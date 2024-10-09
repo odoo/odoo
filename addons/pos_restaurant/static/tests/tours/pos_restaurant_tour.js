@@ -152,9 +152,9 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // Delete the first order then go back to floor
             Chrome.clickMenuOption("Orders"),
-            // The order ref ends with -0002 because it is actually the 2nd order made in the session.
+            // The order ref ends with -00002 because it is actually the 2nd order made in the session.
             // The first order made in the session is a floating order.
-            TicketScreen.deleteOrder("-0002"),
+            TicketScreen.deleteOrder("-00002"),
             Dialog.confirm(),
             {
                 ...Dialog.confirm(),
@@ -162,12 +162,12 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             Chrome.isSyncStatusConnected(),
-            TicketScreen.selectOrder("-0005"),
+            TicketScreen.selectOrder("-00005"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),
 
-            // There should be 0 synced draft order as we already deleted -0002.
+            // There should be 0 synced draft order as we already deleted -00002.
             FloorScreen.clickTable("5"),
             ProductScreen.orderIsEmpty(),
         ].flat(),

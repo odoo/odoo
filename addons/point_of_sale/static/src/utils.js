@@ -127,3 +127,13 @@ export function loadAllImages(el) {
 export function parseUTCString(utcStr) {
     return parseDateTime(utcStr, { format: "yyyy-MM-dd HH:mm:ss", tz: "utc" });
 }
+
+export class Counter {
+    constructor(start = 0) {
+        this.value = start;
+    }
+    next() {
+        this.value++;
+        return this.value;
+    }
+}

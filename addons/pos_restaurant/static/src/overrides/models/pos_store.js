@@ -46,7 +46,7 @@ patch(PosStore.prototype, {
     },
     // using the same floorplan.
     async ws_syncTableCount(data) {
-        if (data["login_number"] === this.session.login_number) {
+        if (data["login_number"] === odoo.login_number) {
             return;
         }
 
@@ -181,8 +181,8 @@ patch(PosStore.prototype, {
         return res;
     },
     //@override
-    add_new_order() {
-        const order = super.add_new_order(...arguments);
+    async add_new_order() {
+        const order = await super.add_new_order(...arguments);
         this.addPendingOrder([order.id]);
         return order;
     },
@@ -259,7 +259,7 @@ patch(PosStore.prototype, {
                     currentOrder.update({ table_id: table });
                     this.selectedOrderUuid = currentOrder.uuid;
                 } else {
-                    this.add_new_order();
+                    await this.add_new_order();
                 }
             }
         }
@@ -288,7 +288,7 @@ patch(PosStore.prototype, {
                 }
                 this.showScreen(orders[0].get_screen_data().name, props);
             } else {
-                this.add_new_order();
+                await this.add_new_order();
                 this.showScreen("ProductScreen");
             }
         }
@@ -310,7 +310,6 @@ patch(PosStore.prototype, {
         if (order && !order.isBooked) {
             this.removeOrder(order);
         }
-        this.set_order(null);
     },
     getActiveOrdersOnTable(table) {
         return this.models["pos.order"].filter(

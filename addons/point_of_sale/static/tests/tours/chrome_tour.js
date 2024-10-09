@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             // Order 1 is at Product Screen
             ProductScreen.addOrderline("Desk Pad", "1", "2", "2.0"),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.checkStatus("-0001", "Ongoing"),
+            TicketScreen.checkStatus("-00001", "Ongoing"),
 
             // Order 2 is at Payment Screen
             Chrome.createFloatingOrder(),
@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.checkStatus("-0002", "Payment"),
+            TicketScreen.checkStatus("-00002", "Payment"),
 
             // Order 3 is at Receipt Screen
             Chrome.createFloatingOrder(),
@@ -40,30 +40,30 @@ registry.category("web_tour.tours").add("ChromeTour", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.checkStatus("-0003", "Receipt"),
+            TicketScreen.checkStatus("-00003", "Receipt"),
 
             // Select order 1, should be at Product Screen
-            TicketScreen.selectOrder("-0001"),
+            TicketScreen.selectOrder("-00001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.productIsDisplayed("Desk Pad"),
             ProductScreen.selectedOrderlineHas("Desk Pad", "1.0", "2.0"),
 
             // Select order 2, should be at Payment Screen
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0002"),
+            TicketScreen.selectOrder("-00002"),
             TicketScreen.loadSelectedOrder(),
             PaymentScreen.emptyPaymentlines("12.0"),
             PaymentScreen.validateButtonIsHighlighted(false),
 
             // Select order 3, should be at Receipt Screen
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0003"),
+            TicketScreen.selectOrder("-00003"),
             TicketScreen.loadSelectedOrder(),
             ReceiptScreen.totalAmountContains("30.0"),
 
             // Pay order 1, with change
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0001"),
+            TicketScreen.selectOrder("-00001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.clickPayButton(),
@@ -75,11 +75,11 @@ registry.category("web_tour.tours").add("ChromeTour", {
 
             // Order 1 now should have Receipt status
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.checkStatus("-0001", "Receipt"),
+            TicketScreen.checkStatus("-00001", "Receipt"),
 
             // Select order 3, should still be at Receipt Screen
             // and the total amount doesn't change.
-            TicketScreen.selectOrder("-0003"),
+            TicketScreen.selectOrder("-00003"),
             TicketScreen.loadSelectedOrder(),
             ReceiptScreen.totalAmountContains("30.0"),
 
@@ -88,12 +88,12 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ReceiptScreen.clickNextOrder(),
             ProductScreen.orderIsEmpty(),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.deleteOrder("-0004"),
+            TicketScreen.deleteOrder("-00004"),
 
             // After deleting order 1 above, order 2 became
             // the 2nd-row order and it has payment status
             TicketScreen.nthRowContains(2, "Payment"),
-            TicketScreen.deleteOrder("-0002"),
+            TicketScreen.deleteOrder("-00002"),
             Dialog.confirm(),
             Chrome.createFloatingOrder(),
 

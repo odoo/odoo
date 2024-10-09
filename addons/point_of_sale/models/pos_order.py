@@ -44,7 +44,7 @@ class PosOrder(models.Model):
         _logger.warning('session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
                         closed_session.name,
                         closed_session.id,
-                        order['name'],
+                        order['uuid'],
                         order['amount_total'])
         rescue_session = PosSession.search([
             ('state', 'not in', ('closed', 'closing_control')),
@@ -52,11 +52,11 @@ class PosOrder(models.Model):
             ('config_id', '=', closed_session.config_id.id),
         ], limit=1)
         if rescue_session:
-            _logger.warning('reusing recovery session %s for saving order %s', rescue_session.name, order['name'])
+            _logger.warning('reusing recovery session %s for saving order %s', rescue_session.name, order['uuid'])
             rescue_session.write({'state': 'opened'})
             return rescue_session
 
-        _logger.warning('attempting to create recovery session for saving order %s', order['name'])
+        _logger.warning('attempting to create recovery session for saving order %s', order['uuid'])
         new_session = PosSession.create({
             'config_id': closed_session.config_id.id,
             'name': _('(RESCUE FOR %(session)s)', session=closed_session.name),
@@ -69,11 +69,6 @@ class PosOrder(models.Model):
             new_session.cash_register_balance_start = last_session.cash_register_balance_end_real
 
         return new_session
-
-    @api.depends('sequence_number', 'session_id')
-    def _compute_tracking_number(self):
-        for record in self:
-            record.tracking_number = str((record.session_id.id % 10) * 100 + record.sequence_number % 100).zfill(3)
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -108,7 +103,6 @@ class PosOrder(models.Model):
         if not existing_order:
             pos_order = self.create({
                 **{key: value for key, value in order.items() if key != 'name'},
-                'pos_reference': order.get('name')
             })
             pos_order = pos_order.with_company(pos_order.company_id)
         else:
@@ -290,7 +284,7 @@ class PosOrder(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
-    sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
+    sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order. Negative if generated from the client', default=1)
 
     session_id = fields.Many2one(
         'pos.session', string='Session', required=True, index=True,
@@ -314,7 +308,16 @@ class PosOrder(models.Model):
     floating_order_name = fields.Char(string='Order Name')
     general_note = fields.Text(string='General Note')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
-    pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True)
+    pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True, help="""
+        Human readable reference for this order.
+            * Format: YYLL-SSS-FOOOO
+            * YY is the year
+            * LL is the login number (proxy to the device)
+            * SSS is the session id
+            * F is 1 or 0 (1 if sequence number is generated from client)
+            * OOOO is the sequence number.
+    """
+    )
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True, ondelete='restrict')
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position', string='Fiscal Position',
@@ -331,7 +334,7 @@ class PosOrder(models.Model):
     refunded_order_id = fields.Many2one('pos.order', compute='_compute_refund_related_fields', help="Order from which items were refunded in this order")
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
-    tracking_number = fields.Char(string="Order Number", compute='_compute_tracking_number', search='_search_tracking_number')
+    tracking_number = fields.Char(string="Order Number", readonly=True, copy=False)
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
     email = fields.Char(string='Email', compute="_compute_contact_details", readonly=False, store=True)
     mobile = fields.Char(string='Mobile', compute="_compute_contact_details", readonly=False, store=True)
@@ -339,18 +342,6 @@ class PosOrder(models.Model):
     has_deleted_line = fields.Boolean(string='Has Deleted Line')
     order_edit_tracking = fields.Boolean(related="config_id.order_edit_tracking", readonly=True)
     available_payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Available Payment Methods', readonly=True, store=False)
-
-    def _search_tracking_number(self, operator, value):
-        #search is made over the pos_reference field
-        #The pos_reference field is like 'Order 00001-001-0001'
-        if operator in ['ilike', '='] and isinstance(value, str):
-            if value[0] == '%' and value[-1] == '%':
-                value = value[1:-1]
-            value = value.zfill(3)
-            search = '% ____' + value[0] + '-___-__' + value[1:]
-            return [('pos_reference', operator, search or '')]
-        else:
-            raise NotImplementedError(_("Unsupported search operation"))
 
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):
@@ -493,6 +484,11 @@ class PosOrder(models.Model):
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
+        if values.get('tracking_number') is None and values.get('pos_reference') is None and values.get('sequence_number') is None:
+            pos_reference, sequence_number, tracking_number = session.get_next_order_refs()
+            values['pos_reference'] = pos_reference
+            values['sequence_number'] = sequence_number
+            values['tracking_number'] = tracking_number
         return values
 
     def write(self, vals):
