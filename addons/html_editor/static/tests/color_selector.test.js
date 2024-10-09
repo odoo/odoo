@@ -368,6 +368,23 @@ test("clicking on the angle input does not close the dropdown", async () => {
     expect("input[name='angle'").toHaveCount(1);
 });
 
+test("should be able to select farthest-corner option in radial gradient", async () => {
+    await setupEditor(`<p>a[bcd]e</p>`);
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".btn:contains('Gradient')").toHaveCount(1);
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    expect("button:contains('Radial')").toHaveCount(1);
+    await click(".btn:contains('Radial')");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveCount(1);
+    await click("button[title='Extend to the farthest corner']");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveClass("active");
+});
+
 describe.tags("desktop")("color preview", () => {
     test("preview color should work and be reverted", async () => {
         await setupEditor("<p>[test]</p>");
