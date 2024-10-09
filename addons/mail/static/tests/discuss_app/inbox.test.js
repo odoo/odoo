@@ -13,10 +13,20 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
-import { mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-dom";
+import {
+    makeServerError,
+    mockService,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
+import { cookie } from "@web/core/browser/cookie";
+import { router } from "@web/core/browser/router";
 
 import { rpc } from "@web/core/network/rpc";
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -471,29 +481,76 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const def = new Deferred();
     mockService("action", {
-        async doAction(action) {
-            if (action?.res_model !== "res.fake") {
-                return super.doAction(...arguments);
+        async loadState() {
+            const state = router.current;
+            if (state.model !== "res.fake") {
+                return super.loadState();
             }
-            // Callback of doing an action (action manager).
+            // Callback of loading a new state (action service).
             // Expected to be called on click on origin thread link,
             // which redirects to form view of record related to origin thread
-            step("do-action");
-            expect(action.type).toBe("ir.actions.act_window");
-            expect(action.views).toEqual([[false, "form"]]);
-            expect(action.res_model).toBe("res.fake");
-            expect(action.res_id).toBe(fakeId);
-            def.resolve();
+            step("load-state");
+            expect(state.model).toBe("res.fake");
+            expect(state.resId).toBe(fakeId);
+            return super.loadState();
         },
     });
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
     await click(".o-mail-Message-header a", { text: "Some record" });
-    await def;
-    await assertSteps(["do-action"]);
+    await assertSteps(["load-state"]);
+    await animationFrame();
+    expect(`.o_form_view`).toHaveCount(1);
+});
+
+test("click on record origin thread on a different company", async () => {
+    serverState.companies = [
+        { id: 1, name: "Company 1", sequence: 1, parent_id: false, child_ids: [] },
+        { id: 2, name: "Company 2", sequence: 2, parent_id: false, child_ids: [] },
+    ];
+    let env;
+    patchWithCleanup(browser.location, {
+        reload() {
+            expect.step("location reload");
+            // Simulate a reload
+            env.services.action.loadState();
+        },
+    });
+    cookie.set("cids", "1");
+    const pyEnv = await startServer();
+    const fakeId = pyEnv["res.fake"].create({ name: "Some record" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.fake",
+        needaction: true,
+        res_id: fakeId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    env = await start();
+    await openDiscuss();
+    await contains(".o-mail-Message");
+    await click(".o-mail-Message-header a", { text: "Some record" });
+    onRpc("web_read", ({ kwargs }) => {
+        if (kwargs.context.allowed_company_ids.length === 1) {
+            throw makeServerError({
+                type: "AccessError",
+                message: "Wrong Company",
+                context: { suggested_company: { id: 2, display_name: "Company 2" } },
+            });
+        }
+    });
+    // wait for the reload
+    await animationFrame();
+    expect.verifySteps(["location reload"]);
+    expect(`.o_form_view`).toHaveCount(1);
+    expect(cookie.get("cids")).toBe("1-2");
 });
 
 test("inbox messages are never squashed", async () => {
