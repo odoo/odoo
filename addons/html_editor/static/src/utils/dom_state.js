@@ -564,3 +564,21 @@ export function enforceWhitespace(el, offset, direction, rule) {
         );
     }
 }
+
+/**
+ * Call this function to start watching for mutations.
+ * Call the returned function to stop watching and get the mutation records.
+ *
+ * @returns {() => MutationRecord[]}
+ */
+export function observeMutations(target, observerOptions) {
+    const records = [];
+    const observerCallback = (mutations) => records.push(...mutations);
+    const observer = new MutationObserver(observerCallback);
+    observer.observe(target, observerOptions);
+    return () => {
+        observerCallback(observer.takeRecords());
+        observer.disconnect();
+        return records;
+    };
+}
