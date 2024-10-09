@@ -270,6 +270,8 @@ class DiscussController(http.Controller):
                 attachmentData['accessToken'] = attachment.access_token
         except AccessError:
             attachmentData = {'error': _("You are not allowed to upload an attachment here.")}
+        except UserError as e:
+            attachmentData = {'error': e.args[0]}
         return request.make_response(
             data=json.dumps(attachmentData),
             headers=[('Content-Type', 'application/json')]
