@@ -13,12 +13,6 @@ patch(ReceiptScreen.prototype, {
             }
         });
     },
-    //@override
-    _addNewOrder() {
-        if (!this.pos.config.module_pos_restaurant) {
-            super._addNewOrder(...arguments);
-        }
-    },
     continueSplitting() {
         const originalOrderUuid = this.currentOrder.uiState.splittedOrderUuid;
         this.currentOrder.uiState.screen_data.value = "";

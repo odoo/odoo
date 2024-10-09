@@ -122,7 +122,7 @@ export class DebugWidget extends Component {
                 }
 
                 if (!this.pos.get_order()) {
-                    this.pos.add_new_order();
+                    return this.pos.add_new_order();
                 }
             },
         });

@@ -1,6 +1,5 @@
 import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { patch } from "@web/core/utils/patch";
-import { PosOrder } from "@point_of_sale/app/models/pos_order";
 
 patch(PosStore.prototype, {
     async getServerOrders() {
@@ -19,14 +18,5 @@ patch(PosStore.prototype, {
     },
     _shouldLoadOrders() {
         return super._shouldLoadOrders() || this.session._self_ordering;
-    },
-});
-
-patch(PosOrder.prototype, {
-    setup() {
-        super.setup(...arguments);
-        if (this.pos_reference?.startsWith("Self-Order")) {
-            this.tracking_number = "S" + this.tracking_number;
-        }
     },
 });

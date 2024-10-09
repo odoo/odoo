@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
             PosLoyalty.orderTotalIs("1.98"),
             PosLoyalty.finalizeOrder("Cash", "20"),
             ...ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("-0001"),
+            TicketScreen.selectOrder("-00001"),
             Order.hasLine({
                 withClass: ".selected",
                 productName: "Magnetic Board",

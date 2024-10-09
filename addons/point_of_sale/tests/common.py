@@ -576,7 +576,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'lines': order_lines,
             'partner_id': customer and customer.id,
             'session_id': self.pos_session.id,
-            'sequence_number': 2,
             'payment_ids': payments,
             'uuid': uuid,
             'user_id': self.env.uid,

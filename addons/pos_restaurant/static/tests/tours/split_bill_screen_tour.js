@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 
             // go back to the original order and see if the order is changed
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0001"),
+            TicketScreen.selectOrder("-00001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.clickOrderline("Water", "2.0"),
@@ -72,7 +72,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 
             // go back to the original order and see if the order is changed
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0001"),
+            TicketScreen.selectOrder("-00001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.clickOrderline("Water", "1.0"),
@@ -100,13 +100,13 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             SplitBillScreen.clickPay(),
             PaymentScreen.clickBack(),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0002"),
+            TicketScreen.selectOrder("-00002"),
             TicketScreen.loadSelectedOrder(),
             Order.hasLine({ productName: "Coca-Cola", quantity: "1.0" }),
             Order.hasLine({ productName: "Water", quantity: "1.0" }),
             ProductScreen.totalAmountIs("4.00"),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.selectOrder("-0001"),
+            TicketScreen.selectOrder("-00001"),
             TicketScreen.loadSelectedOrder(),
             Order.hasLine({ productName: "Minute Maid", quantity: "1.0", withClass: ".selected" }),
             ProductScreen.totalAmountIs("2.00"),

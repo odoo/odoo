@@ -223,16 +223,13 @@ class TestPosMrp(TestPointOfSaleCommon):
                     'qty': 1,
                     'tax_ids': [(6, 0, self.kit_2.taxes_id.ids)]}
             ]],
-            'name': 'Order 00042-003-0014',
             'partner_id': self.partner1.id,
             'session_id': self.pos_config.current_session_id.id,
-            'sequence_number': 2,
             'payment_ids': [[0, 0, {
                 'amount': 2.0,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id}
             ]],
-            'uuid': '00042-003-0014',
             'user_id': self.env.uid
         }
         order = self.env['pos.order'].sync_from_ui([order_data])
@@ -311,16 +308,13 @@ class TestPosMrp(TestPointOfSaleCommon):
                         'qty': 2,
                         'tax_ids': []}],
                         ],
-                'name': 'Order 00042-003-0014',
                 'partner_id': self.partner1.id,
                 'session_id': self.pos_config.current_session_id.id,
-                'sequence_number': 2,
                 'payment_ids': [[0,
                                     0,
                                     {'amount': 2.0,
                                     'name': fields.Datetime.now(),
                                     'payment_method_id': self.cash_payment_method.id}]],
-                'uuid': '00042-003-0014',
                 'user_id': self.env.uid}
         order = self.env['pos.order'].sync_from_ui([order_data])
         order = self.env['pos.order'].browse(order['pos.order'][0]['id'])

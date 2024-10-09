@@ -59,16 +59,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     'qty': 1,
                     'tax_ids': [(6, 0, product.taxes_id.ids)]
                 })],
-                'name': 'Order 12345-123-1234',
                 'partner_id': False,
                 'session_id': pos_session.id,
-                'sequence_number': 2,
                 'payment_ids': [(0, 0, {
                     'amount': untax + atax,
                     'name': fields.Datetime.now(),
                     'payment_method_id': self.cash_payment_method.id
                 })],
-                'uuid': '12345-123-1234',
                 'last_order_preparation_change': '{}',
                 'user_id': self.env.uid
             }
@@ -854,16 +851,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_subtotal_incl': 1.04,
                 'qty': 1,
                 'tax_ids': [(6, 0, self.led_lamp.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)]}]],
-            'name': 'Order 00042-003-0014',
             'partner_id': False,
             'session_id': current_session.id,
-            'sequence_number': 2,
             'payment_ids': [[0, 0,
                 {'amount': untax + atax,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id}]],
-            'uuid': '00042-003-0014',
             'last_order_preparation_change': '{}',
+            'uuid': '1234567890',
             'user_id': self.env.uid
         }
 
@@ -884,16 +879,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_subtotal_incl': 1.38,
                 'qty': 1,
                 'tax_ids': [(6, 0, self.whiteboard_pen.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)]}]],
-            'name': 'Order 00043-003-0014',
             'partner_id': self.partner1.id,
             'session_id': current_session.id,
-            'sequence_number': self.pos_config.journal_id.id,
             'payment_ids': [[0, 0,
                 {'amount': untax + atax,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.credit_payment_method.id}]],
-            'uuid': '00043-003-0014',
             'last_order_preparation_change': '{}',
+            'uuid': '1234567891',
             'user_id': self.env.uid
         }
 
@@ -914,16 +907,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_subtotal_incl': 1.47,
                 'qty': 1,
                 'tax_ids': [[6, False, self.newspaper_rack.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids]]}]],
-            'name': 'Order 00044-003-0014',
             'partner_id': False,
             'session_id': current_session.id,
-            'sequence_number': self.pos_config.journal_id.id,
             'payment_ids': [[0, 0,
                 {'amount': untax + atax,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.bank_payment_method.id}]],
-            'uuid': '00044-003-0014',
             'last_order_preparation_change': '{}',
+            'uuid': '1234567892',
             'user_id': self.env.uid
         }
 
@@ -1199,16 +1190,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_subtotal_incl': 15.0,
                 'qty': 1,
                 'tax_ids': [(6, 0, product5.taxes_id.ids)]}]],
-            'name': 'Order 12345-123-1234',
             'partner_id': False,
             'session_id': pos_session.id,
-            'sequence_number': 2,
             'payment_ids': [[0,
                 0,
                 {'amount': untax + atax,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id}]],
-            'uuid': '12345-123-1234',
             'last_order_preparation_change': '{}',
             'user_id': self.env.uid
         }
@@ -1415,10 +1403,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     'tax_ids': [[6, False, []]],
                     'qty': 1,
                 }]],
-            'name': 'Order 12345-123-1234',
             'partner_id': self.partner1.id,
             'session_id': pos_session.id,
-            'sequence_number': 2,
             'payment_ids': [[0, 0, {
                     'amount': 460,
                     'name': fields.Datetime.now(),
@@ -1428,7 +1414,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     'name': fields.Datetime.now(),
                     'payment_method_id': self.credit_payment_method.id
                 }]],
-            'uuid': '12345-123-1234',
             'user_id': self.env.uid,
             'last_order_preparation_change': '{}',
             'to_invoice': True
@@ -1536,10 +1521,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     'tax_ids': [[6, False, []]],
                     'qty': 1,
                 }]],
-            'name': 'Order 12345-123-1234',
             'partner_id': self.partner1.id,
             'session_id': current_session.id,
-            'sequence_number': 2,
             'payment_ids': [[0, 0, {
                     'amount': 450,
                     'name': fields.Datetime.now(),
@@ -1549,7 +1532,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     'name': fields.Datetime.now(),
                     'payment_method_id': self.bank_payment_method.id
                 }]],
-            'uuid': '12345-123-1234',
             'last_order_preparation_change': '{}',
             'user_id': self.env.uid,
             'to_invoice': True
@@ -1764,16 +1746,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'tax_ids': [[6, False, []]],
                 'qty': 1,
             }]],
-            'name': 'Order 12345-123-1234',
             'partner_id': self.partner1.id,
             'session_id': current_session.id,
-            'sequence_number': 2,
             'payment_ids': [[0, 0, {
                 'amount': 450,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id
             }]],
-            'uuid': '12345-123-1234',
             'last_order_preparation_change': '{}',
             'user_id': self.env.uid,
             'to_invoice': True

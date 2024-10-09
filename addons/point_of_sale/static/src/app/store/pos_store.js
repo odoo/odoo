@@ -5,10 +5,10 @@ import { markRaw } from "@odoo/owl";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, getOnNotified } from "@point_of_sale/utils";
+import { deduceUrl, random5Chars, uuidv4, getOnNotified, Counter } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/store/opening_control_popup/opening_control_popup";
@@ -133,6 +133,8 @@ export class PosStore extends Reactive {
         this.scaleWeight = 0;
         this.scaleTare = 0;
         this.totalPriceOnScale = 0;
+
+        this.orderCounter = new Counter(0);
 
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
@@ -315,7 +317,7 @@ export class PosStore extends Reactive {
                 title: _t("Existing orderlines"),
                 body: _t(
                     "%s has a total amount of %s, are you sure you want to delete this order?",
-                    order.name,
+                    order.pos_reference,
                     this.env.utils.formatCurrency(order.get_total_with_tax())
                 ),
             });
@@ -326,11 +328,13 @@ export class PosStore extends Reactive {
         const orderIsDeleted = await this.deleteOrders([order]);
         if (orderIsDeleted) {
             order.uiState.displayed = false;
-            this.afterOrderDeletion();
+            await this.afterOrderDeletion();
         }
     }
-    afterOrderDeletion() {
-        this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
+    async afterOrderDeletion() {
+        this.set_order(
+            this.get_open_orders().at(-1) || this.createNewOrder(await this.getNextOrderRefs())
+        );
     }
 
     async deleteOrders(orders, serverIds = []) {
@@ -425,7 +429,7 @@ export class PosStore extends Reactive {
         if (!this.config.module_pos_restaurant) {
             this.selectedOrderUuid = openOrders.length
                 ? openOrders[openOrders.length - 1].uuid
-                : this.add_new_order().uuid;
+                : (await this.add_new_order()).uuid;
         }
 
         this.markReady();
@@ -529,7 +533,7 @@ export class PosStore extends Reactive {
         order.assert_editable();
 
         if (!order) {
-            order = this.add_new_order();
+            order = await this.add_new_order();
         }
 
         const options = {
@@ -895,68 +899,88 @@ export class PosStore extends Reactive {
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
     }
-    generate_unique_id() {
-        // Generates a public identification number for the order.
-        // The generated number must be unique and sequential. They are made 12 digit long
-        // to fit into EAN-13 barcodes, should it be needed
-
-        function zero_pad(num, size) {
-            var s = "" + num;
-            while (s.length < size) {
-                s = "0" + s;
-            }
-            return s;
-        }
-        return (
-            zero_pad(this.session.id, 5) +
-            "-" +
-            zero_pad(this.session.login_number, 3) +
-            "-" +
-            zero_pad(this.session.sequence_number, 4)
-        );
-    }
     createNewOrder(data = {}) {
+        if (!(data.pos_reference && data.sequence_number && data.tracking_number)) {
+            throw new Error("pos_reference, sequence_number and tracking_number are required");
+        }
+
         const fiscalPosition = this.models["account.fiscal.position"].find((fp) => {
             return fp.id === this.config.default_fiscal_position_id?.id;
         });
 
-        const uniqId = this.generate_unique_id();
         const order = this.models["pos.order"].create({
             session_id: this.session,
             company_id: this.company,
             config_id: this.config,
             picking_type_id: this.pickingType,
             user_id: this.user,
-            sequence_number: this.session.sequence_number,
             access_token: uuidv4(),
             ticket_code: random5Chars(),
             fiscal_position_id: fiscalPosition,
-            name: _t("Order %s", uniqId),
-            pos_reference: uniqId,
             ...data,
         });
 
-        this.session.sequence_number++;
         order.set_pricelist(this.config.pricelist_id);
+        order.recomputeOrderData();
+
         return order;
     }
-    add_new_order(data = {}) {
+    async add_new_order(data = {}) {
         if (this.get_order()) {
             this.get_order().updateSavedQuantity();
         }
-
+        Object.assign(data, await this.getNextOrderRefs());
         const order = this.createNewOrder(data);
         this.selectedOrderUuid = order.uuid;
         this.searchProductWord = "";
         return order;
     }
-
+    async getNextOrderRefs() {
+        try {
+            const [pos_reference, sequence_number, tracking_number] = await this.data.call(
+                "pos.session",
+                "get_next_order_refs",
+                [[this.session.id], parseInt(odoo.login_number, 10), null, ""]
+            );
+            return { pos_reference, sequence_number, tracking_number };
+        } catch (error) {
+            if (
+                error instanceof ConnectionLostError ||
+                error instanceof ConnectionAbortedError ||
+                error instanceof RPCError
+            ) {
+                return this.getNextOrderRefsLocal(_t("Order"));
+            } else {
+                throw error;
+            }
+        }
+    }
+    /**
+     * Return value of this method is used when the client is offline.
+     * Side-effect: increments the order counter.
+     */
+    getNextOrderRefsLocal(refPrefix) {
+        const sequenceNumber = this.orderCounter.next();
+        const trackingNumber = sequenceNumber.toString().padStart(3, "0");
+        const YY = new Date().getFullYear().toString().slice(-2);
+        const LL = (odoo.login_number % 100).toString().padStart(2, "0");
+        const SSS = this.session.id.toString().padStart(3, "0");
+        const F = "1";
+        const OOOO = sequenceNumber.toString().padStart(4, "0");
+        const posReference = `${refPrefix} ${YY}${LL}-${SSS}-${F}${OOOO}`;
+        return {
+            pos_reference: posReference,
+            // Return negative sequence number to indicate that the value is generated from the client.
+            sequence_number: -sequenceNumber,
+            tracking_number: trackingNumber,
+        };
+    }
     selectNextOrder() {
         const orders = this.models["pos.order"].filter((order) => !order.finalized);
         if (orders.length > 0) {
             this.selectedOrderUuid = orders[0].uuid;
         } else {
-            this.add_new_order();
+            return this.add_new_order();
         }
     }
 
@@ -1025,7 +1049,7 @@ export class PosStore extends Reactive {
     getSyncAllOrdersContext(orders, options = {}) {
         return {
             config_id: this.config.id,
-            login_number: this.session.login_number,
+            login_number: odoo.login_number,
         };
     }
 
@@ -1439,7 +1463,7 @@ export class PosStore extends Reactive {
 
     addOrderIfEmpty() {
         if (!this.get_order()) {
-            this.add_new_order();
+            return this.add_new_order();
         }
     }
 

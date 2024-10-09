@@ -366,6 +366,8 @@ export class FloorScreen extends Component {
         if (table) {
             await this.pos.unsetTable();
         }
+        // Set order to null when reaching the floor screen.
+        this.pos.set_order(null);
     }
     get floorBackround() {
         return this.activeFloor.floor_background_image
