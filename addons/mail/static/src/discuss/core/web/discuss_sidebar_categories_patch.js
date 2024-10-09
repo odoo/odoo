@@ -71,6 +71,7 @@ const DiscussSidebarCategoryPatch = {
                 res_model: "discuss.channel",
                 views: [
                     [false, "kanban"],
+                    [false, "list"],
                     [false, "form"],
                 ],
                 domain: [
