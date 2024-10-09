@@ -403,6 +403,49 @@ QUnit.module('web_editor', {
 
                 removePeers(peers);
             });
+            QUnit.test('Focused client should be able to delete selected text without issue', async (assert) => {
+                assert.expect();
+                const pool = await createPeers(['p1', 'p2']);
+                const peers = pool.peers;
+
+                await peers.p1.startEditor();
+                await peers.p2.startEditor();
+
+                await peers.p1.focus();
+                await peers.p2.focus();
+
+                await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'r6f6afwef6wef1wef');
+
+                await peers.p1.openDataChannel(peers.p2);
+
+                // select last 5 characters of last insertion
+                const selection = peers.p1.document.getSelection();
+                const pElement = peers.p1.wysiwyg.odooEditor.editable.querySelector('p');
+                const lastChild = pElement.lastChild;
+                const lastChildLength = lastChild.textContent.length;
+                const range = new Range();
+                range.setStart(lastChild, lastChildLength - 5);
+                range.setEnd(lastChild, lastChildLength);
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+                // select end of last insertion
+                const selection2 = peers.p2.document.getSelection();
+                const pElement2 = peers.p2.wysiwyg.odooEditor.editable.querySelector('p');
+                const range2 = new Range();
+                range2.setStart(pElement2, 2);
+                range2.setEnd(pElement2, 2);
+                selection2.removeAllRanges();
+                selection2.addRange(range2);
+
+                // delete last 5 characters
+                await peers.p1.wysiwyg.odooEditor.execCommand('oDeleteBackward');
+
+                assert.equal(await peers.p1.getValue(), `<p>ar6f6afwef6we[]</p>`, 'p1 should have the same document as p2');
+                assert.equal(await peers.p2.getValue(), `<p>ar6f6afwef6we[]</p>`, 'p2 should have the same document as p1');
+
+                removePeers(peers);
+            });
         });
 
         QUnit.module('Stale detection & recovery', {}, () => {
