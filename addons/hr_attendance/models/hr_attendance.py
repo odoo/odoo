@@ -76,11 +76,25 @@ class HrAttendance(models.Model):
             self.env['hr.attendance.overtime'].flush_model(['duration'])
             self.env.cr.execute('''
                 WITH employee_time_zones AS (
-                    SELECT employee.id AS employee_id,
-                           calendar.tz AS timezone
-                      FROM hr_employee employee
-                INNER JOIN resource_calendar calendar
-                        ON calendar.id = employee.resource_calendar_id
+                    SELECT
+                        employee.id AS employee_id,
+                        CASE
+                            WHEN resource.tz IS NOT NULL THEN resource.tz
+                            WHEN calendar.id IS NOT NULL THEN calendar.tz
+                            ELSE 'utc'
+                        END AS timezone
+                    FROM hr_employee employee
+                        LEFT JOIN resource_resource resource
+                            ON employee.resource_id = resource.id
+                        LEFT JOIN res_company company
+                            ON employee.company_id = company.id
+                        LEFT JOIN resource_calendar calendar
+                            ON
+                                calendar.id = employee.resource_calendar_id
+                                OR (
+                                    employee.resource_calendar_id IS NULL
+                                    AND company.resource_calendar_id = calendar.id
+                                )
                 )
                 SELECT att.id AS att_id,
                        att.worked_hours AS att_wh,
