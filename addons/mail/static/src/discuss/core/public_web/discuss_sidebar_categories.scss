@@ -92,22 +92,20 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
     }
 }
 
-.o-mail-DiscussSidebarCategories-quickSearchBtn {
+.o-mail-DiscussSidebarCategories-searchBtn {
     padding-top: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
     padding-bottom: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
-
-    &.o-active {
-        background-color: rgba($o-action, .75);
-        color: #fff;
-    }
 }
 
-.o-mail-DiscussSidebarQuickSearchInput {
-    outline: 1px solid rgba($border-color, 1);
-    outline-offset: -1px;
+.o-mail-DiscussSidebarCategories-search {
+    &, & input {
+        background-color: var(--mail-DiscussSidebarCategories-searchContainerBg, $gray-100) !important;
+    }
 
-    &.o-active {
-        outline-color: $o-action;
+    &:has(.o-mail-DiscussSidebarCategories-searchClickable:hover) {
+        &, & input {
+            background-color: var(--mail-DiscussSidebarCategories-searchContainerBgHover, mix($gray-100, $gray-200)) !important;
+        }
     }
 }
 

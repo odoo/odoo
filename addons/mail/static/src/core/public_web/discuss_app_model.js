@@ -13,11 +13,9 @@ export class DiscussApp extends Record {
                 id: "channels",
                 name: _t("Channels"),
                 canView: true,
-                canAdd: true,
                 sequence: 10,
                 serverStateKey: "is_discuss_sidebar_category_channel_open",
                 addTitle: _t("Add or join a channel"),
-                addHotkey: "c",
             },
             chats: {
                 extraClass: "o-mail-DiscussSidebarCategory-chat",
@@ -25,11 +23,9 @@ export class DiscussApp extends Record {
                 id: "chats",
                 name: _t("Direct messages"),
                 canView: false,
-                canAdd: true,
                 sequence: 30,
                 serverStateKey: "is_discuss_sidebar_category_chat_open",
                 addTitle: _t("Start a conversation"),
-                addHotkey: "d",
             },
         });
         return res;

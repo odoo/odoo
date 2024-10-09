@@ -25,6 +25,13 @@ class ResPartner(models.Model):
         If the channel_id is specified, only partners that can actually be invited to the channel
         are returned (not already members, and in accordance to the channel configuration).
         """
+        store = Store()
+        count = self._search_for_channel_invite(store, search_term, channel_id, limit)
+        return {"count": count, "data": store.get_result()}
+
+    @api.readonly
+    @api.model
+    def _search_for_channel_invite(self, store: Store, search_term, channel_id=None, limit=30):
         domain = expression.AND(
             [
                 expression.OR(
@@ -33,6 +40,7 @@ class ResPartner(models.Model):
                         [("email", "ilike", search_term)],
                     ]
                 ),
+                [('id', '!=', self.env.user.partner_id.id)],
                 [("active", "=", True)],
                 [("user_ids", "!=", False)],
                 [("user_ids.active", "=", True)],
@@ -50,12 +58,8 @@ class ResPartner(models.Model):
         query = self._search(domain, limit=limit)
         # bypass lack of support for case insensitive order in search()
         query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
-        store = Store()
         self.env["res.partner"].browse(query)._search_for_channel_invite_to_store(store, channel)
-        return {
-            "count": self.env["res.partner"].search_count(domain),
-            "data": store.get_result(),
-        }
+        return self.env["res.partner"].search_count(domain)
 
     def _search_for_channel_invite_to_store(self, store: Store, channel):
         store.add(self)

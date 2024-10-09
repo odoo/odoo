@@ -26,6 +26,7 @@ export class DiscussChannel extends models.ServerModel {
         [`form,${DEFAULT_MAIL_VIEW_ID}`]: `<form/>`,
     };
 
+    // name = fields.Char({ string: "Name" });
     author_id = fields.Many2one({
         relation: "res.partner",
         default: () => serverState.partnerId,
@@ -532,10 +533,14 @@ export class DiscussChannel extends models.ServerModel {
         );
     }
 
-    /** @param {number[]} partners_to */
-    create_group(partners_to) {
-        const kwargs = getKwArgs(arguments, "partners_to");
+    /**
+     * @param {number[]} partners_to
+     * @param {string} name
+     * */
+    create_group(partners_to, name) {
+        const kwargs = getKwArgs(arguments, "partners_to", "name");
         partners_to = kwargs.partners_to || [];
+        name = kwargs.name || "";
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
@@ -548,7 +553,7 @@ export class DiscussChannel extends models.ServerModel {
             channel_member_ids: partners.map((partner) =>
                 Command.create({ partner_id: partner.id })
             ),
-            name: "",
+            name,
         });
         this._broadcast(
             [id],

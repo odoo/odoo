@@ -128,3 +128,22 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
         text: "Visitor 12",
     });
 });
+
+test("sidebar search finds livechats", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    pyEnv["discuss.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss();
+    await click("input[placeholder='Find or start a conversation']");
+    await click("a", { text: "Visitor 11" });
+    await contains(".o-mail-Discuss-threadName[title='Visitor 11']");
+});

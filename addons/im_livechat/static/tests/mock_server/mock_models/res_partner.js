@@ -23,7 +23,7 @@ export class ResPartner extends mailModels.ResPartner {
 
         super._search_for_channel_invite_to_store(ids, store, channel_id);
         const [channel] = DiscussChannel.browse(channel_id);
-        if (channel.channel_type !== "livechat") {
+        if (channel?.channel_type !== "livechat") {
             return;
         }
         const activeLivechatPartners = LivechatChannel._filter([])
