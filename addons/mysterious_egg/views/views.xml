@@ -1,8 +1,14 @@
 <odoo>
     <data>
-        <menuitem name="Egg"
-                        id="menu_root_egg"
-                        sequence="0"
+        <record id="mysterious_egg.website_preview" model="ir.actions.client">
+            <field name="name">Website Preview</field>
+            <field name="tag">egg_website_preview</field>
+        </record>
+
+        <menuitem name="Website Preview"
+                        id="menu_website_preview"
+                        action="mysterious_egg.website_preview"
+                        sequence="1"
             />
     </data>
 
