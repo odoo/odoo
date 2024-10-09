@@ -5,7 +5,6 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import { boundariesIn, setSelection } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 registry.category("web_tour.tours").add('mailing_editor_theme', {
-    test: true,
     url: '/odoo',
     steps: () => [
         stepUtils.showAppsMenuItem(),

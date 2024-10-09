@@ -6,7 +6,6 @@ import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_
 import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirmation_page_util";
 
 registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_in", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -26,7 +25,6 @@ registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_in", {
 });
 
 registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_out", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -45,7 +43,6 @@ registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_out", {
 });
 
 registry.category("web_tour.tours").add("self_mobile_each_counter_takeaway_in", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -64,7 +61,6 @@ registry.category("web_tour.tours").add("self_mobile_each_counter_takeaway_in", 
 });
 
 registry.category("web_tour.tours").add("self_mobile_each_counter_takeaway_out", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -83,7 +79,6 @@ registry.category("web_tour.tours").add("self_mobile_each_counter_takeaway_out",
 });
 
 registry.category("web_tour.tours").add("self_mobile_meal_table_takeaway_in", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -109,7 +104,6 @@ registry.category("web_tour.tours").add("self_mobile_meal_table_takeaway_in", {
 });
 
 registry.category("web_tour.tours").add("self_mobile_meal_table_takeaway_out", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -135,7 +129,6 @@ registry.category("web_tour.tours").add("self_mobile_meal_table_takeaway_out", {
 });
 
 registry.category("web_tour.tours").add("self_mobile_meal_counter_takeaway_in", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -161,7 +154,6 @@ registry.category("web_tour.tours").add("self_mobile_meal_counter_takeaway_in", 
 });
 
 registry.category("web_tour.tours").add("self_mobile_meal_counter_takeaway_out", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -187,7 +179,6 @@ registry.category("web_tour.tours").add("self_mobile_meal_counter_takeaway_out",
 });
 
 registry.category("web_tour.tours").add("self_order_mobile_meal_cancel", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -217,7 +208,6 @@ registry.category("web_tour.tours").add("self_order_mobile_meal_cancel", {
 });
 
 registry.category("web_tour.tours").add("self_order_mobile_each_cancel", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
@@ -243,7 +233,6 @@ registry.category("web_tour.tours").add("self_order_mobile_each_cancel", {
 });
 
 registry.category("web_tour.tours").add("SelfOrderOrderNumberTour", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),

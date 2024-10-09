@@ -9,7 +9,6 @@ import {
 registerWebsitePreviewTour("snippet_version_1", {
     edition: true,
     url: "/",
-    test: true,
 }, () => [
     ...insertSnippet({
         id: 's_test_snip',
@@ -40,13 +39,12 @@ registerWebsitePreviewTour("snippet_version_1", {
 registerWebsitePreviewTour("snippet_version_2", {
     edition: true,
     url: "/",
-    test: true,
 }, () => [
 {
     content: "Edit s_test_snip",
     trigger: ':iframe #wrap.o_editable .s_test_snip',
     run: "click",
-}, 
+},
 {
     trigger:
         "we-customizeblock-options:contains(Test snip) .snippet-option-VersionControl > we-alert",
@@ -55,7 +53,7 @@ registerWebsitePreviewTour("snippet_version_2", {
     content: "Edit text_image",
     trigger: ':iframe #wrap.o_editable .s_text_image',
     run: "click",
-}, 
+},
 {
     trigger:
         "we-customizeblock-options:contains(Text - Image) .snippet-option-VersionControl  > we-alert",
@@ -64,7 +62,7 @@ registerWebsitePreviewTour("snippet_version_2", {
     content: "Edit s_share",
     trigger: ':iframe #wrap.o_editable .s_share',
     run: "click",
-}, 
+},
 {
     trigger:
         "we-customizeblock-options:contains(Share) .snippet-option-VersionControl > we-alert",

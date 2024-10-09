@@ -3,7 +3,6 @@
 import { insertSnippet, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("carousel_content_removal", {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

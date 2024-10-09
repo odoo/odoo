@@ -11,7 +11,6 @@ import {
 import { browser } from "@web/core/browser/browser";
 
 registerWebsitePreviewTour("snippet_popup_display_on_click", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

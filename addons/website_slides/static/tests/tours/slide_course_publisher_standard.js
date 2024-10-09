@@ -12,7 +12,6 @@ import { clickOnEditAndWaitEditMode, registerWebsitePreviewTour } from '@website
  */
 registerWebsitePreviewTour('course_publisher_standard', {
     url: '/slides',
-    test: true,
 }, () => [{
     content: 'eLearning: click on New (top-menu)',
     trigger: 'div.o_new_content_container a',
@@ -62,7 +61,7 @@ registerWebsitePreviewTour('course_publisher_standard', {
     content: 'eLearning: add a bioutifoul URL',
     trigger: 'input.o_we_url_input',
     run: "edit https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg/800px-ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg",
-}, 
+},
 {
     trigger: ".o_we_url_success",
 },
@@ -78,7 +77,7 @@ registerWebsitePreviewTour('course_publisher_standard', {
     content: 'eLearning: save course edition',
     trigger: 'button[data-action="save"]',
     run: "click",
-}, 
+},
 {
     trigger: ":iframe body:not(.editor_enable)", // wait for editor to close
 },
