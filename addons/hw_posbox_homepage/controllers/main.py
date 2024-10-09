@@ -257,8 +257,15 @@ class IoTboxHomepage(Home):
     def connect_to_server(self, token, iotname):
         if token:
             try:
-                configuration = helpers.parse_url(token)
-                helpers.save_conf_server(**configuration)
+                if len(token.split('|')) == 4:
+                    # Old style token with pipe separators (pre v18 DB)
+                    url, token, db_uuid, enterprise_code = token.split('|')
+                    configuration = helpers.parse_url(url)
+                    helpers.save_conf_server(configuration["url"], token, db_uuid, enterprise_code)
+                else:
+                    # New token using query params (v18+ DB)
+                    configuration = helpers.parse_url(token)
+                    helpers.save_conf_server(**configuration)
             except ValueError:
                 _logger.warning("Wrong server token: %s", token)
                 return 'Invalid URL provided.'
