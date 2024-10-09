@@ -54,7 +54,8 @@ class EventBoothCategory(models.Model):
                 product.lst_price,
                 pricelist.currency_id,
                 self.env.company,
-                fields.Datetime.now()
+                fields.Datetime.now(),
+                round=False,
             )
             discount = (lst_price - product._get_contextual_price()) / lst_price if lst_price else 0.0
             category.price_reduce = (1.0 - discount) * category.price
