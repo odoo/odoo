@@ -13,6 +13,7 @@ FormEditorRegistry.add('create_task', {
         type: 'email',
         custom: true,
         required: true,
+        controllerRequired: true,
         fillWith: 'email',
         name: 'email_from',
         string: _t('Your Email'),
