@@ -44,6 +44,17 @@ export class DiscussCoreWeb {
                 );
             }
         });
+        this.busService.subscribe("discuss.channel/mentioned", async (payload) => {
+            const { channel, mentioned_by_user_id: mentionedByUserId } = payload;
+            const thread = this.store.Thread.insert(channel);
+            await thread.fetchChannelInfo();
+            if (mentionedByUserId && mentionedByUserId !== this.store.self.userId) {
+                this.notificationService.add(
+                    _t("You have been mentioned to #%s", thread.displayName),
+                    { type: "info" }
+                );
+            }
+        });
         this.busService.subscribe("res.users/connection", async ({ partnerId, username }) => {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present

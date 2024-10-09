@@ -261,13 +261,24 @@ class Partner(models.Model):
         ])
 
     @api.model
-    def _search_mention_suggestions(self, domain, limit):
-        domain_is_user = expression.AND([[('user_ids', '!=', False)], [('user_ids.active', '=', True)], domain])
+    def _search_mention_suggestions(self, domain, limit, channel=None):
+        base_domain = expression.AND([[('user_ids', '!=', False)], [('user_ids.active', '=', True)]])
+        domain_is_user = expression.AND([base_domain, domain])
         priority_conditions = [
             expression.AND([domain_is_user, [('partner_share', '=', False)]]),  # Search partners that are internal users
             domain_is_user,  # Search partners that are users
             domain,  # Search partners that are not users
         ]
+        if channel:
+            access_domain = expression.AND([base_domain, [('partner_share', '=', False)]])
+            if channel.group_public_id.id:
+                access_domain = expression.AND(
+                    [
+                        access_domain,
+                        [("user_ids.groups_id", "in", channel.group_public_id.id)],
+                    ]
+                )
+            priority_conditions.append(access_domain)
         partners = self.env['res.partner']
         for domain in priority_conditions:
             remaining_limit = limit - len(partners)

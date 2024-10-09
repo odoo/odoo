@@ -44,6 +44,7 @@ export class SuggestionService {
         if (thread?.model === "discuss.channel") {
             kwargs.channel_id = thread.id;
         }
+        this.store.partnersWithAccess = null;
         const data = await this.orm.silent.call(
             "res.partner",
             thread?.model === "discuss.channel"
@@ -148,6 +149,10 @@ export class SuggestionService {
             partners = thread.channelMembers
                 .map((member) => member.persona)
                 .filter((persona) => persona.type === "partner");
+            //includes channelMembers and internalUsers with access
+            if (thread.channel_type === "channel") {
+                partners = new Set([...partners, ...this.store.partnersWithAccess]);
+            }
         } else {
             partners = Object.values(this.store.Persona.records).filter((persona) => {
                 if (thread?.model !== "discuss.channel" && persona.eq(this.store.odoobot)) {
