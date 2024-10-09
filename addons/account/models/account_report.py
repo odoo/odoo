@@ -151,6 +151,18 @@ class AccountReport(models.Model):
                       'The parent must always come first.', line.name, line.parent_id.name))
             previous_lines |= line
 
+    @api.constrains('column_ids')
+    def _validate_expression_label(self):
+        for record in self:
+            previous_expression_labels = []
+            for column_line in record.column_ids:
+                expression_label = column_line.expression_label
+                if expression_label in previous_expression_labels:
+                    raise ValidationError(
+                        _('Expression_label "%(expression_label)s" already defines in previous column line',
+                            expression_label=expression_label))
+                previous_expression_labels.append(expression_label)
+
     @api.onchange('availability_condition')
     def _onchange_availability_condition(self):
         if self.availability_condition != 'country':
