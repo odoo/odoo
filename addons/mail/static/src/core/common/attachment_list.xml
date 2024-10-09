@@ -34,7 +34,7 @@
                     <div t-if="attachment.uploading" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
                         <i class="fa fa-circle-o-notch fa-spin"/>
                     </div>
-                    <ImageActions actions="getActions(attachment)" imagesHeight="props.imagesHeight"/>
+                    <AttachmentActions actions="getActions(attachment)" maxHeight="props.imagesHeight"/>
                 </div>
             </div>
             <div class="d-flex flex-wrap mt-1 mx-1">
@@ -89,25 +89,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </t>
-
-    <t t-name="mail.ImageActions">
-        <div class="position-absolute top-0 bottom-0 start-0 end-0 p-1 text-white o-opacity-hoverable opacity-100-hover d-flex align-items-end flax-wrap flex-column" t-att-class="{ 'opacity-0': !actionsMenuState.isOpen }">
-            <button t-if="props.actions.length === 1 and props.imagesHeight gt 75" class="btn btn-sm btn-light rounded px-1 py-0" t-att-class="{ 'opacity-75 opacity-100-hover': !isMobileOS }" tabindex="0" t-att-aria-label="props.actions[0].label" t-att-title="props.actions[0].label" role="menuitem" t-on-click.stop="props.actions[0].onSelect">
-                <i t-att-class="props.actions[0].icon"/>
-            </button>
-            <Dropdown t-else="" menuClass="'d-flex flex-column py-0' + (props.actions.length gt 1 ? ' py-0' : '')" state="actionsMenuState" position="'right-start'">
-                <button class="btn btn-sm btn-light rounded px-1 py-0" t-att-class="{ 'opacity-75 opacity-100-hover': !isMobileOS }" tabindex="0" aria-label="Actions" title="Actions" role="menuitem">
-                    <i class="oi oi-chevron-down"/>
-                </button>
-                <t t-set-slot="content">
-                    <DropdownItem t-foreach="props.actions" t-as="action" t-key="action_index" class="'px-2 py-1 d-flex align-items-center rounded-0'" onSelected="action.onSelect">
-                        <i class="fa-fw" t-att-class="action.icon"/>
-                        <span class="mx-2" t-esc="action.label"/>
-                    </DropdownItem>
-                </t>
-            </Dropdown>
         </div>
     </t>
 
