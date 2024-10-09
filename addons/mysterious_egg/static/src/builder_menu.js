@@ -10,6 +10,7 @@ export class BuilderMenu extends Component {
 
     setup() {
         this.pages = [blockTab, customizeTab];
+        this.state = useState({ canUndo: true, canRedo: true });
 
         // TODO we need css
         onWillStart(() => loadBundle("web_editor.wysiwyg_iframe_editor_assets"));
