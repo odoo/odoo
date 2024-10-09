@@ -92,6 +92,7 @@ options.registry.SocialMedia = options.Class.extend({
             "instagram": _t("Instagram"),
             "github": _t("GitHub"),
             "tiktok": _t("TikTok"),
+            "threads": _t("Threads"),
         };
         const setAriaLabelOfSocialNetwork = (el, name, url) => {
             let ariaLabel = ariaLabelsOfSocialNetworks[name];
@@ -295,6 +296,7 @@ options.registry.SocialMedia = options.Class.extend({
                 "social_instagram",
                 "social_github",
                 "social_tiktok",
+                "social_threads",
             ]).then(function (values) {
                 [dbSocialValues] = values;
                 delete dbSocialValues.id;
@@ -315,6 +317,7 @@ options.registry.SocialMedia = options.Class.extend({
             ['facebook', /^(https?:\/\/)(www\.)?(facebook|fb|m\.facebook)\.(com|me).*$/],
             ['youtube', /^(https?:\/\/)(www\.)?(youtube.com|youtu.be).*$/],
             ['instagram', /^(https?:\/\/)(www\.)?(instagram.com|instagr.am|instagr.com).*$/],
+            ['threads', /^(https?:\/\/)(www\.)?(threads.net).*$/],
         ];
         for (const [socialMedia, regex] of supportedSocialMedia) {
             if (regex.test(url)) {

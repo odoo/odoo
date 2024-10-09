@@ -14,3 +14,4 @@ class Company(models.Model):
     social_youtube = fields.Char('Youtube Account')
     social_instagram = fields.Char('Instagram Account')
     social_tiktok = fields.Char('TikTok Account')
+    social_threads = fields.Char('Threads Account')

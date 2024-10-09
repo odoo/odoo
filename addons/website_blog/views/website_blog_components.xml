@@ -196,6 +196,7 @@ Options:
                 <a t-if="website.social_github" t-att-href="website.social_github" t-att-class="classes"><i class="fa fa-github text-github" aria-label="Github" title="Github"/></a>
                 <a t-if="website.social_instagram" t-att-href="website.social_instagram" t-att-class="classes"><i class="fa fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
                 <a t-if="website.social_tiktok" t-att-href="website.social_tiktok" t-att-class="classes"><i class="fa fa-tiktok text-tiktok" aria-label="TikTok" title="TikTok"/></a>
+                <a t-if="website.social_threads" t-att-href="website.social_threads" t-att-class="classes"><i class="fa fa-threads text-threads" aria-label="Threads" title="Threads"/></a>
                 <a t-if="blog" t-att-href="'/blog/%s/feed' % slug(blog)" t-att-class="classes"><i class="fa fa-rss-square" aria-label="RSS" title="RSS"/></a>
             </div>
             <t t-call="website_mail.follow" t-if="blog">
