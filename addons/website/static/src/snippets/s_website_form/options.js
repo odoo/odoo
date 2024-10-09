@@ -1241,17 +1241,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         }
     },
 
-    setErrorMessage(previewMode, widgetValue, params){
-        if (this.$target[0].dataset.errorMessage) {
-            delete this.$target[0].dataset.errorMessage;
-        } else {
-            this.$target[0].dataset.errorMessage = " ";
-        }
-    },
-
-    setErrorMessageInput(previewMode, widgetValue, params){
-        this.$target[0].dataset.errorMessage = widgetValue;
-    },
     //----------------------------------------------------------------------
     // Private
     //----------------------------------------------------------------------
@@ -1266,13 +1255,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             }
             case "setErrorMessage": {
                 const buttonEl = this.$el[0].querySelector('[data-name="error_message_opt"]');
-                if (this.$target[0].dataset.errorMessage) {
-                    buttonEl.classList.add("fa-eye");
-                    buttonEl.classList.remove("fa-eye-slash");
-                } else {
-                    buttonEl.classList.add("fa-eye-slash");
-                    buttonEl.classList.remove("fa-eye");
-                }
+                const isCustomError = this.$target[0].dataset.customError;
+                buttonEl.classList.toggle("fa-eye", isCustomError);
+                buttonEl.classList.toggle("fa-eye-slash", !isCustomError);
                 return;
             }
             case 'toggleDescription': {
@@ -1315,52 +1300,35 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const currentEl = this._getCurrentEl();
         switch (widgetName) {
             // For Requirement
-            case "error_message_opt":
-                return currentEl && !(currentEl.type === "checkbox" || currentEl.type === "radio" || currentEl.type === "file"
-                || currentEl.nodeName === "SELECT");
-            case "error_message_input_opt":
-                return this.$target[0].dataset.errorMessage;
             case "require_condition_opt":
-                return currentEl && !(currentEl.type === "checkbox" || currentEl.type === "radio" || currentEl.type === "file"
-                || currentEl.nodeName === "SELECT");
+                return currentEl && !(["checkbox", "radio", "file"].includes(currentEl.type)
+                    || currentEl.nodeName === "SELECT");
             case "require_condition_text_opt":
                 if (currentEl?.classList.contains("datetimepicker-input")) {
                     return false;
                 }
-                return !currentEl || (["text", "email", "tel", "url", "search", "password"].includes(currentEl.type) ||
-                currentEl.nodeName === "TEXTAREA");
+                return currentEl && (currentEl.nodeName === "TEXTAREA")
+                    || (["text", "email", "tel", "url", "search", "password"].includes(currentEl.type));
             case "require_condition_num_opt":
                 return currentEl && currentEl.type === 'number';
             case "require_condition_time_comparators_opt":
                 return currentEl?.classList.contains("datetimepicker-input");
             case "require_condition_additional_text":
-                if (currentEl && (["checkbox", "radio"].includes(currentEl.type) || currentEl.nodeName === "SELECT")) {
-                    return false;
-                }
-                if(!this.$target[0].dataset.requirementComparator || this.$target[0].dataset.requirementComparator === "none"){
-                    return false;
-                }
-                if (currentEl.classList.contains("datetimepicker-input")) {
+                if (!this.$target[0].dataset.requirementComparator || currentEl.classList.contains("datetimepicker-input")){
                     return false;
                 }
                 return (["text", "email", "tel", "url", "search", "password", "number"].includes(currentEl.type)
-                || currentEl.nodeName === "TEXTAREA");
+                    || currentEl.nodeName === "TEXTAREA");
             case "require_condition_additional_datetime":
-                if (!this.$target[0].dataset.requirementComparator || this.$target[0].dataset.requirementComparator === "none") {
-                    return false;
-                }
-                return currentEl?.closest(".s_website_form_datetime");
+                return currentEl?.closest(".s_website_form_datetime") && this.$target[0].dataset.requirementComparator;
             case "require_condition_additional_date":
-                if (!this.$target[0].dataset.requirementComparator || this.$target[0].dataset.requirementComparator === "none") {
-                    return false;
-                }
-                return currentEl?.closest(".s_website_form_date");
+                return currentEl?.closest(".s_website_form_date") && this.$target[0].dataset.requirementComparator;
             case "require_condition_datetime_between":
                 return currentEl?.closest(".s_website_form_datetime")
-                && ["between", "!between"].includes(this.$target[0].dataset.requirementComparator);
+                    && ["between", "!between"].includes(this.$target[0].dataset.requirementComparator);
             case "require_condition_date_between":
                 return currentEl?.closest(".s_website_form_date")
-                && ["between", "!between"].includes(this.$target[0].dataset.requirementComparator);
+                    && ["between", "!between"].includes(this.$target[0].dataset.requirementComparator);
             // For Visibility
             case 'hidden_condition_time_comparators_opt':
                 return dependencyEl?.classList.contains("datetimepicker-input");

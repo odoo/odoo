@@ -525,7 +525,7 @@ import wUtils from '@website/js/utils';
                         }
                     } else if (input.type === "file") {
                         return self.isFileInputValid(input);
-                    } else if(self._requirementFunction(field) === false) {
+                    } else if (self._requirementFunction(field)) {
                         self.update_status_inline(field.dataset.errorMessage, input);
                         return true;
                     }
@@ -700,11 +700,12 @@ import wUtils from '@website/js/utils';
 
             let format = "";
             let currentDate = new Date();
+            const xYearAgo = new Date();
             if (value.includes(":")) {
                 format = localization.dateTimeFormat;
             } else {
                 format = localization.dateFormat;
-                currentDate.setHours(0, 0, 0, 0);
+                xYearAgo.setHours(0, 0, 0, 0);
             }
             // Date & Date Time comparison requires formatting the value
             const dateTime = DateTime.fromFormat(value, format);
@@ -732,10 +733,9 @@ import wUtils from '@website/js/utils';
                 case 'equal or after':
                     return value >= comparable;
                 case "lessyears":
-                    // currentDate becomes date from comparable years ago(which is x years ago)
-                    currentDate.setFullYear(currentDate.getFullYear() - comparable);
+                    xYearAgo.setFullYear(currentDate.getFullYear() - comparable);
                     value = new Date(value * 1000);
-                    return value > currentDate;
+                    return value > xYearAgo;
             }
         },
         /**
@@ -770,7 +770,7 @@ import wUtils from '@website/js/utils';
             const requirementCondition = fieldEl.dataset.requirementCondition;
             const comparator = fieldEl.dataset.requirementComparator;
             const between = fieldEl.dataset.requirementBetween;
-            return this._compareTo(comparator, fieldEl.querySelector(".s_website_form_input").value, requirementCondition, between);
+            return !!this._compareTo(comparator, fieldEl.querySelector(".s_website_form_input").value, requirementCondition, between);
         },
         /**
          * Calculates the visibility for each field with conditional visibility
