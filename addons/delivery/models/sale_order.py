@@ -151,7 +151,7 @@ class SaleOrder(models.Model):
                 continue
 
             # Retrieve all the data : name, street, city, state, zip, country.
-            name = order.partner_shipping_id.name
+            name = order_location.get('name') or order.partner_shipping_id.name
             street = order_location['street']
             city = order_location['city']
             zip_code = order_location['zip_code']
