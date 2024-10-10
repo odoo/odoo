@@ -1250,6 +1250,16 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
+            case "setErrorMessageInput": {
+                return this.$target[0].dataset.errorMessage;
+            }
+            case "setErrorMessage": {
+                const buttonEl = this.$el[0].querySelector('[data-name="error_message_opt"]');
+                const isCustomError = this.$target[0].dataset.customError;
+                buttonEl.classList.toggle("fa-eye", isCustomError);
+                buttonEl.classList.toggle("fa-eye-slash", !isCustomError);
+                return;
+            }
             case 'toggleDescription': {
                 const description = this.$target[0].querySelector('.s_website_form_field_description');
                 return !!description;
@@ -1287,7 +1297,39 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _computeWidgetVisibility: function (widgetName, params) {
         const dependencyEl = this._getDependencyEl();
+        const currentEl = this._getCurrentEl();
         switch (widgetName) {
+            // For Requirement
+            case "require_condition_opt":
+                return currentEl && !(["checkbox", "radio", "file"].includes(currentEl.type)
+                    || currentEl.nodeName === "SELECT");
+            case "require_condition_text_opt":
+                if (currentEl?.classList.contains("datetimepicker-input")) {
+                    return false;
+                }
+                return currentEl && (currentEl.nodeName === "TEXTAREA")
+                    || (["text", "email", "tel", "url", "search", "password"].includes(currentEl.type));
+            case "require_condition_num_opt":
+                return currentEl && currentEl.type === 'number';
+            case "require_condition_time_comparators_opt":
+                return currentEl?.classList.contains("datetimepicker-input");
+            case "require_condition_additional_text":
+                if (!this.$target[0].dataset.requirementComparator || currentEl.classList.contains("datetimepicker-input")){
+                    return false;
+                }
+                return (["text", "email", "tel", "url", "search", "password", "number"].includes(currentEl.type)
+                    || currentEl.nodeName === "TEXTAREA");
+            case "require_condition_additional_datetime":
+                return currentEl?.closest(".s_website_form_datetime") && this.$target[0].dataset.requirementComparator;
+            case "require_condition_additional_date":
+                return currentEl?.closest(".s_website_form_date") && this.$target[0].dataset.requirementComparator;
+            case "require_condition_datetime_between":
+                return currentEl?.closest(".s_website_form_datetime")
+                    && ["between", "!between"].includes(this.$target[0].dataset.requirementComparator);
+            case "require_condition_date_between":
+                return currentEl?.closest(".s_website_form_date")
+                    && ["between", "!between"].includes(this.$target[0].dataset.requirementComparator);
+            // For Visibility
             case 'hidden_condition_time_comparators_opt':
                 return dependencyEl?.classList.contains("datetimepicker-input");
             case 'hidden_condition_date_between':
@@ -1298,10 +1340,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 && ['between', '!between'].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_additional_datetime':
                 return dependencyEl?.closest(".s_website_form_datetime")
-                && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
+                && !['set', '!set', "lessyears"].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_additional_date':
                 return dependencyEl && dependencyEl?.closest(".s_website_form_date")
-                && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
+                && !['set', '!set', "lessyears"].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_additional_text':
                 if (!this.$target[0].classList.contains('s_website_form_field_hidden_if') ||
                 (dependencyEl && (['checkbox', 'radio'].includes(dependencyEl.type) || dependencyEl.nodeName === 'SELECT'))) {
@@ -1310,11 +1352,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 if (!dependencyEl) {
                     return true;
                 }
-                if (dependencyEl?.classList.contains("datetimepicker-input")) {
-                    return false;
-                }
-                return (['text', 'email', 'tel', 'url', 'search', 'password', 'number'].includes(dependencyEl.type)
-                    || dependencyEl.nodeName === 'TEXTAREA') && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
+                return (["text", "email", "tel", "url", "search", "password", "number", "date", "datetime"].includes(dependencyEl.type)
+                    || dependencyEl.nodeName === "TEXTAREA") 
+                    && !["set", "!set", "dateEqual", "date!equal", "after", "before", "equal or after",
+                        "equal or before", "between", "!between"].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_no_text_opt':
                 return dependencyEl && (dependencyEl.type === 'checkbox' || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT');
             case 'hidden_condition_num_opt':
@@ -1377,6 +1418,13 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     _getDependencyEl(fieldEl = this.$target[0]) {
         const dependencyName = fieldEl.dataset.visibilityDependency;
         return this.formEl.querySelector(`.s_website_form_input[name="${CSS.escape(dependencyName)}"]`);
+    },
+    /**
+     * @param {HTMLElement} [fieldEl]
+     * @returns {HTMLElement} The current field
+     */
+    _getCurrentEl(fieldEl = this.$target[0]) {
+        return fieldEl.querySelector(".s_website_form_input");
     },
     /**
      * @param {HTMLElement} dependentFieldEl
