@@ -175,21 +175,19 @@ class SaleOrder(models.Model):
                 ('type', '=', 'delivery'),
             ], limit=1)
 
-            if existing_partner:
-                order.partner_shipping_id = existing_partner
-            else:
-                order.partner_shipping_id = order.env['res.partner'].create({
-                    'parent_id': parent_id,
-                    'type': 'delivery',
-                    'name': name,
-                    'street': street,
-                    'city': city,
-                    'state_id': state,
-                    'zip': zip_code,
-                    'country_id': country,
-                    'email': email,
-                    'phone': phone,
-                })
+            shipping_partner = existing_partner or order.env['res.partner'].create({
+                'parent_id': parent_id,
+                'type': 'delivery',
+                'name': name,
+                'street': street,
+                'city': city,
+                'state_id': state,
+                'zip': zip_code,
+                'country_id': country,
+                'email': email,
+                'phone': phone,
+            })
+            order.with_context(update_delivery_shipping_partner=True).write({'partner_shipping_id': shipping_partner})
         return super()._action_confirm()
 
     def _prepare_delivery_line_vals(self, carrier, price_unit):
