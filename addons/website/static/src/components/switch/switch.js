@@ -15,7 +15,12 @@ export class Switch extends Component {
     };
     static template = xml`
     <label t-att-class="'o_switch' + extraClasses">
-        <input type="checkbox" t-att-checked="props.value" t-att-disabled="props.disabled" t-on-change="(ev) => props.onChange(ev.target.checked)"/>
+        <input type="checkbox"
+                class="visually-hidden"
+                t-att-checked="props.value"
+                t-att-disabled="props.disabled"
+                t-on-change="(ev) => props.onChange(ev.target.checked)"
+                t-on-keyup="onKeyup"/>
         <span/>
         <span t-if="props.label" t-esc="props.label" class="ms-2"/>
     </label>
@@ -23,5 +28,16 @@ export class Switch extends Component {
 
     setup() {
         this.extraClasses = this.props.extraClasses ? ` ${this.props.extraClasses}` : '';
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    onKeyup(ev) {
+        // "Enter" is not a default on checkboxes, but as the switch doesn't
+        // look like a checkbox anymore, we support it.
+        if (ev.key === "Enter") {
+            ev.currentTarget.checked = !ev.currentTarget.checked;
+        }
     }
 }
