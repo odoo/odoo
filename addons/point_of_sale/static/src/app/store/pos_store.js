@@ -338,16 +338,17 @@ export class PosStore extends Reactive {
         const ids = new Set();
         for (const order of orders) {
             if (order && (await this._onBeforeDeleteOrder(order))) {
-                if (Object.keys(order.last_order_preparation_change).length > 0) {
+                if (Object.keys(order.last_order_preparation_change.lines).length) {
                     await this.sendOrderInPreparation(order, true);
                 }
 
-                const cancelled = this.removeOrder(order, true);
-                this.removePendingOrder(order);
+                const fetchedOrder = this.models["pos.order"].find((x) => x.uuid == order.uuid);
+                const cancelled = this.removeOrder(fetchedOrder, true);
+                this.removePendingOrder(fetchedOrder);
                 if (!cancelled) {
                     return false;
-                } else if (typeof order.id === "number") {
-                    ids.add(order.id);
+                } else if (typeof fetchedOrder?.id === "number") {
+                    ids.add(fetchedOrder.id);
                 }
             }
         }
