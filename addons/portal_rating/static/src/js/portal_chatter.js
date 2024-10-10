@@ -100,6 +100,19 @@ PortalChatter.include({
         }
     },
 
+        /**
+    * Retrieves rating and publisher status for a message.
+    *
+    * @param {number} messageIndex - Index of the message to retrieve values for.
+    * @returns {Object} Object containing rating and user publisher status.
+    */
+    getCommentsData: function (messageIndex) {
+        return {
+            rating: this.messages[messageIndex].rating,
+            is_publisher: this.options.is_user_publisher,
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -342,10 +355,7 @@ PortalChatter.include({
             if (self.messages[messageIndex].rating.publisher_comment !== '') {
                 // Remove the button comment if exist and render the comment
                 self._getCommentButton($source).addClass('d-none');
-                self._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_comment", { 
-                    rating: self.messages[messageIndex].rating,
-                    is_publisher: self.options.is_user_publisher
-                })));
+                self._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_comment",  self.getCommentsData(messageIndex))));
             } else {
                 // Empty string or false considers as no comment
                 self._getCommentButton($source).removeClass("d-none");
@@ -364,11 +374,7 @@ PortalChatter.include({
 
         var comment = this.messages[messageIndex].rating.publisher_comment;
         if (comment) {
-            var data = {
-                rating: this.messages[messageIndex].rating,
-                is_publisher: this.options.is_user_publisher
-            };
-            this._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_comment", data)));
+            this._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_comment", this.getCommentsData(messageIndex))));
         } else {
             this._getCommentContainer($source).empty();
         }

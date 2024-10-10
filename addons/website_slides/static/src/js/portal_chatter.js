@@ -21,4 +21,15 @@ PortalChatter.include({
             $('#review-tab').text(_.str.sprintf(_t('Reviews (%d)'), data.rating_count));
         }
     },
+        /**
+     * Update values to restrict editing and deleting comments.
+     *
+     * @param {number} messageIndex
+     * @override
+     */
+    getCommentsData: function (messageIndex) {
+        let vals = this._super(...arguments);
+        Object.assign(vals, { is_user_manager: this.options.is_user_manager, partner_id: this.options.partner_id});
+        return vals;
+    },
 });
