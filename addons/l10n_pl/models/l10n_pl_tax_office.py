@@ -10,9 +10,10 @@ class TaxOffice(models.Model):
     code = fields.Char('Code', required=True)
     name = fields.Char('Description', required=True)
 
-    _sql_constraints = [
-        ('code_company_uniq', 'unique (code)', 'The code of the tax office must be unique !')
-    ]
+    _code_company_uniq = models.Constraint(
+        'unique (code)',
+        'The code of the tax office must be unique !',
+    )
 
     @api.depends('name', 'code')
     def _compute_display_name(self):

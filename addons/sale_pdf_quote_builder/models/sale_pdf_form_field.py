@@ -40,11 +40,10 @@ class SalePdfFormField(models.Model):
         string="Quotation Documents", comodel_name='quotation.document'
     )
 
-    _sql_constraints = [(
-        'unique_name_per_doc_type',
+    _unique_name_per_doc_type = models.Constraint(
         'UNIQUE(name, document_type)',
-        "Form field name must be unique for a given document type."
-    )]
+        'Form field name must be unique for a given document type.',
+    )
 
     # === CONSTRAINT METHODS ===#
 

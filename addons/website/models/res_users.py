@@ -13,10 +13,10 @@ class ResUsers(models.Model):
 
     website_id = fields.Many2one('website', related='partner_id.website_id', store=True, related_sudo=False, readonly=False)
 
-    _sql_constraints = [
-        # Partial constraint, complemented by a python constraint (see below).
-        ('login_key', 'unique (login, website_id)', 'You can not have two users with the same login!'),
-    ]
+    _login_key = models.Constraint(
+        'unique (login, website_id)',
+        'You can not have two users with the same login!',
+    )
 
     @api.constrains('login', 'website_id')
     def _check_login(self):

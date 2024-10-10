@@ -31,10 +31,10 @@ class MailRtcSession(models.Model):
     is_muted = fields.Boolean(string="Is microphone muted")
     is_deaf = fields.Boolean(string="Has disabled incoming sound")
 
-    _sql_constraints = [
-        ('channel_member_unique', 'UNIQUE(channel_member_id)',
-         'There can only be one rtc session per channel member')
-    ]
+    _channel_member_unique = models.Constraint(
+        'UNIQUE(channel_member_id)',
+        'There can only be one rtc session per channel member',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
