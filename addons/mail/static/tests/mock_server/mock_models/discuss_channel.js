@@ -45,6 +45,7 @@ export class DiscussChannel extends models.ServerModel {
         default: () => uniqueId("discuss.channel_uuid-"),
     });
     last_interest_dt = fields.Datetime({ string: "Last Interest" });
+    read_only = fields.Boolean({ default: false });
 
     /** @param {number[]} ids */
     action_unfollow(ids) {
@@ -242,6 +243,7 @@ export class DiscussChannel extends models.ServerModel {
                 "last_interest_dt",
                 "name",
                 "uuid",
+                "read_only",
             ],
             makeKwArgs({ load: false })
         );
@@ -252,6 +254,7 @@ export class DiscussChannel extends models.ServerModel {
             authorizedGroupFullName: group_public_id ? group_public_id.name : false,
             defaultDisplayMode: channel.default_display_mode,
             group_based_subscription: channel.group_ids.length > 0,
+            read_only: channel.read_only,
             is_editable: (() => {
                 if (channel.channel_type === "channel") {
                     // Match the ACL rules
