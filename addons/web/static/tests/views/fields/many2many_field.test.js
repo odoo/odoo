@@ -18,6 +18,7 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
@@ -603,6 +604,50 @@ test("many2many list (non editable): create a new record and click on action but
     expect(queryAllTexts("[name='timmy'] .o_data_row")).toEqual(["Hello (edited)"]);
 
     expect.verifySteps(["web_save", "action: myaction", "web_read", "web_save", "web_read"]);
+});
+
+test("add a new record in a many2many non editable list", async () => {
+    PartnerType._views = {
+        list: '<list><field name="name"/></list>',
+        form: '<form><field name="name"/></form>',
+        search: '<search><field name="name"/></search>',
+    };
+
+    stepAllNetworkCalls();
+    onRpc("web_save", ({ kwargs }) => {
+        // should not read the record as we're closing the dialog
+        expect(kwargs.specification).toEqual({});
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="timmy">
+                    <list>
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_dialog .o_create_button").click();
+    await contains(".o_dialog .o_field_widget[name=name] input").edit("a name");
+    await contains(".o_dialog .o_form_button_save").click();
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "get_views",
+        "onchange",
+        "get_views",
+        "web_search_read",
+        "has_group",
+        "get_views",
+        "onchange",
+        "web_save",
+        "web_read",
+    ]);
 });
 
 test("add record in a many2many non editable list with context", async () => {

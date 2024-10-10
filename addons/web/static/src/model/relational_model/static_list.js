@@ -747,7 +747,8 @@ export class StaticList extends DataPoint {
         const options = {
             parentRecord: this._parent,
             onUpdate: async ({ withoutParentUpdate }) => {
-                if (!this.currentIds.includes(record.isNew ? record._virtualId : record.resId)) {
+                const id = record.isNew ? record._virtualId : record.resId;
+                if (!this.currentIds.includes(id)) {
                     // the record hasn't been added to the list yet (we're currently creating it
                     // from a dialog)
                     return;
