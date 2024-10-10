@@ -718,6 +718,7 @@ class ResourceCalendar(models.Model):
             get_intervals = self._attendance_intervals_batch
             resource_id = False
 
+        # float_round precision_digits is based on 1/3600 which is around 0.0003
         if hours >= 0:
             delta = timedelta(days=14)
             for n in range(100):
@@ -726,7 +727,7 @@ class ResourceCalendar(models.Model):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
                         return revert(start + timedelta(hours=hours))
-                    hours -= interval_hours
+                    hours = float_round(hours - interval_hours, precision_digits=10)
             return False
         else:
             hours = abs(hours)
@@ -737,7 +738,7 @@ class ResourceCalendar(models.Model):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
                         return revert(stop - timedelta(hours=hours))
-                    hours -= interval_hours
+                    hours = float_round(hours - interval_hours, precision_digits=10)
             return False
 
     def plan_days(self, days, day_dt, compute_leaves=False, domain=None):
