@@ -118,13 +118,13 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
             [so_1_line['quantity'], so_1_line['move_out'], so_1_line['replenishment_filled']],
             [8.0, so_1.picking_ids.move_ids, True]
         )
-        so_2_line = next(filter(lambda line: line.get('document_out') == so_2, report_lines))
+        so_2_line_filled = next(filter(lambda line: line.get('document_out') == so_2 and line.get('replenishment_filled'), report_lines))
         self.assertEqual(
-            [so_2_line['quantity'], so_2_line['move_out'], so_2_line['replenishment_filled']],
-            [7.0, so_2.picking_ids.move_ids, False]
+            (so_2_line_filled['quantity'], so_2_line_filled['move_out']),
+            (2.0, so_2.picking_ids.move_ids)
         )
-        quant_line = next(filter(lambda line: not line.get('document_out'), report_lines))
+        so_2_line_unfilled = next(filter(lambda line: line.get('document_out') == so_2 and not line.get('replenishment_filled'), report_lines))
         self.assertEqual(
-            [quant_line['document_out'], quant_line['quantity'], quant_line['replenishment_filled']],
-            [False, 2.0, True]
+            (so_2_line_unfilled['quantity'], so_2_line_unfilled['move_out']),
+            (5.0, so_2.picking_ids.move_ids)
         )
