@@ -338,9 +338,10 @@ class MailActivity(models.Model):
             return super(MailActivity, self)._search(
                 args, offset=offset, limit=limit, order=order,
                 count=count, access_rights_uid=access_rights_uid)
-        # Perform a super with count as False, to have the ids, not a counter
+        # Modify args for super to have all ids, not part of them or a counter:
+        # we need to filter ids before returning final result
         ids = super(MailActivity, self)._search(
-            args, offset=offset, limit=limit, order=order,
+            args, offset=0, limit=None, order=order,
             count=False, access_rights_uid=access_rights_uid)
         if not ids and count:
             return 0
@@ -384,7 +385,9 @@ class MailActivity(models.Model):
             return len(allowed_ids)
         else:
             # re-construct a list based on ids, because 'allowed_ids' does not keep the original order
-            id_list = [id for id in ids if id in allowed_ids]
+            id_list = [id for id in ids if id in allowed_ids][offset:]
+            if limit:
+                id_list = id_list[:limit]
             return id_list
 
     @api.model
