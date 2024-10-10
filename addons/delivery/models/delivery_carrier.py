@@ -139,7 +139,7 @@ class DeliveryCarrier(models.Model):
 
         return True
 
-    def available_carriers(self, partner):
+    def available_carriers(self, partner, sale_order):
         return self.filtered(lambda c: c._match_address(partner))
 
     def _match_address(self, partner):

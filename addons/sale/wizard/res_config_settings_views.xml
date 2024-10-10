@@ -164,6 +164,14 @@
                             <field name="module_sale_amazon" widget="upgrade_boolean"/>
                             <div class="content-group" name="amazon_connector" invisible="not module_sale_amazon"/>
                         </setting>
+                        <setting id="gelato_connector" help="Enable Gelato related settings">
+                            <field name="module_sale_gelato_connector" widget="upgrade_boolean"/>
+                            <div
+                                class="content-group"
+                                name="gelato_connector"
+                                invisible="not module_sale_gelato_connector"
+                            />
+                        </setting>
                     </block>
                     <div id="sale_ebay"/>
                 </app>

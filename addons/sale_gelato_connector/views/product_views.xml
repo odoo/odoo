@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="product_template_form_view" model="ir.ui.view">
+                <field name="name">product.template.product.gelato.form</field>
+                <field name="model">product.template</field>
+                <field name="inherit_id" ref="product.product_template_form_view"></field>
+                <field name="arch" type="xml">
+                <group name="upsell" position="after">
+                    <group string="Gelato" invisible="(type not in ['product', 'consu'])">
+                            <field name="gelato_template_ref" invisible="is_product_variant"/>
+                            <field name="gelato_reference" groups="base.group_no_one" invisible="((product_variant_count &gt; 1) and not is_product_variant)" />
+                            <field name="gelato_template_image" nolabel="1" widget="image" class="oe_avatar" options="{'preview_image': 'gelato_template_image'}"/>
+                            <gropu>
+                                <button type="object" name="action_create_product_variants_from_gelato_template" class="btn btn-secondary" string="Generate variants"  invisible="is_product_variant or not gelato_template_ref" />
+                            </gropu>
+                    </group>
+                </group>
+                </field>
+        </record>
+
+        <record id="product_variant_easy_edit_view_gelato" model="ir.ui.view">
+                <field name="name">product.variant.gelato.easy.edit.view</field>
+                <field name="model">product.product</field>
+                <field name="inherit_id" ref="product.product_variant_easy_edit_view"></field>
+                <field name="arch" type="xml">
+                <group name="packaging" position="after">
+                        <group string="Gelato" name="gelato_reference" groups="base.group_no_one">
+                                <field name="gelato_reference"/>
+                        </group>
+                </group>
+                </field>
+        </record>
+
+</odoo>
