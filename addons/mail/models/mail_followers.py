@@ -8,7 +8,7 @@ from odoo import api, fields, models, Command
 from odoo.addons.mail.tools.discuss import Store
 
 
-class Followers(models.Model):
+class MailFollowers(models.Model):
     """ mail_followers holds the data related to the follow mechanism inside
     Odoo. Partners can choose to follow documents (records) of any kind
     that inherits from mail.thread. Following documents allow to receive
@@ -17,7 +17,6 @@ class Followers(models.Model):
     :param: res_model: model of the followed objects
     :param: res_id: ID of resource (may be 0 for every objects)
     """
-    _name = 'mail.followers'
     _rec_name = 'partner_id'
     _log_access = False
     _description = 'Document Followers'
@@ -51,21 +50,21 @@ class Followers(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(Followers, self).create(vals_list)
+        res = super().create(vals_list)
         res._invalidate_documents(vals_list)
         return res
 
     def write(self, vals):
         if 'res_model' in vals or 'res_id' in vals:
             self._invalidate_documents()
-        res = super(Followers, self).write(vals)
+        res = super().write(vals)
         if any(x in vals for x in ['res_model', 'res_id', 'partner_id']):
             self._invalidate_documents()
         return res
 
     def unlink(self):
         self._invalidate_documents()
-        return super(Followers, self).unlink()
+        return super().unlink()
 
     _sql_constraints = [
         ('mail_followers_res_partner_res_model_id_uniq', 'unique(res_model,res_id,partner_id)', 'Error, a partner cannot follow twice the same object.'),
@@ -334,7 +333,7 @@ class Followers(models.Model):
 
     def _get_subscription_data(self, doc_data, pids, include_pshare=False, include_active=False):
         """ Private method allowing to fetch follower data from several documents of a given model.
-        Followers can be filtered given partner IDs and channel IDs.
+        MailFollowers can be filtered given partner IDs and channel IDs.
 
         :param doc_data: list of pair (res_model, res_ids) that are the documents from which we
           want to have subscription data;

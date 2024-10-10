@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class ResUsersSettings(models.Model):
-    _inherit = 'res.users.settings'
+    _inherit = ['res.users.settings']
 
     is_discuss_sidebar_category_channel_open = fields.Boolean(string="Is discuss sidebar category channel open?", default=True)
     is_discuss_sidebar_category_chat_open = fields.Boolean(string="Is discuss sidebar category chat open?", default=True)

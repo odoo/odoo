@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     purchase_order_count = fields.Integer(
         "Number of Purchase Order Generated",

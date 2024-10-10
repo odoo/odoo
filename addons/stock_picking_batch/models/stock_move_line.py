@@ -10,7 +10,7 @@ from odoo.tools.misc import OrderedSet
 
 
 class StockMoveLine(models.Model):
-    _inherit = "stock.move.line"
+    _inherit = ["stock.move.line"]
 
     batch_id = fields.Many2one(related='picking_id.batch_id', store=True)
 

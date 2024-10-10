@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class PaymentCaptureWizard(models.TransientModel):
-    _inherit = 'payment.capture.wizard'
+    _inherit = ['payment.capture.wizard']
 
     has_adyen_tx = fields.Boolean(compute='_compute_has_adyen_tx')
 

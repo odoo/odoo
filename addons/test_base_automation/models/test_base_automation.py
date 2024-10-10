@@ -5,8 +5,7 @@ from dateutil import relativedelta
 from odoo import fields, models, api
 
 
-class LeadTest(models.Model):
-    _name = "base.automation.lead.test"
+class BaseAutomationLeadTest(models.Model):
     _description = "Automated Rule Test"
 
     name = fields.Char(string='Subject', required=True)
@@ -30,12 +29,12 @@ class LeadTest(models.Model):
 
     @api.depends('state')
     def _compute_stage_id(self):
-        Stage = self.env['test_base_automation.stage']
+        Test_Base_AutomationStage = self.env['test_base_automation.stage']
         for task in self:
             if not task.stage_id and task.state == 'draft':
                 task.stage_id = (
-                    Stage.search([('name', 'ilike', 'new')], limit=1)
-                    or Stage.create({'name': 'New'})
+                    Test_Base_AutomationStage.search([('name', 'ilike', 'new')], limit=1)
+                    or Test_Base_AutomationStage.create({'name': 'New'})
                 )
 
     @api.depends('partner_id.employee', 'priority')
@@ -56,14 +55,12 @@ class LeadTest(models.Model):
         return result
 
 
-class LeadThreadTest(models.Model):
-    _name = "base.automation.lead.thread.test"
+class BaseAutomationLeadThreadTest(models.Model):
     _description = "Automated Rule Test With Thread"
     _inherit = ['base.automation.lead.test', 'mail.thread']
 
 
-class LineTest(models.Model):
-    _name = "base.automation.line.test"
+class BaseAutomationLineTest(models.Model):
     _description = "Automated Rule Line Test"
 
     name = fields.Char()
@@ -71,24 +68,22 @@ class LineTest(models.Model):
     user_id = fields.Many2one('res.users')
 
 
-class ModelWithAccess(models.Model):
-    _name = "base.automation.link.test"
+class BaseAutomationLinkTest(models.Model):
     _description = "Automated Rule Link Test"
 
     name = fields.Char()
     linked_id = fields.Many2one('base.automation.linked.test', ondelete='cascade')
 
 
-class ModelWithoutAccess(models.Model):
-    _name = "base.automation.linked.test"
+class BaseAutomationLinkedTest(models.Model):
     _description = "Automated Rule Linked Test"
 
     name = fields.Char()
     another_field = fields.Char()
 
 
-class Project(models.Model):
-    _name = _description = 'test_base_automation.project'
+class Test_Base_AutomationProject(models.Model):
+    _description = 'test_base_automation.project'
 
     name = fields.Char()
     task_ids = fields.One2many('test_base_automation.task', 'project_id')
@@ -98,8 +93,8 @@ class Project(models.Model):
     user_ids = fields.Many2many('res.users')
 
 
-class Task(models.Model):
-    _name = _description = 'test_base_automation.task'
+class Test_Base_AutomationTask(models.Model):
+    _description = 'test_base_automation.task'
 
     name = fields.Char()
     parent_id = fields.Many2one('test_base_automation.task')
@@ -115,31 +110,30 @@ class Task(models.Model):
                 task.project_id = task.parent_id.project_id
 
 
-class Stage(models.Model):
-    _name = _description = 'test_base_automation.stage'
+class Test_Base_AutomationStage(models.Model):
+    _description = 'test_base_automation.stage'
     name = fields.Char()
 
 
-class Tag(models.Model):
-    _name = _description = 'test_base_automation.tag'
+class Test_Base_AutomationTag(models.Model):
+    _description = 'test_base_automation.tag'
     name = fields.Char()
 
-class LeadThread(models.Model):
+
+# pylint: disable=E0102
+class BaseAutomationLeadThreadTest(models.Model):  # noqa: F811
     _inherit = ["base.automation.lead.test", "mail.thread"]
-    _name = "base.automation.lead.thread.test"
     _description = "Threaded Lead Test"
 
 
-class ModelWithCharRecName(models.Model):
-    _name = "base.automation.model.with.recname.char"
+class BaseAutomationModelWithRecnameChar(models.Model):
     _description = "Model with Char as _rec_name"
     _rec_name = "description"
     description = fields.Char()
     user_id = fields.Many2one('res.users', string='Responsible')
 
 
-class ModelWithRecName(models.Model):
-    _name = "base.automation.model.with.recname.m2o"
+class BaseAutomationModelWithRecnameM2o(models.Model):
     _description = "Model with Many2one as _rec_name and name_create"
     _rec_name = "user_id"
     user_id = fields.Many2one("base.automation.model.with.recname.char", string='Responsible')

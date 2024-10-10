@@ -4,8 +4,8 @@ from collections import defaultdict
 
 from odoo import _, models
 
-class EmployeeResumeReport(models.AbstractModel):
-    _name = 'report.hr_skills.report_employee_cv'
+
+class ReportHr_SkillsReport_Employee_Cv(models.AbstractModel):
     _description = 'Employee Resume'
 
     def _get_report_values(self, docids, data=None):

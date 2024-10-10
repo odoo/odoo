@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 
+
 class PosOrder(models.Model):
-    _inherit = 'pos.order'
+    _inherit = ['pos.order']
 
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served', index='btree_not_null', readonly=True)
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)

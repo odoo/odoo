@@ -14,9 +14,8 @@ _logger = logging.getLogger(__name__)
 
 
 class IrModuleModule(models.Model):
-    _name = "ir.module.module"
     _description = 'Module'
-    _inherit = _name
+    _inherit = ['ir.module.module']
 
     # The order is important because of dependencies (page need view, menu need page)
     _theme_model_names = OrderedDict([
@@ -32,7 +31,7 @@ class IrModuleModule(models.Model):
     }
 
     image_ids = fields.One2many('ir.attachment', 'res_id',
-                                domain=[('res_model', '=', _name), ('mimetype', '=like', 'image/%')],
+                                domain=[('res_model', '=', 'ir.module.module'), ('mimetype', '=like', 'image/%')],
                                 string='Screenshots', readonly=True)
     # for kanban view
     is_installed_on_current_website = fields.Boolean(compute='_compute_is_installed_on_current_website')

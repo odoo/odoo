@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """
 ================
-IrQWeb / ir.qweb
+IrQweb / ir.qweb
 ================
 
 Preamble
@@ -552,7 +552,7 @@ class QWebException(Exception):
 ####################################
 
 
-class IrQWeb(models.AbstractModel):
+class IrQweb(models.AbstractModel):
     """ Base QWeb rendering engine
     * to customize ``t-field`` rendering, subclass ``ir.qweb.field`` and
       create new models called :samp:`ir.qweb.field.{widget}`
@@ -561,7 +561,6 @@ class IrQWeb(models.AbstractModel):
     inheriting from ``ir.qweb`` and customize that.
     """
 
-    _name = 'ir.qweb'
     _description = 'Qweb'
 
     @QwebTracker.wrap_render
@@ -2694,8 +2693,7 @@ def render(template_name, values, load, **options):
         for cache_name, cache in _Registry__caches.items():
             _Registry__caches_groups.setdefault(cache_name.split('.')[0], []).append(cache)
 
-
-    class MockIrQWeb(IrQWeb):
+    class MockIrQWeb(IrQweb):
         _register = False               # not visible in real registry
 
         pool = MockPool()

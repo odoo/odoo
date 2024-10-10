@@ -6,7 +6,7 @@ from odoo.osv.expression import AND
 
 
 class ProductReplenish(models.TransientModel):
-    _inherit = 'product.replenish'
+    _inherit = ['product.replenish']
 
     @api.model
     def default_get(self, fields):

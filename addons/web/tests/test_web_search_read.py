@@ -21,7 +21,7 @@ class TestWebSearchRead(common.TransactionCase):
             search_count_called[0] = True
             return original_search_count(*method_args, **method_kwargs)
 
-        with patch('odoo.addons.base.models.res_currency.Currency.search_count', new=search_count):
+        with patch('odoo.addons.base.models.res_currency.ResCurrency.search_count', new=search_count):
             results = self.ResCurrency.web_search_read(domain=[], specification={'id':{}}, **kwargs)
 
         self.assertEqual(results['length'], expected_length)

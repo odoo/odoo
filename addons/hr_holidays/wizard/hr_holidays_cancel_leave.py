@@ -5,7 +5,6 @@ from odoo import fields, models, _
 
 
 class HrHolidaysCancelLeave(models.TransientModel):
-    _name = 'hr.holidays.cancel.leave'
     _description = 'Cancel Time Off Wizard'
 
     leave_id = fields.Many2one('hr.leave', string="Time Off Request", required=True)

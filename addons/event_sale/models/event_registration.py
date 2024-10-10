@@ -6,7 +6,7 @@ from odoo.tools import float_is_zero
 
 
 class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+    _inherit = ['event.registration']
 
     # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', copy=False)

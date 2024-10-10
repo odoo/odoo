@@ -7,7 +7,7 @@ from odoo.tools.misc import format_duration
 
 
 class ProjectUpdate(models.Model):
-    _inherit = 'project.update'
+    _inherit = ['project.update']
 
     @api.model
     def _get_template_values(self, project):

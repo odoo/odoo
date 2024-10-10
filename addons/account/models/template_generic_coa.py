@@ -2,9 +2,8 @@ from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
-
 class AccountChartTemplate(models.AbstractModel):
-    _inherit = "account.chart.template"
+    _inherit = ["account.chart.template"]
 
     @template('generic_coa')
     def _get_generic_coa_template_data(self):

@@ -5,8 +5,7 @@ from odoo import fields, models
 
 
 class StockWarnInsufficientQtyRepair(models.TransientModel):
-    _name = 'stock.warn.insufficient.qty.repair'
-    _inherit = 'stock.warn.insufficient.qty'
+    _inherit = ['stock.warn.insufficient.qty']
     _description = 'Warn Insufficient Repair Quantity'
 
     repair_id = fields.Many2one('repair.order', string='Repair')

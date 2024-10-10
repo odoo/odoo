@@ -4,7 +4,7 @@ from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
-    _inherit = 'account.chart.template'
+    _inherit = ['account.chart.template']
 
     @template(model='account.journal')
     def _get_latam_document_account_journal(self, template_code):

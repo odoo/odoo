@@ -6,7 +6,7 @@ from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 class AccountJournal(models.Model):
 
-    _inherit = "account.journal"
+    _inherit = ["account.journal"]
 
     l10n_ar_afip_pos_system = fields.Selection(
         selection='_get_l10n_ar_afip_pos_types_selection', string='AFIP POS System',

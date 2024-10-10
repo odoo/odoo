@@ -3,7 +3,7 @@ from odoo import models
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def _get_name_invoice_report(self):
         # Safety mechanism to avoid issues if the module has not yet been updated.

@@ -9,9 +9,8 @@ from odoo.tools.float_utils import float_compare, float_round
 
 class RatingMixin(models.AbstractModel):
     """This mixin adds rating statistics to mail.thread that already support ratings."""
-    _name = 'rating.mixin'
     _description = "Rating Mixin"
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread']
 
     rating_last_value = fields.Float('Rating Last Value', groups='base.group_user', compute='_compute_rating_last_value', compute_sudo=True, store=True, aggregator="avg")
     rating_last_feedback = fields.Text('Rating Last Feedback', groups='base.group_user', related='rating_ids.feedback')

@@ -15,8 +15,7 @@ from odoo.tools.json import scriptsafe as json_safe
 _logger = logging.getLogger(__name__)
 
 
-class Post(models.Model):
-    _name = 'forum.post'
+class ForumPost(models.Model):
     _description = 'Forum Post'
     _inherit = [
         'mail.thread',
@@ -298,7 +297,7 @@ class Post(models.Model):
     # EXTENDS WEBSITE.SEO.METADATA
 
     def _default_website_meta(self):
-        res = super(Post, self)._default_website_meta()
+        res = super()._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.plain_content
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self.create_uid, 'image_1024')
@@ -316,7 +315,7 @@ class Post(models.Model):
             if 'content' in vals and vals.get('forum_id'):
                 vals['content'] = self._update_content(vals['content'], vals['forum_id'])
 
-        posts = super(Post, self.with_context(mail_create_nolog=True)).create(vals_list)
+        posts = super(ForumPost, self.with_context(mail_create_nolog=True)).create(vals_list)
 
         for post in posts:
             # deleted or closed questions
@@ -342,7 +341,7 @@ class Post(models.Model):
             if post.is_correct:
                 post.create_uid.sudo()._add_karma(post.forum_id.karma_gen_answer_accepted * -1, post, _('The accepted answer is deleted'))
                 self.env.user.sudo()._add_karma(post.forum_id.karma_gen_answer_accepted * -1, post, _('Delete the accepted answer'))
-        return super(Post, self).unlink()
+        return super().unlink()
 
     def write(self, vals):
         trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
@@ -385,7 +384,7 @@ class Post(models.Model):
             if any(key not in trusted_keys for key in vals) and not post.can_edit:
                 raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
 
-        res = super(Post, self).write(vals)
+        res = super().write(vals)
 
         # if post content modify, notify followers
         if 'content' in vals or 'name' in vals:
@@ -407,7 +406,7 @@ class Post(models.Model):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
         if not force_website and not self.state == 'active':
-            return super(Post, self)._get_access_action(access_uid=access_uid, force_website=force_website)
+            return super()._get_access_action(access_uid=access_uid, force_website=force_website)
         return {
             'type': 'ir.actions.act_url',
             'url': '/forum/%s/%s' % (self.forum_id.id, self.id),
@@ -736,7 +735,7 @@ class Post(models.Model):
             for post in self.browse(res_ids):
                 if not post.can_edit:
                     raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
-        return super(Post, self)._get_mail_message_access(res_ids, operation, model_name=model_name)
+        return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Add access button to everyone if the document is active. """
@@ -773,7 +772,7 @@ class Post(models.Model):
                 raise AccessError(_('%d karma required to comment.', self.karma_comment))
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
-        return super(Post, self).message_post(message_type=message_type, **kwargs)
+        return super().message_post(message_type=message_type, **kwargs)
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Override to avoid keeping all notified recipients of a comment.
@@ -783,7 +782,7 @@ class Post(models.Model):
             msg_vals = {}
         if msg_vals.get('message_type', message.message_type) == 'comment':
             return
-        return super(Post, self)._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        return super()._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     # ----------------------------------------------------------------------
     # WEBSITE

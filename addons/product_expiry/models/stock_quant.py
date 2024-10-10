@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+    _inherit = ['stock.quant']
 
     expiration_date = fields.Datetime(related='lot_id.expiration_date', store=True)
     removal_date = fields.Datetime(related='lot_id.removal_date', store=True)

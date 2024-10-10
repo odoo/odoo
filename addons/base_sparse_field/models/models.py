@@ -7,14 +7,14 @@ from odoo.exceptions import UserError
 
 
 class Base(models.AbstractModel):
-    _inherit = 'base'
+    _inherit = ['base']
 
     def _valid_field_parameter(self, field, name):
         return name == 'sparse' or super()._valid_field_parameter(field, name)
 
 
 class IrModelFields(models.Model):
-    _inherit = 'ir.model.fields'
+    _inherit = ['ir.model.fields']
 
     ttype = fields.Selection(selection_add=[
         ('serialized', 'serialized'),
@@ -89,8 +89,7 @@ class IrModelFields(models.Model):
         return attrs
 
 
-class TestSparse(models.TransientModel):
-    _name = 'sparse_fields.test'
+class Sparse_FieldsTest(models.TransientModel):
     _description = 'Sparse fields Test'
 
     data = fields.Serialized()

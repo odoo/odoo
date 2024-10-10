@@ -13,8 +13,7 @@ VARIABLE_SELECTION = [
 ]
 
 
-class PriceRule(models.Model):
-    _name = "delivery.price.rule"
+class DeliveryPriceRule(models.Model):
     _description = "Delivery Price Rules"
     _order = 'sequence, list_price, id'
 

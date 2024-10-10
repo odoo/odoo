@@ -3,8 +3,8 @@
 from odoo import api, models, fields, _
 
 
-class Repair(models.Model):
-    _inherit = 'repair.order'
+class RepairOrder(models.Model):
+    _inherit = ['repair.order']
 
     production_count = fields.Integer(
         'Count of MOs generated',
@@ -75,7 +75,7 @@ class Repair(models.Model):
 
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = ['stock.move']
 
     def _prepare_phantom_line_vals(self, bom_line, qty):
         self.ensure_one()

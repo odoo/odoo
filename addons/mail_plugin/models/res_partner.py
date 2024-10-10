@@ -3,7 +3,7 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     iap_enrich_info = fields.Text('IAP Enrich Info', help='IAP response stored as a JSON string',
                                   compute='_compute_partner_iap_info')

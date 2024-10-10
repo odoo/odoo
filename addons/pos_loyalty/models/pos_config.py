@@ -4,8 +4,9 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
+
 class PosConfig(models.Model):
-    _inherit = 'pos.config'
+    _inherit = ['pos.config']
 
     # NOTE: this funtions acts as a m2m field with loyalty.program model. We do this to handle an excpetional use case:
     # When no PoS is specified at a loyalty program form, this program is applied to every PoS (instead of none)

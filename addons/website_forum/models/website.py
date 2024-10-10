@@ -5,7 +5,7 @@ from odoo import models, fields, api, _
 
 
 class Website(models.Model):
-    _inherit = 'website'
+    _inherit = ['website']
 
     forum_count = fields.Integer(readonly=True, default=0)
 

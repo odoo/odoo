@@ -9,7 +9,7 @@ from odoo.tools import format_list
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     group_use_recurring_revenues = fields.Boolean(string="Recurring Revenues", implied_group='crm.group_use_recurring_revenues')

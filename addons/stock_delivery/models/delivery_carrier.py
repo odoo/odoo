@@ -10,7 +10,7 @@ from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
 
 
 class DeliveryCarrier(models.Model):
-    _inherit = 'delivery.carrier'
+    _inherit = ['delivery.carrier']
 
     # -------------------------------- #
     # Internals for shipping providers #

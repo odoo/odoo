@@ -5,8 +5,8 @@ from odoo import fields, models
 from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 
 
-class Partner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model):
+    _inherit = ['res.partner']
     _check_company_auto = True
 
     property_stock_customer = fields.Many2one(

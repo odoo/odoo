@@ -5,7 +5,7 @@ from odoo import fields, models, api
 
 
 class ReportProjectTaskUser(models.Model):
-    _inherit = "report.project.task.user"
+    _inherit = ["report.project.task.user"]
 
     allocated_hours = fields.Float('Allocated Time', readonly=True, groups="hr_timesheet.group_hr_timesheet_user")
     effective_hours = fields.Float('Time Spent', readonly=True, groups="hr_timesheet.group_hr_timesheet_user")

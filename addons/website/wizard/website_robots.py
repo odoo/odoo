@@ -3,7 +3,6 @@ from odoo import fields, models
 
 
 class WebsiteRobots(models.TransientModel):
-    _name = "website.robots"
     _description = "Robots.txt Editor"
 
     content = fields.Text(default=lambda s: s.env['website'].get_current_website().robots_txt)

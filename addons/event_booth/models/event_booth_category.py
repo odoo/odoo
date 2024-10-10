@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class EventBoothCategory(models.Model):
-    _name = 'event.booth.category'
     _description = 'Event Booth Category'
     _inherit = ['image.mixin']
     _order = 'sequence ASC'

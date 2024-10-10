@@ -9,7 +9,7 @@ from werkzeug import urls
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     def _default_website(self):
         return self.env['website'].search([('company_id', '=', self.env.company.id)], limit=1)

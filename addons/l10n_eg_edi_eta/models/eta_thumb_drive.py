@@ -12,8 +12,7 @@ from odoo import models, fields, _
 from odoo.exceptions import ValidationError
 
 
-class EtaThumbDrive(models.Model):
-    _name = 'l10n_eg_edi.thumb.drive'
+class L10n_Eg_EdiThumbDrive(models.Model):
     _description = 'Thumb drive used to sign invoices in Egypt'
 
     user_id = fields.Many2one('res.users', required=True, default=lambda self: self.env.user)

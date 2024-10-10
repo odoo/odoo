@@ -8,7 +8,7 @@ from odoo.tools import float_compare, float_round
 
 
 class StockLot(models.Model):
-    _inherit = 'stock.lot'
+    _inherit = ['stock.lot']
 
     value_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
     quantity_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)

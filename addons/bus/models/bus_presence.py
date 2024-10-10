@@ -18,7 +18,6 @@ class BusPresence(models.Model):
         at each poll, if the user have multiple opened tabs, concurrence errors can happend, but are 'muted-logged'.
     """
 
-    _name = 'bus.presence'
     _description = 'User Presence'
     _log_access = False
 

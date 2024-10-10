@@ -6,7 +6,7 @@ from markupsafe import Markup
 
 
 class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+    _inherit = ['event.registration']
 
     def _get_lead_description_registration(self, line_suffix=''):
         """Add the questions and answers linked to the registrations into the description of the lead."""

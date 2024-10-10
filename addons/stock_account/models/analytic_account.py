@@ -6,7 +6,7 @@ from odoo.tools import float_compare, float_is_zero, float_round
 
 
 class AccountAnalyticPlan(models.Model):
-    _inherit = 'account.analytic.plan'
+    _inherit = ['account.analytic.plan']
 
     def _calculate_distribution_amount(self, amount, percentage, total_percentage, distribution_on_each_plan):
         """
@@ -31,7 +31,7 @@ class AccountAnalyticPlan(models.Model):
 
 
 class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+    _inherit = ['account.analytic.account']
 
     def _perform_analytic_distribution(self, distribution, amount, unit_amount, lines, obj, additive=False):
         """

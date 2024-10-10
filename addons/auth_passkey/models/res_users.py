@@ -9,8 +9,8 @@ from odoo.addons.base.models.res_users import check_identity
 from .._vendor.webauthn.helpers.exceptions import InvalidAuthenticationResponse
 
 
-class UsersPasskey(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model):
+    _inherit = ['res.users']
 
     auth_passkey_key_ids = fields.One2many('auth.passkey.key', 'create_uid')
 

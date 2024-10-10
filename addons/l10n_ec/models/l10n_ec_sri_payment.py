@@ -4,9 +4,8 @@
 from odoo import fields, models
 
 
-class SriPayment(models.Model):
+class L10n_EcSriPayment(models.Model):
 
-    _name = "l10n_ec.sri.payment"
     _description = "SRI Payment Method"
 
     name = fields.Char("Name", translate=True)

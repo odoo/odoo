@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class StockRule(models.Model):
-    _inherit = 'stock.rule'
+    _inherit = ['stock.rule']
 
     def _prepare_purchase_order(self, company_id, origins, values):
         res = super(StockRule, self)._prepare_purchase_order(company_id, origins, values)
@@ -26,7 +26,7 @@ class StockRule(models.Model):
 
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = ['stock.move']
 
     requisition_line_ids = fields.One2many('purchase.requisition.line', 'move_dest_id')
 

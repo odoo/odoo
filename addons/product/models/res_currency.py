@@ -5,7 +5,7 @@ from odoo import models
 
 
 class ResCurrency(models.Model):
-    _inherit = 'res.currency'
+    _inherit = ['res.currency']
 
     def _activate_group_multi_currency(self):
         # for Sale/ POS - Multi currency flows require pricelists

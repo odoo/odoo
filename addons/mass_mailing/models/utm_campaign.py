@@ -10,7 +10,7 @@ from odoo.tools.float_utils import float_round
 
 
 class UtmCampaign(models.Model):
-    _inherit = 'utm.campaign'
+    _inherit = ['utm.campaign']
 
     mailing_mail_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',

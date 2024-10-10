@@ -4,8 +4,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class CandidateSkill(models.Model):
-    _name = 'hr.candidate.skill'
+class HrCandidateSkill(models.Model):
     _description = "Skill level for a candidate"
     _rec_name = 'skill_id'
     _order = "skill_level_id"

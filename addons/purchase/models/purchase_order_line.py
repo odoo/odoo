@@ -10,8 +10,7 @@ from odoo.exceptions import UserError
 
 
 class PurchaseOrderLine(models.Model):
-    _name = 'purchase.order.line'
-    _inherit = 'analytic.mixin'
+    _inherit = ['analytic.mixin']
     _description = 'Purchase Order Line'
     _order = 'order_id, sequence, id'
 

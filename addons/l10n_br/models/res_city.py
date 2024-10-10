@@ -3,7 +3,7 @@ from odoo import models, fields, api
 
 
 class ResCity(models.Model):
-    _inherit = "res.city"
+    _inherit = ["res.city"]
 
     l10n_br_zip_range_ids = fields.One2many(
         string="Zip Ranges",

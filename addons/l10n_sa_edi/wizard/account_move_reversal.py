@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMoveReversal(models.TransientModel):
-    _inherit = 'account.move.reversal'
+    _inherit = ['account.move.reversal']
 
     def reverse_moves(self, is_modify=False):
         self.ensure_one()

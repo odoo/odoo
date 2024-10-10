@@ -8,7 +8,7 @@ from odoo.addons.portal.utils import validate_thread_with_hash_pid, validate_thr
 
 
 class MailThread(models.AbstractModel):
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread']
 
     _mail_post_token_field = 'access_token' # token field for external posts, to be overridden
 

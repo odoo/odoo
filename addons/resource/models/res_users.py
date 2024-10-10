@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     resource_ids = fields.One2many(
         'resource.resource', 'user_id', 'Resources')

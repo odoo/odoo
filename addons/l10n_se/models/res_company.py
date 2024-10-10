@@ -6,7 +6,7 @@ import re
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     org_number = fields.Char(compute='_compute_org_number')
 

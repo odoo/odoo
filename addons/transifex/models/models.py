@@ -3,8 +3,9 @@
 
 from odoo import models
 
-class BaseModel(models.AbstractModel):
-    _inherit = 'base'
+
+class Base(models.AbstractModel):
+    _inherit = ['base']
 
     def get_field_translations(self, field_name, langs=None):
         """ get model/model_term translations for records with transifex url

@@ -11,8 +11,7 @@ from odoo.tools import index_exists
 _logger = logging.getLogger(__name__)
 
 
-class l10nLatamAccountPaymentCheck(models.Model):
-    _name = 'l10n_latam.check'
+class L10n_LatamCheck(models.Model):
     _description = 'Account payment check'
     _check_company_auto = True
     _inherit = ['mail.thread', 'mail.activity.mixin']

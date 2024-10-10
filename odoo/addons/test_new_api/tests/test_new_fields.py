@@ -4318,7 +4318,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
     def test_ondelete_unexisting_policy(self):
         class Foo(models.Model):
             _module = None
-            _inherit = self.MODEL_REQUIRED
+            _name = self.MODEL_REQUIRED
+            _inherit = [self.MODEL_REQUIRED]
 
             my_selection = fields.Selection(selection_add=[
                 ('random', "Random stuff"),
@@ -4332,7 +4333,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
     def test_ondelete_default_no_default(self):
         class Foo(models.Model):
             _module = None
-            _inherit = self.MODEL_BASE
+            _name = self.MODEL_BASE
+            _inherit = [self.MODEL_BASE]
 
             my_selection = fields.Selection(selection_add=[
                 ('corona', "Corona beers suck"),
@@ -4346,7 +4348,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
     def test_ondelete_value_no_valid(self):
         class Foo(models.Model):
             _module = None
-            _inherit = self.MODEL_BASE
+            _name = self.MODEL_BASE
+            _inherit = [self.MODEL_BASE]
 
             my_selection = fields.Selection(selection_add=[
                 ('westvleteren', "Westvleteren beers is overrated"),
@@ -4360,7 +4363,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
     def test_ondelete_required_null_explicit(self):
         class Foo(models.Model):
             _module = None
-            _inherit = self.MODEL_REQUIRED
+            _name = self.MODEL_REQUIRED
+            _inherit = [self.MODEL_REQUIRED]
 
             my_selection = fields.Selection(selection_add=[
                 ('brap', "Brap"),
@@ -4374,7 +4378,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
     def test_ondelete_required_null_implicit(self):
         class Foo(models.Model):
             _module = None
-            _inherit = self.MODEL_REQUIRED
+            _name = self.MODEL_REQUIRED
+            _inherit = [self.MODEL_REQUIRED]
 
             my_selection = fields.Selection(selection_add=[
                 ('boing', "Boyoyoyoing"),

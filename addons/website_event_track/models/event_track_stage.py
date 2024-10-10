@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 
 
-class TrackStage(models.Model):
-    _name = 'event.track.stage'
+class EventTrackStage(models.Model):
     _description = 'Event Track Stage'
     _order = 'sequence, id'
 

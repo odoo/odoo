@@ -118,7 +118,7 @@ class ImportValidationError(Exception):
 
 
 class Base(models.AbstractModel):
-    _inherit = 'base'
+    _inherit = ['base']
 
     @api.model
     def get_import_templates(self):
@@ -130,7 +130,8 @@ class Base(models.AbstractModel):
         """
         return []
 
-class ImportMapping(models.Model):
+
+class Base_ImportMapping(models.Model):
     """ mapping of previous column:field selections
 
     This is useful when repeatedly importing from a third-party
@@ -142,7 +143,6 @@ class ImportMapping(models.Model):
     without them having to re-enter the mapping every single
     time.
     """
-    _name = 'base_import.mapping'
     _description = 'Base Import Mapping'
 
     res_model = fields.Char(index=True)
@@ -151,7 +151,7 @@ class ImportMapping(models.Model):
 
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     def _can_import_remote_urls(self):
         """ Hook to decide whether the current user is allowed to import
@@ -163,7 +163,8 @@ class ResUsers(models.Model):
         self.ensure_one()
         return self._is_admin()
 
-class Import(models.TransientModel):
+
+class Base_ImportImport(models.TransientModel):
     """
     This model is used to prepare the loading of data coming from a user file.
 
@@ -211,7 +212,6 @@ class Import(models.TransientModel):
           - Return import result to the UI (success or errors if any).
     """
 
-    _name = 'base_import.import'
     _description = 'Base Import'
 
     # allow imports to survive for 12h in case user is slow

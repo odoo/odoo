@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _inherit = ['account.tax']
 
     @api.ondelete(at_uninstall=False)
     def _never_unlink_declaration_of_intent_tax(self):

@@ -51,9 +51,9 @@ class TestMassMailValues(MassMailCommon):
                 return urls
             else:
                 return []
-        with patch("odoo.addons.mass_mailing.models.mailing.MassMailing._get_image_by_url",
+        with patch("odoo.addons.mass_mailing.models.mailing.MailingMailing._get_image_by_url",
                    new=patched_get_image), \
-             patch("odoo.addons.mass_mailing.models.mailing.MassMailing._create_attachments_from_inline_images",
+             patch("odoo.addons.mass_mailing.models.mailing.MailingMailing._create_attachments_from_inline_images",
                    new=patched_images_to_urls):
             mailing = self.env['mailing.mailing'].create({
                 'name': 'Test',
@@ -94,7 +94,7 @@ class TestMassMailValues(MassMailCommon):
                     'token': attachment_token,
                 })
             return urls
-        with patch("odoo.addons.mass_mailing.models.mailing.MassMailing._create_attachments_from_inline_images",
+        with patch("odoo.addons.mass_mailing.models.mailing.MailingMailing._create_attachments_from_inline_images",
                    new=patched_images_to_urls):
             mailing = self.env['mailing.mailing'].create({
                     'name': 'Test',

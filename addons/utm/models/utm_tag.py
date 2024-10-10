@@ -9,7 +9,6 @@ from odoo import fields, models
 class UtmTag(models.Model):
     """Model of categories of utm campaigns, i.e. marketing, newsletter, ..."""
 
-    _name = 'utm.tag'
     _description = 'UTM Tag'
     _order = 'name'
 

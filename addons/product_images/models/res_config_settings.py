@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     google_custom_search_key = fields.Char(
         string="Google Custom Search API Key",

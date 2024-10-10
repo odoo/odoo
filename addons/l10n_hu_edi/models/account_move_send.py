@@ -6,7 +6,7 @@ from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConne
 
 
 class AccountMoveSend(models.AbstractModel):
-    _inherit = 'account.move.send'
+    _inherit = ['account.move.send']
 
     @api.model
     def _is_hu_edi_applicable(self, move):

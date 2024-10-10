@@ -4,7 +4,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _inherit = ['payment.transaction']
 
     payment_id = fields.Many2one(
         string="Payment", comodel_name='account.payment', readonly=True)

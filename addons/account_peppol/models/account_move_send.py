@@ -5,7 +5,7 @@ from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import A
 
 
 class AccountMoveSend(models.AbstractModel):
-    _inherit = 'account.move.send'
+    _inherit = ['account.move.send']
 
     # -------------------------------------------------------------------------
     # ALERTS

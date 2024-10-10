@@ -16,11 +16,11 @@ atext = r"[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~]"
 dot_atom_text = re.compile(r"^%s+(\.%s+)*$" % (atext, atext))
 
 
-class Alias(models.Model):
+class MailAlias(models.Model):
     """A Mail Alias is a mapping of an email address with a given Odoo Document
        model. It is used by Odoo's mail gateway when processing incoming emails
        sent to the system. If the recipient address (To) of the message matches
-       a Mail Alias, the message will be either processed following the rules
+       a Mail MailAlias, the message will be either processed following the rules
        of that alias. If the message is a reply it will be attached to the
        existing discussion on the corresponding record, otherwise a new
        record of the corresponding model will be created.
@@ -29,7 +29,6 @@ class Alias(models.Model):
        on the company's mail server, so that as soon as a new mail.alias is
        created, it becomes immediately usable and Odoo will accept email for it.
      """
-    _name = 'mail.alias'
     _description = "Email Aliases"
     _rec_name = 'alias_name'
     _rec_names_search = ['alias_name', 'alias_domain']

@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 
 class MailThread(models.AbstractModel):
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread']
 
     message_has_sms_error = fields.Boolean(
         'SMS Delivery error', compute='_compute_message_has_sms_error', search='_search_message_has_sms_error',

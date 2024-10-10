@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     def _get_warehouse_available(self):
         self.ensure_one()

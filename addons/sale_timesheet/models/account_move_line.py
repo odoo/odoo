@@ -6,7 +6,7 @@ from odoo import api, models
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     @api.model
     def _timesheet_domain_get_invoiced_lines(self, sale_line_delivery):

@@ -2,8 +2,7 @@
 from odoo import models, api, fields
 
 
-class EventTicket(models.Model):
-    _name = 'event.event.ticket'
+class EventEventTicket(models.Model):
     _inherit = ['event.event.ticket', 'pos.load.mixin']
 
     @api.model

@@ -6,7 +6,7 @@ from odoo import models, fields
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     def _get_template_matrix(self, **kwargs):
         self.ensure_one()
@@ -61,7 +61,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductTemplateAttributeValue(models.Model):
-    _inherit = "product.template.attribute.value"
+    _inherit = ["product.template.attribute.value"]
 
     def _grid_header_cell(self, fro_currency, to_currency, company, display_extra=True):
         """Generate a header matrix cell for 1 or multiple attributes.

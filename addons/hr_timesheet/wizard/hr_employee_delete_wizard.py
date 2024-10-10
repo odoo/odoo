@@ -4,8 +4,7 @@
 from odoo import api, fields, models, _
 
 
-class HrEmployeDeleteWizard(models.TransientModel):
-    _name = 'hr.employee.delete.wizard'
+class HrEmployeeDeleteWizard(models.TransientModel):
     _description = 'Employee Delete Wizard'
 
     employee_ids = fields.Many2many('hr.employee', string='Employees', context={'active_test': False}, export_string_translation=False)

@@ -214,7 +214,7 @@ class TestMailTemplate(MailCommon):
             })
             self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_qweb(expression, 'res.partner'))
 
-            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+            with (patch('odoo.addons.base.models.ir_qweb.IrQweb._render', side_effect=o_qweb_render) as qweb_render,
                 patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
                 rendered = template._render_field('body_html', record.ids)[record.id]
                 self.assertNotIn('t-out', rendered)
@@ -223,7 +223,7 @@ class TestMailTemplate(MailCommon):
 
         # double check that we can detect the qweb rendering
         mail_template.body_html = '<t t-out="1+1"/>'
-        with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+        with (patch('odoo.addons.base.models.ir_qweb.IrQweb._render', side_effect=o_qweb_render) as qweb_render,
             patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
             rendered = mail_template._render_field('body_html', record.ids)[record.id]
             self.assertNotIn('t-out', rendered)

@@ -3,7 +3,7 @@ from odoo.http import request
 
 
 class ResUsers(models.Model):
-    _inherit = "res.users"
+    _inherit = ["res.users"]
 
     def _check_credentials(self, credential, env):
         """Make all wishlists from session belong to its owner user."""

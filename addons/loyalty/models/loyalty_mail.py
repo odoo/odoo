@@ -6,8 +6,8 @@ from odoo import fields, models
 # Allow promo programs to send mails upon certain triggers
 # Like : 'At creation' and 'When reaching X points'
 
+
 class LoyaltyMail(models.Model):
-    _name = 'loyalty.mail'
     _description = 'Loyalty Communication'
 
     active = fields.Boolean(default=True)

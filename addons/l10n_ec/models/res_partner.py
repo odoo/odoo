@@ -50,7 +50,7 @@ class PartnerIdTypeEc(enum.Enum):
 
 class ResPartner(models.Model):
 
-    _inherit = "res.partner"
+    _inherit = ["res.partner"]
 
     l10n_ec_vat_validation = fields.Char(
         string="VAT Error message validation",

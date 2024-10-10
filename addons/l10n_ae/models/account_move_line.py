@@ -4,7 +4,7 @@ from odoo import models, fields, api
 
 
 class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+    _inherit = ["account.move.line"]
 
     l10n_ae_vat_amount = fields.Monetary(compute='_compute_vat_amount', string='VAT Amount')
 

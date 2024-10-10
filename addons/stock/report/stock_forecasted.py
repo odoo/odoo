@@ -8,8 +8,8 @@ from odoo import api, models
 from odoo.osv.expression import AND
 from odoo.tools import float_is_zero, format_date, float_round, float_compare
 
-class StockForecasted(models.AbstractModel):
-    _name = 'stock.forecasted_product_product'
+
+class StockForecasted_Product_Product(models.AbstractModel):
     _description = "Stock Replenishment Report"
 
     @api.model
@@ -431,10 +431,9 @@ class StockForecasted(models.AbstractModel):
         return move_ids
 
 
-class StockForecastedTemplate(models.AbstractModel):
-    _name = 'stock.forecasted_product_template'
+class StockForecasted_Product_Template(models.AbstractModel):
     _description = "Stock Replenishment Report"
-    _inherit = 'stock.forecasted_product_product'
+    _inherit = ['stock.forecasted_product_product']
 
     @api.model
     def get_report_values(self, docids, data=None):

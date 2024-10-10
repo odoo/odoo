@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     payment_onboarding_payment_method = fields.Selection(
         string="Selected onboarding payment method",

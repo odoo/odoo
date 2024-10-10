@@ -20,8 +20,8 @@ TOTP_RATE_LIMITS = {
 }
 
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model):
+    _inherit = ['res.users']
 
     def _mfa_type(self):
         r = super()._mfa_type()

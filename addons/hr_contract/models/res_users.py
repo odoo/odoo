@@ -4,7 +4,7 @@
 from odoo import models, fields, api, _
 
 
-class User(models.Model):
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     vehicle = fields.Char(related="employee_id.vehicle")

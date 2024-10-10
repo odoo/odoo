@@ -6,8 +6,8 @@ import json
 from odoo import _, api, models, modules
 
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model):
+    _inherit = ['res.users']
 
     @api.model
     def _get_activity_groups(self):

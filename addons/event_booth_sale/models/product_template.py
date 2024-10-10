@@ -2,7 +2,7 @@ from odoo import _, api, fields, models
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     service_tracking = fields.Selection(selection_add=[
         ('event_booth', 'Event Booth'),

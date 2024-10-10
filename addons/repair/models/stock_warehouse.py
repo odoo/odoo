@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class StockWarehouse(models.Model):
-    _inherit = 'stock.warehouse'
+    _inherit = ['stock.warehouse']
 
     repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True)
     repair_mto_pull_id = fields.Many2one(

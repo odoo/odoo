@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class MailNotification(models.Model):
-    _inherit = 'mail.notification'
+    _inherit = ['mail.notification']
 
     notification_type = fields.Selection(selection_add=[
         ('sms', 'SMS')

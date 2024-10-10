@@ -5,7 +5,7 @@ from odoo.osv import expression
 
 
 class ResUsers(models.Model):
-    _inherit = "res.users"
+    _inherit = ["res.users"]
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):

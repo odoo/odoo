@@ -5,7 +5,7 @@ from odoo import _, fields, models
 
 
 class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+    _inherit = ['account.payment']
 
     pos_order_id = fields.Many2one('pos.order', string='POS Order', help='The Point of Sale order linked to this payment', readonly=True)
 

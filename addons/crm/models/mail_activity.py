@@ -5,7 +5,7 @@ from odoo import models
 
 
 class MailActivity(models.Model):
-    _inherit = "mail.activity"
+    _inherit = ["mail.activity"]
 
     def action_create_calendar_event(self):
         """ Small override of the action that creates a calendar.

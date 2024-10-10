@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 
 class AccountAnalyticApplicability(models.Model):
-    _inherit = 'account.analytic.applicability'
+    _inherit = ['account.analytic.applicability']
     _description = "Analytic Plan's Applicabilities"
 
     business_domain = fields.Selection(
@@ -25,7 +25,7 @@ class AccountAnalyticApplicability(models.Model):
 
 
 class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+    _inherit = ['account.analytic.account']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_account_in_analytic_distribution(self):

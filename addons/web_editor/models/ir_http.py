@@ -8,7 +8,7 @@ CONTEXT_KEYS = ['editable', 'edit_translations', 'translatable']
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+    _inherit = ['ir.http']
 
     @classmethod
     def _get_web_editor_context(cls):
@@ -27,5 +27,5 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_translation_frontend_modules_name(cls):
-        mods = super(IrHttp, cls)._get_translation_frontend_modules_name()
+        mods = super()._get_translation_frontend_modules_name()
         return mods + ['web_editor']

@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 
 
-class ChooseDestinationLocation(models.TransientModel):
-    _name = 'stock.package.destination'
+class StockPackageDestination(models.TransientModel):
     _description = 'Stock Package Destination'
 
     picking_id = fields.Many2one('stock.picking', required=True)

@@ -4,7 +4,6 @@ from odoo.tools.misc import get_lang
 
 class AccountMoveSendWizard(models.TransientModel):
     """Wizard that handles the sending a single invoice."""
-    _name = 'account.move.send.wizard'
     _inherit = ['account.move.send']
     _description = "Account Move Send Wizard"
 

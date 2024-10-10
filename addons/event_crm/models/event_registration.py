@@ -9,7 +9,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 
 
 class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+    _inherit = ['event.registration']
 
     lead_ids = fields.Many2many(
         'crm.lead', string='Leads', copy=False, readonly=True,

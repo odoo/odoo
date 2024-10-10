@@ -4,9 +4,9 @@
 from odoo import models
 
 
-class Attachment(models.Model):
+class IrAttachment(models.Model):
 
-    _inherit = "ir.attachment"
+    _inherit = ["ir.attachment"]
 
     def _can_bypass_rights_on_media_dialog(self, **attachment_data):
         # We need to allow and sudo the case of an "url + file" attachment,

@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 
 
 class ProductAttributeValue(models.Model):
-    _name = 'product.attribute.value'
     # if you change this _order, keep it in sync with the method
     # `_sort_key_variant` in `product.template'
     _order = 'attribute_id, sequence, id'

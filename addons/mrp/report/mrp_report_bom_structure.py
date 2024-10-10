@@ -9,8 +9,7 @@ from odoo.tools import float_compare, float_round, format_date, float_is_zero
 from odoo.exceptions import UserError
 
 
-class ReportBomStructure(models.AbstractModel):
-    _name = 'report.mrp.report_bom_structure'
+class ReportMrpReport_Bom_Structure(models.AbstractModel):
     _description = 'BOM Overview Report'
 
     @api.model

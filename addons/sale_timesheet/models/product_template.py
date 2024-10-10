@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     def _selection_service_policy(self):
         service_policies = super()._selection_service_policy()

@@ -10,7 +10,6 @@ from odoo.addons.web_editor.tools import get_video_embed_code, get_video_thumbna
 
 
 class ProductImage(models.Model):
-    _name = 'product.image'
     _description = "Product Image"
     _inherit = ['image.mixin']
     _order = 'sequence, id'

@@ -4,8 +4,8 @@ from . import ir_http
 from odoo import models
 
 
-class BaseModel(models.AbstractModel):
-    _inherit = 'base'
+class Base(models.AbstractModel):
+    _inherit = ['base']
 
     def get_base_url(self):
         """

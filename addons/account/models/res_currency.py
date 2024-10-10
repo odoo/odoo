@@ -7,7 +7,7 @@ from odoo.tools import date_utils, SQL
 
 
 class ResCurrency(models.Model):
-    _inherit = 'res.currency'
+    _inherit = ['res.currency']
 
     def _get_fiscal_country_codes(self):
         return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))

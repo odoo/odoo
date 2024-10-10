@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class AccountReportExpression(models.AbstractModel):
-    _inherit = "account.report.expression"
+    _inherit = ["account.report.expression"]
 
     def _get_carryover_target_expression(self, options):
         if self.report_line_id.code == 'VP14b' and fields.Date.from_string(options['date']['date_to']).month == 12:

@@ -7,8 +7,7 @@ MILKY_WAY_REGIONS = ['P3X', 'P4X', 'P2X', 'P5C']
 PEGASUS_REGIONS = ['M4R', 'P3Y', 'M6R']
 
 
-class Stargate(models.Model):
-    _name = 'test_http.stargate'
+class Test_HttpStargate(models.Model):
     _description = 'Stargate'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
@@ -63,8 +62,7 @@ class Stargate(models.Model):
             gate.glyph_compute = gate.glyph_attach
 
 
-class Galaxy(models.Model):
-    _name = 'test_http.galaxy'
+class Test_HttpGalaxy(models.Model):
     _description = 'Galaxy'
 
     name = fields.Char(required=True, help='The galaxy common name.')

@@ -172,8 +172,8 @@ def check_identity(fn):
 # Basic res.groups and res.users
 #----------------------------------------------------------
 
-class Groups(models.Model):
-    _name = "res.groups"
+
+class ResGroups(models.Model):
     _description = "Access Groups"
     _rec_name = 'full_name'
     _order = 'name'
@@ -273,7 +273,7 @@ class Groups(models.Model):
         # DLE P139
         if self.ids:
             self.env['ir.model.access'].call_cache_clearing_methods()
-        return super(Groups, self).write(vals)
+        return super().write(vals)
 
     def _ensure_xml_id(self):
         """Return the groups external identifiers, creating the external identifier for groups missing one"""
@@ -297,7 +297,6 @@ class Groups(models.Model):
 
 
 class ResUsersLog(models.Model):
-    _name = 'res.users.log'
     _order = 'id desc'
     _description = 'Users Log'
     # Uses the magical fields `create_uid` and `create_date` for recording logins.
@@ -315,7 +314,7 @@ class ResUsersLog(models.Model):
         _logger.info("GC'd %d user log entries", self._cr.rowcount)
 
 
-class Users(models.Model):
+class ResUsers(models.Model):
     """ User class. A res.users record models an OpenERP user and is different
         from an employee.
 
@@ -323,7 +322,6 @@ class Users(models.Model):
         used to store the data related to the partner: lang, name, address,
         avatar, ... The user model is now dedicated to technical data.
     """
-    _name = "res.users"
     _description = 'User'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
@@ -427,9 +425,9 @@ class Users(models.Model):
           AND password !~ '^\$[^$]+\$[^$]+\$.'
         """)
         if self.env.cr.rowcount:
-            Users = self.sudo()
+            ResUsers = self.sudo()
             for uid, pw in cr.fetchall():
-                Users.browse(uid).password = pw
+                ResUsers.browse(uid).password = pw
 
     def _set_password(self):
         ctx = self._crypt_context()
@@ -640,7 +638,7 @@ class Users(models.Model):
         for user in self:
             if not user.active and not user.partner_id.active:
                 user.partner_id.toggle_active()
-        super(Users, self).toggle_active()
+        super().toggle_active()
 
     def onchange(self, values, field_names, fields_spec):
         # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
@@ -654,7 +652,7 @@ class Users(models.Model):
         if fields and self == self.env.user and all(key in readable or key.startswith('context_') for key in fields):
             # safe fields only, so we read as super-user to bypass access rights
             self = self.sudo()
-        return super(Users, self).read(fields=fields, load=load)
+        return super().read(fields=fields, load=load)
 
     @api.model
     def check_field_access_rights(self, operation, field_names):
@@ -662,7 +660,7 @@ class Users(models.Model):
         if field_names and self == self.env.user and all(key in readable or key.startswith('context_') for key in field_names):
             # safe fields only, so we read as super-user to bypass access rights
             self = self.sudo()
-        return super(Users, self).check_field_access_rights(operation, field_names)
+        return super().check_field_access_rights(operation, field_names)
 
     @api.model
     def _read_group_select(self, aggregate_spec, query):
@@ -692,7 +690,7 @@ class Users(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        users = super(Users, self).create(vals_list)
+        users = super().create(vals_list)
         setting_vals = []
         for user in users:
             if not user.res_users_settings_ids and user._is_internal():
@@ -745,7 +743,7 @@ class Users(models.Model):
             # the new ones to other existing users
             old_groups = self._default_groups()
 
-        res = super(Users, self).write(values)
+        res = super().write(values)
 
         if old_groups:
             # new elements in _default_groups() means new groups for default users
@@ -1430,6 +1428,9 @@ class Users(models.Model):
         """
         return False
 
+
+ResUsersPatchedInTest = ResUsers
+
 #
 # Implied groups
 #
@@ -1438,8 +1439,11 @@ class Users(models.Model):
 # to the implied groups (transitively).
 #
 
-class GroupsImplied(models.Model):
-    _inherit = 'res.groups'
+
+# TODO: reorganize or split the file to avoid declaring classes multiple times
+# pylint: disable=E0102
+class ResGroups(models.Model):  # noqa: F811
+    _inherit = ['res.groups']
 
     implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
         string='Inherits', help='Users of this group automatically inherit those groups')
@@ -1457,7 +1461,7 @@ class GroupsImplied(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         user_ids_list = [vals.pop('users', None) for vals in vals_list]
-        groups = super(GroupsImplied, self).create(vals_list)
+        groups = super().create(vals_list)
         for group, user_ids in zip(groups, user_ids_list):
             if user_ids:
                 # delegate addition of users to add implied groups
@@ -1466,7 +1470,7 @@ class GroupsImplied(models.Model):
         return groups
 
     def write(self, values):
-        res = super(GroupsImplied, self).write(values)
+        res = super().write(values)
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
@@ -1555,7 +1559,8 @@ class GroupsImplied(models.Model):
 
 
 class UsersImplied(models.Model):
-    _inherit = 'res.users'
+    _name = 'res.users'
+    _inherit = ['res.users']
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1566,13 +1571,13 @@ class UsersImplied(models.Model):
                 gs = user.groups_id._origin
                 gs = gs | gs.trans_implied_ids
                 values['groups_id'] = self._fields['groups_id'].convert_to_write(gs, user)
-        return super(UsersImplied, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, values):
         if not values.get('groups_id'):
-            return super(UsersImplied, self).write(values)
+            return super().write(values)
         users_before = self.filtered(lambda u: u._is_internal())
-        res = super(UsersImplied, self).write(values)
+        res = super().write(values)
         demoted_users = users_before.filtered(lambda u: not u._is_internal())
         if demoted_users:
             # demoted users are restricted to the assigned groups only
@@ -1610,8 +1615,10 @@ class UsersImplied(models.Model):
 #       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
 #
 
-class GroupsView(models.Model):
-    _inherit = 'res.groups'
+
+# pylint: disable=E0102
+class ResGroups(models.Model):  # noqa: F811
+    _inherit = ['res.groups']
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1625,7 +1632,7 @@ class GroupsView(models.Model):
         # determine which values the "user groups view" depends on
         VIEW_DEPS = ('category_id', 'implied_ids')
         view_values0 = [g[name] for name in VIEW_DEPS if name in values for g in self]
-        res = super(GroupsView, self).write(values)
+        res = super().write(values)
         # update the "user groups view" only if necessary
         view_values1 = [g[name] for name in VIEW_DEPS if name in values for g in self]
         if view_values0 != view_values1:
@@ -1635,7 +1642,7 @@ class GroupsView(models.Model):
         return res
 
     def unlink(self):
-        res = super(GroupsView, self).unlink()
+        res = super().unlink()
         self._update_user_groups_view()
         # actions.get_bindings() depends on action records
         self.env.registry.clear_cache()
@@ -1830,8 +1837,8 @@ class GroupsView(models.Model):
         return res
 
 
-class ModuleCategory(models.Model):
-    _inherit = "ir.module.category"
+class IrModuleCategory(models.Model):
+    _inherit = ["ir.module.category"]
 
     def write(self, values):
         res = super().write(values)
@@ -1845,8 +1852,9 @@ class ModuleCategory(models.Model):
         return res
 
 
-class UsersView(models.Model):
-    _inherit = 'res.users'
+# pylint: disable=E0102
+class ResUsers(models.Model):  # noqa: F811
+    _inherit = ['res.users']
 
     user_group_warning = fields.Text(string="User Group Warning", compute="_compute_user_group_warning")
 
@@ -1865,7 +1873,7 @@ class UsersView(models.Model):
         new_vals_list = []
         for values in vals_list:
             new_vals_list.append(self._remove_reified_groups(values))
-        users = super(UsersView, self).create(new_vals_list)
+        users = super().create(new_vals_list)
         group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
@@ -1878,7 +1886,7 @@ class UsersView(models.Model):
 
     def write(self, values):
         values = self._remove_reified_groups(values)
-        res = super(UsersView, self).write(values)
+        res = super().write(values)
         if 'company_ids' not in values:
             return res
         group_multi_company = self.env.ref('base.group_multi_company', False)
@@ -1982,7 +1990,7 @@ class UsersView(models.Model):
     def default_get(self, fields):
         group_fields, fields = partition(is_reified_group, fields)
         fields1 = (fields + ['groups_id']) if group_fields else fields
-        values = super(UsersView, self).default_get(fields1)
+        values = super().default_get(fields1)
         self._add_reified_groups(group_fields, values)
         return values
 
@@ -2033,7 +2041,7 @@ class UsersView(models.Model):
         else:
             other_fields = fields
 
-        res = super(UsersView, self).read(other_fields, load=load)
+        res = super().read(other_fields, load=load)
 
         # post-process result to add reified group fields
         if group_fields:
@@ -2065,7 +2073,7 @@ class UsersView(models.Model):
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
-        res = super(UsersView, self).fields_get(allfields, attributes=attributes)
+        res = super().fields_get(allfields, attributes=attributes)
         # add reified groups fields
         for app, kind, gs, category_name in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
@@ -2107,13 +2115,15 @@ class UsersView(models.Model):
         if allfields:
             missing = missing.intersection(allfields)
         if missing:
+            self = self.sudo()  # noqa: PLW0642
             res.update({
                 key: dict(values, readonly=key not in self.SELF_WRITEABLE_FIELDS, searchable=False)
-                for key, values in super(UsersView, self.sudo()).fields_get(missing, attributes).items()
+                for key, values in super().fields_get(missing, attributes).items()
             })
         return res
 
-class CheckIdentity(models.TransientModel):
+
+class ResUsersIdentitycheck(models.TransientModel):
     """ Wizard used to re-check the user's credentials (password) and eventually
     revoke access to his account to every device he has an active session on.
 
@@ -2122,7 +2132,6 @@ class CheckIdentity(models.TransientModel):
     some of the risk of a third party using such an unattended device to manipulate
     the account.
     """
-    _name = 'res.users.identitycheck'
     _description = "Password Check Wizard"
 
     request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
@@ -2158,9 +2167,9 @@ class CheckIdentity(models.TransientModel):
 # change password wizard
 #----------------------------------------------------------
 
+
 class ChangePasswordWizard(models.TransientModel):
     """ A wizard to manage the change of users' passwords. """
-    _name = "change.password.wizard"
     _description = "Change Password Wizard"
     _transient_max_hours = 0.2
 
@@ -2183,7 +2192,6 @@ class ChangePasswordWizard(models.TransientModel):
 
 class ChangePasswordUser(models.TransientModel):
     """ A model to configure users in the change password wizard. """
-    _name = 'change.password.user'
     _description = 'User, Change Password Wizard'
 
     wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
@@ -2198,8 +2206,8 @@ class ChangePasswordUser(models.TransientModel):
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
 
+
 class ChangePasswordOwn(models.TransientModel):
-    _name = "change.password.own"
     _description = "User, change own password wizard"
     _transient_max_hours = 0.1
 
@@ -2228,8 +2236,11 @@ KEY_CRYPT_CONTEXT = CryptContext(
     # attacks on API keys isn't much of a concern
     ['pbkdf2_sha512'], pbkdf2_sha512__rounds=6000,
 )
-class APIKeysUser(models.Model):
-    _inherit = 'res.users'
+
+
+# pylint: disable=E0102
+class ResUsers(models.Model):  # noqa: F811
+    _inherit = ['res.users']
 
     api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
 
@@ -2282,8 +2293,8 @@ class APIKeysUser(models.Model):
             'views': [(False, 'form')],
         }
 
-class APIKeys(models.Model):
-    _name = 'res.users.apikeys'
+
+class ResUsersApikeys(models.Model):
     _description = 'Users API Keys'
     _auto = False # so we can have a secret column
     _allow_sudo_commands = False
@@ -2405,8 +2416,8 @@ class APIKeys(models.Model):
         """, SQL.identifier(self._table)))
         _logger.info("GC %r delete %d entries", self._name, self.env.cr.rowcount)
 
-class APIKeyDescription(models.TransientModel):
-    _name = 'res.users.apikeys.description'
+
+class ResUsersApikeysDescription(models.TransientModel):
     _description = 'API Key Description'
 
     def _selection_duration(self):
@@ -2482,8 +2493,8 @@ class APIKeyDescription(models.TransientModel):
         if not self.env.user._is_internal():
             raise AccessError(_("Only internal users can create API keys"))
 
-class APIKeyShow(models.AbstractModel):
-    _name = 'res.users.apikeys.show'
+
+class ResUsersApikeysShow(models.AbstractModel):
     _description = 'Show API Key'
 
     # the field 'id' is necessary for the onchange that returns the value of 'key'

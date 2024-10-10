@@ -4,7 +4,7 @@ from odoo import _, api, fields, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = ['sale.order.line']
 
     name_short = fields.Char(compute='_compute_name_short')
     shop_warning = fields.Char(string="Warning")

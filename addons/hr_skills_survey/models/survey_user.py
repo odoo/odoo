@@ -8,8 +8,8 @@ from odoo.osv import expression
 from odoo.tools import html2plaintext
 
 
-class SurveyUserInput(models.Model):
-    _inherit = 'survey.user_input'
+class SurveyUser_Input(models.Model):
+    _inherit = ['survey.user_input']
 
     def _mark_done(self):
         """ Will add certification to employee's resume if
@@ -17,7 +17,7 @@ class SurveyUserInput(models.Model):
         - The user is linked to an employee
         - The user succeeded the test """
 
-        super(SurveyUserInput, self)._mark_done()
+        super()._mark_done()
 
         certification_user_inputs = self.filtered(lambda user_input: user_input.survey_id.certification and user_input.scoring_success)
         user_inputs_by_partner = certification_user_inputs.grouped('partner_id')

@@ -10,7 +10,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+    _inherit = ['ir.attachment']
 
     def _check_attachments_access(self, attachment_tokens):
         """This method relies on access rules/rights and therefore it should not be called from a sudo env."""

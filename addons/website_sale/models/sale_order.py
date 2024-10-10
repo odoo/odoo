@@ -15,7 +15,7 @@ from odoo.tools import float_is_zero
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     website_id = fields.Many2one(
         help="Website through which this order was placed for eCommerce orders.",

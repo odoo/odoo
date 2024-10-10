@@ -449,7 +449,7 @@ class ThreadedServer(CommonServer):
         # just a bit prevents they all poll the database at the exact
         # same time. This is known as the thundering herd effect.
 
-        from odoo.addons.base.models.ir_cron import ir_cron
+        from odoo.addons.base.models.ir_cron import IrCron  # noqa: PLC0415
         conn = odoo.sql_db.db_connect('postgres')
         with conn.cursor() as cr:
             pg_conn = cr._cnx
@@ -474,7 +474,7 @@ class ThreadedServer(CommonServer):
                         thread = threading.current_thread()
                         thread.start_time = time.time()
                         try:
-                            ir_cron._process_jobs(db_name)
+                            IrCron._process_jobs(db_name)
                         except Exception:
                             _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
                         thread.start_time = None
@@ -1202,8 +1202,8 @@ class WorkerCron(Worker):
             db_name = db_names[self.db_index]
             self.setproctitle(db_name)
 
-            from odoo.addons import base
-            base.models.ir_cron.ir_cron._process_jobs(db_name)
+            from odoo.addons.base.models import ir_cron  # noqa: PLC0415
+            ir_cron.IrCron._process_jobs(db_name)
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:

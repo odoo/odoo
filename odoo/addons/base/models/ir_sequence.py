@@ -86,7 +86,6 @@ class IrSequence(models.Model):
     way.
 
     """
-    _name = 'ir.sequence'
     _description = 'Sequence'
     _order = 'name'
     _allow_sudo_commands = False
@@ -310,8 +309,7 @@ class IrSequence(models.Model):
         return self.get_id(code, 'code')
 
 
-class IrSequenceDateRange(models.Model):
-    _name = 'ir.sequence.date_range'
+class IrSequenceDate_Range(models.Model):
     _description = 'Sequence Date Range'
     _rec_name = "sequence_id"
     _allow_sudo_commands = False
@@ -332,7 +330,7 @@ class IrSequenceDateRange(models.Model):
 
     @api.model
     def default_get(self, fields):
-        result = super(IrSequenceDateRange, self).default_get(fields)
+        result = super().default_get(fields)
         if 'number_next_actual' in fields:
             result['number_next_actual'] = 1
         return result
@@ -370,7 +368,7 @@ class IrSequenceDateRange(models.Model):
 
     def unlink(self):
         _drop_sequences(self._cr, ["ir_sequence_%03d_%03d" % (x.sequence_id.id, x.id) for x in self])
-        return super(IrSequenceDateRange, self).unlink()
+        return super().unlink()
 
     def write(self, values):
         if values.get('number_next'):
@@ -384,6 +382,6 @@ class IrSequenceDateRange(models.Model):
         #  - Changing the number next of a sequence is really really rare,
         #  - But selecting the number next happens a lot,
         # Therefore, if I chose to put the flush just above the select, it would check the flush most of the time for no reason.
-        res = super(IrSequenceDateRange, self).write(values)
+        res = super().write(values)
         self.flush_model(values.keys())
         return res

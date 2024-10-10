@@ -5,7 +5,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class BusListenerMixin(models.AbstractModel):
-    _inherit = "bus.listener.mixin"
+    _inherit = ["bus.listener.mixin"]
 
     def _bus_send_store(
         self, /, *args, notification_type="mail.record/insert", subchannel=None, **kwargs

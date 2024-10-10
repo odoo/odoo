@@ -4,8 +4,8 @@ from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
+
 class ResCompany(models.Model):
-    _name = 'res.company'
     _inherit = ['res.company', 'pos.load.mixin']
 
     point_of_sale_update_stock_quantities = fields.Selection([

@@ -6,9 +6,9 @@ from odoo import api, models, fields, _
 from odoo.addons.mail.tools.discuss import Store
 
 
-class Partners(models.Model):
+class ResPartner(models.Model):
     """Update of res.partner class to take into account the livechat username."""
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
 
@@ -47,7 +47,7 @@ class Partners(models.Model):
         super()._to_store(store, fields=fields, **kwargs)
         if fields and "user_livechat_username" in fields:
             if partners := self.filtered(lambda p: not p.user_livechat_username):
-                super(Partners, partners)._to_store(store, fields=["name"])
+                super(ResPartner, partners)._to_store(store, fields=["name"])
 
     def _bus_send_history_message(self, channel, page_history):
         message_body = _("No history found")

@@ -4,8 +4,8 @@
 from odoo import models, _
 
 
-class Event(models.Model):
-    _inherit = "event.event"
+class EventEvent(models.Model):
+    _inherit = ["event.event"]
 
     def action_mass_mailing_track_speakers(self):
         mass_mailing_action = dict(

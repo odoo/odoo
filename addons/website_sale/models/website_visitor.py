@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class WebsiteVisitor(models.Model):
-    _inherit = 'website.visitor'
+    _inherit = ['website.visitor']
 
     visitor_product_count = fields.Integer(
         string="Product Views",

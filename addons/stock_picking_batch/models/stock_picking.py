@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 
 class StockPickingType(models.Model):
-    _inherit = "stock.picking.type"
+    _inherit = ["stock.picking.type"]
 
     count_picking_batch = fields.Integer(compute='_compute_picking_count')
     count_picking_wave = fields.Integer(compute='_compute_picking_count')
@@ -84,7 +84,7 @@ class StockPickingType(models.Model):
 
 
 class StockPicking(models.Model):
-    _inherit = "stock.picking"
+    _inherit = ["stock.picking"]
 
     batch_id = fields.Many2one(
         'stock.picking.batch', string='Batch Transfer',

@@ -6,12 +6,11 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 
 
-class MassMailingContact(models.Model):
+class MailingContact(models.Model):
     """Model of a contact. This model is different from the partner model
     because it holds only some basic information: name, email. The purpose is to
     be able to deal with large contact list to email without bloating the partner
     base."""
-    _name = 'mailing.contact'
     _inherit = ['mail.thread.blacklist']
     _description = 'Mailing Contact'
     _order = 'name ASC, id DESC'
@@ -21,7 +20,7 @@ class MassMailingContact(models.Model):
         """ When coming from a mailing list we may have a default_list_ids context
         key. We should use it to create subscription_ids default value that
         are displayed to the user as list_ids is not displayed on form view. """
-        res = super(MassMailingContact, self).default_get(fields_list)
+        res = super().default_get(fields_list)
         if 'subscription_ids' in fields_list and not res.get('subscription_ids'):
             list_ids = self.env.context.get('default_list_ids')
             if 'default_list_ids' not in res and list_ids and isinstance(list_ids, (list, tuple)):
@@ -125,7 +124,7 @@ class MassMailingContact(models.Model):
                     subscription_ids.append((0, 0, {'list_id': list_id}))
                 vals['subscription_ids'] = subscription_ids
 
-        return super(MassMailingContact, self.with_context(default_list_ids=False)).create(vals_list)
+        return super(MailingContact, self.with_context(default_list_ids=False)).create(vals_list)
 
     def copy(self, default=None):
         """ Cleans the default_list_ids while duplicating mailing contact in context of

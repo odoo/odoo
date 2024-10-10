@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResCountryGroup(models.Model):
-    _inherit = 'res.country.group'
+    _inherit = ['res.country.group']
 
     pricelist_ids = fields.Many2many(
         comodel_name='product.pricelist',

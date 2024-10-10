@@ -14,8 +14,7 @@ from odoo.tools import html2plaintext, file_open, ormcache
 _logger = logging.getLogger(__name__)
 
 
-class Company(models.Model):
-    _name = "res.company"
+class ResCompany(models.Model):
     _description = 'Companies'
     _order = 'sequence, name'
     _inherit = ['format.address.mixin', 'format.vat.label.mixin']
@@ -88,7 +87,7 @@ class Company(models.Model):
             paperformat_euro = self.env.ref('base.paperformat_euro', False)
             if paperformat_euro:
                 company.write({'paperformat_id': paperformat_euro.id})
-        sup = super(Company, self)
+        sup = super()
         if hasattr(sup, 'init'):
             sup.init()
 
@@ -258,7 +257,7 @@ class Company(models.Model):
             constraint = [('id', 'in', companies.ids)]
             newself = newself.sudo()
         newself = newself.with_context(context)
-        domain = super(Company, newself)._search_display_name(operator, value)
+        domain = super(ResCompany, newself)._search_display_name(operator, value)
         return expression.AND([domain, constraint])
 
     @api.model
@@ -361,7 +360,7 @@ class Company(models.Model):
             if not currency.active:
                 currency.write({'active': True})
 
-        res = super(Company, self).write(values)
+        res = super().write(values)
 
         # Archiving a company should also archive all of its branches
         if values.get('active') is False:

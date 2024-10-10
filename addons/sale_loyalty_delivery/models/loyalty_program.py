@@ -5,7 +5,7 @@ from odoo import _, api, models
 
 
 class LoyaltyProgram(models.Model):
-    _inherit = 'loyalty.program'
+    _inherit = ['loyalty.program']
 
     @api.model
     def _program_type_default_values(self):

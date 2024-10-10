@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class EventSaleReport(models.Model):
-    _inherit = 'event.sale.report'
+    _inherit = ['event.sale.report']
 
     is_published = fields.Boolean('Published Events', readonly=True)
 

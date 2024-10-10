@@ -6,7 +6,7 @@ from odoo.tools.sql import column_exists, create_column
 
 
 class ProductTemplate(models.Model):
-    _inherit = "product.template"
+    _inherit = ["product.template"]
 
     @api.model
     def default_get(self, fields):

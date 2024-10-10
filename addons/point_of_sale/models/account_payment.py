@@ -5,7 +5,7 @@ from odoo import models, fields, api
 
 
 class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+    _inherit = ['account.payment']
 
     pos_payment_method_id = fields.Many2one('pos.payment.method', "POS Payment Method")
     force_outstanding_account_id = fields.Many2one("account.account", "Forced Outstanding Account", check_company=True)

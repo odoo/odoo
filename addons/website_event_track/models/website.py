@@ -11,7 +11,7 @@ from odoo.tools.translate import _
 
 
 class Website(models.Model):
-    _inherit = "website"
+    _inherit = ["website"]
 
     app_icon = fields.Image(
         string='Website App Icon',

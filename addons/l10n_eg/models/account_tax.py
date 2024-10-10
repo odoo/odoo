@@ -2,7 +2,7 @@ from odoo import models, fields
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _inherit = ['account.tax']
     _description = 'ETA tax codes mixin'
 
     l10n_eg_eta_code = fields.Selection(

@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class SmsTracker(models.Model):
-    _inherit = "sms.tracker"
+    _inherit = ["sms.tracker"]
 
     SMS_STATE_TO_TRACE_STATUS = {
         'error': 'error',

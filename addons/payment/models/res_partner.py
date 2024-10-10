@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     payment_token_ids = fields.One2many(
         string="Payment Tokens", comodel_name='payment.token', inverse_name='partner_id')

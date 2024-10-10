@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 
 
 class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+    _inherit = ['account.analytic.account']
 
     invoice_count = fields.Integer(
         "Invoice Count",

@@ -27,7 +27,7 @@ ETA_DOMAINS = {
 
 
 class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+    _inherit = ['account.edi.format']
 
     @api.model
     def _l10n_eg_get_eta_qr_domain(self, production_enviroment=False):

@@ -10,16 +10,15 @@ from odoo import api, models, fields
 from odoo.tools import html_escape as escape
 
 
-class Image(models.AbstractModel):
+class IrQwebFieldImage(models.AbstractModel):
     """
     Widget options:
 
     ``class``
         set as attribute on the generated <img> tag
     """
-    _name = 'ir.qweb.field.image'
     _description = 'Qweb Field Image'
-    _inherit = 'ir.qweb.field.image'
+    _inherit = ['ir.qweb.field.image']
 
     def _get_src_urls(self, record, field_name, options):
         """Considering the rendering options, returns the src and data-zoom-image urls.
@@ -113,9 +112,10 @@ class Image(models.AbstractModel):
 
         return Markup(''.join(img))
 
-class ImageUrlConverter(models.AbstractModel):
+
+class IrQwebFieldImage_Url(models.AbstractModel):
     _description = 'Qweb Field Image'
-    _inherit = 'ir.qweb.field.image_url'
+    _inherit = ['ir.qweb.field.image_url']
 
     def _get_src_urls(self, record, field_name, options):
         image_url = record[options.get('preview_image', field_name)]

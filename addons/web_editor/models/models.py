@@ -6,7 +6,7 @@ from odoo import api, models
 
 
 class Base(models.AbstractModel):
-    _inherit = 'base'
+    _inherit = ['base']
 
     @api.model
     def _get_view_field_attributes(self):
@@ -14,10 +14,6 @@ class Base(models.AbstractModel):
         keys.append('sanitize')
         keys.append('sanitize_tags')
         return keys
-
-
-class BaseModel(models.AbstractModel):
-    _inherit = 'base'
 
     def web_update_field_translations(self, fname, translations):
         field = self._fields[fname]

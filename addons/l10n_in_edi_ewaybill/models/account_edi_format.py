@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
-    _inherit = "account.edi.format"
+    _inherit = ["account.edi.format"]
 
     def _l10n_in_edi_ewaybill_base_irn_or_direct(self, move):
         """

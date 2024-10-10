@@ -12,7 +12,6 @@ _logger = logging.getLogger(__name__)
 
 
 class WebsiteSnippetFilter(models.Model):
-    _name = 'website.snippet.filter'
     _inherit = ['website.published.multi.mixin']
     _description = 'Website Snippet Filter'
     _order = 'name ASC'

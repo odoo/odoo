@@ -12,8 +12,8 @@ from odoo.tools import float_round
 _logger = logging.getLogger(__name__)
 
 
-class TeamMember(models.Model):
-    _inherit = 'crm.team.member'
+class CrmTeamMember(models.Model):
+    _inherit = ['crm.team.member']
 
     # assignment
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")

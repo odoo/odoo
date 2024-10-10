@@ -57,8 +57,7 @@ for name, field in MODELS:
             return FALSE_DOMAIN
 
 
-class One2ManyChild(models.Model):
-    _name = 'export.one2many.child'
+class ExportOne2manyChild(models.Model):
     _description = 'Export One to Many Child'
     # FIXME: orm.py:1161, fix to display_name on m2o field
     _rec_name = 'value'
@@ -79,8 +78,7 @@ class One2ManyChild(models.Model):
         return FALSE_DOMAIN
 
 
-class One2ManyMultiple(models.Model):
-    _name = 'export.one2many.multiple'
+class ExportOne2manyMultiple(models.Model):
     _description = 'Export One To Many Multiple'
     _rec_name = 'parent_id'
 
@@ -90,8 +88,7 @@ class One2ManyMultiple(models.Model):
     child2 = fields.One2many('export.one2many.child.2', 'parent_id')
 
 
-class One2ManyChildMultiple(models.Model):
-    _name = 'export.one2many.multiple.child'
+class ExportOne2manyMultipleChild(models.Model):
     # FIXME: orm.py:1161, fix to display_name on m2o field
     _rec_name = 'value'
     _description = 'Export One To Many Multiple Child'
@@ -105,20 +102,19 @@ class One2ManyChildMultiple(models.Model):
             record.display_name = f"{self._name}:{record.value}"
 
 
-class One2ManyChild1(models.Model):
+class ExportOne2manyChild1(models.Model):
     _name = 'export.one2many.child.1'
-    _inherit = 'export.one2many.multiple.child'
+    _inherit = ['export.one2many.multiple.child']
     _description = 'Export One to Many Child 1'
 
 
-class One2ManyChild2(models.Model):
+class ExportOne2manyChild2(models.Model):
     _name = 'export.one2many.child.2'
-    _inherit = 'export.one2many.multiple.child'
+    _inherit = ['export.one2many.multiple.child']
     _description = 'Export One To Many Child 2'
 
 
-class Many2ManyChild(models.Model):
-    _name = 'export.many2many.other'
+class ExportMany2manyOther(models.Model):
     _description = 'Export Many to Many Other'
     # FIXME: orm.py:1161, fix to display_name on m2o field
     _rec_name = 'value'
@@ -137,16 +133,14 @@ class Many2ManyChild(models.Model):
         return FALSE_DOMAIN
 
 
-class SelectionWithDefault(models.Model):
-    _name = 'export.selection.withdefault'
+class ExportSelectionWithdefault(models.Model):
     _description = 'Export Selection With Default'
 
     const = fields.Integer(default=4)
     value = fields.Selection([('1', "Foo"), ('2', "Bar")], default='2')
 
 
-class RecO2M(models.Model):
-    _name = 'export.one2many.recursive'
+class ExportOne2manyRecursive(models.Model):
     _description = 'Export One To Many Recursive'
     _rec_name = 'value'
 
@@ -154,8 +148,7 @@ class RecO2M(models.Model):
     child = fields.One2many('export.one2many.multiple', 'parent_id')
 
 
-class OnlyOne(models.Model):
-    _name = 'export.unique'
+class ExportUnique(models.Model):
     _description = 'Export Unique'
 
     value = fields.Integer()
@@ -168,40 +161,40 @@ class OnlyOne(models.Model):
     ]
 
 
-class InheritsParent(models.Model):
-    _name = _description = 'export.inherits.parent'
+class ExportInheritsParent(models.Model):
+    _description = 'export.inherits.parent'
 
     value_parent = fields.Integer()
 
 
-class InheritsChild(models.Model):
-    _name = _description = 'export.inherits.child'
+class ExportInheritsChild(models.Model):
+    _description = 'export.inherits.child'
     _inherits = {'export.inherits.parent': 'parent_id'}
 
     parent_id = fields.Many2one('export.inherits.parent', required=True, ondelete='cascade')
     value = fields.Integer()
 
 
-class Many2String(models.Model):
-    _name = _description = 'export.m2o.str'
+class ExportM2oStr(models.Model):
+    _description = 'export.m2o.str'
 
     child_id = fields.Many2one('export.m2o.str.child')
 
 
-class ChidToString(models.Model):
-    _name = _description = 'export.m2o.str.child'
+class ExportM2oStrChild(models.Model):
+    _description = 'export.m2o.str.child'
 
     name = fields.Char()
 
 
-class WithRequiredField(models.Model):
-    _name = _description = 'export.with.required.field'
+class ExportWithRequiredField(models.Model):
+    _description = 'export.with.required.field'
 
     name = fields.Char()
     value = fields.Integer(required=True)
 
 
-class Many2OneRequiredSubfield(models.Model):
-    _name = _description = 'export.many2one.required.subfield'
+class ExportMany2oneRequiredSubfield(models.Model):
+    _description = 'export.many2one.required.subfield'
 
     name = fields.Many2one('export.with.required.field')

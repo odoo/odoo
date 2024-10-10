@@ -49,8 +49,7 @@ class LoggerProxy:
         _server_action_logger.exception(message, *args, stack_info=stack_info, exc_info=exc_info)
 
 
-class IrActions(models.Model):
-    _name = 'ir.actions.actions'
+class IrActionsActions(models.Model):
     _description = 'Actions'
     _table = 'ir_actions'
     _order = 'name'
@@ -103,13 +102,13 @@ class IrActions(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(IrActions, self).create(vals_list)
+        res = super().create(vals_list)
         # self.get_bindings() depends on action records
         self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
-        res = super(IrActions, self).write(vals)
+        res = super().write(vals)
         # self.get_bindings() depends on action records
         self.env.registry.clear_cache()
         return res
@@ -121,7 +120,7 @@ class IrActions(models.Model):
         todos.unlink()
         filters = self.env['ir.filters'].search([('action_id', 'in', self.ids)])
         filters.unlink()
-        res = super(IrActions, self).unlink()
+        res = super().unlink()
         # self.get_bindings() depends on action records
         self.env.registry.clear_cache()
         return res
@@ -252,11 +251,10 @@ class IrActions(models.Model):
         }
 
 
-class IrActionsActWindow(models.Model):
-    _name = 'ir.actions.act_window'
+class IrActionsAct_Window(models.Model):
     _description = 'Action Window'
     _table = 'ir_act_window'
-    _inherit = 'ir.actions.actions'
+    _inherit = ['ir.actions.actions']
     _order = 'name'
     _allow_sudo_commands = False
 
@@ -334,7 +332,7 @@ class IrActionsActWindow(models.Model):
     def read(self, fields=None, load='_classic_read'):
         """ call the method get_empty_list_help of the model and set the window action help message
         """
-        result = super(IrActionsActWindow, self).read(fields, load=load)
+        result = super().read(fields, load=load)
         if not fields or 'help' in fields:
             for values in result:
                 model = values.get('res_model')
@@ -353,11 +351,11 @@ class IrActionsActWindow(models.Model):
         for vals in vals_list:
             if not vals.get('name') and vals.get('res_model'):
                 vals['name'] = self.env[vals['res_model']]._description
-        return super(IrActionsActWindow, self).create(vals_list)
+        return super().create(vals_list)
 
     def unlink(self):
         self.env.registry.clear_cache()
-        return super(IrActionsActWindow, self).unlink()
+        return super().unlink()
 
     def exists(self):
         ids = self._existing()
@@ -405,8 +403,7 @@ VIEW_TYPES = [
 ]
 
 
-class IrActionsActWindowView(models.Model):
-    _name = 'ir.actions.act_window.view'
+class IrActionsAct_WindowView(models.Model):
     _description = 'Action Window View'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
@@ -420,16 +417,15 @@ class IrActionsActWindowView(models.Model):
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
     def _auto_init(self):
-        res = super(IrActionsActWindowView, self)._auto_init()
+        res = super()._auto_init()
         tools.create_unique_index(self._cr, 'act_window_view_unique_mode_per_action',
                                   self._table, ['act_window_id', 'view_mode'])
         return res
 
 
-class IrActionsActWindowclose(models.Model):
-    _name = 'ir.actions.act_window_close'
+class IrActionsAct_Window_Close(models.Model):
     _description = 'Action Window Close'
-    _inherit = 'ir.actions.actions'
+    _inherit = ['ir.actions.actions']
     _table = 'ir_actions'
     _allow_sudo_commands = False
 
@@ -443,11 +439,10 @@ class IrActionsActWindowclose(models.Model):
         }
 
 
-class IrActionsActUrl(models.Model):
-    _name = 'ir.actions.act_url'
+class IrActionsAct_Url(models.Model):
     _description = 'Action URL'
     _table = 'ir_act_url'
-    _inherit = 'ir.actions.actions'
+    _inherit = ['ir.actions.actions']
     _order = 'name'
     _allow_sudo_commands = False
 
@@ -500,10 +495,9 @@ class IrActionsServer(models.Model):
     - 'Execute several actions': define an action that triggers several other
       server actions
     """
-    _name = 'ir.actions.server'
     _description = 'Server Actions'
     _table = 'ir_act_server'
-    _inherit = 'ir.actions.actions'
+    _inherit = ['ir.actions.actions']
     _order = 'sequence,name'
     _allow_sudo_commands = False
 
@@ -1072,11 +1066,11 @@ class IrActionsServer(models.Model):
             result[action.id] = expr
         return result
 
+
 class IrActionsTodo(models.Model):
     """
     Configuration Wizards
     """
-    _name = 'ir.actions.todo'
     _description = "Configuration Wizards"
     _rec_name = 'action_id'
     _order = "sequence, id"
@@ -1151,10 +1145,9 @@ class IrActionsTodo(models.Model):
         return self.write({'state': 'open'})
 
 
-class IrActionsActClient(models.Model):
-    _name = 'ir.actions.client'
+class IrActionsClient(models.Model):
     _description = 'Client Action'
-    _inherit = 'ir.actions.actions'
+    _inherit = ['ir.actions.actions']
     _table = 'ir_act_client'
     _order = 'name'
     _allow_sudo_commands = False
@@ -1185,7 +1178,7 @@ class IrActionsActClient(models.Model):
             record.params_store = repr(params) if isinstance(params, dict) else params
 
     def _get_default_form_view(self):
-        doc = super(IrActionsActClient, self)._get_default_form_view()
+        doc = super()._get_default_form_view()
         params = doc.find(".//field[@name='params']")
         params.getparent().remove(params)
         params_store = doc.find(".//field[@name='params_store']")

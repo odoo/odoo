@@ -7,7 +7,7 @@ from odoo import models, fields, api
 
 
 class PosOrderLine(models.Model):
-    _inherit = "pos.order.line"
+    _inherit = ["pos.order.line"]
 
     combo_id = fields.Many2one('product.combo', string='Combo reference')
 
@@ -31,8 +31,9 @@ class PosOrderLine(models.Model):
             del vals['combo_parent_uuid']
         return super().write(vals)
 
+
 class PosOrder(models.Model):
-    _inherit = "pos.order"
+    _inherit = ["pos.order"]
 
     table_stand_number = fields.Char(string="Table Stand Number")
 

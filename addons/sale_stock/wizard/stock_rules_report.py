@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class StockRulesReport(models.TransientModel):
-    _inherit = 'stock.rules.report'
+    _inherit = ['stock.rules.report']
 
     so_route_ids = fields.Many2many('stock.route', string='Apply specific routes',
         domain="[('sale_selectable', '=', True)]", help="Choose to apply SO lines specific routes.")

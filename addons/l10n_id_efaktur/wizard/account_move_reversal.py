@@ -4,7 +4,7 @@ from odoo import models
 
 
 class AccountMoveReversal(models.TransientModel):
-    _inherit = "account.move.reversal"
+    _inherit = ["account.move.reversal"]
 
     def _modify_default_reverse_values(self, origin_move):
         # EXTEND 'account'

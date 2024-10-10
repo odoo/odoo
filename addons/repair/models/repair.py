@@ -17,9 +17,8 @@ MAP_REPAIR_TO_PICKING_LOCATIONS = {
 }
 
 
-class Repair(models.Model):
+class RepairOrder(models.Model):
     """ Repair Orders """
-    _name = 'repair.order'
     _description = 'Repair Order'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
     _order = 'priority desc, create_date desc'
@@ -726,9 +725,9 @@ class Repair(models.Model):
 
         return self.env['product.product'].browse(product_id).list_price
 
+
 class RepairTags(models.Model):
     """ Tags of Repair's tasks """
-    _name = "repair.tags"
     _description = "Repair Tags"
 
     def _get_default_color(self):

@@ -5,8 +5,7 @@ from odoo import api, fields, models
 from odoo.addons.onboarding.models.onboarding_progress import ONBOARDING_PROGRESS_STATES
 
 
-class Onboarding(models.Model):
-    _name = 'onboarding.onboarding'
+class OnboardingOnboarding(models.Model):
     _description = 'Onboarding'
     _order = 'sequence asc, id desc'
 

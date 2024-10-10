@@ -4,8 +4,8 @@
 from odoo import fields, models, api
 
 
-class ResPartnerMondialRelay(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model):
+    _inherit = ['res.partner']
 
     is_mondialrelay = fields.Boolean(compute='_compute_is_mondialrelay')
 

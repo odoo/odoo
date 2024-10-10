@@ -5,8 +5,8 @@ from odoo import models, _
 from odoo.exceptions import UserError
 
 
-class SaleOrderMondialRelay(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(models.Model):
+    _inherit = ['sale.order']
 
     def action_confirm(self):
         unmatch = self.filtered(lambda so: so.carrier_id.is_mondialrelay != so.partner_shipping_id.is_mondialrelay)

@@ -1500,7 +1500,7 @@ class Request:
         """ Update the environment of the current request.
 
         :param user: optional user/user id to change the current user
-        :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.Users>`
+        :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`
         :param dict context: optional context dictionary to change the current context
         :param bool su: optional boolean to change the superuser mode
         """

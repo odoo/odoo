@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 
 
 class EventQuestion(models.Model):
-    _name = 'event.question'
     _rec_name = 'title'
     _order = 'sequence,id'
     _description = 'Event Question'

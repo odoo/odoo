@@ -9,7 +9,7 @@ from odoo.tools.sql import column_exists, create_column, drop_index, index_exist
 
 class AccountMove(models.Model):
 
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     _sql_constraints = [(
         'unique_name', "", "Another entry with the same name already exists.",

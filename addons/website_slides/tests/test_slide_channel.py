@@ -250,7 +250,7 @@ class TestSlidesManagement(slides_common.SlidesCase):
             return 13.37
 
         with patch(
-            'odoo.addons.website_slides.models.slide_slide.Slide._get_completion_time_pdf',
+            'odoo.addons.website_slides.models.slide_slide.SlideSlide._get_completion_time_pdf',
             new=_get_completion_time_pdf
         ):
             slides_1 = self.env['slide.slide'].create({

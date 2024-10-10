@@ -4,7 +4,7 @@ from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
-    _inherit = 'account.chart.template'
+    _inherit = ['account.chart.template']
 
     @template('es_assec')
     def _get_es_assec_template_data(self):

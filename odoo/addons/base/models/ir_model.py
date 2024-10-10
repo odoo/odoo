@@ -186,9 +186,10 @@ def upsert_en(model, fnames, rows, conflict):
 #
 # IMPORTANT: this must be the first model declared in the module
 #
+
+
 class Base(models.AbstractModel):
     """ The base model, which is implicitly inherited by all models. """
-    _name = 'base'
     _description = 'Base'
 
 
@@ -202,7 +203,6 @@ class Unknown(models.AbstractModel):
 
 
 class IrModel(models.Model):
-    _name = 'ir.model'
     _description = "Models"
     _order = 'model'
     _rec_names_search = ['name', 'model']
@@ -350,7 +350,7 @@ class IrModel(models.Model):
             crons.unlink()
 
         self._drop_table()
-        res = super(IrModel, self).unlink()
+        res = super().unlink()
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
@@ -372,7 +372,7 @@ class IrModel(models.Model):
         # writes (4,id,False) even for non dirty items.
         if 'field_id' in vals:
             vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
-        res = super(IrModel, self).write(vals)
+        res = super().write(vals)
         # ordering has been changed, reload registry to reflect update + signaling
         if 'order' in vals:
             self.env.flush_all()  # setup_models need to fetch the updated values from the db
@@ -381,7 +381,7 @@ class IrModel(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(IrModel, self).create(vals_list)
+        res = super().create(vals_list)
         manual_models = [
             vals['model'] for vals in vals_list if vals.get('state', 'manual') == 'manual'
         ]
@@ -519,7 +519,6 @@ FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
 
 
 class IrModelFields(models.Model):
-    _name = 'ir.model.fields'
     _description = "Fields"
     _order = "name"
     _rec_name = 'field_description'
@@ -1382,8 +1381,7 @@ class IrModelFields(models.Model):
         return [(sel.value, sel.name) for sel in field.selection_ids]
 
 
-class ModelInherit(models.Model):
-    _name = "ir.model.inherit"
+class IrModelInherit(models.Model):
     _description = "Model Inheritance Tree"
     _log_access = False
 
@@ -1469,8 +1467,7 @@ class ModelInherit(models.Model):
         self.env["ir.model.data"]._update_xmlids(data_list)
 
 
-class IrModelSelection(models.Model):
-    _name = 'ir.model.fields.selection'
+class IrModelFieldsSelection(models.Model):
     _order = 'sequence, id'
     _description = "Fields Selection"
     _allow_sudo_commands = False
@@ -1787,7 +1784,6 @@ class IrModelConstraint(models.Model):
     This model tracks PostgreSQL foreign keys and constraints used by Odoo
     models.
     """
-    _name = 'ir.model.constraint'
     _description = 'Model Constraint'
     _allow_sudo_commands = False
 
@@ -1941,7 +1937,6 @@ class IrModelRelation(models.Model):
     This model tracks PostgreSQL tables used to implement Odoo many2many
     relations.
     """
-    _name = 'ir.model.relation'
     _description = 'Relation Model'
     _allow_sudo_commands = False
 
@@ -2003,7 +1998,6 @@ class IrModelRelation(models.Model):
 
 
 class IrModelAccess(models.Model):
-    _name = 'ir.model.access'
     _description = 'Model Access'
     _order = 'model_id,group_id,name,id'
     _allow_sudo_commands = False
@@ -2159,7 +2153,6 @@ class IrModelData(models.Model):
              modules themselves, thus making it possible to later
              update them seamlessly.
     """
-    _name = 'ir.model.data'
     _description = 'Model Data'
     _order = 'module, model, name'
     _allow_sudo_commands = False
@@ -2636,8 +2629,7 @@ class IrModelData(models.Model):
             xid.noupdate = not xid.noupdate
 
 
-class WizardModelMenu(models.TransientModel):
-    _name = 'wizard.ir.model.menu.create'
+class WizardIrModelMenuCreate(models.TransientModel):
     _description = 'Create Menu Wizard'
 
     menu_id = fields.Many2one('ir.ui.menu', string='Parent Menu', required=True, ondelete='cascade')

@@ -10,7 +10,6 @@ from ..websocket import wsrequest
 
 
 class IrWebsocket(models.AbstractModel):
-    _name = 'ir.websocket'
     _description = 'websocket message handling'
 
     def _get_missed_presences_identity_domains(self, presence_channels):

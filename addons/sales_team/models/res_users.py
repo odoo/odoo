@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     crm_team_ids = fields.Many2many(
         'crm.team', 'crm_team_member', 'user_id', 'crm_team_id', string='Sales Teams',

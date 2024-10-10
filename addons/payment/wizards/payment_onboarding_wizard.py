@@ -4,8 +4,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class PaymentWizard(models.TransientModel):
-    _name = 'payment.provider.onboarding.wizard'
+class PaymentProviderOnboardingWizard(models.TransientModel):
     _description = 'Payment provider onboarding wizard'
 
     payment_method = fields.Selection([

@@ -5,7 +5,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessage(models.Model):
-    _inherit = 'mail.message'
+    _inherit = ['mail.message']
 
     parent_author_name = fields.Char(compute="_compute_parent_author_name")
     parent_body = fields.Html(compute="_compute_parent_body")

@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+    _inherit = ['purchase.order']
 
     on_time_rate_perc = fields.Float(string="OTD", compute="_compute_on_time_rate_perc")
 
@@ -25,6 +25,6 @@ class PurchaseOrder(models.Model):
 
 
 class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+    _inherit = ['purchase.order.line']
 
     on_time_rate_perc = fields.Float(string="OTD", related="order_id.on_time_rate_perc")

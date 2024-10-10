@@ -5,7 +5,7 @@ from odoo import models
 
 
 class DiscussChannel(models.Model):
-    _inherit = 'discuss.channel'
+    _inherit = ['discuss.channel']
 
     def _convert_visitor_to_lead(self, partner, key):
         """ When website is installed, we can link the created lead from /lead command

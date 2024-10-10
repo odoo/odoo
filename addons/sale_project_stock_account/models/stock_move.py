@@ -5,7 +5,7 @@ from odoo.osv.expression import AND
 
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = ['stock.move']
 
     def _get_valid_moves_domain(self):
         domain = super()._get_valid_moves_domain()

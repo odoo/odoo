@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     l10n_fr_reference_leave_type = fields.Many2one(
         'hr.leave.type',

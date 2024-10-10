@@ -3,8 +3,8 @@
 
 from odoo import fields, models, _
 
+
 class MailingContactToList(models.TransientModel):
-    _name = "mailing.contact.to.list"
     _description = "Add Contacts to Mailing List"
 
     contact_ids = fields.Many2many('mailing.contact', string='Contacts')

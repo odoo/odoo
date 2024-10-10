@@ -4,8 +4,8 @@ import werkzeug.urls
 
 from odoo import models, fields, api
 
-class Partner(models.Model):
-    _name = 'res.partner'
+
+class ResPartner(models.Model):
     _inherit = ['res.partner', 'website.published.multi.mixin']
 
     visitor_ids = fields.One2many('website.visitor', 'partner_id', string='Visitors')

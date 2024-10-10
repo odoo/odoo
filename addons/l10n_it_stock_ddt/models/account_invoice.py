@@ -6,7 +6,7 @@ from odoo.tools.float_utils import float_compare
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     l10n_it_ddt_ids = fields.Many2many('stock.picking', compute="_compute_ddt_ids")
     l10n_it_ddt_count = fields.Integer(compute="_compute_ddt_ids")

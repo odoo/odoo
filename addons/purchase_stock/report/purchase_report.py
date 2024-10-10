@@ -6,7 +6,7 @@ from odoo.tools import SQL
 
 
 class PurchaseReport(models.Model):
-    _inherit = "purchase.report"
+    _inherit = ["purchase.report"]
 
     picking_type_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
     effective_date = fields.Datetime(string="Effective Date")

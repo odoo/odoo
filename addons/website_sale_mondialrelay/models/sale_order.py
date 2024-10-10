@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     def _check_cart_is_ready_to_be_paid(self):
         if (

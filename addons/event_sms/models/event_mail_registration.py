@@ -2,7 +2,7 @@ from odoo import fields, models
 
 
 class EventMailRegistration(models.Model):
-    _inherit = 'event.mail.registration'
+    _inherit = ['event.mail.registration']
 
     def _execute_on_registrations(self):
         todo = self.filtered(

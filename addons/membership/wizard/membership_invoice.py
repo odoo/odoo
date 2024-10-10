@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class MembershipInvoice(models.TransientModel):
-    _name = "membership.invoice"
     _description = "Membership Invoice"
 
     product_id = fields.Many2one('product.product', string='Membership', required=True)

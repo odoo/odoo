@@ -32,7 +32,6 @@ ERROR_CODES = [
 
 
 class SnailmailLetter(models.Model):
-    _name = 'snailmail.letter'
     _description = 'Snailmail Letter'
 
     user_id = fields.Many2one('res.users', 'Sent by')

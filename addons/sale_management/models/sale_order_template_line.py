@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 
 
 class SaleOrderTemplateLine(models.Model):
-    _name = "sale.order.template.line"
     _description = "Quotation Template Line"
     _order = 'sale_order_template_id, sequence, id'
 

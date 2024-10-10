@@ -17,8 +17,7 @@ from .._vendor.webauthn.helpers.structs import AuthenticatorSelectionCriteria, R
 _logger = logging.getLogger(__name__)
 
 
-class PassKey(models.Model):
-    _name = 'auth.passkey.key'
+class AuthPasskeyKey(models.Model):
     _description = 'Passkey'
     _order = 'id desc'
 
@@ -152,8 +151,7 @@ class PassKey(models.Model):
         }
 
 
-class PassKeyCreate(models.TransientModel):
-    _name = 'auth.passkey.key.create'
+class AuthPasskeyKeyCreate(models.TransientModel):
     _description = 'Create a Passkey'
 
     name = fields.Char('Name', required=True)

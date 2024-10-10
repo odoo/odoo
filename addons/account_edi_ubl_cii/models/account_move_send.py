@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountMoveSend(models.AbstractModel):
-    _inherit = 'account.move.send'
+    _inherit = ['account.move.send']
 
     # -------------------------------------------------------------------------
     # ALERTS

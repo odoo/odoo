@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class LoyaltyProgram(models.Model):
-    _inherit = 'loyalty.program'
+    _inherit = ['loyalty.program']
 
     order_count = fields.Integer(compute='_compute_order_count')
     sale_ok = fields.Boolean(string="Sales", default=True)

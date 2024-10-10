@@ -6,12 +6,12 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+
 class MailActivityType(models.Model):
     """ Activity Types are used to categorize activities. Each type is a different
     kind of activity e.g. call, mail, meeting. An activity can be generic i.e.
     available for all models using activities; or specific to a model in which
     case res_model field should be used. """
-    _name = 'mail.activity.type'
     _description = 'Activity Type'
     _rec_name = 'name'
     _order = 'sequence, id'

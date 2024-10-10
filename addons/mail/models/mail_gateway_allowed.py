@@ -19,7 +19,6 @@ class MailGatewayAllowed(models.Model):
     """
 
     _description = 'Mail Gateway Allowed'
-    _name = 'mail.gateway.allowed'
 
     email = fields.Char('Email Address', required=True)
     email_normalized = fields.Char(

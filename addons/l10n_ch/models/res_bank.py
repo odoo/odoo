@@ -40,7 +40,7 @@ def check_qr_iban_range(iban):
 
 
 class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+    _inherit = ['res.partner.bank']
 
     l10n_ch_qr_iban = fields.Char(string='QR-IBAN',
                                   compute='_compute_l10n_ch_qr_iban',

@@ -23,10 +23,10 @@ _INTERVALS = {
     'now': lambda interval: relativedelta(hours=0),
 }
 
+
 class EventTypeMail(models.Model):
     """ Template of event.mail to attach to event.type. Those will be copied
     upon all events created in that type to ease event creation. """
-    _name = 'event.type.mail'
     _description = 'Mail Scheduling on Event Category'
 
     event_type_id = fields.Many2one(
@@ -60,11 +60,11 @@ class EventTypeMail(models.Model):
             'template_ref': '%s,%i' % (self.template_ref._name, self.template_ref.id),
         }
 
-class EventMailScheduler(models.Model):
+
+class EventMail(models.Model):
     """ Event automated mailing. This model replaces all existing fields and
     configuration allowing to send emails on events since Odoo 9. A cron exists
     that periodically checks for mailing to run. """
-    _name = 'event.mail'
     _rec_name = 'event_id'
     _description = 'Event Automated Mailing'
 

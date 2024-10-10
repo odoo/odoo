@@ -2,9 +2,8 @@
 from odoo import models
 
 
-class AccountEdiXmlUBLSG(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
-    _name = "account.edi.xml.ubl_sg"
+class AccountEdiXmlUbl_Sg(models.AbstractModel):
+    _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "SG BIS Billing 3.0"
 
     """

@@ -8,7 +8,7 @@ from odoo.osv import expression
 
 
 class SaleOrder(models.Model):
-    _inherit = "sale.order"
+    _inherit = ["sale.order"]
 
     attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
 

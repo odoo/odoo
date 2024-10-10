@@ -11,7 +11,7 @@ from odoo.tools import file_open, split_every
 
 
 class PosConfig(models.Model):
-    _inherit = "pos.config"
+    _inherit = ["pos.config"]
 
     def _self_order_kiosk_default_languages(self):
         return self.env["res.lang"].get_installed()

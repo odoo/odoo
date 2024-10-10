@@ -9,7 +9,7 @@ from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+    _inherit = ["hr.employee.base"]
 
     def _get_worklocation(self, start_date, end_date):
         work_locations_by_employee = defaultdict(dict)

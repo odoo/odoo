@@ -5,9 +5,8 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 
-class MailBlackList(models.Model):
+class MailBlacklist(models.Model):
     """ Model of blacklisted email addresses to stop sending emails."""
-    _name = 'mail.blacklist'
     _inherit = ['mail.thread']
     _description = 'Mail Blacklist'
     _rec_name = 'email'
@@ -46,13 +45,13 @@ class MailBlackList(models.Model):
             to_create = [v for v in new_values if v['email'] not in bl_entries]
 
         # TODO DBE Fixme : reorder ids according to incoming ids.
-        results = super(MailBlackList, self).create(to_create)
+        results = super().create(to_create)
         return self.env['mail.blacklist'].browse(bl_entries.values()) | results
 
     def write(self, values):
         if 'email' in values:
             values['email'] = tools.email_normalize(values['email'])
-        return super(MailBlackList, self).write(values)
+        return super().write(values)
 
     def _search(self, domain, offset=0, limit=None, order=None):
         """ Override _search in order to grep search on email field and make it

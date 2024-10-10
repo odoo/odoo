@@ -4,7 +4,7 @@ from odoo.tools.date_utils import get_month
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     l10n_in_is_withholding = fields.Boolean(
         string="Is Indian TDS Entry",

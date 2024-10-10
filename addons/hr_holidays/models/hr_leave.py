@@ -31,7 +31,8 @@ def get_employee_from_context(values, context, user_employee_id):
     employee_id_value = employee_ids[0] if employee_ids else False
     return employee_id_value or context.get('default_employee_id', context.get('employee_id', user_employee_id))
 
-class HolidaysRequest(models.Model):
+
+class HrLeave(models.Model):
     """ Time Off Requests Access specifications
 
      - a regular employee / user
@@ -66,7 +67,6 @@ class HolidaysRequest(models.Model):
     On top of that multicompany rules apply based on company defined on the
     leave request leave type.
     """
-    _name = "hr.leave"
     _description = "Time Off"
     _order = "date_from desc"
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
@@ -74,7 +74,7 @@ class HolidaysRequest(models.Model):
 
     @api.model
     def default_get(self, fields_list):
-        defaults = super(HolidaysRequest, self).default_get(fields_list)
+        defaults = super().default_get(fields_list)
         defaults = self._default_get_request_dates(defaults)
 
         lt = self.env['hr.leave.type']
@@ -226,7 +226,7 @@ class HolidaysRequest(models.Model):
     ]
 
     def _auto_init(self):
-        res = super(HolidaysRequest, self)._auto_init()
+        res = super()._auto_init()
         tools.create_index(self._cr, 'hr_leave_date_to_date_from_index',
                            self._table, ['date_to', 'date_from'])
         return res
@@ -727,7 +727,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 if mapped_validation_type[leave_type_id] == 'both':
                     self._check_double_validation_rules(employee_id, values.get('state', False))
 
-        holidays = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         holidays._check_validity()
 
         for holiday in holidays:
@@ -776,7 +776,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 values['request_date_from'] = values['date_from']
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
-        result = super(HolidaysRequest, self).write(values)
+        result = super().write(values)
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
             self._check_validity()
         if not self.env.context.get('leave_fast_create'):
@@ -804,7 +804,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     def unlink(self):
         self.sudo()._post_leave_cancel()
-        return super(HolidaysRequest, self.with_context(leave_skip_date_check=True)).unlink()
+        return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -1318,7 +1318,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         if 'state' in init_values and self.state == 'validate':
             leave_notif_subtype = self.holiday_status_id.leave_notif_subtype_id
             return leave_notif_subtype or self.env.ref('hr_holidays.mt_leave')
-        return super(HolidaysRequest, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Handle HR users and officers recipients that can validate or refuse holidays
@@ -1360,8 +1360,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo
         if any(holiday.state in ['validate', 'validate1'] for holiday in self):
             self.check_access('read')
-            return super(HolidaysRequest, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
-        return super(HolidaysRequest, self).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
+            return super(HrLeave, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
+        return super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):

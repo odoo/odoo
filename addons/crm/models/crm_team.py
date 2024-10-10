@@ -17,8 +17,7 @@ from odoo.tools.safe_eval import safe_eval
 _logger = logging.getLogger(__name__)
 
 
-class Team(models.Model):
-    _name = 'crm.team'
+class CrmTeam(models.Model):
     _inherit = ['mail.alias.mixin', 'crm.team']
     _description = 'Sales Team'
 
@@ -126,7 +125,7 @@ class Team(models.Model):
     # ------------------------------------------------------------
 
     def write(self, vals):
-        result = super(Team, self).write(vals)
+        result = super().write(vals)
         if 'use_leads' in vals or 'use_opportunities' in vals:
             for team in self:
                 alias_vals = team._alias_get_creation_values()
@@ -170,14 +169,14 @@ class Team(models.Model):
                         'variable': frequency.variable,
                         'won_count': frequency.won_count if float_compare(frequency.won_count, 0.1, 2) == 1 else 0.1,
                     })
-        return super(Team, self).unlink()
+        return super().unlink()
 
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
 
     def _alias_get_creation_values(self):
-        values = super(Team, self)._alias_get_creation_values()
+        values = super()._alias_get_creation_values()
         values['alias_model_id'] = self.env['ir.model']._get('crm.lead').id
         if self.id:
             if not self.use_leads and not self.use_opportunities:
@@ -699,7 +698,7 @@ class Team(models.Model):
         return action
 
     def _compute_dashboard_button_name(self):
-        super(Team, self)._compute_dashboard_button_name()
+        super()._compute_dashboard_button_name()
         team_with_pipelines = self.filtered(lambda el: el.use_opportunities)
         team_with_pipelines.update({'dashboard_button_name': _("Pipeline")})
 
@@ -712,29 +711,29 @@ class Team(models.Model):
             }
             action['help'] = self.env['ir.ui.view']._render_template('crm.crm_action_helper', values=rcontext)
             return action
-        return super(Team,self).action_primary_channel_button()
+        return super().action_primary_channel_button()
 
     def _graph_get_model(self):
         if self.use_opportunities:
             return 'crm.lead'
-        return super(Team,self)._graph_get_model()
+        return super()._graph_get_model()
 
     def _graph_date_column(self):
         if self.use_opportunities:
             return SQL('create_date')
-        return super(Team,self)._graph_date_column()
+        return super()._graph_date_column()
 
     def _graph_y_query(self):
         if self.use_opportunities:
             return SQL('count(*)')
-        return super(Team,self)._graph_y_query()
+        return super()._graph_y_query()
 
     def _extra_sql_conditions(self):
         if self.use_opportunities:
             return SQL("type LIKE 'opportunity'")
-        return super(Team,self)._extra_sql_conditions()
+        return super()._extra_sql_conditions()
 
     def _graph_title_and_key(self):
         if self.use_opportunities:
             return ['', _('New Opportunities')] # no more title
-        return super(Team, self)._graph_title_and_key()
+        return super()._graph_title_and_key()

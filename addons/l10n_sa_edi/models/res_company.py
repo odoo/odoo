@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 
 
 class ResCompany(models.Model):
-    _inherit = "res.company"
+    _inherit = ["res.company"]
 
     l10n_sa_private_key_id = fields.Many2one(string="ZATCA Private key", comodel_name='certificate.key', copy=False, domain=[('public', '=', False)],
                                         help="The private key used to generate the CSR and obtain certificates",)

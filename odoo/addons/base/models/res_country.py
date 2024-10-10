@@ -29,8 +29,7 @@ NO_FLAG_COUNTRIES = [
 ]
 
 
-class Country(models.Model):
-    _name = 'res.country'
+class ResCountry(models.Model):
     _description = 'Country'
     _order = 'name'
     _rec_names_search = ['name', 'code']
@@ -110,7 +109,7 @@ class Country(models.Model):
         for vals in vals_list:
             if vals.get('code'):
                 vals['code'] = vals['code'].upper()
-        return super(Country, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, vals):
         if vals.get('code'):
@@ -148,18 +147,17 @@ class Country(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
-class CountryGroup(models.Model):
+
+class ResCountryGroup(models.Model):
     _description = "Country Group"
-    _name = 'res.country.group'
 
     name = fields.Char(required=True, translate=True)
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
 
 
-class CountryState(models.Model):
+class ResCountryState(models.Model):
     _description = "Country state"
-    _name = 'res.country.state'
     _order = 'code'
     _rec_names_search = ['name', 'code']
 

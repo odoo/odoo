@@ -6,7 +6,7 @@ from odoo import models
 
 
 class ProductTemplateAttributeLine(models.Model):
-    _inherit = 'product.template.attribute.line'
+    _inherit = ['product.template.attribute.line']
 
     def _prepare_single_value_for_display(self):
         """On the product page group together the attribute lines that concern

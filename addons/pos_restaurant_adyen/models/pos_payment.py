@@ -10,7 +10,7 @@ TIMEOUT = 10
 
 
 class PosPayment(models.Model):
-    _inherit = 'pos.payment'
+    _inherit = ['pos.payment']
 
     def _update_payment_line_for_tip(self, tip_amount):
         """Capture the payment when a tip is set."""

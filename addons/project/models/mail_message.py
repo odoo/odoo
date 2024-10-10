@@ -5,7 +5,7 @@ from odoo.tools.sql import create_index
 
 
 class MailMessage(models.Model):
-    _inherit = 'mail.message'
+    _inherit = ['mail.message']
 
     def init(self):
         super().init()

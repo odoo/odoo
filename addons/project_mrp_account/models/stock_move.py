@@ -6,7 +6,7 @@ from odoo.tools import format_list
 
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = ['stock.move']
 
     def _get_analytic_distribution(self):
         distribution = self.raw_material_production_id.project_id._get_analytic_distribution()

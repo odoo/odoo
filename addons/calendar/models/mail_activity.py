@@ -6,7 +6,7 @@ from odoo.tools import is_html_empty
 
 
 class MailActivity(models.Model):
-    _inherit = "mail.activity"
+    _inherit = ["mail.activity"]
 
     calendar_event_id = fields.Many2one('calendar.event', string="Calendar Meeting", ondelete='cascade')
 

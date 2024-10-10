@@ -5,7 +5,7 @@ from odoo.tools import config
 
 
 class ResPartner(models.Model):
-    _inherit = "res.partner"
+    _inherit = ["res.partner"]
 
     date_localization = fields.Date(string='Geolocation Date')
 

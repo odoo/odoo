@@ -6,8 +6,7 @@ from odoo.exceptions import UserError
 
 
 class SaleOrderCancel(models.TransientModel):
-    _name = 'sale.order.cancel'
-    _inherit = 'mail.composer.mixin'
+    _inherit = ['mail.composer.mixin']
     _description = "Sales Order Cancel"
 
     @api.model

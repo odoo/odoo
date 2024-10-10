@@ -3,8 +3,8 @@
 
 from odoo import api, fields, models
 
-class SomeObj(models.Model):
-    _name = 'test_access_right.some_obj'
+
+class Test_Access_RightSome_Obj(models.Model):
     _description = 'Object For Test Access Right'
 
     val = fields.Integer()
@@ -18,28 +18,28 @@ class SomeObj(models.Model):
     forbidden2 = fields.Integer(groups='test_access_rights.test_group')
     forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
 
-class Container(models.Model):
-    _name = 'test_access_right.container'
+
+class Test_Access_RightContainer(models.Model):
     _description = 'Test Access Right Container'
 
     some_ids = fields.Many2many('test_access_right.some_obj', 'test_access_right_rel', 'container_id', 'some_id')
 
-class Inherits(models.Model):
-    _name = 'test_access_right.inherits'
+
+class Test_Access_RightInherits(models.Model):
     _description = 'Object for testing related access rights'
 
     _inherits = {'test_access_right.some_obj': 'some_id'}
 
     some_id = fields.Many2one('test_access_right.some_obj', required=True, ondelete='restrict')
 
-class Child(models.Model):
-    _name = 'test_access_right.child'
+
+class Test_Access_RightChild(models.Model):
     _description = 'Object for testing company ir rule'
 
     parent_id = fields.Many2one('test_access_right.some_obj')
 
-class ObjCateg(models.Model):
-    _name = 'test_access_right.obj_categ'
+
+class Test_Access_RightObj_Categ(models.Model):
     _description = "Context dependent searchable model"
 
     name = fields.Char(required=True)
@@ -51,11 +51,10 @@ class ObjCateg(models.Model):
         return super().search_fetch(domain, field_names, offset, limit, order)
 
 
-class FakeTicket(models.Model):
+class Test_Access_RightTicket(models.Model):
     """We want to simulate a record that would typically be accessed by a portal user,
        with a relational field to records that could not be accessed by a portal user.
     """
-    _name = 'test_access_right.ticket'
     _description = 'Fake ticket For Test Access Right'
 
     name = fields.Char()
@@ -66,8 +65,7 @@ class ResPartner(models.Model):
     """User inherits partner, so we are implicitly adding these fields to User
        This essentially reproduces the (sad) situation introduced by account.
     """
-    _name = 'res.partner'
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True)
     monetary = fields.Monetary()  # implicitly depends on currency_id as currency_field

@@ -5,7 +5,6 @@ from odoo import api, exceptions, fields, models, _
 
 
 class CrmTeamMember(models.Model):
-    _name = 'crm.team.member'
     _inherit = ['mail.thread']
     _description = 'Sales Team Member'
     _rec_name = 'user_id'

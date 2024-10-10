@@ -5,13 +5,13 @@ from odoo import api, fields, models
 
 
 class LinkTracker(models.Model):
-    _inherit = "link.tracker"
+    _inherit = ["link.tracker"]
 
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
 
 
 class LinkTrackerClick(models.Model):
-    _inherit = "link.tracker.click"
+    _inherit = ["link.tracker.click"]
 
     mailing_trace_id = fields.Many2one('mailing.trace', string='Mail Statistics', index='btree_not_null')
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', index='btree_not_null')

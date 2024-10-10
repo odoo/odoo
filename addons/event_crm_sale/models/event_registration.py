@@ -7,7 +7,7 @@ from odoo import models
 
 
 class EventRegistration(models.Model):
-    _inherit = 'event.registration'
+    _inherit = ['event.registration']
 
     def _get_lead_grouping(self, rules, rule_to_new_regs):
         """ Override to support sale-order based grouping and update.

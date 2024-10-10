@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class HrEmployee(models.Model):
-    _inherit = 'hr.employee'
+    _inherit = ['hr.employee']
 
     def generate_work_entries(self, date_start, date_stop, force=False):
         date_start = fields.Date.to_date(date_start)

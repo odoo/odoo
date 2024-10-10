@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class Website(models.Model):
-    _inherit = 'website'
+    _inherit = ['website']
 
     def _get_crm_default_team_domain(self):
         if not self.env.user.has_group('crm.group_use_lead'):

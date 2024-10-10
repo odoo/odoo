@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class Website(models.Model):
-    _inherit = 'website'
+    _inherit = ['website']
 
     in_store_dm_id = fields.Many2one(
         string="In-store Delivery Method",

@@ -8,7 +8,7 @@ from odoo.tools import str2bool
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _inherit = ['payment.transaction']
 
     sale_order_ids = fields.Many2many('sale.order', 'sale_order_transaction_rel', 'transaction_id', 'sale_order_id',
                                       string='Sales Orders', copy=False, readonly=True)

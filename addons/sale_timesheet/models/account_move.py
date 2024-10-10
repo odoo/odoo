@@ -7,7 +7,7 @@ from odoo.osv import expression
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     timesheet_ids = fields.One2many('account.analytic.line', 'timesheet_invoice_id', string='Timesheets', readonly=True, copy=False, export_string_translation=False)
     timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count', compute_sudo=True, export_string_translation=False)

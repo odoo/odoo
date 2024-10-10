@@ -5,8 +5,8 @@ from odoo import api, exceptions, models
 from odoo.addons.phone_validation.tools import phone_validation
 
 
-class BaseModel(models.AbstractModel):
-    _inherit = 'base'
+class Base(models.AbstractModel):
+    _inherit = ['base']
 
     # ------------------------------------------------------------
     # FIELDS HELPERS

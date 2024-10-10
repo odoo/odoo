@@ -3,7 +3,7 @@
 
 from unittest.mock import patch
 
-from odoo.addons.base.models.ir_mail_server import IrMailServer
+from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.survey.tests import common
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
@@ -101,7 +101,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         r = self._access_begin(certification, answer_token)
         self.assertResponse(r, 200)
 
-        with patch.object(IrMailServer, 'connect'):
+        with patch.object(IrMail_Server, 'connect'):
             self._answer_question(q01, q01.suggested_answer_ids.ids[3], answer_token, csrf_token)
             self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, csrf_token)
             self._answer_question(q03, "I think they're great!", answer_token, csrf_token)
@@ -208,7 +208,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         r = self._access_begin(certification, answer_token)
         self.assertResponse(r, 200)
 
-        with patch.object(IrMailServer, 'connect'):
+        with patch.object(IrMail_Server, 'connect'):
             question_ids = user_inputs.predefined_question_ids
             self.assertEqual(len(question_ids), 1, 'Only one question should have been selected by the randomization')
             # Whatever which question was selected, the correct answer is the first one

@@ -3,7 +3,8 @@
 
 from odoo import api, fields, models, tools
 
-class Partner(models.Model):
+
+class ResPartner(models.Model):
     _inherit = ['res.partner']
 
     street_name = fields.Char(

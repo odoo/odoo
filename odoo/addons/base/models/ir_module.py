@@ -75,8 +75,8 @@ def assert_log_admin_access(method):
         return method(self, *args, **kwargs)
     return decorator(check_and_log, method)
 
-class ModuleCategory(models.Model):
-    _name = "ir.module.category"
+
+class IrModuleCategory(models.Model):
     _description = "Application"
     _order = 'name'
     _allow_sudo_commands = False
@@ -148,8 +148,7 @@ XML_DECLARATION = (
 )
 
 
-class Module(models.Model):
-    _name = "ir.module.module"
+class IrModuleModule(models.Model):
     _rec_name = "shortdesc"
     _rec_names_search = ['name', 'shortdesc', 'summary']
     _description = "Module"
@@ -336,7 +335,7 @@ class Module(models.Model):
 
     def unlink(self):
         self.env.registry.clear_cache()
-        return super(Module, self).unlink()
+        return super().unlink()
 
     def _get_modules_to_load_domain(self):
         """ Domain to retrieve the modules that should be loaded by the registry. """
@@ -942,7 +941,7 @@ class Module(models.Model):
                 'values': list(values_range.values()),
             }
 
-        return super(Module, self).search_panel_select_range(field_name, **kwargs)
+        return super().search_panel_select_range(field_name, **kwargs)
 
     @api.model
     def _load_module_terms(self, modules, langs, overwrite=False, imported_module=False):
@@ -969,8 +968,8 @@ class Module(models.Model):
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]
 
-class ModuleDependency(models.Model):
-    _name = "ir.module.module.dependency"
+
+class IrModuleModuleDependency(models.Model):
     _description = "Module dependency"
     _log_access = False  # inserts are done manually, create and write uid, dates are always null
     _allow_sudo_commands = False
@@ -1034,8 +1033,7 @@ class ModuleDependency(models.Model):
         return res
 
 
-class ModuleExclusion(models.Model):
-    _name = "ir.module.module.exclusion"
+class IrModuleModuleExclusion(models.Model):
     _description = "Module exclusion"
     _allow_sudo_commands = False
 
