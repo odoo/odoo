@@ -38,3 +38,10 @@ class BaseModel(models.AbstractModel):
         # dummy version of 'get_website_meta' above; this is a graceful fallback
         # for models that don't inherit from 'website.seo.metadata'
         return {}
+
+    def _get_examined_html_fields(self):
+        html_fields = super()._get_examined_html_fields()
+        table_to_model = {self.env[model_name]._table: model_name for model_name in self.env if self.env[model_name]._table}
+        for table, name in self.env['website']._get_html_fields():
+            html_fields.append((table_to_model.get(table), name, [], False))
+        return html_fields
