@@ -2,7 +2,7 @@
 {
     'name': 'Spain - Accounting (PGCE 2008)',
     'website': 'https://www.odoo.com/documentation/saas-17.2/applications/finance/fiscal_localizations/spain.html',
-    'version': '5.3',
+    'version': '5.4',
     'icon': '/account/static/description/l10n.png',
     'countries': ['es'],
     'author': 'Spanish Localization Team',
