@@ -12,6 +12,9 @@ class LoyaltyCard(models.Model):
         string="Order Reference",
         readonly=True,
         help="The sales order from which coupon is generated")
+    order_id_partner_id = fields.Many2one(
+        'res.partner', 'Sale Order Customer',
+        related='order_id.partner_id')
 
     def _get_default_template(self):
         default_template = super()._get_default_template()
@@ -19,8 +22,8 @@ class LoyaltyCard(models.Model):
             default_template = self.env.ref('loyalty.mail_template_loyalty_card', raise_if_not_found=False)
         return default_template
 
-    def _get_mail_partner(self):
-        return super()._get_mail_partner() or self.order_id.partner_id
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return super()._mail_get_partner_fields(introspect_fields=introspect_fields) + ['order_id_partner_id']
 
     def _get_signature(self):
         return self.order_id.user_id.signature or super()._get_signature()
