@@ -7,16 +7,17 @@ import os
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
 from odoo.tools.misc import file_open
 
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.sale.tests.common import SaleCommon
 
 directory = os.path.dirname(__file__)
 
 
 @tagged('-at_install', 'post_install')
-class TestPDFQuoteBuilder(HttpCase, SaleCommon):
+class TestPDFQuoteBuilder(HttpCaseWithUserDemo, SaleCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -136,6 +137,18 @@ class TestPDFQuoteBuilder(HttpCase, SaleCommon):
                 form_field, self.sale_order, sol_1
             )
             self.assertEqual(' '.join(result.split()), expected_value)
+
+    def test_product_document_dialog_params(self):
+        dialog_param = self.sale_order.get_update_included_pdf_params()
+        # should return all document data for admin users
+        self.assertTrue(dialog_param['headers']['files'])
+        self.assertTrue(dialog_param['lines'])
+
+        self.user_demo.groups_id += self.env.ref('sales_team.group_sale_salesman_all_leads')
+        dialog_param = self.sale_order.with_user(self.user_demo.id).get_update_included_pdf_params()
+        # should return only accessible documents for non admin users
+        self.assertFalse(dialog_param['headers']['files'])
+        self.assertTrue(dialog_param['lines'])
 
     def _test_custom_content_kanban_like(self):
         # TODO VCR finish tour and uncomment

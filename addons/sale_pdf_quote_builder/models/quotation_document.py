@@ -3,7 +3,7 @@
 import base64
 
 from odoo import Command, _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 
 from odoo.addons.sale_pdf_quote_builder import utils
 
@@ -54,6 +54,24 @@ class QuotationDocument(models.Model):
             if doc.datas and not doc.mimetype.endswith('pdf'):
                 raise ValidationError(_("Only PDF documents can be used as header or footer."))
             utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
+
+    def _filter_quote_document_access(self):
+        """ Filter the given quotation documents to return only the documents the current user have
+        access to.
+
+        :return: <quotation.document> the current user have access to
+        """
+        accessible_documents = self.browse()
+        if not self.has_access('read') or not self.ir_attachment_id.has_access('read'):
+            return accessible_documents
+
+        for document in self:
+            try:
+                document.ir_attachment_id.sudo(False).check('read')
+                accessible_documents |= document
+            except AccessError:
+                continue
+        return accessible_documents
 
     # === COMPUTE METHODS === #
 
