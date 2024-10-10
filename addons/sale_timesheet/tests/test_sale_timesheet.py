@@ -145,6 +145,16 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         # timesheet can still be modified
         timesheet1.write({'unit_amount': 13})
 
+        timesheet5 = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task_serv2.project_id.id,
+            'task_id': task_serv2.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+            'so_line': so_line_ordered_global_project.id,
+        })
+        self.assertEqual(timesheet5.timesheet_invoice_id, invoice1, "After creating timesheet5, it should be linked to invoice1, since the service policy is ordered_prepaid and invoice1 is the last posted invoice linked to the SOL of timesheet5")
+
     def test_timesheet_delivery(self):
         """ Test timesheet invoicing with 'invoice on delivery' timetracked products
                 1. Create SO and confirm it
@@ -346,8 +356,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         # validate the invoice
         invoice1.action_post()
 
-        self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, even after invoice validation")
-        self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice, even after invoice validation")
+        self.assertEqual(timesheet1.timesheet_invoice_id, invoice1, "After validating the invoice1, the timesheet1 should be linked to it, since the service policy of the sol product of the timesheet is delivered_manual")
+        self.assertFalse(timesheet2.timesheet_invoice_id, "After validating the invoice1, the timesheet2 should still not be linked to it, since the timesheet is non-billable")
 
     def test_timesheet_invoice(self):
         """ Test to create invoices for the sale order with timesheets
@@ -1146,3 +1156,108 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             },
         ])
         self.assertEqual(timesheet.timesheet_invoice_type, 'billable_time')
+
+    def test_timesheet_ordered_prepaid_link_to_invoice(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'SO Test',
+            'partner_id': self.partner_a.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_order_timesheet2.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        self.env['account.analytic.line'].create({
+            'name': 'Timesheet 1',
+            'project_id': self.project_global.id,
+            'unit_amount': 10,
+            'employee_id': self.employee_manager.id,
+            'so_line': so_line.id,
+        })
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Timesheet 2',
+            'project_id': self.project_global.id,
+            'unit_amount': 20,
+            'employee_id': self.employee_manager.id,
+            'so_line': so_line.id,
+        })
+        self.assertEqual(
+            timesheet.timesheet_invoice_id,
+            invoice,
+            "For ordered prepaid services, the created timesheet should be linked to the most recent posted invoice "
+            "linked to the SOL of the timesheet.",
+        )
+        invoice._reverse_moves()
+        self.assertFalse(
+            timesheet.timesheet_invoice_id,
+            "Reversing the invoice should unlink timesheets of that type from the invoice.",
+        )
+
+    def test_timesheet_delivered_milestones_link_to_invoice(self):
+        self.product_milestone.service_tracking = 'project_only'
+        sale_order = self.env['sale.order'].create({
+            'name': 'SO Test',
+            'partner_id': self.partner_a.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_milestone.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        sale_order.project_id.milestone_ids.is_reached = True
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'project_id': sale_order.project_id.id,
+            'unit_amount': 10,
+            'employee_id': self.employee_manager.id,
+            'so_line': so_line.id,
+        })
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        self.assertEqual(
+            invoice.timesheet_ids,
+            timesheet,
+            "For milestones services, the timesheet should be linked to the invoice as the milestone was marked as reached.",
+        )
+        invoice._reverse_moves()
+        self.assertFalse(
+            timesheet.timesheet_invoice_id,
+            "Reversing the invoice should unlink timesheets of that type from the invoice.",
+        )
+
+    def test_timesheet_delivered_manual_link_to_invoice(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'SO Test',
+            'partner_id': self.partner_a.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_manual2.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'project_id': self.project_global.id,
+            'unit_amount': 10,
+            'employee_id': self.employee_manager.id,
+            'so_line': so_line.id,
+        })
+        so_line.qty_delivered = 10
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        self.assertEqual(
+            invoice.timesheet_ids,
+            timesheet,
+            "For delivered manual services, the timesheet should be linked to the invoice as the timesheets's date is before "
+            "or equal to the invoice's date.",
+        )
+        invoice._reverse_moves()
+        self.assertFalse(
+            timesheet.timesheet_invoice_id,
+            "Reversing the invoice should unlink timesheets of that type from the invoice.",
+        )
