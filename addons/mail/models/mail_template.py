@@ -62,7 +62,8 @@ class MailTemplate(models.Model):
     # content
     body_html = fields.Html(
         'Body', render_engine='qweb', render_options={'post_process': True},
-        prefetch=True, translate=True, sanitize=False)
+        prefetch=True, translate=True, sanitize='email_outgoing',
+    )
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
