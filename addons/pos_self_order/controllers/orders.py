@@ -47,6 +47,12 @@ class PosSelfOrderController(http.Controller):
         })
 
         order_ids.send_table_count_notification(order_ids.mapped('table_id'))
+
+        draft_orders = order_ids.filtered(lambda order: order.state == 'draft')
+        for config in pos_config.get_self_order_trusted_configs():
+            if config.current_session_id and draft_orders:
+                config._notify("NEW_DRAFT_SELF_ORDERS", {'order_ids': draft_orders.ids})
+
         return self._generate_return_values(order_ids, pos_config)
 
     def _generate_return_values(self, order, config_id):

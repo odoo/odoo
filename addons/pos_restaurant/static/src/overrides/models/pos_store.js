@@ -25,6 +25,10 @@ patch(PosStore.prototype, {
         this.isEditMode = false;
         this.tableSyncing = false;
         await super.setup(...arguments);
+
+        this.onNotified("NEW_DRAFT_SELF_ORDERS", ({ order_ids }) => {
+            return this.data.read("pos.order", order_ids);
+        });
     },
     get firstScreen() {
         const screen = super.firstScreen;
