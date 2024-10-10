@@ -4,9 +4,16 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
     test: true,
     steps: () => [
         {
+            isActive: ["enterprise"],
             content: "open command palette",
             trigger: ".o_home_menu",
             run: "click && press ctrl+k",
+        },
+        {
+            isActive: ["community"],
+            content: "open command palette",
+            trigger: "body",
+            run: "press ctrl+k",
         },
         {
             trigger: ".o_command_palette_search input",
