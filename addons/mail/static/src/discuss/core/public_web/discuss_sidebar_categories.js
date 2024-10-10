@@ -2,17 +2,16 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
-import { cleanTerm } from "@mail/utils/common/format";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, useState, useSubEnv } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
@@ -82,10 +81,7 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get bordered() {
-        return (
-            this.store.discuss.isSidebarCompact &&
-            Boolean(this.env.filteredThreads?.(this.thread.sub_channel_ids)?.length)
-        );
+        return this.store.discuss.isSidebarCompact && Boolean(this.thread.sub_channel_ids?.length);
     }
 
     get indicators() {
@@ -197,23 +193,6 @@ export class DiscussSidebarCategory extends Component {
     }
 }
 
-export class DiscussSidebarQuickSearchInput extends Component {
-    static template = "mail.DiscussSidebarQuickSearchInput";
-    static props = ["state", "autofocus?"];
-
-    setup() {
-        super.setup();
-        this.store = useState(useService("mail.store"));
-        if (this.props.autofocus) {
-            useAutofocus({ refName: "root" });
-        }
-    }
-
-    get state() {
-        return this.props.state;
-    }
-}
-
 /**
  * @typedef {Object} Props
  * @extends {Component<Props, Env>}
@@ -224,7 +203,6 @@ export class DiscussSidebarCategories extends Component {
     static components = {
         DiscussSidebarCategory,
         DiscussSidebarChannel,
-        DiscussSidebarQuickSearchInput,
         Dropdown,
     };
 
@@ -232,38 +210,18 @@ export class DiscussSidebarCategories extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.discusscorePublicWebService = useState(useService("discuss.core.public.web"));
-        this.state = useState({ quickSearchVal: "", floatingQuickSearchOpen: false });
         this.orm = useService("orm");
-        this.quickSearchHover = useHover(["quick-search-btn", "quick-search-floating*"], {
-            onHover: () => (this.quickSearchFloating.isOpen = true),
-            onAway: () => {
-                if (!this.quickSearchHover.isHover && !this.state.quickSearchVal.length) {
-                    this.state.floatingQuickSearchOpen = false;
-                }
-            },
+        this.ui = useState(useService("ui"));
+        this.command = useService("command");
+        this.searchHover = useHover(["search-btn", "search-floating*"], {
+            onHover: () => (this.searchFloating.isOpen = true),
+            onAway: () => (this.searchFloating.isOpen = false),
         });
-        this.quickSearchFloating = useDropdownState();
-        useSubEnv({
-            filteredThreads: (threads) => this.filteredThreads(threads),
-        });
+        this.searchFloating = useDropdownState();
     }
 
-    filteredThreads(threads) {
-        return threads.filter(
-            (thread) =>
-                thread.displayInSidebar &&
-                (thread.parent_channel_id ||
-                    !this.state.quickSearchVal ||
-                    cleanTerm(thread.displayName).includes(cleanTerm(this.state.quickSearchVal)))
-        );
-    }
-
-    get hasQuickSearch() {
-        return (
-            Object.values(this.store.Thread.records).filter(
-                (thread) => thread.is_pinned && thread.model === "discuss.channel"
-            ).length > 19
-        );
+    onClickFindOrStartConversation() {
+        this.command.openMainPalette({ searchValue: "@" });
     }
 }
 

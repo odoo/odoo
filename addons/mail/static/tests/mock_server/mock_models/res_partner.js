@@ -302,11 +302,14 @@ export class ResPartner extends webModels.ResPartner {
         const ResUsers = this.env["res.users"];
 
         search_term = search_term.toLowerCase(); // simulates ILIKE
-        const memberPartnerIds = new Set(
-            DiscussChannelMember._filter([["channel_id", "=", channel_id]]).map(
-                (member) => member.partner_id
-            )
-        );
+        let memberPartnerIds;
+        if (channel_id) {
+            memberPartnerIds = new Set(
+                DiscussChannelMember._filter([["channel_id", "=", channel_id]]).map(
+                    (member) => member.partner_id
+                )
+            );
+        }
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartnersIds = ResUsers._filter([])
             .filter((user) => {
@@ -315,8 +318,12 @@ export class ResPartner extends webModels.ResPartner {
                 if (!partner) {
                     return false;
                 }
+                // not current partner
+                if (!channel_id && partner.id === this.env.user.partner_id) {
+                    return false;
+                }
                 // user should not already be a member of the channel
-                if (memberPartnerIds.has(partner.id)) {
+                if (channel_id && memberPartnerIds.has(partner.id)) {
                     return false;
                 }
                 // no name is considered as return all

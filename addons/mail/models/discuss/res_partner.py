@@ -33,6 +33,7 @@ class ResPartner(models.Model):
                         [("email", "ilike", search_term)],
                     ]
                 ),
+                [('id', '!=', self.env.user.partner_id.id)],
                 [("active", "=", True)],
                 [("user_ids", "!=", False)],
                 [("user_ids.active", "=", True)],

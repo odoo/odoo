@@ -623,7 +623,7 @@ test("'Start a conversation' button should open a thread in mobile", async () =>
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Start a conversation']", "demo");
-    await click(".o-discuss-ChannelSelector-suggestion", { text: "Demo" });
+    await click(".o-mail-SearchThread-suggestion", { text: "Demo" });
     triggerHotkey("enter");
     await contains(".o-mail-ChatWindow", { text: "Demo" });
 });

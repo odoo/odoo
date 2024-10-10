@@ -670,23 +670,12 @@ export class Store extends BaseStore {
         });
     }
 
-    openNewMessage() {
-        let cw = this.ChatWindow.get({ thread: undefined });
-        if (cw) {
-            cw.focus();
-            return;
-        }
-        cw = this.ChatWindow.insert({ thread: undefined, fromMessagingMenu: true });
-        this.chatHub.opened.unshift(cw);
-        cw.focus();
-    }
-
     /**
      * @param {string} searchTerm
      * @param {Thread} thread
      * @param {number|false} [before]
      */
-    async search(searchTerm, thread, before = false) {
+    async searchMessagesInThread(searchTerm, thread, before = false) {
         const { count, data, messages } = await rpc(thread.getFetchRoute(), {
             ...thread.getFetchParams(),
             search_term: await prettifyMessageContent(searchTerm), // formatted like message_post

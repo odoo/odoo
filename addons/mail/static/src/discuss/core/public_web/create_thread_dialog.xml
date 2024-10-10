@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.CreateThreadDialog">
+        <Dialog size="'md'" title="dialogTitle">
+            <div class="o-mail-CreateThreadDialog d-flex flex-column gap-1">
+                <div class="d-flex align-items-center">
+                    <span class="ms-2 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-comments"/> Conversation name</span>
+                    <div class="ms-auto ps-2">
+                        <div t-if="!props.types or props.types?.includes('group')" class="form-check form-check-inline" t-att-title="groupDescription">
+                            <input class="form-check-input" type="radio" value="group" name="thread-type" id="group" t-model="state.threadType" tabindex="2"/>
+                            <label class="form-check-label" for="group">Group</label>
+                        </div>
+                        <div t-if="!props.types or props.types?.includes('channel')" class="form-check form-check-inline" t-att-title="channelDescription">
+                            <input class="form-check-input" type="radio" value="channel" name="thread-type" id="channel" t-model="state.threadType" tabindex="2"/>
+                            <label class="form-check-label" for="channel">Channel</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group px-1">
+                    <input type="text" class="form-control lh-1" t-att-class="{'is-invalid': state.triedSubmitting and !state.name}" placeholder="Conversation name" t-model.trim="state.name" tabindex="1"/>
+                    <div class="invalid-feedback">
+                        Conversation must have a name
+                    </div>                    
+                </div>
+                <div class="smaller text-muted px-3 text-end" t-esc="threadTypeDescription"/>
+                <div class="d-flex flex-column flex-grow-1 bg-inherit w-100">
+                    <div class="d-flex align-items-center px-0 mb-1 gap-1" t-on-click="onClickInvitePeople" tabindex="3">
+                        <span class="ms-2 my-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-user-plus"/> Invite people (optional)</span>
+                    </div>
+                    <ChannelInvitation autofocus="state.autofocusInvitePeopleInput" state="invitePeopleState"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary me-2" t-on-click="onClickConfirm" title="Create">Create</button>
+                <button class="btn btn-secondary me-2" t-on-click="props.close" title="Cancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
