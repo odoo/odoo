@@ -4,7 +4,7 @@ from odoo import api, models
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):

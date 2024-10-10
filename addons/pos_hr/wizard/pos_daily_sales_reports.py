@@ -3,8 +3,8 @@
 from odoo import fields, models, api
 
 
-class PosDailyReportPerEmployee(models.TransientModel):
-    _inherit = 'pos.daily.sales.reports.wizard'
+class PosDailySalesReportsWizard(models.TransientModel):
+    _inherit = ['pos.daily.sales.reports.wizard']
 
     add_report_per_employee = fields.Boolean(string='Add a report per each employee', default=True)
     employee_ids = fields.Many2many('hr.employee', compute='_compute_employee_ids')

@@ -7,8 +7,8 @@ from odoo import api, models, SUPERUSER_ID
 from odoo.modules.registry import Registry
 
 
-class Users(models.Model):
-    _inherit = "res.users"
+class ResUsers(models.Model):
+    _inherit = ["res.users"]
 
     @classmethod
     def _login(cls, db, credential, user_agent_env):
@@ -59,7 +59,7 @@ class Users(models.Model):
                 if changed:
                     self.env.user._set_empty_password()
                     return True
-        return super(Users, self).change_password(old_passwd, new_passwd)
+        return super().change_password(old_passwd, new_passwd)
 
     def _set_empty_password(self):
         self.flush_recordset(['password'])

@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class StockInventoryWarning(models.TransientModel):
-    _name = 'stock.inventory.warning'
     _description = 'Inventory Adjustment Warning'
 
     quant_ids = fields.Many2many('stock.quant')

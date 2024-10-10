@@ -6,8 +6,7 @@ from ast import literal_eval
 from odoo import fields, models, api
 
 
-class RelocateStockQuant(models.TransientModel):
-    _name = 'stock.quant.relocate'
+class StockQuantRelocate(models.TransientModel):
     _description = 'Stock Quantity Relocation'
 
     quant_ids = fields.Many2many('stock.quant')

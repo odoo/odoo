@@ -4,8 +4,8 @@ from odoo import _, fields, models
 from odoo.exceptions import AccessError
 
 
-class Digest(models.Model):
-    _inherit = 'digest.digest'
+class DigestDigest(models.Model):
+    _inherit = ['digest.digest']
 
     kpi_website_sale_total = fields.Boolean(string="eCommerce Sales")
     kpi_website_sale_total_value = fields.Monetary(compute='_compute_kpi_website_sale_total_value')

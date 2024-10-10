@@ -7,8 +7,8 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class AccountInvoiceFinnish(models.Model):
-    _inherit = 'account.move'
+class AccountMove(models.Model):
+    _inherit = ['account.move']
 
     @api.model
     def number2numeric(self, number):

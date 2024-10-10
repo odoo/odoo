@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class MailingList(models.Model):
-    _inherit = 'mailing.list'
+    _inherit = ['mailing.list']
 
     contact_count_sms = fields.Integer(compute="_compute_mailing_list_statistics", string="SMS Contacts")
 

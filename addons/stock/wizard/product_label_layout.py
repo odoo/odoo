@@ -7,7 +7,7 @@ from odoo.tools import float_compare, float_is_zero
 
 
 class ProductLabelLayout(models.TransientModel):
-    _inherit = 'product.label.layout'
+    _inherit = ['product.label.layout']
 
     move_ids = fields.Many2many('stock.move')
     move_quantity = fields.Selection([

@@ -7,7 +7,6 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class PaymentToken(models.Model):
-    _name = 'payment.token'
     _order = 'partner_id, id desc'
     _description = 'Payment Token'
     _check_company_auto = True

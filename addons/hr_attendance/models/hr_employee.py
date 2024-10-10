@@ -9,7 +9,7 @@ from odoo.tools import float_round
 
 
 class HrEmployee(models.Model):
-    _inherit = "hr.employee"
+    _inherit = ["hr.employee"]
 
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False,

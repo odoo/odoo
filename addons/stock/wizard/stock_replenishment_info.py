@@ -15,7 +15,6 @@ from odoo.tools.misc import get_lang, format_date
 
 
 class StockReplenishmentInfo(models.TransientModel):
-    _name = 'stock.replenishment.info'
     _description = 'Stock supplier replenishment information'
     _rec_name = 'orderpoint_id'
 
@@ -97,7 +96,6 @@ class StockReplenishmentInfo(models.TransientModel):
 
 
 class StockReplenishmentOption(models.TransientModel):
-    _name = 'stock.replenishment.option'
     _description = 'Stock warehouse replenishment option'
 
     route_id = fields.Many2one('stock.route')

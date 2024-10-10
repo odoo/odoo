@@ -5,7 +5,7 @@ from odoo import fields, models, api
 
 
 class StockLandedCost(models.Model):
-    _inherit = 'stock.landed.cost'
+    _inherit = ['stock.landed.cost']
 
     target_model = fields.Selection(selection_add=[
         ('manufacturing', "Manufacturing Orders")

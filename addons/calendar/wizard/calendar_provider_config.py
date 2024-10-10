@@ -7,7 +7,6 @@ from odoo.tools import str2bool
 
 
 class CalendarProviderConfig(models.TransientModel):
-    _name = 'calendar.provider.config'
     _description = 'Calendar Provider Configuration Wizard'
 
     external_calendar_provider = fields.Selection([

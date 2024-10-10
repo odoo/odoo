@@ -5,7 +5,6 @@ from odoo.http import request
 
 
 class ProductWishlist(models.Model):
-    _name = 'product.wishlist'
     _description = 'Product Wishlist'
     _sql_constraints = [
         ("product_unique_partner_id",
@@ -75,13 +74,13 @@ class ProductWishlist(models.Model):
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     wishlist_ids = fields.One2many('product.wishlist', 'partner_id', string='Wishlist', domain=[('active', '=', True)])
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     def _is_in_wishlist(self):
         self.ensure_one()
@@ -89,7 +88,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     def _is_in_wishlist(self):
         self.ensure_one()

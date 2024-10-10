@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 
 class PosSession(models.Model):
-    _inherit = 'pos.session'
+    _inherit = ['pos.session']
 
     def _accumulate_amounts(self, data):
         data = super()._accumulate_amounts(data)

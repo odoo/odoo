@@ -2,8 +2,9 @@
 
 from odoo import models
 
+
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     def _compute_im_status(self):
         super()._compute_im_status()

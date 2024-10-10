@@ -4,8 +4,7 @@ from odoo import models, api, fields, _, Command
 from odoo.exceptions import UserError
 
 
-class L10nLatamPaymentMassTransfer(models.TransientModel):
-    _name = 'l10n_latam.payment.mass.transfer'
+class L10n_LatamPaymentMassTransfer(models.TransientModel):
     _description = 'Checks Mass Transfers'
     _check_company_auto = True
 

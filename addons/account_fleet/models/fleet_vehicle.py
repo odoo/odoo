@@ -5,7 +5,7 @@ from odoo import Command, models, fields
 
 
 class FleetVehicle(models.Model):
-    _inherit = 'fleet.vehicle'
+    _inherit = ['fleet.vehicle']
 
     bill_count = fields.Integer(compute='_compute_move_ids', string="Bills Count")
     account_move_ids = fields.One2many('account.move', compute='_compute_move_ids')

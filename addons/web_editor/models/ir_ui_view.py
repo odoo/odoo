@@ -22,7 +22,7 @@ EDITING_ATTRIBUTES = MOVABLE_BRANDING + [
 
 
 class IrUiView(models.Model):
-    _inherit = 'ir.ui.view'
+    _inherit = ['ir.ui.view']
 
     def _get_cleaned_non_editing_attributes(self, attributes):
         """

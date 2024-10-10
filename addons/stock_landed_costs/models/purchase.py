@@ -1,7 +1,8 @@
 from odoo import api,models
 
+
 class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+    _inherit = ['purchase.order.line']
 
     def _prepare_account_move_line(self, move=False):
         res = super()._prepare_account_move_line(move)

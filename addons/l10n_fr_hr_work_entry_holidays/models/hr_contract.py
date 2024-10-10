@@ -9,7 +9,7 @@ from odoo.addons.resource.models.utils import datetime_to_string
 
 
 class HrContract(models.Model):
-    _inherit = 'hr.contract'
+    _inherit = ['hr.contract']
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
         # Add the work entries difference for french payroll

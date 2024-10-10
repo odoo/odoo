@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     l10n_in_gstin_verified_status = fields.Boolean(
         string="GST Status",

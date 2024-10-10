@@ -5,8 +5,7 @@ from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class RecurrenceRule(models.Model):
-    _name = 'calendar.recurrence'
+class CalendarRecurrence(models.Model):
     _inherit = ['calendar.recurrence', 'microsoft.calendar.sync']
 
 

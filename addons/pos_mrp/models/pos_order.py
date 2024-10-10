@@ -3,8 +3,9 @@
 
 from odoo import models
 
+
 class PosOrderLine(models.Model):
-    _inherit = "pos.order.line"
+    _inherit = ["pos.order.line"]
 
     def _get_stock_moves_to_consider(self, stock_moves, product):
         self.ensure_one()
@@ -15,8 +16,9 @@ class PosOrderLine(models.Model):
         ml_product_to_consider = (product.bom_ids and [comp[0].product_id.id for comp in components]) or [product.id]
         return stock_moves.filtered(lambda ml: ml.product_id.id in ml_product_to_consider and ml.bom_line_id)
 
+
 class PosOrder(models.Model):
-    _inherit = "pos.order"
+    _inherit = ["pos.order"]
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         bom = product.env['mrp.bom']._bom_find(product, company_id=self.mapped('picking_ids.move_line_ids').company_id.id, bom_type='phantom')[product]

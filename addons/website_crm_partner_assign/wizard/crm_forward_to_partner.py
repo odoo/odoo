@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 
 class CrmLeadForwardToPartner(models.TransientModel):
     """ Forward info history to partners. """
-    _name = 'crm.lead.forward.to.partner'
     _description = 'Lead forward to partner'
 
     @api.model
@@ -120,7 +119,6 @@ class CrmLeadForwardToPartner(models.TransientModel):
 
 
 class CrmLeadAssignation(models.TransientModel):
-    _name = 'crm.lead.assignation'
     _description = 'Lead Assignation'
 
     forward_id = fields.Many2one('crm.lead.forward.to.partner', 'Partner Assignment')

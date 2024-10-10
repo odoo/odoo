@@ -8,7 +8,7 @@ from collections import defaultdict
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def _get_valued_in_moves(self):
         self.ensure_one()

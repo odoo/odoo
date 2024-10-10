@@ -5,8 +5,8 @@ from odoo import api, fields, models
 from odoo.osv import expression
 
 
-class SlidePartnerRelation(models.Model):
-    _inherit = 'slide.slide.partner'
+class SlideSlidePartner(models.Model):
+    _inherit = ['slide.slide.partner']
 
     user_input_ids = fields.One2many('survey.user_input', 'slide_partner_id', 'Certification attempts')
     survey_scoring_success = fields.Boolean('Certification Succeeded', compute='_compute_survey_scoring_success', store=True)
@@ -29,7 +29,7 @@ class SlidePartnerRelation(models.Model):
             })
 
     def _recompute_completion(self):
-        super(SlidePartnerRelation, self)._recompute_completion()
+        super()._recompute_completion()
         # Update certified partners
         certification_success_slides = self.filtered(lambda slide: slide.survey_scoring_success)
         if not certification_success_slides:
@@ -43,8 +43,9 @@ class SlidePartnerRelation(models.Model):
             certified_channels_domain]
         )).survey_certification_success = True
 
-class Slide(models.Model):
-    _inherit = 'slide.slide'
+
+class SlideSlide(models.Model):
+    _inherit = ['slide.slide']
 
     name = fields.Char(compute='_compute_name', readonly=False, store=True)
     slide_category = fields.Selection(selection_add=[
@@ -73,7 +74,7 @@ class Slide(models.Model):
         slides_certification = self.filtered(lambda slide: slide.slide_category == 'certification')
         slides_certification.can_self_mark_uncompleted = False
         slides_certification.can_self_mark_completed = False
-        super(Slide, self - slides_certification)._compute_mark_complete_actions()
+        super(SlideSlide, self - slides_certification)._compute_mark_complete_actions()
 
     @api.depends('slide_category')
     def _compute_is_preview(self):
@@ -85,11 +86,11 @@ class Slide(models.Model):
     def _compute_slide_icon_class(self):
         certification = self.filtered(lambda slide: slide.slide_type == 'certification')
         certification.slide_icon_class = 'fa-trophy'
-        super(Slide, self - certification)._compute_slide_icon_class()
+        super(SlideSlide, self - certification)._compute_slide_icon_class()
 
     @api.depends('slide_category', 'source_type')
     def _compute_slide_type(self):
-        super(Slide, self)._compute_slide_type()
+        super()._compute_slide_type()
         for slide in self:
             if slide.slide_category == 'certification':
                 slide.slide_type = 'certification'
@@ -104,14 +105,14 @@ class Slide(models.Model):
 
     def write(self, values):
         old_surveys = self.mapped('survey_id')
-        result = super(Slide, self).write(values)
+        result = super().write(values)
         if 'survey_id' in values:
             self._ensure_challenge_category(old_surveys=old_surveys - self.mapped('survey_id'))
         return result
 
     def unlink(self):
         old_surveys = self.mapped('survey_id')
-        result = super(Slide, self).unlink()
+        result = super().unlink()
         self._ensure_challenge_category(old_surveys=old_surveys, unlink=True)
         return result
 

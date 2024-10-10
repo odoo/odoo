@@ -6,7 +6,7 @@ from odoo import api, models, fields
 
 
 class BaseDocumentLayout(models.TransientModel):
-    _inherit = 'base.document.layout'
+    _inherit = ['base.document.layout']
 
     @api.model
     def _default_report_footer(self):

@@ -12,9 +12,8 @@ from odoo.http import request
 from odoo.tools.translate import html_translate
 
 
-class Menu(models.Model):
+class WebsiteMenu(models.Model):
 
-    _name = "website.menu"
     _description = "Website Menu"
 
     _parent_store = True
@@ -131,7 +130,7 @@ class Menu(models.Model):
             menus_to_remove |= self.env['website.menu'].search([('url', '=', menu.url),
                                                                 ('website_id', '!=', False),
                                                                 ('id', '!=', menu.id)])
-        return super(Menu, menus_to_remove).unlink()
+        return super(WebsiteMenu, menus_to_remove).unlink()
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_tags(self):

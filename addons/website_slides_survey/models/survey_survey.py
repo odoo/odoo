@@ -8,9 +8,8 @@ from odoo.exceptions import ValidationError
 from odoo.tools import format_list
 
 
-
-class Survey(models.Model):
-    _inherit = 'survey.survey'
+class SurveySurvey(models.Model):
+    _inherit = ['survey.survey']
 
     slide_ids = fields.One2many(
         'slide.slide', 'survey_id', string="Certification Slides",

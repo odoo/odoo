@@ -8,8 +8,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools.mimetypes import get_extension
 
 
-class SlideResource(models.Model):
-    _name = 'slide.slide.resource'
+class SlideSlideResource(models.Model):
     _description = "Additional resource for a particular slide"
     _order = "sequence, id"
 

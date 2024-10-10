@@ -7,7 +7,7 @@ from odoo.osv import expression
 
 
 class AccountPaymentMethodLine(models.Model):
-    _inherit = "account.payment.method.line"
+    _inherit = ["account.payment.method.line"]
 
     payment_provider_id = fields.Many2one(
         comodel_name='payment.provider',

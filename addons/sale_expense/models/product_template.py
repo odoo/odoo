@@ -5,7 +5,7 @@ from odoo import api, models, fields, _
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     expense_policy_tooltip = fields.Char(compute='_compute_expense_policy_tooltip')
 

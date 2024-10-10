@@ -3,7 +3,6 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _name = 'res.partner'
     _inherit = ['res.partner', 'pos.load.mixin']
 
     pos_order_count = fields.Integer(

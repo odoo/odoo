@@ -3,8 +3,9 @@
 
 from odoo import models
 
+
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     def _create_recruitment_interviewers(self):
         if not self:

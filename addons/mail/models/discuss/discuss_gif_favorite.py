@@ -3,8 +3,7 @@
 from odoo import fields, models
 
 
-class GifFavorite(models.Model):
-    _name = "discuss.gif.favorite"
+class DiscussGifFavorite(models.Model):
     _description = "Save favorite GIF from Tenor API"
 
     tenor_gif_id = fields.Char("GIF id from Tenor", required=True)

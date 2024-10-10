@@ -7,7 +7,7 @@ from odoo.tools import SQL
 
 
 class CrmTeam(models.Model):
-    _inherit = 'crm.team'
+    _inherit = ['crm.team']
 
     invoiced = fields.Float(
         compute='_compute_invoiced',

@@ -5,7 +5,7 @@ from odoo import api, models, fields
 
 
 class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+    _inherit = ['purchase.order']
 
     dropship_picking_count = fields.Integer("Dropship Count", compute='_compute_incoming_picking_count')
 

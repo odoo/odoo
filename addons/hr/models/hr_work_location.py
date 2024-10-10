@@ -4,8 +4,7 @@
 from odoo import fields, models
 
 
-class WorkLocation(models.Model):
-    _name = "hr.work.location"
+class HrWorkLocation(models.Model):
     _description = "Work Location"
     _order = 'name'
 

@@ -18,7 +18,6 @@ SPLIT_METHOD = [
 
 
 class StockLandedCost(models.Model):
-    _name = 'stock.landed.cost'
     _description = 'Stock Landed Cost'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
@@ -338,8 +337,7 @@ class StockLandedCost(models.Model):
         return True
 
 
-class StockLandedCostLine(models.Model):
-    _name = 'stock.landed.cost.lines'
+class StockLandedCostLines(models.Model):
     _description = 'Stock Landed Cost Line'
 
     name = fields.Char('Description')
@@ -369,8 +367,7 @@ class StockLandedCostLine(models.Model):
         self.account_id = accounts_data['stock_input']
 
 
-class AdjustmentLines(models.Model):
-    _name = 'stock.valuation.adjustment.lines'
+class StockValuationAdjustmentLines(models.Model):
     _description = 'Valuation Adjustment Lines'
 
     name = fields.Char(

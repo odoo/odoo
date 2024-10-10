@@ -8,7 +8,7 @@ from collections import defaultdict
 
 
 class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+    _inherit = ['account.journal']
 
     edi_format_ids = fields.Many2many(comodel_name='account.edi.format',
                                       string='Electronic invoicing',

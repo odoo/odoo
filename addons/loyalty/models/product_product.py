@@ -6,7 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     def write(self, vals):
         if not vals.get('active', True) and any(product.active for product in self):

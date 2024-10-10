@@ -6,8 +6,8 @@ from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
+
 class ResPartnerAutocompleteSync(models.Model):
-    _name = 'res.partner.autocomplete.sync'
     _description = 'Partner Autocomplete Sync'
 
     partner_id = fields.Many2one('res.partner', string="Partner", ondelete='cascade')

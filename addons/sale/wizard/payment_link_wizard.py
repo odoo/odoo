@@ -8,7 +8,7 @@ from odoo.tools import format_amount
 
 
 class PaymentLinkWizard(models.TransientModel):
-    _inherit = 'payment.link.wizard'
+    _inherit = ['payment.link.wizard']
     _description = 'Generate Sales Payment Link'
 
     amount_paid = fields.Monetary(string="Already Paid", readonly=True)

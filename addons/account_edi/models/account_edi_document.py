@@ -15,7 +15,6 @@ DEFAULT_BLOCKING_LEVEL = 'error'
 
 
 class AccountEdiDocument(models.Model):
-    _name = 'account.edi.document'
     _description = 'Electronic Document for an account.move'
 
     # == Stored fields ==

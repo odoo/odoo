@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
-    _inherit = "sale.order"
+    _inherit = ["sale.order"]
 
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',

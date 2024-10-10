@@ -4,8 +4,7 @@ from odoo import models, fields, api
 from odoo.osv import expression
 
 
-class L10nLatamIdentificationType(models.Model):
-    _name = 'l10n_latam.identification.type'
+class L10n_LatamIdentificationType(models.Model):
     _description = "Identification Types"
     _order = 'sequence'
 

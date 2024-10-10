@@ -7,8 +7,9 @@ from odoo.http import request
 from odoo.modules.registry import Registry
 from odoo.addons.bus.websocket import wsrequest
 
+
 class IrWebsocket(models.AbstractModel):
-    _inherit = 'ir.websocket'
+    _inherit = ['ir.websocket']
 
     def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
         super()._update_bus_presence(inactivity_period, im_status_ids_by_model)

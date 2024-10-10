@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+    _inherit = ['account.analytic.account']
     _description = 'Analytic Account'
 
     project_ids = fields.One2many('project.project', 'account_id', string='Projects', export_string_translation=False)

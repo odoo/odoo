@@ -10,7 +10,7 @@ FNC1_CHAR = '\x1D'
 
 
 class BarcodeNomenclature(models.Model):
-    _inherit = 'barcode.nomenclature'
+    _inherit = ['barcode.nomenclature']
 
     is_gs1_nomenclature = fields.Boolean(
         string="Is GS1 Nomenclature",

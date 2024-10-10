@@ -9,7 +9,7 @@ from odoo.addons.website_sale_collect import utils
 
 
 class DeliveryCarrier(models.Model):
-    _inherit = 'delivery.carrier'
+    _inherit = ['delivery.carrier']
 
     delivery_type = fields.Selection(
         selection_add=[('in_store', "Pick up in store")], ondelete={'in_store': 'set default'}

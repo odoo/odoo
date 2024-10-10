@@ -4,11 +4,10 @@
 from odoo import api, fields, models
 
 
-class MailTestSMS(models.Model):
+class MailTestSms(models.Model):
     """ A model inheriting from mail.thread with some fields used for SMS
     gateway, like a partner, a specific mobile phone, ... """
     _description = 'Chatter Model for SMS Gateway'
-    _name = 'mail.test.sms'
     _inherit = ['mail.thread']
     _mailing_enabled = True
     _order = 'name asc, id asc'
@@ -27,11 +26,10 @@ class MailTestSMS(models.Model):
         return ['customer_id']
 
 
-class MailTestSMSBL(models.Model):
+class MailTestSmsBl(models.Model):
     """ A model inheriting from mail.thread.phone allowing to test auto formatting
     of phone numbers, blacklist, ... """
     _description = 'SMS Mailing Blacklist Enabled'
-    _name = 'mail.test.sms.bl'
     _inherit = ['mail.thread.phone']
     _mailing_enabled = True
     _order = 'name asc, id asc'
@@ -60,11 +58,10 @@ class MailTestSMSBL(models.Model):
         return ['customer_id']
 
 
-class MailTestSMSBLActivity(models.Model):
+class MailTestSmsBlActivity(models.Model):
     """ A model inheriting from mail.thread.phone allowing to test auto formatting
     of phone numbers, blacklist, ... as well as activities management. """
     _description = 'SMS Mailing Blacklist Enabled with activities'
-    _name = 'mail.test.sms.bl.activity'
     _inherit = [
         'mail.test.sms.bl',
         'mail.activity.mixin',
@@ -73,11 +70,10 @@ class MailTestSMSBLActivity(models.Model):
     _order = 'name asc, id asc'
 
 
-class MailTestSMSOptout(models.Model):
+class MailTestSmsBlOptout(models.Model):
     """ Model using blacklist mechanism and a hijacked opt-out mechanism for
     mass mailing features. """
     _description = 'SMS Mailing Blacklist / Optout Enabled'
-    _name = 'mail.test.sms.bl.optout'
     _inherit = ['mail.thread.phone']
     _mailing_enabled = True
     _order = 'name asc, id asc'
@@ -104,11 +100,10 @@ class MailTestSMSOptout(models.Model):
         ]).ids
 
 
-class MailTestSMSPartner(models.Model):
+class MailTestSmsPartner(models.Model):
     """ A model like sale order having only a customer, not specific phone
     or mobile fields. """
     _description = 'Chatter Model for SMS Gateway (Partner only)'
-    _name = 'mail.test.sms.partner'
     _inherit = ['mail.thread']
     _mailing_enabled = True
 
@@ -127,7 +122,7 @@ class MailTestSMSPartner(models.Model):
         ]).ids
 
 
-class MailTestSMSPartner2Many(models.Model):
+class MailTestSmsPartner2many(models.Model):
     """ A model like sale order having only a customer, not specific phone
     or mobile fields. """
     _description = 'Chatter Model for SMS Gateway (M2M Partners only)'

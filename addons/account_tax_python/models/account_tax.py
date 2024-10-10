@@ -18,8 +18,8 @@ FORMULA_ALLOWED_TOKENS = {
 }
 
 
-class AccountTaxPython(models.Model):
-    _inherit = "account.tax"
+class AccountTax(models.Model):
+    _inherit = ["account.tax"]
 
     amount_type = fields.Selection(
         selection_add=[('code', "Custom Formula")],

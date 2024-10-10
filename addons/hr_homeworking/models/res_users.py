@@ -3,6 +3,7 @@ from odoo import models, fields
 
 from .hr_homeworking import DAYS
 
+
 class User(models.Model):
     _inherit = ['res.users']
 

@@ -4,8 +4,9 @@
 from operator import itemgetter
 from odoo import api, models
 
+
 class IrUiView(models.Model):
-    _inherit = 'ir.ui.view'
+    _inherit = ['ir.ui.view']
 
     @api.model
     def _validate_custom_views(self, model):

@@ -36,7 +36,6 @@ class MailActivityMixin(models.AbstractModel):
        no automated activities will be generated, updated or unlinked, allowing
        to save computation and avoid generating unwanted activities;
     """
-    _name = 'mail.activity.mixin'
     _description = 'Activity Mixin'
 
     def _default_activity_type(self):

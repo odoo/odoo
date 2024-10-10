@@ -251,8 +251,7 @@ class IrActionsActions(models.Model):
         }
 
 
-class IrActionsActWindow(models.Model):
-    _name = 'ir.actions.act_window'
+class IrActionsAct_Window(models.Model):
     _description = 'Action Window'
     _table = 'ir_act_window'
     _inherit = ['ir.actions.actions']
@@ -333,7 +332,7 @@ class IrActionsActWindow(models.Model):
     def read(self, fields=None, load='_classic_read'):
         """ call the method get_empty_list_help of the model and set the window action help message
         """
-        result = super(IrActionsActWindow, self).read(fields, load=load)
+        result = super().read(fields, load=load)
         if not fields or 'help' in fields:
             for values in result:
                 model = values.get('res_model')
@@ -352,11 +351,11 @@ class IrActionsActWindow(models.Model):
         for vals in vals_list:
             if not vals.get('name') and vals.get('res_model'):
                 vals['name'] = self.env[vals['res_model']]._description
-        return super(IrActionsActWindow, self).create(vals_list)
+        return super().create(vals_list)
 
     def unlink(self):
         self.env.registry.clear_cache()
-        return super(IrActionsActWindow, self).unlink()
+        return super().unlink()
 
     def exists(self):
         ids = self._existing()
@@ -404,8 +403,7 @@ VIEW_TYPES = [
 ]
 
 
-class IrActionsActWindowView(models.Model):
-    _name = 'ir.actions.act_window.view'
+class IrActionsAct_WindowView(models.Model):
     _description = 'Action Window View'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
@@ -419,14 +417,13 @@ class IrActionsActWindowView(models.Model):
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
     def _auto_init(self):
-        res = super(IrActionsActWindowView, self)._auto_init()
+        res = super()._auto_init()
         tools.create_unique_index(self._cr, 'act_window_view_unique_mode_per_action',
                                   self._table, ['act_window_id', 'view_mode'])
         return res
 
 
-class IrActionsActWindowClose(models.Model):
-    _name = 'ir.actions.act_window_close'
+class IrActionsAct_Window_Close(models.Model):
     _description = 'Action Window Close'
     _inherit = ['ir.actions.actions']
     _table = 'ir_actions'
@@ -442,8 +439,7 @@ class IrActionsActWindowClose(models.Model):
         }
 
 
-class IrActionsActUrl(models.Model):
-    _name = 'ir.actions.act_url'
+class IrActionsAct_Url(models.Model):
     _description = 'Action URL'
     _table = 'ir_act_url'
     _inherit = ['ir.actions.actions']
@@ -1069,6 +1065,7 @@ class IrActionsServer(models.Model):
                     expr = float(action.value)
             result[action.id] = expr
         return result
+
 
 class IrActionsTodo(models.Model):
     """

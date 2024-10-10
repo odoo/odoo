@@ -5,7 +5,7 @@ from odoo import Command
 
 
 class AccountChartTemplate(models.AbstractModel):
-    _inherit = 'account.chart.template'
+    _inherit = ['account.chart.template']
 
     @template('in')
     def _get_in_template_data(self):

@@ -2,8 +2,7 @@ from math import floor, log10
 from odoo import api, models
 
 
-class CRMHelpers(models.Model):
-    _name = 'crm.iap.lead.helpers'
+class CrmIapLeadHelpers(models.Model):
     _description = 'Helper methods for crm_iap_mine modules'
 
     @api.model

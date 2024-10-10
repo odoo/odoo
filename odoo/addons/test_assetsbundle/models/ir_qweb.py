@@ -4,7 +4,7 @@ init = config['init']
 
 
 class IrQweb(models.AbstractModel):
-    _inherit = 'ir.qweb'
+    _inherit = ['ir.qweb']
 
     def _register_hook(self):
         super()._register_hook()

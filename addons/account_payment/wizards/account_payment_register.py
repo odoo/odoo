@@ -2,7 +2,7 @@ from odoo import api, Command, fields, models
 
 
 class AccountPaymentRegister(models.TransientModel):
-    _inherit = 'account.payment.register'
+    _inherit = ['account.payment.register']
 
     # == Business fields ==
     payment_token_id = fields.Many2one(

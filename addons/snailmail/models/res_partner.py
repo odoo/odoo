@@ -7,7 +7,7 @@ from odoo.addons.snailmail.country_utils import SNAILMAIL_COUNTRIES
 
 
 class ResPartner(models.Model):
-    _inherit = "res.partner"
+    _inherit = ["res.partner"]
 
     def write(self, vals):
         letter_address_vals = {}

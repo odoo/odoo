@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 
 
-class Contacts(models.Model):
-    _name = 'calendar.filters'
+class CalendarFilters(models.Model):
     _description = 'Calendar Filters'
 
     user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user, index=True, ondelete='cascade')

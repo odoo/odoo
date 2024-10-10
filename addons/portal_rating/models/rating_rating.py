@@ -3,8 +3,8 @@
 from odoo import api, fields, models, exceptions, _
 
 
-class Rating(models.Model):
-    _inherit = 'rating.rating'
+class RatingRating(models.Model):
+    _inherit = ['rating.rating']
 
     # Adding information for comment a rating message
     publisher_comment = fields.Text("Publisher comment")

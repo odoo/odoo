@@ -5,7 +5,7 @@ from odoo import fields, models, _
 
 
 class IrModel(models.Model):
-    _inherit = 'ir.model'
+    _inherit = ['ir.model']
 
     is_mailing_enabled = fields.Boolean(
         string="Mailing Enabled",

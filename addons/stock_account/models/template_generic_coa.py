@@ -3,7 +3,7 @@ from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
-    _inherit = "account.chart.template"
+    _inherit = ["account.chart.template"]
 
     @template('generic_coa', 'res.company')
     def _get_generic_coa_res_company(self):

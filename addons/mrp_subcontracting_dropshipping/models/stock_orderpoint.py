@@ -5,7 +5,7 @@ from odoo import models
 
 
 class StockWarehouseOrderpoint(models.Model):
-    _inherit = 'stock.warehouse.orderpoint'
+    _inherit = ['stock.warehouse.orderpoint']
 
     def _prepare_procurement_values(self, date=False, group=False):
         vals = super()._prepare_procurement_values(date, group)

@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class StockRequestCount(models.TransientModel):
-    _inherit = 'stock.request.count'
+    _inherit = ['stock.request.count']
 
     accounting_date = fields.Date('Accounting Date')
 

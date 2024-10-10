@@ -15,8 +15,7 @@ COMPANY_AC_TIMEOUT = 5
 
 
 class ResCompany(models.Model):
-    _name = 'res.company'
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     partner_gid = fields.Integer('Company database ID', related="partner_id.partner_gid", inverse="_inverse_partner_gid", store=True)
     iap_enrich_auto_done = fields.Boolean('Enrich Done')

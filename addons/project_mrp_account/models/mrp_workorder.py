@@ -4,7 +4,7 @@ from odoo import models
 
 
 class MrpWorkorder(models.Model):
-    _inherit = 'mrp.workorder'
+    _inherit = ['mrp.workorder']
 
     def _create_or_update_analytic_entry_for_record(self, value, hours):
         super()._create_or_update_analytic_entry_for_record(value, hours)

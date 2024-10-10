@@ -7,7 +7,6 @@ from odoo.tools import float_compare, float_is_zero
 
 
 class MrpConsumptionWarning(models.TransientModel):
-    _name = 'mrp.consumption.warning'
     _description = "Wizard in case of consumption in warning/strict and more component has been used for a MO (related to the bom)"
 
     mrp_production_ids = fields.Many2many('mrp.production')
@@ -86,8 +85,8 @@ class MrpConsumptionWarning(models.TransientModel):
                 'target': 'main',
             }
 
+
 class MrpConsumptionWarningLine(models.TransientModel):
-    _name = 'mrp.consumption.warning.line'
     _description = "Line of issue consumption"
 
     mrp_consumption_warning_id = fields.Many2one('mrp.consumption.warning', "Parent Wizard", readonly=True, required=True, ondelete="cascade")

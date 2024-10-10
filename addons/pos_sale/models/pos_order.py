@@ -6,7 +6,7 @@ from odoo.tools import float_compare, float_is_zero
 
 
 class PosOrder(models.Model):
-    _inherit = 'pos.order'
+    _inherit = ['pos.order']
 
     currency_rate = fields.Float(compute='_compute_currency_rate', store=True, digits=0, readonly=True)
     crm_team_id = fields.Many2one('crm.team', string="Sales Team", ondelete="set null")
@@ -159,8 +159,9 @@ class PosOrder(models.Model):
 
         return inv_line_vals
 
+
 class PosOrderLine(models.Model):
-    _inherit = 'pos.order.line'
+    _inherit = ['pos.order.line']
 
     sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order")
     sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line")

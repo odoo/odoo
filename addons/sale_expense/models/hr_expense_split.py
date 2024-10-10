@@ -5,7 +5,7 @@ from odoo import fields, models, api
 
 
 class HrExpenseSplit(models.TransientModel):
-    _inherit = "hr.expense.split"
+    _inherit = ["hr.expense.split"]
 
     def default_get(self, fields):
         result = super(HrExpenseSplit, self).default_get(fields)

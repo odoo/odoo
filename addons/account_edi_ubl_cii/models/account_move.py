@@ -2,7 +2,7 @@ from odoo import _, api, fields, models, Command
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     ubl_cii_xml_id = fields.Many2one(
         comodel_name='ir.attachment',

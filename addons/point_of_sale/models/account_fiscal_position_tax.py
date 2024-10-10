@@ -2,7 +2,6 @@ from odoo import models, api
 
 
 class AccountFiscalPositionTax(models.Model):
-    _name = 'account.fiscal.position.tax'
     _inherit = ['account.fiscal.position.tax', 'pos.load.mixin']
 
     @api.model

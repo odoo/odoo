@@ -4,7 +4,7 @@ from odoo import models
 
 
 class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+    _inherit = ["account.move.line"]
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         price_unit = super(AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()

@@ -4,8 +4,8 @@ from odoo import api, models
 from ..websocket import WebsocketConnectionHandler
 
 
-class Http(models.AbstractModel):
-    _inherit = "ir.http"
+class IrHttp(models.AbstractModel):
+    _inherit = ["ir.http"]
 
     @api.model
     def get_frontend_session_info(self):

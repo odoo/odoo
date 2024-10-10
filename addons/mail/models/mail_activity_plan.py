@@ -5,7 +5,6 @@ from odoo import _, api, fields, models
 
 
 class MailActivityPlan(models.Model):
-    _name = 'mail.activity.plan'
     _description = 'Activity Plan'
     _order = 'id DESC'
 

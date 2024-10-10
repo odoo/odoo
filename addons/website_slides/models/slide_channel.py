@@ -17,8 +17,7 @@ from odoo.tools import is_html_empty
 _logger = logging.getLogger(__name__)
 
 
-class ChannelUsersRelation(models.Model):
-    _name = 'slide.channel.partner'
+class SlideChannelPartner(models.Model):
     _description = 'Channel / Partners (Members)'
     _table = 'slide_channel_partner'
     _rec_name = 'partner_id'
@@ -164,7 +163,7 @@ class ChannelUsersRelation(models.Model):
                 for channel_partner in self
             ])
             self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
-        return super(ChannelUsersRelation, self).unlink()
+        return super().unlink()
 
     def _get_invitation_hash(self):
         """ Returns the invitation hash of the attendee, used to access courses as invited / joined. """
@@ -271,9 +270,8 @@ class ChannelUsersRelation(models.Model):
         expired_invitations.unlink()
 
 
-class Channel(models.Model):
+class SlideChannel(models.Model):
     """ A channel is a container of slides. """
-    _name = 'slide.channel'
     _description = 'Course'
     _inherit = [
         'rating.mixin',
@@ -584,7 +582,7 @@ class Channel(models.Model):
             record.update(result.get(record.id, default_vals))
 
     def _compute_rating_stats(self):
-        super(Channel, self)._compute_rating_stats()
+        super()._compute_rating_stats()
         for record in self:
             record.rating_avg_stars = record.rating_avg
 
@@ -656,7 +654,7 @@ class Channel(models.Model):
 
     @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
-        super(Channel, self)._compute_website_url()
+        super()._compute_website_url()
         for channel in self:
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 base_url = channel.get_base_url()
@@ -703,7 +701,7 @@ class Channel(models.Model):
             it for every record.
         """
         if column_name != 'access_token':
-            super(Channel, self)._init_column(column_name)
+            super()._init_column(column_name)
         else:
             query = """
                 UPDATE %(table_name)s
@@ -723,7 +721,7 @@ class Channel(models.Model):
             if not is_html_empty(vals.get('description')) and is_html_empty(vals.get('description_short')):
                 vals['description_short'] = vals['description']
 
-        channels = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        channels = super(SlideChannel, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
         for channel in channels:
             if channel.user_id:
@@ -748,7 +746,7 @@ class Channel(models.Model):
         if not is_html_empty(vals.get('description')) and is_html_empty(vals.get('description_short')) and self.description == self.description_short:
             vals['description_short'] = vals.get('description')
 
-        res = super(Channel, self).write(vals)
+        res = super().write(vals)
 
         if vals.get('user_id'):
             self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
@@ -789,12 +787,12 @@ class Channel(models.Model):
         to_archive = self.filtered(lambda channel: channel.active)
         to_activate = self.filtered(lambda channel: not channel.active)
         if to_archive:
-            super(Channel, to_archive).toggle_active()
+            super(SlideChannel, to_archive).toggle_active()
             to_archive.is_published = False
             to_archive.mapped('slide_ids').action_archive()
         if to_activate:
             to_activate.with_context(active_test=False).mapped('slide_ids').action_unarchive()
-            super(Channel, to_activate).toggle_active()
+            super(SlideChannel, to_activate).toggle_active()
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):
@@ -1121,7 +1119,7 @@ class Channel(models.Model):
 
     def _rating_domain(self):
         """ Only take the published rating into account to compute avg and count """
-        domain = super(Channel, self)._rating_domain()
+        domain = super()._rating_domain()
         return expression.AND([domain, [('is_internal', '=', False)]])
 
     def _action_request_access(self, partner):

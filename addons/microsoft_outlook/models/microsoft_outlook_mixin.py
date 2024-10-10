@@ -17,7 +17,6 @@ _logger = logging.getLogger(__name__)
 
 class MicrosoftOutlookMixin(models.AbstractModel):
 
-    _name = 'microsoft.outlook.mixin'
     _description = 'Microsoft Outlook Mixin'
 
     _OUTLOOK_SCOPE = None

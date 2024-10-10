@@ -6,7 +6,7 @@ from odoo import fields, models, api
 
 
 class HrCandidate(models.Model):
-    _inherit = 'hr.candidate'
+    _inherit = ['hr.candidate']
 
     candidate_skill_ids = fields.One2many('hr.candidate.skill', 'candidate_id', string="Skills")
     skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True)

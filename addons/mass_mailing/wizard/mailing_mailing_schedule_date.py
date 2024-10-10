@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class MailingMailingScheduleDate(models.TransientModel):
-    _name = "mailing.mailing.schedule.date"
     _description = "schedule a mailing"
 
     schedule_date = fields.Datetime(string='Scheduled for')

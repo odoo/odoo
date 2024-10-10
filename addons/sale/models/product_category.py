@@ -2,7 +2,7 @@ from odoo import models, fields
 
 
 class ProductCategory(models.Model):
-    _inherit = "product.category"
+    _inherit = ["product.category"]
 
     property_account_downpayment_categ_id = fields.Many2one(
         comodel_name='account.account',

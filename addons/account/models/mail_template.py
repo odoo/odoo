@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 
 class MailTemplate(models.Model):
-    _inherit = 'mail.template'
+    _inherit = ['mail.template']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_mail_template(self):

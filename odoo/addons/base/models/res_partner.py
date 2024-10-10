@@ -60,6 +60,7 @@ class FormatVATLabelMixin(models.AbstractModel):
                 node.set("string", vat_label)
         return arch, view
 
+
 class FormatAddressMixin(models.AbstractModel):
     _description = 'Address Format'
 
@@ -174,6 +175,7 @@ class ResPartnerCategory(models.Model):
         if operator.endswith('like'):
             return [('id', 'child_of', self._search(domain))]
         return domain
+
 
 class ResPartnerTitle(models.Model):
     _order = 'name'

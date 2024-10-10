@@ -11,7 +11,7 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = "res.partner"
+    _inherit = ["res.partner"]
 
     @api.model
     def _commercial_fields(self):

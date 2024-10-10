@@ -2,7 +2,7 @@ from odoo import api, fields, models, _
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     minlength = fields.Integer(
         "Minimum Password Length", config_parameter="auth_password_policy.minlength", default=0,

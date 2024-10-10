@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class EventType(models.Model):
-    _inherit = "event.type"
+    _inherit = ["event.type"]
 
     meeting_room_allow_creation = fields.Boolean(
         "Allow Room Creation", compute='_compute_meeting_room_allow_creation',

@@ -17,8 +17,8 @@ from odoo.addons.auth_totp.models.totp import ALGORITHM, DIGITS, TIMESTEP
 
 compress = functools.partial(re.sub, r'\s', '')
 
-class TOTPWizard(models.TransientModel):
-    _name = 'auth_totp.wizard'
+
+class Auth_TotpWizard(models.TransientModel):
     _description = "2-Factor Setup Wizard"
 
     user_id = fields.Many2one('res.users', required=True, readonly=True)

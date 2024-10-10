@@ -4,8 +4,8 @@
 from odoo import api, models
 
 
-class ChooseDestinationLocation(models.TransientModel):
-    _inherit = "stock.package.destination"
+class StockPackageDestination(models.TransientModel):
+    _inherit = ["stock.package.destination"]
 
     def _compute_move_line_ids(self):
         destination_without_batch = self.env['stock.package.destination']
@@ -14,7 +14,7 @@ class ChooseDestinationLocation(models.TransientModel):
                 destination_without_batch |= destination
                 continue
             destination.move_line_ids = destination.picking_id.batch_id.move_line_ids.filtered(lambda l: l.quantity > 0 and not l.result_package_id)
-        super(ChooseDestinationLocation, destination_without_batch)._compute_move_line_ids()
+        super(StockPackageDestination, destination_without_batch)._compute_move_line_ids()
 
     def action_done(self):
         if self.picking_id.batch_id:

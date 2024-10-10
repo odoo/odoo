@@ -9,8 +9,7 @@ from odoo.addons.rating.models import rating_data
 from odoo.tools.misc import file_open
 
 
-class Rating(models.Model):
-    _name = "rating.rating"
+class RatingRating(models.Model):
     _description = "Rating"
     _order = 'write_date desc, id desc'
     _rec_name = 'res_name'
@@ -124,12 +123,12 @@ class Rating(models.Model):
     def write(self, values):
         if values.get('res_model_id') and values.get('res_id'):
             values.update(self._find_parent_data(values))
-        return super(Rating, self).write(values)
+        return super().write(values)
 
     def unlink(self):
         # OPW-2181568: Delete the chatter message too
         self.env['mail.message'].search([('rating_ids', 'in', self.ids)]).unlink()
-        return super(Rating, self).unlink()
+        return super().unlink()
 
     def _find_parent_data(self, values):
         """ Determine the parent res_model/res_id, based on the values to create or write """

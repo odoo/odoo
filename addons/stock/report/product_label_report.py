@@ -8,8 +8,8 @@ from odoo.exceptions import UserError
 
 import markupsafe
 
-class ReportProductLabel(models.AbstractModel):
-    _name = 'report.stock.label_product_product_view'
+
+class ReportStockLabel_Product_Product_View(models.AbstractModel):
     _description = 'Product Label Report'
 
     def _get_report_values(self, docids, data):
@@ -51,8 +51,7 @@ class ReportProductLabel(models.AbstractModel):
         return data
 
 
-class ReportLotLabel(models.AbstractModel):
-    _name = 'report.stock.label_lot_template_view'
+class ReportStockLabel_Lot_Template_View(models.AbstractModel):
     _description = 'Lot Label Report'
 
     def _get_report_values(self, docids, data):

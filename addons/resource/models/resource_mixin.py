@@ -9,7 +9,6 @@ from .utils import timezone_datetime
 
 
 class ResourceMixin(models.AbstractModel):
-    _name = "resource.mixin"
     _description = 'Resource Mixin'
 
     resource_id = fields.Many2one(

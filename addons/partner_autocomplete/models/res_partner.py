@@ -24,9 +24,9 @@ VAT_COUNTRY_MAPPING = {
     'XI': 'GB',  # United Kingdom (Northern Ireland)
 }
 
+
 class ResPartner(models.Model):
-    _name = 'res.partner'
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     partner_gid = fields.Integer('Company database ID')
     additional_info = fields.Char('Additional info')

@@ -5,8 +5,7 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _name = 'res.partner'
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     l10n_cl_sii_taxpayer_type = fields.Selection(
         [

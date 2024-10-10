@@ -6,7 +6,6 @@ from odoo.tools import Query
 
 
 class AccountRoot(models.Model):
-    _name = 'account.root'
     _description = 'Account codes first 2 digits'
     _auto = False
     _table_query = '0'

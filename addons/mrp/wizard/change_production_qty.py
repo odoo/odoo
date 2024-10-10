@@ -7,7 +7,6 @@ from odoo.tools import float_is_zero
 
 
 class ChangeProductionQty(models.TransientModel):
-    _name = 'change.production.qty'
     _description = 'Change Production Qty'
 
     mo_id = fields.Many2one('mrp.production', 'Manufacturing Order',

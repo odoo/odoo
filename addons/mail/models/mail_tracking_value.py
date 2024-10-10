@@ -6,8 +6,7 @@ from datetime import datetime
 from odoo import api, fields, models
 
 
-class MailTracking(models.Model):
-    _name = 'mail.tracking.value'
+class MailTrackingValue(models.Model):
     _description = 'Mail Tracking Value'
     _rec_name = 'field_id'
     _order = 'id DESC'

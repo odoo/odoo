@@ -22,8 +22,7 @@ ROUTE_NAMES = {
 }
 
 
-class Warehouse(models.Model):
-    _name = "stock.warehouse"
+class StockWarehouse(models.Model):
     _description = "Warehouse"
     _order = 'sequence,id'
     _check_company_auto = True

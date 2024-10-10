@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class AccountDebitNote(models.TransientModel):
-    _inherit = 'account.debit.note'
+    _inherit = ['account.debit.note']
 
     def create_debit(self):
         self.ensure_one()

@@ -3,7 +3,7 @@ from odoo import fields, models, api
 
 
 class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+    _inherit = ['account.journal']
 
     l10n_br_invoice_serial = fields.Char(
         'Series', copy=False,

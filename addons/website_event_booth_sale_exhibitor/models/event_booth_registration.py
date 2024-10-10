@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class EventBoothRegistration(models.Model):
-    _inherit = 'event.booth.registration'
+    _inherit = ['event.booth.registration']
 
     sponsor_name = fields.Char(string='Sponsor Name')
     sponsor_email = fields.Char(string='Sponsor Email')

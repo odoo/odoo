@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     invoice_edi_format = fields.Selection(selection_add=[('vn_sinvoice', 'SInvoice file')])
     l10n_vn_edi_symbol = fields.Many2one(

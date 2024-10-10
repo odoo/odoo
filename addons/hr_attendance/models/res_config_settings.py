@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     overtime_company_threshold = fields.Integer(
         string="Tolerance Time In Favor Of Company", readonly=False)

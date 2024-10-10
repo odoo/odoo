@@ -37,9 +37,9 @@ DEFAULT_IMAGE_CHUNK_SIZE = 32768
 
 mso_re = re.compile(r"\[if mso\]>[\s\S]*<!\[endif\]")
 
-class MassMailing(models.Model):
+
+class MailingMailing(models.Model):
     """ Mass Mailing models the sending of emails to a list of recipients for a mass mailing campaign."""
-    _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     _inherit = ['mail.thread',
                 'mail.activity.mixin',
@@ -52,7 +52,7 @@ class MassMailing(models.Model):
 
     @api.model
     def default_get(self, fields_list):
-        vals = super(MassMailing, self).default_get(fields_list)
+        vals = super().default_get(fields_list)
 
         # field sent by the calendar view when clicking on a date block
         # we use it to setup the scheduled date of the created mailing.mailing
@@ -537,7 +537,7 @@ class MassMailing(models.Model):
         if values.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in values:
             raise ValidationError(_("A campaign should be set when A/B test is enabled"))
 
-        result = super(MassMailing, self).write(values)
+        result = super().write(values)
         if values.get('ab_testing_enabled'):
             self._create_ab_testing_utm_campaigns()
         self._fix_attachment_ownership()

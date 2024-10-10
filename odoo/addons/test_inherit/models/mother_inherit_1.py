@@ -4,6 +4,8 @@ from odoo import models, fields
 
 
 # We add a new field in the parent model. Because of a recent refactoring, this
+
+
 # feature was broken. These models rely on that feature.
 class TestInheritMother(models.Model):
     _inherit = ['test.inherit.mother']
@@ -19,15 +21,13 @@ class TestInheritMother(models.Model):
         return 42
 
 
-class TestMotherUnderscore(models.Model):
-    _name = 'test_mother_underscore'
+class Test_Mother_Underscore(models.Model):
     _description = 'Test Inherit Underscore'
     _inherit = ['test.inherit.mother']
 
 
 # pylint: disable=E0102
-class TestMotherUnderscore(models.Model):  # noqa: F811
-    _name = 'test_mother_underscore'
+class Test_Mother_Underscore(models.Model):  # noqa: F811
     _inherit = ['test_mother_underscore']
 
     foo = fields.Char()

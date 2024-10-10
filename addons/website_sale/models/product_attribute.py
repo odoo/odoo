@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class ProductAttribute(models.Model):
-    _inherit = 'product.attribute'
+    _inherit = ['product.attribute']
 
     visibility = fields.Selection(
         selection=[('visible', "Visible"), ('hidden', "Hidden")],

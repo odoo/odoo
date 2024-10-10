@@ -18,8 +18,7 @@ def autoIncrement():
     return rec
 
 
-class MrpStockReport(models.TransientModel):
-    _name = 'stock.traceability.report'
+class StockTraceabilityReport(models.TransientModel):
     _description = 'Traceability Report'
 
     @api.model

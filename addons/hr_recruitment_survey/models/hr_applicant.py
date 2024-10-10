@@ -5,8 +5,8 @@ from odoo import fields, models, _
 from odoo.exceptions import UserError
 
 
-class Applicant(models.Model):
-    _inherit = "hr.applicant"
+class HrApplicant(models.Model):
+    _inherit = ["hr.applicant"]
 
     survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=True)
     response_ids = fields.One2many('survey.user_input', 'applicant_id', string="Responses")

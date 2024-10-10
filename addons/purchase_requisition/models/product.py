@@ -4,15 +4,15 @@
 from odoo import fields, models
 
 
-class SupplierInfo(models.Model):
-    _inherit = 'product.supplierinfo'
+class ProductSupplierinfo(models.Model):
+    _inherit = ['product.supplierinfo']
 
     purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Agreement')
     purchase_requisition_line_id = fields.Many2one('purchase.requisition.line')
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     def _prepare_sellers(self, params=False):
         sellers = super(ProductProduct, self)._prepare_sellers(params=params)

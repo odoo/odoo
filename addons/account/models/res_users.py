@@ -5,8 +5,8 @@ from odoo import api, models, _
 from odoo.exceptions import ValidationError
 
 
-class GroupsView(models.Model):
-    _inherit = 'res.groups'
+class ResGroups(models.Model):
+    _inherit = ['res.groups']
 
     @api.model
     def get_application_groups(self, domain):

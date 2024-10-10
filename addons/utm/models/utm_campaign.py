@@ -5,7 +5,6 @@ from odoo import fields, models, api
 
 
 class UtmCampaign(models.Model):
-    _name = 'utm.campaign'
     _description = 'UTM Campaign'
     _rec_name = 'title'
 

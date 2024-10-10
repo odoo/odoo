@@ -7,7 +7,7 @@ from odoo.tools import html_escape
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+    _inherit = ["res.config.settings"]
 
     l10n_in_edi_ewaybill_username = fields.Char("Indian EDI Stock username",
         related="company_id.l10n_in_edi_ewaybill_username", readonly=False)

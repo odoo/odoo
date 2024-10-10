@@ -15,8 +15,7 @@ def _csv_row(data, delimiter=',', quote='"'):
     return quote + (quote + delimiter + quote).join([str(x).replace(quote, '\\' + quote) for x in data]) + quote + '\n'
 
 
-class EfakturDocument(models.Model):
-    _name = "l10n_id_efaktur.document"
+class L10n_Id_EfakturDocument(models.Model):
     _description = "E-faktur Document"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 

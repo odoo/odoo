@@ -8,8 +8,8 @@ from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
 _logger = logging.getLogger(__name__)
 
 
-class EventTemplateTicket(models.Model):
-    _inherit = 'event.type.ticket'
+class EventTypeTicket(models.Model):
+    _inherit = ['event.type.ticket']
     _order = "sequence, price, name, id"
 
     def _default_product_id(self):

@@ -15,9 +15,9 @@ from odoo.tools.date_utils import get_timedelta
 
 MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}
 
-class HolidaysAllocation(models.Model):
+
+class HrLeaveAllocation(models.Model):
     """ Allocation Requests Access specifications: similar to leave requests """
-    _name = "hr.leave.allocation"
     _description = "Time Off Allocation"
     _order = "create_date desc"
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -670,7 +670,7 @@ class HolidaysAllocation(models.Model):
             employee_id = values.get('employee_id', False)
             if not values.get('department_id'):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
-        allocations = super(HolidaysAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        allocations = super(HrLeaveAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         allocations._add_lastcalls()
         for allocation in allocations:
             partners_to_subscribe = set()
@@ -936,7 +936,7 @@ class HolidaysAllocation(models.Model):
         if 'state' in init_values and self.state == 'validate':
             allocation_notif_subtype_id = self.holiday_status_id.allocation_notif_subtype_id
             return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
-        return super(HolidaysAllocation, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Handle HR users and officers recipients that can validate or refuse holidays
@@ -975,5 +975,5 @@ class HolidaysAllocation(models.Model):
         # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo
         if any(state in ['validate'] for state in self.mapped('state')):
             self.check_access('read')
-            return super(HolidaysAllocation, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
+            return super(HrLeaveAllocation, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         return super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)

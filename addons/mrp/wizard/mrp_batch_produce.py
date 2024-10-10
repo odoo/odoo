@@ -9,8 +9,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class MrpBatchProduct(models.TransientModel):
-    _name = 'mrp.batch.produce'
+class MrpBatchProduce(models.TransientModel):
     _description = 'Produce a batch of production order'
 
     production_id = fields.Many2one('mrp.production', 'Production')

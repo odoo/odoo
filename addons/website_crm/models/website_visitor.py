@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class WebsiteVisitor(models.Model):
-    _inherit = 'website.visitor'
+    _inherit = ['website.visitor']
 
     lead_ids = fields.Many2many('crm.lead', string='Leads', groups="sales_team.group_sale_salesman")
     lead_count = fields.Integer('# Leads', compute="_compute_lead_count", groups="sales_team.group_sale_salesman")

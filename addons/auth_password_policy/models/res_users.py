@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     @api.model
     def get_password_policy(self):

@@ -4,7 +4,7 @@ from odoo import fields, models, _
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     l10n_it_edi_doi_ids = fields.One2many(
         'l10n_it_edi_doi.declaration_of_intent',

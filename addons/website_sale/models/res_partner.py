@@ -6,7 +6,7 @@ from odoo.addons.website.models import ir_http
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     last_website_so_id = fields.Many2one(
         string="Last Online Sales Order",

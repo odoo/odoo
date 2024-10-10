@@ -18,7 +18,6 @@ from odoo.tools.misc import get_lang
 
 
 class MrpWorkcenter(models.Model):
-    _name = 'mrp.workcenter'
     _description = 'Work Center'
     _order = "sequence, id"
     _inherit = ['mail.thread', 'resource.mixin']
@@ -401,8 +400,7 @@ class MrpWorkcenter(models.Model):
         return capacity.time_start + capacity.time_stop if capacity else self.time_start + self.time_stop
 
 
-class WorkcenterTag(models.Model):
-    _name = 'mrp.workcenter.tag'
+class MrpWorkcenterTag(models.Model):
     _description = 'Add tag for the workcenter'
     _order = 'name'
 
@@ -419,7 +417,6 @@ class WorkcenterTag(models.Model):
 
 
 class MrpWorkcenterProductivityLossType(models.Model):
-    _name = "mrp.workcenter.productivity.loss.type"
     _description = 'MRP Workorder productivity losses'
     _rec_name = 'loss_type'
 
@@ -439,7 +436,6 @@ class MrpWorkcenterProductivityLossType(models.Model):
 
 
 class MrpWorkcenterProductivityLoss(models.Model):
-    _name = "mrp.workcenter.productivity.loss"
     _description = "Workcenter Productivity Losses"
     _order = "sequence, id"
 
@@ -464,8 +460,8 @@ class MrpWorkcenterProductivityLoss(models.Model):
                 duration = max(duration, (date_stop - date_start).total_seconds() / 60.0)
         return round(duration, 2)
 
+
 class MrpWorkcenterProductivity(models.Model):
-    _name = "mrp.workcenter.productivity"
     _description = "Workcenter Productivity Log"
     _order = "id desc"
     _rec_name = "loss_id"
@@ -571,8 +567,7 @@ class MrpWorkcenterProductivity(models.Model):
             underperformance_timers.write({'loss_id': underperformance_type.id})
 
 
-class MrpWorkCenterCapacity(models.Model):
-    _name = 'mrp.workcenter.capacity'
+class MrpWorkcenterCapacity(models.Model):
     _description = 'Work Center Capacity'
     _check_company_auto = True
 

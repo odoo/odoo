@@ -3,7 +3,7 @@ from odoo import models, api, _
 
 
 class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+    _inherit = ['account.payment']
 
     @api.depends('country_code', 'partner_type')
     def _compute_payment_receipt_title(self):

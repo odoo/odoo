@@ -6,7 +6,6 @@ from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
 
 
 class SaleReport(models.Model):
-    _name = "sale.report"
     _description = "Sales Analysis Report"
     _auto = False
     _rec_name = 'date'

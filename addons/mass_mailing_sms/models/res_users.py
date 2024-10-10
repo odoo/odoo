@@ -6,8 +6,7 @@ import json
 from odoo import api, fields, models, modules, _
 
 
-class Users(models.Model):
-    _name = 'res.users'
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     @api.model

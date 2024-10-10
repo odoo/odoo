@@ -2,7 +2,7 @@ from odoo import models
 
 
 class CalendarEvent(models.Model):
-    _inherit = 'calendar.event'
+    _inherit = ['calendar.event']
 
     def _need_video_call(self):
         """ Determine if the event needs a video call or not depending

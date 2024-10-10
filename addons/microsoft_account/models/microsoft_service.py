@@ -35,8 +35,8 @@ def _get_microsoft_client_secret(ICP_sudo, service):
     """
     return ICP_sudo.get_param('microsoft_%s_client_secret' % service)
 
+
 class MicrosoftService(models.AbstractModel):
-    _name = 'microsoft.service'
     _description = 'Microsoft Service'
 
     def _get_microsoft_client_id(self, service):

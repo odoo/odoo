@@ -16,8 +16,7 @@ from odoo.tools import format_datetime, format_date, format_list, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
-class PickingType(models.Model):
-    _name = "stock.picking.type"
+class StockPickingType(models.Model):
     _description = "Picking Type"
     _order = 'is_favorite desc, sequence, id'
     _rec_names_search = ['name', 'warehouse_id.name']
@@ -214,7 +213,7 @@ class PickingType(models.Model):
                     moves = self.env['stock.move'].search([('picking_type_id', 'in', picking_types.ids), ('state', 'not in', ('assigned', 'done', 'cancel'))])
                     moves.reservation_date = False
 
-        return super(PickingType, self).write(vals)
+        return super().write(vals)
 
     @api.model
     def _search_is_favorite(self, operator, value):
@@ -525,8 +524,7 @@ class PickingType(models.Model):
             picking_type.kanban_dashboard_graph = json.dumps(graph_data)
 
 
-class Picking(models.Model):
-    _name = "stock.picking"
+class StockPicking(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Transfer"
     _order = "priority desc, scheduled_date asc, id desc"
@@ -1117,7 +1115,7 @@ class Picking(models.Model):
             for picking in self:
                 if picking.picking_type_id != picking_type:
                     picking.name = picking_type.sequence_id.next_by_id()
-        res = super(Picking, self).write(vals)
+        res = super().write(vals)
         if vals.get('signature'):
             for picking in self:
                 picking._attach_sign()
@@ -1139,7 +1137,7 @@ class Picking(models.Model):
     def unlink(self):
         self.move_ids._action_cancel()
         self.with_context(prefetch_fields=False).move_ids.unlink()  # Checks if moves are not done
-        return super(Picking, self).unlink()
+        return super().unlink()
 
     def do_print_picking(self):
         self.write({'printed': True})

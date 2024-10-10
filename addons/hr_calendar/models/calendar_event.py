@@ -8,7 +8,7 @@ from odoo.addons.resource.models.utils import Intervals, sum_intervals, timezone
 
 
 class CalendarEvent(models.Model):
-    _inherit = "calendar.event"
+    _inherit = ["calendar.event"]
 
     unavailable_partner_ids = fields.Many2many('res.partner', compute='_compute_unavailable_partner_ids')
 

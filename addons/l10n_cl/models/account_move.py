@@ -9,7 +9,7 @@ SII_VAT = '60805000-0'
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     partner_id_vat = fields.Char(related='partner_id.vat', string='VAT No')
     l10n_latam_internal_type = fields.Selection(

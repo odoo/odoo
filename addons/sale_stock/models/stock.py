@@ -8,12 +8,12 @@ from odoo.tools.sql import column_exists, create_column
 
 
 class StockRoute(models.Model):
-    _inherit = "stock.route"
+    _inherit = ["stock.route"]
     sale_selectable = fields.Boolean("Selectable on Sales Order Line")
 
 
 class StockMove(models.Model):
-    _inherit = "stock.move"
+    _inherit = ["stock.move"]
     sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index='btree_not_null')
 
     @api.model
@@ -58,20 +58,20 @@ class StockMove(models.Model):
 
 
 class StockMoveLine(models.Model):
-    _inherit = "stock.move.line"
+    _inherit = ["stock.move.line"]
 
     def _should_show_lot_in_invoice(self):
         return 'customer' in {self.location_id.usage, self.location_dest_id.usage}
 
 
 class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+    _inherit = ['procurement.group']
 
     sale_id = fields.Many2one('sale.order', 'Sale Order')
 
 
 class StockRule(models.Model):
-    _inherit = 'stock.rule'
+    _inherit = ['stock.rule']
 
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
@@ -80,7 +80,7 @@ class StockRule(models.Model):
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = ['stock.picking']
 
     sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null')
 
@@ -201,7 +201,7 @@ class StockPicking(models.Model):
 
 
 class StockLot(models.Model):
-    _inherit = 'stock.lot'
+    _inherit = ['stock.lot']
 
     sale_order_ids = fields.Many2many('sale.order', string="Sales Orders", compute='_compute_sale_order_ids')
     sale_order_count = fields.Integer('Sale order count', compute='_compute_sale_order_ids')

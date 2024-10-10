@@ -7,7 +7,7 @@ from odoo.osv import expression
 
 
 class MailActivitySchedule(models.TransientModel):
-    _inherit = 'mail.activity.schedule'
+    _inherit = ['mail.activity.schedule']
 
     department_id = fields.Many2one('hr.department', compute='_compute_department_id')
     plan_department_filterable = fields.Boolean(compute='_compute_plan_department_filterable')

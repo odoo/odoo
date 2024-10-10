@@ -3,7 +3,7 @@ from odoo import api, models
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()

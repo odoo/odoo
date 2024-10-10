@@ -7,7 +7,7 @@ from odoo.addons.payment_custom import const
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = ['payment.provider']
 
     _sql_constraints = [(
         'custom_providers_setup',

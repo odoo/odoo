@@ -5,7 +5,7 @@ from odoo import models, fields
 
 
 class ChatbotScript(models.Model):
-    _inherit = 'chatbot.script'
+    _inherit = ['chatbot.script']
 
     lead_count = fields.Integer(
         string='Generated Lead Count', compute='_compute_lead_count')

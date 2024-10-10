@@ -17,8 +17,7 @@ DR_CREATE_STEP_AUTO = 5000
 DR_CREATE_STEP_MANUAL = 50000
 
 
-class DataRecycleModel(models.Model):
-    _name = 'data_recycle.model'
+class Data_RecycleModel(models.Model):
     _description = 'Recycling Model'
     _order = 'name'
 

@@ -33,7 +33,7 @@ SANDBOX_AUTH = {
 
 
 class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+    _inherit = ['account.journal']
 
     """
         In order to clear/report an invoice through the ZATCA API, we need to onboard each journal by following

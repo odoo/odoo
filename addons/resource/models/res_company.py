@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     resource_calendar_ids = fields.One2many(
         'resource.calendar', 'company_id', 'Working Hours')

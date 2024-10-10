@@ -10,14 +10,13 @@ from odoo.exceptions import UserError
 from odoo.osv.expression import AND
 
 
-class AccountClosing(models.Model):
+class AccountSaleClosing(models.Model):
     """
     This object holds an interval total and a grand total of the accounts of type receivable for a company,
     as well as the last account_move that has been counted in a previous object
     It takes its earliest brother to infer from when the computation needs to be done
     in order to compute its own data.
     """
-    _name = 'account.sale.closing'
     _order = 'date_closing_stop desc, sequence_number desc'
     _description = "Sale Closing"
 

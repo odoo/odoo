@@ -4,8 +4,7 @@ from odoo.exceptions import ValidationError
 
 
 # We just create a new model
-class Unit(models.Model):
-    _name = 'test.unit'
+class TestUnit(models.Model):
     _description = 'Test Unit'
 
     name = fields.Char('Name', required=True, translate=True)
@@ -21,8 +20,7 @@ class Unit(models.Model):
             unit.surname = unit.name or ''
 
 
-class UnitLine(models.Model):
-    _name = 'test.unit.line'
+class TestUnitLine(models.Model):
     _description = 'Test Unit Line'
 
     name = fields.Char('Name', required=True)
@@ -30,9 +28,10 @@ class UnitLine(models.Model):
 
 
 # We want to _inherits from the parent model and we add some fields
+
+
 # in the child object
-class Box(models.Model):
-    _name = 'test.box'
+class TestBox(models.Model):
     _inherits = {'test.unit': 'unit_id'}
     _description = 'Test Box'
 
@@ -43,8 +42,7 @@ class Box(models.Model):
 
 
 # We add a third level of _inherits
-class Pallet(models.Model):
-    _name = 'test.pallet'
+class TestPallet(models.Model):
     _inherits = {'test.box': 'box_id'}
     _description = 'Test Pallet'
 
@@ -54,17 +52,17 @@ class Pallet(models.Model):
 
 
 # Another model for another test suite
-class AnotherUnit(models.Model):
-    _name = 'test.another_unit'
+class TestAnother_Unit(models.Model):
     _description = 'Another Test Unit'
 
     val1 = fields.Integer('Value 1', required=True)
 
 
 # We want to _inherits from the parent model, add a field and check
+
+
 # the new field is always equals to the first one
-class AnotherBox(models.Model):
-    _name = 'test.another_box'
+class TestAnother_Box(models.Model):
     _inherits = {'test.another_unit': 'another_unit_id'}
     _description = 'Another Test Box'
 

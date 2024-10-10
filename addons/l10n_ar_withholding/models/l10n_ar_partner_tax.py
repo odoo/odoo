@@ -5,8 +5,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class L10nArPartnerTax(models.Model):
-    _name = "l10n_ar.partner.tax"
+class L10n_ArPartnerTax(models.Model):
     _description = "Argentinean Partner Taxes"
     _order = "to_date desc, from_date desc, tax_id"
     _check_company_auto = True

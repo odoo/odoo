@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+    _inherit = ["hr.employee.base"]
 
     child_all_count = fields.Integer(
         'Indirect Subordinates Count',

@@ -6,7 +6,6 @@ from odoo.exceptions import UserError
 
 
 class StockPickingToBatch(models.TransientModel):
-    _name = 'stock.picking.to.batch'
     _description = 'Batch Transfer Lines'
 
     batch_id = fields.Many2one('stock.picking.batch', string='Batch Transfer', domain="[('is_wave', '=', False), ('state', 'in', ('draft', 'in_progress'))]")

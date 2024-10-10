@@ -9,7 +9,6 @@ from odoo.tools import format_time
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _name = "hr.employee.base"
     _description = "Basic Employee"
     _order = 'name'
 

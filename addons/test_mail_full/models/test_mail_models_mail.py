@@ -8,7 +8,6 @@ class MailTestPortal(models.Model):
     """ A model inheriting from mail.thread and portal.mixin with some fields
     used for portal sharing, like a partner, ..."""
     _description = 'Chatter Model for Portal'
-    _name = 'mail.test.portal'
     _inherit = [
         'portal.mixin',
         'mail.thread',
@@ -27,7 +26,6 @@ class MailTestPortal(models.Model):
 class MailTestPortalNoPartner(models.Model):
     """ A model inheriting from portal, but without any partner field """
     _description = 'Chatter Model for Portal (no partner field)'
-    _name = 'mail.test.portal.no.partner'
     _inherit = [
         'mail.thread',
         'portal.mixin',
@@ -45,7 +43,6 @@ class MailTestRating(models.Model):
     """ A model inheriting from rating.mixin (which inherits from mail.thread) with some fields used for SMS
     gateway, like a partner, a specific mobile phone, ... """
     _description = 'Rating Model (ticket-like)'
-    _name = 'mail.test.rating'
     _inherit = [
         'rating.mixin',
         'mail.activity.mixin',
@@ -108,8 +105,7 @@ class MailTestRatingThread(models.Model):
      - user_id: value returned by the base _rating_get_operator method
      """
     _description = 'Model for testing rating without the rating mixin'
-    _name = 'mail.test.rating.thread'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread']
     _order = 'name asc, id asc'
 
     name = fields.Char('Name')
@@ -127,7 +123,6 @@ class MailTestRatingThreadRead(models.Model):
     """Same as MailTestRatingThread but post accessible on read by portal users."""
 
     _description = "Read-post rating model"
-    _name = "mail.test.rating.thread.read"
-    _inherit = "mail.test.rating.thread"
+    _inherit = ["mail.test.rating.thread"]
     _order = "name asc, id asc"
     _mail_post_access = "read"

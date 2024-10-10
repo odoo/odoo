@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class FleetVehicleState(models.Model):
-    _name = 'fleet.vehicle.state'
     _order = 'sequence asc'
     _description = 'Vehicle Status'
 

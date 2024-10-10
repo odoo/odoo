@@ -8,8 +8,7 @@ import stdnum
 _logger = logging.getLogger(__name__)
 
 
-class l10nLatamCheckPaymentRegisterCheck(models.TransientModel):
-    _name = 'l10n_latam.payment.register.check'
+class L10n_LatamPaymentRegisterCheck(models.TransientModel):
     _description = 'Payment register check'
     _check_company_auto = True
 

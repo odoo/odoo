@@ -5,7 +5,6 @@ from odoo import api, fields, models, _
 
 
 class BaseLanguageInstall(models.TransientModel):
-    _name = "base.language.install"
     _description = "Install Language"
 
     @api.model

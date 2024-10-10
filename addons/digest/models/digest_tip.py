@@ -5,7 +5,6 @@ from odoo.tools.translate import html_translate
 
 
 class DigestTip(models.Model):
-    _name = 'digest.tip'
     _description = 'Digest Tips'
     _order = 'sequence'
 

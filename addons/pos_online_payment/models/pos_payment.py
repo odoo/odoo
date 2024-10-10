@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosPayment(models.Model):
-    _inherit = 'pos.payment'
+    _inherit = ['pos.payment']
 
     online_account_payment_id = fields.Many2one('account.payment', string='Online accounting payment', readonly=True) # One2one
 

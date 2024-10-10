@@ -13,8 +13,8 @@ from odoo.exceptions import ValidationError, MissingError
 
 from odoo.addons.spreadsheet.utils.validate_data import fields_in_spreadsheet, menus_xml_ids_in_spreadsheet
 
+
 class SpreadsheetMixin(models.AbstractModel):
-    _name = "spreadsheet.mixin"
     _description = "Spreadsheet mixin"
     _auto = False
 

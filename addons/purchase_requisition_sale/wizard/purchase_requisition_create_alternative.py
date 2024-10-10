@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class PurchaseRequisitionCreateAlternative(models.TransientModel):
-    _inherit = 'purchase.requisition.create.alternative'
+    _inherit = ['purchase.requisition.create.alternative']
 
     @api.model
     def _get_alternative_line_value(self, order_line):

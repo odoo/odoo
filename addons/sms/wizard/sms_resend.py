@@ -4,8 +4,7 @@
 from odoo import _, api, exceptions, fields, models
 
 
-class SMSRecipient(models.TransientModel):
-    _name = 'sms.resend.recipient'
+class SmsResendRecipient(models.TransientModel):
     _description = 'Resend Notification'
     _rec_name = 'sms_resend_id'
 
@@ -19,14 +18,13 @@ class SMSRecipient(models.TransientModel):
     sms_number = fields.Char(string='Phone Number')
 
 
-class SMSResend(models.TransientModel):
-    _name = 'sms.resend'
+class SmsResend(models.TransientModel):
     _description = 'SMS Resend'
     _rec_name = 'mail_message_id'
 
     @api.model
     def default_get(self, fields):
-        result = super(SMSResend, self).default_get(fields)
+        result = super().default_get(fields)
         if 'recipient_ids' in fields and result.get('mail_message_id'):
             mail_message_id = self.env['mail.message'].browse(result['mail_message_id'])
             result['recipient_ids'] = [(0, 0, {

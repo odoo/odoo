@@ -4,7 +4,6 @@ from odoo import fields, models
 
 
 class WebsiteSaleExtraField(models.Model):
-    _name = 'website.sale.extra.field'
     _description = "E-Commerce Extra Info Shown on product page"
     _order = 'sequence'
 

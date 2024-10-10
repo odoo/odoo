@@ -4,7 +4,7 @@ from odoo import models
 
 class AccountMoveLine(models.Model):
 
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def _l10n_ar_prices_and_taxes(self):
         self.ensure_one()

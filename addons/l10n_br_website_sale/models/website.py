@@ -3,7 +3,7 @@ from odoo import api, models
 
 
 class Website(models.Model):
-    _inherit = 'website'
+    _inherit = ['website']
 
     @api.model_create_multi
     def create(self, vals_list):

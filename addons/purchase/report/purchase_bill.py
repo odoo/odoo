@@ -4,8 +4,8 @@
 from odoo import api, fields, models, tools
 from odoo.tools import formatLang
 
+
 class PurchaseBillUnion(models.Model):
-    _name = 'purchase.bill.union'
     _auto = False
     _description = 'Purchases & Bills Union'
     _order = "date desc, name desc"

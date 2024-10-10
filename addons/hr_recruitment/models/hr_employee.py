@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
-    _inherit = "hr.employee"
+    _inherit = ["hr.employee"]
 
     # YTI Rename into candidate_ids
     candidate_id = fields.One2many('hr.candidate', 'employee_id', 'Candidate', groups="hr.group_hr_user")

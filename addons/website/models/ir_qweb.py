@@ -18,10 +18,10 @@ _logger = logging.getLogger(__name__)
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
 
-class IrQWeb(models.AbstractModel):
+class IrQweb(models.AbstractModel):
     """ IrQWeb object for rendering stuff in the website context """
 
-    _inherit = 'ir.qweb'
+    _inherit = ['ir.qweb']
 
     URL_ATTRS = {
         'form': 'action',
@@ -199,7 +199,7 @@ class IrQWeb(models.AbstractModel):
         return atts
 
     def _get_bundles_to_pregenarate(self):
-        js_assets, css_assets = super(IrQWeb, self)._get_bundles_to_pregenarate()
+        js_assets, css_assets = super()._get_bundles_to_pregenarate()
         assets = {
             'website.backend_assets_all_wysiwyg',
             'website.assets_all_wysiwyg',

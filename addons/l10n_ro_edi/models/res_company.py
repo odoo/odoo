@@ -12,7 +12,7 @@ from odoo.tools import json
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     l10n_ro_edi_client_id = fields.Char(string='Client ID')
     l10n_ro_edi_client_secret = fields.Char(string='Client Secret')

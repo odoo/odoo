@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IrModelData(models.Model):
-    _inherit = 'ir.model.data'
+    _inherit = ['ir.model.data']
 
     @api.model
     def _process_end_unlink_record(self, record):

@@ -4,8 +4,7 @@ from odoo import _, models
 
 
 class SaleEdiCommon(models.AbstractModel):
-    _name = 'sale.edi.common'
-    _inherit = 'account.edi.common'
+    _inherit = ['account.edi.common']
     _description = "Common functions for EDI orders"
 
     # -------------------------------------------------------------------------

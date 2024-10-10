@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class StockWarehouse(models.Model):
-    _inherit = 'stock.warehouse'
+    _inherit = ['stock.warehouse']
 
     subcontracting_to_resupply = fields.Boolean(
         'Resupply Subcontractors', default=True)

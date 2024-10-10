@@ -8,7 +8,6 @@ from odoo.exceptions import ValidationError
 
 
 class MailActivityPlanTemplate(models.Model):
-    _name = 'mail.activity.plan.template'
     _order = 'sequence,id'
     _description = 'Activity plan template'
     _rec_name = 'summary'

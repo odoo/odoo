@@ -3,8 +3,9 @@
 
 from odoo import models
 
+
 class SaleOrderTemplateLine(models.Model):
-    _inherit = 'sale.order.template.line'
+    _inherit = ['sale.order.template.line']
 
     def _prepare_order_line_values(self):
         res = super()._prepare_order_line_values()

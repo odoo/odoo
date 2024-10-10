@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = ['payment.provider']
 
     so_reference_type = fields.Selection(string='Communication',
         selection=[

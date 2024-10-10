@@ -16,7 +16,7 @@ except ImportError:
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     def _build_vcard(self):
         """ Build the partner's vCard.
