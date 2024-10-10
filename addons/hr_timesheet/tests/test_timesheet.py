@@ -713,13 +713,16 @@ class TestTimesheet(TestCommonTimesheet):
         })
         self.assertEqual(project_1.analytic_account_id.plan_id.id, 1)
 
-        self.env['ir.config_parameter'].set_param('analytic.analytic_plan_projects', 2)
+        other_plan = self.env['account.analytic.plan'].create({
+            'name': 'Operations',
+        })
+        self.env['ir.config_parameter'].set_param('analytic.analytic_plan_projects', other_plan.id)
         project_2 = self.env['project.project'].create({
             'name': "Project with plan setting 2",
             'allow_timesheets': True,
             'partner_id': self.partner.id,
         })
-        self.assertEqual(project_2.analytic_account_id.plan_id.id, 2)
+        self.assertEqual(project_2.analytic_account_id.plan_id.id, other_plan.id)
 
     def test_timesheet_update_user_on_employee(self):
         timesheet = self.env['account.analytic.line'].create({
