@@ -8,6 +8,7 @@ import { createUrlFromId } from "../core/url";
  * @typedef {{
  *  class?: string;
  *  id?: string;
+ *  onClick?: (event: PointerEvent) => any;
  *  options?: import("../core/url").CreateUrlFromIdOptions;
  *  slots: { default: any };
  *  style?: string;
@@ -34,6 +35,7 @@ export class HootLink extends Component {
             t-att-target="props.target"
             t-att-title="props.title"
             t-att-style="props.style"
+            t-on-click="onClick"
             t-on-focus="updateHref"
             t-on-pointerenter="updateHref"
         >
@@ -65,6 +67,13 @@ export class HootLink extends Component {
 
     setup() {
         this.state = useState({ href: "#" });
+    }
+
+    /**
+     * @param {PointerEvent} ev
+     */
+    onClick(ev) {
+        this.props.onClick?.(ev);
     }
 
     updateHref() {
