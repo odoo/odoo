@@ -407,7 +407,7 @@ class HrEmployeePrivate(models.Model):
         # Hardcode the form view for public employee
         return self.env.ref('hr.hr_employee_public_view_form').id
 
-    def get_formview_action(self, access_uid=None):
+    def get_formview_action(self, access_uid=None, **kwargs):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
         res = super(HrEmployeePrivate, self).get_formview_action(access_uid=access_uid)
         if access_uid:
@@ -417,6 +417,9 @@ class HrEmployeePrivate(models.Model):
 
         if not self_sudo.browse().has_access('read'):
             res['res_model'] = 'hr.employee.public'
+
+        if kwargs:
+            res['context'] = dict(res.get('context', {}), **kwargs)
 
         return res
 

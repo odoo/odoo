@@ -1444,23 +1444,36 @@ test("data-oe-id & data-oe-model link redirection on click", async () => {
     await assertSteps(["do-action:openFormView_some.model_250"]);
 });
 
-test("Chat with partner should be opened after clicking on their mention", async () => {
+test("Avatar card of the partner should be opened after clicking on their mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
-        name: "Test Partner",
-        email: "testpartner@odoo.com",
+        name: "First Partner",
+        email: "firstpartner@odoo.com",
+    });
+    pyEnv["res.partner"].create({
+        name: "Second Partner",
+        email: "secondpartner@odoo.com",
+        partner_share: true,
     });
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
-    await insertText(".o-mail-Composer-input", "@Te");
-    await click(".o-mail-Composer-suggestion strong", { text: "Test Partner" });
-    await contains(".o-mail-Composer-input", { value: "@Test Partner " });
+    await insertText(".o-mail-Composer-input", "@Fi");
+    await click(".o-mail-Composer-suggestion strong", { text: "First Partner" });
+    await contains(".o-mail-Composer-input", { value: "@First Partner " });
+    await insertText(".o-mail-Composer-input", "@Seco");
+    await click(".o-mail-Composer-suggestion strong", { text: "Second Partner" });
+    await contains(".o-mail-Composer-input", { value: "@First Partner @Second Partner " });
     await click(".o-mail-Composer-send:enabled");
-    await click(".o_mail_redirect");
-    await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await contains(".o-mail-ChatWindow", { text: "Test Partner" });
+    await click(".o_mail_redirect", { text: "@First Partner" });
+    await contains(".o_avatar_card .o_card_user_infos", { text: "First Partner" });
+    await contains(".o_card_user_infos", { text: "firstpartner@odoo.com" });
+    await contains(".o_avatar_card_buttons", { text: "Send message" });
+    await click(".o_mail_redirect", { text: "@Second Partner" });
+    await contains(".o_avatar_card .o_card_user_infos", { text: "Second Partner" });
+    await contains(".o_card_user_infos", { text: "secondpartner@odoo.com" });
+    await contains(".o_avatar_card_buttons", { text: "Send message", count: 0 });
 });
 
 test("Channel should be opened after clicking on its mention", async () => {
