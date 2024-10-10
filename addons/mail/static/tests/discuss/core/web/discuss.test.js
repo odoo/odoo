@@ -30,19 +30,11 @@ test("can create a new channel", async () => {
     onRpcBefore((route, args) => {
         if (
             route.startsWith("/mail") ||
+            route.startsWith("/discuss/channel/create_channel") ||
             route.startsWith("/discuss/channel/messages") ||
             route.startsWith("/discuss/search")
         ) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
-        }
-    });
-    onRpc((params) => {
-        if (params.model === "discuss.channel" && params.method === "channel_create") {
-            asyncStep(
-                `${params.route} - ${JSON.stringify(
-                    pick(params, "args", "kwargs", "method", "model")
-                )}`
-            );
         }
     });
     await start();
@@ -76,18 +68,8 @@ test("can create a new channel", async () => {
         ["partner_id", "=", serverState.partnerId],
     ]);
     await waitForSteps([
-        `/web/dataset/call_kw/discuss.channel/channel_create - ${JSON.stringify({
-            args: ["abc", null],
-            kwargs: {
-                context: {
-                    lang: "en",
-                    tz: "taht",
-                    uid: serverState.userId,
-                    allowed_company_ids: [1],
-                },
-            },
-            method: "channel_create",
-            model: "discuss.channel",
+        `/discuss/channel/create_channel - ${JSON.stringify({
+            name: "abc"
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${selfMember.new_message_separator}}}`,
     ]);
@@ -105,7 +87,7 @@ test("can make a DM chat", async () => {
     onRpc((params) => {
         if (
             params.model === "discuss.channel" &&
-            ["search_read", "channel_create", "channel_get"].includes(params.method)
+            ["search_read"].includes(params.method)
         ) {
             asyncStep(
                 `${params.route} - ${JSON.stringify(
@@ -142,20 +124,9 @@ test("can make a DM chat", async () => {
     await waitForSteps([
         `/discuss/search - {"term":""}`,
         `/discuss/search - {"term":"mario"}`,
-        `/web/dataset/call_kw/discuss.channel/channel_get - ${JSON.stringify({
-            args: [],
-            kwargs: {
-                partners_to: [partnerId],
-                force_open: false,
-                context: {
-                    lang: "en",
-                    tz: "taht",
-                    uid: serverState.userId,
-                    allowed_company_ids: [1],
-                },
-            },
-            method: "channel_get",
-            model: "discuss.channel",
+        `/discuss/channel/get_or_create_chat - ${JSON.stringify({
+            partners_to: [partnerId],
+            force_open: false,
         })}`,
         `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
