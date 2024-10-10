@@ -15,7 +15,8 @@ class BaseModel(models.AbstractModel):
         2. If the record has a `company_id` field, we use the website from that
            company (if set). Note that a company doesn't really have a website,
            it is retrieve through some heuristic in its `website_id`'s compute.
-        3. Use the ICP `web.base.url` (super)
+        3. Use the active company's website domain if set.
+        4. Fallback to the ICP `web.base.url` (super)
 
         :return: the base url for this record
         :rtype: string
@@ -32,6 +33,8 @@ class BaseModel(models.AbstractModel):
             return self.sudo().website_id.domain
         if 'company_id' in self and self.company_id.website_id.domain:
             return self.company_id.website_id.domain
+        if self.env.company.website_id.domain:
+            return self.env.company.website_id.domain
         return super().get_base_url()
 
     def get_website_meta(self):
