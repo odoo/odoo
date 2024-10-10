@@ -855,12 +855,24 @@ class AccountPayment(models.Model):
 
         payments = super().create(vals_list)
 
+        # Outstanding account should be set on the payment in community edition to force the generation of journal entries on the payment
+        # This is required because no reconciliation is possible in community, which would prevent the user to reconcile the bank statement with the invoice
+        is_only_community_edition = self.env['ir.module.module'].search_count(
+            [('name', 'in', ('account', 'account_accountant', 'accountant')), ('state', '=', 'installed')]) == 1
+
         for i, (pay, vals) in enumerate(zip(payments, vals_list)):
             if (
                 write_off_line_vals_list[i] is not None
                 or force_balance_vals_list[i] is not None
                 or linecomplete_line_vals_list[i] is not None
+                or is_only_community_edition
             ):
+                if is_only_community_edition:
+                    account_ref = 'account_journal_payment_credit_account_id' if vals.get('payment_type') == 'outbound' else 'account_journal_payment_debit_account_id'
+                    outstanding_account = self.env['account.chart.template'].ref(account_ref, raise_if_not_found=False) or self.env['account.account'].search([], limit=1)
+                    if outstanding_account:
+                        pay.outstanding_account_id = outstanding_account.id
+
                 pay._generate_journal_entry(
                     write_off_line_vals=write_off_line_vals_list[i],
                     force_balance=force_balance_vals_list[i],
