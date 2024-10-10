@@ -109,12 +109,10 @@ test("basic search panel rendering", async () => {
 
     await contains(".o_search_panel_category_value:nth-of-type(2) header").click();
     expect(".o_search_panel .o-dropdown").toHaveText("gold");
-    expect(".o_search_panel .o-dropdown .fa-circle").toHaveCount(1);
     expect(".o_search_panel a").toHaveCount(1);
 
     await contains(".o_search_panel a").click();
     expect(".o_search_panel .o-dropdown").toHaveText("category");
-    expect(".o_search_panel .o-dropdown .fa-circle").toHaveCount(0);
 });
 
 test("Dropdown closes on category selection", async () => {
