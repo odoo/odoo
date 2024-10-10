@@ -152,7 +152,7 @@ class ChannelController(http.Controller):
         return Store(channel).get_result()
 
     @http.route("/discuss/channel/sub_channel/create", methods=["POST"], type="json", auth="public")
-    def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
+    def discuss_channel_sub__channel_create(self, parent_channel_id, from_message_id=None, name=None):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
             raise NotFound()

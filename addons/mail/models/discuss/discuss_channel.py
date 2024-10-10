@@ -943,11 +943,11 @@ class Channel(models.Model):
             store.add(channel, info)
 
     @api.model
-    def channel_get_store(self, partners_to, pin=True, force_open=False):
-        return Store(self.channel_get(partners_to, pin, force_open)).get_result()
+    def channel_get(self, partners_to, pin=True, force_open=False):
+        return Store(self._channel_get(partners_to, pin, force_open)).get_result()
 
     @api.model
-    def channel_get(self, partners_to, pin=True, force_open=False):
+    def _channel_get(self, partners_to, pin=True, force_open=False):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
             only the given partners.
@@ -1086,11 +1086,11 @@ class Channel(models.Model):
         self.add_members(self.env.user.partner_id.ids)
 
     @api.model
-    def channel_create_store(self, name, group_id):
-        return Store(self.channel_create(name, group_id)).get_result()
+    def channel_create(self, name, group_id):
+        return Store(self._channel_create(name, group_id)).get_result()
 
     @api.model
-    def channel_create(self, name, group_id):
+    def _channel_create(self, name, group_id):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
             :param name : the name of the channel to create
@@ -1111,11 +1111,11 @@ class Channel(models.Model):
         return new_channel
 
     @api.model
-    def create_group_store(self, partners_to, default_display_mode=False, name=''):
-        return Store(self.create_group(partners_to, default_display_mode, name)).get_result()
+    def create_group(self, partners_to, default_display_mode=False, name=''):
+        return Store(self._create_group(partners_to, default_display_mode, name)).get_result()
 
     @api.model
-    def create_group(self, partners_to, default_display_mode=False, name=''):
+    def _create_group(self, partners_to, default_display_mode=False, name=''):
         """ Creates a group channel.
 
             :param partners_to : list of res.partner ids to add to the conversation

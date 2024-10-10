@@ -96,7 +96,7 @@ export class DiscussCoreCommon {
     }
 
     async createGroupChat({ default_display_mode, partners_to }) {
-        const data = await this.orm.call("discuss.channel", "create_group_store", [], {
+        const data = await this.orm.call("discuss.channel", "create_group", [], {
             default_display_mode,
             partners_to,
         });

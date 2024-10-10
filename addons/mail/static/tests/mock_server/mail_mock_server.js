@@ -334,7 +334,7 @@ async function discuss_channel_messages(request) {
 }
 
 registerRoute("/discuss/channel/sub_channel/create", discuss_channel_sub_channel_create);
-async function discuss_channel_sub_channel_create(request) {
+async function discuss_channel_sub__channel_create(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
     const { from_message_id, parent_channel_id, name } = await parseRequestParams(request);
