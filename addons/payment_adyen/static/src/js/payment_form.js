@@ -165,6 +165,9 @@ odoo.define('payment_adyen.payment_form', require => {
                         onAdditionalDetails: this._dropinOnAdditionalDetails.bind(this),
                         onError: this._dropinOnError.bind(this),
                         onSubmit: this._dropinOnSubmit.bind(this),
+                        paymentMethodsConfiguration: {
+                            card: {hasHolderName: true, holderNameRequired: true},
+                        }
                     };
                     const checkout = new AdyenCheckout(configuration);
                     this.adyenDropin = checkout.create(
