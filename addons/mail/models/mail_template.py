@@ -172,31 +172,9 @@ class MailTemplate(models.Model):
         self._fix_attachment_ownership()
         return True
 
-    def open_delete_confirmation_modal(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_id': self.id,
-            'res_model': self._name,
-            'target': 'new',
-            'view_id': self.env.ref('mail.mail_template_view_form_confirm_delete').id,
-            'context': {'dialog_size': 'medium'},
-            'name': _('Confirmation'),
-        }
-
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
-
-    def cancel_unlink(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_id': self.id,
-            'res_model': self._name,
-            'target': 'new',
-            'context': {'dialog_size': 'large'},
-        }
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
