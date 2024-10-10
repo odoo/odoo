@@ -221,8 +221,7 @@ class PortalWizardUser(models.TransientModel):
         """ send notification email to a new portal user """
         self.ensure_one()
 
-        # determine subject and body in the portal user's language
-        template = self.env.ref('portal.mail_template_data_portal_welcome')
+        template = self.env.ref('auth_signup.portal_set_password_email')
         if not template:
             raise UserError(_('The template "Portal: new user" not found for sending email to the portal user.'))
 
@@ -230,7 +229,7 @@ class PortalWizardUser(models.TransientModel):
         partner = self.user_id.sudo().partner_id
         partner.signup_prepare()
 
-        template.with_context(dbname=self.env.cr.dbname, lang=lang).send_mail(self.id, force_send=True)
+        template.with_context(dbname=self.env.cr.dbname, lang=lang, welcome_message=self.wizard_id.welcome_message, medium='portalinvite').send_mail(self.user_id.id, force_send=True)
 
         return True
 

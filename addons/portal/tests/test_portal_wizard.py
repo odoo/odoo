@@ -74,7 +74,7 @@ class TestPortalWizard(MailCommon):
         self.assertTrue(new_user._is_portal(), 'Must add the group to the user')
         self.assertEqual(self.partner.email, 'first_email@example.com', 'Must write on the email of the partner')
         self.assertEqual(new_user.email, 'first_email@example.com', 'Must create the user with the right email')
-        self.assertSentEmail(self.env.user.partner_id, [self.partner])
+        self.assertSentEmail(self.company_admin.partner_id, [self.partner])
 
     @users('admin')
     def test_portal_wizard_public_user(self):
@@ -104,7 +104,7 @@ class TestPortalWizard(MailCommon):
         self.assertFalse(self.public_user._is_public(), 'Must remove the group public')
         self.assertEqual(public_partner.email, 'new_email@example.com', 'Must change the email of the partner')
         self.assertEqual(self.public_user.email, 'new_email@example.com', 'Must change the email of the user')
-        self.assertSentEmail(self.env.user.partner_id, [public_partner])
+        self.assertSentEmail(self.company_admin.partner_id, [public_partner])
 
         with self.mock_mail_gateway():
             portal_user.action_revoke_access()
