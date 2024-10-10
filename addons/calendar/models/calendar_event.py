@@ -876,7 +876,7 @@ class CalendarEvent(models.Model):
         self.videocall_channel_id.channel_change_description(self.recurrence_id.name if self.recurrency else self.display_time)
 
     def _create_videocall_channel_id(self, name, partner_ids):
-        videocall_channel = self.env['discuss.channel'].create_group(partner_ids, default_display_mode='video_full_screen', name=name)
+        videocall_channel = self.env['discuss.channel']._create_group(partner_ids, default_display_mode='video_full_screen', name=name)
         # if recurrent event, set channel to all other records of the same recurrency
         if self.recurrency:
             recurrent_events_without_channel = self.env['calendar.event'].search([

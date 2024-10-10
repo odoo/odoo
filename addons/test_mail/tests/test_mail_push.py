@@ -352,7 +352,7 @@ class TestWebPushNotification(SMSCommon):
     @mute_logger('odoo.tests')
     def test_notify_call_invitation(self, push_to_end_point):
         inviting_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
-        channel = self.env['discuss.channel'].with_user(inviting_user).channel_get(
+        channel = self.env['discuss.channel'].with_user(inviting_user)._get_or_create_chat(
             partners_to=[self.user_email.partner_id.id])
         inviting_channel_member = channel.sudo().channel_member_ids.filtered(
             lambda channel_member: channel_member.partner_id == inviting_user.partner_id)
