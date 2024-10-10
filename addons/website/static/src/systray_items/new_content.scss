@@ -48,8 +48,10 @@
             margin: auto;
         }
 
-        a {
+        button {
+            @include unset-button-user-agent();
             display: block;
+            width: 100%;
             font-size: 34px;
             text-align: center;
             text-decoration: none;

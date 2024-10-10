@@ -13,7 +13,7 @@ function websiteCreateEventTourSteps() {
             tooltipPosition: "bottom",
             run: "click",
         }, {
-            trigger: "a[data-module-xml-id='base.module_website_event']",
+            trigger: "button[data-module-xml-id='base.module_website_event']",
             content: "Click here to create a new event.",
             tooltipPosition: "bottom",
             run: "click",
