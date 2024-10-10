@@ -23,6 +23,24 @@ class DiscussChannelWebclientController(WebclientController):
 
 
 class ChannelController(http.Controller):
+    @http.route("/discuss/channel/get_or_create_chat", methods=["POST"], type="jsonrpc", auth="public")
+    @add_guest_to_context
+    def discuss_get_or_create_chat(self, partners_to, pin=True, force_open=False):
+        channel = request.env["discuss.channel"]._get_or_create_chat(partners_to, pin, force_open)
+        return Store(channel).get_result()
+
+    @http.route("/discuss/channel/create_channel", methods=["POST"], type="jsonrpc", auth="public")
+    @add_guest_to_context
+    def discuss_create_channel(self, name, group_id):
+        channel = request.env["discuss.channel"]._create_channel(name, group_id)
+        return Store(channel).get_result()
+
+    @http.route("/discuss/channel/create_group", methods=["POST"], type="jsonrpc", auth="public")
+    @add_guest_to_context
+    def discuss_create_group(self, partners_to, default_display_mode=False, name=''):
+        channel = request.env["discuss.channel"]._create_group(partners_to, default_display_mode, name)
+        return Store(channel).get_result()
+
     @http.route("/discuss/channel/members", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_members(self, channel_id, known_member_ids):

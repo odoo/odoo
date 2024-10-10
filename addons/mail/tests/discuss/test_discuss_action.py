@@ -14,7 +14,7 @@ class TestDiscussAction(HttpCase):
     def test_join_call_with_client_action(self):
         inviting_user = self.env['res.users'].sudo().create({'name': "Inviting User", 'login': 'inviting'})
         invited_user = self.env['res.users'].sudo().create({'name': "Invited User", 'login': 'invited'})
-        channel = self.env['discuss.channel'].with_user(inviting_user).channel_get(partners_to=invited_user.partner_id.ids)
+        channel = self.env['discuss.channel'].with_user(inviting_user)._get_or_create_chat(partners_to=invited_user.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(
             lambda channel_member: channel_member.partner_id == inviting_user.partner_id)
         channel_member._rtc_join_call()

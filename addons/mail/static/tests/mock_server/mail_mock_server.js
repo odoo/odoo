@@ -262,6 +262,38 @@ async function channel_call_leave(request) {
     BusBus._sendmany(notifications);
 }
 
+registerRoute("/discuss/channel/get_or_create_chat", discuss_get_or_create_chat);
+/** @type {RouteCallback} */
+async function discuss_get_or_create_chat(request) {
+    const { partners_to } = await parseRequestParams(request);
+
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    return DiscussChannel._get_or_create_chat(partners_to)
+}
+
+registerRoute("/discuss/channel/create_channel", discuss_create_channel);
+/** @type {RouteCallback} */
+async function discuss_create_channel(request) {
+    const { name, group_id } = await parseRequestParams(request);
+
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    return DiscussChannel._create_channel(name, group_id)
+}
+
+registerRoute("/discuss/channel/create_group", discuss_create_group);
+/** @type {RouteCallback} */
+async function discuss_create_group(request) {
+    const kwargs = await parseRequestParams(request);
+    const partners_to = kwargs.partners_to || [];
+    const name = kwargs.name || "";
+
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    return DiscussChannel._create_group(partners_to, name)
+}
+
 registerRoute("/discuss/channel/fold", discuss_channel_fold);
 /** @type {RouteCallback} */
 async function discuss_channel_fold(request) {

@@ -347,8 +347,8 @@ class TestMessageLinks(MailCommon, HttpCase):
         super().setUpClass()
 
         cls.user_employee_1 = mail_new_test_user(cls.env, login='tao1', groups='base.group_user', name='Tao Lee')
-        cls.public_channel = cls.env['discuss.channel'].channel_create(name='Public Channel1', group_id=None)
-        cls.private_group = cls.env['discuss.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
+        cls.public_channel = cls.env['discuss.channel']._create_channel(name='Public Channel1', group_id=None)
+        cls.private_group = cls.env['discuss.channel']._create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
 
     @users('employee')
     def test_message_link_by_employee(self):
