@@ -52,7 +52,7 @@ registerWebsitePreviewTour("test_parallax", {
     changeOption("Parallax", 'we-button[data-select-data-attribute="1.5"]'),
 {
     content: "Check that the option was correctly applied",
-    trigger: ':iframe span.s_parallax_bg[style*=top][style*=bottom][style*=transform]',
+    trigger: ':iframe span.s_parallax_bg[style*=height][style*=transform]',
 },
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
