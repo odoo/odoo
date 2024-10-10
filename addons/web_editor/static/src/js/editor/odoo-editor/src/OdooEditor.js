@@ -2231,7 +2231,7 @@ export class OdooEditor extends EventTarget {
             // Do not apply commands out of the editable area.
             return false;
         }
-        if (!sel.isCollapsed && BACKSPACE_FIRST_COMMANDS.includes(method)) {
+        if (!sel.isCollapsed && (BACKSPACE_FIRST_COMMANDS.includes(method) || this.powerbox.isOpen)) {
             let range = getDeepRange(this.editable, {sel, splitText: true, select: true, correctTripleClick: true});
             if (range &&
                 range.startContainer === range.endContainer &&
