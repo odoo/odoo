@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
-class BadgeUser(models.Model):
+class GamificationBadgeUser(models.Model):
     """User having received a badge"""
 
     _name = 'gamification.badge.user'
@@ -48,3 +47,12 @@ class BadgeUser(models.Model):
         for vals in vals_list:
             self.env['gamification.badge'].browse(vals['badge_id']).check_granting()
         return super().create(vals_list)
+
+    def action_open_badge(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'gamification.badge',
+            'view_mode': 'form',
+            'res_id': self.badge_id.id,
+        }

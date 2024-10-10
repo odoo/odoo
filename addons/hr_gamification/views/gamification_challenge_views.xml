@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="challenge_list_action2" model="ir.actions.act_window">
+        <field name="name">Challenges</field>
+        <field name="res_model">gamification.challenge</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('challenge_category', '=', 'hr')]</field>
+        <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new challenge
+            </p><p>
+                Assign a list of goals to chosen users to evaluate them.
+                The challenge can use a period (weekly, monthly...) for automatic creation of goals.
+                The goals are created for the specified users or member of the group.
+            </p>
+        </field>
+    </record>
+
+    <record id="challenge_list_action2_view1" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="challenge_list_action2"/>
+        <field name="view_id" ref="gamification.view_challenge_kanban"/>
+    </record>
+
+    <record id="challenge_list_action2_view2" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="challenge_list_action2"/>
+        <field name="view_id" ref="gamification.challenge_form_view"/>
+    </record>
+</odoo>

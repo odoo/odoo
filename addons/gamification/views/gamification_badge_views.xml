@@ -29,7 +29,6 @@
         </field>
     </record>
 
-    
     <record id="badge_list_view" model="ir.ui.view">
         <field name="name">Badge List</field>
         <field name="model">gamification.badge</field>
@@ -53,7 +52,11 @@
                     <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" invisible="remaining_sending == 0" />
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="get_granted_employees" invisible="unique_owner_ids == 0" icon="fa-user">
+                            <field name="unique_owner_ids" string="Granted" widget="statinfo"/>
+                        </button>
+                    </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">

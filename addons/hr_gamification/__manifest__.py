@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'HR Gamification',
@@ -15,9 +14,11 @@ Badge received are displayed on the user profile.
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
         'wizard/gamification_badge_user_wizard_views.xml',
-        'views/gamification_views.xml',
+        'views/gamification_challenge_views.xml',
+        'views/gamification_goal_views.xml',
         'views/hr_employee_views.xml',
-        ],
+        'views/menuitems.xml',
+    ],
     'auto_install': True,
     'license': 'LGPL-3',
 }
