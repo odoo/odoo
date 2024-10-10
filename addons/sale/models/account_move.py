@@ -29,7 +29,7 @@ class AccountMove(models.Model):
             downpayment_lines.unlink()
         return res
 
-    @api.depends('invoice_user_id')
+    @api.depends('invoice_user_id', 'partner_id')
     def _compute_team_id(self):
         applicable_moves = self.filtered(
             lambda move:
@@ -40,8 +40,10 @@ class AccountMove(models.Model):
             applicable_moves,
             key=lambda m: (m.invoice_user_id.id, m.company_id.id)
         ):
+            default_team_id = self.env.context.get('default_team_id', False) or moves[0].partner_id.team_id.id or moves[0].team_id.id
             self.concat(*moves).team_id = self.env['crm.team'].with_context(
-                allowed_company_ids=[company_id]
+                allowed_company_ids=[company_id],
+                default_team_id=default_team_id
             )._get_default_team_id(
                 user_id=user_id,
             )
