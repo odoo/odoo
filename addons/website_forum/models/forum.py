@@ -48,6 +48,7 @@ class Forum(models.Model):
     faq = fields.Html('Guidelines', translate=html_translate, sanitize=True, sanitize_overridable=True)
     description = fields.Text('Description', translate=True)
     teaser = fields.Text('Teaser', compute='_compute_teaser', store=True)
+    teaser_non_stored = fields.Text('Teaser Non-stored', compute='_compute_teaser')
     welcome_message = fields.Html(
         'Welcome Message',
         translate=True,
@@ -139,6 +140,7 @@ class Forum(models.Model):
         for forum in self:
             forum.last_post_id = forum.post_ids.search([('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')], order='create_date desc', limit=1)
 
+    @api.depends_context('lang')
     @api.depends('description')
     def _compute_teaser(self):
         for forum in self:
@@ -150,6 +152,7 @@ class Forum(models.Model):
                     forum.teaser = forum.description
             else:
                 forum.teaser = ""
+            forum.teaser_non_stored = forum.teaser
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):

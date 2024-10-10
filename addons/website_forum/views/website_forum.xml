@@ -472,7 +472,7 @@
                     </a>
                     <p class="m-0 flex-grow-1"
                     placeholder="Description"
-                    t-field="forum.teaser"/>
+                    t-field="forum.teaser_non_stored"/>
                     <t t-if="is_view_active('website_forum.opt_post_count') or is_view_active('website_forum.opt_last_post')" t-call="website_forum.forum_post_options"/>
                 </div>
             </div>
