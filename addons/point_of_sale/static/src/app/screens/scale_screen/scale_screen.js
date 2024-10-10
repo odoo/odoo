@@ -1,6 +1,13 @@
 /** @odoo-module */
 
+<<<<<<< saas-17.2
 import { roundPrecision as round_pr } from "@web/core/utils/numbers";
+||||||| fd5123a8c79a0e3419fb8f81afb796d09a6fc30b
+import { roundPrecision as round_pr } from "@web/core/utils/numbers";
+import { registry } from "@web/core/registry";
+=======
+import { registry } from "@web/core/registry";
+>>>>>>> c11e7f686276f99552d88d234cf17d68bc1f51b3
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -54,6 +61,7 @@ export class ScaleScreen extends Component {
         return current_pricelist;
     }
     get productWeightString() {
+<<<<<<< saas-17.2
         const defaultstr = (this.state.weight || 0).toFixed(3) + " Kg";
         if (!this.props.product) {
             return defaultstr;
@@ -66,6 +74,23 @@ export class ScaleScreen extends Component {
         let weightstr = weight.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
         weightstr += " " + unit.name;
         return weightstr;
+||||||| fd5123a8c79a0e3419fb8f81afb796d09a6fc30b
+        const defaultstr = (this.state.weight || 0).toFixed(3) + " Kg";
+        if (!this.props.product) {
+            return defaultstr;
+        }
+        const unit_id = this.props.product.uom_id;
+        if (!unit_id) {
+            return defaultstr;
+        }
+        const unit = this.pos.units_by_id[unit_id[0]];
+        const weight = round_pr(this.state.weight || 0, unit.rounding);
+        let weightstr = weight.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+        weightstr += " " + unit.name;
+        return weightstr;
+=======
+        return (this.state.weight || 0).toFixed(3);
+>>>>>>> c11e7f686276f99552d88d234cf17d68bc1f51b3
     }
     get computedPriceString() {
         return this.env.utils.formatCurrency(this.productPrice * this.state.weight);
