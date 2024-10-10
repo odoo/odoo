@@ -57,7 +57,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
     @users('emp')
     def test_message_to_store(self):
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
-        self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
+        self.env['mail.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
         self.authenticate(self.users[1].login, self.password)
         channel_livechat_1 = self.env["discuss.channel"].browse(
             self.make_jsonrpc_request(
@@ -159,7 +159,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
         livechat_channel_vals = {"name": "support", "user_ids": [Command.link(self.users[0].id)]}
         im_livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_vals)
         # make available for livechat (ignore leave)
-        self.env["bus.presence"].create({"user_id": self.users[0].id, "status": "online"})
+        self.env["mail.presence"].create({"user_id": self.users[0].id, "status": "online"})
         self.authenticate(self.env.user.login, self.env.user.login)
         channel = self.env["discuss.channel"].browse(
             self.make_jsonrpc_request(

@@ -5,6 +5,7 @@ from . import test_controller_common
 from . import test_discuss_tools
 from . import test_ir_mail_server
 from . import test_ir_ui_menu
+from . import test_ir_websocket
 from . import test_link_preview
 from . import test_mail_activity
 from . import test_mail_composer
@@ -12,6 +13,7 @@ from . import test_mail_message_translate
 from . import test_mail_render
 from . import test_mail_template
 from . import test_mail_tools
+from . import test_mail_presence
 from . import test_message_reaction_controller
 from . import test_message_update_controller
 from . import test_res_company

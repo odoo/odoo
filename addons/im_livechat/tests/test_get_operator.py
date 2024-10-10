@@ -19,7 +19,7 @@ class TestGetOperator(HttpCase):
                 else None,
             }
         )
-        self.env["bus.presence"].create({"user_id": operator.id, "status": "online"})  # Simulate online status
+        self.env["mail.presence"].create({"user_id": operator.id, "status": "online"})  # Simulate online status
         self.operator_id += 1
         return operator
 
