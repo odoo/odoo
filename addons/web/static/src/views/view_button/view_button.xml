@@ -16,7 +16,8 @@
         t-att-data-tooltip-info="hasBigTooltip ? tooltip : false"
         t-att-data-tooltip="hasSmallToolTip ? props.title : false"
         t-att-tabindex="props.tabindex"
-        t-on-click.stop="onClick"
+        t-on-click.stop.prevent="onClick"
+        t-ref="root"
     >
       <t t-if="icon" t-tag="icon.tag" t-att-class="icon.class + (props.string ? ' me-1' : '')" t-att-src="icon.src"/>
       <t t-slot="contents"><span t-if="props.string" t-esc="props.string"/></t>

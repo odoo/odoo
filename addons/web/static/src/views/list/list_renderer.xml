@@ -224,17 +224,35 @@
         </tr>
     </t>
 
-    <t t-name="web.ListRenderer.RecordRow">
+    <t t-name="web.ListRecordRowContainer">
         <tr class="o_data_row"
-            t-att-class="getRowClass(record)"
-            t-att-data-id="record.id"
-            t-on-click.capture="(ev) => this.onClickCapture(record, ev)"
-            t-on-mouseover.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
-            t-on-mouseout.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
-            t-on-mouseenter.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
+            t-ref="recordRef"
+            t-att-class="props.class"
+            t-att-data-id="props.record.id"
+            t-on-click.capture="props.onClick"
+            t-on-mouseover.capture="props.onMouseOver"
+            t-on-mouseout.capture="props.onMouseOut"
+            t-on-mouseenter.capture="props.onMouseEnter"
             t-on-touchstart="(ev) => this.onRowTouchStart(record, ev)"
             t-on-touchend="() => this.onRowTouchEnd(record)"
             t-on-touchmove="() => this.onRowTouchMove(record)"
+        >
+            <t t-slot="default"/>
+        </tr>
+    </t>
+
+    <t t-name="web.ListRenderer.RecordRow">
+        <t t-component="constructor.recordRowComponent"
+            record="record"
+            list="props.list"
+            class="getRowClass(record)"
+            onClick.bind="onClickCapture"
+            onMouseOver.bind="ignoreEventInSelectionMode"
+            onMouseOut.bind="ignoreEventInSelectionMode"
+            onMouseEnter.bind="ignoreEventInSelectionMode"
+            toggleRecordSelection.bind="toggleRecordSelection"
+            actions="props.getStaticActionMenuItems?.()"
+            allowSelectors="props.allowSelectors"
         >
             <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector user-select-none" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
                 <CheckBox disabled="!_canSelectRecord" value="record.selected" onChange.alike="() => this.toggleRecordSelection(record)" />
@@ -317,7 +335,7 @@
                 </t>
                 <td t-else="" tabindex="-1" class="w-print-0 p-print-0"/>
             </t>
-        </tr>
+        </t>
     </t>
 
     <t t-name="web.ListHeaderTooltip">
