@@ -138,7 +138,6 @@ class HolidaysRequest(models.Model):
         store=True, string="Time Off Type",
         required=True, readonly=False,
         domain="""[
-            ('company_id', 'in', [employee_company_id, False]),
             '|',
                 ('requires_allocation', '=', 'no'),
                 ('has_valid_allocation', '=', True),

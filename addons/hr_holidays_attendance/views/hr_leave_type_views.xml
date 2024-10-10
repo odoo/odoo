@@ -5,8 +5,10 @@
         <field name="model">hr.leave.type</field>
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='request_unit']" position="after">
-                <field name="overtime_deductible"/>
+            <xpath expr="//group[@name='configuration']" position="inside">
+                <group>
+                        <field name="overtime_deductible"/>
+                </group>
             </xpath>
         </field>
     </record>

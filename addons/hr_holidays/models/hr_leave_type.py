@@ -53,8 +53,14 @@ class HolidaysType(models.Model):
         compute='_compute_allocation_count', string='Allocations')
     group_days_leave = fields.Float(
         compute='_compute_group_days_leave', string='Group Time Off')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    country_id = fields.Many2one('res.country', string='Country', related='company_id.country_id', readonly=True)
+    is_used = fields.Boolean(compute="_compute_is_used")
+    company_id = fields.Many2one('res.company', string='Company',
+                                 domain=lambda self: [('id', 'in', self.env.companies.ids)])
+    country_id = fields.Many2one('res.country', string='Country',
+                                 default=lambda self: self.env.company.country_id,
+                                 compute="_compute_country_id",
+                                 store=True,
+                                 domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)])
     country_code = fields.Char(related='country_id.code', depends=['country_id'], readonly=True)
     responsible_ids = fields.Many2many(
         'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Notified Time Off Officer',
@@ -216,8 +222,14 @@ class HolidaysType(models.Model):
 
     @api.constrains('requires_allocation')
     def check_allocation_requirement_edit_validity(self):
-        if self.env['hr.leave'].search_count([('holiday_status_id', 'in', self.ids)], limit=1):
+        if not self.env.context.get('install_mode') and self.env['hr.leave'].search_count([('holiday_status_id', 'in', self.ids)], limit=1):
             raise UserError(_("The allocation requirement of a time off type cannot be changed once leaves of that type have been taken. You should create a new time off type instead."))
+
+    @api.depends('company_id')
+    def _compute_country_id(self):
+        for holiday_type in self:
+            if holiday_type.company_id:
+                holiday_type.country_id = holiday_type.company_id.country_id
 
     def _search_max_leaves(self, operator, value):
         value = float(value)
@@ -297,7 +309,7 @@ class HolidaysType(models.Model):
             ('holiday_status_id', 'in', self.ids),
             ('date_from', '>=', min_datetime),
             ('date_from', '<=', max_datetime),
-            ('state', 'in', ('confirm', 'validate')),
+            ('state', 'in', ('confirm', 'validate', 'validate1')),
         ]
 
         grouped_res = self.env['hr.leave.allocation']._read_group(
@@ -332,6 +344,34 @@ class HolidaysType(models.Model):
         mapped_data = {time_off_type.id: count for time_off_type, count in accrual_allocations}
         for leave_type in self:
             leave_type.accrual_count = mapped_data.get(leave_type.id, 0)
+
+    def _compute_is_used(self):
+        leaves_count = self._leaves_count_by_leave_type_id()
+        allocations_count = self._allocations_count_by_leave_type_id()
+        for leave_type in self:
+            leave_type.is_used = leaves_count.get(leave_type.id, 0) or allocations_count.get(leave_type.id, 0)
+
+    def _leaves_count_by_leave_type_id(self):
+        leave_domain = [
+            ('holiday_status_id', 'in', self.ids),
+        ]
+        leaves_count = self.env['hr.leave']._read_group(
+            leave_domain,
+            ['holiday_status_id'],
+            ['__count'],
+        )
+        return {holiday_status.id: count for holiday_status, count in leaves_count}
+
+    def _allocations_count_by_leave_type_id(self):
+        allocation_domain = [
+            ('holiday_status_id', 'in', self.ids),
+        ]
+        allocations_count = self.env['hr.leave.allocation']._read_group(
+            allocation_domain,
+            ['holiday_status_id'],
+            ['__count'],
+        )
+        return {holiday_status.id: count for holiday_status, count in allocations_count}
 
     @api.depends('employee_requests')
     def _compute_allocation_validation_type(self):
