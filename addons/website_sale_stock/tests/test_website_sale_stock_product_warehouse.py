@@ -62,31 +62,37 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
         to the warehouse which is set in current website.
           - Set Warehouse 1, Warehouse 2 or none in website and:
             - Check available quantity of Product A and Product B in website
-        When the user doesn't set any warehouse, the module should still select
-        a default one.
+        When the user doesn't set any warehouse, the module should take into account availability in
+        all warehouses.
         """
         test_env = self.env['base'].with_context(
             website_id=self.website.id,
             website_sale_stock_get_quantity=True,
         ).env
 
-        for wh, qty_a, qty_b in [(self.warehouse_1, 10, 0), (self.warehouse_2, 15, 10), (False, 10, 0)]:
+        for wh, qty_a, qty_b in [
+            (self.warehouse_1, 10, 0),
+            (self.warehouse_2, 15, 10),
+            (False, 25, 10)
+        ]:
             # set warehouse_id
             self.website.warehouse_id = wh
 
             combination_info = self.product_A.with_env(test_env)._get_combination_info_variant()
 
             # Check available quantity of product is according to warehouse
+            formatted_wh = f'warehouse {wh}.' if wh else 'in all warehouses.'
             self.assertEqual(
                 combination_info['free_qty'], qty_a,
-                f"{qty_a} units of Product A should be available in warehouse {wh}")
+                f'{qty_a} units of Product A should be available in {formatted_wh}'
+            )
 
             combination_info = self.product_B.with_env(test_env)._get_combination_info_variant()
 
             # Check available quantity of product is according to warehouse
             self.assertEqual(
                 combination_info['free_qty'], qty_b,
-                f"{qty_b} units of Product B should be available in warehouse {wh}")
+                f'{qty_b} units of Product B should be available in {formatted_wh}')
 
     def test_02_update_cart_with_multi_warehouses(self):
         """ When the user updates his cart and increases a product quantity, if
@@ -106,8 +112,14 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
 
         with MockRequest(self.env, website=self.website, sale_order_id=so.id):
             website_so = self.website.sale_get_order()
-            self.assertEqual(website_so.order_line.product_id.virtual_available, 10, "This quantity should be based on SO's warehouse")
+            self.assertEqual(
+                website_so.order_line.product_id.virtual_available,
+                25,
+                'This quantity should be based on all warehouses.'
+            )
 
-            values = so._cart_update(product_id=self.product_A.id, line_id=so.order_line.id, set_qty=20)
+            values = so._cart_update(
+                product_id=self.product_A.id, line_id=so.order_line.id, set_qty=30
+            )
             self.assertTrue(values.get('warning', False))
-            self.assertEqual(values.get('quantity'), 10)
+            self.assertEqual(values.get('quantity'), 25)
