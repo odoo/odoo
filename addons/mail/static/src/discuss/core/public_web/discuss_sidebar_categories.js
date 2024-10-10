@@ -4,7 +4,7 @@ import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, useState, useSubEnv } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -13,8 +13,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
-import { SearchThread } from "./search_thread";
-import { cleanTerm } from "@mail/utils/common/format";
 
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
     "mail.discuss_sidebar_channel_indicators"
@@ -83,10 +81,7 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get bordered() {
-        return (
-            this.store.discuss.isSidebarCompact &&
-            Boolean(this.env.filteredThreads?.(this.thread.sub_channel_ids)?.length)
-        );
+        return this.store.discuss.isSidebarCompact && Boolean(this.thread.sub_channel_ids?.length);
     }
 
     get indicators() {
@@ -208,7 +203,6 @@ export class DiscussSidebarCategories extends Component {
     static components = {
         DiscussSidebarCategory,
         DiscussSidebarChannel,
-        SearchThread,
         Dropdown,
     };
 
@@ -216,30 +210,18 @@ export class DiscussSidebarCategories extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.discusscorePublicWebService = useState(useService("discuss.core.public.web"));
-        this.state = useState({ searchValue: "", floatingSearchOpen: false });
         this.orm = useService("orm");
-        this.quickSearchHover = useHover(["quick-search-btn", "quick-search-floating*"], {
-            onHover: () => (this.quickSearchFloating.isOpen = true),
-            onAway: () => {
-                if (!this.quickSearchHover.isHover && !this.state.searchValue.length) {
-                    this.state.floatingSearchOpen = false;
-                }
-            },
+        this.ui = useState(useService("ui"));
+        this.command = useService("command");
+        this.searchHover = useHover(["search-btn", "search-floating*"], {
+            onHover: () => (this.searchFloating.isOpen = true),
+            onAway: () => (this.searchFloating.isOpen = false),
         });
-        this.quickSearchFloating = useDropdownState();
-        useSubEnv({
-            filteredThreads: (threads) => this.filteredThreads(threads),
-        });
+        this.searchFloating = useDropdownState();
     }
 
-    filteredThreads(threads) {
-        return threads.filter(
-            (thread) =>
-                thread.displayInSidebar &&
-                (thread.parent_channel_id ||
-                    !this.state.quickSearchVal ||
-                    cleanTerm(thread.displayName).includes(cleanTerm(this.state.searchValue)))
-        );
+    onClickFindOrStartConversation() {
+        this.command.openMainPalette({ searchValue: "@" });
     }
 }
 

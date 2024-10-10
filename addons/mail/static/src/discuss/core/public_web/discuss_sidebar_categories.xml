@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCategories">
-        <Dropdown t-if="store.discuss.isSidebarCompact" state="quickSearchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border mx-2 my-0 min-w-0 p-0 shadow-sm'" manual="true">
-            <button class="o-mail-DiscussSidebarCategories-quickSearchBtn btn btn-light d-flex align-items-center justify-content-center px-1 mx-2 bg-inherit" t-att-class="{ 'o-active': state.searchValue.length }" t-on-click="() => state.floatingSearchOpen = true" t-ref="quick-search-btn"><i class="fa fa-search"/></button>
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border mx-2 my-0 min-w-0 p-0 shadow-sm'" manual="true">
+            <button class="o-mail-DiscussSidebarCategories-searchBtn btn btn-light d-flex align-items-center justify-content-center px-1 mx-2 bg-100 border opacity-75" t-on-click="onClickFindOrStartConversation" t-ref="search-btn"><i class="fa fa-search"/></button>
             <t t-set-slot="content">
-                <div t-att-class="{ 'p-2': !state.floatingSearchOpen }" t-ref="quick-search-floating">
-                    <SearchThread t-if="state.floatingSearchOpen" autofocus="true" canCreate="!store.inPublicPage" category="store.inPublicPage and store.discuss.channels" onSearchValueChanged="(searchValue) => this.state.searchValue = searchValue"/>
-                    <span t-else="" class="text-muted user-select-none">Find or start a conversation</span>
+                <div class="p-2" t-ref="search-floating">
+                    <span class="text-muted user-select-none">Find or start a conversation</span>
                 </div>
             </t>
         </Dropdown>
-        <SearchThread t-else="" className="'mx-4 my-2'" canCreate="!store.inPublicPage" category="store.inPublicPage and store.discuss.channels"/>
+        <div t-else="" class="rounded mx-3 my-2 border">
+            <div class="d-flex flex-grow-1 align-items-center justify-content-center gap-1 position-relative">
+                <input class="form-control rounded-3 border-0 bg-100" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Find or start a conversation" tabindex="0"/>
+                <div class="position-absolute z-1 opacity-0 cursor-pointer w-100 h-100" t-on-click="onClickFindOrStartConversation"/>
+            </div>
+        </div>
         <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat_index">
             <t t-if="cat.isVisible" t-call="mail.DiscussSidebarCategories.category">
                 <t t-set="category" t-value="cat"/>
@@ -21,7 +25,7 @@
     <t t-name="mail.DiscussSidebarCategories.category">
         <DiscussSidebarCategory category="category"/>
         <t t-if="category.open">
-            <DiscussSidebarChannel t-foreach="filteredThreads(category.threads)" t-as="thread" t-key="thread.localId" thread="thread"/>
+            <DiscussSidebarChannel t-foreach="category.threads" t-as="thread" t-key="thread.localId" thread="thread"/>
         </t>
         <DiscussSidebarChannel t-elif="store.discuss.thread?.in(category.threads)" thread="store.discuss.thread"/>
         <DiscussSidebarChannel t-elif="store.discuss.thread?.parent_channel_id?.in(category.threads)" thread="store.discuss.thread.parent_channel_id" />
@@ -91,7 +95,7 @@
                     </t>
                 </Dropdown>
                 <t t-else="" t-call="mail.DiscussSidebarChannel.main"/>
-                <t t-set="subChannels" t-value="env.filteredThreads?.(thread.sub_channel_ids) ?? []"/>
+                <t t-set="subChannels" t-value="thread.sub_channel_ids"/>
                 <t t-set="isCategoryOpen" t-value="thread.discussAppCategory.open" />
                 <ul t-if="subChannels.length > 0" class="list-unstyled position-relative flex-grow-1" t-att-class="{ 'my-1 d-flex flex-column gap-1': store.discuss.isSidebarCompact, 'mt-1 mb-0': !store.discuss.isSidebarCompact }">
                     <t t-foreach="subChannels" t-as="sub" t-key="sub.localId">

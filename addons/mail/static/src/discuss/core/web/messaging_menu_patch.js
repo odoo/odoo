@@ -1,20 +1,21 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { patch } from "@web/core/utils/patch";
-import { SearchThread } from "../public_web/search_thread";
-
-Object.assign(MessagingMenu.components, { SearchThread });
+import { useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 patch(MessagingMenu.prototype, {
+    setup() {
+        super.setup();
+        this.command = useState(useService("command"));
+    },
     beforeOpen() {
         const res = super.beforeOpen(...arguments);
         this.store.channels.fetch();
         return res;
     },
     onClickNewMessage() {
-        if (this.ui.isSmall || this.env.inDiscussApp) {
-            Object.assign(this.state, { adding: "chat" });
-        } else {
-            this.store.openNewMessage();
+        this.command.openMainPalette({ searchValue: "@" });
+        if (!this.ui.isSmall && !this.env.inDiscussApp) {
             this.dropdown.close();
         }
     },

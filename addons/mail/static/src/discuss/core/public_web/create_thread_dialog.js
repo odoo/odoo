@@ -29,7 +29,6 @@ export class CreateThreadDialog extends Component {
         this.invitePeopleState = useState({
             selectablePartners: [],
             selectedPartners: [],
-            open: false,
         });
     }
 

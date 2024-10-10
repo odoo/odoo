@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussCommand">
+        <div class="o-mail-DiscussCommand o_command_default d-flex align-items-center" t-att-class="{ 'text-center px-4 small': props.isAction, 'ps-3 pe-4': !props.isAction, 'o-uiSmall': ui.isSmall }">
+            <i t-if="props.channel" class="fa-fw opacity-50 text-muted mx-1" t-att-class="props.channel.parent_channel_id ? 'fa fa-comments-o' : props.channel.discussAppCategory?.icon ?? 'fa fa-user opacity-0'"/>
+            <i t-elif="props.persona" class="fa fa-fw fa-user opacity-50 text-muted mx-1"/>
+            <i t-if="props.icon" class="mx-1" t-attf-class="{{ props.icon }}" t-att-class="{ 'o-action': props.isAction }"/>
+            <img class="rounded me-2" t-if="props.imgUrl" t-att-src="props.imgUrl"  style="width: 25px; height: 25px"/>
+            <ImStatus t-if="props.persona" className="'me-1'" persona="props.persona"/>
+            <span class="pe-1 text-ellipsis d-flex align-items-center" t-att-class="{ 'fw-bold o-action': props.isAction, 'fw-bold': !props.isAction }">
+                <t t-if="props.channel?.parent_channel_id">
+                    <span class="text-truncate flex-shrink-0 opacity-75 mw-50 small" t-esc="props.channel?.parent_channel_id.displayName"/>
+                    <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                </t>
+                <t t-slot="name" />
+            </span>
+            <span t-if="props.persona and props.persona.email" class="text-muted smaller" t-out="'- ' + props.persona.email"/>
+            <span class="flex-grow-1"/>
+            <div t-if="props.counter > 0">
+                <span t-attf-class="badge rounded-pill o-discuss-badge ms-3 me-1 px-2 py-1 fw-bold" t-esc="props.counter"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

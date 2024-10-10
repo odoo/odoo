@@ -4,7 +4,7 @@
         <Dialog size="'md'" title="dialogTitle">
             <div class="o-mail-CreateThreadDialog d-flex flex-column gap-1">
                 <div class="d-flex align-items-center">
-                    <span class="ms-2 text-uppercase text-muted o-xsmaller"><i class="fa fa-comments"/> Conversation name</span>
+                    <span class="ms-2 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-comments"/> Conversation name</span>
                     <div class="ms-auto ps-2">
                         <div t-if="!props.types or props.types?.includes('group')" class="form-check form-check-inline" t-att-title="groupDescription">
                             <input class="form-check-input" type="radio" value="group" name="thread-type" id="group" t-model="state.threadType" tabindex="2"/>
@@ -22,12 +22,11 @@
                         Conversation must have a name
                     </div>                    
                 </div>
-                <div class="smaller text-muted px-3 mt-2" t-esc="threadTypeDescription"/>
-                <div class="d-flex flex-column flex-grow-1 bg-inherit w-100 mt-2">
-                    <button class="o-mail-CreateThreadDialog-invitePeople btn btn-link d-flex align-items-center px-0 gap-1" t-on-click="onClickInvitePeople" tabindex="3">
-                        <span class="ms-2 my-1 text-uppercase text-muted o-xsmaller text-nowrap"><i class="fa fa-user-plus"/> Invite people (optional)</span>
-                        <i class="oi fa-fw o-xsmaller text-muted" t-att-class="{ 'oi-chevron-down': invitePeopleState.open, 'oi-chevron-right': !invitePeopleState.open }"/>
-                    </button>
+                <div class="smaller text-muted px-3 text-end" t-esc="threadTypeDescription"/>
+                <div class="d-flex flex-column flex-grow-1 bg-inherit w-100">
+                    <div class="d-flex align-items-center px-0 mb-1 gap-1" t-on-click="onClickInvitePeople" tabindex="3">
+                        <span class="ms-2 my-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-user-plus"/> Invite people (optional)</span>
+                    </div>
                     <ChannelInvitation autofocus="state.autofocusInvitePeopleInput" state="invitePeopleState"/>
                 </div>
             </div>
