@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import copy
 import itertools
 import logging
 from collections import defaultdict
