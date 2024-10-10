@@ -12,6 +12,7 @@
         'digest',
         'web',
         'web_editor',
+        'html_editor',
         'http_routing',
         'portal',
         'social_media',
@@ -294,6 +295,7 @@
         ],
         'web.assets_backend': [
             ('include', 'website.assets_editor'),
+            ('include', 'html_editor.assets_link_popover'),
             'website/static/src/scss/color_palettes.scss',
             'website/static/src/scss/view_hierarchy.scss',
             'website/static/src/scss/website.backend.scss',
@@ -373,6 +375,10 @@
             'website/static/src/xml/web_editor.xml',
             'website/static/src/js/editor/add_snippet_dialog.js',
             'website/static/src/js/editor/widget_link.js',
+        ],
+        'html_editor.assets_link_popover': [
+            'website/static/src/js/editor/html_editor.js',
+            'website/static/src/xml/html_editor.xml',
         ],
         'website.assets_wysiwyg': [
             ('include', 'web._assets_helpers'),
