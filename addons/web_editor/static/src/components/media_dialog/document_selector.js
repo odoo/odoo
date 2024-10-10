@@ -32,7 +32,7 @@ export class DocumentSelector extends FileSelector {
         const domain = super.attachmentsDomain;
         domain.push(['mimetype', 'not in', IMAGE_MIMETYPES]);
         // The assets should not be part of the documents.
-        // All assets begin with '/web/assets/', see _get_asset_template_url().
+        // All assets begin with '/web/assets/', see IrQWeb._link_to_node().
         domain.unshift('&', '|', ['url', '=', null], '!', ['url', '=like', '/web/assets/%']);
         return domain;
     }
