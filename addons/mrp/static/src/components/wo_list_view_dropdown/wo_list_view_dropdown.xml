@@ -3,7 +3,7 @@
 
     <t t-name="mrp.MOViewListDropdown" style="btn">
         <Dropdown>
-            <button class="btn btn-link d-flex p-0">
+            <button t-attf-class="btn btn-link d-flex p-0 {{!this.props.record.resId ? 'invisible': ''}}">
                 <div class="d-flex align-items-center">
                     <span t-attf-class="o_status {{statusColor}}"/>
                 </div>
