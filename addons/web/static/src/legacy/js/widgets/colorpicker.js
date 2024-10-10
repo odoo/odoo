@@ -124,6 +124,19 @@ var ColorpickerWidget = Widget.extend({
      */
     setSelectedColor: function (color) {
         var rgba = ColorpickerWidget.convertCSSColorToRgba(color);
+        if ((color == 'black') 
+            || (color == 'white')
+            || (color.match(/^[1-9]00$/)) 
+            || (color.match(/black-\d{2}/)) 
+            || (color.match(/white-\d{2}/)) 
+            || (color.match(/o-color-\d{1}/)) 
+        ) {
+            const exampleEl = document.querySelector('.bg-'.concat(color));
+            if (exampleEl) {
+                const exampleElStyle = getComputedStyle(exampleEl);
+                rgba = ColorpickerWidget.convertCSSColorToRgba(exampleElStyle.backgroundColor);
+            }
+        }
         if (rgba) {
             const oldPreviewActive = this.previewActive;
             this.previewActive = false;
