@@ -371,5 +371,8 @@ class SendSMS(models.TransientModel):
         else:
             records = self.env[self.res_model]
 
+        if self.res_model == 'res.users':
+            records = records.mapped('partner_id')
+
         records = records.with_context(mail_notify_author=True)
         return records
