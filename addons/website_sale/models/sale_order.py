@@ -320,6 +320,9 @@ class SaleOrder(models.Model):
             # the requested quantity update.
             warning = ''
 
+        if add_qty and add_qty > 0:
+            self._check_product_compatibility(product_id)
+
         self._remove_delivery_line()
 
         order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
