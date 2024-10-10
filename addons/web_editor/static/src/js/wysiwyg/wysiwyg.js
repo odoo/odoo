@@ -3053,7 +3053,11 @@ const Wysiwyg = Widget.extend({
         // command is being applied. Note that this needs to be done *before*
         // the command and not after because some commands (e.g. font-size)
         // rely on some elements not to have the class to fully work.
-        for (const node of OdooEditorLib.getSelectedNodes(this.$editable[0])) {
+        const nodes = OdooEditorLib.getSelectedNodes(
+            this.$editable[0], 
+            getDeepRange(this.$editable[0], { splitText: true, select: true })
+        );
+        for (const node of nodes) {
             const el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
             const defaultTextEl = el.closest('.o_default_snippet_text');
             if (defaultTextEl) {
