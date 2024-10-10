@@ -12,13 +12,14 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE ("test_new_api_multi"."partner" IN (
+            WHERE "test_new_api_multi"."partner" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name" LIKE %s)
-                   AND ("res_partner"."phone" LIKE %s)
+                WHERE (
+                    "res_partner"."name" LIKE %s
+                   AND "res_partner"."phone" LIKE %s
                 )
-            ))
+            )
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -30,13 +31,14 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE ("test_new_api_multi"."partner" IN (
+            WHERE "test_new_api_multi"."partner" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name" LIKE %s)
-                    OR ("res_partner"."phone" LIKE %s)
+                WHERE (
+                    "res_partner"."name" LIKE %s
+                    OR "res_partner"."phone" LIKE %s
                 )
-            ))
+            )
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -49,13 +51,14 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."partner" NOT IN (
+            WHERE ("test_new_api_multi"."partner" NOT IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name" LIKE %s)
-                    AND ("res_partner"."phone" LIKE %s)
+                WHERE (
+                    "res_partner"."name" LIKE %s
+                    AND "res_partner"."phone" LIKE %s
                 )
-            )) OR "test_new_api_multi"."partner" IS NULL)
+            ) OR "test_new_api_multi"."partner" IS NULL)
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -68,13 +71,14 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."partner" NOT IN (
+            WHERE ("test_new_api_multi"."partner" NOT IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
-                WHERE (("res_partner"."name" LIKE %s)
-                    OR ("res_partner"."phone" LIKE %s)
+                WHERE (
+                    "res_partner"."name" LIKE %s
+                    OR "res_partner"."phone" LIKE %s
                 )
-            )) OR "test_new_api_multi"."partner" IS NULL)
+            ) OR "test_new_api_multi"."partner" IS NULL)
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -91,8 +95,8 @@ class TestSubqueries(TransactionCase):
             LEFT JOIN "res_partner" AS "test_new_api_multi__partner"
                 ON ("test_new_api_multi"."partner" = "test_new_api_multi__partner"."id")
             WHERE (
-                ("test_new_api_multi__partner"."name" LIKE %s)
-                OR ("test_new_api_multi__partner"."phone" LIKE %s)
+                "test_new_api_multi__partner"."name" LIKE %s
+                OR "test_new_api_multi__partner"."phone" LIKE %s
             )
             ORDER BY "test_new_api_multi"."id"
         """]):
@@ -110,12 +114,11 @@ class TestSubqueries(TransactionCase):
             LEFT JOIN "res_partner" AS "test_new_api_multi__partner"
                 ON ("test_new_api_multi"."partner" = "test_new_api_multi__partner"."id")
             WHERE (
-                "test_new_api_multi__partner"."id" IS NULL OR (
-                    NOT ((
-                        ("test_new_api_multi__partner"."name" LIKE %s)
-                        OR ("test_new_api_multi__partner"."phone" LIKE %s)
-                    ))
-                )
+                "test_new_api_multi"."partner" IS NULL OR
+                ((
+                    "test_new_api_multi__partner"."name" LIKE %s
+                    OR "test_new_api_multi__partner"."phone" LIKE %s
+                )) IS NOT TRUE
             )
             ORDER BY "test_new_api_multi"."id"
         """]):
@@ -129,16 +132,17 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE ("test_new_api_multi"."partner" IN (
+            WHERE "test_new_api_multi"."partner" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
                 WHERE (
-                    ("res_partner"."email" LIKE %s)
-                    AND (("res_partner"."name" LIKE %s)
-                      OR ("res_partner"."phone" LIKE %s)
+                    "res_partner"."email" LIKE %s
+                    AND (
+                        "res_partner"."name" LIKE %s
+                        OR "res_partner"."phone" LIKE %s
                     )
                 )
-            ))
+            )
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -153,27 +157,29 @@ class TestSubqueries(TransactionCase):
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
             WHERE (
-                (
-                    (
-                        ({many2one} IN (
-                            {subselect} WHERE ("res_partner"."function" LIKE %s)
-                        )) OR (({many2one} NOT IN (
-                            {subselect} WHERE (
-                                ("res_partner"."phone" LIKE %s)
-                                AND ("res_partner"."mobile" LIKE %s)
-                            )))
-                            OR "test_new_api_multi"."partner" IS NULL
+                {many2one} IN (
+                    {subselect}
+                    WHERE (
+                        "res_partner"."email" LIKE %s
+                        OR "res_partner"."name" LIKE %s
+                    )
+                )
+                AND ({many2one} NOT IN (
+                    {subselect}
+                    WHERE "res_partner"."website" LIKE %s
+                ) OR {many2one} IS NULL)
+                AND (
+                    {many2one} IN (
+                        {subselect}
+                        WHERE "res_partner"."function" LIKE %s
+                    )
+                    OR ({many2one} NOT IN (
+                        {subselect}
+                        WHERE (
+                            "res_partner"."mobile" LIKE %s
+                            AND "res_partner"."phone" LIKE %s
                         )
-                    ) AND ({many2one} IN (
-                        {subselect} WHERE (
-                            ("res_partner"."name" LIKE %s)
-                            OR ("res_partner"."email" LIKE %s)
-                        )
-                    ))
-                ) AND (({many2one} NOT IN (
-                    {subselect} WHERE ("res_partner"."website" LIKE %s)
-                    ))
-                    OR "test_new_api_multi"."partner" IS NULL
+                    ) OR {many2one} IS NULL)
                 )
             )
             ORDER BY "test_new_api_multi"."id"
@@ -199,17 +205,21 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."id" IN (
+            WHERE ("test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE ("test_new_api_multi_line"."name" LIKE %s)
-                      AND "test_new_api_multi_line"."multi" IS NOT NULL
-            )) AND ("test_new_api_multi"."id" IN (
+                WHERE (
+                    "test_new_api_multi_line"."multi" IS NOT NULL
+                    AND "test_new_api_multi_line"."name" LIKE %s
+                )
+            ) AND "test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE ("test_new_api_multi_line"."name" LIKE %s)
-                      AND "test_new_api_multi_line"."multi" IS NOT NULL
-            )))
+                WHERE (
+                    "test_new_api_multi_line"."multi" IS NOT NULL
+                    AND "test_new_api_multi_line"."name" LIKE %s
+                )
+            ))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -221,13 +231,17 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE ("test_new_api_multi"."id" IN (
+            WHERE "test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE (("test_new_api_multi_line"."name" LIKE %s)
-                    OR ("test_new_api_multi_line"."name" LIKE %s)
-                ) AND "test_new_api_multi_line"."multi" IS NOT NULL
-            ))
+                WHERE (
+                    "test_new_api_multi_line"."multi" IS NOT NULL
+                    AND (
+                        "test_new_api_multi_line"."name" LIKE %s
+                        OR "test_new_api_multi_line"."name" LIKE %s
+                    )
+                )
+            )
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -240,18 +254,24 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_multi"."id"
             FROM "test_new_api_multi"
-            WHERE (("test_new_api_multi"."id" IN (
+            WHERE ("test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE ("test_new_api_multi_line"."name" LIKE %s)
-                   AND "test_new_api_multi_line"."multi" IS NOT NULL)
-            ) AND ("test_new_api_multi"."id" IN (
+                WHERE (
+                    "test_new_api_multi_line"."multi" IS NOT NULL
+                    AND "test_new_api_multi_line"."name" LIKE %s
+                )
+            ) AND "test_new_api_multi"."id" IN (
                 SELECT "test_new_api_multi_line"."multi"
                 FROM "test_new_api_multi_line"
-                WHERE (("test_new_api_multi_line"."name" LIKE %s)
-                    OR ("test_new_api_multi_line"."name" LIKE %s)
-                ) AND "test_new_api_multi_line"."multi" IS NOT NULL
-            )))
+                WHERE (
+                    "test_new_api_multi_line"."multi" IS NOT NULL
+                    AND (
+                        "test_new_api_multi_line"."name" LIKE %s
+                        OR "test_new_api_multi_line"."name" LIKE %s
+                    )
+                )
+            ))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -273,8 +293,8 @@ class TestSubqueries(TransactionCase):
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
                     WHERE (
-                        ("test_new_api_multi_tag"."name" ILIKE %s)
-                        AND ("test_new_api_multi_tag"."name" LIKE %s)
+                        "test_new_api_multi_tag"."name" ILIKE %s
+                        AND "test_new_api_multi_tag"."name" LIKE %s
                     )
                 )
             ) AND EXISTS (
@@ -285,13 +305,15 @@ class TestSubqueries(TransactionCase):
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
                     WHERE (
-                        ("test_new_api_multi_tag"."name" ILIKE %s)
-                        AND ("test_new_api_multi_tag"."name" LIKE %s)
+                        "test_new_api_multi_tag"."name" ILIKE %s
+                        AND "test_new_api_multi_tag"."name" LIKE %s
                     )
                 )
             ))
             ORDER BY "test_new_api_multi"."id"
         """]):
+            # each sub-query generates 2 comparisons with name:
+            # one for 'a' (field context) and one from the domain
             self.env['test_new_api.multi'].search([
                 ('tags.name', 'like', 'x'),
                 ('tags.name', 'like', 'y'),
@@ -309,10 +331,10 @@ class TestSubqueries(TransactionCase):
                     SELECT "test_new_api_multi_tag"."id"
                     FROM "test_new_api_multi_tag"
                     WHERE (
-                        ("test_new_api_multi_tag"."name" ILIKE %s)
+                        "test_new_api_multi_tag"."name" ILIKE %s
                         AND (
-                            ("test_new_api_multi_tag"."name" LIKE %s)
-                            OR ("test_new_api_multi_tag"."name" LIKE %s)
+                            "test_new_api_multi_tag"."name" LIKE %s
+                            OR "test_new_api_multi_tag"."name" LIKE %s
                         )
                     )
                 )
@@ -338,8 +360,8 @@ class TestSubqueries(TransactionCase):
                         SELECT "test_new_api_multi_tag"."id"
                         FROM "test_new_api_multi_tag"
                         WHERE (
-                            ("test_new_api_multi_tag"."name" ILIKE %s)
-                            AND ("test_new_api_multi_tag"."name" LIKE %s)
+                            "test_new_api_multi_tag"."name" ILIKE %s
+                            AND "test_new_api_multi_tag"."name" LIKE %s
                         )
                     )
                 ) AND EXISTS (
@@ -350,10 +372,10 @@ class TestSubqueries(TransactionCase):
                         SELECT "test_new_api_multi_tag"."id"
                         FROM "test_new_api_multi_tag"
                         WHERE (
-                            ("test_new_api_multi_tag"."name" ILIKE %s)
+                            "test_new_api_multi_tag"."name" ILIKE %s
                             AND (
-                                ("test_new_api_multi_tag"."name" LIKE %s)
-                                OR ("test_new_api_multi_tag"."name" LIKE %s)
+                                "test_new_api_multi_tag"."name" LIKE %s
+                                OR "test_new_api_multi_tag"."name" LIKE %s
                             )
                         )
                     )
@@ -383,11 +405,11 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."name" = %s)
-            ))
+                WHERE "test_new_api_related_foo"."name" IN %s
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_name_sudo', '=', 'a')])
@@ -395,12 +417,12 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."name" = %s)
-                AND ("test_new_api_related_foo"."id" < %s)
-            ))
+                WHERE "test_new_api_related_foo"."name" IN %s
+                AND "test_new_api_related_foo"."id" < %s
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_name', '=', 'a')])
@@ -428,15 +450,15 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                WHERE "test_new_api_related_foo"."bar_id" IN (
                     SELECT "test_new_api_related_bar"."id"
                     FROM "test_new_api_related_bar"
-                    WHERE ("test_new_api_related_bar"."name" = %s)
-                ))
-            ))
+                    WHERE "test_new_api_related_bar"."name" IN %s
+                )
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_bar_name_sudo', '=', 'a')])
@@ -444,17 +466,17 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                WHERE "test_new_api_related_foo"."bar_id" IN (
                     SELECT "test_new_api_related_bar"."id"
                     FROM "test_new_api_related_bar"
-                    WHERE ("test_new_api_related_bar"."name" = %s)
-                    AND ("test_new_api_related_bar"."id" < %s)
-                ))
-                AND ("test_new_api_related_foo"."id" < %s)
-            ))
+                    WHERE "test_new_api_related_bar"."name" IN %s
+                        AND "test_new_api_related_bar"."id" < %s
+                )
+                AND "test_new_api_related_foo"."id" < %s
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_bar_name', '=', 'a')])
@@ -462,17 +484,17 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                WHERE "test_new_api_related_foo"."bar_id" IN (
                     SELECT "test_new_api_related_bar"."id"
                     FROM "test_new_api_related_bar"
-                    WHERE ("test_new_api_related_bar"."name" = %s)
-                    AND ("test_new_api_related_bar"."id" < %s)
-                ))
-                AND ("test_new_api_related_foo"."id" < %s)
-            ))
+                    WHERE "test_new_api_related_bar"."name" IN %s
+                    AND "test_new_api_related_bar"."id" < %s
+                )
+                AND "test_new_api_related_foo"."id" < %s
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_id_bar_name', '=', 'a')])
@@ -480,17 +502,17 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                WHERE "test_new_api_related_foo"."bar_id" IN (
                     SELECT "test_new_api_related_bar"."id"
                     FROM "test_new_api_related_bar"
-                    WHERE ("test_new_api_related_bar"."name" = %s)
-                    AND ("test_new_api_related_bar"."id" < %s)
-                ))
-                AND ("test_new_api_related_foo"."id" < %s)
-            ))
+                    WHERE "test_new_api_related_bar"."name" IN %s
+                    AND "test_new_api_related_bar"."id" < %s
+                )
+                AND "test_new_api_related_foo"."id" < %s
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_bar_id_name', '=', 'a')])
@@ -499,16 +521,16 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                WHERE "test_new_api_related_foo"."bar_id" IN (
                     SELECT "test_new_api_related_bar"."id"
                     FROM "test_new_api_related_bar"
-                    WHERE ("test_new_api_related_bar"."name" = %s)
-                    AND ("test_new_api_related_bar"."id" < %s)
-                ))
-            ))
+                    WHERE "test_new_api_related_bar"."name" IN %s
+                    AND "test_new_api_related_bar"."id" < %s
+                )
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_bar_sudo_id_name', '=', 'a')])
@@ -531,11 +553,11 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."name" = %s)
-            ))
+                WHERE "test_new_api_related_foo"."name" IN %s
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_name', '=', 'a')])
@@ -544,15 +566,15 @@ class TestSubqueries(TransactionCase):
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
             WHERE (
-                ("test_new_api_related"."foo_id" IN (
+                "test_new_api_related"."foo_id" IS NULL
+                OR "test_new_api_related"."foo_id" IN (
                     SELECT "test_new_api_related_foo"."id"
                     FROM "test_new_api_related_foo"
                     WHERE (
-                        ("test_new_api_related_foo"."name" != %s)
+                        "test_new_api_related_foo"."name" NOT IN %s
                         OR "test_new_api_related_foo"."name" IS NULL
                     )
-                ))
-                OR "test_new_api_related"."foo_id" IS NULL
+                )
             )
             ORDER BY "test_new_api_related"."id"
         """]):
@@ -562,12 +584,12 @@ class TestSubqueries(TransactionCase):
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
             WHERE (
-                ("test_new_api_related"."foo_id" IN (
+                "test_new_api_related"."foo_id" IS NULL
+                OR "test_new_api_related"."foo_id" IN (
                     SELECT "test_new_api_related_foo"."id"
                     FROM "test_new_api_related_foo"
-                    WHERE (("test_new_api_related_foo"."name" = %s) OR "test_new_api_related_foo"."name" IS NULL)
-                ))
-                OR "test_new_api_related"."foo_id" IS NULL
+                    WHERE ("test_new_api_related_foo"."name" IN %s OR "test_new_api_related_foo"."name" IS NULL)
+                )
             )
             ORDER BY "test_new_api_related"."id"
         """]):
@@ -576,11 +598,11 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."name" != %s)
-            ))
+                WHERE "test_new_api_related_foo"."name" NOT IN %s
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_name', '!=', False)])
@@ -588,11 +610,11 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."name" IN %s)
-            ))
+                WHERE "test_new_api_related_foo"."name" IN %s
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_name', 'in', ['a', 'b'])])
@@ -601,15 +623,15 @@ class TestSubqueries(TransactionCase):
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
             WHERE (
-                ("test_new_api_related"."foo_id" IN (
+                "test_new_api_related"."foo_id" IS NULL
+                OR "test_new_api_related"."foo_id" IN (
                     SELECT "test_new_api_related_foo"."id"
                     FROM "test_new_api_related_foo"
                     WHERE (
-                        ("test_new_api_related_foo"."name" NOT IN %s)
+                        "test_new_api_related_foo"."name" NOT IN %s
                         OR "test_new_api_related_foo"."name" IS NULL
                     )
-                ))
-                OR "test_new_api_related"."foo_id" IS NULL
+                )
             )
             ORDER BY "test_new_api_related"."id"
         """]):
@@ -619,15 +641,15 @@ class TestSubqueries(TransactionCase):
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
             WHERE (
-                ("test_new_api_related"."foo_id" IN (
+                "test_new_api_related"."foo_id" IS NULL
+                OR "test_new_api_related"."foo_id" IN (
                     SELECT "test_new_api_related_foo"."id"
                     FROM "test_new_api_related_foo"
                     WHERE (
-                        ("test_new_api_related_foo"."name" IN %s)
+                        "test_new_api_related_foo"."name" IN %s
                         OR "test_new_api_related_foo"."name" IS NULL
                     )
-                ))
-                OR "test_new_api_related"."foo_id" IS NULL
+                )
             )
             ORDER BY "test_new_api_related"."id"
         """]):
@@ -636,14 +658,11 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE (
-                    ("test_new_api_related_foo"."name" NOT IN %s)
-                    AND "test_new_api_related_foo"."name" IS NOT NULL
-                )
-            ))
+                WHERE "test_new_api_related_foo"."name" NOT IN %s
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_name', 'not in', ['a', False])])
@@ -652,19 +671,19 @@ class TestSubqueries(TransactionCase):
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
             WHERE (
-                ("test_new_api_related"."foo_id" IN (
+                "test_new_api_related"."foo_id" IS NULL
+                OR "test_new_api_related"."foo_id" IN (
                     SELECT "test_new_api_related_foo"."id"
                     FROM "test_new_api_related_foo"
                     WHERE (
-                        ("test_new_api_related_foo"."bar_id" IN (
+                        "test_new_api_related_foo"."bar_id" IS NULL
+                        OR "test_new_api_related_foo"."bar_id" IN (
                             SELECT "test_new_api_related_bar"."id"
                             FROM "test_new_api_related_bar"
-                            WHERE (("test_new_api_related_bar"."name" = %s) OR "test_new_api_related_bar"."name" IS NULL)
-                        ))
-                        OR "test_new_api_related_foo"."bar_id" IS NULL
+                            WHERE ("test_new_api_related_bar"."name" IN %s OR "test_new_api_related_bar"."name" IS NULL)
+                        )
                     )
-                ))
-                OR "test_new_api_related"."foo_id" IS NULL
+                )
             )
             ORDER BY "test_new_api_related"."id"
         """]):
@@ -673,15 +692,15 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
             FROM "test_new_api_related"
-            WHERE ("test_new_api_related"."foo_id" IN (
+            WHERE "test_new_api_related"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                WHERE "test_new_api_related_foo"."bar_id" IN (
                     SELECT "test_new_api_related_bar"."id"
                     FROM "test_new_api_related_bar"
-                    WHERE ("test_new_api_related_bar"."name" != %s)
-                ))
-            ))
+                    WHERE "test_new_api_related_bar"."name" NOT IN %s
+                )
+            )
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search([('foo_bar_name', '!=', False)])
@@ -717,8 +736,8 @@ class TestSubqueries(TransactionCase):
             FROM "test_new_api_related_inherits"
             LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
                 ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
-            WHERE ("test_new_api_related_inherits__base_id"."name" = %s)
-            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+            WHERE "test_new_api_related_inherits__base_id"."name" IN %s
+            AND "test_new_api_related_inherits__base_id"."id" < %s
             ORDER BY "test_new_api_related_inherits"."id"
         """]):
             model.search([('name', '=', 'a')])
@@ -729,12 +748,12 @@ class TestSubqueries(TransactionCase):
             FROM "test_new_api_related_inherits"
             LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
                 ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
-            WHERE ("test_new_api_related_inherits__base_id"."foo_id" IN (
+            WHERE "test_new_api_related_inherits__base_id"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."name" = %s)
-            ))
-            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+                WHERE "test_new_api_related_foo"."name" IN %s
+            )
+            AND "test_new_api_related_inherits__base_id"."id" < %s
             ORDER BY "test_new_api_related_inherits"."id"
         """]):
             model.search([('foo_name_sudo', '=', 'a')])
@@ -744,13 +763,13 @@ class TestSubqueries(TransactionCase):
             FROM "test_new_api_related_inherits"
             LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
                 ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
-            WHERE ("test_new_api_related_inherits__base_id"."foo_id" IN (
+            WHERE "test_new_api_related_inherits__base_id"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."name" = %s)
-                AND ("test_new_api_related_foo"."id" < %s)
-            ))
-            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+                WHERE "test_new_api_related_foo"."name" IN %s
+                AND "test_new_api_related_foo"."id" < %s
+            )
+            AND "test_new_api_related_inherits__base_id"."id" < %s
             ORDER BY "test_new_api_related_inherits"."id"
         """]):
             model.search([('foo_name', '=', 'a')])
@@ -760,16 +779,16 @@ class TestSubqueries(TransactionCase):
             FROM "test_new_api_related_inherits"
             LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
                 ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
-            WHERE ("test_new_api_related_inherits__base_id"."foo_id" IN (
+            WHERE "test_new_api_related_inherits__base_id"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                WHERE "test_new_api_related_foo"."bar_id" IN (
                     SELECT "test_new_api_related_bar"."id"
                     FROM "test_new_api_related_bar"
-                    WHERE ("test_new_api_related_bar"."name" = %s)
-                ))
-            ))
-            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+                    WHERE "test_new_api_related_bar"."name" IN %s
+                )
+            )
+            AND "test_new_api_related_inherits__base_id"."id" < %s
             ORDER BY "test_new_api_related_inherits"."id"
         """]):
             model.search([('foo_bar_name_sudo', '=', 'a')])
@@ -779,18 +798,18 @@ class TestSubqueries(TransactionCase):
             FROM "test_new_api_related_inherits"
             LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
                 ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
-            WHERE ("test_new_api_related_inherits__base_id"."foo_id" IN (
+            WHERE "test_new_api_related_inherits__base_id"."foo_id" IN (
                 SELECT "test_new_api_related_foo"."id"
                 FROM "test_new_api_related_foo"
-                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                WHERE "test_new_api_related_foo"."bar_id" IN (
                     SELECT "test_new_api_related_bar"."id"
                     FROM "test_new_api_related_bar"
-                    WHERE ("test_new_api_related_bar"."name" = %s)
-                    AND ("test_new_api_related_bar"."id" < %s)
-                ))
-                AND ("test_new_api_related_foo"."id" < %s)
-            ))
-            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+                    WHERE "test_new_api_related_bar"."name" IN %s
+                    AND "test_new_api_related_bar"."id" < %s
+                )
+                AND "test_new_api_related_foo"."id" < %s
+            )
+            AND "test_new_api_related_inherits__base_id"."id" < %s
             ORDER BY "test_new_api_related_inherits"."id"
         """]):
             model.search([('foo_bar_name', '=', 'a')])
@@ -821,7 +840,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."name" LIKE %s)
+            WHERE "test_new_api_city"."name" LIKE %s
             ORDER BY "test_new_api_city"."id"
         ''']):
             self.brussels.name = "Bruxelles"
@@ -838,11 +857,11 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."country_id" IN (
+            WHERE "test_new_api_city"."country_id" IN (
                 SELECT "test_new_api_country"."id"
                 FROM "test_new_api_country"
-                WHERE ("test_new_api_country"."name" LIKE %s)
-            ))
+                WHERE "test_new_api_country"."name" LIKE %s
+            )
             ORDER BY "test_new_api_city"."id"
         ''']):
             self.brussels.country_id = self.france
@@ -858,11 +877,11 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."country_id" IN (
+            WHERE "test_new_api_city"."country_id" IN (
                 SELECT "test_new_api_country"."id"
                 FROM "test_new_api_country"
-                WHERE ("test_new_api_country"."name" LIKE %s)
-            ))
+                WHERE "test_new_api_country"."name" LIKE %s
+            )
             ORDER BY "test_new_api_city"."id"
         ''']):
             self.belgium.name = "Belgique"
@@ -883,7 +902,7 @@ class TestFlushSearch(TransactionCase):
             FROM "test_new_api_city"
             LEFT JOIN "test_new_api_country" AS "test_new_api_city__country_id"
                 ON ("test_new_api_city"."country_id" = "test_new_api_city__country_id"."id")
-            WHERE ("test_new_api_city__country_id"."name" LIKE %s)
+            WHERE "test_new_api_city__country_id"."name" LIKE %s
             ORDER BY "test_new_api_city"."id"
         ''']):
             self.brussels.country_id = self.france
@@ -905,7 +924,7 @@ class TestFlushSearch(TransactionCase):
             FROM "test_new_api_payment"
             LEFT JOIN "test_new_api_move" AS "test_new_api_payment__move_id"
                 ON ("test_new_api_payment"."move_id" = "test_new_api_payment__move_id"."id")
-            WHERE ("test_new_api_payment__move_id"."tag_repeat" > %s)
+            WHERE "test_new_api_payment__move_id"."tag_repeat" > %s
             ORDER BY "test_new_api_payment"."id"
         ''']):
             payment.move_id = move
@@ -923,7 +942,7 @@ class TestFlushSearch(TransactionCase):
             FROM "test_new_api_payment"
             LEFT JOIN "test_new_api_move" AS "test_new_api_payment__move_id"
                 ON ("test_new_api_payment"."move_id" = "test_new_api_payment__move_id"."id")
-            WHERE ("test_new_api_payment__move_id"."tag_repeat" > %s)
+            WHERE "test_new_api_payment__move_id"."tag_repeat" > %s
             ORDER BY "test_new_api_payment"."id"
         ''']):
             payment.move_id.tag_repeat = 1
@@ -948,7 +967,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."id" = %s) AND ("test_new_api_city"."name" LIKE %s)
+            WHERE "test_new_api_city"."id" IN %s AND "test_new_api_city"."name" LIKE %s
             ORDER BY "test_new_api_city"."id"
         ''']):
             self.brussels.name = "Bruxelles"
@@ -965,7 +984,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."id" = %s)
+            WHERE "test_new_api_city"."id" IN %s
             ORDER BY "test_new_api_city"."name", "test_new_api_city"."id"
         ''']):
             self.brussels.name = "Bruxelles"
@@ -984,7 +1003,7 @@ class TestFlushSearch(TransactionCase):
             FROM "test_new_api_city"
             LEFT JOIN "test_new_api_country" AS "test_new_api_city__country_id"
                 ON ("test_new_api_city"."country_id" = "test_new_api_city__country_id"."id")
-            WHERE ("test_new_api_city"."id" = %s)
+            WHERE "test_new_api_city"."id" IN %s
             ORDER BY "test_new_api_city__country_id"."name",
                     "test_new_api_city__country_id"."id",
                     "test_new_api_city"."id"
@@ -1004,7 +1023,7 @@ class TestFlushSearch(TransactionCase):
             FROM "test_new_api_city"
             LEFT JOIN "test_new_api_country" AS "test_new_api_city__country_id"
                 ON ("test_new_api_city"."country_id" = "test_new_api_city__country_id"."id")
-            WHERE ("test_new_api_city"."id" = %s)
+            WHERE "test_new_api_city"."id" IN %s
             ORDER BY "test_new_api_city__country_id"."name",
                     "test_new_api_city__country_id"."id",
                     "test_new_api_city"."id"
@@ -1016,7 +1035,7 @@ class TestFlushSearch(TransactionCase):
         with self.assertQueries(['''
             SELECT "test_new_api_city"."id", "test_new_api_city"."name"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."id" = %s)
+            WHERE "test_new_api_city"."id" IN %s
             ORDER BY "test_new_api_city"."id"
         '''], flush=False):
             self.brussels.name = "Bruxelles"
@@ -1033,7 +1052,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id", "test_new_api_city"."name"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."name" LIKE %s)
+            WHERE "test_new_api_city"."name" LIKE %s
             ORDER BY "test_new_api_city"."id"
         '''], flush=False):
             self.brussels.name = "Brussel"
@@ -1049,7 +1068,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_new_api_city"."id", "test_new_api_city"."name"
             FROM "test_new_api_city"
-            WHERE ("test_new_api_city"."id" = %s)
+            WHERE "test_new_api_city"."id" IN %s
             ORDER BY "test_new_api_city"."name"
         '''], flush=False):
             self.brussels.name = "Brüsel"
@@ -1109,7 +1128,7 @@ class TestDatePartNumber(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_person"."id"
             FROM "test_new_api_person"
-            WHERE date_part(%s, "test_new_api_person"."birthday") = %s
+            WHERE date_part(%s, "test_new_api_person"."birthday") IN %s
             ORDER BY "test_new_api_person"."id"
         """]):
             result = self.env["test_new_api.person"].search([('birthday.month_number', '=', '2')])
@@ -1118,7 +1137,7 @@ class TestDatePartNumber(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_person"."id"
             FROM "test_new_api_person"
-            WHERE date_part(%s, "test_new_api_person"."birthday") = %s
+            WHERE date_part(%s, "test_new_api_person"."birthday") IN %s
             ORDER BY "test_new_api_person"."id"
         """]):
             result = self.env["test_new_api.person"].search([('birthday.quarter_number', '=', '1')])
@@ -1127,7 +1146,7 @@ class TestDatePartNumber(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_person"."id"
             FROM "test_new_api_person"
-            WHERE date_part(%s, "test_new_api_person"."birthday") = %s
+            WHERE date_part(%s, "test_new_api_person"."birthday") IN %s
             ORDER BY "test_new_api_person"."id"
         """]):
             result = self.env["test_new_api.person"].search([('birthday.iso_week_number', '=', '6')])

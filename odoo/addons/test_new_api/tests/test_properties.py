@@ -10,8 +10,8 @@ from unittest.mock import patch
 
 from odoo import Command
 
+from odoo.domains import Domain
 from odoo.exceptions import AccessError, UserError
-from odoo.osv import expression
 from odoo.tests import Form, TransactionCase, users
 from odoo.tools import mute_logger, get_lang
 
@@ -271,7 +271,7 @@ class PropertiesCase(TestPropertiesMixin):
             ''' SELECT "test_new_api_message"."id",
                        "test_new_api_message"."attributes"
                 FROM "test_new_api_message"
-                WHERE ("test_new_api_message"."id" IN %s)
+                WHERE "test_new_api_message"."id" IN %s
             ''',
             ''' SELECT "test_new_api_message"."id",
                        "test_new_api_message"."discussion",
@@ -287,7 +287,7 @@ class PropertiesCase(TestPropertiesMixin):
                        "test_new_api_message"."write_uid",
                        "test_new_api_message"."write_date"
                 FROM "test_new_api_message"
-                WHERE ("test_new_api_message"."id" IN %s)
+                WHERE "test_new_api_message"."id" IN %s
             ''',
             # read the definition on the definition record
             ''' SELECT "test_new_api_discussion"."id",
@@ -301,7 +301,7 @@ class PropertiesCase(TestPropertiesMixin):
                        "test_new_api_discussion"."write_uid",
                        "test_new_api_discussion"."write_date"
                 FROM "test_new_api_discussion"
-                WHERE ("test_new_api_discussion"."id" IN %s)
+                WHERE "test_new_api_discussion"."id" IN %s
             ''',
             # check the many2one existence
             ''' SELECT "test_new_api_partner"."id"
@@ -315,7 +315,7 @@ class PropertiesCase(TestPropertiesMixin):
                        "test_new_api_partner"."write_uid",
                        "test_new_api_partner"."write_date"
                 FROM "test_new_api_partner"
-                WHERE ("test_new_api_partner"."id" IN %s)
+                WHERE "test_new_api_partner"."id" IN %s
             ''',
         ]
 
@@ -2962,7 +2962,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         falsy_group = result[-1]
         self.assertFalse(falsy_group[f'attributes.{property_name}'])
         falsy_records = Model.search(falsy_group['__domain'])
-        nonfalsy_records = Model.search(expression.OR([line['__domain'] for line in result[:-1]]))
+        nonfalsy_records = Model.search(Domain.OR(*(line['__domain'] for line in result[:-1])))
         self.assertEqual(Model.search_count([]), len(falsy_records) + len(nonfalsy_records))
         for falsy_record in falsy_records:
             self.assertNotIn(falsy_record, nonfalsy_records)

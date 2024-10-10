@@ -1,9 +1,8 @@
 import re
-
 from collections.abc import Iterable
 
 from odoo import api, fields, models
-from odoo.tools import _, SQL
+from odoo.tools import SQL, OrderedSet, _
 
 
 def sanitize_account_number(acc_number):
@@ -122,7 +121,7 @@ class ResPartnerBank(models.Model):
         if fname == 'acc_number':
             fname = 'sanitized_acc_number'
             if not isinstance(value, str) and isinstance(value, Iterable):
-                value = [sanitize_account_number(i) for i in value]
+                value = OrderedSet([sanitize_account_number(i) for i in value])
             else:
                 value = sanitize_account_number(value)
         return super()._condition_to_sql(alias, fname, operator, value, query)

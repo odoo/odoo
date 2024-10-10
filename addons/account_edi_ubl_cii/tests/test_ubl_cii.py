@@ -34,7 +34,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
     def import_attachment(self, attachment, journal=None):
         journal = journal or self.company_data["default_journal_purchase"]
         return self.env['account.journal'] \
-            .with_context(default_journal_id=journal.id) \
+            .with_context(default_journal_id=journal.ids) \
             ._create_document_from_attachment(attachment.id)
 
     def test_import_product(self):

@@ -476,7 +476,7 @@ class Channel(models.Model):
         if isinstance(value, int) and operator == 'in':
             value = [value]
         return [(
-            'channel_partner_ids', '=', self.env['slide.channel.partner'].sudo()._search(
+            'channel_partner_ids', 'in', self.env['slide.channel.partner'].sudo()._search(
                 [('partner_id', operator, value),
                  ('active', '=', True),
                  ('member_status', '!=', 'invited')],
