@@ -63,6 +63,7 @@ class StockWarehouse(models.Model):
     def _generate_global_route_rules_values(self):
         rules = super()._generate_global_route_rules_values()
         production_location = self._get_production_location()
+
         rules.update({
             'repair_mto_pull_id': {
                 'depends': ['repair_type_id'],

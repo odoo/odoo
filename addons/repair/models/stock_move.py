@@ -90,7 +90,7 @@ class StockMove(models.Model):
 
             if move.state == 'draft' and move.repair_id.state in ('confirmed', 'under_repair'):
                 move._check_company()
-                move._adjust_procure_method()
+                move._adjust_procure_method(picking_type_code='repair_operation')
                 move._action_confirm()
                 move._trigger_scheduler()
         repair_moves._create_repair_sale_order_line()
