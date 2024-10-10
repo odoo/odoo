@@ -931,6 +931,14 @@ describe('Format', () => {
                 },
             });
         });
+        it('return true for isSelectionFormat selecting text nodes including invisible elements', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `[<p>${strong("a")}\ufeff<p>${strong("b")}</p></p>]`,
+                stepFunction: async (editor) => {
+                    window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(true);
+                },
+            });
+        });
     });
     describe('switchDirection', () => {
         it('should switch direction on a collapsed range', async () => {
