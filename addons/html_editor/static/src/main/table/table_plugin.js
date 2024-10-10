@@ -455,7 +455,48 @@ export class TablePlugin extends Plugin {
         return true;
     }
 
+    hanldeFirefoxSelection(ev = null) {
+        const selection = this.document.getSelection();
+        const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+        if (isFirefox) {
+            if (selection.rangeCount > 1) {
+                // In Firefox, selecting multiple cells within a table using the mouse can create multiple ranges.
+                // This behavior can cause the original selection (where the selection started) to be lost.
+                // To address this, we reset the selection to the _latestComputedSelection, ensuring that
+                // even when multiple ranges are selected, the original selection remains accessible.
+                const [anchorNode, anchorOffset] = getDeepestPosition(
+                    selection.getRangeAt(0).startContainer,
+                    selection.getRangeAt(0).startOffset
+                );
+                const [focusNode, focusOffset] = getDeepestPosition(
+                    selection.getRangeAt(selection.rangeCount - 1).startContainer,
+                    selection.getRangeAt(selection.rangeCount - 1).startOffset
+                );
+                this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+                return true;
+            } else if (
+                ev &&
+                closestElement(ev.target, "table") ===
+                    closestElement(selection.anchorNode, "table") &&
+                closestElement(ev.target, "td") !== closestElement(selection.focusNode, "td")
+            ) {
+                this.shared.setSelection({
+                    anchorNode: selection.anchorNode,
+                    anchorOffset: selection.anchoerOffset,
+                    focusNode: ev.target,
+                    focusOffset: 0,
+                });
+                return true;
+            }
+        }
+        return false;
+    }
+
     updateSelectionTable(selectionData) {
+        if (this.hanldeFirefoxSelection()) {
+            // It will be retriggered with selectionchange
+            return;
+        }
         this.deselectTable();
         const selection = selectionData.editableSelection;
         const startTd = closestElement(selection.startContainer, "td");
@@ -536,6 +577,9 @@ export class TablePlugin extends Plugin {
 
     onMousemove(ev) {
         if (this._currentMouseState !== "mousedown") {
+            return;
+        }
+        if (this.hanldeFirefoxSelection(ev)) {
             return;
         }
         const selection = this.shared.getEditableSelection();
