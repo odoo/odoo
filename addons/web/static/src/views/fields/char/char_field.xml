@@ -20,18 +20,20 @@
                 t-on-blur="onBlur"
                 t-ref="input"
             />
-            <div class="o_field_char_buttons position-absolute d-inline">
-                <t t-if="isTranslatable">
-                    <TranslationButton
-                        fieldName="props.name"
-                        record="props.record"
+            <div class="position-relative d-inline">
+                <div class="o_field_char_buttons position-absolute d-inline-flex">
+                    <t t-if="isTranslatable">
+                        <TranslationButton
+                            fieldName="props.name"
+                            record="props.record"
+                        />
+                    </t>
+                    <button t-if="hasDynamicPlaceholder"
+                        class="btn m-0 py-0 px-2 fa fa-magic"
+                        title="Insert Field"
+                        t-on-click="onDynamicPlaceholderOpen"
                     />
-                </t>
-                <button t-if="hasDynamicPlaceholder"
-                    class="btn m-0 py-0 px-2 fa fa-magic"
-                    title="Insert Field"
-                    t-on-click="onDynamicPlaceholderOpen"
-                />
+                </div>
             </div>
         </t>
     </t>
