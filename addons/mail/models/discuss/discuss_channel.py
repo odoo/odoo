@@ -439,8 +439,8 @@ class Channel(models.Model):
                 member._bus_send("discuss.channel/joined", payload)
                 if post_joined_message:
                     notification = (
-                        _("joined the channel")
-                        if member.is_self
+                        _("joined the thread") if member.is_self and self.parent_channel_id
+                        else _("joined the channel") if member.is_self
                         else _("invited %s to the channel", member._get_html_link(for_persona=True))
                     )
                     member.channel_id.message_post(
