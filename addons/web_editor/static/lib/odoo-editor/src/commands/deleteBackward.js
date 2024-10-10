@@ -240,7 +240,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
 };
 
 HTMLLIElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
-    if (offset > 0 || this.previousElementSibling) {
+    if (offset > 0 || this.previousElementSibling && this.previousElementSibling.nodeName !== 'TABLE') {
         // If backspace inside li content or if the li is not the first one,
         // it behaves just like in a normal element.
         HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);

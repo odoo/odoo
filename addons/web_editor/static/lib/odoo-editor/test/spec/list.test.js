@@ -109,6 +109,71 @@ describe('List', () => {
                             `),
                         });
                     });
+                    it('should insert a table as direct child of empty list with li', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<ul><li>[]</li></ul>',
+                            stepFunction: async editor => {
+                                await editor.execCommand('insertHTML', unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                    </tbody>
+                                </table>`
+                            )
+                        )},
+                            contentAfter: unformat(`
+                            <ul>
+                                <li></li>
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                         </tr>
+                                    </tbody>
+                                </table>[]
+                                <li></li>
+                            </ul>`),
+                        });
+                    });
+                    it('should insert a table as direct child of list without li, When li has content', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<ul><li>test[]</li></ul>',
+                            stepFunction: async editor => {
+                                await editor.execCommand('insertHTML', unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                    </tbody>
+                                </table>`
+                            )
+                        )},
+                            contentAfter: unformat(`
+                            <ul>
+                                <li>test</li>
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                    </tbody>
+                                </table>[]
+                                <li></li>
+                            </ul>
+                         `),
+                        });
+                    });
                     it('should create a new unordered list if current node is inside a nav-item list', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore: '<ul><li class="nav-item">a[]b</li></ul>',
