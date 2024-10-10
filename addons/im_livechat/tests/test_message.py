@@ -89,7 +89,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
         self.assertEqual(
             Store(message, for_current_user=True).get_result(),
             {
-                "mail.message": self._filter_messages_fields(
+                "mail.message": self._filter_store_messages_fields(
                     {
                         "attachment_ids": [],
                         "author": {"id": self.users[1].partner_id.id, "type": "partner"},
@@ -121,7 +121,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                         "trackingValues": [],
                     },
                 ),
-                "mail.thread": self._filter_threads_fields(
+                "mail.thread": self._filter_store_threads_fields(
                     {
                         "id": channel_livechat_1.id,
                         "model": "discuss.channel",
@@ -138,7 +138,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                         "rating_text": "top",
                     },
                 ],
-                "res.partner": self._filter_partners_fields(
+                "res.partner": self._filter_store_partners_fields(
                     {
                         "id": self.users[1].partner_id.id,
                         "is_company": False,
@@ -192,7 +192,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                         "type": "discuss.channel/new_message",
                         "payload": {
                             "data": {
-                                "mail.message": self._filter_messages_fields(
+                                "mail.message": self._filter_store_messages_fields(
                                     {
                                         "attachment_ids": [],
                                         "author": {
@@ -225,7 +225,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ),
-                                "mail.thread": self._filter_threads_fields(
+                                "mail.thread": self._filter_store_threads_fields(
                                     {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -242,7 +242,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                                         "rating_text": "top",
                                     },
                                 ],
-                                "res.partner": self._filter_partners_fields(
+                                "res.partner": self._filter_store_partners_fields(
                                     {
                                         "id": self.env.user.partner_id.id,
                                         "isInternalUser": False,

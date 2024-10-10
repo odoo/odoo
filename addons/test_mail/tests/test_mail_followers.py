@@ -878,7 +878,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
         self.authenticate(self.env.user.login, self.env.user.login)
         data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
         expected = {
-            "mail.message": self._filter_messages_fields(
+            "mail.message": self._filter_store_messages_fields(
                 {
                     "attachment_ids": [],
                     "author": {"id": self.user_admin.partner_id.id, "type": "partner"},
@@ -920,7 +920,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "persona": {"id": self.env.user.partner_id.id, "type": "partner"},
                 },
             ],
-            "mail.thread": self._filter_threads_fields(
+            "mail.thread": self._filter_store_threads_fields(
                 {
                     "id": test_record.id,
                     "model": "mail.test.simple",
@@ -929,7 +929,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "selfFollower": False,
                 },
             ),
-            "res.partner": self._filter_partners_fields(
+            "res.partner": self._filter_store_partners_fields(
                 {
                     "id": self.env.user.partner_id.id,
                     "name": "Ernest Employee",

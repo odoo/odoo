@@ -83,7 +83,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "type": "discuss.channel/new_message",
                         "payload": {
                             "data": {
-                                "mail.message": self._filter_messages_fields(
+                                "mail.message": self._filter_store_messages_fields(
                                     {
                                         "attachment_ids": [],
                                         "author": {
@@ -118,7 +118,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ),
-                                "mail.thread": self._filter_threads_fields(
+                                "mail.thread": self._filter_store_threads_fields(
                                     {
                                         "id": channel.id,
                                         "model": "discuss.channel",
@@ -127,7 +127,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "rating_count": 0,
                                     },
                                 ),
-                                "res.partner": self._filter_partners_fields(
+                                "res.partner": self._filter_store_partners_fields(
                                     {
                                         "id": self.env.user.partner_id.id,
                                         "isInternalUser": True,
@@ -156,7 +156,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "thread": {"id": channel.id, "model": "discuss.channel"},
                                 },
                             ],
-                            "res.partner": self._filter_partners_fields(
+                            "res.partner": self._filter_store_partners_fields(
                                 {
                                     "active": True,
                                     "email": "test_customer@example.com",
@@ -200,7 +200,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "thread": {"id": channel.id, "model": "discuss.channel"},
                                 }
                             ],
-                            "res.partner": self._filter_partners_fields(
+                            "res.partner": self._filter_store_partners_fields(
                                 {
                                     "active": True,
                                     "email": "test_customer@example.com",
@@ -421,7 +421,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             },
                         ],
-                        "res.partner": self._filter_partners_fields(
+                        "res.partner": self._filter_store_partners_fields(
                             {
                                 "id": self.user_admin.partner_id.id,
                                 "name": self.user_admin.partner_id.name,
@@ -440,7 +440,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "thread": {"id": chat.id, "model": "discuss.channel"},
                             },
                         ],
-                        "res.partner": self._filter_partners_fields(
+                        "res.partner": self._filter_store_partners_fields(
                             {
                                 "id": self.user_admin.partner_id.id,
                                 "name": self.user_admin.partner_id.name,
