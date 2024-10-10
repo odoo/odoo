@@ -26,6 +26,7 @@ class Partner(models.Model):
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
     starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel')
+    im_status = fields.Char("IM Status", compute="_compute_im_status")
 
     @api.depends('contact_address')
     def _compute_contact_address_inline(self):
@@ -35,7 +36,17 @@ class Partner(models.Model):
             partner.contact_address_inline = re.sub(r'\n(\s|\n)*', ', ', partner.contact_address).strip().strip(',')
 
     def _compute_im_status(self):
-        super()._compute_im_status()
+        status_by_partner = {}
+        for presence in self.env["mail.presence"].search([("user_id", "in", self.user_ids.ids)]):
+            partner = presence.user_id.partner_id
+            if (
+                status_by_partner.get(partner, "offline") == "offline"
+                or presence.status == "online"
+            ):
+                status_by_partner[partner] = presence.status
+        for partner in self:
+            default_status = "offline" if partner.user_ids else "im_partner"
+            partner.im_status = status_by_partner.get(partner, default_status)
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
         odoobot = self.env['res.partner'].browse(odoobot_id)
         if odoobot in self:

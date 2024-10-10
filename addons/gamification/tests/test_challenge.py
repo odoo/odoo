@@ -92,14 +92,14 @@ class test_challenge(TestGamificationCommon):
         })
 
         # Setup user presence
-        self.env['bus.presence'].search([('user_id', 'in', challenge.user_ids.ids)]).unlink()
+        self.env['mail.presence'].search([('user_id', 'in', challenge.user_ids.ids)]).unlink()
         now = self.env.cr.now()
 
         # Create "old" log in records
         twenty_minutes_ago = now - datetime.timedelta(minutes=20)
         with freeze_time(twenty_minutes_ago):
             # Not using BusPresence.update_presence to avoid lower level cursor handling there.
-            self.env['bus.presence'].create([
+            self.env['mail.presence'].create([
                 {
                     'user_id': user.id,
                     'last_presence': twenty_minutes_ago,
@@ -129,7 +129,7 @@ class test_challenge(TestGamificationCommon):
 
         # Update presence for 2 users
         users_recent = internal_last_active_recent | portal_last_active_recent
-        users_recent_presence = self.env['bus.presence'].search([('user_id', 'in', users_recent.ids)])
+        users_recent_presence = self.env['mail.presence'].search([('user_id', 'in', users_recent.ids)])
         users_recent_presence.last_presence = now
         users_recent_presence.last_poll = now
         users_recent_presence.flush_recordset()

@@ -10,7 +10,6 @@ from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
 from odoo.addons.bus.websocket import wsrequest
 from odoo.addons.mail.tools.discuss import Store
 
@@ -61,8 +60,8 @@ class MailGuest(models.Model):
     im_status = fields.Char('IM Status', compute='_compute_im_status')
 
     def _compute_im_status(self):
-        # sudo - bus.presence: guests can access other guest's presences
-        presences = self.env["bus.presence"].sudo().search([("guest_id", "in", self.ids)])
+        # sudo - mail.presence: guests can access other guest's presences
+        presences = self.env["mail.presence"].sudo().search([("guest_id", "in", self.ids)])
         im_status_by_guest = {presence.guest_id: presence.status for presence in presences}
         for guest in self:
             guest.im_status = im_status_by_guest.get(guest, "offline")
