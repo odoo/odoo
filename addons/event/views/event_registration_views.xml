@@ -17,7 +17,7 @@
                 <field name="phone" optional="show"/>
                 <field name="company_name" optional="hide"/>
                 <field name="event_id" column_invisible="context.get('default_event_id')" readonly="state != 'draft'"/>
-                <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly="state != 'draft'"/>
+                <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
                 <field name="activity_ids" widget="list_activity"/>
                 <field name="state" decoration-info="state in ('draft', 'open')"
                        decoration-success="state == 'done'"
@@ -65,10 +65,10 @@
                             <field name="company_name" placeholder='e.g. "Azure Interior"'/>
                         </group>
                         <group string="Event Information" name="event">
-                            <field class="text-break" name="event_id" readonly="event_id and state != 'draft' and id"
+                            <field class="text-break" name="event_id"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
                             <field name="barcode" groups="base.group_no_one"/>
-                            <field name="event_ticket_id" invisible="not event_id" readonly="event_ticket_id and state != 'draft' and id"
+                            <field name="event_ticket_id" invisible="not event_id"
                                    context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"
                                    domain="[('event_id', '=', event_id)]"/>
                             <field name="partner_id"/>
