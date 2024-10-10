@@ -6,6 +6,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
 import { renderToElement } from "@web/core/utils/render";
+import { useSubEnv } from "@odoo/owl";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     init() {
@@ -448,6 +449,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
 // Small override of the MediaDialog to retrieve the attachment ids instead of img elements
 class AttachmentMediaDialog extends MediaDialog {
+    setup() {
+        super.setup();
+        useSubEnv({ addImageFields: true });
+    }
     /**
      * @override
      */
@@ -610,6 +615,10 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         // Upon change, make sure to verify whether the same change needs
         // to be applied on both sides.
         // Generate alternate sizes and format for reports.
+        if (/\/web\/image\/\d+-redirect/.test(imageEl.getAttribute("src"))) {
+            // The image is CORS protected; do not transform it into webp
+            return;
+        }
         const imgEl = document.createElement("img");
         imgEl.src = imageEl.src;
         await new Promise(resolve => imgEl.addEventListener("load", resolve));
