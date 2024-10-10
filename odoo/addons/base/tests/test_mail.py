@@ -333,6 +333,47 @@ class TestSanitizer(BaseCase):
     #     for ext in test_mail_examples.MSOFFICE_1_OUT:
     #         self.assertNotIn(ext, new_html)
 
+    def test_video_support(self):
+        cases = [
+            (
+                '<iframe src="//www.youtube.com/embed/_yzUhaL7RYw?rel=0&autoplay=1&mute=1&enablejsapi=1"></iframe>',
+                '<iframe src="//www.youtube.com/embed/_yzUhaL7RYw?rel=0&amp;autoplay=1&amp;mute=1&amp;enablejsapi=1"></iframe>',
+                "Protocol-relative Youtube video should not be sanitized"
+            ),
+            (
+                '<iframe src="//youtube.com/embed/_yzUhaL7RYw?rel=0&autoplay=1&mute=1&enablejsapi=1"></iframe>',
+                '<iframe src="//youtube.com/embed/_yzUhaL7RYw?rel=0&amp;autoplay=1&amp;mute=1&amp;enablejsapi=1"></iframe>',
+                "Protocol-relative no-www Youtube video should not be sanitized"
+            ),
+            (
+                '<iframe src="https://www.youtube.com/embed/_yzUhaL7RYw"></iframe>',
+                '<iframe src="https://www.youtube.com/embed/_yzUhaL7RYw"></iframe>',
+                "Full protocol Youtube video should not be sanitized"
+            ),
+            (
+                '<iframe src="https://youtube.com/embed/_yzUhaL7RYw"></iframe>',
+                '<iframe src="https://youtube.com/embed/_yzUhaL7RYw"></iframe>',
+                "Full protocol no-www Youtube video should not be sanitized"
+            ),
+            (
+                '<iframe src="https://player.vimeo.com"></iframe>',
+                '<iframe src="https://player.vimeo.com"></iframe>',
+                "Random vimeo video should not be sanitized"
+            ),
+            (
+                '<iframe src="https://www.youtube.malicious"></iframe>',
+                '',
+                "Random iframe should be sanitized (1)"
+            ),
+            (
+                '<iframe src="/foo/bar"></iframe>',
+                '',
+                "Random iframe should be sanitized (2)"
+            ),
+        ]
+        for content, expected, message in cases:
+            self.assertEqual(html_sanitize(content), expected, message)
+
 
 class TestHtmlTools(BaseCase):
     """ Test some of our generic utility functions about html """
