@@ -11,6 +11,7 @@ import {
     HootError,
     INCLUDE_LEVEL,
     Markup,
+    STORAGE,
     batch,
     createReporting,
     deepEqual,
@@ -20,6 +21,7 @@ import {
     formatTime,
     getFuzzyScore,
     normalize,
+    storageGet,
     stringify,
 } from "../hoot_utils";
 import { cleanupDate } from "../mock/date";
@@ -34,7 +36,7 @@ import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag } from "./tag";
 import { Test, testError } from "./test";
-import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
+import { createUrlFromId, EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 
 /**
  * @typedef {{
@@ -1072,11 +1074,13 @@ export class Runner {
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
+            const link = createUrlFromId(storageGet(STORAGE.failed), "test");
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
                 `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
             logger.error("test failed (see above for details)");
+            logger.error("failed tests link:", link.toString());
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
