@@ -163,6 +163,31 @@ class AccountMergeWizard(models.TransientModel):
         # 3.2: Update Reference and Many2OneReference fields that reference account.account
         wiz._update_reference_fields_generic('account.account', accounts_to_remove, account_to_merge_into)
 
+        # 3.3: Merge translations
+        self.env.cr.execute(SQL(
+            """
+             UPDATE account_account
+                SET name = (
+                        SELECT jsonb_object_agg(account_transl.lang, account_transl.value)
+                        FROM (
+                             SELECT DISTINCT ON (account_name.lang)
+                                    account_name.lang,
+                                    account_name.value
+                               FROM account_account
+                               JOIN unnest(%(account_ids_in_order)s) WITH ORDINALITY AS account_ordering(id, idx)
+                                 ON account_ordering.id = account_account.id
+                               JOIN LATERAL jsonb_each_text(account_account.name) account_name (lang, value)
+                                 ON TRUE
+                              WHERE account_account.id = ANY(%(account_ids_in_order)s)
+                           ORDER BY account_name.lang, account_ordering.idx
+                        ) account_transl
+                    )
+              WHERE id = %(account_to_merge_into_id)s
+            """,
+            account_ids_in_order=accounts.ids,
+            account_to_merge_into_id=account_to_merge_into.id,
+        ))
+
         # Step 4: Remove merged accounts
         self.env.invalidate_all()
         self.env.cr.execute(SQL(
