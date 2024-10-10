@@ -322,6 +322,13 @@ class ResPartner(models.Model):
     __check_tin_hu_individual_re = re.compile(r'^8\d{9}$')
     __check_tin_hu_companies_re = re.compile(r'^\d{8}-[1-5]-\d{2}$')
 
+    def check_vat_gr(self, vat):
+        """ Allows some custom test VAT number to be valid to allow testing Greece EDI. """
+        greece_test_vats = ('047747270', '047747210', '047747220')
+        if vat in greece_test_vats:
+            return True
+        return stdnum.util.get_cc_module('gr', 'vat').is_valid(vat)
+
     def check_vat_hu(self, vat):
         """
             Check Hungary VAT number that can be for example 'HU12345676 or 'xxxxxxxx-y-zz' or '8xxxxxxxxy'
