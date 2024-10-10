@@ -12,6 +12,9 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
     events: {
         click: '_onClick'
     },
+    assetLibs: [
+        'portal.assets_portal_xml',
+    ],
 
     init() {
         this._super(...arguments);
@@ -64,6 +67,9 @@ publicWidget.registry.RemoveAPIKeyButton = publicWidget.Widget.extend({
     events: {
         click: '_onClick'
     },
+    assetLibs: [
+        'portal.assets_portal_xml',
+    ],
 
     init() {
         this._super(...arguments);
@@ -115,6 +121,9 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
     events: {
         click: '_onClick',
     },
+    assetLibs: [
+        'portal.assets_portal_xml',
+    ],
 
     init() {
         this._super(...arguments);

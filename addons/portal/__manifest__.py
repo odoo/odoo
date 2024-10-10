@@ -42,10 +42,13 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/src/js/portal_composer.js',
             'portal/static/src/js/portal_security.js',
             'portal/static/src/js/portal_sidebar.js',
-            'portal/static/src/xml/portal_security.xml',
             'portal/static/src/js/components/**/*',
             'portal/static/src/signature_form/**/*',
             'portal/static/src/chatter/boot/boot_service.js',
+        ],
+        'portal.assets_portal_xml': [
+            'portal/static/src/xml/portal_security.xml',
+            '''TODO portal_chatter.xml as templates are being inherited'''
         ],
         'web.assets_tests': [
             'portal/static/tests/**/*',

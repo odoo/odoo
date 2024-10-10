@@ -39,6 +39,10 @@
         'web.assets_frontend': [
             'payment/static/lib/jquery.payment/jquery.payment.js',
             'payment/static/src/**/*',
+            ('remove','payment/static/src/xml/*'),
+        ],
+        'payment.assets_payment_xml': [
+            'payment/static/src/xml/payment_form_templates.xml',
         ],
         'web.assets_backend': [
             'payment/static/src/scss/payment_provider.scss',

@@ -510,6 +510,9 @@ publicWidget.registry.CookiesApproval = publicWidget.Widget.extend({
     events: {
         "add_cookies_warning": "_onAddCookiesWarning",
     },
+    assetLibs: [
+        'website.assets_website_xml',
+    ],
 
     /**
      * @override
