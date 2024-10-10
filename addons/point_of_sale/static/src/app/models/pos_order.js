@@ -606,7 +606,10 @@ export class PosOrder extends Base {
     }
 
     get_total_with_tax() {
-        return this.get_total_without_tax() + this.get_total_tax();
+        return roundPrecision(
+            this.lines.reduce((sum, line) => sum + line.get_price_with_tax(), 0),
+            this.currency.rounding
+        );
     }
 
     get_total_without_tax() {
