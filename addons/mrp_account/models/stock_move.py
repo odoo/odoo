@@ -55,10 +55,6 @@ class StockMove(models.Model):
         for wo in self.production_id.workorder_ids:
             account = wo.workcenter_id.expense_account_id or product_expense_account
             labour_amounts[account] += wo._cal_cost()
-        workcenter_cost = sum(labour_amounts.values())
-
-        if self.company_id.currency_id.is_zero(workcenter_cost):
-            return rslt
 
         cost_share = 1
         if self.production_id.move_byproduct_ids:
@@ -66,16 +62,23 @@ class StockMove(models.Model):
                 cost_share = self.cost_share / 100
             else:
                 cost_share = float_round(1 - sum(self.production_id.move_byproduct_ids.mapped('cost_share')) / 100, precision_rounding=0.0001)
-        rslt['credit_line_vals']['balance'] += workcenter_cost * cost_share
+
+        currency = self.env.company.currency_id
+        workcenter_total_cost = 0
         for acc, amt in labour_amounts.items():
-            rslt['labour_credit_line_vals_' + acc.code] = {
-                'name': description,
-                'product_id': self.product_id.id,
-                'quantity': qty,
-                'product_uom_id': self.product_id.uom_id.id,
-                'ref': description,
-                'partner_id': partner_id,
-                'balance': -amt * cost_share,
-                'account_id': acc.id,
-            }
+            amount = float_round(amt * cost_share, precision_rounding=currency.rounding)
+            if not currency.is_zero(amount):
+                workcenter_total_cost += amount
+                rslt['labour_credit_line_vals_' + acc.code] = {
+                    'name': description,
+                    'product_id': self.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': self.product_id.uom_id.id,
+                    'ref': description,
+                    'partner_id': partner_id,
+                    'balance': -amount,
+                    'account_id': acc.id,
+                }
+        if not currency.is_zero(workcenter_total_cost):
+            rslt['credit_line_vals']['balance'] += workcenter_total_cost
         return rslt
