@@ -215,6 +215,18 @@ Wysiwyg.include({
         this.el.removeEventListener("click", this.__onPageClick, { capture: true });
         this._super.apply(this, arguments);
     },
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+    /**
+     * @override
+     */
+    removeLink() {
+        if (this.lastElement.classList.contains("s_website_form_send")) {
+            return;
+        }
+        this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
