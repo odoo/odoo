@@ -7,6 +7,7 @@ import {
     compute_price_force_price_include,
     getTaxesAfterFiscalPosition,
 } from "@point_of_sale/app/models/utils/tax_utils";
+import { serializeDate } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -617,7 +618,7 @@ patch(PosOrder.prototype, {
                                     line.get_quantity(),
                                 0.01
                             );
-                            if (pointsPerUnit > 0) {
+                            if (pointsPerUnit >= 0) {
                                 splitPoints.push(
                                     ...Array.apply(null, Array(line.get_quantity())).map(() => {
                                         if (line._gift_barcode && line.get_quantity() == 1) {
@@ -625,6 +626,17 @@ patch(PosOrder.prototype, {
                                                 points: pointsPerUnit,
                                                 barcode: line._gift_barcode,
                                                 giftCardId: line._gift_card_id.id,
+                                            };
+                                        } else if (program.program_type === "gift_card") {
+                                            return {
+                                                points: pointsPerUnit,
+                                                barcode: null,
+                                                code: line.uiState.gift_code,
+                                                expiration_date:
+                                                    line.uiState.gift_card_expiration_date ||
+                                                    serializeDate(
+                                                        luxon.DateTime.now().plus({ year: 1 })
+                                                    ),
                                             };
                                         }
                                         return { points: pointsPerUnit };

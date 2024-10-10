@@ -223,6 +223,7 @@ patch(PosStore.prototype, {
     },
     async setTable(table, orderUuid = null) {
         this.selectedTable = table;
+        this.selectedOrderUuid = table.getOrder()?.uuid;
         try {
             this.loadingOrderState = true;
             const orders = await this.syncAllOrders({ throw: true });
