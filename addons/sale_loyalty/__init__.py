@@ -2,6 +2,7 @@
 
 from . import models
 from . import wizard
+from . import controllers
 
 
 def uninstall_hook(env):
