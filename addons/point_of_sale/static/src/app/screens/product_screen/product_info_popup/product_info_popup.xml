@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoPopup">
         <Dialog title.translate="Product information">
-            <ProductInfoBanner t-if="!props.product.isConfigurable()" product="props.product" info="props.info"/>
-            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="!isVariant and props.info.productInfo.warehouses.length > 0">
+            <ProductInfoBanner t-if="!props.productTemplate.isConfigurable()" productTemplate="props.productTemplate" product="props.productTemplate.product_variant_ids[0]" info="props.info"/>
+            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info.productInfo.warehouses.length > 0">
                 <h3 class="section-title">
                     Inventory
                     <t t-if="pos.session.update_stock_at_closing">(as of opening)</t>

@@ -9,7 +9,8 @@ from odoo.osv.expression import AND
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _name = 'product.template'
+    _inherit = ['product.template', 'pos.load.mixin']
 
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
     to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration.")
@@ -20,6 +21,98 @@ class ProductTemplate(models.Model):
         string="Product Description",
         translate=True
     )
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        domain = [
+            *self.env['product.product']._check_company_domain(self.company_id),
+            ('available_in_pos', '=', True),
+            ('sale_ok', '=', True),
+            ('product_variant_ids', '!=', False),
+        ]
+        limited_categories = data['pos.config']['data'][0]['limit_categories']
+        if limited_categories:
+            available_category_ids = data['pos.config']['data'][0]['iface_available_categ_ids']
+            domain += [('pos_categ_ids', 'in', available_category_ids)]
+        return domain
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return [
+            'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price',
+            'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
+            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids',
+        ]
+
+    def _load_pos_data(self, data):
+        # Add custom fields for 'formula' taxes.
+        fields = set(self._load_pos_data_fields(data['pos.config']['data'][0]['id']))
+        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
+        product_fields = taxes._eval_taxes_computation_prepare_product_fields()
+        fields = list(fields.union(product_fields))
+
+        config = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        limit_count = config.get_limited_product_count()
+        if limit_count and False:
+            # FIXME restore limited product loading with product tempalte
+            products = config.with_context(display_default_code=False).get_limited_products_loading(fields)
+        else:
+            domain = self._load_pos_data_domain(data)
+            products = self._load_product_with_domain(domain, config.id)
+
+        data['pos.config']['data'][0]['_product_default_values'] = \
+            self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
+
+        products += config._get_special_products().product_tmpl_id.read(fields, load=False)
+        if config.tip_product_id:
+            products += config.tip_product_id.product_tmpl_id.read(fields, load=False)
+
+        self._process_pos_ui_product_product(products, config)
+        return {
+            'data': products,
+            'fields': fields,
+        }
+
+    def _load_product_with_domain(self, domain, config_id, load_archived=False):
+        fields = self._load_pos_data_fields(config_id)
+        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
+        return self.with_context(context).search_read(
+            domain,
+            fields,
+            order='sequence,default_code,name',
+            load=False)
+
+    def _process_pos_ui_product_product(self, products, config_id):
+
+        def filter_taxes_on_company(product_taxes, taxes_by_company):
+            """
+            Filter the list of tax ids on a single company starting from the current one.
+            If there is no tax in the result, it's filtered on the parent company and so
+            on until a non empty result is found.
+            """
+            taxes, comp = None, self.env.company
+            while not taxes and comp:
+                taxes = list(set(product_taxes) & set(taxes_by_company[comp.id]))
+                comp = comp.parent_id
+            return taxes
+
+        taxes = self.env['account.tax'].search(self.env['account.tax']._check_company_domain(self.env.company))
+        # group all taxes by company in a dict where:
+        # - key: ID of the company
+        # - values: list of tax ids
+        taxes_by_company = defaultdict(set)
+        if self.env.company.parent_id:
+            for tax in taxes:
+                taxes_by_company[tax.company_id.id].add(tax.id)
+
+        different_currency = config_id.currency_id != self.env.company.currency_id
+        for product in products:
+            if different_currency:
+                product['lst_price'] = self.env.company.currency_id._convert(product['lst_price'], config_id.currency_id, self.env.company, fields.Date.today())
+            product['image_128'] = bool(product['image_128'])
+
+            if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
+                product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_session(self):
@@ -55,101 +148,11 @@ class ProductProduct(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
-        return config_id._get_available_product_domain()
+        return [('product_tmpl_id', 'in', [p['id'] for p in data['product.template']['data']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return [
-            'id', 'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name',
-            'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking', 'type', 'service_tracking', 'is_storable',
-            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_template_variant_value_ids',
-        ]
-
-    def _load_pos_data(self, data):
-        # Add custom fields for 'formula' taxes.
-        fields = set(self._load_pos_data_fields(data['pos.config']['data'][0]['id']))
-        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
-        product_fields = taxes._eval_taxes_computation_prepare_product_fields()
-        fields = list(fields.union(product_fields))
-
-        config = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
-        limit_count = config.get_limited_product_count()
-        if limit_count:
-            products = config.with_context(display_default_code=False).get_limited_products_loading(fields)
-        else:
-            domain = self._load_pos_data_domain(data)
-            products = self._load_product_with_domain(domain, config.id)
-
-        self._add_missing_products(products, config.id, data)
-
-        data['pos.config']['data'][0]['_product_default_values'] = \
-            self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
-
-        self._process_pos_ui_product_product(products, config)
-        return {
-            'data': products,
-            'fields': fields,
-        }
-
-    def _add_missing_products(self, products, config_id, data):
-        product_ids_in_loaded_lines = {line['product_id'] for line in data['pos.order.line']['data']}
-        not_loaded_product_ids = product_ids_in_loaded_lines - {product['id'] for product in products}
-        products.extend(self._load_product_with_domain([('id', 'in', list(not_loaded_product_ids))], config_id, True))
-
-    def _load_product_with_domain(self, domain, config_id, load_archived=False):
-        fields = self._load_pos_data_fields(config_id)
-        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
-        return self.with_context(context).search_read(
-            domain,
-            fields,
-            order='sequence,default_code,name',
-            load=False)
-
-    def _process_pos_ui_product_product(self, products, config_id):
-
-        def filter_taxes_on_company(product_taxes, taxes_by_company):
-            """
-            Filter the list of tax ids on a single company starting from the current one.
-            If there is no tax in the result, it's filtered on the parent company and so
-            on until a non empty result is found.
-            """
-            taxes, comp = None, self.env.company
-            while not taxes and comp:
-                taxes = list(set(product_taxes) & set(taxes_by_company[comp.id]))
-                comp = comp.parent_id
-            return taxes
-
-        taxes = self.env['account.tax'].search(self.env['account.tax']._check_company_domain(self.env.company))
-        # group all taxes by company in a dict where:
-        # - key: ID of the company
-        # - values: list of tax ids
-        taxes_by_company = defaultdict(set)
-        if self.env.company.parent_id:
-            for tax in taxes:
-                taxes_by_company[tax.company_id.id].add(tax.id)
-
-        loaded_product_tmpl_ids = list({p['product_tmpl_id'] for p in products})
-        archived_combinations = self._get_archived_combinations_per_product_tmpl_id(loaded_product_tmpl_ids)
-        different_currency = config_id.currency_id != self.env.company.currency_id
-        for product in products:
-            if different_currency:
-                product['lst_price'] = self.env.company.currency_id._convert(product['lst_price'], config_id.currency_id, self.env.company, fields.Date.today())
-            product['image_128'] = bool(product['image_128'])
-
-            if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
-                product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
-
-            if archived_combinations.get(product['product_tmpl_id']):
-                product['_archived_combinations'] = archived_combinations[product['product_tmpl_id']]
-
-    def _get_archived_combinations_per_product_tmpl_id(self, product_tmpl_ids):
-        archived_combinations = {}
-        for product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', 'in', product_tmpl_ids), ('active', '=', False)]):
-            if not archived_combinations.get(product.product_tmpl_id.id):
-                archived_combinations[product.product_tmpl_id.id] = []
-            archived_combinations[product.product_tmpl_id.id].append(product.product_template_attribute_value_ids.ids)
-        return archived_combinations
+        return ['id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids', 'barcode']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
@@ -360,10 +363,13 @@ class ProductPricelistItem(models.Model):
         product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']['data']]
         product_ids = [p['id'] for p in data['product.product']['data']]
         pricelist_ids = [p['id'] for p in data['product.pricelist']['data']]
+        today = fields.Date.today()
         return [
             ('pricelist_id', 'in', pricelist_ids),
             '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
             '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
+            '|', ('date_start', '=', False), ('date_start', '<=', today),
+            '|', ('date_end', '=', False), ('date_end', '>=', today)
         ]
 
     @api.model

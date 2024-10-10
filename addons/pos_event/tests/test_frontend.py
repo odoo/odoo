@@ -70,6 +70,10 @@ class TestUi(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('event.group_event_user').id),
             ]
         })
+        self.main_pos_config.write({
+            "limit_categories": True,
+            "iface_available_categ_ids": [(6, 0, [self.event_category.id])],
+        })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SellingEventInPos', login="pos_user")
 

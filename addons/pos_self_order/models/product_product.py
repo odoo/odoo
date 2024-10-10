@@ -13,6 +13,18 @@ class ProductTemplate(models.Model):
         default=True,
     )
 
+    @api.model
+    def _load_pos_self_data_fields(self, config_id):
+        params = super()._load_pos_self_data_fields(config_id)
+        params += ['public_description']
+        return params
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        params = super()._load_pos_data_fields(config_id)
+        params += ['self_order_available']
+        return params
+
     @api.onchange('available_in_pos')
     def _on_change_available_in_pos(self):
         for record in self:
@@ -34,18 +46,6 @@ class ProductTemplate(models.Model):
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
-
-    @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
-        params += ['self_order_available']
-        return params
-
-    @api.model
-    def _load_pos_self_data_fields(self, config_id):
-        params = super()._load_pos_self_data_fields(config_id)
-        params += ['public_description']
-        return params
 
     def _load_pos_self_data(self, data):
         domain = self._load_pos_data_domain(data)

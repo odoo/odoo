@@ -12,7 +12,13 @@ function assertProductPrice(product, pricelist_name, quantity, expected_price) {
         var pricelist = posmodel.data.models["product.pricelist"].find(
             (pricelist) => pricelist.name === pricelist_name
         );
-        var frontend_price = product.get_price(pricelist, quantity);
+        var frontend_price = product.get_price(
+            pricelist,
+            quantity,
+            0,
+            false,
+            product.product_variant_ids[0]
+        );
         const dp = posmodel.data.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"
         );
@@ -45,22 +51,22 @@ export function setUp() {
             content: "waiting for loading to finish",
             trigger: "body:not(:has(.pos-loader))", // Pos has finished loading
             run: function () {
-                var product_wall_shelf = posmodel.data.models["product.product"]
+                var product_wall_shelf = posmodel.data.models["product.template"]
                     .getAll()
                     .find((p) => p.display_name === "Wall Shelf Unit");
-                var product_small_shelf = posmodel.data.models["product.product"]
+                var product_small_shelf = posmodel.data.models["product.template"]
                     .getAll()
                     .find((p) => p.display_name === "Small Shelf");
-                var product_magnetic_board = posmodel.data.models["product.product"]
+                var product_magnetic_board = posmodel.data.models["product.template"]
                     .getAll()
                     .find((p) => p.display_name === "Magnetic Board");
-                var product_monitor_stand = posmodel.data.models["product.product"]
+                var product_monitor_stand = posmodel.data.models["product.template"]
                     .getAll()
                     .find((p) => p.display_name === "Monitor Stand");
-                var product_desk_pad = posmodel.data.models["product.product"]
+                var product_desk_pad = posmodel.data.models["product.template"]
                     .getAll()
                     .find((p) => p.display_name === "Desk Pad");
-                var product_letter_tray = posmodel.data.models["product.product"]
+                var product_letter_tray = posmodel.data.models["product.template"]
                     .getAll()
                     .find((p) => p.display_name === "Letter Tray");
 

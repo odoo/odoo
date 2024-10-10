@@ -108,7 +108,7 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
-    static props = ["product", "getPayload", "close"];
+    static props = ["productTemplate", "getPayload", "close"];
 
     setup() {
         useSubEnv({ attribute_components: [] });
@@ -116,7 +116,8 @@ export class ProductConfiguratorPopup extends Component {
         this.ui = useState(useService("ui"));
         this.inputArea = useRef("input-area");
         this.state = useState({
-            product: this.props.product,
+            productTemplate: this.props.productTemplate,
+            product: null,
             payload: this.env.attribute_components,
         });
 
@@ -151,9 +152,9 @@ export class ProductConfiguratorPopup extends Component {
         };
     }
     computeProductProduct() {
-        let product = this.props.product;
+        let product = null;
         const formattedPayload = this.computePayload();
-        const alwaysVariants = this.props.product.attribute_line_ids.every(
+        const alwaysVariants = this.props.productTemplate.attribute_line_ids.every(
             (line) => line.attribute_id.create_variant === "always"
         );
 
@@ -173,11 +174,11 @@ export class ProductConfiguratorPopup extends Component {
         this.state.product = product;
     }
     get imageUrl() {
-        const product = this.props.product;
+        const product = this.props.productTemplate;
         return `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
     }
     get unitPrice() {
-        return this.env.utils.formatCurrency(this.props.product.lst_price);
+        return this.env.utils.formatCurrency(this.props.productTemplate.list_price);
     }
     close() {
         this.props.close();
@@ -191,7 +192,7 @@ export class ProductConfiguratorPopup extends Component {
         if (variantAttributeValueIds.length === 0) {
             return false;
         }
-        return this.props.product._isArchivedCombination(variantAttributeValueIds);
+        return this.props.productTemplate._isArchivedCombination(variantAttributeValueIds);
     }
     getVariantAttributeValueIds() {
         const attribute_value_ids = [];

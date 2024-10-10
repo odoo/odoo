@@ -31,6 +31,14 @@ export class DataServiceOptions {
                     );
                 },
             },
+            "product.template": {
+                key: "id",
+                condition: (record) => {
+                    return !record["product_variant_ids"].find(
+                        (p) => p["<-pos.order.line.product_id"].length > 0
+                    );
+                },
+            },
             "product.attribute.custom.value": {
                 key: "id",
                 condition: (record) => {
@@ -48,7 +56,8 @@ export class DataServiceOptions {
         const indexes = {
             "pos.order": ["uuid"],
             "pos.order.line": ["uuid"],
-            "product.product": ["barcode", "pos_categ_ids", "write_date"],
+            "product.template": ["pos_categ_ids", "write_date"],
+            "product.product": ["barcode"],
             "account.fiscal.position": ["tax_ids"],
             "product.packaging": ["barcode"],
             "loyalty.program": ["trigger_product_ids"],
