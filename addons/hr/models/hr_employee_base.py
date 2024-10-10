@@ -36,7 +36,7 @@ class HrEmployeeBase(models.AbstractModel):
     work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
-    work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False)
+    work_contact_id = fields.Many2one('res.partner', 'Work Contact', compute="_compute_work_contact_id", store=True, copy=False)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', domain="[('address_id', '=', address_id)]")
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
@@ -195,6 +195,21 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.work_phone = employee.address_id.phone
             else:
                 employee.work_phone = False
+
+    @api.depends('user_id')
+    def _compute_work_contact_id(self):
+        for employee in self:
+            if not employee.user_id and employee.name:
+                existing_partner = employee.env['res.partner'].search([
+                    ('user_id', '=', False),
+                    ('employee_ids', '=', False),
+                    ('email', '=', employee.work_email),
+                    ('name', '=', employee.name),
+                    ], order='id asc', limit=1)
+                if existing_partner:
+                    employee.work_contact_id = existing_partner.id
+                else:
+                    employee._inverse_work_contact_details()
 
     @api.depends('work_contact_id', 'work_contact_id.mobile', 'work_contact_id.email')
     def _compute_work_contact_details(self):

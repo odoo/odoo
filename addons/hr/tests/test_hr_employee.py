@@ -231,6 +231,7 @@ class TestHrEmployee(TestHrCommon):
         employee_B.work_email = 'new_email@example.com'
         self.assertEqual(employee_A.work_email, 'employee_A@example.com')
         self.assertEqual(employee_B.work_email, 'new_email@example.com')
+        self.assertTrue(employee_A.work_contact_id.id)
 
     @users('admin')
     def test_change_user_on_employee(self):
