@@ -5,7 +5,7 @@
             <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper">
                 <div t-if="state.isImage" class="col p-2" style="max-width: 250px;">
                     <div class="input-group mb-1">
-                        <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                        <input name="o_linkpopover_url_img" t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
                         <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
                     </div>
                 </div>
@@ -15,7 +15,7 @@
                             <input t-ref="label" class="o_we_label_link form-control form-control-sm" t-model="state.label" title="Label" placeholder="Add a label for your link"/>
                         </div>
                         <div class="input-group mb-1">
-                            <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Paste or type your URL" t-on-keydown="onKeydownEnter"/>
+                            <input name="o_linkpopover_url" t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Paste or type your URL" t-on-keydown="onKeydownEnter"/>
                             <span class="ms-1" t-if="props.canUpload and !state.url">
                                 or <button class="btn btn-secondary btn-sm" t-on-click="uploadFile">Upload File</button>
                             </span>
