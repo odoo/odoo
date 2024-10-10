@@ -18,8 +18,7 @@ class TestMailComposer(MailCommon):
         cls.test_record = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Test',
         })
-        cls.body_html = """<div>
-    <h1>Hello sir!</h1>
+        cls.body_html = """<h1>Hello sir!</h1>
     <p>Here! <a href="https://www.example.com">
         <!--[if mso]>
             <i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i>
@@ -28,8 +27,7 @@ class TestMailComposer(MailCommon):
         <!--[if mso]>
             <i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i>
         <![endif]-->
-    </a> Make good use of it.</p>
-</div>"""
+    </a> Make good use of it.</p>"""
 
         cls.mail_template = cls.env['mail.template'].create({
             'auto_delete': True,

@@ -243,7 +243,7 @@ class TestMailTemplate(MailCommon):
 
         # malformed HTML (html_normalize should prevent the regex rendering on the malformed HTML)
         templates = (
-            ('''<p ou="<p t-out="object.name">"</p>''', '<p ou="&lt;p t-out=" object.name>"</p>'),
+            ('''<p ou="<p t-out="object.name">"</p>''', '<p ou="&lt;p t-out=" object.name="">"</p>'),
             ('''<p title="'<p t-out='object.name'/>">''', '''<p title="'&lt;p t-out='object.name'/&gt;"></p>'''),
         )
         o_render = self.env['mail.render.mixin']._render_template_qweb_regex

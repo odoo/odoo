@@ -849,14 +849,14 @@ class TestComposerInternals(TestMailComposer):
 
                 # 1. check without template + template update
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
-                    'body': '<p>Test Body <t t-out="record.name>/></p>',
+                    'body': '<p>Test Body <t t-out="record.name"/></p>',
                     'mail_server_id': self.mail_server_default.id,
                     'scheduled_date': '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
                     'subject': 'My amazing subject for {{ record.name }}',
                 })
 
                 # creation values are taken
-                self.assertEqual(composer.body, '<p>Test Body <t t-out="record.name>/></p>')
+                self.assertEqual(composer.body, '<p>Test Body <t t-out="record.name"/></p>')
                 self.assertEqual(composer.mail_server_id, self.mail_server_default)
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.record_name, self.test_record.name)
@@ -885,13 +885,13 @@ class TestComposerInternals(TestMailComposer):
 
                 # manual values is kept over template
                 composer.write({
-                    'body': '<p>Back to my amazing body <t t-out="record.name>/></p>',
+                    'body': '<p>Back to my amazing body <t t-out="record.name"/></p>',
                     'mail_server_id': self.mail_server_default.id,
                     'record_name': 'Manual update',
                     'scheduled_date': '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
                     'subject': 'Back to my amazing subject for {{ record.name }}',
                 })
-                self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name>/></p>')
+                self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"/></p>')
                 self.assertEqual(composer.mail_server_id, self.mail_server_default)
                 self.assertEqual(composer.record_name, 'Manual update')
                 self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
@@ -902,13 +902,13 @@ class TestComposerInternals(TestMailComposer):
                 composer.write({'template_id': template_void.id})
 
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name>/></p>')
+                    self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"/></p>')
                     self.assertEqual(composer.mail_server_id, self.mail_server_default)
                     self.assertEqual(composer.record_name, 'Manual update')
                     self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                     self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')
                 else:
-                    self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name>/></p>')
+                    self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"/></p>')
                     self.assertEqual(composer.mail_server_id, self.mail_server_default)
                     self.assertEqual(composer.record_name, 'Manual update')
                     self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
