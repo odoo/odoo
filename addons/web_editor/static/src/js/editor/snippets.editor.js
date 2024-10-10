@@ -3542,8 +3542,12 @@ var SnippetsMenu = Widget.extend({
                         // Some drop zones might have been disabled.
                         $el = $el.filter($dropZones);
                         if ($el.length) {
-                            $el.after($toInsert);
-                            dropped = true;
+                            // Prevent snippet from being dropped in an element not displayed.
+                            const display = $el[0].style.display;
+                            if (display && display != "none") {
+                                $el.after($toInsert);
+                                dropped = true;
+                            }
                         }
                     }
 
