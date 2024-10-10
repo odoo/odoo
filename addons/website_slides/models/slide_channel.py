@@ -152,6 +152,9 @@ class ChannelUsersRelation(models.Model):
         if uncompleted_records:
             uncompleted_records._post_completion_update_hook(completed=False)
 
+    def _process_attachments_for_post(self, *args, **kwargs):
+        return self.env['mail.thread']._process_attachments_for_post(*args, **kwargs)
+
     def unlink(self):
         """
         Override unlink method :
