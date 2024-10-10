@@ -724,4 +724,16 @@ QUnit.module("utils", {}, () => {
             "2023-01-22T00:00:00"
         );
     });
+
+    QUnit.test("formatDate, properly formats DateTime.fromISO dates, no matter the TimeZone", async (assert) => {
+        patchWithCleanup(localization, { dateFormat: "MM/dd/yyyy", });
+
+        const ISODateStr = "2024-10-15";
+
+        patchTimeZone(60);
+        assert.strictEqual(formatDate(DateTime.fromISO(ISODateStr)), "10/15/2024");
+
+        patchTimeZone(-60);
+        assert.strictEqual(formatDate(DateTime.fromISO(ISODateStr)), "10/15/2024");
+    })
 });
