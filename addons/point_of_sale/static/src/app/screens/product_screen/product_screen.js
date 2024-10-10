@@ -3,7 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, useState, reactive, onWillRender } from "@odoo/owl";
+import { Component, onMounted, useEffect, useState, reactive, onWillRender } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {
@@ -52,6 +52,7 @@ export class ProductScreen extends Component {
         this.state = useState({
             previousSearchWord: "",
             currentOffset: 0,
+            quantityByProductTmplId: {},
         });
         onMounted(() => {
             this.pos.openOpeningControl();
@@ -84,6 +85,18 @@ export class ProductScreen extends Component {
         this.numberBuffer.use({
             useWithBarcode: true,
         });
+
+        useEffect(
+            () => {
+                this.state.quantityByProductTmplId = this.currentOrder?.lines?.reduce((acc, ol) => {
+                    acc[ol.product_id.product_tmpl_id.id]
+                        ? (acc[ol.product_id.product_tmpl_id.id] += ol.qty)
+                        : (acc[ol.product_id.product_tmpl_id.id] = ol.qty);
+                    return acc;
+                }, {});
+            },
+            () => [this.currentOrder.totalQuantity]
+        );
     }
 
     getNumpadButtons() {
