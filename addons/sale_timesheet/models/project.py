@@ -394,7 +394,7 @@ class Project(models.Model):
         }
 
     def _get_profitability_aal_domain(self):
-        domain = ['|', ('project_id', 'in', self.ids), ('so_line', 'in', self._fetch_sale_order_item_ids())]
+        domain = ['|', ('project_id', 'in', self.ids), '&', ('project_id', '!=', False), ('so_line', 'in', self._fetch_sale_order_item_ids())]
         return expression.AND([
             super()._get_profitability_aal_domain(),
             domain,
