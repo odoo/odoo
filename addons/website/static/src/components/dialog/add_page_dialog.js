@@ -42,6 +42,11 @@ export class AddPageConfirmDialog extends Component {
     async addPage() {
         await this.props.createPage(this.state.name, this.state.addMenu);
     }
+
+    async validateOnEnter() {
+        await this.addPage();
+        this.props.close();
+    }
 }
 
 export class AddPageTemplateBlank extends Component {

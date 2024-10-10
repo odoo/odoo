@@ -5,7 +5,8 @@
         title.translate="New Page"
         primaryTitle.translate="Create"
         primaryClick="() => this.addPage()"
-        close="props.close">
+        close="props.close"
+        validateOnEnter.bind="validateOnEnter">
         <div class="row gy-4">
             <label class="col-form-label col-md-3">
                 Page Title
