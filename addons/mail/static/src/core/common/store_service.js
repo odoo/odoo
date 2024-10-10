@@ -571,7 +571,7 @@ export class Store extends BaseStore {
     }
 
     async joinChat(id, forceOpen = false) {
-        const data = await this.env.services.orm.call("discuss.channel", "channel_get", [], {
+        const data = await rpc("/discuss/channel/get_or_create_chat", {
             partners_to: [id],
             force_open: forceOpen,
         });

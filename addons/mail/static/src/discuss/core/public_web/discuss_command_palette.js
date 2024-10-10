@@ -3,6 +3,7 @@ import { cleanTerm } from "@mail/utils/common/format";
 import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useService } from "@web/core/utils/hooks";
@@ -74,7 +75,7 @@ class CreateChannelDialog extends Component {
             this.state.isInvalid = true;
             return;
         }
-        await makeNewChannel(name, this.orm, this.store);
+        await makeNewChannel(name, this.store);
         this.props.close();
     }
 }
@@ -111,11 +112,11 @@ commandSetupRegistry.add("@", {
     placeholder: _t("Search a conversation"),
 });
 
-async function makeNewChannel(name, orm, store) {
-    const data = await orm.call("discuss.channel", "channel_create", [
-        name,
-        store.internalUserGroupId,
-    ]);
+async function makeNewChannel(name, store) {
+    const data = await rpc("/discuss/channel/create_channel", {
+        name: name,
+        group_id: store.internalUserGroupId,
+    });
     const { Thread } = store.insert(data);
     const [channel] = Thread;
     channel.open();
@@ -254,7 +255,7 @@ export class DiscussCommandPalette {
                 action: async () => {
                     const name = this.options.searchValue.trim();
                     if (name) {
-                        makeNewChannel(name, this.orm, this.store);
+                        makeNewChannel(name, this.store);
                     } else {
                         this.dialog.add(CreateChannelDialog);
                     }
