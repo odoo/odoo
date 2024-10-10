@@ -11,7 +11,7 @@ class TestGuestFeature(WebsocketCase, MailCommon):
     def test_mark_as_read_as_guest(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         partner = self.env["res.partner"].create({"name": "John"})
-        channel = self.env["discuss.channel"].channel_create(
+        channel = self.env["discuss.channel"]._channel_create(
             group_id=None, name="General"
         )
         channel.add_members(guest_ids=[guest.id], partner_ids=[partner.id])
@@ -48,7 +48,7 @@ class TestGuestFeature(WebsocketCase, MailCommon):
 
     def test_subscribe_to_discuss_channel(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
-        channel = self.env["discuss.channel"].channel_create(
+        channel = self.env["discuss.channel"]._channel_create(
             group_id=None, name="General"
         )
         channel.add_members(guest_ids=[guest.id])

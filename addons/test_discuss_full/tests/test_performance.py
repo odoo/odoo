@@ -196,30 +196,30 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.env['discuss.channel'].sudo().search([('id', '!=', self.channel_general.id)]).unlink()
         self.user_root = self.env.ref('base.user_root')
         # create public channels
-        self.channel_channel_public_1 = Channel.channel_create(
+        self.channel_channel_public_1 = Channel._channel_create(
             name="public channel 1", group_id=None
         )
         self.channel_channel_public_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[4] + self.users[8]).partner_id.ids)
-        self.channel_channel_public_2 = Channel.channel_create(
+        self.channel_channel_public_2 = Channel._channel_create(
             name="public channel 2", group_id=None
         )
         self.channel_channel_public_2.add_members((self.users[0] + self.users[2] + self.users[4] + self.users[7] + self.users[9]).partner_id.ids)
         # create group-restricted channels
-        self.channel_channel_group_1 = Channel.channel_create(
+        self.channel_channel_group_1 = Channel._channel_create(
             name="group restricted channel 1", group_id=self.env.ref("base.group_user").id
         )
         self.channel_channel_group_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[6] + self.users[12]).partner_id.ids)
-        self.channel_channel_group_2 = Channel.channel_create(
+        self.channel_channel_group_2 = Channel._channel_create(
             name="group restricted channel 2", group_id=self.env.ref("base.group_user").id
         )
         self.channel_channel_group_2.add_members((self.users[0] + self.users[2] + self.users[6] + self.users[7] + self.users[13]).partner_id.ids)
         # create chats
-        self.channel_chat_1 = Channel.channel_get((self.users[0] + self.users[14]).partner_id.ids)
-        self.channel_chat_2 = Channel.channel_get((self.users[0] + self.users[15]).partner_id.ids)
-        self.channel_chat_3 = Channel.channel_get((self.users[0] + self.users[2]).partner_id.ids)
-        self.channel_chat_4 = Channel.channel_get((self.users[0] + self.users[3]).partner_id.ids)
+        self.channel_chat_1 = Channel._channel_get((self.users[0] + self.users[14]).partner_id.ids)
+        self.channel_chat_2 = Channel._channel_get((self.users[0] + self.users[15]).partner_id.ids)
+        self.channel_chat_3 = Channel._channel_get((self.users[0] + self.users[2]).partner_id.ids)
+        self.channel_chat_4 = Channel._channel_get((self.users[0] + self.users[3]).partner_id.ids)
         # create groups
-        self.channel_group_1 = Channel.create_group((self.users[0] + self.users[12]).partner_id.ids)
+        self.channel_group_1 = Channel._create_group((self.users[0] + self.users[12]).partner_id.ids)
         # create livechats
         self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
