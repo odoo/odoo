@@ -271,7 +271,7 @@ export class MassMailingHtmlField extends HtmlField {
      */
     _repositionMailingEditorSidebar() {
         const sidebar = document.querySelector("#oe_snippets");
-        if (!sidebar) {
+        if (!sidebar || this.env.inDialog) {
             return;
         } else if (!this._isFullScreen()) {
             const scrollableY = closestScrollableY(sidebar);
