@@ -22,6 +22,12 @@ class Company(models.Model):
         domain="[('model', '=', 'stock.picking')]",
         default=_default_confirmation_mail_template,
         help="Email sent to the customer once the order is done.")
+    stock_replenishment_info_periods = fields.Selection([
+        ('month', 'Monthly'),
+        ('year', 'Yearly'),
+    ], string='Stock Replenishment Info Periods',
+        default='year',
+        help="The stock replenishment info can be either ordered yearly or monthly")
     annual_inventory_month = fields.Selection([
         ('1', 'January'),
         ('2', 'February'),

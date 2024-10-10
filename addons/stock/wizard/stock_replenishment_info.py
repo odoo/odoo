@@ -6,7 +6,7 @@ from datetime import datetime, time
 
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.osv.expression import AND
-from odoo.tools import get_month, subtract, format_date
+from odoo.tools import get_month, subtract, format_date, get_fiscal_year
 
 
 class StockReplenishmentInfo(models.TransientModel):
@@ -19,6 +19,12 @@ class StockReplenishmentInfo(models.TransientModel):
     qty_to_order = fields.Float(related='orderpoint_id.qty_to_order')
     json_lead_days = fields.Char(compute='_compute_json_lead_days')
     json_replenishment_history = fields.Char(compute='_compute_json_replenishment_history')
+    periods = fields.Selection([
+        ('year', 'Yearly'),
+        ('month', 'Monthly'),
+    ], string='Stock replenishment info period',
+        default='year',
+        help="The stock replenishments infos can be either ordered monthly or yearly.")
 
     @api.depends('orderpoint_id')
     def _compute_json_lead_days(self):
@@ -46,12 +52,15 @@ class StockReplenishmentInfo(models.TransientModel):
 
     @api.depends('orderpoint_id')
     def _compute_json_replenishment_history(self):
+        period_setting = self.orderpoint_id.company_id.stock_replenishment_info_periods
+        today = fields.Datetime.now()
+        get_period = get_fiscal_year if period_setting == 'year' else get_month
+        group_period = "date:year" if period_setting == 'year' else "date:month"
+        start_period = subtract(today, year=2) if period_setting == 'year' else subtract(today, months=2)
         for replenishment_report in self:
             replenishment_history = []
-            today = fields.Datetime.now()
-            first_month = subtract(today, months=2)
-            date_from, dummy = get_month(first_month)
-            dummy, date_to = get_month(today)
+            date_from, dummy = get_period(start_period)
+            dummy, date_to = get_period(today)
             domain = [
                 ('product_id', '=', replenishment_report.product_id.id),
                 ('date', '>=', date_from),
@@ -59,19 +68,19 @@ class StockReplenishmentInfo(models.TransientModel):
                 ('state', '=', 'done'),
                 ('company_id', '=', replenishment_report.orderpoint_id.company_id.id)
             ]
-            quantity_by_month_out = self.env['stock.move'].read_group(
+            quantity_by_period_out = self.env['stock.move'].read_group(
                 AND([domain, [('location_dest_id.usage', '=', 'customer')]]),
-                ['date', 'product_qty'], ['date:month'])
-            quantity_by_month_returned = self.env['stock.move'].read_group(
+                ['date', 'product_qty'], [group_period])
+            quantity_by_period_returned = self.env['stock.move'].read_group(
                 AND([domain, [('location_id.usage', '=', 'customer')]]),
-                ['date', 'product_qty'], ['date:month'])
-            quantity_by_month_returned = {
-                g['date:month']: g['product_qty'] for g in quantity_by_month_returned}
-            for group in quantity_by_month_out:
-                month = group['date:month']
+                ['date', 'product_qty'], [group_period])
+            quantity_by_period_returned = {
+                g[group_period]: g['product_qty'] for g in quantity_by_period_returned}
+            for group in quantity_by_period_out:
+                period = group[group_period]
                 replenishment_history.append({
-                    'name': month,
-                    'quantity': group['product_qty'] - quantity_by_month_returned.get(month, 0),
+                    'name': period,
+                    'quantity': group['product_qty'] - quantity_by_period_returned.get(period, 0),
                     'uom_name': replenishment_report.product_id.uom_id.display_name,
                 })
             replenishment_report.json_replenishment_history = dumps({
