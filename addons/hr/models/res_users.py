@@ -36,6 +36,7 @@ HR_WRITABLE_FIELDS = [
     'address_id',
     'barcode',
     'birthday',
+    'birthday_public_display',
     'category_ids',
     'children',
     'coach_id',
@@ -123,6 +124,7 @@ class ResUsers(models.Model):
     passport_id = fields.Char(related='employee_id.passport_id', readonly=False, related_sudo=False)
     gender = fields.Selection(related='employee_id.gender', readonly=False, related_sudo=False)
     birthday = fields.Date(related='employee_id.birthday', readonly=False, related_sudo=False)
+    birthday_public_display = fields.Boolean(related='employee_id.birthday_public_display', readonly=False, related_sudo=False)
     place_of_birth = fields.Char(related='employee_id.place_of_birth', readonly=False, related_sudo=False)
     country_of_birth = fields.Many2one(related='employee_id.country_of_birth', readonly=False, related_sudo=False)
     marital = fields.Selection(related='employee_id.marital', readonly=False, related_sudo=False)

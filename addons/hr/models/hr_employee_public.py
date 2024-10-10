@@ -50,6 +50,7 @@ class HrEmployeePublic(models.Model):
     parent_id = fields.Many2one('hr.employee.public', 'Manager', readonly=True)
     coach_id = fields.Many2one('hr.employee.public', 'Coach', readonly=True)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
+    birthday_public_display_string = fields.Char("Public Date of Birth", related='employee_id.birthday_public_display_string')
 
     @api.depends_context('uid')
     @api.depends('parent_id')
