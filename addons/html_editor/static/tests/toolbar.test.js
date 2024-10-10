@@ -221,6 +221,7 @@ test("toolbar works: show the right font name", async () => {
     await waitFor(".o-we-toolbar");
     for (const item of fontItems) {
         await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+        await animationFrame();
         const name = item.name.toString();
         let selector = `.o_font_selector_menu .dropdown-item:contains('${name}')`;
         for (const tempItem of fontItems) {
@@ -234,8 +235,28 @@ test("toolbar works: show the right font name", async () => {
             }
         }
         await contains(selector).click();
+        await animationFrame();
         expect(".o-we-toolbar [name='font']").toHaveText(name);
     }
+});
+
+test("toolbar works: show the right font name after undo", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+
+    await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+    await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
+    expect(getContent(el)).toBe("<h2>[test]</h2>");
+    expect(".o-we-toolbar [name='font']").toHaveText("Header 2");
+    await press(["ctrl", "z"]);
+    await animationFrame();
+    expect(getContent(el)).toBe("<p>[test]</p>");
+    expect(".o-we-toolbar [name='font']").toHaveText("Normal");
+    await press(["ctrl", "y"]);
+    await animationFrame();
+    expect(getContent(el)).toBe("<h2>[test]</h2>");
+    expect(".o-we-toolbar [name='font']").toHaveText("Header 2");
 });
 
 test("toolbar works: can select font size", async () => {
