@@ -113,7 +113,24 @@
                 <t t-call="portal.portal_record_sidebar">
                     <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none me-lg-auto'"/>
                     <t t-set="title">
+                        <t t-set="amount" t-value="invoice.amount_residual if invoice.amount_residual > 0 else invoice.amount_total"/>
+                        <t t-set="is_eligible_for_early_payment_discount"
+                           t-value="invoice.invoice_date and invoice._is_eligible_for_early_payment_discount(invoice.currency_id, datetime.date.today())"/>
+
+                        <div t-if="is_eligible_for_early_payment_discount" class="alert alert-info" role="alert">
+                            An early payment discount is available for this invoice!
+                        </div>
                         <h2>
+                            <t t-if="is_eligible_for_early_payment_discount">
+                                <span t-esc="amount" t-attf-class="ms-1 h5" style="text-decoration: line-through; color: grey;" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                <span t-esc="invoice.line_ids.filtered(lambda aml: aml.display_type == 'payment_term').discount_amount_currency"
+                                      t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </t>
+                            <t t-else="1">
+                                <span t-esc="amount" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </t>
+                        </h2>
+                        <h2 t-if="0">
                             <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
                             <span t-else="1" t-field="invoice.amount_total"/>
                         </h2>
