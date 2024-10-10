@@ -182,7 +182,8 @@ class BaseAutomation(models.Model):
         string='Before Update Domain',
         compute='_compute_filter_pre_domain',
         readonly=False, store=True,
-        help="If present, this condition must be satisfied before the update of the record.")
+        help="If present, this condition must be satisfied before the update of the record. "
+             "Not checked on creation.")
     filter_domain = fields.Char(
         string='Apply on',
         help="If present, this condition must be satisfied before executing the automation rule.",
