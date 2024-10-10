@@ -63,6 +63,8 @@ const {
     Date,
     Error,
     ErrorEvent,
+    JSON: { parse: $parse, stringify: $stringify },
+    localStorage,
     Map,
     Math: { floor: $floor, max: $max },
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
@@ -87,8 +89,14 @@ const {
     TypeError,
     window,
 } = globalThis;
+/** @type {Storage["getItem"]} */
+const $getItem = localStorage.getItem.bind(localStorage);
 /** @type {Clipboard["readText"]} */
 const $readText = $clipboard?.readText.bind($clipboard);
+/** @type {Storage["setItem"]} */
+const $setItem = localStorage.setItem.bind(localStorage);
+/** @type {Storage["removeItem"]} */
+const $removeItem = localStorage.removeItem.bind(localStorage);
 /** @type {Clipboard["writeText"]} */
 const $writeText = $clipboard?.writeText.bind($clipboard);
 
@@ -1016,6 +1024,31 @@ export async function paste() {
 }
 
 /**
+ * @param {string} key
+ */
+export function storageGet(key) {
+    const value = $getItem(key);
+    if (value) {
+        try {
+            const parsed = $parse(value);
+            return parsed;
+        } catch (err) {
+            console.warn(`Couldn't parse value for storage key "${key}":`, err);
+            $removeItem(key);
+        }
+    }
+    return null;
+}
+
+/**
+ * @param {string} key
+ * @param {any} value
+ */
+export function storageSet(key, value) {
+    return $setItem(key, $stringify(value));
+}
+
+/**
  * @param {unknown} a
  * @param {unknown} b
  * @returns {boolean}
@@ -1390,4 +1423,10 @@ export const INCLUDE_LEVEL = {
     url: 1,
     tag: 2,
     preset: 3,
+};
+
+export const STORAGE = {
+    failed: "hoot-failed-tests",
+    scheme: "hoot-color-scheme",
+    searches: "hoot-latest-searches",
 };
