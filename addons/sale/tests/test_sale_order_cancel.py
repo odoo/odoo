@@ -33,7 +33,7 @@ class TestSaleOrderCancel(SaleCommon, TestSalesCommon):
         })
 
         self.assertEqual(cancel.subject, 'I can see 1 order(s)')
-        self.assertEqual(cancel.body, 'I can see 1 order(s)')
+        self.assertEqual(cancel.body, '<p>I can see 1 order(s)</p>')
 
     @users('user_sales_manager')
     def test_manager_record_rules(self):
@@ -43,4 +43,4 @@ class TestSaleOrderCancel(SaleCommon, TestSalesCommon):
         })
 
         self.assertEqual(cancel.subject, 'I can see 2 order(s)')
-        self.assertEqual(cancel.body, 'I can see 2 order(s)')
+        self.assertEqual(cancel.body, '<p>I can see 2 order(s)</p>')
