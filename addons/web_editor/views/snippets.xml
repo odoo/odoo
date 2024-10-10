@@ -435,7 +435,7 @@
             data-set-new-window="true" data-no-preview="true"/>
     </div>
 
-    <div data-js="FontawesomeTools" data-selector="span.fa, i.fa" data-exclude="[data-oe-xpath]">
+    <div data-js="FontawesomeTools" data-selector="span.fa, i.fa, img.to_icon" data-exclude="[data-oe-xpath]">
         <we-colorpicker string="Color"
                 title="Color"
                 data-select-style=""
@@ -467,7 +467,7 @@
 
     <t t-set="no_animations" t-value="False"/>
     <div data-js="ImageTools"
-         data-selector="img">
+         data-selector="img:not(.to_icon)">
         <div class="o_we_image_shape">
             <we-row string="Shape" class="o_we_full_row">
                 <we-select-pager data-name="shape_img_opt" class="o_we_fake_transparent_background">
