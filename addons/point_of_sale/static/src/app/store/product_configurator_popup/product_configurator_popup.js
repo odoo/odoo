@@ -191,6 +191,7 @@ export class ProductConfiguratorPopup extends Component {
         if (variantAttributeValueIds.length === 0) {
             return false;
         }
+        this.props.product._checkExclusions(variantAttributeValueIds);
         return this.props.product._isArchivedCombination(variantAttributeValueIds);
     }
     getVariantAttributeValueIds() {

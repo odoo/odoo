@@ -225,5 +225,40 @@ export class ProductProduct extends Base {
         }
         return false;
     }
+
+    _checkExclusions(attributeValueIds) {
+        if (!this._archived_combinations) {
+            return;
+        }
+        const excludedPTAV = new Set(); // ptav -> product template attribute value
+        this._archived_combinations.forEach((archivedCombination) => {
+            const ptavCommon = archivedCombination.filter((ptav) =>
+                attributeValueIds.includes(ptav)
+            );
+            if (
+                !!ptavCommon &&
+                attributeValueIds.length === archivedCombination.length &&
+                ptavCommon.length === attributeValueIds.length
+            ) {
+                // all attributes must be disabled from each other
+                archivedCombination.forEach((ptav) => excludedPTAV.add(ptav));
+            } else if (
+                !!ptavCommon &&
+                attributeValueIds.length === archivedCombination.length &&
+                ptavCommon.length === attributeValueIds.length - 1
+            ) {
+                // In this case we only need to disable the remaining ptav
+                const disablePTAV = archivedCombination.find(
+                    (ptav) => !attributeValueIds.includes(ptav)
+                );
+                excludedPTAV.add(disablePTAV);
+            }
+        });
+        this.attribute_line_ids.forEach((attribute_line) => {
+            attribute_line.product_template_value_ids.forEach((ptav) => {
+                ptav["excluded"] = excludedPTAV.has(ptav.id);
+            });
+        });
+    }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);
