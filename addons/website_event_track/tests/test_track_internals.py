@@ -6,7 +6,9 @@ from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
+from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.tests.common import users
 
 class TestTrackData(TestEventOnlineCommon):
@@ -94,6 +96,41 @@ class TestTrackData(TestEventOnlineCommon):
         self.assertEqual(
             new_track.contact_phone, customer.phone,
             'Track customer should take over existing contact phone value')
+
+    def test_prepare_calendar_values(self):
+        today = fields.Datetime.today()
+        event_id = self.env['event.event'].create({
+            'name': 'TestEvent',
+            'date_begin': today + timedelta(days=1),
+            'date_end': today + timedelta(days=15),
+            'website_menu': True,
+            'community_menu': True,
+            'date_tz': 'Asia/Calcutta',
+            'website_track': True,
+            'is_published': True,
+            'website_track_proposal': True,
+            'track_ids': [
+            (0, 0, {
+                'name': 'Portfolio Status & Strategy',
+                'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
+                'date': today + timedelta(days=2),
+                'duration': 50,
+            })],
+        })
+
+        self.assertTrue(event_id.website_menu)
+        self.assertTrue(event_id.is_published)
+
+        with MockRequest(self.env):
+            track_data = EventTrackController()._prepare_calendar_values(event_id)
+            tracks = event_id.track_ids
+            track_days = track_data['days']
+            track_start_date = tracks.date.date()
+
+            # compare track start day
+            self.assertEqual(track_days[0], track_start_date, 'Track start day')
+            # compare track end day
+            self.assertEqual(track_days[-1], track_start_date + timedelta(hours=tracks.duration), 'Track end day')
 
 class TestTrackSuggestions(TestEventOnlineCommon):
 
