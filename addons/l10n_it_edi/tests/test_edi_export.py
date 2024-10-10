@@ -494,3 +494,28 @@ class TestItEdiExport(TestItEdi):
         })
         invoice.action_post()
         self._assert_export_invoice(invoice, 'export_foreign_currency_global_discount.xml')
+
+    def test_invoice_document_type(self):
+        '''Test document type will be TD01 for physical products and TD06 for services
+        '''
+        for (product_type, document_type) in (('consu', 'TD01'), ('service', 'TD06')):
+            product = self.env['product.product'].create({
+                'name': 'service product',
+                'detailed_type': product_type,
+                'list_price': 50.0,
+            })
+
+            invoice = self.env['account.move'].with_company(self.company).create({
+                'move_type': 'out_invoice',
+                'invoice_date': '2022-03-24',
+                'invoice_date_due': '2022-03-24',
+                'partner_id': self.italian_partner_a.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': product.id,
+                        'tax_ids': [Command.set(self.default_tax.ids)],
+                    }),
+                ],
+            })
+            invoice.action_post()
+            self.assertEqual(invoice.l10n_it_document_type.code, document_type, "Document type is incorrect")
