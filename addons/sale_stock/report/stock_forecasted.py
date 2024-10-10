@@ -31,7 +31,7 @@ class ReplenishmentReport(models.AbstractModel):
     def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
         res = super()._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids)
         domain = self._product_sale_domain(product_template_ids, product_variant_ids)
-        so_lines = self.env['sale.order.line'].search(domain)
+        so_lines = self.env['sale.order.line'].sudo().search(domain)
         out_sum = 0
         if so_lines:
             product_uom = so_lines[0].product_id.uom_id
