@@ -490,9 +490,28 @@ class AccountMoveLine(models.Model):
             else:
                 line.currency_id = line.currency_id or line.company_id.currency_id
 
-    @api.depends('product_id', 'move_id.ref')
+    @api.depends('product_id', 'move_id.ref', 'move_id.payment_reference')
     def _compute_name(self):
-        term_by_move = (self.move_id.line_ids | self).filtered(lambda l: l.display_type == 'payment_term').sorted(lambda l: l.date_maturity if l.date_maturity else date.max).grouped('move_id')
+        def get_name(line):
+            values = []
+            if line.partner_id.lang:
+                product = line.product_id.with_context(lang=line.partner_id.lang)
+            else:
+                product = line.product_id
+            if not product:
+                return False
+
+            if line.journal_id.type == 'sale':
+                values.append(product.display_name)
+                if product.description_sale:
+                    values.append(product.description_sale)
+            elif line.journal_id.type == 'purchase':
+                values.append(product.display_name)
+                if product.description_purchase:
+                    values.append(product.description_purchase)
+            return '\n'.join(values)
+
+        term_by_move = (self.move_id.line_ids | self).filtered(lambda l: l.display_type == 'payment_term').sorted(lambda l: l.date_maturity or date.max).grouped('move_id')
         for line in self.filtered(lambda l: l.move_id.inalterable_hash is False):
             if line.display_type == 'payment_term':
                 term_lines = term_by_move.get(line.move_id, self.env['account.move.line'])
@@ -505,24 +524,16 @@ class AccountMoveLine(models.Model):
                 if n_terms > 1:
                     index = term_lines._ids.index(line.id) if line in term_lines else len(term_lines)
                     name = _('%(name)s installment #%(number)s', name=name, number=index + 1).lstrip()
-                line.name = name
+                if n_terms > 1 or not line.name or line._origin.name == line._origin.move_id.payment_reference or (
+                    line._origin.move_id.payment_reference and line._origin.move_id.ref
+                    and line._origin.name == f'{line._origin.move_id.ref} - {line._origin.move_id.payment_reference}'
+                ):
+                    line.name = name
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
-            if line.partner_id.lang:
-                product = line.product_id.with_context(lang=line.partner_id.lang)
-            else:
-                product = line.product_id
 
-            values = []
-            if line.journal_id.type == 'sale':
-                values.append(product.display_name)
-                if product.description_sale:
-                    values.append(product.description_sale)
-            elif line.journal_id.type == 'purchase':
-                values.append(product.display_name)
-                if product.description_purchase:
-                    values.append(product.description_purchase)
-            line.name = '\n'.join(values)
+            if not line.name or line._origin.name == get_name(line._origin):
+                line.name = get_name(line)
 
     def _compute_account_id(self):
         term_lines = self.filtered(lambda line: line.display_type == 'payment_term')
