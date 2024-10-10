@@ -24,10 +24,8 @@ class TestMessageReactionController(MailControllerReactionCommon):
 
     def test_message_reaction_channel_as_member(self):
         """Test access of message reaction for a channel as member."""
-        channel = self.env["discuss.channel"].browse(
-            self.env["discuss.channel"].create_group(
-                partners_to=(self.user_portal + self.user_employee).partner_id.ids
-            )["id"]
+        channel = self.env["discuss.channel"]._create_group(
+            partners_to=(self.user_portal + self.user_employee).partner_id.ids
         )
         channel.add_members(guest_ids=self.guest.ids)
         message = channel.message_post(body="invite message")
@@ -44,9 +42,7 @@ class TestMessageReactionController(MailControllerReactionCommon):
 
     def test_message_reaction_channel_as_non_member(self):
         """Test access of message reaction for a channel as non-member."""
-        channel = self.env["discuss.channel"].browse(
-            self.env["discuss.channel"].create_group(partners_to=[])["id"]
-        )
+        channel = self.env["discuss.channel"]._create_group(partners_to=[])
         message = channel.message_post(body="private message")
         self._execute_subtests(
             message,

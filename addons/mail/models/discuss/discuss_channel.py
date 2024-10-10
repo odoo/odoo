@@ -1034,9 +1034,9 @@ class DiscussChannel(models.Model):
         store.add_records_fields(self, fields)
 
     # User methods
+
     @api.model
-    @api.returns("self", lambda channels: Store(channels).get_result())
-    def channel_get(self, partners_to, pin=True, force_open=False):
+    def _get_or_create_chat(self, partners_to, pin=True, force_open=False):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
             only the given partners.
@@ -1175,8 +1175,7 @@ class DiscussChannel(models.Model):
         self.add_members(self.env.user.partner_id.ids)
 
     @api.model
-    @api.returns("self", lambda channels: Store(channels).get_result())
-    def channel_create(self, name, group_id):
+    def _create_channel(self, name, group_id):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
             :param name : the name of the channel to create
@@ -1197,8 +1196,7 @@ class DiscussChannel(models.Model):
         return new_channel
 
     @api.model
-    @api.returns("self", lambda channels: Store(channels).get_result())
-    def create_group(self, partners_to, default_display_mode=False, name=''):
+    def _create_group(self, partners_to, default_display_mode=False, name=''):
         """ Creates a group channel.
 
             :param partners_to : list of res.partner ids to add to the conversation

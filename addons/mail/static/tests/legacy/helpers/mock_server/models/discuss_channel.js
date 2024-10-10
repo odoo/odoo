@@ -53,9 +53,9 @@ patch(MockServer.prototype, {
             const ids = args.args[0];
             return this._mockDiscussChannelChannelFetched(ids);
         }
-        if (args.model === "discuss.channel" && args.method === "channel_create") {
-            const name = args.args[0];
-            const groupId = args.args[1];
+        if (route === "/discuss/channel/create_channel") {
+            const name = args.name;
+            const groupId = args.groupId;
             return this._mockDiscussChannelChannelCreate(name, groupId);
         }
         if (args.model === "discuss.channel" && args.method === "set_message_pin") {
@@ -65,20 +65,10 @@ patch(MockServer.prototype, {
                 args.kwargs.pinned
             );
         }
-        if (args.model === "discuss.channel" && args.method === "channel_get") {
-            const partners_to = args.args[0] || args.kwargs.partners_to;
-            const pin =
-                args.args[1] !== undefined
-                    ? args.args[1]
-                    : args.kwargs.pin !== undefined
-                    ? args.kwargs.pin
-                    : undefined;
-            const force_open =
-                args.args[2] !== undefined
-                    ? args.args[2]
-                    : args.kwargs.force_open !== undefined
-                    ? args.kwargs.force_open
-                    : undefined;
+        if (route === "/discuss/channel/get_or_create_chat") {
+            const partners_to = args.partners_to;
+            const pin = args.pin || undefined;
+            const force_open = args.force_open || undefined;
             return this._mockDiscussChannelChannelGet(partners_to, pin, force_open);
         }
         if (route === "/discuss/channel/info") {
@@ -119,8 +109,8 @@ patch(MockServer.prototype, {
             const name = args.args[1] || args.kwargs.name;
             return this._mockDiscussChannelChannelSetCustomName(ids, name);
         }
-        if (args.model === "discuss.channel" && args.method === "create_group") {
-            const partners_to = args.args[0] || args.kwargs.partners_to;
+        if (route === "/discuss/channel/create_group") {
+            const partners_to = args.partners_to;
             return this._mockDiscussChannelCreateGroup(partners_to);
         }
         if (args.model === "discuss.channel" && args.method === "execute_command_leave") {
