@@ -1204,3 +1204,50 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             })],
         })
         self.assertTrue(bom)
+
+    def test_kit_price_without_rounding(self):
+        warehouse = self.warehouse
+        buy_route = warehouse.buy_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time'
+        })
+
+        prod, compo = self.env['product.product'].create([{
+        'name': name,
+        'type': 'product',
+        'categ_id': avco_category.id,
+        'route_ids': [(4, route_id)],
+        } for name, route_id in [('product a', manufacture_route.id), ('component a', buy_route.id)]])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': prod.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': compo.id,
+                'product_qty': 12,
+            })]
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        partner = self.env['res.partner'].create({'name': 'Testy'})
+        po_form.partner_id = partner
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = prod
+            pol_form.product_qty = 1
+            pol_form.price_unit = 100
+            pol_form.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.button_validate()
+        move = receipt.move_ids[0]
+        # the price unit for 1 unit of the kit is 100
+        # calculating the unit cost per component: 100 / 12 = 8.33333333333
+        # total cost for 12 components: 8.33 * 12 = 99.96
+        # however, due to rounding differences, the expected value is 100
+        svl_val = self.env['stock.valuation.layer'].search([('stock_move_id', '=', move.id)]).value
+        self.assertEqual(svl_val, 100)
