@@ -196,6 +196,9 @@ export class SelectionPlugin extends Plugin {
             if (this.fixSelectionOnEditableRoot(this.activeSelection)) {
                 return;
             }
+            if (this._fixSelectionInEmptyDiv(this.activeSelection)) {
+                return;
+            }
         }
         this.dispatchTo("selectionchange_handlers", selectionData);
     }
@@ -790,5 +793,24 @@ export class SelectionPlugin extends Plugin {
         if (selection) {
             selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
         }
+    }
+
+    _fixSelectionInEmptyDiv(selection) {
+        if (
+            selection.isCollapsed &&
+            selection.anchorNode &&
+            selection.anchorNode.nodeName === "DIV" &&
+            selection.anchorNode.innerHTML.trim() === "" &&
+            selection.anchorNode.classList.contains("oe_structure") &&
+            this.isSelectionInEditable(selection)
+        ) {
+            const p = this.document.createElement("p");
+            const br = this.document.createElement("br");
+            p.appendChild(br);
+            selection.anchorNode.appendChild(p);
+            this.setSelection({ anchorNode: p, anchorOffset: 0 });
+            return true;
+        }
+        return false;
     }
 }
