@@ -31,9 +31,11 @@ class StockValuationLayer(models.Model):
     description = fields.Char('Description', readonly=True)
     stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked To', readonly=True, check_company=True, index=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
+    #TODO : ids
     stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True, index=True)
     account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True, index="btree_not_null")
     account_move_line_id = fields.Many2one('account.move.line', 'Invoice Line', readonly=True, check_company=True, index="btree_not_null")
+    #TODO : update (multiple move_ids)
     reference = fields.Char(related='stock_move_id.reference')
     price_diff_value = fields.Float('Invoice value correction with invoice currency')
     warehouse_id = fields.Many2one('stock.warehouse', string="Receipt WH", compute='_compute_warehouse_id', search='_search_warehouse_id')
@@ -42,8 +44,25 @@ class StockValuationLayer(models.Model):
     def init(self):
         tools.create_index(
             self._cr, 'stock_valuation_layer_index',
-            self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
+            self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date'] #TODO
         )
+
+    def _compute_warehouse_id(self):
+        for svl in self:
+            if svl.stock_move_id.location_id.usage == "internal":
+                svl.warehouse_id = svl.stock_move_id.location_id.warehouse_id.id
+            else:
+                svl.warehouse_id = svl.stock_move_id.location_dest_id.warehouse_id.id
+
+    def _search_warehouse_id(self, operator, value):
+        layer_ids = self.search([
+            '|',
+            ('stock_move_id.location_dest_id.warehouse_id', operator, value),
+            '&',
+            ('stock_move_id.location_id.usage', '=', 'internal'),
+            ('stock_move_id.location_id.warehouse_id', operator, value),
+        ]).ids
+        return [('id', 'in', layer_ids)]
 
     def _compute_warehouse_id(self):
         for svl in self:
@@ -70,9 +89,9 @@ class StockValuationLayer(models.Model):
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue
-            move = svl.stock_move_id
+            move = svl.stock_move_id    #TODO : batch move
             if not move:
-                move = svl.stock_valuation_layer_id.stock_move_id
+                move = svl.stock_valuation_layer_id.stock_move_id #TODO : batch move
             am_vals += move.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
@@ -81,6 +100,7 @@ class StockValuationLayer(models.Model):
             move = svl.stock_move_id
             product = svl.product_id
             if svl.company_id.anglo_saxon_accounting:
+                #TODO : for loop, batch
                 move._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
             for aml in (move | move.origin_returned_move_id)._get_all_related_aml():
                 if aml.reconciled or aml.move_id.state != "posted" or not aml.account_id.reconcile:
@@ -91,6 +111,7 @@ class StockValuationLayer(models.Model):
 
     def _validate_analytic_accounting_entries(self):
         for svl in self:
+            #TODO : batch
             svl.stock_move_id._account_analytic_entry_move()
 
     def action_open_journal_entry(self):
@@ -124,6 +145,7 @@ class StockValuationLayer(models.Model):
 
     def action_open_reference(self):
         self.ensure_one()
+        #TODO : move_ids + List view ?
         if self.stock_move_id:
             action = self.stock_move_id.action_open_reference()
             if action['res_model'] != 'stock.move':

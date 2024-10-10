@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter, defaultdict
+from typing import Collection
 
 from odoo import _, api, fields, tools, models, Command
 from odoo.exceptions import UserError, ValidationError
@@ -306,9 +307,12 @@ class StockMoveLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        #2 read_group -> (move_id : company_id) & (picking_id: company_id)
         for vals in vals_list:
+            # if not vals.get('company_id'):
             if vals.get('move_id'):
-                vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
+                # vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id  # FIXME : 22% o.O
+                vals['company_id'] = self.env['stock.move'].search_fetch([('id', '=', vals['move_id'])], ['company_id']).id
             elif vals.get('picking_id'):
                 vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
             if vals.get('move_id') and 'picked' not in vals:
@@ -316,10 +320,10 @@ class StockMoveLine(models.Model):
             if vals.get('quant_id'):
                 vals.update(self._copy_quant_info(vals))
 
-        mls = super().create(vals_list)
+        mls = super().create(vals_list)  # FIXME : 20 %
 
         def create_move(move_line):
-            new_move = self.env['stock.move'].create(move_line._prepare_stock_move_vals())
+            new_move = self.env['stock.move'].create(move_line._prepare_stock_move_vals())  # FIXME : WHUUUUT ! Called in a loop ò.ó
             move_line.move_id = new_move.id
 
         # If the move line is directly create on the picking view.
