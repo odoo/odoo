@@ -114,6 +114,13 @@ class IrQWeb(models.AbstractModel):
     def _get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
         return AssetsBundleMultiWebsite(xmlid, files, env=env)
 
+    def _get_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+        website = self.env['website'].get_current_website(fallback=False)
+        self_website = self
+        if website:
+            self_website = self.with_context(website_id=website.id)
+        return super(IrQWeb, self_website)._get_asset_nodes(bundle, css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load, media=media)
+
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):
             return atts
