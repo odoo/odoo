@@ -328,37 +328,16 @@
             <xpath expr="//field[@name='name']" position="after">
                 <field name="project_partner_id" column_invisible="True"/>
                 <field name="allow_billable" column_invisible="True"/>
-                <field name="sale_line_id" optional="hide" options="{'no_open': True}" placeholder="Non-billable" readonly="1" groups="!sales_team.group_sale_salesman"/>
-                <field name="sale_line_id" optional="hide" options="{'no_create': True}" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
-                <field name="quantity_percentage" string="Quantity (%)" optional="hide" widget="percentage" groups="!sales_team.group_sale_salesman"/>
-                <field name="quantity_percentage" string="Quantity (%)" optional="hide" widget="percentage" readonly="0" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" options="{'no_open': True}" placeholder="Non-billable" readonly="1" groups="!sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" options="{'no_create': True}" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
+                <field name="quantity_percentage" string="Quantity (%)" widget="percentage" groups="!sales_team.group_sale_salesman"/>
+                <field name="quantity_percentage" string="Quantity (%)" widget="percentage" readonly="0" groups="sales_team.group_sale_salesman"/>
                 <field name="product_uom_qty" optional="hide" groups="!sales_team.group_sale_salesman" readonly="1"/>
                 <field name="product_uom_qty" optional="hide" groups="sales_team.group_sale_salesman"/>
             </xpath>
             <xpath expr="//button[@name='action_view_tasks']" position="after">
                 <button name="action_view_sale_order" type="object" string="View Sales Order"
                     class="btn btn-link float-end" invisible="not sale_line_id"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="sale_project_milestone_view_tree" model="ir.ui.view">
-        <field name="name">project.milestone.view.list.inherit</field>
-        <field name="model">project.milestone</field>
-        <field name="inherit_id" ref="sale_project.project_milestone_view_tree"/>
-        <field name="mode">primary</field>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='sale_line_id'][1]" position="attributes">
-                <attribute name="optional">show</attribute>
-            </xpath>
-            <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
-                <attribute name="optional">show</attribute>
-            </xpath>
-            <xpath expr="//field[@name='quantity_percentage'][1]" position="attributes">
-                <attribute name="optional">show</attribute>
-            </xpath>
-            <xpath expr="//field[@name='quantity_percentage'][2]" position="attributes">
-                <attribute name="optional">show</attribute>
             </xpath>
         </field>
     </record>
@@ -382,6 +361,23 @@
         <field name="arch" type="xml">
             <xpath expr="//group//field[@name='project_id']" position="attributes">
                 <attribute name="domain">[('allow_billable', '=', True), ('type_ids', 'in', context['default_stage_id'])] if context.get('default_stage_id') else []</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_milestone_view_kanban_inherit_sale_project" model="ir.ui.view">
+        <field name="name">project.milestone.view.kanban.inherit</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="project.project_milestone_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="is_deadline_exceeded" position="after">
+                <field name="quantity_percentage"/>
+            </field>
+            <xpath expr="//field[@name='name']" position="after">
+                <t t-if="record.sale_line_display_name.raw_value and record.quantity_percentage.raw_value">
+                    <field name="sale_line_display_name"/>(
+                    <field name="quantity_percentage" widget="percentage" class="d-contents"/>)
+                </t>
             </xpath>
         </field>
     </record>
