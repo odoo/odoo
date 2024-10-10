@@ -20,3 +20,4 @@ class TestSnippets(odoo.tests.HttpCase):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
         self.start_tour("/?enable_editor=1", "donation_snippet_edition", login='admin')
+        self.start_tour("/", "donation_snippet_use")
