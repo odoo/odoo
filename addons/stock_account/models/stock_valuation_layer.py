@@ -4,6 +4,7 @@
 from odoo import api, fields, models, tools
 from odoo.tools import float_compare, float_is_zero
 
+from itertools import chain
 from collections import defaultdict
 
 
@@ -59,10 +60,12 @@ class StockValuationLayer(models.Model):
             account_moves._post()
         for svl in self:
             move = svl.stock_move_id
+            returned_move = move.origin_returned_move_id
+            prefetch_ids = chain(move._prefetch_ids, returned_move._prefetch_ids)
             product = svl.product_id
             if svl.company_id.anglo_saxon_accounting:
                 move._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
-            for aml in (move | move.origin_returned_move_id)._get_all_related_aml():
+            for aml in (move | returned_move).with_prefetch(prefetch_ids)._get_all_related_aml():
                 if aml.reconciled or aml.move_id.state != "posted" or not aml.account_id.reconcile:
                     continue
                 aml_to_reconcile[(product, aml.account_id)].add(aml.id)
