@@ -514,7 +514,7 @@ class StockQuant(models.Model):
         quants_already_set = self.filtered(lambda quant: quant.inventory_quantity_set)
         if quants_already_set:
             ctx = dict(self.env.context or {}, default_quant_ids=self.ids)
-            view = self.env.ref('stock.inventory_warning_set_view', False)
+            view = self.env.ref('stock.inventory_warning_set_view', raise_if_not_found=False)
             return {
                 'name': _('Quantities Already Set'),
                 'type': 'ir.actions.act_window',
@@ -533,7 +533,7 @@ class StockQuant(models.Model):
     def action_apply_all(self):
         quant_ids = self.env['stock.quant'].search(self.env.context['active_domain']).ids
         ctx = dict(self.env.context or {}, default_quant_ids=quant_ids)
-        view = self.env.ref('stock.stock_inventory_adjustment_name_form_view', False)
+        view = self.env.ref('stock.stock_inventory_adjustment_name_form_view', raise_if_not_found=False)
         return {
             'name': _('Inventory Adjustment Reference / Reason'),
             'type': 'ir.actions.act_window',
@@ -545,7 +545,7 @@ class StockQuant(models.Model):
 
     def action_reset(self):
         ctx = dict(self.env.context or {}, default_quant_ids=self.ids)
-        view = self.env.ref('stock.inventory_warning_reset_view', False)
+        view = self.env.ref('stock.inventory_warning_reset_view', raise_if_not_found=False)
         return {
             'name': _('Quantities To Reset'),
             'type': 'ir.actions.act_window',
@@ -1289,7 +1289,7 @@ class StockQuant(models.Model):
                            _('This analysis gives you an overview of the current stock level of your products.')),
         }
 
-        target_action = self.env.ref('stock.dashboard_open_quants', False)
+        target_action = self.env.ref('stock.dashboard_open_quants', raise_if_not_found=False)
         if target_action:
             action['id'] = target_action.id
 

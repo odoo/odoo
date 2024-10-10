@@ -85,7 +85,7 @@ class Company(models.Model):
 
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):
-            paperformat_euro = self.env.ref('base.paperformat_euro', False)
+            paperformat_euro = self.env.ref('base.paperformat_euro', raise_if_not_found=False)
             if paperformat_euro:
                 company.write({'paperformat_id': paperformat_euro.id})
         sup = super(Company, self)

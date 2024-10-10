@@ -17,11 +17,11 @@ class TestProjectStagesMulticompany(TestMultiCompanyProject):
             'company_id': cls.company_a.id,
             'company_ids': [(4, cls.company_a.id), (4, cls.company_b.id)],
             'groups_id':
-                [(6, 0, [
-                    cls.env.ref('base.group_user').id,
-                    cls.env.ref('project.group_project_stages').id,
-                    cls.env.ref('project.group_project_manager').id,
-                ])]
+                [(6, 0, cls.env.ref(
+                    'base.group_user',
+                    'project.group_project_stages',
+                    'project.group_project_manager',
+                ).ids)]
         })
         cls.stage_company_a, cls.stage_company_b, cls.stage_company_none = cls.env['project.project.stage'].create([{
             'name': 'Stage Company A',
