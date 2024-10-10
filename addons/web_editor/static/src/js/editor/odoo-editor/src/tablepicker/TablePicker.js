@@ -84,6 +84,10 @@ export class TablePicker extends EventTarget {
         this.el.style.display = 'none';
     }
 
+    visible() {
+        return this.el.style.display === 'none';
+    }
+
     reset() {
         this.rowNumber = this.options.minRowCount;
         this.colNumber = this.options.minColCount;
