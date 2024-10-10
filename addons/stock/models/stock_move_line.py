@@ -268,7 +268,11 @@ class StockMoveLine(models.Model):
                     smls.package_level_id.location_dest_id = smls.location_dest_id
             else:
                 for sml in smls:
-                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls)._get_putaway_strategy(
+                    if self.env.context.get('prefer_move_line_location'):
+                        location_dest = sml.location_dest_id
+                    else:
+                        location_dest = sml.move_id.location_dest_id
+                    putaway_loc_id = location_dest.with_context(exclude_sml_ids=excluded_smls)._get_putaway_strategy(
                         sml.product_id, quantity=sml.quantity, packaging=sml.move_id.product_packaging_id,
                     )
                     if putaway_loc_id != sml.location_dest_id:
