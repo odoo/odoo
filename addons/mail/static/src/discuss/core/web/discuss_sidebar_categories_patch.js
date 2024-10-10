@@ -70,6 +70,7 @@ const DiscussSidebarCategoryPatch = {
                 type: "ir.actions.act_window",
                 res_model: "discuss.channel",
                 views: [
+                    [false, "list"],
                     [false, "kanban"],
                     [false, "form"],
                 ],
