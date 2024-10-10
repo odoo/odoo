@@ -45,7 +45,7 @@
                 <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap">
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                         <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
-                        <small class="o_facet_value" t-esc="facetValue"/>
+                        <small class="o_facet_value" t-esc="facetValue" t-att-title="facetValue"/>
                     </t>
                     <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none"
                         role="button"
