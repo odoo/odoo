@@ -19,6 +19,7 @@ export class MOListViewDropdown extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+        this.notification = useService("notification");
         this.state = useState({
             state: this.props.record.data.state,
         });
@@ -56,8 +57,14 @@ export class MOListViewDropdown extends Component {
             ids = [this.props.record.resId];
         }
 
-        await this.orm.call("mrp.workorder", "action_mark_as_done", [ids]);
-        await this.reload();
+        if (ids.includes(false)) {
+            this.notification.add("Please save your changes before marking as done.", {
+                type: "danger",
+            });
+        } else {
+            await this.orm.call("mrp.workorder", "action_mark_as_done", [ids]);
+            await this.reload();
+        }
     }
 
     async printWO() {
