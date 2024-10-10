@@ -1,8 +1,8 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { Test } from "../core/test";
 import { refresh, subscribeToURLParams } from "../core/url";
+import { STORAGE, storageSet } from "../hoot_utils";
 import { HootLink } from "./hoot_link";
 
 /**
@@ -37,8 +37,12 @@ export class HootButtons extends Component {
     static props = {};
 
     static template = xml`
-        <div class="${HootButtons.name} flex rounded gap-px overflow-hidden">
+        <div class="${HootButtons.name} relative">
             <t t-set="isRunning" t-value="runnerState.status === 'running'" />
+            <t t-set="showAll" t-value="env.runner.hasFilter" />
+            <t t-set="showFailed" t-value="runnerState.failedIds.size" />
+            <t t-set="failedSuites" t-value="getFailedSuiteIds()" />
+            <div class="flex rounded gap-px overflow-hidden">
             <button
                 class="flex items-center bg-btn gap-2 px-2 py-1 transition-colors"
                 t-on-click="onRunClick"
@@ -46,22 +50,47 @@ export class HootButtons extends Component {
                 t-att-disabled="state.disable"
             >
                 <i t-attf-class="fa fa-{{ isRunning ? 'stop' : 'play' }}" />
-                <span class="hidden sm:inline" t-esc="isRunning ? 'Stop' : 'Run'" />
+                <span t-esc="isRunning ? 'Stop' : 'Run'" />
             </button>
-            <t t-if="state.failed.length">
-                <HootLink
-                    type="'test'"
-                    id="state.failed"
-                    class="'bg-btn px-2 py-1 transition-colors animate-slide-left'"
-                    title="'Run failed tests'"
+            <t t-if="showAll or showFailed">
+                <button
+                    class="bg-btn px-2 py-1 transition-colors animate-slide-left"
+                    t-on-click="() => state.open = !state.open"
                 >
-                    Run failed
-                </HootLink>
+                    <i class="fa fa-caret-down" />
+                </button>
             </t>
-            <t t-if="env.runner.hasFilter">
-                <HootLink class="'bg-btn px-2 py-1 transition-colors animate-slide-left'">
-                    Run all
-                </HootLink>
+            </div>
+            <t t-if="state.open">
+                <div
+                    class="animate-slide-down w-fit absolute flex flex-col end-0 shadow rounded overflow-hidden shadow z-2"
+                >
+                    <t t-if="showAll">
+                        <HootLink class="'bg-btn p-2 whitespace-nowrap transition-colors'">
+                            Run <strong>all</strong> tests
+                        </HootLink>
+                    </t>
+                    <t t-if="showFailed">
+                        <HootLink
+                            type="'test'"
+                            id="runnerState.failedIds"
+                            class="'bg-btn p-2 whitespace-nowrap transition-colors'"
+                            title.translate="Run failed tests"
+                            onClick="onRunFailedClick"
+                        >
+                            Run failed <strong>tests</strong>
+                        </HootLink>
+                        <HootLink
+                            type="'suite'"
+                            id="failedSuites"
+                            class="'bg-btn p-2 whitespace-nowrap transition-colors'"
+                            title.translate="Run failed suites"
+                            onClick="onRunFailedClick"
+                        >
+                            Run failed <strong>suites</strong>
+                        </HootLink>
+                    </t>
+                </div>
             </t>
         </div>
     `;
@@ -70,18 +99,24 @@ export class HootButtons extends Component {
         const { runner } = this.env;
         this.state = useState({
             disable: false,
-            failed: [],
+            open: false,
         });
         this.runnerState = useState(runner.state);
         this.disableTimeout = 0;
 
-        runner.afterPostTest(({ id, status }) => {
-            if (status === Test.FAILED) {
-                this.state.failed.push(id);
-            }
-        });
-
         subscribeToURLParams(...$keys(runner.config));
+    }
+
+    getFailedSuiteIds() {
+        const { tests } = this.env.runner;
+        const suiteIds = [];
+        for (const id of this.runnerState.failedIds) {
+            const test = tests.get(id);
+            if (test && !suiteIds.includes(test.parent.id)) {
+                suiteIds.push(test.parent.id);
+            }
+        }
+        return suiteIds;
     }
 
     onRunClick() {
@@ -112,5 +147,9 @@ export class HootButtons extends Component {
                 break;
             }
         }
+    }
+
+    onRunFailedClick() {
+        storageSet(STORAGE.failed, []);
     }
 }
