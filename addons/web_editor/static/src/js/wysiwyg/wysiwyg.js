@@ -1326,6 +1326,8 @@ const Wysiwyg = Widget.extend({
                 restoreSelection: restoreSelection,
             }),
             onAttachmentChange: this._onAttachmentChange.bind(this),
+            // TODO remove ?
+            notifyOnAttachmentChanged: !!this.snippetsMenu,
             close: () => restoreSelection(),
             ...this.options.mediaModalParams,
             ...params,
@@ -1361,13 +1363,32 @@ const Wysiwyg = Widget.extend({
      * @param {Object} params binded @see openMediaDialog
      * @param {Element} element provided by the dialog
      */
-    _onMediaDialogSave: function (params, element) {
+    async _onMediaDialogSave(params, element) {
+        const saveCallback = this.snippetsMenu ? async (element) => {
+            if (element.tagName === 'IMG') {
+                const $element = $(element);
+                // Make sure the newly inserted image's options are built
+                if (params.node) {
+                    await this.snippetsMenu.activateSnippet($(element));
+                } else {
+                    await this.snippetsMenu.callPostSnippetDrop($element);
+                }
+                await new Promise(resolve => {
+                    this.snippetsMenu.trigger_up("snippet_edition_request", {exec: () => {
+                        // TODO In master use a trigger parameter
+                        const event = $.Event("image_changed", {_complete: resolve});
+                        $element.trigger(event);
+                    }});
+                });
+            }
+        } : () => {};
         params.restoreSelection();
         if (!element) {
             return;
         }
 
         if (params.node) {
+            this.odooEditor.historyPauseSteps();
             const isIcon = (el) => el.matches('i.fa, span.fa');
             const changedIcon = isIcon(params.node) && isIcon(element);
             if (changedIcon) {
@@ -1379,20 +1400,19 @@ const Wysiwyg = Widget.extend({
             } else {
                 params.node.replaceWith(element);
             }
+            await saveCallback(element);
+            this.odooEditor.historyUnpauseSteps();
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
             // Refocus again to save updates when calling `_onWysiwygBlur`
             this.odooEditor.editable.focus();
         } else {
-            return this.odooEditor.execCommand('insert', element);
-        }
-
-        if (this.snippetsMenu) {
-            this.snippetsMenu.activateSnippet($(element)).then(() => {
-                if (element.tagName === 'IMG') {
-                    $(element).trigger('image_changed');
-                }
-            });
+            this.odooEditor.historyPauseSteps();
+            const insertedEls = this.odooEditor.execCommand('insert', element);
+            await saveCallback(element);
+            this.odooEditor.historyUnpauseSteps();
+            this.odooEditor.historyStep();
+            return insertedEls;
         }
     },
     getInSelection(selector) {
