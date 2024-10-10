@@ -280,7 +280,7 @@ class ReplenishmentReport(models.AbstractModel):
                 if float_is_zero(demand, precision_rounding=product_rounding):
                     continue
                 current = currents[product.id]
-                taken_from_stock = min(demand, current) if out.procure_method != 'make_to_order' else 0
+                taken_from_stock = min(demand, current) if (out.procure_method != 'make_to_order' or any(not m.move_orig_ids and m.location_id.id in wh_location_ids for m in self.env['stock.move'].browse(out._rollup_move_origs()))) else 0
                 if not float_is_zero(taken_from_stock, precision_rounding=product_rounding):
                     currents[product.id] -= taken_from_stock
                     demand -= taken_from_stock
