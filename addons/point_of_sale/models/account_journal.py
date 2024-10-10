@@ -4,6 +4,8 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
@@ -41,3 +43,10 @@ class AccountJournal(models.Model):
                 'company_id': self.env.company.id,
             })
         return journal
+
+    def unlink(self):
+        if self.env.context.get(MODULE_UNINSTALL_FLAG):
+            payment_methods = self.env['pos.payment.method'].search([('journal_id', 'in', self.ids)])
+            self.env['pos.payment'].search([('payment_method_id', 'in', payment_methods.ids)]).unlink()
+            payment_methods.unlink()
+        return super().unlink()
