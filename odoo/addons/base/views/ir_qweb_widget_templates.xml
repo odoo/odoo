@@ -37,14 +37,14 @@
                 </span>
             </div>
             <div class="d-flex align-items-center gap-1" t-if="phone and 'phone' in fields">
-                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw' role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" itemprop="telephone" t-esc="phone"/>
+                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw' role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr w-100" itemprop="telephone" t-esc="phone"/>
             </div>
             <div class="d-flex align-items-center gap-1" t-if="mobile and 'mobile' in fields">
-                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr" itemprop="telephone" t-esc="mobile"/>
+                <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr w-100" itemprop="telephone" t-esc="mobile"/>
             </div>
             <div class="d-flex align-items-center gap-1" t-if="website and 'website' in fields">
                 <i t-if="not options.get('no_marker')" class='fa fa-globe fa-fw' role="img" aria-label="Website" title="Website"/>
-                <a t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-esc="website"/></a>
+                <a t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span class="w-100" itemprop="website" t-esc="website"/></a>
             </div>
             <div class="d-flex align-items-center gap-1" t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='fa fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/> <span class="text-break" itemprop="email" t-esc="email"/></div>
         </div>
