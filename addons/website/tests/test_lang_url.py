@@ -109,7 +109,7 @@ class TestLangUrl(HttpCase):
     def test_07_nolang_prefix_underscore(self):
         res = self.url_open('/_not_a_lang', allow_redirects=False)
         self.assertEqual(res.status_code, 404, "Should not consider /_not_a_lang as a lang")
-        self.assertTrue(res.url.endswith('/_not_a_lang'), "Should use /_not_a_lang as the path and not a lang")
+        self.assertURLEqual(res.url, '/_not_a_lang', "Should use /_not_a_lang as the path and not a lang")
 
 
 @tagged('-at_install', 'post_install')
