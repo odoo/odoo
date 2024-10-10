@@ -1,9 +1,9 @@
 import { Component, onWillStart, useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { SnippetsMenu } from "./snippets_menu";
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { LazyComponent } from "@web/core/assets";
 
 export const unslugHtmlDataObject = (repr) => {
     const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
@@ -18,7 +18,7 @@ export const unslugHtmlDataObject = (repr) => {
 
 class WebsiteBuilder extends Component {
     static template = "mysterious_egg.WebsiteBuilder";
-    static components = { SnippetsMenu };
+    static components = { LazyComponent };
 
     setup() {
         this.orm = useService("orm");
