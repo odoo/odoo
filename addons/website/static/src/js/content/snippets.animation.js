@@ -1386,6 +1386,13 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
      */
     _restoreBottomFixedElements($elements) {
         $elements.removeClass('o_bottom_fixed_element_hidden');
+        const popover = document.querySelector('.popover');
+        if (popover && popover.offsetParent !== null) {
+            const popoverInstance = Popover.getInstance(popover);
+            if (popoverInstance) {
+                popoverInstance.toggle();
+            }
+        }
         $elements.filter('.o_bottom_fixed_element_move_up').css('margin-bottom', '');
     },
 });
