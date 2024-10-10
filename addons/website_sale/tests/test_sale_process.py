@@ -7,12 +7,13 @@ from odoo.tests import loaded_demo_data, tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website.tests.common import HttpCaseWithUserRestricted
 
 _logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
-class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon):
+class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithUserRestricted):
 
     @classmethod
     def setUpClass(cls):
@@ -66,6 +67,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon):
 
         # Avoid Shipping/Billing address page
         cls.env.ref('base.partner_admin').write(cls.dummy_partner_address_values)
+        cls.partner_restricted.write(cls.dummy_partner_address_values)
 
         if cls.env['ir.module.module']._get('payment_custom').state == 'installed':
             transfer_provider = cls.env.ref('payment.payment_provider_transfer')
@@ -142,4 +144,4 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon):
             'list_price': 12.50,
             'is_published': True,
         })
-        self.start_tour("/shop", 'update_billing_shipping_address', login="admin")
+        self.start_tour("/shop", 'update_billing_shipping_address', login="restricted")

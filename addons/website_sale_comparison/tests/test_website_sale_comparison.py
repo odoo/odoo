@@ -6,7 +6,8 @@ from collections import OrderedDict
 from lxml import etree
 
 from odoo.fields import Command
-from odoo.tests import HttpCase, TransactionCase, loaded_demo_data, tagged
+from odoo.tests import TransactionCase, loaded_demo_data, tagged
+from odoo.addons.website.tests.common import HttpCaseWithUserRestricted
 
 _logger = logging.getLogger(__name__)
 
@@ -72,7 +73,7 @@ class TestWebsiteSaleComparison(TransactionCase):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleComparisonUi(HttpCase):
+class TestWebsiteSaleComparisonUi(HttpCaseWithUserRestricted):
 
     @classmethod
     def setUpClass(cls):
@@ -127,7 +128,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
         if not loaded_demo_data(self.env):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
-        self.start_tour("/", 'product_comparison', login='admin')
+        self.start_tour("/", 'product_comparison', login="restricted")
 
     def test_02_attribute_multiple_lines(self):
         # Case product page with "Product attributes table" disabled (website_sale standard case)
