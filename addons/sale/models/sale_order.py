@@ -883,10 +883,17 @@ class SaleOrder(models.Model):
         :rtype: record of `mail.template` or `None` if not found
         """
         self.ensure_one()
-        if self.env.context.get('proforma') or self.state != 'sale':
-            return self.env.ref('sale.email_template_edi_sale', raise_if_not_found=False)
-        else:
+        template_ref = 'sale.email_template_edi_sale'
+
+        if self.env.context.get('proforma'):
+            template_ref = 'sale.email_template_edi_sale_proforma'
+
+        template = self.env.ref(template_ref, raise_if_not_found=False)
+
+        if not template and self.state == 'sale':
             return self._get_confirmation_template()
+
+        return template
 
     def _get_confirmation_template(self):
         """ Get the mail template sent on SO confirmation (or for confirmed SO's).
