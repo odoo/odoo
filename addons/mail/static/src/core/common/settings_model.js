@@ -8,6 +8,13 @@ import { rpc } from "@web/core/network/rpc";
 export class Settings extends Record {
     id;
 
+    static insert(data, options) {
+        if (data["push_to_talk_key"]) {
+            window.electronAPI?.setPushToTalkKey(data["push_to_talk_key"]);
+        }
+        return super.insert(data, options);
+    }
+
     setup() {
         super.setup();
         this.saveVoiceThresholdDebounce = debounce(() => {
@@ -176,6 +183,7 @@ export class Settings extends Record {
             pushToTalkKey += `.${ev.key === " " ? "Space" : ev.key}`;
         }
         this.push_to_talk_key = pushToTalkKey;
+        window.electronAPI?.setPushToTalkKey(this.push_to_talk_key);
         this._saveSettings();
     }
     /**
