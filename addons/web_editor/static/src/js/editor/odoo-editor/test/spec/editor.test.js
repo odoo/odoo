@@ -3636,6 +3636,13 @@ X[]
                         contentAfter: '<pre>abc</pre><p>[]<br></p>',
                     });
                 });
+                it('should insert a new list item after the pre inside a list item', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<ul><li><pre>abc[]</pre></li></ul>',
+                        stepFunction: insertParagraphBreak,
+                        contentAfter: '<ul><li><pre>abc</pre></li><li>[]<br></li></ul>',
+                    });
+                });
             });
             describe('Consecutive', () => {
                 it('should duplicate an empty paragraph twice', async () => {
