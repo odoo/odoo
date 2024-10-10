@@ -30,6 +30,10 @@
     'assets': {
         'web.assets_backend': [
             'mysterious_egg/static/src/**/*',
+            ('remove', 'mysterious_egg/static/src/builder/*')
         ],
+        'website.assets_builder': [
+            'mysterious_egg/static/src/builder/*',
+        ]
     },
 }
