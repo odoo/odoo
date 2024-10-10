@@ -78,6 +78,14 @@ class TestVariants(common.TestProductCommon):
         self.assertEqual({True}, set(v.is_product_variant for v in variants),
                          'Product variants are variants')
 
+    def test_variant_of_inactive_template(self):
+        template = self.env['product.template'].create({'name': 'Test Product'})
+        variants = template.product_variant_ids
+        template.active = False
+        for variant in variants:
+            self.assertFalse(variant.active)
+        self.assertEqual(template.product_variant_id, variants[0])
+
     def test_variants_creation_mono(self):
         test_template = self.env['product.template'].create({
             'name': 'Sofa',

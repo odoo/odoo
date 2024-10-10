@@ -179,7 +179,9 @@ class ProductTemplate(models.Model):
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
         for p in self:
-            p.product_variant_id = p.product_variant_ids[:1].id
+            # The active_test enables inactive product.templates to compute
+            # their (also inactive) product_variant_id correctly.
+            p.product_variant_id = p.with_context(active_test=p.active).product_variant_ids[:1].id
 
     @api.depends('company_id')
     def _compute_currency_id(self):
