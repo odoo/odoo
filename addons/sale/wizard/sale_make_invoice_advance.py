@@ -59,7 +59,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     display_invoice_amount_warning = fields.Boolean(compute="_compute_display_invoice_amount_warning")
     consolidated_billing = fields.Boolean(
         string="Consolidated Billing", default=True,
-        help="Create one invoice for all orders related to same customer and same invoicing address"
+        help="Create one invoice for all orders related to same customer, same invoicing address"
+             " and same delivery address."
     )
 
     #=== COMPUTE METHODS ===#
