@@ -140,7 +140,9 @@ const TABABLE_SELECTOR = [
  * @param {HTMLElement} [container=document.body]
  */
 export function getTabableElements(container = document.body) {
-    const elements = [...container.querySelectorAll(TABABLE_SELECTOR)].filter(isVisible);
+    const elements = [...container.querySelectorAll(TABABLE_SELECTOR)].filter(
+        (el) => isVisible(el) && !el.closest("[inert]")
+    );
     /** @type {Record<number, HTMLElement[]>} */
     const byTabIndex = {};
     for (const el of [...elements]) {
