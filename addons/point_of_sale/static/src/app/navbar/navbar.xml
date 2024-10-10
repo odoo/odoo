@@ -20,6 +20,7 @@
                         placeholder="'Search products...'"
                         icon="{type: 'fa', value: 'fa-search'}"
                         debounceMillis="500"
+                        getRef="(ref) => this.inputRef = ref"
                         t-if="pos.showSearchButton()" />
                     <CashierName />
                     <ProxyStatus t-if="pos.config.use_proxy" />
