@@ -24,8 +24,6 @@ def test_get_data(self, template_code):
         'template_data': {
             'code_digits': 6,
             'currency_id': 'base.EUR',
-            'property_account_income_categ_id': 'test_account_income_template',
-            'property_account_expense_categ_id': 'test_account_expense_template',
             'property_account_receivable_id': 'test_account_receivable_template',
             'property_account_payable_id': 'test_account_payable_template',
         },
@@ -41,6 +39,8 @@ def test_get_data(self, template_code):
                 'bank_account_code_prefix': '1000',
                 'cash_account_code_prefix': '2000',
                 'transfer_account_code_prefix': '3000',
+                'income_account_id': 'test_account_income_template',
+                'expense_account_id': 'test_account_expense_template',
             },
         },
         'account.account.tag': {

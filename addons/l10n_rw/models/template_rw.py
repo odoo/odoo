@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '4',
             'property_account_receivable_id': 'rw_190',
             'property_account_payable_id': 'rw_311',
-            'property_account_expense_categ_id': 'rw_510',
-            'property_account_income_categ_id': 'rw_400',
         }
 
     @template('rw', 'res.company')
@@ -31,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_expense_account_id': 'rw_342',
                 'account_sale_tax_id': 'VAT_S_IN_RW_18',
                 'account_purchase_tax_id': 'VAT_P_IN_RW_18',
+                'expense_account_id': 'rw_510',
+                'income_account_id': 'rw_400',
             },
         }

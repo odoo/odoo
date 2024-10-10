@@ -33,7 +33,6 @@ class TestProcurementException(common.TransactionCase):
         #     ...
         #         product.write({'list_price': value})
         product_form.lst_price = 20.00
-        product_form.categ_id = self.env.ref('product.product_category_1')
         product_with_no_seller = product_form.save()
 
         product_with_no_seller.standard_price = 70.0

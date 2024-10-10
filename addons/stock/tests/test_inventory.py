@@ -18,13 +18,11 @@ class TestInventory(TransactionCase):
         cls.product1 = cls.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_all').id,
         })
         cls.product2 = cls.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'serial',
-            'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
     def test_inventory_1(self):
@@ -504,7 +502,6 @@ class TestInventory(TransactionCase):
         product3 = self.env['product.product'].create({
             'name': 'Product C',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.env['stock.quant'].create({
             'product_id': product3.id,

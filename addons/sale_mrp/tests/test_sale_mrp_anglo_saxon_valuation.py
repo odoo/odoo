@@ -19,7 +19,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
     @classmethod
     def _create_product(cls, **kwargs):
         return super()._create_product(
-            categ_id=cls.stock_account_product_categ.id if kwargs.get('is_storable') else cls.env.ref('product.product_category_all').id,
+            categ_id=cls.stock_account_product_categ.id if kwargs.get('is_storable') else cls.env.ref('product.product_category_services').id,
             **kwargs
         )
 

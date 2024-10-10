@@ -308,7 +308,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             return
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
-        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all = self.product_category
         product_category_all.property_cost_method = 'standard'
         product_category_all.property_valuation = 'real_time'
 
@@ -362,7 +362,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             An extra SVL should be created to correct the valuation of the product
             Also check account move data for real time inventory
         """
-        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all = self.product_category
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
         in_account = self.env['account.account'].create({

@@ -564,12 +564,10 @@ class TestProcurement(TestMrpCommon):
             'name': 'product',
             'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('mrp.route_warehouse0_manufacture'))],
-            'categ_id': self.env.ref('product.product_category_all').id
         })
         component = self.env['product.product'].create({
             'name': 'component',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_all').id
         })
         self.env['mrp.bom'].create({
             'product_id': product.id,

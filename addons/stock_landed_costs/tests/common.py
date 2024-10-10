@@ -22,11 +22,11 @@ class TestStockLandedCostsCommon(ValuationReconciliationTestCommon):
         cls.supplier_location_id = cls.env.ref('stock.stock_location_suppliers').id
         cls.customer_location_id = cls.env.ref('stock.stock_location_customers').id
         cls.categ_all = cls.stock_account_product_categ
-        cls.categ_manual_periodic = cls.env.ref('product.product_category_all').copy({
+        cls.categ_manual_periodic = cls.env.ref('product.product_category_services').copy({
             "property_valuation": "manual_periodic",
             "property_cost_method": "fifo"
         })
-        cls.categ_real_time = cls.env.ref('product.product_category_all').copy({
+        cls.categ_real_time = cls.env.ref('product.product_category_services').copy({
             "property_valuation": "real_time",
             "property_cost_method": "average"
         })
@@ -53,6 +53,6 @@ class TestStockLandedCostsCommon(ValuationReconciliationTestCommon):
             'categ_id': cls.categ_real_time.id})
         # Create service type product 1.Labour 2.Brokerage 3.Transportation 4.Packaging
         cls.landed_cost = cls.Product.create({'name': 'Landed Cost', 'type': 'service', 'categ_id': cls.product_category.id})
-        cls.brokerage_quantity = cls.Product.create({'name': 'Brokerage Cost', 'type': 'service'})
-        cls.transportation_weight = cls.Product.create({'name': 'Transportation Cost', 'type': 'service'})
-        cls.packaging_volume = cls.Product.create({'name': 'Packaging Cost', 'type': 'service'})
+        cls.brokerage_quantity = cls.Product.create({'name': 'Brokerage Cost', 'type': 'service', 'categ_id': cls.categ_all.id})
+        cls.transportation_weight = cls.Product.create({'name': 'Transportation Cost', 'type': 'service', 'categ_id': cls.categ_all.id})
+        cls.packaging_volume = cls.Product.create({'name': 'Packaging Cost', 'type': 'service', 'categ_id': cls.categ_all.id})

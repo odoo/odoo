@@ -158,6 +158,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         p = Form(cls.env['product.product'])
         p.name = name
         p.is_storable = True
+        p.categ_id = cls.env.ref('product.product_category_services')
         p.uom_id = uom_id
         p.uom_po_id = uom_id
         p.route_ids.clear()

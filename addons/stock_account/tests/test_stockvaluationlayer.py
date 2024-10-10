@@ -21,7 +21,7 @@ class TestStockValuationCommon(TransactionCase):
         cls.product1 = cls.env['product.product'].create({
             'name': 'product1',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
         })
         cls.picking_type_in = cls.env.ref('stock.picking_type_in')
         cls.picking_type_out = cls.env.ref('stock.picking_type_out')
@@ -307,10 +307,12 @@ class TestStockValuationStandard(TestStockValuationCommon):
         product1 = self.env['product.product'].create({
             'name': 'p1',
             'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_expenses').id,
         })
         product2 = self.env['product.product'].create({
             'name': 'p2',
             'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_expenses').id,
         })
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_in.id,
@@ -860,7 +862,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
 
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 5)
         for svl in self.product1.stock_valuation_layer_ids.sorted()[-2:]:
-            self.assertEqual(svl.description, 'Costing method change for product category All: from standard to fifo.')
+            self.assertEqual(svl.description, 'Costing method change for product category Services: from standard to fifo.')
 
     def test_standard_to_fifo_2(self):
         """ We want the same result as `test_standard_to_fifo_1` but by changing the category of
@@ -996,7 +998,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
         for svl in self.product1.stock_valuation_layer_ids.sorted()[-2:]:
-            self.assertEqual(svl.description, 'Valuation method change for product category All: from manual_periodic to real_time.')
+            self.assertEqual(svl.description, 'Valuation method change for product category Services: from manual_periodic to real_time.')
 
     def test_standard_manual_to_auto_2(self):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
@@ -1157,7 +1159,7 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
         cls.product1 = cls.env['product.product'].create({
             'name': 'product1',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.env.ref('product.product_category_services').id,
             'property_account_expense_id': cls.expense_account.id,
         })
         cls.product1.categ_id.write({

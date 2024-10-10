@@ -680,6 +680,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         Receive the products.
         """
         self.product_id_1.is_storable = True
+        self.product_id_1.categ_id = self.env.ref('product.product_category_services').id
         self.product_id_1.categ_id.property_cost_method = 'average'
         po = self.env['purchase.order'].create(self.po_vals)
         po.button_confirm()

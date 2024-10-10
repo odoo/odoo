@@ -2154,7 +2154,6 @@ class TestMrpOrder(TestMrpCommon):
             'name': 'Product Component',
             'is_storable': True,
             'tracking': 'lot',
-            'categ_id': self.env.ref('product.product_category_all').id,
             'uom_id': uom_L.id,
             'uom_po_id': uom_L.id,
         })
@@ -2163,7 +2162,6 @@ class TestMrpOrder(TestMrpCommon):
             'name': 'Product Final',
             'is_storable': True,
             'tracking': 'lot',
-            'categ_id': self.env.ref('product.product_category_all').id,
             'uom_id': uom_L.id,
             'uom_po_id': uom_L.id,
         })

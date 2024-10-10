@@ -200,6 +200,7 @@ class TestLotValuation(TestStockValuationCommon):
             'is_storable': True,
             'uom_id': self.uom_unit.id,
             'uom_po_id': self.uom_unit.id,
+            'categ_id': self.env.ref('product.product_category_services').id,
             'attribute_line_ids': [
                 Command.create({
                     'attribute_id': self.size_attribute.id,
