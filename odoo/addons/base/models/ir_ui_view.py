@@ -598,6 +598,17 @@ actual arch.
         assert from_clause == '"ir_ui_view"', f"Unexpected from clause: {from_clause}"
 
         self._flush_search(domain, fields=['inherit_id', 'priority', 'model', 'mode'])
+
+        wheres = [
+            "coalesce(ir_ui_view.model, '') = coalesce(parent.model, '')",
+            f"({where_clause})",
+        ]
+
+        if not self._context.get('include_primary_views'):
+            wheres.append("ir_ui_view.mode = 'extension'")
+
+        where = " AND ".join(wheres)
+
         query = f"""
             WITH RECURSIVE ir_ui_view_inherits AS (
                 SELECT id, inherit_id, priority, mode, model
@@ -608,9 +619,7 @@ actual arch.
                        ir_ui_view.mode, ir_ui_view.model
                 FROM ir_ui_view
                 INNER JOIN ir_ui_view_inherits parent ON parent.id = ir_ui_view.inherit_id
-                WHERE coalesce(ir_ui_view.model, '') = coalesce(parent.model, '')
-                      AND ir_ui_view.mode = 'extension'
-                      AND ({where_clause})
+                WHERE {where}
             )
             SELECT
                 v.id, v.inherit_id, v.mode
