@@ -309,13 +309,13 @@ const noBackdropPopupWidget = publicWidget.Widget.extend({
             // If the "no-backdrop" modal has a scrollbar, the page's scrollbar
             // must be hidden. This is because if the two scrollbars overlap, it
             // is no longer possible to scroll using the modal's scrollbar.
-            modalInstance._adjustDialog();
+            modalInstance?._adjustDialog();
         } else {
             // If the "no-backdrop" modal does not have a scrollbar, the page
             // scrollbar must be displayed because we must be able to scroll the
             // page (e.g. a "cookies bar" popup at the bottom of the page must
             // not prevent scrolling the page).
-            modalInstance._resetAdjustments();
+            modalInstance?._resetAdjustments();
         }
     },
     /**

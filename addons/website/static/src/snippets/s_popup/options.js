@@ -76,13 +76,13 @@ options.registry.SnippetPopup = options.Class.extend({
      */
     onTargetShow: async function () {
         //Todo: visp ask this to MSH as this model get appended in document body.
-        const model = Modal.getOrCreateInstance(this.$bsTarget[0]);
-        model.show();
+        this.$bsTarget[0].classList.add("show");
+        this.$bsTarget[0].style.display = "block";
+        this.$bsTarget[0].removeAttribute("aria-hidden");
+        this.$bsTarget[0].setAttribute("aria-modal", true);
+        this.$bsTarget[0].setAttribute("role", "dialog");
         // Temporary fix.Find better fix for it.
-        document
-            .querySelector("iframe")
-            .contentDocument.querySelector(".s_popup")
-            .append(this.$target[0]);
+        document.querySelector("iframe").contentDocument.body.classList.add("modal-open");
         $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
     },
     /**
@@ -101,10 +101,13 @@ options.registry.SnippetPopup = options.Class.extend({
             // The following line is in charge of hiding .s_popup at the same
             // time the modal is closed when the page is saved in edit mode.
             this.$target[0].closest(".s_popup")?.classList.add("d-none");
-            const modal = Modal.getOrCreateInstance(this.$bsTarget[0]);
-            modal.hide();
-        });
-    },
+            this.$bsTarget[0].style.display = "none";
+            this.$bsTarget[0].setAttribute("aria-hidden", true);
+            this.$bsTarget[0].removeAttribute("aria-modal");
+            this.$bsTarget[0].removeAttribute("role");
+            document.querySelector("iframe").contentDocument.body.classList.remove("modal-open");
+            });
+        },
 
     //--------------------------------------------------------------------------
     // Options
