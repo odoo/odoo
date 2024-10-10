@@ -27,26 +27,28 @@
 
             &:not(.o_first),
             &:not(.o_last) {
-                &:before, &:after {
-                    @include o-position-absolute(-$border-width, -$o-statusbar-arrow-width);
-                    display: block;
-
-                    border-top: floor($o-statusbar-height/2) solid transparent;
-                    border-bottom: ceil($o-statusbar-height/2) solid transparent;
-                    border-right: none;
-                    border-left: $o-statusbar-arrow-width solid map-get($-btn-secondary-design, background);
-                    -moz-transform: scale(0.9999); // Smooth the triangle on firefox
-                    content: " ";
-                    @include transition($btn-transition);
+                &::before, &::after {
+                    @include o-position-absolute($top: -1 * $btn-border-width, $bottom: -1 * $btn-border-width, $left: 100%);
+                    content: "";
+                    width: $o-statusbar-arrow-width;
+                    z-index: 1;
+                    clip-path: polygon(100% 50%, -100% -50%, 0 100%);
+                    background: map-get($-btn-secondary-design, background);
                 }
 
-                &:before {
-                    right: calc(-#{$o-statusbar-arrow-width} - #{$border-width});
-                    border-left-color: $o-view-background-color;
+                &::before {
+                    margin-left: $btn-border-width;
+                    background-color: $o-view-background-color;
                 }
 
-                &:hover:after {
-                    border-left-color: map-get($-btn-secondary-design, hover-background);
+                &.dropdown-toggle::after {
+                    margin-left: 0;
+                }
+
+                &:hover, &:focus {
+                    &::after {
+                        background-color: map-get($-btn-secondary-design, hover-background);
+                    }
                 }
             }
 
@@ -66,13 +68,13 @@
                 border-color: map-get($-btn-secondary-design, active-border);
                 color: map-get($-btn-secondary-design, active-color);
 
-                &:after {
-                    border-left-color: map-get($-btn-secondary-design, active-background);
+                &::after {
+                    background-color: map-get($-btn-secondary-design, active-background);
                 }
 
                 &, & + .btn {
-                    &:before {
-                        border-left-color: map-get($-btn-secondary-design, active-border);
+                    &::before {
+                        background-color: map-get($-btn-secondary-design, active-border);
                     }
                 }
             }
