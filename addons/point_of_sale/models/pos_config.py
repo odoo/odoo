@@ -856,11 +856,15 @@ class PosConfig(models.Model):
         }
 
     @api.model
-    def _create_cash_payment_method(self):
+    def _create_cash_payment_method(self, cash_journal_vals=None):
+        if cash_journal_vals is None:
+            cash_journal_vals = {}
+
         cash_journal = self.env['account.journal'].create({
             'name': _('Cash'),
             'type': 'cash',
             'company_id': self.env.company.id,
+            **cash_journal_vals,
         })
         return self.env['pos.payment.method'].create({
             'name': _('Cash'),
@@ -868,7 +872,7 @@ class PosConfig(models.Model):
             'company_id': self.env.company.id,
         })
 
-    def _create_journal_and_payment_methods(self, cash_ref=None):
+    def _create_journal_and_payment_methods(self, cash_ref=None, cash_journal_vals=None):
         """This should only be called at creation of a new pos.config."""
 
         journal = self.env['account.journal']._ensure_company_account_journal()
@@ -882,9 +886,9 @@ class PosConfig(models.Model):
                 cash_pm_from_ref.check_access_rule('read')
                 cash_pm = cash_pm_from_ref
             except AccessError:
-                cash_pm = self._create_cash_payment_method()
+                cash_pm = self._create_cash_payment_method(cash_journal_vals)
         else:
-            cash_pm = self._create_cash_payment_method()
+            cash_pm = self._create_cash_payment_method(cash_journal_vals)
 
         if cash_ref and cash_pm != cash_pm_from_ref:
             self.env['ir.model.data']._update_xmlids([{
@@ -948,7 +952,7 @@ class PosConfig(models.Model):
             'point_of_sale.pos_category_lower',
             'point_of_sale.pos_category_others'
         ])
-        journal, payment_methods_ids = self._create_journal_and_payment_methods()
+        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Clothes Shop', 'show_on_dashboard': False})
         config = self.env['pos.config'].create([{
             'name': _('Clothes Shop'),
             'company_id': self.env.company.id,
@@ -969,7 +973,7 @@ class PosConfig(models.Model):
         if not self.env.ref(ref_name, raise_if_not_found=False):
             convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/bakery_data.xml', None, mode='init', noupdate=True, kind='data')
 
-        journal, payment_methods_ids = self._create_journal_and_payment_methods()
+        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Bakery', 'show_on_dashboard': False})
         bakery_categories = self.get_categories([
             'point_of_sale.pos_category_breads',
             'point_of_sale.pos_category_pastries',
@@ -994,7 +998,10 @@ class PosConfig(models.Model):
         if not self.env.ref(ref_name, raise_if_not_found=False):
             self._load_furniture_data()
 
-        journal, payment_methods_ids = self._create_journal_and_payment_methods('point_of_sale.cash_payment_method_furniture')
+        journal, payment_methods_ids = self._create_journal_and_payment_methods(
+            cash_ref='point_of_sale.cash_payment_method_furniture',
+            cash_journal_vals={'name': 'Cash Furn. Shop', 'show_on_dashboard': False},
+        )
         furniture_categories = self.get_categories([
             'point_of_sale.pos_category_miscellaneous',
             'point_of_sale.pos_category_desks',
