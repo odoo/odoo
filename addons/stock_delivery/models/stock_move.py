@@ -41,6 +41,7 @@ class StockMove(models.Model):
         vals = super(StockMove, self)._get_new_picking_values()
         carrier_id = self.group_id.sale_id.carrier_id.id
         vals['carrier_id'] = any(rule.propagate_carrier for rule in self.rule_id) and carrier_id
+        vals['delivery_address_id'] = self.group_id.sale_id.delivery_address_id.id
         return vals
 
     def _key_assign_picking(self):

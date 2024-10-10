@@ -25,6 +25,12 @@
                                 <i class="oi oi-arrow-right me-1"/>Get rate
                             </button>
                         </div>
+                        <label for="pickup_point_id" string="Pickup Point" invisible="not show_pickup_points"/>
+                        <div class="o_row" invisible="not show_pickup_points">
+                            <field name="pickup_point_id" readonly="1"/>
+                            <button type="object" name="action_open_pickup_location_selector" icon="fa-pencil" title="Choose" class="disabled" invisible="state not in ['sale', 'cancel']"/>
+                            <button type="object" name="action_open_pickup_location_selector" icon="fa-pencil" title="Choose" invisible="state in ['sale', 'cancel']"/>
+                        </div>
                     </group>
                 </group>
                 <div role="alert" class="alert alert-warning" invisible="invoicing_message == ''">

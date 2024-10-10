@@ -51,6 +51,7 @@ class DeliveryCarrier(models.Model):
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
     tracking_url = fields.Char(string='Tracking Link', help="This option adds a link for the customer in the portal to track their package easily. Use <shipmenttrackingnumber> as a placeholder in your URL.")
     currency_id = fields.Many2one(related='product_id.currency_id')
+    is_pickup = fields.Boolean(compute='_compute_is_pickup', help="Technical field to know if the carrier is used as a pickup carrier.")
 
     invoice_policy = fields.Selection(
         selection=[('estimated', "Estimated cost")],
@@ -120,6 +121,10 @@ class DeliveryCarrier(models.Model):
 
     def _compute_volume_uom_name(self):
         self.volume_uom_name = self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
+
+    def _compute_is_pickup(self):
+        for carrier in self:
+            carrier.is_pickup = hasattr(carrier, f'{carrier.delivery_type}_use_locations') and getattr(carrier, f'{carrier.delivery_type}_use_locations')
 
     @api.depends('delivery_type')
     def _compute_can_generate_return(self):
