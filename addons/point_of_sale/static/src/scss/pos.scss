@@ -171,6 +171,10 @@ button {
         @include o-print-color($-bg, background-color, bg-opacity);
         @include o-print-color($-color, color, text-opacity);
     }
+    .o_colorlist_item_count_color_#{$size - 1} {
+        $-color: adjust-color(nth($o-colors, $size), $lightness: 10%, $saturation: 15%);
+        @include o-print-color($-color, color, text-opacity);
+    }
 }
 
 .pos-rightheader .status-buttons .btn-secondary{

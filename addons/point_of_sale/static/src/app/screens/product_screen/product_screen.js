@@ -364,6 +364,27 @@ export class ProductScreen extends Component {
         );
     }
 
+    getProductCartAmount(product) {
+        const productTmplValIds = product.attribute_line_ids
+            .map((l) => l.product_template_value_ids)
+            .flat();
+
+        const orderLines =
+            productTmplValIds.length > 1
+                ? this.pos.models["product.product"]
+                      .filter((p) => p.raw.product_tmpl_id === product.raw.product_tmpl_id)
+                      .map((p) => p["<-pos.order.line.product_id"])
+                      .flat()
+                : product["<-pos.order.line.product_id"];
+
+        const productAmount = orderLines.reduce(
+            (acc, ol) => (ol.order_id?.uuid === this.currentOrder.uuid ? acc + ol.qty : acc),
+            0
+        );
+
+        return productAmount;
+    }
+
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {
