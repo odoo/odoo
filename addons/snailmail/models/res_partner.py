@@ -39,6 +39,8 @@ class ResPartner(models.Model):
     def _get_address_format(self):
         # When sending a letter, the fields 'street' and 'street2' should be on a single line to fit in the address area
         if self.env.context.get('snailmail_layout') and self.street2:
+            if self.country_code == 'DE':
+                return "%(street)s, //%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
             return "%(street)s, %(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
 
         return super(ResPartner, self)._get_address_format()
