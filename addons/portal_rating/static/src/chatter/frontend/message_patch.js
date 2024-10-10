@@ -10,10 +10,6 @@ patch(Message.prototype, {
         this.state.editRating = false;
     },
 
-    get ratingValue() {
-        return this.message.rating_id?.rating || this.message.rating_value;
-    },
-
     get commentPublishDate() {
         return luxon.DateTime.fromFormat(
             this.message.rating_id.publisher_datetime,
