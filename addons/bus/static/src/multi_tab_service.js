@@ -26,6 +26,11 @@ let multiTabId = 0;
 export const multiTabService = {
     start() {
         const bus = new EventBus();
+        let broadcastChannel = null;
+        if (browser.BroadcastChannel) {
+            broadcastChannel = new browser.BroadcastChannel("multi.tab.service");
+            broadcastChannel.onmessage = ({ data }) => bus.trigger(data.type, data.payload);
+        }
 
         // CONSTANTS
         const TAB_HEARTBEAT_PERIOD = 10000; // 10 seconds
@@ -36,7 +41,6 @@ export const multiTabService = {
         const PRIVATE_LOCAL_STORAGE_KEYS = ["main", "heartbeat"];
 
         // PROPERTIES
-        let _isOnMainTab = false;
         let lastHeartbeat = 0;
         let heartbeatTimeout;
         const sanitizedOrigin = location.origin.replace(/:\/{0,2}/g, "_");
@@ -62,7 +66,7 @@ export const multiTabService = {
         }
 
         function startElection() {
-            if (_isOnMainTab) {
+            if (isOnMainTab()) {
                 return;
             }
             // Check who's next.
@@ -82,8 +86,7 @@ export const multiTabService = {
                 // We're next in queue. Electing as main.
                 lastHeartbeat = now;
                 setItemInStorage("heartbeat", lastHeartbeat);
-                setItemInStorage("main", true);
-                _isOnMainTab = true;
+                setItemInStorage("main", tabId);
                 bus.trigger("become_main_tab");
                 // Removing main peer from queue.
                 delete lastPresenceByTab[newMain];
@@ -100,7 +103,7 @@ export const multiTabService = {
                 startElection();
                 heartbeatValue = getItemFromStorage("heartbeat", 0);
             }
-            if (_isOnMainTab) {
+            if (isOnMainTab()) {
                 // Walk through all tabs and kill old ones.
                 const cleanedTabs = {};
                 for (const [tabId, lastPresence] of Object.entries(lastPresenceByTab)) {
@@ -111,7 +114,6 @@ export const multiTabService = {
                 if (heartbeatValue !== lastHeartbeat) {
                     // Someone else is also main...
                     // It should not happen, except in some race condition situation.
-                    _isOnMainTab = false;
                     lastHeartbeat = 0;
                     lastPresenceByTab[tabId] = now;
                     setItemInStorage("lastPresenceByTab", lastPresenceByTab);
@@ -126,7 +128,7 @@ export const multiTabService = {
                 lastPresenceByTab[tabId] = now;
                 setItemInStorage("lastPresenceByTab", lastPresenceByTab);
             }
-            const hbPeriod = _isOnMainTab ? MAIN_TAB_HEARTBEAT_PERIOD : TAB_HEARTBEAT_PERIOD;
+            const hbPeriod = isOnMainTab() ? MAIN_TAB_HEARTBEAT_PERIOD : TAB_HEARTBEAT_PERIOD;
             heartbeatTimeout = browser.setTimeout(heartbeat, hbPeriod);
         }
 
@@ -157,11 +159,19 @@ export const multiTabService = {
             setItemInStorage("lastPresenceByTab", lastPresenceByTab);
 
             // Unload main.
-            if (_isOnMainTab) {
-                _isOnMainTab = false;
+            if (isOnMainTab()) {
                 bus.trigger("no_longer_main_tab");
                 browser.localStorage.removeItem(generateLocalStorageKey("main"));
             }
+        }
+
+        /**
+         * Determine whether or not this tab is the main one.
+         *
+         * @returns {boolean}
+         */
+        function isOnMainTab() {
+            return getItemFromStorage("main") === tabId;
         }
 
         browser.addEventListener("pagehide", unregister);
@@ -179,16 +189,9 @@ export const multiTabService = {
 
         return {
             bus,
+            isOnMainTab,
             get currentTabId() {
                 return tabId;
-            },
-            /**
-             * Determine whether or not this tab is the main one.
-             *
-             * @returns {boolean}
-             */
-            isOnMainTab() {
-                return _isOnMainTab;
             },
             /**
              * Get value shared between all the tabs.
@@ -225,6 +228,12 @@ export const multiTabService = {
              * be able to become the main tab.
              */
             unregister: unregister,
+            broadcast(type, payload, delay = 0) {
+                broadcastChannel?.postMessage({ type, payload, delay });
+            },
+            subscribe(type, callback) {
+                bus.addEventListener(type, ({ detail }) => callback(detail));
+            },
         };
     },
 };
