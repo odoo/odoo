@@ -43,6 +43,9 @@ class IrUiMenu(models.Model):
 
     web_icon_data = fields.Binary(string='Web Icon Image', attachment=True)
 
+    _audit_fieldnames = {'name', 'active', 'sequence', 'child_id', 'parent_id', 'parent_path', 'groups_id', 'action',
+                      'complete_name'}
+
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
         for menu in self:

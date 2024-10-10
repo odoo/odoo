@@ -26,6 +26,9 @@ class IrRule(models.Model):
     perm_create = fields.Boolean(string='Create', default=True)
     perm_unlink = fields.Boolean(string='Delete', default=True)
 
+    _audit_fieldnames = {'name', 'active', 'model_id', 'groups', 'domain_force', 'perm_read', 'perm_write', 'perm_create',
+                    'perm_unlink'}
+
     _sql_constraints = [
         ('no_access_rights',
          'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)',
