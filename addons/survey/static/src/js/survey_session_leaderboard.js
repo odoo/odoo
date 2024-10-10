@@ -9,6 +9,7 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
 
         this.surveyAccessToken = options.surveyAccessToken;
+        this.surveyId = options.surveyId;
         this.$sessionResults = options.sessionResults;
 
         this.BAR_MIN_WIDTH = '3rem';
@@ -44,7 +45,7 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
             self.$('.o_survey_session_leaderboard_container').empty();
         }
 
-        var leaderboardPromise = rpc(`/survey/session/leaderboard/${this.surveyAccessToken}`);
+        var leaderboardPromise = rpc(`/survey/session/leaderboard/${this.surveyId}/${this.surveyAccessToken}`);
 
         Promise.all([fadeOutPromise, leaderboardPromise]).then(function (results) {
             var leaderboardResults = results[1];

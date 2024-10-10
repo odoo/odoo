@@ -342,7 +342,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         }
 
         var nextQuestionPromise = rpc(
-            `/survey/session/next_question/${self.surveyAccessToken}`,
+            `/survey/session/next_question/${self.surveyId}/${self.surveyAccessToken}`,
             {
                 'go_back': goBack,
             }
@@ -455,7 +455,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         var self = this;
 
         return rpc(
-            `/survey/session/results/${self.surveyAccessToken}`
+            `/survey/session/results/${self.surveyId}/${self.surveyAccessToken}`
         ).then(function (questionResults) {
             if (questionResults) {
                 self.attendeesCount = questionResults.attendees_count;
@@ -557,6 +557,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         if (this.isScoredQuestion || this.isLastQuestion) {
             this.leaderBoard = new SurveySessionLeaderBoard(this, {
                 surveyAccessToken: this.surveyAccessToken,
+                surveyId: this.surveyId,
                 sessionResults: this.$('.o_survey_session_results')
             });
 
