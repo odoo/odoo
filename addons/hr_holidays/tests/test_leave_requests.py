@@ -987,3 +987,29 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         for leave_validation_type in types:
             with self.assertRaises(RuntimeError), self.env.cr.savepoint():
                 run_validation_flow(leave_validation_type)
+
+    def test_update_request_date_from_to(self):
+        self.employee_emp.tz = 'Pacific/Auckland'  # GMT+12
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': date(2024, 4, 1),
+            'request_date_to': date(2024, 4, 1),
+        })
+        leave._compute_date_from_to()
+
+        # Check that timezone calculations ensure the two dates are different in UTC
+        self.assertEqual(leave.date_from.date(), date(2024, 3, 31))
+        self.assertEqual(leave.date_to.date(), date(2024, 4, 1))
+
+        # Moving date_from forward by one hour should not change the request_date_from
+        leave.write({
+            'date_from': leave.date_from + timedelta(hours=1),
+        })
+        self.assertEqual(leave.request_date_from, date(2024, 4, 1))
+
+        # Moving date_to forward by one day should also move request_date_to by one day
+        leave.write({
+            'date_to': leave.date_to + timedelta(days=1),
+        })
+        self.assertEqual(leave.request_date_to, date(2024, 4, 2))
