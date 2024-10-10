@@ -85,6 +85,10 @@ export class PosOrder extends Base {
         return this.state !== "draft";
     }
 
+    get totalQuantity() {
+        return this.lines.reduce((sum, line) => sum + line.getQuantity(), 0);
+    }
+
     get isUnsyncedPaid() {
         return this.finalized && typeof this.id === "string";
     }
