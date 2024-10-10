@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { BuilderMenu } from "./builder_menu";
@@ -38,7 +38,6 @@ class WebsitePreview extends Component {
     }
 
     onWebsiteLoaded() {
-        debugger;
         this.editor.attachTo(this.websiteContent.el.contentDocument.body);
     }
 }
