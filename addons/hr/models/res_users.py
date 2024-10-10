@@ -341,3 +341,12 @@ class User(models.Model):
             'res_id': employees.id,
             'view_mode': 'form',
         }
+
+    def action_related_contact(self):
+        return {
+            'name': _("Related Contact"),
+            'res_id': self.partner_id.id,
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.partner',
+            'view_mode': 'form',
+        }
