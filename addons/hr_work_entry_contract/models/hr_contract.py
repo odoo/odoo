@@ -4,7 +4,6 @@
 import itertools
 from collections import defaultdict
 from datetime import datetime, date, time
-from math import floor
 import pytz
 
 from dateutil.relativedelta import relativedelta
@@ -109,34 +108,6 @@ class HrContract(models.Model):
             ))
         return result
 
-    def _postprocess_attendance_intervals(self, intervals):
-        # _attendance_intervals_batch combines the attendances regardless of work entry type if their date and time overlap.
-        # This makes a single attendance block with the work entry type of the first attendance only. This function undoes those
-        # undesirable merges
-        try:
-            multi_type_intervals = [interval for interval in intervals if len(interval[2].work_entry_type_id) > 1]
-        except AttributeError:
-            return intervals
-        for interval in multi_type_intervals:
-            attendances = interval[2]
-            current_work_entry_type = attendances[0].work_entry_type_id
-            attendances_of_type = self.env["resource.calendar.attendance"]
-            start_date = interval[0]
-            for attendance in attendances:
-                if attendance.work_entry_type_id == current_work_entry_type:
-                    end_date = interval[0].replace(hour=floor(attendance.hour_to), minute=int((attendance.hour_to % 1) * 60))
-                    attendances_of_type |= attendance
-                else:
-                    intervals._items.append((start_date, end_date, attendances_of_type))
-                    start_date = interval[0].replace(hour=floor(attendance.hour_from), minute=int((attendance.hour_from % 1) * 60))
-                    end_date = interval[0].replace(hour=floor(attendance.hour_to), minute=int((attendance.hour_to % 1) * 60))
-                    current_work_entry_type = attendance.work_entry_type_id
-                    attendances_of_type = attendance
-            intervals._items.append((start_date, end_date, attendances_of_type))
-            intervals._items.remove(interval)
-        intervals._items.sort()
-        return intervals
-
     def _get_lunch_intervals(self, start_dt, end_dt):
         # {resource: intervals}
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
@@ -217,7 +188,7 @@ class HrContract(models.Model):
             mapped_leaves = {r.id: WorkIntervals(result[r.id]) for r in resources_list}
             leaves = mapped_leaves[resource.id]
 
-            real_attendances = self._postprocess_attendance_intervals(attendances - leaves)
+            real_attendances = attendances - leaves
             if contract.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
                 real_leaves = attendances - real_attendances
