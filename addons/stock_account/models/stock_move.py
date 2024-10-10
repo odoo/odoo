@@ -138,7 +138,8 @@ class StockMove(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer'
+        return (self.location_id.usage == 'supplier' or (self.location_id.usage == 'transit' and not self.location_id.company_id)) \
+           and (self.location_dest_id.usage == 'customer' or (self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id))
 
     def _is_dropshipped_returned(self):
         """Check if the move should be considered as a returned dropshipping move so that the cost
@@ -148,7 +149,8 @@ class StockMove(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return self.location_id.usage == 'customer' and self.location_dest_id.usage == 'supplier'
+        return (self.location_id.usage == 'customer' or (self.location_id.usage == 'transit' and not self.location_id.company_id)) \
+           and (self.location_dest_id.usage == 'supplier' or (self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id))
 
     def _prepare_common_svl_vals(self):
         """When a `stock.valuation.layer` is created from a `stock.move`, we can prepare a dict of
