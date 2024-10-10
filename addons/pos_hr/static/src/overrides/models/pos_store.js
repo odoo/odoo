@@ -49,8 +49,8 @@ patch(PosStore.prototype, {
             this.hasLoggedIn = saved_cashier ? true : false;
         }
     },
-    createNewOrder() {
-        const order = super.createNewOrder(...arguments);
+    async createNewOrder() {
+        const order = await super.createNewOrder(...arguments);
 
         if (this.config.module_pos_hr) {
             order.update({ employee_id: this.get_cashier() });
