@@ -142,11 +142,11 @@ test("Step Tour validity", async () => {
 test("override existing tour by using saveAs", async () => {
     tourRegistry
         .add("Tour 1", {
-            steps: () => [{ trigger: "#1" }],
+            steps: () => [{ trigger: "#selector1" }],
             saveAs: "homepage",
         })
         .add("Tour 2", {
-            steps: () => [{ trigger: "#2" }],
+            steps: () => [{ trigger: "#selector2" }],
             saveAs: "homepage",
         });
     await makeMockEnv({});
@@ -284,10 +284,9 @@ test("a failing tour logs the step that failed in run", async () => {
         `log: [2/2] Tour tour2 → Step .button1`,
         [
             "error: FAILED: [2/2] Tour tour2 → Step .button1.",
-            "Element has been found. The error seems to be with step.run.",
-            "Cannot read properties of null (reading 'click')",
+            "Try to run: Cannot read properties of null (reading 'click')",
         ].join("\n"),
-        "error: tour not succeeded",
+        "error: tour tour2 not succeeded",
     ];
     expect.verifySteps(expectedError);
 });
@@ -335,11 +334,10 @@ test("a failing tour with disabled element", async () => {
     const expectedError = [
         [
             `error: FAILED: [2/3] Tour tour3 → Step .button1.`,
-            `Element has been found. The error seems to be with step.run.`,
-            `Element can't be disabled when you want to click on it.`,
+            `Try to run: Element can't be disabled when you want to click on it.`,
             `Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`,
         ].join("\n"),
-        `error: tour not succeeded`,
+        `error: tour tour3 not succeeded`,
     ];
     await advanceTime(10000);
     expect.verifySteps(expectedError);
@@ -423,19 +421,20 @@ test("a failing tour logs the step that failed", async () => {
     });
     await odoo.startTour("tour1", { mode: "auto" });
     await advanceTime(750);
-    expect.verifySteps(["log: [1/9] Tour tour1 → Step content (trigger: .button0)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: [2/9] Tour tour1 → Step content (trigger: .button1)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: [3/9] Tour tour1 → Step content (trigger: .button2)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: [4/9] Tour tour1 → Step content (trigger: .button3)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)"]);
     await advanceTime(10000);
     expect.verifySteps([
-        "error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector).\nThe cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+        `log: [1/9] Tour tour1 → Step content (trigger: .button0)`,
+        `log: [2/9] Tour tour1 → Step content (trigger: .button1)`,
+        `log: [3/9] Tour tour1 → Step content (trigger: .button2)`,
+        `log: [4/9] Tour tour1 → Step content (trigger: .button3)`,
+        `log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)`,
+        "error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector).\nTIMEOUT: This step cannot be succeeded within 10000ms.\nElement has not been found.",
         `runbot: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[5/9]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
+        `error: tour tour1 not succeeded`,
     ]);
 });
 
@@ -484,11 +483,12 @@ test("check tour with inactive steps", async () => {
     await advanceTime(750);
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["this action 1 has not been skipped"]);
     await advanceTime(750);
-    await advanceTime(750);
-    await advanceTime(750);
-    expect.verifySteps(["this action 3 has not been skipped"]);
+    await advanceTime(100000);
+    expect.verifySteps([
+        "this action 1 has not been skipped",
+        "this action 3 has not been skipped",
+    ]);
 });
 
 test("pointer is added on top of overlay's stack", async () => {
@@ -882,7 +882,10 @@ test("automatic tour with invisible element", async () => {
     await advanceTime(750);
     await advanceTime(10000);
     expect.verifySteps([
-        "error: FAILED: [2/3] Tour tour_de_wallonie → Step .button1.\nThe cause is that trigger (.button1) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+        `error: FAILED: [2/3] Tour tour_de_wallonie → Step .button1.
+TIMEOUT: This step cannot be succeeded within 10000ms.
+Element has not been found.`,
+        `error: tour tour_de_wallonie not succeeded`,
     ]);
 });
 
@@ -1111,7 +1114,7 @@ test("manual tour with alternative trigger", async () => {
     await contains(".button3").click();
     await contains(".button5").click();
     await contains(".button2").click();
-    expect.verifySteps(["click", "click", "click", "click", "tour succeeded"]);
+    expect.verifySteps(["click", "click", "click", "click"]);
 });
 
 test("Tour backward when the pointed element disappear", async () => {

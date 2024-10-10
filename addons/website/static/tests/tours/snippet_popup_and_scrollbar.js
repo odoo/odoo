@@ -43,6 +43,7 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     test: true,
     url: "/",
     edition: true,
+    checkDelay: 100,
 }, () => [
     ...insertSnippet(snippets[1]), // Media List
     ...insertSnippet(snippets[0]), // Popup
@@ -125,11 +126,7 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Remove the s_popup snippet",
         trigger: ".o_we_customize_panel we-customizeblock-options:contains('Popup') we-button.oe_snippet_remove:first",
-        async run(helpers) {
-            await helpers.click();
-            // TODO: remove the below setTimeout. Without it, goBackToBlocks() not works.
-            await new Promise((r) => setTimeout(r, 1000));
-        }
+        run: "click",
     },
     checkScrollbar(true),
     goBackToBlocks(),
