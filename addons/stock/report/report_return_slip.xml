@@ -16,11 +16,11 @@
                                 Your parcel must be sent to this address:
                             </p>
                             <span t-field="o.location_id.warehouse_id.partner_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'>Demo Address and Name</span>
+                                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' data-oe-demo="Demo Address and Name"/>
                         </div>
                         <div class="col-4 text-center mt-4">
                             <div>
-                                <span t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%;'}">Default Barcode Name</span>
+                                <span t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%;'}" data-oe-demo="Default Barcode Name"/>
                                 <span t-out="o.name">Default Name</span>
                             </div>
                             <div style="margin-top:200px;">

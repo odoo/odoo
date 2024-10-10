@@ -50,8 +50,8 @@
                                 <a href="#" t-att-res-model="doc_model" view-type="form" t-att-res-id="doc.id">
                                     <span t-out="doc.display_name">Demo Display Name</span>
                                 </a>
-                                <span t-field="doc.display_name" t-options="{'widget': 'barcode', 'width': 300, 'height': 50}">Display Name</span>
-                                <span t-field="doc.state" t-attf-class="badge rounded-pill bg-opacity-50 #{'bg-success' if doc.state == 'done' else 'bg-info'}">Andrwep</span>
+                                <span t-field="doc.display_name" t-options="{'widget': 'barcode', 'width': 300, 'height': 50}" data-oe-demo="Display Name"/>
+                                <span t-field="doc.state" t-attf-class="badge rounded-pill bg-opacity-50 #{'bg-success' if doc.state == 'done' else 'bg-info'}" data-oe-demo="Andrwep"/>
                             </div>
                         </t>
                     </t>
@@ -65,7 +65,7 @@
                     <thead t-if="any(line['is_assigned'] for line in sources_to_lines[source])">
                         <tr class="bg-light">
                             <th>
-                                <span t-field="source[0].display_name" t-options="{'widget': 'barcode', 'width': 200, 'height': 30}">Display Name</span>
+                                <span t-field="source[0].display_name" t-options="{'widget': 'barcode', 'width': 200, 'height': 30}" data-oe-demo="Display Name"/>
                                 <i t-if="source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
                                 <a name="source_link" href="#" t-att-res-model="source[0]._name" view-type="form" t-att-res-id="source[0].id">
                                     <span t-out="source[0].display_name">DEMO_SOURCE_DISPLAY_NAME</span>
