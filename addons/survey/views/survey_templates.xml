@@ -427,7 +427,7 @@
             <!-- Directly use field or route if the user doesn't have access rights -->
             <div t-if="not env.user.has_group('survey.group_survey_user')"
                 class="o_survey_choice_img d-flex my-3 justify-content-center">
-                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)"/>
+                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)" class="mw-100 h-auto"/>
             </div>
             <div t-else=""  t-field="label.value_image"
                 class="o_survey_choice_img d-flex my-3 justify-content-center"
