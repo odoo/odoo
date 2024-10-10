@@ -33,7 +33,7 @@ export class HootPresets extends Component {
             </button>
             <t t-if="state.open">
                 <form
-                    class="hoot-config-dropdown animate-slide-down bg-base text-base mt-1 absolute flex flex-col end-0 px-2 py-3 shadow rounded shadow z-2"
+                    class="hoot-dropdown animate-slide-down bg-base text-base mt-1 absolute flex flex-col end-0 px-2 py-3 shadow rounded shadow z-2"
                     t-on-submit.prevent="refresh"
                 >
                     <t t-foreach="env.runner.presets.entries()" t-as="preset" t-key="preset[0]">
