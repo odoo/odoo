@@ -59,9 +59,25 @@
         <field name="hr_responsible_id" ref="base.user_admin"/>
     </record>
 
+    <record id="hr_contract_mit_old" model="hr.contract">
+        <field name="name">R&amp;D Dev Contract old</field>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(months=-6)).strftime('%Y-%m-1')"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(months=-2, day=31)).strftime('%Y-%m-%d')"/>
+        <field name="employee_id" ref="hr.employee_mit"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_mit').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_mit').department_id.id"/>
+        <field eval="4500.0" name="wage"/>
+        <field name="state">close</field>
+        <field name="kanban_state">normal</field>
+        <field name="hr_responsible_id" ref="base.user_admin"/>
+    </record>
+
+    <!-- Here contract change from full-time to part-time -->
     <record id="hr_contract_mit" model="hr.contract">
         <field name="name">R&amp;D Dev Contract</field>
-        <field name="date_start" eval="time.strftime('%Y')+'-3-1'"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(months=-1)).strftime('%Y-%m-1')"/>
         <field name="employee_id" ref="hr.employee_mit"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_mit').job_id.id"/>
@@ -70,6 +86,7 @@
         <field eval="4500.0" name="wage"/>
         <field name="state">open</field>
         <field name="kanban_state">normal</field>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std_20h"/>
         <field name="hr_responsible_id" ref="base.user_admin"/>
     </record>
 
@@ -85,6 +102,7 @@
         <field eval="4500.0" name="wage"/>
         <field name="state">open</field>
         <field name="kanban_state">normal</field>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std_20h"/>
         <field name="hr_responsible_id" ref="base.user_admin"/>
     </record>
 
