@@ -319,18 +319,19 @@ export class ProductScreen extends Component {
             list = this.products;
         }
 
-        if (!list) {
+        if (!list || list.length === 0) {
             return [];
         }
 
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
         list = list
             .filter(
-                (product) =>
-                    ![
-                        this.pos.config.tip_product_id?.id,
-                        ...this.pos.hiddenProductIds,
-                        ...this.pos.session._pos_special_products_ids,
-                    ].includes(product.id) && product.available_in_pos
+                (product) => !excludedProductIds.includes(product.id) && product.available_in_pos
             )
             .slice(0, 100);
 
@@ -371,9 +372,9 @@ export class ProductScreen extends Component {
     }
 
     getProductsByCategory(category) {
-        const allCategories = category.getAllChildren();
-        return this.products.filter((p) =>
-            p.pos_categ_ids.some((categId) => allCategories.includes(categId))
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        return allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
         );
     }
 
