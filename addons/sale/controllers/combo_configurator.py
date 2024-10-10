@@ -57,16 +57,10 @@ class SaleComboConfiguratorController(Controller):
             'combos': [{
                 'id': combo.id,
                 'name': combo.name,
-                'combo_items': [{
-                    'id': combo_item.id,
-                    'extra_price': combo_item.extra_price,
-                    'is_selected': combo_item.id in selected_combo_item_dict,
-                    'product': self._get_combo_item_product_data(
-                        combo_item.product_id,
-                        selected_combo_item_dict.get(combo_item.id, {}),
-                        **kwargs,
-                    )
-                } for combo_item in combo.combo_item_ids],
+                'combo_items': [
+                   self. _get_combo_item_data(
+                       combo, combo_item, selected_combo_item_dict.get(combo_item.id, {}), **kwargs
+                   ) for combo_item in combo.combo_item_ids],
             } for combo in product_template.combo_ids.sudo()],
             'currency_id': currency_id,
         }
@@ -105,6 +99,25 @@ class SaleComboConfiguratorController(Controller):
         return self._get_combo_product_price(
             product_template, quantity, date, currency, pricelist, **kwargs
         )
+
+    def _get_combo_item_data(self, combo, combo_item, selected_combo_item, **kwargs):
+        product_data = self._get_combo_item_product_data(
+            combo_item.product_id,
+            selected_combo_item,
+            **kwargs,
+        )
+        # If the combo has a single, non-configurable combo item, it should be preselected.
+        is_preselected = len(combo.combo_item_ids) == 1 and not any(
+            ptal['create_variant'] == 'no_variant' for ptal in product_data['ptals']
+        )
+
+        return {
+            'id': combo_item.id,
+            'extra_price': combo_item.extra_price,
+            'is_selected': bool(selected_combo_item),
+            'is_preselected': is_preselected,
+            'product': product_data,
+        }
 
     def _get_combo_product_data(
         self, product_template, quantity, date, currency, pricelist, **kwargs
