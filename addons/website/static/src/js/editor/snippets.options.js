@@ -2008,7 +2008,8 @@ options.registry.Parallax = options.Class.extend({
      * @override
      */
     onMove() {
-        this._refreshPublicWidgets();
+        // TODO In master return promise.
+        this._onMove_resultPromise = this._refreshPublicWidgets();
     },
     /**
      * @override

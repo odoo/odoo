@@ -672,7 +672,7 @@ var SnippetEditor = Widget.extend({
      * @param {boolean} [show=false]
      */
     toggleOverlayVisibility: function (show) {
-        if (this.$el && !this.scrollingTimeout) {
+        if (this.$el && !this.scrollingTimeout && !this.dragAndDropResolve) {
             this.$el.toggleClass('o_overlay_hidden', !show && this.isShown());
         }
     },
@@ -919,6 +919,13 @@ var SnippetEditor = Widget.extend({
      * @private
      */
     _onDragAndDropStart: function () {
+        if (this.dragAndDropResolve) {
+            // A drag is already in progress.
+            return;
+        }
+        this.toggleOverlayVisibility(false);
+        const prom = new Promise(resolve => this.dragAndDropResolve = () => resolve());
+        this.trigger_up('snippet_edition_suspend', {exec: () => prom});
         this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         this.trigger_up('drag_and_drop_start');
         this.options.wysiwyg.odooEditor.automaticStepUnactive();
@@ -1024,6 +1031,7 @@ var SnippetEditor = Widget.extend({
         this.options.wysiwyg.odooEditor.automaticStepActive();
         this.options.wysiwyg.odooEditor.automaticStepSkipStack();
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+        this.trigger_up('snippet_edition_block_until_completed');
 
         // TODO lot of this is duplicated code of the d&d feature of snippets
         if (!this.dropped) {
@@ -1057,6 +1065,7 @@ var SnippetEditor = Widget.extend({
         $clone.remove();
 
         this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
+        const moves = [];
         if (this.dropped) {
             if (prev) {
                 this.$target.insertAfter(prev);
@@ -1067,22 +1076,30 @@ var SnippetEditor = Widget.extend({
             }
 
             for (var i in this.styles) {
+                // TODO In master use return value.
                 this.styles[i].onMove();
+                moves.push(this.styles[i]._onMove_resultPromise);
+                delete this.styles[i]._onMove_resultPromise;
             }
-
-            this.$target.trigger('content_changed');
-            $from.trigger('content_changed');
         }
-
-        this.trigger_up('drag_and_drop_stop', {
-            $snippet: this.$target,
+        Promise.allSettled(moves).then(() => {
+            if (this.dropped) {
+                this.$target.trigger('content_changed');
+                $from.trigger('content_changed');
+            }
+            this.trigger_up('drag_and_drop_stop', {
+                $snippet: this.$target,
+            });
+            this.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
+            const samePositionAsStart = this._dropSiblings.prev === this.$target.prev()[0] && this._dropSiblings.next === this.$target.next()[0];
+            if (!samePositionAsStart) {
+                this.options.wysiwyg.odooEditor.historyStep();
+            }
+            delete this.$dropZones;
+            this.dragAndDropResolve();
+            delete this.dragAndDropResolve;
+            this.toggleOverlayVisibility(true);
         });
-        this.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
-        const samePositionAsStart = this._dropSiblings.prev === this.$target.prev()[0] && this._dropSiblings.next === this.$target.next()[0];
-        if (!samePositionAsStart) {
-            this.options.wysiwyg.odooEditor.historyStep();
-        }
-        delete this.$dropZones;
     },
     /**
      * @private
@@ -1244,7 +1261,9 @@ var SnippetsMenu = Widget.extend({
         'get_snippet_versions': '_onGetSnippetVersions',
         'find_snippet_template': '_onFindSnippetTemplate',
         'remove_snippet': '_onRemoveSnippet',
+        'snippet_edition_block_until_completed': '_onSnippetEditionBlockUntilCompleted',
         'snippet_edition_request': '_onSnippetEditionRequest',
+        'snippet_edition_suspend': '_onSnippetEditionSuspend',
         'snippet_editor_destroyed': '_onSnippetEditorDestroyed',
         'snippet_removed': '_onSnippetRemoved',
         'snippet_cloned': '_onSnippetCloned',
@@ -3083,6 +3102,20 @@ var SnippetsMenu = Widget.extend({
      */
     async _execWithLoadingEffect(action, contentLoading = true, delay = 500) {
         const mutexExecResult = this._mutex.exec(action);
+        this._withLoadingEffect(contentLoading, delay);
+        return mutexExecResult;
+    },
+    /**
+     * Sets a loading effect over the editor to appear if the action takes too
+     * much time.
+     * As soon as the mutex is unlocked, the loading effect will be removed.
+     *
+     * @private
+     * @param {boolean} [contentLoading=true]
+     * @param {number} [delay=500]
+     * @returns {Promise}
+     */
+    _withLoadingEffect(contentLoading = true, delay = 500) {
         if (!this.loadingTimers[contentLoading]) {
             const addLoader = () => {
                 if (this._loadingEffectDisabled || this.loadingElements[contentLoading]) {
@@ -3117,7 +3150,6 @@ var SnippetsMenu = Widget.extend({
                 }
             });
         }
-        return mutexExecResult;
     },
     /**
      * Update the options pannel as being empty.
@@ -3587,6 +3619,30 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetEditionRequest: function (ev) {
         this._execWithLoadingEffect(ev.data.exec, true);
+    },
+    /**
+     * Execs within mutex but without loading effect - e.g. for intra-page
+     * drag'n'drop.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data
+     * @param {function} ev.data.exec
+     */
+    _onSnippetEditionSuspend(ev) {
+        this._mutex.exec(ev.data.exec);
+    },
+    /**
+     * Blocks the UI with a loading effect until the current mutexed operation
+     * completes. This is to be used after a call to _onSnippetEditionSuspend
+     * if the UI needs to be blocked after all.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetEditionBlockUntilCompleted(ev) {
+        this._withLoadingEffect(false);
+        this._withLoadingEffect(true);
     },
     /**
      * @private
