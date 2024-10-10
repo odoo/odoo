@@ -316,7 +316,10 @@ class IotBoxOwlHomePage(Home):
             try:
                 helpers.save_conf_server(url, token, db_uuid, enterprise_code)
             except (subprocess.CalledProcessError, OSError, Exception):
-                return 'Failed to write server configuration files on IoT. Please try again.'
+                return {
+                    'status': 'failure',
+                    'message': 'Failed to write server configuration files on IoT. Please try again.',
+                }
 
         if iotname and platform.system() == 'Linux' and iotname != helpers.get_hostname():
             subprocess.run([file_path(
