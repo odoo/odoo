@@ -63,7 +63,13 @@
     .o_video_preview {
         @include o-we-preview-box();
 
-        .media_iframe_video {
+        .media_iframe_video_vertical {
+            aspect-ratio: 9 / 16;
+            max-height: 580px;
+        }
+
+        .media_iframe_video_horizontal {
+            aspect-ratio: 3 / 2;
             width: 100%;
         }
     }
