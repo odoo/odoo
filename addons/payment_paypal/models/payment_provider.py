@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = ['payment.provider']
 
     code = fields.Selection(
         selection_add=[('paypal', "PayPal")], ondelete={'paypal': 'set default'}

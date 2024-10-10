@@ -16,8 +16,7 @@ _logger = logging.getLogger(__name__)
 SFU_MODE_THRESHOLD = 3
 
 
-class ChannelMember(models.Model):
-    _name = "discuss.channel.member"
+class DiscussChannelMember(models.Model):
     _inherit = ["bus.listener.mixin"]
     _description = "Channel Member"
     _rec_names_search = ["channel_id", "partner_id", "guest_id"]

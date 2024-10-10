@@ -20,7 +20,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     l10n_hu_payment_mode = fields.Selection(
         [
@@ -1030,8 +1030,8 @@ class AccountMove(models.Model):
         return tax_totals
 
 
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(models.Model):
+    _inherit = ['account.move.line']
 
     @api.depends('move_id.delivery_date')
     def _compute_currency_rate(self):

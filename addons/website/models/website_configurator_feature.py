@@ -8,7 +8,6 @@ from odoo.exceptions import ValidationError
 
 class WebsiteConfiguratorFeature(models.Model):
 
-    _name = 'website.configurator.feature'
     _description = 'Website Configurator Feature'
     _order = 'sequence'
 

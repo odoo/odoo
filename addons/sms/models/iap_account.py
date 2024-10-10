@@ -4,7 +4,7 @@ from odoo import fields, models, _
 
 
 class IapAccount(models.Model):
-    _inherit = 'iap.account'
+    _inherit = ['iap.account']
 
     sender_name = fields.Char(help="This is the name that will be displayed as the sender of the SMS.", readonly=True)
 

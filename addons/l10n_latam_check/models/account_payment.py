@@ -4,7 +4,7 @@ from odoo.tools.misc import format_date
 
 
 class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+    _inherit = ['account.payment']
 
     l10n_latam_new_check_ids = fields.One2many('l10n_latam.check', 'payment_id', string='Checks')
     l10n_latam_move_check_ids = fields.Many2many(

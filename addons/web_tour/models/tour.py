@@ -3,8 +3,7 @@ import json
 import base64
 
 
-class Tour(models.Model):
-    _name = "web_tour.tour"
+class Web_TourTour(models.Model):
     _description = "Tours"
     _order = "sequence, name, id"
 
@@ -79,8 +78,7 @@ registry.category("web_tour.tours").add("{self.name}", {{
         }
 
 
-class TourStep(models.Model):
-    _name = "web_tour.tour.step"
+class Web_TourTourStep(models.Model):
     _description = "Tour's step"
     _order = "sequence, id"
 

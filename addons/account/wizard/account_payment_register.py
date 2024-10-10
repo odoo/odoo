@@ -8,7 +8,6 @@ from odoo.tools import frozendict, SQL
 
 
 class AccountPaymentRegister(models.TransientModel):
-    _name = 'account.payment.register'
     _description = 'Pay'
     _check_company_auto = True
 

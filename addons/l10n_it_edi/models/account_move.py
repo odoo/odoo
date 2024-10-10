@@ -50,7 +50,7 @@ def get_datetime(tree, xpath):
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     l10n_it_edi_state = fields.Selection(
         string="SDI State",

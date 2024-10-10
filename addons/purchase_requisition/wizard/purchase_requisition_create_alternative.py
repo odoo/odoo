@@ -6,7 +6,6 @@ from odoo.exceptions import UserError
 
 
 class PurchaseRequisitionCreateAlternative(models.TransientModel):
-    _name = 'purchase.requisition.create.alternative'
     _description = 'Wizard to preset values for alternative PO'
 
     origin_po_id = fields.Many2one(

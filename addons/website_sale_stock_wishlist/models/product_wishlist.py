@@ -4,7 +4,7 @@ from odoo import fields, models, api
 
 
 class ProductWishlist(models.Model):
-    _inherit = "product.wishlist"
+    _inherit = ["product.wishlist"]
 
     stock_notification = fields.Boolean(compute='_compute_stock_notification', default=False, required=True)
 

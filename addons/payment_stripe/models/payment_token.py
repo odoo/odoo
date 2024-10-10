@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+    _inherit = ['payment.token']
 
     stripe_payment_method = fields.Char(string="Stripe Payment Method ID", readonly=True)
     stripe_mandate = fields.Char(string="Stripe Mandate", readonly=True)

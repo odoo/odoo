@@ -6,7 +6,7 @@ from odoo.tools import float_compare
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = ['sale.order.line']
 
     @api.depends('product_uom_qty', 'qty_delivered', 'product_id', 'state')
     def _compute_qty_to_deliver(self):

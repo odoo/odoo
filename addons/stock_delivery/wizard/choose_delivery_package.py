@@ -4,7 +4,6 @@ from odoo import api, fields, models, _
 
 
 class ChooseDeliveryPackage(models.TransientModel):
-    _name = 'choose.delivery.package'
     _description = 'Delivery Package Selection Wizard'
 
     picking_id = fields.Many2one('stock.picking', 'Picking')

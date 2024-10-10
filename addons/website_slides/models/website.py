@@ -5,7 +5,7 @@ from odoo import fields, models, _
 
 
 class Website(models.Model):
-    _inherit = "website"
+    _inherit = ["website"]
 
     website_slide_google_app_key = fields.Char('Google Doc Key', groups='base.group_system')
 

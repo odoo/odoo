@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError
 
 
 class DiscussChannel(models.Model):
-    _inherit = 'discuss.channel'
+    _inherit = ['discuss.channel']
 
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor', index='btree_not_null')
 

@@ -45,7 +45,7 @@ _DEFAULT_TAX_REASONS = {
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _inherit = ['account.tax']
 
     l10n_hu_tax_type = fields.Selection(
         _SELECTION_TAX_TYPE,

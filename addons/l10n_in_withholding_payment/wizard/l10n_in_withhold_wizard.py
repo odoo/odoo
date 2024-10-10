@@ -1,8 +1,8 @@
 from odoo import models
 
 
-class L10nInWithholdWizard(models.TransientModel):
-    _inherit = 'l10n_in.withhold.wizard'
+class L10n_InWithholdWizard(models.TransientModel):
+    _inherit = ['l10n_in.withhold.wizard']
 
     def _prepare_withhold_header(self):
         res = super()._prepare_withhold_header()

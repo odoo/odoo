@@ -5,7 +5,7 @@ from odoo import fields, models, api, _
 
 
 class StockPicking(models.Model):
-    _inherit = "stock.picking"
+    _inherit = ["stock.picking"]
 
     l10n_it_transport_reason = fields.Selection([('sale', 'Sale'),
                                                  ('outsourcing', 'Outsourcing'),
@@ -55,7 +55,7 @@ class StockPicking(models.Model):
 
 
 class StockPickingType(models.Model):
-    _inherit = 'stock.picking.type'
+    _inherit = ['stock.picking.type']
 
     l10n_it_ddt_sequence_id = fields.Many2one('ir.sequence')
 

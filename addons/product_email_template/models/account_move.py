@@ -4,7 +4,7 @@ from odoo import api, models, SUPERUSER_ID
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def invoice_validate_send_email(self):
         if self.env.su:

@@ -3,8 +3,9 @@
 
 from odoo import api, fields, models
 
+
 class MailActivityMixin(models.AbstractModel):
-    _inherit = 'mail.activity.mixin'
+    _inherit = ['mail.activity.mixin']
 
     activity_calendar_event_id = fields.Many2one(
         'calendar.event', string="Next Activity Calendar Event",

@@ -6,8 +6,8 @@ from odoo.exceptions import ValidationError
 
 from dateutil.relativedelta import relativedelta
 
+
 class HrWorkEntryRegenerationWizard(models.TransientModel):
-    _name = 'hr.work.entry.regeneration.wizard'
     _description = 'Regenerate Employee Work Entries'
 
     earliest_available_date = fields.Date('Earliest date', compute='_compute_earliest_available_date')

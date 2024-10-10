@@ -6,7 +6,7 @@ from odoo.addons.website_sale_collect import utils
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     def _get_additionnal_combination_info(self, product_or_template, quantity, date, website):
         """ Override of `website_sale` to add information on whether Click & Collect is enabled and

@@ -7,7 +7,6 @@ from odoo.tools import float_round
 
 
 class MrpRoutingWorkcenter(models.Model):
-    _name = 'mrp.routing.workcenter'
     _description = 'Work Center Usage'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 

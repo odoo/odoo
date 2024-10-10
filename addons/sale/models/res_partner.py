@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     sale_order_count = fields.Integer(
         string="Sale Order Count",

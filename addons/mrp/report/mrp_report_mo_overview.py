@@ -8,8 +8,8 @@ from odoo.tools import float_compare, float_repr, float_round, float_is_zero, fo
 from datetime import datetime, timedelta
 from math import log10
 
-class ReportMoOverview(models.AbstractModel):
-    _name = 'report.mrp.report_mo_overview'
+
+class ReportMrpReport_Mo_Overview(models.AbstractModel):
     _description = 'MO Overview Report'
 
     @api.model

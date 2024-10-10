@@ -4,7 +4,6 @@ from odoo import fields, models
 
 
 class LoyaltyHistory(models.Model):
-    _name = 'loyalty.history'
     _description = "History for Loyalty cards and Ewallets"
     _order = 'id desc'
 

@@ -13,8 +13,7 @@ from odoo.addons.mail.tools.discuss import Store
 _logger = logging.getLogger(__name__)
 
 
-class MailRtcSession(models.Model):
-    _name = 'discuss.channel.rtc.session'
+class DiscussChannelRtcSession(models.Model):
     _inherit = ["bus.listener.mixin"]
     _description = 'Mail RTC session'
     _rec_name = 'channel_member_id'

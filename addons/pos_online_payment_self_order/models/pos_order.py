@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class PosOrder(models.Model):
-    _inherit = 'pos.order'
+    _inherit = ['pos.order']
 
     use_self_order_online_payment = fields.Boolean(compute='_compute_use_self_order_online_payment', store=True, readonly=True)
 

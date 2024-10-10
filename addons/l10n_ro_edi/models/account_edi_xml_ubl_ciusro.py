@@ -10,9 +10,8 @@ def get_formatted_sector_ro(city: str):
     return city.upper().replace(' ', '')
 
 
-class AccountEdiXmlUBLRO(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
-    _name = "account.edi.xml.ubl_ro"
+class AccountEdiXmlUbl_Ro(models.AbstractModel):
+    _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "CIUS RO"
 
     def _export_invoice_filename(self, invoice):

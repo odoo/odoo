@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class StockPickingType(models.Model):
-    _inherit = "stock.picking.type"
+    _inherit = ["stock.picking.type"]
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -27,7 +27,7 @@ class StockPickingType(models.Model):
 
 
 class StockPicking(models.Model):
-    _inherit = "stock.picking"
+    _inherit = ["stock.picking"]
 
     def _get_possible_pickings_domain(self):
         domain = super()._get_possible_pickings_domain()

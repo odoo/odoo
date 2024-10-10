@@ -1,8 +1,7 @@
 from odoo import fields, models
 
 
-class L10nItDocumentType(models.Model):
-    _name = 'l10n_it.document.type'
+class L10n_ItDocumentType(models.Model):
     _description = 'Italian Document Type'
 
     name = fields.Char(required=True, help='The document type name', translate=True)

@@ -10,7 +10,7 @@ from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
     _check_company_auto = True
 
     service_type = fields.Selection(

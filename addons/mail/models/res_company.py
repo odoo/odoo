@@ -4,9 +4,8 @@
 from odoo import api, models, fields, tools
 
 
-class Company(models.Model):
-    _name = 'res.company'
-    _inherit = 'res.company'
+class ResCompany(models.Model):
+    _inherit = ['res.company']
 
     def _default_alias_domain_id(self):
         return self.env['mail.alias.domain'].search([], limit=1)

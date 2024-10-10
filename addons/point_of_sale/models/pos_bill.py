@@ -3,8 +3,7 @@ from odoo.exceptions import UserError
 from odoo.osv.expression import OR
 
 
-class Bill(models.Model):
-    _name = "pos.bill"
+class PosBill(models.Model):
     _order = "value"
     _description = "Coins/Bills"
     _inherit = ["pos.load.mixin"]

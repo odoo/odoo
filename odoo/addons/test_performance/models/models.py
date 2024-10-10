@@ -4,8 +4,7 @@
 from odoo import models, fields, api, tools
 
 
-class BaseModel(models.Model):
-    _name = 'test_performance.base'
+class Test_PerformanceBase(models.Model):
     _description = 'Test Performance Base'
 
     name = fields.Char()
@@ -47,8 +46,7 @@ class BaseModel(models.Model):
             record.total = sum(line.value for line in record.line_ids)
 
 
-class LineModel(models.Model):
-    _name = 'test_performance.line'
+class Test_PerformanceLine(models.Model):
     _description = 'Test Performance Line'
 
     base_id = fields.Many2one('test_performance.base', required=True, ondelete='cascade')
@@ -59,30 +57,26 @@ class LineModel(models.Model):
         tools.create_unique_index(self._cr, 'test_performance_line_uniq', self._table, ['base_id', 'value'])
 
 
-class TagModel(models.Model):
-    _name = 'test_performance.tag'
+class Test_PerformanceTag(models.Model):
     _description = 'Test Performance Tag'
 
     name = fields.Char()
 
 
-class Bacon(models.Model):
-    _name = 'test_performance.bacon'
+class Test_PerformanceBacon(models.Model):
     _description = 'Test Performance Bacon'
 
     property_eggs = fields.Many2one(
         'test_performance.eggs', company_dependent=True, string='Eggs')
 
 
-class Eggs(models.Model):
-    _name = 'test_performance.eggs'
+class Test_PerformanceEggs(models.Model):
     _description = 'Test Performance Eggs'
 
     name = fields.Char()
 
 
-class Mozzarella(models.Model):
-    _name = 'test_performance.mozzarella'
+class Test_PerformanceMozzarella(models.Model):
     _description = 'Test Performance Mozzarella'
 
     value = fields.Integer(default=0, required=True)
@@ -95,8 +89,8 @@ class Mozzarella(models.Model):
             record.value_plus_one = record.value + 1
 
 
-class SimpleMinded(models.Model):
-    _name = _description = 'test_performance.simple.minded'
+class Test_PerformanceSimpleMinded(models.Model):
+    _description = 'test_performance.simple.minded'
 
     name = fields.Char()
     active = fields.Boolean(default=True)

@@ -1,8 +1,8 @@
 from odoo import models, _
 
 
-class MailComposer(models.TransientModel):
-    _inherit = 'mail.compose.message'
+class MailComposeMessage(models.TransientModel):
+    _inherit = ['mail.compose.message']
 
     def action_send_mail(self):
         res = super().action_send_mail()

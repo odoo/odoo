@@ -10,8 +10,8 @@ from markupsafe import Markup, escape
 from odoo.tools import frozendict
 import json
 
-class AutomaticEntryWizard(models.TransientModel):
-    _name = 'account.automatic.entry.wizard'
+
+class AccountAutomaticEntryWizard(models.TransientModel):
     _description = 'Create Automatic Entries'
     _check_company_auto = True
 

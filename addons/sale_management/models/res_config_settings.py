@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     group_sale_order_template = fields.Boolean(
         "Quotation Templates", implied_group='sale_management.group_sale_order_template')

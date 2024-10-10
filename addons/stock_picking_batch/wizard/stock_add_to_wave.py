@@ -5,8 +5,7 @@ from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 
 
-class StockPickingToWave(models.TransientModel):
-    _name = 'stock.add.to.wave'
+class StockAddToWave(models.TransientModel):
     _description = 'Wave Transfer Lines'
 
     @api.model

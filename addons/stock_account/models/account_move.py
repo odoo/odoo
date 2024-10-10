@@ -5,7 +5,7 @@ from odoo.tools import float_is_zero
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     stock_move_id = fields.Many2one('stock.move', string='Stock Move', index='btree_not_null')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_id', string='Stock Valuation Layer')
@@ -238,7 +238,7 @@ class AccountMove(models.Model):
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_line_id', string='Stock Valuation Layer')
     cogs_origin_id = fields.Many2one(  # technical field used to keep track in the originating line of the anglo-saxon lines

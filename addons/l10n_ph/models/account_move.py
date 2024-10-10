@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     def action_open_l10n_ph_2307_wizard(self):
         vendor_bills = self.filtered_domain([('move_type', '=', 'in_invoice')])

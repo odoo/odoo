@@ -10,20 +10,18 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class GeoProvider(models.Model):
-    _name = "base.geo_provider"
+class BaseGeo_Provider(models.Model):
     _description = "Geo Provider"
 
     tech_name = fields.Char(string="Technical Name")
     name = fields.Char()
 
 
-class GeoCoder(models.AbstractModel):
+class BaseGeocoder(models.AbstractModel):
     """
     Abstract class used to call Geolocalization API and convert addresses
     into GPS coordinates.
     """
-    _name = "base.geocoder"
     _description = "Geo Coder"
 
     @api.model

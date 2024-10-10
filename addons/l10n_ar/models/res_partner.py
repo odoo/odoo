@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class ResPartner(models.Model):
 
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     l10n_ar_vat = fields.Char(
         compute='_compute_l10n_ar_vat', string="VAT", help='Computed field that returns VAT or nothing if this one'

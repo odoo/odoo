@@ -9,8 +9,8 @@ from .eu_tag_map import EU_TAG_MAP
 from .eu_tax_map import EU_TAX_MAP
 
 
-class Company(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model):
+    _inherit = ['res.company']
 
     @api.model
     def _map_all_eu_companies_taxes(self):

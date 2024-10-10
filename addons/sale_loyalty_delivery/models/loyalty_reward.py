@@ -5,7 +5,7 @@ from odoo import _, fields, models
 
 
 class LoyaltyReward(models.Model):
-    _inherit = 'loyalty.reward'
+    _inherit = ['loyalty.reward']
 
     reward_type = fields.Selection(
         selection_add=[('shipping', 'Free Shipping')],

@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+    _inherit = ['account.analytic.account']
 
     purchase_order_count = fields.Integer("Purchase Order Count", compute='_compute_purchase_order_count')
 

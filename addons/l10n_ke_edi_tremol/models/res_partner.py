@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     l10n_ke_exemption_number = fields.Char(
         string='Exemption Number',

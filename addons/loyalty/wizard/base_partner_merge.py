@@ -1,8 +1,8 @@
 from odoo import models
 
 
-class MergePartnerAutomatic(models.TransientModel):
-    _inherit = 'base.partner.merge.automatic.wizard'
+class BasePartnerMergeAutomaticWizard(models.TransientModel):
+    _inherit = ['base.partner.merge.automatic.wizard']
 
     def _update_foreign_keys(self, src_partners, dst_partner):
         """ Override of base to merge corresponding nominative loyalty cards."""

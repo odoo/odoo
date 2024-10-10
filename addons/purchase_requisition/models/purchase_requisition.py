@@ -6,7 +6,6 @@ from collections import defaultdict
 
 
 class PurchaseRequisition(models.Model):
-    _name = "purchase.requisition"
     _description = "Purchase Requisition"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "id desc"
@@ -161,8 +160,7 @@ class PurchaseRequisition(models.Model):
 
 
 class PurchaseRequisitionLine(models.Model):
-    _name = "purchase.requisition.line"
-    _inherit = 'analytic.mixin'
+    _inherit = ['analytic.mixin']
     _description = "Purchase Requisition Line"
     _rec_name = 'product_id'
 

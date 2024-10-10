@@ -6,8 +6,9 @@ import binascii
 
 from odoo import _, api, exceptions, fields, models
 
+
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     def _default_use_google_maps_static_api(self):
         api_key = self.env['ir.config_parameter'].sudo().get_param('google_maps.signed_static_api_key')

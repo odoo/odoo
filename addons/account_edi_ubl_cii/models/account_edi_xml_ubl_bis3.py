@@ -6,9 +6,8 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NA
 from stdnum.no import mva
 
 
-class AccountEdiXmlUBLBIS3(models.AbstractModel):
-    _name = "account.edi.xml.ubl_bis3"
-    _inherit = 'account.edi.xml.ubl_21'
+class AccountEdiXmlUbl_Bis3(models.AbstractModel):
+    _inherit = ['account.edi.xml.ubl_21']
     _description = "UBL BIS Billing 3.0.12"
 
     """

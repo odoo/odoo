@@ -41,7 +41,6 @@ def add_guest_to_context(func):
 
 
 class MailGuest(models.Model):
-    _name = 'mail.guest'
     _description = "Guest"
     _inherit = ["avatar.mixin", "bus.listener.mixin"]
     _avatar_name_field = "name"

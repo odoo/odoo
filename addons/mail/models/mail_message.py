@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
 
 
-class Message(models.Model):
+class MailMessage(models.Model):
     """ Message model (from notifications to user input).
 
     Note:: State management / Error codes / Failure types summary
@@ -65,7 +65,6 @@ class Message(models.Model):
     See ``mailing.trace`` model in mass_mailing application for mailing trace
     information.
     """
-    _name = 'mail.message'
     _inherit = ["bus.listener.mixin"]
     _description = 'Message'
     _order = 'id desc'
@@ -73,7 +72,7 @@ class Message(models.Model):
 
     @api.model
     def default_get(self, fields):
-        res = super(Message, self).default_get(fields)
+        res = super().default_get(fields)
         missing_author = 'author_id' in fields and 'author_id' not in res
         missing_email_from = 'email_from' in fields and 'email_from' not in res
         if missing_author or missing_email_from:
@@ -634,7 +633,7 @@ class Message(models.Model):
             # delegate creation of tracking after the create as sudo to avoid access rights issues
             tracking_values_list.append(values.pop('tracking_value_ids', False))
 
-        messages = super(Message, self).create(values_list)
+        messages = super().create(values_list)
 
         # link back attachments to records, to filter out attachments linked to
         # the same records as the message (considered as ok if message is ok)
@@ -692,7 +691,7 @@ class Message(models.Model):
         """ Override to explicitely call check_access(), that is not called
             by the ORM. It instead directly fetches ir.rules and apply them. """
         self.check_access('read')
-        return super(Message, self).read(fields=fields, load=load)
+        return super().read(fields=fields, load=load)
 
     def fetch(self, field_names):
         # This freaky hack is aimed at reading data without the overhead of
@@ -709,7 +708,7 @@ class Message(models.Model):
             raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
-        res = super(Message, self).write(vals)
+        res = super().write(vals)
         if vals.get('attachment_ids'):
             for mail in self:
                 mail.attachment_ids.check(mode='read')
@@ -736,13 +735,13 @@ class Message(models.Model):
         # Notify front-end of messages deletion for partners having a user
         for partner, messages in messages_by_partner.items():
             partner._bus_send("mail.message/delete", {"message_ids": messages.ids})
-        return super(Message, self).unlink()
+        return super().unlink()
 
     def export_data(self, fields_to_export):
         if not self.env.is_admin():
             raise AccessError(_("Only administrators are allowed to export mail message"))
 
-        return super(Message, self).export_data(fields_to_export)
+        return super().export_data(fields_to_export)
 
     # ------------------------------------------------------
     # ACTIONS

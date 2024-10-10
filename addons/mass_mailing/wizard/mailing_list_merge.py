@@ -5,13 +5,12 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class MassMailingListMerge(models.TransientModel):
-    _name = 'mailing.list.merge'
+class MailingListMerge(models.TransientModel):
     _description = 'Merge Mass Mailing List'
 
     @api.model
     def default_get(self, fields):
-        res = super(MassMailingListMerge, self).default_get(fields)
+        res = super().default_get(fields)
 
         if not res.get('src_list_ids') and 'src_list_ids' in fields:
             if self.env.context.get('active_model') != 'mailing.list':

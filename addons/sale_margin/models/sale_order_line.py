@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+    _inherit = ["sale.order.line"]
 
     margin = fields.Float(
         "Margin", compute='_compute_margin',

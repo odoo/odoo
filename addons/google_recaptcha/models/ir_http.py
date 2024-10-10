@@ -10,8 +10,8 @@ from odoo.exceptions import UserError, ValidationError
 logger = logging.getLogger(__name__)
 
 
-class Http(models.AbstractModel):
-    _inherit = 'ir.http'
+class IrHttp(models.AbstractModel):
+    _inherit = ['ir.http']
 
     def session_info(self):
         session_info = super().session_info()

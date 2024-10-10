@@ -5,7 +5,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class IrAttachment(models.Model):
-    _inherit = "ir.attachment"
+    _inherit = ["ir.attachment"]
 
     voice_ids = fields.One2many("discuss.voice.metadata", "attachment_id")
 

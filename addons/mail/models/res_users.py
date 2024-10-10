@@ -7,14 +7,13 @@ from odoo.tools import email_normalize
 from odoo.addons.mail.tools.discuss import Store
 
 
-class Users(models.Model):
+class ResUsers(models.Model):
     """ Update of res.users class
         - add a preference about sending emails about notifications
         - make a new user follow itself
         - add a welcome message
         - add suggestion preference
     """
-    _name = 'res.users'
     _inherit = ['res.users']
 
     notification_type = fields.Selection([
@@ -73,7 +72,7 @@ class Users(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
 
-        users = super(Users, self).create(vals_list)
+        users = super().create(vals_list)
 
         # log a portal status change (manual tracking)
         log_portal_access = not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
@@ -105,7 +104,7 @@ class Users(models.Model):
         if 'notification_type' in vals:
             user_notification_type_modified = self.filtered(lambda user: user.notification_type != vals['notification_type'])
 
-        write_res = super(Users, self).write(vals)
+        write_res = super().write(vals)
 
         # log a portal status change (manual tracking)
         if log_portal_access:
@@ -156,7 +155,7 @@ class Users(models.Model):
     def action_archive(self):
         activities_to_delete = self.env['mail.activity'].search([('user_id', 'in', self.ids)])
         activities_to_delete.unlink()
-        return super(Users, self).action_archive()
+        return super().action_archive()
 
     def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):
         """ This method is meant to be called whenever a sensitive update is done on the user's account.
@@ -245,7 +244,7 @@ class Users(models.Model):
         else:
             users_to_blacklist = []
 
-        super(Users, self)._deactivate_portal_user(**post)
+        super()._deactivate_portal_user(**post)
 
         for user, user_email in users_to_blacklist:
             self.env['mail.blacklist']._add(

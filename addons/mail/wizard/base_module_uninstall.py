@@ -5,7 +5,7 @@ from odoo import models
 
 
 class BaseModuleUninstall(models.TransientModel):
-    _inherit = "base.module.uninstall"
+    _inherit = ["base.module.uninstall"]
 
     def _get_models(self):
         # consider mail-thread models only

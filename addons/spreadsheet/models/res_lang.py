@@ -8,8 +8,8 @@ from odoo.addons.spreadsheet.utils.formatting import (
 )
 
 
-class Lang(models.Model):
-    _inherit = "res.lang"
+class ResLang(models.Model):
+    _inherit = ["res.lang"]
 
     @api.model
     def get_locales_for_spreadsheet(self):

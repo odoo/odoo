@@ -4,7 +4,6 @@ from odoo import fields, models
 
 
 class ProductTag(models.Model):
-    _name = 'product.tag'
     _inherit = ['website.multi.mixin', 'product.tag']
 
     visible_on_ecommerce = fields.Boolean(

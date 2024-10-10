@@ -4,9 +4,8 @@ from odoo import models, _
 ANZ_TAX_CATEGORIES = {'S', 'E', 'Z', 'G', 'O'}
 
 
-class AccountEdiXmlUBLPINTANZ(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
-    _name = "account.edi.xml.pint_anz"
+class AccountEdiXmlPint_Anz(models.AbstractModel):
+    _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "Australia & New Zealand implementation of Peppol International (PINT) model for Billing"
     """
     Pint is a standard for International Billing from Peppol. It is based on Peppol BIS Billing 3.

@@ -3,7 +3,7 @@ from odoo import models, fields, api
 
 
 class PosOrder(models.Model):
-    _inherit = 'pos.order'
+    _inherit = ['pos.order']
 
     attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
 

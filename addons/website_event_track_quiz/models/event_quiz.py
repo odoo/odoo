@@ -5,8 +5,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class Quiz(models.Model):
-    _name = "event.quiz"
+class EventQuiz(models.Model):
     _description = "Quiz"
 
     name = fields.Char('Name', required=True, translate=True)
@@ -19,8 +18,7 @@ class Quiz(models.Model):
         help='Let attendees reset the quiz and try again.')
 
 
-class QuizQuestion(models.Model):
-    _name = "event.quiz.question"
+class EventQuizQuestion(models.Model):
     _description = "Content Quiz Question"
     _order = "quiz_id, sequence, id"
 
@@ -50,8 +48,7 @@ class QuizQuestion(models.Model):
                 raise ValidationError(_('Question "%s" must have 1 correct answer and at least 1 incorrect answer to be valid.', question.name))
 
 
-class QuizAnswer(models.Model):
-    _name = "event.quiz.answer"
+class EventQuizAnswer(models.Model):
     _rec_name = "text_value"
     _description = "Question's Answer"
     _order = 'question_id, sequence, id'

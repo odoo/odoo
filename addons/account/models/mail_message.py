@@ -16,8 +16,8 @@ DOMAINS = {
 }
 
 
-class Message(models.Model):
-    _inherit = 'mail.message'
+class MailMessage(models.Model):
+    _inherit = ['mail.message']
 
     account_audit_log_preview = fields.Text(string="Description", compute="_compute_account_audit_log_preview")
     account_audit_log_move_id = fields.Many2one(

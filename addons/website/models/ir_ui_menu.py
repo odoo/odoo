@@ -5,7 +5,7 @@ from odoo.http import request
 
 
 class IrUiMenu(models.Model):
-    _inherit = 'ir.ui.menu'
+    _inherit = ['ir.ui.menu']
 
     @api.model
     @tools.ormcache_context('self._uid', keys=('lang', 'force_action',))

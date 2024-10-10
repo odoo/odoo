@@ -7,7 +7,6 @@ from datetime import date
 
 
 class AccountPartialReconcile(models.Model):
-    _name = "account.partial.reconcile"
     _description = "Partial Reconcile"
 
     # ==== Reconciliation fields ====

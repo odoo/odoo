@@ -4,7 +4,6 @@ from odoo.tools import SQL
 
 
 class AccountMergeWizard(models.TransientModel):
-    _name = 'account.merge.wizard'
     _description = "Account merge wizard"
 
     account_ids = fields.Many2many('account.account')
@@ -184,7 +183,6 @@ class AccountMergeWizard(models.TransientModel):
 
 
 class AccountMergeWizardLine(models.TransientModel):
-    _name = 'account.merge.wizard.line'
     _description = "Account merge wizard line"
     _order = 'sequence, id'
 

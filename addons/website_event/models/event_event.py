@@ -16,8 +16,7 @@ from odoo.tools.misc import get_lang, format_date
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
 
-class Event(models.Model):
-    _name = 'event.event'
+class EventEvent(models.Model):
     _inherit = [
         'event.event',
         'website.seo.metadata',
@@ -47,7 +46,7 @@ class Event(models.Model):
         [('public', 'Public'), ('link', 'Via a Link'), ('logged_users', 'Logged Users')],
         string="Website Visibility", required=True, default='public', tracking=True,
         help="""Defines the Visibility of the Event on the Website and searches.\n
-            Note that the Event is however always available via its link.""")
+            Note that the EventEvent is however always available via its link.""")
     website_published = fields.Boolean(tracking=True)
     website_menu = fields.Boolean(
         string='Website Menu',
@@ -229,7 +228,7 @@ class Event(models.Model):
 
     @api.depends('name')
     def _compute_website_url(self):
-        super(Event, self)._compute_website_url()
+        super()._compute_website_url()
         for event in self:
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 event.website_url = '/event/%s' % self.env['ir.http']._slug(event)
@@ -256,7 +255,7 @@ class Event(models.Model):
 
     def write(self, vals):
         menus_state_by_field = self._split_menus_state_by_field()
-        res = super(Event, self).write(vals)
+        res = super().write(vals)
         menus_update_by_field = self._get_menus_update_by_field(menus_state_by_field, force_update=vals.keys())
         self._update_website_menus(menus_update_by_field=menus_update_by_field)
         return res
@@ -458,7 +457,7 @@ class Event(models.Model):
             if self.is_published:
                 return self.env.ref('website_event.mt_event_published', raise_if_not_found=False)
             return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False)
-        return super(Event, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     def _get_external_description(self):
         """ Adding the URL of the event into the description """
@@ -485,7 +484,7 @@ class Event(models.Model):
         return {'google_url': google_url, 'iCal_url': iCal_url}
 
     def _default_website_meta(self):
-        res = super(Event, self)._default_website_meta()
+        res = super()._default_website_meta()
         event_cover_properties = json.loads(self.cover_properties)
         # background-image might contain single quotes eg `url('/my/url')`
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = event_cover_properties.get('background-image', 'none')[4:-1].strip("'")

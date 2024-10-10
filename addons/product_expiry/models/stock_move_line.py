@@ -8,7 +8,7 @@ from odoo.tools.sql import column_exists, create_column
 
 
 class StockMoveLine(models.Model):
-    _inherit = "stock.move.line"
+    _inherit = ["stock.move.line"]
 
     expiration_date = fields.Datetime(
         string='Expiration Date', compute='_compute_expiration_date', store=True,

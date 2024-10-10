@@ -7,7 +7,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+    _inherit = ['ir.http']
 
     def session_info(self):
         """Override to add the current user data (partner or guest) if applicable."""

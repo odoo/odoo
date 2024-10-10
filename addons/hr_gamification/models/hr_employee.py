@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+    _inherit = ["hr.employee.base"]
 
     goal_ids = fields.One2many('gamification.goal', string='Employee HR Goals', compute='_compute_employee_goals')
     badge_ids = fields.One2many(

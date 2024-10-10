@@ -6,8 +6,7 @@ from odoo import Command, api, fields, models, _
 
 
 class ProjectShareWizard(models.TransientModel):
-    _name = 'project.share.wizard'
-    _inherit = 'portal.share'
+    _inherit = ['portal.share']
     _description = 'Project Sharing'
 
     @api.model

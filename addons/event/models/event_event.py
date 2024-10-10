@@ -27,7 +27,6 @@ except ImportError:
 
 
 class EventType(models.Model):
-    _name = 'event.type'
     _description = 'Event Template'
     _order = 'sequence, id'
 
@@ -92,7 +91,6 @@ class EventType(models.Model):
 
 class EventEvent(models.Model):
     """Event"""
-    _name = 'event.event'
     _description = 'Event'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_begin, id'

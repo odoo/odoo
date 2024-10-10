@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+    _inherit = ['res.partner.bank']
 
     proxy_type = fields.Selection(selection_add=[('mobile', 'Mobile Number'), ('uen', 'UEN')],
                                   ondelete={'mobile': 'set default', 'uen': 'set default'})

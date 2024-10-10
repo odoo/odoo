@@ -7,7 +7,7 @@ from odoo.tools import html2plaintext
 
 
 class DiscussChannel(models.Model):
-    _inherit = 'discuss.channel'
+    _inherit = ['discuss.channel']
 
     def execute_command_lead(self, **kwargs):
         key = kwargs['body']

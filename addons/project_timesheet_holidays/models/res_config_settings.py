@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     internal_project_id = fields.Many2one(
         related='company_id.internal_project_id', required=True, string="Internal Project",

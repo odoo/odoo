@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     property_stock_subcontractor = fields.Many2one(
         'stock.location', string="Subcontractor Location", company_dependent=True,

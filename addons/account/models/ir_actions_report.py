@@ -8,7 +8,7 @@ from odoo.tools import pdf
 
 
 class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
+    _inherit = ['ir.actions.report']
 
     is_invoice_report = fields.Boolean(
         string="Invoice report",

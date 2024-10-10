@@ -7,7 +7,7 @@ from odoo import SUPERUSER_ID, _, api, models
 
 
 class AccountMoveSend(models.AbstractModel):
-    _inherit = 'account.move.send'
+    _inherit = ['account.move.send']
 
     @api.model
     def _is_vn_edi_applicable(self, move):

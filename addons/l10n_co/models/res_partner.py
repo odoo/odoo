@@ -4,7 +4,7 @@ from odoo import models, api
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     @api.constrains('vat', 'country_id', 'l10n_latam_identification_type_id')
     def check_vat(self):

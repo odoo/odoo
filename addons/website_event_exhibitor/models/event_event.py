@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class EventEvent(models.Model):
-    _inherit = "event.event"
+    _inherit = ["event.event"]
 
     # sponsors
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')

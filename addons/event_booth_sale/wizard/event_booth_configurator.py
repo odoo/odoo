@@ -6,7 +6,6 @@ from odoo.exceptions import ValidationError
 
 
 class EventBoothConfigurator(models.TransientModel):
-    _name = 'event.booth.configurator'
     _description = 'Event Booth Configurator'
 
     product_id = fields.Many2one('product.product', string='Product', readonly=True)

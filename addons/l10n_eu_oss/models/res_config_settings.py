@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     l10n_eu_oss_eu_country = fields.Boolean('Is European country?', compute='_compute_l10n_eu_oss_european_country')
 

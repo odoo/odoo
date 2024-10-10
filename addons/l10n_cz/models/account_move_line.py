@@ -3,7 +3,7 @@ from odoo import models, fields
 
 
 class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+    _inherit = ["account.move.line"]
 
     def _compute_currency_rate(self):
         super()._compute_currency_rate()

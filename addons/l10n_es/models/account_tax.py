@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _inherit = ['account.tax']
 
     l10n_es_exempt_reason = fields.Selection(
         selection=[

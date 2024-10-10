@@ -5,7 +5,7 @@ from odoo.http import request, Response
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+    _inherit = ['ir.http']
 
     @classmethod
     def get_utm_domain_cookies(cls):

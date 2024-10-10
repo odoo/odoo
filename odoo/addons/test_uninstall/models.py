@@ -3,12 +3,12 @@
 
 from odoo import models, fields
 
-class test_uninstall_model(models.Model):
+
+class Test_UninstallModel(models.Model):
     """
     This model uses different types of columns to make it possible to test
     the uninstall feature of Odoo.
     """
-    _name = 'test_uninstall.model'
     _description = 'Testing Uninstall Model'
 
     name = fields.Char('Name')
@@ -19,8 +19,9 @@ class test_uninstall_model(models.Model):
         ('name_uniq', 'unique (name)', 'Each name must be unique.'),
     ]
 
+
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     _sql_constraints = [
         ('test_uninstall_res_user_unique_constraint', 'unique (password)', 'Test uninstall unique constraint'),

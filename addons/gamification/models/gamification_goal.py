@@ -11,12 +11,11 @@ from odoo.tools.safe_eval import safe_eval, time
 _logger = logging.getLogger(__name__)
 
 
-class Goal(models.Model):
+class GamificationGoal(models.Model):
     """Goal instance for a user
 
     An individual goal for a user on a specified time period"""
 
-    _name = 'gamification.goal'
     _description = 'Gamification Goal'
     _rec_name = 'definition_id'
     _order = 'start_date desc, end_date desc, definition_id, id'
@@ -274,7 +273,7 @@ class Goal(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        return super(Goal, self.with_context(no_remind_goal=True)).create(vals_list)
+        return super(GamificationGoal, self.with_context(no_remind_goal=True)).create(vals_list)
 
     def write(self, vals):
         """Overwrite the write method to update the last_update field to today
@@ -283,7 +282,7 @@ class Goal(models.Model):
         change, a report is generated
         """
         vals['last_update'] = fields.Date.context_today(self)
-        result = super(Goal, self).write(vals)
+        result = super().write(vals)
         for goal in self:
             if goal.state != "draft" and ('definition_id' in vals or 'user_id' in vals):
                 # avoid drag&drop in kanban view

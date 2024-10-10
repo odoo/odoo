@@ -2361,7 +2361,6 @@ class ResetViewArchWizard(models.TransientModel):
 
 
 class Base(models.AbstractModel):
-    _name = "base"
 
     _inherit = ['base']
 

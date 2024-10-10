@@ -4,7 +4,7 @@ from odoo import models
 
 
 class AccountTax(models.Model):
-    _inherit = "account.tax"
+    _inherit = ["account.tax"]
 
     def _hook_compute_is_used(self, taxes_to_compute):
         # OVERRIDE in order to fetch taxes used in expenses

@@ -6,7 +6,7 @@ from odoo import models
 
 
 class AccountEdiDocument(models.Model):
-    _inherit = 'account.edi.document'
+    _inherit = ['account.edi.document']
 
     def _prepare_jobs(self):
         """

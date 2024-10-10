@@ -7,7 +7,7 @@ from stdnum import luhn
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def _get_invoice_reference_se_ocr2(self, reference):
         self.ensure_one()

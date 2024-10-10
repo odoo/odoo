@@ -4,8 +4,8 @@
 from odoo import fields, models
 
 
-class company(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model):
+    _inherit = ['res.company']
 
     security_lead = fields.Float(
         'Sales Safety Days', default=0.0, required=True,

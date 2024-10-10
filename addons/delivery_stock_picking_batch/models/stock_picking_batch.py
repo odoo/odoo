@@ -3,8 +3,9 @@
 
 from odoo import models
 
+
 class StockPickingBatch(models.Model):
-    _inherit = "stock.picking.batch"
+    _inherit = ["stock.picking.batch"]
 
     def _is_picking_auto_mergeable(self, picking):
         """ Verifies if a picking can be safely inserted into the batch without violating auto_batch_constrains.

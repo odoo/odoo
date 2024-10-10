@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
-    _inherit = 'sale.advance.payment.inv'
+    _inherit = ['sale.advance.payment.inv']
 
     date_start_invoice_timesheet = fields.Date(
         string="Start Date",

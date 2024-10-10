@@ -2,7 +2,7 @@ from odoo import models, _
 
 
 class StockRule(models.Model):
-    _inherit = 'stock.rule'
+    _inherit = ['stock.rule']
 
     def _get_lead_days(self, product, **values):
         """For subcontracting, we need to consider both vendor lead time and

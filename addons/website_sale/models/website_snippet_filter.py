@@ -7,7 +7,7 @@ from odoo.osv import expression
 
 
 class WebsiteSnippetFilter(models.Model):
-    _inherit = 'website.snippet.filter'
+    _inherit = ['website.snippet.filter']
 
     product_cross_selling = fields.Boolean(
         string="About cross selling products",

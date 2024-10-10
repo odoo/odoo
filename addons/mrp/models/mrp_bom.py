@@ -12,7 +12,6 @@ from collections import defaultdict
 
 class MrpBom(models.Model):
     """ Defines bills of material for a product or a product template """
-    _name = 'mrp.bom'
     _description = 'Bill of Material'
     _inherit = ['mail.thread', 'product.catalog.mixin']
     _rec_name = 'product_tmpl_id'
@@ -516,7 +515,6 @@ class MrpBom(models.Model):
 
 
 class MrpBomLine(models.Model):
-    _name = 'mrp.bom.line'
     _order = "sequence, id"
     _rec_name = "product_id"
     _description = 'Bill of Material Line'
@@ -721,8 +719,7 @@ class MrpBomLine(models.Model):
         }
 
 
-class MrpByProduct(models.Model):
-    _name = 'mrp.bom.byproduct'
+class MrpBomByproduct(models.Model):
     _description = 'Byproduct'
     _rec_name = "product_id"
     _check_company_auto = True

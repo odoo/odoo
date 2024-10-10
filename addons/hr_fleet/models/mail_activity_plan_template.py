@@ -6,7 +6,7 @@ from odoo import exceptions
 
 
 class MailActivityPlanTemplate(models.Model):
-    _inherit = 'mail.activity.plan.template'
+    _inherit = ['mail.activity.plan.template']
 
     responsible_type = fields.Selection(
         selection_add=[('fleet_manager', "Fleet Manager")],

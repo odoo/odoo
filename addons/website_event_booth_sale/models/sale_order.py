@@ -6,7 +6,7 @@ from odoo import models, _
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     def _cart_find_product_line(
         self, product_id=None, line_id=None,

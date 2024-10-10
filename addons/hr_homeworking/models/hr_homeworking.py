@@ -6,7 +6,6 @@ DAYS = ['monday_location_id', 'tuesday_location_id', 'wednesday_location_id', 't
 
 
 class HrEmployeeLocation(models.Model):
-    _name = "hr.employee.location"
     _description = "Employee Location"
 
     work_location_id = fields.Many2one('hr.work.location', required=True, string="Location")

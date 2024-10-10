@@ -3,8 +3,7 @@
 from odoo import models, fields
 
 
-class Course(models.Model):
-    _name = 'test_new_api.course'
+class Test_New_ApiCourse(models.Model):
     _description = 'a course'
 
     name = fields.Char('Name')
@@ -19,8 +18,7 @@ class Course(models.Model):
         return [('test_new_api.lesson', None)]
 
 
-class Lesson(models.Model):
-    _name = 'test_new_api.lesson'
+class Test_New_ApiLesson(models.Model):
     _description = 'a lesson of a course (a day typically)'
 
     name = fields.Char('Name')
@@ -41,8 +39,7 @@ class Lesson(models.Model):
                 record.display_name = record.name
 
 
-class Person(models.Model):
-    _name = 'test_new_api.person'
+class Test_New_ApiPerson(models.Model):
     _description = 'a person, can be an author, teacher or attendee of a lesson'
 
     name = fields.Char('Name')
@@ -60,16 +57,14 @@ class Person(models.Model):
             record.display_name = f"{particular}{record.name}{special}"
 
 
-class Employer(models.Model):
-    _name = 'test_new_api.employer'
+class Test_New_ApiEmployer(models.Model):
     _description = 'the employer of a person'
 
     name = fields.Char('Name')
     employee_ids = fields.One2many('test_new_api.person', 'employer_id')
 
 
-class PersonAccount(models.Model):
-    _name = 'test_new_api.person.account'
+class Test_New_ApiPersonAccount(models.Model):
     _description = 'an account with credentials for a given person'
     _inherits = {'test_new_api.person': 'person_id'}
 

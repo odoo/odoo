@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+    _inherit = ['account.payment']
 
     # == Business fields ==
     payment_transaction_id = fields.Many2one(

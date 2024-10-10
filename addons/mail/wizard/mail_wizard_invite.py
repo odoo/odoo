@@ -9,9 +9,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class Invite(models.TransientModel):
+class MailWizardInvite(models.TransientModel):
     """ Wizard to invite partners (or channels) and make them followers. """
-    _name = 'mail.wizard.invite'
     _description = 'Invite wizard'
 
     res_model = fields.Char('Related Document Model', required=True, help='Model of the followed resource')

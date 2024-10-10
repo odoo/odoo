@@ -3,7 +3,7 @@ from odoo import fields, models
 
 
 class PosOrder(models.Model):
-    _inherit = "pos.order"
+    _inherit = ["pos.order"]
 
     # referenced in l10n_id/models/res_bank.py where we will link QRIS transactions
     # to the record that initiates the payment flow

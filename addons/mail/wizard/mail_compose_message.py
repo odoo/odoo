@@ -27,7 +27,7 @@ def _reopen(self, res_id, model, context=None):
             }
 
 
-class MailComposer(models.TransientModel):
+class MailComposeMessage(models.TransientModel):
     """ Generic message composition wizard. You may inherit from this wizard
         at model and view levels to provide specific features.
 
@@ -37,8 +37,7 @@ class MailComposer(models.TransientModel):
             contain template placeholders that will be merged with actual data
             before being sent to each recipient.
     """
-    _name = 'mail.compose.message'
-    _inherit = 'mail.composer.mixin'
+    _inherit = ['mail.composer.mixin']
     _description = 'Email composition wizard'
     _log_access = True
     _batch_size = 50
@@ -623,11 +622,11 @@ class MailComposer(models.TransientModel):
         """
         non_mass_mail = self.filtered(lambda m: m.composition_mode != 'mass_mail')
         non_mass_mail.can_edit_body = True
-        super(MailComposer, self - non_mass_mail)._compute_can_edit_body()
+        super(MailComposeMessage, self - non_mass_mail)._compute_can_edit_body()
 
     def _compute_field_value(self, field):
         if field.compute_sudo:
-            return super(MailComposer, self.with_context(prefetch_fields=False))._compute_field_value(field)
+            return super(MailComposeMessage, self.with_context(prefetch_fields=False))._compute_field_value(field)
         return super()._compute_field_value(field)
 
     # ------------------------------------------------------------

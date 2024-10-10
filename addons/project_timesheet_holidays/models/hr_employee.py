@@ -5,8 +5,8 @@ from odoo import api, fields, models
 from collections import defaultdict
 
 
-class Employee(models.Model):
-    _inherit = 'hr.employee'
+class HrEmployee(models.Model):
+    _inherit = ['hr.employee']
 
     @api.model_create_multi
     def create(self, vals_list):

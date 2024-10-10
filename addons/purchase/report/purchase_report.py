@@ -11,7 +11,6 @@ from odoo.tools.sql import SQL
 
 
 class PurchaseReport(models.Model):
-    _name = "purchase.report"
     _description = "Purchase Report"
     _auto = False
     _order = 'date_order desc, price_total desc'

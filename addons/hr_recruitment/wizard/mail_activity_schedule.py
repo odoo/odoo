@@ -4,7 +4,7 @@ from odoo import models
 
 
 class MailActivitySchedule(models.TransientModel):
-    _inherit = 'mail.activity.schedule'
+    _inherit = ['mail.activity.schedule']
 
     def _compute_plan_department_filterable(self):
         super()._compute_plan_department_filterable()

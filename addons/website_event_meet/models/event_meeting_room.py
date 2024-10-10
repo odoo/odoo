@@ -7,7 +7,6 @@ from odoo import api, fields, models
 
 
 class EventMeetingRoom(models.Model):
-    _name = "event.meeting.room"
     _description = "Event Meeting Room"
     _order = "is_pinned DESC, id"
     _inherit = [

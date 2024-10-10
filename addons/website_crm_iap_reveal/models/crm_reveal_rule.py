@@ -19,8 +19,8 @@ DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
 DEFAULT_REVEAL_BATCH_LIMIT = 25
 DEFAULT_REVEAL_MONTH_VALID = 6
 
-class CRMRevealRule(models.Model):
-    _name = 'crm.reveal.rule'
+
+class CrmRevealRule(models.Model):
     _description = 'CRM Lead Generation Rules'
     _order = 'sequence'
 
@@ -94,11 +94,11 @@ class CRMRevealRule(models.Model):
         }
         if set(vals.keys()) & fields_set:
             self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
-        return super(CRMRevealRule, self).write(vals)
+        return super().write(vals)
 
     def unlink(self):
         self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
-        return super(CRMRevealRule, self).unlink()
+        return super().unlink()
 
     def action_get_lead_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")

@@ -9,8 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 
 class ProductTemplate(models.Model):
-    _name = 'product.template'
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased', digits='Product Unit of Measure')
     purchase_method = fields.Selection([
@@ -56,8 +55,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _name = 'product.product'
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased',
         digits='Product Unit of Measure')
@@ -117,7 +115,7 @@ class ProductProduct(models.Model):
 
 
 class ProductSupplierinfo(models.Model):
-    _inherit = "product.supplierinfo"
+    _inherit = ["product.supplierinfo"]
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -125,6 +123,6 @@ class ProductSupplierinfo(models.Model):
 
 
 class ProductPackaging(models.Model):
-    _inherit = 'product.packaging'
+    _inherit = ['product.packaging']
 
     purchase = fields.Boolean("Purchase", default=True, help="If true, the packaging can be used for purchase orders")

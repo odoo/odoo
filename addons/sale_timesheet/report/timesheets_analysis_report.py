@@ -7,7 +7,7 @@ from odoo.addons.sale_timesheet.models.hr_timesheet import TIMESHEET_INVOICE_TYP
 
 
 class TimesheetsAnalysisReport(models.Model):
-    _inherit = "timesheets.analysis.report"
+    _inherit = ["timesheets.analysis.report"]
 
     order_id = fields.Many2one("sale.order", string="Sales Order", readonly=True)
     so_line = fields.Many2one("sale.order.line", string="Sales Order Item", readonly=True)

@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
-    _inherit = "sale.order"
+    _inherit = ["sale.order"]
 
     def _cart_find_product_line(self, product_id=None, line_id=None, event_ticket_id=False, **kwargs):
         lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
@@ -95,7 +95,7 @@ class SaleOrder(models.Model):
 
 
 class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+    _inherit = ["sale.order.line"]
 
     @api.depends('product_id.display_name', 'event_ticket_id.display_name')
     def _compute_name_short(self):

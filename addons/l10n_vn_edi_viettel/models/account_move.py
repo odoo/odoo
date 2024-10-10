@@ -33,7 +33,7 @@ def _l10n_vn_edi_send_request(method, url, json_data=None, params=None, headers=
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     # EDI values
     l10n_vn_edi_invoice_state = fields.Selection(

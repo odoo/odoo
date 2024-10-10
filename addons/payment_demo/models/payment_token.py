@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+    _inherit = ['payment.token']
 
     demo_simulated_state = fields.Selection(
         string="Simulated State",

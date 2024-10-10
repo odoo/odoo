@@ -5,7 +5,7 @@ from odoo import api, Command, models
 
 
 class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+    _inherit = ['account.journal']
 
     @api.model
     def _prepare_liquidity_account_vals(self, company, code, vals):

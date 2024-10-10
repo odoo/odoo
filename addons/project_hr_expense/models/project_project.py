@@ -6,8 +6,8 @@ from odoo import models
 from odoo.osv import expression
 
 
-class Project(models.Model):
-    _inherit = 'project.project'
+class ProjectProject(models.Model):
+    _inherit = ['project.project']
 
     # ----------------------------
     #  Actions

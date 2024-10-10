@@ -13,7 +13,6 @@ class DiscussChannel(models.Model):
         It extends the base method for anonymous usage.
     """
 
-    _name = 'discuss.channel'
     _inherit = ['rating.mixin', 'discuss.channel']
 
     anonymous_name = fields.Char('Anonymous Name')

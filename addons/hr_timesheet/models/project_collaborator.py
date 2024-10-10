@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class ProjectCollaborator(models.Model):
-    _inherit = 'project.collaborator'
+    _inherit = ['project.collaborator']
 
     @api.model
     def _toggle_project_sharing_portal_rules(self, active):

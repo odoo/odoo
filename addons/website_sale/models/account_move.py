@@ -5,7 +5,7 @@ from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     website_id = fields.Many2one(
         'website', compute='_compute_website_id', string='Website',

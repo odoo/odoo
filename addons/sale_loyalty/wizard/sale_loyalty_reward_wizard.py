@@ -4,8 +4,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+
 class SaleLoyaltyRewardWizard(models.TransientModel):
-    _name = 'sale.loyalty.reward.wizard'
     _description = 'Sale Loyalty - Reward Selection Wizard'
 
     order_id = fields.Many2one('sale.order', default=lambda self: self.env.context.get('active_id'), required=True)

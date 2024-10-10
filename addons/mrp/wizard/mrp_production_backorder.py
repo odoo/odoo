@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class MrpProductionBackorderLine(models.TransientModel):
-    _name = 'mrp.production.backorder.line'
     _description = "Backorder Confirmation Line"
 
     mrp_production_backorder_id = fields.Many2one('mrp.production.backorder', 'MO Backorder', required=True, ondelete="cascade")
@@ -14,7 +13,6 @@ class MrpProductionBackorderLine(models.TransientModel):
 
 
 class MrpProductionBackorder(models.TransientModel):
-    _name = 'mrp.production.backorder'
     _description = "Wizard to mark as done or create back order"
 
     mrp_production_ids = fields.Many2many('mrp.production')

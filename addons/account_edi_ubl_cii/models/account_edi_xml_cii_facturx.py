@@ -16,9 +16,8 @@ CII_NAMESPACES = {
 }
 
 
-class AccountEdiXmlCII(models.AbstractModel):
-    _name = "account.edi.xml.cii"
-    _inherit = 'account.edi.common'
+class AccountEdiXmlCii(models.AbstractModel):
+    _inherit = ['account.edi.common']
     _description = "Factur-x/XRechnung CII 2.2.0"
 
     def _find_value(self, xpath, tree, nsmap=False):

@@ -4,8 +4,8 @@
 from odoo import fields, models
 
 
-class Digest(models.Model):
-    _inherit = 'digest.digest'
+class DigestDigest(models.Model):
+    _inherit = ['digest.digest']
 
     kpi_livechat_rating = fields.Boolean('% of Happiness')
     kpi_livechat_rating_value = fields.Float(digits=(16, 2), compute='_compute_kpi_livechat_rating_value')
@@ -43,7 +43,7 @@ class Digest(models.Model):
         self.kpi_livechat_response_value = response_time[0][0]
 
     def _compute_kpis_actions(self, company, user):
-        res = super(Digest, self)._compute_kpis_actions(company, user)
+        res = super()._compute_kpis_actions(company, user)
         res['kpi_livechat_rating'] = 'im_livechat.rating_rating_action_livechat_report'
         res['kpi_livechat_conversations'] = 'im_livechat.im_livechat_report_operator_action'
         res['kpi_livechat_response'] = 'im_livechat.im_livechat_report_channel_time_to_answer_action'

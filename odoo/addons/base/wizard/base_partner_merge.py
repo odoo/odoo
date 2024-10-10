@@ -15,9 +15,9 @@ from odoo.tools import mute_logger, SQL
 
 _logger = logging.getLogger('odoo.addons.base.partner.merge')
 
-class MergePartnerLine(models.TransientModel):
 
-    _name = 'base.partner.merge.line'
+class BasePartnerMergeLine(models.TransientModel):
+
     _description = 'Merge Partner Line'
     _order = 'min_id asc'
 
@@ -26,19 +26,18 @@ class MergePartnerLine(models.TransientModel):
     aggr_ids = fields.Char('Ids', required=True)
 
 
-class MergePartnerAutomatic(models.TransientModel):
+class BasePartnerMergeAutomaticWizard(models.TransientModel):
     """
         The idea behind this wizard is to create a list of potential partners to
         merge. We use two objects, the first one is the wizard for the end-user.
         And the second will contain the partner list to merge.
     """
 
-    _name = 'base.partner.merge.automatic.wizard'
     _description = 'Merge Partner Wizard'
 
     @api.model
     def default_get(self, fields):
-        res = super(MergePartnerAutomatic, self).default_get(fields)
+        res = super().default_get(fields)
         active_ids = self.env.context.get('active_ids')
         if self.env.context.get('active_model') == 'res.partner' and active_ids:
             if 'state' in fields:

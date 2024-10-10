@@ -6,11 +6,11 @@ import sys
 
 from odoo import models, api
 
-class m(models.Model):
+
+class TestLimitsModel(models.Model):
     """ This model exposes a few methods that will consume between 'almost no
         resource' and 'a lot of resource'.
     """
-    _name = 'test.limits.model'
     _description = 'Test Limits Model'
 
     @api.model

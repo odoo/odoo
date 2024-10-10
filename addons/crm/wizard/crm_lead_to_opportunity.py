@@ -6,15 +6,14 @@ from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
-class Lead2OpportunityPartner(models.TransientModel):
-    _name = 'crm.lead2opportunity.partner'
+class CrmLead2opportunityPartner(models.TransientModel):
     _description = 'Convert Lead to Opportunity (not in mass)'
 
     @api.model
     def default_get(self, fields):
         """ Allow support of active_id / active_model instead of jut default_lead_id
         to ease window action definitions, and be backward compatible. """
-        result = super(Lead2OpportunityPartner, self).default_get(fields)
+        result = super().default_get(fields)
 
         if 'lead_id' in fields and not result.get('lead_id') and self.env.context.get('active_id'):
             result['lead_id'] = self.env.context.get('active_id')

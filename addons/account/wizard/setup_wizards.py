@@ -7,8 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class FinancialYearOpeningWizard(models.TransientModel):
-    _name = 'account.financial.year.op'
+class AccountFinancialYearOp(models.TransientModel):
     _description = 'Opening Balance of Financial Year'
 
     company_id = fields.Many2one(comodel_name='res.company', required=True)
@@ -67,9 +66,8 @@ class FinancialYearOpeningWizard(models.TransientModel):
         return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
 
-class SetupBarBankConfigWizard(models.TransientModel):
+class AccountSetupBankManualConfig(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
-    _name = 'account.setup.bank.manual.config'
     _description = 'Bank setup manual config'
     _check_company_auto = True
 

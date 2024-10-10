@@ -10,7 +10,6 @@ from odoo.osv import expression
 
 
 class HrCandidate(models.Model):
-    _name = "hr.candidate"
     _description = "Candidate"
     _inherit = ['mail.thread.cc',
                'mail.thread.main.attachment',

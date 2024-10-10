@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 
 
 class MrpProduction(models.Model):
-    _inherit = 'mrp.production'
+    _inherit = ['mrp.production']
 
     repair_count = fields.Integer(
         string='Count of source repairs',

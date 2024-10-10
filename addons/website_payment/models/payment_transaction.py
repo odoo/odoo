@@ -6,7 +6,7 @@ from odoo import _, fields, models
 
 
 class PaymentTransaction(models.Model):
-    _inherit = "payment.transaction"
+    _inherit = ["payment.transaction"]
 
     is_donation = fields.Boolean(string="Is donation")
 

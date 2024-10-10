@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     l10n_it_edi_doi_date = fields.Date(
         string="Date on which Declaration of Intent is applied",

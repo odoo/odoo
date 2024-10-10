@@ -47,7 +47,6 @@ SALE_ORDER_STATE = [
 
 
 class SaleOrder(models.Model):
-    _name = 'sale.order'
     _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'

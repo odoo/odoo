@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
+
 class SnailmailLetterFormatError(models.TransientModel):
-    _name = 'snailmail.letter.format.error'
     _description = 'Format Error Sending a Snailmail Letter'
 
     message_id = fields.Many2one(

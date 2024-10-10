@@ -6,7 +6,6 @@ from odoo.exceptions import UserError
 
 
 class PrivacyLog(models.Model):
-    _name = 'privacy.log'
     _description = 'Privacy Log'
     _rec_name = 'user_id'
 

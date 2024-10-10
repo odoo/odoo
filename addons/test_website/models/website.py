@@ -5,7 +5,7 @@ from odoo import models
 
 
 class Website(models.Model):
-    _inherit = "website"
+    _inherit = ["website"]
 
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)

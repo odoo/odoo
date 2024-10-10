@@ -64,7 +64,7 @@ TAX_EXEMPTION_MAPPING = {
 
 
 class AccountEdiCommon(models.AbstractModel):
-    _inherit = "account.edi.common"
+    _inherit = ["account.edi.common"]
 
     def _get_tax_unece_codes(self, customer, supplier, tax):
         if tax.ubl_cii_tax_category_code:

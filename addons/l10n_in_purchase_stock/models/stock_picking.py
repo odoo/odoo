@@ -4,7 +4,7 @@ from odoo import models
 
 
 class StockPicking(models.Model):
-    _inherit = "stock.picking"
+    _inherit = ["stock.picking"]
 
     def _get_l10n_in_dropship_dest_partner(self):
         self.ensure_one()

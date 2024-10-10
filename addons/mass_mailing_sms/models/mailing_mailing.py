@@ -10,12 +10,12 @@ from odoo.osv import expression
 _logger = logging.getLogger(__name__)
 
 
-class Mailing(models.Model):
-    _inherit = 'mailing.mailing'
+class MailingMailing(models.Model):
+    _inherit = ['mailing.mailing']
 
     @api.model
     def default_get(self, fields):
-        res = super(Mailing, self).default_get(fields)
+        res = super().default_get(fields)
         if fields is not None and 'keep_archives' in fields and res.get('mailing_type') == 'sms':
             res['keep_archives'] = True
         return res
@@ -56,7 +56,7 @@ class Mailing(models.Model):
 
     @api.depends('mailing_type')
     def _compute_medium_id(self):
-        super(Mailing, self)._compute_medium_id()
+        super()._compute_medium_id()
         for mailing in self:
             if mailing.mailing_type == 'sms' and (not mailing.medium_id or mailing.medium_id == self.env['utm.medium']._fetch_or_create_utm_medium('email')):
                 mailing.medium_id = self.env['utm.medium']._fetch_or_create_utm_medium("sms", module="mass_mailing_sms").id
@@ -105,7 +105,7 @@ class Mailing(models.Model):
         mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')
         if mass_sms:
             mass_sms.action_retry_failed_sms()
-        return super(Mailing, self - mass_sms).action_retry_failed()
+        return super(MailingMailing, self - mass_sms).action_retry_failed()
 
     def action_retry_failed_sms(self):
         failed_sms = self.env['sms.sms'].sudo().search([
@@ -127,10 +127,10 @@ class Mailing(models.Model):
                 'target': 'new',
                 'context': ctx,
             }
-        return super(Mailing, self).action_test()
+        return super().action_test()
 
     def _action_view_traces_filtered(self, view_filter):
-        action = super(Mailing, self)._action_view_traces_filtered(view_filter)
+        action = super()._action_view_traces_filtered(view_filter)
         if self.mailing_type == 'sms':
             action['views'] = [(self.env.ref('mass_mailing_sms.mailing_trace_view_tree_sms').id, 'list'),
                                (self.env.ref('mass_mailing_sms.mailing_trace_view_form_sms').id, 'form')]
@@ -238,7 +238,7 @@ class Mailing(models.Model):
         mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')
         if mass_sms:
             mass_sms.action_send_sms(res_ids=res_ids)
-        return super(Mailing, self - mass_sms)._action_send_mail(res_ids=res_ids)
+        return super(MailingMailing, self - mass_sms)._action_send_mail(res_ids=res_ids)
 
     def action_send_sms(self, res_ids=None):
         for mailing in self:
@@ -259,7 +259,7 @@ class Mailing(models.Model):
         Each item in the returned list will be displayed as a table, with a title and
         1, 2 or 3 columns.
         """
-        values = super(Mailing, self)._prepare_statistics_email_values()
+        values = super()._prepare_statistics_email_values()
         if self.mailing_type == 'sms':
             mailing_type = self._get_pretty_mailing_type()
             values['title'] = _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
@@ -291,14 +291,14 @@ class Mailing(models.Model):
     def _get_pretty_mailing_type(self):
         if self.mailing_type == 'sms':
             return _('SMS Text Message')
-        return super(Mailing, self)._get_pretty_mailing_type()
+        return super()._get_pretty_mailing_type()
 
     # --------------------------------------------------
     # TOOLS
     # --------------------------------------------------
 
     def _get_default_mailing_domain(self):
-        mailing_domain = super(Mailing, self)._get_default_mailing_domain()
+        mailing_domain = super()._get_default_mailing_domain()
         if self.mailing_type == 'sms' and 'phone_sanitized_blacklisted' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([mailing_domain, [('phone_sanitized_blacklisted', '=', False)]])
 
@@ -311,7 +311,7 @@ class Mailing(models.Model):
             tracker_values = mailing._get_link_tracker_values()
             body = mailing._shorten_links_text(mailing.body_plaintext, tracker_values)
             res[mailing.id] = body
-        res.update(super(Mailing, self - sms_mailings).convert_links())
+        res.update(super(MailingMailing, self - sms_mailings).convert_links())
         return res
 
     # ------------------------------------------------------

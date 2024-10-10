@@ -15,8 +15,7 @@ emails_split = re.compile(r"[;,\n\r]+")
 
 
 class SurveyInvite(models.TransientModel):
-    _name = 'survey.invite'
-    _inherit = 'mail.composer.mixin'
+    _inherit = ['mail.composer.mixin']
     _description = 'Survey Invitation Wizard'
 
     @api.model

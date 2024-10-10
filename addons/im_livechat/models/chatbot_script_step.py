@@ -13,7 +13,6 @@ from markupsafe import Markup
 
 
 class ChatbotScriptStep(models.Model):
-    _name = 'chatbot.script.step'
     _description = 'Chatbot Script Step'
     _order = 'sequence, id'
     _rec_name = 'message'

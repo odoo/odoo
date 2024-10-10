@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class HrDepartment(models.Model):
-    _inherit = 'hr.department'
+    _inherit = ['hr.department']
 
     new_applicant_count = fields.Integer(
         compute='_compute_new_applicant_count', string='New Applicant', compute_sudo=True)

@@ -4,7 +4,7 @@ from odoo import models
 
 
 class StockMove(models.Model):
-    _inherit = "stock.move"
+    _inherit = ["stock.move"]
 
     def _l10n_in_get_product_price_unit(self):
         self.ensure_one()

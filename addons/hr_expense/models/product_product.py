@@ -2,7 +2,7 @@ from odoo import api, fields, models, _
 
 
 class ProductProduct(models.Model):
-    _inherit = "product.product"
+    _inherit = ["product.product"]
 
     standard_price_update_warning = fields.Char(compute="_compute_standard_price_update_warning")
 

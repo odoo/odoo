@@ -20,8 +20,7 @@ CREDIT_PER_COMPANY = 1
 CREDIT_PER_CONTACT = 1
 
 
-class CRMLeadMiningRequest(models.Model):
-    _name = 'crm.iap.lead.mining.request'
+class CrmIapLeadMiningRequest(models.Model):
     _description = 'CRM Lead Mining Request'
 
     def _default_lead_type(self):

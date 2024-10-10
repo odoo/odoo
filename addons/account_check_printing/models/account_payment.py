@@ -10,7 +10,7 @@ INV_LINES_PER_STUB = 9
 
 
 class AccountPayment(models.Model):
-    _inherit = "account.payment"
+    _inherit = ["account.payment"]
 
     check_amount_in_words = fields.Char(
         string="Amount in Words",

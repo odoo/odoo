@@ -10,8 +10,8 @@ from odoo.tools.translate import trans_export, trans_export_records
 
 NEW_LANG_KEY = '__new__'
 
+
 class BaseLanguageExport(models.TransientModel):
-    _name = "base.language.export"
     _description = 'Language Export'
 
     @api.model

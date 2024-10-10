@@ -3,7 +3,7 @@ from odoo import api, models
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     @api.depends('pos_session_ids')
     def _compute_l10n_in_state_id(self):

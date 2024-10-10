@@ -28,8 +28,8 @@ APPS_URL = "https://apps.odoo.com"
 MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 
 
-class IrModule(models.Model):
-    _inherit = "ir.module.module"
+class IrModuleModule(models.Model):
+    _inherit = ["ir.module.module"]
 
     imported = fields.Boolean(string="Imported Module")
     module_type = fields.Selection([
@@ -46,7 +46,7 @@ class IrModule(models.Model):
         imported_modules = self.filtered(lambda m: m.imported and m.latest_version)
         for module in imported_modules:
             module.installed_version = module.latest_version
-        super(IrModule, self - imported_modules)._get_latest_version()
+        super(IrModuleModule, self - imported_modules)._get_latest_version()
 
     @api.depends('icon')
     def _get_icon_image(self):

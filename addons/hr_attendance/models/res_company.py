@@ -8,7 +8,7 @@ from werkzeug.urls import url_join
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     def _default_company_token(self):
         return str(uuid.uuid4())

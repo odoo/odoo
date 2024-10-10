@@ -9,7 +9,7 @@ from lxml import etree
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     l10n_sa_uuid = fields.Char(string='Document UUID (SA)', copy=False, help="Universally unique identifier of the Invoice")
 
@@ -206,7 +206,7 @@ class AccountMove(models.Model):
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def _apply_retention_tax_filter(self, tax_values):
         return not tax_values['tax_id'].l10n_sa_is_retention

@@ -5,7 +5,7 @@ from odoo.tools import SQL
 
 class AccountInvoiceReport(models.Model):
 
-    _inherit = 'account.invoice.report'
+    _inherit = ['account.invoice.report']
 
     l10n_ar_state_id = fields.Many2one('res.country.state', 'Delivery Province', readonly=True)
     date = fields.Date(readonly=True, string="Accounting Date")

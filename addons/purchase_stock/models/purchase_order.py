@@ -10,7 +10,7 @@ from odoo.tools.misc import OrderedSet
 
 
 class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+    _inherit = ['purchase.order']
 
     @api.model
     def _default_picking_type(self):

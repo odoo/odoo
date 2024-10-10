@@ -4,7 +4,6 @@ from odoo import api, fields, models
 
 
 class BaseModuleUpdate(models.TransientModel):
-    _name = "base.module.update"
     _description = "Update Module"
 
     updated = fields.Integer('Number of modules updated', readonly=True)

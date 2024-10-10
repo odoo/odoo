@@ -6,8 +6,9 @@ from odoo.osv import expression
 import pytz
 from datetime import datetime
 
-class CalendarLeaves(models.Model):
-    _inherit = "resource.calendar.leaves"
+
+class ResourceCalendarLeaves(models.Model):
+    _inherit = ["resource.calendar.leaves"]
 
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request')
 
@@ -153,8 +154,9 @@ class CalendarLeaves(models.Model):
 
         return res
 
+
 class ResourceCalendar(models.Model):
-    _inherit = "resource.calendar"
+    _inherit = ["resource.calendar"]
 
     associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
 

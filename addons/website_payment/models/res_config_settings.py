@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     providers_state = fields.Selection(
         selection=[

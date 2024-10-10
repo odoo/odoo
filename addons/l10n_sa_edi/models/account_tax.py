@@ -22,7 +22,7 @@ EXEMPTION_REASON_CODES = [
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _inherit = ['account.tax']
 
     l10n_sa_is_retention = fields.Boolean("Is Retention", default=False,
                                           help="Determines whether or not a tax counts as a Withholding Tax")

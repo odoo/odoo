@@ -53,8 +53,7 @@ def google_calendar_token(user):
     yield user._get_google_calendar_token()
 
 
-class GoogleSync(models.AbstractModel):
-    _name = 'google.calendar.sync'
+class GoogleCalendarSync(models.AbstractModel):
     _description = "Synchronize a record with Google Calendar"
 
     google_id = fields.Char('Google Calendar Id', copy=False)

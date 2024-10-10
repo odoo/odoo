@@ -2,7 +2,7 @@ from odoo import models, api
 
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     @api.model
     def _load_pos_data_domain(self, data):

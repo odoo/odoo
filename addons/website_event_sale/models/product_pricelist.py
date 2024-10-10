@@ -2,8 +2,9 @@
 
 from odoo import _, api, models
 
-class PricelistItem(models.Model):
-    _inherit = "product.pricelist.item"
+
+class ProductPricelistItem(models.Model):
+    _inherit = ["product.pricelist.item"]
 
     @api.onchange('applied_on', 'product_id', 'product_tmpl_id', 'min_quantity')
     def _onchange_event_sale_warning(self):

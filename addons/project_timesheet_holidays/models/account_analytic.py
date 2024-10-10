@@ -7,7 +7,7 @@ from odoo.osv import expression
 
 
 class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+    _inherit = ['account.analytic.line']
 
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request', copy=False, index='btree_not_null', export_string_translation=False)
     global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", index='btree_not_null', ondelete='cascade', export_string_translation=False)

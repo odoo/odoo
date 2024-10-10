@@ -5,7 +5,6 @@ from odoo.tools.translate import html_translate
 
 
 class ProductPublicCategory(models.Model):
-    _name = 'product.public.category'
     _inherit = [
         'website.seo.metadata',
         'website.multi.mixin',

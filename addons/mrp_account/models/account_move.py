@@ -7,7 +7,7 @@ from collections import defaultdict
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     wip_production_ids = fields.Many2many(
         'mrp.production', string="Relevant WIP MOs",
@@ -40,7 +40,7 @@ class AccountMove(models.Model):
 
 
 class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+    _inherit = ["account.move.line"]
 
     def _get_invoiced_qty_per_product(self):
         # Replace the kit-type products with their components

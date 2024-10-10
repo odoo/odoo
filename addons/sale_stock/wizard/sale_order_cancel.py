@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class SaleOrderCancel(models.TransientModel):
-    _inherit = 'sale.order.cancel'
+    _inherit = ['sale.order.cancel']
 
     display_delivery_alert = fields.Boolean('Delivery Alert', compute='_compute_display_delivery_alert')
 

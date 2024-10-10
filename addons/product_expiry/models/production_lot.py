@@ -5,7 +5,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 
 
 class StockLot(models.Model):
-    _inherit = 'stock.lot'
+    _inherit = ['stock.lot']
 
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
@@ -90,7 +90,7 @@ class StockLot(models.Model):
 
 
 class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+    _inherit = ['procurement.group']
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):

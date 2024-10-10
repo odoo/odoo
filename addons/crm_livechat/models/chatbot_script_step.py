@@ -5,7 +5,7 @@ from odoo import _, models, fields
 
 
 class ChatbotScriptStep(models.Model):
-    _inherit = 'chatbot.script.step'
+    _inherit = ['chatbot.script.step']
 
     step_type = fields.Selection(
         selection_add=[('create_lead', 'Create Lead')], ondelete={'create_lead': 'cascade'})

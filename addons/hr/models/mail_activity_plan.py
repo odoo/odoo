@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class MailActivityPlan(models.Model):
-    _inherit = 'mail.activity.plan'
+    _inherit = ['mail.activity.plan']
 
     department_id = fields.Many2one(
         'hr.department', check_company=True,

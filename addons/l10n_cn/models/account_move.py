@@ -10,8 +10,9 @@ try:
 except ImportError:
     an2cn = None
 
+
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     fapiao = fields.Char(string='Fapiao Number', size=8, copy=False, tracking=True)
 

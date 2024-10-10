@@ -3,8 +3,8 @@
 
 from odoo import fields, models, api
 
-class L10nItDdt(models.Model):
-    _name = 'l10n_it.ddt'
+
+class L10n_ItDdt(models.Model):
     _description = 'Transport Document'
 
     invoice_id = fields.One2many('account.move', 'l10n_it_ddt_id', string='Invoice Reference')

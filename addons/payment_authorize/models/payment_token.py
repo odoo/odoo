@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentToken(models.Model):
-    _inherit = 'payment.token'
+    _inherit = ['payment.token']
 
     authorize_profile = fields.Char(
         string="Authorize.Net Profile ID",

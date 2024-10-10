@@ -8,8 +8,7 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tools.misc import formatLang
 
 
-class EventTemplateTicket(models.Model):
-    _name = 'event.type.ticket'
+class EventTypeTicket(models.Model):
     _description = 'Event Template Ticket'
     _order = 'sequence, name, id'
 
@@ -43,19 +42,18 @@ class EventTemplateTicket(models.Model):
         return ['sequence', 'name', 'description', 'seats_max']
 
 
-class EventTicket(models.Model):
+class EventEventTicket(models.Model):
     """ Ticket model allowing to have different kind of registrations for a given
     event. Ticket are based on ticket type as they share some common fields
     and behavior. Those models come from <= v13 Odoo event.event.ticket that
     modeled both concept: tickets for event templates, and tickets for events. """
-    _name = 'event.event.ticket'
-    _inherit = 'event.type.ticket'
+    _inherit = ['event.type.ticket']
     _description = 'Event Ticket'
     _order = "event_id, sequence, name, id"
 
     @api.model
     def default_get(self, fields):
-        res = super(EventTicket, self).default_get(fields)
+        res = super().default_get(fields)
         if 'name' in fields and (not res.get('name') or res['name'] == _('Registration')) and self.env.context.get('default_event_name'):
             res['name'] = _('Registration for %s', self.env.context['default_event_name'])
         return res

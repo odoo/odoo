@@ -4,8 +4,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class Pricelist(models.Model):
-    _name = "product.pricelist"
+class ProductPricelist(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Pricelist"
     _rec_names_search = ['name', 'currency_id']  # TODO check if should be removed
@@ -301,7 +300,7 @@ class Pricelist(models.Model):
         company_id = self.env.company.id
 
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
-        Pricelist = self.env['product.pricelist']
+        ProductPricelist = self.env['product.pricelist']
         pl_domain = self._get_partner_pricelist_multi_search_domain_hook(company_id)
 
         # if no specific property, try to find a fitting pricelist
@@ -321,7 +320,7 @@ class Pricelist(models.Model):
                     return None
             # get fallback pricelist when no pricelist for a given country
             pl_fallback = (
-                Pricelist.search(pl_domain + [('country_group_ids', '=', False)], limit=1) or
+                ProductPricelist.search(pl_domain + [('country_group_ids', '=', False)], limit=1) or
                 # save data in ir.config_parameter instead of ir.default for
                 # res.partner.property_product_pricelist
                 # otherwise the data will become the default value while
@@ -329,15 +328,15 @@ class Pricelist(models.Model):
                 # however if the property_product_pricelist is not specified
                 # the result of the previous line should have high priority
                 # when computing
-                Pricelist.browse(convert_to_int(IrConfigParameter.get_param(f'res.partner.property_product_pricelist_{company_id}'))) or
-                Pricelist.browse(convert_to_int(IrConfigParameter.get_param('res.partner.property_product_pricelist'))) or
-                Pricelist.search(pl_domain, limit=1)
+                ProductPricelist.browse(convert_to_int(IrConfigParameter.get_param(f'res.partner.property_product_pricelist_{company_id}'))) or
+                ProductPricelist.browse(convert_to_int(IrConfigParameter.get_param('res.partner.property_product_pricelist'))) or
+                ProductPricelist.search(pl_domain, limit=1)
             )
             # group partners by country, and find a pricelist for each country
             remaining_partners = self.env['res.partner'].browse(remaining_partner_ids)
             partners_by_country = remaining_partners.grouped('country_id')
             for country, partners in partners_by_country.items():
-                pl = Pricelist.search(pl_domain + [('country_group_ids.country_ids', '=', country.id if country else False)], limit=1)
+                pl = ProductPricelist.search(pl_domain + [('country_group_ids.country_ids', '=', country.id if country else False)], limit=1)
                 pl = pl or pl_fallback
                 result.update(dict.fromkeys(partners._ids, pl))
 

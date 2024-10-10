@@ -9,8 +9,8 @@ from odoo.exceptions import AccessError
 from pytz import timezone, UTC
 
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model):
+    _inherit = ['res.users']
 
     calendar_default_privacy = fields.Selection(
         [('public', 'Public'),

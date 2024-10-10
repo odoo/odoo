@@ -7,8 +7,7 @@ from odoo import _, api, fields, models
 from odoo.tools import date_utils
 
 
-class KarmaTracking(models.Model):
-    _name = 'gamification.karma.tracking'
+class GamificationKarmaTracking(models.Model):
     _description = 'Track Karma Changes'
     _rec_name = 'user_id'
     _order = 'tracking_date desc, id desc'

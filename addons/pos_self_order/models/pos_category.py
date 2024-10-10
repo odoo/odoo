@@ -6,7 +6,7 @@ from odoo import models, fields, api, _
 
 
 class PosCategory(models.Model):
-    _inherit = "pos.category"
+    _inherit = ["pos.category"]
 
 
     hour_until = fields.Float(string='Availability Until', default=24.0, help="The product will be available until this hour.")

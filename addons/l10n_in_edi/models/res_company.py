@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResCompany(models.Model):
-    _inherit = "res.company"
+    _inherit = ["res.company"]
 
     l10n_in_edi_username = fields.Char("E-invoice (IN) Username", groups="base.group_system")
     l10n_in_edi_password = fields.Char("E-invoice (IN) Password", groups="base.group_system")

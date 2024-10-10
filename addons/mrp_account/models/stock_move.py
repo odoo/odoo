@@ -7,7 +7,7 @@ from odoo.tools import float_round
 
 
 class StockMove(models.Model):
-    _inherit = "stock.move"
+    _inherit = ["stock.move"]
 
     def _filter_anglo_saxon_moves(self, product):
         res = super(StockMove, self)._filter_anglo_saxon_moves(product)

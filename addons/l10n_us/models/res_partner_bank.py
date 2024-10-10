@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 
 class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+    _inherit = ['res.partner.bank']
 
     aba_routing = fields.Char(string="ABA/Routing", help="American Bankers Association Routing Number")
 

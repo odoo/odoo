@@ -5,7 +5,7 @@ import odoo.addons.payment_stripe as stripe  # prevent circular import error wit
 
 
 class ResCountry(models.Model):
-    _inherit = 'res.country'
+    _inherit = ['res.country']
 
     is_stripe_supported_country = fields.Boolean(compute='_compute_is_stripe_supported_country')
 

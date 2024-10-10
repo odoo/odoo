@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class StockInventoryConflict(models.TransientModel):
-    _name = 'stock.inventory.conflict'
     _description = 'Conflict in Inventory'
 
     quant_ids = fields.Many2many(
