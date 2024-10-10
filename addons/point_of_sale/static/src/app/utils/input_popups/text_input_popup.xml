@@ -2,9 +2,14 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.TextInputPopup">
+        <!-- buttons to show -->
         <Dialog title="props.title">
             <t t-foreach="props.buttons" t-as="button" t-key="button_index">
-                <button t-on-click="() => this.buttonClick(button)" type="button" t-attf-class="btn btn-lg me-2 mb-2 toggle-button {{button.isSelected? 'btn-primary' : 'btn-secondary'}} lh-lg" >
+                <button
+                    t-on-click="() => this.buttonClick(button)"
+                    type="button"
+                    class="btn me-2 mb-2 toggle-button"
+                    t-attf-class="{{ button.isSelected ? 'btn-primary' : (button.class || 'btn-secondary') }}">
                     <t t-esc="button.label"/>
                 </button>
             </t>

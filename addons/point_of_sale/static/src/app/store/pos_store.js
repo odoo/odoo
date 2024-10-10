@@ -1107,7 +1107,6 @@ export class PosStore extends Reactive {
             if (orders.length === 0 && !context.force) {
                 return;
             }
-
             // Re-compute all taxes, prices and other information needed for the backend
             for (const order of orders) {
                 order.recomputeOrderData();
@@ -1147,7 +1146,6 @@ export class PosStore extends Reactive {
             if (options.throw) {
                 throw error;
             }
-
             console.warn("Offline mode active, order will be synced later");
             return error;
         }

@@ -198,6 +198,7 @@
             "point_of_sale/static/src/app/generic_components/order_widget/*",
             "point_of_sale/static/src/app/generic_components/orderline/*",
             "point_of_sale/static/src/app/generic_components/centered_icon/*",
+            "point_of_sale/static/src/app/generic_components/internal_note/*",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/customer_display/**/*",
         ],
