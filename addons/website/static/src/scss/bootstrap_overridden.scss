@@ -70,6 +70,7 @@ $spacers: (
 // grep: BOXED_BODY_BG_ODOO
 $body-bg: o-color('o-cc1-bg') !default;
 $body-color: o-color('o-cc1-text') or color-contrast($body-bg) !default;
+$body-tertiary-bg: rgba($body-color, .1) !default;
 
 // Links
 //
@@ -379,3 +380,6 @@ $pagination-border-radius-sm: $pagination-border-radius !default;
 
 // Carousel
 $carousel-control-width: 10% !default;
+
+// Close
+$btn-close-color: $body-color !default;
