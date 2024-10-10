@@ -4,7 +4,8 @@
     <Dialog contentClass="contentClasses"
         footer="props.showFooter ? undefined : false"
         size="props.size"
-        title="props.title">
+        title="props.title"
+        modalRef="modalRef">
         <t t-set-slot="default">
             <t t-if="props.slots and props.slots.default" t-slot="default"/>
             <t t-else="" t-esc="props.body"/>
