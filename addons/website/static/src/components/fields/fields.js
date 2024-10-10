@@ -51,10 +51,17 @@ class PageUrlField extends UrlField {
         if (value[0] === "/") {
             value = value.substring(1);
         }
-        // Re-add the leading slash for saving, because url field is required
-        // and thus doesn't accept an empty string.
-        this.props.record.data[this.props.name] = `/${value.trim()}`;
         return value;
+    }
+
+    get extraInputFieldParams() {
+        return {
+            ...super.extraInputFieldParams,
+            // Add leading slash for save
+            parse(rawValue) {
+                return rawValue[0] !== "/" ? `/${rawValue}` : rawValue;
+            },
+        };
     }
 }
 

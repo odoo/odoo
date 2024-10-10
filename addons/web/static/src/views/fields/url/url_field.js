@@ -15,7 +15,10 @@ export class UrlField extends Component {
     };
 
     setup() {
-        useInputField({ getValue: () => this.value });
+        useInputField({
+            getValue: () => this.value,
+            ...this.extraInputFieldParams,
+        });
     }
 
     get value() {
@@ -29,6 +32,17 @@ export class UrlField extends Component {
             value = !regex.test(value) ? `http://${value}` : value;
         }
         return value;
+    }
+
+    /**
+     * Override this method to add extra parameters to the useInputField hook.
+     * This overrides any existing parameters already set by UrlField.
+     *
+     * @protected
+     * @returns {Object}
+     */
+    get extraInputFieldParams() {
+        return {};
     }
 }
 
