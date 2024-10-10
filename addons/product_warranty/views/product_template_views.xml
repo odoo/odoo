@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <record id="view_product_form_warranty" model="ir.ui.view">
+        <field name="name">product.template.inherit.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form" />
+        <field name="arch" type="xml">
+            <group name="traceability" position="after">
+                <group name="warranty" string="Warranty" invisible="tracking == 'none'">
+                    <field name="default_warranty_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
