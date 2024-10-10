@@ -52,6 +52,10 @@ class UoM(models.Model):
             "product_uom_dozen",
         ]
 
+    def _default_allow_label(self):
+        unit_category = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
+        return unit_category and self._context.get('default_category_id') == unit_category.id
+
     name = fields.Char('Unit of Measure', required=True, translate=True)
     category_id = fields.Many2one(
         'uom.category', 'Category', required=True, ondelete='restrict',
@@ -75,6 +79,7 @@ class UoM(models.Model):
         default='reference', required=True)
     ratio = fields.Float('Combined Ratio', compute='_compute_ratio', inverse='_set_ratio', store=False)
     color = fields.Integer('Color', compute='_compute_color')
+    allow_label = fields.Boolean('Labelable', default=lambda self: self._default_allow_label(), help="Print 1 product label per unit transferred")
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
