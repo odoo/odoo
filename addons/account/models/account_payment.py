@@ -857,9 +857,12 @@ class AccountPayment(models.Model):
 
         for i, (pay, vals) in enumerate(zip(payments, vals_list)):
             if (
-                write_off_line_vals_list[i] is not None
-                or force_balance_vals_list[i] is not None
-                or linecomplete_line_vals_list[i] is not None
+                write_off_line_vals_list[i]
+                or force_balance_vals_list[i]
+                or linecomplete_line_vals_list[i]
+                # When creating payments through the payment registration wizard,
+                # as we post the payment we can generate them earlier to ensure a correct computation
+                or self.env.context.get('force_entry_generation')
             ):
                 pay._generate_journal_entry(
                     write_off_line_vals=write_off_line_vals_list[i],
@@ -1025,8 +1028,9 @@ class AccountPayment(models.Model):
                     method_name=self.payment_method_line_id.name,
                     partner=payment.partner_id.display_name,
                 ))
-
-        self.state = 'in_process'
+        # Avoid going back one state when clicking on the confirm action in the payment list view and having paid expenses selected
+        # We need to set values to each payment to avoid recomputation later
+        self.filtered(lambda pay: not pay.state or pay.state == 'draft').state = 'in_process'
 
     def action_validate(self):
         self.state = 'paid'

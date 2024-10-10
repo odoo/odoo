@@ -1102,6 +1102,8 @@ class AccountPaymentRegister(models.TransientModel):
             # If you try to pay 12.15A using 0.12B, the computed balance will be 12.00A for the payment instead of 12.15A.
             if edit_mode:
                 lines = vals['to_reconcile']
+                if not payment.move_id:  # No need to recompute anything if we don't have a payment move yet
+                    continue
 
                 # Batches are made using the same currency so making 'lines.currency_id' is ok.
                 if payment.currency_id != lines.currency_id:
@@ -1247,8 +1249,10 @@ class AccountPaymentRegister(models.TransientModel):
                     'batch': batch_result,
                 })
 
-        payments = self._init_payments(to_process, edit_mode=edit_mode)
+        # Generate entries asap to allow a proper currency amount computation
+        payments = self.with_context(force_entry_generation=True)._init_payments(to_process, edit_mode=edit_mode)
         self._post_payments(to_process, edit_mode=edit_mode)
+        payments.move_id.action_post()
         self._reconcile_payments(to_process, edit_mode=edit_mode)
         return payments
 
