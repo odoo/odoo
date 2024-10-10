@@ -1,7 +1,7 @@
 import { Component, onWillStart, useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { BuilderMenu } from "./builder_menu";
+import { SnippetsMenu } from "./snippets_menu";
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
@@ -16,9 +16,9 @@ export const unslugHtmlDataObject = (repr) => {
     };
 };
 
-class WebsitePreview extends Component {
-    static template = "mysterious_egg.WebsitePreview";
-    static components = { BuilderMenu };
+class WebsiteBuilder extends Component {
+    static template = "mysterious_egg.WebsiteBuilder";
+    static components = { SnippetsMenu };
 
     setup() {
         this.orm = useService("orm");
@@ -42,4 +42,4 @@ class WebsitePreview extends Component {
     }
 }
 
-registry.category("actions").add("egg_website_preview", WebsitePreview);
+registry.category("actions").add("egg_website_preview", WebsiteBuilder);
