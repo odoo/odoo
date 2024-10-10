@@ -8,6 +8,9 @@
             t-on-click="props.onClick"
             t-att-data-product-id="props.productId"
             t-attf-aria-labelledby="article_product_{{props.productId}}">
+            <div t-if="props.productCartAmount"
+                t-out="props.productCartAmount"
+                t-attf-class="{{props.color ? `o_colorlist_item_count_color_${props.color}` : ''}} position-absolute rounded top-0 start-0 px-2 fs-1" />
             <div t-if="props.productInfo" class="product-information-tag" t-on-click.stop="props.onProductInfoClick" t-att-class="{'red-tag' : props.showWarning}">
                 <i class="product-information-tag-logo fa fa-info" role="img" aria-label="Product Information" title="Product Information" />
             </div>
