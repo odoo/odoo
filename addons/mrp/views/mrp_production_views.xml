@@ -248,8 +248,8 @@
                             <field name="product_description_variants" invisible="product_description_variants in (False, '')" readonly="state != 'draft'"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row g-0 d-flex">
-                                <div invisible="state == 'draft'" class="o_row flex-grow-0">
-                                    <field name="qty_producing" class="text-start" readonly="state == 'cancel' or (state == 'done' and is_locked)"/>
+                                <div invisible="state == 'draft'" class="o_row flex-grow-0 qty_producing_field">
+                                    <field name="qty_producing" class="text-start qty_producing_field" readonly="state == 'cancel' or (state == 'done' and is_locked)"/>
                                     /
                                 </div>
                                 <field name="product_qty" class="oe_inline text-start" invisible="state not in ('draft', 'done')" readonly="state != 'draft'"/>
