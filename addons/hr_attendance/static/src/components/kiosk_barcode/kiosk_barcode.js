@@ -21,6 +21,11 @@ export class KioskBarcodeScanner extends BarcodeScanner {
         }
         return super.facingMode;
     }
+
+    get installURL() {
+        const url = `hr_attendance/${this.props.token}`;
+        return `/scoped_app?app_id=hr_attendance&path=${encodeURIComponent(url)}`;
+    }
 }
 
 /**
