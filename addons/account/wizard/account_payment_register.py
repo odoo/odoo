@@ -472,32 +472,45 @@ class AccountPaymentRegister(models.TransientModel):
         """
         self.ensure_one()
         comp_curr = self.company_id.currency_id
+        single_mode = len(batch_result['lines']) == 1
         if self.source_currency_id == self.currency_id:
             # Same currency (manage the early payment discount).
             return self._get_total_amount_using_same_currency(batch_result, early_payment_discount=early_payment_discount)
         elif self.source_currency_id != comp_curr and self.currency_id == comp_curr:
             # Foreign currency on source line but the company currency one on the opposite line.
+            aml = batch_result['lines']
+            mode = False
+            amount = self.source_amount_currency
+            if single_mode and early_payment_discount and aml._is_eligible_for_early_payment_discount(aml.currency_id, self.payment_date):
+                mode = 'early_payment'
+                amount = aml.discount_amount_currency
             return self.source_currency_id._convert(
-                self.source_amount_currency,
+                amount,
                 comp_curr,
                 self.company_id,
                 self.payment_date,
-            ), False
+            ), mode
         elif self.source_currency_id == comp_curr and self.currency_id != comp_curr:
             # Company currency on source line but a foreign currency one on the opposite line.
             residual_amount = 0.0
+            mode = False
             for aml in batch_result['lines']:
                 if not aml.move_id.payment_id and not aml.move_id.statement_line_id:
                     conversion_date = self.payment_date
                 else:
                     conversion_date = aml.date
+                if single_mode and early_payment_discount and aml._is_eligible_for_early_payment_discount(aml.currency_id, conversion_date):
+                    aml_amount_residual = aml.discount_amount_currency
+                    mode = 'early_payment'
+                else:
+                    aml_amount_residual = aml.amount_residual
                 residual_amount += comp_curr._convert(
-                    aml.amount_residual,
+                    aml_amount_residual,
                     self.currency_id,
                     self.company_id,
                     conversion_date,
                 )
-            return abs(residual_amount), False
+            return abs(residual_amount), mode
         else:
             # Foreign currency on payment different than the one set on the journal entries.
             return comp_curr._convert(
@@ -640,7 +653,7 @@ class AccountPaymentRegister(models.TransientModel):
             if self.early_payment_discount_mode:
                 epd_aml_values_list = []
                 for aml in batch_result['lines']:
-                    if aml._is_eligible_for_early_payment_discount(self.currency_id, self.payment_date):
+                    if aml._is_eligible_for_early_payment_discount(aml.currency_id, self.payment_date):
                         epd_aml_values_list.append({
                             'aml': aml,
                             'amount_currency': -aml.amount_residual_currency,
@@ -651,6 +664,10 @@ class AccountPaymentRegister(models.TransientModel):
                 open_balance = self.company_id.currency_id.round(open_amount_currency * conversion_rate)
                 early_payment_values = self.env['account.move']._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
                 for aml_values_list in early_payment_values.values():
+                    for aml_values in aml_values_list:
+                        if aml_values['currency_id'] != self.currency_id.id:
+                            aml_values['currency_id'] = self.currency_id.id
+                            aml_values['amount_currency'] = aml_values['balance'] / conversion_rate
                     payment_vals['write_off_line_vals'] += aml_values_list
 
             elif not self.currency_id.is_zero(self.payment_difference):
