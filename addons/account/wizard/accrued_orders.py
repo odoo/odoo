@@ -243,6 +243,8 @@ class AccruedExpenseRevenue(models.TransientModel):
             'date': self.date,
             'line_ids': move_lines,
         }
+        if len(orders) == 1 and orders.company_id.currency_id != orders.currency_id:
+            move_vals['currency_id'] = orders.currency_id.id
         return move_vals, orders_with_entries
 
     def create_entries(self):
