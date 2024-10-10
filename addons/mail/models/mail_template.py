@@ -212,8 +212,6 @@ class MailTemplate(models.Model):
         return True
 
     def create_action(self):
-        if not issubclass(self.env[self.model].__class__, self.env['mail.thread'].__class__):
-            raise UserError(_("Seems like a model you selected doesn't have mailing capabilities.\nIt doesn't inherit from mail.thread)"))
         ActWindow = self.env['ir.actions.act_window']
         view = self.env.ref('mail.email_compose_message_wizard_form')
         for template in self:
