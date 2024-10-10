@@ -36,8 +36,12 @@
                 <we-input string="Product Names" class="o_we_large" data-name="product_names_opt"
                     data-attribute-name="productNames" data-no-preview="true" data-select-data-attribute=""
                     placeholder="e.g. lamp,bin" title="Comma-separated list of parts of product names, barcodes or internal reference"/>
-            </t>
-        </xpath>
+                <we-checkbox string="Title"
+                    data-customize-website-views="website_sale.alternative_product_title"
+                    data-no-preview="true"
+                    data-reload="/"/>
+                </t>
+            </xpath>
     </template>
 
     <record id="website_sale.s_dynamic_snippet_products_000_js" model="ir.asset">
