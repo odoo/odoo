@@ -188,6 +188,15 @@
         </t>
     </xpath>
 
+    <xpath expr="//t[@t-set='body_classname']" position="after">
+        <t t-set="default_lang_code" t-value="website.env['res.lang']._get_data(id=website._get_cached('default_lang_id')).code"/>
+        <t t-set="mainobject_url" t-value="main_object.with_context(lang=default_lang_code).website_url if main_object and 'website_url' in main_object else ''"/>
+        <t t-set="mainobject_url" t-value="mainobject_url.split('?')[0].split('#')[0]"/>
+        <t t-set="mainobject_url" t-value="'_home' if mainobject_url == '/' else mainobject_url"/>
+        <t t-set="classname_from_mainobject" t-value="' o_website_url' + mainobject_url.replace('/', '_').replace('-', '_') if mainobject_url else ''"/>
+        <t t-set="body_classname" t-valuef="{{body_classname}}{{classname_from_mainobject}}"/>
+    </xpath>
+
     <xpath expr="//header" position="attributes">
         <attribute name="data-name">Header</attribute>
         <attribute name="t-att-data-extra-items-toggle-aria-label">extra_items_toggle_aria_label</attribute>

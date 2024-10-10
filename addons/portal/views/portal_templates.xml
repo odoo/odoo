@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="frontend_layout" name="Main Frontend Layout" inherit_id="web.frontend_layout">
+        <xpath expr="//body" position="before">
+            <t t-set="classname_from_template" t-value="(' o_' + response_template.replace('.', '_')) if isinstance(response_template, str) else 'o_id_' + str(response_template) if response_template else ''"/>
+            <t t-set="body_classname" t-valuef="{{body_classname}}{{classname_from_template}}"/>
+        </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
             <attribute name="t-attf-class" add="#{request.env['res.lang']._get_data(code=request.env.lang).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
             <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
