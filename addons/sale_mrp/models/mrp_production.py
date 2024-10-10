@@ -52,3 +52,14 @@ class MrpProduction(models.Model):
             if procurement.values.get('group_id'):
                 production.procurement_group_id.sale_id = procurement.values['group_id'].sale_id
         return super()._post_run_manufacture(procurements)
+
+
+class MrpProductionSplit(models.TransientModel):
+    _inherit = 'mrp.production.split'
+
+    def action_split(self):
+        if self.split_pre_production_picking and self.production_id.warehouse_id.manufacture_steps in ['pbm_sam', 'pbm']:
+            # Unlink the canceled pre-production picking from the sale order when the MO is created via MTO rule and then split
+            if self.production_id.mrp_production_backorder_count < 2 and self.production_id.picking_ids.sale_id:
+                self.production_id.picking_ids.sale_id = False
+        return super().action_split()
