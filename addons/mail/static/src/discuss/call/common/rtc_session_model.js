@@ -26,17 +26,17 @@ export class RtcSession extends Record {
 
     // Server data
     /** @type {boolean} */
-    channelMember = Record.one("discuss.channel.member", { inverse: "rtcSession" });
+    channel_member_id = Record.one("discuss.channel.member", { inverse: "rtcSession" });
     /** @type {boolean} */
-    isCameraOn;
+    is_camera_on;
     /** @type {boolean} */
-    isScreenSharingOn;
+    is_screen_sharing_on;
     /** @type {number} */
     id;
     /** @type {boolean} */
-    isDeaf;
+    is_deaf;
     /** @type {boolean} */
-    isSelfMuted;
+    is_muted;
     // Client data
     /** @type {HTMLAudioElement} */
     audioElement;
@@ -63,15 +63,15 @@ export class RtcSession extends Record {
     isVideoStreaming = Record.attr(false, {
         /** @this {import("models").RtcSession} */
         compute() {
-            return this.isScreenSharingOn || this.isCameraOn;
+            return this.is_screen_sharing_on || this.is_camera_on;
         },
     });
     shortStatus = Record.attr(undefined, {
         compute() {
-            if (this.isScreenSharingOn) {
+            if (this.is_screen_sharing_on) {
                 return "live";
             }
-            if (this.isDeaf) {
+            if (this.is_deaf) {
                 return "deafen";
             }
             if (this.isMute) {
@@ -103,11 +103,11 @@ export class RtcSession extends Record {
     logStep;
 
     get channel() {
-        return this.channelMember?.thread;
+        return this.channel_member_id?.thread;
     }
 
     get isMute() {
-        return this.isSelfMuted || this.isDeaf;
+        return this.is_muted || this.is_deaf;
     }
 
     get mainVideoStream() {
@@ -118,15 +118,17 @@ export class RtcSession extends Record {
         if (!this.mainVideoStreamType) {
             return false;
         }
-        return this.mainVideoStreamType === "camera" ? this.isCameraOn : this.isScreenSharingOn;
+        return this.mainVideoStreamType === "camera"
+            ? this.is_camera_on
+            : this.is_screen_sharing_on;
     }
 
     get hasVideo() {
-        return this.isScreenSharingOn || this.isCameraOn;
+        return this.is_screen_sharing_on || this.is_camera_on;
     }
 
     getStream(type) {
-        const isActive = type === "camera" ? this.isCameraOn : this.isScreenSharingOn;
+        const isActive = type === "camera" ? this.is_camera_on : this.is_screen_sharing_on;
         return isActive && this.videoStreams.get(type);
     }
 
@@ -135,22 +137,22 @@ export class RtcSession extends Record {
      */
     get info() {
         return {
-            isSelfMuted: this.isSelfMuted,
+            isSelfMuted: this.is_muted,
             isRaisingHand: Boolean(this.raisingHand),
-            isDeaf: this.isDeaf,
+            isDeaf: this.is_deaf,
             isTalking: this.isTalking,
-            isCameraOn: this.isCameraOn,
-            isScreenSharingOn: this.isScreenSharingOn,
+            isCameraOn: this.is_camera_on,
+            isScreenSharingOn: this.is_screen_sharing_on,
         };
     }
 
     get partnerId() {
-        const persona = this.channelMember?.persona;
+        const persona = this.channel_member_id?.persona;
         return persona.type === "partner" ? persona.id : undefined;
     }
 
     get guestId() {
-        const persona = this.channelMember?.persona;
+        const persona = this.channel_member_id?.persona;
         return persona.type === "guest" ? persona.id : undefined;
     }
 
@@ -158,7 +160,7 @@ export class RtcSession extends Record {
      * @returns {string}
      */
     get name() {
-        return this.channelMember?.persona.name;
+        return this.channel_member_id?.persona.name;
     }
 
     /**
@@ -193,9 +195,9 @@ export class RtcSession extends Record {
      */
     updateStreamState(type, state) {
         if (type === "camera") {
-            this.isCameraOn = state;
+            this.is_camera_on = state;
         } else if (type === "screen") {
-            this.isScreenSharingOn = state;
+            this.is_screen_sharing_on = state;
         }
     }
 }

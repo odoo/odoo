@@ -28,7 +28,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCallParticipants.participant">
-        <t t-set="channelMember" t-value="session.channelMember"/>
+        <t t-set="channelMember" t-value="session.channel_member_id"/>
         <div class="d-flex text-reset overflow-hidden align-items-center" t-att-class="{ 'justify-content-center bg-inherit': compact, 'me-2': !compact and props.compact === undefined }">
             <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:24px;height:24px">
                 <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-src="channelMember.persona.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar"/>
@@ -47,8 +47,8 @@
                 </t>
                 <t t-else="">
                     <span t-if="session.isMute" class="p-1 fa" t-att-class="callActionsRegistry.get('mute').icon"/>
-                    <span t-if="session.isDeaf" class="p-1 fa" t-att-class="callActionsRegistry.get('deafen').icon"/>
-                    <span t-if="session.isScreenSharingOn" class="o-live bg-danger o-text-white rounded">LIVE</span>
+                    <span t-if="session.is_deaf" class="p-1 fa" t-att-class="callActionsRegistry.get('deafen').icon"/>
+                    <span t-if="session.is_screen_sharing_on" class="o-live bg-danger o-text-white rounded">LIVE</span>
                 </t>
             </div>
         </div>

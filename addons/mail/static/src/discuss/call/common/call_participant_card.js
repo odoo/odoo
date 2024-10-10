@@ -68,7 +68,7 @@ export class CallParticipantCard extends Component {
     }
 
     get channelMember() {
-        return this.rtcSession ? this.rtcSession.channelMember : this.props.cardData.member;
+        return this.rtcSession ? this.rtcSession.channel_member_id : this.props.cardData.member;
     }
 
     get isOfActiveCall() {
@@ -83,7 +83,7 @@ export class CallParticipantCard extends Component {
 
     get showServerState() {
         return Boolean(
-            this.rtcSession.channelMember?.persona.eq(this.store.self) &&
+            this.rtcSession.channel_member_id?.persona.eq(this.store.self) &&
                 this.rtc.state.serverState &&
                 this.rtc.state.serverState !== "connected"
         );
