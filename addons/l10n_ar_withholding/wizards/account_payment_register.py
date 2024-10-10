@@ -19,14 +19,24 @@ class AccountPaymentRegister(models.TransientModel):
 
     @api.depends('l10n_latam_move_check_ids.amount', 'amount', 'l10n_ar_net_amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_l10n_ar_adjustment_warning(self):
-        wizard_register = self
         for wizard in self:
             checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
             checks_amount = sum(checks.mapped('amount'))
-            if checks_amount and wizard.l10n_ar_net_amount != checks_amount:
-                wizard.l10n_ar_adjustment_warning = True
-                wizard_register -= wizard
-        wizard_register.l10n_ar_adjustment_warning = False
+            if checks_amount and not wizard.currency_id.is_zero(wizard.l10n_ar_net_amount - checks_amount):
+                difference = wizard.l10n_ar_net_amount - checks_amount
+                adjustment_step = 0.01
+                for _ in range(200):  # Limitar a 200 intentos
+                    if wizard.currency_id.is_zero(difference):
+                        break
+                    if -difference > 2:
+                        wizard.amount -= difference
+                    else:
+                        wizard.amount += min(adjustment_step, -difference)
+                    difference = wizard.l10n_ar_net_amount - checks_amount
+
+                wizard.l10n_ar_adjustment_warning = not wizard.currency_id.is_zero(difference)
+            else:
+                wizard.l10n_ar_adjustment_warning = False
 
     @api.depends('amount')
     def _compute_l10n_ar_net_amount(self):
