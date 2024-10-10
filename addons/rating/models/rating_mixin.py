@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.addons.rating.models import rating_data
@@ -117,36 +118,24 @@ class RatingMixin(models.AbstractModel):
         """
         return ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)]
 
-    def _rating_get_repartition(self, add_stats=False, domain=None):
-        """ get the repatition of rating grade for the given res_ids.
-            :param add_stats : flag to add stat to the result
-            :type add_stats : boolean
+    def _rating_get_repartition(self, domain=None):
+        """ get the repartition of rating grade for the given res_ids.
             :param domain : optional extra domain of the rating to include/exclude in repartition
-            :return dictionnary
-                if not add_stats, the dict is like
-                    - key is the rating value (integer)
-                    - value is the number of object (res_model, res_id) having the value
-                otherwise, key is the value of the information (string) : either stat name (avg, total, ...) or 'repartition'
-                containing the same dict if add_stats was False.
+            :return dictionary
+                - key is the res_id (product/chat/...)
+                - value is the distribution of the rating value for the given res_id
         """
         base_domain = expression.AND([self._rating_domain(), [('rating', '>=', 1)]])
         if domain:
             base_domain += domain
-        rg_data = self.env['rating.rating']._read_group(base_domain, ['rating'], ['__count'])
+        rg_data = self.env['rating.rating']._read_group(base_domain, ['rating', 'res_id'], ['__count'])
         # init dict with all possible rate value, except 0 (no value for the rating)
-        values = dict.fromkeys(range(1, 6), 0)
-        for rating, count in rg_data:
+        rating_repartition_data = defaultdict(lambda: dict.fromkeys(range(1, 6), 0))
+
+        for rating, res_id, count in rg_data:
             rating_val_round = float_round(rating, precision_digits=1)
-            values[rating_val_round] = values.get(rating_val_round, 0) + count
-        # add other stats
-        if add_stats:
-            rating_number = sum(values.values())
-            return {
-                'repartition': values,
-                'avg': sum(float(key * values[key]) for key in values) / rating_number if rating_number > 0 else 0,
-                'total': sum(count for __, count in rg_data),
-            }
-        return values
+            rating_repartition_data[res_id][rating_val_round] += count
+        return rating_repartition_data
 
     def rating_get_grades(self, domain=None):
         """ get the repatition of rating grade for the given res_ids.
@@ -156,12 +145,14 @@ class RatingMixin(models.AbstractModel):
                                                 31-69%: Okay
                                                 70-100%: Great
         """
-        data = self._rating_get_repartition(domain=domain)
-        res = dict.fromkeys(['great', 'okay', 'bad'], 0)
-        for key in data:
-            grade = rating_data._rating_to_grade(key)
-            res[grade] += data[key]
-        return res
+        rating_repartition_data = self._rating_get_repartition(domain=domain)
+        rating_grades = dict.fromkeys(['great', 'okay', 'bad'], 0)
+
+        for _res_id, rating_repartition in rating_repartition_data.items():
+            for rating_key in rating_repartition:
+                grade = rating_data._rating_to_grade(rating_key)
+                rating_grades[grade] += rating_repartition[rating_key]
+        return rating_grades
 
     def rating_get_stats(self, domain=None):
         """ get the statistics of the rating repatition
@@ -171,12 +162,13 @@ class RatingMixin(models.AbstractModel):
                 - value is statistic value : 'percent' contains the repartition in percentage, 'avg' is the average rate
                   and 'total' is the number of rating
         """
-        data = self._rating_get_repartition(domain=domain, add_stats=True)
-        result = {
-            'avg': data['avg'],
-            'total': data['total'],
-            'percent': dict.fromkeys(range(1, 6), 0),
-        }
-        for rate in data['repartition']:
-            result['percent'][rate] = (data['repartition'][rate] * 100) / data['total'] if data['total'] > 0 else 0
-        return result
+        rating_stats = defaultdict(dict)
+        rating_repartition_data = self._rating_get_repartition(domain=domain)
+        for res_id, rating_partition in rating_repartition_data.items():
+            rating_total = sum(rating_partition.values())
+            rating_stats[res_id].update({
+                'avg': sum(float(key * val) for key, val in rating_partition.items()) / rating_total if rating_total > 0 else 0,
+                'total': rating_total,
+                'percent': {rating: (count * 100) / rating_total if rating_total > 0 else 0 for rating, count in rating_partition.items()},
+            })
+        return rating_stats
