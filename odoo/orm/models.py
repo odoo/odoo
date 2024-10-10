@@ -61,7 +61,8 @@ from odoo.tools.lru import LRU
 from odoo.tools.misc import LastOrderedSet, ReversedIterable, unquote
 from odoo.tools.translate import _, LazyTranslate
 
-from . import api, fields
+from . import fields
+from . import decorators as api
 from .fields import Field, Datetime, Command
 from .identifiers import NewId
 from .utils import OriginIds, expand_ids, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
@@ -70,8 +71,9 @@ from odoo.osv import expression
 import typing
 if typing.TYPE_CHECKING:
     from collections.abc import Reversible
+    from .environments import Environment
     from .registry import Registry
-    from .api import Self, ValuesType, IdType
+    from .types import Self, ValuesType, IdType
 
 
 _lt = LazyTranslate('base')
@@ -441,7 +443,7 @@ class BaseModel(metaclass=MetaModel):
     """
     __slots__ = ['env', '_ids', '_prefetch_ids']
 
-    env: api.Environment
+    env: Environment
     id: IdType | typing.Literal[False]
     display_name: str | typing.Literal[False]
     pool: Registry

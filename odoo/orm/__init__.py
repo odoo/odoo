@@ -3,7 +3,7 @@
 A `Registry` object is instantiated per database, and exposes all the available
 models for its database. The available models are determined by the modules
 that must be loaded for the given database.
-The `api` defines various method decorators.
+The `decorators` defines various method decorators.
 The 'environments` defines `Transaction`, collecting database
 transaction-specific data, and `Environment`, which contains specific
 context-dependent data inside a transaction.

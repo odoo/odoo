@@ -2,7 +2,7 @@
 import typing
 from collections.abc import Mapping
 
-from .api import Environment
+from .environments import Environment
 from .fields import Field
 from .identifiers import IdType, NewId
 from .models import BaseModel
