@@ -25,7 +25,10 @@ export class TimeOffCalendarModel extends CalendarModel {
         let result = super.normalizeRecord(...arguments);
         if (rawRecord.employee_id) {
             const employee = rawRecord.employee_id[1];
-            result.title = [employee, result.title].join(' ');
+            // If the employee's name isn't already included at the start of the title
+            if (!result.title.startsWith(employee)){
+                result.title = [employee, result.title].join(' ');
+            }
         }
         return result;
     }
