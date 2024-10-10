@@ -554,21 +554,21 @@ export class Composer extends Component {
         };
         const options = {
             onClose: (...args) => {
-                // args === [] : click on 'X'
+                // args === [] : click on 'X' or press escape
                 // args === { special: true } : click on 'discard'
-                const isDiscard = args.length === 0 || args[0]?.special;
+                const accidentalDiscard = args.length === 0;
+                const isDiscard = accidentalDiscard || args[0]?.special;
                 // otherwise message is posted (args === [undefined])
                 if (!isDiscard && this.props.composer.thread.model === "mail.box") {
                     this.notifySendFromMailbox();
                 }
-                if (
-                    args.length === 0 &&
-                    document
-                        .querySelector(".o_mail_composer_form_view .note-editable")
-                        .innerText.replace(/^\s*$/gm, "")
-                ) {
-                    this.saveContent();
-                    this.restoreContent();
+                if (accidentalDiscard) {
+                    const editor = document.querySelector(".o_mail_composer_form_view .note-editable");
+                    const editorIsEmpty = !editor || !editor.innerText.replace(/^\s*$/gm, "");
+                    if (!editorIsEmpty) {
+                        this.saveContent();
+                        this.restoreContent();
+                    }
                 } else {
                     this.clear();
                 }
