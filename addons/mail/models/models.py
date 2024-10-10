@@ -208,10 +208,11 @@ class BaseModel(models.AbstractModel):
         Override this method on a specific model to implement model-specific
         behavior. Also consider inheriting from ``mail.thread``. """
         res = {}
+        customers = self._mail_get_partners()
         for record in self:
             recipient_ids, email_to, email_cc = [], False, False
-            if 'partner_id' in record and record.partner_id:
-                recipient_ids.append(record.partner_id.id)
+            if recipients := customers.get(record.id):
+                recipient_ids += recipients.ids
             else:
                 found_email = False
                 if 'email_from' in record and record.email_from:

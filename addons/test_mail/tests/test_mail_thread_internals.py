@@ -507,19 +507,37 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
 
 
-@tagged('mail_thread')
+@tagged('mail_thread', 'mail_nothread')
 class TestNoThread(MailCommon, TestRecipients):
     """ Specific tests for cross models thread features """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_record_nothread = cls.env['mail.test.nothread'].with_user(cls.user_employee).create({
+            'customer_id': cls.partner_1.id,
+            'name': 'Not A Thread',
+        })
+
+    @users('employee')
+    def test_mail_template_send_mail(self):
+        template = self.env['mail.template'].create({
+            'model_id': self.env['ir.model']._get_id('mail.test.nothread'),
+            'use_default_to': True,
+        })
+        test_record = self.test_record_nothread.with_env(self.env)
+        template.send_mail(
+            test_record.id,
+            email_layout_xmlid='mail.mail_notification_light',
+        )
 
     @users('employee')
     def test_message_to_store(self):
         """ Test formatting of messages when linked to non-thread models.
         Format could be asked notably if an inbox notification due to a
         'message_notify' happens. """
-        test_record = self.env['mail.test.nothread'].create({
-            'customer_id': self.partner_1.id,
-            'name': 'Not A Thread',
-        })
+        test_record = self.test_record_nothread.with_env(self.env)
+
         message = self.env['mail.message'].create({
             'model': test_record._name,
             'record_name': 'Not used in message _to_store',
@@ -540,10 +558,7 @@ class TestNoThread(MailCommon, TestRecipients):
         class with model and res_id giving the record used for notification.
 
         Test default subject computation is also tested. """
-        test_record = self.env['mail.test.nothread'].create({
-            'customer_id': self.partner_1.id,
-            'name': 'Not A Thread',
-        })
+        test_record = self.test_record_nothread.with_env(self.env)
 
         for subject in ["Test Notify", False]:
             with self.subTest():
