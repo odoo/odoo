@@ -432,14 +432,6 @@ class Product(models.Model):
             product.reordering_min_qty = product_min_qty_sum
             product.reordering_max_qty = product_max_qty_sum
 
-    @api.onchange('tracking')
-    def _onchange_tracking(self):
-        if any(product.tracking != 'none' and product.qty_available > 0 for product in self):
-            return {
-                'warning': {
-                    'title': _('Warning!'),
-                    'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
-
     @api.model
     def view_header_get(self, view_id, view_type):
         res = super(Product, self).view_header_get(view_id, view_type)
@@ -709,6 +701,7 @@ class ProductTemplate(models.Model):
     has_available_route_ids = fields.Boolean(
         'Routes can be selected on this product', compute='_compute_has_available_route_ids',
         default=lambda self: self.env['stock.route'].search_count([('product_selectable', '=', True)]))
+    has_move_line_ids = fields.Boolean(compute='_compute_has_move_line_ids')
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)], depends_context=['company', 'allowed_companies'],
@@ -740,6 +733,13 @@ class ProductTemplate(models.Model):
     @api.depends('is_storable')
     def _compute_has_available_route_ids(self):
         self.has_available_route_ids = self.env['stock.route'].search_count([('product_selectable', '=', True)])
+
+    @api.depends('is_storable')
+    def _compute_has_move_line_ids(self):
+        self.has_move_line_ids = self.env['stock.move.line'].sudo().search_count([
+            ('product_id', 'in', self.mapped('product_variant_ids').ids),
+            ('state', 'in', ['partially_available', 'assigned', 'done']),
+        ], limit=1)
 
     @api.depends(
         'product_variant_ids.qty_available',
@@ -850,10 +850,6 @@ class ProductTemplate(models.Model):
             template.reordering_min_qty = res[template.id]['reordering_min_qty']
             template.reordering_max_qty = res[template.id]['reordering_max_qty']
 
-    @api.onchange('tracking')
-    def _onchange_tracking(self):
-        return self.mapped('product_variant_ids')._onchange_tracking()
-
     @api.depends('is_storable')
     def _compute_tracking(self):
         self.filtered(lambda t: not t.is_storable and t.tracking != 'none').tracking = 'none'
@@ -903,22 +899,40 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You cannot change the unit of measure as there are already stock moves for this product. If you want to change the unit of measure, you should rather archive this product and create a new one."))
         if 'is_storable' in vals and not vals['is_storable'] and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
-        if any('is_storable' in vals and vals['is_storable'] != prod_tmpl.is_storable for prod_tmpl in self):
-            existing_done_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
-                ('state', '=', 'done'),
-            ], limit=1)
-            if existing_done_move_lines:
-                raise UserError(_("You can not change the inventory tracking of a product that was already used."))
-            existing_reserved_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
+        reserved_move_lines = self.env['stock.move.line']
+        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self) or \
+            ('tracking' in vals and vals['tracking'] == 'none' and self.tracking != 'none'):
+            grouped_move_lines = {}
+            reserved_move_lines = self.env['stock.move.line'].sudo().search([
+                ('product_id', 'in', self.mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
-            ], limit=1)
-            if existing_reserved_move_lines:
-                raise UserError(_("You can not change the inventory tracking of a product that is currently reserved on a stock move. If you need to change the inventory tracking, you should first unreserve the stock move."))
-        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
-            raise UserError(_("Available quantity should be set to zero before changing inventory tracking"))
-        return super().write(vals)
+                ('location_id.usage', '=', 'internal'),
+            ])
+            # Group move lines by key attributes
+            for rmvl in reserved_move_lines:
+                key = (rmvl.move_id.id, rmvl.product_id.id, rmvl.location_id.id, rmvl.package_id.id or False, rmvl.owner_id.id or False)
+                if key not in grouped_move_lines:
+                    grouped_move_lines[key] = {'quantity': 0}
+                # Aggregate the quantities
+                grouped_move_lines[key]['quantity'] += rmvl.quantity
+
+            # Update stock quantities
+            self._remove_and_replenish_stock_quantities()
+
+        res = super().write(vals)
+
+        if reserved_move_lines:
+            for key, data in grouped_move_lines.items():
+                move_id, product_id, location_id, package_id, owner_id = key
+                self.env['stock.move.line'].create({
+                    'product_id': product_id,
+                    'move_id': move_id,
+                    'location_id': location_id,
+                    'package_id': package_id,
+                    'owner_id': owner_id,
+                    'quantity': data['quantity'],
+                })
+        return res
 
     def copy(self, default=None):
         new_products = super().copy(default=default)
@@ -1021,6 +1035,65 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_forecasted_product_template_action')
         return action
+
+    def _remove_and_replenish_stock_quantities(self):
+        """
+            Remove existing stock quants for the products in this recordset,
+            group them by product, location, package, and owner, and then
+            create new moves based on the aggregated quantities.
+        """
+        for product in self:
+            # Fetch stock quants related to the product in internal and transit locations
+            quants = self.env['stock.quant'].search([
+                ('product_id', 'in', product.product_variant_ids.ids),
+                ('location_id.usage', 'in', ['internal', 'transit']),
+            ])
+
+            # Dictionary to hold grouped quants by unique identifiers
+            grouped_quants = {}
+
+            for quant in quants:
+                key = (quant.product_id, quant.location_id.id, quant.package_id.id or False, quant.owner_id.id or False)
+
+                if key not in grouped_quants:
+                    grouped_quants[key] = {'quantity': 0}
+                # Aggregate the quantities
+                grouped_quants[key]['quantity'] += quant.quantity
+
+                # Reset the quant's quantity and apply inventory adjustment
+                quant.inventory_quantity = 0
+                quant.with_context(inventory_mode=True).action_apply_inventory()
+
+            # Create new move entries based on grouped data
+            for key, data in grouped_quants.items():
+                product_id, location_id, package_id, owner_id = key
+                product._replenish_stock_quantities(product_id, location_id, data['quantity'], package_id, owner_id)
+
+    def _replenish_stock_quantities(self, product_id, location_id, quantity, package_id=False, owner_id=False):
+        StockMove = self.env['stock.move']
+        move_vals = {
+            'name': _("Replenishment for %(product)s", product=product_id.display_name),
+            'product_id': product_id.id,
+            'product_uom': product_id.uom_id.id,
+            'company_id': self.company_id.id or self.env.company.id,
+            'state': 'confirmed',
+            'location_id': product_id.property_stock_inventory.id,
+            'location_dest_id': location_id,
+            'is_inventory': True,
+            'picked': True,
+            'move_line_ids': [(0, 0, {
+                'product_id': product_id.id,
+                'product_uom_id': product_id.uom_id.id,
+                'quantity': quantity,
+                'location_id': product_id.property_stock_inventory.id,
+                'location_dest_id': location_id,
+                'result_package_id': package_id,
+                'owner_id': owner_id,
+                'company_id': self.company_id.id or self.env.company.id,
+            })]
+        }
+        stock_move = StockMove.with_context(inventory_mode=False).create(move_vals)
+        stock_move._action_done()
 
 
 class ProductCategory(models.Model):
