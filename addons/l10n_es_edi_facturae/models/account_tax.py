@@ -1,4 +1,7 @@
-from odoo import fields, models
+import csv
+
+from odoo import api, fields, models
+from odoo.tools import file_open
 
 
 class AccountTax(models.Model):
@@ -35,3 +38,31 @@ class AccountTax(models.Model):
         ('28', 'IRNR: Non-resident Income Tax'),
         ('29', 'Corporation Tax'),
     ), string='Spanish Facturae EDI Tax Type', default='01')
+
+    @api.model
+    def _update_l10n_es_edi_facturae_tax_type(self):
+        """
+            Applies all existing tax l10n_es_edi_facturae_tax_type field to their proper value if any link between tax and their template is found
+        """
+        concerned_company_ids = [
+            company.id
+            for company in self.env.companies
+            if company.chart_template and company.chart_template.startswith('es_')
+        ]
+        if not concerned_company_ids:
+            return
+        current_taxes = self.env['account.tax'].search(self.env['account.tax']._check_company_domain(concerned_company_ids))
+        if not current_taxes:
+            return
+        with file_open('l10n_es_edi_facturae/data/template/account.tax-es_common.csv') as template_file:
+            template_data = {record['id']: record['l10n_es_edi_facturae_tax_type'] for record in csv.DictReader(template_file)}
+        xmlid2tax = {
+            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax'].browse(record)
+            for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
+        }
+        for xmlid, facturae_tax_type in template_data.items():
+            # Only update the tax_type fields
+            xmlid = xmlid.split('.')[1]
+            oldtax = xmlid2tax.get(xmlid)
+            if oldtax and oldtax.l10n_es_edi_facturae_tax_type != facturae_tax_type:
+                oldtax.l10n_es_edi_facturae_tax_type = facturae_tax_type
