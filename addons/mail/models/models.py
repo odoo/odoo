@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 
 class Base(models.AbstractModel):
     _inherit = ['base']
+    _mail_defaults_to_email = False
 
     def _valid_field_parameter(self, field, name):
         # allow tracking on abstract models; see also 'mail.thread'
@@ -73,6 +74,13 @@ class Base(models.AbstractModel):
             for record in self
         }
 
+    def _mail_get_customer(self, introspect_fields=False):
+        """ Return the 'main partner' (customer business wise) of the record.
+        Mainly a helper for future changes e.g. main customer in templates. """
+        self.ensure_one()
+        customers = self._mail_get_partners(introspect_fields=introspect_fields)[self.id]
+        return customers[0] if customers else self.env['res.partner']
+
     @api.model
     def _mail_get_partner_fields(self, introspect_fields=False):
         """ This method returns the fields to use to find the contact to link
@@ -104,10 +112,13 @@ class Base(models.AbstractModel):
           customers to contact;
         """
         partner_fields = self._mail_get_partner_fields(introspect_fields=introspect_fields)
-        return dict(
-            (record.id, self.env['res.partner'].union(*[record[fname] for fname in partner_fields]))
-            for record in self
-        )
+        pids = {pid for record in self for fn in partner_fields for pid in record[fn].ids}
+        Partner = self.env['res.partner'].with_prefetch(pids)
+        records_partners = {}
+        for record in self:
+            pids = tools.unique(pid for fn in partner_fields for pid in record[fn].ids)
+            records_partners[record.id] = Partner.browse(pids)
+        return records_partners
 
     @api.model
     def _mail_get_primary_email_field(self):
@@ -206,28 +217,71 @@ class Base(models.AbstractModel):
         all models as we could send an email through mail templates on models
         not inheriting from mail.thread.
 
+        Heuristics is to find a customer (res.partner record) holding a
+        email. Then we fallback on email fields, beginning with field optionally
+        defined using `_primary_email` attribute. Email can be prioritized
+        compared to partner if `_mail_defaults_to_email` class parameter is set.
+
         Override this method on a specific model to implement model-specific
         behavior. Also consider inheriting from ``mail.thread``. """
         res = {}
+        customers = self._mail_get_partners()
+        prioritize_email = getattr(self, '_mail_defaults_to_email', False)
+        primary_email_fn = self._mail_get_primary_email_field()
         for record in self:
-            recipient_ids, email_to, email_cc = [], False, False
-            if 'partner_id' in record and record.partner_id:
-                recipient_ids.append(record.partner_id.id)
+            email_cc_lst, email_to_lst = [], []
+            # main recipients (res.partner)
+            recipients_all = customers.get(record.id)
+            recipients = recipients_all.filtered(lambda p: p.email)
+            # to computation
+            to_fn = next(
+                (
+                    fname for fname in [
+                        primary_email_fn,
+                        'email_from', 'x_email_from',
+                        'email', 'x_email',
+                        'partner_email',
+                        'email_normalized',
+                    ] if fname and fname in record and record[fname]
+                ), False
+            )
+            if to_fn:
+                # keep value to ease debug / trace update if cannot normalize
+                email_to_lst = tools.mail.email_split_and_format_normalize(record[to_fn]) or [record[to_fn]]
+            # cc computation
+            cc_fn = next(
+                (
+                    fname for fname in ['email_cc', 'partner_email_cc', 'x_email_cc']
+                    if fname in record and record[fname]
+                ), False
+            )
+            if cc_fn:
+                email_cc_lst = tools.mail.email_split_and_format_normalize(record[cc_fn]) or [record[cc_fn]]
+            # prioritize recipients: default, or when to == recipients emails, or
+            # when no email_to
+            if not prioritize_email or not email_to_lst:
+                # if no valid recipients nor emails, fallback on recipients even
+                # invalid to have at least some information
+                if recipients:
+                    partner_ids = recipients.ids or recipients_all.ids
+                    email_to = ''
+                else:
+                    partner_ids = [] if email_to_lst else recipients_all.ids
+                    email_to = ','.join(email_to_lst)
+            # if emails match partners, use partners to have more information
+            elif len(email_to_lst) == len(recipients) and all(
+                tools.email_normalize(email) in recipients.mapped('email_normalized') for email in email_to_lst
+            ):
+                partner_ids = recipients.ids
+                email_to = ''
             else:
-                found_email = False
-                if 'email_from' in record and record.email_from:
-                    found_email = record.email_from
-                elif 'partner_email' in record and record.partner_email:
-                    found_email = record.partner_email
-                elif 'email' in record and record.email:
-                    found_email = record.email
-                elif 'email_normalized' in record and record.email_normalized:
-                    found_email = record.email_normalized
-                if found_email:
-                    email_to = ','.join(tools.email_normalize_all(found_email))
-                if not email_to:  # keep value to ease debug / trace update
-                    email_to = found_email
-            res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
+                partner_ids = []
+                email_to = ','.join(email_to_lst)
+            res[record.id] = {
+                'email_cc': ','.join(email_cc_lst),
+                'email_to': email_to,
+                'partner_ids': partner_ids,
+            }
         return res
 
     def _notify_get_reply_to(self, default=None):

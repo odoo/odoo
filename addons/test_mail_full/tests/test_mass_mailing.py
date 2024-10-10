@@ -43,8 +43,10 @@ class TestMassMailing(TestMailFullCommon):
 
         for recipient in recipients_all:
             recipient_info = {
-                'email': recipient.email_normalized,
-                'content': 'Hello %s' % recipient.name}
+                'content': f'Hello {recipient.name}',
+                'email': recipient.email_normalized or '',
+                'email_to_mail': recipient.email_from or '',
+            }
             # opt-out: cancel (cancel mail)
             if recipient in recipients[1] | recipients[2]:
                 recipient_info['trace_status'] = "cancel"
@@ -67,7 +69,7 @@ class TestMassMailing(TestMailFullCommon):
                 recipient_info['failure_type'] = "mail_email_invalid"
                 recipient_info['email'] = recipient.email_from  # normalized is False but email should be falsymail
             else:
-                email = self._find_sent_mail_wemail(recipient.email_normalized)
+                email = self._find_sent_mail_wemail(recipient.email_from)
                 # preview correctly integrated rendered qweb
                 self.assertIn(
                     'Hi %s :)' % recipient.name,

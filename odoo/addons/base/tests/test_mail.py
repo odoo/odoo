@@ -13,7 +13,7 @@ from odoo.tools import misc
 from odoo.tools.mail import (
     is_html_empty, html2plaintext, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
     email_domain_normalize, email_normalize, email_re,
-    email_split, email_split_and_format, email_split_tuples,
+    email_split, email_split_and_format, email_split_and_format_normalize, email_split_tuples,
     single_email_re,
     formataddr,
     prepend_html_content,
@@ -698,7 +698,8 @@ class TestEmailTools(BaseCase):
 
     def test_email_split_and_format(self):
         """ Test 'email_split_and_format', notably in case of multi encapsulation
-        or multi emails. """
+        or multi emails. Also check 'email_split_and_format_normalize' while
+        being there. """
         sources = [
             'deboulonneur@example.com',
             '"Super Déboulonneur" <deboulonneur@example.com>',  # formatted
@@ -717,6 +718,8 @@ class TestEmailTools(BaseCase):
             '"Déboulonneur 😊" <deboulonneur@example.com>',  # unicode in name
             '"Déboulonneur 😊" <deboulonneur.😊@example.com>',  # unicode in name and email left-part
             '"Déboulonneur" <déboulonneur@examplé.com>',  # utf-8
+            '"Déboulonneur" <DEboulonneur@😊.example.com>',  # case + unicode
+            '"Déboulonneur" <DÉBoulonneur.😊@Éxamplé.com>',  # case + utf-8 + unicode
         ]
         expected_list = [
             ['deboulonneur@example.com'],
@@ -736,13 +739,24 @@ class TestEmailTools(BaseCase):
             ['"Déboulonneur 😊" <deboulonneur@example.com>'],
             ['"Déboulonneur 😊" <deboulonneur.😊@example.com>'],
             ['"Déboulonneur" <déboulonneur@examplé.com>'],
+            ['"Déboulonneur" <DEboulonneur@😊.example.com>'],
+            ['"Déboulonneur" <DÉBoulonneur.😊@Éxamplé.com>'],
         ]
+        # mostly the same except 3 cases so don't copy paste everything
+        normalized = {
+            # lower
+            'deboulonneur@example.com Déboulonneur': ['deboulonneur@example.comdéboulonneur'],
+            '"Déboulonneur" <DEboulonneur@😊.example.com>': ['"Déboulonneur" <deboulonneur@😊.example.com>'],
+            # encoded -> not lowerized
+            '"Déboulonneur" <DÉBoulonneur.😊@Éxamplé.com>': ['"Déboulonneur" <DÉBoulonneur.😊@éxamplé.com>'],
+        }
         for source, expected in zip(sources, expected_list):
             with self.subTest(source=source):
                 self.assertEqual(email_split_and_format(source), expected)
+                self.assertEqual(email_split_and_format_normalize(source), normalized.get(source, expected))
 
     def test_email_split_tuples(self):
-        """ Test 'email_split_and_format' that returns (name, email) pairs
+        """ Test 'email_split_tuples' that returns (name, email) pairs
         found in text input """
         expected = [
             # single email
