@@ -39,10 +39,11 @@
         </form>
         <div class="d-flex w-100 w-lg-auto">
             <t t-set="exhibitor_search_placeholder">Search an exhibitor ...</t>
-            <t t-call="website_event.events_search_box">
+            <t t-call="website_event.events_search_box_input">
                 <t t-set="_searches" t-value="searches"/>
                 <t t-set="action" t-value="'/event/%s/exhibitors' % (slug(event))"/>
                 <t t-set="_placeholder" t-value="exhibitor_search_placeholder"/>
+                <t t-set="_search_type">sponser</t>
             </t>
             <button class="btn btn-light position-relative ms-2 d-lg-none"
                 data-bs-toggle="offcanvas"

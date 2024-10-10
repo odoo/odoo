@@ -20,7 +20,8 @@ class Sponsor(models.Model):
         'mail.thread',
         'mail.activity.mixin',
         'website.published.mixin',
-        'chat.room.mixin'
+        'chat.room.mixin',
+        'website.searchable.mixin'
     ]
 
     def _default_sponsor_type_id(self):
@@ -242,3 +243,30 @@ class Sponsor(models.Model):
                 reason=_('Sponsor')
             )
         return recipients
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        domain = []
+        if options.get('event'):
+            event_id = self.env['ir.http']._unslug(options['event'])[1]
+            domain.append([('event_id', '=', event_id)])
+
+        fetch_fields = ['name', 'website_url', 'partner_name']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'partner_name': {'name': 'partner_name', 'type': 'text', 'match': True, 'html': True},
+        }
+        if options['displayDescription']:
+            fetch_fields.append('subtitle')
+            mapping['subtitle'] = {'name': 'subtitle', 'type': 'text', 'truncate': True, 'html': True}
+
+        return {
+            'model': 'event.sponsor',
+            'base_domain': domain,
+            'search_fields': ['name', 'partner_name'],
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-black-tie',
+            'order': order,
+        }
