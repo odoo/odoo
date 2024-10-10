@@ -4,6 +4,118 @@ import { uniqueId } from "@web/core/utils/functions";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToElement } from "@web/core/utils/render";
 
+export const CAROUSEL_SLIDING_CLASS = "o_carousel_sliding";
+
+/**
+ * @param {HTMLElement} carouselEl
+ * @returns {Promise<void>}
+ */
+export async function waitForCarouselToFinishSliding(carouselEl) {
+    if (carouselEl.classList.contains(CAROUSEL_SLIDING_CLASS)) {
+        await new Promise((resolve) => {
+            const handler = () => {
+                carouselEl.removeEventListener("slid.bs.carousel", handler);
+                resolve();
+            };
+            carouselEl.addEventListener("slid.bs.carousel", handler);
+        });
+    }
+}
+
+/**
+ * This class is used to fix carousel auto-slide behavior in Odoo 17.4 and up.
+ * It handles upgrade cases from Odoo 17.2 and lower to the new bootstrap 5.x
+ * version.
+ */
+const CarouselWidget = publicWidget.Widget.extend({
+    selector: "[data-snippet] .carousel",
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    async start() {
+        const superResult = await this._super(...arguments);
+        const carouselEl = this.$el?.[0];
+        if (carouselEl) {
+            const hasInterval = ![undefined, "false", "0"].includes(carouselEl.dataset.bsInterval);
+            if (!hasInterval && carouselEl.dataset.bsRide) {
+                // A bsInterval of 0 (or false or undefined) is intended to not
+                //  auto-slide. In bootstrap 5.x, a value of 0 will mean
+                //  auto-slide without any delay (very fast). To prevent this,
+                //  we remove the bsRide.
+                this.previousBsRide = carouselEl.dataset.bsRide;
+                delete carouselEl.dataset.bsRide;
+                await this._destroyCarouselInstance();
+                window.Carousel.getOrCreateInstance(carouselEl);
+            } else if (hasInterval && !carouselEl.dataset.bsRide) {
+                // Re-add bsRide on carousels that don't have it but still have
+                //  a bsInterval. s_image_gallery must auto-slide on load,
+                //  while the others only auto-slide on mouseleave.
+                // In the case of s_image_gallery that has a bsRide = "true"
+                //  instead of "carousel", it's better not to change the
+                //  behavior and let the user update the snippet manually to
+                //  avoid making changes that they don't expect.
+                const snippetName = carouselEl.closest("[data-snippet]").dataset.snippet;
+                carouselEl.dataset.bsRide = snippetName === "s_image_gallery" ? "carousel" : "true";
+                await this._destroyCarouselInstance();
+                window.Carousel.getOrCreateInstance(carouselEl);
+            }
+
+            // Mark carousel with class o_carousel_sliding while sliding
+            carouselEl.classList.remove(CAROUSEL_SLIDING_CLASS);
+            carouselEl.addEventListener("slide.bs.carousel", this._markCarouselSliding);
+            carouselEl.addEventListener("slid.bs.carousel", this._unmarkCarouselSliding);
+        }
+
+        return superResult;
+    },
+    /**
+     * @override
+     */
+    async destroy() {
+        const superResult = await this._super(...arguments);
+        const carouselEl = this.$el?.[0];
+        if (carouselEl) {
+            if (this.previousBsRide) {
+                carouselEl.dataset.bsRide = this.previousBsRide;
+                delete this.previousBsRide;
+            }
+            await this._destroyCarouselInstance();
+
+            carouselEl.removeEventListener("slide.bs.carousel", this._markCarouselSliding);
+            carouselEl.removeEventListener("slid.bs.carousel", this._unmarkCarouselSliding);
+            carouselEl.classList.remove(CAROUSEL_SLIDING_CLASS);
+        }
+
+        return superResult;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    async _destroyCarouselInstance() {
+        const carouselEl = this.$el[0];
+        await waitForCarouselToFinishSliding(carouselEl); // Prevent traceback
+        window.Carousel.getInstance(carouselEl)?.dispose();
+    },
+    /**
+     * @private
+     */
+    _markCarouselSliding(ev) {
+        ev.target.classList.add(CAROUSEL_SLIDING_CLASS);
+    },
+    /**
+     * @private
+     */
+    _unmarkCarouselSliding(ev) {
+        ev.target.classList.remove(CAROUSEL_SLIDING_CLASS);
+    },
+});
 
 const GalleryWidget = publicWidget.Widget.extend({
 
@@ -198,10 +310,12 @@ const GallerySliderWidget = publicWidget.Widget.extend({
     },
 });
 
+publicWidget.registry.__carouselBootstrapUpgradeFix__ = CarouselWidget; // TODO: rename in master
 publicWidget.registry.gallery = GalleryWidget;
 publicWidget.registry.gallerySlider = GallerySliderWidget;
 
 export default {
+    CarouselWidget: CarouselWidget,
     GalleryWidget: GalleryWidget,
     GallerySliderWidget: GallerySliderWidget,
 };
