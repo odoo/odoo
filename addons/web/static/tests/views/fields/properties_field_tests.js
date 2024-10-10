@@ -4,6 +4,7 @@ import {
     click,
     clickDiscard,
     clickSave,
+    drag,
     dragAndDrop,
     editInput,
     editSelect,
@@ -61,7 +62,7 @@ async function changeType(target, propertyType) {
 // Separators tests utils
 // -----------------------------------------
 
-async function makePropertiesGroupView(properties) {
+async function makePropertiesGroupView(properties, columns = 2) {
     // mock random function to have predictable auto generated properties names
     let counter = 1;
     patchWithCleanup(PropertiesField.prototype, {
@@ -109,7 +110,7 @@ async function makePropertiesGroupView(properties) {
                 <sheet>
                     <group>
                         <field name="company_id"/>
-                        <field name="properties" columns="2"/>
+                        <field name="properties" columns="${columns}"/>
                     </group>
                 </sheet>
             </form>`,
@@ -144,6 +145,10 @@ function getLocalStorageFold() {
         "fake.model,1337":
             JSON.parse(window.localStorage.getItem("properties.fold,fake.model,1337")) || [],
     };
+}
+
+function getPropertyHandleElement(propertyName) {
+    return target.querySelector(`*[property-name='${propertyName}'] .oi-draggable`);
 }
 
 QUnit.module("Fields", (hooks) => {
@@ -2730,4 +2735,134 @@ QUnit.module("Fields", (hooks) => {
             "0"
         );
     });
+
+    QUnit.test(
+        "properties: moving single property to 2nd group in auto split mode",
+        async function (assert) {
+            await makePropertiesGroupView([false]);
+
+            const { moveTo, drop } = await drag(getPropertyHandleElement("property_1"));
+
+            const secondGroup = target.querySelector(".o_property_group:last-of-type");
+            await moveTo(secondGroup, "bottom");
+            await drop(target, "bottom-right");
+
+            assert.deepEqual(getGroups(), [
+                [["GROUP 1", "property_gen_2"]],
+                [
+                    ["GROUP 2", "property_gen_3"],
+                    ["Property 1", "property_1"],
+                ],
+            ]);
+        }
+    );
+
+    QUnit.test("properties: moving single property to 1st group", async function (assert) {
+        await makePropertiesGroupView([true, true, false]);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_1")
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["SEPARATOR 1", "property_1"],
+                ["Property 3", "property_3"],
+            ],
+            [["SEPARATOR 2", "property_2"]],
+        ]);
+    });
+
+    QUnit.test("properties: 3 cols, auto split", async function (assert) {
+        await makePropertiesGroupView([false, false, false, false], 3);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_1"),
+            getPropertyHandleElement("property_4"),
+            "top"
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["GROUP 1", "property_gen_2"],
+                ["Property 2", "property_2"],
+            ],
+            [
+                ["GROUP 2", "property_gen_3"],
+                ["Property 3", "property_3"],
+            ],
+            [
+                ["GROUP 3", "property_gen_4"],
+                ["Property 1", "property_1"],
+                ["Property 4", "property_4"],
+            ],
+        ]);
+    });
+
+    QUnit.test("properties: 4 cols, moving property to last group", async function (assert) {
+        await makePropertiesGroupView([false, false, false], 4);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_1"),
+            target.querySelector(".o_property_group:last-of-type")
+        );
+
+        assert.deepEqual(getGroups(), [
+            [["GROUP 1", "property_gen_2"]],
+            [
+                ["GROUP 2", "property_gen_3"],
+                ["Property 2", "property_2"],
+            ],
+            [
+                ["GROUP 3", "property_gen_4"],
+                ["Property 3", "property_3"],
+            ],
+            [
+                ["GROUP 4", "property_gen_5"],
+                ["Property 1", "property_1"],
+            ],
+        ]);
+    });
+
+    QUnit.test("properties: split, moving property from 2nd group to 1st", async function (assert) {
+        await makePropertiesGroupView([true, false, false], 2);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_2"),
+            "top"
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["SEPARATOR 1", "property_1"],
+                ["Property 3", "property_3"],
+                ["Property 2", "property_2"],
+            ],
+            [["GROUP 2", "property_gen_2"]],
+        ]);
+    });
+
+    QUnit.test(
+        "properties: 3 cols, split moving property from 2nd group to 1st",
+        async function (assert) {
+            await makePropertiesGroupView([true, false, false], 3);
+
+            await dragAndDrop(
+                getPropertyHandleElement("property_3"),
+                getPropertyHandleElement("property_2"),
+                "top"
+            );
+
+            assert.deepEqual(getGroups(), [
+                [
+                    ["SEPARATOR 1", "property_1"],
+                    ["Property 3", "property_3"],
+                    ["Property 2", "property_2"],
+                ],
+                [["GROUP 2", "property_gen_2"]],
+            ]);
+        }
+    );
 });

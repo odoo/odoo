@@ -17,7 +17,15 @@ import { pick } from "@web/core/utils/objects";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
-import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+
+/**
+ * @typedef {Object} Property
+ * @property {"char" | "boolean" | "integer" | "float" | "date" | "datetime" | "selection" | "tags" | "many2one" | "many2many" | "separator"} type
+ * @property {boolean?} definition_changed
+ * @property {string} name
+ * @property {string} string
+ */
 
 export class PropertiesField extends Component {
     static template = "web.PropertiesField";
@@ -130,16 +138,10 @@ export class PropertiesField extends Component {
                     to = next.getAttribute("property-name");
                     moveBefore = !!to;
                 }
-                if (!to) {
-                    // we move in an empty group or outside of the DOM element
-                    // move the element at the end of the group
-                    const groupName = parent.getAttribute("property-name");
-                    const group = this.groupedPropertiesList.find(
-                        (group) => group.name === groupName
-                    );
-                    to = group.elements.length ? group.elements.at(-1).name : groupName;
-                }
-                await this.onPropertyMoveTo(from, to, moveBefore);
+                const targetGroupIndex = Array.from(
+                    this.propertiesRef.el.querySelectorAll(".o_property_group")
+                ).findIndex((e) => e.isSameNode(parent));
+                await this.onPropertyMoveTo(from, to, moveBefore, targetGroupIndex);
             },
             onDragEnd: ({ element }) => {
                 this.propertiesRef.el.classList.remove("o_property_dragging");
@@ -204,7 +206,7 @@ export class PropertiesField extends Component {
      * in the events, we won't re-use same object (can lead to issue, e.g. if we
      * discard a form view, we should be able to restore the old props).
      *
-     * @returns {array}
+     * @returns {Property[]}
      */
     get propertiesList() {
         const propertiesValues = this.props.record.data[this.props.name] || [];
@@ -384,56 +386,124 @@ export class PropertiesField extends Component {
      * Move a property after the target property.
      *
      * @param {string} propertyName
-     * @param {string} toPropertyName, the target property
+     * @param {string | undefined} toPropertyName - the target property
+     * @param {boolean} moveBefore
+     * @param {number} targetGroupIndex
      *  (null if we move the property to the first index)
      */
-    onPropertyMoveTo(propertyName, toPropertyName, moveBefore) {
+    onPropertyMoveTo(propertyName, toPropertyName, moveBefore, targetGroupIndex) {
         const propertiesValues = this.propertiesList || [];
 
-        let fromIndex = propertiesValues.findIndex((property) => property.name === propertyName);
-        let toIndex = propertiesValues.findIndex((property) => property.name === toPropertyName);
-        const columnSize = Math.ceil(propertiesValues.length / this.renderedColumnsCount);
+        const separatorCount = propertiesValues.filter((p) => p.type === "separator").length;
+        const isSplit =
+            (propertiesValues[0].type === "separator" && separatorCount === 1) ||
+            separatorCount === 0;
+
+        function insertPropertyInTargetGroup(map) {
+            const property = propertiesValues.find((property) => property.name === propertyName);
+            let targetGroup = map[targetGroupIndex];
+            if (!targetGroup) {
+                targetGroup = [];
+                map[targetGroupIndex] = targetGroup;
+            }
+
+            if (toPropertyName) {
+                const targetPropertyIndex = targetGroup.findIndex(
+                    (property) => property.name === toPropertyName
+                );
+                if (moveBefore) {
+                    targetGroup.splice(targetPropertyIndex, 0, property);
+                } else {
+                    targetGroup.splice(targetPropertyIndex + 1, 0, property);
+                }
+            } else {
+                targetGroup.push(property);
+            }
+        }
+
+        const flatten = (propertiesByIndex, shouldAddSeparators = false) => {
+            /** @type {Array<Property>} */
+            const result = [];
+            const newSeparators = [];
+
+            for (let groupIndex = 0; groupIndex < this.renderedColumnsCount; groupIndex++) {
+                const group = propertiesByIndex[groupIndex] || [];
+                if (shouldAddSeparators && (!group.length || group[0].type !== "separator")) {
+                    const newSeparator = {
+                        type: "separator",
+                        string: _t("Group %s", groupIndex + 1),
+                        name: this.generatePropertyName(),
+                    };
+                    newSeparators.push(newSeparator.name);
+                    result.push(newSeparator);
+                    if (groupIndex >= propertiesByIndex.length && !group.length) {
+                        // If we already added a separator, we're not anymore in the split mode, so no need to add more
+                        break;
+                    }
+                }
+
+                group.forEach((property) => {
+                    result.push(property);
+                });
+            }
+            return { result, newSeparators };
+        };
+
+        const groupProperties = () => {
+            /** @type {Array<Array<Property>>} */
+            const groups = [];
+
+            let currentGroupIndex;
+            let offset = 0;
+            if (isSplit && separatorCount === 1) {
+                // We should ignore the initial separator when computing the columnIndex;
+                offset = 1;
+            }
+            let groupIndex = 0;
+            propertiesValues.forEach((property, index) => {
+                if (isSplit) {
+                    let currentOffset = offset;
+                    if (property.type === "separator") {
+                        currentOffset = 0;
+                    }
+                    groupIndex = Math.floor(
+                        ((index - currentOffset) * this.renderedColumnsCount) /
+                            (propertiesValues.length - currentOffset)
+                    );
+                } else {
+                    if (property.type === "separator" && index !== 0) {
+                        groupIndex++;
+                    }
+                }
+
+                if (property.name === propertyName) {
+                    currentGroupIndex = groupIndex;
+                    return;
+                }
+
+                let propertiesInCurrentGroup = groups[groupIndex];
+                if (!propertiesInCurrentGroup) {
+                    propertiesInCurrentGroup = [];
+                    groups[groupIndex] = propertiesInCurrentGroup;
+                }
+                propertiesInCurrentGroup.push(property);
+            });
+            return { groups, currentGroupIndex };
+        };
+
+        const { groups, currentGroupIndex } = groupProperties();
+        insertPropertyInTargetGroup(groups);
 
         // if we have no separator at first, we might want to create some
         // to keep the initial column separation (only if needed, if we move properties
         // inside the same column we do nothing)
-        if (
-            this.renderedColumnsCount > 1 &&
-            !propertiesValues.some((p, index) => index !== 0 && p.type === "separator") &&
-            Math.floor(fromIndex / columnSize) !== Math.floor(toIndex / columnSize)
-        ) {
-            const newSeparators = [];
-            for (let col = 0; col < this.renderedColumnsCount; ++col) {
-                const separatorIndex = columnSize * col + newSeparators.length;
-                if (propertiesValues[separatorIndex].type === "separator") {
-                    continue;
-                }
-                const newSeparator = {
-                    type: "separator",
-                    string: _t("Group %s", col + 1),
-                    name: this.generatePropertyName(),
-                };
-                newSeparators.push(newSeparator.name);
-                propertiesValues.splice(separatorIndex, 0, newSeparator);
-            }
-            this._unfoldSeparators(newSeparators, true);
-            toPropertyName = toPropertyName || propertiesValues[0].name;
+        const shouldAddSeparators =
+            isSplit && this.renderedColumnsCount > 1 && targetGroupIndex !== currentGroupIndex;
 
-            // indexes might have changed
-            fromIndex = propertiesValues.findIndex((property) => property.name === propertyName);
-            toIndex = propertiesValues.findIndex((property) => property.name === toPropertyName);
-        }
-
-        if (moveBefore) {
-            toIndex--;
-        }
-        if (toIndex < fromIndex) {
-            // the first splice operation will change the index
-            toIndex++;
-        }
-        propertiesValues.splice(toIndex, 0, propertiesValues.splice(fromIndex, 1)[0]);
-        propertiesValues[0].definition_changed = true;
-        this.props.record.update({ [this.props.name]: propertiesValues });
+        const { result, newSeparators } = flatten(groups, shouldAddSeparators);
+        this._unfoldSeparators(newSeparators, true);
+        result[0].definition_changed = true;
+        this.props.record.update({ [this.props.name]: result });
     }
 
     /**
