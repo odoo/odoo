@@ -29,7 +29,7 @@ class ProductTemplate(models.Model):
         if self.with_context(product_ctx).search_count([('id', 'in', self.ids), ('available_in_pos', '=', True)]):
             if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
                 raise UserError(_("To delete a product, make sure all point of sale sessions are closed.\n\n"
-                    "Deleting a product available in a session would be like attempting to snatch a"
+                    "Deleting a product available in a session would be like attempting to snatch a "
                     "hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"))
 
     @api.onchange('sale_ok')
