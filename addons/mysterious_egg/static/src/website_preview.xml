@@ -2,18 +2,16 @@
 <templates xml:space="preserve">
 
 <t t-name="mysterious_egg.WebsitePreview">
-    <div class="o_website_preview" t-ref="container">
-        <div class="o_iframe_container">
+    <div class="d-flex h-100 w-100" t-ref="container">
+        <div class="flex-grow-1">
             <iframe t-att-src="initialUrl"
-                class="o_iframe"
+                class="h-100 w-100"
                 t-ref="iframe"
                 t-on-load="onWebsiteLoaded"
                 />
         </div>
-        <div>
-            <div class="o_w_wysiwyg_transition o_w_wysiwyg">
-                <BuilderMenu></BuilderMenu>
-            </div>
+        <div style="width:288px;" class="border-start border-dark">
+            <BuilderMenu></BuilderMenu>
         </div>
     </div>
 </t>
