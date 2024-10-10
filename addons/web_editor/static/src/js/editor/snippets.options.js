@@ -1813,6 +1813,9 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (wysiwyg) {
             options.document = this.$target[0].ownerDocument;
             options.getTemplate = wysiwyg.getColorpickerTemplate.bind(wysiwyg);
+            // Load the getEditableCustomColors from the background props.
+            // This function is a common option for both background and text colorpalettes
+            options.getEditableCustomColors = wysiwyg.colorPalettesProps?.background?.getEditableCustomColors;
         }
         this.colorPaletteWrapper?.destroy();
         const sidebarDocument = this.colorPaletteEl.ownerDocument;
