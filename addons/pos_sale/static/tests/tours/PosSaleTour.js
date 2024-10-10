@@ -199,6 +199,13 @@ registry.category("web_tour.tours").add("PosQuotationSaving", {
             ProductScreen.selectedOrderlineHas("Product", "4.00", "40.00"),
             ProductScreen.controlButton("More..."),
             ProductScreen.controlButton("Park Order"),
+            {
+                trigger: ".pos",
+                run: () => {
+                    window.location.reload();
+                },
+            },
+            ProductScreen.orderIsEmpty(),
         ].flat(),
 });
 
