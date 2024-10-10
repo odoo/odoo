@@ -14,6 +14,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
     template: 'slide.quiz.question.input',
     events: {
         'click .o_wslides_js_quiz_validate_question': '_validateQuestion',
+        'click .o_wslides_js_quiz_validate_question_and_new': '_validateQuestionAndNew',
         'click .o_wslides_js_quiz_cancel_question': '_cancelValidation',
         'click .o_wslides_js_quiz_comment_answer': '_toggleAnswerLineComment',
         'click .o_wslides_js_quiz_add_answer': '_addAnswerLine',
@@ -28,6 +29,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
      * @param options
      */
     init: function (parent, options) {
+        this.parent = parent;
         this.$editedQuestion = options.editedQuestion;
         this.question = options.question || {};
         this.update = options.update;
@@ -113,7 +115,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
     },
 
     /**
-     * Handler when user click on 'Save' or 'Update' buttons.
+     * Handler when user click on 'Save & Close' or 'Update' buttons.
      * @param ev
      * @private
      */
@@ -124,7 +126,18 @@ var QuestionFormWidget = publicWidget.Widget.extend({
     },
 
     /**
-     * Handler when user click on the 'Cancel' button.
+     * Handler when a user clicks on the 'Save & New' button.
+     * @private
+     */
+    async _validateQuestionAndNew() {
+        await this._createOrUpdateQuestion();
+        if (!document.querySelector(".o_wslides_js_quiz_validation_error")) {
+            this.parent._onCreateQuizClick();
+        }
+    },
+
+    /**
+     * Handler when user click on the 'Discard' button.
      * Calls a method from slides_course_quiz.js widget
      * which will handle the reset of the question display.
      * @private
@@ -146,7 +159,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
      * @param options
      * @private
      */
-    _createOrUpdateQuestion: async function (options) {
+    _createOrUpdateQuestion: async function (options = {}) {
         var $form = this.$('form');
 
         if (this._isValidForm($form)) {
