@@ -83,11 +83,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         this._startZoom();
 
-        window.addEventListener('popstate', (ev) => {
-            if (ev.state?.newURL) {
-                this._applyHash();
-                this.triggerVariantChange(this.$el);
-            }
+        window.addEventListener("hashchange", (ev) => {
+            this._applyHash();
+            this.triggerVariantChange(this.$el);
         });
 
         // This allows conditional styling for the filmstrip
