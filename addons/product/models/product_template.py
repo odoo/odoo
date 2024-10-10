@@ -149,6 +149,10 @@ class ProductTemplate(models.Model):
     default_code = fields.Char(
         'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
+    hs_code = fields.Char(
+        string="HS Code",
+        help="Standardized code for international shipping and goods declaration.",
+    )
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_item_count")
 

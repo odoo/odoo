@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_move_send_inherit_l10n_pk_edi">
+            <field name="name">account.move.send.form.inherit.l10n_pk_edi</field>
+            <field name="model">account.move.send</field>
+            <field name="inherit_id" ref="account.account_move_send_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='option_send_mail']" position='after'>
+                    <div>
+                        <div invisible="not l10n_pk_edi_enable_send">
+                            <field name="l10n_pk_edi_checkbox_send" readonly="l10n_pk_edi_readonly_send"/>
+                            <b><label for="l10n_pk_edi_checkbox_send"/></b>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
