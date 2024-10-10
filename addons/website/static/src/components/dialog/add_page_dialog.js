@@ -360,10 +360,12 @@ class AddPageTemplates extends Component {
         const activePaneEl = this.panesRef.el.querySelector(".active");
         activeTabEl?.classList?.remove("active");
         activePaneEl?.classList?.remove("active");
+        activePaneEl?.setAttribute("inert", "inert"); // Make sure trapFocus() works.
         const tabEl = this.tabsRef.el.querySelector(`[data-id=${id}]`);
         const paneEl = this.panesRef.el.querySelector(`[data-id=${id}]`);
         tabEl.classList.add("active");
         paneEl.classList.add("active");
+        paneEl.removeAttribute("inert");
         this.props.onTemplatePageChanged(tabEl.dataset.id === "basic" ? "" : tabEl.textContent);
     }
 }

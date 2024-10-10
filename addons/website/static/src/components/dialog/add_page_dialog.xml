@@ -20,11 +20,11 @@
 
 <t t-name="website.AddPageTemplatePreviewWrapper">
     <div t-ref="holder" class="o_page_template position-relative placeholder-glow mx-auto transition-base" t-att-class="{ 'mt-4': !props.firstRow }">
-        <div t-ref="preview" class="o_page_template_preview border border-white bg-white rounded" t-out="0"/>
+        <div t-ref="preview" class="o_page_template_preview border border-white bg-white rounded" t-out="0" inert="inert"/>
         <span class="placeholder position-absolute top-0 w-100 h-100 rounded" t-attf-style="animation-duration: #{props.animationDelay + 500}ms"/>
-        <div class="o_button_area position-absolute top-0 w-100 h-100 start-0 cursor-pointer rounded" t-on-click="select">
+        <button class="btn o_button_area position-absolute top-0 w-100 h-100 start-0 cursor-pointer rounded" t-on-click="select">
             <div t-if="props.template and props.template.name" class="position-absolute start-0 bottom-100 w-100 fw-bold lh-1 pb-1 pe-none text-center o_page_name" t-out="props.template.name"/>
-        </div>
+        </button>
     </div>
 </t>
 
@@ -98,6 +98,7 @@
                     <div t-att-data-id="page.id"
                         class="o_website_page_templates_pane position-absolute top-0 start-0 w-100 h-100 overflow-y-scroll bg-200"
                         t-att-class="{active: page_first}"
+                        tabindex="-1"
                     >
                         <AddPageTemplatePreviews t-if="page_first or page.isAccessed"
                             templates="page.props.templates" isCustom="page.props.is_custom"
