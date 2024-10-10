@@ -43,7 +43,7 @@ class MailRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            channel._bus_send_store(channel, {"rtcSessions": Store.many(rtc_sessions, "ADD")})
+            channel._bus_send_store(channel, {"rtcSessions": Store.Many(rtc_sessions, "ADD")})
         return rtc_sessions
 
     def unlink(self):
@@ -64,7 +64,7 @@ class MailRtcSession(models.Model):
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
             channel._bus_send_store(
-                channel, {"rtcSessions": Store.many(rtc_sessions, "DELETE", only_id=True)}
+                channel, {"rtcSessions": Store.Many(rtc_sessions, "DELETE", only_id=True)}
             )
         for rtc_session in self:
             rtc_session._bus_send(
@@ -136,23 +136,30 @@ class MailRtcSession(models.Model):
         for target, payload in payload_by_target.items():
             target._bus_send("discuss.channel.rtc.session/peer_notification", payload)
 
-    def _to_store(self, store: Store, extra=False):
-        for rtc_session in self:
-            data = rtc_session._read_format([], load=False)[0]
-            data["channelMember"] = Store.one(
-                rtc_session.channel_member_id,
-                fields={"channel": [], "persona": ["name", "im_status"]},
+    def _to_store_fields(self):
+        return super()._to_store_fields() + [
+            Store.One(
+                "channelMember",
+                fields=[
+                    Store.One("thread", as_thread=True, only_id=True),
+                    Store.One("persona", fields=["name", "im_status"]),
+                ],
             )
-            if extra:
-                data.update(
-                    {
-                        "isCameraOn": rtc_session.is_camera_on,
-                        "isDeaf": rtc_session.is_deaf,
-                        "isSelfMuted": rtc_session.is_muted,
-                        "isScreenSharingOn": rtc_session.is_screen_sharing_on,
-                    }
-                )
-            store.add(rtc_session, data)
+        ]
+
+    def _to_store_field_computes(self):
+        return super()._to_store_field_computes() | {
+            "channelMember": lambda rtc_session: rtc_session.channel_member_id,
+            "isCameraOn": lambda rtc_session: rtc_session.is_camera_on,
+            "isDeaf": lambda rtc_session: rtc_session.is_deaf,
+            "isSelfMuted": lambda rtc_session: rtc_session.is_muted,
+            "isScreenSharingOn": lambda rtc_session: rtc_session.is_screen_sharing_on,
+        }
+
+    def _to_store(self, store: Store, /, *, fields, **kwargs):
+        if kwargs.get("extra"):
+            fields += ["isCameraOn", "isDeaf", "isSelfMuted", "isScreenSharingOn"]
+        super()._to_store(store, fields=fields, **kwargs)
 
     @api.model
     def _inactive_rtc_session_domain(self):

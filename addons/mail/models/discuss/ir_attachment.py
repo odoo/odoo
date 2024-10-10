@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
-from odoo.addons.mail.tools.discuss import Store
 
 
 class IrAttachment(models.Model):
@@ -18,11 +17,14 @@ class IrAttachment(models.Model):
             return guest._bus_channel()
         return super()._bus_channel()
 
-    def _to_store(self, store: Store, **kwargs):
-        super()._to_store(store, **kwargs)
-        for attachment in self:
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + ["voice"]
+
+    def _to_store_field_computes(self):
+        return super()._to_store_field_computes() | {
             # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible attachments is fine
-            store.add(attachment, {"voice": bool(attachment.sudo().voice_ids)})
+            "voice": lambda attachment: bool(attachment.sudo().voice_ids)
+        }
 
     def _post_add_create(self, **kwargs):
         super()._post_add_create()

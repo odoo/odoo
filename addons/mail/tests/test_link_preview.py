@@ -150,7 +150,7 @@ class TestLinkPreview(MailCommon):
                                 "mail.message": self._filter_messages_fields(
                                     {
                                         "id": message.id,
-                                        "linkPreviews": [message.link_preview_ids.id],
+                                        "link_preview_ids": [message.link_preview_ids.id],
                                     },
                                 ),
                             },

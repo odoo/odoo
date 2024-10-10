@@ -54,6 +54,6 @@ class MailMainAttachmentMixin(models.AbstractModel):
         if request_list and "attachments" in request_list:
             store.add(
                 self,
-                {"mainAttachment": Store.one(self.message_main_attachment_id, only_id=True)},
+                {"mainAttachment": Store.One(self.message_main_attachment_id, only_id=True)},
                 as_thread=True,
             )

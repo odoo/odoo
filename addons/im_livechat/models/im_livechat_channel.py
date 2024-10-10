@@ -332,11 +332,6 @@ class ImLivechatChannel(models.Model):
             info['options']["default_username"] = username
         return info
 
-    def _to_store(self, store: Store, /, *, fields=None):
-        if fields is None:
-            fields = []
-        store.add(self._name, self._read_format(fields))
-
 
 class ImLivechatChannelRule(models.Model):
     """ Channel Rules
