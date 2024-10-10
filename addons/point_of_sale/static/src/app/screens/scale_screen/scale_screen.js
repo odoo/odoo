@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { roundPrecision as round_pr } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, onWillUnmount, useExternalListener, useState } from "@odoo/owl";
@@ -68,19 +67,7 @@ export class ScaleScreen extends Component {
         return current_pricelist;
     }
     get productWeightString() {
-        const defaultstr = (this.state.weight || 0).toFixed(3) + " Kg";
-        if (!this.props.product) {
-            return defaultstr;
-        }
-        const unit_id = this.props.product.uom_id;
-        if (!unit_id) {
-            return defaultstr;
-        }
-        const unit = this.pos.units_by_id[unit_id[0]];
-        const weight = round_pr(this.state.weight || 0, unit.rounding);
-        let weightstr = weight.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
-        weightstr += " " + unit.name;
-        return weightstr;
+        return (this.state.weight || 0).toFixed(3);
     }
     get computedPriceString() {
         return this.env.utils.formatCurrency(this.productPrice * this.state.weight);
