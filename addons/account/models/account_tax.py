@@ -198,6 +198,11 @@ class AccountTax(models.Model):
     # Technical field depicting if the tax has at least one repartition line with a percentage below 0.
     # Used for the taxes computation to manage the reverse charge taxes having a repartition +100 -100.
     has_negative_factor = fields.Boolean(compute='_compute_has_negative_factor')
+    check_account_audit_trail = fields.Boolean(
+        'Audit Trail',
+        compute='_compute_check_account_audit_trail',
+        search='_search_check_account_audit_trail'
+    )
 
     @api.constrains('company_id', 'name', 'type_tax_use', 'tax_scope', 'country_id')
     def _constrains_name(self):
@@ -447,6 +452,21 @@ class AccountTax(models.Model):
         for tax in self:
             tax_reps = tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
             tax.has_negative_factor = bool(tax_reps.filtered(lambda tax_rep: tax_rep.factor < 0.0))
+
+    @api.depends('company_id.check_account_audit_trail')
+    def _compute_check_account_audit_trail(self):
+        for record in self:
+            record.check_account_audit_trail = record.company_id.check_account_audit_trail
+
+    def _search_check_account_audit_trail(self, operator, value):
+        if operator not in ['=', '!='] or value not in [True, False]:
+            raise UserError(_('Operation not supported'))
+        want_active = (operator == '=') == value
+        normal_domain_for_active = [('company_id.check_account_audit_trail', '=', True)]
+        if want_active:
+            return normal_domain_for_active
+        else:
+            return ['!'] + normal_domain_for_active
 
     @staticmethod
     def _parse_name_search(name):

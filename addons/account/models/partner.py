@@ -609,6 +609,12 @@ class ResPartner(models.Model):
              " incoming payments created for this customer",
     )
 
+    check_account_audit_trail = fields.Boolean(
+        'Audit Trail',
+        compute='_compute_check_account_audit_trail',
+        search='_search_check_account_audit_trail'
+    )
+
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['__count'])
         mapped_data = {partner.id: count for partner, count in bank_data}
@@ -984,3 +990,25 @@ class ResPartner(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             partner.partner_vat_placeholder = placeholder
+
+    @api.depends('company_id.check_account_audit_trail')
+    def _compute_check_account_audit_trail(self):
+        restricted_partners = self.env['account.move'].sudo().search([
+            ('check_account_audit_trail', '=', True),
+            ('partner_id', 'in', self.ids),
+        ]).partner_id
+        restricted_partners.check_account_audit_trail = True
+        (self - restricted_partners).check_account_audit_trail = False
+
+    def _search_check_account_audit_trail(self, operator, value):
+        if operator not in ['=', '!='] or value not in [True, False]:
+            raise UserError(_('Operation not supported'))
+        want_active = (operator == '=') == value
+        restricted_partner_id_query = self.env['account.move'].sudo()._search([
+            ('check_account_audit_trail', '=', True),
+        ]).select('partner_id')
+        normal_domain_for_active = [('id', 'in', SQL('(%s)', restricted_partner_id_query))]
+        if want_active:
+            return normal_domain_for_active
+        else:
+            return ['!'] + normal_domain_for_active

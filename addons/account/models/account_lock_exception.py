@@ -279,7 +279,6 @@ class AccountLockException(models.Model):
 
         domain = [
             ('model', '=', 'account.move'),
-            ('account_audit_log_activated', '=', True),
             ('message_type', '=', 'notification'),
             ('account_audit_log_move_id.company_id', 'child_of', self.company_id.id),  # WORKAROUND: record_company_id is not set for bills
             ('date', '>=', self.create_date),
@@ -316,6 +315,7 @@ class AccountLockException(models.Model):
 
         return domain
 
+    # TODO: remove in master
     def action_show_audit_trail_during_exception(self):
         self.ensure_one()
         return {
@@ -325,4 +325,15 @@ class AccountLockException(models.Model):
             'views': [(self.env.ref('account.view_message_tree_audit_log').id, 'list'), (False, 'form')],
             'search_view_id': [self.env.ref('account.view_message_tree_audit_log_search').id],
             'domain': self._get_audit_trail_during_exception_domain(),
+        }
+
+    def action_audit_exception(self):
+        self.ensure_one()
+        audit_trail = self.env['mail.message'].search(self._get_audit_trail_during_exception_domain())
+        return {
+            'name': _("Journal Items"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move.line',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', audit_trail.account_audit_log_move_id.line_ids.ids)],
         }

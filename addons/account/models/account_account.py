@@ -141,6 +141,12 @@ class AccountAccount(models.Model):
     # Form view: show code mapping tab or not
     display_mapping_tab = fields.Boolean(default=lambda self: len(self.env.user.company_ids) > 1, store=False)
 
+    check_account_audit_trail = fields.Boolean(
+        'Audit Trail',
+        compute='_compute_check_account_audit_trail',
+        search='_search_check_account_audit_trail'
+    )
+
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         if fname == 'internal_group':
             return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
@@ -825,6 +831,21 @@ class AccountAccount(models.Model):
     def _compute_display_name(self):
         for account in self:
             account.display_name = f"{account.code} {account.name}" if account.code else account.name
+
+    @api.depends('company_ids.check_account_audit_trail')
+    def _compute_check_account_audit_trail(self):
+        for record in self:
+            record.check_account_audit_trail = any(record.company_ids.mapped('check_account_audit_trail'))
+
+    def _search_check_account_audit_trail(self, operator, value):
+        if operator not in ['=', '!='] or value not in [True, False]:
+            raise UserError(_('Operation not supported'))
+        want_active = (operator == '=') == value
+        normal_domain_for_active = [('company_ids.check_account_audit_trail', '=', True)]
+        if want_active:
+            return normal_domain_for_active
+        else:
+            return ['!'] + normal_domain_for_active
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)

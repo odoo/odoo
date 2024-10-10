@@ -38,6 +38,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         return self.env['mail.message'].search([
             ('model', '=', 'account.move'),
             ('res_id', '=', move.id),
+            ('account_audit_log_activated', '=', True),
         ])
 
     def assertTrail(self, trail, expected):
@@ -77,11 +78,14 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             trackings.unlink()
 
     def test_content(self):
-        messages = ["Journal Entry created"]
+        messages = []  # move has never been posted before
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.action_post()
-        messages.append("Updated\nFalse ⇨ True (Checked)\nDraft ⇨ Posted (Status)")
+        messages.extend([
+            "Journal Entry created",
+            "Updated\nFalse ⇨ True (Checked)\nDraft ⇨ Posted (Status)",
+        ])
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.button_draft()
