@@ -816,8 +816,8 @@ class AccountMoveLine(models.Model):
     @api.depends('display_type')
     def _compute_quantity(self):
         for line in self:
-            if line.display_type == 'product':
-                line.quantity = line.quantity if line.quantity else 1
+            if line.display_type == 'product' and not line.quantity:
+                line.quantity = 0 if self.env.context.get('force_zero_quantity') else 1
             else:
                 line.quantity = False
 
