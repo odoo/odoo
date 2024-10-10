@@ -991,15 +991,15 @@ export class PosStore extends Reactive {
     }
     async getPosReference() {
         try {
-            const [newPosReference, sequenceNumber, trackingNumber] = await this.data.call(
+            const [posReference, sequenceNumber, trackingNumber] = await this.data.call(
                 "pos.session",
-                "get_next_pos_reference",
+                "get_next_order_refs",
                 [[this.session.id], parseInt(odoo.login_number, 10), null, ""]
             );
-            return [newPosReference, sequenceNumber, trackingNumber];
+            return [posReference, sequenceNumber, trackingNumber];
         } catch (error) {
             if (error instanceof ConnectionLostError || error instanceof ConnectionAbortedError) {
-                return this.getNextPosReferenceLocal(_t("Order"));
+                return this.getNextOrdereRefs(_t("Order"));
             } else {
                 throw error;
             }
@@ -1009,16 +1009,24 @@ export class PosStore extends Reactive {
      * Return value of this method is used when the client is offline.
      * Side-effect: increments the order counter.
      */
-    getNextPosReferenceLocal(refPrefix) {
+    getNextOrdereRefs(refPrefix) {
+        const sequenceNumber = this.orderCounter.next();
+
+        const trackingNumber =
+            sequenceNumber < 1000
+                ? sequenceNumber.toString().padStart(3, "0")
+                : sequenceNumber.toString();
+
         const loginNumber = odoo.login_number % 100;
         const YY = new Date().getFullYear().toString().slice(-2);
         const LL = loginNumber.toString().padStart(2, "0");
         const SSS = this.session.id.toString().padStart(3, "0");
         const F = "1";
-        const sequenceNumber = this.orderCounter.next();
         const OOOO = sequenceNumber.toString().padStart(4, "0");
-        // Negative sequence number to indicate that the value is generated from the client.
-        return [`${refPrefix} ${YY}${LL}-${SSS}-${F}${OOOO}`, -sequenceNumber, OOOO.slice(-3)];
+        const posReference = `${refPrefix} ${YY}${LL}-${SSS}-${F}${OOOO}`;
+
+        // Return negative sequence number to indicate that the value is generated from the client.
+        return [posReference, -sequenceNumber, trackingNumber];
     }
     selectNextOrder() {
         const orders = this.models["pos.order"].filter((order) => !order.finalized);

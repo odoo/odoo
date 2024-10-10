@@ -332,27 +332,33 @@ class PosSession(models.Model):
                 'login_number_seq_id': login_number_seq.id
             })
 
-    def get_next_pos_reference(self, login_number=0, ref_prefix=None, tracking_prefix=''):
+    def get_next_order_refs(self, login_number=0, ref_prefix=None, tracking_prefix=''):
         """
-        Generates a consistent set of tracking_number, sequence_number and pos_reference for a new order.
+        Generates a consistent set of tracking_number, sequence_number and pos_reference for a new pos.order.
         Side-effect: Calling this will increment the order_seq_id.
         Convention: `login_number != 0` means the order is created in the classic PoS UI.
             During self-ordering workflow (kiosk and mobile), login_number = 0 is used.
+        Returns:
+            (pos_reference: string, sequence_number: int, tracking_number: string)
         """
         self.ensure_one()
+
         if ref_prefix is None:
             ref_prefix = _("Order")
-        # get current year in YY format
+
+        sequence_num = int(self.order_seq_id._next())
+
+        # tracking number is minimum 3 digits
+        tracking_num = sequence_num < 1000 and f"{sequence_num:03}" or f"{sequence_num}"
+
         YY = fields.Datetime.now().strftime('%y')
         LL = f"{login_number % 100:02}"
         SSS = f"{self.id:03}"
-        # reaching this endpoint means the client is online
-        F = 0
-        order_sequence_number = int(self.order_seq_id._next())
-        OOOO = f"{order_sequence_number:04}"
+        F = 0  # -> means server-generated pos_reference
+        OOOO = f"{sequence_num:04}"
         order_ref = f"{ref_prefix} {YY}{LL}-{SSS}-{F}{OOOO}"
-        tracking_number = f"{OOOO}"[-3:]
-        return [order_ref, order_sequence_number, tracking_prefix + tracking_number]
+
+        return order_ref, sequence_num, tracking_prefix + tracking_num
 
     @api.model_create_multi
     def create(self, vals_list):

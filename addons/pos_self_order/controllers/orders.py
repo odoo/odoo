@@ -14,15 +14,8 @@ class PosSelfOrderController(http.Controller):
         pos_session = pos_config.current_session_id
 
         # Create the order
-        tracking_prefix = ''
-        ref_prefix = None
-        if device_type == 'mobile':
-            tracking_prefix = 'S'
-            ref_prefix = 'Self-Order'
-        elif device_type == 'kiosk':
-            tracking_prefix = 'K'
-            ref_prefix = 'Kiosk'
-        pos_reference, order_sequence_number, tracking_number = pos_session.get_next_pos_reference(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
+        tracking_prefix, ref_prefix = self._get_prefixes(device_type)
+        pos_reference, sequence_number, tracking_number = pos_session.get_next_order_refs(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
         fiscal_position = (
             pos_config.takeaway_fp_id
             if is_takeaway
@@ -34,7 +27,7 @@ class PosSelfOrderController(http.Controller):
 
         order['pos_reference'] = pos_reference
         order['tracking_number'] = tracking_number
-        order['sequence_number'] = order_sequence_number
+        order['sequence_number'] = sequence_number
         order['user_id'] = request.session.uid
         order['date_order'] = str(fields.Datetime.now())
         order['fiscal_position_id'] = fiscal_position.id if fiscal_position else False
@@ -54,6 +47,19 @@ class PosSelfOrderController(http.Controller):
 
         order_ids.send_table_count_notification(order_ids.mapped('table_id'))
         return self._generate_return_values(order_ids, pos_config)
+
+    def _get_prefixes(self, device_type):
+        tracking_prefix = ''
+        ref_prefix = None
+
+        if device_type == 'mobile':
+            tracking_prefix = 'S'
+            ref_prefix = 'Self-Order'
+        elif device_type == 'kiosk':
+            tracking_prefix = 'K'
+            ref_prefix = 'Kiosk'
+
+        return tracking_prefix, ref_prefix
 
     def _generate_return_values(self, order, config_id):
         return {
