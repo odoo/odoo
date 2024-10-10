@@ -231,7 +231,8 @@ function executeFailingImport(field, isMultiline, field_path = "") {
     };
 }
 
-async function createImportAction(customRouter = {}) {
+/** @param {Object} customRouter */
+function createWebClientWithBaseImportRoutes(customRouter) {
     const router = {
         "/web/dataset/call_kw/partner/get_import_templates": (route, args) => Promise.resolve([]),
         "/web/dataset/call_kw/base_import.import/parse_preview": (route, args) =>
@@ -247,7 +248,7 @@ async function createImportAction(customRouter = {}) {
         router["/web/dataset/call_kw/" + key] = customRouter[key];
     }
 
-    const webClient = await createWebClient({
+    return createWebClient({
         serverData,
         mockRPC: function (route, { args }) {
             if (route in router) {
@@ -255,7 +256,11 @@ async function createImportAction(customRouter = {}) {
             }
         },
     });
+}
 
+/** @param {Object} customRouter */
+async function createImportAction(customRouter = {}) {
+    const webClient = await createWebClientWithBaseImportRoutes(customRouter);
     await doAction(webClient, 1);
 }
 
@@ -580,6 +585,57 @@ QUnit.module("Base Import Tests", (hooks) => {
             ".o_import_action .o_import_data_content",
             "content panel is visible"
         );
+    });
+
+    QUnit.test("Import view: drag-and-drop file support on standard views", async function (assert) {
+        serverData.views = {
+            "partner,false,list": `<list><field name="display_name"/></list>`,
+            "partner,false,kanban": `
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="display_name"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+            "partner,false,search": `<search/>`,
+        };
+
+        registerFakeHTTPService((route, params) => {
+            assert.strictEqual(route, "/base_import/set_file");
+            assert.strictEqual(
+                params.ufile[0].name,
+                "fake_file.csv",
+                "file is correctly uploaded to the server"
+            );
+        });
+
+        const webClient = await createWebClientWithBaseImportRoutes();
+        const file = new File(["fake_file"], "fake_file.csv", {
+            type: "text/plain"
+        });
+
+        const views = [
+            { type: "list", dropzone: ".o_list_renderer" },
+            { type: "kanban", dropzone: ".o_kanban_renderer" },
+        ];
+
+        for (const { type, dropzone } of views) {
+            await doAction(webClient, {
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, type]],
+            }, { stackPosition: "replaceCurrentAction" });
+
+            await dragenterFiles(dropzone, [file]);
+            await dropFiles(".o-Dropzone", [file]);
+            await nextTick();
+            assert.containsOnce(
+                target,
+                ".o_import_action .o_import_data_content",
+                "content panel is visible"
+            );
+        }
     });
 
     QUnit.test("Import view: additional options in debug", async function (assert) {

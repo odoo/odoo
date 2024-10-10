@@ -32,6 +32,7 @@ export class KanbanArchParser {
         const fields = models[modelName].fields;
         const className = xmlDoc.getAttribute("class") || null;
         const canOpenRecords = exprToBoolean(xmlDoc.getAttribute("can_open"), true);
+        const canImportRecords = exprToBoolean(xmlDoc.getAttribute("import"), true);
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
@@ -167,6 +168,7 @@ export class KanbanArchParser {
         return {
             activeActions,
             canOpenRecords,
+            canImportRecords,
             cardClassName,
             cardColorField: xmlDoc.getAttribute("highlight_color"),
             className,
