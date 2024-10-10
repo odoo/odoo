@@ -244,6 +244,10 @@ export class FontPlugin extends Plugin {
             !nodesAfterTarget.length ||
             (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR")
         ) {
+            const closestLi = closestElement(targetNode, 'li');
+            if (closestLi) {
+                return;
+            }
             const p = this.document.createElement("p");
             closestPre.after(p);
             fillEmpty(p);
@@ -267,7 +271,8 @@ export class FontPlugin extends Plugin {
         const closestHeading = closestElement(params.targetNode, (element) =>
             headingTags.includes(element.tagName)
         );
-        if (closestHeading) {
+        const closestLi = closestElement(params.targetNode, 'li');
+        if (closestHeading && !closestLi) {
             const [, newElement] = this.shared.splitElementBlock(params);
             // @todo @phoenix: if this condition can be anticipated before the split,
             // handle the splitBlock only in such case.
