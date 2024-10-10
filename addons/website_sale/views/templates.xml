@@ -1071,7 +1071,7 @@
                                 <div class="js_product js_main_product mb-3">
                                     <div>
                                         <t t-call="website_sale.product_price"/>
-                                        <small t-if="combination_info['base_unit_price']"
+                                        <small t-if="'base_unit_price' in combination_info"
                                                class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
                                             <t t-call='website_sale.base_unit_price'/>
                                         </small>
