@@ -287,6 +287,7 @@ class ProductTemplate(models.Model):
             if pricelist_rule_id:  # If a rule was applied, there might be a discount
                 # For ecommerce flows, the base price is always the product sales price
                 # which can be computed by calling `_compute_base_price` without a pricelist rule
+                pricelist_item = template.env['product.pricelist.item'].browse(pricelist_rule_id)
                 pricelist_base_price = template.env['product.pricelist.item']._compute_base_price(
                     product=template,
                     quantity=1.0,
@@ -294,7 +295,10 @@ class ProductTemplate(models.Model):
                     uom=template.uom_id,
                     currency=currency,
                 )
-                if pricelist_base_price != pricelist_price:
+                if (
+                    pricelist_base_price != pricelist_price
+                    and pricelist_item.compute_price == 'percentage'
+                ):
                     base_price = pricelist_base_price
                     template_price_vals['base_price'] = self._apply_taxes_to_price(
                         base_price, currency, product_taxes, taxes, self, website=website,
@@ -471,6 +475,7 @@ class ProductTemplate(models.Model):
         if pricelist_rule_id:  # If a rule was applied, there might be a discount
             # For ecommerce flows, the base price is always the product sales price
             # which can be computed by calling `_compute_base_price` without a pricelist rule
+            pricelist_item = self.env['product.pricelist.item'].browse(pricelist_rule_id)
             price_before_discount = self.env['product.pricelist.item']._compute_base_price(
                 product=product_or_template,
                 quantity=quantity or 1.0,
@@ -479,7 +484,10 @@ class ProductTemplate(models.Model):
                 currency=currency,
             )
 
-        has_discounted_price = price_before_discount > pricelist_price
+        has_discounted_price = (
+            price_before_discount > pricelist_price and
+            pricelist_item.compute_price == "percentage"
+        )
         combination_info = {
             'list_price': max(pricelist_price, price_before_discount),
             'price': pricelist_price,
