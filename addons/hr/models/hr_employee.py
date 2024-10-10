@@ -429,8 +429,8 @@ class HrEmployeePrivate(models.Model):
     @api.constrains('barcode')
     def _verify_barcode(self):
         for employee in self:
-            if employee.barcode and not employee.barcode.isdigit():
-                raise ValidationError(_("The Badge ID must be a sequence of digits."))
+            if employee.barcode and not employee.barcode.isalnum():
+                raise ValidationError(_("The Badge ID must be a sequence of digits and alphabets."))
 
     @api.constrains('ssnid')
     def _check_ssnid(self):
