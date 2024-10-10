@@ -39,6 +39,7 @@ const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
 const getCursorDirection = OdooEditorLib.getCursorDirection;
 const DIRECTIONS = OdooEditorLib.DIRECTIONS;
+const getSelectedNodes = OdooEditorLib.getSelectedNodes;
 
 var id = 0;
 const faZoomClassRegex = RegExp('fa-[0-9]x');
@@ -1120,7 +1121,29 @@ const Wysiwyg = Widget.extend({
      * Open the link tools or the image link tool depending on the selection.
      */
     openLinkToolsFromSelection() {
-        const targetEl = this.odooEditor.document.getSelection().getRangeAt(0).startContainer;
+        const selection = this.odooEditor.document.getSelection();
+        const selectedNodes = getSelectedNodes(this.odooEditor.editable);
+        // If there is no selection return
+        if (!selection || selection.rangeCount == 0) {
+            return;
+        }
+        // If there is video in selection than return
+        for (const el of selectedNodes) {
+            const elClassList = el.classList;
+            if (
+                elClassList &&
+                (elClassList.contains("media_iframe_video") ||
+                    elClassList.contains("media_iframe_video_size"))
+            ) {
+                return;
+            }
+        }
+        const targetEl = selection.getRangeAt(0).startContainer;
+        // Avoid toggleLinkTools for video if targetEl is text
+        const closestEl = closestElement(targetEl, ".media_iframe_video");
+        if (closestEl) {
+            return;
+        }
         // Link tool is different if the selection is an image or a text.
         if (targetEl instanceof HTMLElement
                 && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
