@@ -595,6 +595,7 @@ class Project(models.Model):
         return res
 
     def message_unsubscribe(self, partner_ids=None):
+        self.task_ids.message_unsubscribe(partner_ids=partner_ids)
         super().message_unsubscribe(partner_ids=partner_ids)
         if partner_ids:
             self.env['project.collaborator'].search([('partner_id', 'in', partner_ids), ('project_id', 'in', self.ids)]).unlink()
@@ -1012,6 +1013,8 @@ class Project(models.Model):
         if not new_collaborators:
             # Then we have nothing to do
             return
+        # Subscribe to all existing active tasks when subscribing to a project
+        self.tasks.message_subscribe(partner_ids=new_collaborators.ids)
         self.write({'collaborator_ids': [
             Command.create({
                 'partner_id': collaborator.id,
