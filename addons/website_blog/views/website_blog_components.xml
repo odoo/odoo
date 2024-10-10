@@ -119,7 +119,7 @@
     <select name="archive" oninput="location = this.value;" class="form-select">
         <option t-att-value="blog_url(date_begin=False, date_end=False) if blog else '/blog'"
                 t-att="[('selected' if (not date_begin) else 'unselected' ) , 'true' ]">
-                -- All dates
+                All dates
         </option>
 
         <optgroup t-foreach="nav_list" t-as="year" t-attf-label="#{year}">
