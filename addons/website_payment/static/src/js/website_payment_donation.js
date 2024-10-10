@@ -6,7 +6,9 @@ publicWidget.registry.WebsitePaymentDonation = publicWidget.Widget.extend({
     selector: '.o_donation_payment_form',
     events: {
         'focus .o_amount_input': '_onFocusAmountInput',
-        'change #donation_comment_checkbox': '_onChangeDonationComment'
+        'change #donation_comment_checkbox': '_onChangeDonationComment',
+        'change input[type="radio"]': '_onSelectRadioButton',
+        'input #other_amount_value': '_onChangeAmountInput',
     },
 
     //--------------------------------------------------------------------------
@@ -22,6 +24,7 @@ publicWidget.registry.WebsitePaymentDonation = publicWidget.Widget.extend({
         if (otherAmountEl) {
             otherAmountEl.checked = true;
         }
+        this._onChangeAmountInput();
     },
     /**
      * @private
@@ -34,5 +37,32 @@ publicWidget.registry.WebsitePaymentDonation = publicWidget.Widget.extend({
         if (!checked) {
             donationCommentEl.value = "";
         }
+    },
+    /**
+     * @private
+     */
+    _onChangeAmountInput() {
+        const inputEl = document.querySelector("#other_amount_value");
+        const warningMessageEl = document.querySelector("#warningMessageId");
+        const warningMinMessageEl = document.querySelector("#warningMinMessageId");
+        const value = parseFloat(inputEl.value);
+        warningMessageEl.classList.toggle("d-none", Boolean(value));
+        if (value) {
+            warningMinMessageEl.classList.toggle("d-none", !(inputEl.min > value));
+        } else {
+            warningMinMessageEl.classList.add("d-none");
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onSelectRadioButton(ev) {
+        if (ev.currentTarget.id === "other_amount") {
+            return this._onChangeAmountInput();
+        }
+        document.querySelector("#other_amount_value").value = "";
+        document.querySelector("#warningMinMessageId").classList.add("d-none");
+        document.querySelector("#warningMessageId").classList.add("d-none");
     },
 });
