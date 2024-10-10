@@ -474,8 +474,17 @@ class AccountPayment(models.Model):
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
+<<<<<<< saas-17.4
             if pay.partner_bank_id not in pay.available_partner_bank_ids:
                 pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
+||||||| 97a1f21cbe3650ed880cef870a394f87f49fcbfd
+            pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
+=======
+            # Avoid overwriting existing value
+            if pay.partner_bank_id and pay.partner_bank_id in pay.available_partner_bank_ids:
+                continue
+            pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
+>>>>>>> fa08d0ac63acbddd40dbd14f9cea3e688093b423
 
     @api.depends('partner_id', 'journal_id', 'destination_journal_id')
     def _compute_is_internal_transfer(self):
