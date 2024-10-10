@@ -122,7 +122,7 @@ class TestLinkPreview(MailCommon):
                 for _ in range(throttle)
             ])
             message = self.test_partner.message_post(
-                body=Markup(f'<a href={self.source_url}>Nothing link</a>'),
+                body=Markup(f'<a href={self.source_url}>Nothing link</a> [exemple](https://example.com)'),
             )
             self._reset_bus()
 
@@ -135,7 +135,7 @@ class TestLinkPreview(MailCommon):
                             "payload": {
                                 "mail.link.preview": [
                                     {
-                                        "id": message.link_preview_ids.id,
+                                        "id": message.link_preview_ids[0].id,
                                         "image_mimetype": False,
                                         "message": message.id,
                                         "og_description": self.og_description,
@@ -146,11 +146,23 @@ class TestLinkPreview(MailCommon):
                                         "og_type": False,
                                         "source_url": self.source_url,
                                     },
+                                    {
+                                        "id": message.link_preview_ids[1].id,
+                                        "image_mimetype": False,
+                                        "message": message.id,
+                                        "og_description": self.og_description,
+                                        "og_image": self.og_image,
+                                        "og_mimetype": False,
+                                        "og_site_name": False,
+                                        "og_title": self.og_title,
+                                        "og_type": False,
+                                        "source_url": "https://example.com",
+                                    },
                                 ],
                                 "mail.message": self._filter_messages_fields(
                                     {
                                         "id": message.id,
-                                        "linkPreviews": [message.link_preview_ids.id],
+                                        "linkPreviews": [linkpreview.id for linkpreview in message.link_preview_ids],
                                     },
                                 ),
                             },

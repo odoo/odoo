@@ -36,7 +36,12 @@ class LinkPreview(models.Model):
     def _create_from_message_and_notify(self, message, request_url=None):
         if tools.is_html_empty(message.body):
             return self
-        urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
+
+        # we want to ignore everything inside a markdown code block
+        body = re.sub(r"^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)", "", message.body, flags=re.MULTILINE)
+        urls = OrderedSet(html.fromstring(body).xpath('//a[not(@data-oe-model)]/@href'))
+        markdown_link_re = r"\[.+?\]\(\s*([^)]+)\s*\)"
+        urls.update(re.findall(markdown_link_re, body))
         link_previews = self.env['mail.link.preview']
         requests_session = requests.Session()
         link_preview_values = []
