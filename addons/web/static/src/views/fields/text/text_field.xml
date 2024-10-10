@@ -6,7 +6,7 @@
             <span t-esc="props.record.data[props.name] or ''" />
         </t>
         <t t-else="">
-            <div t-ref="div">
+            <div class="d-flex align-items-baseline" t-ref="div">
                 <textarea
                     class="o_input"
                     t-att-class="{'o_field_translate': isTranslatable}"
