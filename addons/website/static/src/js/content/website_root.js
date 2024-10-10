@@ -109,7 +109,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
                 const key = await this._getGMapAPIKey(refetch);
 
                 window.odoo_gmap_api_post_load = (async function odoo_gmap_api_post_load() {
-                    await this._startWidgets($("section.s_google_map"), {editableMode: editableMode});
+                    await this._startWidgets(document.querySelectorAll("section.s_google_map"), {editableMode: editableMode});
                     resolve(key);
                 }).bind(this);
 
