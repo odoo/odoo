@@ -15,6 +15,10 @@ export class PosOrderline extends Base {
 
     setup(vals) {
         super.setup(vals);
+        if (!this.product_id) {
+            this.delete();
+            return;
+        }
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.skip_change = vals.skip_change || false;
         this.set_full_product_name();
