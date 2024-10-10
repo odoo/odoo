@@ -199,7 +199,7 @@ export class ProductProduct extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name", "description_sale", "description"];
+        const fields = ["display_name", "description_sale", "description", "default_code"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
