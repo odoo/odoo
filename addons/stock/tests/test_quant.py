@@ -751,6 +751,13 @@ class StockQuant(TransactionCase):
         quant = self.gather_relevant(self.product, self.stock_subloc2)
         self.assertFalse(quant.inventory_quantity_set)
 
+        res = self.env['stock.quant'].read_group(
+            [("product_id", "=", self.product.id)],
+            ["inventory_diff_quantity:sum"],
+            ["location_id"],
+        )
+        self.assertEqual(sum(r["inventory_diff_quantity"] for r in res), 0)
+
     def test_unpack_and_quants_merging(self):
         """
         When unpacking a package, if there are already some quantities of the
