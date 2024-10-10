@@ -28,7 +28,7 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         )
         guest = self.env['mail.guest'].create({'name': 'Guest Mario'})
 
-        self.channel = self.env['discuss.channel'].channel_create(group_id=None, name='Test channel')
+        self.channel = self.env['discuss.channel']._channel_create(group_id=None, name='Test channel')
         self.channel.allow_public_upload = True
         self.channel.add_members(portal_user.partner_id.ids)
         self.channel.add_members(internal_user.partner_id.ids)
@@ -36,7 +36,7 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         internal_member = self.channel.channel_member_ids.filtered(lambda m: internal_user.partner_id == m.partner_id)
         internal_member._rtc_join_call()
 
-        self.group = self.env['discuss.channel'].create_group(partners_to=(internal_user + portal_user).partner_id.ids, name="Test group")
+        self.group = self.env['discuss.channel']._create_group(partners_to=(internal_user + portal_user).partner_id.ids, name="Test group")
         self.group.add_members(guest_ids=[guest.id])
         self.group.allow_public_upload = True
 
@@ -95,8 +95,8 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.assertEqual(len(channel), 1)
 
     def test_channel_invitation_from_token(self):
-        public_channel = self.env["discuss.channel"].channel_create(name="Public Channel", group_id=None)
-        internal_channel = self.env["discuss.channel"].channel_create(name="Internal Channel", group_id=self.env.ref("base.group_user").id)
+        public_channel = self.env["discuss.channel"]._channel_create(name="Public Channel", group_id=None)
+        internal_channel = self.env["discuss.channel"]._channel_create(name="Internal Channel", group_id=self.env.ref("base.group_user").id)
 
         public_response = self.url_open(public_channel.invitation_url)
         self.assertEqual(public_response.status_code, 200)
@@ -106,8 +106,8 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
     def test_sidebar_in_public_page(self):
         guest = self.env['mail.guest'].create({'name': 'Guest'})
-        channel_1 = self.env["discuss.channel"].channel_create(name="Channel 1", group_id=None)
-        channel_2 = self.env["discuss.channel"].channel_create(name="Channel 2", group_id=None)
+        channel_1 = self.env["discuss.channel"]._channel_create(name="Channel 1", group_id=None)
+        channel_2 = self.env["discuss.channel"]._channel_create(name="Channel 2", group_id=None)
         channel_1.add_members(guest_ids=[guest.id])
         channel_2.add_members(guest_ids=[guest.id])
         self.start_tour(f"/discuss/channel/{channel_1.id}", "sidebar_in_public_page_tour", cookies={guest._cookie_name: guest._format_auth_cookie()})

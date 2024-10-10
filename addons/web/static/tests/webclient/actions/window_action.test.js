@@ -1690,7 +1690,7 @@ test.tags("desktop")("save current search", async () => {
             group_by: [],
             shouldBeInFilterContext: true,
         });
-        return 3; // fake filter id
+        return [3]; // fake filter id
     });
 
     await mountWithCleanup(WebClient);

@@ -579,9 +579,9 @@ export class SearchModel extends EventBus {
     }
 
     async _createIrFilters(irFilter) {
-        const serverSideId = await this.orm.call("ir.filters", "create_or_replace", [irFilter]);
+        const serverSideIds = await this.orm.call("ir.filters", "create_or_replace", [irFilter]);
         this.env.bus.trigger("CLEAR-CACHES");
-        return serverSideId;
+        return serverSideIds[0];
     }
 
     /**

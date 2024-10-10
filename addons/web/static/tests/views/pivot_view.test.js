@@ -4143,7 +4143,7 @@ test("pivot_row_groupby should be also used after first load", async () => {
 
     onRpc("create_or_replace", ({ args }) => {
         expect(args[0].context).toEqual(expectedContexts.shift());
-        return ids.shift();
+        return [ids.shift()];
     });
 
     await mountView({
@@ -4314,7 +4314,7 @@ test("favorite pivot_measures should be used even if found also in global contex
             pivot_measures: ["computed_field"],
             pivot_row_groupby: [],
         });
-        return 1;
+        return [1];
     });
 
     await mountView({
