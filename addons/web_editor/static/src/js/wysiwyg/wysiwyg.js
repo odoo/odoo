@@ -441,7 +441,7 @@ export class Wysiwyg extends Component {
             getPowerboxElement: () => {
                 const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
-                    const baseNode = closestElement(selection.anchorNode, 'P:not([t-field]), DIV:not([t-field])');
+                    const baseNode = closestElement(selection.anchorNode, "P:not([t-field]), DIV:not([t-field]):not(.o_not_editable):not([contenteditable='false'])");
                     const fieldContainer = closestElement(selection.anchorNode, '[data-oe-field]');
                     if (!baseNode ||
                         (
@@ -3418,6 +3418,12 @@ export class Wysiwyg extends Component {
             // breaking the o_editable behaviors (website, mass_mailing, ...)
             for (const element of node.querySelectorAll('.o_not_editable')) {
                 if (element.isContentEditable !== false) {
+                    element.contentEditable = false;
+                }
+            }
+            // Set contenteditable false for all empty elements.
+            for (const element of node.querySelectorAll(".oe_empty")) {
+                if (!element.hasChildNodes() && element.isContentEditable) {
                     element.contentEditable = false;
                 }
             }
