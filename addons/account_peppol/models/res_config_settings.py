@@ -7,7 +7,7 @@ from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     account_peppol_edi_user = fields.Many2one(
         comodel_name='account_edi_proxy_client.user',

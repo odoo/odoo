@@ -3,8 +3,7 @@
 from odoo import api, fields, models
 
 
-class ProductReplenishMixin(models.AbstractModel):
-    _name = 'stock.replenish.mixin'
+class StockReplenishMixin(models.AbstractModel):
     _description = 'Product Replenish Mixin'
 
     route_id = fields.Many2one(

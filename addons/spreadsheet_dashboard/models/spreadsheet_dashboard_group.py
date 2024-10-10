@@ -3,7 +3,6 @@ from odoo.exceptions import UserError
 
 
 class SpreadsheetDashboardGroup(models.Model):
-    _name = 'spreadsheet.dashboard.group'
     _description = 'Group of dashboards'
     _order = 'sequence'
 

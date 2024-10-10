@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
-    _inherit = "account.edi.format"
+    _inherit = ["account.edi.format"]
 
     def _is_enabled_by_default_on_journal(self, journal):
         self.ensure_one()

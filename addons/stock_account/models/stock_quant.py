@@ -8,7 +8,7 @@ from odoo.tools.misc import groupby
 
 
 class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+    _inherit = ['stock.quant']
 
     value = fields.Monetary('Value', compute='_compute_value', groups='stock.group_stock_manager')
     currency_id = fields.Many2one('res.currency', compute='_compute_value', groups='stock.group_stock_manager')

@@ -3,13 +3,13 @@
 from odoo import models, fields, api, _
 
 
-class Warehouse(models.Model):
-    _inherit = "stock.warehouse"
+class StockWarehouse(models.Model):
+    _inherit = ["stock.warehouse"]
 
     pos_type_id = fields.Many2one('stock.picking.type', string="Point of Sale Operation Type")
 
     def _get_sequence_values(self, name=False, code=False):
-        sequence_values = super(Warehouse, self)._get_sequence_values(name=name, code=code)
+        sequence_values = super()._get_sequence_values(name=name, code=code)
         sequence_values.update({
             'pos_type_id': {
                 'name': _('%(name)s Picking POS', name=self.name),
@@ -21,14 +21,14 @@ class Warehouse(models.Model):
         return sequence_values
 
     def _get_picking_type_update_values(self):
-        picking_type_update_values = super(Warehouse, self)._get_picking_type_update_values()
+        picking_type_update_values = super()._get_picking_type_update_values()
         picking_type_update_values.update({
             'pos_type_id': {'default_location_src_id': self.lot_stock_id.id}
         })
         return picking_type_update_values
 
     def _get_picking_type_create_values(self, max_sequence):
-        picking_type_create_values, max_sequence = super(Warehouse, self)._get_picking_type_create_values(max_sequence)
+        picking_type_create_values, max_sequence = super()._get_picking_type_create_values(max_sequence)
         picking_type_create_values.update({
             'pos_type_id': {
                 'name': _('PoS Orders'),

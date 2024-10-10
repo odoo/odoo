@@ -6,11 +6,10 @@ from odoo.http import request
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
 
-class ServerAction(models.Model):
+class IrActionsServer(models.Model):
     """ Add website option in server actions. """
 
-    _name = 'ir.actions.server'
-    _inherit = 'ir.actions.server'
+    _inherit = ['ir.actions.server']
 
     xml_id = fields.Char('External ID', compute='_compute_xml_id', help="ID of the action if defined in a XML file")
     website_path = fields.Char('Website Path')
@@ -45,7 +44,7 @@ class ServerAction(models.Model):
     @api.model
     def _get_eval_context(self, action):
         """ Override to add the request object in eval_context. """
-        eval_context = super(ServerAction, self)._get_eval_context(action)
+        eval_context = super()._get_eval_context(action)
         if action.state == 'code':
             eval_context['request'] = request
             eval_context['json'] = json_scriptsafe
@@ -57,5 +56,5 @@ class ServerAction(models.Model):
             returned by the basic server action behavior. Note that response has
             priority over action, avoid using both.
         """
-        res = super(ServerAction, self)._run_action_code_multi(eval_context)
+        res = super()._run_action_code_multi(eval_context)
         return eval_context.get('response', res)

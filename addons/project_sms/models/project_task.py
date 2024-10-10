@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class ProjectTask(models.Model):
-    _inherit = "project.task"
+    _inherit = ["project.task"]
 
     def _send_sms(self):
         for task in self:

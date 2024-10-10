@@ -9,7 +9,6 @@ _logger = logging.getLogger(__name__)
 
 
 class EventMailRegistration(models.Model):
-    _name = 'event.mail.registration'
     _description = 'Registration Mail Scheduler'
     _rec_name = 'scheduler_id'
     _order = 'scheduled_date DESC, id ASC'

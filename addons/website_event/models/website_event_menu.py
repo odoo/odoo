@@ -4,8 +4,7 @@
 from odoo import fields, models
 
 
-class EventMenu(models.Model):
-    _name = "website.event.menu"
+class WebsiteEventMenu(models.Model):
     _description = "Website Event Menu"
     _rec_name = "menu_id"
 
@@ -21,4 +20,4 @@ class EventMenu(models.Model):
 
     def unlink(self):
         self.view_id.sudo().unlink()
-        return super(EventMenu, self).unlink()
+        return super().unlink()

@@ -6,9 +6,8 @@ from odoo import fields, models, api
 from markupsafe import escape
 
 
-class PosSelfOrderCustomLink(models.Model):
-    _name = "pos_self_order.custom_link"
-    _inherit = "pos.load.mixin"
+class Pos_Self_OrderCustom_Link(models.Model):
+    _inherit = ["pos.load.mixin"]
     _description = (
         "Custom links that the restaurant can configure to be displayed on the self order screen"
     )

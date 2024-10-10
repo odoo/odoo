@@ -1,8 +1,8 @@
 
 from odoo import _, api, fields, models
 
+
 class SnailmailLetterMissingRequiredFields(models.TransientModel):
-    _name = 'snailmail.letter.missing.required.fields'
     _description = 'Update address of partner'
 
     partner_id = fields.Many2one('res.partner')

@@ -7,9 +7,8 @@ from odoo import fields, models
 
 
 class SlideChannelTagGroup(models.Model):
-    _name = 'slide.channel.tag.group'
     _description = 'Channel/Course Groups'
-    _inherit = 'website.published.mixin'
+    _inherit = ['website.published.mixin']
     _order = 'sequence asc'
 
     name = fields.Char('Group Name', required=True, translate=True)
@@ -21,7 +20,6 @@ class SlideChannelTagGroup(models.Model):
 
 
 class SlideChannelTag(models.Model):
-    _name = 'slide.channel.tag'
     _description = 'Channel/Course Tag'
     _order = 'group_sequence asc, sequence asc'
 

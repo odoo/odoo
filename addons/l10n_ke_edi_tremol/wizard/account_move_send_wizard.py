@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMoveSendWizard(models.TransientModel):
-    _inherit = 'account.move.send.wizard'
+    _inherit = ['account.move.send.wizard']
 
     def action_send_and_print(self, allow_fallback_pdf=False):
         # EXTENDS account - prevent Send & Print if KE invoices aren't validated and no fallback is allowed.

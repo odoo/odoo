@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = "res.partner"
+    _inherit = ["res.partner"]
 
     @api.model
     def default_get(self, fields_list):

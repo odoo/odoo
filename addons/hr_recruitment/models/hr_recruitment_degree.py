@@ -4,8 +4,7 @@
 from odoo import fields, models
 
 
-class RecruitmentDegree(models.Model):
-    _name = "hr.recruitment.degree"
+class HrRecruitmentDegree(models.Model):
     _description = "Applicant Degree"
 
     name = fields.Char("Degree Name", required=True, translate=True)

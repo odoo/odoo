@@ -21,8 +21,7 @@ from odoo.tools import html2plaintext, sql
 _logger = logging.getLogger(__name__)
 
 
-class SlidePartnerRelation(models.Model):
-    _name = 'slide.slide.partner'
+class SlideSlidePartner(models.Model):
     _description = 'Slide / Partner decorated m2m'
     _table = 'slide_slide_partner'
     _rec_name = 'partner_id'
@@ -62,7 +61,7 @@ class SlidePartnerRelation(models.Model):
             slides_completion_to_recompute = self.filtered(
                 lambda slide_partner: slide_partner.completed != values['completed'])
 
-        res = super(SlidePartnerRelation, self).write(values)
+        res = super().write(values)
 
         if slides_completion_to_recompute:
             slides_completion_to_recompute._recompute_completion()
@@ -79,7 +78,6 @@ class SlidePartnerRelation(models.Model):
 
 class SlideTag(models.Model):
     """ Tag to search slides across channels. """
-    _name = 'slide.tag'
     _description = 'Slide Tag'
 
     name = fields.Char('Name', required=True, translate=True)
@@ -89,8 +87,7 @@ class SlideTag(models.Model):
     ]
 
 
-class Slide(models.Model):
-    _name = 'slide.slide'
+class SlideSlide(models.Model):
     _inherit = [
         'mail.thread',
         'image.mixin',
@@ -591,7 +588,7 @@ class Slide(models.Model):
 
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
-        super(Slide, self)._compute_website_url()
+        super()._compute_website_url()
         for slide in self:
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 base_url = slide.channel_id.get_base_url()
@@ -669,7 +666,7 @@ class Slide(models.Model):
             elif values['slide_category'] != 'article':
                 values = {'html_content': False, **values}
 
-        res = super(Slide, self).write(values)
+        res = super().write(values)
         if values.get('is_published'):
             self.date_published = datetime.datetime.now()
             self._post_publication()
@@ -705,14 +702,14 @@ class Slide(models.Model):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
         channel_partner_ids = self.channel_id.channel_partner_ids
-        res = super(Slide, self).unlink()
+        res = super().unlink()
         channel_partner_ids._recompute_completion()
         return res
 
     def toggle_active(self):
         # archiving/unarchiving a channel does it on its slides, too
         to_archive = self.filtered(lambda slide: slide.active)
-        res = super(Slide, self).toggle_active()
+        res = super().toggle_active()
         if to_archive:
             to_archive.filtered(lambda slide: not slide.is_category).is_published = False
         return res
@@ -726,7 +723,7 @@ class Slide(models.Model):
         self.ensure_one()
         if message_type == 'comment' and not self.channel_id.can_comment:  # user comments have a restriction on karma
             raise AccessError(_('Not enough karma to comment'))
-        return super(Slide, self).message_post(message_type=message_type, **kwargs)
+        return super().message_post(message_type=message_type, **kwargs)
 
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to website if it is published. """
@@ -739,7 +736,7 @@ class Slide(models.Model):
                 'target_type': 'public',
                 'res_id': self.id,
             }
-        return super(Slide, self)._get_access_action(access_uid=access_uid, force_website=force_website)
+        return super()._get_access_action(access_uid=access_uid, force_website=force_website)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Add access button to everyone if the document is active. """
@@ -1308,7 +1305,7 @@ class Slide(models.Model):
         return slide_metadata, None
 
     def _default_website_meta(self):
-        res = super(Slide, self)._default_website_meta()
+        res = super()._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = html2plaintext(self.description)
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')

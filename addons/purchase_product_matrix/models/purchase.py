@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+    _inherit = ['purchase.order']
 
     report_grids = fields.Boolean(string="Print Variant Grids", default=True, help="If set, the matrix of configurable products will be shown on the report of this order.")
 
@@ -161,7 +161,7 @@ class PurchaseOrder(models.Model):
 
 
 class PurchaseOrderLine(models.Model):
-    _inherit = "purchase.order.line"
+    _inherit = ["purchase.order.line"]
 
     product_template_id = fields.Many2one('product.template', string='Product Template', related="product_id.product_tmpl_id", domain=[('purchase_ok', '=', True)])
     is_configurable_product = fields.Boolean('Is the product configurable?', related="product_template_id.has_configurable_attributes")

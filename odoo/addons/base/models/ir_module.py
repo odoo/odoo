@@ -75,6 +75,7 @@ def assert_log_admin_access(method):
         return method(self, *args, **kwargs)
     return decorator(check_and_log, method)
 
+
 class IrModuleCategory(models.Model):
     _description = "Application"
     _order = 'name'
@@ -966,6 +967,7 @@ class IrModuleModule(models.Model):
 
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]
+
 
 class IrModuleModuleDependency(models.Model):
     _description = "Module dependency"

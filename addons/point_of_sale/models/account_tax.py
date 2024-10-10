@@ -6,7 +6,6 @@ from odoo.tools import split_every
 
 
 class AccountTax(models.Model):
-    _name = 'account.tax'
     _inherit = ['account.tax', 'pos.load.mixin']
 
     def write(self, vals):

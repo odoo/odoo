@@ -6,8 +6,7 @@ from odoo.osv import expression
 from odoo.tools.misc import unquote
 
 
-class ProjectProductEmployeeMap(models.Model):
-    _name = 'project.sale.line.employee.map'
+class ProjectSaleLineEmployeeMap(models.Model):
     _description = 'Project Sales line, employee mapping'
 
     def _domain_sale_line_id(self):

@@ -3,7 +3,7 @@ from odoo import fields, models, api
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     l10n_pe_district = fields.Many2one(
         'l10n_pe.res.city.district', string='District',

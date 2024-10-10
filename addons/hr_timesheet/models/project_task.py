@@ -25,9 +25,9 @@ PROJECT_TASK_READABLE_FIELDS = {
     'total_hours_spent',
 }
 
-class Task(models.Model):
-    _name = "project.task"
-    _inherit = "project.task"
+
+class ProjectTask(models.Model):
+    _inherit = ["project.task"]
 
     project_id = fields.Many2one(domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_internal_project', '=', False)]")
     analytic_account_active = fields.Boolean("Active Analytic Account", related='project_id.analytic_account_active', export_string_translation=False)

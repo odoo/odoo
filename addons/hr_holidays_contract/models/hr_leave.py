@@ -8,7 +8,7 @@ from odoo.tools import format_date
 
 
 class HrLeave(models.Model):
-    _inherit = 'hr.leave'
+    _inherit = ['hr.leave']
 
     def _compute_resource_calendar_id(self):
         super()._compute_resource_calendar_id()

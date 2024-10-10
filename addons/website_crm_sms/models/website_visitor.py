@@ -5,7 +5,7 @@ from odoo import models
 
 
 class WebsiteVisitor(models.Model):
-    _inherit = 'website.visitor'
+    _inherit = ['website.visitor']
 
     def _check_for_sms_composer(self):
         check = super(WebsiteVisitor, self)._check_for_sms_composer()

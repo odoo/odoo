@@ -6,8 +6,7 @@ from odoo.tools.sql import SQL
 from collections import defaultdict
 
 
-class ContractHistory(models.Model):
-    _name = 'hr.contract.history'
+class HrContractHistory(models.Model):
     _description = 'Contract history'
     _auto = False
     _order = 'is_under_contract'

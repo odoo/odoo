@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     l10n_eg_long_id = fields.Char(string='ETA Long ID', compute='_compute_eta_long_id')
     l10n_eg_qr_code = fields.Char(string='ETA QR Code', compute='_compute_eta_qr_code_str')

@@ -4,7 +4,7 @@ from odoo import fields, api, models
 
 
 class ResPartner(models.Model):
-    _inherit = "res.partner"
+    _inherit = ["res.partner"]
 
     branch_code = fields.Char("Branch Code", default='000', compute='_compute_branch_code', store=True)
     first_name = fields.Char("First Name")

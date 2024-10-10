@@ -31,7 +31,7 @@ except ImportError:
 
 class ResPartnerBank(models.Model):
 
-    _inherit = 'res.partner.bank'
+    _inherit = ['res.partner.bank']
 
     @api.model
     def _get_supported_account_types(self):

@@ -9,7 +9,6 @@ from dateutil.relativedelta import relativedelta
 
 
 class AccountReconcileModelPartnerMapping(models.Model):
-    _name = 'account.reconcile.model.partner.mapping'
     _description = 'Partner mapping for reconciliation models'
     _check_company_auto = True
 
@@ -37,8 +36,7 @@ class AccountReconcileModelPartnerMapping(models.Model):
 
 
 class AccountReconcileModelLine(models.Model):
-    _name = 'account.reconcile.model.line'
-    _inherit = 'analytic.mixin'
+    _inherit = ['analytic.mixin']
     _description = 'Rules for the reconciliation model'
     _order = 'sequence, id'
     _check_company_auto = True
@@ -172,7 +170,6 @@ class AccountReconcileModelLine(models.Model):
 
 
 class AccountReconcileModel(models.Model):
-    _name = 'account.reconcile.model'
     _description = 'Preset to create journal entries during a invoices and payments matching'
     _inherit = ['mail.thread']
     _order = 'sequence, id'

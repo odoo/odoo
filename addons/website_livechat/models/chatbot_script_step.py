@@ -5,7 +5,7 @@ from odoo import models
 
 
 class ChatbotScriptStep(models.Model):
-    _inherit = 'chatbot.script.step'
+    _inherit = ['chatbot.script.step']
 
     def _chatbot_prepare_customer_values(self, discuss_channel, create_partner=True, update_partner=True):
         values = super()._chatbot_prepare_customer_values(discuss_channel, create_partner, update_partner)

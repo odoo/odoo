@@ -4,8 +4,8 @@
 from odoo import api, models
 
 
-class Lead(models.Model):
-    _inherit = 'crm.lead'
+class CrmLead(models.Model):
+    _inherit = ['crm.lead']
 
     @api.model
     def _form_view_auto_fill(self):

@@ -7,10 +7,9 @@ from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
 
-class IrMailServer(models.Model):
+class IrMail_Server(models.Model):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
 
-    _name = 'ir.mail_server'
     _inherit = ['ir.mail_server', 'google.gmail.mixin']
 
     smtp_authentication = fields.Selection(
@@ -23,14 +22,14 @@ class IrMailServer(models.Model):
             'Connect your Gmail account with the OAuth Authentication process.  \n'
             'By default, only a user with a matching email address will be able to use this server. '
             'To extend its use, you should set a "mail.default.from" system parameter.')
-        super(IrMailServer, self - gmail_servers)._compute_smtp_authentication_info()
+        super(IrMail_Server, self - gmail_servers)._compute_smtp_authentication_info()
 
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):
         """Do not change the SMTP configuration if it's a Gmail server
         (e.g. the port which is already set)"""
         if self.smtp_authentication != 'gmail':
-            super(IrMailServer, self)._onchange_encryption()
+            super()._onchange_encryption()
 
     @api.onchange('smtp_authentication')
     def _onchange_smtp_authentication_gmail(self):
@@ -76,4 +75,4 @@ class IrMailServer(models.Model):
             connection.ehlo()
             connection.docmd('AUTH', f'XOAUTH2 {oauth_param}')
         else:
-            super(IrMailServer, self)._smtp_login(connection, smtp_user, smtp_password)
+            super()._smtp_login(connection, smtp_user, smtp_password)

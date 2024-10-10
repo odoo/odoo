@@ -2,7 +2,7 @@ from odoo import models
 
 
 class PosConfig(models.Model):
-    _inherit = 'pos.config'
+    _inherit = ['pos.config']
 
     def get_limited_partners_loading(self):
         partner_ids = super().get_limited_partners_loading()

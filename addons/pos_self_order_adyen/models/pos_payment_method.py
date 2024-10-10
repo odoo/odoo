@@ -5,7 +5,7 @@ from odoo.addons.pos_adyen.models.pos_payment_method import UNPREDICTABLE_ADYEN_
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = "pos.payment.method"
+    _inherit = ["pos.payment.method"]
 
     @api.model
     def _get_valid_acquirer_data(self):

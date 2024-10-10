@@ -3,9 +3,10 @@
 
 from odoo import models
 
-class MembershipLine(models.Model):
 
-    _inherit = 'membership.membership_line'
+class MembershipMembership_Line(models.Model):
+
+    _inherit = ['membership.membership_line']
 
     def _get_published_companies(self, limit=None):
         if not self.ids:

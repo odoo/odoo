@@ -4,7 +4,7 @@ from odoo import _, api, models
 
 
 class ChooseDeliveryCarrier(models.TransientModel):
-    _inherit = 'choose.delivery.carrier'
+    _inherit = ['choose.delivery.carrier']
 
     @api.depends('carrier_id')
     def _compute_invoicing_message(self):

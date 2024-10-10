@@ -5,8 +5,7 @@ from odoo import fields, models
 from odoo.tools.sql import drop_view_if_exists, SQL
 
 
-class FleetReport(models.Model):
-    _name = "fleet.vehicle.cost.report"
+class FleetVehicleCostReport(models.Model):
     _description = "Fleet Analysis Report"
     _auto = False
     _order = 'date_start desc'

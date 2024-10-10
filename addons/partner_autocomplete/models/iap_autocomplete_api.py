@@ -10,8 +10,7 @@ from requests.exceptions import HTTPError
 _logger = logging.getLogger(__name__)
 
 
-class IapAutocompleteEnrichAPI(models.AbstractModel):
-    _name = 'iap.autocomplete.api'
+class IapAutocompleteApi(models.AbstractModel):
     _description = 'IAP Partner Autocomplete API'
     _DEFAULT_ENDPOINT = 'https://partner-autocomplete.odoo.com'
 

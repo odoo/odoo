@@ -9,6 +9,8 @@ from odoo.tools import config, SQL
 from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
+
+
 class IrRule(models.Model):
     _description = 'Record Rule'
     _order = 'model_id DESC,id'

@@ -2,7 +2,7 @@ from odoo import models
 
 
 class AccountMoveSendBatchWizard(models.TransientModel):
-    _inherit = 'account.move.send.batch.wizard'
+    _inherit = ['account.move.send.batch.wizard']
 
     def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False):
         # EXTENDS 'account'

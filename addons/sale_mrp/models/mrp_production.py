@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class MrpProduction(models.Model):
-    _inherit = 'mrp.production'
+    _inherit = ['mrp.production']
 
     sale_order_count = fields.Integer(
         "Count of Source SO",

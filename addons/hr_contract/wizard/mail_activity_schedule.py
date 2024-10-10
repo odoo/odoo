@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 
 class MailActivitySchedule(models.TransientModel):
-    _inherit = 'mail.activity.schedule'
+    _inherit = ['mail.activity.schedule']
 
     def _compute_plan_date(self):
         todo = self.filtered(lambda s: s.res_model == 'hr.employee')

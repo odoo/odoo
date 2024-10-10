@@ -9,7 +9,7 @@ from odoo.addons.sale_pdf_quote_builder import utils
 
 
 class ProductDocument(models.Model):
-    _inherit = 'product.document'
+    _inherit = ['product.document']
 
     attached_on_sale = fields.Selection(
         selection_add=[('inside', "Inside quote pdf")],

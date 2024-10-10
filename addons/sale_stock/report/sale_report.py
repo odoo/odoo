@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class SaleReport(models.Model):
-    _inherit = "sale.report"
+    _inherit = ["sale.report"]
 
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
 

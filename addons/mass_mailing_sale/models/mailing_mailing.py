@@ -6,9 +6,8 @@ from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 
 
-class MassMailing(models.Model):
-    _name = 'mailing.mailing'
-    _inherit = 'mailing.mailing'
+class MailingMailing(models.Model):
+    _inherit = ['mailing.mailing']
 
     sale_quotation_count = fields.Integer('Quotation Count', compute='_compute_sale_quotation_count')
     sale_invoiced_amount = fields.Integer('Invoiced Amount', compute='_compute_sale_invoiced_amount')
@@ -84,7 +83,7 @@ class MassMailing(models.Model):
 
     def _prepare_statistics_email_values(self):
         self.ensure_one()
-        values = super(MassMailing, self)._prepare_statistics_email_values()
+        values = super()._prepare_statistics_email_values()
         if not self.user_id:
             return values
 

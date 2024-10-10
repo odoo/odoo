@@ -1,8 +1,8 @@
 from odoo import models
 
 
-class Http(models.AbstractModel):
-    _inherit = 'ir.http'
+class IrHttp(models.AbstractModel):
+    _inherit = ['ir.http']
 
     def session_info(self):
         result = super().session_info()

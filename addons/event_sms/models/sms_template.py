@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class SmsTemplate(models.Model):
-    _inherit = 'sms.template'
+    _inherit = ['sms.template']
 
     @api.model
     def _search_display_name(self, operator, value):

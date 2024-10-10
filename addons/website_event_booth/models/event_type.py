@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class EventType(models.Model):
-    _inherit = 'event.type'
+    _inherit = ['event.type']
 
     booth_menu = fields.Boolean(
         string='Booths on Website', compute='_compute_booth_menu',

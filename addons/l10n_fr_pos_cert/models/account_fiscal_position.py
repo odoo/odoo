@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class AccountFiscalPosition(models.Model):
-    _inherit = "account.fiscal.position"
+    _inherit = ["account.fiscal.position"]
 
     def write(self, vals):
         if "tax_ids" in vals:

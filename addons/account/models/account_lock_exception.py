@@ -9,8 +9,7 @@ from odoo.addons.account.models.company import SOFT_LOCK_DATE_FIELDS
 from datetime import date
 
 
-class AccountLockException(models.Model):
-    _name = "account.lock_exception"
+class AccountLock_Exception(models.Model):
     _description = "Account Lock Exception"
 
     active = fields.Boolean(

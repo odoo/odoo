@@ -8,7 +8,7 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPIN
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     invoice_edi_format = fields.Selection(
         selection_add=[

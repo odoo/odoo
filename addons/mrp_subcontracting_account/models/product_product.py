@@ -3,8 +3,9 @@
 
 from odoo import models, fields
 
+
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     def _compute_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
         """ Add the price of the subcontracting supplier if it exists with the bom configuration.

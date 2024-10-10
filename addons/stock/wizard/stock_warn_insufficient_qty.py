@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class StockWarnInsufficientQty(models.AbstractModel):
-    _name = 'stock.warn.insufficient.qty'
     _description = 'Warn Insufficient Quantity'
 
     product_id = fields.Many2one('product.product', 'Product', required=True)
@@ -32,8 +31,7 @@ class StockWarnInsufficientQty(models.AbstractModel):
 
 
 class StockWarnInsufficientQtyScrap(models.TransientModel):
-    _name = 'stock.warn.insufficient.qty.scrap'
-    _inherit = 'stock.warn.insufficient.qty'
+    _inherit = ['stock.warn.insufficient.qty']
     _description = 'Warn Insufficient Scrap Quantity'
 
     scrap_id = fields.Many2one('stock.scrap', 'Scrap')

@@ -9,9 +9,8 @@ from odoo.osv.expression import AND
 from odoo.tools import SQL
 
 
-class ReportSaleDetails(models.AbstractModel):
+class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
-    _name = 'report.point_of_sale.report_saledetails'
     _description = 'Point of Sale Details'
 
     def _get_date_start_and_date_stop(self, date_start, date_stop):

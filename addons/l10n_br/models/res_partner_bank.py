@@ -8,7 +8,7 @@ from odoo.tools import float_repr
 
 
 class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+    _inherit = ["res.partner.bank"]
 
     proxy_type = fields.Selection(
         selection_add=[

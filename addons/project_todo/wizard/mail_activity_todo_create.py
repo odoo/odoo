@@ -2,8 +2,8 @@
 
 from odoo import fields, models, _
 
+
 class MailActivityTodoCreate(models.TransientModel):
-    _name = 'mail.activity.todo.create'
     _description = 'Create activity and todo at the same time'
 
     summary = fields.Char()

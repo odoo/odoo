@@ -5,7 +5,7 @@ from odoo import models
 
 
 class MrpConsumptionWarning(models.TransientModel):
-    _inherit = 'mrp.consumption.warning'
+    _inherit = ['mrp.consumption.warning']
 
     def action_confirm(self):
         if self.mrp_production_ids._get_subcontract_move():

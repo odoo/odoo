@@ -2,7 +2,7 @@ from odoo import models
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     def _load_pos_data(self, data):
         res = super()._load_pos_data(data)

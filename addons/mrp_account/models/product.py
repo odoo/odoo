@@ -6,8 +6,7 @@ from odoo.tools import float_round, groupby
 
 
 class ProductTemplate(models.Model):
-    _name = 'product.template'
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     def _get_product_accounts(self):
         accounts = super()._get_product_accounts()
@@ -28,8 +27,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _name = 'product.product'
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     def button_bom_cost(self):
         self.ensure_one()
@@ -114,7 +112,7 @@ class ProductProduct(models.Model):
 
 
 class ProductCategory(models.Model):
-    _inherit = 'product.category'
+    _inherit = ['product.category']
 
     property_stock_account_production_cost_id = fields.Many2one(
         'account.account', 'Production Account', company_dependent=True, ondelete='restrict',

@@ -3,7 +3,7 @@ from odoo import models, fields, api
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     taxable_supply_date = fields.Date(default=fields.Date.today())
 

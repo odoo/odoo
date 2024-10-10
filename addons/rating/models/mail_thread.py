@@ -7,7 +7,7 @@ from odoo import _, api, fields, models, tools
 
 
 class MailThread(models.AbstractModel):
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread']
 
     rating_ids = fields.One2many('rating.rating', 'res_id', string='Ratings', groups='base.group_user',
                                  domain=lambda self: [('res_model', '=', self._name)], auto_join=True)

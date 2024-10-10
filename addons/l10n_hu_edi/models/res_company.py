@@ -12,7 +12,7 @@ from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConne
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     l10n_hu_group_vat = fields.Char(
         related='partner_id.l10n_hu_group_vat',

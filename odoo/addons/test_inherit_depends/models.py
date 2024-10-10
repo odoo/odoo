@@ -3,8 +3,7 @@
 from odoo import models, fields
 
 
-class PublishedFoo(models.Model):
-    _name = 'test_new_api.foo'
+class Test_New_ApiFoo(models.Model):
     _inherit = ['test_new_api.foo', 'test_inherit_mixin']
 
 

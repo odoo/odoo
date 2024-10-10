@@ -8,8 +8,7 @@ from odoo import api, fields, models, _
 _logger = logging.getLogger(__name__)
 
 
-class PeppolService(models.TransientModel):
-    _name = 'account_peppol.service'
+class Account_PeppolService(models.TransientModel):
     _order = 'document_name, id'
     _description = 'Peppol Service'
 
@@ -19,8 +18,7 @@ class PeppolService(models.TransientModel):
     enabled = fields.Boolean()
 
 
-class PeppolServiceConfig(models.TransientModel):
-    _name = 'account_peppol.service.wizard'
+class Account_PeppolServiceWizard(models.TransientModel):
     _description = 'Peppol Services Wizard'
 
     edi_user_id = fields.Many2one(comodel_name='account_edi_proxy_client.user', string='EDI user')

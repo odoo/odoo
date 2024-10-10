@@ -9,7 +9,7 @@ from odoo.tools.sql import SQL
 
 
 class ProductProduct(models.Model):
-    _inherit = "product.product"
+    _inherit = ["product.product"]
 
     date_from = fields.Date(compute='_compute_product_margin_fields_values', string='Margin Date From')
     date_to = fields.Date(compute='_compute_product_margin_fields_values', string='Margin Date To')

@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ProductReplenish(models.TransientModel):
-    _inherit = 'product.replenish'
+    _inherit = ['product.replenish']
 
     @api.depends('route_id')
     def _compute_date_planned(self):

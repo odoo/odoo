@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResCompany(models.Model):
-    _inherit = "res.company"
+    _inherit = ["res.company"]
 
     # ==== Business fields ====
     l10n_br_cpf_code = fields.Char(string="CPF", help="Natural Persons Register.")

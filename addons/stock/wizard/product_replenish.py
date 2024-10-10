@@ -10,8 +10,7 @@ from odoo.tools.misc import clean_context
 
 
 class ProductReplenish(models.TransientModel):
-    _name = 'product.replenish'
-    _inherit = 'stock.replenish.mixin'
+    _inherit = ['stock.replenish.mixin']
     _description = 'Product Replenish'
     _check_company_auto = True
 

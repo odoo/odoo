@@ -5,7 +5,7 @@ from odoo import models
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = ['stock.picking']
 
     def _create_move_from_pos_order_lines(self, lines):
         lines_to_unreserve = self.env['pos.order.line']

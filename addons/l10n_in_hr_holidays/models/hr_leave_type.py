@@ -3,8 +3,8 @@
 from odoo import fields, models
 
 
-class HolidaysType(models.Model):
-    _inherit = "hr.leave.type"
+class HrLeaveType(models.Model):
+    _inherit = ["hr.leave.type"]
 
     l10n_in_is_sandwich_leave = fields.Boolean(
         help="""If a leave is covering holidays, the holiday period will be included in the requested time.

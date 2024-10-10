@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+    _inherit = ['res.partner.bank']
 
     proxy_type = fields.Selection(selection_add=[('ewallet_id', 'Ewallet ID'),
                                                  ('merchant_tax_id', 'Merchant Tax ID'),

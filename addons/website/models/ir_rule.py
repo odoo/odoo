@@ -3,7 +3,7 @@ from odoo.addons.website.models import ir_http
 
 
 class IrRule(models.Model):
-    _inherit = 'ir.rule'
+    _inherit = ['ir.rule']
 
     @api.model
     def _eval_context(self):

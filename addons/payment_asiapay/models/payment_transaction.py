@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _inherit = ['payment.transaction']
 
     @api.model
     def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):

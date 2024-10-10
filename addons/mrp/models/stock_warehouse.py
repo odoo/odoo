@@ -7,7 +7,7 @@ from odoo.tools import split_every
 
 
 class StockWarehouse(models.Model):
-    _inherit = 'stock.warehouse'
+    _inherit = ['stock.warehouse']
 
     manufacture_to_resupply = fields.Boolean(
         'Manufacture to Resupply', default=True,
@@ -279,8 +279,9 @@ class StockWarehouse(models.Model):
                 warehouse.manufacture_pull_id.write({'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)})
         return res
 
-class Orderpoint(models.Model):
-    _inherit = "stock.warehouse.orderpoint"
+
+class StockWarehouseOrderpoint(models.Model):
+    _inherit = ["stock.warehouse.orderpoint"]
 
     @api.constrains('product_id')
     def check_product_is_not_kit(self):

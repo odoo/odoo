@@ -10,7 +10,7 @@ from odoo.tools.pdf import NameObject, NumberObject, PdfFileReader, PdfFileWrite
 
 
 class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
+    _inherit = ['ir.actions.report']
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         """Override to add and fill headers, footers and product documents to the sale quotation."""

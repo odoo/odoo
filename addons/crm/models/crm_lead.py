@@ -85,8 +85,7 @@ PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger clu
 PLS_UPDATE_BATCH_STEP = 5000
 
 
-class Lead(models.Model):
-    _name = "crm.lead"
+class CrmLead(models.Model):
     _description = "Lead/Opportunity"
     _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc',
@@ -733,7 +732,7 @@ class Lead(models.Model):
         for vals in vals_list:
             if vals.get('website'):
                 vals['website'] = self.env['res.partner']._clean_website(vals['website'])
-        leads = super(Lead, self).create(vals_list)
+        leads = super().create(vals_list)
 
         for lead, values in zip(leads, vals_list):
             if any(field in ['active', 'stage_id'] for field in values):
@@ -779,16 +778,16 @@ class Lead(models.Model):
             self._handle_won_lost(vals)
 
         if not stage_is_won:
-            return super(Lead, self).write(vals)
+            return super().write(vals)
 
         # stage change between two won stages: does not change the date_closed
         leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
         remaining = self - leads_already_won
         if remaining:
-            result = super(Lead, remaining).write(vals)
+            result = super(CrmLead, remaining).write(vals)
         if leads_already_won:
             vals.pop('date_closed', False)
-            result = super(Lead, leads_already_won).write(vals)
+            result = super(CrmLead, leads_already_won).write(vals)
         return result
 
     @api.model
@@ -879,11 +878,11 @@ class Lead(models.Model):
         in scoring frequency table.
         - From won to lost : We need to decrement corresponding won count + increment corresponding lost count
         in scoring frequency table."""
-        Lead = self.env['crm.lead']
-        leads_reach_won = Lead
-        leads_leave_won = Lead
-        leads_reach_lost = Lead
-        leads_leave_lost = Lead
+        CrmLead = self.env['crm.lead']
+        leads_reach_won = CrmLead
+        leads_leave_won = CrmLead
+        leads_reach_lost = CrmLead
+        leads_leave_lost = CrmLead
         won_stage_ids = self.env['crm.stage'].search([('is_won', '=', True)]).ids
         for lead in self:
             if 'stage_id' in vals:
@@ -935,7 +934,7 @@ class Lead(models.Model):
                 'res_id': False,
                 'res_model_id': False,
             })
-        return super(Lead, self).unlink()
+        return super().unlink()
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
@@ -986,7 +985,7 @@ class Lead(models.Model):
     def toggle_active(self):
         """ When archiving: mark probability as 0. When re-activating
         update probability again, for leads and opportunities. """
-        res = super(Lead, self).toggle_active()
+        res = super().toggle_active()
         activated = self.filtered(lambda lead: lead.active)
         archived = self.filtered(lambda lead: not lead.active)
         if activated:
@@ -1920,7 +1919,7 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_restored')
         elif 'active' in init_values and not self.active:
             return self.env.ref('crm.mt_lead_lost')
-        return super(Lead, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
@@ -1974,7 +1973,7 @@ class Lead(models.Model):
         res = {lead.id: aliases.get(lead.team_id.id) for lead in self}
         leftover = self.filtered(lambda rec: not rec.team_id)
         if leftover:
-            res.update(super(Lead, leftover)._notify_get_reply_to(default=default))
+            res.update(super(CrmLead, leftover)._notify_get_reply_to(default=default))
         return res
 
     def _message_get_default_recipients(self):
@@ -2025,7 +2024,7 @@ class Lead(models.Model):
             defaults['priority'] = msg_dict.get('priority')
         defaults.update(custom_values)
 
-        return super(Lead, self).message_new(msg_dict, custom_values=defaults)
+        return super().message_new(msg_dict, custom_values=defaults)
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:
@@ -2043,14 +2042,14 @@ class Lead(models.Model):
                 self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
                 ]).write({'partner_id': new_partner[0].id})
-        return super(Lead, self)._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message, msg_vals)
 
     def _message_partner_info_from_emails(self, emails, link_mail=False):
         """ Try to propose a better recipient when having only an email by populating
         it with the partner_name / contact_name field of the lead e.g. if lead
         contact_name is "Raoul" and email is "raoul@raoul.fr", suggest
         "Raoul" <raoul@raoul.fr> as recipient. """
-        result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
+        result = super()._message_partner_info_from_emails(emails, link_mail=link_mail)
         if not (self.partner_name or self.contact_name) or not self.email_from:
             return result
         for email, partner_info in zip(emails, result):

@@ -3,7 +3,6 @@ from odoo import models, api
 
 
 class PosLoadMixin(models.AbstractModel):
-    _name = "pos.load.mixin"
     _description = "PoS data loading mixin"
 
     @api.model

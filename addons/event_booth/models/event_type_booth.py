@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 
 
-class EventBooth(models.Model):
-    _name = 'event.type.booth'
+class EventTypeBooth(models.Model):
     _description = 'Event Booth Template'
 
     def _get_default_booth_category(self):

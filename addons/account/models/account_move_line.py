@@ -18,8 +18,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountMoveLine(models.Model):
-    _name = "account.move.line"
-    _inherit = "analytic.mixin"
+    _inherit = ["analytic.mixin"]
     _description = "Journal Item"
     _order = "date desc, move_name desc, id"
     _check_company_auto = True

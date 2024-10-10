@@ -34,8 +34,8 @@ MAX_RECURRENT_EVENT = 720
 
 _logger = logging.getLogger(__name__)
 
-class Meeting(models.Model):
-    _name = 'calendar.event'
+
+class CalendarEvent(models.Model):
     _inherit = ['calendar.event', 'microsoft.calendar.sync']
 
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
@@ -95,7 +95,7 @@ class Meeting(models.Model):
         # for a recurrent event, we do not create events separately but we directly
         # create the recurrency from the corresponding calendar.recurrence.
         # That's why, events from a recurrency have their `need_sync_m` attribute set to False.
-        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
+        return super(CalendarEvent, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync_m=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
@@ -210,11 +210,11 @@ class Meeting(models.Model):
         if attendee_ids and values.get('partner_ids'):
             (self - deactivated_events)._update_attendee_status(attendee_ids)
 
-        res = super(Meeting, (self - deactivated_events).with_context(dont_notify=notify_context)).write(values)
+        res = super(CalendarEvent, (self - deactivated_events).with_context(dont_notify=notify_context)).write(values)
 
         # Deactivate events that were recreated after changing organizer.
         if deactivated_events:
-            res |= super(Meeting, deactivated_events.with_context(dont_notify=notify_context)).write({**values, 'active': False})
+            res |= super(CalendarEvent, deactivated_events.with_context(dont_notify=notify_context)).write({**values, 'active': False})
 
         if recurrence_update_setting in ('all_events',) and len(self) == 1 \
            and values.keys() & self._get_microsoft_synced_fields():
@@ -670,7 +670,7 @@ class Meeting(models.Model):
         for event in records:
             # remove the tracking data to avoid calling _track_template in the pre-commit phase
             self.env.cr.precommit.data.pop(f'mail.tracking.create.{event._name}.{event.id}', None)
-        super(Meeting, records)._cancel_microsoft()
+        super(CalendarEvent, records)._cancel_microsoft()
         attendees = (self - records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.do_decline()
 

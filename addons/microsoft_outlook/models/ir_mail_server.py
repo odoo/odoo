@@ -7,10 +7,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class IrMailServer(models.Model):
+class IrMail_Server(models.Model):
     """Add the Outlook OAuth authentication on the outgoing mail servers."""
 
-    _name = 'ir.mail_server'
     _inherit = ['ir.mail_server', 'microsoft.outlook.mixin']
 
     _OUTLOOK_SCOPE = 'https://outlook.office.com/SMTP.Send'
@@ -23,7 +22,7 @@ class IrMailServer(models.Model):
     def _compute_is_microsoft_outlook_configured(self):
         outlook_servers = self.filtered(lambda server: server.smtp_authentication == 'outlook')
         (self - outlook_servers).is_microsoft_outlook_configured = False
-        super(IrMailServer, outlook_servers)._compute_is_microsoft_outlook_configured()
+        super(IrMail_Server, outlook_servers)._compute_is_microsoft_outlook_configured()
 
     def _compute_smtp_authentication_info(self):
         outlook_servers = self.filtered(lambda server: server.smtp_authentication == 'outlook')
@@ -31,7 +30,7 @@ class IrMailServer(models.Model):
             'Connect your Outlook account with the OAuth Authentication process.  \n'
             'By default, only a user with a matching email address will be able to use this server. '
             'To extend its use, you should set a "mail.default.from" system parameter.')
-        super(IrMailServer, self - outlook_servers)._compute_smtp_authentication_info()
+        super(IrMail_Server, self - outlook_servers)._compute_smtp_authentication_info()
 
     @api.constrains('smtp_authentication', 'smtp_pass', 'smtp_encryption', 'smtp_user')
     def _check_use_microsoft_outlook_service(self):

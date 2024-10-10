@@ -4,7 +4,7 @@ from odoo import fields, models, api
 
 
 class StockPickingBatch(models.Model):
-    _inherit = 'stock.picking.batch'
+    _inherit = ['stock.picking.batch']
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
     vehicle_category_id = fields.Many2one(

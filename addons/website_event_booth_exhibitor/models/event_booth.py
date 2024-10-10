@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class EventBooth(models.Model):
-    _inherit = 'event.booth'
+    _inherit = ['event.booth']
 
     use_sponsor = fields.Boolean(related='booth_category_id.use_sponsor')
     sponsor_type_id = fields.Many2one(related='booth_category_id.sponsor_type_id')

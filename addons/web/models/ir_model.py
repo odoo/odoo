@@ -5,7 +5,7 @@ from odoo import models, api
 
 
 class IrModel(models.Model):
-    _inherit = "ir.model"
+    _inherit = ["ir.model"]
 
     @api.model
     def display_name_for(self, models):

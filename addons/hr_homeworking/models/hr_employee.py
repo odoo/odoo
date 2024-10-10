@@ -6,7 +6,7 @@ from .hr_homeworking import DAYS
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+    _inherit = ["hr.employee.base"]
 
     monday_location_id = fields.Many2one('hr.work.location', string='Monday')
     tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday')

@@ -5,7 +5,7 @@ from odoo import models, _
 
 
 class StockPicking(models.Model):
-    _inherit = "stock.picking"
+    _inherit = ["stock.picking"]
 
     def _pre_action_done_hook(self):
         res = super()._pre_action_done_hook()

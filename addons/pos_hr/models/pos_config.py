@@ -4,7 +4,7 @@ from odoo import models, fields, api
 
 
 class PosConfig(models.Model):
-    _inherit = 'pos.config'
+    _inherit = ['pos.config']
 
     basic_employee_ids = fields.Many2many(
         'hr.employee', 'pos_hr_basic_employee_hr_employee', string="Employees with basic access",

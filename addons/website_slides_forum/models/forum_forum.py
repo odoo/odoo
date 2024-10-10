@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 
 
-class Forum(models.Model):
-    _inherit = 'forum.forum'
+class ForumForum(models.Model):
+    _inherit = ['forum.forum']
 
     slide_channel_ids = fields.One2many('slide.channel', 'forum_id', 'Courses', help="Edit the course linked to this forum on the course form.")
     slide_channel_id = fields.Many2one('slide.channel', 'Course', compute='_compute_slide_channel_id', store=True)

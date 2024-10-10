@@ -4,7 +4,7 @@ from odoo import fields, models, api
 
 class AccountTaxGroup(models.Model):
 
-    _inherit = 'account.tax.group'
+    _inherit = ['account.tax.group']
 
     # values from http://www.afip.gob.ar/fe/documentos/otros_Tributos.xlsx
     l10n_ar_tribute_afip_code = fields.Selection([

@@ -6,7 +6,6 @@ from odoo.exceptions import UserError
 
 
 class FleetVehicleLogServices(models.Model):
-    _name = 'fleet.vehicle.log.services'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'service_type_id'
     _description = 'Services for vehicles'

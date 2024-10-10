@@ -17,7 +17,7 @@ def _generate_random_reward_code():
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     # Contains how much points should be given to a coupon upon validating the order
     applied_coupon_ids = fields.Many2many(

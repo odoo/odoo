@@ -5,13 +5,12 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class Opportunity2Quotation(models.TransientModel):
-    _name = 'crm.quotation.partner'
+class CrmQuotationPartner(models.TransientModel):
     _description = 'Create new or use existing Customer on new Quotation'
 
     @api.model
     def default_get(self, fields):
-        result = super(Opportunity2Quotation, self).default_get(fields)
+        result = super().default_get(fields)
 
         active_model = self._context.get('active_model')
         if active_model != 'crm.lead':

@@ -6,7 +6,7 @@ from odoo.tools.translate import html_translate
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     allow_out_of_stock_order = fields.Boolean(string='Continue selling when out-of-stock', default=True)
 

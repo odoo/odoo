@@ -3,7 +3,7 @@ from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     l10n_in_partner_gstin_status = fields.Boolean(
         string="GST Status",

@@ -128,7 +128,7 @@ _DOCUMENTS_MAPPING = {
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     l10n_ec_sri_payment_id = fields.Many2one(
         comodel_name="l10n_ec.sri.payment",

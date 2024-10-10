@@ -5,7 +5,7 @@ from odoo import models
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def _invoice_paid_hook(self):
         """ When an invoice linked to a sales order selling registrations is

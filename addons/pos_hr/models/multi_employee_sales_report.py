@@ -2,8 +2,7 @@
 from odoo import api, models
 
 
-class MultiEmployeeSalesReport(models.AbstractModel):
-    _name = 'report.pos_hr.multi_employee_sales_report'
+class ReportPos_HrMulti_Employee_Sales_Report(models.AbstractModel):
     _description = 'A collection of single session reports. One for each employee'
 
     @api.model

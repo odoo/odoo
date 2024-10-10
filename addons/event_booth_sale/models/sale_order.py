@@ -7,7 +7,7 @@ from odoo.osv import expression
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     event_booth_ids = fields.One2many('event.booth', 'sale_order_id', string='Booths')
     event_booth_count = fields.Integer(string='Booth Count', compute='_compute_event_booth_count')

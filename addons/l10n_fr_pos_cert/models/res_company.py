@@ -22,7 +22,7 @@ def ctx_tz(record, field):
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     l10n_fr_pos_cert_sequence_id = fields.Many2one('ir.sequence')
 

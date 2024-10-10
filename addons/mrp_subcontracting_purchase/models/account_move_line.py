@@ -5,7 +5,7 @@ from odoo.tools import float_is_zero
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def _get_price_unit_val_dif_and_relevant_qty(self):
         price_unit_val_dif, relevant_qty = super()._get_price_unit_val_dif_and_relevant_qty()

@@ -9,7 +9,6 @@ from odoo.tools import float_compare, float_is_zero, format_list
 
 
 class StockValuationLayerRevaluation(models.TransientModel):
-    _name = 'stock.valuation.layer.revaluation'
     _description = "Wizard model to reavaluate a stock inventory for a product"
     _check_company_auto = True
 

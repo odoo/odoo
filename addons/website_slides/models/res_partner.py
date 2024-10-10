@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     slide_channel_ids = fields.Many2many(
         'slide.channel', string='eLearning Courses',

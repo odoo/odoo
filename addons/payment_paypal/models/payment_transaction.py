@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _inherit = ['payment.transaction']
 
     # See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
     # this field has no use in Odoo except for debugging

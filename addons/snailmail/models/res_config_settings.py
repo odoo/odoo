@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):	
-    _inherit = 'res.config.settings'	
+    _inherit = ['res.config.settings']
 
     snailmail_color = fields.Boolean(string='Print In Color', related='company_id.snailmail_color', readonly=False)
     snailmail_cover = fields.Boolean(string='Add a Cover Page', related='company_id.snailmail_cover', readonly=False)

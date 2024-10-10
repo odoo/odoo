@@ -2,7 +2,7 @@ from odoo import models, fields
 
 
 class AccountMoveReversal(models.TransientModel):
-    _inherit = 'account.move.reversal'
+    _inherit = ['account.move.reversal']
 
     l10n_es_edi_facturae_reason_code = fields.Selection(
         selection=lambda self: self.env['account.move']._fields['l10n_es_edi_facturae_reason_code']._description_selection(self.env),

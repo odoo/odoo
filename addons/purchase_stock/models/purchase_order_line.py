@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+    _inherit = ['purchase.order.line']
 
     def _ondelete_stock_moves(self):
         modified_fields = ['qty_received_manual', 'qty_received_method']

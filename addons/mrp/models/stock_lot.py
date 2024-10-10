@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class StockLot(models.Model):
-    _inherit = 'stock.lot'
+    _inherit = ['stock.lot']
 
     def _check_create(self):
         active_mo_id = self.env.context.get('active_mo_id')

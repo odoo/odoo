@@ -8,8 +8,8 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
-class HolidaysAllocation(models.Model):
-    _inherit = 'hr.leave.allocation'
+class HrLeaveAllocation(models.Model):
+    _inherit = ['hr.leave.allocation']
 
     def default_get(self, fields):
         res = super().default_get(fields)

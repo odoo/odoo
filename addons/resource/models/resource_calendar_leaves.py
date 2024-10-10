@@ -9,7 +9,6 @@ from odoo.exceptions import ValidationError
 
 
 class ResourceCalendarLeaves(models.Model):
-    _name = "resource.calendar.leaves"
     _description = "Resource Time Off Detail"
     _order = "date_from"
 

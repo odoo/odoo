@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
     _check_company_auto = True
 
     _sql_constraints = [

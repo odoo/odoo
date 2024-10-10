@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 
 
 class PosOrder(models.Model):
-    _inherit = 'pos.order'
+    _inherit = ['pos.order']
 
     l10n_es_tbai_state = fields.Selection([
             ('to_send', 'To Send'),

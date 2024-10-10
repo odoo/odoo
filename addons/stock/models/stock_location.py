@@ -12,8 +12,7 @@ from odoo.osv import expression
 from odoo.tools.float_utils import float_compare
 
 
-class Location(models.Model):
-    _name = "stock.location"
+class StockLocation(models.Model):
     _description = "Inventory Locations"
     _parent_name = "location_id"
     _parent_store = True
@@ -24,7 +23,7 @@ class Location(models.Model):
 
     @api.model
     def default_get(self, fields):
-        res = super(Location, self).default_get(fields)
+        res = super().default_get(fields)
         if 'barcode' in fields and 'barcode' not in res and res.get('complete_name'):
             res['barcode'] = res['complete_name']
         return res
@@ -252,7 +251,7 @@ class Location(models.Model):
                         "You can't disable locations %s because they still contain products.",
                         ', '.join(children_quants.mapped('location_id.display_name'))))
                 else:
-                    super(Location, children_location - self).with_context(do_not_check_quant=True).write({
+                    super(StockLocation, children_location - self).with_context(do_not_check_quant=True).write({
                         'active': values['active'],
                     })
 
@@ -261,7 +260,7 @@ class Location(models.Model):
         return res
 
     def unlink(self):
-        return super(Location, self.search([('id', 'child_of', self.ids)])).unlink()
+        return super(StockLocation, self.search([('id', 'child_of', self.ids)])).unlink()
 
     @api.model
     def name_create(self, name):
@@ -497,7 +496,6 @@ class Location(models.Model):
 
 
 class StockRoute(models.Model):
-    _name = 'stock.route'
     _description = "Inventory Routes"
     _order = 'sequence'
     _check_company_auto = True

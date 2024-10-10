@@ -4,8 +4,9 @@
 from odoo import models
 from odoo.tools import float_is_zero
 
-class ReportMoOverview(models.AbstractModel):
-    _inherit = 'report.mrp.report_mo_overview'
+
+class ReportMrpReport_Mo_Overview(models.AbstractModel):
+    _inherit = ['report.mrp.report_mo_overview']
 
     def _get_unit_cost(self, move):
         valuation_layers = move.sudo().stock_valuation_layer_ids

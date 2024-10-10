@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     module_stock_dropshipping = fields.Boolean("Dropshipping")
     days_to_purchase = fields.Float(

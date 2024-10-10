@@ -5,9 +5,8 @@ from odoo.exceptions import UserError
 from odoo.tools import _, SQL
 
 
-class PhoneBlackList(models.Model):
+class PhoneBlacklist(models.Model):
     """ Blacklist of phone numbers. Used to avoid sending unwanted messages to people. """
-    _name = 'phone.blacklist'
     _inherit = ['mail.thread']
     _description = 'Phone Blacklist'
     _rec_name = 'number'
@@ -64,7 +63,7 @@ class PhoneBlackList(models.Model):
             except UserError as err:
                 raise UserError(_("%(error)s Please correct the number and try again.", error=str(err))) from err
             values['number'] = sanitized
-        return super(PhoneBlackList, self).write(values)
+        return super().write(values)
 
     def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query) -> SQL:
         if fname == 'number':

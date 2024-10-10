@@ -5,8 +5,9 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv.expression import AND
 
+
 class MrpBom(models.Model):
-    _inherit = 'mrp.bom'
+    _inherit = ['mrp.bom']
 
     type = fields.Selection(selection_add=[
         ('subcontract', 'Subcontracting')

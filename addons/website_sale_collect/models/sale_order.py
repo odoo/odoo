@@ -8,7 +8,7 @@ from odoo.http import request
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     def set_delivery_line(self, carrier, amount):
         """ Override of `website_sale` to recompute warehouse when a new delivery method

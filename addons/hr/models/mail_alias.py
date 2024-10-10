@@ -4,8 +4,8 @@
 from odoo import fields, models, _
 
 
-class Alias(models.Model):
-    _inherit = 'mail.alias'
+class MailAlias(models.Model):
+    _inherit = ['mail.alias']
 
     alias_contact = fields.Selection(selection_add=[
         ('employees', 'Authenticated Employees'),
@@ -14,4 +14,4 @@ class Alias(models.Model):
     def _get_alias_contact_description(self):
         if self.alias_contact == 'employees':
             return _('addresses linked to registered employees')
-        return super(Alias, self)._get_alias_contact_description()
+        return super()._get_alias_contact_description()

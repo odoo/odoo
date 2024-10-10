@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+    _inherit = ['stock.quant']
 
     is_subcontract = fields.Boolean(store=False, search='_search_is_subcontract')
 

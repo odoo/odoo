@@ -14,7 +14,7 @@ UY_DOC_SUBTYPES = [
 
 class AccountMove(models.Model):
 
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the

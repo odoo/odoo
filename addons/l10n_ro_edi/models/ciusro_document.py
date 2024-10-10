@@ -45,8 +45,7 @@ def make_efactura_request(session, company, endpoint, method, params, data=None)
     return {'content': response.content}
 
 
-class L10nRoEdiDocument(models.Model):
-    _name = 'l10n_ro_edi.document'
+class L10n_Ro_EdiDocument(models.Model):
     _description = "Document object for tracking CIUS-RO XML sent to E-Factura"
     _order = 'datetime DESC, id DESC'
 

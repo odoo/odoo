@@ -10,7 +10,7 @@ from odoo.addons.payment_buckaroo import const
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = ['payment.provider']
 
     code = fields.Selection(
         selection_add=[('buckaroo', "Buckaroo")], ondelete={'buckaroo': 'set default'})

@@ -2,7 +2,7 @@ from odoo import api, fields, models
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _inherit = ['account.tax']
 
     ubl_cii_tax_category_code = fields.Selection(
         help="The VAT category code used for electronic invoicing purposes.",

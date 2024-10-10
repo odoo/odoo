@@ -9,14 +9,13 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 
 
-class ImLivechatChannel(models.Model):
+class Im_LivechatChannel(models.Model):
     """ Livechat Channel
         Define a communication channel, which can be accessed with 'script_external' (script tag to put on
         external website), 'script_internal' (code to be integrated with odoo website) or via 'web_page' link.
         It provides rating tools, and access rules for anonymous people.
     """
 
-    _name = 'im_livechat.channel'
     _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
     _rating_satisfaction_days = 14  # include only last 14 days to compute satisfaction
@@ -338,13 +337,12 @@ class ImLivechatChannel(models.Model):
         store.add(self._name, self._read_format(fields))
 
 
-class ImLivechatChannelRule(models.Model):
+class Im_LivechatChannelRule(models.Model):
     """ Channel Rules
         Rules defining access to the channel (countries, and url matching). It also provide the 'auto pop'
         option to open automatically the conversation.
     """
 
-    _name = 'im_livechat.channel.rule'
     _description = 'Livechat Channel Rules'
     _order = 'sequence asc'
 

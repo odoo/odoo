@@ -10,7 +10,7 @@ from odoo.tools import get_lang
 
 
 class StockMove(models.Model):
-    _inherit = "stock.move"
+    _inherit = ["stock.move"]
 
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')

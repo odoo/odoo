@@ -18,7 +18,7 @@ from .hr_work_intervals import WorkIntervals
 
 
 class HrContract(models.Model):
-    _inherit = 'hr.contract'
+    _inherit = ['hr.contract']
     _description = 'Employee Contract'
 
     date_generated_from = fields.Datetime(string='Generated From', readonly=True, required=True,

@@ -6,6 +6,7 @@ import re
 from odoo import api, fields, models
 from odoo.tools import remove_accents
 
+
 class ChatRoomMixin(models.AbstractModel):
     """Add the chat room configuration (`chat.room`) on the needed models.
 
@@ -13,7 +14,6 @@ class ChatRoomMixin(models.AbstractModel):
     all the chat room logic at the same place, for all models.
     Embed chat room related fields prefixed with `room_`.
     """
-    _name = "chat.room.mixin"
     _description = "Chat Room Mixin"
     ROOM_CONFIG_FIELDS = [
         ('room_name', 'name'),

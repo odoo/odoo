@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 
 
 class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+    _inherit = ["res.partner.bank"]
 
     aba_bsb = fields.Char(string='BSB', help='Bank State Branch code - needed if payment is to be made using ABA files')
 

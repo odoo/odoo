@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class ProductCategory(models.Model):
-    _inherit = "product.category"
+    _inherit = ["product.category"]
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_delivery_category(self):

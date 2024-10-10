@@ -4,7 +4,7 @@ from odoo.http import Controller, route
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+    _inherit = ['ir.http']
 
     @classmethod
     def _auth_method_thing(cls):

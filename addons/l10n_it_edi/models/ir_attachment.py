@@ -13,7 +13,7 @@ FATTURAPA_FILENAME_RE = "[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m
 
 
 class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+    _inherit = ['ir.attachment']
 
     def _decode_edi_l10n_it_edi(self, name, content):
         """ Decodes a  into a list of one dictionary representing an attachment.

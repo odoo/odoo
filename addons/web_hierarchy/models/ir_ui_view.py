@@ -20,8 +20,9 @@ HIERARCHY_VALID_ATTRIBUTES = {
     'default_order'
 }
 
-class View(models.Model):
-    _inherit = 'ir.ui.view'
+
+class IrUiView(models.Model):
+    _inherit = ['ir.ui.view']
 
     type = fields.Selection(selection_add=[('hierarchy', "Hierarchy")])
 

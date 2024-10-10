@@ -9,7 +9,7 @@ from datetime import datetime, time
 
 
 class StockWarehouseOrderpoint(models.Model):
-    _inherit = 'stock.warehouse.orderpoint'
+    _inherit = ['stock.warehouse.orderpoint']
 
     show_bom = fields.Boolean('Show BoM column', compute='_compute_show_bom')
     bom_id = fields.Many2one(

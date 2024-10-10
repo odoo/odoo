@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
-    _inherit = "sale.order"
+    _inherit = ["sale.order"]
 
     def write(self, values):
         # We compute the l10n_fi/SaleOrder.reference from itself the same way

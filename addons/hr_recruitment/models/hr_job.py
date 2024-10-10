@@ -9,8 +9,7 @@ from odoo.tools import SQL
 from odoo.tools.convert import convert_file
 
 
-class Job(models.Model):
-    _name = "hr.job"
+class HrJob(models.Model):
     _inherit = ["mail.alias.mixin", "hr.job"]
     _order = "sequence, name asc"
 

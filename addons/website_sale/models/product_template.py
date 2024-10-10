@@ -20,7 +20,6 @@ class ProductTemplate(models.Model):
         'website.published.multi.mixin',
         'website.searchable.mixin',
     ]
-    _name = 'product.template'
     _mail_post_access = 'read'
     _check_company_auto = True
 

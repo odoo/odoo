@@ -5,7 +5,7 @@ from odoo import models, _
 
 
 class SaleOrder(models.Model):
-    _inherit = "sale.order"
+    _inherit = ["sale.order"]
 
     def _action_confirm(self):
         """ If the product of an order line is a 'course', we add the client of the sale_order

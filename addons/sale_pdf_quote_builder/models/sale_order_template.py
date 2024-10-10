@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class SaleOrderTemplate(models.Model):
-    _inherit = 'sale.order.template'
+    _inherit = ['sale.order.template']
 
     quotation_document_ids = fields.Many2many(
         string="Headers and footers",

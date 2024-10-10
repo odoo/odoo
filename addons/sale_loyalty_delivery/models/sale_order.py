@@ -6,7 +6,7 @@ from odoo.fields import Command
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     # delivery overrides
 

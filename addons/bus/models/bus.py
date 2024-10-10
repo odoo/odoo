@@ -81,9 +81,8 @@ def get_notify_payloads(channels):
                 get_notify_payloads(channels[pivot:]))
 
 
-class ImBus(models.Model):
+class BusBus(models.Model):
 
-    _name = 'bus.bus'
     _description = 'Communication Bus'
 
     channel = fields.Char('Channel')

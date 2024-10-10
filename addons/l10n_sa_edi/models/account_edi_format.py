@@ -9,7 +9,7 @@ from odoo.tools import format_list
 
 
 class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+    _inherit = ['account.edi.format']
 
     """
         Once the journal has been successfully onboarded, we can clear/report invoices through the ZATCA API:

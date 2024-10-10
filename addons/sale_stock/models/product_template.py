@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     @api.depends('type')
     def _compute_expense_policy(self):

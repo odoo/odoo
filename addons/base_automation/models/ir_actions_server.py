@@ -6,8 +6,9 @@ from odoo import api, exceptions, fields, models, _
 
 from .base_automation import get_webhook_request_payload
 
-class ServerAction(models.Model):
-    _inherit = "ir.actions.server"
+
+class IrActionsServer(models.Model):
+    _inherit = ["ir.actions.server"]
 
     name = fields.Char(compute='_compute_name', store=True, readonly=False)
 

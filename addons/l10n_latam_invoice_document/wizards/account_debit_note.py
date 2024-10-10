@@ -3,7 +3,7 @@ from odoo import models
 
 class AccountDebitNote(models.TransientModel):
 
-    _inherit = 'account.debit.note'
+    _inherit = ['account.debit.note']
 
     def create_debit(self):
         """ Properly compute the latam document type of type debit note. """

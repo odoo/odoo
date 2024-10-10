@@ -5,8 +5,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class PosDetails(models.TransientModel):
-    _name = 'pos.details.wizard'
+class PosDetailsWizard(models.TransientModel):
     _description = 'Point of Sale Details Report'
 
     def _default_start_date(self):

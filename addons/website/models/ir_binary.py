@@ -2,7 +2,7 @@ from odoo import models
 
 
 class IrBinary(models.AbstractModel):
-    _inherit = 'ir.binary'
+    _inherit = ['ir.binary']
 
     def _find_record(
             self, xmlid=None, res_model='ir.attachment', res_id=None,

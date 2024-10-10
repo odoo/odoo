@@ -9,13 +9,12 @@ from odoo.exceptions import UserError
 from odoo.tools import html2plaintext, plaintext2html
 
 
-class SendSMS(models.TransientModel):
-    _name = 'sms.composer'
+class SmsComposer(models.TransientModel):
     _description = 'Send SMS Wizard'
 
     @api.model
     def default_get(self, fields):
-        result = super(SendSMS, self).default_get(fields)
+        result = super().default_get(fields)
 
         result['res_model'] = result.get('res_model') or self.env.context.get('active_model')
 

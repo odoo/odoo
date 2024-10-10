@@ -5,8 +5,8 @@ from odoo.tools.misc import format_duration
 from odoo import _, api, fields, models
 
 
-class HRLeaveType(models.Model):
-    _inherit = 'hr.leave.type'
+class HrLeaveType(models.Model):
+    _inherit = ['hr.leave.type']
 
     overtime_deductible = fields.Boolean(
         "Deduct Extra Hours", default=False,
@@ -30,7 +30,7 @@ class HRLeaveType(models.Model):
                 'count': _('%s hours available',
                     format_duration(employee.total_overtime)),
             }
-        super(HRLeaveType, self - overtime_leaves)._compute_display_name()
+        super(HrLeaveType, self - overtime_leaves)._compute_display_name()
 
     def get_allocation_data(self, employees, date=None):
         res = super().get_allocation_data(employees, date)

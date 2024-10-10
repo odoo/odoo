@@ -5,7 +5,7 @@ from odoo.tools import format_list
 
 
 class FleetVehicleModelCategory(models.Model):
-    _inherit = 'fleet.vehicle.model.category'
+    _inherit = ['fleet.vehicle.model.category']
 
     weight_capacity = fields.Float(string="Max Weight")
     weight_capacity_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_capacity_uom_name')

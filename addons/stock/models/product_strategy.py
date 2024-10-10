@@ -7,8 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare
 
 
-class RemovalStrategy(models.Model):
-    _name = 'product.removal'
+class ProductRemoval(models.Model):
     _description = 'Removal Strategy'
 
     name = fields.Char('Name', required=True, translate=True)
@@ -16,7 +15,6 @@ class RemovalStrategy(models.Model):
 
 
 class StockPutawayRule(models.Model):
-    _name = 'stock.putaway.rule'
     _order = 'sequence,product_id'
     _description = 'Putaway Rule'
     _check_company_auto = True

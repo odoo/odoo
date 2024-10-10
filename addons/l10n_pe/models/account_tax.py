@@ -3,7 +3,7 @@ from odoo import fields, models
 
 
 class AccountTax(models.Model):
-    _inherit = "account.tax"
+    _inherit = ["account.tax"]
 
     l10n_pe_edi_tax_code = fields.Selection(
         [

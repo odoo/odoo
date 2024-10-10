@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE = 20_000_000
 
 
-class CloudStorageSettings(models.TransientModel):
+class ResConfigSettings(models.TransientModel):
     """
     Instructions:
     cloud_storage_provider: Once set, new attachments from the web client can
@@ -18,7 +18,7 @@ class CloudStorageSettings(models.TransientModel):
     cloud_storage_mim_file_size: a soft limit for the file size that can be
         uploaded as the cloud storage attachments for web client.
     """
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     cloud_storage_provider = fields.Selection(
         selection=[],

@@ -13,7 +13,6 @@ from odoo.tools import convert, SQL
 
 
 class PosConfig(models.Model):
-    _name = 'pos.config'
     _inherit = ['pos.bus.mixin', 'pos.load.mixin']
     _description = 'Point of Sale Configuration'
     _check_company_auto = True

@@ -2,7 +2,6 @@ from odoo import models, api
 
 
 class ResCountry(models.Model):
-    _name = 'res.country'
     _inherit = ['res.country', 'pos.load.mixin']
 
     @api.model

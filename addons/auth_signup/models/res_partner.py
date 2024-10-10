@@ -22,7 +22,7 @@ def now(**kwargs):
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
 

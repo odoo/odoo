@@ -6,7 +6,7 @@ from odoo.osv.expression import OR
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = ['stock.picking']
 
     def action_view_stock_valuation_layers(self):
         action = super(StockPicking, self).action_view_stock_valuation_layers()

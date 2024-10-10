@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     @api.model
     def _default_project_time_mode_id(self):

@@ -4,7 +4,7 @@ from odoo import api, models
 
 
 class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
+    _inherit = ['ir.actions.report']
 
     def retrieve_attachment(self, record):
         # Override this method in order to force to re-render the pdf in case of

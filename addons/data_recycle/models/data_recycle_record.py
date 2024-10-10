@@ -6,8 +6,7 @@ from collections import defaultdict
 from odoo import models, api, fields, _
 
 
-class DataRecycleRecord(models.Model):
-    _name = 'data_recycle.record'
+class Data_RecycleRecord(models.Model):
     _description = 'Recycling Record'
 
     active = fields.Boolean('Active', default=True)

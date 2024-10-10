@@ -6,7 +6,7 @@ from odoo import models
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     def _prepare_categories_for_display(self):
         """On the comparison page group on the same line the values of each

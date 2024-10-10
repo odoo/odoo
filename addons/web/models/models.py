@@ -37,7 +37,7 @@ DISPLAY_DATE_FORMATS = {
 
 
 class Base(models.AbstractModel):
-    _inherit = 'base'
+    _inherit = ['base']
 
     @api.model
     @api.readonly
@@ -1049,9 +1049,8 @@ class Base(models.AbstractModel):
                 self.update_field_translations(field_name, translations)
 
 
-
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 
 
 class AccountAccountTag(models.Model):
-    _name = 'account.account.tag'
     _description = 'Account Tag'
 
     name = fields.Char('Tag Name', required=True, translate=True)

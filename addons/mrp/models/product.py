@@ -18,8 +18,9 @@ OPERATORS = {
     '!=': py_operator.ne
 }
 
+
 class ProductTemplate(models.Model):
-    _inherit = "product.template"
+    _inherit = ["product.template"]
 
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_tmpl_id', 'BoM Components')
     bom_ids = fields.One2many('mrp.bom', 'product_tmpl_id', 'Bill of Materials')
@@ -112,7 +113,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _inherit = "product.product"
+    _inherit = ["product.product"]
 
     variant_bom_ids = fields.One2many('mrp.bom', 'product_id', 'BOM Product Variants')
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_id', 'BoM Components')

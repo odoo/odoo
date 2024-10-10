@@ -5,6 +5,6 @@ from odoo import models, fields
 
 
 class MailActivityType(models.Model):
-    _inherit = "mail.activity.type"
+    _inherit = ["mail.activity.type"]
 
     category = fields.Selection(selection_add=[('meeting', 'Meeting')])

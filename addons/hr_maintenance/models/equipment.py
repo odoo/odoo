@@ -4,7 +4,7 @@ from odoo import api, fields, models, tools
 
 
 class MaintenanceEquipment(models.Model):
-    _inherit = 'maintenance.equipment'
+    _inherit = ['maintenance.equipment']
 
     employee_id = fields.Many2one('hr.employee', compute='_compute_equipment_assign',
         store=True, readonly=False, string='Assigned Employee', tracking=True)
@@ -78,7 +78,7 @@ class MaintenanceEquipment(models.Model):
 
 
 class MaintenanceRequest(models.Model):
-    _inherit = 'maintenance.request'
+    _inherit = ['maintenance.request']
 
     @api.returns('self')
     def _default_employee_get(self):

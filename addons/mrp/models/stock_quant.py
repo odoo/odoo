@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 
 class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+    _inherit = ['stock.quant']
 
     @api.constrains('product_id')
     def _check_kits(self):

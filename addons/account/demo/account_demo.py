@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountChartTemplate(models.AbstractModel):
-    _inherit = "account.chart.template"
+    _inherit = ["account.chart.template"]
 
     @api.model
     def _get_demo_data(self, company=False):

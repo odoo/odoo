@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 from odoo.osv import expression
 
+
 class LoyaltyRule(models.Model):
-    _name = 'loyalty.rule'
     _inherit = ['loyalty.rule', 'pos.load.mixin']
 
     valid_product_ids = fields.Many2many(

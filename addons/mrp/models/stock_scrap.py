@@ -5,7 +5,7 @@ from odoo import _, api, fields, models
 
 
 class StockScrap(models.Model):
-    _inherit = 'stock.scrap'
+    _inherit = ['stock.scrap']
 
     production_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',

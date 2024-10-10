@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     # when the specific_property_product_pricelist is not defined
     # the fallback value may be computed with 2 ir.config_parameter

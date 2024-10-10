@@ -6,7 +6,6 @@ from odoo import api, fields, models, _
 
 
 class ResourceCalendarAttendance(models.Model):
-    _name = "resource.calendar.attendance"
     _description = "Work Detail"
     _order = 'sequence, week_type, dayofweek, hour_from'
 

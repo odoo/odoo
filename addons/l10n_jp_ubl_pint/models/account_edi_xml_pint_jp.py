@@ -1,9 +1,8 @@
 from odoo import fields, models
 
 
-class AccountEdiXmlUBLPINTJP(models.AbstractModel):
-    _inherit = "account.edi.xml.ubl_bis3"
-    _name = 'account.edi.xml.pint_jp'
+class AccountEdiXmlPint_Jp(models.AbstractModel):
+    _inherit = ["account.edi.xml.ubl_bis3"]
     _description = "Japanese implementation of Peppol International (PINT) model for Billing"
     """
     Pint is a standard for International Billing from Peppol. It is based on Peppol BIS Billing 3.

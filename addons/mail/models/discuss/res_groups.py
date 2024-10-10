@@ -4,7 +4,7 @@ from odoo import models
 
 
 class ResGroups(models.Model):
-    _inherit = "res.groups"
+    _inherit = ["res.groups"]
 
     def write(self, vals):
         res = super().write(vals)

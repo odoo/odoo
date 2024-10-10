@@ -5,7 +5,7 @@ from odoo import models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     def action_privacy_lookup(self):
         self.ensure_one()

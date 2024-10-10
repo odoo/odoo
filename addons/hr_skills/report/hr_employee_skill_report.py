@@ -2,10 +2,10 @@
 
 from odoo import fields, models, tools
 
+
 class HrEmployeeSkillReport(models.BaseModel):
     _auto = False
-    _name = 'hr.employee.skill.report'
-    _inherit = "hr.manager.department.report"
+    _inherit = ["hr.manager.department.report"]
     _description = 'Employee Skills Report'
     _order = 'employee_id, level_progress desc'
 

@@ -4,7 +4,7 @@ from odoo import models
 
 
 class IrModel(models.Model):
-    _inherit = 'ir.model'
+    _inherit = ['ir.model']
 
     def _get_model_definitions(self, model_names_to_fetch):
         model_definitions = {}

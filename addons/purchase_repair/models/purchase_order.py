@@ -3,7 +3,7 @@ from odoo import api, fields, models, _
 
 
 class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+    _inherit = ['purchase.order']
 
     repair_count = fields.Integer(string='Count of source repairs', compute='_compute_repair_count', groups='stock.group_stock_user')
 

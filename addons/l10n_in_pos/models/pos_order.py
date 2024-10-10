@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class PosOrder(models.Model):
-    _inherit = 'pos.order'
+    _inherit = ['pos.order']
 
     def _prepare_invoice_vals(self):
         vals = super()._prepare_invoice_vals()

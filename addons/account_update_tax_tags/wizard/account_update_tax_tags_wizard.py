@@ -4,7 +4,6 @@ from odoo.exceptions import UserError
 
 
 class AccountUpdateTaxTagsWizard(models.TransientModel):
-    _name = 'account.update.tax.tags.wizard'
     _description = 'Update Tax Tags Wizard'
 
     company_id = fields.Many2one(comodel_name='res.company', required=True, readonly=True, default=lambda self: self.env.company)

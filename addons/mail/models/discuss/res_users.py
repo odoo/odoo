@@ -5,7 +5,7 @@ from odoo.addons.base.models.res_users import is_selection_groups
 
 
 class ResUsers(models.Model):
-    _inherit = "res.users"
+    _inherit = ["res.users"]
 
     @api.model_create_multi
     def create(self, vals_list):

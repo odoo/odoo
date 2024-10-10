@@ -4,7 +4,6 @@ from odoo import api, models
 
 
 class EventRegistrationAnswer(models.Model):
-    _name = 'event.registration.answer'
     _inherit = ['event.registration.answer', 'pos.load.mixin']
 
     @api.model

@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class StockRule(models.Model):
-    _inherit = 'stock.rule'
+    _inherit = ['stock.rule']
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
@@ -23,7 +23,7 @@ class StockRule(models.Model):
 
 
 class ProcurementGroup(models.Model):
-    _inherit = "procurement.group"
+    _inherit = ["procurement.group"]
 
     @api.model
     def _get_rule_domain(self, location, values):
@@ -32,8 +32,9 @@ class ProcurementGroup(models.Model):
             domain = expression.AND([domain, [('company_id', '=', values['company_id'].id)]])
         return domain
 
+
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = ['stock.picking']
 
     is_dropship = fields.Boolean("Is a Dropship", compute='_compute_is_dropship')
 
@@ -46,8 +47,9 @@ class StockPicking(models.Model):
         self.ensure_one()
         return super()._is_to_external_location() or self.is_dropship
 
+
 class StockPickingType(models.Model):
-    _inherit = 'stock.picking.type'
+    _inherit = ['stock.picking.type']
 
     code = fields.Selection(
         selection_add=[('dropship', 'Dropship')], ondelete={'dropship': lambda recs: recs.write({'code': 'outgoing', 'active': False})})
@@ -80,7 +82,7 @@ class StockPickingType(models.Model):
 
 
 class StockLot(models.Model):
-    _inherit = 'stock.lot'
+    _inherit = ['stock.lot']
 
     def _compute_last_delivery_partner_id(self):
         super()._compute_last_delivery_partner_id()

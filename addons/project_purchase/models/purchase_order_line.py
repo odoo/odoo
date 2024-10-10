@@ -4,7 +4,7 @@ from odoo import api, models
 
 
 class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+    _inherit = ['purchase.order.line']
 
     @api.depends('product_id', 'order_id.partner_id', 'order_id.project_id')
     def _compute_analytic_distribution(self):

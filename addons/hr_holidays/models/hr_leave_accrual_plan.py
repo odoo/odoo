@@ -10,8 +10,7 @@ DAY_SELECT_VALUES = [str(i) for i in range(1, 29)] + ['last']
 DAY_SELECT_SELECTION_NO_LAST = tuple(zip(DAY_SELECT_VALUES, (str(i) for i in range(1, 29))))
 
 
-class AccrualPlan(models.Model):
-    _name = "hr.leave.accrual.plan"
+class HrLeaveAccrualPlan(models.Model):
     _description = "Accrual Plan"
 
     active = fields.Boolean(default=True)

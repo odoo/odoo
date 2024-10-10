@@ -6,7 +6,7 @@ from odoo.tools.misc import str2bool
 
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     @api.model
     def web_create_users(self, emails):

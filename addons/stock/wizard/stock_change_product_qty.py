@@ -5,8 +5,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class ProductChangeQuantity(models.TransientModel):
-    _name = "stock.change.product.qty"
+class StockChangeProductQty(models.TransientModel):
     _description = "Change Product Quantity"
 
     product_id = fields.Many2one('product.product', 'Product', required=True)

@@ -3,7 +3,7 @@ from odoo import models
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def _get_name_invoice_report(self):
         if self.company_id.account_fiscal_country_id.code == 'AU':

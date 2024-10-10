@@ -59,7 +59,7 @@ def get_cloud_storage_azure_user_delegation_key(env):
 
 
 class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+    _inherit = ['ir.attachment']
     _cloud_storage_azure_url_pattern = re.compile(r'https://(?P<account_name>[\w]+).blob.core.windows.net/(?P<container_name>[\w]+)/(?P<blob_name>[^?]+)')
 
     def _get_cloud_storage_azure_info(self):

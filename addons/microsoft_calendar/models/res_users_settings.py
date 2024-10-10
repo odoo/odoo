@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class ResUsersSettings(models.Model):
-    _inherit = "res.users.settings"
+    _inherit = ["res.users.settings"]
 
     # Microsoft Calendar settings.
     microsoft_calendar_sync_token = fields.Char('Microsoft Next Sync Token', copy=False, groups='base.group_system')

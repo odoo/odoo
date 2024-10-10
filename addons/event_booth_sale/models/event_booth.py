@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class EventBooth(models.Model):
-    _inherit = 'event.booth'
+    _inherit = ['event.booth']
 
     # registrations
     event_booth_registration_ids = fields.One2many('event.booth.registration', 'event_booth_id')

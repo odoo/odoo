@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
-    _inherit = "sale.order"
+    _inherit = ["sale.order"]
 
     margin = fields.Monetary("Margin", compute='_compute_margin', store=True)
     margin_percent = fields.Float("Margin (%)", compute='_compute_margin', store=True, aggregator="avg")

@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+    _inherit = ["sale.order.line"]
     _description = "Sales Order Line"
 
     sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')

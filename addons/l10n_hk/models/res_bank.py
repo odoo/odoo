@@ -8,7 +8,7 @@ from odoo.tools import single_email_re
 
 
 class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+    _inherit = ['res.partner.bank']
 
     proxy_type = fields.Selection(selection_add=[('id', "FPS ID"), ('mobile', "Mobile Number"), ('email', "Email Address")],
                                   ondelete={'id': 'set default', 'mobile': 'set default', 'email': 'set default'})

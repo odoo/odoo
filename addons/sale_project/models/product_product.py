@@ -4,7 +4,7 @@ from odoo import api, models
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     @api.onchange('service_tracking')
     def _onchange_service_tracking(self):

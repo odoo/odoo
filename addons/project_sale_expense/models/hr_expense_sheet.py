@@ -4,7 +4,7 @@ from odoo import models
 
 
 class HrExpenseSheet(models.Model):
-    _inherit = "hr.expense.sheet"
+    _inherit = ["hr.expense.sheet"]
 
     def _do_create_moves(self):
         """ When creating the move of the expense, if the AA is given in the project of the SO, we take it as reference in the distribution.

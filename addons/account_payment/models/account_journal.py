@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class AccountJournal(models.Model):
-    _inherit = "account.journal"
+    _inherit = ["account.journal"]
 
     def _get_available_payment_method_lines(self, payment_type):
         lines = super()._get_available_payment_method_lines(payment_type)

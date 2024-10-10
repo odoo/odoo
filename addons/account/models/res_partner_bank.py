@@ -10,7 +10,6 @@ from odoo.tools.image import image_data_uri
 
 
 class ResPartnerBank(models.Model):
-    _name = 'res.partner.bank'
     _inherit = ['res.partner.bank', 'mail.thread', 'mail.activity.mixin']
 
     journal_id = fields.One2many(

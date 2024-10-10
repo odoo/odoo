@@ -4,8 +4,7 @@
 from odoo import fields, models
 
 
-class PackageType(models.Model):
-    _name = 'stock.package.type'
+class StockPackageType(models.Model):
     _description = "Stock package type"
 
     def _get_default_length_uom(self):

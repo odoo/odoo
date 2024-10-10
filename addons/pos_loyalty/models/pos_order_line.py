@@ -3,8 +3,9 @@
 
 from odoo import fields, models, api
 
+
 class PosOrderLine(models.Model):
-    _inherit = 'pos.order.line'
+    _inherit = ['pos.order.line']
 
     is_reward_line = fields.Boolean(
         help="Whether this line is part of a reward or not.")

@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class AccountFiscalPosition(models.Model):
-    _inherit = 'account.fiscal.position'
+    _inherit = ['account.fiscal.position']
 
     @api.ondelete(at_uninstall=False)
     def _never_unlink_declaration_of_intent_fiscal_position(self):

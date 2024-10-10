@@ -10,8 +10,8 @@ from odoo.fields import Datetime
 _logger = logging.getLogger(__name__)
 
 
-class Employee(models.AbstractModel):
-    _inherit = 'hr.employee.base'
+class HrEmployeeBase(models.AbstractModel):
+    _inherit = ['hr.employee.base']
 
     email_sent = fields.Boolean(default=False)
     ip_connected = fields.Boolean(default=False)

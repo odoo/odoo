@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     # if set, the matrix of the products configurable by matrix will be shown
     # on the report of the order.

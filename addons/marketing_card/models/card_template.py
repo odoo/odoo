@@ -8,8 +8,7 @@ TEMPLATE_DIMENSIONS = (600, 315)
 TEMPLATE_RATIO = 40 / 21
 
 
-class CardCampaignTemplate(models.Model):
-    _name = 'card.template'
+class CardTemplate(models.Model):
     _description = 'Marketing Card Template'
 
     name = fields.Char(required=True)

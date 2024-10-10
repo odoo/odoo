@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     landed_costs_ids = fields.One2many('stock.landed.cost', 'vendor_bill_id', string='Landed Costs')
     landed_costs_visible = fields.Boolean(compute='_compute_landed_costs_visible')
@@ -53,7 +53,7 @@ class AccountMove(models.Model):
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     product_type = fields.Selection(related='product_id.type', readonly=True)
     is_landed_costs_line = fields.Boolean()

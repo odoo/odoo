@@ -5,7 +5,7 @@ from odoo.http import request
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+    _inherit = ['ir.http']
 
     @classmethod
     def _pre_dispatch(cls, rule, args):

@@ -7,8 +7,8 @@ from odoo import api, fields, models
 from odoo.tools import SQL
 
 
-class Partner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model):
+    _inherit = ['res.partner']
 
     meeting_count = fields.Integer("# Meetings", compute='_compute_meeting_count')
     meeting_ids = fields.Many2many('calendar.event', 'calendar_event_res_partner_rel', 'res_partner_id',

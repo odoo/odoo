@@ -7,7 +7,6 @@ from odoo.tools import SQL
 
 
 class AccountPayment(models.Model):
-    _name = "account.payment"
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _description = "Payments"
     _order = "date desc, name desc"
@@ -1122,9 +1121,10 @@ class AccountPayment(models.Model):
 
 
 # For optimization purpose, creating the reverse relation of m2o in _inherits saves
+
+
 # a lot of SQL queries
 class AccountMove(models.Model):
-    _name = "account.move"
     _inherit = ['account.move']
 
     payment_ids = fields.One2many('account.payment', 'move_id', string='Payments')

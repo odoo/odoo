@@ -4,7 +4,7 @@ from odoo import models
 
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     def _can_manage_unsplash_settings(self):
         self.ensure_one()

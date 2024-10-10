@@ -5,8 +5,7 @@ from odoo import _, api, models, fields
 from odoo.exceptions import ValidationError
 
 
-class EventConfigurator(models.TransientModel):
-    _name = 'event.event.configurator'
+class EventEventConfigurator(models.TransientModel):
     _description = 'Event Configurator'
 
     product_id = fields.Many2one('product.product', string="Product", readonly=True)

@@ -9,7 +9,6 @@ from odoo.osv import expression
 
 
 class LoyaltyReward(models.Model):
-    _name = 'loyalty.reward'
     _description = 'Loyalty Reward'
     _rec_name = 'description'
     _order = 'required_points asc'

@@ -5,7 +5,7 @@ from odoo import models
 
 
 class ResCompany(models.Model):
-    _inherit = "res.company"
+    _inherit = ["res.company"]
 
     def _get_social_media_links(self):
         social_media_links = super()._get_social_media_links()

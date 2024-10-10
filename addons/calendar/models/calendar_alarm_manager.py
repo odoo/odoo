@@ -8,8 +8,7 @@ from odoo import api, fields, models
 from odoo.tools import plaintext2html
 
 
-class AlarmManager(models.AbstractModel):
-    _name = 'calendar.alarm_manager'
+class CalendarAlarm_Manager(models.AbstractModel):
     _description = 'Event Alarm Manager'
 
     def _get_next_potential_limit_alarm(self, alarm_type, seconds=None, partners=None):

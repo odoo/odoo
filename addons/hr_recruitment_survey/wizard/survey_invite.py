@@ -7,7 +7,7 @@ from odoo.tools.misc import clean_context
 
 
 class SurveyInvite(models.TransientModel):
-    _inherit = "survey.invite"
+    _inherit = ["survey.invite"]
 
     applicant_id = fields.Many2one('hr.applicant', string='Applicant')
 

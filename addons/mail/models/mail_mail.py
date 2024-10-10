@@ -25,7 +25,6 @@ _UNFOLLOW_REGEX = re.compile(r'<span id="mail_unfollow".*?<\/span>', re.DOTALL)
 class MailMail(models.Model):
     """ Model holding RFC2822 email messages to send. This model also provides
         facilities to queue and send new email messages.  """
-    _name = 'mail.mail'
     _description = 'Outgoing Mails'
     _inherits = {'mail.message': 'mail_message_id'}
     _order = 'id desc'

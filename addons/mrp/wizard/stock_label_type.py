@@ -4,8 +4,8 @@
 from odoo import _, fields, models
 
 
-class ProductLabelLayout(models.TransientModel):
-    _inherit = 'picking.label.type'
+class PickingLabelType(models.TransientModel):
+    _inherit = ['picking.label.type']
 
     production_ids = fields.Many2many('mrp.production')
 

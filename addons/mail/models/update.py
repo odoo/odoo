@@ -15,8 +15,7 @@ from odoo.tools import config
 _logger = logging.getLogger(__name__)
 
 
-class PublisherWarrantyContract(AbstractModel):
-    _name = "publisher_warranty.contract"
+class Publisher_WarrantyContract(AbstractModel):
     _description = 'Publisher Warranty Contract'
 
     @api.model

@@ -13,8 +13,11 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class BaseModel(models.AbstractModel):
-    _inherit = 'base'
+    _name = "base"
+
+    _inherit = ['base']
 
     def _valid_field_parameter(self, field, name):
         # allow tracking on abstract models; see also 'mail.thread'

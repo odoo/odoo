@@ -7,7 +7,7 @@ from odoo import models
 
 
 class IrUiMenu(models.Model):
-    _inherit = "ir.ui.menu"
+    _inherit = ["ir.ui.menu"]
 
     def load_web_menus(self, debug):
         """ Loads all menu items (all applications and their sub-menus) and

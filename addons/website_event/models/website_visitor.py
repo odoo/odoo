@@ -6,7 +6,6 @@ from odoo.osv import expression
 
 
 class WebsiteVisitor(models.Model):
-    _name = 'website.visitor'
     _inherit = ['website.visitor']
 
     event_registration_ids = fields.One2many(

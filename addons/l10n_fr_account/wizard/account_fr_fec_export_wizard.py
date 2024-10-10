@@ -8,8 +8,7 @@ from odoo.tools.misc import get_lang
 from stdnum.fr import siren
 
 
-class FecExportWizard(models.TransientModel):
-    _name = 'l10n_fr.fec.export.wizard'
+class L10n_FrFecExportWizard(models.TransientModel):
     _description = 'Fichier Echange Informatise'
 
     date_from = fields.Date(string='Start Date', required=True, default=lambda self: self._context.get('report_dates', {}).get('date_from'))

@@ -2,7 +2,7 @@ from odoo import api, models, _
 
 
 class AccountMoveSend(models.AbstractModel):
-    _inherit = 'account.move.send'
+    _inherit = ['account.move.send']
 
     # -------------------------------------------------------------------------
     # ALERTS

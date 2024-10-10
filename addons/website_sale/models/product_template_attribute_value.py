@@ -4,7 +4,7 @@ from odoo import models
 
 
 class ProductTemplateAttributeValue(models.Model):
-    _inherit = 'product.template.attribute.value'
+    _inherit = ['product.template.attribute.value']
 
     def _get_extra_price(self, combination_info):
         self.ensure_one()

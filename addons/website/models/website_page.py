@@ -9,8 +9,7 @@ from odoo.tools import escape_psql, SQL
 from odoo.tools.translate import _
 
 
-class Page(models.Model):
-    _name = 'website.page'
+class WebsitePage(models.Model):
     _inherits = {'ir.ui.view': 'view_id'}
     _inherit = [
         'website.published.multi.mixin',
@@ -160,7 +159,7 @@ class Page(models.Model):
                 if vals['visibility'] != 'restricted_group':
                     vals['groups_id'] = False
         self.env.registry.clear_cache()  # write on page == write on view that invalid cache
-        return super(Page, self).write(vals)
+        return super().write(vals)
 
     def get_website_meta(self):
         self.ensure_one()

@@ -11,7 +11,7 @@ TIMEOUT = 10
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = 'pos.payment.method'
+    _inherit = ['pos.payment.method']
 
     # Viva Wallet
     viva_wallet_merchant_id = fields.Char(string="Merchant ID", help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/merchant-id-and-api-key/')

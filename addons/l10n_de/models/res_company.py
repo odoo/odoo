@@ -8,7 +8,7 @@ import stdnum.exceptions
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     l10n_de_stnr = fields.Char(
         string="St.-Nr.",

@@ -7,8 +7,8 @@ from odoo.exceptions import UserError, ValidationError
 from . import membership
 
 
-class Partner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model):
+    _inherit = ['res.partner']
 
     associate_member = fields.Many2one('res.partner', string='Associate Member',
         help="A member with whom you want to associate your membership."

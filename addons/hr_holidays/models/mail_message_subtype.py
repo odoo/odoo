@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class MailMessageSubtype(models.Model):
-    _inherit = 'mail.message.subtype'
+    _inherit = ['mail.message.subtype']
 
     def _get_department_subtype(self):
         return self.search([

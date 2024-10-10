@@ -5,8 +5,7 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_compare
 
 
-class L10nInWithholdWizard(models.TransientModel):
-    _name = 'l10n_in.withhold.wizard'
+class L10n_InWithholdWizard(models.TransientModel):
     _description = "Withhold Wizard"
     _check_company_auto = True
 
@@ -243,8 +242,7 @@ class L10nInWithholdWizard(models.TransientModel):
             raise ValidationError(_("You must input at least one withhold line"))
 
 
-class L10nInWithholdWizardLine(models.TransientModel):
-    _name = 'l10n_in.withhold.wizard.line'
+class L10n_InWithholdWizardLine(models.TransientModel):
     _description = "Withhold Wizard Lines"
 
     base = fields.Monetary(string="Base")

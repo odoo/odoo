@@ -8,7 +8,7 @@ from odoo.osv import expression
 
 
 class CrmLead(models.Model):
-    _inherit = 'crm.lead'
+    _inherit = ['crm.lead']
 
     sale_amount_total = fields.Monetary(compute='_compute_sale_data', string="Sum of Orders", help="Untaxed Total of Confirmed Orders", currency_field='company_currency')
     quotation_count = fields.Integer(compute='_compute_sale_data', string="Number of Quotations")

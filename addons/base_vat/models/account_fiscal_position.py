@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class AccountFiscalPosition(models.Model):
-    _inherit = 'account.fiscal.position'
+    _inherit = ['account.fiscal.position']
 
     @api.model_create_multi
     def create(self, vals_list):

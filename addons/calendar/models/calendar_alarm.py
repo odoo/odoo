@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 
 
-class Alarm(models.Model):
-    _name = 'calendar.alarm'
+class CalendarAlarm(models.Model):
     _description = 'Event Alarm'
 
     _interval_selection = {'minutes': 'Minutes', 'hours': 'Hours', 'days': 'Days'}

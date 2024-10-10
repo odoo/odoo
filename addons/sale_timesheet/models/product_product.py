@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     @tools.ormcache()
     def _get_default_uom_id(self):

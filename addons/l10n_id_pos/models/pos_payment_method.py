@@ -4,7 +4,7 @@ from odoo import _, models
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = "pos.payment.method"
+    _inherit = ["pos.payment.method"]
 
     def l10n_id_verify_qris_status(self, trx_uuid):
         """ Verify qris payment status from the provided transaction UUID

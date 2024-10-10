@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class HrDepartureWizard(models.TransientModel):
-    _inherit = 'hr.departure.wizard'
+    _inherit = ['hr.departure.wizard']
 
     def _get_employee_departure_date(self):
         employee = self.env['hr.employee'].browse(self.env.context['active_id'])

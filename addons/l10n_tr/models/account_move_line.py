@@ -2,7 +2,7 @@ from odoo import models
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def _compute_account_id(self):
         # OVERRIDE

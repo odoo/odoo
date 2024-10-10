@@ -13,10 +13,9 @@ from odoo.osv import expression
 from odoo.tools import is_html_empty
 
 
-class Survey(models.Model):
+class SurveySurvey(models.Model):
     """ Settings for a multi-page/multi-question survey. Each survey can have one or more attached pages
     and each page can display one or more questions. """
-    _name = 'survey.survey'
     _description = 'Survey'
     _order = 'create_date DESC'
     _rec_name = 'title'
@@ -441,7 +440,7 @@ class Survey(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        surveys = super(Survey, self).create(vals_list)
+        surveys = super().create(vals_list)
         for survey_sudo in surveys.filtered(lambda survey: survey.certification_give_badge).sudo():
             survey_sudo._create_certification_badge_trigger()
         return surveys
@@ -454,7 +453,7 @@ class Survey(models.Model):
             or speed_limit is not None and s.session_speed_rating_time_limit != speed_limit
         ))
 
-        result = super(Survey, self).write(vals)
+        result = super().write(vals)
         if 'certification_give_badge' in vals:
             return self.sudo()._handle_certification_badges(vals)
 
@@ -498,7 +497,7 @@ class Survey(models.Model):
         return [dict(vals, title=self.env._("%s (copy)", survey.title)) for survey, vals in zip(self, vals_list)]
 
     def toggle_active(self):
-        super(Survey, self).toggle_active()
+        super().toggle_active()
         activated = self.filtered(lambda survey: survey.active)
         activated.certification_badge_id.action_unarchive()
         (self - activated).certification_badge_id.action_archive()

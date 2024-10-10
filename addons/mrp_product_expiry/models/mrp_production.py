@@ -4,8 +4,8 @@
 from odoo import models, _
 
 
-class MrpWorkorder(models.Model):
-    _inherit = 'mrp.production'
+class MrpProduction(models.Model):
+    _inherit = ['mrp.production']
 
     def pre_button_mark_done(self):
         confirm_expired_lots = self._check_expired_lots()

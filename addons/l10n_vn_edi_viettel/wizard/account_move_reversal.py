@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMoveReversal(models.TransientModel):
-    _inherit = 'account.move.reversal'
+    _inherit = ['account.move.reversal']
 
     l10n_vn_edi_adjustment_type = fields.Selection(
         selection=[

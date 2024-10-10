@@ -7,7 +7,7 @@ from odoo.tools import float_compare
 
 
 class ResCurrencyRate(models.Model):
-    _inherit = 'res.currency.rate'
+    _inherit = ['res.currency.rate']
 
     @api.onchange('company_rate')
     def _onchange_rate_warning(self):

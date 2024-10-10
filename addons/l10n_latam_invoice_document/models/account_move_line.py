@@ -6,7 +6,7 @@ from odoo.tools.sql import column_exists, create_column
 
 class AccountMoveLine(models.Model):
 
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def _auto_init(self):
         # Skip the computation of the field `l10n_latam_document_type_id` at the module installation

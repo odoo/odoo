@@ -5,12 +5,12 @@ import odoo.exceptions
 from odoo import models, api
 from odoo.tools.safe_eval import safe_eval
 
-class m(models.Model):
+
+class TestExceptionsModel(models.Model):
     """ This model exposes a few methods that will raise the different
         exceptions that must be handled by the server (and its RPC layer)
         and the clients.
     """
-    _name = 'test.exceptions.model'
     _description = 'Test Exception Model'
 
     def generate_redirect_warning(self):

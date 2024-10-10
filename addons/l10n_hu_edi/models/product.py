@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     l10n_hu_product_code_type = fields.Selection(
         selection=[

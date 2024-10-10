@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class AccountPayment(models.Model):
-    _inherit = "account.payment"
+    _inherit = ["account.payment"]
 
     expense_sheet_id = fields.Many2one(related='move_id.expense_sheet_id')
 

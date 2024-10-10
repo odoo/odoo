@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = 'pos.payment.method'
+    _inherit = ['pos.payment.method']
 
     mp_bearer_token = fields.Char(
         string="Production user token",

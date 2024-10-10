@@ -16,8 +16,7 @@ from .project_update import STATUS_COLOR
 from .project_task import CLOSED_STATES
 
 
-class Project(models.Model):
-    _name = "project.project"
+class ProjectProject(models.Model):
     _description = "Project"
     _inherit = [
         'portal.mixin',
@@ -428,7 +427,7 @@ class Project(models.Model):
         default = dict(default or {})
         # Since we dont want to copy the milestones if the original project has the feature disabled, we set the milestones to False by default.
         default['milestone_ids'] = False
-        new_projects = super(Project, self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)).copy(default=default)
+        new_projects = super(ProjectProject, self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)).copy(default=default)
         if 'milestone_mapping' not in self.env.context:
             self = self.with_context(milestone_mapping={})
         actions_per_project = dict(self.env['ir.embedded.actions']._read_group(

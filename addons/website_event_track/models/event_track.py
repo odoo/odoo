@@ -11,8 +11,7 @@ from odoo.tools.mail import is_html_empty
 from odoo.tools.translate import _, html_translate
 
 
-class Track(models.Model):
-    _name = "event.track"
+class EventTrack(models.Model):
     _description = 'Event Track'
     _order = 'priority, date'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'website.seo.metadata', 'website.published.mixin']
@@ -152,7 +151,7 @@ class Track(models.Model):
 
     @api.depends('name')
     def _compute_website_url(self):
-        super(Track, self)._compute_website_url()
+        super()._compute_website_url()
         for track in self:
             if track.id:
                 track.website_url = '/event/%s/track/%s' % (self.env['ir.http']._slug(track.event_id), self.env['ir.http']._slug(track))
@@ -397,7 +396,7 @@ class Track(models.Model):
             if values.get('website_cta_url'):
                 values['website_cta_url'] = self.env['res.partner']._clean_website(values['website_cta_url'])
 
-        tracks = super(Track, self).create(vals_list)
+        tracks = super().create(vals_list)
 
         post_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
         for track in tracks:
@@ -422,7 +421,7 @@ class Track(models.Model):
         if vals.get('stage_id'):
             stage = self.env['event.track.stage'].browse(vals['stage_id'])
             self._synchronize_with_stage(stage)
-        res = super(Track, self).write(vals)
+        res = super().write(vals)
         return res
 
     def _synchronize_with_stage(self, stage):
@@ -478,10 +477,10 @@ class Track(models.Model):
                 self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.is_cancel', '=', False),
                 ]).write({'partner_id': new_partner[0].id})
-        return super(Track, self)._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message, msg_vals)
 
     def _track_template(self, changes):
-        res = super(Track, self)._track_template(changes)
+        res = super()._track_template(changes)
         track = self[0]
         if 'stage_id' in changes and track.stage_id.mail_template_id:
             res['stage_id'] = (track.stage_id.mail_template_id, {
@@ -498,7 +497,7 @@ class Track(models.Model):
             return self.env.ref('website_event_track.mt_track_blocked')
         elif 'kanban_state' in init_values and self.kanban_state == 'done':
             return self.env.ref('website_event_track.mt_track_ready')
-        return super(Track, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     # ------------------------------------------------------------
     # ACTION

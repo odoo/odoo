@@ -5,7 +5,7 @@ from odoo import fields, models, _
 
 
 class HrExpenseSheet(models.Model):
-    _inherit = "hr.expense.sheet"
+    _inherit = ["hr.expense.sheet"]
 
     sale_order_count = fields.Integer(compute='_compute_sale_order_count')
 

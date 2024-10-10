@@ -18,8 +18,7 @@ from odoo.tools.float_utils import float_round
 _logger = logging.getLogger(__name__)
 
 
-class Digest(models.Model):
-    _name = 'digest.digest'
+class DigestDigest(models.Model):
     _description = 'Digest'
 
     # Digest description

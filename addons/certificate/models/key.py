@@ -31,8 +31,7 @@ def _int_to_bytes(value, byteorder='big'):
     return value.to_bytes((value.bit_length() + 7) // 8, byteorder=byteorder)
 
 
-class Key(models.Model):
-    _name = 'certificate.key'
+class CertificateKey(models.Model):
     _description = 'Cryptographic Keys'
 
     name = fields.Char(string='Name', default="New key")

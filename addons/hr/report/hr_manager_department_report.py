@@ -4,7 +4,6 @@ from odoo import fields, models
 
 
 class HrManagerDepartmentReport(models.AbstractModel):
-    _name = 'hr.manager.department.report'
     _description = 'Hr Manager Department Report'
     _auto = False
 

@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 
 class ChooseDeliveryCarrier(models.TransientModel):
-    _inherit = 'choose.delivery.carrier'
+    _inherit = ['choose.delivery.carrier']
 
     shipping_zip = fields.Char(related='order_id.partner_shipping_id.zip')
     shipping_country_code = fields.Char(related='order_id.partner_shipping_id.country_id.code')

@@ -2,7 +2,7 @@ from odoo import fields, models, api
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     l10n_fr_is_company_french = fields.Boolean(compute='_compute_l10n_fr_is_company_french')
 

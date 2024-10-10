@@ -7,7 +7,6 @@ from odoo.tools.misc import format_datetime
 
 
 class StockQuantityHistory(models.TransientModel):
-    _name = 'stock.quantity.history'
     _description = 'Stock Quantity History'
 
     inventory_datetime = fields.Datetime('Inventory at Date',

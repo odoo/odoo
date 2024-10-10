@@ -5,7 +5,7 @@ from odoo import models
 
 
 class MailComposeMessage(models.TransientModel):
-    _inherit = 'mail.compose.message'
+    _inherit = ['mail.compose.message']
 
     def _action_send_mail(self, auto_commit=False):
         if self.model == 'repair.order':

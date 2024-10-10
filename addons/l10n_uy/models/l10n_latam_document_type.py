@@ -4,9 +4,9 @@ from odoo.exceptions import UserError
 import re
 
 
-class L10nAccountDocumentType(models.Model):
+class L10n_LatamDocumentType(models.Model):
 
-    _inherit = 'l10n_latam.document.type'
+    _inherit = ['l10n_latam.document.type']
 
     def _format_document_number(self, document_number):
         """ format and validate the document_number"""

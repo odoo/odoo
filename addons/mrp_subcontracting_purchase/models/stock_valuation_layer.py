@@ -4,7 +4,7 @@ from odoo import models
 
 
 class StockValuationLayer(models.Model):
-    _inherit = 'stock.valuation.layer'
+    _inherit = ['stock.valuation.layer']
 
     def _get_layer_price_unit(self):
         """ For a subcontracted product, we want a way to get the subcontracting cost (the price on the PO)

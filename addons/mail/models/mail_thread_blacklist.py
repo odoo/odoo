@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.tools import SQL
 
 
-class MailBlackListMixin(models.AbstractModel):
+class MailThreadBlacklist(models.AbstractModel):
     """ Mixin that is inherited by all model with opt out. This mixin stores a normalized
     email based on primary_email field.
 
@@ -26,7 +26,6 @@ class MailBlackListMixin(models.AbstractModel):
 
     Mail Thread capabilities are required for this mixin. """
 
-    _name = 'mail.thread.blacklist'
     _inherit = ['mail.thread']
     _description = 'Mail Blacklist mixin'
     _primary_email = 'email'
@@ -101,14 +100,14 @@ class MailBlackListMixin(models.AbstractModel):
     def _message_receive_bounce(self, email, partner):
         """ Override of mail.thread generic method. Purpose is to increment the
         bounce counter of the record. """
-        super(MailBlackListMixin, self)._message_receive_bounce(email, partner)
+        super()._message_receive_bounce(email, partner)
         for record in self:
             record.message_bounce = record.message_bounce + 1
 
     def _message_reset_bounce(self, email):
         """ Override of mail.thread generic method. Purpose is to reset the
         bounce counter of the record. """
-        super(MailBlackListMixin, self)._message_reset_bounce(email)
+        super()._message_reset_bounce(email)
         self.write({'message_bounce': 0})
 
     def mail_action_blacklist_remove(self):

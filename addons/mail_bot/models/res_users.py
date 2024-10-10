@@ -4,8 +4,9 @@ from markupsafe import Markup
 
 from odoo import models, fields, _
 
-class Users(models.Model):
-    _inherit = 'res.users'
+
+class ResUsers(models.Model):
+    _inherit = ['res.users']
 
     odoobot_state = fields.Selection(
         [

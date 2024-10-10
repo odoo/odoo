@@ -4,8 +4,9 @@
 from odoo import api, fields, models, _
 from odoo.tools import float_compare
 
+
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     repair_order_ids = fields.One2many(
         comodel_name='repair.order', inverse_name='sale_order_id',
@@ -48,7 +49,7 @@ class SaleOrder(models.Model):
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = ['sale.order.line']
 
     def _compute_qty_delivered(self):
         remaining_so_lines = self

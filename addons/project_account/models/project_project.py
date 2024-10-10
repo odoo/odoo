@@ -7,8 +7,8 @@ from collections import defaultdict
 from odoo import models
 
 
-class Project(models.Model):
-    _inherit = 'project.project'
+class ProjectProject(models.Model):
+    _inherit = ['project.project']
 
     def _add_purchase_items(self, profitability_items, with_action=True):
         domain = self._get_add_purchase_items_domain()

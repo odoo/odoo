@@ -8,7 +8,7 @@ from odoo.tools import OrderedSet
 
 
 class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+    _inherit = ['purchase.order']
 
     mrp_production_count = fields.Integer(
         "Count of MO Source",
@@ -49,7 +49,7 @@ class PurchaseOrder(models.Model):
 
 
 class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+    _inherit = ['purchase.order.line']
 
     def _compute_qty_received(self):
         kit_lines = self.env['purchase.order.line']

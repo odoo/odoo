@@ -5,8 +5,7 @@ from odoo.addons.sms.tools.sms_api import ERROR_MESSAGES, SmsApi
 from odoo.exceptions import ValidationError
 
 
-class SMSAccountPhone(models.TransientModel):
-    _name = 'sms.account.phone'
+class SmsAccountPhone(models.TransientModel):
     _description = 'SMS Account Registration Phone Number Wizard'
 
     account_id = fields.Many2one('iap.account', required=True)

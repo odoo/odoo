@@ -6,7 +6,6 @@ from odoo import fields, models
 class UtmTestSourceMixin(models.Model):
     """ Test utm.source.mixin """
     _description = "UTM Source Mixin Test Model"
-    _name = "utm.test.source.mixin"
     _order = "id DESC"
     _rec_name = "title"
     _inherit = [
@@ -21,7 +20,6 @@ class UtmTestSourceMixinOther(models.Model):
     """ Test utm.source.mixin, similar to the other one, allowing also to test
     cross model uniqueness check """
     _description = "UTM Source Mixin Test Model (another)"
-    _name = "utm.test.source.mixin.other"
     _order = "id DESC"
     _rec_name = "title"
     _inherit = [

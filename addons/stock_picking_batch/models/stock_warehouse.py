@@ -5,7 +5,7 @@ from odoo import models
 
 
 class StockWarehouse(models.Model):
-    _inherit = 'stock.warehouse'
+    _inherit = ['stock.warehouse']
 
     def _get_picking_type_create_values(self, max_sequence):
         data, next_sequence = super()._get_picking_type_create_values(max_sequence)

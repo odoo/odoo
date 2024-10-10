@@ -4,11 +4,11 @@
 from odoo import models
 
 
-class IrConfigParameter(models.Model):
-    _inherit = 'ir.config_parameter'
+class IrConfig_Parameter(models.Model):
+    _inherit = ['ir.config_parameter']
 
     def init(self, force=False):
-        super(IrConfigParameter, self).init(force=force)
+        super().init(force=force)
         if force:
             oauth_oe = self.env.ref('auth_oauth.provider_openerp')
             if not oauth_oe:

@@ -7,8 +7,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
+
 class LoyaltyRule(models.Model):
-    _name = 'loyalty.rule'
     _description = 'Loyalty Rule'
 
     @api.model

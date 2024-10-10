@@ -12,7 +12,7 @@ from odoo.tools.translate import _
 
 
 class ProjectProject(models.Model):
-    _inherit = 'project.project'
+    _inherit = ['project.project']
 
     def _domain_sale_line_id(self):
         domain = expression.AND([

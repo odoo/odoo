@@ -4,8 +4,8 @@ from odoo import api, fields, models
 from odoo.tools import convert
 
 
-class Employee(models.Model):
-    _inherit = 'hr.employee'
+class HrEmployee(models.Model):
+    _inherit = ['hr.employee']
 
     resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")
     employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills",
@@ -19,7 +19,7 @@ class Employee(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(Employee, self).create(vals_list)
+        res = super().create(vals_list)
         if self.env.context.get('salary_simulation'):
             return res
         resume_lines_values = []

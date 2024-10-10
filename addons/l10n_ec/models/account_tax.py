@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class AccountTax(models.Model):
 
-    _inherit = "account.tax"
+    _inherit = ["account.tax"]
 
     l10n_ec_code_base = fields.Char(
         string="Code base",

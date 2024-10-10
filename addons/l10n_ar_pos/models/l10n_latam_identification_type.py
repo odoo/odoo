@@ -3,8 +3,7 @@
 from odoo import models, api
 
 
-class L10nArAfipResponsibilityType(models.Model):
-    _name = 'l10n_latam.identification.type'
+class L10n_LatamIdentificationType(models.Model):
     _inherit = ['l10n_latam.identification.type', 'pos.load.mixin']
 
     @api.model

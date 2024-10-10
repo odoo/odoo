@@ -4,8 +4,7 @@
 from odoo import fields, models
 
 
-class TrackVisitor(models.Model):
-    _name = 'event.track.visitor'
+class EventTrackVisitor(models.Model):
     _inherit = ['event.track.visitor']
 
     quiz_completed = fields.Boolean('Completed')

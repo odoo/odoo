@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 
 
-class Channel(models.Model):
-    _inherit = 'slide.channel'
+class SlideChannel(models.Model):
+    _inherit = ['slide.channel']
 
     forum_id = fields.Many2one('forum.forum', 'Course Forum', copy=False)
     forum_total_posts = fields.Integer('Number of active forum posts', related="forum_id.total_posts")
@@ -27,14 +27,14 @@ class Channel(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        channels = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        channels = super(SlideChannel, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         channels.forum_id.privacy = False
         return channels
 
     def write(self, vals):
         old_forum = self.forum_id
 
-        res = super(Channel, self).write(vals)
+        res = super().write(vals)
         if 'forum_id' in vals:
             self.forum_id.privacy = False
             if old_forum != self.forum_id:

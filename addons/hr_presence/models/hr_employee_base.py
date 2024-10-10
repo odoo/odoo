@@ -3,7 +3,7 @@ from odoo import api, fields, models
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+    _inherit = ["hr.employee.base"]
 
     @api.depends("user_id.im_status", "hr_presence_state_display")
     def _compute_presence_state(self):

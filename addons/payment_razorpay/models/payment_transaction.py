@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _inherit = ['payment.transaction']
 
     def _get_specific_processing_values(self, processing_values):
         """ Override of `payment` to return razorpay-specific processing values.

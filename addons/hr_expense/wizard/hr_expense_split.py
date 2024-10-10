@@ -6,7 +6,6 @@ from odoo.tools import float_compare
 
 
 class HrExpenseSplit(models.TransientModel):
-    _name = 'hr.expense.split'
     _inherit = ['analytic.mixin']
     _description = 'Expense Split'
     _check_company_auto = True

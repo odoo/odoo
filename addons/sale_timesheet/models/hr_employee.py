@@ -4,7 +4,7 @@ from odoo import api, models
 
 
 class HrEmployee(models.Model):
-    _inherit = 'hr.employee'
+    _inherit = ['hr.employee']
 
     @api.model
     def default_get(self, fields):

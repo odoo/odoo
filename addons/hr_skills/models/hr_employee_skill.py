@@ -6,8 +6,8 @@ from odoo.exceptions import ValidationError
 
 from collections import defaultdict
 
-class EmployeeSkill(models.Model):
-    _name = 'hr.employee.skill'
+
+class HrEmployeeSkill(models.Model):
     _description = "Skill level for an employee"
     _order = "skill_type_id, skill_level_id"
     _rec_name = "skill_id"

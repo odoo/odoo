@@ -3,7 +3,7 @@ from odoo import models
 
 
 class PosConfig(models.Model):
-    _inherit = 'pos.config'
+    _inherit = ['pos.config']
 
     def _update_events_seats(self, events):
         data = []

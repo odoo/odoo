@@ -8,7 +8,6 @@ from odoo import api, fields, models
 
 class FleetVehicleLogContract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _name = 'fleet.vehicle.log.contract'
     _description = 'Vehicle Contract'
     _order = 'state desc,expiration_date'
 

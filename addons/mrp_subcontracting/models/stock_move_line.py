@@ -6,7 +6,7 @@ from odoo import _, api, models
 
 
 class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
+    _inherit = ['stock.move.line']
 
     @api.onchange('lot_name', 'lot_id')
     def _onchange_serial_number(self):

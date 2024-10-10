@@ -4,12 +4,12 @@ from odoo import models
 from odoo.tools import format_list
 
 
-class MergePartnerAutomatic(models.TransientModel):
+class BasePartnerMergeAutomaticWizard(models.TransientModel):
 
-    _inherit = 'base.partner.merge.automatic.wizard'
+    _inherit = ['base.partner.merge.automatic.wizard']
 
     def _log_merge_operation(self, src_partners, dst_partner):
-        super(MergePartnerAutomatic, self)._log_merge_operation(src_partners, dst_partner)
+        super()._log_merge_operation(src_partners, dst_partner)
         dst_partner.message_post(
             body=self.env._(
                 "Merged with the following partners: %s",

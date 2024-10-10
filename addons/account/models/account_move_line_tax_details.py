@@ -5,7 +5,7 @@ from odoo.tools import SQL
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     @api.model
     def _get_query_tax_details_from_domain(self, domain, fallback=True) -> SQL:

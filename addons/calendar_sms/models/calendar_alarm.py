@@ -5,7 +5,7 @@ from odoo import _, api, fields, models
 
 
 class CalendarAlarm(models.Model):
-    _inherit = 'calendar.alarm'
+    _inherit = ['calendar.alarm']
 
     alarm_type = fields.Selection(selection_add=[
         ('sms', 'SMS Text Message')

@@ -3,7 +3,7 @@ from odoo import models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     def create(self, vals):
         configs = super().create(vals)

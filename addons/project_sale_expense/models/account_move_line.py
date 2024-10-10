@@ -4,7 +4,7 @@ from odoo import models
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def _sale_determine_order(self):
         """ For move lines created from expense, we override the normal behavior.

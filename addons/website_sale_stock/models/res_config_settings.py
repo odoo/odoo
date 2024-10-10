@@ -5,7 +5,7 @@ from odoo import fields, models, api
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     allow_out_of_stock_order = fields.Boolean(
         string='Continue selling when out-of-stock',

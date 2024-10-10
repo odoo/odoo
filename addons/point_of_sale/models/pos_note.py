@@ -4,7 +4,6 @@ from odoo import fields, models, api
 
 
 class PosNote(models.Model):
-    _name = 'pos.note'
     _description = 'PoS Note'
     _inherit = ['pos.load.mixin']
 

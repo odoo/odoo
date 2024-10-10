@@ -5,7 +5,7 @@ from odoo import models
 
 
 class WebsiteMenu(models.Model):
-    _inherit = "website.menu"
+    _inherit = ["website.menu"]
 
     def unlink(self):
         """ Override to synchronize event configuration fields with menu deletion. """

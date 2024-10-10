@@ -7,7 +7,7 @@ from odoo.addons.payment import utils as payment_utils
 
 
 class PaymentLinkWizard(models.TransientModel):
-    _inherit = 'payment.link.wizard'
+    _inherit = ['payment.link.wizard']
 
     invoice_amount_due = fields.Monetary(
         string="Amount Due",

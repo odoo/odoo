@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 
 
 class PosMakePayment(models.TransientModel):
-    _name = 'pos.make.payment'
     _description = 'Point of Sale Make Payment Wizard'
 
     def _default_config(self):

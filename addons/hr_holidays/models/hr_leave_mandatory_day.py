@@ -4,8 +4,7 @@ from random import randint
 from odoo import fields, models
 
 
-class MandatoryDay(models.Model):
-    _name = 'hr.leave.mandatory.day'
+class HrLeaveMandatoryDay(models.Model):
     _description = 'Mandatory Day'
     _order = 'start_date desc, end_date desc'
 

@@ -4,7 +4,7 @@ from odoo import models
 
 
 class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+    _inherit = ['purchase.order']
 
     def _prepare_picking(self):
         res = super()._prepare_picking()

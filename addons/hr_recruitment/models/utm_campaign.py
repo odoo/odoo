@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 
 class UtmCampaign(models.Model):
-    _inherit = 'utm.campaign'
+    _inherit = ['utm.campaign']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_utm_campaign_job(self):

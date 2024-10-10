@@ -5,7 +5,7 @@ from odoo import models, fields, api
 
 
 class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+    _inherit = ['purchase.order']
 
     subcontracting_resupply_picking_count = fields.Integer(
         "Count of Subcontracting Resupply", compute='_compute_subcontracting_resupply_picking_count',

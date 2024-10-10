@@ -5,7 +5,6 @@ from odoo import api, fields, models, tools
 
 
 class HrEmployeePublic(models.Model):
-    _name = "hr.employee.public"
     _inherit = ["hr.employee.base"]
     _description = 'Public Employee'
     _order = 'name'

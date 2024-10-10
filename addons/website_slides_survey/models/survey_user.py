@@ -5,8 +5,8 @@ from odoo import fields, models, api
 from odoo.osv import expression
 
 
-class SurveyUserInput(models.Model):
-    _inherit = 'survey.user_input'
+class SurveyUser_Input(models.Model):
+    _inherit = ['survey.user_input']
 
     slide_id = fields.Many2one('slide.slide', 'Related course slide',
         help="The related course slide when there is no membership information")
@@ -16,12 +16,12 @@ class SurveyUserInput(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        records = super(SurveyUserInput, self).create(vals_list)
+        records = super().create(vals_list)
         records._check_for_failed_attempt()
         return records
 
     def write(self, vals):
-        res = super(SurveyUserInput, self).write(vals)
+        res = super().write(vals)
         if 'state' in vals:
             self._check_for_failed_attempt()
         return res

@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class ResPartnerGrade(models.Model):
-    _name = 'res.partner.grade'
     _order = 'sequence'
     _inherit = ['website.published.mixin']
     _description = 'Partner Grade'

@@ -4,7 +4,7 @@ from odoo import models, fields
 
 
 class SaleReport(models.Model):
-    _inherit = 'sale.report'
+    _inherit = ['sale.report']
 
     project_id = fields.Many2one(comodel_name='project.project', readonly=True)
 

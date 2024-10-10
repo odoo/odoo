@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class ProductDocument(models.Model):
-    _inherit = 'product.document'
+    _inherit = ['product.document']
 
     shown_on_product_page = fields.Boolean(string="Publish on website")
 

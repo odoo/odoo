@@ -131,9 +131,8 @@ def _verify_check_hostname_callback(cnx, x509, err_no, err_depth, return_code, *
     return True
 
 
-class IrMailServer(models.Model):
+class IrMail_Server(models.Model):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
-    _name = "ir.mail_server"
     _description = 'Mail Server'
     _order = 'sequence, id'
     _allow_sudo_commands = False

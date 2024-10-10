@@ -5,7 +5,7 @@ from odoo import models
 
 
 class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+    _inherit = ["account.move.line"]
 
     def _get_stock_valuation_layers(self, move):
         """ Do not handle the invoice correction for kit. It has to be done

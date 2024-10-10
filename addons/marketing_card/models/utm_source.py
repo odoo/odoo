@@ -2,7 +2,7 @@ from odoo import _, api, models, exceptions
 
 
 class UtmSource(models.Model):
-    _inherit = 'utm.source'
+    _inherit = ['utm.source']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_utm_source_marketing_card(self):

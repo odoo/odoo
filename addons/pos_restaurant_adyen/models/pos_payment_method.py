@@ -5,7 +5,7 @@ from odoo import fields, models, api
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = 'pos.payment.method'
+    _inherit = ['pos.payment.method']
 
     adyen_merchant_account = fields.Char(help='The POS merchant account code used in Adyen')
 

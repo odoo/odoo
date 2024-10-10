@@ -15,8 +15,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class Contract(models.Model):
-    _name = 'hr.contract'
+class HrContract(models.Model):
     _description = 'Contract'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
@@ -301,7 +300,7 @@ class Contract(models.Model):
 
     def write(self, vals):
         old_state = {c.id: c.state for c in self}
-        res = super(Contract, self).write(vals)
+        res = super().write(vals)
         new_state = {c.id: c.state for c in self}
         if vals.get('state') == 'open':
             self._assign_open_contract()
@@ -354,7 +353,7 @@ class Contract(models.Model):
             return self.env.ref('hr_contract.mt_contract_pending')
         elif 'state' in init_values and self.state == 'close':
             return self.env.ref('hr_contract.mt_contract_close')
-        return super(Contract, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     def _is_struct_from_country(self, country_code):
         self.ensure_one()

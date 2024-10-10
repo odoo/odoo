@@ -15,7 +15,7 @@ account.move object: add support for Belgian structured communication
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def _get_invoice_reference_be_partner(self):
         """ This computes the reference based on the belgian national standard

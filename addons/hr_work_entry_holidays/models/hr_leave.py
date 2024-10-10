@@ -12,13 +12,13 @@ from odoo.tools import format_date
 
 
 class HrLeaveType(models.Model):
-    _inherit = 'hr.leave.type'
+    _inherit = ['hr.leave.type']
 
     work_entry_type_id = fields.Many2one('hr.work.entry.type', string='Work Entry Type')
 
 
 class HrLeave(models.Model):
-    _inherit = 'hr.leave'
+    _inherit = ['hr.leave']
 
     def _prepare_resource_leave_vals(self):
         vals = super(HrLeave, self)._prepare_resource_leave_vals()

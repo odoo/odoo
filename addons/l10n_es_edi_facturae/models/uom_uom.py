@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class UoM(models.Model):
-    _inherit = 'uom.uom'
+class UomUom(models.Model):
+    _inherit = ['uom.uom']
 
     l10n_es_edi_facturae_uom_code = fields.Selection(
         selection=[

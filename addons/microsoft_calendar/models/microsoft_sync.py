@@ -51,8 +51,8 @@ def after_commit(func):
 def microsoft_calendar_token(user):
     yield user._get_microsoft_calendar_token()
 
-class MicrosoftSync(models.AbstractModel):
-    _name = 'microsoft.calendar.sync'
+
+class MicrosoftCalendarSync(models.AbstractModel):
     _description = "Synchronize a record with Microsoft Calendar"
 
     microsoft_id = fields.Char('Organizer event Id', copy=False, index=True)

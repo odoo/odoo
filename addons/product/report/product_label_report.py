@@ -58,40 +58,35 @@ def _prepare_data(env, docids, data):
     }
 
 
-class ReportProductTemplateLabel2x7(models.AbstractModel):
-    _name = 'report.product.report_producttemplatelabel2x7'
+class ReportProductReport_Producttemplatelabel2x7(models.AbstractModel):
     _description = 'Product Label Report 2x7'
 
     def _get_report_values(self, docids, data):
         return _prepare_data(self.env, docids, data)
 
 
-class ReportProductTemplateLabel4x7(models.AbstractModel):
-    _name = 'report.product.report_producttemplatelabel4x7'
+class ReportProductReport_Producttemplatelabel4x7(models.AbstractModel):
     _description = 'Product Label Report 4x7'
 
     def _get_report_values(self, docids, data):
         return _prepare_data(self.env, docids, data)
 
 
-class ReportProductTemplateLabel4x12(models.AbstractModel):
-    _name = 'report.product.report_producttemplatelabel4x12'
+class ReportProductReport_Producttemplatelabel4x12(models.AbstractModel):
     _description = 'Product Label Report 4x12'
 
     def _get_report_values(self, docids, data):
         return _prepare_data(self.env, docids, data)
 
 
-class ReportProductTemplateLabel4x12NoPrice(models.AbstractModel):
-    _name = 'report.product.report_producttemplatelabel4x12noprice'
+class ReportProductReport_Producttemplatelabel4x12noprice(models.AbstractModel):
     _description = 'Product Label Report 4x12 No Price'
 
     def _get_report_values(self, docids, data):
         return _prepare_data(self.env, docids, data)
 
 
-class ReportProductTemplateLabelDymo(models.AbstractModel):
-    _name = 'report.product.report_producttemplatelabel_dymo'
+class ReportProductReport_Producttemplatelabel_Dymo(models.AbstractModel):
     _description = 'Product Label Report'
 
     def _get_report_values(self, docids, data):

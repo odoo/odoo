@@ -6,7 +6,7 @@ import ast
 from odoo import api, models, _
 
 
-class SurveyTemplate(models.Model):
+class SurveySurvey(models.Model):
     """This model defines additional actions on the 'survey.survey' model that
        can be used to load a survey sample. The model defines a sample for each
        survey type:
@@ -16,7 +16,7 @@ class SurveyTemplate(models.Model):
        (4) custom: An empty survey
     """
 
-    _inherit = 'survey.survey'
+    _inherit = ['survey.survey']
 
     @api.model
     def action_load_sample_survey(self):

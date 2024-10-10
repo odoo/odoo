@@ -2,8 +2,9 @@
 
 from odoo import api, fields, models
 
+
 class SurveySurvey(models.Model):
-    _inherit = 'survey.survey'
+    _inherit = ['survey.survey']
 
     survey_type = fields.Selection(selection_add=[('recruitment', 'Recruitment')], ondelete={'recruitment': 'set default'})
     hr_job_ids = fields.One2many("hr.job", "survey_id", string="Job Position")

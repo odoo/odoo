@@ -5,8 +5,7 @@ from odoo import api, fields, models, _
 from ast import literal_eval
 
 
-class ProjectTaskTypeDelete(models.TransientModel):
-    _name = 'project.task.type.delete.wizard'
+class ProjectTaskTypeDeleteWizard(models.TransientModel):
     _description = 'Project Task Stage Delete Wizard'
 
     project_ids = fields.Many2many('project.project', domain="['|', ('active', '=', False), ('active', '=', True)]", string='Projects', ondelete='cascade', export_string_translation=False)

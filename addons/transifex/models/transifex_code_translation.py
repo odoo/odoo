@@ -8,7 +8,6 @@ from odoo.tools.translate import CodeTranslations
 
 
 class TransifexCodeTranslation(models.Model):
-    _name = "transifex.code.translation"
     _description = "Code Translation"
     _log_access = False
 

@@ -8,8 +8,8 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import clean_context
 
 
-class PickingType(models.Model):
-    _inherit = 'stock.picking.type'
+class StockPickingType(models.Model):
+    _inherit = ['stock.picking.type']
 
     code = fields.Selection(selection_add=[
         ('repair_operation', 'Repair')
@@ -118,7 +118,7 @@ class PickingType(models.Model):
                 continue
             stock_location = picking_type.warehouse_id.lot_stock_id
             picking_type.default_location_src_id = stock_location.id
-        super(PickingType, remaining_picking_type)._compute_default_location_src_id()
+        super(StockPickingType, remaining_picking_type)._compute_default_location_src_id()
 
     def _compute_default_location_dest_id(self):
         repair_picking_type = self.filtered(lambda pt: pt.code == 'repair_operation')
@@ -130,7 +130,7 @@ class PickingType(models.Model):
         prod_locations = {l[0].id: l[1] for l in prod_locations}
         for picking_type in repair_picking_type:
             picking_type.default_location_dest_id = prod_locations.get(picking_type.company_id.id)
-        super(PickingType, (self - repair_picking_type))._compute_default_location_dest_id()
+        super(StockPickingType, (self - repair_picking_type))._compute_default_location_dest_id()
 
     @api.depends('code')
     def _compute_default_product_location_id(self):
@@ -171,7 +171,7 @@ class PickingType(models.Model):
         repair_picking_types = self.filtered(lambda picking: picking.code == 'repair_operation')
         other_picking_types = (self - repair_picking_types)
 
-        records = super(PickingType, other_picking_types)._get_aggregated_records_by_date()
+        records = super(StockPickingType, other_picking_types)._get_aggregated_records_by_date()
         repair_records = self.env['repair.order']._read_group(
             [
                 ('picking_type_id', 'in', repair_picking_types.ids),
@@ -193,8 +193,8 @@ class PickingType(models.Model):
         return self.env['ir.actions.actions']._for_xml_id('repair.action_repair_picking_type_kanban')
 
 
-class Picking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model):
+    _inherit = ['stock.picking']
 
     is_repairable = fields.Boolean(compute='_compute_is_repairable')
     repair_ids = fields.One2many('repair.order', 'picking_id')

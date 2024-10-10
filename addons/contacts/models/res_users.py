@@ -4,8 +4,7 @@
 from odoo import api, models, modules
 
 
-class Users(models.Model):
-    _name = 'res.users'
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     @api.model

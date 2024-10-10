@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+    _inherit = ['account.analytic.account']
     _description = 'Analytic Account'
 
     production_ids = fields.Many2many('mrp.production')
@@ -74,12 +74,13 @@ class AccountAnalyticAccount(models.Model):
 
 
 class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+    _inherit = ['account.analytic.line']
 
     category = fields.Selection(selection_add=[('manufacturing_order', 'Manufacturing Order')])
 
+
 class AccountAnalyticApplicability(models.Model):
-    _inherit = 'account.analytic.applicability'
+    _inherit = ['account.analytic.applicability']
     _description = "Analytic Plan's Applicabilities"
 
     business_domain = fields.Selection(

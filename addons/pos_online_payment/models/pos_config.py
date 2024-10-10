@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class PosConfig(models.Model):
-    _inherit = 'pos.config'
+    _inherit = ['pos.config']
 
     @api.constrains('payment_method_ids')
     def _check_online_payment_methods(self):

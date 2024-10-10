@@ -5,8 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 
 
-class MessageTranslation(models.Model):
-    _name = "mail.message.translation"
+class MailMessageTranslation(models.Model):
     _description = "Message Translation"
 
     message_id = fields.Many2one("mail.message", "Message", required=True, ondelete="cascade")

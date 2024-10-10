@@ -3,7 +3,7 @@ from odoo import models, api
 
 
 class PosLoadMixin(models.AbstractModel):
-    _inherit = "pos.load.mixin"
+    _inherit = ["pos.load.mixin"]
 
     @api.model
     def _load_pos_self_data_domain(self, data):

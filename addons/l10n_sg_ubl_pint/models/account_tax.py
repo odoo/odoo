@@ -3,7 +3,7 @@ from odoo import fields, models
 
 
 class AccountTax(models.Model):
-    _inherit = "account.tax"
+    _inherit = ["account.tax"]
 
     # The classification is too precise to be able to do any kind of guessing, so we need it set.
     # See https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_goods_and_services_tax_gst

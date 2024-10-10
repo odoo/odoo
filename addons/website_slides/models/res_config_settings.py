@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+    _inherit = ["res.config.settings"]
 
     website_slide_google_app_key = fields.Char(related='website_id.website_slide_google_app_key', readonly=False)
     module_website_sale_slides = fields.Boolean(string="Sell on eCommerce")

@@ -4,8 +4,8 @@
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 
+
 class ProjectProjectStage(models.Model):
-    _name = 'project.project.stage'
     _description = 'Project Stage'
     _order = 'sequence, id'
 

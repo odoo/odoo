@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     module_hr_timesheet = fields.Boolean(string="Task Logs")
     group_project_rating = fields.Boolean("Customer Ratings", implied_group='project.group_project_rating')

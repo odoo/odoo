@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = ['payment.provider']
 
     journal_id = fields.Many2one(
         string="Payment Journal",

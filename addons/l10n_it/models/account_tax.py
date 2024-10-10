@@ -3,8 +3,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
 
+
 class AccountTax(models.Model):
-    _inherit = "account.tax"
+    _inherit = ["account.tax"]
 
     l10n_it_exempt_reason = fields.Selection(
         selection=[

@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 class FetchmailServer(models.Model):
     """Add the Outlook OAuth authentication on the incoming mail servers."""
 
-    _name = 'fetchmail.server'
     _inherit = ['fetchmail.server', 'microsoft.outlook.mixin']
 
     _OUTLOOK_SCOPE = 'https://outlook.office.com/IMAP.AccessAsUser.All'

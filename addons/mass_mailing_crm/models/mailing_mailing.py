@@ -5,9 +5,8 @@ from markupsafe import Markup
 from odoo import fields, models, _, tools
 
 
-class MassMailing(models.Model):
-    _name = 'mailing.mailing'
-    _inherit = 'mailing.mailing'
+class MailingMailing(models.Model):
+    _inherit = ['mailing.mailing']
 
     use_leads = fields.Boolean('Use Leads', compute='_compute_use_leads')
     crm_lead_count = fields.Integer('Leads/Opportunities Count', compute='_compute_crm_lead_count')
@@ -47,7 +46,7 @@ class MassMailing(models.Model):
 
     def _prepare_statistics_email_values(self):
         self.ensure_one()
-        values = super(MassMailing, self)._prepare_statistics_email_values()
+        values = super()._prepare_statistics_email_values()
         if not self.user_id:
             return values
         if not self.env['crm.lead'].has_access('read'):

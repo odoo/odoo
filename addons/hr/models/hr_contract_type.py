@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 
 
-class ContractType(models.Model):
-    _name = 'hr.contract.type'
+class HrContractType(models.Model):
     _description = 'Contract Type'
     _order = 'sequence'
 

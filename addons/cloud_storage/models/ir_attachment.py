@@ -7,8 +7,8 @@ from odoo.exceptions import UserError
 from odoo.http import Stream
 
 
-class CloudStorageAttachment(models.Model):
-    _inherit = 'ir.attachment'
+class IrAttachment(models.Model):
+    _inherit = ['ir.attachment']
     _cloud_storage_upload_url_time_to_expiry = 300  # 300 seconds
     _cloud_storage_download_url_time_to_expiry = 300  # 300 seconds
 

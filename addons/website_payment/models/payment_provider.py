@@ -10,7 +10,7 @@ from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 
 
 class PaymentProvider(models.Model):
-    _inherit = "payment.provider"
+    _inherit = ["payment.provider"]
 
     website_id = fields.Many2one(
         "website",

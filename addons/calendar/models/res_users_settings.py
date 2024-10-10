@@ -2,8 +2,9 @@
 
 from odoo import api, fields, models
 
+
 class ResUsersSettings(models.Model):
-    _inherit = "res.users.settings"
+    _inherit = ["res.users.settings"]
 
     # Calendar module settings.
     calendar_default_privacy = fields.Selection(

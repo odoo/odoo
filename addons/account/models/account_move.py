@@ -77,7 +77,6 @@ EMPTY = object()
 
 
 class AccountMove(models.Model):
-    _name = "account.move"
     _inherit = ['portal.mixin', 'mail.thread.main.attachment', 'mail.activity.mixin', 'sequence.mixin', 'product.catalog.mixin']
     _description = "Journal Entry"
     _order = 'date desc, name desc, invoice_date desc, id desc'

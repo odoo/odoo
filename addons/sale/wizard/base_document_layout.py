@@ -4,7 +4,7 @@ from odoo import models
 
 
 class BaseDocumentLayout(models.TransientModel):
-    _inherit = 'base.document.layout'
+    _inherit = ['base.document.layout']
 
     def _get_preview_template(self):
         if (

@@ -7,8 +7,8 @@ from odoo import models, fields
 from collections import defaultdict
 
 
-class Project(models.Model):
-    _inherit = 'project.project'
+class ProjectProject(models.Model):
+    _inherit = ['project.project']
 
     def _get_expenses_profitability_items(self, with_action=True):
         expenses_read_group = self.env['hr.expense']._read_group(

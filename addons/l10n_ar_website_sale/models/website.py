@@ -5,7 +5,7 @@ from odoo import models
 
 
 class Website(models.Model):
-    _inherit = "website"
+    _inherit = ["website"]
 
     def _display_partner_b2b_fields(self):
         """ Argentinean localization must always display b2b fields """

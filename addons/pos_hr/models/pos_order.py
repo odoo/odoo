@@ -4,7 +4,7 @@ from markupsafe import Markup
 
 
 class PosOrder(models.Model):
-    _inherit = "pos.order"
+    _inherit = ["pos.order"]
 
     employee_id = fields.Many2one('hr.employee', string="Cashier", help="The employee who uses the cash register.")
     cashier = fields.Char(string="Cashier name", compute="_compute_cashier", store=True)

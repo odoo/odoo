@@ -6,7 +6,6 @@ from odoo.tools.float_utils import float_compare
 
 
 class StockBackorderConfirmationLine(models.TransientModel):
-    _name = 'stock.backorder.confirmation.line'
     _description = 'Backorder Confirmation Line'
 
     backorder_confirmation_id = fields.Many2one('stock.backorder.confirmation', 'Immediate Transfer')
@@ -15,7 +14,6 @@ class StockBackorderConfirmationLine(models.TransientModel):
 
 
 class StockBackorderConfirmation(models.TransientModel):
-    _name = 'stock.backorder.confirmation'
     _description = 'Backorder Confirmation'
 
     pick_ids = fields.Many2many('stock.picking', 'stock_picking_backorder_rel')

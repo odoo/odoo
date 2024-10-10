@@ -3,7 +3,7 @@ from odoo import models
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def _compute_l10n_es_is_simplified(self):
         super()._compute_l10n_es_is_simplified()

@@ -2,8 +2,9 @@
 
 from odoo import api, models, fields
 
+
 class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+    _inherit = ["sale.order.line"]
 
     expense_id = fields.Many2one('hr.expense', string='Expense')
 

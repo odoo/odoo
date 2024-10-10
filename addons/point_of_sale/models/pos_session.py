@@ -13,7 +13,6 @@ from odoo.osv.expression import AND
 
 
 class PosSession(models.Model):
-    _name = 'pos.session'
     _order = 'id desc'
     _description = 'Point of Sale Session'
     _inherit = ['mail.thread', 'mail.activity.mixin', "pos.bus.mixin", 'pos.load.mixin']
@@ -1872,8 +1871,9 @@ class PosSession(models.Model):
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 
+
 class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+    _inherit = ['procurement.group']
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):

@@ -8,7 +8,7 @@ from odoo.tools import float_round, float_repr
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     l10n_id_tax_number = fields.Char(string="Tax Number", copy=False)
     l10n_id_replace_invoice_id = fields.Many2one('account.move', string="Replace Invoice", domain="['|', '&', '&', ('state', '=', 'posted'), ('partner_id', '=', partner_id), ('reversal_move_ids', '!=', False), ('state', '=', 'cancel')]", copy=False, index='btree_not_null')

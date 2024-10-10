@@ -9,8 +9,7 @@ from odoo import api, models, fields, _
 from odoo.exceptions import UserError
 
 
-class L10nHuEdiTaxAuditExport(models.TransientModel):
-    _name = 'l10n_hu_edi.tax_audit_export'
+class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
     _description = 'Tax audit export - Adóhatósági Ellenőrzési Adatszolgáltatás'
 
     selection_mode = fields.Selection(

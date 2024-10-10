@@ -7,9 +7,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class ServerActions(models.Model):
+class IrActionsServer(models.Model):
     """ Add mail.thread related options in server actions. """
-    _name = 'ir.actions.server'
     _description = 'Server Action'
     _inherit = ['ir.actions.server']
 
@@ -89,7 +88,7 @@ class ServerActions(models.Model):
             mail_models = self.env['ir.model'].search([('is_mail_thread', '=', True), ('transient', '=', False)])
             for action in mail_thread_based:
                 action.available_model_ids = mail_models.ids
-        super(ServerActions, self - mail_thread_based)._compute_available_model_ids()
+        super(IrActionsServer, self - mail_thread_based)._compute_available_model_ids()
 
     @api.depends('model_id', 'state')
     def _compute_template_id(self):
@@ -290,7 +289,7 @@ class ServerActions(models.Model):
         key set to False in the context. This way all notification emails linked
         to the currently executed action will be set in the queue instead of
         sent directly. This will avoid possible break in transactions. """
-        eval_context = super(ServerActions, self)._get_eval_context(action=action)
+        eval_context = super()._get_eval_context(action=action)
         ctx = dict(eval_context['env'].context)
         ctx['mail_notify_force_send'] = False
         eval_context['env'].context = ctx

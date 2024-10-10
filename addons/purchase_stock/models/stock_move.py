@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = ['stock.move']
 
     purchase_line_id = fields.Many2one(
         'purchase.order.line', 'Purchase Order Line',

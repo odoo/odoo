@@ -4,10 +4,9 @@
 from odoo import api, fields, models
 
 
-class BadgeUser(models.Model):
+class GamificationBadgeUser(models.Model):
     """User having received a badge"""
 
-    _name = 'gamification.badge.user'
     _description = 'Gamification User Badge'
     _order = "create_date desc"
     _rec_name = "badge_name"

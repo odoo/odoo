@@ -5,7 +5,7 @@ from .res_config_settings import DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE
 
 
 class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
+    _inherit = ['ir.http']
 
     def session_info(self):
         res = super().session_info()

@@ -4,8 +4,8 @@
 from odoo import models
 
 
-class StockForecasted(models.AbstractModel):
-    _inherit = 'stock.forecasted_product_product'
+class StockForecasted_Product_Product(models.AbstractModel):
+    _inherit = ['stock.forecasted_product_product']
 
     def _get_reservation_data(self, move):
         if move.repair_id and move.repair_line_type:
@@ -17,7 +17,7 @@ class StockForecasted(models.AbstractModel):
         When a product's move is bind at the same time to a Repair Order
         and to a Sale Order, only take the data into account once, as a RO
         """
-        sol_domain = super(StockForecasted, self)._product_sale_domain(product_template_ids, product_ids)
+        sol_domain = super()._product_sale_domain(product_template_ids, product_ids)
         move_domain = self._product_domain(product_template_ids, product_ids)
         move_domain += [
             ('repair_id', '!=', False),

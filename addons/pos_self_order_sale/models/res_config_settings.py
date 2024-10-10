@@ -4,7 +4,7 @@ from odoo import models, api
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+    _inherit = ["res.config.settings"]
 
     @api.onchange("pos_self_ordering_mode")
     def _onchange_pos_self_order_kiosk(self):

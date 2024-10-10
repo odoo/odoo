@@ -7,7 +7,7 @@ from odoo.tools.misc import frozendict
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     expense_sheet_id = fields.Many2one(comodel_name='hr.expense.sheet', ondelete='set null', copy=False, index='btree_not_null')
     show_commercial_partner_warning = fields.Boolean(compute='_compute_show_commercial_partner_warning')

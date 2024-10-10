@@ -4,8 +4,8 @@
 from odoo import fields, models, _
 
 
-class Company(models.Model):
-    _inherit = 'res.company'
+class ResCompany(models.Model):
+    _inherit = ['res.company']
 
     leave_timesheet_task_id = fields.Many2one(
         'project.task', string="Time Off Task",
