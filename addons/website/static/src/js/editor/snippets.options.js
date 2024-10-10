@@ -1000,6 +1000,11 @@ options.Class.include({
                 await this._customizeWebsiteData(widgetValue, params, true);
                 break;
             case 'variable':
+                // Color values (e.g. "header-text-color") must be saved as
+                // string. TODO: Color values should be added to the color map.
+                if (params.colorNames?.includes(widgetValue)) {
+                    widgetValue =`'${widgetValue}'`;
+                }
                 await this._customizeWebsiteVariable(widgetValue, params);
                 break;
             case "variables":
