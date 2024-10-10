@@ -1,7 +1,7 @@
 /*!
-FullCalendar Luxon 3 Plugin v6.1.10
+FullCalendar Luxon 3 Plugin v6.1.15
 Docs & License: https://fullcalendar.io/docs/luxon
-(c) 2023 Adam Shaw
+(c) 2024 Adam Shaw
 */
 FullCalendar.Luxon3 = (function (exports, core, luxon, internal) {
     'use strict';
