@@ -2,8 +2,7 @@
 # Exports features of the ORM to developers.
 # This is a `__init__.py` file to avoid merge conflicts on `odoo/api.py`.
 from odoo._orm.identifiers import NewId
-from odoo._orm.api import (
-    Environment,
+from odoo._orm.decorators import (
     autovacuum,
     call_kw,
     constrains,
@@ -16,5 +15,6 @@ from odoo._orm.api import (
     readonly,
     returns,
 )
+from odoo._orm.environments import Environment
 
 from odoo._orm.types import ContextType, DomainType, IdType, Self, ValuesType
