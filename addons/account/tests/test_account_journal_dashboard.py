@@ -213,12 +213,12 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
 
         self._create_test_vendor_bills(journal)
         dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
-        # Expected behavior is to have six amls waiting for payment for a total amount of 4440$
-        # three of which would be late for a total amount of 140$
-        self.assertEqual(6, dashboard_data['number_waiting'])
+        # Expected behavior is to have three moves waiting for payment for a total amount of 4440$ one of which would be late
+        # for a total amount of 40$ (second move has one of three lines late but that's not enough to make the move late)
+        self.assertEqual(3, dashboard_data['number_waiting'])
         self.assertEqual(format_amount(self.env, 4440, company_currency), dashboard_data['sum_waiting'])
-        self.assertEqual(3, dashboard_data['number_late'])
-        self.assertEqual(format_amount(self.env, 140, company_currency), dashboard_data['sum_late'])
+        self.assertEqual(1, dashboard_data['number_late'])
+        self.assertEqual(format_amount(self.env, 40, company_currency), dashboard_data['sum_late'])
 
     def test_gap_in_sequence_warning(self):
         journal = self.company_data['default_journal_sale']
