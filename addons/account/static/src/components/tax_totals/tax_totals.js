@@ -146,6 +146,23 @@ export class TaxTotalsComponent extends Component {
         let totals = JSON.parse(JSON.stringify(props.value));
         const currencyFmtOpts = { currencyId: props.record.data.currency_id && props.record.data.currency_id[0] };
 
+        if (Object.keys(this.totals).length) {
+            for (let group of totals.subtotals_order) {
+                if (this.totals.groups_by_subtotal[group]) {
+                    for (let new_subtotal of totals.groups_by_subtotal[group]) {
+                        let current_subtotal = this.totals.groups_by_subtotal[group].find((e) => e.tax_group_name === new_subtotal.tax_group_name);
+                        if (current_subtotal &&
+                            new_subtotal.formatted_tax_group_base_amount === current_subtotal.formatted_tax_group_base_amount &&
+                            new_subtotal.tax_group_base_amount === current_subtotal.tax_group_base_amount
+                        ) {
+                            new_subtotal.formatted_tax_group_amount = current_subtotal.formatted_tax_group_amount;
+                            new_subtotal.tax_group_amount = current_subtotal.tax_group_amount;
+                        }
+                    }
+                }
+            }
+        }
+
         let amount_untaxed = totals.amount_untaxed;
         let amount_tax = 0;
         let subtotals = [];
