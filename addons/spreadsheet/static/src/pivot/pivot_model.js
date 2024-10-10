@@ -102,6 +102,9 @@ export class OdooPivotModel extends PivotModel {
      * @param {PivotDomain} domain
      */
     getPivotCellValue(measure, domain) {
+        if (domain.some((node) => node.value === NO_RECORD_AT_THIS_POSITION)) {
+            return "";
+        }
         const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
         const group = JSON.stringify([rows, cols]);
         const values = this.data.measurements[group];
@@ -186,6 +189,9 @@ export class OdooPivotModel extends PivotModel {
      * @param {PivotDomain} domain
      */
     getPivotCellDomain(domain) {
+        if (domain.some((node) => node.value === NO_RECORD_AT_THIS_POSITION)) {
+            return undefined;
+        }
         const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
         const key = JSON.stringify([rows, cols]);
         const domains = this.data.groupDomains[key];

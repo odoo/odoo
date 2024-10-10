@@ -9,6 +9,7 @@ import {
 import { selectCell, setCellContent, updatePivot } from "@spreadsheet/../tests/helpers/commands";
 import { doMenuAction, getActionMenu } from "@spreadsheet/../tests/helpers/ui";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getCell, getCellFormula, getCellValue } from "@spreadsheet/../tests/helpers/getters";
@@ -312,4 +313,26 @@ test("See records is not visible on an empty cell", async function () {
     selectCell(model, "A21");
     const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
     expect(action.isVisible(env)).toBe(false);
+});
+
+test("Cannot see records of out of range positional pivot formula with calculated field", async function () {
+    const { env, model, pivotId } = await createSpreadsheetWithPivot();
+    updatePivot(model, pivotId, {
+        measures: [
+            {
+                id: "calculated",
+                fieldName: "calculated",
+                aggregator: "sum",
+                computedBy: {
+                    formula: "=0",
+                    sheetId: model.getters.getActiveSheetId(),
+                },
+            },
+        ],
+    });
+    await waitForDataLoaded(model);
+    setCellContent(model, "A1", `=PIVOT.VALUE(1,"calculated","bar",FALSE,"#foo",22)`);
+    selectCell(model, "A1");
+    const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
+    expect(!!action.isVisible(env)).toBe(false);
 });
