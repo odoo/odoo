@@ -76,12 +76,32 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         url = url_join('https://api.razorpay.com/v1/', endpoint)
-        auth = (self.razorpay_key_id, self.razorpay_key_secret)
+        auth = None
+        if self.razorpay_key_id:
+            auth = (self.razorpay_key_id, self.razorpay_key_secret)
+
+        razorpay_access_token = self._razorpay_get_access_token()
+        headers = None
+        if razorpay_access_token:
+            headers = {'Authorization': f'Bearer {razorpay_access_token}'}
+
         try:
             if method == 'GET':
-                response = requests.get(url, params=payload, auth=auth, timeout=10)
+                response = requests.get(
+                    url,
+                    params=payload,
+                    headers=headers,
+                    auth=auth,
+                    timeout=10,
+                )
             else:
-                response = requests.post(url, json=payload, auth=auth, timeout=10)
+                response = requests.post(
+                    url,
+                    json=payload,
+                    headers=headers,
+                    auth=auth,
+                    timeout=10,
+                )
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError:
@@ -98,6 +118,14 @@ class PaymentProvider(models.Model):
                 "Razorpay: " + _("Could not establish the connection to the API.")
             )
         return response.json()
+
+    def _razorpay_get_access_token(self):
+        self.ensure_one()
+        return False
+
+    def _razorpay_get_public_token(self):
+        self.ensure_one()
+        return False
 
     def _razorpay_calculate_signature(self, data, is_redirect=True):
         """ Compute the signature for the request's data according to the Razorpay documentation.
