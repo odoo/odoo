@@ -23,6 +23,32 @@ patch(PosOrderline.prototype, {
         if (this.uiState.hasChange || this.skip_change) {
             this.setDirty();
             this.skip_change = !this.skip_change;
+            // Update skip_change for combo lines
+            for (const comboLine of this.combo_line_ids) {
+                if (comboLine.uiState.hasChange || comboLine.skip_change) {
+                    comboLine.setDirty();
+                    comboLine.skip_change = this.skip_change;
+                }
+            }
+            // update with the combo parent if applicable
+            if (this.combo_parent_id) {
+                this.updateParentSkipChange(this.combo_parent_id);
+            }
+        }
+    },
+    updateParentSkipChange(parentOrderline) {
+        let allLinesSynced = true;
+        for (const comboLine of parentOrderline.combo_line_ids) {
+            if (comboLine.uiState.hasChange || comboLine.skip_change) {
+                if (comboLine.skip_change !== this.skip_change) {
+                    allLinesSynced = false;
+                    break;
+                }
+            }
+        }
+        if (allLinesSynced) {
+            this.setDirty();
+            parentOrderline.skip_change = this.skip_change;
         }
     },
     getDisplayClasses() {
