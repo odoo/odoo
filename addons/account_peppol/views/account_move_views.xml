@@ -37,7 +37,7 @@
         <field name="inherit_id" ref="account.view_out_invoice_tree"/>
         <field name="arch" type="xml">
             <field name="status_in_payment" position="before">
-                <field name="peppol_move_state" optional="hide"/>
+                <field name="peppol_move_state" optional="show"/>
             </field>
         </field>
     </record>
@@ -48,7 +48,7 @@
         <field name="inherit_id" ref="account.view_out_credit_note_tree"/>
         <field name="arch" type="xml">
             <field name="status_in_payment" position="before">
-                <field name="peppol_move_state" optional="hide"/>
+                <field name="peppol_move_state" optional="show"/>
             </field>
         </field>
     </record>
