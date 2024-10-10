@@ -13,7 +13,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
         super().setUpClass()
 
         unit = cls.env.ref("uom.product_uom_unit")
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.depot_location = cls.env['stock.location'].create({
             'name': 'Depot',
             'usage': 'internal',
@@ -297,60 +296,74 @@ class TestKitPicking(common.TestMrpCommon):
         bom_kit_1 = cls.env['mrp.bom'].create({
             'product_tmpl_id': kit_1.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
+            'type': 'phantom',
+        })
         BomLine = cls.env['mrp.bom.line']
         BomLine.create({
             'product_id': component_a.id,
             'product_qty': 2.0,
-            'bom_id': bom_kit_1.id})
+            'bom_id': bom_kit_1.id,
+        })
         BomLine.create({
             'product_id': component_b.id,
             'product_qty': 1.0,
-            'bom_id': bom_kit_1.id})
+            'bom_id': bom_kit_1.id,
+        })
         BomLine.create({
             'product_id': component_c.id,
             'product_qty': 3.0,
-            'bom_id': bom_kit_1.id})
+            'bom_id': bom_kit_1.id,
+        })
         bom_kit_2 = cls.env['mrp.bom'].create({
             'product_tmpl_id': kit_2.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
+            'type': 'phantom',
+        })
         BomLine.create({
             'product_id': component_d.id,
             'product_qty': 1.0,
-            'bom_id': bom_kit_2.id})
+            'bom_id': bom_kit_2.id,
+        })
         BomLine.create({
             'product_id': kit_1.id,
             'product_qty': 2.0,
-            'bom_id': bom_kit_2.id})
+            'bom_id': bom_kit_2.id,
+        })
         bom_kit_parent = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.kit_parent.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
+            'type': 'phantom',
+        })
         BomLine.create({
             'product_id': component_e.id,
             'product_qty': 1.0,
-            'bom_id': bom_kit_parent.id})
+            'bom_id': bom_kit_parent.id,
+        })
         BomLine.create({
             'product_id': kit_2.id,
             'product_qty': 2.0,
-            'bom_id': bom_kit_parent.id})
+            'bom_id': bom_kit_parent.id,
+        })
         bom_kit_3 = cls.env['mrp.bom'].create({
             'product_tmpl_id': kit_3.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
+            'type': 'phantom',
+        })
         BomLine.create({
             'product_id': component_f.id,
             'product_qty': 1.0,
-            'bom_id': bom_kit_3.id})
+            'bom_id': bom_kit_3.id,
+        })
         BomLine.create({
             'product_id': component_g.id,
             'product_qty': 2.0,
-            'bom_id': bom_kit_3.id})
+            'bom_id': bom_kit_3.id,
+        })
         BomLine.create({
             'product_id': kit_3.id,
             'product_qty': 1.0,
-            'bom_id': bom_kit_parent.id})
+            'bom_id': bom_kit_parent.id,
+        })
 
         # We create an 'immediate transfer' receipt for x3 kit_parent
         cls.test_partner = cls.env['res.partner'].create({
@@ -359,7 +372,7 @@ class TestKitPicking(common.TestMrpCommon):
         cls.test_supplier = cls.env['stock.location'].create({
             'name': 'supplier',
             'usage': 'supplier',
-            'location_id': cls.env.ref('stock.stock_location_stock').id,
+            'location_id': cls.stock_location.id,
         })
 
         cls.expected_quantities = {
@@ -380,7 +393,7 @@ class TestKitPicking(common.TestMrpCommon):
             'location_id': self.test_supplier.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'partner_id': self.test_partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'picking_type_id': self.picking_type_in.id,
         })
         self.env['stock.move'].create({
             'name': self.kit_parent.name,
@@ -389,7 +402,7 @@ class TestKitPicking(common.TestMrpCommon):
             'picked': True,
             'product_uom': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'picking_type_id': self.picking_type_in.id,
             'location_id':  self.test_supplier.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
         })
@@ -409,7 +422,7 @@ class TestKitPicking(common.TestMrpCommon):
             'location_id': self.test_supplier.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'partner_id': self.test_partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'picking_type_id': self.picking_type_in.id,
         })
         move_receipt_1 = self.env['stock.move'].create({
             'name': self.kit_parent.name,
@@ -417,7 +430,7 @@ class TestKitPicking(common.TestMrpCommon):
             'product_uom_qty': 3,
             'product_uom': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'picking_type_id': self.picking_type_in.id,
             'location_id':  self.test_supplier.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
         })
@@ -430,8 +443,6 @@ class TestKitPicking(common.TestMrpCommon):
 
     def test_add_sml_with_kit_to_confirmed_picking(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        customer_location = self.env.ref('stock.stock_location_customers')
-        stock_location = warehouse.lot_stock_id
         in_type = warehouse.in_type_id
 
         self.bom_4.type = 'phantom'
@@ -441,15 +452,15 @@ class TestKitPicking(common.TestMrpCommon):
 
         receipt = self.env['stock.picking'].create({
             'picking_type_id': in_type.id,
-            'location_id': customer_location.id,
-            'location_dest_id': stock_location.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
             'move_ids': [(0, 0, {
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 1,
                 'product_uom': product.uom_id.id,
-                'location_id': customer_location.id,
-                'location_dest_id': stock_location.id,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
             })]
         })
         receipt.action_confirm()
@@ -459,8 +470,8 @@ class TestKitPicking(common.TestMrpCommon):
             'product_id': kit.id,
             'quantity': 1,
             'product_uom_id': kit.uom_id.id,
-            'location_id': customer_location.id,
-            'location_dest_id': stock_location.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
         })]
         receipt.move_ids.picked = True
 
@@ -502,7 +513,7 @@ class TestKitPicking(common.TestMrpCommon):
         })
 
         delivery_form = Form(self.env['stock.picking'])
-        delivery_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        delivery_form.picking_type_id = self.picking_type_in
         with delivery_form.move_ids_without_package.new() as move:
             move.product_id = bom_kit.product_id
             move.product_uom_qty = 4
