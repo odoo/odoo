@@ -5,11 +5,12 @@ from markupsafe import Markup
 
 from odoo import Command
 from odoo.exceptions import AccessError
-from odoo.tests.common import users, tagged, HttpCase
+from odoo.tests.common import users, tagged
+from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 
 
 @tagged('post_install', '-at_install')
-class TestImLivechatMessage(HttpCase):
+class TestImLivechatMessage(ChatbotCase):
     def setUp(self):
         super().setUp()
         self.password = 'Pl1bhD@2!kXZ'
@@ -38,6 +39,55 @@ class TestImLivechatMessage(HttpCase):
             self.env['res.users'].with_user(user).check_access_rights('write')
         user.with_user(user).livechat_username = 'New username'
         self.assertEqual(user.livechat_username, 'New username')
+
+    @users('emp')
+    def test_chatbot_message_format(self):
+        user = self.env.user
+        channel_info = self.livechat_channel.with_user(user)._open_livechat_mail_channel(
+            anonymous_name='Test Chatbot',
+            previous_operator_id=self.chatbot_script.operator_partner_id.id,
+            chatbot_script=self.chatbot_script,
+            user_id=user.id
+        )
+        mail_channel = self.env['mail.channel'].browse(channel_info['id'])
+        self._post_answer_and_trigger_next_step(
+            mail_channel,
+            self.step_dispatch_buy_software.name,
+            chatbot_script_answer=self.step_dispatch_buy_software
+        )
+        chatbot_message = mail_channel.chatbot_message_ids.mail_message_id[-1:]
+        self.assertEqual(chatbot_message.message_format(), [{
+            'id': chatbot_message.id,
+            'body': '<p>Can you give us your email please?</p>',
+            'date': chatbot_message.date,
+            'message_type': 'comment',
+            'subtype_id': (self.env.ref('mail.mt_comment').id, 'Discussions'),
+            'subject': False,
+            'model': 'mail.channel',
+            'res_id': mail_channel.id,
+            'record_name': 'Testing Bot',
+            'starred_partner_ids': [],
+            'author': {
+                'id': self.chatbot_script.operator_partner_id.id,
+                'name': 'Testing Bot'
+            },
+            'guestAuthor': [('clear',)],
+            'notifications': [],
+            'attachment_ids': [],
+            'trackingValues': [],
+            'linkPreviews': [],
+            'messageReactionGroups': [],
+            'chatbot_script_step_id': self.step_email.id,
+            'needaction_partner_ids': [],
+            'history_partner_ids': [],
+            'is_note': False,
+            'is_discussion': True,
+            'subtype_description': False,
+            'is_notification': False,
+            'recipients': [],
+            'module_icon': '/mail/static/description/icon.png',
+            'sms_ids': []
+        }])
 
     @users('emp')
     def test_message_format(self):
