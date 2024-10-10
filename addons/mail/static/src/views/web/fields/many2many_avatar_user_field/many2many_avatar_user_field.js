@@ -39,8 +39,15 @@ const WithUserChatter = (T) =>
         }
 
         getTagProps(record) {
+            const { resId, data, model } = this.props.record;
+            const { viewType } = this.env.config;
             return {
                 ...super.getTagProps(...arguments),
+                displayText:
+                    viewType === "form" ||
+                    viewType === "list" && ( // This is ugly, but is it worth a new component?
+                        data[this.props.name].count === 1 || resId === model.root.editedRecord?.resId
+                    ),
                 onImageClicked: (ev) => {
                     if (!this.displayAvatarCard(record)) {
                         return;

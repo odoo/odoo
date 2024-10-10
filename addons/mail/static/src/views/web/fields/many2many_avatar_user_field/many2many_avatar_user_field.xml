@@ -4,6 +4,9 @@
         <img position="attributes">
             <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
         </img>
+        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="attributes">
+            <attribute name="t-if" separator=" " add="and tag.displayText"/>
+        </xpath>
     </t>
 
     <t t-name="mail.KanbanMany2ManyAvatarUserTagsList" t-inherit="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit-mode="primary">
