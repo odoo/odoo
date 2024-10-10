@@ -24,7 +24,7 @@ class MailMessageReaction(models.Model):
         ("partner_or_guest_exists", "CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))", "A message reaction must be from a partner or from a guest."),
     ]
 
-    def _to_store(self, store: Store):
+    def _to_store(self, store: Store, /, *, fields=None, **kwargs):
         for (message_id, content), reactions in groupby(self, lambda r: (r.message_id, r.content)):
             reactions = self.env["mail.message.reaction"].union(*reactions)
             store.add(reactions.guest_id, fields=["name", "write_date"])

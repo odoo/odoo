@@ -7,6 +7,7 @@ from secrets import choice
 from markupsafe import Markup
 from datetime import timedelta
 
+import odoo
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.addons.mail.tools.discuss import Store
@@ -395,7 +396,7 @@ class Channel(models.Model):
         self._bus_send_store(
             self,
             {
-                "channelMembers": Store.many(member, "DELETE", only_id=True),
+                "channelMembers": Store.Many(member, "DELETE", only_id=True),
                 "memberCount": self.member_count,
             },
         )
@@ -492,10 +493,13 @@ class Channel(models.Model):
             self._bus_send_store(
                 self,
                 {
-                    "invitedMembers": Store.many(
+                    "invitedMembers": Store.Many(
                         members,
                         "DELETE",
-                        fields={"channel": [], "persona": ["name", "im_status"]},
+                        fields=[
+                            Store.One("thread", as_thread=True, only_id=True),
+                            Store.One("persona", fields=["name", "im_status"]),
+                        ],
                     ),
                 },
             )
@@ -861,8 +865,9 @@ class Channel(models.Model):
         data["memberCount"] = self.member_count
         return data
 
-    def _to_store(self, store: Store):
+    def _to_store(self, store: Store, /, *, fields, **kwargs):
         """Adds channel data to the given store."""
+        super()._to_store(store, fields=fields, **kwargs)
         if not self:
             return []
         # sudo: bus.bus: reading non-sensitive last id
@@ -889,7 +894,7 @@ class Channel(models.Model):
                ORDER BY discuss_channel_member.id ASC
         """, {'channel_ids': tuple(self.ids), 'current_partner_id': current_partner.id or None, 'current_guest_id': current_guest.id or None})
         all_needed_members = self.env['discuss.channel.member'].browse([m['id'] for m in self.env.cr.dictfetchall()])
-        all_needed_members._to_store(Store())  # prefetch in batch
+        Store(all_needed_members)  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
         invited_members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
         member_of_current_user_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
@@ -904,8 +909,8 @@ class Channel(models.Model):
             info = channel._channel_basic_info()
             info["is_editable"] = channel.is_editable
             info["fetchChannelInfoState"] = "fetched"
-            info["parent_channel_id"] = Store.one(channel.parent_channel_id)
-            info["from_message_id"] = Store.one(channel.from_message_id)
+            info["parent_channel_id"] = Store.One(channel.parent_channel_id)
+            info["from_message_id"] = Store.One(channel.from_message_id)
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
@@ -913,21 +918,21 @@ class Channel(models.Model):
                 if member:
                     store.add(
                         member,
-                        extra_fields={
-                            "last_interest_dt": True,
-                            "message_unread_counter": True,
-                            "message_unread_counter_bus_id": bus_last_id,
-                            "new_message_separator": True
-                        },
+                        extra_fields=[
+                            "last_interest_dt",
+                            "message_unread_counter",
+                            "new_message_separator",
+                        ],
+                        message_unread_counter_bus_id=bus_last_id,
                     )
                     info['state'] = member.fold_state or 'closed'
                     info['custom_notifications'] = member.custom_notifications
-                    info['mute_until_dt'] = fields.Datetime.to_string(member.mute_until_dt)
+                    info['mute_until_dt'] = odoo.fields.Datetime.to_string(member.mute_until_dt)
                     info['custom_channel_name'] = member.custom_channel_name
                     info['is_pinned'] = member.is_pinned
                     if member.rtc_inviting_session_id:
                         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-                        info["rtcInvitingSession"] = Store.one(member.rtc_inviting_session_id.sudo())
+                        info["rtcInvitingSession"] = Store.One(member.rtc_inviting_session_id.sudo())
             # add members info
             if channel.channel_type != 'channel':
                 # avoid sending potentially a lot of members for big channels
@@ -936,11 +941,16 @@ class Channel(models.Model):
                 store.add(members_by_channel[channel] - member)
             # add RTC sessions info
             invited_members = invited_members_by_channel[channel]
-            info["invitedMembers"] = Store.many(
-                invited_members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
+            info["invitedMembers"] = Store.Many(
+                invited_members,
+                "ADD",
+                fields=[
+                    Store.One("thread", as_thread=True, only_id=True),
+                    Store.One("persona", fields=["name", "im_status"]),
+                ],
             )
             # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-            info["rtcSessions"] = Store.many(channel.sudo().rtc_session_ids, "ADD", extra=True)
+            info["rtcSessions"] = Store.Many(channel.sudo().rtc_session_ids, "ADD", extra=True)
             store.add(channel, info)
 
     # User methods
