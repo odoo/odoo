@@ -113,9 +113,9 @@ class MassMailing(models.Model):
         copy=False,
         help="Date at which the mailing was or will be sent.")
     # don't translate 'body_arch', the translations are only on 'body_html'
-    body_arch = fields.Html(string='Body', translate=False, sanitize=False)
+    body_arch = fields.Html(string='Body', translate=False, sanitize='email_outgoing', sanitize_output_method="html")
     body_html = fields.Html(
-        string='Body converted to be sent by mail', sanitize=False,
+        string='Body converted to be sent by mail', sanitize='email_outgoing',
         render_engine='qweb', render_options={'post_process': True})
     is_body_empty = fields.Boolean(compute="_compute_is_body_empty")
     attachment_ids = fields.Many2many(
