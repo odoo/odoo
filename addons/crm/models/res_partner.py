@@ -37,22 +37,24 @@ class Partner(models.Model):
                 )
         return rec
 
-    def _compute_opportunity_count(self):
-        self.opportunity_count = 0
-        if not self.env.user._has_group('sales_team.group_sale_salesman'):
-            return
-
+    def _fetch_children_partners_for_hierarchy(self):
         # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.with_context(active_test=False).search_fetch(
+        return self.with_context(active_test=False).search_fetch(
             [('id', 'child_of', self.ids)], ['parent_id'],
         )
 
+    def _get_contact_opportunities_domain(self):
+        return [('partner_id', 'in', self._fetch_children_partners_for_hierarchy().ids)]
+
+    def _compute_opportunity_count(self):
+        self.opportunity_count = 0
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return
         opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
-            domain=[('partner_id', 'in', all_partners.ids)],
+            domain=self._get_contact_opportunities_domain(),
             groupby=['partner_id'], aggregates=['__count']
         )
         self_ids = set(self._ids)
-
         for partner, count in opportunity_data:
             while partner:
                 if partner.id in self_ids:
@@ -65,9 +67,5 @@ class Partner(models.Model):
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
         action['context'] = {}
-        if self.is_company:
-            action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
-        else:
-            action['domain'] = [('partner_id', '=', self.id)]
-        action['domain'] = expression.AND([action['domain'], [('active', 'in', [True, False])]])
+        action['domain'] = expression.AND([self._get_contact_opportunities_domain(), [('active', 'in', [True, False])]])
         return action
