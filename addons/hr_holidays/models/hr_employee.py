@@ -488,9 +488,12 @@ class HrEmployee(models.Model):
         )
         for allocation in allocations:
             allocation_data = allocations_leaves_consumed[allocation.employee_id][allocation.holiday_status_id][allocation]
-            future_leaves = 0
+            allocation_data_on_target_date = {'future_leaves': 0,
+                                              'carried_over_days_expiration_date': False,
+                                              'expiring_carryover_days': 0}
             if allocation.allocation_type == 'accrual':
-                future_leaves = allocation._get_future_leaves_on(target_date)
+                allocation_data_on_target_date = allocation._get_allocation_data_on(target_date)
+            future_leaves = allocation_data_on_target_date['future_leaves']
             max_leaves = allocation.number_of_hours_display\
                 if allocation.type_request_unit in ['hour']\
                 else allocation.number_of_days_display
@@ -502,6 +505,8 @@ class HrEmployee(models.Model):
                 'remaining_leaves': max_leaves,
                 'leaves_taken': 0,
                 'virtual_leaves_taken': 0,
+                'carried_over_days_expiration_date': allocation_data_on_target_date['carried_over_days_expiration_date'],
+                'expiring_carryover_days': allocation_data_on_target_date['expiring_carryover_days']
             })
 
         for employee in employees:
@@ -598,7 +603,7 @@ class HrEmployee(models.Model):
                     virtual_remaining = 0
                     additional_leaves_duration = 0
                     for allocation in consumed_content:
-                        latest_accrual_bonus += allocation and allocation._get_future_leaves_on(date_to_simulate)
+                        latest_accrual_bonus += allocation and allocation._get_allocation_data_on(date_to_simulate)['future_leaves']
                         date_accrual_bonus += consumed_content[allocation]['accrual_bonus']
                         virtual_remaining += consumed_content[allocation]['virtual_remaining_leaves']
                     for leave in content['to_recheck_leaves']:
