@@ -4,3 +4,4 @@
 from . import test_express_checkout_flows
 from . import test_ui
 from . import test_controller
+from . import test_website_sale_controller
