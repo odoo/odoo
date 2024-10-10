@@ -181,7 +181,7 @@ class TestAllocations(TestHrHolidaysCommon):
             ('employee_id', '=', self.employee_emp.id),
         ])
 
-        self.assertAlmostEqual(employee_allocation.number_of_hours_display, 11.43, places=2)
+        self.assertAlmostEqual(employee_allocation.number_of_hours_display, 10.0, places=2)
         self.assertAlmostEqual(employee_emp_allocation.number_of_hours_display, 10.0, places=2)
 
     def change_allocation_type_hours(self):
@@ -304,3 +304,55 @@ class TestAllocations(TestHrHolidaysCommon):
             default_date_to='2024-08-18 15:00:00'
         ).name_search(args=[['id', '=', leave_type.id]])
         self.assertEqual(result[0][1], 'Compensatory Days (9 remaining out of 9 days)')
+
+    def test_allocations_with_different_working_hours_than_default(self):
+        attendances = []
+        for index in range(3):
+            attendances.extend([
+                (0, 0, {
+                    'name': '%s_%d' % ('20 Hours', index),
+                    'hour_from': 8,
+                    'hour_to': 10,
+                    'dayofweek': str(index),
+                    'day_period': 'morning'
+                }),
+                (0, 0, {
+                    'name': '%s_%d' % ('20 Hours', index),
+                    'hour_from': 10,
+                    'hour_to': 11,
+                    'dayofweek': str(index),
+                    'day_period': 'lunch'
+                }),
+                (0, 0, {
+                    'name': '%s_%d' % ('20 Hours', index),
+                    'hour_from': 11,
+                    'hour_to': 13,
+                    'dayofweek': str(index),
+                    'day_period': 'afternoon'
+                })
+            ])
+
+        calendar_emp = self.env['resource.calendar'].create({
+            'name': '20 Hours',
+            'tz': self.employee_hrmanager.tz,
+            'attendance_ids': attendances,
+        })
+        self.employee_hrmanager.resource_calendar_id = calendar_emp.id
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test type',
+            'requires_allocation': 'yes',
+            'request_unit': 'hour',
+        })
+
+        with Form(self.env['hr.leave.allocation']) as f:
+            f.allocation_type = "regular"
+            f.date_from = '2024-08-07'
+            f.holiday_status_id = leave_type
+            f.employee_id = self.employee_hrmanager
+            f.name = "Allocation"
+            f.number_of_hours_display = 20
+
+        alloc = f.save()
+
+        self.assertEqual(alloc.number_of_hours_display, 20)
