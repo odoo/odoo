@@ -455,6 +455,9 @@ class PosSession(models.Model):
         else:
             self.sudo()._post_statement_difference(self.cash_register_difference)
 
+        # Make sure to trigger reordering rules
+        self.picking_ids.move_ids.sudo()._trigger_scheduler()
+
         self.write({'state': 'closed'})
         return True
 
