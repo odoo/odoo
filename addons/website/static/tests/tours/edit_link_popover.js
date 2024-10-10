@@ -167,6 +167,13 @@ tour.register('edit_link_popover', {
     {
         content: "Click 'Home' link in footer",
         trigger: 'footer a[href="/"]',
+        run: function (actions) {
+            actions.click();
+            const sel = document.getSelection();
+            const el = this.$anchor[0];
+            sel.collapse(el, 0);
+            el.focus();
+        },
     },
     {
         content: "Popover should be shown (4)",
