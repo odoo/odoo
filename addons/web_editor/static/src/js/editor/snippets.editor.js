@@ -4117,13 +4117,11 @@ var SnippetsMenu = Widget.extend({
     _onRenameBtnClick: function (ev) {
         const $snippet = $(ev.target).closest('.oe_snippet');
         const snippetName = $snippet.attr('name');
-        const confirmText = _t('Confirm');
         const cancelText = _t('Cancel');
         const $input = $(`
             <we-input class="o_we_user_value_widget w-100 mx-1">
                 <div>
                     <input type="text" autocomplete="chrome-off" value="${snippetName}" class="text-start"/>
-                    <we-button class="o_we_confirm_btn o_we_text_success fa fa-check" title="${confirmText}"></we-button>
                     <we-button class="o_we_cancel_btn o_we_text_danger fa fa-times" title="${cancelText}"></we-button>
                 </div>
             </we-input>
@@ -4134,10 +4132,10 @@ var SnippetsMenu = Widget.extend({
         $textInput.focus();
         $textInput.select();
         $snippet.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging'); // prevent drag
-        $input.find('.o_we_confirm_btn').click(async () => {
-            const name = $textInput.val();
-            if (name !== snippetName) {
-                this._execWithLoadingEffect(async () => {
+        const confirmButtonClickHandler = async () => {
+            const name = $textInput[0].value.trim();
+            if (name && name !== snippetName) {
+                await this._execWithLoadingEffect(async () => {
                     await this._rpc({
                         model: 'ir.ui.view',
                         method: 'rename_snippet',
@@ -4149,9 +4147,14 @@ var SnippetsMenu = Widget.extend({
                     });
                 }, true);
             }
-            await this._loadSnippetsTemplates(name !== snippetName);
-        });
-        $input.find('.o_we_cancel_btn').click(async () => {
+            setTimeout(async () => {
+                await this._loadSnippetsTemplates(name && name !== snippetName);
+            }, 100);
+        };
+
+        $textInput[0].addEventListener("focusout", confirmButtonClickHandler);
+        $input[0].querySelector(".o_we_cancel_btn").addEventListener("mousedown", async () => {
+            $textInput[0].removeEventListener("focusout", confirmButtonClickHandler);
             await this._loadSnippetsTemplates(false);
         });
     },
