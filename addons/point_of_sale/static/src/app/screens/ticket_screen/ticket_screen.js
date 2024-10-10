@@ -58,13 +58,10 @@ export class TicketScreen extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
-        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer = { reset: () => {} };
         this.doPrint = useTrackedAsync((_selectedSyncedOrder) =>
             this.pos.printReceipt({ order: _selectedSyncedOrder })
         );
-        this.numberBuffer.use({
-            triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
-        });
 
         this.state = useState({
             page: 1,
@@ -93,7 +90,12 @@ export class TicketScreen extends Component {
     }
     getNumpadButtons() {
         return getButtons(DEFAULT_LAST_ROW, [
-            { value: "quantity", text: _t("Qty"), class: "active border-primary" },
+            {
+                value: "quantity",
+                text: _t("Qty"),
+                class: "active border-primary",
+                modifier: () => {},
+            },
             { value: "discount", text: _t("% Disc"), disabled: true },
             { value: "price", text: _t("Price"), disabled: true },
             BACKSPACE,
@@ -105,7 +107,7 @@ export class TicketScreen extends Component {
     }
     onClickOrder(clickedOrder) {
         this.state.selectedOrder = clickedOrder;
-        this.numberBuffer.reset();
+        this.numberBufferReset?.();
         if ((!clickedOrder || clickedOrder.uiState.locked) && !this.getSelectedOrderlineId()) {
             // Automatically select the first orderline of the selected order.
             const firstLine = this.state.selectedOrder.get_orderlines()[0];
@@ -134,7 +136,7 @@ export class TicketScreen extends Component {
         if (this.state.selectedOrder.uiState.locked) {
             const order = this.getSelectedOrder();
             this.state.selectedOrderlineIds[order.id] = orderline.id;
-            this.numberBuffer.reset();
+            this.numberBufferReset();
         }
     }
     onClickRefundOrderUid(orderUuid) {
@@ -144,16 +146,16 @@ export class TicketScreen extends Component {
             this._setOrder(refundOrder);
         }
     }
-    _onUpdateSelectedOrderline({ key, buffer }) {
+    _onUpdateSelectedOrderline({ buffer }) {
         const order = this.getSelectedOrder();
         if (!order) {
-            return this.numberBuffer.reset();
+            return this.numberBufferReset();
         }
 
         const selectedOrderlineId = this.getSelectedOrderlineId();
         const orderline = order.lines.find((line) => line.id == selectedOrderlineId);
         if (!orderline) {
-            return this.numberBuffer.reset();
+            return this.numberBufferReset();
         }
 
         const toRefundDetails = orderline
@@ -162,12 +164,12 @@ export class TicketScreen extends Component {
         for (const toRefundDetail of toRefundDetails) {
             // When already linked to an order, do not modify the to refund quantity.
             if (toRefundDetail.destionation_order_id) {
-                return this.numberBuffer.reset();
+                return this.numberBufferReset();
             }
 
             const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refunded_qty;
             if (refundableQty <= 0) {
-                return this.numberBuffer.reset();
+                return this.numberBufferReset();
             }
 
             if (buffer == null || buffer == "") {
@@ -175,7 +177,7 @@ export class TicketScreen extends Component {
             } else {
                 const quantity = Math.abs(parseFloat(buffer));
                 if (quantity > refundableQty) {
-                    this.numberBuffer.reset();
+                    this.numberBufferReset();
                     if (!toRefundDetail.line.combo_parent_id) {
                         this.dialog.add(AlertDialog, {
                             title: _t("Maximum Exceeded"),

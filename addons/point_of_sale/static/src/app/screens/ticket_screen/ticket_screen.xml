@@ -163,7 +163,11 @@
                                     </button>
                                 </div>
                                 <div class="subpads d-flex flex-column">
-                                    <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
+                                    <Numpad class="'pb-2'"
+                                        buttons="getNumpadButtons()"
+                                        onClick.bind="_onUpdateSelectedOrderline"
+                                        getResetter="(resetter) => this.numberBufferReset = resetter"
+                                    />
                                     <ActionpadWidget
                                         partner="getSelectedOrder()?.get_partner()"
                                         actionName.translate="Refund"
