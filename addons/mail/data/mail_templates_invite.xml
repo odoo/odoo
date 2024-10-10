@@ -22,9 +22,9 @@
                     </div>
                 </div>
             </xpath>
-            <xpath expr="//tr[td/p[@t-if='subtype_internal']]" position="replace"/>
+            <xpath expr="//tr[@t-if='subtype_internal']" position="replace"/>
             <xpath expr="//span[@id='mail_unfollow']" position="replace"/>
-            <xpath expr="//div[@style='margin-top:16px;']/hr" position="before">
+            <xpath expr="//t[@t-call='mail.mail_footer']" position="before">
                 <span id="mail_unfollow" style="font-size: 13px;">
                     Not interested by this? <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
                 </span>
