@@ -12,7 +12,7 @@ export class ServerDialog extends Component {
 
     setup() {
         this.store = toRaw(useStore());
-        this.state = useState({ waitRestart: false });
+        this.state = useState({ waitRestart: false, loading: false, error: null });
         this.form = useState({
             token: "",
             iotname: this.store.base.hostname,
@@ -20,6 +20,8 @@ export class ServerDialog extends Component {
     }
 
     async connectToServer() {
+        this.state.loading = true;
+        this.state.error = null;
         try {
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/connect_to_server",
@@ -29,10 +31,13 @@ export class ServerDialog extends Component {
 
             if (data.status === "success") {
                 this.state.waitRestart = true;
+            } else {
+                this.state.error = data.message;
             }
         } catch {
             console.warn("Error while fetching data");
         }
+        this.state.loading = false;
     }
 
     async clearConfiguration() {
@@ -77,8 +82,9 @@ export class ServerDialog extends Component {
                         <small t-if="!this.form.token" class="text-danger">Please enter a server token</small>
                     </div>
                     <div class="d-flex justify-content-end gap-2">
-                        <button type="submit" class="btn btn-warning btn-sm" t-on-click="connectToServer">Connect</button>
+                        <button type="submit" class="btn btn-warning btn-sm" t-att-disabled="this.state.loading" t-on-click="connectToServer">Connect</button>
                     </div>
+                    <small t-if="this.state.error" class="text-danger" t-esc="this.state.error"/>
                 </div>
             </t>
             <t t-set-slot="footer">
