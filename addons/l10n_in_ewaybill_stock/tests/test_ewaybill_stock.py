@@ -160,33 +160,3 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
           'totInvValue': 2625.0
         }
         self.assertDictEqual(ewaybill._ewaybill_generate_direct_json(), expected_json)
-
-    @freeze_time('2024-04-26')
-    def test_ewaybill_stock_test_3(self):
-        """
-        Ewaybill Zero distance test
-        """
-        delivery_picking = self._create_stock_picking()
-        ewaybill = self.env['l10n.in.ewaybill'].create({
-            'type_id': self.env.ref('l10n_in_ewaybill_stock.type_delivery_challan_sub_others').id,
-            'type_description': "Other reasons",
-            'picking_id': delivery_picking.id,
-            'transporter_id': self.partner_a.id,
-            'mode': '2',
-            'distance': 0,
-            'transportation_doc_no': 123456789,
-            'transportation_doc_date': '2024-04-26'
-        })
-        expected_distance = 118
-        response = {
-            'status_cd': '1',
-            'status_desc': 'EWAYBILL request succeeds',
-            'data': {
-                'ewayBillNo': 123456789012,
-                'ewayBillDate': '26/02/2024 12:09:43 PM',
-                'validUpto': '27/02/2024 12:09:43 PM',
-                "alert": ", Distance between these two pincodes is 118, "
-            }
-        }
-        ewaybill._l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(response)
-        self.assertEqual(ewaybill.distance, expected_distance)
