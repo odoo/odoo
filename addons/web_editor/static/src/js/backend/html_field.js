@@ -30,6 +30,7 @@ import { rpc } from "@web/core/network/rpc";
 // Ensure `@web/views/fields/html/html_field` is loaded first as this module
 // must override the html field in the registry.
 import '@web/views/fields/html/html_field';
+import { Deferred } from "@web/core/utils/concurrency";
 
 let stripHistoryIds;
 
@@ -380,9 +381,15 @@ export class HtmlField extends Component {
         popover.style.left = leftPosition + 'px';
     }
     async commitChanges({ urgent, shouldInline } = {}) {
+        if (this.isCurrentlySaving && !urgent) {
+            await this.isCurrentlySaving;
+        }
         if (this._isDirty() || urgent || (shouldInline && this.props.isInlineStyle)) {
             let savePendingImagesPromise, toInlinePromise;
             if (this.wysiwyg && this.wysiwyg.odooEditor) {
+                if (!urgent) {
+                    this.isCurrentlySaving = new Deferred();
+                }
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
                 savePendingImagesPromise = this.wysiwyg.savePendingImages();
                 if (this.props.isInlineStyle) {
@@ -400,6 +407,9 @@ export class HtmlField extends Component {
             }
             if (status(this) !== 'destroyed') {
                 await this.updateValue();
+            }
+            if (this.isCurrentlySaving) {
+                this.isCurrentlySaving.resolve();
             }
         }
     }
