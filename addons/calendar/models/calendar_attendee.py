@@ -100,10 +100,21 @@ class CalendarAttendee(models.Model):
     def _mail_template_default_values(self):
         return {
             "email_from": "{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}",
-            "email_to": "{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}",
-            "partner_to": "{{ object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False }}",
+            "email_to": False,
+            "partner_to": False,
             "lang": "{{ object.partner_id.lang }}",
-            "use_default_to": False,
+            "use_default_to": True,
+        }
+
+    def _message_get_default_recipients(self):
+        # override: partner_id being the only stored field, we can currently
+        # simplify computation, we have no other choice than relying on it
+        return {
+            attendee.id: {
+                'partner_ids': attendee.partner_id.ids,
+                'email_to': False,
+                'email_cc': False
+            } for attendee in self
         }
 
     def _send_invitation_emails(self):
