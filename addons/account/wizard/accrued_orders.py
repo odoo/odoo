@@ -143,9 +143,10 @@ class AccruedExpenseRevenue(models.TransientModel):
         fnames = []
         total_balance = 0.0
         for order in orders:
-            if len(orders) == 1 and self.amount and order.order_line:
+            product_lines = order.order_line.filtered(lambda x: x.product_id)
+            if len(orders) == 1 and product_lines and self.amount and order.order_line:
                 total_balance = self.amount
-                order_line = order.order_line[0]
+                order_line = product_lines[0]
                 account = self._get_computed_account(order, order_line.product_id, is_purchase)
                 distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
                 values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'), analytic_distribution=distribution)
