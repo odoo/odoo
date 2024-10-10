@@ -123,3 +123,21 @@ class TestEdiZatca(TestSaEdiCommon):
             current_tree = self.with_applied_xpath(current_tree, self.remove_ubl_extensions_xpath)
 
             self.assertXmlTreeEqual(current_tree, expected_tree)
+
+    def test_invoice_tax_amount_calculation(self):
+        taxes = self.env['account.tax'].create([
+            {
+                'l10n_sa_is_retention': True,
+                'name': "Retention 10%",
+                'amount': -10
+            },
+            {
+                'name': "15% sales",
+                'amount': 15
+            },
+        ])
+
+        invoice = self.init_invoice('out_invoice', amounts=[1000], taxes=taxes)
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'product'), [{
+            'l10n_gcc_invoice_tax_amount': 150
+        }])
