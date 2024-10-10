@@ -6,11 +6,19 @@ export class ProjectProject extends models.Model {
 
     name = fields.Char();
     is_favorite = fields.Boolean();
+    date = fields.Date({ string: "Expiration Date" });
+    date_start = fields.Date();
+    user_id = fields.Many2one({ relation: "res.users" });
 
     _records = [
         { id: 1, name: "Project 1" },
         { id: 2, name: "Project 2" },
     ];
+
+    _views = {
+        list: '<list><field name="name"/></list>',
+        form: '<form><field name="name"/></form>',
+    };
 }
 
 export class ProjectTask extends models.Model {
