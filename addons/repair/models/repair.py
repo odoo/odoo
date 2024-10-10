@@ -236,6 +236,11 @@ class Repair(models.Model):
             self.partner_invoice_id = addresses['invoice']
             self.pricelist_id = self.partner_id.property_product_pricelist.id
 
+    @api.onchange('lot_id')
+    def onchange_lot_id(self):
+        if any(line.lot_id == self.lot_id and line.type == 'add' for line in self.operations):
+            raise UserError(_("The serial number of the product to be repaired cannot be the same as one of the part of the repair."))
+
     @api.depends('company_id')
     def _compute_location_id(self):
         for order in self:
@@ -816,6 +821,11 @@ class RepairLine(models.Model):
                 return {'warning': warning}
             else:
                 self.price_unit = price
+
+    @api.onchange('lot_id')
+    def onchange_lot_id(self):
+        if self.type == 'add' and self.lot_id == self.repair_id.lot_id:
+            raise UserError(_("The serial number of the product to be repaired cannot be the same as one of the part of the repair."))
 
 
 class RepairFee(models.Model):
