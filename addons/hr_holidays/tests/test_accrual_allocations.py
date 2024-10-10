@@ -3311,3 +3311,81 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2025-04-01'):
             allocation._update_accrual()
             self.assert_allocation_and_balance(allocation, 11, 5, "Only 5 days will carry over")
+
+    def test_carriedover_days_expiration_reset(self):
+        """
+        Description:
+
+        Assert that the number of expiring carry-over days and the expiration date of the carry-over days
+        are reset when the start date of the allocation is changed. This should result in the number of accrued days
+        being consistent when setting the allocation start date to some date, changing the start date to another date
+        and then changing the start date back to the first date.
+
+        Steps:
+
+        Create an accrual plan:
+        - Carryover date on allocation start date.
+        - Has 1 level:
+            * Start 0 days after allocation start date.
+            * Accrues 1 day monthly on 1st day of the month.
+            * Carryover policy all accrued time carried over.
+            * Carryover validity 1 month.
+
+        Note: The following dates are in mm/dd/YYYY
+        Create an allocation:
+            * Allocation type: accrual allocation.
+            * Accrual plan: use the one defined above.
+            * Set allocation start date 08/01/2023.
+
+            Assume that today is 09/25/2024
+
+            * Compute the number of accrued days on 09/25/2024 -> 2 days.
+
+            * Change allocation start date to 09/01/2023.
+              - Number of expiring carry-over days will reset to 0
+              - Expiration date of carry-over days will reset to False
+              - Compute the number of accrued days on 09/25/2024 -> 12 days.
+
+            * Change allocation start date back to 08/01/2023.
+              - Number of expiring carry-over days will reset to 0
+              - Expiration date of carry-over days will reset to False
+              - Compute the number of accrued days on 09/25/2024 -> 2 days.
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'carryover_date': 'allocation',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+                'action_with_unused_accruals': 'all',
+                'accrual_validity': True,
+                'accrual_validity_type': 'month',
+                'accrual_validity_count': 1,
+            })]
+        })
+
+        with freeze_time('2023-08-01'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'date_from': '2023-08-01'
+            })
+
+        with freeze_time('2024-09-25'):
+            allocation._onchange_date_from()
+            self.assertEqual(allocation.number_of_days, 2)
+
+            allocation.date_from = '2023-09-01'
+            allocation._onchange_date_from()
+            self.assertEqual(allocation.number_of_days, 12)
+
+            allocation.date_from = '2023-08-01'
+            allocation._onchange_date_from()
+            self.assertEqual(allocation.number_of_days, 2)

@@ -855,6 +855,8 @@ class HolidaysAllocation(models.Model):
         self.number_of_hours_display = 0.0
         self.number_of_days = 0.0
         self.already_accrued = False
+        self.carried_over_days_expiration_date = False
+        self.expiring_carryover_days = 0
         date_to = min(self.date_to, date.today()) if self.date_to else False
         self._process_accrual_plans(date_to)
 
