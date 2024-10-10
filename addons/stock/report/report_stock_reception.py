@@ -47,7 +47,7 @@ class ReceptionReport(models.AbstractModel):
             if qty_already_assigned:
                 product_to_total_assigned[move.product_id][0] += qty_already_assigned
                 product_to_total_assigned[move.product_id][1].append(move.id)
-            if move.product_qty != qty_already_assigned:
+            if move.product_qty != qty_already_assigned or self.env.context.get('reception_show_all_out_moves'):
                 if move.state == 'draft':
                     product_to_qty_draft[move.product_id] += move.product_qty - qty_already_assigned
                 else:
@@ -115,7 +115,7 @@ class ReceptionReport(models.AbstractModel):
                     if float_compare(qty_to_reserve, qty_done, precision_rounding=product_uom.rounding) == 0:
                         break
 
-                if not float_is_zero(qty_done, precision_rounding=product_uom.rounding):
+                if not float_is_zero(qty_done, precision_rounding=product_uom.rounding) or self.env.context.get('reception_show_all_out_moves'):
                     sources_to_lines[source].append(self._prepare_report_line(qty_done, product_id, out, source[0], move_ins=self.env['stock.move'].browse(moves_in_ids)))
 
                 # draft qtys can be shown but not assigned
