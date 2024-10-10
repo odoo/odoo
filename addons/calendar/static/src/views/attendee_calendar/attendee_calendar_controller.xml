@@ -3,7 +3,7 @@
     <t t-name="calendar.AttendeeCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary">
         <xpath expr="//Layout" position="inside">
             <t t-set-slot="control-panel-create-button">
-                <button class="btn btn-primary o-calendar-button-new me-1" t-on-click="onClickAddButton">New</button>
+                <button class="btn btn-primary o-calendar-button-new" t-on-click="onClickAddButton">New</button>
             </t>
         </xpath>
         <!-- Add header div to be filled with synchronization buttons in synchronization modules. -->
