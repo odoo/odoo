@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime
 from pytz import utc, timezone
@@ -7,6 +6,7 @@ from odoo.addons.resource.models.resource import Intervals, sum_intervals
 from odoo.fields import Date
 
 from .common import TestContractCommon
+
 
 class TestResource(TestContractCommon):
 
@@ -80,6 +80,17 @@ class TestResource(TestContractCommon):
             elif calendar == self.calendar_richard:
                 self.assertFalse(richard_entries[calendar] - interval_40h, "Interval 40h should cover all calendar 40h validity")
                 self.assertFalse(interval_40h - richard_entries[calendar], "Calendar 40h validity should cover all interval 40h")
+
+        self.employee.contract_ids.state = 'close'
+        self.contract_cdi.date_end = '2021-12-31'
+        calendars = self.employee.resource_id._get_calendars_validity_within_period(
+            tz.localize(datetime(2022, 1, 1)),
+            tz.localize(datetime(2022, 1, 31)),
+        )
+        self.assertTrue(
+            calendars[self.employee.resource_id.id][self.employee.company_id.resource_calendar_id],
+            "Employee without running contract falls back on company calendar",
+        )
 
     def test_queries(self):
         employees_test = self.env['hr.employee'].create([{

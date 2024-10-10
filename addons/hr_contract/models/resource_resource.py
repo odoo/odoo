@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from datetime import datetime
 from pytz import timezone
 
 from odoo import models
+
 from odoo.addons.resource.models.resource import Intervals
+
 
 class ResourceResource(models.Model):
     _inherit = 'resource.resource'
@@ -52,5 +53,11 @@ class ResourceResource(models.Model):
                 tz.localize(datetime.combine(contract.date_start, datetime.min.time())) if contract.date_start > start.astimezone(tz).date() else start,
                 tz.localize(datetime.combine(contract.date_end, datetime.max.time())) if contract.date_end and contract.date_end < end.astimezone(tz).date() else end,
                 self.env['resource.calendar.attendance']
+            )])
+        # Fall back on company calendar for employees without applicable contract
+        for employee in resource_with_contract.employee_id - contracts.employee_id:
+            calendar = employee.company_id.resource_calendar_id
+            calendars_within_period_per_resource[employee.resource_id.id][calendar] = Intervals([(
+                start, end, self.env['resource.calendar.attendance'],
             )])
         return calendars_within_period_per_resource
