@@ -222,14 +222,18 @@ class AccountMoveLine(models.Model):
     @api.depends('price_subtotal', 'price_total')
     def _compute_tax_amount(self):
         super()._compute_tax_amount()
-        taxes_vals_by_move = {}
-        for record in self:
-            move = record.move_id
-            if move.country_code == 'SA':
-                taxes_vals = taxes_vals_by_move.get(move.id)
-                if not taxes_vals:
-                    taxes_vals = move._prepare_invoice_aggregated_taxes(
-                        filter_tax_values_to_apply=lambda l, t: not self.env['account.tax'].browse(t['id']).l10n_sa_is_retention
-                    )
-                    taxes_vals_by_move[move.id] = taxes_vals
-                record.l10n_gcc_invoice_tax_amount = abs(taxes_vals.get('tax_details_per_record', {}).get(record, {}).get('tax_amount_currency', 0))
+        AccountTax = self.env['account.tax']
+        for line in self:
+            if (
+                line.move_id.country_code == 'SA'
+                and line.move_id.is_invoice(include_receipts=True)
+                and line.display_type == 'product'
+            ):
+                base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
+                AccountTax._add_tax_details_in_base_line(base_line, line.company_id)
+                AccountTax._round_base_lines_tax_details([base_line], line.company_id)
+                line.l10n_gcc_invoice_tax_amount = sum(
+                    tax_data['tax_amount_currency']
+                    for tax_data in base_line['tax_details']['taxes_data']
+                    if not tax_data['tax'].l10n_sa_is_retention
+                )
