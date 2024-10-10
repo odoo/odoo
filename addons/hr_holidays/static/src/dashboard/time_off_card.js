@@ -24,6 +24,8 @@ export class TimeOffCardPopover extends Component {
         "onClickNewAllocationRequest?",
         "errorLeaves",
         "accrualExcess",
+        "timeOffType",
+        "employeeId",
     ];
 
     setup() {
@@ -41,6 +43,18 @@ export class TimeOffCardPopover extends Component {
             domain: [["id", "in", this.props.errorLeaves]],
         });
     }
+
+    async navigateInfo(state) {
+        const { employeeId, timeOffType } = this.props;
+
+        const domain = [
+            ['state', 'in', state],
+            ['holiday_status_id', '=', timeOffType],
+            employeeId ? ['employee_id', '=', employeeId] : ['user_id', '=', user.userId]
+        ];
+
+        openLeaveWindow(this.actionService, domain);
+    }
 }
 
 export class TimeOffCard extends Component {
@@ -53,6 +67,7 @@ export class TimeOffCard extends Component {
             popoverClass: "bg-view",
         });
         this.newAllocationRequest = useNewAllocationRequest();
+        this.actionService = useService("action");
         this.lang = user.lang;
         this.formatNumber = formatNumber;
         const { data } = this.props;
@@ -79,7 +94,7 @@ export class TimeOffCard extends Component {
     }
 
     onClickInfo(ev) {
-        const { data } = this.props;
+        const { data, holidayStatusId, employeeId } = this.props;
         this.popover.open(ev.target, {
             allocated: formatNumber(this.lang, data.max_leaves),
             accrual_bonus: formatNumber(this.lang, data.accrual_bonus),
@@ -95,6 +110,8 @@ export class TimeOffCard extends Component {
             onClickNewAllocationRequest: this.newAllocationRequestFrom.bind(this),
             errorLeaves: this.errorLeaves,
             accrualExcess: this.getAccrualExcess(data),
+            timeOffType: holidayStatusId,
+            employeeId: employeeId
         });
     }
 
@@ -108,6 +125,34 @@ export class TimeOffCard extends Component {
         this.popover.close();
         await this.newAllocationRequest(this.props.employeeId, this.props.holidayStatusId);
     }
+
+    async navigateTimeOffType() {
+        const { employeeId, holidayStatusId } = this.props;
+
+        const domain = [
+            ['holiday_status_id', '=', holidayStatusId],
+            employeeId ? ['employee_id', '=', employeeId] : ['user_id', '=', user.userId]
+        ];
+
+        openLeaveWindow(this.actionService, domain);
+    }
+}
+
+function openLeaveWindow(actionService, domain) {
+    actionService.doAction({
+        type: "ir.actions.act_window",
+        name: "My Time Off",
+        res_model: "hr.leave",
+        views: [
+            [false, "list"],
+            [false, "form"]
+        ],
+        domain: domain,
+        context: {
+            list_view_ref: "hr_holidays.hr_leave_view_tree_my",
+            form_view_ref: "hr_holidays.hr_leave_view_form",
+        }
+    });
 }
 
 export class TimeOffCardMobile extends TimeOffCard {
