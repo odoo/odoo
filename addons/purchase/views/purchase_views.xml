@@ -221,7 +221,7 @@
                                 mode="list,kanban"
                                 context="{'default_state': 'draft'}"
                                 readonly="state in ('done', 'cancel')">
-                                <list string="Purchase Order Lines" editable="bottom">
+                                <list string="Purchase Order Lines" editable="bottom" limit="200">
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
