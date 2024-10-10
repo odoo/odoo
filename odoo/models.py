@@ -4349,18 +4349,21 @@ class BaseModel(metaclass=MetaModel):
             lines = [_("Incompatible companies on records:")]
             company_msg = _lt("- Record is company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
             record_msg = _lt("- “%(record)s” belongs to company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
+            record_companies_msg = _lt("- “%(record)s” belongs to companies %(company)s and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
             root_company_msg = _lt("- Only a root company can be set on “%(record)s”. Currently set to “%(company)s”")
             for record, name, corecords in inconsistencies[:5]:
                 if record._name == 'res.company':
-                    msg, company = company_msg, record
+                    msg, company_name = company_msg, record.display_name
                 elif record == corecords and name == 'company_id':
-                    msg, company = root_company_msg, record.company_id
+                    msg, company_name = root_company_msg, record.company_id.display_name
+                elif 'company_id' in record._fields:
+                    msg, company_name = record_msg, record.company_id.display_name
                 else:
-                    msg, company = record_msg, record.company_id
+                    msg, company_name = record_companies_msg, ", ".join(f"“{c.display_name}”" for c in record.company_ids)
                 field = self.env['ir.model.fields']._get(self._name, name)
                 lines.append(str(msg) % {
                     'record': record.display_name,
-                    'company': company.display_name,
+                    'company': company_name,
                     'field': field.field_description,
                     'fname': field.name,
                     'values': ", ".join(repr(rec.display_name) for rec in corecords),
