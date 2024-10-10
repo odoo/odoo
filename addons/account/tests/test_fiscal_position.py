@@ -171,6 +171,13 @@ class TestFiscalPosition(common.TransactionCase):
         self.env['account.fiscal.position'].search([]).auto_apply = False
 
         # Create the fiscal positions
+        fp_oss_nl = self.env['account.fiscal.position'].create({
+            'name': 'OSS B2C Netherlands',
+            'auto_apply': True,
+            'country_id': self.nl.id,
+            'vat_required': False,
+            'sequence': 0,
+        })
         fp_be_nat = self.env['account.fiscal.position'].create({
             'name': 'Régime National',
             'auto_apply': True,
@@ -202,7 +209,11 @@ class TestFiscalPosition(common.TransactionCase):
         # Create the partners
         partner_be_vat = self.env['res.partner'].create({
             'name': 'BE VAT',
-            'vat': 'BE0477472701',
+            'vat': 'BE0246697724',
+            'country_id': self.be.id,
+        })
+        partner_be_no_vat = self.env['res.partner'].create({
+            'name': 'BE NO VAT',
             'country_id': self.be.id,
         })
         partner_nl_vat = self.env['res.partner'].create({
@@ -214,64 +225,63 @@ class TestFiscalPosition(common.TransactionCase):
             'name': 'NL NO VAT',
             'country_id': self.nl.id,
         })
+        partner_us_vat = self.env['res.partner'].create({
+            'name': 'US VAT',
+            'vat': 'US34567',
+            'country_id': self.us.id,
+        })
         partner_us_no_vat = self.env['res.partner'].create({
             'name': 'US NO VAT',
             'country_id': self.us.id,
         })
+        partner_us_nl_vat = self.env['res.partner'].create({
+            'name': 'US NL VAT',
+            'vat': 'NL123456781B90',
+            'country_id': self.us.id,
+        })
 
-        # Case : 1
-        # Billing (VAT/country) : BE/BE
-        # Delivery (VAT/country) : NL/NL
-        # Expected FP : Régime National
-        self.assertEqual(
-            self.env['account.fiscal.position']._get_fiscal_position(partner_be_vat, partner_nl_vat),
-            fp_be_nat
-        )
+        data = [
+            {'partner': partner_nl_vat, 'delivery': partner_be_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_nl_vat, 'delivery': partner_be_no_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_nl_vat, 'delivery': partner_nl_vat, 'expected_fp': fp_eu_intra},
+            {'partner': partner_nl_vat, 'delivery': partner_nl_no_vat, 'expected_fp': fp_eu_intra},
+            {'partner': partner_nl_vat, 'delivery': partner_us_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_nl_vat, 'delivery': partner_us_nl_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_nl_vat, 'delivery': partner_us_no_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_nl_no_vat, 'delivery': partner_be_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_nl_no_vat, 'delivery': partner_be_no_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_nl_no_vat, 'delivery': partner_nl_vat, 'expected_fp': fp_oss_nl},
+            {'partner': partner_nl_no_vat, 'delivery': partner_nl_no_vat, 'expected_fp': fp_oss_nl},
+            {'partner': partner_nl_no_vat, 'delivery': partner_us_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_nl_no_vat, 'delivery': partner_us_nl_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_nl_no_vat, 'delivery': partner_us_no_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_us_vat, 'delivery': partner_be_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_us_vat, 'delivery': partner_be_no_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_us_vat, 'delivery': partner_nl_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_us_vat, 'delivery': partner_nl_no_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_us_vat, 'delivery': partner_us_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_us_vat, 'delivery': partner_us_no_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_us_vat, 'delivery': partner_us_nl_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_us_no_vat, 'delivery': partner_be_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_us_no_vat, 'delivery': partner_be_no_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_us_no_vat, 'delivery': partner_nl_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_us_no_vat, 'delivery': partner_nl_no_vat, 'expected_fp': fp_be_nat},
+            {'partner': partner_us_no_vat, 'delivery': partner_us_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_us_no_vat, 'delivery': partner_us_no_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_us_no_vat, 'delivery': partner_us_nl_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_us_nl_vat, 'delivery': partner_nl_vat, 'expected_fp': fp_eu_intra},
+            {'partner': partner_us_nl_vat, 'delivery': partner_nl_no_vat, 'expected_fp': fp_eu_intra},
+            {'partner': partner_us_nl_vat, 'delivery': partner_be_vat, 'expected_fp': fp_eu_priv},
+            {'partner': partner_us_nl_vat, 'delivery': partner_be_no_vat, 'expected_fp': fp_eu_priv},
+            {'partner': partner_us_nl_vat, 'delivery': partner_us_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_us_nl_vat, 'delivery': partner_us_nl_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_us_nl_vat, 'delivery': partner_us_no_vat, 'expected_fp': fp_eu_extra},
+        ]
 
-        # Case : 2
-        # Billing (VAT/country) : NL/NL
-        # Delivery (VAT/country) : BE/BE
-        # Expected FP : Régime National
-        self.assertEqual(
-            self.env['account.fiscal.position']._get_fiscal_position(partner_nl_vat, partner_be_vat),
-            fp_be_nat
-        )
-
-        # Case : 3
-        # Billing (VAT/country) : BE/BE
-        # Delivery (VAT/country) : None/NL
-        # Expected FP : Régime National
-        self.assertEqual(
-            self.env['account.fiscal.position']._get_fiscal_position(partner_be_vat, partner_nl_no_vat),
-            fp_be_nat
-        )
-
-        # Case : 4
-        # Billing (VAT/country) : NL/NL
-        # Delivery (VAT/country) : NL/NL
-        # Expected FP : Régime Intra-Communautaire
-        self.assertEqual(
-            self.env['account.fiscal.position']._get_fiscal_position(partner_nl_vat, partner_nl_vat),
-            fp_eu_intra
-        )
-
-        # Case : 5
-        # Billing (VAT/country) : None/NL
-        # Delivery (VAT/country) : None/NL
-        # Expected FP : EU privé
-        self.assertEqual(
-            self.env['account.fiscal.position']._get_fiscal_position(partner_nl_no_vat, partner_nl_no_vat),
-            fp_eu_priv
-        )
-
-        # Case : 6
-        # Billing (VAT/country) : None/US
-        # Delivery (VAT/country) : None/US
-        # Expected FP : Régime Extra-Communautaire
-        self.assertEqual(
-            self.env['account.fiscal.position']._get_fiscal_position(partner_us_no_vat, partner_us_no_vat),
-            fp_eu_extra
-        )
+        for vals in data:
+            fp = self.env['account.fiscal.position'].with_company(self.env.company)._get_fiscal_position(vals['partner'], vals['delivery'])
+            with self.subTest(fp=fp.name, expected_fp=vals['expected_fp'].name):
+                self.assertEqual(fp, vals['expected_fp'])
 
     def test_fiscal_position_constraint(self):
         """
