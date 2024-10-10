@@ -89,7 +89,7 @@ export class Call extends Component {
         const filterVideos = this.store.settings.showOnlyVideo && this.props.thread.videoCount > 0;
         for (const session of this.props.thread.rtcSessions) {
             const target = session.raisingHand ? raisingHandCards : sessionCards;
-            const cameraStream = session.isCameraOn
+            const cameraStream = session.is_camera_on
                 ? session.videoStreams.get("camera")
                 : undefined;
             if (!filterVideos || cameraStream) {
@@ -100,7 +100,7 @@ export class Call extends Component {
                     videoStream: cameraStream,
                 });
             }
-            const screenStream = session.isScreenSharingOn
+            const screenStream = session.is_screen_sharing_on
                 ? session.videoStreams.get("screen")
                 : undefined;
             if (screenStream) {
@@ -125,8 +125,8 @@ export class Call extends Component {
         });
         sessionCards.sort((c1, c2) => {
             return (
-                c1.session.channelMember?.persona?.name?.localeCompare(
-                    c2.session.channelMember?.persona?.name
+                c1.session.channel_member_id?.persona?.name?.localeCompare(
+                    c2.session.channel_member_id?.persona?.name
                 ) ?? 1
             );
         });
@@ -144,7 +144,7 @@ export class Call extends Component {
             return this.visibleCards;
         }
         const type = activeSession.mainVideoStreamType;
-        if (type === "screen" || activeSession.isScreenSharingOn) {
+        if (type === "screen" || activeSession.is_screen_sharing_on) {
             this.setInset(activeSession, type === "camera" ? "screen" : "camera");
         }
         return [

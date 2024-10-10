@@ -43,8 +43,8 @@
             <span t-ref="displayName" class="ms-2 text-truncate" t-esc="member.name"/>
             <span class="ms-auto">
                 <span t-if="member.in(props.thread.invitedMembers)" class="p-1 fa fa-user-plus"/>
-                <span t-if="member.rtcSession?.isSelfMuted and !member.rtcSession?.isDeaf" class="p-1 fa fa-microphone-slash"/>
-                <span t-elif="member.rtcSession?.isDeaf" class="p-1 fa fa-deaf"/>
+                <span t-if="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash"/>
+                <span t-elif="member.rtcSession?.is_deaf" class="p-1 fa fa-deaf"/>
                 <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
             </span>
 

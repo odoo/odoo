@@ -139,17 +139,17 @@ class MailRtcSession(models.Model):
     def _to_store(self, store: Store, extra=False):
         for rtc_session in self:
             data = rtc_session._read_format([], load=False)[0]
-            data["channelMember"] = Store.one(
+            data["channel_member_id"] = Store.one(
                 rtc_session.channel_member_id,
                 fields={"channel": [], "persona": ["name", "im_status"]},
             )
             if extra:
                 data.update(
                     {
-                        "isCameraOn": rtc_session.is_camera_on,
-                        "isDeaf": rtc_session.is_deaf,
-                        "isSelfMuted": rtc_session.is_muted,
-                        "isScreenSharingOn": rtc_session.is_screen_sharing_on,
+                        "is_camera_on": rtc_session.is_camera_on,
+                        "is_deaf": rtc_session.is_deaf,
+                        "is_muted": rtc_session.is_muted,
+                        "is_screen_sharing_on": rtc_session.is_screen_sharing_on,
                     }
                 )
             store.add(rtc_session, data)
