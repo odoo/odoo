@@ -1509,3 +1509,60 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })
 
         self.assertEqual(wizard.amount, 39.50)
+
+    def test_group_payment_method_with_branch(self):
+        # create a new branch
+        self.env.company.write({
+            'child_ids': [
+                Command.create({'name': 'Branch A'}),
+                Command.create({'name': 'Branch B'}),
+            ],
+        })
+        self.cr.precommit.run()  # load the CoA
+
+        # create an invoice on the new branch
+        branch_invoices = self.env['account.move']
+        for idx, branch in enumerate(self.env.company.child_ids):
+            self.env["account.journal"].create({
+                'code': 'TEST',
+                'company_id': branch.id,
+                'name': f'{branch.name} journal',
+                'type': 'bank',
+            })
+            receivable_account = self.env['account.account'].create({
+                'name': 'Receivable Account',
+                'code': f'{idx}234567',
+                'account_type': 'asset_receivable',
+                'reconcile': True,
+                'company_id': branch.id,
+            })
+            self.partner_a.with_company(branch).write({
+                'property_account_receivable_id': receivable_account.id,
+            })
+            branch_invoices |= self.init_invoice('out_invoice', products=self.product_a, company=branch)
+
+        parent_invoice = self.init_invoice('out_invoice', products=self.product_a)
+        (branch_invoices | parent_invoice).action_post()
+
+        # branch1 + parent
+        case1 = branch_invoices[0] + parent_invoice
+        # branch1 + branch2
+        case2 = branch_invoices
+        # branch1 + branch2 + parent
+        case3 = branch_invoices + parent_invoice
+
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=case1.ids).create({})
+        # When user select branch + parent, allow only parent company journals
+        self.assertTrue(wizard.journal_id.company_id == self.env.company)
+
+        # When user select sibling companies, group payments are not allowed
+        with self.assertRaises(UserError, msg="You can't create payments for entries belonging to different branches."):
+            self.env['account.payment.register'].with_context(active_model='account.move', active_ids=case2.ids).create({})
+
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=case3.ids).create({})
+        available_journals = wizard.available_journal_ids.filtered_domain([
+            *self.env['account.journal']._check_company_domain(wizard.company_id),
+            ('type', 'in', ('bank', 'cash')),
+        ])
+        # When user select 2+ branches and parent company allow to create payment on the parent journal
+        self.assertEqual(available_journals.company_id, self.env.company)
