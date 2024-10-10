@@ -702,7 +702,7 @@ class TestReports(TestReportsCommon):
 
         report_values, docs, lines = self.get_report_forecast(
             product_template_ids=self.product_template.ids,
-            context={'warehouse': wh_2.id},
+            context={'warehouse': [wh_2.id]},
         )
         draft_picking_qty = docs['draft_picking_qty']
         self.assertEqual(len(lines), 0)
@@ -719,7 +719,7 @@ class TestReports(TestReportsCommon):
 
         report_values, docs, lines = self.get_report_forecast(
             product_template_ids=self.product_template.ids,
-            context={'warehouse': wh_2.id},
+            context={'warehouse': [wh_2.id]},
         )
         draft_picking_qty = docs['draft_picking_qty']
         self.assertEqual(len(lines), 0)
@@ -744,7 +744,7 @@ class TestReports(TestReportsCommon):
 
         report_values, docs, lines = self.get_report_forecast(
             product_template_ids=self.product_template.ids,
-            context={'warehouse': wh_2.id},
+            context={'warehouse': [wh_2.id]},
         )
         draft_picking_qty = docs['draft_picking_qty']
         self.assertEqual(len(lines), 0)
@@ -760,7 +760,7 @@ class TestReports(TestReportsCommon):
 
         report_values, docs, lines = self.get_report_forecast(
             product_template_ids=self.product_template.ids,
-            context={'warehouse': wh_2.id},
+            context={'warehouse': [wh_2.id]},
         )
         draft_picking_qty = docs['draft_picking_qty']
         self.assertEqual(len(lines), 1)
@@ -815,7 +815,7 @@ class TestReports(TestReportsCommon):
         self.assertEqual(len(inter_wh_delivery), 1)
         _, _, lines = self.get_report_forecast(
             product_template_ids=self.product_template.ids,
-            context={'warehouse': wh.id},
+            context={'warehouse': [wh.id]},
         )
         # The forecast should show 1 line linking the delivery with the replenish
         self.assertEqual(len(lines), 1)
@@ -859,7 +859,7 @@ class TestReports(TestReportsCommon):
 
         report_values, docs, lines = self.get_report_forecast(
             product_template_ids=self.product_template.ids,
-            context={'warehouse': wh_2.id},
+            context={'warehouse': [wh_2.id]},
         )
         draft_picking_qty = docs['draft_picking_qty']
         self.assertEqual(len(lines), 0, "Must have 0 line.")
@@ -877,7 +877,7 @@ class TestReports(TestReportsCommon):
 
         report_values, docs, lines = self.get_report_forecast(
             product_template_ids=self.product_template.ids,
-            context={'warehouse': wh_2.id},
+            context={'warehouse': [wh_2.id]},
         )
         self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(lines[0]['document_in']['id'], wh_2_receipt.id)

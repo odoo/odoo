@@ -110,7 +110,7 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
 
         ])
         (so_1 | so_2).action_confirm()
-        report_lines = self.env['stock.forecasted_product_product'].with_context(warehouse=warehouse.id).get_report_values(docids=product.ids)['docs']['lines']
+        report_lines = self.env['stock.forecasted_product_product'].with_context(warehouse=[warehouse.id]).get_report_values(docids=product.ids)['docs']['lines']
         self.assertEqual(len(report_lines), 3)
         so_1_line = next(filter(lambda line: line.get('document_out') and line['document_out'].get('id') == so_1.id, report_lines))
         self.assertEqual(
