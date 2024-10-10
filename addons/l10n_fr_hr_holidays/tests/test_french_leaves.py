@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import time
 
+from datetime import datetime
 from odoo.tests.common import TransactionCase, tagged
 
 _logger = logging.getLogger(__name__)
@@ -357,6 +357,35 @@ class TestFrenchLeaves(TransactionCase):
             'request_date_from_period': 'am',
         })
         self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')
+        self.assertEqual(leave.date_from, datetime(2024, 7, 29, 7, 0))
+        self.assertEqual(leave.date_to, datetime(2024, 7, 29, 10, 0))
 
         leave.request_date_from_period = 'pm'
         self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')
+        self.assertEqual(leave.date_from, datetime(2024, 7, 29, 11, 0))
+        self.assertEqual(leave.date_to, datetime(2024, 7, 29, 16, 0))
+
+    def test_leave_full_day_different_working_hours(self):
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday AM', 'dayofweek': '0', 'hour_from': 8.5, 'hour_to': 12.5, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12.5, 'hour_to': 13.5, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Monday PM', 'dayofweek': '0', 'hour_from': 13.5, 'hour_to': 17.5, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday AM', 'dayofweek': '1', 'hour_from': 8.5, 'hour_to': 12.5, 'day_period': 'morning'}),
+            ],
+        })
+        self.employee.resource_calendar_id = employee_calendar
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2024-07-29',
+            'request_date_to': '2024-07-29',
+        })
+
+        self.assertEqual(leave.number_of_days, 1.0)
+        # leave's hours are based on company's working schedule
+        self.assertEqual(leave.date_from, datetime(2024, 7, 29, 6, 0))
+        self.assertEqual(leave.date_to, datetime(2024, 7, 29, 15, 0))
