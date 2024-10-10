@@ -288,7 +288,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
 
                     let popupTitle = "";
                     let popupInputSuffix = "";
-                    const popupTotalDue = sale_order.amount_total;
+                    const popupTotalDue = sale_order.amount_unpaid;
                     let getInputBufferReminder = () => false;
                     const popupSubtitle = _t("Due balance: %s");
                     if (selectedOption == "dpAmount") {
@@ -328,7 +328,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     if (selectedOption == "dpAmount") {
                         down_payment = parseFloat(payload);
                     } else {
-                        down_payment = (down_payment * parseFloat(payload)) / 100;
+                        down_payment = (popupTotalDue * parseFloat(payload)) / 100;
                     }
 
                     if (down_payment > sale_order.amount_unpaid) {
