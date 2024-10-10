@@ -153,7 +153,7 @@ class EventTrackController(http.Controller):
         for tracks_group in tracks_by_day:
             # the tracks group is folded if all tracks are done (and if it's not "today")
             tracks_group['default_collapsed'] = (today_tz != tracks_group['date']) and all(
-                track.is_track_done and not track.is_track_live
+                not track.is_track_done if search_tags else track.is_track_done and not track.is_track_live
                 for track in tracks_group['tracks']
             )
 
