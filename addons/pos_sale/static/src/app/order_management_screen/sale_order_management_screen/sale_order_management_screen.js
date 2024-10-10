@@ -398,7 +398,9 @@ export class SaleOrderManagementScreen extends Component {
             const down_payment_line_price = total_down_payment * ratio;
             // We apply the taxes and keep the same price
             const new_price = this.pos.compute_price_force_price_include(
-                group[0].tax_id.map((tax_id) => this.pos.models["account.tax"].get(tax_id)),
+                group[0].tax_id
+                    .filter((id) => this.pos.models["account.tax"].get(id).amount_type !== "fixed")
+                    .map((tax_id) => this.pos.models["account.tax"].get(tax_id)),
                 down_payment_line_price
             );
             this.pos.get_order().add_orderline(
@@ -412,7 +414,9 @@ export class SaleOrderManagementScreen extends Component {
                         price_type: "automatic",
                         sale_order_origin_id: clickedOrder,
                         down_payment_details: tab,
-                        tax_ids: group[0].tax_id,
+                        tax_ids: group[0].tax_id.filter(
+                            (id) => this.pos.models["account.tax"].get(id).amount_type !== "fixed"
+                        ),
                     }
                 )
             );
