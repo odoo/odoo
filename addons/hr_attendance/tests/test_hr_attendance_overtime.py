@@ -375,6 +375,21 @@ class TestHrAttendanceOvertime(TransactionCase):
         # 5:00 -> 19:00[in emp tz] should contain 5 hours of overtime
         self.assertAlmostEqual(early_attendance.overtime_hours, 5)
 
+        # Check that it still works if the calendar's timezone is different
+        self.europe_employee.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'America Calendar',
+            'tz': 'America/New_York',
+        })
+        self.europe_employee.flush_recordset(['resource_calendar_id'])  # Needed because we're testing an SQL query
+        early_attendance2 = self.env['hr.attendance'].create({
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2024, 5, 30, 3, 0),
+            'check_out': datetime(2024, 5, 30, 17, 0)
+        })
+
+        # still 5
+        self.assertAlmostEqual(early_attendance2.overtime_hours, 5)
+
         # Total overtime for that day : 5 hours
         overtime_record = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
                                                               ('date', '=', datetime(2024, 5, 28))])
