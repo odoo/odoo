@@ -223,7 +223,7 @@
                                         readonly="type == 'contact' and parent_id"/>
                                 </div>
                             </div>
-                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id"/>
+                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id and not is_company"/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
