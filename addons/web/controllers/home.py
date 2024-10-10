@@ -2,6 +2,7 @@
 
 import json
 import logging
+import psycopg2
 
 
 import odoo
@@ -151,13 +152,21 @@ class Home(http.Controller):
         return request.redirect(self._login_redirect(uid))
 
     @http.route('/web/health', type='http', auth='none', save_session=False)
-    def health(self):
-        data = json.dumps({
-            'status': 'pass',
-        })
+    def health(self, db_server_status=False):
+        health_info = {'status': 'pass'}
+        status = 200
+        if db_server_status:
+            try:
+                odoo.sql_db.db_connect('postgres').cursor().close()
+                health_info['db_server_status'] = True
+            except psycopg2.Error:
+                health_info['db_server_status'] = False
+                health_info['status'] = 'fail'
+                status = 500
+        data = json.dumps(health_info)
         headers = [('Content-Type', 'application/json'),
                    ('Cache-Control', 'no-store')]
-        return request.make_response(data, headers)
+        return request.make_response(data, headers, status=status)
 
     @http.route(['/robots.txt'], type='http', auth="none")
     def robots(self, **kwargs):
