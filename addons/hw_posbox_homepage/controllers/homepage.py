@@ -308,15 +308,27 @@ class IotBoxOwlHomePage(Home):
     @http.route('/hw_posbox_homepage/connect_to_server', auth="none", type="json", methods=['POST'], cors='*')
     def connect_to_odoo_server(self, token=False, iotname=False):
         if token:
-            credential = token.split('|')
-            url = credential[0]
-            token = credential[1]
-            db_uuid = credential[2]
-            enterprise_code = credential[3]
             try:
-                helpers.save_conf_server(url, token, db_uuid, enterprise_code)
+                if len(token.split('|')) == 4:
+                    # Old style token with pipe separators (pre v18 DB)
+                    url, token, db_uuid, enterprise_code = token.split('|')
+                    configuration = helpers.parse_url(url)
+                    helpers.save_conf_server(configuration["url"], token, db_uuid, enterprise_code)
+                else:
+                    # New token using query params (v18+ DB)
+                    configuration = helpers.parse_url(token)
+                    helpers.save_conf_server(**configuration)
+            except ValueError:
+                _logger.warning("Wrong server token: %s", token)
+                return {
+                    'status': 'failure',
+                    'message': 'Invalid URL provided.',
+                }
             except (subprocess.CalledProcessError, OSError, Exception):
-                return 'Failed to write server configuration files on IoT. Please try again.'
+                return {
+                    'status': 'failure',
+                    'message': 'Failed to write server configuration files on IoT. Please try again.',
+                }
 
         if iotname and platform.system() == 'Linux' and iotname != helpers.get_hostname():
             subprocess.run([file_path(
