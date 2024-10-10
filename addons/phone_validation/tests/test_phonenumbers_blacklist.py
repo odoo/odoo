@@ -13,3 +13,10 @@ class TestPhonenumbersBlacklist(TransactionCase):
         res = blacklist.search([('number', 'in', ['+917 5896 32587'])])
 
         self.assertEqual(len(res), 1, "There should be one result")
+
+    def test_MX_blacklist(self):
+        """ Test that we can add a MX number to the blacklist """
+        blacklist = self.env['phone.blacklist']
+        blacklist.create({'number': '+527201020711'})
+        res = blacklist.search([('number', 'in', ['+527201020711'])])
+        self.assertEqual(len(res), 1, "There should be one result")

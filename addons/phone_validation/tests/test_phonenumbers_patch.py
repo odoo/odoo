@@ -176,3 +176,11 @@ class TestPhonenumbersPatch(BaseCase):
             self.PhoneInputOutputLine("+22176 707 0065"),
         )
         self._assert_parsing_phonenumbers(parse_test_lines_SN)
+
+    def test_region_MX_monkey_patch(self):
+        """Makes sure that patch for Mexican phone numbers work"""
+        parse_test_lines_MX = (
+            self.PhoneInputOutputLine("+527201020711"),
+            self.PhoneInputOutputLine("+52 72 0102 0711"),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_MX)

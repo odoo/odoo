@@ -50,6 +50,10 @@ else:
         # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.31/python/phonenumbers/data/region_MU.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('MU', _local_load_region)
 
+    if parse_version(phonenumbers.__version__) < parse_version('8.13.43'):
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.43/python/phonenumbers/data/region_MX.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('MX', _local_load_region)
+
     if parse_version(phonenumbers.__version__) < parse_version('8.12.43'):
         # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.43/python/phonenumbers/data/region_PA.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('PA', _local_load_region)
