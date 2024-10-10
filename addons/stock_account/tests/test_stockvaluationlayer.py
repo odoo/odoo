@@ -1330,3 +1330,35 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
             {'account_id': acc_out.id,       'debit': 0,  'credit': 20},
             {'account_id': acc_valuation.id, 'debit': 20, 'credit': 0},
         ])
+
+    def test_dashboard_valuation_reporting_manual_cost_change(self):
+        """ Ensure `read_group` on SVL `value` with a location filter will take into account price
+        updates not associated with a location.
+        """
+        self.product1.categ_id.write({
+            'property_cost_method': 'standard',
+            'property_valuation': 'manual_periodic',
+        })
+        self.product1.standard_price = 0
+
+        in_move = self.env['stock.move'].create({
+            'name': 'in move',
+            'product_id': self.product1.id,
+            'product_uom_qty': 1,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        in_move._action_confirm()
+        in_move._action_assign()
+        in_move.quantity_done = 1
+        in_move._action_done()
+        self.product1.standard_price = 1000
+
+        self.assertEqual(
+            self.env['stock.valuation.layer'].read_group(
+                ['&', ('product_id.type', '=', 'product'), '&', ('stock_move_id.location_dest_id', 'in', [self.stock_location.id]), ('product_id', 'in', [self.product1.id])],
+                ['value:sum'],
+                []
+            )[0]['value'],
+            1000
+        )
