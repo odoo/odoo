@@ -97,6 +97,80 @@ class TestAPI(MailCommon, TestRecipients):
         ticket_record._message_update_content(message, "Hello <R&D/>")
         self.assertEqual(message.body, Markup('<p>Hello &lt;R&amp;D/&gt;<span class="o-mail-Message-edited"></span></p>'))
 
+    @users('employee')
+    def test_message_get_default_recipients(self):
+        void_partner = self.env['res.partner'].sudo().create({'name': 'No Email'})
+        test_records = self.env['mail.test.recipients'].create([
+            {
+                'customer_id': self.partner_1.id,
+                'contact_ids': [(4, self.partner_2.id), (4, self.partner_1.id)],
+                'name': 'Lots of partners',
+            }, {
+                'customer_id': self.partner_1.id,
+                'customer_email': '"Forced" <forced@test.example.com>',
+                'email_cc': '"CC" <email.cc@test.example.com>',
+                'name': 'Email Forced + CC',
+            }, {
+                'customer_id': self.partner_1.id,
+                'customer_email': False,
+                'name': 'No email but partner',
+            }, {
+                'customer_email': '"Unknown" <unknown@test.example.com>',
+                'name': 'Email only',
+            }, {
+                'email_cc': '"CC" <email.cc@test.example.com>',
+                'name': 'CC only',
+            }, {
+                'customer_id': void_partner.id,
+                'name': 'No info (void partner)',
+            }, {
+                'name': 'No info at all',
+            },
+        ])
+        self.assertFalse(test_records[2].customer_email)
+        self.flush_tracking()
+
+        # test default computation of recipients
+        self.env.invalidate_all()
+        with self.assertQueryCount(16):
+            defaults = test_records._message_get_default_recipients()
+        for record, expected in zip(test_records, [
+            {
+                # customer_id first for partner_ids; partner > email
+                'email_cc': '', 'email_to': '',
+                'partner_ids': (self.partner_1 + self.partner_2).ids,
+            }, {
+                # partner > email
+                'email_cc': '"CC" <email.cc@test.example.com>', 'email_to': '', 'partner_ids': self.partner_1.ids,
+            }, {
+                # partner > email
+                'email_cc': '', 'email_to': '', 'partner_ids': self.partner_1.ids,
+            }, {
+                'email_cc': '', 'email_to': '"Unknown" <unknown@test.example.com>', 'partner_ids': [],
+            }, {
+                'email_cc': '"CC" <email.cc@test.example.com>', 'email_to': '', 'partner_ids': [],
+            }, {
+                'email_cc': '', 'email_to': '', 'partner_ids': void_partner.ids,
+            }, {
+                'email_cc': '', 'email_to': '', 'partner_ids': [],
+            },
+        ]):
+            with self.subTest(name=record.name):
+                self.assertEqual(defaults[record.id], expected)
+
+        # test default computation of recipients with email prioritized
+        with patch.object(type(self.env["mail.test.recipients"]), "_mail_defaults_to_email", True):
+            self.assertEqual(
+                test_records[1]._message_get_default_recipients()[test_records[1].id],
+                {'email_cc': '"CC" <email.cc@test.example.com>', 'email_to': '"Forced" <forced@test.example.com>', 'partner_ids': []},
+                'Mail: prioritize email should not return partner if email is found'
+            )
+            self.assertEqual(
+                test_records[2]._message_get_default_recipients()[test_records[2].id],
+                {'email_cc': '', 'email_to': '', 'partner_ids': self.partner_1.ids},
+                'Mail: prioritize email should not return partner if email is found'
+            )
+
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
     def test_message_update_content(self):
@@ -507,19 +581,42 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
 
 
-@tagged('mail_thread')
+@tagged('mail_thread', 'mail_nothread')
 class TestNoThread(MailCommon, TestRecipients):
     """ Specific tests for cross models thread features """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_record_nothread = cls.env['mail.test.nothread'].with_user(cls.user_employee).create({
+            'customer_id': cls.partner_1.id,
+            'name': 'Not A Thread',
+        })
+
+    @users('employee')
+    def test_mail_template_send_mail(self):
+        template = self.env['mail.template'].create({
+            'model_id': self.env['ir.model']._get_id('mail.test.nothread'),
+            'use_default_to': True,
+        })
+        test_record = self.test_record_nothread.with_env(self.env)
+        with self.mock_mail_gateway():
+            template.send_mail(
+                test_record.id,
+                email_layout_xmlid='mail.mail_notification_light',
+            )
+        self.assertMailMail(
+            self.partner_1,
+            'outgoing',
+        )
 
     @users('employee')
     def test_message_to_store(self):
         """ Test formatting of messages when linked to non-thread models.
         Format could be asked notably if an inbox notification due to a
         'message_notify' happens. """
-        test_record = self.env['mail.test.nothread'].create({
-            'customer_id': self.partner_1.id,
-            'name': 'Not A Thread',
-        })
+        test_record = self.test_record_nothread.with_env(self.env)
+
         message = self.env['mail.message'].create({
             'model': test_record._name,
             'record_name': 'Not used in message _to_store',
@@ -540,10 +637,7 @@ class TestNoThread(MailCommon, TestRecipients):
         class with model and res_id giving the record used for notification.
 
         Test default subject computation is also tested. """
-        test_record = self.env['mail.test.nothread'].create({
-            'customer_id': self.partner_1.id,
-            'name': 'Not A Thread',
-        })
+        test_record = self.test_record_nothread.with_env(self.env)
 
         for subject in ["Test Notify", False]:
             with self.subTest():

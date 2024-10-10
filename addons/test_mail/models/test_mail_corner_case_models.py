@@ -212,3 +212,6 @@ class MailTestNothread(models.Model):
     name = fields.Char()
     company_id = fields.Many2one('res.company')
     customer_id = fields.Many2one('res.partner')
+
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return ['customer_id']
