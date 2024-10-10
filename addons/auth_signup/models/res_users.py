@@ -163,11 +163,22 @@ class ResUsers(models.Model):
         self.mapped('partner_id').signup_prepare(signup_type=signup_type)
 
         # send email to users with their signup url
-        account_created_template = None
+        internal_account_created_template = None
+        portal_account_created_template = None
         if create_mode:
-            account_created_template = self.env.ref('auth_signup.set_password_email', raise_if_not_found=False)
-            if account_created_template and account_created_template._name != 'mail.template':
-                _logger.error("Wrong set password template %r", account_created_template)
+            templates = self.env['mail.template']
+            if any(user._is_internal() for user in self):
+                internal_account_created_template = self.env.ref('auth_signup.set_password_email', raise_if_not_found=False)
+                if internal_account_created_template:
+                    templates += internal_account_created_template
+
+            if any(not user._is_internal() for user in self):
+                portal_account_created_template = self.env.ref('auth_signup.portal_set_password_email', raise_if_not_found=False)
+                if portal_account_created_template:
+                    templates += portal_account_created_template
+
+            if templates and templates._name != 'mail.template':
+                _logger.error("Wrong set password template")
                 return
 
         email_values = {
@@ -184,10 +195,13 @@ class ResUsers(models.Model):
                 raise UserError(_("Cannot send email: user %s has no email address.", user.name))
             email_values['email_to'] = user.email
             with contextlib.closing(self.env.cr.savepoint()):
+                is_internal = user._is_internal()
+                account_created_template = internal_account_created_template if is_internal else portal_account_created_template
                 if account_created_template:
+                    portal_email_from = {'email_from': user.company_id.email_formatted or self.env.user.email_formatted} if not is_internal else {}
                     account_created_template.send_mail(
                         user.id, force_send=True,
-                        raise_exception=True, email_values=email_values)
+                        raise_exception=True, email_values={**email_values, **portal_email_from})
                 else:
                     user_lang = user.lang or self.env.lang or 'en_US'
                     body = self.env['mail.render.mixin'].with_context(lang=user_lang)._render_template(
