@@ -2,18 +2,18 @@
 <templates xml:space="preserve">
 
 <t t-name="mysterious_egg.BuilderMenu">
-    <div id="oe_snippets">
-        <div class="o_we_website_top_actions">
-            <div class="o_we_external_history_buttons d-flex">
+    <div class="h-100 o-builder-menu">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex">
                 <button type="button" t-on-click="() => {}" class="btn btn-secondary fa fa-undo" t-att-disabled="!state.canUndo"/>
                 <button type="button"  t-on-click="() => {}" class="btn btn-secondary fa fa-repeat" t-att-disabled="!state.canRedo"/>
             </div>
-            <form class="ms-auto d-flex">
+            <div class="d-flex">
                 <button type="button"  t-on-click="() => {}" class="btn btn-secondary" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
                 <button type="button" t-on-click="() => {}" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
-            </form>
+            </div>
         </div>
-        <div id="snippets_menu">
+        <div>
             <Notebook pages="pages"/>
         </div>
     </div>
