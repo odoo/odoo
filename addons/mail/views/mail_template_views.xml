@@ -43,7 +43,7 @@
                             <group>
                                 <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
                                 <field name="subject" options="{'dynamic_placeholder': true}"
-                                       placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
+                                       placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"' widget="char_emojis"/>
                                 <field name="model" invisible="1"/>
                             </group>
                         </div>
