@@ -349,7 +349,9 @@ class IrHttp(models.AbstractModel):
             return lang_code
 
         short = lang_code.partition('_')[0]
-        return short and next((code for code in lang_codes if code.startswith(short)), None)
+        if not short:
+           return None
+        return next((code for code in lang_codes if code.startswith(short)), None)
 
     @classmethod
     def _match(cls, path):
