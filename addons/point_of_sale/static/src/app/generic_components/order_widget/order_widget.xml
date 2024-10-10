@@ -9,7 +9,7 @@
                         <Orderline t-else="" line="line" />
                     </t>
                     <div class="mt-1 bg-opacity-75" t-attf-class="{{ props.screenName == 'ReceiptScreen' ? 'p-0' : 'p-2 border-bottom border-top border-opacity-75'}}" t-if="props.generalNote">
-                        <b class="fw-bolder">General Note</b>
+                        <b class="fw-bolder">Footer Note</b>
                         <t t-foreach="props.generalNote.split('\n')" t-as="subNote" t-key="subNote_index">
                             <br/>• <t t-esc="subNote"/>
                         </t>

@@ -15,7 +15,7 @@ export class OrderlineNoteButton extends Component {
         class: { type: String, optional: true },
     };
     static defaultProps = {
-        label: _t("Customer Note"),
+        label: _t("Item Note"),
         getter: (orderline) => orderline.get_customer_note(),
         setter: (orderline, note) => orderline.set_customer_note(note),
         class: "",
@@ -26,7 +26,7 @@ export class OrderlineNoteButton extends Component {
         this.dialog = useService("dialog");
     }
     onClick() {
-        return this.props.label == _t("General Note") ? this.addGeneralNote() : this.addLineNotes();
+        return this.props.label == _t("Footer Note") ? this.addGeneralNote() : this.addLineNotes();
     }
     async addLineNotes() {
         const selectedOrderline = this.pos.get_order().get_selected_orderline();
@@ -65,7 +65,7 @@ export class OrderlineNoteButton extends Component {
     }
     async openTextInput(selectedNote) {
         let buttons = [];
-        if (this._isInternalNote() || this.props.label == _t("General Note")) {
+        if (this._isInternalNote() || this.props.label == _t("Footer Note")) {
             buttons = this.pos.models["pos.note"].getAll().map((note) => ({
                 label: note.name,
                 isSelected: selectedNote.split("\n").includes(note.name), // Check if the note is already selected

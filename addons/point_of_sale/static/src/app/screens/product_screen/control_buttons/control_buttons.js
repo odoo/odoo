@@ -118,7 +118,7 @@ export class ControlButtons extends Component {
     }
     internalNoteLabel(order) {
         if (order) {
-            return _t("General Note");
+            return _t("Footer Note");
         }
         return this.pos.config.module_pos_restaurant ? _t("Kitchen Note") : _t("Internal Note");
     }

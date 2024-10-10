@@ -472,11 +472,7 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
 }
 export function addCustomerNote(note) {
     return inLeftSide(
-        [
-            clickControlButton("Customer Note"),
-            TextInputPopup.inputText(note),
-            Dialog.confirm(),
-        ].flat()
+        [clickControlButton("Item Note"), TextInputPopup.inputText(note), Dialog.confirm()].flat()
     );
 }
 
