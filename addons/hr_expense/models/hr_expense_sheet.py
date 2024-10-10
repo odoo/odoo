@@ -552,9 +552,12 @@ class HrExpenseSheet(models.Model):
         The default_partner_bank_id is set only if there is one available, if more than one the field is left empty.
         :return: An action opening the account.payment.register wizard.
         '''
-        return self.account_move_ids.with_context(default_partner_bank_id=(
-            self.employee_id.sudo().bank_account_id.id if len(self.employee_id.sudo().bank_account_id.ids) <= 1 else None
-        )).action_register_payment()
+        res = self.account_move_ids.action_register_payment()
+        if len(self.employee_id.sudo().bank_account_id.ids) <= 1:
+            res['context'].update({
+                'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id,
+            })
+        return res
 
     def action_open_expense_view(self):
         self.ensure_one()
