@@ -24,7 +24,6 @@ import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tou
 registerWebsitePreviewTour('test_custom_snippet', {
     url: '/',
     edition: true,
-    test: true,
 }, () => [
     ...insertSnippet({
         id: 's_banner',

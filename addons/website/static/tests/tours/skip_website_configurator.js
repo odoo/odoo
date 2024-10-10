@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('skip_website_configurator', {
-    test: true,
     url: '/odoo/action-website.action_website_configuration',
     steps: () => [
     {

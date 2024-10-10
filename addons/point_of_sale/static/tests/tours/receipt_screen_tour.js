@@ -9,7 +9,6 @@ import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -76,7 +75,6 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
 });
 
 registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -93,7 +91,6 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
 });
 
 registry.category("web_tour.tours").add("OrderPaidInCash", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -119,7 +116,6 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
 });
 
 registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [

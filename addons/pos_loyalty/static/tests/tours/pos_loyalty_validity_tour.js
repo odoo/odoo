@@ -5,7 +5,6 @@ import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyValidity1", {
-    test: true,
     steps: () =>
         [
             // First tour should not get any automatic rewards
@@ -22,7 +21,6 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity1", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyValidity2", {
-    test: true,
     steps: () =>
         [
             // Second tour

@@ -7,7 +7,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('donation_snippet_edition', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

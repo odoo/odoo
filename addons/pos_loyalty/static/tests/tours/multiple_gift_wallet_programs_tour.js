@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 
 const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
 registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
-    test: true,
     steps: () =>
         [
             // One card for gift_card_1.

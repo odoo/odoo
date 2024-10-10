@@ -4,7 +4,6 @@ import { closeChat } from "./website_livechat_common";
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_after_reload_tour", {
-    test: true,
     steps: () => [
         {
             trigger: messagesContain("Hello! I'm a bot!"),

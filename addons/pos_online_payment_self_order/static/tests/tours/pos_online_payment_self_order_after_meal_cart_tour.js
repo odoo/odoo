@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { PosSelf } from "@pos_self_order/../tests/tours/tour_utils";
 
 registry.category("web_tour.tours").add("pos_online_payment_self_order_after_meal_cart_tour", {
-    test: true,
     steps: () => [
         // Check that the self is open
         PosSelf.isNotNotification(),

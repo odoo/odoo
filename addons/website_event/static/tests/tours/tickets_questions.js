@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('test_tickets_questions', {
-    test: true,
     url: '/event',
     steps: () => [{
     content: "Click on the Design Fair event",

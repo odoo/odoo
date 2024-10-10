@@ -8,7 +8,6 @@ import {
 import snippetNewsletterPopupUseTour from "@website_mass_mailing/../tests/tours/snippet_newsletter_popup_use";
 
 registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

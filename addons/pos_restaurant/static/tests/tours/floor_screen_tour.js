@@ -13,7 +13,6 @@ const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("FloorScreenTour", {
-    test: true,
     steps: () =>
         [
             // check floors if they contain their corresponding tables

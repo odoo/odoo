@@ -4,7 +4,6 @@ import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_survey_chained_conditional_questions', {
-    test: true,
     url: '/survey/start/3cfadce3-3f7e-41da-920d-10fa0eb19527',
     steps: () => [
     {
@@ -15,7 +14,7 @@ registry.category("web_tour.tours").add('test_survey_chained_conditional_questio
         content: 'Answer Q1 with Answer 1',
         trigger: 'div.js_question-wrapper:contains("Q1") label:contains("Answer 1")',
         run: "click",
-    }, 
+    },
     {
         trigger: 'div.js_question-wrapper:contains("Q4")',
     },

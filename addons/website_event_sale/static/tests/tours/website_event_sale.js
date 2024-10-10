@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("event_buy_tickets", {
-    test: true,
     url: "/event",
     steps: () => [
         {

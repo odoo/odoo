@@ -6,7 +6,6 @@ import { registry } from "@web/core/registry";
 const PRODUCT_CATEGORY_ID = 2;
 
 registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
-    test: true,
     url: `/shop/category/${PRODUCT_CATEGORY_ID}`,
     edition: true,
 }, () => [
@@ -43,7 +42,6 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
 ]);
 
 registry.category("web_tour.tours").add('category_page_and_products_snippet_use', {
-    test: true,
     url: `/shop/category/${PRODUCT_CATEGORY_ID}`,
     steps: () => [
     {

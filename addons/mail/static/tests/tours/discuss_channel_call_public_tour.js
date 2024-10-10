@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
-    test: true,
     steps: () => [
         {
             content: "The call does not start on the welcome page",

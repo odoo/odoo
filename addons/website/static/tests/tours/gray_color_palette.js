@@ -21,7 +21,6 @@ function waitForCSSReload() {
 }
 
 registerWebsitePreviewTour('website_gray_color_palette', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

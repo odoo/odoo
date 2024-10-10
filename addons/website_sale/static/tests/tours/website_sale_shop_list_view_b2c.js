@@ -9,7 +9,6 @@ import {
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registerWebsitePreviewTour('shop_list_view_b2c', {
-    test: true,
     url: '/shop?search=Test Product',
 },
     () => [

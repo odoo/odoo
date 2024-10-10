@@ -15,7 +15,6 @@ const snippet = {
 };
 
 registerWebsitePreviewTour('website_replace_grid_image', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [
@@ -60,7 +59,6 @@ registerWebsitePreviewTour('website_replace_grid_image', {
 ]);
 
 registerWebsitePreviewTour("scroll_to_new_grid_item", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [
