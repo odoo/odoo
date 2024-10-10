@@ -51,7 +51,7 @@ export class MailComposerTemplateSelector extends Component {
      */
     async onDeleteTemplate(template) {
         this.env.services.dialog.add(ConfirmationDialog, {
-            body: sprintf(_t('Are you sure you want to delete "%(template_name)s"?'), {
+            body: sprintf(_t('Are you sure you want to delete "%(template_name)s" for all users?\nOnce done, there is no going back!'), {
                 template_name: template.display_name,
             }),
             confirmLabel: _t("Delete Template"),
@@ -61,7 +61,9 @@ export class MailComposerTemplateSelector extends Component {
                     return current.id !== template.id;
                 });
             },
+            cancelLabel: _t("No, keep it"),
             cancel: () => {},
+            title: _t("Delete Email Template"),
         });
     }
 
