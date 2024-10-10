@@ -4,8 +4,9 @@
         <field name="name">Gift Card: Gift Card Information</field>
         <field name="model_id" ref="model_loyalty_card"/>
         <field name="subject">Your Gift Card at {{ object.company_id.name }}</field>
-        <field name="partner_to">{{ object._get_mail_partner().id }}</field>
-        <field name="lang">{{ object._get_mail_partner().lang }}</field>
+        <field name="partner_to" eval="False"/>
+        <field name="use_default_to" eval="True"/>
+        <field name="lang">{{ object._mail_get_customer().lang }}</field>
         <field name="description">Sent to customer who purchased a gift card</field>
         <field name="body_html" type="html">
             <div style="background: #ffffff">
@@ -44,15 +45,16 @@
         <field name="model_id" ref="loyalty.model_loyalty_card"/>
         <field name="subject">Your reward coupon from {{ object.program_id.company_id.name }} </field>
         <field name="email_from">{{ object.program_id.company_id.email }}</field>
-        <field name="partner_to">{{ object._get_mail_partner().id }}</field>
-        <field name="lang">{{ object._get_mail_partner().lang }}</field>
+        <field name="partner_to" eval="False"/>
+        <field name="use_default_to" eval="True"/>
+        <field name="lang">{{ object._mail_get_customer().lang }}</field>
         <field name="description">Sent to customer with coupon information</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="width:100%; margin:0px auto; background:#ffffff; color:#333333;"><tbody>
 <tr>
     <td valign="top" style="text-align: center; font-size: 14px;">
-        <t t-if="object._get_mail_partner().name">
-            Congratulations <t t-out="object._get_mail_partner().name or ''">Brandon Freeman</t>,<br />
+        <t t-if="object._mail_get_customer().name">
+            Congratulations <t t-out="object._mail_get_customer().name or ''">Brandon Freeman</t>,<br />
         </t>
 
         Here is your reward from <t t-out="object.program_id.company_id.name or ''">YourCompany</t>.<br />

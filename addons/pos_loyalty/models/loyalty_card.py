@@ -9,6 +9,9 @@ class LoyaltyCard(models.Model):
 
     source_pos_order_id = fields.Many2one('pos.order', "PoS Order Reference",
         help="PoS order where this coupon was generated.")
+    source_pos_order_partner_id = fields.Many2one(
+        'res.partner', "PoS Order Customer",
+        related="source_pos_order_id.partner_id")
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -27,8 +30,8 @@ class LoyaltyCard(models.Model):
             return self.env.ref('pos_loyalty.mail_coupon_template', False)
         return super()._get_default_template()
 
-    def _get_mail_partner(self):
-        return super()._get_mail_partner() or self.source_pos_order_id.partner_id
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return super()._mail_get_partner_fields(introspect_fields=introspect_fields) + ['source_pos_order_partner_id']
 
     def _get_signature(self):
         return self.source_pos_order_id.user_id.signature or super()._get_signature()
