@@ -8,11 +8,25 @@ export class ProjectProject extends models.Model {
     is_favorite = fields.Boolean();
     active = fields.Boolean({ default: true });
     stage_id = fields.Many2one({ relation: "project.project.stage" });
+    date = fields.Date({ string: "Expiration Date" });
+    date_start = fields.Date();
+    user_id = fields.Many2one({ relation: "res.users", falsy_value_label: "👤 Unassigned" });
 
     _records = [
-        { id: 1, name: "Project 1", stage_id: 1 },
+        {
+            id: 1,
+            name: "Project 1",
+            stage_id: 1,
+            date: "2024-01-09 07:00:00",
+            date_start: "2024-01-03 12:00:00",
+        },
         { id: 2, name: "Project 2", stage_id: 2 },
     ];
+
+    _views = {
+        list: '<list><field name="name"/></list>',
+        form: '<form><field name="name"/></form>',
+    };
 
     check_access_rights() {
         return Promise.resolve(true);
@@ -28,6 +42,11 @@ export class ProjectProjectStage extends models.Model {
         { id: 1, name: "Stage 1" },
         { id: 2, name: "Stage 2" },
     ];
+
+    _views = {
+        list: '<list><field name="name"/></list>',
+        form: '<form><field name="name"/></form>',
+    };
 }
 
 export class ProjectTask extends models.Model {
