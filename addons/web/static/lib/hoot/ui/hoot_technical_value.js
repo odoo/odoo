@@ -10,7 +10,7 @@ import {
 } from "@odoo/owl";
 import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
 import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
-import { Markup, toExplicitString } from "../hoot_utils";
+import { getTypeOf, Markup, stringify, toExplicitString } from "../hoot_utils";
 
 /**
  * @typedef {{
@@ -138,18 +138,17 @@ export class HootTechnicalValue extends Component {
             </pre>
         </t>
         <t t-else="">
-            <span t-attf-class="hoot-{{ typeof value }}">
-                <t t-if="typeof value === 'string'">
-                    <t>"</t><t t-esc="explicitValue" /><t>"</t>
-                </t>
-                <t t-else="" t-esc="explicitValue" />
+            <span t-attf-class="hoot-{{ getTypeOf(value) }}">
+                <t t-esc="typeof value === 'string' ? stringify(explicitValue) : explicitValue" />
             </span>
         </t>
     `;
 
-    toSelector = toSelector;
+    getTypeOf = getTypeOf;
     isIterable = isIterable;
     isNode = isNode;
+    stringify = stringify;
+    toSelector = toSelector;
 
     get explicitValue() {
         return toExplicitString(this.value);

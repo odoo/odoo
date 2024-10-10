@@ -9,9 +9,13 @@ import { Test } from "../core/test";
 import { EXCLUDE_PREFIX, refresh } from "../core/url";
 import {
     INCLUDE_LEVEL,
+    STORAGE,
     debounce,
     lookup,
     normalize,
+    storageGet,
+    storageSet,
+    stringify,
     title,
     useWindowListener,
 } from "../hoot_utils";
@@ -34,7 +38,6 @@ import { HootTagButton } from "./hoot_tag_button";
 
 const {
     Boolean,
-    localStorage,
     Object: { entries: $entries, values: $values },
 } = globalThis;
 
@@ -137,11 +140,10 @@ const templateIncludeWidget = (tagName) => /* xml */ `
     </${tagName}>
 `;
 
-const EMPTY_SUITE = new Suite(null, "...", []);
+const EMPTY_SUITE = new Suite(null, "…", []);
 const SECRET_SEQUENCE = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
 const R_QUERY_CONTENT = new RegExp(`^\\s*${EXCLUDE_PREFIX}?\\s*(.*)\\s*$`);
 const RESULT_LIMIT = 5;
-const STORAGE_KEY = "hoot-latest-searches";
 
 // Template parts, because 16 levels of indent is a bit much
 
@@ -325,7 +327,7 @@ export class HootSearch extends Component {
                     </label>
                 </div>
                 <t t-if="state.showDropdown">
-                    <div class="hoot-search-dropdown flex flex-col animate-slide-down bg-base text-base absolute mt-1 p-3 shadow rounded shadow z-2">
+                    <div class="hoot-dropdown-lg flex flex-col animate-slide-down bg-base text-base absolute mt-1 p-3 shadow rounded shadow z-2">
                         <t t-if="state.empty">
                             ${TEMPLATE_SEARCH_DASHBOARD}
                         </t>
@@ -349,7 +351,7 @@ export class HootSearch extends Component {
 
     get wrappedQuery() {
         const query = this.state.query.trim();
-        return this.useRegExp ? query : `"${query}"`;
+        return this.useRegExp ? query : stringify(query);
     }
 
     updateSuggestions = debounce(() => {
@@ -465,11 +467,7 @@ export class HootSearch extends Component {
     }
 
     getLatestSearches() {
-        const strSearchItems = localStorage.getItem(STORAGE_KEY);
-        if (!strSearchItems) {
-            return [];
-        }
-        return JSON.parse(strSearchItems);
+        return storageGet(STORAGE.searches) || [];
     }
 
     /**
@@ -581,14 +579,12 @@ export class HootSearch extends Component {
     }
 
     onSearchInputChange() {
-        if (this.state.query) {
-            const latestSearches = this.getLatestSearches();
-            latestSearches.unshift(this.state.query);
-            localStorage.setItem(
-                STORAGE_KEY,
-                JSON.stringify([...new Set(latestSearches)].slice(0, 5))
-            );
+        if (!this.state.query) {
+            return;
         }
+        const latestSearches = this.getLatestSearches();
+        latestSearches.unshift(this.state.query);
+        storageSet(STORAGE.searches, [...new Set(latestSearches)].slice(0, 5));
     }
 
     /**

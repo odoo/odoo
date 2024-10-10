@@ -628,7 +628,7 @@ const parseSelector = (selector) => {
 const parseXml = (xmlString, type) => {
     const document = parser.parseFromString(`<templates>${xmlString}</templates>`, `text/${type}`);
     if (document.getElementsByTagName("parsererror").length) {
-        const trimmed = xmlString.length > 80 ? xmlString.slice(0, 80) + "..." : xmlString;
+        const trimmed = xmlString.length > 80 ? xmlString.slice(0, 80) + "…" : xmlString;
         throw new HootDomError(
             `error while parsing ${trimmed}: ${getNodeText(
                 document.getElementsByTagName("parsererror")[0]

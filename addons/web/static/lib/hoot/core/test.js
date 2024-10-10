@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { reactive } from "@odoo/owl";
-import { HootError } from "../hoot_utils";
+import { HootError, stringify } from "../hoot_utils";
 import { Job } from "./job";
 
 /**
@@ -10,28 +10,29 @@ import { Job } from "./job";
  */
 
 /**
+ * @param {string} name
  * @param {Function} fn
  */
-const formatFunctionSource = (fn) => {
-    const lines = String(fn).split("\n");
-
-    if (lines.length > 2) {
-        lines.shift();
-        lines.pop();
+const formatFunctionSource = (name, fn) => {
+    let stringFn = fn.toString();
+    if (name) {
+        stringFn = `test(${stringify(name)}, ${stringFn});`;
     }
 
+    const lines = stringFn.split("\n");
+
     let toTrim = null;
-    for (const line of lines) {
-        if (!line.trim()) {
+    for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) {
             continue;
         }
-        const [, whiteSpaces] = line.match(/^(\s*)/);
+        const [, whiteSpaces] = lines[i].match(/^(\s*)/);
         if (toTrim === null || whiteSpaces.length < toTrim) {
             toTrim = whiteSpaces.length;
         }
     }
     if (toTrim) {
-        for (let i = 0; i < lines.length; i++) {
+        for (let i = 1; i < lines.length; i++) {
             lines[i] = lines[i].slice(toTrim);
         }
     }
@@ -44,9 +45,9 @@ const formatFunctionSource = (fn) => {
  * @returns {HootError}
  */
 export function testError({ name, parent }, ...message) {
-    const parentString = parent ? ` (in suite "${parent.name}")` : "";
+    const parentString = parent ? ` (in suite ${stringify(parent.name)})` : "";
     return new HootError(
-        `error while registering test "${name}"${parentString}: ${message.join("\n")}`
+        `error while registering test ${stringify(name)}${parentString}: ${message.join("\n")}`
     );
 }
 
@@ -90,7 +91,7 @@ export class Test extends Job {
     setRunFn(fn) {
         this.run = fn ? async () => fn() : null;
         if (fn) {
-            this.code = formatFunctionSource(fn);
+            this.code = formatFunctionSource(this.name, fn);
         }
     }
 }

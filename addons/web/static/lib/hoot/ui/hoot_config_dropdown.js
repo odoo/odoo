@@ -44,7 +44,7 @@ export class HootConfigDropdown extends Component {
             </button>
             <t t-if="state.open">
                 <form
-                    class="hoot-config-dropdown animate-slide-down bg-base text-base mt-1 absolute flex flex-col end-0 px-2 py-3 shadow rounded shadow z-2"
+                    class="hoot-dropdown animate-slide-down bg-base text-base mt-1 absolute flex flex-col end-0 px-2 py-3 shadow rounded shadow z-2"
                     t-on-submit.prevent="refresh"
                 >
                     <div
@@ -165,7 +165,7 @@ export class HootConfigDropdown extends Component {
                         <small class="flex items-center p-1 pt-0 gap-1">
                             <span class="text-muted whitespace-nowrap ms-1">Level:</span>
                             <select
-                                class="outline-none w-full border-b border-primary px-1"
+                                class="outline-none w-full bg-base text-base border-b border-primary px-1"
                                 t-model.number="config.loglevel"
                             >
                                 <t t-foreach="logLevels" t-as="level" t-key="level.value">

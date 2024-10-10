@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { formatTime } from "../hoot_utils";
+import { formatTime, stringify } from "../hoot_utils";
 import { urlParams } from "./url";
 
 //-----------------------------------------------------------------------------
@@ -154,7 +154,7 @@ export const logger = {
         const { fullName, lastResults } = test;
         $log(
             ...styledArguments([
-                `Test "${fullName}" passed`,
+                `Test ${stringify(fullName)} passed`,
                 lastResults.assertions.length,
                 `assertions (time: ${formatTime(lastResults.duration)})`,
             ])
@@ -167,7 +167,7 @@ export const logger = {
         if (logger.level < logLevels.SUITES) {
             return;
         }
-        const args = [`"${suite.fullName}" ended`];
+        const args = [`${stringify(suite.fullName)} ended`];
         const withArgs = [];
         if (suite.reporting.passed) {
             withArgs.push(suite.reporting.passed, "passed");

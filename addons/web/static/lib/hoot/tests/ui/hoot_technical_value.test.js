@@ -37,16 +37,16 @@ describe(parseUrl(import.meta.url), () => {
         expect(".hoot-string").toHaveText(`"oui"`);
 
         await updateValue(`"stringified"`);
-        expect(".hoot-string").toHaveText(`""stringified""`);
+        expect(".hoot-string").toHaveText(`'"stringified"'`);
 
         await updateValue(3);
-        expect(".hoot-number").toHaveText(`3`);
+        expect(".hoot-integer").toHaveText(`3`);
 
         await updateValue(undefined);
         expect(".hoot-undefined").toHaveText(`undefined`);
 
         await updateValue(null);
-        expect(".hoot-object").toHaveText(`null`); // null is not a number
+        expect(".hoot-null").toHaveText(`null`);
     });
 
     test("technical value with objects", async () => {

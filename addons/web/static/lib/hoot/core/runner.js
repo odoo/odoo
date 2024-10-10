@@ -11,6 +11,7 @@ import {
     HootError,
     INCLUDE_LEVEL,
     Markup,
+    STORAGE,
     batch,
     createReporting,
     deepEqual,
@@ -20,6 +21,8 @@ import {
     formatTime,
     getFuzzyScore,
     normalize,
+    storageGet,
+    stringify,
 } from "../hoot_utils";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
@@ -33,7 +36,7 @@ import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag } from "./tag";
 import { Test, testError } from "./test";
-import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
+import { createUrlFromId, EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 
 /**
  * @typedef {{
@@ -552,7 +555,9 @@ export class Runner {
             if (this.dry || originalTest.run) {
                 throw testError(
                     { name, parent: parentSuite },
-                    `a test with that name already exists in the suite "${parentSuite.name}"`
+                    `a test with that name already exists in the suite ${stringify(
+                        parentSuite.name
+                    )}`
                 );
             }
             test = originalTest;
@@ -1007,7 +1012,9 @@ export class Runner {
                         ...lastResults.errors.map((e) => `\n${e.message}`)
                     );
                 }
-                logger.error([`Test "${test.fullName}" failed:`, ...failReasons].join("\n"));
+                logger.error(
+                    [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n")
+                );
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
@@ -1067,11 +1074,13 @@ export class Runner {
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
+            const link = createUrlFromId(storageGet(STORAGE.failed), "test");
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
                 `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
             logger.error("test failed (see above for details)");
+            logger.error("failed tests link:", link.toString());
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
@@ -1207,7 +1216,9 @@ export class Runner {
                 case Tag.ONLY:
                     if (!this.dry) {
                         logger.warn(
-                            `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
+                            `${stringify(job.fullName)} is marked as ${stringify(
+                                tag.name
+                            )}. This is not suitable for CI`
                         );
                     }
                     this._include(
@@ -1229,7 +1240,9 @@ export class Runner {
         if (skip) {
             if (ignoreSkip) {
                 logger.warn(
-                    `test "${job.fullName}" is explicitly included but marked as skipped: "skip" modifier has been ignored`
+                    `test ${stringify(
+                        job.fullName
+                    )} is explicitly included but marked as skipped: "skip" modifier has been ignored`
                 );
             } else {
                 job.config.skip = true;
