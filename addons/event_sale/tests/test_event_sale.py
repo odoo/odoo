@@ -482,6 +482,36 @@ class TestEventSale(TestEventSaleCommon):
         })
         self.assertEqual(so.amount_total, 660.0, "Ticket is $1000 but the event product is on a pricelist 10 -> 6. So, $600 + a 10% tax.")
 
+    def test_event_sale_price_subtotal(self):
+        """ Check that the `sale_price_subtotal` should be the total price of only the confirmed orders. """
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+        })
+        ticket, ticket1 = self.event_0.event_ticket_ids
+        self.env['sale.order.line'].create([
+            {
+                'product_id': ticket.product_id.id,
+                'price_unit': 195.50,
+                'order_id': self.sale_order.id,
+                'event_id': self.event_0.id,
+                'event_ticket_id': ticket.id,
+            }, {
+                'product_id': ticket1.product_id.id,
+                'price_unit': 200.50,
+                'order_id': so.id,
+                'event_id': self.event_0.id,
+                'event_ticket_id': ticket1.id,
+            },
+        ])
+
+        self.sale_order.action_confirm()  # Confirm existing SO
+        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertEqual(so.state, 'draft')
+
+        confirmed_order_lines = self.event_0.sale_order_lines_ids.filtered(lambda line: line.state == 'sale')
+        expected_price = sum(confirmed_order_lines.mapped('price_subtotal'))
+        self.assertEqual(self.event_0.sale_price_subtotal, expected_price)
+
     @users('user_salesman')
     def test_unlink_so(self):
         """ This test ensures that when deleting a sale order, if the latter is linked to an event registration,
