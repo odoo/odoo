@@ -364,6 +364,7 @@ class AccountMove(models.Model):
     ####################################################
 
     def button_process_edi_web_services(self):
+        self.ensure_one()
         self.action_process_edi_web_services(with_commit=False)
 
     def action_process_edi_web_services(self, with_commit=True):
