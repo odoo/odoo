@@ -337,6 +337,35 @@ class PosConfig(models.Model):
             'context': ctx
         }
 
+    def action_install_kiosk_pwa(self):
+        self.ensure_one()
+        self_url = self._get_self_order_route()
+        scoped_url = f"/scoped_app?app_id=pos_self_order&path={self_url}"
+        return {
+            'type': 'ir.actions.act_url',
+            'url': scoped_url,
+            'target': 'new',
+        }
+
+    def open_kiosk_in_new_tab(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.get_kiosk_url(),
+            'target': 'new',
+        }
+
+    # This method will open the kiosk on IOT if one of them is linked,
+    # otherwise it will open a new tab with the kiosk url
+    def open_kiosk(self):
+        self.ensure_one()
+
+        if not self.current_session_id:
+            session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
+            session.set_opening_control(0, "")
+            self._notify('STATUS', {'status': 'open'})
+
+        return self.open_kiosk_in_new_tab()
+
     def get_kiosk_url(self):
         return self.self_ordering_url
 
