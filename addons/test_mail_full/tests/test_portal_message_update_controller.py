@@ -9,13 +9,7 @@ class TestPortalMessageUpdateController(TestMessageUpdateControllerCommon):
     def test_message_update_portal(self):
         """Test Only Admin and Portal User can update a portal user message on a record with no assigned partner."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
-        token = record._portal_ensure_token()
-        partner = self.env["res.partner"].create({"name": "Sign Partner"})
-        _hash = record._sign_token(partner.id)
-        token_param = {"token": token}
-        incorrect_token_param = {"token": "incorrect token"}
-        hash_pid_param = {"hash": _hash, "pid": partner.id}
-        incorrect_hash_pid_param = {"hash": "incorrect hash", "pid": partner.id}
+        token, bad_token, sign, bad_sign, _ = record._get_sign_token_params()
         message = record.message_post(
             body=self.message_body,
             author_id=self.user_portal.partner_id.id,
@@ -25,26 +19,26 @@ class TestPortalMessageUpdateController(TestMessageUpdateControllerCommon):
             message,
             (
                 (self.user_public, False),
-                (self.user_public, False, token_param),
-                (self.user_public, False, hash_pid_param),
+                (self.user_public, False, token),
+                (self.user_public, False, sign),
                 (self.guest, False),
-                (self.guest, False, token_param),
-                (self.guest, False, hash_pid_param),
+                (self.guest, False, token),
+                (self.guest, False, sign),
                 (self.user_portal, False),
-                (self.user_portal, False, incorrect_token_param),
-                (self.user_portal, False, incorrect_hash_pid_param),
-                (self.user_portal, True, token_param),
-                (self.user_portal, True, hash_pid_param),
+                (self.user_portal, False, bad_token),
+                (self.user_portal, False, bad_sign),
+                (self.user_portal, True, token),
+                (self.user_portal, True, sign),
                 (self.user_employee, False),
-                (self.user_employee, False, token_param),
-                (self.user_employee, False, hash_pid_param),
+                (self.user_employee, False, token),
+                (self.user_employee, False, sign),
                 (self.user_demo, False),
-                (self.user_demo, False, token_param),
-                (self.user_demo, False, hash_pid_param),
+                (self.user_demo, False, token),
+                (self.user_demo, False, sign),
                 (self.user_admin, True),
-                (self.user_admin, True, incorrect_token_param),
-                (self.user_admin, True, incorrect_hash_pid_param),
-                (self.user_admin, True, token_param),
-                (self.user_admin, True, hash_pid_param),
+                (self.user_admin, True, bad_token),
+                (self.user_admin, True, bad_sign),
+                (self.user_admin, True, token),
+                (self.user_admin, True, sign),
             ),
         )

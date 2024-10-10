@@ -619,6 +619,7 @@ export class Thread extends Record {
             after,
             around,
             before,
+            ...this.rpcParams,
         });
     }
 
@@ -748,10 +749,6 @@ export class Thread extends Record {
         if (this.model === "mail.box" && this.id === "history") {
             return `/mail/history/messages`;
         }
-        return this.fetchRouteChatter;
-    }
-
-    get fetchRouteChatter() {
         return "/mail/thread/messages";
     }
 

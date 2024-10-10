@@ -12,13 +12,7 @@ class TestPortalThreadController(TestThreadControllerCommon):
     def test_message_post_access_portal_no_partner(self):
         """Test access of message post for portal without partner."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
-        access_token = record._portal_ensure_token()
-        partner = self.env["res.partner"].create({"name": "Sign Partner"})
-        _hash = record._sign_token(partner.id)
-        token = {"token": access_token}
-        bad_token = {"token": "incorrect token"}
-        sign = {"hash": _hash, "pid": partner.id}
-        bad_sign = {"hash": "incorrect hash", "pid": partner.id}
+        token, bad_token, sign, bad_sign, partner = record._get_sign_token_params()
 
         def test_access(user, allowed, route_kw=None, exp_author=None):
             return MessagePostSubTestData(user, allowed, route_kw=route_kw, exp_author=exp_author)
@@ -117,13 +111,7 @@ class TestPortalThreadController(TestThreadControllerCommon):
         """Test partner_ids of message_post for portal record without partner.
         Only followers are allowed to be mentioned by non-internal users."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
-        access_token = record._portal_ensure_token()
-        partner = self.env["res.partner"].create({"name": "Sign Partner"})
-        _hash = record._sign_token(partner.id)
-        token = {"token": access_token}
-        bad_token = {"token": "incorrect token"}
-        sign = {"hash": _hash, "pid": partner.id}
-        bad_sign = {"hash": "incorrect hash", "pid": partner.id}
+        token, bad_token, sign, bad_sign, partner = record._get_sign_token_params()
         all_partners = (
             self.user_portal + self.user_employee + self.user_demo + self.user_admin
         ).partner_id
@@ -173,5 +161,46 @@ class TestPortalThreadController(TestThreadControllerCommon):
                 test_partners(self.user_admin, True, all_partners, route_kw=bad_sign),
                 test_partners(self.user_admin, True, all_partners, route_kw=token),
                 test_partners(self.user_admin, True, all_partners, route_kw=sign),
+            ),
+        )
+
+    def test_message_fetch_access_portal(self):
+        """Test access of fetching messages for portal."""
+        record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
+        token, bad_token, sign, bad_sign, _ = record._get_sign_token_params()
+        self._execute_message_fetch_subtests(
+            record,
+            (
+                (self.user_public, False),
+                (self.user_public, False, bad_token),
+                (self.user_public, False, bad_sign),
+                (self.user_public, "only_comments", token),
+                (self.user_public, "only_comments", sign),
+                (self.guest, False),
+                (self.guest, False, bad_token),
+                (self.guest, False, bad_sign),
+                (self.guest, "only_comments", token),
+                (self.guest, "only_comments", sign),
+                # portal users with read access to the document can read the messages
+                (self.user_portal, "only_comments"),
+                (self.user_portal, "only_comments", bad_token),
+                (self.user_portal, "only_comments", bad_sign),
+                (self.user_portal, "only_comments", token),
+                (self.user_portal, "only_comments", sign),
+                (self.user_employee, "only_comments"),
+                (self.user_employee, "only_comments", bad_token),
+                (self.user_employee, "only_comments", bad_sign),
+                (self.user_employee, "only_comments", token),
+                (self.user_employee, "only_comments", sign),
+                (self.user_demo, "only_comments"),
+                (self.user_demo, "only_comments", bad_token),
+                (self.user_demo, "only_comments", bad_sign),
+                (self.user_demo, "only_comments", token),
+                (self.user_demo, "only_comments", sign),
+                (self.user_admin, "only_comments"),
+                (self.user_admin, "only_comments", bad_token),
+                (self.user_admin, "only_comments", bad_sign),
+                (self.user_admin, "only_comments", token),
+                (self.user_admin, "only_comments", sign),
             ),
         )

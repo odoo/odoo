@@ -50,7 +50,7 @@ class TestThreadControllerCommon(TestControllerCommon):
             ):
                 if test.allowed:
                     self._message_post(record, test.post_data, test.route_kw)
-                    message = self._find_message(record)
+                    message = self._find_messages(record, limit=1)
                     self.assertTrue(message)
                     if test.guest and not test.exp_author:
                         self.assertEqual(message.author_guest_id, test.guest)
@@ -75,9 +75,69 @@ class TestThreadControllerCommon(TestControllerCommon):
             },
         )
 
-    def _find_message(self, record):
+    def _find_messages(self, record, limit=30):
         return self.env["mail.message"].search(
-            [("res_id", "=", record.id), ("model", "=", record._name)], order="id desc", limit=1
+            [("res_id", "=", record.id), ("model", "=", record._name)], order="id desc", limit=limit
+        )
+
+    def _execute_message_fetch_subtests(self, record, subtests):
+        for data_user, allowed, *args in subtests:
+            route_kw = args[0] if args else {}
+            user = data_user if data_user._name == "res.users" else self.user_public
+            guest = data_user if data_user._name == "mail.guest" else self.env["mail.guest"]
+            self._create_records(record)
+            messages = self._find_messages(record)
+            self._authenticate_user(user=user, guest=guest)
+            with self.subTest(record=record, user=user, guest=guest, route_kw=route_kw):
+                if allowed:
+                    if allowed == "all":
+                        self.assertEqual(
+                            len(self._message_fetch(record, route_kw)["messages"]), len(messages)
+                        )
+                    elif allowed == "only_comments":
+                        route_kw["portal"] = True
+                        fetched_data = self._message_fetch(record, route_kw)
+                        self.assertNotEqual(len(fetched_data["messages"]), len(messages))
+                        self.assertEqual(len(fetched_data["messages"]), 1)
+                        self.assertEqual(fetched_data["data"]["mail.message"][0].get("is_note"),
+                                         False)
+
+                else:
+                    with self.assertRaises(
+                            JsonRpcException, msg="Fetch messages should raise NotFound"
+                    ):
+                        self._message_fetch(record, route_kw)
+            messages.unlink()
+
+    def _message_fetch(self, record, route_kw):
+        return self.make_jsonrpc_request(
+            route="/mail/thread/messages",
+            params={
+                "thread_model": record._name,
+                "thread_id": record.id,
+                **route_kw,
+            },
+        )
+
+    def _create_records(self, record):
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self._message_post(
+            record,
+            {
+                "body": "<p>Test comment</p>",
+                "message_type": "comment",
+                "subtype_xmlid": "mail.mt_comment",
+            },
+            {},
+        )
+        self._message_post(
+            record,
+            {
+                "body": "<p>Test note</p>",
+                "message_type": "comment",
+                "subtype_xmlid": "mail.mt_note",
+            },
+            {},
         )
 
 
@@ -126,5 +186,21 @@ class TestThreadController(TestThreadControllerCommon):
                 test_partners(self.user_employee, False, no_partner),
                 test_partners(self.user_demo, True, partners),
                 test_partners(self.user_admin, True, partners),
+            ),
+        )
+
+    def test_partner_message_fetch_access(self):
+        """Test access of fetching messages on a partner record."""
+        record = self.env["res.partner"].create({"name": "Test Partner"})
+        self._execute_message_fetch_subtests(
+            record,
+            (
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
+                (self.user_employee, "all"),
+                (self.user_demo, "all"),
+                (self.user_admin, "all"),
+
             ),
         )
