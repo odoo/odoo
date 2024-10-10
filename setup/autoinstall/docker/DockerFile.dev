@@ -1,0 +1,18 @@
+FROM dockerhub.runbot102.odoo.com/odoo:DockerMasterVenv
+
+USER root
+
+RUN userdel odoo
+RUN userdel ubuntu
+
+ARG USER=odoo
+ARG UID=1000
+ARG GID=1000
+
+RUN groupadd -g ${GID} ${USER}
+RUN useradd ${USER} -u ${UID} -g ${GID} -ms /bin/bash 
+
+USER ${USER}
+WORKDIR /home/${USER}
+
+# ENV PATH="/venv/main/bin:$PATH"

@@ -3,6 +3,7 @@
 
 import contextlib
 import difflib
+import inspect
 import logging
 import re
 from contextlib import contextmanager
@@ -115,6 +116,8 @@ class TestRunnerLoggingCommon(TransactionCase):
                 level, msg = self.expected_logs.pop(0)
                 self._assert_log_equal(log_record, 'level', level)
                 self._assert_log_equal(log_record, 'msg', msg)
+        elif 'expected_logs' in inspect.getsource(getattr(self, self._testMethodName)):
+            self._log_error("expected_logs present in function body but not defined when checking logs while checking error %s" % log_records[-1])
 
     def _assert_log_equal(self, log_record, key, expected):
         """ Check the content of a log record. """
