@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
-        <record id="view_badge_wizard_grant_employee" model="ir.ui.view">
-            <field name="name">gamification.badge.user.wizard.form.inherit</field>
-            <field name="model">gamification.badge.user.wizard</field>
-            <field name="inherit_id" ref="gamification.view_badge_wizard_grant" />
-            <field name="arch" type="xml">
-                <data>
-                    <!--remove in master-->
-                    <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="employee_id" nolabel="1" invisible="1" domain="[('user_id', '!=', False),('user_id', '!=', uid)]" colspan="2"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
         <record id="view_badge_wizard_reward" model="ir.ui.view">
             <field name="name">gamification.badge.user.wizard.form</field>
             <field name="model">gamification.badge.user.wizard</field>
@@ -23,6 +8,7 @@
                     What are you thankful for?
                     <group>
                         <group>
+                            <!-- Both invisible fields are needed in order to compute correctly user_id and save it -->
                             <field name="employee_id" invisible="1" />
                             <field name="user_id" invisible="1" />
                             <field name="badge_id" nolabel="1" colspan="4" />
@@ -46,5 +32,4 @@
             <field name="domain">[]</field>
             <field name="context">{'default_employee_id': active_id, 'employee_id': active_id}</field>
         </record>
-
 </odoo>
