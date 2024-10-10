@@ -20,7 +20,7 @@ from xml.etree import ElementTree as ET
 import odoo
 
 from odoo import http, models, fields, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
@@ -794,6 +794,37 @@ class Website(Home):
         return {
             'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
         }
+
+    @http.route([
+        '/website/get_wysiwyg_font/gfont/<string:url>',
+        '/website/get_wysiwyg_font/local/<int:attachment_id>/<string:name>',
+    ], type='http', auth='user', website=True)
+    def get_wysiwyg_font(self, url=None, attachment_id=None, name=None):
+        """
+        Returns a font-face where the font-family is replaced to avoid
+        colliding the ones used inside the iframe.
+        """
+        if url:
+            url = 'https://fonts.googleapis.com/css?family=%s&display=swap' % url
+            original = requests.get(url)
+            if original.status_code != 200:
+                raise request.not_found()
+            text = original.text
+        elif attachment_id:
+            try:
+                record = request.env['ir.binary']._find_record(res_id=int(attachment_id))
+                text = base64.b64decode(record.datas).decode()
+            except MissingError:
+                raise request.not_found()
+        else:
+            raise request.not_found()
+
+        text = re.sub(r"(font-family\s*:\s*')(.*)('\s*;)", r"\1VersionOf\2ForWysiwyg\3", text)
+        return request.make_response(text, [
+            ('Content-type', 'text/css; charset=utf-8'),
+            ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
+        ])
+
 
     # ------------------------------------------------------
     # Server actions
