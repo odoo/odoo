@@ -28,7 +28,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard_register -= wizard
         wizard_register.l10n_ar_adjustment_warning = False
 
-    @api.depends('amount')
+    @api.depends('amount', 'l10n_ar_withholding_ids.amount')
     def _compute_l10n_ar_net_amount(self):
         for rec in self:
             rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))

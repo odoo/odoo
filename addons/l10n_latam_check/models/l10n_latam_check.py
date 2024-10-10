@@ -129,7 +129,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
     def _get_last_operation(self):
         self.ensure_one()
         return (self.payment_id + self.operation_ids).filtered(
-                lambda x: x.state == 'in_process').sorted(key=lambda payment: (payment.date, payment._origin.id))[-1:]
+                lambda x: x.state != 'draft').sorted(key=lambda payment: (payment.date, payment._origin.id))[-1:]
 
     @api.depends('payment_id.state', 'operation_ids.state')
     def _compute_current_journal(self):
@@ -152,7 +152,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
         :return:    An action on account.move.
         '''
         self.ensure_one()
-        operations = ((self.operation_ids + self.payment_id).filtered(lambda x: x.state == 'posted'))
+        operations = ((self.operation_ids + self.payment_id).filtered(lambda x: x.state != 'draft'))
         action = {
             'name': _("Check Operations"),
             'type': 'ir.actions.act_window',
@@ -217,5 +217,5 @@ class l10nLatamAccountPaymentCheck(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_payment_is_draft(self):
-        if any(check.payment_id.state == 'in_process' for check in self):
+        if any(check.payment_id.state != 'draft' for check in self):
             raise UserError("Can't delete a check if payment is In Process!")
