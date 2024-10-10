@@ -32,3 +32,9 @@ class WebsiteSaleBr(WebsiteSale):
         if website.company_id.country_code == 'BR':
             country_related_values['identification_types'] = request.env['l10n_latam.identification.type'].search(['|', ('country_id', '=', False), ('country_id.code', '=', 'BR')])
         return country_related_values
+
+    def force_show_vat(self):
+        website = request.env['website'].get_current_website()
+        if website.company_id.country_code == 'BR':
+            return True
+        return super().force_show_vat()

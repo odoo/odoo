@@ -57,3 +57,8 @@ class L10nARWebsiteSale(WebsiteSale):
                     error_message.append(_('For the selected AFIP Responsibility you will need to set CUIT Identification Type'))
 
         return error, error_message
+
+    def force_show_vat(self):
+        if request.website.sudo().company_id.country_id.code == "AR":
+            return True
+        return super().force_show_vat()
