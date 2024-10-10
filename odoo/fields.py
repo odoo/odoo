@@ -2808,15 +2808,17 @@ class Selection(Field[str | typing.Literal[False]]):
                 if self.related:
                     _logger.warning("%s: selection attribute will be ignored as the field is related", self)
                 selection = field.args['selection']
-                if isinstance(selection, list):
+                if isinstance(selection, (list, tuple)):
                     if values is not None and list(values) != [kv[0] for kv in selection]:
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = dict(selection)
                     self.ondelete = {}
-                else:
-                    values = None
-                    self.selection = selection
+                elif callable(selection) or isinstance(selection, str):
                     self.ondelete = None
+                    self.selection = selection
+                    values = None
+                else:
+                    raise ValueError("%r: selection=%r should be a list or a callable" % (self, selection))
 
             if 'selection_add' in field.args:
                 if self.related:
