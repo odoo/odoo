@@ -23,12 +23,9 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
             && this.isProjectManager || this.props.list.groupByField.name === 'personal_stage_type_id');
     }
 
+    // TODO remove in master
     isProjectTasksContext() {
-        return (
-            ["project.project", "project.task.type.delete.wizard"].includes(
-                this.props.list.context.active_model
-            ) && !!this.props.list.context.default_project_id
-        );
+        return !!this.props.list.context.default_project_id;
     }
 }
 
