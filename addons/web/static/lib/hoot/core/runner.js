@@ -11,6 +11,7 @@ import {
     HootError,
     INCLUDE_LEVEL,
     Markup,
+    STORAGE,
     batch,
     createReporting,
     deepEqual,
@@ -20,6 +21,8 @@ import {
     formatTime,
     getFuzzyScore,
     normalize,
+    storageGet,
+    storageSet,
     stringify,
 } from "../hoot_utils";
 import { cleanupDate } from "../mock/date";
@@ -34,7 +37,7 @@ import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag } from "./tag";
 import { Test, testError } from "./test";
-import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
+import { createUrlFromId, EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 
 /**
  * @typedef {{
@@ -309,6 +312,10 @@ export class Runner {
          * @type {Set<Test>}
          */
         done: new Set(),
+        /**
+         * List of IDs of tests that have failed (previously AND during this run).
+         */
+        failedIds: new Set(storageGet(STORAGE.failed)),
         /**
          * @type {Record<string, GlobalIssueReport>}
          */
@@ -992,6 +999,11 @@ export class Runner {
             test.runCount++;
             if (lastResults.pass) {
                 logger.logTest(test);
+
+                if (this.state.failedIds.has(test.id)) {
+                    this.state.failedIds.delete(test.id);
+                    storageSet(STORAGE.failed, [...this.state.failedIds]);
+                }
             } else {
                 const failReasons = [];
                 const failedAssertions = lastResults.assertions.filter(
@@ -1014,6 +1026,9 @@ export class Runner {
                 logger.error(
                     [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n")
                 );
+
+                this.state.failedIds.add(test.id);
+                storageSet(STORAGE.failed, [...this.state.failedIds]);
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
@@ -1073,11 +1088,13 @@ export class Runner {
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
+            const link = createUrlFromId(this.state.failedIds, "test");
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
                 `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
             logger.error("test failed (see above for details)");
+            logger.error("failed tests link:", link.toString());
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
@@ -1513,6 +1530,14 @@ export class Runner {
         }
         if (this.config.test) {
             this._checkUrlValidity("test", "tests", this.tests);
+        }
+
+        // Cleanup invalid tests from storage
+        const failedIds = [...this.state.failedIds];
+        const existingFailed = failedIds.filter((id) => this.tests.has(id));
+        if (existingFailed.length !== failedIds.length) {
+            this.state.failedIds = new Set(existingFailed);
+            storageSet(STORAGE.failed, existingFailed);
         }
 
         this._populateState = true;

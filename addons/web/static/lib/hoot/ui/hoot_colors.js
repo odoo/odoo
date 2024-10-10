@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { reactive, useState } from "@odoo/owl";
+import { STORAGE, storageGet, storageSet } from "../hoot_utils";
 
 /**
  * @typedef {"dark" | "light"} ColorScheme
@@ -11,7 +12,6 @@ import { reactive, useState } from "@odoo/owl";
 //-----------------------------------------------------------------------------
 
 const {
-    localStorage,
     matchMedia,
     Object: { entries: $entries },
 } = globalThis;
@@ -147,15 +147,13 @@ const COLOR_VALUES = {
 /** @type {ColorScheme[]} */
 const COLOR_SCHEMES = ["dark", "light"];
 
-const STORAGE_KEY = "hoot-color-scheme";
-
 /** @type {HTMLElement | null} */
 let colorRoot = null;
 /** @type {ColorScheme} */
-let defaultScheme = localStorage.getItem(STORAGE_KEY);
+let defaultScheme = storageGet(STORAGE.scheme);
 if (!COLOR_SCHEMES.includes(defaultScheme)) {
     defaultScheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    localStorage.setItem(STORAGE_KEY, defaultScheme);
+    storageSet(STORAGE.scheme, defaultScheme);
 }
 const current = reactive({ scheme: defaultScheme }, updateClassNames);
 
@@ -187,7 +185,7 @@ export function setColorRoot(element) {
 
 export function toggleColorScheme() {
     current.scheme = COLOR_SCHEMES.at(COLOR_SCHEMES.indexOf(current.scheme) - 1);
-    localStorage.setItem(STORAGE_KEY, current.scheme);
+    storageSet(STORAGE.scheme, current.scheme);
 }
 
 export function useColorScheme() {

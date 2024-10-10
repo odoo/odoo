@@ -1564,7 +1564,7 @@ describe(parseUrl(import.meta.url), () => {
 
         const { innerHeight } = window;
 
-        on(window, "resize", () => expect.step("window.resize"));
+        after(on(window, "resize", () => expect.step("window.resize")));
 
         await resize({ width: 300 });
 
