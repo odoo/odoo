@@ -15,7 +15,81 @@ paymentButton.include({
      * @return {boolean}
      */
     _canSubmit() {
+<<<<<<< saas-17.4
         return this._super(...arguments) && this._isTCCheckboxReady();
+||||||| 87c4d66f9b797de6117c7e99c8892583c1e2504f
+        return this._super(...arguments) && this._isCarrierReady() && this._isTCCheckboxReady();
+    },
+
+    /**
+     * Check if the delivery carrier is selected and if its price is computed.
+     *
+     * @private
+     * @return {boolean}
+     */
+    _isCarrierReady() {
+        const carriers = document.querySelectorAll('.o_delivery_carrier_select');
+        if (carriers.length === 0) { // No carrier is available.
+            return true; // Ignore the check.
+        }
+
+        const checkedCarriers = document.querySelectorAll('input[name="delivery_type"]:checked');
+        if (checkedCarriers.length === 0) { // No carrier is selected.
+            return false; // Nothing else to check.
+        }
+        const carriersContainer = checkedCarriers[0].closest('.o_delivery_carrier_select');
+        if (carriersContainer.querySelector('.o_wsale_delivery_carrier_error')) {
+            // Rate shipment error.
+            return false;
+        }
+        const isPickUpPointRequired = carriersContainer.querySelector('.o_show_pickup_locations');
+        if (isPickUpPointRequired) {
+            const address = carriersContainer.querySelector(
+                '.o_order_location_address'
+            ).innerText;
+            const isPickUp = carriersContainer.lastChild.previousSibling.children;
+            if (
+                isPickUp.length > 1 && (address === '' || isPickUp[0].classList.contains('d-none'))
+            ) { // A pickup point is required but not selected
+                return false;
+            }
+        }
+
+        return true;
+=======
+        return this._super(...arguments) && this._isCarrierReady() && this._isTCCheckboxReady();
+    },
+
+    /**
+     * Check if the delivery carrier is selected and if its price is computed.
+     *
+     * @private
+     * @return {boolean}
+     */
+    _isCarrierReady() {
+        const carriers = document.querySelectorAll('.o_delivery_carrier_select');
+        if (carriers.length === 0) { // No carrier is available.
+            return true; // Ignore the check.
+        }
+
+        const checkedCarriers = document.querySelectorAll('input[name="delivery_type"]:checked');
+        if (checkedCarriers.length === 0) { // No carrier is selected.
+            return false; // Nothing else to check.
+        }
+        const carriersContainer = checkedCarriers[0].closest('.o_delivery_carrier_select');
+        if (carriersContainer.querySelector('.o_wsale_delivery_carrier_error')) {
+            // Rate shipment error.
+            return false;
+        }
+        const isPickUpPointRequired = carriersContainer.querySelector('.o_show_pickup_locations');
+        if (isPickUpPointRequired) {
+            const address = carriersContainer.querySelector(
+                '.o_order_location_address'
+            ).innerText;
+            return address !== '';  // A pickup point is required but not selected.
+        }
+        return true;
+>>>>>>> e4dd64aa7b6608e7bd5f8b102584189eb8c44365
     },
 
     /**
