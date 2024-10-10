@@ -179,26 +179,19 @@ class AccountPayment(models.Model):
         '''
         self.ensure_one()
 
-        # liquidity_lines, counterpart_lines, writeoff_lines
-        lines = [self.env['account.move.line'] for _dummy in range(3)]
+        liquidity_lines = self.env['account.move.line']
+        counterpart_lines = self.env['account.move.line']
+        writeoff_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
             if line.account_id in self._get_valid_liquidity_accounts():
-                lines[0] += line  # liquidity_lines
+                liquidity_lines += line
             elif line.account_id.internal_type in ('receivable', 'payable') or line.account_id == line.company_id.transfer_account_id:
-                lines[1] += line  # counterpart_lines
+                counterpart_lines += line
             else:
-                lines[2] += line  # writeoff_lines
+                writeoff_lines += line
 
-        # In some case, there is no liquidity or counterpart line (after changing an outstanding account on the journal for example)
-        # In that case, and if there is one writeoff line, we take this line and set it as liquidity/counterpart line
-        if len(lines[2]) == 1:
-            for i in (0, 1):
-                if not lines[i]:
-                    lines[i] = lines[2]
-                    lines[2] -= lines[2]
-
-        return lines
+        return liquidity_lines, counterpart_lines, writeoff_lines
 
     def _get_valid_liquidity_accounts(self):
         return (
