@@ -42,7 +42,13 @@ const StepSchema = {
 };
 
 const TourSchema = {
-    checkDelay: { type: Number, optional: true },
+    checkDelay: {
+        type: Number,
+        optional: true,
+        validate(value) {
+            return value >= 50 && value <= 500;
+        },
+    },
     name: { type: String, optional: true },
     saveAs: { type: String, optional: true },
     rainbowManMessage: { type: [String, Boolean, Function], optional: true },
@@ -78,18 +84,6 @@ export const tourService = {
             isChecked: toursEnabled,
             sequence: 30,
         }));
-
-        function endTour({ name }) {
-            // Used to signal the python test runner that the tour finished without error.
-            browser.console.log("tour succeeded");
-            // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
-            const succeeded = `║ TOUR ${name} SUCCEEDED ║`;
-            const msg = [succeeded];
-            msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
-            msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
-            browser.console.log(`\n\n${msg.join("\n")}\n`);
-            tourState.clear();
-        }
 
         function getTourFromRegistry(tourName) {
             const tour = tourRegistry.getEntries().findLast(([n, t]) => t.saveAs == tourName) || [
@@ -141,6 +135,7 @@ export const tourService = {
             }
 
             let tourConfig = {
+                delayToCheckUndeterminisms: 0,
                 stepDelay: 0,
                 keepWatchBrowser: false,
                 mode: "auto",
@@ -153,11 +148,6 @@ export const tourService = {
             tourState.setCurrentConfig(tourConfig);
             tourState.setCurrentTour(tour.name);
             tourState.setCurrentIndex(0);
-            if (tourConfig.debug !== false) {
-                // Starts the tour with a debugger to allow you to choose devtools configuration.
-                // eslint-disable-next-line no-debugger
-                debugger;
-            }
 
             const willUnload = callWithUnloadCheck(() => {
                 if (tour.url && tourConfig.startUrl != tour.url && tourConfig.redirect) {
@@ -199,12 +189,11 @@ export const tourService = {
             if (tourConfig.mode === "auto") {
                 new TourAutomatic(tour).start(pointer, () => {
                     pointer.stop();
-                    endTour(tour);
                 });
             } else {
                 new TourInteractive(tour).start(pointer, async () => {
                     pointer.stop();
-                    endTour(tour);
+                    tourState.clear();
                     let message = tourConfig.rainbowManMessage || tour.rainbowManMessage;
                     if (message) {
                         message = window.DOMPurify.sanitize(tourConfig.rainbowManMessage);

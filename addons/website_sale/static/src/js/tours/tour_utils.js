@@ -184,7 +184,6 @@ export function payWithTransfer(redirect=false) {
 
 export function searchProduct(productName) {
     return [
-        clickOnElement('Shop', 'a:contains("Shop")'),
         {
             content: "Search for the product",
             trigger: 'form input[name="search"]',
