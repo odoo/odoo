@@ -325,6 +325,7 @@ class AdvancedFollowersTest(MailCommon):
 
         # generic subtypes
         cls.sub_comment = cls.env.ref('mail.mt_comment')
+        cls.odoobot_comment = cls.env.ref('mail.odoobot_comment')
         cls.sub_generic_int_nodef = Subtype.create({
             'name': 'Generic internal subtype',
             'default': False,
@@ -419,7 +420,7 @@ class AdvancedFollowersTest(MailCommon):
         follower_adm = container.message_follower_ids.filtered(lambda f: f.partner_id == self.partner_admin)
         self.assertEqual(
             follower_por.subtype_ids,
-            self.sub_comment | self.umb_def | self.umb_autosub_def,
+            self.sub_comment | self.odoobot_comment | self.umb_def | self.umb_autosub_def,
             'Subscribe: Default subtypes: comment (default generic) and two model-related defaults')
         self.assertEqual(
             follower_adm.subtype_ids,
@@ -438,7 +439,7 @@ class AdvancedFollowersTest(MailCommon):
         follower_adm = sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_admin)
         follower_emp = sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee.partner_id)
         self.assertEqual(
-            follower_por.subtype_ids, self.sub_comment | self.sub_track_1,
+            follower_por.subtype_ids, self.sub_comment | self.odoobot_comment | self.sub_track_1,
             'AutoSubscribe: comment (generic checked), Track (with child relation) 1 as Umbrella AutoSub (default) was checked'
         )
         self.assertEqual(
@@ -446,7 +447,7 @@ class AdvancedFollowersTest(MailCommon):
             'AutoSubscribe: comment (generic checked), Track (with child relation) 2) as Umbrella AutoSub 2 was checked, Generic internal subtype (generic checked)'
         )
         self.assertEqual(
-            follower_emp.subtype_ids, self.sub_comment | self.sub_track_def | self.sub_generic_int_def,
+            follower_emp.subtype_ids, self.sub_comment | self.odoobot_comment | self.sub_track_def | self.sub_generic_int_def,
             'AutoSubscribe: only default one as no subscription on parent'
         )
 
@@ -456,7 +457,7 @@ class AdvancedFollowersTest(MailCommon):
         follower_por = sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal)
 
         self.assertEqual(
-            follower_por.subtype_ids, self.sub_comment | self.sub_track_def,
+            follower_por.subtype_ids, self.sub_comment | self.odoobot_comment | self.sub_track_def,
             'AutoSubscribe: only default one as no subscription on parent (no internal as portal)'
         )
 
@@ -469,7 +470,7 @@ class AdvancedFollowersTest(MailCommon):
             'container_id': container.id,
         })
         follower_emp = sub2.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee.partner_id)
-        defaults = self.sub_comment | self.sub_track_def | self.sub_generic_int_def
+        defaults = self.sub_comment | self.odoobot_comment | self.sub_track_def | self.sub_generic_int_def
         parents = self.sub_generic_int_nodef | self.sub_track_2
         self.assertEqual(
             follower_emp.subtype_ids, defaults + parents,
@@ -888,6 +889,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "default_subject": "Test",
                     "email_from": '"Mitchell Admin" <test.admin@test.example.com>',
                     "id": message.id,
+                    'isOdoobotDiscussion': False,
                     "is_discussion": True,
                     "is_note": False,
                     "linkPreviews": [],

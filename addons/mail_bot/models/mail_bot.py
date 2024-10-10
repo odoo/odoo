@@ -30,7 +30,7 @@ class MailBot(models.AbstractModel):
             answer = self._get_answer(record, body, values, command)
             if answer:
                 message_type = 'comment'
-                subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+                subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.odoobot_comment')
                 record.with_context(mail_create_nosubscribe=True).sudo().message_post(body=answer, author_id=odoobot_id, message_type=message_type, subtype_id=subtype_id)
 
     @staticmethod

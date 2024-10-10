@@ -34,7 +34,7 @@ patch(Thread.prototype, {
      * @param {import("models").Message} message
      */
     notifyMessageToUser(message) {
-        if (this.isCorrespondentOdooBot) {
+        if (message.isOdoobotDiscussion) {
             return;
         }
         const channel_notifications =

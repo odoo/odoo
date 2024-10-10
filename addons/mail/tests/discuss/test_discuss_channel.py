@@ -98,6 +98,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "default_subject": "Channel",
                                         "email_from": '"Ernest Employee" <e.e@example.com>',
                                         "id": message.id,
+                                        'isOdoobotDiscussion': False,
                                         "is_discussion": True,
                                         "is_note": False,
                                         "linkPreviews": [],
