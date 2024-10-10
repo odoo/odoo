@@ -1,11 +1,14 @@
 {
     'name': 'RPC endpoints',
-    'description': """
+    'description': """\
+Standard Odoo RPC endpoints to models
+=====================================
+
+This module provides the /xmlrpc and /jsonrpc endpoints used to
+programmatically access models.
 """,
-    'depends': [],
+    'depends': ["base"],
     'category': 'Extra Tools',
     'auto_install': True,
-    'data': [],
-    'assets': {},
     'license': 'LGPL-3',
 }
