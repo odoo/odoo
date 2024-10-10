@@ -15,7 +15,7 @@
         'data/payment_provider_data.xml',  # Depends on views/payment_razorpay_templates.xml
     ],
     'assets': {
-        'web.assets_frontend': [
+        'web.assets_frontend_lazy': [
             'payment_razorpay/static/src/js/payment_form.js',
         ],
     },

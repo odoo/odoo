@@ -59,9 +59,6 @@ Key Features
             'event/static/src/template_reference_field/*',
             'event/static/src/js/tours/**/*',
         ],
-        'web.assets_frontend': [
-            'event/static/src/js/tours/**/*',
-        ],
         'web.report_assets_common': [
             '/event/static/src/scss/event_badge_report.scss',
             '/event/static/src/scss/event_full_page_ticket_report.scss',
@@ -70,6 +67,9 @@ Key Features
         'web.report_assets_pdf': [
             '/event/static/src/scss/event_full_page_ticket_report_pdf.scss',
         ],
+        'web.assets_tests': [
+            'event/static/src/js/tours/**/*',
+        ]
     },
     'license': 'LGPL-3',
 }
