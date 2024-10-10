@@ -386,20 +386,6 @@ class Job(models.Model):
         }
         return action
 
-    def close_dialog(self):
-        return {'type': 'ir.actions.act_window_close'}
-
-    def edit_dialog(self):
-        form_view = self.env.ref('hr.view_hr_job_form')
-        return {
-            'name': _('Job'),
-            'res_model': 'hr.job',
-            'res_id': self.id,
-            'views': [(form_view.id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'inline'
-        }
-
     @api.model
     def _action_load_recruitment_scenario(self):
 
