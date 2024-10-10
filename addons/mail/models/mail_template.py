@@ -41,7 +41,7 @@ class MailTemplate(models.Model):
          ('hidden_template', 'Hidden Template'),
          ('custom_template', 'Custom Template')],
          compute="_compute_template_category", search="_search_template_category")
-    model_id = fields.Many2one('ir.model', 'Applies to')
+    model_id = fields.Many2one('ir.model', 'Applies to', domain=lambda self: self._get_non_abstract_models())
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
     email_from = fields.Char('From',
@@ -143,6 +143,11 @@ class MailTemplate(models.Model):
             return [('id', 'in' if operator == "=" else 'not in', value_templates.ids)]
 
         raise NotImplementedError(_('Operation not supported'))
+
+    @api.model
+    def _get_non_abstract_models(self):
+        non_abstract_models = self.env['ir.model'].search([]).filtered(lambda m: not self.env[m.model]._abstract)
+        return [('id', 'in', non_abstract_models.ids)]
 
     # ------------------------------------------------------------
     # CRUD
