@@ -364,7 +364,7 @@ class Project(models.Model):
     def _compute_access_instruction_message(self):
         for project in self:
             if project.privacy_visibility == 'portal':
-                project.access_instruction_message = _('Grant portal users access to your project by adding them as followers (the tasks of the project are not included). To grant access to tasks to a portal user, add them as followers for these tasks.')
+                project.access_instruction_message = _('To give portal users access to your project, add them as followers. For task access, add them as followers for each task.')
             elif project.privacy_visibility == 'followers':
                 project.access_instruction_message = _('Grant employees access to your project or tasks by adding them as followers. Employees automatically get access to the tasks they are assigned to.')
             else:

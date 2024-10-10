@@ -85,6 +85,24 @@
                         <page name="settings" string="Settings">
                             <group>
                                 <group>
+                                    <div name="alias_def" colspan="2">
+                                        <!-- Always display the whole alias in edit mode. It depends in read only -->
+                                        <!-- Need to add alias_id in view for getting alias_domain_id by default -->
+                                        <field name="alias_id" invisible="1"/>
+                                        <span class="o_wrap_label text-900">
+                                            <label for="alias_name" string="Email Alias"/>
+                                        </span>
+                                        <field name="alias_email" class="oe_read_only w-100 w-sm-auto" widget="email" readonly="1" invisible="not alias_name"/>
+                                        <span class="ps-0 ps-sm-3 oe_edit_only d-inline-flex">
+                                            <field name="alias_name" placeholder="alias"/>@
+                                            <field name="alias_domain_id" placeholder="e.g. mycompany.com"
+                                                options="{'no_create': True, 'no_open': True}"/>
+                                        </span>
+                                    </div>
+                                    <!-- the alias contact must appear when the user start typing and it must disappear
+                                        when the string is deleted. -->
+                                    <field name="alias_contact" class="oe_inline" string="Accept Emails From"
+                                           invisible="not alias_email"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <span colspan="2" class="text-muted o_row ps-1" invisible="access_instruction_message == ''">
                                         <i class="fa fa-lightbulb-o"/>&amp;nbsp;<field class="d-inline" name="access_instruction_message" nolabel="1"/>
@@ -93,23 +111,9 @@
                                         <i class="fa fa-warning"/>&amp;nbsp;<field class="d-inline" name="privacy_visibility_warning" nolabel="1"/>
                                     </span>
                                 </group>
-                                <group>
-                                    <div name="alias_def" colspan="2" class="pb-2">
-                                        <!-- Always display the whole alias in edit mode. It depends in read only -->
-                                        <!-- Need to add alias_id in view for getting alias_domain_id by default -->
-                                        <field name="alias_id" invisible="1"/>
-                                        <label for="alias_name" class="fw-bold o_form_label" string="Create tasks by sending an email to"/>
-                                        <field name="alias_email" class="oe_read_only d-inline" widget="email" readonly="1" invisible="not alias_name" />
-                                        <span class="oe_edit_only o_row">
-                                            <field name="alias_name" placeholder="alias"/>@
-                                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
-                                                   options="{'no_create': True, 'no_open': True}"/>
-                                        </span>
-                                    </div>
-                                    <!-- the alias contact must appear when the user start typing and it must disappear
-                                        when the string is deleted. -->
-                                    <field name="alias_contact" class="oe_inline" string="Accept Emails From"
-                                           invisible="not alias_email"/>
+                                <group name="analytic">
+                                    <div class="o_horizontal_separator text-uppercase fw-bolder small" groups="analytic.group_analytic_accounting">analytic</div>
+                                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                                 </group>
                                 <group name="extra_settings">
                                 </group>
@@ -151,13 +155,6 @@
                                             </div>
                                         </setting>
                                     </div>
-                                </group>
-                            </group>
-                        </page>
-                        <page name="analytic" string="Analytic" groups="analytic.group_analytic_accounting">
-                            <group>
-                                 <group>
-                                    <field name="account_id"/>
                                 </group>
                             </group>
                         </page>
