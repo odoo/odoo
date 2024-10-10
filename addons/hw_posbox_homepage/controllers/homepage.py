@@ -320,7 +320,10 @@ class IotBoxOwlHomePage(Home):
                     helpers.save_conf_server(**configuration)
             except ValueError:
                 _logger.warning("Wrong server token: %s", token)
-                return 'Invalid URL provided.'
+                return {
+                    'status': 'failure',
+                    'message': 'Invalid URL provided.',
+                }
             except (subprocess.CalledProcessError, OSError, Exception):
                 return {
                     'status': 'failure',
