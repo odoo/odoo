@@ -349,7 +349,7 @@ class Alias(models.Model):
                 matching_name=existing.display_name,
             )
         msg_end = _('Choose another value or change it on the other document.')
-        raise UserError(f'{msg_begin} {msg_end}')
+        raise UserError(f'{msg_begin} {msg_end}')  # pylint: disable=missing-gettext
 
     @api.model
     def _sanitize_allowed_domains(self, allowed_domains):

@@ -413,7 +413,7 @@ class MailThread(models.AbstractModel):
         allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
         operand = value if isinstance(value, (list, tuple)) else [value]
         if not allow_partner_ids.issuperset(operand):
-            raise AccessError("Portal users can only filter threads by themselves as followers.")
+            raise AccessError(self.env._("Portal users can only filter threads by themselves as followers."))
         return super(MailThread, self.sudo())._condition_to_sql(alias, fname, operator, value, query)
 
     # ------------------------------------------------------

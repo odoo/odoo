@@ -696,7 +696,7 @@ class IrAttachment(models.Model):
             tok = record_sudo.with_context(prefetch_fields=False).access_token
             valid_token = consteq(tok or '', access_token)
             if not valid_token:
-                raise AccessError("Invalid access token")
+                raise AccessError(self.env._("Invalid access token"))
             return record_sudo
 
         if record_sudo.with_context(prefetch_fields=False).public:

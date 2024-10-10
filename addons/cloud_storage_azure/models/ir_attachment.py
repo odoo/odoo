@@ -65,7 +65,7 @@ class IrAttachment(models.Model):
     def _get_cloud_storage_azure_info(self):
         match = self._cloud_storage_azure_url_pattern.match(self.url)
         if not match:
-            raise ValidationError('%s is not a valid Azure Blob Storage URL.', self.url)
+            raise ValidationError(self.env._('%s is not a valid Azure Blob Storage URL.', self.url))
         return {
             'account_name': match['account_name'],
             'container_name': match['container_name'],

@@ -294,7 +294,7 @@ class MaintenanceRequest(models.Model):
     def _check_repeat_interval(self):
         for record in self:
             if record.repeat_interval < 1:
-                raise ValidationError("Repeat Interval cannot be less than 1.")
+                raise ValidationError(self.env._("The repeat interval cannot be less than 1."))
 
     @api.depends('company_id', 'equipment_id')
     def _compute_maintenance_team_id(self):

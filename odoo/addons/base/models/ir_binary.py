@@ -44,7 +44,7 @@ class IrBinary(models.AbstractModel):
         elif res_id is not None and res_model in self.env:
             record = self.env[res_model].browse(res_id).exists()
         if not record:
-            raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")
+            raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")  # pylint: disable=missing-gettext
 
         record = self._find_record_check_access(record, access_token, field)
         return record
@@ -85,7 +85,7 @@ class IrBinary(models.AbstractModel):
                     ('res_field', '=', field_name)],
             limit=1)
         if not field_attachment:
-            raise MissingError("The related attachment does not exist.")
+            raise MissingError(self.env._("The related attachment does not exist."))
         return field_attachment._to_http_stream()
 
     def _get_stream_from(
@@ -112,15 +112,15 @@ class IrBinary(models.AbstractModel):
             ``application/octet-stream``.
         :rtype: odoo.http.Stream
         """
-        with replace_exceptions(ValueError, by=UserError(f'Expected singleton: {record}')):
+        with replace_exceptions(ValueError, by=UserError(f'Expected singleton: {record}')):  # pylint: disable=missing-gettext
             record.ensure_one()
 
         try:
             field_def = record._fields[field_name]
         except KeyError:
-            raise UserError(f"Record has no field {field_name!r}.")
+            raise UserError(f"Record has no field {field_name!r}.")  # pylint: disable=missing-gettext
         if field_def.type != 'binary':
-            raise UserError(
+            raise UserError(  # pylint: disable=missing-gettext
                 f"Field {field_def!r} is type {field_def.type!r} but "
                 f"it is only possible to stream Binary or Image fields."
             )

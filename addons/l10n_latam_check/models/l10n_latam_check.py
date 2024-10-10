@@ -218,4 +218,4 @@ class l10nLatamAccountPaymentCheck(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_if_payment_is_draft(self):
         if any(check.payment_id.state == 'in_process' for check in self):
-            raise UserError("Can't delete a check if payment is In Process!")
+            raise UserError(self.env._("Can't delete a check if payment is In Process!"))
