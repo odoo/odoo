@@ -158,7 +158,14 @@
                                 <field name="ssnid" readonly="not can_edit"/>
                                 <field name="passport_id" readonly="not can_edit"/>
                                 <field name="gender" readonly="not can_edit"/>
-                                <field name="birthday" readonly="not can_edit"/>
+                                <label for="birthday"/>
+                                        <div class="oe_inline">
+                                            <field name="birthday" class="o_hr_narrow_field" readonly="not can_edit"/>
+                                            <span invisible="not birthday" groups="hr.group_hr_user">
+                                                <label for="birthday_public_display" class="fw-bold text-900 form-check-label ms-3"/>
+                                                <field name="birthday_public_display" class="ms-3" readonly="not can_edit"/>
+                                            </span>
+                                        </div>
                                 <field name="place_of_birth" readonly="not can_edit"/>
                                 <field name="country_of_birth" readonly="not can_edit"/>
                             </group>

@@ -150,10 +150,14 @@
                                     <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                     <field name="work_email"/>
                                 </div>
+                                <div t-if="record.work_phone.raw_value">
+                                    <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
+                                    <field name="work_phone"/>
+                                </div>
                                 <div class="d-flex">
-                                    <div t-if="record.work_phone.raw_value">
-                                        <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
-                                        <field name="work_phone"/>
+                                    <div invisible="birthday_public_display_string == 'hidden'">
+                                        <i class="fa fa-fw me-2 fa-birthday-cake text-primary" title="Birthday"/>
+                                        <field name="birthday_public_display_string"/>
                                     </div>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="1" class="ms-auto"/>
                                 </div>
