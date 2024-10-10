@@ -34,34 +34,39 @@
                 <t t-foreach="grouped_tasks" t-as="tasks">
                     <tbody t-if="tasks">
                         <tr t-if="not groupby == 'none'" class="table-light">
-                            <th t-if="groupby == 'project_id' and multiple_projects" t-attf-colspan="{{grouped_tasks_colspan}}">
+                            <th t-if="groupby == 'project_id' and multiple_projects">
                                 <!-- This div is necessary for documents_project_sale -->
                                 <div name="project_name" class="d-flex w-100 align-items-center">
                                     <span t-if="tasks[0].sudo().project_id" t-field="tasks[0].sudo().project_id.name"/>
                                     <span t-else="">No Project</span>
                                 </div>
                             </th>
-                            <th t-if="groupby == 'milestone_id'" t-attf-colspan="{{grouped_tasks_colspan}}">
+                            <th t-if="groupby == 'milestone_id'">
                                 <span t-if="tasks[0].sudo().milestone_id and tasks[0].sudo().allow_milestones"
                                       class="text-truncate"
                                       t-field="tasks[0].sudo().milestone_id.name"/>
                                 <span t-else="">No Milestone</span>
                             </th>
-                            <th t-if="groupby == 'stage_id'" t-attf-colspan="{{grouped_tasks_colspan}}">
+                            <th t-if="groupby == 'stage_id'">
                                 <!-- This div is necessary for documents_project_sale -->
                                 <div name="stage_name" class="d-flex w-100 align-items-center">
                                     <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/>
                                 </div>
                             </th>
-                            <th t-if="groupby == 'priority'" t-attf-colspan="{{grouped_tasks_colspan}}">
+                            <th t-if="groupby == 'priority'">
                                 <span class="text-truncate" t-field="tasks[0].sudo().priority"/></th>
-                            <th t-if="groupby == 'state'" t-attf-colspan="{{grouped_tasks_colspan}}">
+                            <th t-if="groupby == 'state'">
                                 <span class="text-truncate" t-field="tasks[0].sudo().state"/></th>
-                            <th t-if="groupby == 'partner_id'" t-attf-colspan="{{grouped_tasks_colspan}}">
+                            <th t-if="groupby == 'partner_id'">
                                 <span t-if="tasks[0].sudo().partner_id"
                                       class="text-truncate"
                                       t-field="tasks[0].sudo().partner_id.name"/>
                                 <span t-else="">No Customer</span>
+                            </th>
+                            <!-- make space for the title across the whole row -->
+                            <th name="colspan_project_tasks"
+                                t-if="groupby in group_by_in_header_list + ['partner_id']"
+                                t-attf-colspan="{{grouped_tasks_colspan}}">
                             </th>
                         </tr>
                     </tbody>

@@ -28,4 +28,11 @@
         </xpath>
     </template>
 
+    <!-- It will modify the spacing between the groupby title and the time information -->
+    <template id="portal_tasks_list_inherit_sale_timesheet" inherit_id="project.portal_tasks_list">
+        <xpath expr="//th[@name='header_group_sale_line_id']" position="attributes">
+            <attribute name="t-attf-colspan">{{grouped_tasks_colspan - 3}}</attribute>
+        </xpath>
+    </template>
+
 </odoo>

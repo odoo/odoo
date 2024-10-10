@@ -72,6 +72,40 @@
                 </t>
             </td>
         </xpath>
+
+        <xpath expr="//th[@name='colspan_project_tasks']" position="after">
+            <th t-if="groupby">
+                <t t-call="hr_timesheet.total_hours_display"/>
+            </th>
+        </xpath>
+
+        <!-- create space between the title of the group and the time information if hr_timesheet is enabled -->
+        <xpath expr="//th[@name='colspan_project_tasks']" position="attributes">
+            <attribute name="t-attf-colspan">{{grouped_tasks_colspan - (3 if groupby in ('stage_id', 'state') else 4)}}</attribute>
+        </xpath>
+    </template>
+
+    <template id="total_hours_display">
+        <div class="text-end w-100 text-muted fw-normal">
+            <t t-set="total_effective_hours" t-value="sum(tasks.mapped('effective_hours'))"/>
+            <t t-set="total_allocated_hours" t-value="sum(tasks.mapped('allocated_hours'))"/>
+            <span>Total:
+                <t t-if="is_uom_day">
+                    <t t-out="tasks._convert_hours_to_days(total_effective_hours)" t-options='{"widget": "timesheet_uom"}'/>
+                    <span t-if="total_allocated_hours > 0"> /
+                        <t t-out="tasks._convert_hours_to_days(total_allocated_hours)" t-options='{"widget": "timesheet_uom"}'/>
+                    </span>
+                </t>
+                <t t-else="">
+                    <t t-out="total_effective_hours" t-options='{"widget": "float_time"}'/>
+                    <span t-if="total_allocated_hours > 0"> /
+                        <t t-out="total_allocated_hours" t-options='{"widget": "float_time"}'/>
+                    </span>
+                </t>
+            </span>
+        </div>
+        <!-- This space is specifically for the stage column -->
+        <th t-attf-colspan="2"/>
     </template>
 
 </odoo>
