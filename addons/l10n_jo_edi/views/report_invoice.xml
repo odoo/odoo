@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="l10n_jo_edi_report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@id='qrcode']" position="after">
+                <div t-if="o.l10n_jo_edi_qr" name="qr_code">
+                    <p>
+                        <strong class="text-center">JoFotara QR Code</strong>
+                        <img style="display:block;"
+                            t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_jo_edi_qr, 200, 200)"/>
+                    </p>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

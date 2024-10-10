@@ -342,7 +342,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Price subtotal with discount / quantity:
         gross_price_unit = gross_price_subtotal / line.quantity if line.quantity else 0.0
 
-        uom = super()._get_uom_unece_code(line)
+        uom = self._get_uom_unece_code(line)
 
         return {
             'currency': line.currency_id,
@@ -373,7 +373,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """
         allowance_charge_vals_list = self._get_invoice_line_allowance_vals_list(line, tax_values_list=taxes_vals)
 
-        uom = super()._get_uom_unece_code(line)
+        uom = self._get_uom_unece_code(line)
         total_fixed_tax_amount = sum(
             vals['amount']
             for vals in allowance_charge_vals_list
