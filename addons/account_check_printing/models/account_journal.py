@@ -39,6 +39,8 @@ class AccountJournal(models.Model):
         string="Check Layout",
     )
 
+    bank_check_printing_format = fields.Many2one(comodel_name='account.check.layout.format', string='Check Format')
+
     def _get_check_printing_layouts(self):
         """ Returns available check printing layouts for the company, excluding disabled options """
         selection = self.company_id._fields['account_check_printing_layout'].selection

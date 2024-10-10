@@ -45,3 +45,4 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         help="Adjust the margins of generated checks to make it fit your printer's settings."
     )
+    account_check_layout_format_id = fields.Many2one('account.check.layout.format', related='company_id.account_check_layout_format_id', string="Check Format", readonly=False)

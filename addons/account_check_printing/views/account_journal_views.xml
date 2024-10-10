@@ -34,6 +34,7 @@
                         <field name="check_next_number"
                                invisible="not check_manual_sequencing"/>
                         <field name="bank_check_printing_layout" placeholder="Default"/>
+                        <field name="bank_check_printing_format" invisible="bank_check_printing_layout != 'account_check_printing.action_print_check'"/>
                     </group>
                 </xpath>
             </field>
