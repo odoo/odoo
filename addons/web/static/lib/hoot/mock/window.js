@@ -144,7 +144,10 @@ const EVENT_TARGET_PROTOTYPES = new Map(
         Worker,
         // Others
         EventBus,
-    ].map((cls) => [cls.prototype, cls.prototype.addEventListener])
+    ].map(({ prototype }) => [
+        prototype,
+        [prototype.addEventListener, prototype.removeEventListener],
+    ])
 );
 
 /** @type {{ descriptor: PropertyDescriptor; owner: any; property: string; target: any }[]} */
@@ -280,7 +283,7 @@ export function setTitle(value) {
 export function watchListeners() {
     const remaining = [];
 
-    for (const [proto, addEventListener] of EVENT_TARGET_PROTOTYPES) {
+    for (const [proto, [addEventListener, removeEventListener]] of EVENT_TARGET_PROTOTYPES) {
         proto.addEventListener = function mockedAddEventListener(...args) {
             const runner = getRunner();
             if (runner.dry) {
@@ -288,11 +291,12 @@ export function watchListeners() {
                 return;
             }
             if (runner.suiteStack.length && !R_OWL_SYNTHETIC_LISTENER.test(String(args[1]))) {
+                const cleanup = removeEventListener.bind(this, ...args);
                 // Do not cleanup:
                 // - listeners outside of suites
                 // - Owl synthetic listeners
-                remaining.push([this, args]);
-                runner.after(() => this.removeEventListener(...args));
+                remaining.push(cleanup);
+                runner.after(cleanup);
             }
             return addEventListener.call(this, ...args);
         };
@@ -300,11 +304,10 @@ export function watchListeners() {
 
     return function unwatchAllListeners() {
         while (remaining.length) {
-            const [target, args] = remaining.pop();
-            target.removeEventListener(...args);
+            remaining.pop()();
         }
 
-        for (const [proto, addEventListener] of EVENT_TARGET_PROTOTYPES) {
+        for (const [proto, [addEventListener]] of EVENT_TARGET_PROTOTYPES) {
             proto.addEventListener = addEventListener;
         }
     };
