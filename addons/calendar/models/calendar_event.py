@@ -22,6 +22,7 @@ from odoo.addons.calendar.models.calendar_recurrence import (
     WEEKDAY_SELECTION,
     BYDAY_SELECTION
 )
+from odoo.addons.calendar.models.utils import intervals_overlap, interval_from_events
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
 from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
@@ -190,6 +191,7 @@ class Meeting(models.Model):
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners)
     invalid_email_partner_ids = fields.Many2many('res.partner', compute='_compute_invalid_email_partner_ids')
+    unavailable_partner_ids = fields.Many2many('res.partner', compute='_compute_unavailable_partner_ids')
     # alarms
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
@@ -301,6 +303,19 @@ class Meeting(models.Model):
             event.invalid_email_partner_ids = event.partner_ids.filtered(
                 lambda a: not (a.email and single_email_re.match(a.email))
             )
+
+    @api.depends('partner_ids', 'start', 'stop', 'allday')
+    def _compute_unavailable_partner_ids(self):
+        self.unavailable_partner_ids = False
+        for start, stop, events in interval_from_events(self):
+            events_by_partner_id = events.partner_ids._get_busy_calendar_events(start, stop)
+            for event in events:
+                for partner in event.partner_ids:
+                    if any(
+                        intervals_overlap((event.start, event.stop), (other_event.start, other_event.stop))
+                        for other_event in events_by_partner_id.get(partner._origin.id, []) if other_event != event
+                    ):
+                        event.unavailable_partner_ids += partner
 
     def _compute_is_highlighted(self):
         if self.env.context.get('active_model') == 'res.partner':
