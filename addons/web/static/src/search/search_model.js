@@ -1524,7 +1524,15 @@ export class SearchModel extends EventBus {
         const domains = autocompleteValues.map(({ label, value, operator }) => {
             let domain;
             if (field.filterDomain) {
-                domain = new Domain(field.filterDomain).toList({ self: label, raw_value: value });
+                let self;
+                // Dates from the search panel can come in a variety of formats, but
+                // we want the universal formatted value to use it in the domain
+                if (["datetime", "date"].includes(field.fieldType)) {
+                    self = value;
+                } else {
+                    self = label;
+                }
+                domain = new Domain(field.filterDomain).toList({ self: self, raw_value: value });
             } else {
                 domain = [[field.fieldName, operator, value]];
             }
