@@ -20,9 +20,10 @@ export class EventRegistrationSummaryDialog extends Component {
     static components = { Dialog };
     static props = {
         close: Function,
-        doNextScan: Function,
-        playSound: Function,
-        registration: Object,
+        doNextScan: { type: Function, optional: true },
+        model: { type: Object, optional: true },
+        playSound: { type: Function, optional: true },
+        registration: { type: Object },
     };
 
     setup() {
@@ -53,16 +54,16 @@ export class EventRegistrationSummaryDialog extends Component {
         this.dialogState = useState({ isHidden: this.willAutoPrint });
 
         onMounted(() => {
-            if (this.props.registration.status === 'already_registered' || this.props.registration.status === 'need_manual_confirmation') {
+            if (['already_registered', 'need_manual_confirmation'].includes(this.props.registration.status) && this.props.playSound) {
                 this.props.playSound("notify");
-            } else if (this.props.registration.status === 'not_ongoing_event' || this.props.registration.status === 'canceled_registration') {
+            } else if (['not_ongoing_event', 'canceled_registration'].includes(this.props.registration.status) && this.props.playSound) {
                 this.props.playSound("error");
             } else if (this.willAutoPrint) {
                 this.onRegistrationPrintPdf()
                     .catch(() => { this.dialogState.isHidden = false; });
             }
             // Without this, repeat barcode scans don't work as focus is lost
-            this.continueButtonRef.el.focus();
+            this.continueButtonRef.el?.focus();
         });
     }
 
@@ -81,6 +82,25 @@ export class EventRegistrationSummaryDialog extends Component {
     async onRegistrationConfirm() {
         await this.orm.call("event.registration", "action_set_done", [this.registration.id]);
         this.registrationStatus.value = "confirmed_registration";
+        this.props.close();
+        if (this.props.model) {
+            this.props.model.load();
+        }
+        if (this.props.doNextScan) {
+            this.onScanNext();
+        }
+    }
+
+    async undoRegistration() {
+        if (["confirmed_registration", "already_registered"].includes(this.registrationStatus.value)) {
+            await this.orm.call("event.registration", "action_confirm", [this.registration.id]);
+        } else if (this.registrationStatus.value == "unconfirmed_registration") {
+            await this.orm.call("event.registration", "action_set_draft", [this.registration.id]);
+        }
+        this.props.close();
+        if (this.props.model) {
+            this.props.model.load();
+        }
     }
 
     async onRegistrationPrintPdf() {

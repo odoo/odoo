@@ -58,6 +58,7 @@ Key Features
             'event/static/src/icon_selection_field/icon_selection_field.xml',
             'event/static/src/template_reference_field/*',
             'event/static/src/js/tours/**/*',
+            'event/static/src/views/*',
         ],
         'web.assets_frontend': [
             'event/static/src/js/tours/**/*',
