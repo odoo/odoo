@@ -5,7 +5,7 @@
             <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper">
                 <div t-if="state.isImage" class="col p-2" style="max-width: 250px;">
                     <div class="input-group mb-1">
-                        <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                        <input name="o_linkpopover_url_img" t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
                         <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
                     </div>
                 </div>
@@ -21,6 +21,7 @@
                         </div>
                         <div class="input-group mb-1">
                             <input t-ref="url"
+                                name="o_linkpopover_url"
                                 class="o_we_href_input_link form-control form-control-sm"
                                 t-model="state.url"
                                 title="URL"
