@@ -332,7 +332,7 @@ export class View extends Component {
                     : "web.assets_backend_lazy"
             );
         }
-        const descr = viewRegistry.get(jsClass);
+        const ViewClass = viewRegistry.get(jsClass);
 
         const sample = archXmlDoc.getAttribute("sample");
         const className = computeViewClassName(type, archXmlDoc, [
@@ -347,7 +347,7 @@ export class View extends Component {
             viewType: type,
             viewSubType: jsClass,
             noBreadcrumbs: props.noBreadcrumbs,
-            ...extractLayoutComponents(descr),
+            ...extractLayoutComponents(ViewClass),
         });
         const info = {
             actionMenus,
@@ -394,20 +394,22 @@ export class View extends Component {
         }
 
         const searchMenuTypes =
-            props.searchMenuTypes || descr.searchMenuTypes || this.constructor.searchMenuTypes;
+            props.searchMenuTypes || ViewClass.searchMenuTypes || this.constructor.searchMenuTypes;
         viewProps.searchMenuTypes = searchMenuTypes;
-        const canOrderByCount = descr.canOrderByCount || this.constructor.canOrderByCount;
+        const canOrderByCount = ViewClass.canOrderByCount || this.constructor.canOrderByCount;
 
-        const finalProps = descr.props ? descr.props(viewProps, descr, this.env.config) : viewProps;
+        const finalProps =
+            new ViewClass()?.getComponentProps(viewProps, this.env.config) || viewProps;
+
         // prepare the WithSearch component props
-        this.Controller = descr.Controller;
+        this.Controller = ViewClass.Controller;
         this.componentProps = finalProps;
         this.withSearchProps = {
             ...toRaw(props),
-            hideCustomGroupBy: props.hideCustomGroupBy || descr.hideCustomGroupBy,
+            hideCustomGroupBy: props.hideCustomGroupBy || ViewClass.hideCustomGroupBy,
             searchMenuTypes,
             canOrderByCount,
-            SearchModel: descr.SearchModel,
+            SearchModel: ViewClass.SearchModel,
         };
 
         if (searchViewId !== undefined) {
@@ -421,11 +423,11 @@ export class View extends Component {
             this.withSearchProps.irFilters = irFilters;
         }
 
-        if (descr.display) {
+        if (ViewClass.display) {
             // FIXME: there's something inelegant here: display might come from
             // the View's defaultProps, in which case, modifying it in place
             // would have unwanted effects.
-            const viewDisplay = deepCopy(descr.display);
+            const viewDisplay = deepCopy(ViewClass.display);
             const display = { ...this.withSearchProps.display };
             for (const key in viewDisplay) {
                 if (typeof display[key] === "object") {
