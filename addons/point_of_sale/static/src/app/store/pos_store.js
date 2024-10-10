@@ -1056,7 +1056,9 @@ export class PosStore extends Reactive {
                 // Replace the original session by the rescue one. And the rescue one will have
                 // a higher id than the original one since it's the last one created.
                 const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
-                session.delete();
+                if (session.state !== "opened") {
+                    session.delete();
+                }
             }
 
             return newData["pos.order"];
