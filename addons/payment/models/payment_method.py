@@ -93,6 +93,10 @@ class PaymentMethod(models.Model):
              "to customers.",
         context={'active_test': False},
     )
+    support_manual_capture = fields.Boolean(
+        string="Support Manual Capture",
+        help="Indicates whether this payment method supports manual capture",
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -294,6 +298,25 @@ class PaymentMethod(models.Model):
                 available=False,
                 reason=REPORT_REASONS_MAPPING['express_checkout_not_supported'],
             )
+
+        # Filter pms that does not support manual capture.
+        unfiltered_pms = payment_methods
+        non_supported_manual_capture_pms = payment_methods.filtered(
+            lambda p: not p.support_manual_capture
+        )
+        providers = self.env['payment.provider'].browse(provider_ids)
+        capture_manually_supported_pp = providers.filtered('capture_manually')
+        if non_supported_manual_capture_pms and capture_manually_supported_pp:
+            for pm in non_supported_manual_capture_pms:
+                if any(p in pm.provider_ids for p in capture_manually_supported_pp):
+                    payment_methods -= pm
+
+        payment_utils.add_to_report(
+            report,
+            unfiltered_pms - payment_methods,
+            available=False,
+            reason=REPORT_REASONS_MAPPING['manual_capture_not_supported'],
+        )
 
         return payment_methods
 

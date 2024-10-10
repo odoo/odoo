@@ -156,10 +156,12 @@ class TestPaymentMethod(PaymentCommon):
             'active': True,
             'support_express_checkout': True,
             'support_tokenization': True,
+            'support_manual_capture': True,
         })
 
         # Prepare the report with a provider to allow checking provider availability.
         report = {}
+        self.provider.capture_manually = True
         payment_utils.add_to_report(report, self.provider)
 
         # Prepare a payment method with an unavailable provider.
@@ -187,6 +189,10 @@ class TestPaymentMethod(PaymentCommon):
         # Prepare a payment method without support for express checkout.
         no_express_checkout_pm = self.payment_method.copy()
         no_express_checkout_pm.support_express_checkout = False
+
+        # Prepare a payment method without support for manual capture.
+        no_manual_capture_pm = self.payment_method.copy()
+        no_manual_capture_pm.support_manual_capture = False
 
         # Get compatible payment methods to generate their availability report.
         self.env['payment.method']._get_compatible_payment_methods(
@@ -228,6 +234,11 @@ class TestPaymentMethod(PaymentCommon):
             no_express_checkout_pm: {
                 'available': False,
                 'reason': REPORT_REASONS_MAPPING['express_checkout_not_supported'],
+                'supported_providers': [(self.provider, True)],
+            },
+            no_manual_capture_pm: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['manual_capture_not_supported'],
                 'supported_providers': [(self.provider, True)],
             },
         }
