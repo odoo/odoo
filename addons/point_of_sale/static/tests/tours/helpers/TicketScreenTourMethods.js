@@ -226,7 +226,7 @@ export function receiptTotalIs(amount) {
 export function nthColumnContains(nRow, nCol, string){
     return [
         {
-            trigger: `.ticket-screen .order-row:nth-child(${nRow}) > .col:nth-child(${nCol}):contains("${string}")`,
+            trigger: `.ticket-screen .order-row:nth-last-child(${nRow}) > .col:nth-child(${nCol}):contains("${string}")`,
             run: () => {},
         },
     ];
