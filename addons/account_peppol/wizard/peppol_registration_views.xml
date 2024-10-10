@@ -34,28 +34,6 @@
                         <field name="peppol_endpoint" string="Endpoint"/>
                         <field name="contact_email" string="Email"/>
 
-                        <!-- edi mode selection -->
-                        <field name="edi_mode_constraint" invisible="1"/>
-                        <div colspan="2" class="row" invisible="account_peppol_proxy_state != 'not_registered'">
-                            <label for="edi_mode" string="EDI mode" class="text-900 col-2"/>
-                            <field name="edi_mode"
-                                   widget="account_peppol_radio_field"
-                                   class="o_field_radio col-2 w-25 ps-0"
-                                   readonly_items="edi_mode_constraint != 'prod' and ['prod'] or []"
-                                   hidden_items="edi_mode_constraint != 'test' and ['test'] or []"/>
-                            <div class="text-muted col" invisible="edi_mode != 'prod'">
-                                By clicking the button below I accept that Odoo may process my e-invoices.
-                            </div>
-                            <div class="text-muted col" invisible="edi_mode != 'test'">
-                                Test mode allows sending e-invoices through the test Peppol network.
-                                By clicking the button below I accept that Odoo may process my e-invoices.
-                            </div>
-                            <div class="text-muted col" invisible="edi_mode != 'demo'">
-                                In demo mode sending invoices is simulated.
-                                There will be no communication with the Peppol network.
-                            </div>
-                        </div>
-
                         <div colspan="2" class="row">
                             <label for="phone_number" string="Phone" class="text-900 col-2"/>
                             <field name="phone_number" required="edi_mode != 'demo'" class="col-2 w-25 ps-0"/>
@@ -81,6 +59,23 @@
                             </div>
                             <div colspan="2" class="mt-1 ps-3 w-50">
                                 <field name="verification_code" widget="verification_code"/>
+                            </div>
+                        </div>
+
+                        <!-- edi mode info -->
+                        <field name="edi_mode_constraint" invisible="1"/>
+                        <div colspan="2" class="row" invisible="account_peppol_proxy_state != 'not_registered'">
+                            <field name="edi_mode" invisible="1"/>
+                            <div class="text-muted col" invisible="edi_mode != 'prod'">
+                                By clicking the button below I accept that Odoo may process my e-invoices.
+                            </div>
+                            <div class="text-muted col" invisible="edi_mode != 'test'">
+                                Test mode allows sending e-invoices through the test Peppol network.
+                                By clicking the button below I accept that Odoo may process my e-invoices.
+                            </div>
+                            <div class="text-muted col" invisible="edi_mode != 'demo'">
+                                In demo mode sending invoices is simulated.
+                                There will be no communication with the Peppol network.
                             </div>
                         </div>
                     </group>
