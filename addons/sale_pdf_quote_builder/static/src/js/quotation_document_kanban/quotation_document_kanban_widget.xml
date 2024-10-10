@@ -8,6 +8,7 @@
         <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
             <UploadButton
                 formData="formData"
+                allowedMIMETypes="allowedMIMETypes"
                 load.bind="() => this.props.record.load()"
                 uploadRoute="uploadRoute"
             />
