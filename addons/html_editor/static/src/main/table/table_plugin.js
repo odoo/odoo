@@ -6,13 +6,17 @@ import {
     isProtected,
     isProtecting,
     isEmptyBlock,
+    isTextNode,
+    nextLeaf,
+    previousLeaf,
 } from "@html_editor/utils/dom_info";
 import { ancestors, closestElement, descendants, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
-import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
+import { getColumnIndex, getRowIndex, getTableCells } from "@html_editor/utils/table";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 export const BORDER_SENSITIVITY = 5;
 
@@ -51,6 +55,22 @@ export class TablePlugin extends Plugin {
     setup() {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
+        this.addDomListener(this.editable, "keydown", (ev) => {
+            const handled = [
+                "shift+arrowup",
+                "shift+arrowright",
+                "shift+arrowdown",
+                "shift+arrowleft",
+                "control+shift+arrowup",
+                "control+shift+arrowright",
+                "control+shift+arrowdown",
+                "control+shift+arrowleft",
+            ];
+            if (handled.includes(getActiveHotkey(ev))) {
+                this.isShiftKey = true;
+                this.onKeyDown(ev);
+            }
+        });
         this.onMousemove = this.onMousemove.bind(this);
     }
 
@@ -455,11 +475,135 @@ export class TablePlugin extends Plugin {
         return true;
     }
 
+    /**
+     * Sets selection in table to make cell selection
+     * rectangularly when pressing shift + arrow key.
+     *
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    onKeyDown(ev) {
+        const selection = this.shared.getSelectionData().deepEditableSelection;
+        const startTable = closestElement(selection.anchorNode, "table");
+        const endTable = closestElement(selection.focusNode, "table");
+        if (!(startTable || endTable)) {
+            return;
+        }
+        const [startTd, endTd] = [
+            closestElement(selection.anchorNode, "td"),
+            closestElement(selection.focusNode, "td"),
+        ];
+        // Handle selection for the single cell.
+        if (startTd === endTd && !startTd.classList.contains("o_selected_td")) {
+            const { focusNode, focusOffset } = selection;
+            //Do not prevent default when there is a text in cell.
+            if (focusNode.nodeType === Node.TEXT_NODE) {
+                const textNodes = descendants(startTd).filter(isTextNode);
+                const lastTextChild = textNodes.pop();
+                const firstTextChild = textNodes.shift();
+                const isAtTextBoundary = {
+                    ArrowRight: nodeSize(focusNode) === focusOffset && focusNode === lastTextChild,
+                    ArrowLeft: focusOffset === 0 && focusNode === firstTextChild,
+                    ArrowUp: focusNode === firstTextChild,
+                    ArrowDown: focusNode === lastTextChild,
+                };
+                if (isAtTextBoundary[ev.key]) {
+                    ev.preventDefault();
+                    this.selectTableCells(this.shared.getEditableSelection());
+                }
+            } else {
+                ev.preventDefault();
+                this.selectTableCells(this.shared.getEditableSelection());
+            }
+            return;
+        }
+        if (startTable !== endTable) {
+            // Deselect the table at once if it is fully selected.
+            if (endTable) {
+                const deselectingBackward =
+                    ["ArrowLeft", "ArrowUp"].includes(ev.key) &&
+                    selection.direction === DIRECTIONS.RIGHT;
+                const deselectingForward =
+                    ["ArrowRight", "ArrowDown"].includes(ev.key) &&
+                    selection.direction === DIRECTIONS.LEFT;
+                let targetNode;
+                if (deselectingBackward) {
+                    targetNode = endTable.previousElementSibling;
+                } else if (deselectingForward) {
+                    targetNode = endTable.nextElementSibling;
+                }
+                if (targetNode) {
+                    ev.preventDefault();
+                    this.shared.setSelection({
+                        anchorNode: selection.anchorNode,
+                        anchorOffset: selection.anchorOffset,
+                        focusNode: targetNode,
+                        focusOffset: deselectingBackward ? nodeSize(targetNode) : 0,
+                    });
+                }
+            }
+            return;
+        }
+        const endCellPosition = { x: getRowIndex(endTd), y: getColumnIndex(endTd) };
+        const tds = [...startTable.rows].map((row) => [...row.cells]);
+        let targetTd, targetNode;
+        switch (ev.key) {
+            case "ArrowUp": {
+                if (endCellPosition.x > 0) {
+                    targetTd = tds[endCellPosition.x - 1][endCellPosition.y];
+                } else {
+                    if (previousLeaf(startTable, this.editable)) {
+                        targetNode = previousLeaf(startTable, this.editable);
+                    }
+                }
+                break;
+            }
+            case "ArrowDown": {
+                if (endCellPosition.x < tds.length - 1) {
+                    targetTd = tds[endCellPosition.x + 1][endCellPosition.y];
+                } else {
+                    targetNode = nextLeaf(startTable, this.editable);
+                }
+                break;
+            }
+            case "ArrowRight": {
+                if (endCellPosition.y < tds[0].length - 1) {
+                    targetTd = tds[endCellPosition.x][endCellPosition.y + 1];
+                }
+                break;
+            }
+            case "ArrowLeft": {
+                if (endCellPosition.y > 0) {
+                    targetTd = tds[endCellPosition.x][endCellPosition.y - 1];
+                }
+                break;
+            }
+        }
+        if (targetTd || targetNode) {
+            this.shared.setSelection({
+                anchorNode: selection.anchorNode,
+                anchorOffset: selection.anchorOffset,
+                focusNode: targetTd || targetNode,
+                focusOffset: 0,
+            });
+        }
+        ev.preventDefault();
+    }
+
     updateSelectionTable(selectionData) {
-        this.deselectTable();
+        if (!selectionData.documentSelectionIsInEditable) {
+            return;
+        }
         const selection = selectionData.editableSelection;
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
+        const selectSingleCell =
+            startTd &&
+            startTd === endTd &&
+            startTd.classList.contains("o_selected_td") &&
+            this.isShiftKey;
+        this.deselectTable();
+        delete this.isShiftKey;
         const startTable = ancestors(selection.startContainer, this.editable)
             .filter((node) => node.nodeName === "TABLE")
             .pop();
@@ -468,13 +612,34 @@ export class TablePlugin extends Plugin {
             .pop();
 
         const traversedNodes = this.shared.getTraversedNodes({ deep: true });
-        if (startTd !== endTd && startTable === endTable) {
+        if ((startTd !== endTd || selectSingleCell) && startTable === endTable) {
             if (!isProtected(startTable) && !isProtecting(startTable)) {
                 // The selection goes through at least two different cells ->
                 // select cells.
+                // Select single cell if selection goes from two cells to
+                // one using shift + arrow key.
                 this.selectTableCells(selection);
             }
         } else if (!traversedNodes.every((node) => closestElement(node.parentElement, "table"))) {
+            const endSelectionTable = closestElement(selection.focusNode, "table");
+            const endSelectionTableTds = endSelectionTable && getTableCells(endSelectionTable);
+            const traversedTds = new Set(traversedNodes.map((node) => closestElement(node, "td")));
+            const isTableFullySelected = endSelectionTableTds?.every((td) => traversedTds.has(td));
+            if (endSelectionTable && !isTableFullySelected) {
+                // Make sure all the cells are traversed in actual selection
+                // when selecting full table. If not, they will be selected
+                // forcefully and updateSelectionTable will be called again.
+                const targetTd =
+                    selection.direction === DIRECTIONS.RIGHT
+                        ? endSelectionTableTds.pop()
+                        : endSelectionTableTds.shift();
+                this.shared.setSelection({
+                    anchorNode: selection.anchorNode,
+                    anchorOffset: selection.anchorOffset,
+                    focusNode: targetTd,
+                    focusOffset: selection.direction === DIRECTIONS.RIGHT ? nodeSize(targetTd) : 0,
+                });
+            }
             const traversedTables = new Set(
                 traversedNodes
                     .map((node) => closestElement(node, "table"))
@@ -484,9 +649,7 @@ export class TablePlugin extends Plugin {
                 // Don't apply several nested levels of selection.
                 if (!ancestors(table, this.editable).some((node) => traversedTables.has(node))) {
                     table.classList.toggle("o_selected_table", true);
-                    for (const td of [...table.querySelectorAll("td")].filter(
-                        (td) => closestElement(td, "table") === table
-                    )) {
+                    for (const td of getTableCells(table)) {
                         td.classList.toggle("o_selected_td", true);
                     }
                 }
@@ -576,9 +739,7 @@ export class TablePlugin extends Plugin {
     selectTableCells(selection) {
         const table = closestElement(selection.commonAncestorContainer, "table");
         table.classList.toggle("o_selected_table", true);
-        const columns = [...table.querySelectorAll("td")].filter(
-            (td) => closestElement(td, "table") === table
-        );
+        const columns = getTableCells(table);
         const startCol =
             [selection.startContainer, ...ancestors(selection.startContainer, this.editable)].find(
                 (node) => node.nodeName === "TD" && closestElement(node, "table") === table
