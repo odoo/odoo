@@ -284,7 +284,7 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
     getLoyaltyCards(partner) {
         const loyaltyCards = [];
         if (this.partnerId2CouponIds[partner.id]) {
-            this.partnerId2CouponIds[partner.id].forEach(couponId => loyaltyCards.push(this.couponCache[couponId]));
+            this.partnerId2CouponIds[partner.id].forEach(couponId => !this.couponCache[couponId].isExpired() ? loyaltyCards.push(this.couponCache[couponId]) : null);
         }
         return loyaltyCards;
     }
@@ -714,6 +714,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 continue;
             }
             const loyaltyCard = this.pos.couponCache[coupon_id] || /* or new card */ { id: coupon_id, balance: 0 };
+            if (loyaltyCard instanceof PosLoyaltyCard && loyaltyCard.isExpired()) {
+                continue;
+            }
             let [won, spent, total] = [0, 0, 0];
             let balance = loyaltyCard.balance;
             won += points - this._getPointsCorrection(program);

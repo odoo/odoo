@@ -661,6 +661,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         all_coupons = forced_coupons or (self.coupon_point_ids.coupon_id | self.order_line.coupon_id | self.applied_coupon_ids)
+        all_coupons = all_coupons.filtered(lambda c: not c.expiration_date or c.expiration_date >= fields.Date.today())
         has_payment_reward = any(line.reward_id.program_id.is_payment_program for line in self.order_line)
         total_is_zero = float_is_zero(self.amount_total, precision_digits=2)
         result = defaultdict(lambda: self.env['loyalty.reward'])

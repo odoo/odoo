@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields
 from odoo.osv.expression import AND
 import ast
 import json
@@ -111,7 +111,7 @@ class PosSession(models.Model):
         loyalty_card_fields = ['points', 'code', 'program_id']
         partner_id_to_loyalty_card = {}
         for group in self.env['loyalty.card'].read_group(
-            domain=[('partner_id', 'in', [p['id'] for p in partners]), ('program_id', 'in', loyalty_programs.ids)],
+            domain=[('partner_id', 'in', [p['id'] for p in partners]), ('program_id', 'in', loyalty_programs.ids), ('expiration_date', '>=', fields.Date.today())],
             fields=[f"{field_name}:array_agg" for field_name in loyalty_card_fields] + ["ids:array_agg(id)"],
             groupby=['partner_id']
         ):
