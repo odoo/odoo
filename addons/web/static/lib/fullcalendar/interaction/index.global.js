@@ -1,7 +1,7 @@
 /*!
-FullCalendar Interaction Plugin v6.1.10
+FullCalendar Interaction Plugin v6.1.15
 Docs & License: https://fullcalendar.io/docs/editable
-(c) 2023 Adam Shaw
+(c) 2024 Adam Shaw
 */
 FullCalendar.Interaction = (function (exports, core, internal) {
     'use strict';
@@ -106,8 +106,8 @@ FullCalendar.Interaction = (function (exports, core, internal) {
             };
             this.handleScroll = (ev) => {
                 if (!this.shouldIgnoreMove) {
-                    let pageX = (window.pageXOffset - this.prevScrollX) + this.prevPageX;
-                    let pageY = (window.pageYOffset - this.prevScrollY) + this.prevPageY;
+                    let pageX = (window.scrollX - this.prevScrollX) + this.prevPageX;
+                    let pageY = (window.scrollY - this.prevScrollY) + this.prevPageY;
                     this.emitter.trigger('pointermove', {
                         origEvent: ev,
                         isTouch: this.isTouchDragging,
@@ -176,8 +176,8 @@ FullCalendar.Interaction = (function (exports, core, internal) {
             if (this.shouldWatchScroll) {
                 this.prevPageX = ev.pageX;
                 this.prevPageY = ev.pageY;
-                this.prevScrollX = window.pageXOffset;
-                this.prevScrollY = window.pageYOffset;
+                this.prevScrollX = window.scrollX;
+                this.prevScrollY = window.scrollY;
             }
         }
         destroyScrollWatch() {
@@ -296,15 +296,15 @@ FullCalendar.Interaction = (function (exports, core, internal) {
         start(sourceEl, pageX, pageY) {
             this.sourceEl = sourceEl;
             this.sourceElRect = this.sourceEl.getBoundingClientRect();
-            this.origScreenX = pageX - window.pageXOffset;
-            this.origScreenY = pageY - window.pageYOffset;
+            this.origScreenX = pageX - window.scrollX;
+            this.origScreenY = pageY - window.scrollY;
             this.deltaX = 0;
             this.deltaY = 0;
             this.updateElPosition();
         }
         handleMove(pageX, pageY) {
-            this.deltaX = (pageX - window.pageXOffset) - this.origScreenX;
-            this.deltaY = (pageY - window.pageYOffset) - this.origScreenY;
+            this.deltaX = (pageX - window.scrollX) - this.origScreenX;
+            this.deltaY = (pageY - window.scrollY) - this.origScreenY;
             this.updateElPosition();
         }
         // can be called before start
@@ -382,6 +382,7 @@ FullCalendar.Interaction = (function (exports, core, internal) {
                 // would use preventSelection(), but that prevents selectstart, causing problems.
                 mirrorEl.style.userSelect = 'none';
                 mirrorEl.style.webkitUserSelect = 'none';
+                mirrorEl.style.pointerEvents = 'none';
                 mirrorEl.classList.add('fc-event-dragging');
                 internal.applyStyle(mirrorEl, {
                     position: 'fixed',
@@ -537,7 +538,7 @@ FullCalendar.Interaction = (function (exports, core, internal) {
             this.everMovedRight = false;
             this.animate = () => {
                 if (this.isAnimating) { // wasn't cancelled between animation calls
-                    let edge = this.computeBestEdge(this.pointerScreenX + window.pageXOffset, this.pointerScreenY + window.pageYOffset);
+                    let edge = this.computeBestEdge(this.pointerScreenX + window.scrollX, this.pointerScreenY + window.scrollY);
                     if (edge) {
                         let now = getTime();
                         this.handleSide(edge, (now - this.msSinceRequest) / 1000);
@@ -563,8 +564,8 @@ FullCalendar.Interaction = (function (exports, core, internal) {
         }
         handleMove(pageX, pageY) {
             if (this.isEnabled) {
-                let pointerScreenX = pageX - window.pageXOffset;
-                let pointerScreenY = pageY - window.pageYOffset;
+                let pointerScreenX = pageX - window.scrollX;
+                let pointerScreenY = pageY - window.scrollY;
                 let yDelta = this.pointerScreenY === null ? 0 : pointerScreenY - this.pointerScreenY;
                 let xDelta = this.pointerScreenX === null ? 0 : pointerScreenX - this.pointerScreenX;
                 if (yDelta < 0) {
@@ -644,6 +645,10 @@ FullCalendar.Interaction = (function (exports, core, internal) {
                         (!bestSide || bestSide.distance > bottomDist)) {
                         bestSide = { scrollCache, name: 'bottom', distance: bottomDist };
                     }
+                    /*
+                    TODO: fix broken RTL scrolling. canScrollLeft always returning false
+                    https://github.com/fullcalendar/fullcalendar/issues/4837
+                    */
                     if (leftDist <= edgeThreshold && this.everMovedLeft && scrollCache.canScrollLeft() &&
                         (!bestSide || bestSide.distance > leftDist)) {
                         bestSide = { scrollCache, name: 'left', distance: leftDist };
@@ -671,6 +676,10 @@ FullCalendar.Interaction = (function (exports, core, internal) {
                     els.push(query);
                 }
                 else {
+                    /*
+                    TODO: in the future, always have auto-scroll happen on element where current Hit came from
+                    Ticket: https://github.com/fullcalendar/fullcalendar/issues/4593
+                    */
                     els.push(...Array.prototype.slice.call(scrollStartEl.getRootNode().querySelectorAll(query)));
                 }
             }
@@ -845,6 +854,7 @@ FullCalendar.Interaction = (function (exports, core, internal) {
     */
     class OffsetTracker {
         constructor(el) {
+            this.el = el;
             this.origRect = internal.computeRect(el);
             // will work fine for divs that have overflow:hidden
             this.scrollCaches = internal.getClippingParents(el).map((scrollEl) => new ElementScrollGeomCache(scrollEl, true));
@@ -904,6 +914,7 @@ FullCalendar.Interaction = (function (exports, core, internal) {
             // options that can be set by caller
             this.useSubjectCenter = false;
             this.requireInitial = true; // if doesn't start out on a hit, won't emit any events
+            this.disablePointCheck = false;
             this.initialHit = null;
             this.movingHit = null;
             this.finalHit = null; // won't ever be populated if shouldIgnoreMove
@@ -1020,6 +1031,13 @@ FullCalendar.Interaction = (function (exports, core, internal) {
                         if (hit && (
                         // make sure the hit is within activeRange, meaning it's not a dead cell
                         internal.rangeContainsRange(hit.dateProfile.activeRange, hit.dateSpan.range)) &&
+                            // Ensure the component we are querying for the hit is accessibly my the pointer
+                            // Prevents obscured calendars (ex: under a modal dialog) from accepting hit
+                            // https://github.com/fullcalendar/fullcalendar/issues/5026
+                            (this.disablePointCheck ||
+                                offsetTracker.el.contains(offsetTracker.el.getRootNode().elementFromPoint(
+                                // add-back origins to get coordinate relative to top-left of window viewport
+                                positionLeft + originLeft - window.scrollX, positionTop + originTop - window.scrollY))) &&
                             (!bestHit || hit.layer > bestHit.layer)) {
                             hit.componentId = id;
                             hit.context = component.context;
@@ -1300,7 +1318,7 @@ FullCalendar.Interaction = (function (exports, core, internal) {
                     let receivingOptions = receivingContext.options;
                     if (initialContext === receivingContext ||
                         (receivingOptions.editable && receivingOptions.droppable)) {
-                        mutation = computeEventMutation(initialHit, hit, receivingContext.getCurrentData().pluginHooks.eventDragMutationMassagers);
+                        mutation = computeEventMutation(initialHit, hit, this.eventRange.instance.range.start, receivingContext.getCurrentData().pluginHooks.eventDragMutationMassagers);
                         if (mutation) {
                             mutatedRelevantEvents = internal.applyMutationToEventStore(relevantEvents, receivingContext.getCurrentData().eventUiBases, mutation, receivingContext);
                             interaction.mutatedEvents = mutatedRelevantEvents;
@@ -1507,7 +1525,7 @@ FullCalendar.Interaction = (function (exports, core, internal) {
     // TODO: test this in IE11
     // QUESTION: why do we need it on the resizable???
     EventDragging.SELECTOR = '.fc-event-draggable, .fc-event-resizable';
-    function computeEventMutation(hit0, hit1, massagers) {
+    function computeEventMutation(hit0, hit1, eventInstanceStart, massagers) {
         let dateSpan0 = hit0.dateSpan;
         let dateSpan1 = hit1.dateSpan;
         let date0 = dateSpan0.range.start;
@@ -1519,7 +1537,12 @@ FullCalendar.Interaction = (function (exports, core, internal) {
             if (dateSpan1.allDay) {
                 // means date1 is already start-of-day,
                 // but date0 needs to be converted
-                date0 = internal.startOfDay(date0);
+                date0 = internal.startOfDay(eventInstanceStart);
+            }
+            else {
+                // Moving from allDate->timed
+                // Doesn't matter where on the event the drag began, mutate the event's start-date to date1
+                date0 = eventInstanceStart;
             }
         }
         let delta = internal.diffDates(date0, date1, hit0.context.dateEnv, hit0.componentId === hit1.componentId ?
@@ -2086,7 +2109,10 @@ FullCalendar.Interaction = (function (exports, core, internal) {
             if (typeof settings.mirrorSelector === 'string') {
                 dragging.mirrorSelector = settings.mirrorSelector;
             }
-            new ExternalElementDragging(dragging, settings.eventData); // eslint-disable-line no-new
+            let externalDragging = new ExternalElementDragging(dragging, settings.eventData);
+            // The hit-detection system requires that the dnd-mirror-element be pointer-events:none,
+            // but this can't be guaranteed for third-party draggables, so disable
+            externalDragging.hitDragging.disablePointCheck = true;
         }
         destroy() {
             this.dragging.destroy();
