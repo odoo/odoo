@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+
 from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
@@ -84,7 +85,9 @@ class HrEmployee(models.Model):
     children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_user", tracking=True)
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
-    birthday = fields.Date('Date of Birth', groups="hr.group_hr_user", tracking=True)
+    birthday = fields.Date('Birthday', groups="hr.group_hr_user", tracking=True)
+    birthday_public_display = fields.Boolean('Show to all employees', groups="hr.group_hr_user", default=False)
+    birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
     ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
     sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user", tracking=True)
     identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
@@ -242,6 +245,14 @@ class HrEmployee(models.Model):
                 avatar = employee.user_id.sudo()[avatar_field]
             employee[avatar_field] = avatar
         super(HrEmployee, employee_wo_user_and_image)._compute_avatar(avatar_field, image_field)
+
+    @api.depends('birthday_public_display')
+    def _compute_birthday_public_display_string(self):
+        for employee in self:
+            if employee.birthday and employee.birthday_public_display:
+                employee.birthday_public_display_string = datetime.strftime(employee.birthday, "%d %B")
+            else:
+                employee.birthday_public_display_string = "hidden"
 
     @api.depends('name', 'permit_no')
     def _compute_work_permit_name(self):
