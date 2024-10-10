@@ -20,20 +20,9 @@
                     update="(resIds) => this.onTagSelected(filter.id, resIds)" />
             </span>
             <div t-if="filter.type === 'date'" class="w-100">
-                <select t-if="filter.rangeType === 'relative'"
-                    t-on-change="(e) => this.onDateInput(filter.id, e.target.value || undefined)"
-                    class="date_filter_values o_input me-3"
-                    required="true">
-                    <option value="">Select period...</option>
-                    <t t-foreach="relativeDateRangesTypes"
-                        t-as="range"
-                        t-key="range.type">
-                        <option t-att-selected="range.type === filterValue"
-                            t-att-value="range.type">
-                            <t t-esc="range.description"/>
-                        </option>
-                    </t>
-                </select>
+                <RelativeDateValue t-if="filter.rangeType === 'relative'"
+                    value="filterValue"
+                    onChange="(value) => this.onDateInput(filter.id, value)"/>
                 <DateFromToValue t-elif="filter.rangeType === 'from_to'"
                     from="filterValue?.from"
                     to="filterValue?.to"
