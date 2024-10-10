@@ -21,6 +21,9 @@ export class ResUsersSettings extends models.ServerModel {
     is_discuss_sidebar_category_channel_open = fields.Generic({ default: true });
     is_discuss_sidebar_category_chat_open = fields.Generic({ default: true });
 
+    link_preview_image = fields.Boolean({ default: true });
+    link_preview_html = fields.Boolean({ default: false });
+
     /** @param {number|number[]} userIdOrIds */
     _find_or_create_for_user(userIdOrIds) {
         const [userId] = ensureArray(userIdOrIds);
