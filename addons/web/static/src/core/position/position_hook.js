@@ -61,6 +61,7 @@ export function usePosition(refName, getTarget, options = {}) {
         }
         const repositionOptions = { ...DEFAULTS, ...omit(options, "onPositioned") };
         const solution = reposition(ref.el, targetEl, repositionOptions);
+        options.position = `${solution.direction}-${solution.variant}`; // memorize last position
         options.onPositioned?.(ref.el, solution);
     };
 
