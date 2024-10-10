@@ -53,7 +53,6 @@ export class PaymentScreen extends Component {
 
     onMounted() {
         const order = this.pos.get_order();
-        this.pos.addPendingOrder([order.id]);
 
         for (const payment of order.payment_ids) {
             const pmid = payment.payment_method_id.id;
@@ -272,17 +271,17 @@ export class PaymentScreen extends Component {
             }
         }
 
-        this.pos.addPendingOrder([this.currentOrder.id]);
         this.currentOrder.state = "paid";
 
         this.env.services.ui.block();
         let syncOrderResult;
         try {
+            this.currentOrder.recomputeOrderData();
             // 1. Save order to server.
-            syncOrderResult = await this.pos.syncAllOrders({ throw: true });
-            if (!syncOrderResult) {
-                return;
-            }
+            // syncOrderResult = await this.pos.syncAllOrders({ throw: true });
+            // if (!syncOrderResult) {
+            //     return;
+            // }
 
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
@@ -312,24 +311,7 @@ export class PaymentScreen extends Component {
         }
 
         // 3. Post process.
-        if (
-            syncOrderResult &&
-            syncOrderResult.length > 0 &&
-            this.currentOrder.wait_for_push_order()
-        ) {
-            await this.postPushOrderResolve(syncOrderResult.map((res) => res.id));
-        }
-
         await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
-    }
-    async postPushOrderResolve(ordersServerId) {
-        const postPushResult = await this._postPushOrderResolve(this.currentOrder, ordersServerId);
-        if (!postPushResult) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Error: no internet connection."),
-                body: _t("Some, if not all, post-processing after syncing order failed."),
-            });
-        }
     }
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to

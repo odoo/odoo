@@ -66,7 +66,7 @@ patch(TicketScreen.prototype, {
             this.pos.set_tip(amount);
             order.state = "paid";
             order.uiState.screen_data.value = { name: "", props: {} };
-
+            // TODO
             const serializedTipLine = order.get_selected_orderline().serialize({ orm: true });
             order.get_selected_orderline().delete();
 

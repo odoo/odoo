@@ -85,10 +85,10 @@
             # for the related_models.test.js
             'point_of_sale/static/src/app/models/related_models.js',
             # for the data_service.test.js
-            'point_of_sale/static/src/app/models/utils/indexed_db.js',
-            'point_of_sale/static/src/app/models/data_service_options.js',
-            'point_of_sale/static/src/utils.js',
-            'point_of_sale/static/src/app/models/data_service.js',
+            # 'point_of_sale/static/src/app/models/utils/indexed_db.js',
+            # 'point_of_sale/static/src/app/models/data_service_options.js',
+            # 'point_of_sale/static/src/utils.js',
+            # 'point_of_sale/static/src/app/models/data_service.js',
             'point_of_sale/static/tests/unit/**/*',
         ],
 
@@ -117,6 +117,7 @@
             'bus/static/src/bus_parameters_service.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/workers/*',
+            'mail/static/src/utils/common/misc.js',
         ],
 
         # Main PoS assets, they are loaded in the PoS UI

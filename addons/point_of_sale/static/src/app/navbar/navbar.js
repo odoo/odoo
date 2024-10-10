@@ -4,7 +4,6 @@ import { isDisplayStandalone, isMobileOS } from "@web/core/browser/feature_detec
 
 import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
-import { SyncPopup } from "@point_of_sale/app/navbar/sync_popup/sync_popup";
 import {
     SaleDetailsButton,
     handleSaleDetails,
@@ -29,7 +28,6 @@ export class Navbar extends Component {
         Input,
         Dropdown,
         DropdownItem,
-        SyncPopup,
         OrderTabs,
     };
     static props = {};
@@ -126,17 +124,5 @@ export class Navbar extends Component {
 
     async showSaleDetails() {
         await handleSaleDetails(this.pos, this.hardwareProxy, this.dialog);
-    }
-
-    onSyncNotificationClick() {
-        if (this.pos.data.network.offline) {
-            this.pos.data.network.warningTriggered = false;
-        }
-
-        if (this.pos.data.network.unsyncData.length > 0) {
-            this.dialog.add(SyncPopup, {
-                confirm: () => this.pos.data.syncData(),
-            });
-        }
     }
 }

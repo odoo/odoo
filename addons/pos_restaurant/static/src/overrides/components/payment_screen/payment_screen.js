@@ -20,9 +20,8 @@ patch(PaymentScreen.prototype, {
             (t) => t.parent_id && t.parent_id.id === this.currentOrder.table_id?.id
         );
         if (changedTables?.length) {
-            for (const table of changedTables) {
-                this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
-            }
+            // TODO: can we update on a recordset or does it have to be 1 record at a time?
+            changedTables.update({ parent_id: null });
         }
         return await super.afterOrderValidation(...arguments);
     },
