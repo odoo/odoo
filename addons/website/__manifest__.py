@@ -294,6 +294,10 @@
             'website/static/src/js/editor/add_snippet_dialog.js',
             'website/static/src/js/editor/widget_link.js',
         ],
+        'html_editor.assets_link_popover': [
+            'website/static/src/js/editor/html_editor.js',
+            'website/static/src/xml/html_editor.xml',
+            ],
         'website.assets_wysiwyg': [
             ('include', 'web._assets_helpers'),
             'web_editor/static/src/scss/bootstrap_overridden.scss',
