@@ -4,7 +4,7 @@ from odoo import _, api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     # Groups
     group_delivery_invoice_address = fields.Boolean(

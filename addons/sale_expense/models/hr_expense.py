@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 
 
-class Expense(models.Model):
-    _inherit = "hr.expense"
+class HrExpense(models.Model):
+    _inherit = ["hr.expense"]
 
     sale_order_id = fields.Many2one('sale.order', compute='_compute_sale_order_id', store=True, string='Customer to Reinvoice', readonly=False, tracking=True,
         # NOTE: only confirmed SO can be selected, but this domain in activated throught the name search with the `sale_expense_all_order`
@@ -31,7 +31,7 @@ class Expense(models.Model):
         self.env.add_to_compute(self._fields['analytic_distribution'], to_reset)
 
     def _get_split_values(self):
-        vals = super(Expense, self)._get_split_values()
+        vals = super()._get_split_values()
         for split_value in vals:
             split_value['sale_order_id'] = self.sale_order_id.id
         return vals

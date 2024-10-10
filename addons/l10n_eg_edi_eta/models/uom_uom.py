@@ -4,8 +4,7 @@
 from odoo import models, fields
 
 
-class UomCode(models.Model):
-    _name = 'l10n_eg_edi.uom.code'
+class L10n_Eg_EdiUomCode(models.Model):
     _description = 'ETA code for the unit of measures'
 
     name = fields.Char(required=True, translate=True)
@@ -13,7 +12,7 @@ class UomCode(models.Model):
 
 
 class UomUom(models.Model):
-    _inherit = 'uom.uom'
+    _inherit = ['uom.uom']
 
     l10n_eg_unit_code_id = fields.Many2one('l10n_eg_edi.uom.code', string='ETA Unit Code',
                                            help='This is the type of unit according to egyptian tax authority')

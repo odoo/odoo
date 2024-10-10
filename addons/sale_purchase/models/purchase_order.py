@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 
 
 class PurchaseOrder(models.Model):
-    _inherit = "purchase.order"
+    _inherit = ["purchase.order"]
 
     sale_order_count = fields.Integer(
         "Number of Source Sale",
@@ -68,7 +68,7 @@ class PurchaseOrder(models.Model):
 
 
 class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+    _inherit = ['purchase.order.line']
 
     sale_order_id = fields.Many2one(related='sale_line_id.order_id', string="Sale Order", store=True, readonly=True)
     sale_line_id = fields.Many2one('sale.order.line', string="Origin Sale Item", index='btree_not_null', copy=False)

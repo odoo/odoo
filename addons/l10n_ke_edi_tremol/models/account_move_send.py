@@ -2,7 +2,7 @@ from odoo import _, models, api
 
 
 class AccountMoveSend(models.AbstractModel):
-    _inherit = 'account.move.send'
+    _inherit = ['account.move.send']
 
     @api.model
     def _get_l10n_ke_edi_tremol_warning_moves(self, moves):

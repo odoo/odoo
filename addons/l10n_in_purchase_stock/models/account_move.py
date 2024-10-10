@@ -5,7 +5,7 @@ from odoo import models
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     def _l10n_in_get_warehouse_address(self):
         res = super()._l10n_in_get_warehouse_address()

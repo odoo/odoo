@@ -6,7 +6,7 @@ from odoo.osv.expression import AND
 
 
 class HrAttendance(models.Model):
-    _inherit = "hr.attendance"
+    _inherit = ["hr.attendance"]
 
     def _get_overtime_leave_domain(self):
         domain = super()._get_overtime_leave_domain()

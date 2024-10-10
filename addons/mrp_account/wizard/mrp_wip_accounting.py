@@ -7,8 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tools import format_list
 
 
-class MrpWipAccountingLine(models.TransientModel):
-    _name = 'mrp.account.wip.accounting.line'
+class MrpAccountWipAccountingLine(models.TransientModel):
     _description = 'Account move line to be created when posting WIP account move'
 
     account_id = fields.Many2one('account.account', "Account")
@@ -36,8 +35,7 @@ class MrpWipAccountingLine(models.TransientModel):
                 record.credit = 0
 
 
-class MrpWipAccounting(models.TransientModel):
-    _name = 'mrp.account.wip.accounting'
+class MrpAccountWipAccounting(models.TransientModel):
     _description = 'Wizard to post Manufacturing WIP account move'
 
     @api.model

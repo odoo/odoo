@@ -7,7 +7,7 @@ from odoo import api, fields, models
 
 
 class HrWorkEntry(models.Model):
-    _inherit = 'hr.work.entry'
+    _inherit = ['hr.work.entry']
 
     leave_id = fields.Many2one('hr.leave', string='Time Off')
     leave_state = fields.Selection(related='leave_id.state')
@@ -101,7 +101,7 @@ class HrWorkEntry(models.Model):
 
 
 class HrWorkEntryType(models.Model):
-    _inherit = 'hr.work.entry.type'
+    _inherit = ['hr.work.entry.type']
     _description = 'HR Work Entry Type'
 
     leave_type_ids = fields.One2many(

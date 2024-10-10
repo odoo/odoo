@@ -8,7 +8,7 @@ from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class MrpProduction(models.Model):
-    _inherit = 'mrp.production'
+    _inherit = ['mrp.production']
     _rec_names_search = ['name', 'incoming_picking.name']
 
     move_line_raw_ids = fields.One2many(

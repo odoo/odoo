@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 
 class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
+    _inherit = ['stock.move.line']
 
     # -------------------------------------------------------------------------
     # CRUD

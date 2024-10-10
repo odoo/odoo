@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 from odoo import models, fields
 
 
-class HolidaysRequest(models.Model):
-    _inherit = "hr.leave"
+class HrLeave(models.Model):
+    _inherit = ["hr.leave"]
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
 

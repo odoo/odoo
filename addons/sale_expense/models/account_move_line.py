@@ -4,7 +4,7 @@ from odoo import models
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def _sale_can_be_reinvoice(self):
         """ determine if the generated analytic line should be reinvoiced or not.
@@ -44,7 +44,7 @@ class AccountMoveLine(models.Model):
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         self.expense_sheet_id._sale_expense_reset_sol_quantities()

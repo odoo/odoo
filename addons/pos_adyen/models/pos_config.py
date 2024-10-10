@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosConfig(models.Model):
-    _inherit = 'pos.config'
+    _inherit = ['pos.config']
 
     adyen_ask_customer_for_tip = fields.Boolean('Ask Customers For Tip')
 

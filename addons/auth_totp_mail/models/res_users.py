@@ -4,8 +4,8 @@
 from odoo import _, models
 
 
-class Users(models.Model):
-    _inherit = 'res.users'
+class ResUsers(models.Model):
+    _inherit = ['res.users']
 
     def write(self, vals):
         res = super().write(vals)

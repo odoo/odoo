@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 
 
 class MrpProduction(models.Model):
-    _inherit = 'mrp.production'
+    _inherit = ['mrp.production']
 
     has_analytic_account = fields.Boolean(compute='_compute_has_analytic_account')
 

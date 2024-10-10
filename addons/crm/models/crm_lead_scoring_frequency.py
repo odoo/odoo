@@ -2,8 +2,7 @@
 from odoo import fields, models
 
 
-class LeadScoringFrequency(models.Model):
-    _name = 'crm.lead.scoring.frequency'
+class CrmLeadScoringFrequency(models.Model):
     _description = 'Lead Scoring Frequency'
 
     variable = fields.Char('Variable', index=True)
@@ -12,8 +11,8 @@ class LeadScoringFrequency(models.Model):
     lost_count = fields.Float('Lost Count', digits=(16, 1))  # Float because we add 0.1 to avoid zero Frequency issue
     team_id = fields.Many2one('crm.team', 'Sales Team', ondelete="cascade")
 
-class FrequencyField(models.Model):
-    _name = 'crm.lead.scoring.frequency.field'
+
+class CrmLeadScoringFrequencyField(models.Model):
     _description = 'Fields that can be used for predictive lead scoring computation'
 
     name = fields.Char(related="field_id.field_description")

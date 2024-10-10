@@ -7,8 +7,7 @@ from odoo.exceptions import UserError
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConnection
 
 
-class L10nHuEdiCancellation(models.TransientModel):
-    _name = 'l10n_hu_edi.cancellation'
+class L10n_Hu_EdiCancellation(models.TransientModel):
     _description = 'Technical Annulment Wizard'
 
     invoice_id = fields.Many2one(

@@ -7,7 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 class StockMove(models.Model):
-    _inherit = "stock.move"
+    _inherit = ["stock.move"]
     _description = "Stock Move Ewaybill"
 
     l10n_in_ewaybill_id = fields.One2many(related="picking_id.l10n_in_ewaybill_id")

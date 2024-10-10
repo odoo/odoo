@@ -3,7 +3,7 @@ from odoo import models, fields, api
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _inherit = ['account.tax']
 
     l10n_mx_factor_type = fields.Selection(
         selection=[

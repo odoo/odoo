@@ -21,8 +21,8 @@ def group_by_journal(vals_list):
     return res
 
 
-class account_journal(models.Model):
-    _inherit = "account.journal"
+class AccountJournal(models.Model):
+    _inherit = ["account.journal"]
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')

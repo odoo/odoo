@@ -5,7 +5,7 @@ from odoo import api, models, fields
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     self_order_available = fields.Boolean(
         string="Available in Self Order",
@@ -32,8 +32,9 @@ class ProductTemplate(models.Model):
                     product._send_availability_status()
         return res
 
+
 class ProductProduct(models.Model):
-    _inherit = "product.product"
+    _inherit = ["product.product"]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 
 
-class PosConfig(models.Model):
-    _inherit = 'pos.payment'
+class PosPayment(models.Model):
+    _inherit = ['pos.payment']
 
     def _update_payment_line_for_tip(self, tip_amount):
         """Inherit this method to perform reauthorization or capture on electronic payment."""

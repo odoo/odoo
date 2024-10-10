@@ -8,7 +8,7 @@ from odoo.osv.expression import OR
 
 
 class HrContract(models.Model):
-    _inherit = 'hr.contract'
+    _inherit = ['hr.contract']
     _description = 'Employee Contract'
 
     # override to add work_entry_type from leave

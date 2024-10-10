@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 
 class RestaurantFloor(models.Model):
 
-    _name = 'restaurant.floor'
     _description = 'Restaurant Floor'
     _order = "sequence, name"
     _inherit = ['pos.load.mixin']
@@ -81,9 +80,9 @@ class RestaurantFloor(models.Model):
 
         return True
 
+
 class RestaurantTable(models.Model):
 
-    _name = 'restaurant.table'
     _description = 'Restaurant Table'
     _inherit = ['pos.load.mixin']
 

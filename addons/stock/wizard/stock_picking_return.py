@@ -5,8 +5,7 @@ from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_is_zero
 
 
-class ReturnPickingLine(models.TransientModel):
-    _name = "stock.return.picking.line"
+class StockReturnPickingLine(models.TransientModel):
     _rec_name = 'product_id'
     _description = 'Return Picking Line'
 
@@ -78,8 +77,7 @@ class ReturnPickingLine(models.TransientModel):
             return True
 
 
-class ReturnPicking(models.TransientModel):
-    _name = 'stock.return.picking'
+class StockReturnPicking(models.TransientModel):
     _description = 'Return Picking'
 
     @api.model

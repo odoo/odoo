@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMoveReversal(models.TransientModel):
-    _inherit = 'account.move.reversal'
+    _inherit = ['account.move.reversal']
 
     l10n_es_tbai_is_required = fields.Boolean(
         compute="_compute_l10n_es_tbai_is_required", readonly=True,

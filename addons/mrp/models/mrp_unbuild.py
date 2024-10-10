@@ -9,7 +9,6 @@ from odoo.tools.misc import clean_context
 
 
 class MrpUnbuild(models.Model):
-    _name = "mrp.unbuild"
     _description = "Unbuild Order"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'

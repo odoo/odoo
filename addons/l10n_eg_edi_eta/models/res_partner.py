@@ -6,7 +6,7 @@ from odoo import models, fields, api
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     l10n_eg_building_no = fields.Char('Building No.')
 

@@ -14,9 +14,8 @@ from odoo.tools import float_is_zero
 _logger = logging.getLogger(__name__)
 
 
-class SurveyUserInput(models.Model):
+class SurveyUser_Input(models.Model):
     """ Metadata for a set of one user's answers to a particular survey """
-    _name = "survey.user_input"
     _description = "Survey User Input"
     _rec_name = "survey_id"
     _order = "create_date desc"
@@ -169,7 +168,7 @@ class SurveyUserInput(models.Model):
                 suvey_id = vals.get('survey_id', self.env.context.get('default_survey_id'))
                 survey = self.env['survey.survey'].browse(suvey_id)
                 vals['predefined_question_ids'] = [(6, 0, survey._prepare_user_input_predefined_questions().ids)]
-        return super(SurveyUserInput, self).create(vals_list)
+        return super().create(vals_list)
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS
@@ -701,8 +700,7 @@ class SurveyUserInput(models.Model):
             user_input.message_post(author_id=author_id, body=body, subtype_xmlid='survey.mt_survey_user_input_completed')
 
 
-class SurveyUserInputLine(models.Model):
-    _name = 'survey.user_input.line'
+class SurveyUser_InputLine(models.Model):
     _description = 'Survey User Input Line'
     _rec_name = 'user_input_id'
     _order = 'question_sequence, id'
@@ -791,7 +789,7 @@ class SurveyUserInputLine(models.Model):
             if not vals.get('answer_score'):
                 score_vals = self._get_answer_score_values(vals)
                 vals.update(score_vals)
-        return super(SurveyUserInputLine, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, vals):
         res = True
@@ -806,7 +804,7 @@ class SurveyUserInputLine(models.Model):
             if not vals_copy.get('answer_score'):
                 score_vals = self._get_answer_score_values(getter_params, compute_speed_score=False)
                 vals_copy.update(score_vals)
-            res = super(SurveyUserInputLine, line).write(vals_copy) and res
+            res = super(SurveyUser_InputLine, line).write(vals_copy) and res
         return res
 
     def _get_answer_matching_domain(self):

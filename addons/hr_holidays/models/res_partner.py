@@ -5,7 +5,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     def _compute_im_status(self):
         super(ResPartner, self)._compute_im_status()

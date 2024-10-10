@@ -7,8 +7,7 @@ from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
 
 
-class Job(models.Model):
-    _name = 'hr.job'
+class HrJob(models.Model):
     _inherit = [
         'hr.job',
         'website.seo.metadata',
@@ -69,13 +68,13 @@ class Job(models.Model):
             self.is_published = False
 
     def _compute_website_url(self):
-        super(Job, self)._compute_website_url()
+        super()._compute_website_url()
         for job in self:
             job.website_url = f'/jobs/{self.env["ir.http"]._slug(job)}'
 
     def set_open(self):
         self.write({'website_published': False})
-        return super(Job, self).set_open()
+        return super().set_open()
 
     def get_backend_menu_id(self):
         return self.env.ref('hr_recruitment.menu_hr_recruitment_root').id

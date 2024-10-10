@@ -7,9 +7,8 @@ from odoo.exceptions import ValidationError
 from odoo.osv.expression import OR
 
 
-class AnalyticPlanFields(models.AbstractModel):
+class AnalyticPlanFieldsMixin(models.AbstractModel):
     """ Add one field per analytic plan to the model """
-    _name = 'analytic.plan.fields.mixin'
     _description = 'Analytic Plan Fields'
 
     account_id = fields.Many2one(
@@ -129,8 +128,7 @@ class AnalyticPlanFields(models.AbstractModel):
 
 
 class AccountAnalyticLine(models.Model):
-    _name = 'account.analytic.line'
-    _inherit = 'analytic.plan.fields.mixin'
+    _inherit = ['analytic.plan.fields.mixin']
     _description = 'Analytic Line'
     _order = 'date desc, id desc'
     _check_company_auto = True

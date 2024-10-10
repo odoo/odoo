@@ -79,8 +79,7 @@ CLOSED_STATES = {
 }
 
 
-class Task(models.Model):
-    _name = "project.task"
+class ProjectTask(models.Model):
     _description = "Task"
     _date_name = "date_assign"
     _inherit = [
@@ -98,7 +97,7 @@ class Task(models.Model):
     _track_duration_field = 'stage_id'
 
     def _get_versioned_fields(self):
-        return [Task.description.name]
+        return [ProjectTask.description.name]
 
     @api.model
     def _get_default_partner_id(self, project=None, parent=None):
@@ -847,7 +846,7 @@ class Task(models.Model):
             'depend_on_ids': False,
             'dependent_ids': False,
         })
-        copied_tasks = super(Task, self.with_context(
+        copied_tasks = super(ProjectTask, self.with_context(
             mail_auto_subscribe_no_notify=True,
             mail_create_nosubscribe=True,
             mail_create_nolog=True,
@@ -1120,7 +1119,7 @@ class Task(models.Model):
         if is_portal_user:
             vals_list_no_sudo, vals_list = zip(*(self._get_portal_sudo_vals(vals, defaults=True) for vals in vals_list))
             self_no_sudo, self = self, self.sudo().with_context(self._get_portal_sudo_context())
-        tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        tasks = super(ProjectTask, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         if is_portal_user:
             for task, vals in zip(tasks.with_env(self_no_sudo.env), vals_list_no_sudo):
                 task.write(vals)
@@ -1276,7 +1275,7 @@ class Task(models.Model):
                         project_link_per_task_id[task.id] = project_link
         result = super().write(vals)
         if portal_can_write:
-            super(Task, self_no_sudo).write(vals_no_sudo)
+            super(ProjectTask, self_no_sudo).write(vals_no_sudo)
 
         if 'user_ids' in vals:
             self._populate_missing_personal_stages()
@@ -1614,7 +1613,7 @@ class Task(models.Model):
         res = {task.id: aliases.get(task.project_id.id) for task in self}
         leftover = self.filtered(lambda rec: not rec.project_id)
         if leftover:
-            res.update(super(Task, leftover)._notify_get_reply_to(default=default))
+            res.update(super(ProjectTask, leftover)._notify_get_reply_to(default=default))
         return res
 
     def _ensure_personal_stages(self):
@@ -1660,7 +1659,7 @@ class Task(models.Model):
         }
         defaults.update(custom_values)
 
-        task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
+        task = super(ProjectTask, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
         task.message_subscribe(partner_ids)

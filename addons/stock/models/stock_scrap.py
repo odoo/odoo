@@ -8,7 +8,6 @@ from odoo.tools.misc import clean_context
 
 
 class StockScrap(models.Model):
-    _name = 'stock.scrap'
     _inherit = ['mail.thread']
     _order = 'id desc'
     _description = 'Scrap'
@@ -228,7 +227,6 @@ class StockScrap(models.Model):
 
 
 class StockScrapReasonTag(models.Model):
-    _name = 'stock.scrap.reason.tag'
     _description = 'Scrap Reason Tag'
     _order = 'sequence, id'
 

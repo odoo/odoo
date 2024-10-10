@@ -19,7 +19,7 @@ TBAI_REFUND_REASONS = [
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     l10n_es_tbai_state = fields.Selection([
             ('to_send', 'To Send'),

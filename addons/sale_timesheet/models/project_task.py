@@ -5,7 +5,7 @@ from odoo.osv import expression
 
 
 class ProjectTask(models.Model):
-    _inherit = "project.task"
+    _inherit = ["project.task"]
 
     def _get_default_partner_id(self, project, parent):
         res = super()._get_default_partner_id(project, parent)

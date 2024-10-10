@@ -10,7 +10,7 @@ from odoo.addons.base.models.res_bank import sanitize_account_number
 
 
 class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+    _inherit = ['account.journal']
 
     invoice_reference_model = fields.Selection(selection_add=[
         ('ch', 'Switzerland')

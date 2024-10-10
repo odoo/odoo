@@ -35,7 +35,7 @@ def textToString(element):
 
 
 class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+    _inherit = ['ir.attachment']
 
     def _index_docx(self, bin_data):
         '''Index Microsoft .docx documents'''

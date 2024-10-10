@@ -5,7 +5,7 @@ from odoo import models
 
 
 class SaleReport(models.Model):
-    _inherit = "sale.report"
+    _inherit = ["sale.report"]
 
     def _fill_pos_fields(self, additional_fields):
         values = super()._fill_pos_fields(additional_fields)

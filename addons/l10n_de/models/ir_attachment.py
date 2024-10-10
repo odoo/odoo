@@ -7,7 +7,7 @@ from odoo.tools.misc import format_date
 
 
 class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+    _inherit = ['ir.attachment']
 
     @api.ondelete(at_uninstall=True)
     def _except_audit_trail(self):

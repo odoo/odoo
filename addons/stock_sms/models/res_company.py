@@ -4,8 +4,8 @@
 from odoo import fields, models
 
 
-class Company(models.Model):
-    _inherit = "res.company"
+class ResCompany(models.Model):
+    _inherit = ["res.company"]
 
     def _default_confirmation_sms_picking_template(self):
         try:

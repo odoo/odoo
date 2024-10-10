@@ -5,7 +5,7 @@ from odoo import fields, models, _
 
 
 class HrJob(models.Model):
-    _inherit = "hr.job"
+    _inherit = ["hr.job"]
 
     skill_ids = fields.Many2many(comodel_name='hr.skill', string="Expected Skills")
 

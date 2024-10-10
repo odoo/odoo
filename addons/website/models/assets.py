@@ -9,8 +9,8 @@ from werkzeug.urls import url_parse
 from odoo import api, models
 
 
-class Assets(models.AbstractModel):
-    _inherit = 'web_editor.assets'
+class Web_EditorAssets(models.AbstractModel):
+    _inherit = ['web_editor.assets']
 
     @api.model
     def make_scss_customization(self, url, values):
@@ -144,7 +144,7 @@ class Assets(models.AbstractModel):
     @api.model
     def _get_custom_attachment(self, custom_url, op='='):
         """
-        See web_editor.Assets._get_custom_attachment
+        See web_editor.Web_EditorAssets._get_custom_attachment
         Extend to only return the attachments related to the current website.
         """
         if self.env.user.has_group('website.group_website_designer'):
@@ -162,7 +162,7 @@ class Assets(models.AbstractModel):
     @api.model
     def _get_custom_asset(self, custom_url):
         """
-        See web_editor.Assets._get_custom_asset
+        See web_editor.Web_EditorAssets._get_custom_asset
         Extend to only return the views related to the current website.
         """
         if self.env.user.has_group('website.group_website_designer'):
@@ -182,7 +182,7 @@ class Assets(models.AbstractModel):
     @api.model
     def _save_asset_attachment_hook(self):
         """
-        See web_editor.Assets._save_asset_attachment_hook
+        See web_editor.Web_EditorAssets._save_asset_attachment_hook
         Extend to add website ID at ir.attachment creation.
         """
         return self._add_website_id(super()._save_asset_attachment_hook())
@@ -190,7 +190,7 @@ class Assets(models.AbstractModel):
     @api.model
     def _save_asset_hook(self):
         """
-        See web_editor.Assets._save_asset_hook
+        See web_editor.Web_EditorAssets._save_asset_hook
         Extend to add website ID at ir.asset creation.
         """
         return self._add_website_id(super()._save_asset_hook())

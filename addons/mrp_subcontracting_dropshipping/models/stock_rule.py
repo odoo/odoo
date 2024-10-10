@@ -5,7 +5,7 @@ from odoo import models
 
 
 class StockRule(models.Model):
-    _inherit = 'stock.rule'
+    _inherit = ['stock.rule']
 
     def _prepare_purchase_order(self, company_id, origins, values):
         if 'partner_id' not in values[0] \

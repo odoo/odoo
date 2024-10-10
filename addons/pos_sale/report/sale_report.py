@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class SaleReport(models.Model):
-    _inherit = "sale.report"
+    _inherit = ["sale.report"]
 
     @api.model
     def _get_done_states(self):

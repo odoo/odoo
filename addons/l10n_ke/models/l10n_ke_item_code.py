@@ -4,8 +4,7 @@
 from odoo import models, fields, api
 
 
-class L10nKeItemCode(models.Model):
-    _name = 'l10n_ke.item.code'
+class L10n_KeItemCode(models.Model):
     _description = "KRA defined codes that justify a given tax rate / exemption"
     _rec_names_search = ['code', 'description']
 

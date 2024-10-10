@@ -7,7 +7,7 @@ from odoo import models, fields
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = ['stock.picking']
 
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
 

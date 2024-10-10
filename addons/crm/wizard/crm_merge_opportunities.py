@@ -4,7 +4,7 @@
 from odoo import api, fields, models
 
 
-class MergeOpportunity(models.TransientModel):
+class CrmMergeOpportunity(models.TransientModel):
     """
         Merge opportunities together.
         If we're talking about opportunities, it's just because it makes more sense
@@ -14,7 +14,6 @@ class MergeOpportunity(models.TransientModel):
         in a new opp).
     """
 
-    _name = 'crm.merge.opportunity'
     _description = 'Merge Opportunities'
 
     @api.model
@@ -23,7 +22,7 @@ class MergeOpportunity(models.TransientModel):
             In order to get merged, these leads/opps can't be in 'Dead' or 'Closed'
         """
         record_ids = self._context.get('active_ids')
-        result = super(MergeOpportunity, self).default_get(fields)
+        result = super().default_get(fields)
 
         if record_ids:
             if 'opportunity_ids' in fields:

@@ -7,9 +7,8 @@ from odoo import _, api, Command, fields, models, tools
 from odoo.exceptions import UserError
 
 
-class MassMailingList(models.Model):
+class MailingList(models.Model):
     """Model of a contact list. """
-    _name = 'mailing.list'
     _order = 'name'
     _description = 'Mailing List'
     _mailing_enabled = True
@@ -120,7 +119,7 @@ class MassMailingList(models.Model):
             if mass_mailings > 0:
                 raise UserError(_("At least one of the mailing list you are trying to archive is used in an ongoing mailing campaign."))
 
-        return super(MassMailingList, self).write(vals)
+        return super().write(vals)
 
     @api.depends('contact_count')
     def _compute_display_name(self):

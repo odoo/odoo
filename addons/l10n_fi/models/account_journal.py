@@ -4,7 +4,7 @@ from odoo import models, fields
 
 class AccountJournal(models.Model):
 
-    _inherit = 'account.journal'
+    _inherit = ['account.journal']
 
     invoice_reference_model = fields.Selection(selection_add=[
         ('fi', 'Finnish Standard Reference'),

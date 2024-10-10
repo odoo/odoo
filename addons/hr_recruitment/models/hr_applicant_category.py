@@ -6,8 +6,7 @@ from random import randint
 from odoo import fields, models
 
 
-class ApplicantCategory(models.Model):
-    _name = "hr.applicant.category"
+class HrApplicantCategory(models.Model):
     _description = "Category of applicant"
 
     def _get_default_color(self):

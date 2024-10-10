@@ -5,7 +5,7 @@ from odoo import models, fields, api
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = ['sale.order']
 
     dropship_picking_count = fields.Integer("Dropship Count", compute='_compute_picking_ids')
 
@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = ['sale.order.line']
 
     def _compute_is_mto(self):
         super(SaleOrderLine, self)._compute_is_mto()

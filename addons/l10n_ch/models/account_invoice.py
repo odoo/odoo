@@ -8,8 +8,9 @@ from odoo.tools.misc import mod10r
 
 L10N_CH_QRR_NUMBER_LENGTH = 27
 
+
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     l10n_ch_is_qr_valid = fields.Boolean(compute='_compute_l10n_ch_qr_is_valid', help="Determines whether an invoice can be printed as a QR or not")
 

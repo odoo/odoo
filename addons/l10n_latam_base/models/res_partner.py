@@ -4,7 +4,7 @@ from odoo import models, fields, api
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     l10n_latam_identification_type_id = fields.Many2one('l10n_latam.identification.type',
         string="Identification Type", index='btree_not_null', auto_join=True,

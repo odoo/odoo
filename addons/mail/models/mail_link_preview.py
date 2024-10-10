@@ -12,9 +12,8 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.link_preview import get_link_preview_from_url
 
 
-class LinkPreview(models.Model):
-    _name = 'mail.link.preview'
-    _inherit = "bus.listener.mixin"
+class MailLinkPreview(models.Model):
+    _inherit = ["bus.listener.mixin"]
     _description = "Store link preview data"
 
     message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade')

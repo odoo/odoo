@@ -5,8 +5,8 @@ from odoo import fields, models, _
 from odoo.exceptions import AccessError
 
 
-class Digest(models.Model):
-    _inherit = 'digest.digest'
+class DigestDigest(models.Model):
+    _inherit = ['digest.digest']
 
     kpi_all_sale_total = fields.Boolean('All Sales')
     kpi_all_sale_total_value = fields.Monetary(compute='_compute_kpi_sale_total_value')
@@ -24,6 +24,6 @@ class Digest(models.Model):
         )
 
     def _compute_kpis_actions(self, company, user):
-        res = super(Digest, self)._compute_kpis_actions(company, user)
+        res = super()._compute_kpis_actions(company, user)
         res['kpi_all_sale_total'] = 'sale.report_all_channels_sales_action&menu_id=%s' % self.env.ref('sale.sale_menu_root').id
         return res

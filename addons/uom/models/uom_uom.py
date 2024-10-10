@@ -8,8 +8,7 @@ from odoo import api, fields, tools, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
-class UoMCategory(models.Model):
-    _name = 'uom.category'
+class UomCategory(models.Model):
     _description = 'Product UoM Categories'
 
     name = fields.Char('Unit of Measure Category', required=True, translate=True)
@@ -41,8 +40,7 @@ class UoMCategory(models.Model):
                 self.reference_uom_id = new_reference._origin.id
 
 
-class UoM(models.Model):
-    _name = 'uom.uom'
+class UomUom(models.Model):
     _description = 'Product Unit of Measure'
     _order = "factor DESC, id"
 
@@ -164,7 +162,7 @@ class UoM(models.Model):
             if 'factor_inv' in values:
                 factor_inv = values.pop('factor_inv')
                 values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
-        res = super(UoM, self).create(vals_list)
+        res = super().create(vals_list)
         res._check_category_reference_uniqueness()
         return res
 
@@ -173,7 +171,7 @@ class UoM(models.Model):
             factor_inv = values.pop('factor_inv')
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
 
-        res = super(UoM, self).write(values)
+        res = super().write(values)
         if ('uom_type' not in values or values['uom_type'] != 'reference') and\
                 not self.env.context.get('allow_to_change_reference'):
             self._check_category_reference_uniqueness()
@@ -211,9 +209,9 @@ class UoM(models.Model):
     def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP', raise_if_failure=True):
         """ Convert the given quantity from the current UoM `self` into a given one
             :param qty: the quantity to convert
-            :param to_unit: the destination UoM record (uom.uom)
+            :param to_unit: the destination UomUom record (uom.uom)
             :param raise_if_failure: only if the conversion is not possible
-                - if true, raise an exception if the conversion is not possible (different UoM category),
+                - if true, raise an exception if the conversion is not possible (different UomUom category),
                 - otherwise, return the initial quantity
         """
         if not self or not qty:

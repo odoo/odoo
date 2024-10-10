@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     # Transaction Details
     l10n_in_type_id = fields.Many2one("l10n.in.ewaybill.type", "E-waybill Document Type", tracking=True)

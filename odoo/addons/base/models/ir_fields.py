@@ -42,6 +42,7 @@ class ImportWarning(Warning):
 class ConversionNotFound(ValueError):
     pass
 
+
 class IrFieldsConverter(models.AbstractModel):
     _description = 'Fields Converter'
 

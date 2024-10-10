@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     l10n_it_edi_doi_date = fields.Date(
         string="Date on which Declaration of Intent is applied",

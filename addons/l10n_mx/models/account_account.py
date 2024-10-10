@@ -2,7 +2,7 @@ from odoo import api, Command, models
 
 
 class AccountAccount(models.Model):
-    _inherit = 'account.account'
+    _inherit = ['account.account']
 
     @api.model_create_multi
     def create(self, vals_list):

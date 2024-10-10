@@ -4,9 +4,8 @@
 from odoo import _, api, fields, models, tools
 
 
-class MailCCMixin(models.AbstractModel):
-    _name = 'mail.thread.cc'
-    _inherit = 'mail.thread'
+class MailThreadCc(models.AbstractModel):
+    _inherit = ['mail.thread']
     _description = 'Email CC management'
 
     email_cc = fields.Char('Email cc')
@@ -28,7 +27,7 @@ class MailCCMixin(models.AbstractModel):
             'email_cc': ", ".join(self._mail_cc_sanitized_raw_dict(msg_dict.get('cc')).values()),
         }
         cc_values.update(custom_values)
-        return super(MailCCMixin, self).message_new(msg_dict, cc_values)
+        return super().message_new(msg_dict, cc_values)
 
     def message_update(self, msg_dict, update_vals=None):
         '''Adds cc email to self.email_cc while trying to keep email as raw as possible but unique'''
@@ -41,7 +40,7 @@ class MailCCMixin(models.AbstractModel):
             new_cc.update(old_cc)
             cc_values['email_cc'] = ", ".join(new_cc.values())
         cc_values.update(update_vals)
-        return super(MailCCMixin, self).message_update(msg_dict, cc_values)
+        return super().message_update(msg_dict, cc_values)
 
     def _message_get_suggested_recipients(self):
         recipients = super()._message_get_suggested_recipients()

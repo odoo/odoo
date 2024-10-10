@@ -14,8 +14,7 @@ from odoo.tools.translate import _
 
 
 class SaleOrderLine(models.Model):
-    _name = 'sale.order.line'
-    _inherit = 'analytic.mixin'
+    _inherit = ['analytic.mixin']
     _description = "Sales Order Line"
     _rec_names_search = ['name', 'order_id.name']
     _order = 'order_id, sequence, id'

@@ -7,7 +7,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class ResPartner(models.Model):
-    _inherit = "res.partner"
+    _inherit = ["res.partner"]
 
     channel_ids = fields.Many2many(
         "discuss.channel",

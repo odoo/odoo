@@ -10,7 +10,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     edi_document_ids = fields.One2many(
         comodel_name='account.edi.document',

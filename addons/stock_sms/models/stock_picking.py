@@ -6,8 +6,8 @@ from odoo import models, _
 import threading
 
 
-class Picking(models.Model):
-    _inherit = 'stock.picking'
+class StockPicking(models.Model):
+    _inherit = ['stock.picking']
 
     def _pre_action_done_hook(self):
         res = super()._pre_action_done_hook()
@@ -46,7 +46,7 @@ class Picking(models.Model):
         }
 
     def _send_confirmation_email(self):
-        super(Picking, self)._send_confirmation_email()
+        super()._send_confirmation_email()
         if not self.env.context.get('skip_sms') and not getattr(threading.current_thread(), 'testing', False) and not self.env.registry.in_test_mode():
             pickings = self.filtered(lambda p: p.company_id.stock_move_sms_validation and p.picking_type_id.code == 'outgoing' and (p.partner_id.mobile or p.partner_id.phone))
             for picking in pickings:

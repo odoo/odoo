@@ -16,7 +16,7 @@ NON_PEPPOL_FORMAT = (False, 'facturx', 'oioubl_201', 'ciusro')
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     invoice_sending_method = fields.Selection(
         selection_add=[('peppol', 'by Peppol')],

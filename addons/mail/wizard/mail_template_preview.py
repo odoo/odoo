@@ -6,7 +6,6 @@ from odoo.exceptions import UserError
 
 
 class MailTemplatePreview(models.TransientModel):
-    _name = 'mail.template.preview'
     _description = 'Email Template Preview'
     _MAIL_TEMPLATE_FIELDS = ['attachment_ids',
                              'body_html',

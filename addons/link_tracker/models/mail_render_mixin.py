@@ -14,7 +14,7 @@ from odoo.tools.mail import is_html_empty, URL_SKIP_PROTOCOL_REGEX, TEXT_URL_REG
 
 
 class MailRenderMixin(models.AbstractModel):
-    _inherit = "mail.render.mixin"
+    _inherit = ["mail.render.mixin"]
 
     # ------------------------------------------------------------
     # TOOLS

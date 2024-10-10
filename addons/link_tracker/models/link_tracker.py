@@ -26,7 +26,6 @@ class LinkTracker(models.Model):
     This model is also used in mass_mailing where each link in html body is
     automatically converted into a short link that is tracked and integrates
     UTMs. """
-    _name = "link.tracker"
     _rec_name = "short_url"
     _description = "Link Tracker"
     _order = "count DESC"
@@ -291,7 +290,6 @@ class LinkTracker(models.Model):
 
 
 class LinkTrackerCode(models.Model):
-    _name = "link.tracker.code"
     _description = "Link Tracker Code"
     _rec_name = 'code'
 
@@ -318,7 +316,6 @@ class LinkTrackerCode(models.Model):
 
 
 class LinkTrackerClick(models.Model):
-    _name = "link.tracker.click"
     _rec_name = "link_id"
     _description = "Link Tracker Click"
 

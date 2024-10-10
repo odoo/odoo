@@ -18,8 +18,7 @@ from odoo.addons.l10n_in_ewaybill_stock.tools.ewaybill_api import EWayBillApi, E
 _logger = logging.getLogger(__name__)
 
 
-class Ewaybill(models.Model):
-    _name = "l10n.in.ewaybill"
+class L10nInEwaybill(models.Model):
     _description = "e-Waybill"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _check_company_auto = True
@@ -300,7 +299,7 @@ class Ewaybill(models.Model):
     @api.model
     def _l10n_in_validate_partner(self, partner):
         """
-        Validation method for Stock Ewaybill (different from the one in EDI Ewaybill)
+        Validation method for Stock L10nInEwaybill (different from the one in EDI L10nInEwaybill)
         """
         message = []
         if partner.country_id.code == "IN":

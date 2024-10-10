@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class EventBoothCategory(models.Model):
-    _inherit = 'event.booth.category'
+    _inherit = ['event.booth.category']
 
     @api.model
     def _get_exhibitor_type(self):

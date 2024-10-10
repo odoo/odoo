@@ -26,9 +26,8 @@ _default_parameters = {
 }
 
 
-class IrConfigParameter(models.Model):
+class IrConfig_Parameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
-    _name = 'ir.config_parameter'
     _description = 'System Parameter'
     _rec_name = 'key'
     _order = 'key'
@@ -105,7 +104,7 @@ class IrConfigParameter(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self.env.registry.clear_cache()
-        return super(IrConfigParameter, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, vals):
         if 'key' in vals:
@@ -113,11 +112,11 @@ class IrConfigParameter(models.Model):
             if illegal:
                 raise ValidationError(_("You cannot rename config parameters with keys %s", ', '.join(illegal)))
         self.env.registry.clear_cache()
-        return super(IrConfigParameter, self).write(vals)
+        return super().write(vals)
 
     def unlink(self):
         self.env.registry.clear_cache()
-        return super(IrConfigParameter, self).unlink()
+        return super().unlink()
 
     @api.ondelete(at_uninstall=False)
     def unlink_default_parameters(self):

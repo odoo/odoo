@@ -5,8 +5,8 @@ from odoo import models
 from odoo.http import request
 
 
-class Http(models.AbstractModel):
-    _inherit = 'ir.http'
+class IrHttp(models.AbstractModel):
+    _inherit = ['ir.http']
 
     @classmethod
     def _pre_dispatch(cls, rule, args):

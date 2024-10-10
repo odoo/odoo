@@ -12,7 +12,7 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     event_count = fields.Integer(
         '# Events', compute='_compute_event_count', groups='event.group_event_registration_desk')

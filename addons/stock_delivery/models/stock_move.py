@@ -5,13 +5,13 @@ from odoo.tools.sql import column_exists, create_column
 
 
 class StockRoute(models.Model):
-    _inherit = "stock.route"
+    _inherit = ["stock.route"]
 
     shipping_selectable = fields.Boolean("Applicable on Shipping Methods")
 
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = ['stock.move']
 
     def _auto_init(self):
         if not column_exists(self.env.cr, "stock_move", "weight"):
@@ -47,8 +47,9 @@ class StockMove(models.Model):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.sale_line_id.order_id.carrier_id,)
 
+
 class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
+    _inherit = ['stock.move.line']
 
     sale_price = fields.Float(compute='_compute_sale_price')
     destination_country_code = fields.Char(related='picking_id.destination_country_code')

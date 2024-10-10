@@ -9,7 +9,6 @@ class ProductCatalogMixin(models.AbstractModel):
     It assumes the model using this mixin has a O2M field where the products are added/removed and
     this field's co-related model should has a method named `_get_product_catalog_lines_data`.
     """
-    _name = 'product.catalog.mixin'
     _description = 'Product Catalog Mixin'
 
     def action_add_from_catalog(self):

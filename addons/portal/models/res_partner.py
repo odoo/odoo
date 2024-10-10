@@ -5,7 +5,7 @@ from odoo import models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     def _can_edit_name(self):
         """ Name can be changed more often than the VAT """

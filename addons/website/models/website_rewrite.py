@@ -12,7 +12,6 @@ _logger = logging.getLogger(__name__)
 
 class WebsiteRoute(models.Model):
     _rec_name = 'path'
-    _name = 'website.route'
     _description = "All Website Route"
     _order = 'path'
 
@@ -49,7 +48,6 @@ class WebsiteRoute(models.Model):
 
 
 class WebsiteRewrite(models.Model):
-    _name = 'website.rewrite'
     _description = "Website rewrite"
 
     name = fields.Char('Name', required=True)

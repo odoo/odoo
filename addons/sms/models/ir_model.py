@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class IrModel(models.Model):
-    _inherit = 'ir.model'
+    _inherit = ['ir.model']
 
     is_mail_thread_sms = fields.Boolean(
         string="Mail Thread SMS", default=False,

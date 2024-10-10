@@ -8,7 +8,7 @@ from odoo.osv import expression
 
 
 class StockPickingType(models.Model):
-    _inherit = 'stock.picking.type'
+    _inherit = ['stock.picking.type']
 
     code = fields.Selection(selection_add=[
         ('mrp_operation', 'Manufacturing')
@@ -116,8 +116,9 @@ class StockPickingType(models.Model):
         mrp_records = [(i, d, self.env._('Confirmed')) for i, d in picking_type_id_to_dates.items()]
         return records + mrp_records
 
+
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = ['stock.picking']
 
     has_kits = fields.Boolean(compute='_compute_has_kits')
     production_count = fields.Integer(

@@ -7,7 +7,7 @@ from odoo.tools.translate import _
 
 
 class MailActivitySchedule(models.TransientModel):
-    _inherit = 'mail.activity.schedule'
+    _inherit = ['mail.activity.schedule']
 
     def action_create_calendar_event(self):
         self.ensure_one()

@@ -5,7 +5,7 @@ from odoo import models
 
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = ['stock.move']
 
     def _is_purchase_return(self):
         res = super()._is_purchase_return()

@@ -5,7 +5,7 @@ from odoo import models, _
 
 
 class IrModuleModule(models.Model):
-    _inherit = 'ir.module.module'
+    _inherit = ['ir.module.module']
 
     def action_open_install_request(self):
         self.ensure_one()

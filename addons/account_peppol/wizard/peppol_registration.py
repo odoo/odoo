@@ -13,7 +13,6 @@ from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 
 class PeppolRegistration(models.TransientModel):
-    _name = 'peppol.registration'
     _description = "Peppol Registration"
 
     company_id = fields.Many2one(

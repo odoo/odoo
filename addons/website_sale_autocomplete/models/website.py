@@ -4,7 +4,7 @@ from odoo import models, fields
 
 
 class Website(models.Model):
-    _inherit = 'website'
+    _inherit = ['website']
 
     google_places_api_key = fields.Char(
         string='Google Places API Key',

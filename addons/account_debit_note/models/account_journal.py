@@ -2,7 +2,7 @@ from odoo import api, fields, models
 
 
 class AccountJournal(models.Model):
-    _inherit = "account.journal"
+    _inherit = ["account.journal"]
 
     debit_sequence = fields.Boolean(
         string="Dedicated Debit Note Sequence",

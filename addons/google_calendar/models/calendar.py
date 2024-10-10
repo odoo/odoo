@@ -11,8 +11,8 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 
-class Meeting(models.Model):
-    _name = 'calendar.event'
+
+class CalendarEvent(models.Model):
     _inherit = ['calendar.event', 'google.calendar.sync']
 
     MEET_ROUTE = 'meet.google.com'
@@ -40,7 +40,7 @@ class Meeting(models.Model):
     def _compute_videocall_source(self):
         events_with_google_url = self.filtered(lambda event: self.MEET_ROUTE in (event.videocall_location or ''))
         events_with_google_url.videocall_source = 'google_meet'
-        super(Meeting, self - events_with_google_url)._compute_videocall_source()
+        super(CalendarEvent, self - events_with_google_url)._compute_videocall_source()
 
     @api.model
     def _get_google_synced_fields(self):
@@ -56,7 +56,7 @@ class Meeting(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         notify_context = self.env.context.get('dont_notify', False)
-        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
+        return super(CalendarEvent, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
@@ -93,7 +93,7 @@ class Meeting(models.Model):
         notify_context = self.env.context.get('dont_notify', False)
         if not notify_context and ([self.env.user.id != record.user_id.id for record in self]):
             self._check_modify_event_permission(values)
-        res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
+        res = super(CalendarEvent, self.with_context(dont_notify=notify_context)).write(values)
         if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_google_synced_fields():
             self.recurrence_id.need_sync = True
         return res
@@ -282,7 +282,7 @@ class Meeting(models.Model):
             # Increase performance handling 'future_events' edge case as it was an 'all_events' update.
             if archive_future_events:
                 recurrence_update_setting = 'all_events'
-        super(Meeting, self).action_mass_archive(recurrence_update_setting)
+        super().action_mass_archive(recurrence_update_setting)
 
     def _google_values(self):
         if self.allday:
@@ -361,7 +361,7 @@ class Meeting(models.Model):
         for event in self:
             # remove the tracking data to avoid calling _track_template in the pre-commit phase
             self.env.cr.precommit.data.pop(f'mail.tracking.create.{event._name}.{event.id}', None)
-        super(Meeting, my_cancelled_records)._cancel()
+        super(CalendarEvent, my_cancelled_records)._cancel()
         attendees = (self - my_cancelled_records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.state = 'declined'
 

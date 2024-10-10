@@ -7,7 +7,7 @@ from datetime import date
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     def button_draft(self):
         # OVERRIDE to update the cancel date.
@@ -40,7 +40,7 @@ class AccountMove(models.Model):
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def write(self, vals):
         # OVERRIDE

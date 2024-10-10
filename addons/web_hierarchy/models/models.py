@@ -4,7 +4,7 @@ from odoo import api, models
 
 
 class Base(models.AbstractModel):
-    _inherit = 'base'
+    _inherit = ['base']
 
     @api.model
     def hierarchy_read(self, domain, specification, parent_field, child_field=None, order=None):

@@ -4,7 +4,7 @@ from odoo import _, fields, models
 
 
 class CrmTeam(models.Model):
-    _inherit = 'crm.team'
+    _inherit = ['crm.team']
 
     website_ids = fields.One2many(
         string="Websites", comodel_name='website', inverse_name='salesteam_id',

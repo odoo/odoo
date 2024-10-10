@@ -4,7 +4,6 @@ from odoo.exceptions import UserError
 
 
 class ValidateAccountMove(models.TransientModel):
-    _name = "validate.account.move"
     _description = "Validate Account Move"
 
     move_ids = fields.Many2many('account.move')

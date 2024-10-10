@@ -8,7 +8,7 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = ['res.partner']
 
     purchase_line_ids = fields.One2many('purchase.order.line', 'partner_id', string="Purchase Lines")
     on_time_rate = fields.Float(

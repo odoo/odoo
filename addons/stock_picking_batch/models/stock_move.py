@@ -6,7 +6,7 @@ from odoo.osv import expression
 
 
 class StockMove(models.Model):
-    _inherit = "stock.move"
+    _inherit = ["stock.move"]
 
     def _search_picking_for_assignation_domain(self):
         domain = super()._search_picking_for_assignation_domain()

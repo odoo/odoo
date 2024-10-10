@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+    _inherit = ["res.config.settings"]
 
     @api.model
     def get_values(self):

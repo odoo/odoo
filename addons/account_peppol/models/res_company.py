@@ -47,7 +47,7 @@ PEPPOL_ENDPOINT_SANITIZERS = {
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     account_peppol_contact_email = fields.Char(
         string='Primary contact email',

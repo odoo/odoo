@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class IrCronTrigger(models.Model):
-    _inherit = 'ir.cron.trigger'
+    _inherit = ['ir.cron.trigger']
 
     @api.constrains('cron_id')
     def _check_image_cron_is_not_already_triggered(self):

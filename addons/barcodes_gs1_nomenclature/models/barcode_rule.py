@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class BarcodeRule(models.Model):
-    _inherit = 'barcode.rule'
+    _inherit = ['barcode.rule']
 
     def _default_encoding(self):
         return 'gs1-128' if self.env.context.get('is_gs1') else 'any'

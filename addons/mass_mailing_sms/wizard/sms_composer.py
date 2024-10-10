@@ -6,8 +6,8 @@ import werkzeug.urls
 from odoo import _, Command, fields, models
 
 
-class SMSComposer(models.TransientModel):
-    _inherit = 'sms.composer'
+class SmsComposer(models.TransientModel):
+    _inherit = ['sms.composer']
 
     # mass mode with mass sms
     mass_sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=True)
@@ -48,7 +48,7 @@ class SMSComposer(models.TransientModel):
 
     def _get_optout_record_ids(self, records, recipients_info):
         """ Fetch opt-out records based on mailing. """
-        res = super(SMSComposer, self)._get_optout_record_ids(records, recipients_info)
+        res = super()._get_optout_record_ids(records, recipients_info)
         if self.mailing_id:
             optout_res_ids = self.mailing_id._get_opt_out_list_sms()
             res += optout_res_ids
@@ -56,14 +56,14 @@ class SMSComposer(models.TransientModel):
 
     def _get_done_record_ids(self, records, recipients_info):
         """ A/B testing could lead to records having been already mailed. """
-        res = super(SMSComposer, self)._get_done_record_ids(records, recipients_info)
+        res = super()._get_done_record_ids(records, recipients_info)
         if self.mailing_id:
             seen_ids, seen_list = self.mailing_id._get_seen_list_sms()
             res += seen_ids
         return res
 
     def _prepare_body_values(self, records):
-        all_bodies = super(SMSComposer, self)._prepare_body_values(records)
+        all_bodies = super()._prepare_body_values(records)
         if self.mailing_id:
             tracker_values = self.mailing_id._get_link_tracker_values()
             for sms_id, body in all_bodies.items():
@@ -72,7 +72,7 @@ class SMSComposer(models.TransientModel):
         return all_bodies
 
     def _prepare_mass_sms_values(self, records):
-        result = super(SMSComposer, self)._prepare_mass_sms_values(records)
+        result = super()._prepare_mass_sms_values(records)
         if self.composition_mode == 'mass' and self.mailing_id:
             for record in records:
                 sms_values = result[record.id]
@@ -85,7 +85,7 @@ class SMSComposer(models.TransientModel):
         return result
 
     def _prepare_mass_sms(self, records, sms_record_values):
-        sms_all = super(SMSComposer, self)._prepare_mass_sms(records, sms_record_values)
+        sms_all = super()._prepare_mass_sms(records, sms_record_values)
         if self.mailing_id:
             updated_bodies = sms_all._update_body_short_links()
             for sms in sms_all:

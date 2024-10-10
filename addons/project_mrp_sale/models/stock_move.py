@@ -4,7 +4,7 @@ from odoo import models
 
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = ['stock.move']
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()

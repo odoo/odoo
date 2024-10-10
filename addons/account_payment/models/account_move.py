@@ -7,7 +7,7 @@ from odoo.addons.payment import utils as payment_utils
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     transaction_ids = fields.Many2many(
         string="Transactions", comodel_name='payment.transaction',

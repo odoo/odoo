@@ -5,7 +5,7 @@ from odoo import models, api, _, fields
 
 
 class PosSession(models.Model):
-    _inherit = 'pos.session'
+    _inherit = ['pos.session']
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -9,7 +9,7 @@ from odoo.tools.sql import column_exists, create_column
 
 
 class WebsiteVisitor(models.Model):
-    _inherit = 'website.visitor'
+    _inherit = ['website.visitor']
 
     livechat_operator_id = fields.Many2one('res.partner', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index='btree_not_null')
     livechat_operator_name = fields.Char('Operator Name', related="livechat_operator_id.name")

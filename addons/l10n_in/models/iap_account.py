@@ -9,7 +9,7 @@ IAP_SERVICE_NAME = 'l10n_in_edi'
 
 
 class IapAccount(models.Model):
-    _inherit = 'iap.account'
+    _inherit = ['iap.account']
 
     @api.model
     def _l10n_in_connect_to_server(self, is_production, params, url_path, config_parameter, timeout=25):

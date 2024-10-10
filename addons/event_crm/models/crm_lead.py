@@ -4,8 +4,8 @@
 from odoo import fields, models, api
 
 
-class Lead(models.Model):
-    _inherit = 'crm.lead'
+class CrmLead(models.Model):
+    _inherit = ['crm.lead']
 
     event_lead_rule_id = fields.Many2one('event.lead.rule', string="Registration Rule", help="Rule that created this lead")
     event_id = fields.Many2one('event.event', string="Source Event", help="Event triggering the rule that created this lead")
@@ -24,7 +24,7 @@ class Lead(models.Model):
             record.registration_count = len(record.registration_ids)
 
     def _merge_dependences(self, opportunities):
-        super(Lead, self)._merge_dependences(opportunities)
+        super()._merge_dependences(opportunities)
 
         # merge registrations as sudo, as crm people may not have access to event rights
         self.sudo().write({
@@ -32,4 +32,4 @@ class Lead(models.Model):
         })
 
     def _merge_get_fields(self):
-        return super(Lead, self)._merge_get_fields() + ['event_lead_rule_id', 'event_id']
+        return super()._merge_get_fields() + ['event_lead_rule_id', 'event_id']

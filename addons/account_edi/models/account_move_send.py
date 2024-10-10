@@ -2,7 +2,7 @@ from odoo import api, models
 
 
 class AccountMoveSend(models.AbstractModel):
-    _inherit = 'account.move.send'
+    _inherit = ['account.move.send']
 
     @api.model
     def _get_mail_attachment_from_doc(self, doc):

@@ -7,7 +7,7 @@ from odoo.addons.payment_demo import const
 
 
 class PaymentProvider(models.Model):
-    _inherit = 'payment.provider'
+    _inherit = ['payment.provider']
 
     code = fields.Selection(selection_add=[('demo', 'Demo')], ondelete={'demo': 'set default'})
 

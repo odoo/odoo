@@ -4,8 +4,7 @@
 from odoo import fields, models
 
 
-class TrackTagCategory(models.Model):
-    _name = "event.track.tag.category"
+class EventTrackTagCategory(models.Model):
     _description = 'Event Track Tag Category'
     _order = "sequence"
 

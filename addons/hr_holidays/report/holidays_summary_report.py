@@ -26,8 +26,7 @@ COLORS_MAP = {
 }
 
 
-class HrHolidaySummaryReport(models.AbstractModel):
-    _name = 'report.hr_holidays.report_holidayssummary'
+class ReportHr_HolidaysReport_Holidayssummary(models.AbstractModel):
     _description = 'Holidays Summary Report'
 
     def _get_header_info(self, start_date, holiday_type):

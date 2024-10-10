@@ -2,9 +2,8 @@
 from odoo import api, models
 
 
-class AccountEdiXmlUBL21(models.AbstractModel):
-    _name = "account.edi.xml.ubl_21"
-    _inherit = 'account.edi.xml.ubl_20'
+class AccountEdiXmlUbl_21(models.AbstractModel):
+    _inherit = ['account.edi.xml.ubl_20']
     _description = "UBL 2.1"
 
     # -------------------------------------------------------------------------

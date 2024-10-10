@@ -5,7 +5,7 @@ from odoo.osv.expression import AND
 
 
 class ProjectProject(models.Model):
-    _inherit = 'project.project'
+    _inherit = ['project.project']
 
     def action_open_deliveries(self):
         self.ensure_one()

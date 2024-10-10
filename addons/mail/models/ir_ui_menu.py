@@ -7,7 +7,7 @@ from odoo.exceptions import AccessError
 
 
 class IrUiMenu(models.Model):
-    _inherit = 'ir.ui.menu'
+    _inherit = ['ir.ui.menu']
 
     @api.model
     def _get_best_backend_root_menu_id_for_model(self, res_model):

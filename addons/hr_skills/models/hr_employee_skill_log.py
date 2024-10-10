@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class HrEmployeeSkillLog(models.Model):
-    _name = 'hr.employee.skill.log'
     _description = "Skills History"
     _rec_name = 'skill_id'
     _order = "employee_id,date"

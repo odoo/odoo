@@ -8,7 +8,7 @@ CARD_PREVIEW_URL = re.compile(r'href=".*?/cards/[0-9]+/preview"')
 
 
 class MailComposeMessage(models.TransientModel):
-    _inherit = 'mail.compose.message'
+    _inherit = ['mail.compose.message']
 
     def _prepare_mail_values_dynamic(self, res_ids):
         """Replace generic card urls with the specific res_id url."""

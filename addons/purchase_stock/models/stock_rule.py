@@ -12,7 +12,7 @@ from odoo.tools import groupby
 
 
 class StockRule(models.Model):
-    _inherit = 'stock.rule'
+    _inherit = ['stock.rule']
 
     action = fields.Selection(selection_add=[
         ('buy', 'Buy')

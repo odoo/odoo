@@ -5,8 +5,7 @@
 from odoo import fields, models
 
 
-class EtaActivityType(models.Model):
-    _name = 'l10n_eg_edi.activity.type'
+class L10n_Eg_EdiActivityType(models.Model):
     _description = 'ETA code for activity type'
     _rec_name = 'name'
     _rec_names_search = ['name', 'code']

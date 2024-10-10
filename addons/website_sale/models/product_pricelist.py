@@ -7,7 +7,7 @@ from odoo.addons.website.models import ir_http
 
 
 class ProductPricelist(models.Model):
-    _inherit = 'product.pricelist'
+    _inherit = ['product.pricelist']
 
     #=== DEFAULT METHODS ===#
 

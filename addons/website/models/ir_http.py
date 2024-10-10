@@ -58,8 +58,8 @@ def get_request_website():
     return request and getattr(request, 'website', False) or False
 
 
-class Http(models.AbstractModel):
-    _inherit = 'ir.http'
+class IrHttp(models.AbstractModel):
+    _inherit = ['ir.http']
 
     def routing_map(self, key=None):
         if not key and request:
@@ -279,7 +279,7 @@ class Http(models.AbstractModel):
         website_id = False
         if getattr(request, 'is_frontend', True):
             website_id = self.env.get('website_id', request.website_routing)
-        return super(Http, self.with_context(website_id=website_id)).get_nearest_lang(lang_code)
+        return super(IrHttp, self.with_context(website_id=website_id)).get_nearest_lang(lang_code)
 
     @classmethod
     def _get_default_lang(cls):
@@ -426,7 +426,7 @@ class Http(models.AbstractModel):
 
     @api.model
     def get_frontend_session_info(self):
-        session_info = super(Http, self).get_frontend_session_info()
+        session_info = super().get_frontend_session_info()
         geoip_country_code = request.geoip.country_code
         geoip_phone_code = request.env['res.country']._phone_code_for(geoip_country_code) if geoip_country_code else None
         session_info.update({

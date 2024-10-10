@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     @api.model
     def _get_product_types_allow_zero_price(self):

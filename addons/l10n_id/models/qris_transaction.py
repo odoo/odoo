@@ -4,12 +4,11 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class QRISTransaction(models.Model):
+class L10n_IdQrisTransaction(models.Model):
     """QRIS Transaction
 
     General table to store a certian unique transaction with QRIS details attached
     """
-    _name = "l10n_id.qris.transaction"
     _description = "Record of QRIS transactions"
 
     model = fields.Char(string="Model")  # payment in respond to which model

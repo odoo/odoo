@@ -6,7 +6,7 @@ from odoo.tools import SQL
 
 
 class CrmTeam(models.Model):
-    _inherit = 'crm.team'
+    _inherit = ['crm.team']
 
     def _compute_dashboard_button_name(self):
         super(CrmTeam, self)._compute_dashboard_button_name()

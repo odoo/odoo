@@ -2,7 +2,7 @@ from odoo import models
 
 
 class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+    _inherit = ['account.move.line']
 
     def _l10n_es_tbai_is_ignored(self):
         self.ensure_one()

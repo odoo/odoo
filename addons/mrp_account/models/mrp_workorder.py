@@ -5,7 +5,7 @@ from odoo import fields, models, _
 
 
 class MrpWorkorder(models.Model):
-    _inherit = 'mrp.workorder'
+    _inherit = ['mrp.workorder']
 
     mo_analytic_account_line_ids = fields.Many2many('account.analytic.line', 'mrp_workorder_mo_analytic_rel', copy=False)
     wc_analytic_account_line_ids = fields.Many2many('account.analytic.line', 'mrp_workorder_wc_analytic_rel', copy=False)

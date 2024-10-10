@@ -5,8 +5,7 @@ from odoo import fields, models, _
 from odoo.exceptions import ValidationError
 
 
-class BlockedThirdPartyDomains(models.TransientModel):
-    _name = "website.custom_blocked_third_party_domains"
+class WebsiteCustom_Blocked_Third_Party_Domains(models.TransientModel):
     _description = "User list of blocked 3rd-party domains"
 
     content = fields.Text(default=lambda s: s.env['website'].get_current_website().custom_blocked_third_party_domains)

@@ -23,10 +23,9 @@ def get_google_maps_url(latitude, longitude):
 
 
 class HrAttendance(models.Model):
-    _name = "hr.attendance"
     _description = "Attendance"
     _order = "check_in desc"
-    _inherit = "mail.thread"
+    _inherit = ["mail.thread"]
 
     def _default_employee(self):
         return self.env.user.employee_id

@@ -6,7 +6,6 @@ from odoo import fields, models
 
 class MailTestProperties(models.Model):
     _description = 'Mail Test Properties'
-    _name = 'mail.test.properties'
     _inherit = ['mail.thread']
 
     name = fields.Char('Name')

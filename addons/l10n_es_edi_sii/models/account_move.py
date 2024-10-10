@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     l10n_es_edi_is_required = fields.Boolean(
         string="Is the Spanish EDI needed",

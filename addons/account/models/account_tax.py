@@ -23,7 +23,6 @@ TYPE_TAX_USE = [
 
 
 class AccountTaxGroup(models.Model):
-    _name = 'account.tax.group'
     _description = 'Tax Group'
     _order = 'sequence asc, id'
     _check_company_auto = True
@@ -85,7 +84,6 @@ class AccountTaxGroup(models.Model):
 
 
 class AccountTax(models.Model):
-    _name = 'account.tax'
     _inherit = ['mail.thread']
     _description = 'Tax'
     _order = 'sequence,id'
@@ -2490,7 +2488,6 @@ class AccountTax(models.Model):
 
 
 class AccountTaxRepartitionLine(models.Model):
-    _name = "account.tax.repartition.line"
     _description = "Tax Repartition Line"
     _order = 'document_type, repartition_type, sequence, id'
     _check_company_auto = True

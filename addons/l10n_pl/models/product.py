@@ -2,7 +2,7 @@ from odoo import models, fields
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     l10n_pl_vat_gtu = fields.Selection(
         string='GTU Codes',

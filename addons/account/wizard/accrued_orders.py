@@ -7,8 +7,8 @@ from odoo.exceptions import UserError
 from odoo.tools import date_utils
 from odoo.tools.misc import formatLang
 
-class AccruedExpenseRevenue(models.TransientModel):
-    _name = 'account.accrued.orders.wizard'
+
+class AccountAccruedOrdersWizard(models.TransientModel):
     _description = 'Accrued Orders Wizard'
     _check_company_auto = True
 

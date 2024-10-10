@@ -16,8 +16,7 @@ def _get_selection_days(self):
     return DAY_SELECT_SELECTION_NO_LAST + (("last", _("last day")),)
 
 
-class AccrualPlanLevel(models.Model):
-    _name = "hr.leave.accrual.level"
+class HrLeaveAccrualLevel(models.Model):
     _description = "Accrual Plan Level"
     _order = 'sequence asc'
 

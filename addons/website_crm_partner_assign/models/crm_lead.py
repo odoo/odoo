@@ -8,7 +8,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError
 
 
 class CrmLead(models.Model):
-    _inherit = "crm.lead"
+    _inherit = ["crm.lead"]
 
     partner_latitude = fields.Float('Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float('Geo Longitude', digits=(10, 7))

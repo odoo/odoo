@@ -8,7 +8,7 @@ from odoo.addons.account_qr_code_emv.const import CURRENCY_MAPPING
 
 
 class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+    _inherit = ['res.partner.bank']
 
     display_qr_setting = fields.Boolean(compute='_compute_display_qr_setting')
     include_reference = fields.Boolean(string="Include Reference", help="Include the reference in the QR code.")

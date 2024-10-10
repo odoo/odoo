@@ -4,7 +4,7 @@ from odoo import fields, models, api
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     l10n_hu_tax_regime = fields.Selection(
         related='company_id.l10n_hu_tax_regime',

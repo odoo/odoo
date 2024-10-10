@@ -4,8 +4,8 @@
 from odoo import api, fields, models, Command
 
 
-class User(models.Model):
-    _inherit = "res.users"
+class ResUsers(models.Model):
+    _inherit = ["res.users"]
 
     leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
     show_leaves = fields.Boolean(related='employee_id.show_leaves')
@@ -32,7 +32,7 @@ class User(models.Model):
         ]
 
     def _compute_im_status(self):
-        super(User, self)._compute_im_status()
+        super()._compute_im_status()
         on_leave_user_ids = self._get_on_leave_ids()
         for user in self:
             if user.id in on_leave_user_ids:

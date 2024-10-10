@@ -10,7 +10,6 @@ from odoo.tools import email_split, float_repr, float_round, is_html_empty
 
 
 class HrExpense(models.Model):
-    _name = "hr.expense"
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin', 'analytic.mixin']
     _description = "Expense"
     _order = "date desc, id desc"

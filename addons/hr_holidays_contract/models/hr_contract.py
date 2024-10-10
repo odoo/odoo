@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class HrContract(models.Model):
-    _inherit = 'hr.contract'
+    _inherit = ['hr.contract']
     _description = 'Employee Contract'
 
     @api.constrains('date_start', 'date_end', 'state')

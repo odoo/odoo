@@ -5,13 +5,12 @@ from odoo import api, models, fields
 from odoo.tools.translate import html_translate
 
 
-class ImLivechatChannel(models.Model):
+class Im_LivechatChannel(models.Model):
 
-    _name = 'im_livechat.channel'
     _inherit = ['im_livechat.channel', 'website.published.mixin']
 
     def _compute_website_url(self):
-        super(ImLivechatChannel, self)._compute_website_url()
+        super()._compute_website_url()
         for channel in self:
             channel.website_url = "/livechat/channel/%s" % (self.env['ir.http']._slug(channel),)
 

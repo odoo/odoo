@@ -5,7 +5,7 @@ from odoo import models
 
 
 class MailThread(models.AbstractModel):
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread']
 
     def _message_post_after_hook(self, message, msg_vals):
         self.env['mail.bot']._apply_logic(self, msg_vals)

@@ -4,8 +4,7 @@ from random import randint
 from odoo import fields, models
 
 
-class SkillType(models.Model):
-    _name = 'hr.skill.type'
+class HrSkillType(models.Model):
     _description = "Skill Type"
     _order = "name"
 

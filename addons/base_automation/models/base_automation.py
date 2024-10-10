@@ -76,7 +76,6 @@ def get_webhook_request_payload():
 
 
 class BaseAutomation(models.Model):
-    _name = 'base.automation'
     _description = 'Automation Rule'
 
     name = fields.Char(string="Automation Rule Name", required=True, translate=True)

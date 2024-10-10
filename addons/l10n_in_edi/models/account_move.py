@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _inherit = ["account.move"]
 
     l10n_in_edi_cancel_reason = fields.Selection(selection=[
         ("1", "Duplicate"),

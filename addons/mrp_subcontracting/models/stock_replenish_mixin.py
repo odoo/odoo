@@ -4,8 +4,8 @@ from odoo import models, _
 from odoo.osv import expression
 
 
-class ProductReplenishMixin(models.AbstractModel):
-    _inherit = 'stock.replenish.mixin'
+class StockReplenishMixin(models.AbstractModel):
+    _inherit = ['stock.replenish.mixin']
 
     def _get_allowed_route_domain(self):
         domains = super()._get_allowed_route_domain()

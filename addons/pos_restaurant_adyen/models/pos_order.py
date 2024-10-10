@@ -5,7 +5,7 @@ from odoo import models
 
 
 class PosOrder(models.Model):
-    _inherit = 'pos.order'
+    _inherit = ['pos.order']
 
     def action_pos_order_paid(self):
         res = super(PosOrder, self).action_pos_order_paid()

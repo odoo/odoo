@@ -4,7 +4,7 @@ from odoo import _, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     def action_view_in_store_delivery_methods(self):
         """ Return an action to browse pickup delivery methods in list view, or in form view if

@@ -4,8 +4,8 @@
 from odoo import fields, models, api
 
 
-class UoM(models.Model):
-    _inherit = "uom.uom"
+class UomUom(models.Model):
+    _inherit = ["uom.uom"]
 
     fiscal_country_codes = fields.Char(compute="_compute_fiscal_country_codes")
 

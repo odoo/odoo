@@ -2,16 +2,14 @@
 from odoo import fields, models
 
 
-class GroupOnDate(models.Model):
-    _name = 'test_read_group.on_date'
+class Test_Read_GroupOn_Date(models.Model):
     _description = 'Group Test Read On Date'
 
     date = fields.Date("Date")
     value = fields.Integer("Value")
 
 
-class BooleanAggregate(models.Model):
-    _name = 'test_read_group.aggregate.boolean'
+class Test_Read_GroupAggregateBoolean(models.Model):
     _description = 'Group Test Read Boolean Aggregate'
     _order = 'key DESC'
 
@@ -21,8 +19,7 @@ class BooleanAggregate(models.Model):
     bool_array = fields.Boolean(default=False, aggregator='array_agg')
 
 
-class Aggregate(models.Model):
-    _name = 'test_read_group.aggregate'
+class Test_Read_GroupAggregate(models.Model):
     _order = 'id'
     _description = 'Group Test Aggregate'
 
@@ -38,8 +35,7 @@ class Aggregate(models.Model):
 SELECTION = [('c', "C"), ('b', "B"), ('a', "A")]
 
 
-class GroupOnSelection(models.Model):
-    _name = 'test_read_group.on_selection'
+class Test_Read_GroupOn_Selection(models.Model):
     _description = 'Group Test Read On Selection'
 
     state = fields.Selection([('a', "A"), ('b', "B")], group_expand='_expand_states')
@@ -53,8 +49,7 @@ class GroupOnSelection(models.Model):
         return [key for key, val in self._fields['state'].selection]
 
 
-class FillTemporal(models.Model):
-    _name = 'test_read_group.fill_temporal'
+class Test_Read_GroupFill_Temporal(models.Model):
     _description = 'Group Test Fill Temporal'
 
     date = fields.Date()
@@ -62,16 +57,14 @@ class FillTemporal(models.Model):
     value = fields.Integer()
 
 
-class Order(models.Model):
-    _name = 'test_read_group.order'
+class Test_Read_GroupOrder(models.Model):
     _description = 'Sales order'
 
     line_ids = fields.One2many('test_read_group.order.line', 'order_id')
     date = fields.Date()
 
 
-class OrderLine(models.Model):
-    _name = 'test_read_group.order.line'
+class Test_Read_GroupOrderLine(models.Model):
     _description = 'Sales order line'
 
     order_id = fields.Many2one('test_read_group.order', ondelete='cascade')
@@ -79,8 +72,7 @@ class OrderLine(models.Model):
     date = fields.Date(related='order_id.date')
 
 
-class User(models.Model):
-    _name = 'test_read_group.user'
+class Test_Read_GroupUser(models.Model):
     _description = "User"
 
     name = fields.Char(required=True)
@@ -93,8 +85,7 @@ class User(models.Model):
     )
 
 
-class Task(models.Model):
-    _name = 'test_read_group.task'
+class Test_Read_GroupTask(models.Model):
     _description = "Project task"
 
     name = fields.Char(required=True)
@@ -108,14 +99,13 @@ class Task(models.Model):
     date = fields.Date()
 
 
-class Partner(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model):
+    _inherit = ['res.partner']
 
     date = fields.Date()
 
 
-class RelatedBar(models.Model):
-    _name = 'test_read_group.related_bar'
+class Test_Read_GroupRelated_Bar(models.Model):
     _description = "RelatedBar"
 
     name = fields.Char(aggregator="count_distinct")
@@ -130,8 +120,7 @@ class RelatedBar(models.Model):
         self.computed_base_ids = False
 
 
-class RelatedFoo(models.Model):
-    _name = 'test_read_group.related_foo'
+class Test_Read_GroupRelated_Foo(models.Model):
     _description = "RelatedFoo"
 
     name = fields.Char()
@@ -143,8 +132,7 @@ class RelatedFoo(models.Model):
     bar_base_ids = fields.Many2many('bar_name', related='bar_id.base_ids')
 
 
-class RelatedBase(models.Model):
-    _name = 'test_read_group.related_base'
+class Test_Read_GroupRelated_Base(models.Model):
     _description = "RelatedBase"
 
     name = fields.Char()
@@ -159,8 +147,7 @@ class RelatedBase(models.Model):
     foo_id_bar_name_sudo = fields.Char('foo_bar_name_sudo_2', related='foo_id.bar_name_sudo')
 
 
-class RelatedInherits(models.Model):
-    _name = 'test_read_group.related_inherits'
+class Test_Read_GroupRelated_Inherits(models.Model):
     _description = "RelatedInherits"
     _inherits = {
         'test_read_group.related_base': 'base_id',

@@ -60,7 +60,7 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
 
 
 class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+    _inherit = ['account.edi.format']
 
     # -------------------------------------------------------------------------
     # ES EDI

@@ -5,8 +5,7 @@ from odoo import api, models, _
 from odoo.exceptions import UserError
 
 
-class PosInvoiceReport(models.AbstractModel):
-    _name = 'report.point_of_sale.report_invoice'
+class ReportPoint_Of_SaleReport_Invoice(models.AbstractModel):
     _description = 'Point of Sale Invoice Report'
 
     @api.model

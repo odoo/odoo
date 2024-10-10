@@ -6,7 +6,7 @@ from odoo import models
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _inherit = ['product.product']
 
     def _compute_display_name(self):
         """ In a string consisting of space-delimited substrings, force a double-space between

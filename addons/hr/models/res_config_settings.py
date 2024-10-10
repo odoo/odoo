@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = ['res.config.settings']
 
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Company Working Hours',

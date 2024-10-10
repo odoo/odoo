@@ -4,7 +4,7 @@ from odoo import api, models, _
 
 
 class DecimalPrecision(models.Model):
-    _inherit = 'decimal.precision'
+    _inherit = ['decimal.precision']
 
     @api.onchange('digits')
     def _onchange_digits(self):

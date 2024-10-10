@@ -5,7 +5,7 @@ from odoo import api, Command, models
 
 
 class PurchaseRequisitionCreateAlternative(models.TransientModel):
-    _inherit = 'purchase.requisition.create.alternative'
+    _inherit = ['purchase.requisition.create.alternative']
 
     def _get_alternative_values(self):
         vals = super(PurchaseRequisitionCreateAlternative, self)._get_alternative_values()

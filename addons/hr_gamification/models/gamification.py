@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 class GamificationBadgeUser(models.Model):
     """User having received a badge"""
-    _inherit = 'gamification.badge.user'
+    _inherit = ['gamification.badge.user']
 
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True)
 
@@ -27,8 +27,9 @@ class GamificationBadgeUser(models.Model):
             'res_id': self.badge_id.id,
         }
 
+
 class GamificationBadge(models.Model):
-    _inherit = 'gamification.badge'
+    _inherit = ['gamification.badge']
 
     granted_employees_count = fields.Integer(compute="_compute_granted_employees_count")
 

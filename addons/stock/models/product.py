@@ -23,8 +23,8 @@ OPERATORS = {
 }
 
 
-class Product(models.Model):
-    _inherit = "product.product"
+class ProductProduct(models.Model):
+    _inherit = ["product.product"]
 
     stock_quant_ids = fields.One2many('stock.quant', 'product_id') # used to compute quantities
     stock_move_ids = fields.One2many('stock.move', 'product_id') # used to compute quantities
@@ -442,7 +442,7 @@ class Product(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        res = super(Product, self).view_header_get(view_id, view_type)
+        res = super().view_header_get(view_id, view_type)
         if not res and self._context.get('active_id') and self._context.get('active_model') == 'stock.location':
             return _(
                 'Products: %(location)s',
@@ -637,7 +637,7 @@ class Product(models.Model):
         domain = [('product_id', 'in', self.ids)]
         lines = self.env['stock.lot']._read_group(domain, ['product_id'])
         linked_product_ids = [product.id for [product] in lines]
-        return super(Product, self - self.browse(linked_product_ids))._filter_to_unlink()
+        return super(ProductProduct, self - self.browse(linked_product_ids))._filter_to_unlink()
 
     @api.model
     def _count_returned_sn_products(self, sn_lot):
@@ -660,7 +660,7 @@ class Product(models.Model):
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
     _check_company_auto = True
 
     is_storable = fields.Boolean(
@@ -1024,7 +1024,7 @@ class ProductTemplate(models.Model):
 
 
 class ProductCategory(models.Model):
-    _inherit = 'product.category'
+    _inherit = ['product.category']
 
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_categ', 'categ_id', 'route_id', 'Routes',
@@ -1080,8 +1080,9 @@ class ProductCategory(models.Model):
                 return [('id', '=', product.categ_id.id)]
         return []
 
+
 class ProductPackaging(models.Model):
-    _inherit = "product.packaging"
+    _inherit = ["product.packaging"]
 
     package_type_id = fields.Many2one('stock.package.type', 'Package Type')
     route_ids = fields.Many2many(
@@ -1090,8 +1091,8 @@ class ProductPackaging(models.Model):
         help="Depending on the modules installed, this will allow you to define the route of the product in this packaging: whether it will be bought, manufactured, replenished on order, etc.")
 
 
-class UoM(models.Model):
-    _inherit = 'uom.uom'
+class UomUom(models.Model):
+    _inherit = ['uom.uom']
 
     def write(self, values):
         # Users can not update the factor if open stock moves are based on it
@@ -1122,7 +1123,7 @@ class UoM(models.Model):
                     ('quantity', '!=', 0),
                 ]):
                     raise UserError(error_msg)
-        return super(UoM, self).write(values)
+        return super().write(values)
 
     def _adjust_uom_quantities(self, qty, quant_uom):
         """ This method adjust the quantities of a procurement if its UoM isn't the same

@@ -7,7 +7,7 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 class Website(models.Model):
 
-    _inherit = "website"
+    _inherit = ["website"]
 
     channel_id = fields.Many2one('im_livechat.channel', string='Website Live Chat Channel')
 

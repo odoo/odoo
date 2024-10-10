@@ -2,7 +2,7 @@ from odoo import models
 
 
 class AccountMoveReversal(models.TransientModel):
-    _inherit = 'account.move.reversal'
+    _inherit = ['account.move.reversal']
 
     def reverse_moves(self, is_modify=False):
         action = super().reverse_moves(is_modify=is_modify)

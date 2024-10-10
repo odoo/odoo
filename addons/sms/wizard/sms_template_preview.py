@@ -4,8 +4,7 @@
 from odoo import api, fields, models
 
 
-class SMSTemplatePreview(models.TransientModel):
-    _name = "sms.template.preview"
+class SmsTemplatePreview(models.TransientModel):
     _description = "SMS Template Preview"
 
     @api.model
@@ -18,7 +17,7 @@ class SMSTemplatePreview(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        result = super(SMSTemplatePreview, self).default_get(fields)
+        result = super().default_get(fields)
         sms_template_id = self.env.context.get('default_sms_template_id')
         if not sms_template_id or 'resource_ref' not in fields:
             return result

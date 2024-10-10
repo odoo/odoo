@@ -6,8 +6,8 @@ from odoo import api, fields, models
 from odoo import Command
 
 
-class Event(models.Model):
-    _inherit = 'event.event'
+class EventEvent(models.Model):
+    _inherit = ['event.event']
 
     event_booth_ids = fields.One2many(
         'event.booth', 'event_id', string='Booths', copy=True,

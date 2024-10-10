@@ -3,7 +3,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
-class QrInvoiceWizard(models.TransientModel):
+class L10n_ChQr_InvoiceWizard(models.TransientModel):
     '''
     Wizard :
     When multiple invoices are selected to be printed in the QR-Iban format,
@@ -12,7 +12,6 @@ class QrInvoiceWizard(models.TransientModel):
     to see a list of those.
     The non-QR invoices will have a note logged in their chatter, detailing the reason of the failure.
     '''
-    _name = 'l10n_ch.qr_invoice.wizard'
     _description = 'Handles problems occurring while creating multiple QR-invoices at once'
 
     nb_qr_inv = fields.Integer(readonly=True)

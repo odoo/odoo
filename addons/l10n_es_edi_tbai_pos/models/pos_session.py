@@ -2,7 +2,7 @@ from odoo import models
 
 
 class PosSession(models.Model):
-    _inherit = 'pos.session'
+    _inherit = ['pos.session']
 
     def _load_pos_data(self, models_to_load):
         data = super()._load_pos_data(models_to_load)

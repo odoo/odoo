@@ -10,8 +10,8 @@ from odoo.osv import expression
 from odoo.tools import date_utils
 
 
-class AccountMove(models.Model):
-    _inherit = "account.account"
+class AccountAccount(models.Model):
+    _inherit = ["account.account"]
 
     @api.model
     def _get_date_period_boundaries(self, date_period, company):

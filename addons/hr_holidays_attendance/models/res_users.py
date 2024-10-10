@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users']
 
     request_overtime = fields.Boolean(compute='_compute_request_overtime')
 

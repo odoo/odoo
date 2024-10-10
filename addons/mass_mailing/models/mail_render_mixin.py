@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class MailRenderMixin(models.AbstractModel):
-    _inherit = "mail.render.mixin"
+    _inherit = ["mail.render.mixin"]
 
     @api.model
     def _render_template_postprocess(self, model, rendered):

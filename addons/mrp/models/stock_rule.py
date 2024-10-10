@@ -11,7 +11,7 @@ from odoo.tools import float_compare, OrderedSet
 
 
 class StockRule(models.Model):
-    _inherit = 'stock.rule'
+    _inherit = ['stock.rule']
     action = fields.Selection(selection_add=[
         ('manufacture', 'Manufacture')
     ], ondelete={'manufacture': 'cascade'})
@@ -233,7 +233,7 @@ class StockRule(models.Model):
 
 
 class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+    _inherit = ['procurement.group']
 
     mrp_production_ids = fields.One2many('mrp.production', 'procurement_group_id')
 

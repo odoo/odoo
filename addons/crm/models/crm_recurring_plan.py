@@ -4,8 +4,7 @@
 from odoo import fields, models
 
 
-class RecurringPlan(models.Model):
-    _name = "crm.recurring.plan"
+class CrmRecurringPlan(models.Model):
     _description = "CRM Recurring revenue plans"
     _order = "sequence"
 

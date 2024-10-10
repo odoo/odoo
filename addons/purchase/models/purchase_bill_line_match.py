@@ -6,8 +6,7 @@ from odoo.tools import SQL
 from odoo.exceptions import UserError
 
 
-class PurchaseBillMatch(models.Model):
-    _name = "purchase.bill.line.match"
+class PurchaseBillLineMatch(models.Model):
     _description = "Purchase Line and Vendor Bill line matching view"
     _auto = False
     _order = 'product_id, aml_id, pol_id'

@@ -2,7 +2,7 @@ from odoo import models
 
 
 class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+    _inherit = ['account.journal']
 
     def _prepare_liquidity_account_vals(self, company, code, vals):
         account_vals = super()._prepare_liquidity_account_vals(company, code, vals)

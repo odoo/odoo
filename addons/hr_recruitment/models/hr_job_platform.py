@@ -4,8 +4,7 @@ from odoo import api, fields, models
 from odoo.tools import email_normalize
 
 
-class JobPlatform(models.Model):
-    _name = "hr.job.platform"
+class HrJobPlatform(models.Model):
     _description = 'Job Platforms'
 
     name = fields.Char(required=True)

@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = ['sale.order.line']
 
     event_id = fields.Many2one(
         'event.event', string='Event',

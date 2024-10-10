@@ -12,9 +12,8 @@ from odoo.osv import expression
 
 class LunchProduct(models.Model):
     """ Products available to order. A product is linked to a specific vendor. """
-    _name = 'lunch.product'
     _description = 'Lunch Product'
-    _inherit = 'image.mixin'
+    _inherit = ['image.mixin']
     _order = 'name'
     _check_company_auto = True
 

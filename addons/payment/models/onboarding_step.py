@@ -3,8 +3,8 @@
 from odoo import api, models
 
 
-class OnboardingStep(models.Model):
-    _inherit = 'onboarding.onboarding.step'
+class OnboardingOnboardingStep(models.Model):
+    _inherit = ['onboarding.onboarding.step']
 
     @api.model
     def action_validate_step_payment_provider(self):

@@ -6,7 +6,7 @@ from odoo import models, fields
 
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _inherit = ['res.company']
 
     l10n_eg_client_identifier = fields.Char('ETA Client ID', groups="base.group_erp_manager")
     l10n_eg_client_secret = fields.Char('ETA Secret', groups="base.group_erp_manager")

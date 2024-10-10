@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = ['product.template']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_loyalty_products(self):

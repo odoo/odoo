@@ -6,8 +6,8 @@ from odoo.exceptions import ValidationError
 
 from dateutil.relativedelta import relativedelta
 
+
 class ProjectTaskRecurrence(models.Model):
-    _name = 'project.task.recurrence'
     _description = 'Task Recurrence'
 
     task_ids = fields.One2many('project.task', 'recurrence_id', copy=False)

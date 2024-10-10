@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = ['account.move']
 
     peppol_message_uuid = fields.Char(string='PEPPOL message ID')
     peppol_move_state = fields.Selection(

@@ -6,7 +6,6 @@ from odoo.addons.onboarding.models.onboarding_progress import ONBOARDING_PROGRES
 
 
 class OnboardingProgressStep(models.Model):
-    _name = 'onboarding.progress.step'
     _description = 'Onboarding Progress Step Tracker'
     _rec_name = 'step_id'
 

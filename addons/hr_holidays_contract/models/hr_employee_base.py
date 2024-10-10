@@ -4,7 +4,7 @@ from odoo import models
 
 
 class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+    _inherit = ["hr.employee.base"]
 
     def write(self, vals):
         # Prevent the resource calendar of leaves to be updated by a write to

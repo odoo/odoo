@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class MrpBom(models.Model):
-    _inherit = 'mrp.bom'
+    _inherit = ['mrp.bom']
 
     def toggle_active(self):
         self.filtered(lambda bom: bom.active)._ensure_bom_is_free()

@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 
 class UtmMedium(models.Model):
-    _inherit = 'utm.medium'
+    _inherit = ['utm.medium']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_mailings(self):

@@ -18,8 +18,7 @@ from odoo.tools.float_utils import float_round
 _logger = logging.getLogger(__name__)
 
 
-class HolidaysType(models.Model):
-    _name = "hr.leave.type"
+class HrLeaveType(models.Model):
     _description = "Time Off Type"
     _order = 'sequence'
 

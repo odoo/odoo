@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 
 
 class ProductLabelLayout(models.TransientModel):
-    _name = 'product.label.layout'
     _description = 'Choose the sheet layout to print the labels'
 
     print_format = fields.Selection([

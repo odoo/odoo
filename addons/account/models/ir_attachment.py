@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+    _inherit = ['ir.attachment']
 
     def _build_zip_from_attachments(self):
         """ Return the zip bytes content resulting from compressing the attachments in `self`"""

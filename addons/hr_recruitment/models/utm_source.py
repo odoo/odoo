@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 
 class UtmSource(models.Model):
-    _inherit = 'utm.source'
+    _inherit = ['utm.source']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_recruitment_sources(self):

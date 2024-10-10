@@ -5,8 +5,8 @@ from odoo.tools import SQL, Query, unique
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.exceptions import UserError, ValidationError
 
+
 class AnalyticMixin(models.AbstractModel):
-    _name = 'analytic.mixin'
     _description = 'Analytic Mixin'
 
     analytic_distribution = fields.Json(
