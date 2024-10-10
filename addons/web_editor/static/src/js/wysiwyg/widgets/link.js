@@ -555,7 +555,7 @@ export class Link extends Component {
             this.state.originalText = this.state.originalText ? this.state.originalText.replace(/[ \t\r\n]+/g, ' ') : '';
         }
 
-        this.state.url ||= this._deduceUrl(this.state.originalText, this.linkEl);
+        this.state.url ||= this._deduceUrl(this.state.originalText);
 
         if (this.linkEl) {
             this.initialNewWindow = this.initialNewWindow || this.linkEl.target === '_blank';
@@ -637,7 +637,7 @@ export class Link extends Component {
      */
     __onURLInput() {
         const inputValue = this.$el[0].querySelector('#o_link_dialog_url_input').value;
-        this.state.url = this._deduceUrl(inputValue, this.linkEl) || inputValue;
+        this.state.url = this._deduceUrl(inputValue) || inputValue;
         this._onURLInput(...arguments);
     }
     /**
