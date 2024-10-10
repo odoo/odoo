@@ -151,6 +151,7 @@ class Users(models.Model):
 
     def _revoke_all_devices(self):
         self.totp_trusted_device_ids._remove()
+        _logger.info("All TOTP devices revoked for %s by %s", self, self.env.user)
 
     @api.model
     def change_password(self, old_passwd, new_passwd):

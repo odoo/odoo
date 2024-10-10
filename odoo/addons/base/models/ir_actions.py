@@ -643,6 +643,8 @@ class IrActionsServer(models.Model):
                     raise
 
             runner, multi = action._get_runner()
+            if runner and action.usage != "ir_cron":
+                _logger.info("%s has been run by %s", self, self.env.user)
             if runner and multi:
                 # call the multi method
                 run_self = action.with_context(eval_context['env'].context)

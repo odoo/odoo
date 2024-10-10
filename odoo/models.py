@@ -1056,6 +1056,10 @@ class BaseModel(metaclass=MetaModel):
         if not (self.env.is_admin() or self.env.user.has_group('base.group_allow_export')):
             raise UserError(_("You don't have the rights to export data. Please contact an Administrator."))
         fields_to_export = [fix_import_export_id_paths(f) for f in fields_to_export]
+        _logger.info("Export made on model %r for %d records on %d fields by %s. "
+                     "Fields : %s, Ids (10 max) : %s",
+                     self._name, len(self.ids), len(fields_to_export),
+                    self.env.user, fields_to_export, self.ids[:10])
         return {'datas': self._export_rows(fields_to_export)}
 
     @api.model
