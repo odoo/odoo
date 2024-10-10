@@ -268,3 +268,9 @@ export function getAdjacentCharacter(selection, side, editable) {
     }
     return adjacentCharacter;
 }
+
+export function selectionsAreEqual(selection1, selection2) {
+    return ["anchorNode", "anchorOffset", "focusNode", "focusOffset"].every(
+        (key) => selection1[key] === selection2[key]
+    );
+}
