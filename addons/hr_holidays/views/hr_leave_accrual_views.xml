@@ -13,7 +13,7 @@
                         <div>
                             <field name="accrued_gain_time" invisible="1"/>
                             <field name="can_modify_value_type" invisible="1"/>
-                            <field name="added_value" widget="FloatWithoutTrailingZeros" style="width: 4rem" class="me-1"/>
+                            <field name="added_value" widget="float_without_trailing_zeros" style="width: 4rem" class="me-1"/>
                             <field name="added_value_type" style="width: 3.4rem" nolabel="1" readonly="not can_modify_value_type"/>
                         </div>
                         <div style="width: 5rem"/>
@@ -57,7 +57,7 @@
                         <span>
                             <field name="cap_accrued_time" nolabel="1"/>
                             <span class="position-absolute" invisible="not cap_accrued_time">
-                                <field name="maximum_leave" style="width: 5rem" widget="FloatWithoutTrailingZeros"
+                                <field name="maximum_leave" style="width: 5rem" widget="float_without_trailing_zeros"
                                     nolabel="1"/>
                                 <field name="added_value_type" readonly="1" style="white-space: nowrap;width: 5rem"/>
                             </span>
@@ -89,7 +89,7 @@
                             <span>
                                 <field name="cap_accrued_time_yearly" nolabel="1"/>
                                 <span class="position-absolute" invisible="not cap_accrued_time_yearly">
-                                    <field name="maximum_leave_yearly" style="width: 5rem" widget="FloatWithoutTrailingZeros"
+                                    <field name="maximum_leave_yearly" style="width: 5rem" widget="float_without_trailing_zeros"
                                         nolabel="1"/>
                                     <field name="added_value_type" readonly="1" style="white-space: nowrap;width: 5rem"/>
                                 </span>
@@ -176,6 +176,7 @@
                                 <field name="accrual_validity_count"/>
                                 <field name="accrual_validity_type"/>
                                 <field name="cap_accrued_time"/>
+                                <field name="accrual_validity"/>
                                 <templates>
                                     <div t-name="card" class="bg-transparent border-0">
                                         <div class="o_hr_holidays_body">
@@ -230,7 +231,7 @@
                                                     </div>
                                                     <div class="col-3 m-0 ps-1 d-flex">
                                                         <t t-if="record.cap_accrued_time.raw_value and record.maximum_leave.raw_value > 0">
-                                                            <field name="maximum_leave" widget="FloatWithoutTrailingZeros"/> <field class="ms-1" name="added_value_type"/>
+                                                            <field name="maximum_leave" widget="float_without_trailing_zeros"/> <field class="ms-1" name="added_value_type"/>
                                                         </t>
                                                         <t t-else="">
                                                             Unlimited
@@ -242,9 +243,16 @@
                                                         Carry over:
                                                     </div>
                                                     <div class="col-6 m-0 ps-1">
-                                                        <t t-if="record.action_with_unused_accruals.raw_value === 'all'">all - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/></t>
+                                                        <t t-if="record.action_with_unused_accruals.raw_value === 'all'">all
+                                                            <span invisible="not accrual_validity">
+                                                                - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/>
+                                                            </span>
+                                                        </t>
                                                         <t t-elif="record.action_with_unused_accruals.raw_value === 'maximum'">up to <field name="postpone_max_days" /> <t t-esc="record.added_value_type.raw_value" />
-                                                        - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/></t>
+                                                            <span invisible="not accrual_validity">
+                                                                - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/>
+                                                            </span>
+                                                        </t>
                                                         <t t-else="">no</t>
                                                     </div>
                                                 </div>
