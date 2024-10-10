@@ -109,7 +109,7 @@ class ResPartner(models.Model):
             ('9949', "9949 - Slovenia VAT number"),
             ('9950', "9950 - Slovakia VAT number"),
             ('9951', "9951 - San Marino VAT number"),
-            ('9952', "9952 - Turkey VAT number"),
+            ('9952', "9952 - Türkiye VAT number"),
             ('9953', "9953 - Holy See (Vatican City State) VAT number"),
             ('9957', "9957 - French VAT number"),
             ('9959', "9959 - Employer Identification Number (EIN, USA)"),

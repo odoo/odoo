@@ -356,3 +356,35 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             PartnerList.searchCustomerValue("john@doe.com"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosCategoriesOrder", {
+    test: true,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                trigger: '.category-button:eq(0) > span:contains("AAA")',
+            },
+            {
+                trigger: '.category-button:eq(1) > span:contains("AAB")',
+            },
+            {
+                trigger: '.category-button:eq(2) > span:contains("AAC")',
+            },
+            {
+                trigger: '.category-button:eq(1) > span:contains("AAB")',
+                run: "click",
+            },
+            {
+                trigger: '.category-button:eq(2) > span:contains("AAX")',
+            },
+            {
+                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                run: "click",
+            },
+            {
+                trigger: '.category-button:eq(3) > span:contains("AAY")',
+            },
+        ].flat(),
+});
