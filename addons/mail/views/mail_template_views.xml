@@ -17,11 +17,6 @@
                                 name="%(mail_template_reset_action)d" type="action"
                                 groups="mail.group_mail_template_editor"
                                 invisible="not template_fs"/>
-                        <button string="Delete"
-                                name="open_delete_confirmation_modal" type="object"
-                                class="btn btn-secondary"
-                                invisible="(user_id != uid and not is_template_editor) or template_fs"
-                                help="Permanently delete this template"/>
                         <button string="Add Context Action"
                                 class="btn btn-secondary"
                                 name="create_action" type="object"
@@ -94,20 +89,6 @@
                             </page>
                         </notebook>
                        </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="mail_template_view_form_confirm_delete" model="ir.ui.view">
-            <field name="name">mail.template.view.form.confirm.delete</field>
-            <field name="model">mail.template</field>
-            <field name="arch" type="xml">
-                <form string="Confirmation">
-                    <p>Are you sure you want to delete this Mail Template?</p>
-                    <footer>
-                        <button name="unlink" type="object" string="Delete" class="btn btn-primary"/>
-                        <button name="cancel_unlink" type="object" string="Cancel" class="btn btn-secondary"/>
-                    </footer>
                 </form>
             </field>
         </record>
