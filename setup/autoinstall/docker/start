@@ -1,0 +1,10 @@
+
+docker run \
+    -v /var/run/postgres:/var/run/postgres \
+    -v /home/$USER/.local/share/Odoo:/home/$USER/.local/share/Odoo \
+    -v /home/$USER/.bashrc:/home/$USER/.bashrc:ro \
+    --user $USER \
+    -ti \
+    --rm \
+    odoo:dev \
+    /bin/bash
