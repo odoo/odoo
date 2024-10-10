@@ -9,4 +9,7 @@ patch(OrderTabs.prototype, {
             order.setBooked(true);
         }
     },
+    showOrderTabs() {
+        return super.showOrderTabs() && !this.pos.isOrderTransferMode;
+    },
 });
