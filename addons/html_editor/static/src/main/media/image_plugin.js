@@ -290,7 +290,11 @@ export class ImagePlugin extends Plugin {
         }
     }
 
-    onSelectionChange() {
+    onSelectionChange(selectionData) {
+        const { anchorNode, focusNode } = selectionData.documentSelection;
+        if (!anchorNode && !focusNode) {
+            return;
+        }
         this.closeImageTransformation();
     }
 
@@ -354,10 +358,12 @@ export class ImagePlugin extends Plugin {
             props: {
                 image,
                 document: this.document,
-                destroy: this.closeImageTransformation,
+                destroy: () => this.closeImageTransformation(),
                 onChange: () => this.dispatch("ADD_STEP"),
             },
         });
+        const selection = this.document.getSelection();
+        selection && selection.removeAllRanges();
     }
 
     isImageTransformationOpen() {
