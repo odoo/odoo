@@ -41,6 +41,7 @@ export class ChannelMember extends Record {
     fetched_message_id = Record.one("Message");
     seen_message_id = Record.one("Message");
     syncUnread = true;
+    syncCounterOnly = false;
     _syncUnread = Record.attr(false, {
         compute() {
             if (!this.syncUnread || !this.eq(this.thread?.selfMember)) {
@@ -54,6 +55,19 @@ export class ChannelMember extends Record {
         onUpdate() {
             if (this._syncUnread) {
                 this.localNewMessageSeparator = this.new_message_separator;
+                this.localMessageUnreadCounter = this.message_unread_counter;
+            }
+        },
+    });
+    _syncCounterOnly = Record.attr(false, {
+        compute() {
+            if (!this.syncCounterOnly || !this.eq(this.thread?.selfMember)) {
+                return false;
+            }
+            return this.localMessageUnreadCounter !== this.message_unread_counter;
+        },
+        onUpdate() {
+            if (this._syncCounterOnly) {
                 this.localMessageUnreadCounter = this.message_unread_counter;
             }
         },

@@ -59,6 +59,7 @@ export class ChatWindow extends Component {
             closeActionPanel: () => this.threadActions.activeAction?.close(),
             inChatWindow: true,
             messageHighlight: this.messageHighlight,
+            isComposerFocused: this.thread?.composer.isFocused,
         });
     }
 

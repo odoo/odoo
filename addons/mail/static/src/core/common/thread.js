@@ -113,10 +113,10 @@ export class Thread extends Component {
             },
             { ready: false }
         );
+        this.setupScroll();
         this.presentThresholdState = useVisible("present-treshold", () =>
             this.updateShowJumpPresent()
         );
-        this.setupScroll();
         useEffect(
             () => this.updateShowJumpPresent(),
             () => [this.props.thread.loadNewer]
@@ -300,6 +300,9 @@ export class Thread extends Component {
                     : ref.el.scrollTop < 30;
             if (isBottom) {
                 thread.scrollTop = "bottom";
+                if (this.props.thread.showUnreadBanner && this.env.isComposerFocused) {
+                    this.props.thread.markAsRead();
+                }
             } else {
                 thread.scrollTop =
                     this.props.order === "asc"
