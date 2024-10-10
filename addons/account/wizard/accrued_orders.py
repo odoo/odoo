@@ -157,7 +157,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         for order in orders:
             if len(orders) == 1 and self.amount and order.order_line:
                 total_balance = self.amount
-                order_line = order.order_line[0]
+                order_line = order.order_line.filtered(lambda x: x.product_id)[0]
                 account = self._get_computed_account(order, order_line.product_id, is_purchase)
                 distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
                 if not is_purchase and order.analytic_account_id:
