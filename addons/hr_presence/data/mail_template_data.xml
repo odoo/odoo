@@ -7,6 +7,7 @@
             <field name="subject">Unexpected Absence</field>
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="email_to">{{ (object.user_id.email_formatted or object.work_email) }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="auto_delete" eval="False"/>
             <field name="description">Sent manually in presence module when an employee wasn't working despite not being off</field>
             <field name="body_html" type="html">

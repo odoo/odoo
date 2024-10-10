@@ -5,7 +5,8 @@
             <field name="name">Survey: Certification Failure</field>
             <field name="model_id" ref="model_survey_user_input" />
             <field name="subject">You have failed the course: {{ object.slide_partner_id.channel_id.name }}</field>
-            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
             <field name="description">Sent to participant if they failed the certification</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">

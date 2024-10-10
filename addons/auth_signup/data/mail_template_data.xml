@@ -8,6 +8,7 @@
             <field name="subject">{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Odoo</field>
             <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Sent to new user after you invited them</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
@@ -105,6 +106,7 @@
             <field name="subject">Reminder for unregistered users</field>
             <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Sent automatically to admin if new user haven't responded to the invitation</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
@@ -157,6 +159,7 @@
             <field name="subject">Welcome to {{ object.company_id.name }}!</field>
             <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Sent to portal user who registered themselves</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">

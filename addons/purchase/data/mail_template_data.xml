@@ -5,7 +5,8 @@
             <field name="name">Purchase: Request For Quotation</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="subject">{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})</field>
-            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
             <field name="description">Sent manually to vendor to request a quotation</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
@@ -49,7 +50,8 @@
             <field name="name">Purchase: Purchase Order</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="subject">{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})</field>
-            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
             <field name="description">Sent to vendor with the purchase order in attachment</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
@@ -88,7 +90,8 @@
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
             <field name="subject">{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})</field>
-            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
             <field name="description">Sent to vendors before expected arrival, based on the purchase order setting</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">

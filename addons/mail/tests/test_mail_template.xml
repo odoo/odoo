@@ -10,6 +10,7 @@
         <field name="model_id" ref="base.model_res_users"/>
         <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
         <field name="email_to">{{ object.email_formatted }}</field>
+        <field name="use_default_to" eval="False"/>
         <field name="body_html" type="html">
             <div>Hello Odoo</div>
         </field>

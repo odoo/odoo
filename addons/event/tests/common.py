@@ -86,6 +86,13 @@ class EventCase(common.TransactionCase):
             tz='Europe/Brussels',
         )
 
+        cls.event_organizer = cls.env['res.partner'].create({
+            'city': 'Bruxelles',
+            'country_id': cls.env.ref('base.be').id,
+            'email': 'organizer@example.com',
+            'name': 'Organizer',
+            'street': 'Organizer Street',
+        })
         cls.event_customer = cls.env['res.partner'].create({
             'name': 'Constantin Customer',
             'email': 'constantin@test.example.com',
