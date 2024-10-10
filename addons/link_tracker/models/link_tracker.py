@@ -73,6 +73,9 @@ class LinkTracker(models.Model):
     @api.depends('code')
     def _compute_short_url(self):
         for tracker in self:
+            if not tracker.id or not tracker.code:
+                tracker.short_url = ''
+                continue
             tracker.short_url = urls.url_join(tracker.short_url_host, '%(code)s' % {'code': tracker.code})
 
     def _compute_short_url_host(self):
