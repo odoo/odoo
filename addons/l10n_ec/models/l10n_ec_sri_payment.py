@@ -8,7 +8,9 @@ class SriPayment(models.Model):
 
     _name = "l10n_ec.sri.payment"
     _description = "SRI Payment Method"
+    _order = "sequence, id"
 
+    sequence = fields.Integer("Sequence", default=10)
     name = fields.Char("Name", translate=True)
     code = fields.Char("Code")
     active = fields.Boolean("Active", default=True)

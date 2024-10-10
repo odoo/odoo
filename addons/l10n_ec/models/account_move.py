@@ -134,6 +134,7 @@ class AccountMove(models.Model):
         comodel_name="l10n_ec.sri.payment",
         string="Payment Method (SRI)",
         help="Ecuador: Payment Methods Defined by the SRI.",
+        default=lambda self: self.env['l10n_ec.sri.payment'].search([], limit=1),
     )
 
     @api.model
