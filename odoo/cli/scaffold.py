@@ -2,7 +2,10 @@ import os
 import re
 import sys
 
-import jinja2
+try:
+    import jinja2
+except ImportError:
+    jinja2 = None
 
 from . import Command
 
@@ -81,11 +84,15 @@ def directory(p, create=False):
         die("%s is not a directory" % p)
     return expanded
 
-env = jinja2.Environment()
-env.filters['snake'] = snake
-env.filters['pascal'] = pascal
+if jinja2:
+    env = jinja2.Environment()
+    env.filters['snake'] = snake
+    env.filters['pascal'] = pascal
+
 class template(object):
     def __init__(self, identifier):
+        if not jinja2:
+            raise ImportError("jinja2 is required to use Scaffold templates")
         # TODO: archives (zipfile, tarfile)
         self.id = identifier
         # is identifier a builtin?
