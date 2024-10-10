@@ -12,11 +12,13 @@ import {
     convertNumericToUnit,
     getCSSVariableValue,
     getHtmlStyle,
+    getFontSizeDisplayValue,
 } from "@html_editor/utils/formatting";
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
 import { FontSelector } from "./font_selector";
 import { withSequence } from "@html_editor/utils/resource";
+import { reactive } from "@odoo/owl";
 
 export const fontItems = [
     {
@@ -122,6 +124,7 @@ export class FontPlugin extends Plugin {
                 Component: FontSelector,
                 props: {
                     getItems: () => fontItems,
+                    getDisplay: () => this.font,
                     command: "SET_TAG",
                 },
             },
@@ -132,9 +135,8 @@ export class FontPlugin extends Plugin {
                 Component: FontSelector,
                 props: {
                     getItems: () => this.fontSizeItems,
-                    isFontSize: true,
+                    getDisplay: () => this.fontSize,
                     command: "FORMAT_FONT_SIZE_CLASSNAME",
-                    document: this.document,
                 },
             },
         ],
@@ -205,7 +207,57 @@ export class FontPlugin extends Plugin {
             { selector: "PRE", text: _t("Code") },
             { selector: "BLOCKQUOTE", text: _t("Quote") },
         ],
+        onSelectionChange: this.updateFontParams.bind(this),
     };
+
+    setup() {
+        this.fontSize = reactive({ displayName: "" });
+        this.font = reactive({ displayName: "" });
+    }
+
+    handleCommand(command) {
+        switch (command) {
+            case "HISTORY_UNDO":
+            case "HISTORY_REDO":
+            case "SET_TAG":
+            case "FORMAT_FONT_SIZE_CLASSNAME":
+                this.updateFontParams();
+                break;
+        }
+    }
+
+    get fontName() {
+        const sel = this.shared.getEditableSelection();
+        // if (!sel) {
+        //     return "Normal";
+        // }
+        const anchorNode = sel.anchorNode;
+        const block = closestBlock(anchorNode);
+        const tagName = block.tagName.toLowerCase();
+
+        const matchingItems = fontItems.filter((item) => {
+            return item.tagName === tagName;
+        });
+
+        const matchingItemsWitoutExtraClass = matchingItems.filter((item) => !item.extraClass);
+
+        if (!matchingItems.length) {
+            return "Normal";
+        }
+
+        return (
+            matchingItems.find((item) => block.classList.contains(item.extraClass)) ||
+            (matchingItemsWitoutExtraClass.length && matchingItemsWitoutExtraClass[0])
+        ).name;
+    }
+
+    get fontSizeName() {
+        const sel = this.shared.getEditableSelection();
+        if (!sel) {
+            return fontSizeItems[0].name;
+        }
+        return Math.round(getFontSizeDisplayValue(sel, this.document));
+    }
 
     get fontSizeItems() {
         const style = getHtmlStyle(this.document);
@@ -343,5 +395,9 @@ export class FontPlugin extends Plugin {
             fillEmpty(blockEl);
             this.dispatch("SET_TAG", { tagName: headingToBe });
         }
+    }
+    updateFontParams() {
+        this.font.displayName = this.fontName;
+        this.fontSize.displayName = this.fontSizeName;
     }
 }
