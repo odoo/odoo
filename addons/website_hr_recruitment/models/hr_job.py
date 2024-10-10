@@ -31,6 +31,9 @@ class Job(models.Model):
             <h6>4 Days after Interview</h6>
         """)
 
+    def _editable_fields(self):
+        return ['description', 'website_description', 'job_details']
+
     description = fields.Html(
         'Job Description', translate=html_translate,
         prefetch=False,

@@ -21,6 +21,9 @@ class Track(models.Model):
     def _get_default_stage_id(self):
         return self.env['event.track.stage'].search([], limit=1).id
 
+    def _editable_fields(self):
+        return ['description']
+
     # description
     name = fields.Char('Title', required=True, translate=True)
     event_id = fields.Many2one('event.event', 'Event', required=True)

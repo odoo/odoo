@@ -1,10 +1,14 @@
+/** @odoo-module **/
 import { _t } from "@web/core/l10n/translation";
 import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
+import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
+import { isVisible } from "@web/core/utils/ui";
+import { CheckBox } from '@web/core/checkbox/checkbox';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
-import { Component, useState, reactive, onMounted, onWillStart, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillStart, reactive, useEffect, useState } from "@odoo/owl";
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
 // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
@@ -17,7 +21,121 @@ const seoContext = reactive({
     seoName: '',
     metaImage: '',
     defaultTitle: '',
+    updatedAlts: [],
+    brokenLinks: [],
 });
+
+const getSeo = async (self, onlyKeywords = false) => {
+    const pageTextContentEl = self.website.pageDocument.documentElement.querySelector("#wrap");
+    const lang = self.state.language || "en";
+    const tagWeights = {
+        h1: 5,
+        h2: 4,
+        h3: 3,
+        a: 2,
+        p: 1,
+    };
+    const maxNGrams = 2;
+
+    const getKeywordsFromText = (text, weight, wordCounts) => {
+        const segmenter = new Intl.Segmenter(lang, { granularity: "word" });
+        const segmentedText = segmenter.segment(text);
+        const words = [...segmentedText]
+            .filter((s) => s.isWordLike)
+            .map((s) => s.segment.toLowerCase())
+            .filter((word) => !/[0-9]+/.test(word));
+        const singleWordsLength = words.length;
+        for (let nGram = maxNGrams; nGram > 1; nGram--) {
+            for (let i = 0; i <= singleWordsLength - nGram; i++) {
+                if (words[i].length > 4 && words[i + nGram - 1].length > 4) {
+                    words.push(words.slice(i, i + nGram).join(" "));
+                }
+            }
+        }
+        if (words) {
+            words
+                .filter((word) => word.length > 4)
+                .forEach((word) => {
+                    if (!wordCounts[word]) {
+                        wordCounts[word] = 0;
+                    }
+                    wordCounts[word] += weight * (word.length - 3);
+                });
+        }
+    };
+
+    const jaccardSimilarity = (str1, str2) => {
+        const set1 = new Set(str1.replace(/\s+/g, "").split(""));
+        const set2 = new Set(str2.replace(/\s+/g, "").split(""));
+
+        const intersection = new Set([...set1].filter((item) => set2.has(item)));
+        const union = new Set([...set1, ...set2]);
+
+        return intersection.size / union.size;
+    };
+
+    const extractKeywords = () => {
+        const wordCounts = {};
+
+        Object.keys(tagWeights).forEach((tag) => {
+            const elements = pageTextContentEl.getElementsByTagName(tag);
+            for (const element of elements) {
+                getKeywordsFromText(element.innerText, tagWeights[tag], wordCounts);
+            }
+        });
+
+        const keywords = Object.entries(wordCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 20);
+
+        for (let i = 0; i < keywords.length; i++) {
+            for (let j = 0; j < keywords.length; j++) {
+                if (i == j || keywords[i][1] === 0) {
+                    continue;
+                }
+                if (jaccardSimilarity(keywords[i][0], keywords[j][0]) > 0.5) {
+                    keywords[i][1] += keywords[j][1];
+                    keywords[j][1] = 0;
+                }
+            }
+        }
+        const sortedKeywords = keywords
+            .sort((a, b) => b[1] - a[1])
+            .filter((entry) => entry[1] > 0)
+            .map((entry) => entry[0])
+            .slice(0, 7);
+        return sortedKeywords;
+    };
+
+    const extractDescription = () => {
+        let subtitlesEls = pageTextContentEl.querySelectorAll(
+            "[class*='subtitle'],[class*='lead'],[data-oe-field*='subtitle'],[data-oe-field*='description']"
+        );
+        subtitlesEls = Array.from(subtitlesEls).filter(
+            (el) => isVisible(el) && el.innerText.trim()
+        );
+        if (subtitlesEls.length) {
+            return subtitlesEls[0].innerText.trim();
+        }
+        let headersEls = pageTextContentEl.querySelectorAll("h2,h3");
+        headersEls = Array.from(headersEls).filter(
+            (el) => isVisible(el) && el.innerText.trim().replace(/[\W\d]/g, "")
+        );
+        if (headersEls.length) {
+            return headersEls.map((el) => el.innerText.trim().replace(/\s+/g, " ")).join(", ");
+        }
+        return self.seoContext.title;
+    };
+
+    const keywords = extractKeywords()
+    if (keywords.length) {
+        self.seoContext.keywords = keywords;
+    }
+    if (!onlyKeywords) {
+        self.seoContext.title = htmlToTextContentInline(self.seoContext.defaultTitle);
+        self.seoContext.description = extractDescription();
+    }
+};
 
 class MetaImage extends Component {
     static template = "website.MetaImage";
@@ -77,14 +195,6 @@ class ImageSelector extends Component {
         }
     }
 
-    get title() {
-        return this.seoContext.title || this.props.defaultTitle;
-    }
-
-    get description() {
-        return this.seoContext.description || this.props.previewDescription;
-    }
-
     get activeMetaImage() {
         const activeImage = this.state.images.find(({active}) => active);
         return activeImage && activeImage.src;
@@ -108,7 +218,7 @@ class ImageSelector extends Component {
 
     openMediaDialog() {
         this.dialogs.add(MediaDialog, {
-            // onlyImages: true,
+            onlyImages: true,
             resModel: 'ir.ui.view',
             useMediaLibrary: true,
             save: image => {
@@ -158,7 +268,9 @@ class Keyword extends Component {
                 keywords: this.props.keyword,
             });
             const regex = new RegExp(WORD_SEPARATORS_REGEX + this.props.keyword + WORD_SEPARATORS_REGEX, 'gi');
-            this.state.suggestions = [...new Set(JSON.parse(suggestions).map(word => word.replace(regex, '').trim()))];
+            this.state.suggestions = [
+                ...new Set(JSON.parse(suggestions).map((word) => word.replace(regex, "").trim())),
+            ].filter(Boolean);
         });
     }
 
@@ -172,6 +284,32 @@ class Keyword extends Component {
 
     getBodyText() {
         return this.website.pageDocument.body.textContent;
+    }
+
+    get mentionedIn() {
+        return [
+            this.usedInH1 && "H1",
+            this.usedInH2 && "H2",
+            this.usedInTitle && "Title",
+            this.usedInDescription && "Description",
+            this.usedInContent && "Body",
+        ]
+            .filter(Boolean)
+            .join(", ");
+    }
+
+    get notMentionedIn() {
+        const res = [
+            !this.usedInH1 && "H1",
+            !this.usedInH2 && "H2",
+            !this.usedInTitle && "Title",
+            !this.usedInDescription && "Description",
+            !this.usedInContent && "Body",
+        ].filter(Boolean);
+        if (res.length === 5) {
+            return _t("Not in the page");
+        }
+        return res.join(", ");
     }
 
     get usedInH1() {
@@ -220,6 +358,10 @@ class MetaKeywords extends Component {
         });
     }
 
+    provideKeywords() {
+        getSeo(this, true);
+    }
+
     onKeyup(ev) {
         // Add keyword on enter.
         if (ev.key === "Enter") {
@@ -228,9 +370,7 @@ class MetaKeywords extends Component {
     }
 
     getLanguage() {
-        return (
-            pyToJsLocale(this.website.pageDocument.documentElement.getAttribute("lang")) || "en-US"
-        );
+        return pyToJsLocale(this.website.pageDocument.documentElement.getAttribute("lang") || "en-US");
     }
 
     get isFull() {
@@ -259,6 +399,67 @@ class SEOPreview extends Component {
         url: String,
     };
 
+    setup() {
+        this.website = useService("website");
+        this.seoContext = useState(seoContext);
+        this.logo = `/web/image/website/${encodeURIComponent(this.website.currentWebsite.id)}/logo`;
+    }
+
+    get urlToBreadcrumbs() {
+        const MAX_LENGTH = 45;
+        const REPLACEMENT = "…";
+        let translatedPage = false;
+        if (this.website.currentWebsite.metadata.langName !== undefined) {
+            translatedPage = true;
+        }
+        const urlObj = new URL(this.props.url);
+        const hostname = urlObj.hostname;
+        const path = urlObj.pathname;
+
+        const segments = path.split("/").filter((segment) => segment);
+        // Remove non-readable elements (numeric parts)
+        const readableSegments = segments.map((segment) => {
+            // Remove numeric suffixes (e.g., "astronomy-2" becomes "astronomy")
+            const noNumericSuffix = segment.replace(/-\d+$/, "");
+            // Replace dashes with spaces and remove numbers
+            return noNumericSuffix.replace(/-/g, " ").replace(/\d+/g, "");
+        });
+        // Capitalise the first word of each segment
+        let capitalisedSegments = readableSegments.map(
+            (segment) => segment.replace(/\b\w/, (char) => char.toUpperCase()) // Capitalise each word
+        );
+        // Remove the localisation part if it's there
+        if (translatedPage) {
+            capitalisedSegments = capitalisedSegments.slice(1);
+        }
+        capitalisedSegments.unshift(`https://${hostname}`);
+        // Manage the truncated parts if it's too long
+        let lastIndexOfEllipsis = null;
+        while (
+            capitalisedSegments.length > 2 &&
+            capitalisedSegments.join("   ").length > MAX_LENGTH
+        ) {
+            let replaced = false;
+            for (let index = 1; index < capitalisedSegments.length - 1; index++) {
+                if (capitalisedSegments[index] !== REPLACEMENT) {
+                    capitalisedSegments[index] = REPLACEMENT;
+                    replaced = true;
+                    lastIndexOfEllipsis = index;
+                    break;
+                }
+            }
+            if (!replaced) {
+                break;
+            }
+        }
+        if (lastIndexOfEllipsis) {
+            capitalisedSegments = capitalisedSegments.filter(
+                (item, index) => item !== REPLACEMENT || index === lastIndexOfEllipsis
+            );
+        }
+        return capitalisedSegments.join(" › ");
+    }
+
     get description() {
         if (this.props.description.length > 160) {
             return this.props.description.substring(0, 159) + '…';
@@ -269,6 +470,7 @@ class SEOPreview extends Component {
 class TitleDescription extends Component {
     static template = "website.TitleDescription";
     static props = {
+        canEditSeo: Boolean,
         canEditDescription: Boolean,
         canEditUrl: Boolean,
         canEditTitle: Boolean,
@@ -285,8 +487,12 @@ class TitleDescription extends Component {
 
     setup() {
         this.seoContext = useState(seoContext);
+        this.website = useService("website");
         useAutofocus();
 
+        this.state = useState({
+            language: this.getLanguage(),
+        });
         this.previousSeoName = this.seoContext.seoName;
 
         this.maxRecommendedDescriptionSize = 300;
@@ -331,6 +537,10 @@ class TitleDescription extends Component {
         return this.props.url.replace(this.seoNameUrl, this.props.seoNameDefault);
     }
 
+    get titleOrDescriptionNotSet() {
+        return !this.seoContext.title || !this.seoContext.description;
+    }
+
     get title() {
         return this.seoContext.title || this.props.defaultTitle;
     }
@@ -351,9 +561,17 @@ class TitleDescription extends Component {
         return false;
     }
 
+    getLanguage() {
+        return pyToJsLocale(this.website.pageDocument.documentElement.getAttribute("lang") || "en-US");
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    autoFill() {
+        getSeo(this);
+    }
 
     /**
      * @private
@@ -369,6 +587,147 @@ class TitleDescription extends Component {
     }
 }
 
+export class SeoChecks extends Component {
+    static template = "website.SeoChecks";
+    static components = {
+        CheckBox,
+    };
+    static props = {};
+
+    setup() {
+        this.website = useService("website");
+        this.seoContext = useState(seoContext);
+        this.state = useState({
+            altAttributes: this.getAltAttributes(),
+            checkingLinks: false,
+            checkingLink: false,
+            checkedLinks: false,
+            counterLinks: 0,
+            totalLinks: 0,
+            headingsScan: this.getHeadingsScan(),
+        });
+        this.imgUpdated = this.imgUpdated.bind(this);
+    }
+
+    imgUpdated(img) {
+        img.updated = true;
+        this.seoContext.updatedAlts = this.state.altAttributes.filter(img => img.updated);
+    }
+
+    getHeadingsScan() {
+        let ret = {
+            missingH1: false,
+            multipleH1: false,
+            misplacedH1: false,
+        }
+        const allHeadingsEls = Array.from(this.website.pageDocument.documentElement.querySelectorAll("#wrap h1,h2,h3,h4,h5,h6"));
+        const h1Els = allHeadingsEls.filter(heading => heading.tagName.toLowerCase() === "h1");
+        
+        if (h1Els.length === 0) {
+            // We must have a h1 tag
+            ret.missingH1 = true;
+        } else if(h1Els.length > 1) {
+            // We must have only one h1 tag
+            ret.multipleH1 = true;
+        }
+        if (allHeadingsEls.length && allHeadingsEls[0].tagName.toLowerCase() !== "h1") {
+            // The h1 tag must be at the top of the hierarchy
+            ret.misplacedH1 = true;
+        }
+        return ret;
+    }
+
+    getAltAttributes() {
+        const imageEls = this.website.pageDocument.documentElement.querySelectorAll("#wrap img");
+        const altAttributes = Array.from(imageEls).map((img, index) => {
+            return { 
+                id: index, 
+                src: img.getAttribute("src"), 
+                alt: (img.getAttribute("alt") || "").trim(), 
+                decorative: img.hasAttribute("aria-hidden") && img.getAttribute("aria-hidden") === "true",
+                updated: false,
+            };
+        }).filter( (img) => !img.decorative && img.alt == "")
+        return altAttributes;
+    }
+
+    linkClass(link) {
+        if (link.oldLink.trim() !== link.newLink.trim() && !link.broken) {
+            return "is-valid";
+        } else if (link.broken) {
+            return "is-invalid";
+        }
+        return "";
+    }
+
+    async modifyLink(link) {
+        this.state.checkingLink = true;
+        let broken = false;
+        try {
+            const response = await fetch(link.newLink, {
+                method: "GET",
+                mode: "no-cors",
+                referrerPolicy: "no-referrer",
+                credentials: "omit",
+            });
+            if (response.status == 404) {
+                broken = true;
+            }
+        } catch {
+            broken = true;
+        }
+        link.broken = broken;
+        this.state.checkingLink = false;
+    }
+
+    removeLink(link) {
+        link.newLink = "";
+        link.broken = false;
+        link.remove = true;
+    }
+
+    async getBrokenLinks() {
+        this.state.checkingLinks = true;
+        this.state.counterLinks = 0;
+        const links = [
+            ...new Set(
+                Array.from(this.website.pageDocument.documentElement.querySelectorAll("a[href]"))
+                    .filter((a) => a.href !== "" && a.href.startsWith("http"))
+                    .map(({ href }) => {
+                        const hashIndex = href.indexOf("#");
+                        const cleanedUrl = hashIndex !== -1 ? href.substring(0, hashIndex) : href;
+                        return cleanedUrl;
+                    })
+            ),
+        ];
+        this.state.totalLinks = links.length;
+        const brokenLinks = [];
+        const promises = links.map(async (url) => {
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    mode: "no-cors",
+                    referrerPolicy: "no-referrer",
+                    credentials: "omit",
+                });
+                if (response.status === 404) {
+                    brokenLinks.push(url);
+                }
+                // eslint-disable-next-line no-unused-vars
+            } catch (error) {
+                brokenLinks.push(url);
+            }
+            this.state.counterLinks++;
+        });
+        await Promise.all(promises);
+        this.state.checkingLinks = false;
+        this.state.checkedLinks = true;
+        this.seoContext.brokenLinks = brokenLinks.map((link) => {
+            return { oldLink: link, newLink: link, broken: true, remove: false };
+        });
+    }
+}
+
 export class OptimizeSEODialog extends Component {
     static template = "website.OptimizeSEODialog";
     static components = {
@@ -376,6 +735,7 @@ export class OptimizeSEODialog extends Component {
         TitleDescription,
         ImageSelector,
         MetaKeywords,
+        SeoChecks,
     };
     static props = {
         close: Function,
@@ -392,8 +752,9 @@ export class OptimizeSEODialog extends Component {
         this.contentClass = "oe_seo_configuration";
 
         onWillStart(async () => {
-            const { metadata: { mainObject, seoObject, path } } = this.website.currentWebsite;
-
+            const {
+                metadata: {  mainObject, seoObject, path },
+            } = this.website.currentWebsite;
             this.object = seoObject || mainObject;
             this.data = await rpc('/website/get_seo_data', {
                 'res_id': this.object.id,
@@ -437,9 +798,9 @@ export class OptimizeSEODialog extends Component {
     getImages() {
         const imageEls = this.pageDocumentElement.querySelectorAll('#wrap img');
         return [...new Set(Array.from(imageEls)
-                .filter(img => img.naturalHeight > 200 && img.naturalWidth > 200)
-                .map(({src}) => (src))
-            )];
+            .filter(img => img.naturalHeight > 200 && img.naturalWidth > 200)
+            .map(({ src }) => (src))
+        )];
     }
 
     getMeta({ name, property }) {
@@ -483,6 +844,36 @@ export class OptimizeSEODialog extends Component {
                 'website_id': this.website.currentWebsite.id,
             },
         });
-        this.website.goToWebsite({path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName)});
+
+        const rpcCalls = [];
+        if (
+            seoContext.brokenLinks &&
+            seoContext.brokenLinks.some(
+                (link) => link.oldLink !== link.newLink || link.remove === true
+            )
+        ) {
+            rpcCalls.push(
+                rpc("/website/update_broken_links", {
+                    res_id: this.object.id,
+                    res_model: this.object.model,
+                    links: seoContext.brokenLinks,
+                })
+            );
+        }
+        if (seoContext.updatedAlts && seoContext.updatedAlts.length > 0) {
+            rpcCalls.push(
+                rpc("/website/update_alt_images", {
+                    res_id: this.object.id,
+                    res_model: this.object.model,
+                    imgs: seoContext.updatedAlts,
+                })
+            );
+        }
+
+        await Promise.all(rpcCalls);
+
+        this.website.goToWebsite({
+            path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName),
+        });
     }
 }

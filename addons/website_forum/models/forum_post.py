@@ -25,6 +25,9 @@ class Post(models.Model):
     ]
     _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
 
+    def _editable_fields(self):
+        return ['content']
+
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     content = fields.Html('Content', strip_style=True)

@@ -40,6 +40,9 @@ class ProductTemplate(models.Model):
             return 10000
         return max_sequence + 5
 
+    def _editable_fields(self):
+        return ['website_description', 'description_ecommerce']
+
     #=== FIELDS ===#
 
     website_description = fields.Html(

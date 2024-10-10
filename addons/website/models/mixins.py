@@ -32,6 +32,14 @@ class SeoMetadata(models.AbstractModel):
         for record in self:
             record.is_seo_optimized = record.website_meta_title and record.website_meta_description and record.website_meta_keywords
 
+    def _editable_fields(self):
+        """ Provide the editable HTML fields in the model inheriting this mixin
+
+        :returns:       A list of editable fields.
+        """
+        # TO OVERRIDE
+        return []
+
     def _default_website_meta(self):
         """ This method will return default meta information. It return the dict
             contains meta property as a key and meta content as a value.

@@ -35,6 +35,9 @@ class Event(models.Model):
         })
         return res
 
+    def _editable_fields(self):
+        return ['description']
+
     # description
     subtitle = fields.Char('Event Subtitle', translate=True)
     # registration

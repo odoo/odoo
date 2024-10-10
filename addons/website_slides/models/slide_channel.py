@@ -310,6 +310,9 @@ class Channel(models.Model):
     def _get_default_enroll_msg(self):
         return _('Contact Responsible')
 
+    def _editable_fields(self):
+        return ['description', 'description_short', 'description_html', 'enroll_msg']
+
     # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True, tracking=100)
