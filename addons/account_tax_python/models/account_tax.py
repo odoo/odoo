@@ -66,7 +66,7 @@ class AccountTaxPython(models.Model):
         amount_type = tax_data['amount_type']
         if amount_type == 'code':
             tax = self.browse(tax_data['id'])
-            raw_base = (evaluation_context['quantity'] * evaluation_context['price_unit']) + evaluation_context['extra_base']
+            raw_base = evaluation_context['raw_price'] + evaluation_context['extra_base']
             local_dict = {**evaluation_context, 'base_amount': raw_base}
             json.dumps(local_dict) # Ensure it contains only json serializable data (security).
             try:
