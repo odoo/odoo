@@ -77,6 +77,20 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.clickValidate(),
             Order.hasLine({ customerNote: "Test customer note" }),
             ReceiptScreen.clickNextOrder(),
+
+            // Test discount and original price
+            ProductScreen.addOrderline("Desk Pad", "2", "10"),
+            ProductScreen.pressNumpad("% Disc"),
+            ProductScreen.modeIsActive("% Disc"),
+            ProductScreen.pressNumpad("5", "."),
+            ProductScreen.selectedOrderlineHas("Desk Pad", "2", "19"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            Order.hasLine({ productName: "Desk Pad", priceNoDiscount: "10" }),
+            ReceiptScreen.totalAmountContains("19.00"),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 
