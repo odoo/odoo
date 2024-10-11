@@ -505,9 +505,12 @@ class MailMail(models.Model):
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
         for values in mail_values:
+            # protect against ill-formatted email_from when formataddr was used on an already formatted email
+            emails_from = tools.email_split_and_format(values['email_from'])
+            email_from = emails_from[0] if emails_from else values['email_from']
             mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
             alias_domain_id = values['record_alias_domain_id'][0] if values['record_alias_domain_id'] else False
-            key = (mail_server_id, alias_domain_id, values['email_from'])
+            key = (mail_server_id, alias_domain_id, email_from)
             group_per_email_from[key].append(values['id'])
 
         # Then find the mail server for each email_from and group the <mail.mail>
