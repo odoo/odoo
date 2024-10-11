@@ -291,11 +291,6 @@ class AccountMoveLine(models.Model):
         string="Account Root",
         depends_context='company',
     )
-    account_code = fields.Char(
-        related='account_id.code',
-        string="Account Code",
-        depends_context='company',
-    )
     product_category_id = fields.Many2one(related='product_id.product_tmpl_id.categ_id')
 
     # ==============================================================================================

@@ -2904,13 +2904,16 @@ class BaseModel(metaclass=MetaModel):
         assert field.related and not field.store
         if not (self.env.su or field.compute_sudo or field.inherited):
             raise ValueError(f'Cannot convert {field} to SQL because it is not a sudoed related or inherited field')
+        return self.sudo(self.env.su or field.compute_sudo)._traverse_many2one_sql(alias, field.related, query)
 
-        model = self.sudo(self.env.su or field.compute_sudo)
-        *path_fnames, last_fname = field.related.split('.')
+    def _traverse_many2one_sql(self, alias: str, field_path: str, query: Query, sudo: bool = True):
+        *path_fnames, last_fname = field_path.split('.')
+
+        model = self
         for path_fname in path_fnames:
             path_field = model._fields[path_fname]
             if path_field.type != 'many2one':
-                raise ValueError(f'Cannot convert {field} (related={field.related}) to SQL because {path_fname} is not a Many2one')
+                raise ValueError(f'Cannot convert field path {field_path} to SQL because {path_fname} is not a Many2one')
 
             comodel = model.env[path_field.comodel_name]
             coalias = query.make_alias(alias, path_fname)
@@ -2952,6 +2955,10 @@ class BaseModel(metaclass=MetaModel):
 
         if field.type == 'properties' and property_name:
             return SQL("%s -> %s", self._field_to_sql(alias, fname, query, flush), property_name)
+
+        if field.type == 'many2one' and property_name:
+            model, field, alias = self._traverse_many2one_sql(alias, f"{fname}.{property_name}", query)
+            return model._field_to_sql(alias, field.name, query)
 
         if property_name:
             fname = f"{fname}.{property_name}"
