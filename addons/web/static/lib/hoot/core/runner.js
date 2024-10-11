@@ -37,7 +37,7 @@ import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag } from "./tag";
 import { Test, testError } from "./test";
-import { createUrlFromId, EXCLUDE_PREFIX, setParams, urlParams } from "./url";
+import { EXCLUDE_PREFIX, createUrlFromId, setParams, urlParams } from "./url";
 
 /**
  * @typedef {{
@@ -1214,8 +1214,8 @@ export class Runner {
      * @param {Job} job
      */
     _applyTagModifiers(job) {
-        let skip = false;
-        let ignoreSkip = false;
+        let shouldSkip = false;
+        let [ignoreSkip] = this._getExplicitIncludeStatus(job);
         for (const tag of job.tags) {
             this.tags.set(tag.name, tag);
             switch (tag.name) {
@@ -1243,7 +1243,7 @@ export class Runner {
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
-                    skip = true;
+                    shouldSkip = true;
                     break;
                 case Tag.TODO:
                     job.config.todo = true;
@@ -1251,12 +1251,12 @@ export class Runner {
             }
         }
 
-        if (skip) {
+        if (shouldSkip) {
             if (ignoreSkip) {
                 logger.warn(
-                    `test ${stringify(
+                    `${stringify(
                         job.fullName
-                    )} is explicitly included but marked as skipped: "skip" modifier has been ignored`
+                    )} is marked as skipped but explicitly included: "skip" modifier has been ignored`
                 );
             } else {
                 job.config.skip = true;
