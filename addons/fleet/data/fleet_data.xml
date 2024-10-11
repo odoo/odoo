@@ -5,10 +5,11 @@
             <field name="name">Fleet: Generate contracts costs based on costs frequency</field>
             <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
             <field name="state">code</field>
-            <field name="code">model.run_scheduler()</field>
+            <field name="code">model.scheduler_manage_contract_expiration()</field>
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
+            <field name="priority">5</field>
         </record>
 
         <record id="fleet_vehicle_state_new_request" model="fleet.vehicle.state">
