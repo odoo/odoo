@@ -1153,17 +1153,38 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
         }
 
         &.s_carousel_indicators_numbers {
-            flex-wrap: wrap;
+            justify-content: start;
             height: auto;
             counter-reset: numberList;
+            overflow: auto;
+            transition: scrollbar-color .2s ease-in-out; // $transition-base duration & bezier
+            scrollbar-color: var(--IndicatorsNumbers__Scrollbar-color, #{rgba($carousel-indicator-active-bg, .15)}) transparent;
+            scrollbar-width: thin;
 
+            &::-webkit-scrollbar {
+                height: 6px;
+            }
+            &::-webkit-scrollbar-thumb {
+                border-radius: $btn-border-radius-sm;
+                background: var(--IndicatorsNumbers__Scrollbar-color, #{rgba($carousel-indicator-active-bg, .15)});
+            }
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            &:hover {
+                scrollbar-color: var(--IndicatorsNumbers__Scrollbar-color, #{$carousel-indicator-active-bg}) transparent;
+
+                &::-webkit-scrollbar-thumb {
+                    background: var(--IndicatorsNumbers__Scrollbar-color, $carousel-indicator-active-bg);
+                }
+            }
             button {
                 display: flex;
                 align-items: center;
-                gap: map-get($spacers, 1);
                 width: auto;
                 height: auto;
                 margin: 0;
+                border: 0;
                 padding: 0 map-get($spacers, 2) 0;
                 background: none;
                 color: $carousel-indicator-active-bg;
@@ -1172,24 +1193,30 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
                 &:hover {
                     opacity: 1;
                 }
-
                 &:before {
                     content: counter(numberList);
                     counter-increment: numberList;
                 }
+                &:after {
+                    display: block;
+                    width: 0;
+                    margin-left: map-get($spacers, 1);
+                    border-top: $border-width * 2 solid $carousel-indicator-active-bg;
+                    transition: width .2s ease-in-out; // $transition-base duration & bezier
+                    content: '';
+                }
+                &.active:after {
+                    width: map-get($spacers, 4);
+                }
 
-                @include media-breakpoint-up(md) {
-                    &:after {
-                        display: block;
-                        width: 0;
-                        border-top: $border-width * 2 solid $carousel-indicator-active-bg;
-                        transition: width .2s ease-in-out; // $transition-base duration & bezier
-                        content: '';
-                    }
-
-                    &.active:after {
-                        width: map-get($spacers, 4);
-                    }
+                // As flexbox's "safe" property (e.g. justify-content: safe center;) is not yet
+                // fully supported, this will maintain centered alignment with overflowing
+                // elements.
+                &:first-child {
+                    margin-left: auto;
+                }
+                &:last-child {
+                    margin-right: auto;
                 }
             }
         }
@@ -1206,6 +1233,12 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
             &:after {
                 border-color: $carousel-dark-indicator-active-bg;
             }
+        }
+
+        --IndicatorsNumbers__Scrollbar-color: #{rgba($carousel-dark-indicator-active-bg, .15)};
+
+        &:hover {
+            --IndicatorsNumbers__Scrollbar-color: #{$carousel-dark-indicator-active-bg};
         }
     }
 
