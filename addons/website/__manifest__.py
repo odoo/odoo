@@ -321,7 +321,6 @@
             'website/static/src/snippets/s_carousel_intro/options.js',
             'website/static/src/snippets/s_countdown/options.js',
             'website/static/src/snippets/s_countdown/options.xml',
-            'website/static/src/snippets/s_masonry_block/options.js',
             'website/static/src/snippets/s_popup/options.js',
             'website/static/src/snippets/s_chart/options.js',
             'website/static/src/snippets/s_rating/options.js',
@@ -430,7 +429,7 @@
         },
         'landing': {
             '0': ['s_cover'],
-            '1': ['s_banner', 's_features', 's_masonry_block', 's_call_to_action_digital', 's_references', 's_quotes_carousel'],
+            '1': ['s_banner', 's_features', 's_masonry_block_default_template', 's_call_to_action_digital', 's_references', 's_quotes_carousel'],
             '2': ['s_cover', 's_text_image', 's_text_block_h2', 's_three_columns', 's_call_to_action'],
             '3': ['s_text_cover', 's_text_block_h2', 's_three_columns', 's_showcase', 's_color_blocks_2', 's_quotes_carousel', 's_call_to_action'],
             '4': ['s_cover', 's_text_block_h2', 's_text_block', 's_text_block_h2_contact', 's_website_form'],
