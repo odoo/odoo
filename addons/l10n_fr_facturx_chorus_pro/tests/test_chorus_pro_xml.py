@@ -14,13 +14,13 @@ class TestChorusProXml(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.company = cls.company_data['company']
-        cls.company.siret = "02546465000024"
+        cls.company.company_registry = "02546465000024"
         chorus_eas, chorus_endpoint = CHORUS_PRO_PEPPOL_ID.split(":")
         cls.chorus_pro_partner = cls.env['res.partner'].create({
             'name': "Chorus Pro - Commune de Nantes",
             # Commune de Nantes
             'vat': "FR74214401093",
-            'siret': "21440109300015",
+            'company_registry': "21440109300015",
             # Peppol ID for the AIFE (= Chorus Pro)
             'peppol_eas': chorus_eas,
             'peppol_endpoint': chorus_endpoint,

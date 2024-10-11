@@ -32,9 +32,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if customer.peppol_eas and customer.peppol_endpoint and customer.peppol_eas + ":" + customer.peppol_endpoint == CHORUS_PRO_PEPPOL_ID:
             for role in ('supplier', 'customer'):
                 partner = vals[role].commercial_partner_id
-                if 'siret' in partner._fields and partner.siret and partner.country_code == 'FR':
+                if partner.company_registry and partner.country_code == 'FR':
                     vals['vals'][f'accounting_{role}_party_vals']['party_vals']['party_identification_vals'] = [{
-                        'id': partner.siret,
+                        'id': partner.company_registry,
                         'id_attrs': {'schemeName': 1},
                     }]
                 else:
@@ -48,8 +48,8 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         constraints = super()._export_invoice_constraints(invoice, vals)
         customer, supplier = vals['customer'].commercial_partner_id, vals['supplier']
         if customer.peppol_eas and customer.peppol_endpoint and customer.peppol_eas + ":" + customer.peppol_endpoint == CHORUS_PRO_PEPPOL_ID:
-            if 'siret' not in customer._fields or not customer.siret:
-                constraints['chorus_customer'] = _("The siret is mandatory for the customer when invoicing to Chorus Pro.")
-            if supplier.country_code == 'FR' and ('siret' not in supplier._fields or not supplier.siret):
-                constraints['chorus_supplier'] = _("The siret is mandatory for french suppliers when invoicing to Chorus Pro.")
+            if customer.company_registry:
+                constraints['chorus_customer'] = _("The company_registry is mandatory for the customer when invoicing to Chorus Pro.")
+            if supplier.company_registry:
+                constraints['chorus_supplier'] = _("The company_registry is mandatory for french suppliers when invoicing to Chorus Pro.")
         return constraints

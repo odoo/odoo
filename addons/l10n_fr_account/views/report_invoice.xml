@@ -2,18 +2,18 @@
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
         <xpath expr="(//address)[1]" position="after">
-            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.siret">
-                SIRET: <t t-esc="o.partner_id.commercial_partner_id.siret"/>
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.company_registry">
+                SIRET: <t t-esc="o.partner_id.commercial_partner_id.company_registry"/>
             </div>
         </xpath>
         <xpath expr="(//address)[2]" position="after">
-            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.siret">
-                SIRET: <t t-esc="o.partner_id.commercial_partner_id.siret"/>
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.company_registry">
+                SIRET: <t t-esc="o.partner_id.commercial_partner_id.company_registry"/>
             </div>
         </xpath>
         <xpath expr="(//address)[3]" position="after">
-            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.siret">
-                SIRET: <t t-esc="o.partner_id.commercial_partner_id.siret"/>
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.company_registry">
+                SIRET: <t t-esc="o.partner_id.commercial_partner_id.company_registry"/>
             </div>
         </xpath>
 
