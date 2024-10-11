@@ -3,6 +3,7 @@ import { onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { FormControllerWithHTMLExpander } from "@resource/views/form_with_html_expander/form_controller_with_html_expander";
+import { TodoFormCogMenu } from "./todo_form_cog_menu";
 
 /**
  *  The FormController is overridden to be able to manage the edition of the name of a to-do directly
@@ -10,6 +11,11 @@ import { FormControllerWithHTMLExpander } from "@resource/views/form_with_html_e
  */
 
 export class TodoFormController extends FormControllerWithHTMLExpander {
+    static components = {
+        ...FormControllerWithHTMLExpander.components,
+        CogMenu: TodoFormCogMenu,
+    };
+
     setup() {
         super.setup();
         onWillStart(async () => {
