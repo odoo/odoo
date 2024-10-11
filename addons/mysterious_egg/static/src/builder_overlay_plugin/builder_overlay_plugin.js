@@ -41,4 +41,8 @@ export class BuilderOverlayPlugin extends Plugin {
             },
         });
     }
+
+    destroy() {
+        registry.category("main_components").remove("BuilderOverlay");
+    }
 }
