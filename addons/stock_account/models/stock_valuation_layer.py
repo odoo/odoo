@@ -110,10 +110,10 @@ class StockValuationLayer(models.Model):
         if not self:
             return 0, 0
 
-        rounding = self.product_id.uom_id.rounding
         qty_to_take_on_candidates = qty_to_value
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in self:
+            rounding = candidate.product_id.uom_id.rounding
             if float_is_zero(candidate.quantity, precision_rounding=rounding):
                 continue
             candidate_quantity = abs(candidate.quantity)
