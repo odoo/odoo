@@ -2009,11 +2009,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                 'subject': f'TemplateSubject {record.name}',
                             },
                         )
-                        # to check behavior of extract_rfc2822_addresses
-                        if recipient == new_partner:
-                            smtp_to_list = ['test.to.1@test.example.com', 'test.to.1@test.example.com']
-                        else:
-                            smtp_to_list = [recipient.email_normalized]
+                        smtp_to_list = [recipient.email_normalized]
                         if exp_alias_domain == self.mail_alias_domain:
                             self.assertSMTPEmailsSent(
                                 smtp_from=f'{self.default_from}@{self.alias_domain}',
@@ -2196,23 +2192,12 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             elif recipient == new_partners[1]:
                 self.assertEqual(recipient, partner_multi_tofind)
                 smtp_to_list = ['find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com']
-            # FIXME: name being an email, extract_rfc2822 finds 2 emails
             elif recipient == new_partners[3]:
-                smtp_to_list = ['find.me.multi.2@test.example.com', 'find.me.multi.2@test.example.com']
+                smtp_to_list = ['find.me.multi.2@test.example.com']
             # bike@home: name is recognized as email
             elif recipient == new_partners[2]:
                 self.assertEqual(recipient, partner_at_tofind)
                 smtp_to_list = ['NotBike@Home', 'find.me.at@test.example.com']
-            # name being an email = 2 sent emails due to extract_rfc2822
-            elif recipient.name in [
-                'test.to.1@example.com',
-                'test.to.2@example.com',
-                'test.cc.1@example.com',
-                'test.cc.2@example.com',
-                'test.cc.2.2@example.com',
-                'test.cc.3@example.com',
-            ]:
-                smtp_to_list = [recipient.name, recipient.email_normalized]
             else:
                 smtp_to_list = [recipient.email_normalized]
             self.assertSMTPEmailsSent(
@@ -2924,11 +2909,7 @@ class TestComposerResultsMass(TestMailComposer):
                         },
                     )
                     for recipient in recipients:
-                        # to check behavior of extract_rfc2822_addresses
-                        if recipient == new_partner:
-                            smtp_to_list = ['test.to.1@test.example.com', 'test.to.1@test.example.com']
-                        else:
-                            smtp_to_list = [recipient.email_normalized]
+                        smtp_to_list = [recipient.email_normalized]
                         if exp_alias_domain == self.mail_alias_domain:
                             self.assertSMTPEmailsSent(
                                 smtp_from=f'{self.default_from}@{self.alias_domain}',
@@ -3242,23 +3223,12 @@ class TestComposerResultsMass(TestMailComposer):
                 elif recipient == new_partners[1]:
                     self.assertEqual(recipient, partner_multi_tofind)
                     smtp_to_list = ['find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com']
-                # name being an email = 2 sent emails due to extract_rfc2822
                 elif recipient == new_partners[3]:
-                    smtp_to_list = ['find.me.multi.2@test.example.com', 'find.me.multi.2@test.example.com']
+                    smtp_to_list = ['find.me.multi.2@test.example.com']
                 # bike@home: name is recognized as email
                 elif recipient == new_partners[2]:
                     self.assertEqual(recipient, partner_at_tofind)
                     smtp_to_list = ['NotBike@Home', 'find.me.at@test.example.com']
-                # name being an email = 2 sent emails due to extract_rfc2822
-                elif recipient.name in [
-                    'test.to.1@example.com',
-                    'test.to.2@example.com',
-                    'test.cc.1@example.com',
-                    'test.cc.2@example.com',
-                    'test.cc.2.2@example.com',
-                    'test.cc.3@example.com',
-                ]:
-                    smtp_to_list = [recipient.name, recipient.email_normalized]
                 else:
                     smtp_to_list = [recipient.email_normalized]
                 self.assertSMTPEmailsSent(
