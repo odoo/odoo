@@ -450,3 +450,25 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
     ]
 });
+
+registry.category("web_tour.tours").add('check_shop_wishlist_icon', {
+    test: true,
+    checkDelay: 250,
+    url: '/shop?&search=flipover',
+    steps: () => [
+        {
+            content: "check add to wishlist is diable or not",
+            trigger: '.o_add_wishlist:disabled',
+            isCheck: true,
+        },
+        {
+            content: "click on the product",
+            trigger: '.oe_product_cart',
+        },
+        {
+            content: "check value of wishlist",
+            trigger: ":not(.my_wish_quantity)",
+            isCheck: true,
+        },
+    ]
+})
