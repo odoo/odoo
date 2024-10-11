@@ -1,4 +1,4 @@
-import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 export function enterValue(keys) {
     return Numpad.enterValue(keys).map((step) => ({
