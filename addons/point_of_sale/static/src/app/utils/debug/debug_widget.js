@@ -162,6 +162,10 @@ export class DebugWidget extends Component {
                         continue;
                     }
 
+                    if (!order[rel.name] && (rel.local || rel.related || rel.compute)) {
+                        order[rel.name] = [];
+                    }
+
                     const existingRecords = model.getAllBy("id");
                     const records = order[rel.name]
                         .filter((rel) => !existingRecords[rel[2]])
