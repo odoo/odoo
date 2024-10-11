@@ -4,7 +4,6 @@ import {
     getClientActionUrl,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
-import { waitFor } from "@odoo/hoot-dom";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 const openPagePropertiesDialog = [
@@ -23,11 +22,17 @@ const openPagePropertiesDialog = [
     },
 ];
 
-const clickOnSaveButtonStep = {
-    content: "Click on Save & Close",
-    trigger: ".o_form_button_save:enabled",
-    run: "click",
-};
+const clickOnSaveButtonStep = [
+    {
+        content: "Click on Save & Close",
+        trigger:
+            ".modal:contains(page properties) .o_form_button_save:contains(save & close):enabled",
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
+];
 
 const openCreatePageDialog = [
     // FIXME: Needed to prevent a non-deterministic error when click too fast
@@ -43,28 +48,11 @@ const openCreatePageDialog = [
         trigger: 'a[title="New Page"]',
         run: "click",
     },
+    {
+        content: "check modal new page opens",
+        trigger: ".modal:contains(new page)",
+    },
 ];
-
-/**
- * FIXME: This should not be necessary
- * For when tour utils doesn't detect the DOM changes...
- * Seems to happen when watching for an element in the page template selection
- * modal that doesn't exist yet, then appears. I suspect the DOM changes to the
- * modal don't trigger a new search of the `trigger`.
- */
-function waitForSelector(selector) {
-    return [
-        {
-            content: `Wait for ${selector}`,
-            trigger: "body",
-            async run() {
-                return waitFor(selector, {
-                    timeout: 5000,
-                });
-            },
-        },
-    ];
-}
 
 function assertPageCanonicalUrlIs(url) {
     return [
@@ -78,31 +66,36 @@ function assertPageCanonicalUrlIs(url) {
 function checkIsTemplate(isTemplate, pageTitle = undefined) {
     return [
         ...openCreatePageDialog,
-        ...waitForSelector('a[data-id="custom"]'),
         {
             content: "Go to custom section",
-            trigger: 'a[data-id="custom"]',
+            trigger: '.modal:contains(new page) a[data-id="custom"]',
             run: "click",
         },
         ...(isTemplate
             ? [
                   {
                       content: `Verify template ${pageTitle} exists`,
-                      trigger: `:visible .o_page_template .o_page_name:text(${pageTitle})`,
+                      trigger: `:visible .o_page_template .o_page_name:contains(${pageTitle})`,
                   },
               ]
             : [
-                  ...waitForSelector(".o_website_page_templates_pane .alert-info"),
+                  {
+                      trigger: ".o_website_page_templates_pane .alert-info",
+                  },
                   {
                       content: `Verify custom templates section is empty`,
                       trigger: `.o_website_page_templates_pane:not(:has(.o_page_template))`,
                   },
-              ]
-        ),
+              ]),
         {
             content: "Exit dialog",
             trigger: ".modal-header .btn-close",
             run: "click",
+        },
+        {
+            content: "Close new content container",
+            trigger: "body",
+            run: "press Escape",
         },
     ];
 }
@@ -116,33 +109,43 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
         setup: [
             {
                 content: "Open Edit Menu dialog",
-                trigger: '.o_field_widget[name="is_in_menu"] + .btn-link',
+                trigger: '.o_field_widget[name="is_in_menu"] + .btn-link:contains(edit menu)',
                 run: "click",
             },
             {
                 content: "Check that menu editor was opened",
-                trigger: ".oe_menu_editor",
+                trigger: ".modal:contains(edit menu) .oe_menu_editor",
             },
             {
                 content: "Close Edit Menu dialog",
-                trigger: ".modal:has(.oe_menu_editor) .btn-close",
+                trigger: ".modal:contains(edit menu):has(.oe_menu_editor) .btn-close",
                 run: "click",
             },
             {
+                content: "check the modal is closed",
+                trigger: "body:not(:has(.modal:contains(edit menu):has(.oe_menu_editor))",
+            },
+            {
                 content: "Add to menu",
-                trigger: "#is_in_menu_0",
+                trigger: ".modal:contains(edit menu) #is_in_menu_0",
                 run: "check",
             },
             {
                 content: "Set as homepage",
-                trigger: "#is_homepage_0",
+                trigger: ".modal:contains(edit menu) #is_homepage_0",
                 run: "check",
             },
         ],
         check: [
             {
+                content: "Click on fa-plus if present in DOM (in case other menus already exists)",
+                isActive: [":iframe nav:has(.o_extra_menu_items)"],
+                trigger: ":iframe .o_extra_menu_items a",
+                run: "click",
+            },
+            {
                 content: "Verify is in menu",
-                trigger: `:visible :iframe #top_menu a[href="${modifiedUrl}"]`,
+                trigger: `:iframe #top_menu a[href="${modifiedUrl}"]`,
             },
             stepUtils.goToUrl(getClientActionUrl("/")),
             ...assertPageCanonicalUrlIs(modifiedUrl),
@@ -151,19 +154,19 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
         teardown: [
             {
                 content: "Remove from menu",
-                trigger: "#is_in_menu_0",
+                trigger: ".modal #is_in_menu_0",
                 run: "uncheck",
             },
             {
                 content: "Unset as homepage",
-                trigger: "#is_homepage_0",
+                trigger: ".modal #is_homepage_0",
                 run: "uncheck",
             },
         ],
         checkTorndown: [
             {
                 content: "Verify is not in menu",
-                trigger: `:visible :iframe #top_menu:not(:has(a[href="${url}"]))`,
+                trigger: `:iframe #top_menu:not(:has(a[href="${url}"]))`,
             },
             stepUtils.goToUrl(getClientActionUrl("/")),
             ...assertPageCanonicalUrlIs("/"),
@@ -174,11 +177,11 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
             return [
                 ...openPagePropertiesDialog,
                 ...this.setup,
-                clickOnSaveButtonStep,
+                ...clickOnSaveButtonStep,
                 ...this.check,
                 ...openPagePropertiesDialog,
                 ...this.teardown,
-                clickOnSaveButtonStep,
+                ...clickOnSaveButtonStep,
                 ...this.checkTorndown,
             ];
         },
@@ -187,7 +190,7 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
     if (canPublish) {
         steps.setup.push({
             content: "Publish",
-            trigger: "#is_published_0",
+            trigger: ".modal #is_published_0",
             run: "check",
         });
         steps.check.push({
@@ -196,7 +199,7 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
         });
         steps.teardown.push({
             content: "Unpublish",
-            trigger: "#is_published_0",
+            trigger: ".modal #is_published_0",
             run: "uncheck",
         });
         steps.checkTorndown.push({
@@ -257,12 +260,12 @@ function testWebsitePageProperties() {
             content: "Make it a template",
             trigger: "#is_new_page_template_0",
             run: "check",
-        },
+        }
     );
     steps.check.push(
         {
             content: "Verify page title",
-            trigger: ":visible :iframe head title:text(/Cool Page/)",
+            trigger: ":visible :iframe head title:contains(Cool Page)",
         },
         ...assertPageCanonicalUrlIs("/cool-page"),
         stepUtils.goToUrl(getClientActionUrl("/new-page")),
@@ -271,22 +274,23 @@ function testWebsitePageProperties() {
             content: "Verify no index",
             trigger: ':visible :iframe head meta[name="robots"][content="noindex"]',
         },
-        ...checkIsTemplate(true, "Cool Page"),
+        ...checkIsTemplate(true, "Cool Page")
     );
     steps.teardown.unshift(
         {
             content: "Reset page title",
-            trigger: "#name_0",
-            run: `edit New Page`,
+            trigger: ".modal:contains(page properties) #name_0",
+            run: `edit New Page && press Tab`,
         },
         {
             content: `Change url back to /new-page`,
-            trigger: "#url_0",
-            run: `edit new-page && press Enter`,
+            trigger: ".modal:contains(page properties) #url_0",
+            run: `edit new-page && press Tab`,
         },
         {
             content: "Open dependencies link",
-            trigger: '[data-bs-html="true"][title="Dependencies"] a',
+            trigger:
+                '.modal:contains(page properties) [data-bs-html="true"][title="Dependencies"] a',
             run: "click",
         },
         {
@@ -295,29 +299,29 @@ function testWebsitePageProperties() {
         },
         {
             content: "Reset date published",
-            trigger: "#date_publish_0",
+            trigger: ".modal:contains(page properties) #date_publish_0",
             run: "edit ",
         },
         {
             content: "Do index",
-            trigger: "#website_indexed_0",
+            trigger: ".modal:contains(page properties) #website_indexed_0",
             run: "check",
         },
         {
             content: "Make visibility Public",
-            trigger: "#visibility_0",
+            trigger: ".modal:contains(page properties) #visibility_0",
             run: 'select ""',
         },
         {
             content: "Remove from templates",
-            trigger: "#is_new_page_template_0",
+            trigger: ".modal:contains(page properties) #is_new_page_template_0",
             run: "uncheck",
-        },
+        }
     );
     steps.checkTorndown.push(
         {
             content: "Verify page title",
-            trigger: ":visible :iframe head title:text(/New Page/)",
+            trigger: ":visible :iframe head title:contains(New Page)",
         },
         ...assertPageCanonicalUrlIs("/new-page"),
         stepUtils.goToUrl(getClientActionUrl("/new-page")),
@@ -326,7 +330,7 @@ function testWebsitePageProperties() {
             content: "Verify is indexed",
             trigger: ':visible :iframe head:not(:has(meta[name="robots"][content="noindex"]))',
         },
-        ...checkIsTemplate(false),
+        ...checkIsTemplate(false)
     );
     return steps;
 }
@@ -337,7 +341,7 @@ registerWebsitePreviewTour(
         test: true,
         url: "/test_view",
     },
-    () => [...testCommonProperties("/test_view", false).finalize()],
+    () => [...testCommonProperties("/test_view", false).finalize()]
 );
 
 registerWebsitePreviewTour(
@@ -346,7 +350,7 @@ registerWebsitePreviewTour(
         test: true,
         url: "/test_website/model_item/1",
     },
-    () => [...testCommonProperties("/test_website/model_item/1", true).finalize()],
+    () => [...testCommonProperties("/test_website/model_item/1", true).finalize()]
 );
 
 registerWebsitePreviewTour(
@@ -354,6 +358,7 @@ registerWebsitePreviewTour(
     {
         test: true,
         url: "/",
+        checkDelay: 150,
     },
     () => [
         ...openCreatePageDialog,
@@ -364,25 +369,26 @@ registerWebsitePreviewTour(
         },
         {
             content: "Name page",
-            trigger: ".modal-body input",
-            run: "edit New Page",
+            trigger: ".modal:not(.o_inactive_modal):contains(new page) .modal-body input",
+            run: "edit New Page && press Tab",
         },
         {
             content: "Don't add to menu",
-            trigger: ".modal-body .o_switch",
-            run: "click",
+            trigger: ".modal:not(.o_inactive_modal):contains(new page) .modal-body .o_switch",
+            run: "uncheck",
         },
         {
             content: "Click on Create button",
-            trigger: ".modal-footer .btn-primary",
+            trigger: ".modal:not(.o_inactive_modal):contains(new page) button:contains(create)",
             run: "click",
         },
         {
             content: "Wait for editor to open",
             trigger: ".o_website_navbar_hide",
+            timeout: 20000,
         },
         ...clickOnSave(),
         stepUtils.waitIframeIsReady(),
         ...testWebsitePageProperties().finalize(),
-    ],
+    ]
 );
