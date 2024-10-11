@@ -1911,7 +1911,7 @@ class IrModelConstraint(models.Model):
             message = cons.message
             if not isinstance(message, str) or not message:
                 message = None
-            typ = 'f' if isinstance(cons, models.Constraint) and cons._type == 'FK' else 'u'
+            typ = 'u'
             record = self._reflect_constraint(model, conname, typ, definition, module, message)
             xml_id = '%s.constraint_%s' % (module, conname)
             if record:
