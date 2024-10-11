@@ -1005,25 +1005,6 @@ export function getNodeText(node, options) {
 }
 
 /**
- * Returns the parent `<iframe>` of a given node (if any).
- *
- * @param {Node} node
- * @returns {HTMLIFrameElement | null}
- */
-export function getParentFrame(node) {
-    const nodeDocument = node.ownerDocument;
-    const view = nodeDocument.defaultView;
-    if (view !== view.parent) {
-        for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
-            if (iframe.contentDocument === nodeDocument) {
-                return iframe;
-            }
-        }
-    }
-    return null;
-}
-
-/**
  * @template {Node} T
  * @param {T} node
  * @returns {T extends Element ? CSSStyleDeclaration : null}
@@ -1385,6 +1366,25 @@ export function getNextFocusableElement(options) {
     const focusableEls = getFocusableElements(parent, options);
     const index = focusableEls.indexOf(getActiveElement(parent));
     return focusableEls[index + 1] || null;
+}
+
+/**
+ * Returns the parent `<iframe>` of a given node (if any).
+ *
+ * @param {Node} node
+ * @returns {HTMLIFrameElement | null}
+ */
+export function getParentFrame(node) {
+    const nodeDocument = node.ownerDocument;
+    const view = nodeDocument.defaultView;
+    if (view !== view.parent) {
+        for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
+            if (iframe.contentDocument === nodeDocument) {
+                return iframe;
+            }
+        }
+    }
+    return null;
 }
 
 /**
