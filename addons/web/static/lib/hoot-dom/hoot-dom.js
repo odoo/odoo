@@ -22,6 +22,7 @@ export {
     getActiveElement,
     getFocusableElements,
     getNextFocusableElement,
+    getParentFrame,
     getPreviousFocusableElement,
     isDisplayed,
     isEditable,
