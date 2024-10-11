@@ -385,8 +385,11 @@ class MailMail(models.Model):
         # First group the <mail.mail> per mail_server_id and per email_from
         group_per_email_from = defaultdict(list)
         for values in mail_values:
+            # protect against ill-formatted email_from when formataddr was used on an already formatted email
+            emails_from = tools.email_split_and_format(values['email_from'])
+            email_from = emails_from[0] if emails_from else values['email_from']
             mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
-            group_per_email_from[(mail_server_id, values['email_from'])].append(values['id'])
+            group_per_email_from[mail_server_id, email_from].append(values['id'])
 
         # Then find the mail server for each email_from and group the <mail.mail>
         # per mail_server_id and smtp_from
@@ -399,7 +402,7 @@ class MailMail(models.Model):
             else:
                 smtp_from = email_from
 
-            group_per_smtp_from[(mail_server_id, smtp_from)].extend(mail_ids)
+            group_per_smtp_from[mail_server_id, smtp_from].extend(mail_ids)
 
         sys_params = self.env['ir.config_parameter'].sudo()
         batch_size = int(sys_params.get_param('mail.session.batch.size', 1000))

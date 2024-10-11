@@ -1549,10 +1549,10 @@ class TestComposerResultsComment(TestMailComposer):
                 smtp_from=f'{self.alias_bounce}@{self.alias_domain}',
                 smtp_to_list=smtp_to_list,
                 mail_server=self.mail_server_domain,
-                # FIXME: email_from of smtp still multi-email with a weird format
+                # msg_from takes only first found normalized email to make a valid email_from
                 message_from=formataddr(
                     (self.user_employee.name,
-                    'email.from.1@test.mycompany.com>,email.from.2@test.mycompany.com',
+                    'email.from.1@test.mycompany.com',
                 )),
                 # similar envelope, assert_email_sent_smtp cannot distinguish
                 # records (would have to dive into content, too complicated)
@@ -2171,10 +2171,10 @@ class TestComposerResultsMass(TestMailComposer):
                     smtp_from=f'{self.alias_bounce}@{self.alias_domain}',
                     smtp_to_list=smtp_to_list,
                     mail_server=self.mail_server_domain,
-                    # FIXME: email_from of smtp still multi-email with a weird format
+                    # msg_from takes only first found normalized email to make a valid email_from
                     message_from=formataddr(
                         (self.user_employee.name,
-                        'email.from.1@test.mycompany.com>,email.from.2@test.mycompany.com',
+                        'email.from.1@test.mycompany.com',
                     )),
                     # similar envelope, assert_email_sent_smtp cannot distinguish
                     # records (would have to dive into content, too complicated)
