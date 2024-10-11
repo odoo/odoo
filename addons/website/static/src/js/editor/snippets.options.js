@@ -2105,6 +2105,22 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         carouselEl.classList.toggle("s_carousel_controllers_hidden", areControllersHidden);
     },
 
+    /**
+     * Toggle card images.
+     */
+    toggleCardImg(previewMode, widgetValue, params) {
+        const carouselEl = this.$target[0].closest(".carousel");
+        if (widgetValue) {
+            const cardEls = carouselEl.querySelectorAll(".card");
+            for (const cardEl of cardEls) {
+                const imageWrapperEl = renderToElement("website.s_carousel_cards.imageWrapper");
+                cardEl.insertAdjacentElement("afterbegin", imageWrapperEl);
+            }
+        } else {
+            carouselEl.querySelectorAll("figure").forEach(el => el.remove());
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

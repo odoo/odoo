@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel_cards" name="Carousel Cards">
+    <section class="s_carousel_cards_wrapper pt64 pb64">
+        <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
+        <div t-attf-id="myCarouselCards{{uniq}}" class="s_carousel_cards s_carousel_cards_with_img s_carousel_boxed container carousel carousel-fade slide" data-bs-interval="10000" data-bs-ride="true" data-option-name="CarouselCards" style="--card-img-size-h: 60%; --CardBody-extra-height: 0px;">
+            <!-- Content -->
+            <div class="carousel-inner rounded">
+                <!-- #01 -->
+                <div class="s_carousel_cards_item carousel-item active p-0" data-name="Slide">
+                    <div class="s_card s_carousel_cards_card card o_colored_level o_cc o_cc4 o_card_img_horizontal flex-lg-row w-100 m-0 border-0 rounded-0" data-vxml="001" data-snippet="s_card">
+                        <figure class="o_card_img_wrapper mb-0">
+                            <img class="o_card_img h-100" src="/web/image/website.s_carousel_cards_default_image_1" alt=""/>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title">Slide title</h3>
+                            <p class="card-text">A card is a flexible and extensible content container. It includes colors and powerful display options.</p>
+                            <a href="#" class="btn btn-secondary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="s_carousel_cards_item carousel-item p-0" data-name="Slide">
+                    <div class="s_card s_carousel_cards_card card o_colored_level o_cc o_cc5 o_card_img_horizontal flex-lg-row w-100 m-0 border-0 rounded-0" data-vxml="001" data-snippet="s_card">
+                        <figure class="o_card_img_wrapper mb-0">
+                            <img class="o_card_img h-100" src="/web/image/website.s_carousel_cards_default_image_2" alt=""/>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title">Slide title</h3>
+                            <p class="card-text">A card is a flexible and extensible content container. It includes colors and powerful display options.</p>
+                            <a href="#" class="btn btn-secondary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="s_carousel_cards_item carousel-item p-0" data-name="Slide">
+                    <div class="s_card s_carousel_cards_card card o_colored_level o_cc o_cc4 o_card_img_horizontal flex-lg-row w-100 m-0 border-0 rounded-0" data-vxml="001" data-snippet="s_card">
+                        <figure class="o_card_img_wrapper mb-0">
+                            <img class="o_card_img h-100" src="/web/image/website.s_carousel_cards_default_image_3" alt=""/>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title">Slide title</h3>
+                            <p class="card-text">A card is a flexible and extensible content container. It includes colors and powerful display options.</p>
+                            <a href="#" class="btn btn-secondary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="o_horizontal_controllers position-absolute start-0 end-0 bottom-0 o_not_editable">
+                <div class="o_horizontal_controllers_row d-flex gap-3 justify-content-between flex-nowrap">
+                    <!-- Indicators -->
+                    <div class="s_carousel_indicators_dots carousel-indicators align-items-center flex-shrink-1 w-auto mb-0">
+                        <button type="button" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide-to="0" class="active"/>
+                        <button type="button" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide-to="1"/>
+                        <button type="button" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide-to="2"/>
+                    </div>
+                    <!-- Controls -->
+                    <div class="o_arrows_wrapper gap-2 align-items-center w-auto p-0">
+                        <button class="carousel-control-prev bottom-0 o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next bottom-0 o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide="next" role="img" aria-label="Next" title="Next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"/>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="snippet_options_carousel_cards" inherit_id="website.snippet_options_carousel_bottom_controllers" primary="True">
+    <xpath expr="//div" position="attributes">
+        <attribute name="data-target">.s_carousel_cards</attribute>
+        <attribute name="data-exclude"/>
+        <attribute name="data-js">Carousel</attribute>
+    </xpath>
+    <xpath expr="(//we-select)[3]" position="after">
+        <we-checkbox string="Images"
+            data-select-class="s_carousel_cards_with_img"
+            data-toggle-card-img="true"
+            data-no-preview="true"
+            data-name="toggle_card_img_opt"/>
+        <we-button-group string="Position"
+            class="o_we_sublevel_1"
+            data-apply-to=".s_card"
+            data-dependencies="toggle_card_img_opt">
+            <we-button title="Left"
+                data-select-class="flex-lg-row"
+                data-img="/website/static/src/img/snippets_options/pos_left.svg"/>
+            <we-button title="Right"
+                data-select-class="flex-lg-row-reverse"
+                data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
+        </we-button-group>
+        <we-range string="Width"
+            class="o_we_sublevel_1"
+            data-dependencies="toggle_card_img_opt"
+            title="Adjust the image width"
+            data-select-style="0"
+            data-css-property="--card-img-size-h"
+            data-unit="%"
+            t-att-data-min="10"
+            t-att-data-max="75"
+            t-att-data-step="5"
+            data-display-range-value="true"
+            data-display-range-value-unit="%"/>
+        <we-range string="Extra height"
+            title="Add extra height to cards"
+            data-select-style="0"
+            data-css-property="--CardBody-extra-height"
+            data-unit="px"
+            t-att-data-min="0"
+            t-att-data-max="500"
+            t-att-data-step="10"
+            data-display-range-value="true"
+            data-display-range-value-unit="px"/>
+    </xpath>
+    <xpath expr="//div[@data-js='Carousel']" position="after">
+        <div data-js="Box" data-selector="section" data-target=".s_carousel_cards">
+            <t t-call="website.snippet_options_border_widgets">
+                <t t-set="apply_to" t-valuef=".carousel-inner"/>
+            </t>
+            <we-button-group string="Shadow"
+                data-shadow-class="shadow"
+                t-att-data-variable="shadow_variable"
+                data-apply-to=".carousel-inner">
+                <we-button data-set-shadow="">None</we-button>
+                <we-button data-set-shadow="outset"
+                        data-img="/website/static/src/img/snippets_options/shadow_out.svg"
+                        data-name="shadow_active_opt"
+                        title="Outset"/>
+            </we-button-group>
+            <we-multi data-css-property="box-shadow"
+                data-dependencies="shadow_active_opt"
+                t-att-data-variable="shadow_variable"
+                data-apply-to=".carousel-inner">
+                <we-colorpicker string="Color" class="o_we_sublevel_1" data-select-style="" data-css-compatible=""/>
+                <we-row string="Offset (X, Y)" class="o_we_sublevel_1">
+                    <we-input data-select-style="" data-unit="px"/>
+                    <we-input data-select-style="" data-unit="px"/>
+                </we-row>
+                <we-input string="Blur" class="o_we_sublevel_1" data-select-style="" data-unit="px"/>
+                <we-input string="Spread" class="o_we_sublevel_1" data-select-style="" data-unit="px"/>
+                <!-- Inset parameter always hidden (as controlled above) but needed -->
+                <!-- for the we-multi widget to work properly. -->
+                <we-checkbox data-name="fake_inset_shadow_opt" data-select-style="inset"/>
+            </we-multi>
+        </div>
+    </xpath>
+</template>
+
+<template id="s_carousel_cards_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='GridColumns']" position="after">
+        <t t-call="website.snippet_options_carousel_cards"/>
+    </xpath>
+    <xpath expr="." position="inside">
+        <t t-call="website.snippet_options_background_options">
+            <t t-set="selector" t-valuef="#{card_parent_handlers}"/>
+            <t t-set="target" t-value="'> .s_carousel_cards_card'"/>
+            <t t-set="with_colors" t-value="True"/>
+            <t t-set="with_images" t-value="True"/>
+            <t t-set="with_shapes" t-value="True"/>
+            <t t-set="with_color_combinations" t-value="True"/>
+            <t t-set="with_gradients" t-value="True"/>
+        </t>
+        <div data-js="CarouselCardsImageOptions" data-selector=".s_carousel_cards_item" data-target="> .s_carousel_cards_card">
+            <we-range
+                string="Image Alignment"
+                data-dependencies="toggle_card_img_opt"
+                data-select-style="0"
+                data-align-cover-image=""
+                data-css-property="--card-img-ratio-align"
+                data-unit="%"
+                data-min="0"
+                data-max="100"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_carousel_cards_000_scss" model="ir.asset">
+    <field name="name">Carousel Intro 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_carousel_cards/000.scss</field>
+</record>
+
+</odoo>

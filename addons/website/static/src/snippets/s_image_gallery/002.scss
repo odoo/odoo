@@ -310,7 +310,7 @@
         &.s_image_gallery_controllers_outside {
 
             .carousel-inner {
-                padding-bottom: $-o-carousel-controllers-size + map-get($spacers, 2);
+                padding-bottom: calc(#{$-o-carousel-controllers-size} + #{map-get($spacers, 2)});
             }
 
             .o_carousel_controllers {
@@ -330,7 +330,7 @@
 
             &:not(.s_image_gallery_indicators_hidden) {
                 .carousel-control-prev, .carousel-control-next {
-                    bottom: $-o-carousel-controllers-size + map-get($spacers, 2);
+                    bottom: calc(#{$-o-carousel-controllers-size} + #{map-get($spacers, 2)});
                 }
             }
 
