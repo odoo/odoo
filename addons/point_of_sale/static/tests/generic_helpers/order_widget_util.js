@@ -28,6 +28,7 @@ export function hasLine({
     comboParent,
     discount,
     oldPrice,
+    priceNoDiscount,
 } = {}) {
     let trigger = `.order-container .orderline${withClass}`;
     if (withoutClass) {
@@ -56,6 +57,9 @@ export function hasLine({
     }
     if (oldPrice) {
         trigger += `:has(.info-list .price-per-unit s:contains("${oldPrice}"))`;
+    }
+    if (priceNoDiscount) {
+        trigger += `:has(.info-list:contains("${priceNoDiscount}"))`;
     }
     const args = JSON.stringify(arguments[0]);
     return [
