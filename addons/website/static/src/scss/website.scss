@@ -840,6 +840,24 @@ table.table_desc tr td {
 $-o-carousel-indicators-dots-size: .75rem;
 $-o-carousel-controllers-size: map-get($spacers, 5);
 
+%o_horizontal_controllers {
+    @include media-breakpoint-up(md) {
+        .carousel-indicators {
+            position: relative;
+            min-width: 0;
+            margin: 0;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            position: relative;
+            width: auto;
+        }
+    }
+
+    .o_arrows_wrapper {
+        display: flex;
+    }
+}
+
 // This style is shared by old versions of carousels
 // 000 for s_carousel & 000 and 001 for s_quotes_carousel
 %old_s_carousel_variants {
@@ -1075,6 +1093,14 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
         .carousel-control-prev, .carousel-control-next {
             display: none;
         }
+    }
+
+    .o_horizontal_controllers {
+        @extend %o_horizontal_controllers;
+    }
+
+    &.s_carousel_arrows_hidden .o_horizontal_controllers .o_arrows_wrapper {
+        display: none;
     }
 
     // Content
@@ -1341,7 +1367,7 @@ $-transition-duration: 200ms;
         > a.dropdown-toggle {
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
-            
+
             &:not(.active) {
                 background-color: map-get($grays, '200');
             }
