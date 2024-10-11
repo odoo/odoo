@@ -1,6 +1,6 @@
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { patch } from "@web/core/utils/patch";
-import { onMounted, useState } from "@odoo/owl";
+import { useState } from "@odoo/owl";
 
 patch(ProductScreen.prototype, {
     /**
@@ -11,10 +11,6 @@ patch(ProductScreen.prototype, {
 
         this.uiState = useState({
             clicked: false,
-        });
-
-        onMounted(() => {
-            this.pos.addPendingOrder([this.pos.get_order().id]);
         });
     },
     get selectedOrderlineQuantity() {
