@@ -81,7 +81,7 @@
         "pos_self_order.assets_tests": [
             ("include", "point_of_sale.base_tests"),
             "pos_self_order/static/tests/**/*",
-            "point_of_sale/static/tests/tours/utils/numpad_util.js",
+            "point_of_sale/static/tests/generic_helpers/numpad_util.js",
         ],
     },
     "license": "LGPL-3",
