@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from '@web/core/registry';
+import { isVisible } from "@web/core/utils/ui";
 import { getWysiwygClass } from 'web_editor.loader';
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
@@ -57,10 +58,14 @@ export const websiteService = {
 
         hotkey.add("escape", () => {
             // Toggle fullscreen mode when pressing escape.
-            if (!currentWebsiteId && !fullscreen) {
+            if (
+                (!currentWebsiteId && !fullscreen)
+                || (pageDocument && isVisible(pageDocument.querySelector(".modal")))
+            ) {
                 // Only allow to use this feature while on the website app, or
                 // while it is already fullscreen (in case you left the website
-                // app in fullscreen mode, thanks to CTRL-K).
+                // app in fullscreen mode, thanks to CTRL-K), or if a modal
+                // is open within the preview and could be closed with escape.
                 return;
             }
             fullscreen = !fullscreen;
