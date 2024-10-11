@@ -9,8 +9,8 @@
                 <button type="button"  t-on-click="() => {}" class="btn btn-secondary fa fa-repeat" t-att-disabled="!state.canRedo"/>
             </div>
             <div class="d-flex">
-                <button type="button"  t-on-click="() => {}" class="btn btn-secondary" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
-                <button type="button" t-on-click="() => {}" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
+                <button type="button"  t-on-click="discard" class="btn btn-secondary" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
+                <button type="button" t-on-click="save" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
             </div>
         </div>
         <div>
