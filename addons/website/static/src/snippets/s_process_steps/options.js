@@ -107,24 +107,37 @@ options.registry.StepsConnector = options.Class.extend({
             const nextStepOffset = this._getClassSuffixedInteger(stepsEls[i + 1], 'offset-lg-');
             const stepPaddingTop = this._getClassSuffixedInteger(stepsEls[i], 'pt');
             const nextStepPaddingTop = this._getClassSuffixedInteger(stepsEls[i + 1], 'pt');
+            const stepHeightDifference = stepPaddingTop - nextStepPaddingTop;
+            this.hCurrentStepIconHeight = stepMainElementRect.height / 2;
+            this.hNextStepIconHeight = nextStepMainElementRect.height / 2;
 
             connectorEl.style.left = `calc(50% + ${stepMainElementRect.width / 2}px + 16px)`;
-            connectorEl.style.height = `${stepMainElementRect.height}px`;
+            connectorEl.style.height = `${
+                stepMainElementRect.height + Math.abs(stepHeightDifference)
+            }px`;
             connectorEl.style.width = `calc(${100 * (stepSize / 2 + nextStepOffset + nextStepSize / 2) / stepSize}% - ${stepMainElementRect.width / 2}px - ${nextStepMainElementRect.width / 2}px - 32px)`;
+
+            const marginType = stepHeightDifference < 0 ? "marginBottom" : "marginTop";
+            connectorEl.style[marginType] = `${0 - Math.abs(stepHeightDifference)}px`;
 
             const isTheLastColOfRow = nbBootstrapCols <
                 colsInRow + stepSize + stepOffset + nextStepSize + nextStepOffset;
-            const isNextStepTooLow = stepMainElementRect.height + stepPaddingTop <
-                nextStepPaddingTop;
-            connectorEl.classList.toggle('d-none', isTheLastColOfRow || isNextStepTooLow);
+            connectorEl.classList.toggle("d-none", isTheLastColOfRow);
             colsInRow = isTheLastColOfRow ? 0 : colsInRow + stepSize + stepOffset;
             // When we are mobile view, the connector is not visible, here we
             // display it quickly just to have its size.
             connectorEl.style.display = 'block';
             const {height, width} = connectorEl.getBoundingClientRect();
             connectorEl.style.removeProperty('display');
+            if (type === "s_process_steps_connector_curved_arrow" && i % 2 === 0) {
+                connectorEl.style.transform = stepHeightDifference ? "unset" : "scale(1, -1)";
+            } else {
+                connectorEl.style.transform = "unset";
+            }
             connectorEl.setAttribute('viewBox', `0 0 ${width} ${height}`);
-            connectorEl.querySelector('path').setAttribute('d', this._getPath(type, width, height));
+            connectorEl
+                .querySelector("path")
+                .setAttribute("d", this._getPath(type, width, height, stepHeightDifference));
         }
     },
     /**
@@ -175,17 +188,52 @@ options.registry.StepsConnector = options.Class.extend({
      * @param {integer} height
      * @returns {string}
      */
-    _getPath(type, width, height) {
+    _getPath(type, width, height, stepHeightDifference) {
         const hHeight = height / 2;
         switch (type) {
             case 's_process_steps_connector_line': {
-                return `M 0 ${hHeight} L ${width} ${hHeight}`;
+                const verticalPaddingFactor = (Math.abs(stepHeightDifference) / 8);
+                if (stepHeightDifference >= 0) {
+                    return `M 0 ${stepHeightDifference + this.hCurrentStepIconHeight - verticalPaddingFactor} L ${width} ${
+                        this.hNextStepIconHeight + verticalPaddingFactor
+                    }`;
+                }
+                return `M 0 ${this.hCurrentStepIconHeight + verticalPaddingFactor} L ${width} ${
+                    this.hNextStepIconHeight - stepHeightDifference - verticalPaddingFactor}`;
             }
             case 's_process_steps_connector_arrow': {
-                return `M ${0.05 * width} ${hHeight} L ${0.95 * width - 6} ${hHeight}`;
+                // When someone plays with the y-axis, it adds the padding in
+                // multiple of 8px. so here we devide it by 8 to calculate the
+                // number of padding steps has been added.
+                const verticalPaddingFactor = (Math.abs(stepHeightDifference) / 8) * 1.5;
+                if (stepHeightDifference >= 0) {
+                    return `M ${0.05 * width} ${
+                        stepHeightDifference + this.hCurrentStepIconHeight - verticalPaddingFactor
+                    } L ${0.95 * width - 6} ${this.hNextStepIconHeight + verticalPaddingFactor}`;
+                }
+                return `M ${0.05 * width} ${
+                    this.hCurrentStepIconHeight + verticalPaddingFactor
+                } L ${0.95 * width - 6} ${
+                    Math.abs(stepHeightDifference) +
+                    this.hNextStepIconHeight -
+                    verticalPaddingFactor
+                }`;
             }
             case 's_process_steps_connector_curved_arrow': {
-                return `M ${0.05 * width} ${hHeight * 1.2} Q ${width / 2} ${hHeight * 1.8}, ${0.95 * width - 6} ${hHeight * 1.2}`;
+                if (stepHeightDifference == 0) {
+                    return `M ${0.05 * width} ${hHeight * 1.2} Q ${width / 2} ${hHeight * 1.8} ${0.95 * width - 6} ${hHeight * 1.2}`;
+                } else if (stepHeightDifference > 0) {
+                    return `M ${0.05 * width} ${
+                        stepHeightDifference + this.hCurrentStepIconHeight
+                    } Q ${width * 0.75} ${height * 0.75} ${0.5 * width - 6} ${hHeight} T ${
+                        0.95 * width - 6
+                    } ${this.hNextStepIconHeight}`;
+                }
+                return `M ${0.05 * width} ${this.hCurrentStepIconHeight} Q ${width * 0.75} ${
+                    height * 0.005
+                } ${0.5 * width - 6} ${hHeight} T ${0.95 * width - 6} ${
+                    Math.abs(stepHeightDifference) + this.hNextStepIconHeight
+                }`;
             }
         }
         return '';
