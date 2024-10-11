@@ -541,7 +541,11 @@ class ProductProduct(models.Model):
             positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
             product_ids = []
             if operator in positive_operators:
-                product_ids = list(self._search([('default_code', '=', name)] + domain, limit=limit, order=order))
+                product_ids = list(self._search(
+                    ['|', ('default_code', '=', name), ('name', '=', name)] + domain,
+                    limit=limit,
+                    order=order
+                ))
                 if not product_ids:
                     product_ids = list(self._search([('barcode', '=', name)] + domain, limit=limit, order=order))
             if not product_ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
