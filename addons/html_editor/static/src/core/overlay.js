@@ -18,6 +18,7 @@ export class EditorOverlay extends Component {
         getContainer: Function,
         history: Object,
         close: Function,
+        isOverlayOpen: Function,
 
         // Props from createOverlay
         positionOptions: { type: Object, optional: true },
@@ -91,7 +92,7 @@ export class EditorOverlay extends Component {
     getSelectionTarget() {
         const doc = this.props.editable.ownerDocument;
         const selection = doc.getSelection();
-        if (!selection || !selection.rangeCount) {
+        if (!selection || !selection.rangeCount || !this.props.isOverlayOpen()) {
             return null;
         }
         const inEditable = this.props.editable.contains(selection.anchorNode);

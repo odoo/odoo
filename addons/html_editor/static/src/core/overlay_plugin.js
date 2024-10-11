@@ -110,6 +110,7 @@ export class Overlay {
                     bus: this.bus,
                     getContainer: this.getContainer,
                     close: this.close.bind(this),
+                    isOverlayOpen: this.isOverlayOpen.bind(this),
                     history: {
                         enableObserver: this.plugin.dependencies.history.enableObserver,
                         disableObserver: this.plugin.dependencies.history.disableObserver,
@@ -127,6 +128,10 @@ export class Overlay {
         if (this._remove) {
             this._remove();
         }
+    }
+
+    isOverlayOpen() {
+        return this.isOpen;
     }
 
     updatePosition() {
