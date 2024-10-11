@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 import typing
 
 from odoo.tools import sql
@@ -77,7 +76,6 @@ class Constraint(TableObject):
 
     The definition of the constraint is used to `ADD CONSTRAINT` on the table.
     """
-    _FOREIGN_KEY_RE = re.compile(r'\sforeign\s+key\b.*', re.IGNORECASE)
 
     def __init__(
         self,
@@ -99,12 +97,6 @@ class Constraint(TableObject):
         self._definition = definition
         if message:
             self.message = message
-        if self._FOREIGN_KEY_RE.match(definition):
-            self._type = 'FK'
-        elif not definition:
-            self._type = 'VIRTUAL'
-        else:
-            self._type = 'CONSTRAINT'
 
     @property
     def definition(self):
@@ -122,10 +114,7 @@ class Constraint(TableObject):
             # constraint exists but its definition may have changed
             sql.drop_constraint(cr, model._table, conname)
 
-        if self._type == 'VIRTUAL':
+        if not definition:
             # virtual constraint (e.g. implemented by a custom index)
             model.pool.post_init(sql.check_index_exist, cr, conname)
-        elif self._type == "FK":
-            model.pool.post_init(sql.add_constraint, cr, model._table, conname, definition)
-        else:
-            model.pool.post_constraint(sql.add_constraint, cr, model._table, conname, definition)
+        model.pool.post_constraint(sql.add_constraint, cr, model._table, conname, definition)
