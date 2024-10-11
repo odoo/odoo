@@ -50,7 +50,7 @@ registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "Ensure custom snippet preview appeared in the dialog",
-        trigger: ":iframe .o_snippet_preview_wrap[data-snippet-id='s_banner'] section[data-name='Custom Banner']",
+        trigger: ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_banner_'] section[data-name='Custom Banner']",
     },
     {
         content: "Rename custom snippet",
@@ -69,7 +69,7 @@ registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "Click on the 'Bruce Banner' snippet",
-        trigger: ":iframe .o_snippet_preview_wrap[data-snippet-id='s_banner']:has(section[data-name='Bruce Banner'])",
+        trigger: ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_banner_']:has(section[data-name='Bruce Banner'])",
         run: "click",
     },
     {

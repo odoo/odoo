@@ -22,7 +22,13 @@ class TestSnippets(HttpCase):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
-        data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-type='snippet']/*[@data-snippet]")
+        data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]/*[@data-snippet]")
+
+        # FIXME targeting data-oe-snippet-key should be enough to find actual
+        # snippets, but the current xpath search for inner data-snippet too as
+        # it currently missing on some snippet (e.g. accordion?)
+        data_snippet_els = [el.getparent() for el in data_snippet_els]
+
         blacklist = [
             's_facebook_page',  # avoid call to external services (facebook.com)
             's_map',  # avoid call to maps.google.com
@@ -31,9 +37,9 @@ class TestSnippets(HttpCase):
             's_snippet_group',  # Snippet groups are not snippets
         ]
         snippets_names = ','.join({
-            f"{el.attrib['data-snippet']}:{el.getparent().attrib.get('data-o-group', '')}"
+            f"{el.attrib['data-oe-snippet-key']}:{el.attrib.get('data-o-group', '')}"
             for el in data_snippet_els
-            if el.attrib['data-snippet'] not in blacklist
+            if el.attrib['data-oe-snippet-key'] not in blacklist
         })
         snippets_names_encoded = url_encode({'snippets_names': snippets_names})
         path = url_encode({

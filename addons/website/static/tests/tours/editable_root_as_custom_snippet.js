@@ -33,7 +33,7 @@ registerWebsitePreviewTour("editable_root_as_custom_snippet", {
         trigger: ':iframe a[href="/"].nav-link.active',
     },
     ...clickOnEditAndWaitEditMode(),
-    ...insertSnippet({id: "s_title", name: "Custom Title", groupName: "Custom"}),
+    ...insertSnippet({customID: "s_title", name: "Custom Title", groupName: "Custom"}),
     {
         content: "Check that the custom snippet does not have branding",
         trigger: ':iframe #wrap .s_title.custom:not([data-oe-model]):not([data-oe-id]):not([data-oe-field]):not([data-oe-xpath])',
