@@ -12,13 +12,6 @@ patch(PosOrderline.prototype, {
         orderline.note = this.note;
         return orderline;
     },
-    get_line_diff_hash() {
-        if (this.getNote()) {
-            return this.id + "|" + this.getNote();
-        } else {
-            return "" + this.id;
-        }
-    },
     toggleSkipChange() {
         if (this.uiState.hasChange || this.skip_change) {
             this.setDirty();

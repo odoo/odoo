@@ -629,7 +629,7 @@ export class PosOrderline extends Base {
                 : "",
             discount: this.get_discount_str(),
             customerNote: this.get_customer_note() || "",
-            internalNote: this.getNote(),
+            internalNote: this.internalNotes(),
             comboParent: this.combo_parent_id?.get_full_product_name?.() || "",
             packLotLines: this.pack_lot_ids.map(
                 (l) =>
@@ -670,6 +670,20 @@ export class PosOrderline extends Base {
     }
     set_price_extra(price_extra) {
         this.price_extra = parseFloat(price_extra) || 0.0;
+    }
+    internalNotes() {
+        const allnotes = [];
+        const notesArray = this.note.split("\n");
+
+        for (const noteName of notesArray) {
+            const defaultNote = this.models["pos.note"].getAll().find(note => note.name === noteName);
+            if (defaultNote && noteName.trim()) {
+                allnotes.push({ id: 1, text: defaultNote.name, colorIndex: defaultNote.color });
+            } else if (noteName.trim()) {
+                allnotes.push({ id: 1, text: noteName, colorIndex: Math.floor(Math.random() * 11) });
+            }
+        }
+        return allnotes;
     }
     getNote() {
         return this.note || "";
