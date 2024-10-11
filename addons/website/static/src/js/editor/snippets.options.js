@@ -2105,6 +2105,23 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         carouselEl.classList.toggle("s_carousel_controllers_hidden", areControllersHidden);
     },
 
+    /**
+     * Toggle card images.
+     */
+    toggleCardImg(previewMode, widgetValue, params) {
+        const carouselEl = this.$target[0].closest(".carousel");
+        const currentImageWrapperEls = carouselEl.querySelectorAll("figure");
+        const cardEls = carouselEl.querySelectorAll(".card");
+        if (widgetValue) {
+            cardEls.forEach((cardEl) => {
+                const imageWrapperEl = renderToElement("website.s_carousel_cards.imageWrapper");
+                cardEl.insertAdjacentElement("afterbegin", imageWrapperEl);
+            });
+        } else {
+            currentImageWrapperEls.forEach((elt) => elt.remove());
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -4442,8 +4459,7 @@ options.registry.GalleryElement = options.Class.extend({
      * @see this.selectClass for parameters
      */
     position(previewMode, widgetValue, params) {
-        const carouselOptionName = "Carousel";
-        const optionName = this.$target[0].classList.contains("carousel-item") ? carouselOptionName
+        const optionName = this.$target[0].classList.contains("carousel-item") ? "Carousel"
             : "GalleryImageList";
         const itemEl = this.$target[0];
         this.trigger_up("option_update", {
