@@ -2768,7 +2768,7 @@ var SnippetsMenu = Widget.extend({
 
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
-                handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
+                handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging):not(.o_snippet_no_drag)',
                 cancel: '.oe_snippet.o_disabled',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
@@ -3448,7 +3448,7 @@ var SnippetsMenu = Widget.extend({
         const $textInput = $input.find('input');
         $textInput.focus();
         $textInput.select();
-        $snippet.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging'); // prevent drag
+        $snippet[0].querySelector('.oe_snippet_thumbnail').classList.add("o_snippet_no_drag"); // prevent drag
         $input.find('.o_we_confirm_btn').click(async () => {
             const name = $textInput.val();
             if (name !== snippetName) {
@@ -3464,9 +3464,11 @@ var SnippetsMenu = Widget.extend({
                     });
                 }, true);
             }
+            this.el.classList.remove("o_snippet_no_drag");
             await this._loadSnippetsTemplates(name !== snippetName);
         });
         $input.find('.o_we_cancel_btn').click(async () => {
+            this.el.classList.remove("o_snippet_no_drag");
             await this._loadSnippetsTemplates(false);
         });
     },
