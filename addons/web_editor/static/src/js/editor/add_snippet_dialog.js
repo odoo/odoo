@@ -179,7 +179,13 @@ export class AddSnippetDialog extends Component {
             clonedSnippetEl.classList.remove("oe_snippet_body");
             const snippetPreviewWrapEl = document.createElement("div");
             snippetPreviewWrapEl.classList.add("o_snippet_preview_wrap", "position-relative", "d-none");
-            snippetPreviewWrapEl.dataset.snippetId = snippet.name;
+            // TODO consolidate, we have many things (data-snippet,
+            // data-snippet-key, data-snippet-id), sometimes duplicated and not
+            // meaning the same thing, etc). Here we rely on the original key,
+            // because e.g. there are multiple masonry snippets but all with the
+            // same data-snippet attribute (s_masonry_block), while we need to
+            // differentiate them for the tours here.
+            snippetPreviewWrapEl.dataset.snippetId = snippet.data.oeSnippetKey;
             snippetPreviewWrapEl.dataset.snippetKey = snippet.key;
             snippetPreviewWrapEl.appendChild(clonedSnippetEl);
             this.__onSnippetPreviewClick = this._onSnippetPreviewClick.bind(this);
