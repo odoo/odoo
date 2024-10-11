@@ -156,14 +156,6 @@ class AccountEdiXmlCii(models.AbstractModel):
             tax_details['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
             tax_details['base_amount'] += fixed_tax_details['tax_amount']
 
-        if 'siret' in invoice.company_id._fields and invoice.company_id.siret:
-            seller_siret = invoice.company_id.siret
-        else:
-            seller_siret = invoice.company_id.company_registry
-
-        buyer_siret = invoice.commercial_partner_id.company_registry
-        if 'siret' in invoice.commercial_partner_id._fields and invoice.commercial_partner_id.siret:
-            buyer_siret = invoice.commercial_partner_id.siret
         template_values = {
             **invoice._prepare_edi_vals_to_export(),
             'tax_details': tax_details,
@@ -173,8 +165,8 @@ class AccountEdiXmlCii(models.AbstractModel):
             'scheduled_delivery_time': self._get_scheduled_delivery_time(invoice),
             'intracom_delivery': False,
             'ExchangedDocument_vals': self._get_exchanged_document_vals(invoice),
-            'seller_specified_legal_organization': seller_siret,
-            'buyer_specified_legal_organization': buyer_siret,
+            'seller_specified_legal_organization': invoice.company_id.company_registry,
+            'buyer_specified_legal_organization': invoice.commercial_partner_id.company_registry,
             'ship_to_trade_party': invoice.partner_shipping_id if 'partner_shipping_id' in invoice._fields and invoice.partner_shipping_id
                 else invoice.commercial_partner_id,
             # Chorus Pro fields
