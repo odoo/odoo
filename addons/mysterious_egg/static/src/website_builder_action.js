@@ -38,19 +38,7 @@ class WebsiteBuilder extends Component {
             this.backendWebsiteId = unslugHtmlDataObject(slugCurrentWebsite).id;
             this.initialUrl = `/website/force/${encodeURIComponent(this.backendWebsiteId)}`;
         });
-
-        const systrayProps = {
-            onNewPage: this.onNewPage.bind(this),
-            onEditPage: this.onEditPage.bind(this),
-        };
-
-        registry
-            .category("systray")
-            .add(
-                "website.WebsiteSystrayItem",
-                { Component: WebsiteSystrayItem, props: systrayProps },
-                { sequence: -100 },
-            );
+        this.addSystrayItems();
         onWillDestroy(() => {
             registry.category("systray").remove("website.WebsiteSystrayItem");
         });
@@ -59,7 +47,27 @@ class WebsiteBuilder extends Component {
     get menuProps() {
         return {
             iframe: this.websiteContent.el,
+            closeMenu: this.closeMenu.bind(this),
         };
+    }
+
+    addSystrayItems() {
+        const systrayProps = {
+            onNewPage: this.onNewPage.bind(this),
+            onEditPage: this.onEditPage.bind(this),
+        };
+        registry
+            .category("systray")
+            .add(
+                "website.WebsiteSystrayItem",
+                { Component: WebsiteSystrayItem, props: systrayProps },
+                { sequence: -100 },
+            );
+    }
+
+    closeMenu() {
+        this.state.isEditing = false;
+        this.addSystrayItems();
     }
 
     onNewPage() {
