@@ -130,7 +130,7 @@
         <!-- Binding the card options on the card handler parents -->
         <t t-call="website.s_card_options">
             <t t-set="selector" t-valuef="#{card_parent_handlers}"/>
-            <t t-set="target" t-value="'> .s_card'"/>
+            <t t-set="target" t-value="'> .s_card:not(.s_carousel_cards_card)'"/>
             <t t-set="disable_width" t-value="true"/>
         </t>
     </xpath>
