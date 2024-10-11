@@ -258,20 +258,22 @@
                 </t>
                 <t t-if="column.type === 'button_group'">
                     <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell w-print-0 p-print-0 cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
-                        <t t-foreach="column.buttons" t-as="button" t-key="button.id">
-                            <ViewButton t-if="!evalInvisible(button.invisible, record)"
-                                className="button.className"
-                                clickParams="button.clickParams"
-                                defaultRank="button.defaultRank"
-                                disabled="button.disabled"
-                                icon="button.icon"
-                                record="record"
-                                string="button.string"
-                                title="button.title"
-                                tabindex="props.list.editedRecord ? '-1' : '0'"
-                                onClick="isX2Many and record.isNew ? displaySaveNotification.bind(this) : ''"
-                            />
-                        </t>
+                        <div class="d-flex flex-wrap gap-1">
+                            <t t-foreach="column.buttons" t-as="button" t-key="button.id">
+                                <ViewButton t-if="!evalInvisible(button.invisible, record)"
+                                    className="button.className"
+                                    clickParams="button.clickParams"
+                                    defaultRank="button.defaultRank"
+                                    disabled="button.disabled"
+                                    icon="button.icon"
+                                    record="record"
+                                    string="button.string"
+                                    title="button.title"
+                                    tabindex="props.list.editedRecord ? '-1' : '0'"
+                                    onClick="isX2Many and record.isNew ? displaySaveNotification.bind(this) : ''"
+                                />
+                            </t>
+                        </div>
                     </td>
                 </t>
                 <t t-if="column.type === 'widget'">
