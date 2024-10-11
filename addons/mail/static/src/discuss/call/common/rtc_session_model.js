@@ -96,14 +96,6 @@ export class RtcSession extends Record {
     mainVideoStreamType;
     // RTC stats
     connectionState;
-    localCandidateType;
-    remoteCandidateType;
-    dataChannelState;
-    packetsReceived;
-    packetsSent;
-    dtlsState;
-    iceState;
-    iceGatheringState;
     logStep;
 
     get channel() {

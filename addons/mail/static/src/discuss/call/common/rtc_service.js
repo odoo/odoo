@@ -4,7 +4,7 @@ import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { rpc } from "@web/core/network/rpc";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
-import { reactive } from "@odoo/owl";
+import { reactive, toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -521,6 +521,7 @@ export class Rtc extends Record {
             try {
                 await this._loadSfu();
                 this.state.connectionType = CONNECTION_TYPES.SERVER;
+                this.selfSession.connectionState = null;
                 this.network.addSfu(this.sfuClient);
             } catch (e) {
                 this.notification.add(
@@ -550,11 +551,18 @@ export class Rtc extends Record {
      * @param {String} [param2.step] current step of the flow
      * @param {String} [param2.state] current state of the connection
      */
-    log(session, entry, { error, step, state, ...data } = {}) {
+    log(session, entry, param2 = {}) {
+        const { error, step, state, ...data } = param2;
         session.logStep = entry;
         if (!this.store.settings.logRtc) {
             return;
         }
+        console.debug(
+            `%c${new Date().toLocaleString()} - [${entry}]`,
+            "color: #e36f17; font-weight: bold;",
+            toRaw(session)._raw,
+            param2
+        );
         if (!this.state.logs.has(session.id)) {
             this.state.logs.set(session.id, { step: "", state: "", logs: [] });
         }
@@ -653,6 +661,7 @@ export class Rtc extends Record {
     }
 
     async _handleSfuClientStateChange({ detail: { state, cause } }) {
+        this.log(this.selfSession, "SFU connection state changed", { state, cause });
         this.state.serverState = state;
         switch (state) {
             case this.SFU_CLIENT_STATE.AUTHENTICATED:
