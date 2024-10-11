@@ -1044,7 +1044,6 @@ export class ListRenderer extends Component {
     }
 
     async onDeleteRecord(record) {
-        this.keepColumnWidths = true;
         const editedRecord = this.props.list.editedRecord;
         if (editedRecord && editedRecord !== record) {
             const leaved = await this.props.list.leaveEditMode();
