@@ -217,9 +217,13 @@ class ChannelMember(models.Model):
         sub_members = []
         for parent in self.channel_id.filtered(lambda c: c.sub_channel_ids):
             sub_members += parent.sub_channel_ids.channel_member_ids.filtered(
-                lambda m: m.partner_id in set(parent.channel_member_ids.partner_id)
-                if m.partner_id
-                else m.guest_id in set(parent.channel_member_ids.guest_id)
+                lambda m: (
+                    m.partner_id in self.partner_id
+                    and m.partner_id in set(parent.channel_member_ids.partner_id)
+                    if m.partner_id
+                    else m.guest_id in self.guest_id
+                         and m.guest_id in set(parent.channel_member_ids.guest_id)
+                )
             )
         for member in sub_members:
             member.channel_id._action_unfollow(partner=member.partner_id, guest=member.guest_id)

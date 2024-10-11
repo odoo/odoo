@@ -32,15 +32,19 @@ class TestDiscussSubChannels(HttpCase):
             self.assertTrue(self_member.is_pinned)
 
     def test_02_sub_channel_members_sync_with_parent(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
-        parent.action_unfollow()
-        self.assertFalse(any(m.is_self for m in parent.channel_member_ids))
+        bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
+        baz_user = new_test_user(self.env, "baz_user", groups="base.group_user")
+        parent = self.env["discuss.channel"].with_user(bob_user).create({"name": "General"})
+        self.assertTrue(any(m.is_self for m in parent.channel_member_ids))
+        parent.add_members(partner_ids=[baz_user.partner_id.id])
         parent._create_sub_channel()
         sub_channel = parent.sub_channel_ids[0]
-        # Member created for sub channel (_create_sub_channel): should also be
-        # created for the parent channel.
+        # Member created for sub channel (_create_sub_channel): should be the same
+        # as the members of the parent channel.
         self.assertTrue(any(m.is_self for m in parent.channel_member_ids))
         self.assertTrue(any(m.is_self for m in sub_channel.channel_member_ids))
+        self.assertEqual(parent.channel_member_ids.partner_id,
+                         sub_channel.channel_member_ids.partner_id)
         # Member removed from parent channel: should also be removed from the sub
         # channel.
         parent.action_unfollow()
@@ -48,9 +52,11 @@ class TestDiscussSubChannels(HttpCase):
         self.assertFalse(any(m.is_self for m in sub_channel.channel_member_ids))
         # Member created for sub channel (add_members): should also be created
         # for parent.
-        sub_channel.add_members(partner_ids=[self.env.user.partner_id.id])
+        sub_channel.add_members(partner_ids=[bob_user.partner_id.id])
         self.assertTrue(any(m.is_self for m in parent.channel_member_ids))
         self.assertTrue(any(m.is_self for m in sub_channel.channel_member_ids))
+        self.assertEqual(parent.channel_member_ids.partner_id,
+                         sub_channel.channel_member_ids.partner_id)
 
     def test_03_cannot_create_recursive_sub_channel(self):
         parent = self.env["discuss.channel"].create({"name": "General"})
