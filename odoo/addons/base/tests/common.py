@@ -325,6 +325,7 @@ class MockSmtplibCase:
                     'smtp_from': smtp_from,
                     'smtp_to_list': smtp_to_list,
                     'message': message.as_string(),
+                    'msg_from': message['From'],
                     'from_filter': self.from_filter,
                 })
 
@@ -333,6 +334,7 @@ class MockSmtplibCase:
                     'smtp_from': smtp_from,
                     'smtp_to_list': smtp_to_list,
                     'message': message_str,
+                    'msg_from': None,  # to fix if necessary
                     'from_filter': self.from_filter,
                 })
 
