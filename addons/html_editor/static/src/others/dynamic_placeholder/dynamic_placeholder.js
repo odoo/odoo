@@ -10,14 +10,16 @@ export class DynamicPlaceholderPlugin extends Plugin {
     resources = {
         powerboxCategory: withSequence(60, { id: "marketing_tools", name: _t("Marketing Tools") }),
         powerboxItems: {
+            id: "dynamic_placeholder",
             name: _t("Dynamic Placeholder"),
             description: _t("Insert a field"),
             category: "marketing_tools",
-            fontawesome: "fa-magic",
+            fontawesome: "fa-hashtag",
             action(dispatch) {
                 dispatch("OPEN_DYNAMIC_PLACEHOLDER");
             },
         },
+        powerButtons: ["dynamic_placeholder"],
     };
     setup() {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;

@@ -7,6 +7,7 @@
 # Manon Rondou, 2024
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2024
 # Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,11 +29,13 @@ msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products."
 msgstr ""
+"<i>Je bestelling is opgeslagen.</i> Kom naar de winkel om je producten te "
+"betalen."
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Afhalen in de winkel)</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -55,7 +58,7 @@ msgstr "Configuratie instellingen"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.res_config_settings_form
 msgid "Configure Pickup Locations"
-msgstr ""
+msgstr "Afhaallocaties configureren"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__custom_mode
@@ -71,7 +74,7 @@ msgstr "Verzendwijzes"
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
-msgstr ""
+msgstr "Leveringsmethode in de winkel"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -100,7 +103,7 @@ msgstr "Uitverkocht"
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
 msgid "Pay on Site"
-msgstr ""
+msgstr "Ter plaatse betalen"
 
 #. module: website_sale_collect
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__payment_provider__custom_mode__on_site
@@ -120,13 +123,13 @@ msgstr "Betaalprovider"
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
 msgid "Pick up in store"
-msgstr ""
+msgstr "Afhalen in de winkel"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 msgid "Please choose a store to collect your order."
-msgstr ""
+msgstr "Kies een winkel om je bestelling af te halen."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_product_template
@@ -156,14 +159,14 @@ msgstr "Verzendwijzes"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Some of the products are not available at"
-msgstr ""
+msgstr "Sommige producten zijn niet verkrijgbaar bij"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Some products are not available in the selected store."
-msgstr ""
+msgstr "Sommige producten zijn niet verkrijgbaar in de geselecteerde winkel."
 
 #. module: website_sale_collect
 #. odoo-python
@@ -181,13 +184,15 @@ msgstr "Winkels"
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method and a warehouse must share the same company"
-msgstr ""
+msgstr "De bezorgmethode en een magazijn moeten hetzelfde bedrijf hebben"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method must have at least one warehouse to be published."
 msgstr ""
+"De aflevermethode moet minstens één magazijn hebben om gepubliceerd te "
+"worden."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_warehouse
@@ -206,16 +211,18 @@ msgid ""
 "You can only pay on site when selecting the pick up in store delivery "
 "method."
 msgstr ""
+"Je kunt alleen ter plekke betalen als je kiest voor de afhaalmethode in de "
+"winkel."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been authorized."
-msgstr "Jouw betaling is toegestaan."
+msgstr "Je betaling is toegestaan."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,cancel_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been cancelled."
-msgstr "Jouw betaling is geannuleerd."
+msgstr "Je betaling is geannuleerd."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
@@ -233,4 +240,4 @@ msgstr "beschikbaar"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "no in-store delivery methods available"
-msgstr ""
+msgstr "geen bezorgmethoden in de winkel beschikbaar"

@@ -123,7 +123,8 @@ class GoogleCalendarService():
         state = {
             'd': self.google_service.env.cr.dbname,
             's': 'calendar',
-            'f': from_url
+            'f': from_url,
+            'u': self.google_service.env['ir.config_parameter'].sudo().get_param('database.uuid'),
         }
         base_url = self.google_service._context.get('base_url') or self.google_service.get_base_url()
         return self.google_service._get_authorize_uri(

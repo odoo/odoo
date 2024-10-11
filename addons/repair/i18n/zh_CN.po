@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1335,7 +1336,7 @@ msgstr "这是一份维修说明。"
 msgid ""
 "This is the default destination location for product which come for the "
 "repair when you create a repair order with this operation type."
-msgstr ""
+msgstr "这是当您使用此操作类型创建维修订单时要维修的产品的默认目标位置。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1356,13 +1357,13 @@ msgstr "使用此作业类型创建维修订单时，这是默认的移除目标
 msgid ""
 "This is the default source location for product which come for the repair "
 "when you create a repair order with this operation type."
-msgstr ""
+msgstr "这是当您使用此操作类型创建维修订单时要维修的产品的默认来源位置。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid ""
 "This is the location where the components of product to repair is located."
-msgstr ""
+msgstr "这是要维修的产品组件所在的位置。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__product_location_src_id
@@ -1525,6 +1526,9 @@ msgid ""
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
+"您无法为已链接到现有销售订单的维修订单创建报价。\n"
+"相关维修订单：\n"
+"%(ref_str)s"
 
 #. module: repair
 #. odoo-python
@@ -1534,6 +1538,9 @@ msgid ""
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
+"您需要为维修订单定义客户才能创建关联的报价。\n"
+"相关维修订单：\n"
+"%(ref_str)s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
@@ -1543,4 +1550,4 @@ msgstr "来自位置"
 #. module: repair
 #: model:ir.actions.server,name:repair.action_repair_overview
 msgid "stock.repair.type.overview"
-msgstr ""
+msgstr "stock.repair.type.overview"

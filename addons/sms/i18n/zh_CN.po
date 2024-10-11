@@ -3,9 +3,9 @@
 # 	* sms
 # 
 # Translators:
-# Chloe Wang, 2024
 # LINYUN TONG <tong.linyun@elico-corp.com>, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,21 +54,21 @@ msgstr "%s无效的收件人"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "+1 555-555-555"
-msgstr ""
+msgstr "+1 555-555-555"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
 msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/> 您的帐户出现错误。请联系支持部门获取更多信息..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
 msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/> 账户未注册时无法发送短信。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -76,6 +76,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Register"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            注册"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -83,6 +85,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Set Sender Name"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            设置发件人名称"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -198,7 +202,7 @@ msgstr "发送短信时发生错误"
 msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
-msgstr ""
+msgstr "出现未知错误。如果错误仍然存在，请联系 Odoo 支持人员。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -296,7 +300,7 @@ msgstr "选择一个示例"
 #: code:addons/sms/wizard/sms_account_code.py:0
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Choose your sender name"
-msgstr ""
+msgstr "选择发件人姓名"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -462,7 +466,7 @@ msgstr "启用短信息"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
-msgstr ""
+msgstr "输入电话号码，获取带有验证码的短信。"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -655,7 +659,7 @@ msgid ""
 "Invalid phone number. Please make sure to follow the international format, "
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
-msgstr ""
+msgstr "电话号码无效。请确保遵循国际格式，即加号 (+)，然后是国家代码、城市代码和当地电话号码。例如 +1 555-555-555"
 
 #. module: sms
 #. odoo-python
@@ -802,7 +806,7 @@ msgstr "仅供参考"
 msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
-msgstr ""
+msgstr "请注意，这不是必需的，如果您不设置发件人名称，您的短信将通过短代码发送。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -981,7 +985,7 @@ msgstr "注册"
 #: code:addons/sms/models/iap_account.py:0
 #: code:addons/sms/wizard/sms_account_phone.py:0
 msgid "Register Account"
-msgstr ""
+msgstr "注册账户"
 
 #. module: sms
 #. odoo-python
@@ -993,7 +997,7 @@ msgstr "立即注册"
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Register your SMS account"
-msgstr ""
+msgstr "注册短信账户"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
@@ -1073,17 +1077,17 @@ msgstr "短信（无备注）"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
 msgid "SMS Account Registration Phone Number Wizard"
-msgstr ""
+msgstr "短信账户注册电话号码向导"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_sender
 msgid "SMS Account Sender Name Wizard"
-msgstr ""
+msgstr "短信账户发件人姓名向导"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_code
 msgid "SMS Account Verification Code Wizard"
-msgstr ""
+msgstr "短信账户验证码向导"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -1244,6 +1248,11 @@ msgid "Send Now"
 msgstr "立即发送"
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_button/sms_button.js:0
+#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_multi
+#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_single
+#: model:ir.actions.act_window,name:sms.sms_composer_action_form
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send SMS"
@@ -1262,20 +1271,6 @@ msgid "Send SMS As"
 msgstr "发送短信为"
 
 #. module: sms
-#. odoo-javascript
-#: code:addons/sms/static/src/components/sms_button/sms_button.js:0
-#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_multi
-#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_single
-#: model:ir.actions.act_window,name:sms.sms_composer_action_form
-msgid "Send SMS Text Message"
-msgstr "发送文本短信息"
-
-#. module: sms
-#: model:iap.service,description:sms.iap_service_sms
-msgid "Send SMS Text Messages to your contacts directly from your database."
-msgstr ""
-
-#. module: sms
 #: model:ir.model,name:sms.model_sms_composer
 msgid "Send SMS Wizard"
 msgstr "发送短信息向导"
@@ -1284,6 +1279,11 @@ msgstr "发送短信息向导"
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
 msgid "Send SMS in batch"
 msgstr "批处理发送短信息"
+
+#. module: sms
+#: model:iap.service,description:sms.iap_service_sms
+msgid "Send SMS to your contacts directly from your database."
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1303,13 +1303,13 @@ msgstr "发送到数字"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Send verification code"
-msgstr ""
+msgstr "发送验证码"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__sender_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__sender_name
 msgid "Sender Name"
-msgstr ""
+msgstr "发件人名称"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
@@ -1341,7 +1341,7 @@ msgstr "服务器错误"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Set sender name"
-msgstr ""
+msgstr "设置发件人名称"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1368,7 +1368,7 @@ msgstr "单篇模式"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Skip for now"
-msgstr ""
+msgstr "暂时跳过"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1422,7 +1422,7 @@ msgstr "模板"
 msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
-msgstr ""
+msgstr "短信服务目前不对新用户开放，新账户注册已暂停。"
 
 #. module: sms
 #. odoo-python
@@ -1458,7 +1458,7 @@ msgstr "该模板可使用的单据类型"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The verification code is incorrect."
-msgstr ""
+msgstr "验证码不正确。"
 
 #. module: sms
 #. odoo-python
@@ -1477,12 +1477,12 @@ msgstr "由于该号码已被使用，此短信已被删除。"
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "该账户已有发件人姓名，无法更改。"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "这是作为短信发件人显示的姓名。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1494,7 +1494,7 @@ msgstr "此电话号码被列入短信息营销黑名单。单击以取消黑名
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This phone number/account has been banned from our service."
-msgstr ""
+msgstr "此电话号码/帐户已被禁止使用我们的服务。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -1604,7 +1604,7 @@ msgstr "警告"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "我们无法在数据库中找到您的账户。"
 
 #. module: sms
 #. odoo-python
@@ -1612,7 +1612,7 @@ msgstr ""
 msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
-msgstr ""
+msgstr "我们无法通过您的电话号码联系到您。如果您最近申请了多个代码，请稍后再试。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1664,7 +1664,7 @@ msgstr "您的IAP账户上没有足够的点数。"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You tried too many times. Please retry later."
-msgstr ""
+msgstr "您尝试的次数太多。请稍后重试。"
 
 #. module: sms
 #. odoo-javascript
@@ -1677,7 +1677,7 @@ msgstr "您的SMS短信息必须至少包括一个非空格字符"
 #. odoo-python
 #: code:addons/sms/wizard/sms_account_code.py:0
 msgid "Your SMS account has been successfully registered."
-msgstr ""
+msgstr "您的 SMS 账户已成功注册。"
 
 #. module: sms
 #. odoo-python
@@ -1685,7 +1685,7 @@ msgstr ""
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
-msgstr ""
+msgstr "您的发件人姓名长度必须在 3 到 11 个字符之间，且只能包含字母数字字符。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1693,12 +1693,14 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
 "                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
 msgstr ""
+"您的发件人姓名长度必须在 3 到 11 个字符之间，且只能包含字母数字字符。\n"
+"                        它必须符合你的公司名称，而且一旦注册，就不允许修改，因此要慎重选择。"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your sms account has not been activated yet."
-msgstr ""
+msgstr "您的短信账户尚未激活。"
 
 #. module: sms
 #. odoo-javascript

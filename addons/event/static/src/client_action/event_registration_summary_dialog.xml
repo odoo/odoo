@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
 
     <t t-name="event.EventRegistrationSummaryDialog" >
-       <Dialog size="'md'" title.translate="Home">
+        <Dialog t-if="!dialogState.isHidden" size="'md'" title.translate="Home">
             <div class="row">
                 <div class="col-lg-10 w-100 fs-2">
                     <div t-if="['confirmed_registration', 'unconfirmed_registration'].includes(registrationStatus.value)" class="alert alert-success d-flex justify-content-center" role="alert">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between">
-                <select t-if="registration.iot_printers.length > 1" type="select" class="form-select w-75" t-model.number="printSettings.iotPrinterId" t-on-change="savePrintSettings">
+                <select t-if="useIotPrinter" type="select" class="form-select w-75" t-model.number="printSettings.iotPrinterId" t-on-change="savePrintSettings">
                     <option value="" disabled="true" t-att-selected="!printSettings.iotPrinterId">Select printer...</option>
                     <option t-foreach="registration.iot_printers" t-as="printer" t-key="printer.id" t-att-value="printer.id">
                         <t t-esc="printer.name" />

@@ -365,10 +365,10 @@
                 </t>
             </t>
 
-            <tr t-if="'cash_rounding_amount_currency' in tax_totals">
+            <tr t-if="'cash_rounding_base_amount_currency' in tax_totals">
                 <td>Rounding</td>
                 <td class="text-end">
-                    <span t-out="tax_totals['cash_rounding_amount_currency']"
+                    <span t-out="tax_totals['cash_rounding_base_amount_currency']"
                           t-options='{"widget": "monetary", "display_currency": currency}'
                     >0</span>
                 </td>

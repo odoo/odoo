@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Abe Manyo, 2024
 # Tiffany Chang, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-27 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tiffany Chang, 2024\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,19 +79,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s pada %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% diskon pada %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% diskon pada harga sales"
 
 #. module: product
 #. odoo-python
@@ -125,13 +125,13 @@ msgstr "(contoh: keterangan produk, ebook, pemberitahuan hukum, ...)."
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s biaya tambahan"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s rebate"
 
 #. module: product
 #. odoo-python
@@ -147,6 +147,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- Secara Instan: Semua kemungkinan varian dibuat langsung setelah atribut dan value-nya ditambahkan ke produk.\n"
+"        - Secara Dinamik: Setiap varian dibuat hanya saat atribut dan value yang sesuai ditambahkan ke sales order.\n"
+"        - Tidak Pernah: Varian tidak pernah dibuat untuk atribut.\n"
+"        Ingat: ini tidak bisa diganti setelah atribut digunakan pada produk."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -319,25 +323,25 @@ msgstr "Barcode hanya dapat ditetapkan ke satu paket."
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "Pilihan kombo yang tidak memiliki produk duplikat."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "Pilihan kombo yang tidak memiliki produk tipe \"kombo\"."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "Pilihan kombo harus memiliki setidaknya 1 produk."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "Kombo produk harus memiliki setidaknya 1 pilihan kombo."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -376,7 +380,7 @@ msgstr "Produk sudah menggunakan barcode"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "Produk kombo yang dapat dijual hanya dapat memiliki produk sellable."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -470,7 +474,7 @@ msgstr "Tambahkan Produk"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "Tambahkan Produk ke laporan daftar harga"
 
 #. module: product
 #. odoo-javascript
@@ -485,22 +489,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Tambah produk menggunakan tombol \"Tambahkan Produk\" di pojok kanan atas untuk\n"
+"                                mengikutsertakan mereka di laporan."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "Tambalhkan ke semua produk"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "Tambahkan ke produk yang tersedia"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "Tambahkan ke produk"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -895,7 +901,7 @@ msgstr "Harga Comb"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes"
-msgstr ""
+msgstr "Produk-produk kombo tidak boleh memiliki atribut"
 
 #. module: product
 #. odoo-python
@@ -904,6 +910,8 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
+"Kombo memungkinkan untuk memilih satu produk di antara pilihan yang tersedia"
+" per kategori."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1170,7 +1178,7 @@ msgstr "Harga Ekstra Default"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "Harga Ekstra Default Diubah"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1422,7 +1430,7 @@ msgstr "Ergonomik"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "Error mengekspor file. Silakan coba lagi."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1737,6 +1745,8 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
 msgstr ""
+"Bila tidak dicentang, ini akan memungkinkan Anda untuk menyembunyikan "
+"atribut tanpa menghapusnya."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -2123,7 +2133,7 @@ msgstr "Monitor Stand"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox"
-msgstr ""
+msgstr "Multi-checkbox"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
@@ -2209,7 +2219,7 @@ msgstr "Tidak ada produk yang dapat ditemukan."
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "Tidak ada produk yang ditemukan di laporan"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2290,7 +2300,7 @@ msgstr "Kursi Kantor Hitam"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "Kombo Kantor"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2411,7 +2421,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "Silakan pilih beberapa produk terlebih dahulu."
 
 #. module: product
 #. odoo-python
@@ -2532,7 +2542,7 @@ msgstr "Laporan Daftar Harga"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "Pratinjau Laporan Daftar harga"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2678,7 +2688,7 @@ msgstr "Jumlah Produk"
 #. module: product
 #: model:res.groups,name:product.group_product_manager
 msgid "Product Creation"
-msgstr ""
+msgstr "Pembuatan Produk"
 
 #. module: product
 #: model:ir.model,name:product.model_product_document
@@ -2973,7 +2983,7 @@ msgstr "Kuantitas"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "Kuantitas (Satuan Ukuran %s) "
 
 #. module: product
 #. odoo-javascript
@@ -3177,7 +3187,7 @@ msgstr "Ukuran"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "Specific Property Product Pricelist"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3390,6 +3400,10 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
+"Harga minimum di antara produk-produk di kombo ini. Value ini akan digunakan"
+" untuk prorata harga kombo ini mengingat kombo-kombo lain di produk kombo. "
+"Heuristik ini memastikan produk apa pun yang user pilih di kombo, akan "
+"selalu memiliki harga yang sama."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3631,23 +3645,23 @@ msgstr "Satuan Ukuran"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "Update harga ekstra"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "Update nilai atribut produk"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "Update harga ekstra produk"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "Update harga ekstra pada produk yang tersedia"
 
 #. module: product
 #. odoo-javascript
@@ -3763,7 +3777,7 @@ msgstr "Jumlah Varian"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "Pembuatan Varian"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -3971,12 +3985,14 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
+"Anda akan menambahkan value \"%(attribute_value)s\" ke produk "
+"%(product_count)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "Anda akan mengupdate harga ekstra untuk %s produk."
 
 #. module: product
 #. odoo-python
@@ -4053,6 +4069,8 @@ msgstr "Anda tidak dapat mengedit produk ini di katalog."
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
 msgstr ""
+"Anda tidak dapat mengarsip atribut ini karena masih ada produk yang "
+"terhubung"
 
 #. module: product
 #. odoo-python
@@ -4250,7 +4268,7 @@ msgstr "Anda harus menetapkan kuantitas positif."
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "csv"
-msgstr ""
+msgstr "csv"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -4272,7 +4290,7 @@ msgstr "contoh 1234567890"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "contoh. Pilihan Burger"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -4334,7 +4352,7 @@ msgstr "produk"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "product cost"
-msgstr ""
+msgstr "biaya produk"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -4367,4 +4385,4 @@ msgstr "kepada"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
-msgstr ""
+msgstr "xlsx"

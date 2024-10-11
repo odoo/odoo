@@ -5,6 +5,7 @@
 # Translators:
 # Raymond Yu <cl_yu@hotmail.com>, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1878,7 +1879,7 @@ msgstr "半天"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__has_department_manager_access
 msgid "Has Department Manager Access"
-msgstr ""
+msgstr "拥有部门经理访问权限"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__has_mandatory_day
@@ -3330,7 +3331,7 @@ msgstr "从分配开始日期后的定义时间段开始计算应计。此字段
 msgid ""
 "The allocation requirement of a time off type cannot be changed once leaves "
 "of that type have been taken. You should create a new time off type instead."
-msgstr ""
+msgstr "一旦休完该类型的休假，该类型的休假类型的分配要求就无法更改。您应该创建一个新的休假类型。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3394,7 +3395,7 @@ msgstr "负值必须大于 0。 如果要设置 0，请禁用负值上限。"
 msgid ""
 "The number of carried over days that will expire on "
 "carried_over_days_expiration_date"
-msgstr ""
+msgstr "将于 Carry_over_days_expiration_date 到期的结转天数"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3505,7 +3506,7 @@ msgstr "该区域由用户自动填写，并通过第二级验证分配（如果
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
-msgstr ""
+msgstr "该字段定义累计结束之前的时间单位。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -3793,7 +3794,7 @@ msgstr "必须待确认或验证休假请求才能拒绝。"
 msgid ""
 "Time off request state must be \"Refused\" or \"Cancelled\" in order to be "
 "reset to \"Confirmed\"."
-msgstr ""
+msgstr "休假请求状态必须为 “拒绝” 或 “已取消” 才能重置为 “已确认”。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
@@ -4107,14 +4108,14 @@ msgstr "达到结转时间后，根据计划的设置，选择您希望如何处
 msgid ""
 "When the field is checked the balance of an allocation using this accrual "
 "plan will never exceed the specified amount."
-msgstr ""
+msgstr "若勾选字段，使用此累积计划的分配，其结余将不会超过指定的数量。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
 msgid ""
 "When the field is checked the total amount accrued each year will be capped "
 "at the specified amount"
-msgstr ""
+msgstr "选中该字段后，每年应计的总金额将限制在指定金额"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -4149,7 +4150,7 @@ msgstr "年 月"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__maximum_leave_yearly
 msgid "Yearly limit to"
-msgstr ""
+msgstr "每年上限"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year
@@ -4183,7 +4184,7 @@ msgstr "您不得在强制休假日申请休假"
 msgid ""
 "You can define a period of time where the days carried over will be "
 "available"
-msgstr ""
+msgstr "您可以定义可以使用结转天数的时间段"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4242,7 +4243,7 @@ msgstr "如果不设定最高金额，就无法对累计时间设置上限。"
 msgid ""
 "You cannot have a cap on yearly accrued time without setting a maximum "
 "amount."
-msgstr ""
+msgstr "如果不设置最高金额，则无法对每年累积时间设置上限。"
 
 #. module: hr_holidays
 #. odoo-python

@@ -895,13 +895,13 @@
     </div>
 
     <!-- Move snippets around -->
-    <div data-js="SnippetMove" data-selector="section, .s_accordion .accordion-item, .s_showcase .row:not(.s_col_no_resize) > div, .s_hr" data-no-scroll=".s_accordion .accordion-item">
+    <div data-js="SnippetMove" data-selector="section, .s_accordion .accordion-item, .s_showcase .row .row:not(.s_col_no_resize) > div, .s_hr" data-no-scroll=".s_accordion .accordion-item">
         <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
         <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
     </div>
     <div data-js="SnippetMove"
          data-selector=".row:not(.s_col_no_resize) > div, .nav-item"
-         data-exclude=".s_showcase .row > div"
+         data-exclude=".s_showcase .row .row > div"
          data-name="move_horizontally_opt">
         <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true" data-name="move_left_opt"/>
         <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true" data-name="move_right_opt"/>

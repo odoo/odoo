@@ -254,6 +254,7 @@ class HrWorkEntryType(models.Model):
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.")
     country_id = fields.Many2one('res.country', string="Country")
+    country_code = fields.Char(related='country_id.code')
 
     @api.constrains('country_id')
     def _check_work_entry_type_country(self):

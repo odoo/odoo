@@ -548,6 +548,16 @@
                 }
             }
 
+            #translate .dropdown-menu {
+                min-width: auto;
+                max-width: 250px;
+
+                .dropdown-item {
+                    overflow-x: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
             .dropdown-item {
                 @include we-icon-button('', $align: left); // Always a padding on the left
                 background-color: $o-we-sidebar-content-field-dropdown-item-bg;
@@ -2965,6 +2975,11 @@ we-select.o_grid we-toggler {
                 img {
                     max-width: 100%;
                 }
+            }
+
+            .o_animate {
+                visibility: visible;
+                animation-name: none;
             }
         }
         .o_custom_snippet_wrap {

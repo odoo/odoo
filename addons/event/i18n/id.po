@@ -60,7 +60,7 @@ msgstr "%(event_name)s - Pendaftaran untuk %(attendee_name)s"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "%(start_date)s sampai %(end_date)s"
 
 #. module: event
 #. odoo-python
@@ -171,12 +171,12 @@ msgstr "5-10"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
 msgid "96x134mm (Badge Printer)"
-msgstr ""
+msgstr "96x134mm (Badge Printer)"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
 msgid "96x82mm (Badge Printer)"
-msgstr ""
+msgstr "96x82mm (Badge Printer)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -347,7 +347,7 @@ msgstr "<i class=\"fa fa-ticket\" title=\"Tipe tiket\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-2\" title=\"Tanggal akhir\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2063,7 +2063,7 @@ msgstr "Peserta"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Auto-Print"
-msgstr ""
+msgstr "Cetak-otomatis"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -2079,12 +2079,12 @@ msgstr "Lencana"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
 msgid "Badge (96x134mm)"
-msgstr ""
+msgstr "Badge (96x134mm)"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
 msgid "Badge (96x82mm)"
-msgstr ""
+msgstr "Badge (96x82mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -2365,7 +2365,7 @@ msgstr "Tombol Konfirmasi Kehadiran"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "Konfirmasi ketadangan?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2722,6 +2722,12 @@ msgstr "Pendaftaran acara"
 #: model:ir.model,name:event.model_event_registration_answer
 msgid "Event Registration Answer"
 msgstr "Jawaban Pendaftaran Acara"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/controllers/main.py:0
+msgid "Event Registrations"
+msgstr "Pendaftaran Acara"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
@@ -3429,7 +3435,7 @@ msgstr "30 hari terakhir"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "Peserta Terakhir"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -3831,6 +3837,8 @@ msgstr "Online bila tidak diaktifkan"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"Buka pemilih rentang tanggal.<br/>Pilih Tanggal Awal dan Akhir untuk acara "
+"Anda."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3953,7 +3961,7 @@ msgstr "Cetak"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "Printing badge on %s..."
-msgstr ""
+msgstr "Mencetak lencana pada %s..."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4219,6 +4227,12 @@ msgid "Scan a badge"
 msgstr "Scan lencana"
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_barcode.xml:0
+msgid "Scan or Tap"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
 msgstr "Jadwal & Track"
@@ -4268,7 +4282,7 @@ msgstr "Pilih Pendaftar"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Select printer..."
-msgstr ""
+msgstr "Pilih printer..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4884,6 +4898,12 @@ msgid ""
 msgstr ""
 "Di bawah menu teknis ini Anda akan menemukan semua komunikasi yang "
 "dijadwalkan yang terkait acara-acara Anda."
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Undo"
+msgstr "Undo"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
