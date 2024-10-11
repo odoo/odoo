@@ -69,10 +69,7 @@ import { Deferred, waitUntil } from "./time";
  *  raw?: boolean;
  * }} QueryTextOptions
  *
- * @typedef {{
- *  message?: string | () => string;
- *  timeout?: number;
- * }} WaitOptions
+ * @typedef {import("./time").WaitOptions} WaitOptions
  */
 
 /**

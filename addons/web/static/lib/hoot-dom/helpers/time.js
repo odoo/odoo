@@ -2,6 +2,13 @@
 
 import { HootDomError } from "../hoot_dom_utils";
 
+/**
+ * @typedef {{
+ *  message?: string | () => string;
+ *  timeout?: number;
+ * }} WaitOptions
+ */
+
 //-----------------------------------------------------------------------------
 // Global
 //-----------------------------------------------------------------------------
@@ -369,22 +376,14 @@ export function waitUntil(predicate, options) {
 
     let handle;
     let timeoutId;
+    let running = true;
     return new Deferred((resolve, reject) => {
         const runCheck = () => {
             const result = predicate();
             if (result) {
                 resolve(result);
-            } else {
+            } else if (running) {
                 handle = requestAnimationFrame(runCheck);
-            }
-        };
-
-        const timeout = $floor(options?.timeout ?? 200);
-        timeoutId = setTimeout(() => {
-            // Last check before the timeout expires
-            const result = predicate();
-            if (result) {
-                resolve(result);
             } else {
                 let message =
                     options?.message || `'waitUntil' timed out after %timeout% milliseconds`;
@@ -393,7 +392,10 @@ export function waitUntil(predicate, options) {
                 }
                 reject(new HootDomError(message.replace("%timeout%", String(timeout))));
             }
-        }, timeout);
+        };
+
+        const timeout = $floor(options?.timeout ?? 200);
+        timeoutId = setTimeout(() => (running = false), timeout);
         handle = requestAnimationFrame(runCheck);
     }).finally(() => {
         cancelAnimationFrame(handle);
