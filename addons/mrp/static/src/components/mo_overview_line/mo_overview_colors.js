@@ -1,5 +1,5 @@
 const PRODUCTION_DECORATORS = {
-    draft: "muted",
+    draft: "secondary",
     confirmed: "info",
     progress: "warning",
     done: "success",
@@ -13,11 +13,11 @@ const PURCHASE_DECORATORS = {
     ['to approve']: "info",
     purchase: "info",
     done: "info",
-    cancel: "muted",
+    cancel: "secondary",
 };
 
 const PICKING_DECORATORS = {
-    draft: "muted",
+    draft: "secondary",
     waiting: "warning",
     confirmed: "warning",
     assigned: "info",
@@ -31,7 +31,7 @@ const OPERATION_DECORATORS = {
     ready: "info",
     progress: "warning",
     done: "success",
-    cancel: "muted",
+    cancel: "secondary",
 };
 
 const PRODUCT_DECORATORS = {
