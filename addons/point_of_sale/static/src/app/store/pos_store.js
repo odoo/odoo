@@ -339,7 +339,10 @@ export class PosStore extends Reactive {
         const ids = new Set();
         for (const order of orders) {
             if (order && (await this._onBeforeDeleteOrder(order))) {
-                if (Object.keys(order.last_order_preparation_change).length > 0) {
+                if (
+                    typeof order.id === "number" &&
+                    Object.keys(order.last_order_preparation_change).length > 0
+                ) {
                     await this.sendOrderInPreparation(order, true);
                 }
 
