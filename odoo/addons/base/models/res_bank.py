@@ -85,6 +85,7 @@ class ResPartnerBank(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_id = fields.Many2one('res.company', 'Company', related='partner_id.company_id', store=True, readonly=True)
     country_code = fields.Char(related='partner_id.country_code', string="Country Code")
+    note = fields.Text('Notes')
 
     _unique_number = models.Constraint(
         'unique(sanitized_acc_number, partner_id)',
