@@ -19,7 +19,7 @@
                 <div><span class="fw-bolder">ICE gathering: </span><t t-out="state.peerStats.iceGatheringState"/></div>
                 <div><span class="fw-bolder">Packets sent: </span><t t-out="state.peerStats.packetsSent"/></div>
                 <div><span class="fw-bolder">Packets received: </span><t t-out="state.peerStats.packetsReceived"/></div>
-                <div><span class="fw-bolder">Log step: </span><t t-out="state.peerStats.logStep"/></div>
+                <div><span class="fw-bolder">Log step: </span><t t-out="props.rtcSession.logStep"/></div>
             </t>
             <t t-elif="env.debug and isSelf and rtc.state.connectionType === rtcConnectionTypes.SERVER">
                 <div><span class="fw-bolder">Connection type: </span><t t-out="rtc.state.connectionType"/></div>
