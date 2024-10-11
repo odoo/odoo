@@ -255,7 +255,8 @@
                                 <group string="Purchase" name="purchase" priority="2">
                                 </group>
                                 <group name="misc" string="Misc">
-                                    <field name="company_registry" invisible="parent_id or not is_company"/>
+                                    <field name="company_registry_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                                    <field name="company_registry" invisible="parent_id or not is_company" options="{'placeholder_field': 'company_registry_placeholder'}"/>
                                     <field name="ref" string="Reference"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="parent_id" force_save="1"/>
                                     <field name="company_id" invisible="1"/> <!-- need to be able to compute based on the company even without multi company groups -->

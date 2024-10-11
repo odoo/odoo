@@ -37,7 +37,8 @@
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                     </div>
                                     <field name="vat"/>
-                                    <field name="company_registry"/>
+                                    <field name="company_registry_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                                    <field name="company_registry" options="{'placeholder_field': 'company_registry_placeholder'}"/>
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
                                 </group>
                                 <group>
