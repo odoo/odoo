@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
 
             // Check that the product has been added to the order with correct attributes and price
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Red, Metal, Fabrics: Custom Fabric)",
+                "Configurable Chair (Red, Metal, Fabrics: Other: Custom Fabric)",
                 "1.0",
                 "11.0"
             ),
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Red, Metal, Fabrics: Custom Fabric)",
+                "Configurable Chair (Red, Metal, Fabrics: Other: Custom Fabric)",
                 "2.0",
                 "22.0"
             ),

@@ -337,6 +337,10 @@ export class SelfOrder extends Reactive {
         ); // Stripe, Adyen, Online
         const order = await this.sendDraftOrderToServer();
 
+        if (!order) {
+            return;
+        }
+
         // Stand number page will recall this function after the stand number is set
         if (
             service === "table" &&
@@ -419,8 +423,14 @@ export class SelfOrder extends Reactive {
     initData() {
         this.productCategories = this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.product"].getAllBy("pos_categ_ids");
+        const isSpecialProduct = (p) => this.config._pos_special_products_ids.includes(p.id);
+        for (const category_id in this.productByCategIds) {
+            this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
+                (p) => !isSpecialProduct(p)
+            );
+        }
         const productWoCat = this.models["product.product"].filter(
-            (p) => p.pos_categ_ids.length === 0
+            (p) => p.pos_categ_ids.length === 0 && !isSpecialProduct(p)
         );
 
         if (productWoCat.length) {
