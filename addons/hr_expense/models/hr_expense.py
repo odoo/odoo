@@ -1160,7 +1160,7 @@ class HrExpenseSheet(models.Model):
     def write(self, vals):
         if 'state' in vals:
             # Avoid user with write access on expense sheet in draft state to bypass the validation process
-            if not self.user_has_groups('hr_expense.group_hr_expense_manager') and self.state == 'draft' and vals['state'] != 'submit':
+            if vals['state'] != 'submit' and not self.user_has_groups('hr_expense.group_hr_expense_manager') and any(e.state == 'draft' for e in self):
                 raise UserError(_("You don't have the rights to bypass the validation process of this expense report."))
             elif vals['state'] == 'approve':
                 self._check_can_approve()
