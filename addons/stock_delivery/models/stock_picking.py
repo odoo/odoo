@@ -31,7 +31,7 @@ class StockPicking(models.Model):
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
         for picking in self:
-            picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
+            picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_id.active and picking.carrier_tracking_ref else False
 
     @api.depends('carrier_id', 'move_ids_without_package')
     def _compute_return_picking(self):
