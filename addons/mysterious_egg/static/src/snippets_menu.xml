@@ -21,10 +21,10 @@
             </div>
             <div class="pt-1">
                 <t t-if="state.activeTab === 'blocks'">
-                    <BlockTab/>
+                    <BlockTab editor="editor"/>
                 </t>
                 <t t-if="state.activeTab === 'customize'">
-                    <CustomizeTab/>
+                    <CustomizeTab editor="editor" />
                 </t>
                 <t t-if="state.activeTab === 'theme'">
                     theme
