@@ -21,7 +21,7 @@ function onIframeLoaded(iframe, callback) {
 export class SnippetsMenu extends Component {
     static template = "mysterious_egg.SnippetsMenu";
     static components = { BlockTab, CustomizeTab };
-    static props = ["iframe"];
+    static props = ["iframe", "closeEditor"];
 
     setup() {
         const actionService = useService("action");
@@ -51,7 +51,7 @@ export class SnippetsMenu extends Component {
     }
 
     discard() {
-        this.props.closeMenu();
+        this.props.closeEditor();
     }
 
     save() {

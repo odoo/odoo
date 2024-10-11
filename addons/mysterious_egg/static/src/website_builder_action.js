@@ -47,7 +47,7 @@ class WebsiteBuilder extends Component {
     get menuProps() {
         return {
             iframe: this.websiteContent.el,
-            closeMenu: this.closeMenu.bind(this),
+            closeEditor: this.closeEditor.bind(this),
         };
     }
 
@@ -65,7 +65,7 @@ class WebsiteBuilder extends Component {
             );
     }
 
-    closeMenu() {
+    closeEditor() {
         this.state.isEditing = false;
         this.addSystrayItems();
     }
