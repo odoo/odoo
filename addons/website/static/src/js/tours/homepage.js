@@ -24,7 +24,7 @@ const snippets = [
         groupName: "Content",
     },
     {
-        id: 's_masonry_block',
+        id: 's_masonry_block_default_template',
         name: 'Masonry',
         groupName: "Images",
     },
