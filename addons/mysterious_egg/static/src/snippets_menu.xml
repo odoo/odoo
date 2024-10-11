@@ -3,7 +3,7 @@
 
 <t t-name="mysterious_egg.SnippetsMenu">
     <div class="h-100 o-snippets-menu">
-        <div class="d-flex justify-content-between">
+        <div class="o-snippets-top-actions d-flex justify-content-between">
             <div class="d-flex">
                 <button type="button" t-on-click="() => {}" class="btn btn-secondary fa fa-undo" t-att-disabled="!state.canUndo"/>
                 <button type="button"  t-on-click="() => {}" class="btn btn-secondary fa fa-repeat" t-att-disabled="!state.canRedo"/>
@@ -14,7 +14,22 @@
             </div>
         </div>
         <div>
-            <Notebook pages="pages"/>
+            <div class="o-snippets-tabs d-flex justify-content-between mt-2 p-2 text-uppercase">
+                <span class="px-2 cursor-pointer pb-1 pe-auto" t-att-class="{'active': state.activeTab === 'blocks'}" t-on-click="() => this.setTab('blocks')">Blocks</span>
+                <span class="px-2 cursor-pointer pb-1" t-att-class="{'active': state.activeTab === 'customize'}" t-on-click="() => this.setTab('customize')">Customize</span>
+                <span class="px-2 cursor-pointer pb-1" t-att-class="{'active': state.activeTab === 'theme'}" t-on-click="() => this.setTab('theme')">Theme</span>
+            </div>
+            <div class="pt-1">
+                <t t-if="state.activeTab === 'blocks'">
+                    <BlockTab/>
+                </t>
+                <t t-if="state.activeTab === 'customize'">
+                    <CustomizeTab/>
+                </t>
+                <t t-if="state.activeTab === 'theme'">
+                    theme
+                </t>
+            </div>
         </div>
     </div>
 </t>
