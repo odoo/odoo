@@ -17,17 +17,6 @@
         </field>
     </record>
 
-    <record id="event_registration_view_kanban" model="ir.ui.view">
-        <field name="name">event.registration.kanban.inherit.event.sale</field>
-        <field name="model">event.registration</field>
-        <field name="inherit_id" ref="event.event_registration_view_kanban"/>
-        <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('o_kanban_event_registration_event_name')]" position="inside">
-                <span invisible="context.get('default_event_id')" class="text-muted"> - </span><field name="sale_status"/>
-            </xpath>
-        </field>
-    </record>
-
     <record id="event_registration_view_graph" model="ir.ui.view">
         <field name="name">event.registration.graph.inherit.event.sale</field>
         <field name="model">event.registration</field>
