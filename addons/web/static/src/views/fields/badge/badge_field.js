@@ -27,10 +27,14 @@ export class BadgeField extends Component {
         const evalContext = this.props.record.evalContextWithVirtualIds;
         for (const decorationName in this.props.decorations) {
             if (evaluateBooleanExpr(this.props.decorations[decorationName], evalContext)) {
+                // fallback case for text-bg-muted
+                if (decorationName === "muted") {
+                    return "text-bg-300";
+                }
                 return `text-bg-${decorationName}`;
             }
         }
-        return "";
+        return "text-bg-300";
     }
 }
 
