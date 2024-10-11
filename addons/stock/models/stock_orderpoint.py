@@ -120,11 +120,25 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
     def _compute_rules(self):
-        for orderpoint in self:
-            if not orderpoint.product_id or not orderpoint.location_id:
-                orderpoint.rule_ids = False
-                continue
-            orderpoint.rule_ids = orderpoint.product_id._get_rules_from_location(orderpoint.location_id, route_ids=orderpoint.route_id)
+        orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
+        # Products without routes have no impact on _get_rules_from_location.
+        product_ids_with_routes = set(orderpoints_to_compute.product_id.filter_has_routes().ids)
+        # Small cache mapping (location_id, route_id) -> stock.rule.
+        # This reduces calls to _get_rules_from_location for products without routes.
+        rules_cache = {}
+        for orderpoint in orderpoints_to_compute:
+            if orderpoint.product_id.id not in product_ids_with_routes:
+                cache_key = (orderpoint.location_id, orderpoint.route_id)
+                rule_ids = rules_cache.get(cache_key) or orderpoint.product_id._get_rules_from_location(
+                    orderpoint.location_id, route_ids=orderpoint.route_id
+                )
+                orderpoint.rule_ids = rule_ids
+                rules_cache[cache_key] = rule_ids
+            else:
+                orderpoint.rule_ids = orderpoint.product_id._get_rules_from_location(
+                    orderpoint.location_id, route_ids=orderpoint.route_id
+                )
+        (self - orderpoints_to_compute).rule_ids = False
 
     @api.depends('route_id', 'product_id')
     def _compute_visibility_days(self):
