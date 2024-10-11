@@ -7,6 +7,8 @@ import { batched } from "@web/core/utils/timing";
 import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
 import { uuidv4 } from "@point_of_sale/utils";
+import { _t } from "@web/core/l10n/translation";
+import { RPCError } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
@@ -185,10 +187,20 @@ export class PosData extends Reactive {
     }
 
     async loadInitialData() {
-        return await this.orm.call("pos.session", "load_data", [
-            odoo.pos_session_id,
-            PosData.modelToLoad,
-        ]);
+        try {
+            return await this.orm.call("pos.session", "load_data", [
+                odoo.pos_session_id,
+                PosData.modelToLoad,
+            ]);
+        } catch (error) {
+            let message = _t("An error occurred while loading the Point of Sale: \n");
+            if (error instanceof RPCError) {
+                message += error.data.message;
+            } else {
+                message += error.message;
+            }
+            window.alert(message);
+        }
     }
     async initData() {
         const modelClasses = {};
