@@ -2095,6 +2095,16 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         return this._addSlide();
     },
 
+    /**
+     * Add a custom class if all controllers are hidden.
+     */
+    toggleControllers() {
+        const carouselEl = this.$target[0].closest(".carousel");
+        const indicatorsWrapEl = carouselEl.querySelector(".carousel-indicators");
+        const areControllersHidden = carouselEl.classList.contains("s_carousel_arrows_hidden") && indicatorsWrapEl.classList.contains("s_carousel_indicators_hidden");
+        carouselEl.classList.toggle("s_carousel_controllers_hidden", areControllersHidden);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -2187,7 +2197,28 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
             this.$bsTarget.carousel(direction);
         });
     },
+    /**
+     * @override
+     */
+    async selectClass(previewMode, widgetValue, params) {
+        // Prevent the "Controllers" option from being "centered" when
+        // arrows and indicators are displayed
+        await this._super(...arguments);
+        if (["arrows_opt", "indicators_opt"].includes(params.name)) {
+            const carouselEl = this.$target[0].closest(".carousel");
+            const controllersEl = carouselEl.querySelector(".o_horizontal_controllers_row");
+            const indicatorsEl = carouselEl.querySelector(".carousel-indicators");
 
+            const hasHiddenArrows = carouselEl.classList.contains("s_carousel_arrows_hidden");
+            const hasHiddenIndicators = indicatorsEl.classList.contains(
+                "s_carousel_indicators_hidden"
+            );
+
+            const contentBetween = !hasHiddenIndicators && !hasHiddenArrows;
+            controllersEl.classList.toggle("justify-content-between", contentBetween);
+            controllersEl.classList.toggle("justify-content-center", !contentBetween);
+        }
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -2271,7 +2302,7 @@ options.registry.CarouselItem = options.Class.extend({
         this.$targetCarousel = this.$target.closest(".carousel");
         this.$indicators = this.$carousel.find('.carousel-indicators');
         this.$controls = this.$carousel.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
-        this.carouselOptionName = this.$carousel[0].classList.contains("s_carousel_intro") ? "CarouselIntro" : "Carousel";
+        this.carouselOptionName = "Carousel";
 
         var leftPanelEl = this.$overlay.data('$optionsSection')[0];
         var titleTextEl = leftPanelEl.querySelector('we-title > span');
@@ -4411,7 +4442,7 @@ options.registry.GalleryElement = options.Class.extend({
      * @see this.selectClass for parameters
      */
     position(previewMode, widgetValue, params) {
-        const carouselOptionName = this.$target[0].parentNode.parentNode.classList.contains("s_carousel_intro") ? "CarouselIntro" : "Carousel";
+        const carouselOptionName = "Carousel";
         const optionName = this.$target[0].classList.contains("carousel-item") ? carouselOptionName
             : "GalleryImageList";
         const itemEl = this.$target[0];
