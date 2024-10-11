@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, delay, microTick, waitUntil } from "@odoo/hoot-dom";
 import { Deferred, advanceTime, runAllTimers, tick } from "@odoo/hoot-mock";
 import { parseUrl } from "../local_helpers";
 
@@ -81,5 +82,54 @@ describe.timeout(1_000)(parseUrl(import.meta.url), () => {
 
         expect(ms).toBeWithin(1e6 - 1, 1e6); // more or less
         expect.verifySteps(["animation", "timeout"]);
+    });
+
+    test("waitUntil: already true", async () => {
+        const promise = waitUntil(() => "some value").then((value) => {
+            expect.step("resolved");
+            return value;
+        });
+
+        expect.verifySteps([]);
+        expect(promise).toBeInstanceOf(Promise);
+
+        await microTick();
+
+        expect.verifySteps(["resolved"]);
+        await expect(promise).resolves.toBe("some value");
+    });
+
+    test("waitUntil: rejects", async () => {
+        const promise = waitUntil(() => false, { timeout: 1 }).catch(() => expect.step("rejected"));
+
+        expect.verifySteps([]);
+        expect(promise).toBeInstanceOf(Promise);
+
+        await delay(1);
+
+        expect.verifySteps([]);
+
+        await animationFrame();
+
+        expect.verifySteps(["rejected"]);
+    });
+
+    test("waitUntil: lazy", async () => {
+        let returnValue = "";
+        const promise = waitUntil(() => returnValue).then((v) => expect.step(v));
+
+        expect.verifySteps([]);
+        expect(promise).toBeInstanceOf(Promise);
+
+        await animationFrame();
+        await animationFrame();
+
+        expect.verifySteps([]);
+
+        returnValue = "test";
+
+        await animationFrame();
+
+        expect.verifySteps(["test"]);
     });
 });

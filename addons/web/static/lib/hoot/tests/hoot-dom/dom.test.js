@@ -20,7 +20,6 @@ import {
     queryRect,
     waitFor,
     waitForNone,
-    waitUntil,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
 import { getParentFrame } from "@web/../lib/hoot-dom/helpers/dom";
@@ -435,29 +434,6 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         }
 
         expect.verifySteps(["none"]);
-    });
-
-    test("waitUntil: already true", async () => {
-        await expect(waitUntil(() => true)).resolves.toBe(true);
-    });
-
-    test("waitUntil: rejects", async () => {
-        await expect(waitUntil(() => false, { timeout: 1 })).rejects.toThrow();
-    });
-
-    test("waitUntil: lazy", async () => {
-        let value = "";
-        waitUntil(() => value).then((v) => expect.step(v));
-
-        expect.verifySteps([]);
-
-        value = "test";
-
-        expect.verifySteps([]);
-
-        await animationFrame();
-
-        expect.verifySteps(["test"]);
     });
 
     describe("query", () => {
