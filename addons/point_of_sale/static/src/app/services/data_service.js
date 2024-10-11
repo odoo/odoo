@@ -8,7 +8,8 @@ import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
 import { uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
@@ -219,7 +220,14 @@ export class PosData extends Reactive {
                 }
 
                 this.synchronizeServerDataInIndexedDB(localData);
-            } catch {
+            } catch (error) {
+                let message = _t("An error occurred while loading the Point of Sale: \n");
+                if (error instanceof RPCError) {
+                    message += error.data.message;
+                } else {
+                    message += error.message;
+                }
+                window.alert(message);
                 return localData;
             }
         }
