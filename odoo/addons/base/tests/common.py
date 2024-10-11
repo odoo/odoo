@@ -327,6 +327,7 @@ class MockSmtplibCase:
                     'smtp_from': smtp_from,
                     'smtp_to_list': smtp_to_list,
                     'message': message.as_string(),
+                    'msg_from': message['From'],
                     'from_filter': self.from_filter,
                 })
 
@@ -335,6 +336,7 @@ class MockSmtplibCase:
                     'smtp_from': smtp_from,
                     'smtp_to_list': smtp_to_list,
                     'message': message_str,
+                    'msg_from': None,  # to fix if necessary
                     'from_filter': self.from_filter,
                 })
 
@@ -365,7 +367,9 @@ class MockSmtplibCase:
             self.find_mail_server_mocked = find_mail_server_mocked
             yield
 
-    def assert_email_sent_smtp(self, smtp_from=None, smtp_to_list=None, message_from=None, from_filter=None, emails_count=1):
+    def assert_email_sent_smtp(self, smtp_from=None, smtp_to_list=None, message_from=None,
+                               mail_server=None, from_filter=None,
+                               emails_count=1):
         """Check that the given email has been sent.
 
         If one of the parameter is None, it's just ignored and not used to retrieve the email.
@@ -373,11 +377,17 @@ class MockSmtplibCase:
         :param smtp_from: FROM used for the authentication to the mail server
         :param smtp_to_list: List of destination email address
         :param message_from: FROM used in the SMTP headers
+        :param mail_server: used to compare the 'from_filter' as an alternative
+          to using the from_filter parameter
         :param from_filter: from_filter of the <ir.mail_server> used to send the email
             Can use a lambda to check the value
         :param emails_count: the number of emails which should match the condition
         :return: True if at least one email has been found with those parameters
         """
+        if from_filter is not None and mail_server:
+            raise ValueError('Invalid usage: use either from_filter either mail_server')
+        if from_filter is None and mail_server is not None:
+            from_filter = mail_server.from_filter
         matching_emails = filter(
             lambda email:
                 (smtp_from is None or (
