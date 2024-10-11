@@ -1,3 +1,4 @@
+from datetime import datetime
 from itertools import combinations
 
 from odoo import Command
@@ -350,3 +351,38 @@ class TestDomainComplement(TransactionExpressionCase):
         self._search(Model, [('number2', '>', 3)])
         self._search(Model, [('number2', '<', 1)])
         self._search(Model, [('number2', '<=', 1)])
+
+    def test_inequalities_char(self):
+        Model = self.env['test_new_api.empty_char']
+        Model.create([{}])
+        Model.create([{'name': n} for n in ('', 'hello', 'world')])
+        self._search(Model, [('name', '>', 'a')])
+        self._search(Model, [('name', '>', 'z')])
+        self._search(Model, [('name', '<', 'k')])
+        self._search(Model, [('name', '<=', 'k')])
+        self._search(Model, [('name', '<', '')])
+
+    def test_inequalities_datetime(self):
+        Model = self.env['test_new_api.mixed']
+        Model.create([{}])
+        Model.create([{'moment': datetime(2000, 5, n)} for n in range(5, 10)])
+        self._search(Model, [('moment', '>', datetime(2000, 5, 3))])
+        self._search(Model, [('moment', '>', datetime(2000, 5, 8))])
+        self._search(Model, [('moment', '>', datetime(2000, 5, 20))])
+        self._search(Model, [('moment', '<', datetime(2000, 5, 7))])
+        self._search(Model, [('moment', '<=', datetime(2000, 5, 7))])
+
+    def test_inequalities_m2o(self):
+        Model = self.env['test_new_api.model_active_field']
+
+        active_parent = Model.create({'name': 'Parent'})
+        Model.create({'name': "Child of active", 'parent_id': active_parent.id})
+        Model.create({'parent_id': active_parent.id})
+        inactive_parent = Model.create({'name': 'Parent', 'active': False})
+        Model.create({'name': "Child of inactive", 'parent_id': inactive_parent.id})
+
+        self._search(Model, [('parent_id', '<', active_parent.id)])
+        self._search(Model, [('parent_id', '>=', inactive_parent.id)])
+
+        # TODO does this even work?
+        self._search(Model, [('parent_id', '>=', 'Par')])

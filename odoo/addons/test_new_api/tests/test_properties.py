@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import babel.dates
@@ -10,13 +9,14 @@ from unittest.mock import patch
 
 from odoo import Command
 
+from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
-from odoo.tests import Form, TransactionCase, users
+from odoo.tests import Form, users
 from odoo.tools import mute_logger, get_lang
 
 
-class TestPropertiesMixin(TransactionCase):
+class TestPropertiesMixin(TransactionExpressionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -1970,17 +1970,17 @@ class PropertiesSearchCase(TestPropertiesMixin):
         }]
         self.message_2.attributes = {'mychar': 'Helene'}
 
-        result = Model.search([('attributes.mychar', 'ilike', 'Helene')])
+        result = self._search(Model, [('attributes.mychar', 'ilike', 'Helene')])
         self.assertEqual(self.message_1 | self.message_2, result)
 
-        result = Model.search([('attributes.mychar', 'ilike', 'hélène')])
+        result = self._search(Model, [('attributes.mychar', 'ilike', 'hélène')])
         self.assertEqual(self.message_1 | self.message_2, result)
 
-        result = Model.search([('attributes.mychar', 'not ilike', 'Helene')])
+        result = self._search(Model, [('attributes.mychar', 'not ilike', 'Helene')])
         self.assertNotIn(self.message_1, result)
         self.assertNotIn(self.message_2, result)
 
-        result = Model.search([('attributes.mychar', 'not ilike', 'hélène')])
+        result = self._search(Model, [('attributes.mychar', 'not ilike', 'hélène')])
         self.assertNotIn(self.message_1, result)
         self.assertNotIn(self.message_2, result)
 
