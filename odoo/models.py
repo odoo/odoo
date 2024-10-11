@@ -6881,7 +6881,8 @@ class BaseModel(metaclass=MetaModel):
                     records = model.search([(field.name, 'in', real_records.ids)], order='id')
                 if new_records:
                     cache_records = self.env.cache.get_records(model, field)
-                    new_ids = set(self._ids)
+                    # optimization: Filter out real record to avoid useless isdisjoint time
+                    new_ids = {id_ for id_ in self._ids if not id_}
                     records |= cache_records.filtered(lambda r: not set(r[field.name]._ids).isdisjoint(new_ids))
 
             yield from records._modified_triggers(subtree)
