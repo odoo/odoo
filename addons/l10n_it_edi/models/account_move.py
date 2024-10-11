@@ -521,25 +521,21 @@ class AccountMove(models.Model):
             and self.amount_total <= 400
         )
 
-    def _l10n_it_edi_is_fee_statement(self):
+    def _l10n_it_edi_is_professional_fees(self):
         """
             This function returns a boolean value based on the comparison of the lines values with a product.
-            If the total value of the lines associated with services exceeds the total value of the lines associated with goods, the function assumes that the document is a fee statement.
-            This is particularly useful for documents that represent downpayments.
+            If one line has the tag for professional fee then we return True
         """
         self.ensure_one()
-        service_value = 0
-        good_or_conso_value = 0
-        for line in self.invoice_line_ids:
-            if line.display_type in ('line_note', 'line_section'):
-                continue
+        professional_fee_tag = self.env.ref('l10n_it_edi.l10n_it_edi_professional_fees_tag', raise_if_not_found=False)
+        if not professional_fee_tag:
+            return False
 
-            if line.product_id.type == "service":
-                service_value += line.price_total
-            else:
-                good_or_conso_value += line.price_total
-
-        return service_value > good_or_conso_value
+        return any(
+            professional_fee_tag.id in line.account_id.tag_ids.ids
+            for line in self.invoice_line_ids
+            if line.display_type not in ('line_note', 'line_section')
+        )
 
     def _l10n_it_edi_features_for_document_type_selection(self):
         """ Returns a dictionary of features to be compared with the TDxx FatturaPA
@@ -556,7 +552,7 @@ class AccountMove(models.Model):
             'downpayment': self._is_downpayment(),
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
-            'fee_statement': self._l10n_it_edi_is_fee_statement(),  # For downpayment
+            'professional fees': self._l10n_it_edi_is_professional_fees(),
         }
 
     def _l10n_it_edi_document_type_mapping(self):
@@ -567,18 +563,19 @@ class AccountMove(models.Model):
                      'self_invoice': False,
                      'simplified': False,
                      'downpayment': False,
-                     'fee_statement': False},  # Needed because downpayment move will be set as TD01 otherwise
+                     'professional fees': False},
             'TD02': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': True},
+                     'downpayment': True,
+                     'professional fees': False},
             'TD03': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': False,
-                     'fee_statement': True},
+                     'downpayment': True,
+                     'professional fees': True},
             'TD04': {'move_types': ['out_refund'],
                      'import_type': 'in_refund',
                      'self_invoice': False,
@@ -591,8 +588,8 @@ class AccountMove(models.Model):
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': True,
-                     'fee_statement': True},
+                     'downpayment': False,
+                     'professional fees': True},
             'TD07': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
