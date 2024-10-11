@@ -2,17 +2,14 @@ import { onWillStart } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { FormController } from "@web/views/form/form_controller";
+import { FormControllerWithHTMLExpander } from "@resource/views/form_with_html_expander/form_controller_with_html_expander";
 
 /**
  *  The FormController is overridden to be able to manage the edition of the name of a to-do directly
  *  in the breadcrumb as well as the mark as done button next to it.
  */
 
-export class TodoFormController extends FormController {
-    static components = {
-        ...FormController.components,
-    };
+export class TodoFormController extends FormControllerWithHTMLExpander {
     setup() {
         super.setup();
         onWillStart(async () => {
