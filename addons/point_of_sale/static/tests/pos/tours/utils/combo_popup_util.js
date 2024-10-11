@@ -1,4 +1,4 @@
-import { negate } from "@point_of_sale/../tests/tours/utils/common";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 const productTrigger = (productName) =>
     `label.combo-item article.product:has(.product-name:contains("${productName}"))`;
