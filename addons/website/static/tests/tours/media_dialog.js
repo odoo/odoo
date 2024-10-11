@@ -41,37 +41,31 @@ registerWebsitePreviewTour("website_media_dialog_external_library", {
     }),
     {
         content: "Open the media dialog from the snippet",
-        trigger: "iframe .s_text_image img",
+        trigger: ":iframe .s_text_image img",
         run: "dblclick",
     }, {
         content: "Dummy search to call the media library",
         trigger: ".o_select_media_dialog .o_we_search",
-        run: "text a",
+        run: "edit a",
     }, {
         content: "Choose the media library to only show its media",
         trigger: ".o_select_media_dialog .o_we_search_select",
-        // This is a standard <select>: we can't simulate a click on the option
-        // directly.
-        async run(actions) {
-            await actions.click();
-            await actions.text("Illustrations");
-            this.$anchor.trigger($.Event("keydown", {key: 'Enter', keyCode: 13}));
-        },
+        run: "select Illustrations",
     }, {
         content: "Double click on the first image",
         trigger: ".o_select_media_dialog img.o_we_attachment_highlight",
-        run: "dblclick",
+        run: "click",
     }, {
         content: "Reopen the media dialog",
-        trigger: "iframe .s_text_image img",
+        trigger: ":iframe .s_text_image img",
         run: "dblclick",
     }, {
         content: "Check that the image was created only once",
-        trigger: ".o_select_media_dialog .o_we_existing_attachments",
+        trigger: ".o_select_media_dialog .o_we_existing_attachments .o_existing_attachment_cell img[src^='/html_editor/shape/illustration/']",
         run() {
-            const selector = ".o_existing_attachment_cell img[src^='/web_editor/shape/illustration/']";
-            const imgName = this.anchor.querySelector(selector).title;
-            const uploadedImgs = this.anchor.querySelectorAll(`${selector}[title='${imgName}']`);
+            const listEl = this.anchor.closest(".o_select_media_dialog .o_we_existing_attachments");
+            const selector = ".o_existing_attachment_cell img[src^='/html_editor/shape/illustration/']";
+            const uploadedImgs = listEl.querySelectorAll(`${selector}[title='${this.anchor.title}']`);
             if (uploadedImgs.length !== 1) {
                 throw new Error(`${uploadedImgs.length} attachment(s) were found. Exactly 1 should have been created.`);
             }
