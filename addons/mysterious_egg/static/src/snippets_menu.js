@@ -1,7 +1,6 @@
 import { Component, onWillDestroy, onMounted, useState } from "@odoo/owl";
-import { Notebook } from "@web/core/notebook/notebook";
-import { blockTab } from "./snippets_menu_tabs/block_tab";
-import { customizeTab } from "./snippets_menu_tabs/customize_tab";
+import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
+import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
 import { registry } from "@web/core/registry";
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
@@ -21,13 +20,17 @@ function onIframeLoaded(iframe, callback) {
 
 export class SnippetsMenu extends Component {
     static template = "mysterious_egg.SnippetsMenu";
-    static components = { Notebook };
+    static components = { BlockTab, CustomizeTab };
     static props = ["iframe"];
 
     setup() {
         const actionService = useService("action");
         this.pages = [blockTab, customizeTab];
-        this.state = useState({ canUndo: true, canRedo: true });
+        this.state = useState({
+            canUndo: true,
+            canRedo: true,
+            activeTab: "blocks",
+        });
         this.editor = new Editor(
             {
                 Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN],
@@ -52,6 +55,10 @@ export class SnippetsMenu extends Component {
 
     save() {
         console.log("todo");
+    }
+
+    setTab(tab) {
+        this.state.activeTab = tab;
     }
 }
 
