@@ -218,6 +218,7 @@ function getImageUrl (file) {
 export class OdooEditor extends EventTarget {
     constructor(editable, options = {}) {
         super();
+        // draft for testing
 
         this.options = defaultOptions(
             {
