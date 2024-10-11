@@ -73,6 +73,7 @@ regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
+GC_UNLINK_LIMIT = 100_000
 
 INSERT_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
@@ -6859,11 +6860,13 @@ class TransientModel(Model):
         query = """
             SELECT id FROM "{}"
             WHERE COALESCE(write_date, create_date, (now() AT TIME ZONE 'UTC'))::timestamp
-                < (now() AT TIME ZONE 'UTC') - interval %s
-        """.format(self._table)
+                < (now() AT TIME ZONE 'UTC') - interval %s LIMIT {}
+        """.format(self._table, GC_UNLINK_LIMIT)
         self._cr.execute(query, ["%s seconds" % seconds])
         ids = [x[0] for x in self._cr.fetchall()]
         self.sudo().browse(ids).unlink()
+        if len(ids) >= GC_UNLINK_LIMIT:
+            self.env.ref('base.autovacuum_job')._trigger()
 
 
 def itemgetter_tuple(items):
