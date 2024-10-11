@@ -1,10 +1,11 @@
-import { Component, onWillStart, useRef } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { LazyComponent } from "@web/core/assets";
 import { BuilderOverlayPlugin } from "@mysterious_egg/editor/builder_overlay/builder_overlay_plugin";
+import { WebsiteSystrayItem } from "./website_systray_item";
 
 export const unslugHtmlDataObject = (repr) => {
     const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
@@ -39,6 +40,26 @@ class WebsiteBuilder extends Component {
             this.backendWebsiteId = unslugHtmlDataObject(slugCurrentWebsite).id;
             this.initialUrl = `/website/force/${encodeURIComponent(this.backendWebsiteId)}`;
         });
+
+        const systrayProps = {
+            onNewPage: this.onNewPage.bind(this),
+            onEditPage: this.onEditPage.bind(this),
+        };
+
+        registry.category("systray")
+            .add("website.WebsiteSystrayItem", {Component: WebsiteSystrayItem, props: systrayProps}, { sequence: -100 });
+        onWillDestroy(() => {
+            registry.category("systray").remove("website.WebsiteSystrayItem");
+        })
+
+    }
+
+    onNewPage() {
+        console.log("todo: new page");
+    }
+
+    onEditPage() {
+        console.log("todo: editpage");
     }
 
     onWebsiteLoaded() {
