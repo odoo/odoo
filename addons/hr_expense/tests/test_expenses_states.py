@@ -58,6 +58,7 @@ class TestExpensesStates(TestExpenseCommon):
             {'payment_mode': 'own_account', 'state': 'submit', 'payment_state': 'not_paid'},
             {'payment_mode': 'company_account', 'state': 'submit', 'payment_state': 'not_paid'},
         ])
+        self.assertFalse(self.expense_states_sheets.account_move_ids)
 
         # STEP 3: Approve (creates moves in draft)
         self.expense_states_sheets._do_approve()
@@ -73,6 +74,8 @@ class TestExpensesStates(TestExpenseCommon):
             {'state': 'draft'},
             {'state': 'draft'},
         ])
+        self.assertEqual('draft', self.expense_states_company_sheet.account_move_ids.origin_payment_id.state)
+        self.assertFalse(self.expense_states_employee_sheet.account_move_ids.origin_payment_id)
 
         # STEP 4: Post
         self.expense_states_sheets.action_sheet_move_post()
@@ -88,6 +91,9 @@ class TestExpensesStates(TestExpenseCommon):
             {'state': 'posted'},
             {'state': 'posted'},
         ])
+
+        self.assertEqual('in_process', self.expense_states_company_sheet.account_move_ids.origin_payment_id.state)
+        self.assertFalse(self.expense_states_employee_sheet.account_move_ids.origin_payment_id)
 
     def test_expense_state_synchro_2_employee_specific_flow(self):
         self.expense_states_sheets.action_submit_sheet()
@@ -210,7 +216,7 @@ class TestExpensesStates(TestExpenseCommon):
         ])
 
         # STEP 8: ER Done (fully paid) -> Reset to draft payment (Reverts to post state)
-        payment.move_id.button_draft()
+        payment.action_draft()
         self.assertRecordValues(self.expense_states_employee_sheet.expense_line_ids, [
             {'state': 'approved'},
         ])
@@ -222,7 +228,7 @@ class TestExpensesStates(TestExpenseCommon):
         ])
 
     def test_expense_state_synchro_3_company_specific_flow(self):
-        self.expense_states_company_sheet.action_submit_sheet()
+        self.expense_states_company_sheet._do_submit()
         self.expense_states_company_sheet._do_approve()
         self.expense_states_company_sheet.action_sheet_move_post()
 
@@ -239,7 +245,7 @@ class TestExpensesStates(TestExpenseCommon):
         ])
 
         self.expense_states_company_sheet.account_move_ids.action_post()
-        self.expense_states_company_sheet.account_move_ids.button_draft()
+        self.expense_states_company_sheet.account_move_ids.origin_payment_id.action_draft()
         self.assertRecordValues(self.expense_states_company_sheet.expense_line_ids, [
             {'state': 'approved'},
         ])
@@ -250,34 +256,42 @@ class TestExpensesStates(TestExpenseCommon):
             {'state': 'draft'},
         ])
 
-        # STEP 2: ER Done & paid (draft move) -> Cancel move or payment (nothing changes)
+        # STEP 2: ER approved (draft move) -> Cancel move (back to approved stage, without linked move)
+        expense_sheet_old_payment = self.expense_states_company_sheet.account_move_ids.origin_payment_id
         self.expense_states_company_sheet.account_move_ids.button_cancel()
-        self.assertRecordValues(self.expense_states_company_sheet.expense_line_ids, [
-            {'state': 'done'},
-        ])
+        self.assertEqual('approved', self.expense_states_company_sheet.expense_line_ids.state)
         self.assertRecordValues(self.expense_states_company_sheet, [
-            {'state': 'done', 'payment_state': 'paid'},
+            {'state': 'approve', 'payment_state': 'not_paid'},
         ])
-        self.assertRecordValues(self.expense_states_company_sheet.account_move_ids, [
-            {'state': 'cancel'},
-        ])
-        self.expense_states_company_sheet.account_move_ids.button_draft()
-        self.expense_states_company_sheet.account_move_ids.button_cancel()
-        self.assertRecordValues(self.expense_states_company_sheet.expense_line_ids, [
-            {'state': 'done'},
-        ])
-        self.assertRecordValues(self.expense_states_company_sheet, [
-            {'state': 'done', 'payment_state': 'paid'},
-        ])
-        self.assertRecordValues(self.expense_states_company_sheet.account_move_ids, [
+        self.assertFalse(self.expense_states_company_sheet.account_move_ids)
+        self.assertRecordValues(expense_sheet_old_payment.move_id, [
             {'state': 'cancel'},
         ])
 
-        # Change move state to draft
-        self.expense_states_company_sheet.account_move_ids.button_draft()
+        # Go back to an approved expense sheet with a linked move
+        self.expense_states_company_sheet.action_reset_expense_sheets()
+        self.expense_states_company_sheet._do_submit()
+        self.expense_states_company_sheet._do_approve()
 
-        # STEP 3: ER draft & paid -> Delete move (Back to approve state)
-        self.expense_states_company_sheet.account_move_ids.origin_payment_id.unlink()
+        # STEP 2.5: ER approved (draft move) -> Cancel payment (back to approved stage, without linked move)
+        expense_sheet_old_payment = self.expense_states_company_sheet.account_move_ids.origin_payment_id
+        self.expense_states_company_sheet.account_move_ids.origin_payment_id.action_cancel()
+        self.assertRecordValues(self.expense_states_company_sheet.expense_line_ids, [
+            {'state': 'approved'},
+        ])
+        self.assertRecordValues(self.expense_states_company_sheet, [
+            {'state': 'approve', 'payment_state': 'not_paid'},
+        ])
+        self.assertFalse(self.expense_states_company_sheet.account_move_ids)
+        self.assertRecordValues(expense_sheet_old_payment, [
+            {'state': 'canceled', 'move_id': False},
+        ])
+
+        # Re-create move and state to draft
+        self.expense_states_company_sheet.action_sheet_move_post()
+        self.expense_states_company_sheet.account_move_ids.origin_payment_id.action_draft()
+
+        # STEP 3: ER approved (draft move) -> Delete move (Nothing changes)
         self.expense_states_company_sheet.account_move_ids.unlink()
         self.assertRecordValues(self.expense_states_company_sheet.expense_line_ids, [
             {'state': 'approved'},

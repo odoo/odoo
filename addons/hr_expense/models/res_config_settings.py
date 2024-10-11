@@ -16,7 +16,13 @@ class ResConfigSettings(models.TransientModel):
     module_hr_payroll_expense = fields.Boolean(string='Reimburse Expenses in Payslip')
     module_hr_expense_extract = fields.Boolean(string='Send bills to OCR to generate expenses')
     expense_journal_id = fields.Many2one('account.journal', related='company_id.expense_journal_id', readonly=False, check_company=True, domain="[('type', '=', 'purchase')]")
-    expense_outstanding_account_id = fields.Many2one('account.account', related='company_id.expense_outstanding_account_id', readonly=False, check_company=True)
+    expense_outstanding_account_id = fields.Many2one(
+        comodel_name='account.account',
+        related='company_id.expense_outstanding_account_id',
+        domain="[('account_type', '=', 'asset_current'), ('reconcile', '=', True)]",
+        readonly=False,
+        check_company=True,
+    )
     company_expense_allowed_payment_method_line_ids = fields.Many2many(
         comodel_name='account.payment.method.line',
         check_company=True,
