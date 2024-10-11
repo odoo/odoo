@@ -929,6 +929,11 @@ export class PosStore extends Reactive {
             }
         }
 
+        if (typeof order.id === "string" && order.finalized) {
+            this.addPendingOrder([order.id]);
+            return;
+        }
+
         return this.data.localDeleteCascade(order, removeFromServer);
     }
 
