@@ -31,23 +31,30 @@ test("avatar card preview with hr", async () => {
         employee_id: employeeId,
     });
     env["m2x.avatar.user"].create({ user_id: userId });
-    onRpc("res.users", "read", (request) => {
-        expect.step("user read");
-        expect(request.args[1]).toEqual([
-            "name",
-            "email",
-            "phone",
-            "im_status",
-            "share",
-            "partner_id",
-            "work_phone",
-            "work_email",
-            "work_location_name",
-            "work_location_type",
-            "job_title",
-            "department_id",
-            "employee_ids",
-        ]);
+    onRpc("res.users", "web_read", (request) => {
+        expect.step("user web read");
+        expect(request.kwargs.specification).toEqual({
+            email: {},
+            employee_id: {
+                fields: {
+                  department_id: {
+                    fields: {
+                      display_name: {},
+                    },
+                  },
+                  job_title: {},
+                  work_email: {},
+                  work_location_name: {},
+                  work_location_type: {},
+                  work_phone: {},
+                },
+            },
+            im_status: {},
+            name: {},
+            partner_id: {},
+            phone: {},
+            share: {}
+        });
     });
     await mountView({
         type: "kanban",
@@ -61,7 +68,7 @@ test("avatar card preview with hr", async () => {
         </kanban>`,
     });
     await contains(".o_m2o_avatar > img").click();
-    expect.verifySteps(["user read"]);
+    expect.verifySteps(["user web read"]);
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card span[data-tooltip='Work Location'] .fa-building-o").toHaveCount(1);
     expect(queryAllTexts(".o_card_user_infos > *")).toEqual([
