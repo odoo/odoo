@@ -10,6 +10,9 @@
     'description': """
     """,
     'depends': ['l10n_us', 'account'],
+    'data': [
+        'views/res_bank_views.xml',
+    ],
     'installable': True,
     'auto_install': ['account'],
     'license': 'LGPL-3',
