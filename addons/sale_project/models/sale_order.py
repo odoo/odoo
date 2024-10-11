@@ -151,7 +151,19 @@ class SaleOrder(models.Model):
         form_view_id = self.env.ref('project.view_task_form2').id
         kanban_view_id = self.env.ref('project.view_task_kanban_inherit_view_default_project').id
 
-        action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
+        project_ids = self.tasks_ids.project_id
+        if len(project_ids) > 1:
+            action = self.env['ir.actions.actions']._for_xml_id('project.action_view_task')
+            action['domain'] = AND([ast.literal_eval(action['domain']), [('id', 'in', self.tasks_ids.ids)]])
+            action['context'] = {}
+        else:
+            # Load top bar if all the tasks linked to the SO belong to the same project
+            action = self.env['ir.actions.actions'].with_context({'active_id': project_ids.id})._for_xml_id('project.act_project_project_2_project_task_all')
+            action['context'] = {
+                'active_id': project_ids.id,
+                'search_default_sale_order_id': self.id,
+            }
+
         if self.tasks_count > 1:  # cross project kanban task
             for idx, (view_id, view_type) in enumerate(action['views']):
                 if view_type == 'kanban':
@@ -167,14 +179,13 @@ class SaleOrder(models.Model):
         default_line = next((sol for sol in self.order_line if sol.product_id.type == 'service'), self.env['sale.order.line'])
         default_project_id = default_line.project_id.id or self.project_ids[:1].id or self.tasks_ids.project_id[:1].id
 
-        action['context'] = {
+        action['context'].update({
             'default_sale_order_id': self.id,
             'default_sale_line_id': default_line.id,
             'default_partner_id': self.partner_id.id,
             'default_project_id': default_project_id,
             'default_user_ids': [self.env.uid],
-        }
-        action['domain'] = AND([ast.literal_eval(action['domain']), [('id', 'in', self.tasks_ids.ids)]])
+        })
         return action
 
     def action_create_project(self):
