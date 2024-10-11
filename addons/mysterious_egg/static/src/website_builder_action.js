@@ -1,13 +1,16 @@
-import { Component, onWillDestroy, onWillStart, useRef } from "@odoo/owl";
+import {
+    Component,
+    onWillDestroy,
+    onWillStart,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Editor } from "@html_editor/editor";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { LazyComponent } from "@web/core/assets";
-import { BuilderOverlayPlugin } from "@mysterious_egg/builder_overlay_plugin/builder_overlay_plugin";
 import { WebsiteSystrayItem } from "./website_systray_item";
 
-export const unslugHtmlDataObject = (repr) => {
+function unslugHtmlDataObject(repr) {
     const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
     if (!match) {
         return null;
@@ -16,9 +19,7 @@ export const unslugHtmlDataObject = (repr) => {
         model: match[1],
         id: match[2] | 0,
     };
-};
-
-const BUILDER_PLUGIN = [BuilderOverlayPlugin];
+}
 
 class WebsiteBuilder extends Component {
     static template = "mysterious_egg.WebsiteBuilder";
@@ -27,16 +28,13 @@ class WebsiteBuilder extends Component {
     setup() {
         this.orm = useService("orm");
         this.websiteContent = useRef("iframe");
-
-        // this.editor = new Editor(
-        //     {
-        //         Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN],
-        //     },
-        //     this.env.services
-        // );
+        this.state = useState({ isEditing: false });
 
         onWillStart(async () => {
-            const slugCurrentWebsite = await this.orm.call("website", "get_current_website");
+            const slugCurrentWebsite = await this.orm.call(
+                "website",
+                "get_current_website",
+            );
             this.backendWebsiteId = unslugHtmlDataObject(slugCurrentWebsite).id;
             this.initialUrl = `/website/force/${encodeURIComponent(this.backendWebsiteId)}`;
         });
@@ -46,12 +44,22 @@ class WebsiteBuilder extends Component {
             onEditPage: this.onEditPage.bind(this),
         };
 
-        registry.category("systray")
-            .add("website.WebsiteSystrayItem", {Component: WebsiteSystrayItem, props: systrayProps}, { sequence: -100 });
+        registry
+            .category("systray")
+            .add(
+                "website.WebsiteSystrayItem",
+                { Component: WebsiteSystrayItem, props: systrayProps },
+                { sequence: -100 },
+            );
         onWillDestroy(() => {
             registry.category("systray").remove("website.WebsiteSystrayItem");
-        })
+        });
+    }
 
+    get menuProps() {
+        return {
+            iframe: this.websiteContent.el,
+        };
     }
 
     onNewPage() {
@@ -59,11 +67,8 @@ class WebsiteBuilder extends Component {
     }
 
     onEditPage() {
-        console.log("todo: editpage");
-    }
-
-    onWebsiteLoaded() {
-        // this.editor.attachTo(this.websiteContent.el.contentDocument.body);
+        this.state.isEditing = true;
+        registry.category("systray").remove("website.WebsiteSystrayItem");
     }
 }
 
