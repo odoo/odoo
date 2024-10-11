@@ -601,7 +601,9 @@ class IrMailServer(models.Model):
         smtp_to_list = [
             address
             for base in [email_to, email_cc, email_bcc]
-            for address in extract_rfc2822_addresses(base)
+            # be sure a given address does not return duplicates (but duplicates
+            # in final smtp to list is still ok)
+            for address in tools.misc.unique(extract_rfc2822_addresses(base))
             if address
         ]
         assert smtp_to_list, self.NO_VALID_RECIPIENT
