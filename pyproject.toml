@@ -44,6 +44,10 @@ dependencies = [
     'zeep',
 ]
 
+[project.scripts]
+odoo = "odoo.cli.command:main"
+odoo-bin = "odoo.cli.command:main"
+
 [tool.setuptools]
 packages = ["odoo"]
 
