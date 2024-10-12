@@ -998,10 +998,6 @@ actual arch.
         group_definitions = self.env['res.groups']._get_group_definitions()
 
         user_group_ids = self.env.user._get_group_ids()
-        # The 'base.group_no_one' is not actually involved by any other group because it is session dependent.
-        group_no_one_id = group_definitions.get_id('base.group_no_one')
-        if group_no_one_id in user_group_ids and not (request and request.session.debug):
-            user_group_ids = [g for g in user_group_ids if g != group_no_one_id]
 
         # check the read/visibility access
         @functools.cache
@@ -1059,6 +1055,33 @@ actual arch.
 
         return tree
 
+    def _postprocess_features_to_cache(self, tree):
+        group_features = {'base.group_no_one', 'base.group_multi_company'}
+        remove = {f'!{group}' for group in group_features}
+        group_features |= remove
+        for node in tree.xpath("//*[@groups]"):
+            groups = set(node.attrib.get('groups', '').split(','))
+            features = group_features & groups
+            if features:
+                node.attrib['__features__'] = ','.join(features)
+                node.attrib['groups'] = ','.join(groups - remove)
+
+    def _postprocess_features(self, tree):
+        debug = request and request.session.debug
+        multi = len(self.env.user.company_ids) > 1
+        group_features = {
+            'base.group_no_one': debug,
+            '!base.group_no_one': not debug,
+            'base.group_multi_company': multi,
+            '!base.group_multi_company': not multi,
+        }
+        for node in tree.xpath('//*[@__features__]'):
+            features = node.attrib.pop('__features__')
+            for feature, value in group_features.items():
+                if value == (feature not in features):
+                    node.attrib['invisible'] = '1'
+        return tree
+
     def _postprocess_view(self, node, model_name, editable=True, node_info=None, **options):
         """ Process the given architecture, modifying it in-place to add and
         remove stuff.
@@ -1097,6 +1120,8 @@ actual arch.
         }
 
         is_compute_warning_info = options.get('is_compute_warning_info')
+
+        self._postprocess_features_to_cache(root)
 
         # use a stack to recursively traverse the tree
         stack = [(root, view_groups, editable)]
@@ -2758,6 +2783,7 @@ class Model(models.AbstractModel):
 
         node = etree.fromstring(result['arch'])
         node = self.env['ir.ui.view']._postprocess_access_rights(node)
+        node = self.env['ir.ui.view']._postprocess_features(node)
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result

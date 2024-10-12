@@ -1187,6 +1187,8 @@ class Users(models.Model):
         result = self._has_group(group_ext_id)
         if group_ext_id == 'base.group_no_one':
             result = result and bool(request and request.session.debug)
+        elif group_ext_id == 'base.group_multi_company':
+            result = result and len(self.company_ids) > 1
         return result
 
     def _has_group(self, group_ext_id: str) -> bool:
@@ -1532,18 +1534,13 @@ class GroupsImplied(models.Model):
         """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
         groups = self.sudo().search([], order='id')
         id_to_ref = groups.get_external_id()
-
-        # The 'base.group_no_one' is not actually involved by any other group because it is session dependent.
-        group_no_one_id = {gid for gid, ref in id_to_ref.items() if ref == 'base.group_no_one'}
-
         data = {
             group.id: {
                 'ref': id_to_ref[group.id] or str(group.id),
-                'supersets': set(group.implied_ids.ids) - group_no_one_id,
+                'supersets': group.implied_ids.ids,
             }
             for group in groups
         }
-
         # determine exclusive groups (will be disjoint for the set expression)
         user_types_category_id = self.env['ir.model.data']._xmlid_to_res_id('base.module_category_user_type', raise_if_not_found=False)
         if user_types_category_id:
@@ -1865,44 +1862,18 @@ class UsersView(models.Model):
         new_vals_list = []
         for values in vals_list:
             new_vals_list.append(self._remove_reified_groups(values))
-        users = super(UsersView, self).create(new_vals_list)
-        group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
-            'base.group_multi_company', raise_if_not_found=False)
-        if group_multi_company_id:
-            for user in users:
-                if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
-                    user.write({'groups_id': [Command.unlink(group_multi_company_id)]})
-                elif len(user.company_ids) > 1 and group_multi_company_id not in user.groups_id.ids:
-                    user.write({'groups_id': [Command.link(group_multi_company_id)]})
-        return users
+        return super().create(new_vals_list)
 
     def write(self, values):
         values = self._remove_reified_groups(values)
-        res = super(UsersView, self).write(values)
-        if 'company_ids' not in values:
-            return res
-        group_multi_company = self.env.ref('base.group_multi_company', False)
-        if group_multi_company:
-            for user in self:
-                if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                    user.write({'groups_id': [Command.unlink(group_multi_company.id)]})
-                elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                    user.write({'groups_id': [Command.link(group_multi_company.id)]})
-        return res
+        return super().write(values)
 
     @api.model
     def new(self, values=None, origin=None, ref=None):
         if values is None:
             values = {}
         values = self._remove_reified_groups(values)
-        user = super().new(values=values, origin=origin, ref=ref)
-        group_multi_company = self.env.ref('base.group_multi_company', False)
-        if group_multi_company and 'company_ids' in values:
-            if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                user.update({'groups_id': [Command.unlink(group_multi_company.id)]})
-            elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                user.update({'groups_id': [Command.link(group_multi_company.id)]})
-        return user
+        return super().new(values=values, origin=origin, ref=ref)
 
     def _prepare_warning_for_group_inheritance(self, user):
         """ Check (updated) groups configuration for user. If implieds groups
