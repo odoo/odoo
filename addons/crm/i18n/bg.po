@@ -184,6 +184,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Similar Leads</span>\n"
 "                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Подобни потенциални клиенти</span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Подобен потенциален клиент</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -191,11 +193,13 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Leads</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">Потенциални клиенти</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">Възможности</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Потенциални клиенти</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -235,16 +239,18 @@ msgid ""
 "<span> leads assigned this month\n"
 "                            on a maximum of </span>"
 msgstr ""
+"<span> потенциални клиенти, възложени този месец\n"
+"                            при максимум от </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "<span>Expected Revenues:</span>"
-msgstr ""
+msgstr "<span>Очаквани приходи:</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "<span>Merged the Lead/Opportunity</span>"
-msgstr ""
+msgstr "<span>Обединени потенциален клиент/възможност</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -255,6 +261,10 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Периодично възлагайте потенциални клиенти въз основа на правила</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    Всички екипи по продажбите ще използват тази настройка по подразбиране, освен ако е указано друго.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3175,12 +3185,12 @@ msgstr "Търговски отдел"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "Екип Продажби"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Sales Team:"
-msgstr ""
+msgstr "Екип Продажби:"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
@@ -3486,7 +3496,7 @@ msgstr "Екипи"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_member_config
 msgid "Teams Members"
-msgstr ""
+msgstr "Членове на екипа"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
