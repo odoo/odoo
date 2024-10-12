@@ -767,9 +767,9 @@ test.tags("desktop")("range value", async () => {
     });
 
     expect(queryAllTexts(".o_time_picker_select:eq(0) option")).toEqual(range(24, String));
-    expect(queryAllTexts(".o_time_picker_select:eq(1) option")).toEqual(
-        range(12, (i) => pad2(i * 5))
-    );
+    const expectedMinutes = range(12, (i) => pad2(i * 5));
+    expectedMinutes.unshift("");
+    expect(queryAllTexts(".o_time_picker_select:eq(1) option")).toEqual(expectedMinutes);
 
     expect(queryAllTexts(".o_time_picker_select:eq(2) option")).toEqual(range(24, String));
     expect(queryAllTexts(".o_time_picker_select:eq(3) option")).toEqual(
@@ -816,9 +816,9 @@ test("range value on small device", async () => {
     });
 
     expect(queryAllTexts(".o_time_picker_select:eq(0) option")).toEqual(range(24, String));
-    expect(queryAllTexts(".o_time_picker_select:eq(1) option")).toEqual(
-        range(12, (i) => pad2(i * 5))
-    );
+    const expectedMinutes = range(12, (i) => pad2(i * 5));
+    expectedMinutes.unshift("");
+    expect(queryAllTexts(".o_time_picker_select:eq(1) option")).toEqual(expectedMinutes);
 
     expect(queryAllTexts(".o_time_picker_select:eq(2) option")).toEqual(range(24, String));
     expect(queryAllTexts(".o_time_picker_select:eq(3) option")).toEqual(
