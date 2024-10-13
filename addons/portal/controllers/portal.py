@@ -332,7 +332,6 @@ class CustomerPortal(Controller):
 
         # country and state validation
         country_id = data.get("country_id")
-
         if country_id and country_id.isdigit():
             country_id = request.env['res.country'].browse(int(country_id))
 
