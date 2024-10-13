@@ -6,6 +6,7 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Wil Odoo, 2024
 # Chloe Wang, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr ""
 "* 已确认：生产订单已确认，触发库存规则和组件重新订购。\n"
 "* 进行中：生产已开始（生产订单或工单（WO））。\n"
 "* 待关闭：生产已完成，须关闭生产订单。\n"
-"* 已完成：生产订单已关闭，库存分录已过帐。\n"
+"* 已完成：生产订单已关闭，库存分录已过账。\n"
 "* 已取消：生产订单已取消，无法确认。"
 
 #. module: mrp
@@ -458,7 +459,7 @@ msgstr "<span>与套件无关的产品</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>报告</span>"
+msgstr "<span>报表</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -718,17 +719,17 @@ msgstr "分配"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
-msgstr "分配报告"
+msgstr "分配报表"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report Labels"
-msgstr "分配报告标签"
+msgstr "分配报表标签"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_reception_report
 msgid "Allocation Report for Manufacturing Orders"
-msgstr "制造订单分配报告"
+msgstr "制造订单分配报表"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -865,7 +866,7 @@ msgstr "自动打印分配报告"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
 msgid "Auto Print Allocation Report Labels"
-msgstr "自动打印分配报告标签"
+msgstr "自动打印分配报表标签"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -967,7 +968,7 @@ msgstr "单位平均总成本"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr "物料清单（BOM）概述报告"
+msgstr "物料清单（BOM）概述报表"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -1125,7 +1126,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "阻塞"
+msgstr "构造块"
 
 #. module: mrp
 #. odoo-javascript
@@ -1174,7 +1175,7 @@ msgstr "受阻原因"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
 msgid "Blocks"
-msgstr "阻塞"
+msgstr "构造块"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -1850,7 +1851,7 @@ msgstr "日期"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__search_date_category
 msgid "Date Category"
-msgstr ""
+msgstr "日期类别"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3098,7 +3099,7 @@ msgstr "生产订单（MO）概述"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr "生产订单（MO）概述报告"
+msgstr "生产订单（MO）概述报表"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3135,7 +3136,7 @@ msgstr "MRP ：可见于"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
 msgid "MRP Reception Report"
-msgstr "物料需求计划（MRP）接收报告"
+msgstr "物料需求计划（MRP）接收报表"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -3727,8 +3728,8 @@ msgid ""
 "                                barcode operator and configure the routing of the reports."
 msgstr ""
 "Odoo 默认打开 PDF 预览。如果您想立即打印、\n"
-"                                在与条码操作员位于同一本地网络的计算机上安装 IoT 应用程序，并配置报告的路由。\n"
-"                                条码操作员的计算机上安装物联网应用程序，并配置报告的路由。"
+"                                在与条码操作员位于同一本地网络的计算机上安装 IoT 应用程序，并配置报表的路由。\n"
+"                                条码操作员的计算机上安装物联网应用程序，并配置报表的路由。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -4746,7 +4747,7 @@ msgstr "补货"
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Reporting"
-msgstr "报告"
+msgstr "报表"
 
 #. module: mrp
 #. odoo-javascript
@@ -5252,12 +5253,12 @@ msgstr "库存移动"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_reception
 msgid "Stock Reception Report"
-msgstr "库存接收报告"
+msgstr "库存接收报表"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr "库存补货报告"
+msgstr "库存补货报表"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
@@ -5272,7 +5273,7 @@ msgstr "制造后库存位置"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "库存规则报告"
+msgstr "库存规则报表"
 
 #. module: mrp
 #. odoo-python
@@ -5610,7 +5611,7 @@ msgstr "该生产已在%s中合并"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "This production order has been created from Replenishment Report."
-msgstr "该生产订单已由补货报告创建。"
+msgstr "该生产订单已由补货报表创建。"
 
 #. module: mrp
 #. odoo-python
@@ -5839,7 +5840,7 @@ msgstr "可追溯性"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_traceability_report
 msgid "Traceability Report"
-msgstr "可追溯性报告"
+msgstr "可追溯性报表"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__tracking
@@ -6035,7 +6036,7 @@ msgstr "使用作业依赖性"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
-msgstr "将接收报告与制造订单一起使用"
+msgstr "将接收报表与制造订单一起使用"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button

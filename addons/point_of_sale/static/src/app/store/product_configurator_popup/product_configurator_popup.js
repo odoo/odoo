@@ -33,12 +33,14 @@ export class BaseProductAttribute extends Component {
                 return val.name;
             })
             .join(", ");
+        const hasCustom = attribute_value_ids.some((val) => val.is_custom);
 
         return {
             value,
             valueIds,
             custom_value: this.state.custom_value,
             extra,
+            hasCustom,
         };
     }
 
@@ -130,10 +132,10 @@ export class ProductConfiguratorPopup extends Component {
         var price_extra = 0.0;
 
         this.state.payload.forEach((attribute_component) => {
-            const { valueIds, extra, custom_value } = attribute_component.getValue();
+            const { valueIds, extra, custom_value, hasCustom } = attribute_component.getValue();
             attribute_value_ids.push(valueIds);
 
-            if (custom_value) {
+            if (hasCustom) {
                 // for custom values, it will never be a multiple attribute
                 attribute_custom_values[valueIds[0]] = custom_value;
             }

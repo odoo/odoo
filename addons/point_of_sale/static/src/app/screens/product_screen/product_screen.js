@@ -97,14 +97,32 @@ export class ProductScreen extends Component {
             ? [...selectedCategory.child_ids]
             : this.pos.models["pos.category"].filter((category) => !category.parent_id);
     }
-    getCategoriesAndSub() {
-        return this.getAncestorsAndCurrent()
-            .flatMap((category) => this.getChildCategoriesInfo(category))
-            .toSorted((a, b) => a.id - b.id);
+
+    getCategoriesList(list, allParents, depth) {
+        return list.map((category) => {
+            if (category.id === allParents[depth]?.id && category.child_ids?.length) {
+                return [
+                    category,
+                    this.getCategoriesList(category.child_ids, allParents, depth + 1),
+                ];
+            }
+            return category;
+        });
     }
 
-    getChildCategoriesInfo(selectedCategory) {
-        return this.getChildCategories(selectedCategory).map((category) => ({
+    getCategoriesAndSub() {
+        const rootCategories = this.pos.models["pos.category"].filter(
+            (category) => !category.parent_id
+        );
+        const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
+        const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
+        return this.getCategoriesList(rootCategories, allParents, 0)
+            .flat(Infinity)
+            .map(this.getChildCategoriesInfo, this);
+    }
+
+    getChildCategoriesInfo(category) {
+        return {
             ...pick(category, "id", "name", "color"),
             imgSrc:
                 this.pos.config.show_category_images && category.has_image
@@ -112,7 +130,7 @@ export class ProductScreen extends Component {
                     : undefined,
             isSelected: this.getAncestorsAndCurrent().includes(category),
             isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
-        }));
+        };
     }
 
     getNumpadButtons() {
@@ -318,18 +336,19 @@ export class ProductScreen extends Component {
             list = this.products;
         }
 
-        if (!list) {
+        if (!list || list.length === 0) {
             return [];
         }
 
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
         list = list
             .filter(
-                (product) =>
-                    ![
-                        this.pos.config.tip_product_id?.id,
-                        ...this.pos.hiddenProductIds,
-                        ...this.pos.session._pos_special_products_ids,
-                    ].includes(product.id) && product.available_in_pos
+                (product) => !excludedProductIds.includes(product.id) && product.available_in_pos
             )
             .slice(0, 100);
 
@@ -358,9 +377,9 @@ export class ProductScreen extends Component {
     }
 
     getProductsByCategory(category) {
-        const allCategories = category.getAllChildren();
-        return this.products.filter((p) =>
-            p.pos_categ_ids.some((categId) => allCategories.includes(categId))
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        return allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
         );
     }
 
