@@ -41,6 +41,9 @@ msgid ""
 "\n"
 "Transfers %s: You need to supply a Lot/Serial number for products %s."
 msgstr ""
+"\n"
+"\n"
+"Overføring %s: Du må oppgi et Lot/serienummer for produkter %s."
 
 #. module: stock
 #. odoo-python
@@ -50,6 +53,8 @@ msgid ""
 "\n"
 "(%s) exists in location %s"
 msgstr ""
+"\n"
+"(%s) eksisterer på lokasjon %s"
 
 #. module: stock
 #. odoo-python
@@ -60,6 +65,9 @@ msgid ""
 "The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"Mengden som er gjort for produktet %s, respekterer ikke avrundingspresisjonen definert for enheten %s.\n"
+" Vennligst endre mengden som er gjort eller avrundingspresisjonen for enheten din."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -75,13 +83,23 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
+"* Utkast: Overføringen er ikke bekreftet ennå. Reservasjon gjelder ikke \n"
+"* Venter på en annen operasjon: Denne overføringen venter på en annen operasjon før den er klar \n"
+"* Venter: Overføringen venter på tilgjengeligheten av noen produkter \n"
+"(a) Fraktpolitikken er \"Så snart som mulig\": ingen produkter kunne reserveres \n"
+"(b) Fraktpolitikken er \"Når alle produkter er klare\": ikke alle produktene kunne reserveres \n"
+"* Klar: Overføringen er klar til å behandles \n"
+"(a) Fraktpolitikken er \"Så snart som mulig\": minst ett produkt har blitt reservert \n"
+"(b) Fraktpolitikken er \"Når alle produkter er klare\": alle produkter har blitt reservert \n"
+"* Fullført: Overføringen har blitt behandlet \n"
+"* Kansellert: Overføringen har blitt kansellert "
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid " - Product: %s, Serial Number: %s"
-msgstr ""
+msgstr "- Produkt: %s, serienummer: %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__cyclic_inventory_frequency
@@ -90,18 +108,20 @@ msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
 msgstr ""
+"Når den er forskjellig fra 0, vil inventaretellingens dato for produkter "
+"lagret på dette stedet automatisk bli satt til den definerte frekvensen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
 msgid "# Returns"
-msgstr ""
+msgstr "# returer"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(name)s (copy)(%(id)s)"
-msgstr ""
+msgstr "%(name)s (kopi)(%(id)s)"
 
 #. module: stock
 #. odoo-python
@@ -111,13 +131,15 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
+"%(warehouse)s kan bare levere %(free_qty)s %(uom)s, mens antallet å bestille"
+" er %(qty_to_order)s %(uom)s."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
-msgstr ""
+msgstr "%(warehouse)s: Lever produkt fra %(supplier)s"
 
 #. module: stock
 #. odoo-python
@@ -138,14 +160,14 @@ msgstr "%s (kopi)"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
-msgstr ""
+msgstr "%s -> Produkt UoM er %s (%s) - Flytt UoM er %s (%s)"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "%s [reverted]"
-msgstr ""
+msgstr "%s  [tilbakeført]"
 
 #. module: stock
 #. odoo-python
@@ -155,11 +177,13 @@ msgid ""
 "%s use default source or destination locations from warehouse %s that will "
 "be archived."
 msgstr ""
+"%s bruk standard kilde- eller destinasjonssteder fra lager %s som vil bli "
+"arkivert."
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Count Sheet'"
-msgstr ""
+msgstr "'Telleskjema'"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -199,29 +223,29 @@ msgstr ""
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "(copy of) %s"
-msgstr ""
+msgstr "(kopi av) %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(document barcode)"
-msgstr ""
+msgstr "(dokument barkode) "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(package barcode)"
-msgstr ""
+msgstr "(pakke barkode)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(product barcode)"
-msgstr ""
+msgstr "(produkt barkode)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(serial barcode)"
-msgstr ""
+msgstr "(serienummer barkode)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state

@@ -3,8 +3,8 @@
 # 	* base_import_module
 # 
 # Translators:
-# Wil Odoo, 2023
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,15 +89,6 @@ msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr ""
-"لا ينبغي استخدام البيانات التجريبية إلا على قواعد البيانات التجريبية. بمجرد "
-"تحميل البيانات، لا يمكن إزالتها بالكامل! "
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
@@ -156,11 +147,6 @@ msgid "Import Module"
 msgstr "استيراد تطبيق "
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "استيراد البيانات التجريبية "
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
 msgstr "استيراد بيانات التطبيق التجريبية "
@@ -201,6 +187,20 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "تحميل البيانات التجريبية"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -284,13 +284,6 @@ msgstr "تخصيصات الاستوديو تتطلب وجود تطبيق الا�
 #, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "تخصيصات الاستوديو تتطلب وجود تطبيق الاستوديو من أودو. "
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
-msgid "The following modules will also be installed:\n"
-msgstr "سيتم تثبيت التطبيقات التالية أيضاً:\n"
 
 #. module: base_import_module
 #. odoo-python
