@@ -5,6 +5,7 @@
 # Translators:
 # LINYUN TONG <tong.linyun@elico-corp.com>, 2024
 # Wil Odoo, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
 # Chloe Wang, 2024
 # 
 msgid ""
@@ -50,7 +51,7 @@ msgstr "账户令牌是您使用此服务的验证密钥。请勿共享。"
 msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
-msgstr ""
+msgstr "达到%s时出错。如果此错误仍然存在，请联系 Odoo 技术支持人员。"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -111,12 +112,12 @@ msgstr "显示名称"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
 msgid "Email Alert Recipients"
-msgstr ""
+msgstr "邮件警报收件人"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 msgid "Email Alert Threshold"
-msgstr ""
+msgstr "邮件警报阈值"
 
 #. module: iap
 #: model:iap.service,description:iap.iap_service_reveal
@@ -187,7 +188,7 @@ msgstr "上次更新日期"
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
-msgstr ""
+msgstr "管理服务并购买积分"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -206,18 +207,18 @@ msgstr "Odoo IAP"
 msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
-msgstr ""
+msgstr "其中一个电子邮件提醒收件人没有设置电子邮件地址。用户：%s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr ""
+msgstr "具有特定技术名称的服务只能存在"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr ""
+msgstr "请设置积极的电子邮件警报阈值。"
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -232,7 +233,7 @@ msgstr "服务"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr ""
+msgstr "服务已锁定"
 
 #. module: iap
 #. odoo-javascript

@@ -6,6 +6,10 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Jiri Grönroos <jiri.gronroos@iki.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
@@ -35,7 +39,7 @@ msgstr "Client Secret"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Koodi"
 
 #. module: payment_paypal
 #. odoo-python
@@ -52,7 +56,7 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
 msgid "Email"
-msgstr ""
+msgstr "Sähköposti"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
@@ -62,7 +66,7 @@ msgstr "Luo webhook"
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "How to configure your paypal account?"
-msgstr ""
+msgstr "Kuinka määrittää Paypal-tilisi?"
 
 #. module: payment_paypal
 #. odoo-python
@@ -74,13 +78,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
+msgstr "Puuttuva arvo txn_id (%(txn_id)s) tai txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Viitettä %s vastaavaa tapahtumaa ei löytynyt."
 
 #. module: payment_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
@@ -110,7 +114,7 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "PayPal-transaktion tyyppi"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_webhook_id
@@ -120,12 +124,12 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Maksupalveluntarjoaja"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Maksutapahtuma"
 
 #. module: payment_paypal
 #. odoo-javascript
@@ -137,7 +141,7 @@ msgstr "Maksun käsittely epäonnistui"
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Vastaanotetut tiedot, joiden maksutila on virheellinen: %s"
 
 #. module: payment_paypal
 #. odoo-python
@@ -149,7 +153,7 @@ msgstr "Yhteys API:n kanssa epäonnistui. Yksityiskohdat: %s"
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "Asiakas poistui maksusivulta."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token_expiry
@@ -161,6 +165,8 @@ msgstr ""
 msgid ""
 "The public business email solely used to identify the account with PayPal"
 msgstr ""
+"Julkinen yrityssähköpostiosoite, jota käytetään ainoastaan PayPal-tilin "
+"tunnistamiseen"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token
@@ -170,7 +176,7 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Tämän maksupalveluntarjoajan tekninen koodi."
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
