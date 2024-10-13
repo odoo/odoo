@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2024
-# Marta Waclawek, 2024
+# Marta Wacławek, 2024
 # Wil Odoo, 2024
+# Interactive AV-IT, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Interactive AV-IT, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -882,6 +883,14 @@ msgstr ""
 "aliasu"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+msgid ""
+"<small class=\"form-text text-muted\">\n"
+"                    You can choose how you want us to send your invoices, and with which electronic format.\n"
+"                </small>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
@@ -1734,6 +1743,8 @@ msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
+"Konta %(account)s zostaną podzielone na %(num_accounts)s, po jednym dla "
+"każdej firmy:\n"
 
 #. module: account
 #. odoo-python
@@ -3071,7 +3082,7 @@ msgstr "Zarchiwizowane"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Are you sure? This will perform the following operations:\n"
-msgstr ""
+msgstr "Czy jesteś pewien? Spowoduje to wykonanie następujących operacji:\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3394,6 +3405,7 @@ msgstr "Bank i gotówka"
 #: code:addons/account/models/account_move.py:0
 msgid "Bank & Cash accounts cannot be shared between companies."
 msgstr ""
+"Konta bankowe i gotówkowe nie mogą być współdzielone pomiędzy firmami."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -3679,7 +3691,7 @@ msgstr "Przed"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__before_date
 msgid "Before Next Payment Date"
-msgstr ""
+msgstr "Przed następną datą płatności"
 
 #. module: account
 #. odoo-python
@@ -6767,6 +6779,11 @@ msgstr "Edytuj kwoty podatku, jeśli napotkasz problemy z zaokrągleniem."
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Electronic Data Interchange"
 msgstr "Elektroniczna wymiana danych"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+msgid "Electronic format"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -12624,20 +12641,6 @@ msgid "RD Expenses"
 msgstr "Wydatki RD"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "Oceny"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Ponów sekwencje "
@@ -12687,6 +12690,11 @@ msgstr "Przyjęcie"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__inbound
 msgid "Receive Money"
 msgstr "Przyjmij pieniądze"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+msgid "Receive invoices"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -13562,6 +13570,13 @@ msgstr "Zabezpiecz opublikowane wpisy haszowaniem"
 #: model:ir.model.fields,field_description:account.field_account_move__secured
 msgid "Secured"
 msgstr "Zabezpieczono"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_secure_entries_wizard.py:0
+msgid ""
+"Securing these entries will also secure entries after the selected date."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16791,7 +16806,7 @@ msgstr "Łączna kwota, którą musisz zapłacić temu dostawcy."
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Total for the installments before %(date)s."
-msgstr ""
+msgstr "Suma za raty przed %(date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -18193,6 +18208,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
+"Nie można usunąć pozycji dziennika należących do zablokowanej pozycji "
+"dziennika."
 
 #. module: account
 #. odoo-python
@@ -18753,6 +18770,8 @@ msgid "bills for"
 msgstr "rachunki dla"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_sending_method__email
 msgid "by Email"
 msgstr "przez e-mail."

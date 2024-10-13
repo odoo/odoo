@@ -7,6 +7,7 @@
 # Martin Trigaux, 2024
 # Manon Rondou, 2024
 # Wil Odoo, 2024
+# Jordy Blankestijn <jblankestijn@erpopen.nl>, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
@@ -885,6 +886,14 @@ msgstr ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Aliasdomein instellen"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+msgid ""
+"<small class=\"form-text text-muted\">\n"
+"                    You can choose how you want us to send your invoices, and with which electronic format.\n"
+"                </small>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
@@ -1063,7 +1072,7 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted\">\n"
-"                                <i>Beveiligde invoer tot</i>\n"
+"                                <i>Beveilig de boekingen t/m</i>\n"
 "                            </span>"
 
 #. module: account
@@ -1740,6 +1749,8 @@ msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
+"Account %(account)s wordt opgesplitst in %(num_accounts)s, één voor elk "
+"bedrijf:\n"
 
 #. module: account
 #. odoo-python
@@ -3084,7 +3095,7 @@ msgstr "Gearchiveerd"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Are you sure? This will perform the following operations:\n"
-msgstr ""
+msgstr "Weet je het zeker? Dit voert de volgende bewerkingen uit:\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3406,7 +3417,7 @@ msgstr "Bank en Kas"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank & Cash accounts cannot be shared between companies."
-msgstr ""
+msgstr "Bank- en kasrekeningen kunnen niet worden gedeeld tussen bedrijven."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -5911,12 +5922,12 @@ msgstr "Standaard algemene voorwaarden"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms
 msgid "Default Terms and Conditions"
-msgstr "Standaard algemene voorwaarden"
+msgstr "Algemene voorwaarden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms_html
 msgid "Default Terms and Conditions as a Web page"
-msgstr "Standaard algemene voorwaarden als webpagina"
+msgstr "Algemene voorwaarden als webpagina"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_defaults
@@ -5953,7 +5964,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product"
-msgstr "Standaard btw-tarief gebruikt bij productaankoop"
+msgstr "Standaard btw-tarief gebruikt bij productinkoop"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
@@ -6069,7 +6080,7 @@ msgstr "Demo-voorraadrekening"
 #. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "Depending moves"
-msgstr "Afhankelijke verplaatsingen"
+msgstr "Afhankelijke boekingen"
 
 #. module: account
 #. odoo-python
@@ -6799,6 +6810,11 @@ msgstr "Bewerk BTW-bedragen als je afrondingsproblemen ondervindt."
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Electronic Data Interchange"
 msgstr "Electronic Data Interchange"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+msgid "Electronic format"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -8274,10 +8290,10 @@ msgid ""
 "sequence from the entry back to the last hashed entry. The hash can also be "
 "performed on demand by the Secure Entries wizard."
 msgstr ""
-"Als deze optie is aangevinkt, worden bij het posten van een entry alle "
-"zetten in de reeks van de entry met terugwerkende kracht gehasht tot de "
-"laatst gehashte entry. De hash kan ook op verzoek worden uitgevoerd door de "
-"Beveiligde invoer wizard."
+"Als aangevinkt, wanneer een boeking wordt geplaatst, hashen we met "
+"terugwerkende kracht alle boekingen in de reeks vanaf de huidige boeking tot"
+" aan de laatste gehashte boeking. De hash kan ook op aanvraag worden "
+"uitgevoerd via de Secure Entries-wizard."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8444,7 +8460,7 @@ msgstr "Om deze factuur te bevestigen, moet je"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "In payment"
-msgstr ""
+msgstr "In betaling"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9823,7 +9839,7 @@ msgstr "Grootboekgroep"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Ledger group allows managing multiple accounting standards."
-msgstr "Met grootboekgroep kun je meerdere boekhoudstandaarden beheren."
+msgstr "Met grootboekgroepen kun je meerdere boekhoudstandaarden beheren."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__horizontal_split_side__left
@@ -10481,7 +10497,7 @@ msgstr "Maandelijks"
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__move_ids
 #: model:ir.model.fields,field_description:account.field_validate_account_move__move_ids
 msgid "Move"
-msgstr "Verplaatsingen"
+msgstr "Boekingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_data
@@ -12563,12 +12579,12 @@ msgstr "Inkoop"
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__purchase_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__purchase_lock_date
 msgid "Purchase Lock Date"
-msgstr "Aankoopvergrendelingsdatum"
+msgstr "Inkoopvergrendelingsdatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__purchase_lock_date
 msgid "Purchase Lock date"
-msgstr "Aankoop Vergrendelingsdatum"
+msgstr "Inkoopvergrendelingsdatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_purchase_receipts
@@ -12597,7 +12613,7 @@ msgstr "Inkoop BTW"
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr "Btw aankoop"
+msgstr "Btw inkoop"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -12673,20 +12689,6 @@ msgid "RD Expenses"
 msgstr "RD uitgaven"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "Beoordelingen"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Hernummeren"
@@ -12736,6 +12738,11 @@ msgstr "Ontvangen"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__inbound
 msgid "Receive Money"
 msgstr "Ontvangen"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+msgid "Receive invoices"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -13333,7 +13340,7 @@ msgstr "SO123"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "STANDAARD VERKOOPVOORWAARDEN"
+msgstr "ALGEMENE VOORWAARDEN"
 
 #. module: account
 #: model:account.account,name:account.1_expense_salary
@@ -13613,6 +13620,13 @@ msgstr "Beveilig Geplaatste Berichten met Hash"
 #: model:ir.model.fields,field_description:account.field_account_move__secured
 msgid "Secured"
 msgstr "Beveiligd"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_secure_entries_wizard.py:0
+msgid ""
+"Securing these entries will also secure entries after the selected date."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15247,8 +15261,8 @@ msgid ""
 msgstr ""
 "De opdrachtgever doet uitdrukkelijk afstand van zijn eigen "
 "standaardvoorwaarden, ook indien deze zijn opgesteld na deze algemene "
-"verkoopvoorwaarden. Om geldig te zijn, moet elke afwijking vooraf "
-"uitdrukkelijk schriftelijk worden overeengekomen."
+"voorwaarden. Om geldig te zijn, moet elke afwijking vooraf uitdrukkelijk "
+"schriftelijk worden overeengekomen."
 
 #. module: account
 #. odoo-python
@@ -17438,7 +17452,7 @@ msgstr "Gebruiker heeft Groep Bankrekening bevestigen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_purchase_lock_date
 msgid "User Purchase Lock Date"
-msgstr "Aankoopvergrendelingsdatum gebruiker"
+msgstr "Inkoopvergrendelingsdatum gebruiker"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_sale_lock_date
@@ -18274,6 +18288,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
+"Je kunt geen journaalposten verwijderen die horen bij een vergrendelde "
+"journaalpost."
 
 #. module: account
 #. odoo-python
@@ -18590,7 +18606,7 @@ msgid ""
 "have the label starting with _carryover_"
 msgstr ""
 "Je kan het veld carryover_target niet gebruiken in een uitdrukking waarvan "
-"de label niet met _carryover_ begint."
+"de label niet begint met _carryover_"
 
 #. module: account
 #. odoo-python
@@ -18838,9 +18854,11 @@ msgid "bills for"
 msgstr "rekeningen voor"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_sending_method__email
 msgid "by Email"
-msgstr ""
+msgstr "per e-mail"
 
 #. module: account
 #. odoo-python

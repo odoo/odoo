@@ -1228,7 +1228,11 @@
         "payment_state",
         "state"
       ],
-      "domain": [["move_type", "=", "out_invoice"]],
+      "domain": [
+        "&",
+        ["state", "not in", ["draft", "cancel"]],
+        ["move_type", "=", "out_invoice"]
+      ],
       "model": "account.move",
       "context": { "default_move_type": "out_invoice" },
       "orderBy": [{ "name": "amount_total_signed", "asc": false }],

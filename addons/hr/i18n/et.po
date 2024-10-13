@@ -4,12 +4,13 @@
 # 
 # Translators:
 # Triine Aavik <triine@avalah.ee>, 2024
-# Katrin Kampura, 2024
-# Siim Raasuke, 2024
 # Leaanika Randmets, 2024
-# Eneli Õigus <enelioigus@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Stevin Lilla, 2024
+# Eneli Õigus <enelioigus@gmail.com>, 2024
+# Katrin Kampura, 2024
+# JanaAvalah, 2024
+# Siim Raasuke, 2024
 # Anna, 2024
 # 
 msgid ""
@@ -194,7 +195,7 @@ msgstr "<span class=\"o_stat_text\">Ühendatud alates</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton_inherited
 msgid "<span class=\"o_stat_text\">Contacts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kontaktid</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
@@ -299,7 +300,7 @@ msgstr "Vajalik toiming"
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
-msgstr ""
+msgstr "Aktiveeri kaugtöö, et töötajad saaksid määrata, kust nad töötavad."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -513,6 +514,13 @@ msgid ""
 "                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
+"As an employee of our company, you will <b>collaborate with each department to create and deploy\n"
+"                                disruptive products.</b> Come work at a growing company that offers great benefits with opportunities to\n"
+"                                moving forward and learn alongside accomplished leaders. We're seeking an experienced and outstanding member of staff.\n"
+"                                <br><br>\n"
+"                                This position is both <b>creative and rigorous</b> by nature you need to think outside the box.\n"
+"                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
+"                                you will have solid solving problem skills."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
@@ -1013,6 +1021,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Define the minimum number of sent emails to be displayed as Present."
 msgstr ""
+"Määra minimaalne saadetud e-kirjade arv, mida kuvatakse kui kohalolekut."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -1021,6 +1030,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"Määra ressursi tööaeg. Kui see pole määratud, on ressursil täielikult "
+"paindlik tööaeg."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_ceo
@@ -1059,7 +1070,7 @@ msgstr "Osakond"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_assignable
 msgid "Department Assignable"
-msgstr ""
+msgstr "Osakonda määratav"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
@@ -1165,6 +1176,8 @@ msgid ""
 "Display remote work settings for each employee and dedicated reports. "
 "Presence icons will be updated with remote work location."
 msgstr ""
+"Kuva kaugtöö seadeid igale töötajale ja seotud aruandlust. Kohaloleku "
+"ikoonile lisatakse kaugtöö asukoht."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
@@ -1271,7 +1284,7 @@ msgstr "Töötaja pilt"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_lang
 msgid "Employee Lang"
-msgstr ""
+msgstr "Employee Lang"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
@@ -1282,7 +1295,7 @@ msgstr "Töötaja nimi"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
 msgid "Employee Plans"
-msgstr ""
+msgstr "Töötajate plaanid"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
@@ -1486,6 +1499,8 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the department "
 "auto-subscription."
 msgstr ""
+"Osakonna automaatse tellimise jaoks peab %(channels)s jaoks kanali_tüüp "
+"olema \"channel\"."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
@@ -1577,7 +1592,7 @@ msgstr "HR töötaja: kontrollige tööloa kehtivust"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 msgid "HR Presence Status"
-msgstr ""
+msgstr "Personaliosakonna kohaloleku staatus"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1587,7 +1602,7 @@ msgstr "HR seaded"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__has_department_manager_access
 msgid "Has Department Manager Access"
-msgstr ""
+msgstr "Omab osakonnajuhi ligipääsu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
@@ -1625,7 +1640,7 @@ msgstr "Kaugus töökohast"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
-msgstr ""
+msgstr "Kodu ja töö vahemaa kilomeetrites"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work_unit
@@ -1644,7 +1659,7 @@ msgstr "HR ikooni ekraan"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_manager_department_report
 msgid "Hr Manager Department Report"
-msgstr ""
+msgstr "Personalijuhi osakonna aruanne"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1786,14 +1801,14 @@ msgstr "Vahepealne"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Intern"
-msgstr ""
+msgstr "Praktikant"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_flexible
 msgid "Is Flexible"
-msgstr ""
+msgstr "On paindlik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -1807,7 +1822,7 @@ msgstr "On jälgija"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_fully_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_fully_flexible
 msgid "Is Fully Flexible"
-msgstr ""
+msgstr "On täielikult paindlik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
@@ -2203,7 +2218,7 @@ msgstr "Hea kui oleks"
 #: code:addons/hr/static/src/views/hr_graph_controller.xml:0
 #: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
 msgid "No Data"
-msgstr ""
+msgstr "Andmed puuduvad"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
@@ -2264,7 +2279,7 @@ msgstr "Ülalpeetavate laste arv"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Number of Employees"
-msgstr ""
+msgstr "Töötajate arv"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
@@ -2295,7 +2310,7 @@ msgstr "Veateatega sõnumite arv"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr ""
+msgstr "Eeldatav uute tööle võetavate töötajate arv."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__office
@@ -2357,7 +2372,7 @@ msgstr "Meie tooted"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "Out of Working Hours"
-msgstr ""
+msgstr "Tööajaväline"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
@@ -2367,7 +2382,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Out of Working hours"
-msgstr ""
+msgstr "Tööajaväline"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -2508,6 +2523,8 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"Plaani aktiviteedid %(template_names)sei saa kasutada treenerit, juhti või "
+"vastutavat töötajat, kuna see on mõeldud ainult töötajate plaanide jaoks."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2555,7 +2572,7 @@ msgstr "Kohaloleku olukord"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Display"
-msgstr ""
+msgstr "Kohaloleku kuvamine"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2745,7 +2762,7 @@ msgstr "Registreerimisosakond"
 #: code:addons/hr/models/hr_employee.py:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton_inherited
 msgid "Related Contacts"
-msgstr ""
+msgstr "Seotud kontaktid"
 
 #. module: hr
 #. odoo-python
@@ -2756,7 +2773,7 @@ msgstr "Seotud töötajad"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_partners_count
 msgid "Related Partners Count"
-msgstr ""
+msgstr "Seotud partnerite arv"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2897,6 +2914,8 @@ msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
+"Valige \"Töötaja\", kes on selle töötaja juhendaja.\n"
+"\"Juhendajal\" ei ole vaikimisi konkreetseid õigusi ega kohustusi."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__sequence
@@ -2963,7 +2982,7 @@ msgstr "Tarkvaraarendaja"
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 msgid "Some employee already have a work contact"
-msgstr ""
+msgstr "Mõnel töötajal on juba tööleping"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3022,7 +3041,7 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_statutaire
 msgid "Statutory"
-msgstr ""
+msgstr "Seadusjärgne"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3122,6 +3141,7 @@ msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
+"Märgi ID peab olema unikaalne. Antud märgi ID on seotud teise töötajaga."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
@@ -3140,6 +3160,10 @@ msgid ""
 "              He defines the products and customers portfolio according to the marketing plan.\n"
 "              This mission requires strong collaboration with Technical Service and Sales."
 msgstr ""
+"Turundusjuht määratleb oma hõlmatud turusegmentide keskmise ja pikaajalise turundusstrateegia kogu maailmas.\n"
+"              Ta koostab ja jälgib igaaastast eelarvet koostöös müügiga.\n"
+"              Ta määratleb tooted ja kliendiportaali vastavalt turundusplaanile.\n"
+"              See missioon nõuab tihedat koostööd tehnilise teeninduse ja müügiga."
 
 #. module: hr
 #. odoo-python
@@ -3150,7 +3174,7 @@ msgstr "PIN-kood peab olema numbrite jada."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
-msgstr ""
+msgstr "Vaikimisi tööajad on seadistatud konfiguratsioonis."
 
 #. module: hr
 #. odoo-python
@@ -3205,6 +3229,8 @@ msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
+"Kasutajal on juurdepääs personaliseadistustele ja statistilistele "
+"aruannetele."
 
 #. module: hr
 #. odoo-python
@@ -3215,7 +3241,7 @@ msgstr "Töötaja %(employee)s tööluba aegub %(date)s."
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "Lõputöö"
 
 #. module: hr
 #. odoo-python
@@ -3273,6 +3299,9 @@ msgid ""
 " leaves, ...), you should create another employee in the new company "
 "instead."
 msgstr ""
+"To avoid multi company issues (losing the access to your previous contracts,"
+" leaves, ...), you should create another employee in the new company "
+"instead."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -3391,6 +3420,8 @@ msgstr "Hoiatus"
 msgid ""
 "We are currently looking for someone like that to join our Consultant team."
 msgstr ""
+"Oleme otsimas praegu kedagi sellist, kes liituks meie "
+"konsultatsioonimeeskonnaga."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -3445,6 +3476,8 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr ""
+"Whether the employee is a member of the active user's department or one of "
+"it's child department."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -3499,7 +3532,7 @@ msgstr "Töö asukoht"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_name
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_name
 msgid "Work Location Name"
-msgstr ""
+msgstr "Töökoha nimi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_type
@@ -3507,7 +3540,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_type
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_type
 msgid "Work Location Type"
-msgstr ""
+msgstr "Töökoha tüüp"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
@@ -3603,7 +3636,7 @@ msgstr "Saate vestelda ainult töötajatega, kellel on selleks kasutaja."
 #. odoo-python
 #: code:addons/hr/models/hr_department.py:0
 msgid "You cannot create recursive departments."
-msgstr ""
+msgstr "You cannot create recursive departments."
 
 #. module: hr
 #. odoo-python
@@ -3671,7 +3704,7 @@ msgstr "osakond"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
-msgstr ""
+msgstr "nt Hoone 2, kaugtöö jne."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3692,12 +3725,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. johndoe@example.com"
-msgstr ""
+msgstr "nt johndoe@example.com"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
-msgstr ""
+msgstr "nt myprivateemail@example.com"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__kilometers

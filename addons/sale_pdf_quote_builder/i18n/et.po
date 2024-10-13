@@ -4,20 +4,21 @@
 # 
 # Translators:
 # Helen Sulaoja <helen@avalah.ee>, 2024
-# Eneli Õigus <enelioigus@gmail.com>, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
 # JanaAvalah, 2024
-# Anna, 2024
 # Piia Paurson <piia@avalah.ee>, 2024
 # Martin Trigaux, 2024
 # Leaanika Randmets, 2024
-# Patrick-Jordan Kiudorv, 2024
 # Stevin Lilla, 2024
 # Rivo Zängov <eraser@eraser.ee>, 2024
 # Algo Kärp <algokarp@gmail.com>, 2024
 # Siim Raasuke, 2024
+# Anna, 2024
+# Eneli Õigus <enelioigus@gmail.com>, 2024
+# Patrick-Jordan Kiudorv, 2024
 # Katrin Kampura, 2024
+# Tairi Tiimann, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Katrin Kampura, 2024\n"
+"Last-Translator: Tairi Tiimann, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,12 +46,12 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span class=\"pe-2\">Templates:</span>"
-msgstr ""
+msgstr "<span class=\"pe-2\">Mallid:</span>"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span>Document type:</span>"
-msgstr ""
+msgstr "<span>Dokumendi tüüp:</span>"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -128,7 +129,7 @@ msgstr "Manuse URL"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__available_product_document_ids
 msgid "Available Product Documents"
-msgstr ""
+msgstr "Saadaval toote dokumendid"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__checksum
@@ -139,7 +140,7 @@ msgstr "Kontrollsumma/SHA1"
 #. odoo-javascript
 #: code:addons/sale_pdf_quote_builder/static/src/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card.js:0
 msgid "Click to write content for the PDF quote..."
-msgstr ""
+msgstr "Klõpsa, et kirjutada pakkumise PDF-i sisu..."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__company_id
@@ -150,7 +151,7 @@ msgstr "Ettevõte"
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Configure dynamic fields"
-msgstr ""
+msgstr "Konfigureeri dünaamilisi välju"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
@@ -177,12 +178,12 @@ msgstr "Loomine"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
 msgid "Customizable"
-msgstr ""
+msgstr "Kohandatav"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__customizable_pdf_form_fields
 msgid "Customizable PDF Form Fields"
-msgstr ""
+msgstr "Kohandatavad PDF vormi väljad"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__db_datas
@@ -214,7 +215,7 @@ msgstr "Dokumendi tüüp"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Document type"
-msgstr ""
+msgstr "Dokumendi tüüp"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -256,25 +257,25 @@ msgstr "Jalus"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "Form Field Name"
-msgstr ""
+msgstr "Vormi välja nimi"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Form Fields"
-msgstr ""
+msgstr "Vormi väljad"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__form_field_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__form_field_ids
 msgid "Form Fields Included"
-msgstr ""
+msgstr "Kaasatud vormi väljad"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
 msgid "Form field name must be unique for a given document type."
-msgstr ""
+msgstr "Vormi välja nimi peab olema selle dokumendi tüübi puhul unikaalne"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
@@ -296,12 +297,12 @@ msgstr "Päis"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_form_field__document_type__quotation_document
 msgid "Header/Footer"
-msgstr ""
+msgstr "Päis/Jalus"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__quotation_document_ids
 msgid "Headers and footers"
-msgstr ""
+msgstr "Päised ja jalused"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.act_window,name:sale_pdf_quote_builder.quotation_document_action
@@ -309,7 +310,7 @@ msgstr ""
 #: model:ir.ui.menu,name:sale_pdf_quote_builder.sale_menu_quotation_document_action
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 msgid "Headers/Footers"
-msgstr ""
+msgstr "Päised/Jalused"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
@@ -328,6 +329,8 @@ msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
 msgstr ""
+"Kui ei ole märgitud, siis saad peita päist või jalust, ilma et sa peaksid "
+"neid eemaldama."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
@@ -352,7 +355,7 @@ msgstr "Indekseeritud sisu"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on_sale__inside
 msgid "Inside quote pdf"
-msgstr ""
+msgstr "Pakkumise PDF-i sees"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -361,6 +364,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"Vigane vormi välja nimi %(field_name)s. Päise või jaluse vormi välja nimi ei"
+" tohi alata \"sol_id_\"."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -369,6 +374,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"Vigane vormivälja nimi %(field_name)s. See peab sisaldama ainult tähemärke, "
+"sidekriipse või alakriipse."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -377,11 +384,13 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"Vigane tee %(path)s. See peaks sisaldama ainult numbreid, tähestikku, "
+"sidekriipse, alakriipse või punkte."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__is_pdf_quote_builder_available
 msgid "Is Pdf Quote Builder Available"
-msgstr ""
+msgstr "Kas PDF pakkumise koostaja on saadaval"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__public
@@ -395,6 +404,8 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
+"Tundub, et seda PDF faili ei saa pakkumises töödelda. See on kas "
+"krüpteeritud või kodeeritud formaadis, mida me ei toeta."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__key
@@ -416,7 +427,7 @@ msgstr "Viimati uuendatud"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Mark fields as safe to fill in the quote."
-msgstr ""
+msgstr "Märgi väljad ohutuks täitmiseks pakkumises."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__mimetype
@@ -438,13 +449,13 @@ msgstr "Ei"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 msgid "Only PDF documents can be attached inside a quote."
-msgstr ""
+msgstr "Ainult PDF dokumente saab pakkumisele lisada."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Only PDF documents can be used as header or footer."
-msgstr ""
+msgstr "Jaluse ja Päise failina saab kasutada ainult PDF faile."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
@@ -463,6 +474,9 @@ msgid ""
 "                <br>\n"
 "                to boost your sales."
 msgstr ""
+"Isikupärasta oma pakkumised pilkupüüdvate päise- ja jaluse lehtedega,\n"
+"                <br>\n"
+"                et suurendada enda müüki."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -486,7 +500,7 @@ msgstr "Tootedokument"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__product_document_ids
 msgid "Product Documents"
-msgstr ""
+msgstr "Toote dokumendid"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -497,27 +511,32 @@ msgid ""
 "                        details of the quote and then the footer pages. <br/>\n"
 "                        If empty, it will use those define in the company settings. <br/>"
 msgstr ""
+"Lisa päise ja jalus, et koostada atraktiivne pakkumine,\n"
+" mis sisaldab rohkem teavet sinu ettevõtte, toodete ja teenuste kohta. <br/>\n"
+"                        Pakkumise PDF koostatakse, ühendades päise, tootekirjeldused,\n"
+"                         pakkumise üksikasjad ja seejärel jalus. <br/>\n"
+"                        Kui jätate tühjaks, kasutatakse neid, mis on määratud ettevõtte seadetes <br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Pakkumine / Korraldus"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Quotation Document"
-msgstr ""
+msgstr "Pakkumise dokumendid"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__quotation_document_ids
 msgid "Quotation Documents"
-msgstr ""
+msgstr "Pakkumise Dokumendid"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Quotation Template"
-msgstr ""
+msgstr "Pakkumise põhi"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__quotation_template_ids
@@ -527,13 +546,13 @@ msgstr "Pakkumise põhjad"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_quotation_document
 msgid "Quotation's Headers & Footers"
-msgstr ""
+msgstr "Pakkumise päised & jalused"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Quote Builder"
-msgstr ""
+msgstr "PDF hinnapakkumise koostaja"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
@@ -568,12 +587,14 @@ msgstr "Ressursi nimi"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Müük: nähtav"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server
 msgid "Sale Pdf Quote Builder: assign form fields to documents post upgrade"
 msgstr ""
+"Müügi PDF-pakkumise koostaja: määra vormi väljad dokumentidele pärast "
+"uuendust."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -599,12 +620,12 @@ msgstr "Salvestatud faili nimi"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
-msgstr ""
+msgstr "Välja %(field_name)s ei ole olemas moodulis %(model_name)s"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "The form field name as written in the PDF."
-msgstr ""
+msgstr "Vormivälja nimi nii nagu see on kirjutatud PDF-is"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__path
@@ -628,7 +649,7 @@ msgstr "Teema mall"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
 msgid "This document"
-msgstr ""
+msgstr "See dokument"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__type
@@ -638,7 +659,7 @@ msgstr "Tüüp"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
 msgid "Upload quotation headers and footers"
-msgstr ""
+msgstr "Lae üles päringu päis ja jalus"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__url
@@ -659,7 +680,7 @@ msgstr "Veebileht"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 msgid "When attached inside a quote, the document must be a file, not a URL."
-msgstr ""
+msgstr "Kui lisate pakkumisse dokumendi, peab see olema fail, mitte URL."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python

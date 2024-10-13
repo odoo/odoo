@@ -3,13 +3,14 @@
 # 	* hr_fleet
 # 
 # Translators:
-# JanaAvalah, 2024
-# Eneli Õigus <enelioigus@gmail.com>, 2024
 # Siim Raasuke, 2024
 # Martin Trigaux, 2024
 # Stevin Lilla, 2024
-# Anna, 2024
+# Eneli Õigus <enelioigus@gmail.com>, 2024
 # Rivo Zängov <eraser@eraser.ee>, 2024
+# Anna, 2024
+# Leaanika Randmets, 2024
+# JanaAvalah, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-08 06:51+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rivo Zängov <eraser@eraser.ee>, 2024\n"
+"Last-Translator: JanaAvalah, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,8 @@ msgid ""
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">Employee</span>"
 msgstr ""
+"<span class=\"o_stat_value\">1</span>\n"
+"                        <span class=\"o_stat_text\">Töötaja</span>"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
@@ -57,7 +60,7 @@ msgstr "Manused"
 #. odoo-python
 #: code:addons/hr_fleet/models/employee.py:0
 msgid "Cannot remove address from employees with linked cars."
-msgstr ""
+msgstr "Autodega seotud töötajate aadressi ei saa eemaldada."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
@@ -68,12 +71,12 @@ msgstr "Autod"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.hr_departure_wizard_view_form
 msgid "Company Car"
-msgstr ""
+msgstr "Ettevõtte auto"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
 msgid "Current Driver"
-msgstr ""
+msgstr "Praegune juht"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
@@ -93,12 +96,12 @@ msgstr "Juht"
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
 msgid "Driver (Employee)"
-msgstr ""
+msgstr "Juht (Töötaja)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
 msgid "Drivers history on a vehicle"
-msgstr ""
+msgstr "Sõiduki kasutajate ajalugu"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee
@@ -110,7 +113,7 @@ msgstr "Töötaja"
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Employee %s is not linked to a vehicle."
-msgstr ""
+msgstr "Töötaja %s ei ole seotud sõidukiga."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
@@ -120,45 +123,45 @@ msgstr "Töötaja nimi"
 #. module: hr_fleet
 #: model:ir.model.fields.selection,name:hr_fleet.selection__mail_activity_plan_template__responsible_type__fleet_manager
 msgid "Fleet Manager"
-msgstr ""
+msgstr "Sõiduvahendite haldur"
 
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Fleet Manager is limited to Employee plans."
-msgstr ""
+msgstr "Sõiduvahendite halduril on piiratud õigus töötajate töögraafikutele."
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Fleet Mobility Card"
-msgstr ""
+msgstr "Fleet Mobility Card"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
 msgid "Future Driver (Employee)"
-msgstr ""
+msgstr "Tulevane juht (Töötaja)"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
 msgid "License Plate"
-msgstr ""
+msgstr "Numbriplaat"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__mobility_card
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
 msgid "Mobility Card"
-msgstr ""
+msgstr "Mobility Card"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
 msgid "Number of Attachments"
-msgstr ""
+msgstr "Manuste arv"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr ""
+msgstr "Sõidupäevik"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
@@ -170,23 +173,23 @@ msgstr "Avalik töötaja"
 #: code:addons/hr_fleet/models/fleet_vehicle.py:0
 #: code:addons/hr_fleet/models/fleet_vehicle_log_contract.py:0
 msgid "Related Employee"
-msgstr ""
+msgstr "Seotud töötaja"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release Company Car"
-msgstr ""
+msgstr "Vabasta ettevõtte auto"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
-msgstr ""
+msgstr "Teenused sõiduki kohta"
 
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
-msgstr ""
+msgstr "Töötaja %(employee)s sõiduk ei ole seotud sõiduvahendi halduriga. "
 
 #. module: hr_fleet
 #. odoo-javascript
@@ -207,9 +210,9 @@ msgstr "Sõiduk"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_contract
 msgid "Vehicle Contract"
-msgstr ""
+msgstr "Sõiduki leping"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
 msgid "Vehicles (private)"
-msgstr ""
+msgstr "Sõidukid (era)"

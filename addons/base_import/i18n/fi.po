@@ -3,8 +3,14 @@
 # 	* base_import
 # 
 # Translators:
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
+# Janne Rättyä <janne.rattya@web-veistamo.fi>, 2024
+# Miku Laitinen <miku.laitinen@gmail.com>, 2024
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Martin Trigaux, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
@@ -31,13 +37,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "%s at multiple rows"
-msgstr ""
+msgstr "%s useilla riveillä"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "%s records successfully imported"
-msgstr ""
+msgstr "%s tietuetta on tuotu onnistuneesti"
 
 #. module: base_import
 #. odoo-javascript
@@ -46,18 +52,20 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
 msgstr ""
+"Tiedostosta löytyi vain yksi sarake. Tämä tarkoittaa yleensä, että "
+"tietoerotin on väärä."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Additional Fields"
-msgstr ""
+msgstr "Lisäkentät"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Advanced"
-msgstr ""
+msgstr "Edistyneet"
 
 #. module: base_import
 #. odoo-javascript
@@ -70,7 +78,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Allow matching with subfields"
-msgstr ""
+msgstr "Mahdollista alikenttien tunnistus"
 
 #. module: base_import
 #. odoo-javascript
@@ -81,39 +89,43 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Latauksessa tapahtui tunnistamaton virhe. Mahdollisesti yhteys katkesi, "
+"suurin käsiteltävä tietuemäärä ylittyi tai muisti loppui kesken. Yritä "
+"kertaalleen uudestaan. Mikäli ongelma toistuu, pilko tiedosto pienempiin "
+"eriin sen sijaan, että lataat sen kerralla."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
 msgid "Base"
-msgstr ""
+msgstr "Pohja"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr ""
+msgstr "Perustuonti"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Perustan tuonnin täsmäys"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Batch"
-msgstr ""
+msgstr "Erä"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch Import"
-msgstr ""
+msgstr "Eräanjotuonti"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch limit"
-msgstr ""
+msgstr "Eräajon rajoitus"
 
 #. module: base_import
 #. odoo-javascript
@@ -125,13 +137,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Cancel"
-msgstr ""
+msgstr "Peruuta"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
-msgstr ""
+msgstr "Jatka tuontia napsauttamalla 'Jatka' ja jatka tuontia rivillä %s."
 
 #. module: base_import
 #. odoo-python
@@ -150,13 +162,13 @@ msgstr ""
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Sarakkeen nimi"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Comma"
-msgstr ""
+msgstr "Pilkku"
 
 #. module: base_import
 #. odoo-javascript
@@ -171,18 +183,20 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Ei pysty lataamaan URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Create new values"
-msgstr ""
+msgstr "Luo uudet arvot"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Luonut"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
@@ -200,25 +214,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Database ID"
-msgstr ""
+msgstr "Tietokannan tunnus"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Date Format:"
-msgstr ""
+msgstr "Päivämäärän muoto:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Datetime Format:"
-msgstr ""
+msgstr "Päivämäärän ja ajan muoto:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Decimals Separator:"
-msgstr ""
+msgstr "Desimaalien erotin:"
 
 #. module: base_import
 #. odoo-javascript
@@ -236,20 +250,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näyttönimi"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Dot"
-msgstr ""
+msgstr "Piste"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Download"
-msgstr ""
+msgstr "Lataa"
 
 #. module: base_import
 #. odoo-javascript
@@ -261,7 +275,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Encoding:"
-msgstr ""
+msgstr "Merkistö:"
 
 #. module: base_import
 #. odoo-python
@@ -281,6 +295,7 @@ msgstr ""
 msgid ""
 "Error while importing records: Text Delimiter should be a single character."
 msgstr ""
+"Virhe tietueiden tuonnissa: Tekstin erottimena saa olla vain yksi merkki."
 
 #. module: base_import
 #. odoo-python
@@ -295,62 +310,63 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Estimated time left:"
-msgstr ""
+msgstr "Arvioitu valmistuminen:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Everything seems valid."
-msgstr ""
+msgstr "Kaikki näyttää olevan kunnossa."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Excel files are recommended as formatting is automatic."
 msgstr ""
+"Suosittelemme Excel-tiedostoja, koska niiden muotoilu on automaattista."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
-msgstr ""
+msgstr "Ulkoinen ID"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
 msgid "Field Name"
-msgstr ""
+msgstr "Kentän nimi"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
 msgid "File"
-msgstr ""
+msgstr "Tiedosto"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "File Column"
-msgstr ""
+msgstr "Tiedoston sarake"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
-msgstr ""
+msgstr "Tiedostonimi"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr ""
+msgstr "Tiedostotyyppi"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "Tiedostokoko ylittää suurimman sallitun (%s tavua)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "Tarkistettava ja/tai tuotava tiedosto, raaka binääri (ei base64)"
 
 #. module: base_import
 #. odoo-javascript
@@ -362,19 +378,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "Käsittele nykyinen eräajo loppuun ennen keskeyttämistä..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "CSV-tiedostojen kanssa voit joutua valitsemaan oikean erottimen."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Formatting"
-msgstr ""
+msgstr "Muotoilu"
 
 #. module: base_import
 #. odoo-python
@@ -383,30 +399,32 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Havaittu väärän muotoinen kuvadata. Kuvien tulisi olla koodattuna "
+"base64-muotoon tai URLeja."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Go to Import FAQ"
-msgstr ""
+msgstr "Mene latauksen UKK:hon"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Help"
-msgstr ""
+msgstr "Apua"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Here is the start of the file we could not import:"
-msgstr ""
+msgstr "Tässä on alkuosa tiedostosta, jonka tuonti epäonnistui:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_import
 #. odoo-javascript
@@ -417,6 +435,10 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"Jos tiedosto sisältää\n"
+"                    sarakkeiden nimet, Odoo voi auatomaattisesti yrittää tunnistaa niitä\n"
+"                    vastaavat kentätä. Tämä tekee latauksesta yksinkertaista, erityisesti\n"
+"\\v                    jos tiedostossa on useita sarakkeita."
 
 #. module: base_import
 #. odoo-javascript
@@ -434,48 +456,50 @@ msgstr ""
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"Valtavan suuri kuvan koko. Ladattavien kuvien tulee olla pienempiä kuin 42 "
+"miljoonaa pikseliä"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Import"
-msgstr ""
+msgstr "Tuo"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Import FAQ"
-msgstr ""
+msgstr "Tuonnin UKK"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Import a File"
-msgstr ""
+msgstr "Tuo tiedosto"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "Tuontitiedostossa ei ole sisältöä tai se on korruptoitunut"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "Tuonnin esikatselu epäonnistui seuraavista syistä: \""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_records/import_records.xml:0
 msgid "Import records"
-msgstr ""
+msgstr "Tuo tietoja"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Importing"
-msgstr ""
+msgstr "Tuodaan tietoja"
 
 #. module: base_import
 #. odoo-python
@@ -490,18 +514,19 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"Virheellinen solu rivillä %(row)s, sarakkeessa %(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimeksi päivittänyt"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #. module: base_import
 #. odoo-javascript
@@ -513,13 +538,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Loading file..."
-msgstr ""
+msgstr "Ladataan tiedostoa..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 msgid "Loading..."
-msgstr ""
+msgstr "Lataa..."
 
 #. module: base_import
 #. odoo-javascript
@@ -536,25 +561,25 @@ msgstr "Mt"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
-msgstr ""
+msgstr "Malli"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "Tapahtui useita virheitä"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Need Help?"
-msgstr ""
+msgstr "Tarvitsetko apua?"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "No Separator"
-msgstr ""
+msgstr "Ei erotinta"
 
 #. module: base_import
 #. odoo-javascript
@@ -566,13 +591,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Seuraavalle nimelle ei löytynyt vastaavia tietueita"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Odoo Field"
-msgstr ""
+msgstr "Odoon kenttä"
 
 #. module: base_import
 #. odoo-javascript
@@ -590,13 +615,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Prevent import"
-msgstr ""
+msgstr "Estä tuonti"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Preview"
-msgstr ""
+msgstr "Esikatselu"
 
 #. module: base_import
 #. odoo-javascript
@@ -608,205 +633,207 @@ msgstr "Edistymispalkki"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Reimport"
-msgstr ""
+msgstr "Uudelleentuonti"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Relation Fields"
-msgstr ""
+msgstr "Relaatiokentät"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr ""
+msgstr "Res-malli"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Resume"
-msgstr ""
+msgstr "Jatka"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a field..."
-msgstr ""
+msgstr "Etsi kenttä..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "See possible values"
-msgstr ""
+msgstr "Näytä mahdolliset arvot"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Selected Sheet:"
-msgstr ""
+msgstr "Valittu sivu:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Semicolon"
-msgstr ""
+msgstr "Puolipiste"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Separator:"
-msgstr ""
+msgstr "Erotin:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: %s"
-msgstr ""
+msgstr "Aseta arvoksi: %s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: False"
-msgstr ""
+msgstr "Aseta: False"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: True"
-msgstr ""
+msgstr "Aseta: True"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set value as empty"
-msgstr ""
+msgstr "Aseta arvo tyhjäksi"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Sheet:"
-msgstr ""
+msgstr "Sivu:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Skip record"
-msgstr ""
+msgstr "Hyppää tietueen yli"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Space"
-msgstr ""
+msgstr "Välilyönti"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Standard Fields"
-msgstr ""
+msgstr "Vakiokentät"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Start at line"
-msgstr ""
+msgstr "Aloita riviltä"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Stop Import"
-msgstr ""
+msgstr "Pysäytä tuonti"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Suggested Fields"
-msgstr ""
+msgstr "Ehdotetut kentät"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Tab"
-msgstr ""
+msgstr "Sarkain"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Test"
-msgstr ""
+msgstr "Testi"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Testing"
-msgstr ""
+msgstr "Testaus"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "Tekstierotin:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "Tiedostossa on jatkon estäviä virheitä (ks. alla)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "Tiedosto tuodaan erissä"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "Sarake yhdistetään kenttään"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Tuhaterotin:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "Jos haluat tuoda useita arvoja, erota ne toisistaan pilkulla."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "To import, select a field..."
-msgstr ""
+msgstr "Valitse kenttä tuodaksesi..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Track history during import"
-msgstr ""
+msgstr "Kirjaa muutoshistoria tuonnin aikana"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
+"Ei voi ladata \"{extension}\" tiedosto: tarvitsee Python-moduulin "
+"\"{modname}\""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr ""
+msgstr "Tukematon tiedostomuoto \"{}\", tuonti tukee vain CSV, ODS, XLS and XLSX"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Untitled"
-msgstr ""
+msgstr "Nimetön"
 
 #. module: base_import
 #. odoo-javascript
@@ -828,6 +855,10 @@ msgid ""
 "system. You can use a custom format in addition to the suggestions provided."
 " Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Käytä HH-tuntia 24 tunnin järjestelmässä ja II-tuntia yhdessä p-kirjaimen "
+"kanssa 12 tunnin järjestelmässä. Voit käyttää mukautettua muotoa annettujen "
+"ehdotusten lisäksi. Jätä tyhjäksi, jotta Odoo voi arvata muodon "
+"(suositellaan)"
 
 #. module: base_import
 #. odoo-javascript
@@ -838,17 +869,21 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
+"Käytä YYYY-vuotta, MM-kuukautta ja DD-päivää. Käytä erottimia, kuten "
+"pistettä, vinoviivaa tai katkoviivaa. Voit käyttää mukautettua muotoa "
+"annettujen ehdotusten lisäksi. Jätä tyhjäksi, jotta Odoo voi arvata muodon "
+"(suositellaan)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Use first row as header"
-msgstr ""
+msgstr "Ensimmäinen on otsikkorivi"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Käyttäjä"
 
 #. module: base_import
 #. odoo-javascript
@@ -864,7 +899,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
 msgid "When a value cannot be matched:"
-msgstr ""
+msgstr "Kun arvoa ei voida täsmätä:"
 
 #. module: base_import
 #. odoo-python
@@ -873,64 +908,68 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Et voi ladata kuvia URL:n kautta, ota yhteyttä järjestelmävalvojaan tai "
+"tukeen syyn selvittämiseksi."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"Voit joko testata tai ladata uudelleen tiedostosi ennen lataamisen "
+"jatkamista."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "You must configure at least one field to import"
-msgstr ""
+msgstr "Sinun pitää asettaa ainakin yksi kenttä joka tuodaan"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at multiple rows"
-msgstr ""
+msgstr "useilla riveillä"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at row"
-msgstr ""
+msgstr "rivillä"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "in field"
-msgstr ""
+msgstr "kentässä"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "minutes"
-msgstr ""
+msgstr "minuutit"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "more"
-msgstr ""
+msgstr "lisää"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "out of"
-msgstr ""
+msgstr "josta"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "seconds"
-msgstr ""
+msgstr "sekuntia"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "unknown error code %s"
-msgstr ""
+msgstr "tuntematon virhekoodi %s"
