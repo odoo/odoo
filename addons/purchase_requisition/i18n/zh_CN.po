@@ -1147,13 +1147,13 @@ msgstr "您不能更改非草稿采购协议的协议类型或公司。"
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a price."
-msgstr ""
+msgstr "若一揽子订单中有资料行缺漏价格，便不可确认。"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a quantity."
-msgstr ""
+msgstr "若一揽子订单中有资料行缺漏数量，便不可确认。"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1161,7 +1161,7 @@ msgstr ""
 msgid ""
 "You cannot confirm agreement '%(agreement)s' because it does not contain any"
 " product lines."
-msgstr ""
+msgstr "未能确认协议 “%(agreement)s”，因为它未有任何产品资料行。"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1169,7 +1169,7 @@ msgstr ""
 msgid ""
 "You cannot have a negative or unit price of 0 for an already confirmed "
 "blanket order."
-msgstr ""
+msgstr "已经确认的一揽子订单，不可包括负数或数值为 0（零）的单价。"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

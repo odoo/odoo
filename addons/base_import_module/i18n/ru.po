@@ -85,15 +85,6 @@ msgid "Created on"
 msgstr "Создано"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr ""
-"Демонстрационные данные следует использовать только в тестовых базах данных."
-" После загрузки их нельзя полностью удалить!"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
@@ -149,11 +140,6 @@ msgid "Import Module"
 msgstr "Модуль импорта"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "Импорт демо-данных"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
 msgstr "Импорт демонстрационных данных модуля"
@@ -193,6 +179,20 @@ msgstr "Последнее обновление"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
 msgstr "Последнее обновление"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Загрузка демонстрационных данных"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -275,12 +275,7 @@ msgstr "Для настройки студии требуется приложе
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "The following modules will also be installed:\n"
-msgstr "Также будут установлены следующие модули:\n"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
 msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
