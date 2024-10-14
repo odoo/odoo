@@ -26,7 +26,7 @@ import { localization } from "@web/core/l10n/localization";
  */
 
 /** @type {{[d: string]: Direction}} */
-const DIRECTIONS = { t: "top", r: "right", b: "bottom", l: "left" };
+const DIRECTIONS = { t: "top", r: "right", b: "bottom", l: "left", c: "center" };
 /** @type {{[v: string]: Variant}} */
 const VARIANTS = { s: "start", m: "middle", e: "end", f: "fit" };
 /** @type DirectionFlipOrder */
@@ -77,6 +77,9 @@ function computePosition(popper, target, { container, margin, position }) {
             variant = variant === "start" ? "end" : "start";
         }
     }
+    if (direction === "center") {
+        variant = "middle";
+    }
     const directions =
         variant === "fit" ? FIT_FLIP_ORDER[direction] : DIRECTION_FLIP_ORDER[direction];
     const variants = VARIANT_FLIP_ORDER[variant];
@@ -116,6 +119,7 @@ function computePosition(popper, target, { container, margin, position }) {
         b: iframeBox.top + targetBox.bottom + popMargins.top + margin,
         r: iframeBox.left + targetBox.right + popMargins.left + margin,
         l: iframeBox.left + targetBox.left - popMargins.right - margin - popBox.width,
+        c: iframeBox.top + targetBox.top + targetBox.height / 2 - popBox.height / 2,
     };
     const variantsData = {
         vf: iframeBox.left + targetBox.left,
@@ -181,6 +185,16 @@ function computePosition(popper, target, { container, margin, position }) {
             variant: VARIANTS[v],
         };
     }
+
+    if (direction === "center") {
+        return {
+            top: directionsData[direction[0]] - popBox.top,
+            left: variantsData.vm - popBox.left,
+            direction: DIRECTIONS[direction[0]],
+            variant: "middle",
+        };
+    }
+
 
     // Find best solution
     for (const d of directions) {
