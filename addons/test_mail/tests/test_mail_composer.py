@@ -2111,15 +2111,15 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         )
         self.assertEqual(
             sorted(new_partners.mapped('email_formatted')),
-            sorted(['"NotBike@Home" <find.me.at@test.example.com>',
+            sorted(['"NotBike @ Home" <find.me.at@test.example.com>',
                     '"FindMe Format" <find.me.format@test.example.com>',
                     '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>',
-                    '"find.me.multi.2@test.example.com" <find.me.multi.2@test.example.com>',
-                    '"test.cc.1@example.com" <test.cc.1@example.com>',
-                    '"test.cc.2@example.com" <test.cc.2@example.com>',
-                    '"test.cc.2.2@example.com" <test.cc.2.2@example.com>',
-                    '"test.to.1@example.com" <test.to.1@example.com>',
-                    '"test.to.2@example.com" <test.to.2@example.com>']),
+                    '"find.me.multi.2 @ test.example.com" <find.me.multi.2@test.example.com>',
+                    '"test.cc.1 @ example.com" <test.cc.1@example.com>',
+                    '"test.cc.2 @ example.com" <test.cc.2@example.com>',
+                    '"test.cc.2.2 @ example.com" <test.cc.2.2@example.com>',
+                    '"test.to.1 @ example.com" <test.to.1@example.com>',
+                    '"test.to.2 @ example.com" <test.to.2@example.com>']),
         )
         self.assertEqual(
             sorted(new_partners.mapped('name')),
@@ -2199,10 +2199,10 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 smtp_to_list = ['find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com']
             elif recipient == new_partners[3]:
                 smtp_to_list = ['find.me.multi.2@test.example.com']
-            # bike@home: name is recognized as email
+            # bike@home: name is not recognized as email anymore
             elif recipient == new_partners[2]:
                 self.assertEqual(recipient, partner_at_tofind)
-                smtp_to_list = ['NotBike@Home', 'find.me.at@test.example.com']
+                smtp_to_list = ['find.me.at@test.example.com']
             else:
                 smtp_to_list = [recipient.email_normalized]
             self.assertSMTPEmailsSent(
@@ -3151,15 +3151,15 @@ class TestComposerResultsMass(TestMailComposer):
         )
         self.assertEqual(
             sorted(new_partners.mapped('email_formatted')),
-            sorted(['"NotBike@Home" <find.me.at@test.example.com>',
+            sorted(['"NotBike @ Home" <find.me.at@test.example.com>',
                     '"FindMe Format" <find.me.format@test.example.com>',
                     '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>',
-                    '"find.me.multi.2@test.example.com" <find.me.multi.2@test.example.com>',
-                    '"test.cc.1@example.com" <test.cc.1@example.com>',
-                    '"test.cc.2@example.com" <test.cc.2@example.com>',
-                    '"test.cc.2.2@example.com" <test.cc.2.2@example.com>',
-                    '"test.to.1@example.com" <test.to.1@example.com>',
-                    '"test.to.2@example.com" <test.to.2@example.com>']),
+                    '"find.me.multi.2 @ test.example.com" <find.me.multi.2@test.example.com>',
+                    '"test.cc.1 @ example.com" <test.cc.1@example.com>',
+                    '"test.cc.2 @ example.com" <test.cc.2@example.com>',
+                    '"test.cc.2.2 @ example.com" <test.cc.2.2@example.com>',
+                    '"test.to.1 @ example.com" <test.to.1@example.com>',
+                    '"test.to.2 @ example.com" <test.to.2@example.com>']),
         )
         self.assertEqual(
             sorted(new_partners.mapped('name')),
@@ -3235,10 +3235,10 @@ class TestComposerResultsMass(TestMailComposer):
                     smtp_to_list = ['find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com']
                 elif recipient == new_partners[3]:
                     smtp_to_list = ['find.me.multi.2@test.example.com']
-                # bike@home: name is recognized as email
+                # bike@home: name is not recognized as email anymore
                 elif recipient == new_partners[2]:
                     self.assertEqual(recipient, partner_at_tofind)
-                    smtp_to_list = ['NotBike@Home', 'find.me.at@test.example.com']
+                    smtp_to_list = ['find.me.at@test.example.com']
                 else:
                     smtp_to_list = [recipient.email_normalized]
                 self.assertSMTPEmailsSent(

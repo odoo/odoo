@@ -428,13 +428,10 @@ class MailMail(models.Model):
         for partner in self.recipient_ids:
             # check partner email content
             emails_normalized = tools.email_normalize_all(partner.email)
-            if emails_normalized:
-                email_to = [
-                    tools.formataddr((partner.name or "", email or "False"))
-                    for email in emails_normalized
-                ]
-            else:
-                email_to = [tools.formataddr((partner.name or "", partner.email or "False"))]
+            email_to = [
+                tools.formataddr_sanitized_name((partner.name or "", email or "False"))
+                for email in emails_normalized or [partner.email]
+            ]
             email_list.append({
                 'email_cc': [],
                 'email_to': email_to,

@@ -128,15 +128,15 @@ class TestPartner(TransactionCaseWithUserDemo):
             ),
             # check with '@' in name
             (
-                'Bike@Home', '"Bike@Home" <vlad.the.impaler@example.com>',
-                ['Bike@Home', 'vlad.the.impaler@example.com']
+                'Bike@Home', '"Bike @ Home" <vlad.the.impaler@example.com>',
+                ['vlad.the.impaler@example.com']
             ), (
-                'Bike @ Home@Home', '"Bike @ Home@Home" <vlad.the.impaler@example.com>',
-                ['Home@Home', 'vlad.the.impaler@example.com']
+                'Bike @ Home@Home', '"Bike @ Home @ Home" <vlad.the.impaler@example.com>',
+                ['vlad.the.impaler@example.com']
             ), (
                 'Balázs <email.in.name@example.com>',
-                '"Balázs <email.in.name@example.com>" <vlad.the.impaler@example.com>',
-                ['email.in.name@example.com', 'vlad.the.impaler@example.com']
+                '"Balázs <email.in.name @ example.com>" <vlad.the.impaler@example.com>',
+                ['vlad.the.impaler@example.com']
             ),
         ]:
             with self.subTest(source=source):
