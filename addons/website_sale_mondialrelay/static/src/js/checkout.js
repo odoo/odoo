@@ -31,7 +31,10 @@ WebsiteSaleCheckout.include({
      */
     async start() {
         await this._super(...arguments);
-        this.$('#use_delivery_as_billing_label')?.tooltip();
+        const deliveryAsBillingEl = document.querySelector("#use_delivery_as_billing_label");
+        if (deliveryAsBillingEl) {
+           Tooltip.getOrCreateInstance(deliveryAsBillingEl);
+        }
         this._adaptUseDeliveryAsBillingToggle();
     },
 
@@ -96,9 +99,16 @@ WebsiteSaleCheckout.include({
                 || selectedDeliveryAddress?.dataset.isMondialrelay
             );
             this.use_delivery_as_billing_toggle.disabled = requireSeparateBillingAddress;
-            this.$('#use_delivery_as_billing_label').tooltip(
-                requireSeparateBillingAddress ? 'enable' : 'disable'
-            );
+            let tooltip;
+            const deliveryAsBillingEl = document.querySelector("#use_delivery_as_billing_label");
+            if (deliveryAsBillingEl) {
+                tooltip = Tooltip.getOrCreateInstance(deliveryAsBillingEl);
+            }
+            if (requireSeparateBillingAddress) {
+                tooltip?.enable();
+            } else {
+                tooltip?.disable();
+            }
         }
     },
 
