@@ -1,0 +1,180 @@
+<!--
+original Author:	Bill Rollins
+adapted for python by aaron watters
+Purpose: This HTML example shows how to use Microsoft's ActiveX Chart control.
+	Properties of the control are changed using sub procedures called
+	by radio buttons and check boxes. The AboutBox method is called from
+	a command button.
+Created: 3/16/96
+Edited:	3/19/96 - VBScript code edited so there is only one procedure for each property.
+	3/23/96 - Font sizes changed in title. Added text to the Notes section.
+            6/01/96 - Change OBJECT tag to match E3 Beta requirements
+-->
+
+
+<HTML>
+<HEAD>
+<TITLE>ActiveX / VBScript Chart Example</TITLE>
+</HEAD>
+
+<BODY BGCOLOR=#FFFFCC TEXT=#000000>
+
+<B><FONT SIZE=6>Chart Example</FONT></B><BR>
+<FONT SIZE=2>You must be running Microsoft Internet Explorer 3.0 and have the <A HREF ="http://microsoft.saltmine.com/isapi/activexisv/prmgallery/gallery-activex-info.idc?ID=162">Microsoft ActiveX Chart control</A> installed to view this page.</FONT><BR>
+<P>
+The chart control enables you to draw charts. The chart's types and styles are properties of the control. The chart has one method, AboutBox. The chart generates no events.
+
+<HR>
+
+<OBJECT
+	classid="clsid:FC25B780-75BE-11CF-8B01-444553540000"
+	CODEBASE="http://activex.microsoft.com/controls/iexplorer/iechart.ocx#Version=4,70,0,1161"
+    	TYPE="application/x-oleobject"
+	id=Chart1
+	width=200
+	height=200
+        align=left
+	hspace=0
+	vspace=0
+>
+
+<param name="_extentX" value="300">
+<param name="_extentY" value="150">
+<param name="ChartStyle" value="0">
+<param name="ChartType" value="4">
+<param name="hgridStyle" value="0">
+<param name="vgridStyle" value="0">
+<param name="colorscheme" value="0">
+<param name="rows" value="2">
+<param name="columns" value="4">
+<param name="data[0][0]" value="30">
+<param name="data[0][1]" value="2">
+<param name="data[0][2]" value="20">
+<param name="data[0][3]" value="40">
+<param name="data[1][0]" value="15">
+<param name="data[1][1]" value="33">
+<param name="data[1][2]" value="21">
+<param name="data[1][3]" value="45">
+<param name="BackStyle" value="1">
+
+
+</object>
+
+
+<SCRIPT LANGUAGE="Python">
+<!-- ' This prevents script from being displayed in browsers that don't support the SCRIPT tag
+# OPTION EXPLICIT (?)
+
+# Calls the AboutBox Method. This displays the Chart Object About Box
+def DoChartAboutBox():
+		ax.Chart1.AboutBox()
+
+# Changes the type of chart. WhatType is passed as a value (0-5) when one of the Chart Type radio buttons is selected
+def DoChartType(WhatType):
+		ax.Chart1.ChartType = WhatType
+
+# Turns horizontal gridlines on or off depending on value of chkHorizontal checkbox
+def DoHorizontalGrid():
+    print(ax.chkHorizontal.Checked)
+		if ax.chkHorizontal.Checked:
+			ax.Chart1.HGridStyle = 1
+		else:
+			ax.Chart1.HGridStyle = 0
+
+# Sets the background of the chart to Opaque or Transparent
+def DoBackground(intBackGround):
+		ax.Chart1.BackStyle = intBackGround
+
+# Turns vertical gridlines on or off depending on value of chkVertical checkbox
+def DoVerticalGrid():
+		if ax.chkVertical.Checked:
+			ax.Chart1.VGridStyle = 1
+		else:
+			ax.Chart1.VGridStyle = 0
+-->
+</SCRIPT>
+
+
+
+<TABLE BORDER = 0 XBORDER=5 BGCOLOR="#FFFFCC" WIDTH=300 ALIGN=LEFT>
+<TR><TD colspan=2 BGCOLOR=NAVY ALIGN=CENTER><FONT COLOR=FFFFCC>Chart Type</TR>
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(0)"> Simple Pie </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(11)"> Simple Column </TD></TR>
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(1)"> Pie with Wedge Out </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(12)"> Stacked Column </TD></TR>
+
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(2)"> Simple Point </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(13)"> Full Column </TD></TR>
+
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(3)"> Stacked Point </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(14)"> Simple Bar </TD></TR>
+
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(4)"> Full Point </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(15)"> Stacked Bar </TD></TR>
+
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(5)"> Simple Line </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(16)"> Full Bar </TD></TR>
+
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(6)"> Stacked Line </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(17)"> HLC Stock </TD></TR>
+
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(7)"> Full Line </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(18)"> HLC Stock WSJ</TD></TR>
+
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(8)"> Simple Area </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(19)"> OHLC Stock </TD></TR>
+
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(9)"> Stack Area </TD>
+<TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(20)"> OHLC Stock WSJ </TD></TR>
+
+<TR><TD><INPUT TYPE=RADIO NAME=ChartType onClick="DoChartType(10)"> Full Area </TD></TR>
+</TABLE>
+
+
+
+
+
+<TABLE XBORDER=5 WIDTH=125 BGCOLOR="#FFFFCC" ALIGN=LEFT>
+<TR><TD BGCOLOR=NAVY ALIGN=CENTER><FONT COLOR=FFFFCC>Gridlines</TR>
+<TR><TD><INPUT TYPE=CHECKBOX NAME="chkHorizontal" onClick="DoHorizontalGrid()">Horizontal</TD></TR>
+<TR><TD><INPUT TYPE=CHECKBOX NAME="chkVertical" onClick="DoVerticalGrid()">Vertical</TD></TR>
+<TR><TD BGCOLOR=NAVY ALIGN=CENTER><FONT COLOR=FFFFCC>Background</TR>
+<TR><TD><INPUT TYPE=RADIO NAME=BackStyle onClick="DoBackground(1)">Opaque</TD></TR>
+<TR><TD><INPUT TYPE=RADIO NAME=BackStyle onClick="DoBackground(0)">Transparent</TD></TR>
+
+</TABLE>
+
+<BR CLEAR=ALL>
+<BR>
+
+<INPUT TYPE=BUTTON VALUE="About Chart Control" NAME="cdmChartAboutBox" onClick="DoChartAboutBox()">
+
+<BR CLEAR=ALL>
+<BR><BR>
+
+<HR>
+<B><FONT SIZE=4>Notes</FONT></B><BR>
+The chart's properties on this page are changed by selecting the various radio buttons and check boxes. The OnClick event of these intrinsic controls calls VBScript procedures that change the chart properties.<BR>
+<P>
+The About Chart Control command button calls the chart's AboutBox method.<BR>
+<P>
+To view the source code for this page, select <SAMP>Source</SAMP> from the <SAMP>View</SAMP> menu.<BR>
+<P>
+If you have any questions or comments about this example, please send them to <A HREF ="mailto:billr@smart.net">billr@smart.net</A>. We would appreciate feedback and would like to hear about other developers' experiences with these new tools.<BR>
+
+
+<HR>
+
+</BODY>
+
+
+
+<ADDRESS>
+<FONT SIZE=2>
+&copy; 1996 Rollins & Associates, Inc.<BR>
+Page last updated 08/28/96<BR>
+Please send comments to <A HREF ="mailto:billr@smart.net">billr@smart.net</A><BR>
+</FONT>
+</ADDRESS>
+
+</HTML>
