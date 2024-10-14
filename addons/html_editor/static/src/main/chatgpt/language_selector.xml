@@ -13,8 +13,8 @@
             </button>
             <t t-set-slot="content">
                 <t t-foreach="state.languages" t-as="language" t-key="language[0]">
-                    <DropdownItem onSelected="() => this.onSelected(language[1])">
-                        <div class="user-select-none lang" t-esc="language[1]"/>
+                    <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(language[1])">
+                        <div class="lang" t-esc="language[1]"/>
                     </DropdownItem>
                 </t>
             </t>
