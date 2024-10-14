@@ -4322,7 +4322,7 @@ class TestStockValuation(TestStockValuationBase):
             'parent_id': self.env.company.id,
         })
         # Create a move in the branch company
-        self.env.company = branch
+        self.patch(self, 'env', branch.with_company(branch).env)
         self.product1.with_company(branch).categ_id.property_cost_method = 'average'
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', branch.id)], limit=1)
         self._make_in_move(self.product1, 1, unit_cost=30, location_dest_id=warehouse.lot_stock_id.id, picking_type_id=warehouse.in_type_id.id)

@@ -290,13 +290,14 @@ class HrLeaveType(models.Model):
     @api.depends_context('employee_id', 'default_employee_id', 'default_date_from')
     def _compute_leaves(self):
         employee = self.env['hr.employee']._get_contextual_employee()
-        target_date = self._context['default_date_from'] if 'default_date_from' in self._context else None
         # This is a workaround to save the date value in context for next triggers
         # when context gets cleaned and 'default_' context keys gets removed
+        target_date = self.env.context.get('default_date_from')
         if target_date:
-            self.env.context = frozendict(self.env.context, leave_date_from=self._context['default_date_from'])
+            # TODO remove this hack, do not depend on "default_*" context keys
+            vars(self.env)['context'] = self.with_context(leave_date_from=target_date).env.context
         else:
-            target_date = self._context.get('leave_date_from', None)
+            target_date = self.env.context.get('leave_date_from')
         data_days = self.get_allocation_data(employee, target_date)[employee]
         for holiday_status in self:
             result = [item for item in data_days if item[0] == holiday_status.name]

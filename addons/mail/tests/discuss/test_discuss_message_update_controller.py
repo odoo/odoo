@@ -11,7 +11,7 @@ class TestDiscussMessageUpdateController(MailControllerUpdateCommon):
             {"group_public_id": None, "name": "public channel"}
         )
         channel.add_members(guest_ids=[self.guest.id])
-        channel.env.context = {**channel.env.context, "guest": self.guest}
+        channel = channel.with_context(guest=self.guest)
         message = channel.with_user(self.user_public).message_post(
             body=self.message_body,
             message_type="comment",

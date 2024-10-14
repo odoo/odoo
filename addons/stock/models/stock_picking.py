@@ -1770,7 +1770,7 @@ class StockPicking(models.Model):
 
     def _get_action(self, action_xmlid):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
-        context = self.env.context
+        context = dict(self.env.context)
         context.update(literal_eval(action['context']))
         action['context'] = context
 

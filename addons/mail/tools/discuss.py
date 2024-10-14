@@ -29,8 +29,8 @@ def add_guest_to_context(func):
                 guest._update_timezone(timezone)
         if guest:
             req.update_context(guest=guest)
-            if hasattr(self, "env"):
-                self.env.context = {**self.env.context, "guest": guest}
+            if isinstance(self, models.BaseModel):
+                self = self.with_context(guest=guest)
         return func(self, *args, **kwargs)
 
     return wrapper
