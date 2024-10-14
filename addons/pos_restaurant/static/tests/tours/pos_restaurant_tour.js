@@ -69,6 +69,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickPlanButton(),
+            // Check if there is no active Order
+            Chrome.activeTableOrOrderIs("Table"),
 
             // Create first order
             FloorScreen.clickTable("5"),
@@ -109,6 +111,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             ReceiptScreen.clickNextOrder(),
+            // Check if there ids no active Order
+            Chrome.activeTableOrOrderIs("Table"),
 
             // order on another table with a product variant
             FloorScreen.orderCountSyncedInTableIs("5", "1"),
