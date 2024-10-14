@@ -251,7 +251,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.assertRecordValues(delivery.move_ids, [
             {'product_id': self.mto_product.id, 'product_uom_qty': 2.0},
         ])
-        so.with_context(disable_cancel_warning=True).action_cancel()
+        so.action_cancel()
         self.assertEqual(delivery.state, 'cancel')
         so.action_draft()
         so.action_confirm()

@@ -403,36 +403,5 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
-        <record id="sale.mail_template_sale_cancellation" model="mail.template">
-            <field name="name">Sales: Order Cancellation</field>
-            <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ object.name or 'n/a' }})</field>
-            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
-            <field name="partner_to" eval="False"/>
-            <field name="use_default_to" eval="True"/>
-            <field name="description">Sent automatically to customers when you cancel an order</field>
-            <field name="body_html" type="html">
-<div style="margin: 0px; padding: 0px;">
-    <p style="margin: 0px; padding: 0px; font-size: 13px;">
-        <t t-set="doc_name" t-value="object.type_name"/>
-        Dear <t t-out="object.partner_id.name or ''">user</t>,
-        <br/><br/>
-        Please be advised that your
-        <t t-out="doc_name or ''">quotation</t> <strong t-out="object.name or ''">S00052</strong>
-        <t t-if="object.origin">
-            (with reference: <t t-out="object.origin or ''">S00052</t> )
-        </t>
-        has been cancelled. Therefore, you should not be charged further for this order.
-        If any refund is necessary, this will be executed at best convenience.
-        <br/><br/>
-        Do not hesitate to contact us if you have any questions.
-        <br/>
-    </p>
-</div>
-            </field>
-            <field name="lang">{{ object.partner_id.lang }}</field>
-            <field name="auto_delete" eval="True"/>
-        </record>
-
     </data>
 </odoo>
