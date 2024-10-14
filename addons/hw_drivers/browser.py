@@ -8,6 +8,18 @@ from odoo.addons.hw_drivers.tools import helpers
 _logger = logging.getLogger(__name__)
 MIN_IMAGE_VERSION = 24.08
 
+CHROMIUM_ARGS = [
+    '--incognito',
+    '--disable-infobars',
+    '--noerrdialogs',
+    '--no-first-run',
+    '--bwsi',                       # Use chromium without signing in
+    '--disable-extensions',         # Disable extensions as they fill up /tmp
+    '--disk-cache-dir=/dev/null',   # Disable disk cache
+    '--disk-cache-size=1',          # Set disk cache size to 1 byte
+    '--log-level=3',                # Reduce amount of logs
+]
+
 
 class BrowserState(Enum):
     """Enum to represent the state of the browser"""
@@ -19,7 +31,7 @@ class BrowserState(Enum):
 class Browser:
     """Methods to interact with a browser"""
 
-    def __init__(self, url, _x_screen, env, kiosk=False):
+    def __init__(self, url, _x_screen, env):
         """
         :param url: URL to open in the browser
         :param _x_screen: X screen number
@@ -32,19 +44,7 @@ class Browser:
         self.browser_process_name = 'chromium' if self.browser == 'chromium-browser' else self.browser
         self._x_screen = _x_screen
         self._set_environment(env)
-        self.kiosk_args = [
-            '--kiosk',
-            '--incognito',
-            '--disable-infobars',
-            '--noerrdialogs',
-            '--no-first-run',
-        ]
-        self.fullscreen_args = ['--start-fullscreen']
-        self.chromium_additional_args = [
-            '--bwsi',  # Use Chromium without signing in
-            '--disable-extensions',  # disable extensions as they fill up /tmp
-            *(self.kiosk_args if kiosk else [])
-        ]
+        self._state = BrowserState.NORMAL
 
     def _set_environment(self, env):
         """
@@ -62,29 +62,33 @@ class Browser:
         open the browser with the given URL, or reopen it if it is already open
         :param url: URL to open in the browser
         :param state: State of the browser (normal, kiosk, fullscreen)
-        :return: Browser instance (subprocess.Popen instance)
         """
         self.url = url or self.url
+        self._state = state
 
         # Reopen to take new url or additional args into account
         self.close_browser()
 
+        browser_args = list(CHROMIUM_ARGS) if self.browser == 'chromium-browser' else []
+
         if state == BrowserState.KIOSK:
-            self.enable_kiosk_mode()
+            browser_args.append("--kiosk")
         elif state == BrowserState.FULLSCREEN:
-            self.fullscreen()
+            browser_args.append("--start-fullscreen")
 
         subprocess.Popen(
             [
                 self.browser,
                 self.url,
-                '--disk-cache-dir=/dev/null',   # Disable disk cache
-                '--disk-cache-size=1',          # Set disk cache size to 1 byte
-                '--log-level=3',                # Reduce amount of logs
-                *self.chromium_additional_args,
+                *browser_args,
             ],
             env=self.env,
         )
+
+        if self.browser == 'firefox' and state == BrowserState.FULLSCREEN:
+            # Firefox does not support fullscreen via command line argument, so we use a keypress
+            self.xdotool_keystroke('F11')
+
         helpers.save_browser_state(url=self.url)
 
     def close_browser(self):
@@ -133,16 +137,7 @@ class Browser:
         """Refresh the current tab"""
         self.xdotool_keystroke('ctrl+r')
 
-    def fullscreen(self):
-        """Adds required arguments to chromium-browser cli to open it """
-        self.chromium_additional_args = self.fullscreen_args
-
-    def enable_kiosk_mode(self):
-        """Adds required arguments to chromium-browser cli to open it in kiosk mode"""
-        self.chromium_additional_args = self.kiosk_args
-
     def disable_kiosk_mode(self):
         """Removes arguments to chromium-browser cli to open it without kiosk mode"""
-        if '--kiosk' in self.chromium_additional_args:
-            self.chromium_additional_args = [arg for arg in self.chromium_additional_args if arg not in self.kiosk_args]
-            self.open_browser()
+        if self._state == BrowserState.KIOSK:
+            self.open_browser(state=BrowserState.FULLSCREEN)
