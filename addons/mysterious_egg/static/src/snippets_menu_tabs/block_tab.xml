@@ -3,6 +3,15 @@
 
 <t t-name="mysterious_egg.BlockTab">
     <div> BLOCK </div>
+    <div t-foreach="this.categoriesBy3" t-as="categories" t-key="categories_index" class="d-flex flex-row justify-content-center">
+        <t t-foreach="categories" t-as="category" t-key="category[0]">
+            <div class="d-flex flex-column m-1 block" t-att-class="category[1].install ? 'to_install' : '' " style="background-color: rgba(62, 62, 70, 0.9);">
+                <img t-att-src="category[1].image"/>
+                <button t-if="category[1].install" class="btn btn-primary" t-on-click="onClickInstall">install</button>
+                <span class="text-center" t-esc="category[1].title"/>
+            </div>
+        </t>
+    </div>
 </t>
 
 </templates>
