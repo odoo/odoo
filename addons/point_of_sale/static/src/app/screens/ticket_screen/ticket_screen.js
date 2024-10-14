@@ -140,7 +140,7 @@ export class TicketScreen extends Component {
             if (!confirmed) {
                 return false;
             }
-            if (this.state.selectedOrder === order) {
+            if (this.state.selectedOrder?.id === order.id) {
                 this.state.selectedOrder = null;
             }
         }
