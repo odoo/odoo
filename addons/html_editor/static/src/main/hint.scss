@@ -14,3 +14,9 @@
         width: 100%;
     }
 }
+
+div[class*="col-"][class*="o-we-hint"] {
+    &:after {
+        left: calc(var(--gutter-x, 0)* .5);
+    }
+}

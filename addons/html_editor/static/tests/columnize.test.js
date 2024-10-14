@@ -32,7 +32,7 @@ describe("2 columns", () => {
             contentAfterEdit:
                 columnsContainer(
                     column(6, `<p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>`) +
-                    column(6, `<p><br></p>`)
+                    column(6, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
                 ),
             /* eslint-enable */
         });
@@ -49,7 +49,7 @@ describe("2 columns", () => {
             contentAfterEdit:
                 columnsContainer(
                     column(6, `<table><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr></tbody></table>`) +
-                    column(6, `<p><br></p>`)
+                    column(6, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
                 ),
             /* eslint-enable */
         });
@@ -75,7 +75,7 @@ describe("2 columns", () => {
             /* eslint-disable */
                 columnsContainer(
                     column(6, "<p>[]abcd</p>") +
-                    column(6, `<p><br></p>`)
+                    column(6, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
                 ) +
                 "<p><br></p>",
             contentAfter:
@@ -125,7 +125,7 @@ describe("2 columns", () => {
 
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/columns");
@@ -147,7 +147,7 @@ describe("3 columns", () => {
             contentBeforeEdit:
                 columnsContainer(
                     column(4, "<p>abcd</p>") +
-                    column(4, `<p><br></p>`) +
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`) +
                     column(4, `<p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>`)
                 ),
             /* eslint-enable */
@@ -166,8 +166,8 @@ describe("3 columns", () => {
             contentAfterEdit:
                 columnsContainer(
                     column(4, "<p>ab[]cd</p>") +
-                    column(4, `<p><br></p>`) +
-                    column(4, `<p><br></p>`)
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`) +
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
                 ) + "<p><br></p>",
             contentAfter:
                 columnsContainer(
@@ -218,7 +218,7 @@ describe("3 columns", () => {
 
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-4"><p>ab[]cd</p></div><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns"><div class="row"><div class="col-4"><p>ab[]cd</p></div><div class="col-4"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div><div class="col-4"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/columns");
@@ -304,7 +304,7 @@ describe("4 columns", () => {
 
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-3"><p>ab[]cd</p></div><div class="col-3"><p><br></p></div><div class="col-3"><p><br></p></div><div class="col-3"><p><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns"><div class="row"><div class="col-3"><p>ab[]cd</p></div><div class="col-3"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div><div class="col-3"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div><div class="col-3"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/columns");
@@ -374,7 +374,7 @@ describe("remove columns", () => {
         // add 2 columns
         await press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
         );
 
         await insertText(editor, "/removecolumns");
@@ -449,6 +449,65 @@ describe("undo", () => {
             contentAfter:
                 columnsContainer(column(6, "<p>x[]</p>") + column(6, "<p><br></p>")) +
                 "<p><br></p>",
+        });
+    });
+});
+
+describe("helper hint", () => {
+    test("should display helper hint in first block of each column", async () => {
+        await testEditor({
+            /* eslint-disable */
+            contentBefore:
+                columnsContainer(
+                    column(4, "<p>[]<br></p>") +
+                    column(4, "<h1><br></h1>" + "<h2><br></h2>") +
+                    column(4, "<p><br></p>")
+                ),
+            contentAfterEdit:
+                columnsContainer(
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>`) +
+                    column(4, `<h1 o-we-hint-text="Heading 1" class="o-we-hint"><br></h1>` + "<h2><br></h2>") +
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
+                ),
+            /* eslint-enable */
+        });
+    });
+
+    test("should not display hint in first block if cursor is inside different block in same column", async () => {
+        await testEditor({
+            /* eslint-disable */
+            contentBefore:
+                columnsContainer(
+                    column(4, "<p><br></p>") +
+                    column(4, "<h1><br></h1>" + "<h2>[]<br></h2>") +
+                    column(4, "<p><br></p>")
+                ),
+            contentAfterEdit:
+                columnsContainer(
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`) +
+                    column(4, "<h1><br></h1>" + `<h2 o-we-hint-text="Heading 2" class="o-we-hint">[]<br></h2>`) +
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
+                ),
+            /* eslint-enable */
+        });
+    });
+
+    test("should display normal hint on focused paragraph if paragraph is not first block of column", async () => {
+        await testEditor({
+            /* eslint-disable */
+            contentBefore:
+                columnsContainer(
+                    column(4, "<p><br></p>" + "<p>[]<br></p>") +
+                    column(4, "<p><br></p>") +
+                    column(4, "<p><br></p>")
+                ),
+            contentAfterEdit:
+                columnsContainer(
+                    column(4, "<p><br></p>" + `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`) +
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`) +
+                    column(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
+                ),
+            /* eslint-enable */
         });
     });
 });

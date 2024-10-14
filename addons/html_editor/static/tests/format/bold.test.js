@@ -222,8 +222,8 @@ test("should make a few characters bold inside table (bold)", async () => {
     });
 });
 
-test("should insert a span zws when toggling a formatting command twice", () => {
-    return testEditor({
+test("should insert a span zws when toggling a formatting command twice", () =>
+    testEditor({
         contentBefore: `<p>[]<br></p>`,
         stepFunction: async (editor) => {
             bold(editor);
@@ -232,9 +232,11 @@ test("should insert a span zws when toggling a formatting command twice", () => 
         // todo: It would be better to remove the zws entirely so that
         // the P could have the "/" hint but that behavior might be
         // complex with the current implementation.
-        contentAfterEdit: `<p>${span(`[]\u200B`, "first")}</p>`,
-    });
-});
+        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">${span(
+            `[]\u200B`,
+            "first"
+        )}</p>`,
+    }));
 
 // This test uses execCommand to reproduce as closely as possible the browser's
 // default behaviour when typing in a contenteditable=true zone.
