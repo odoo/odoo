@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <template id="arabic_english_invoice" inherit_id="l10n_gcc_invoice.arabic_english_invoice">
         <xpath expr="//div[@name='due_date']" position="after">
             <div class="row" t-if="o.l10n_sa_delivery_date" name="delivery_date">
@@ -28,6 +27,121 @@
                 </p>
             </t>
         </xpath>
+        <xpath expr="//th[@name='th_total']//span[2]" position="attributes">
+            <span>
+                 <attribute name="class">d-none</attribute>
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_total']//span[2]" position="after">
+            <span>
+                Subtotal<br/>(inclusive of VAT)
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_total']//span" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_total']//span" position="after">
+            <span>
+                المجموع شامل ضريبة القيمة المضافة
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']//span[2]" position="attributes">
+            <span>
+                <attribute name="class">d-none</attribute>
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']//span[2]" position="after">
+            <span>
+                Subtotal<br/>(exclusive of VAT)
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']//span" position="attributes">
+            <span>
+                <attribute name="class">d-none</attribute>
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']//span" position="after">
+            <span>
+                المجموع الفرعي بدون الضريبة
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_taxes']//span" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_taxes']//span" position="after">
+            <span>
+                نسبة الضريبة
+            </span>
+        </xpath>
+        <xpath expr="//tr" position="attributes">
+            <attribute name="style">font-size: 14px;</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='line.l10n_gcc_invoice_tax_amount']" position="attributes">
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]//strong" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]//strong" position="after">
+            <strong>
+                Invoice Taxable Amount
+                /<br/>
+                المبلغ الخاضع للضريبة غير شامل ضريبة القيمة المضافة
+            </strong>
+        </xpath>
+        <xpath expr="//t[@t-call='account.tax_groups_totals']" position="attributes">
+            <attribute name="t-if">0</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='account.tax_groups_totals']" position="after">
+            <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
+                <t t-set="arabic_tax_group_name" t-value="json.loads(o_sec.tax_totals_json)['groups_by_subtotal'][json.loads(o_sec.tax_totals_json)['subtotals'][subtotal_index]['name']][amount_by_group_index]['tax_group_name']"/>
+                <tr>
+                    <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1 or (tax_totals['amount_untaxed'] != amount_by_group['tax_group_base_amount'])">
+                        <td>
+                            <span t-esc="amount_by_group['tax_group_name']"/>
+                            <span t-if="arabic_tax_group_name != amount_by_group['tax_group_name']" class="text-nowrap">/
+                                <t t-esc="arabic_tax_group_name"/>
+                            </span>
+                            <span class="text-nowrap"> on
+                                <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/>
+                            </span>
+                        </td>
+                        <td class="text-right o_price_total">
+                            <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                        </td>
+                    </t>
+                    <t t-else="">
+                        <td>
+                            <span class="text-nowrap" t-esc="amount_by_group['tax_group_name']"/>
+                            <span t-if="arabic_tax_group_name != amount_by_group['tax_group_name']" class="text-nowrap">/
+                                <t t-esc="arabic_tax_group_name"/>
+                            </span>
+                        </td>
+                        <td class="text-right o_price_total">
+                            <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']" />
+                        </td>
+                    </t>
+                </tr>
+            </t>
+        </xpath>
+        <xpath expr="//tr[hasclass('o_total')]//strong" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//tr[hasclass('o_total')]//strong" position="after">
+            <strong>
+                Invoice Total (inclusive of VAT)
+                /
+                إجمالي قيمة الفاتورة شامل ضريبة القيمة المضافة
+            </strong>
+        </xpath>
+        <xpath expr="//div[@name='invoice_date']//span" position="before">
+            <span t-if="o.l10n_sa_confirmation_datetime" t-field="o.l10n_sa_confirmation_datetime"/>
+        </xpath>
+        <xpath expr="//div[@name='invoice_date']//span[@t-field='o.invoice_date']" position="attributes">
+            <attribute name="t-if">not o.l10n_sa_confirmation_datetime</attribute>
+        </xpath>
     </template>
-
 </odoo>

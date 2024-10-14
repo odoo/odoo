@@ -66,10 +66,10 @@
                                 فاتورة ملغاة
                             </span>
                             <span t-if="o.move_type == 'out_refund'">
-                                إشعار خصم
+                                إشعار دائن
                             </span>
                             <span t-if="o.move_type == 'in_refund'">
-                                إشعار خصم المورد
+                                إشعار مدين
                             </span>
                             <span t-if="o.move_type == 'in_invoice'">
                                 فاتورة المورد
@@ -138,12 +138,12 @@
                             </strong>
                         </div>
                     </div>
-                    <div class="col-auto mw-100 mb-2" t-if="o.ref" name="reference">
+                    <div class="row" t-if="o.ref" name="reference">
                         <div class="col-2">
                             <strong style="white-space:nowrap">Reference:
                             </strong>
                         </div>
-                        <div class="col-2">
+                        <div class="col-8">
                             <span t-field="o.ref"/>
                         </div>
                         <div class="col-2 text-right">
