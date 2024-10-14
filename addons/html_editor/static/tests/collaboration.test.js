@@ -514,7 +514,7 @@ describe("sanitize", () => {
                 execCommand(editor, "historyRedo");
             },
             contentAfter:
-                '<div contenteditable="true" class="o-paragraph o-we-hint" o-we-hint-text="Type &quot;/&quot; for commands">[c1}{c1]<br></div>',
+                '<div class="o-paragraph o-we-hint" contenteditable="true" o-we-hint-text="Type &quot;/&quot; for commands">[c1}{c1]<br></div>',
         });
     });
     test("should not sanitize the content of an element recursively when sanitizing an attribute", async () => {

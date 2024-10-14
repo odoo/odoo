@@ -1,7 +1,7 @@
 import { test, describe, beforeEach, expect } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { getContent } from "../_helpers/selection";
+import { getContent, setContent } from "../_helpers/selection";
 import {
     addStep,
     deleteBackward,
@@ -16,7 +16,7 @@ import {
     toggleBlockEmbedding,
 } from "@html_editor/others/embedded_components/core/toggle_block/toggle_block";
 import { onMounted } from "@odoo/owl";
-import { animationFrame, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, queryOne, tick } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
@@ -470,7 +470,7 @@ describe("Enter applied to toggle title", () => {
                     </div>
                     <div class="ps-4 ms-1 d-none">
                         <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                            <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                            <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                         </div>
                     </div>
                 </div>
@@ -552,7 +552,7 @@ describe("Enter applied to toggle title", () => {
                 </div>
                 <div class="ps-4 ms-1 d-none">
                     <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                        <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                        <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                     </div>
                 </div>
             </div>
@@ -754,7 +754,7 @@ describe("Tab applied to toggle title", () => {
                             </div>
                             <div class="ps-4 ms-1">
                                 <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                                    <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                                    <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                                 </div>
                             </div>
                         </div>
@@ -810,7 +810,7 @@ describe("Shift+Tab applied to toggle title", () => {
                 </div>
                 <div class="ps-4 ms-1">
                     <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                        <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                        <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                     </div>
                 </div>
             </div>
@@ -915,6 +915,39 @@ describe("Insert (paste, drop) inside toggle title", () => {
                 <div class="oe_unbreakable">brol</div>
                 <div class="o-paragraph">[]World</div>
             `)
+        );
+    });
+});
+
+describe("hint", () => {
+    test("should show normal hint when focusing embedded content element", async () => {
+        const { el } = await setupEditor(
+            unformat(`<div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
+                    <div data-embedded-editable="title">
+                        <p>[]<br></p>
+                    </div>
+                    <div data-embedded-editable="content">
+                        <p><br></p>
+                    </div>
+                </div>`),
+            {
+                config: getConfig([toggleBlockEmbedding]),
+            }
+        );
+        await embeddedToggleMountedPromise;
+        expect("[data-embedded-editable='title']").toHaveInnerHTML(
+            '<p o-we-hint-text="Toggle title" class="o-we-hint"><br></p>'
+        );
+        await contains("[data-embedded='toggleBlock'] button").click();
+        await animationFrame();
+        const content = el.querySelector("[data-embedded-editable='content'");
+        expect(content).toHaveInnerHTML(
+            '<p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>'
+        );
+        setContent(content, "<p>[]<br></p>");
+        await tick(); // selectionChange
+        expect(content).toHaveInnerHTML(
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p>`
         );
     });
 });

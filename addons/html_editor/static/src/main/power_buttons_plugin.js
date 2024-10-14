@@ -116,7 +116,7 @@ export class PowerButtonsPlugin extends Plugin {
         const element = closestElement(editableSelection.anchorNode);
         if (
             editableSelection.isCollapsed &&
-            element?.matches(baseContainerGlobalSelector) &&
+            block?.matches(baseContainerGlobalSelector) &&
             isEmptyBlock(block) &&
             !this.services.ui.isSmall &&
             !closestElement(editableSelection.anchorNode, "td") &&
