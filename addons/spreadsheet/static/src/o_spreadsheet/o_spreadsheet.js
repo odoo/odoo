@@ -33951,11 +33951,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                     if (cell &&
                         this.currentSearchRegex &&
-                        this.currentSearchRegex.test(this.searchOptions.searchFormulas
-                            ? cell.isFormula()
-                                ? cell.content
-                                : String(cell.evaluated.value)
-                            : String(cell.evaluated.value))) {
+                        this.currentSearchRegex.test(this.searchOptions.searchFormulas ? cell.content : String(cell.evaluated.value))) {
                         const position = this.getters.getCellPosition(cell.id);
                         const match = { col: position.col, row: position.row, selected: false };
                         matches.push(match);
@@ -36593,6 +36589,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "REMOTE_REVISION":
                 case "REVISION_REDONE":
                 case "REVISION_UNDONE":
+                case "SNAPSHOT_CREATED":
                     return this.processedRevisions.has(message.nextRevisionId);
                 default:
                     return false;
@@ -43103,6 +43100,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.selection.observe(this, {
                 handleEvent: () => this.trigger("update"),
             });
+            // move in "Loading" mode where we ignore redundant calls to finalize triggered by the
+            // replay of stateUpdateMessages in the session
+            this.isLoading = true;
             // This should be done after construction of LocalHistory due to order of
             // events
             this.setupSessionEvents();
@@ -43115,6 +43115,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             // mark all models as "raw", so they will not be turned into reactive objects
             // by owl, since we do not rely on reactivity
             owl.markRaw(this);
+            this.isLoading = false;
+            // ensure propre recomputation of plugin states after the message replays
+            this.finalize();
         }
         joinSession() {
             this.session.join(this.config.client);
@@ -43224,6 +43227,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return DispatchResult.Success;
         }
         finalize() {
+            if (this.isLoading) {
+                return;
+            }
             this.status = 3 /* Status.Finalizing */;
             for (const h of this.handlers) {
                 h.finalize();
@@ -43442,9 +43448,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.52';
-    __info__.date = '2024-09-05T12:00:03.412Z';
-    __info__.hash = '2d666d7';
+    __info__.version = '16.0.53';
+    __info__.date = '2024-10-14T07:57:53.922Z';
+    __info__.hash = 'a9ad6d8';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
