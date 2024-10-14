@@ -46,12 +46,7 @@ export class FormRendererWithHtmlExpander extends FormRenderer {
                 }
                 this.props.notifyHtmlExpander();
             },
-            () => [
-                ref.el,
-                this.uiService.size,
-                this.props.reloadHtmlFieldHeight,
-                this.props.record.resId,
-            ]
+            () => [ref.el, this.uiService.size, this.props.reloadHtmlFieldHeight]
         );
     }
 
