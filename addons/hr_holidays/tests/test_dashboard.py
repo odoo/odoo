@@ -5,7 +5,7 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 class TestDashboard(TestHrHolidaysCommon):
     def test_dashboard_special_days(self):
-        self.env.user = self.user_hrmanager
+        self.uid = self.user_hrmanager.id
         employee = self.env.user.employee_id
         other_calendar = self.env['resource.calendar'].create({
             'name': 'Other calendar',
