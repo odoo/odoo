@@ -667,6 +667,7 @@ class SlideSlide(models.Model):
                 values = {'html_content': False, **values}
 
         res = super().write(values)
+
         if values.get('is_published'):
             self.date_published = datetime.datetime.now()
             self._post_publication()
@@ -686,6 +687,8 @@ class SlideSlide(models.Model):
                 })
 
         if 'is_published' in values or 'active' in values:
+            # archiving a channel unpublishes its slides
+            self.filtered(lambda slide: not slide.active and not slide.is_category and slide.is_published).is_published = False
             # recompute the completion for all partners of the channel
             self.channel_id.channel_partner_ids._recompute_completion()
 
@@ -704,14 +707,6 @@ class SlideSlide(models.Model):
         channel_partner_ids = self.channel_id.channel_partner_ids
         res = super().unlink()
         channel_partner_ids._recompute_completion()
-        return res
-
-    def toggle_active(self):
-        # archiving/unarchiving a channel does it on its slides, too
-        to_archive = self.filtered(lambda slide: slide.active)
-        res = super().toggle_active()
-        if to_archive:
-            to_archive.filtered(lambda slide: not slide.is_category).is_published = False
         return res
 
     # ---------------------------------------------------------

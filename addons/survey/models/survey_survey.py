@@ -496,11 +496,13 @@ class SurveySurvey(models.Model):
         vals_list = super().copy_data(default=default)
         return [dict(vals, title=self.env._("%s (copy)", survey.title)) for survey, vals in zip(self, vals_list)]
 
-    def toggle_active(self):
-        super().toggle_active()
-        activated = self.filtered(lambda survey: survey.active)
-        activated.certification_badge_id.action_unarchive()
-        (self - activated).certification_badge_id.action_archive()
+    def action_archive(self):
+        super().action_archive()
+        self.certification_badge_id.action_archive()
+
+    def action_unarchive(self):
+        super().action_unarchive()
+        self.certification_badge_id.action_unarchive()
 
     # ------------------------------------------------------------
     # ANSWER MANAGEMENT

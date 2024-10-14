@@ -8,12 +8,8 @@ from odoo.exceptions import UserError
 class MrpBom(models.Model):
     _inherit = ['mrp.bom']
 
-    def toggle_active(self):
-        self.filtered(lambda bom: bom.active)._ensure_bom_is_free()
-        return super().toggle_active()
-
     def write(self, vals):
-        if 'phantom' in self.mapped('type') and vals.get('type', 'phantom') != 'phantom':
+        if not vals.get('active', True) or ('phantom' in self.mapped('type') and vals.get('type', 'phantom') != 'phantom'):
             self._ensure_bom_is_free()
         return super().write(vals)
 
@@ -24,7 +20,7 @@ class MrpBom(models.Model):
     def _ensure_bom_is_free(self):
         product_ids = []
         for bom in self:
-            if bom.type != 'phantom':
+            if not bom.active or bom.type != 'phantom':
                 continue
             product_ids += bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids
         if not product_ids:

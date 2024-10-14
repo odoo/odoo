@@ -92,14 +92,13 @@ class TestChannelStatistics(common.SlidesCase):
         self.assertEqual(channel_emp.completion, 100)
         self.assertTrue(channel_emp.completed)
 
-        self.slide_3.is_published = True
         self.slide_3.active = False
+        # slide_3 is not active, so it cannot be published yet
         self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertTrue(channel_emp.completed)
 
         # Should update completion when slide is marked as completed
-
         self.assertEqual(member_publisher.completion, 0)
         self.assertEqual(channel_publisher.completion, 0)
         self.slide.with_user(self.user_officer).action_mark_completed()
@@ -108,6 +107,7 @@ class TestChannelStatistics(common.SlidesCase):
 
         # Should update completion when slide is (un)archived
         self.slide_3.active = True
+        self.slide_3.is_published = True  # set the published flag to True again
         self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertEqual(member_publisher.completion, 33)

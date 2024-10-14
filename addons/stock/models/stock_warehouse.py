@@ -295,8 +295,7 @@ class StockWarehouse(models.Model):
                         ('supplier_wh_id', 'in', to_add.ids),
                         ('active', '=', False)
                     ])
-                    if existing_routes:
-                        existing_routes.toggle_active()
+                    existing_routes.action_unarchive()
                     remaining_to_add = to_add - existing_routes.supplier_wh_id
                     if remaining_to_add:
                         warehouse.create_resupply_routes(remaining_to_add)
@@ -306,7 +305,7 @@ class StockWarehouse(models.Model):
                         ('supplier_wh_id', 'in', to_remove.ids),
                         ('active', '=', True)
                     ])
-                    to_disable_route_ids.toggle_active()
+                    to_disable_route_ids.action_archive()
 
         if 'active' in vals:
             self._check_multiwarehouse_group()

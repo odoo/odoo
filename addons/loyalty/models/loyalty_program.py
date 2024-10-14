@@ -434,16 +434,6 @@ class LoyaltyProgram(models.Model):
         if any(program.active for program in self):
             raise UserError(_('You can not delete a program in an active state'))
 
-    def toggle_active(self):
-        res = super().toggle_active()
-        # Propagate active state to children
-        for program in self.with_context(active_test=False):
-            program.rule_ids.active = program.active
-            program.reward_ids.active = program.active
-            program.communication_plan_ids.active = program.active
-            program.reward_ids.with_context(active_test=True).discount_line_product_id.active = program.active
-        return res
-
     def write(self, vals):
         # There is an issue when we change the program type, since we clear the rewards and create new ones.
         # The orm actually does it in this order upon writing, triggering the constraint before creating the new rewards.
@@ -455,14 +445,24 @@ class LoyaltyProgram(models.Model):
             #`loyalty.reward`.
             if 'program_type' in vals:
                 self = self.with_context(program_type=vals['program_type'])
-                return super().write(vals)
+                res = super().write(vals)
             else:
                 for program in self:
                     program = program.with_context(program_type=program.program_type)
                     super(LoyaltyProgram, program).write(vals)
-                return True
+                res = True
         else:
-            return super().write(vals)
+            res = super().write(vals)
+
+        # Propagate active state to children
+        if 'active' in vals:
+            for program in self.with_context(active_test=False):
+                program.rule_ids.active = program.active
+                program.reward_ids.active = program.active
+                program.communication_plan_ids.active = program.active
+                program.reward_ids.with_context(active_test=True).discount_line_product_id.active = program.active
+
+        return res
 
     @api.model
     def get_program_templates(self):

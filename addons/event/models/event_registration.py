@@ -243,14 +243,14 @@ class EventRegistration(models.Model):
         for registration in self:
             registration.display_name = registration.name or f"#{registration.id}"
 
-    def toggle_active(self):
-        pre_inactive = self - self.filtered(self._active_name)
-        super().toggle_active()
+    def action_unarchive(self):
+        res = super().action_unarchive()
         # Necessary triggers as changing registration states cannot be used as triggers for the
         # Event(Ticket) models constraints.
-        if pre_inactive:
-            pre_inactive.event_id._check_seats_availability()
-            pre_inactive.event_ticket_id._check_seats_availability()
+        if unarchived := self.filtered(self._active_name):
+            unarchived.event_id._check_seats_availability()
+            unarchived.event_ticket_id._check_seats_availability()
+        return res
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS

@@ -65,19 +65,19 @@ class TestPartner(TransactionCaseWithUserDemo):
                                 })
         # Cannot archive the partner
         with self.assertRaises(RedirectWarning):
-            test_partner.with_user(self.env.ref('base.user_admin')).toggle_active()
+            test_partner.with_user(self.env.ref('base.user_admin')).action_archive()
         with self.assertRaises(ValidationError):
-            test_partner.with_user(self.user_demo).toggle_active()
+            test_partner.with_user(self.user_demo).action_archive()
 
         # Can archive the user but the partner stays active
-        test_user.toggle_active()
+        test_user.action_archive()
         self.assertTrue(test_partner.active, 'Parter related to user should remain active')
 
         # Now we can archive the partner
-        test_partner.toggle_active()
+        test_partner.action_archive()
 
         # Activate the user should reactivate the partner
-        test_user.toggle_active()
+        test_user.action_unarchive()
         self.assertTrue(test_partner.active, 'Activating user must active related partner')
 
     def test_email_formatted(self):

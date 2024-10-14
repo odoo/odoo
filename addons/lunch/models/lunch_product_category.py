@@ -30,10 +30,16 @@ class LunchProductCategory(models.Model):
         for category in self:
             category.product_count = data.get(category.id, 0)
 
-    def toggle_active(self):
+    def _sync_active_products(self):
         """ Archiving related lunch product """
-        res = super().toggle_active()
         Product = self.env['lunch.product'].with_context(active_test=False)
         all_products = Product.search([('category_id', 'in', self.ids)])
         all_products._sync_active_from_related()
-        return res
+
+    def action_archive(self):
+        super().action_archive()
+        self._sync_active_products()
+
+    def action_unarchive(self):
+        super().action_unarchive()
+        self._sync_active_products()

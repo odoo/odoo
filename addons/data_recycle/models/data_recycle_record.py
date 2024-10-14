@@ -77,7 +77,7 @@ class Data_RecycleRecord(models.Model):
             elif record.recycle_model_id.recycle_action == "unlink":
                 record_ids_to_unlink[original_record._name].append(original_record.id)
         for model_name, ids in record_ids_to_archive.items():
-            self.env[model_name].sudo().browse(ids).toggle_active()
+            self.env[model_name].sudo().browse(ids).action_archive()
         for model_name, ids in record_ids_to_unlink.items():
             self.env[model_name].sudo().browse(ids).unlink()
         records_done.unlink()

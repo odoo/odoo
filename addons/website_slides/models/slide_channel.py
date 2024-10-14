@@ -770,29 +770,31 @@ class SlideChannel(models.Model):
         self.slide_ids.unlink()
         return super().unlink()
 
-    def toggle_active(self):
-        """ Archiving/unarchiving a channel does it on its slides, too.
-        1. When archiving
+    def action_archive(self):
+        """ Archiving a channel does it on its slides, too.
+
         We want to be archiving the channel FIRST.
         So that when slides are archived and the recompute is triggered,
         it does not try to mark the channel as "completed".
         That happens because it counts slide_done / slide_total, but slide_total
         will be 0 since all the slides for the course have been archived as well.
+        """
+        archived = self.filtered(self._active_name)
+        res = super().action_archive()
+        archived.is_published = False
+        archived.slide_ids.action_archive()
+        return res
 
-        2. When un-archiving
+    def action_unarchive(self):
+        """ Unarchiving a channel does it on its slides, too.
+
         We want to archive the channel LAST.
         So that when it recomputes stats for the channel and completion, it correctly
-        counts the slides_total by counting slides that are already un-archived. """
-
-        to_archive = self.filtered(lambda channel: channel.active)
+        counts the slides_total by counting slides that are already un-archived.
+        """
         to_activate = self.filtered(lambda channel: not channel.active)
-        if to_archive:
-            super(SlideChannel, to_archive).toggle_active()
-            to_archive.is_published = False
-            to_archive.mapped('slide_ids').action_archive()
-        if to_activate:
-            to_activate.with_context(active_test=False).mapped('slide_ids').action_unarchive()
-            super(SlideChannel, to_activate).toggle_active()
+        to_activate.with_context(active_test=False).slide_ids.action_unarchive()
+        return super(SlideChannel, to_activate).action_unarchive()
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):

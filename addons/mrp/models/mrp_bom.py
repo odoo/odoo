@@ -282,9 +282,13 @@ class MrpBom(models.Model):
             raise UserError(_("You cannot create a new Bill of Material from here."))
         return super(MrpBom, self).name_create(name)
 
-    def toggle_active(self):
-        self.with_context({'active_test': False}).operation_ids.toggle_active()
-        return super().toggle_active()
+    def action_archive(self):
+        self.with_context(active_test=False).operation_ids.action_archive()
+        return super().action_archive()
+
+    def action_unarchive(self):
+        self.with_context(active_test=False).operation_ids.action_unarchive()
+        return super().action_unarchive()
 
     @api.depends('code')
     def _compute_display_name(self):
