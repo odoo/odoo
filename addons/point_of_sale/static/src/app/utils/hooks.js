@@ -43,7 +43,7 @@ export function useErrorHandlers() {
                     "Check the internet connection then try to sync again by clicking on the red wifi button (upper right of the screen)."
                 ),
             });
-        } else if (error.code === 200) {
+        } else if (error.data) {
             // OpenERP Server Errors
             dialog.add(ErrorDialog, {
                 traceback:
