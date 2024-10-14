@@ -66,6 +66,7 @@ class WebsiteBuilder extends Component {
     }
 
     closeEditor() {
+        document.querySelector(".o_main_navbar").removeAttribute("style");
         this.state.isEditing = false;
         this.addSystrayItems();
     }
@@ -75,8 +76,11 @@ class WebsiteBuilder extends Component {
     }
 
     onEditPage() {
-        this.state.isEditing = true;
-        registry.category("systray").remove("website.WebsiteSystrayItem");
+        document.querySelector(".o_main_navbar").setAttribute("style", "margin-top: -100%;");
+        setTimeout(() => {
+            this.state.isEditing = true;
+            registry.category("systray").remove("website.WebsiteSystrayItem");
+        }, 200);
     }
 }
 
