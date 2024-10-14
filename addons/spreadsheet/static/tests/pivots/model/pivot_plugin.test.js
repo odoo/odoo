@@ -254,7 +254,7 @@ test("invalid group dimensions", async function () {
         setCellContent(model, "G10", formula);
         expect(getCellValue(model, "G10")).toBe("#ERROR", { message: formula });
         expect(getEvaluatedCell(model, "G10").message).toBe(
-            "Dimensions don't match the pivot definition",
+            "Dimensions don't match the pivot definition. Consider using a dynamic pivot formula: =PIVOT(1). Or re-insert the static pivot from the Data menu.",
             { message: formula }
         );
     }
