@@ -2896,9 +2896,11 @@ class MrpProduction(models.Model):
             else:
                 entity.unlink()
         elif quantity > 0:
-            new_line = self._get_new_catalog_line_values(product_id, quantity, **kwargs)
-            command = Command.create(new_line)
+            new_line_vals = self._get_new_catalog_line_values(product_id, quantity, **kwargs)
+            command = Command.create(new_line_vals)
             self.write({child_field: [command]})
+            new_line = self[child_field].filtered(lambda mv: mv.product_id.id == product_id)[-1:]
+            self._update_catalog_line_quantity(new_line, quantity, **kwargs)
 
         return self.env['product.product'].browse(product_id).standard_price
 
