@@ -172,7 +172,7 @@ def check_git_branch():
                     subprocess.run(
                         ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
                     )
-                    odoo_restart()
+                odoo_restart()
     except Exception:
         _logger.exception('An error occurred while connecting to server')
 
