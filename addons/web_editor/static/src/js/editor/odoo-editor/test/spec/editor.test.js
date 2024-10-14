@@ -7343,6 +7343,28 @@ X[]
                     contentAfter: '<p>ab<code class="o_inline_code">[]c</code></p>',
                 });
             });
+            it('should not convert text into inline code when content is empty', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>`[]</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>``[]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>``[]</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>```[]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>```[]</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>````[]</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>````[]</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>`````[]</p>',
+                });
+            });
         });
     });
 
