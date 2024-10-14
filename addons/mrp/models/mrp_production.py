@@ -1400,7 +1400,7 @@ class MrpProduction(models.Model):
         for workorder in final_workorders:
             workorder._plan_workorder(replan)
 
-        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])
+        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'] and w.leave_id)
         if not workorders:
             return
 
