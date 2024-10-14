@@ -9450,7 +9450,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                     this.trigger_up('context_get', {
                         callback: ctx => context = ctx,
                     });
-                    if (this.$target[0].matches("[data-snippet=s_popup]")) {
+                    if (this.$target[0].matches(".s_popup")) {
                         // Do not "cleanForSave" the popup before copying the
                         // HTML, otherwise the popup will be saved invisible and
                         // therefore not visible in the "add snippet" dialog.
