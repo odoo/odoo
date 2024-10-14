@@ -144,7 +144,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
 
     _getInputLabel(name) {
         const input = this.addressForm[name];
-        return input.parentElement.querySelector(`label[for='${input.id}']`);
+        return input?.parentElement.querySelector(`label[for='${input.id}']`);
     },
 
     _showInput(name) {
@@ -158,7 +158,10 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     },
 
     _markRequired(name, required) {
-        this.addressForm[name].required = required;
+        const input = this.addressForm[name];
+        if (input) {
+            input.required = required;
+        }
         this._getInputLabel(name)?.classList.toggle('label-optional', !required);
     },
 
