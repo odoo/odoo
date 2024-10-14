@@ -205,6 +205,23 @@ msgstr ""
 "factura."
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+msgid ""
+"A required tax group could not be found (XML ID: %s).\n"
+"Please reload your chart template in order to reinstall the required tax "
+"group.\n"
+"\n"
+"Note: You might have to relink your existing taxes to this new tax group."
+msgstr ""
+"No se ha encontrado el grupo de impuestos requerido (XML ID: %s).\n"
+"Vuelva a cargar la plantilla de plan para volver a instalar el grupo de "
+"impuestos necesario.\n"
+"\n"
+"Nota: Es posible que tenga que volver a vincular sus impuestos existentes a "
+"este nuevo grupo de impuestos."
+
+#. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_ac_dis_cf
 msgid "ACCOUNTING ADJUSTMENTS THAT DECREASE THE TAX CREDIT"
 msgstr "AJUSTES CONTABLES QUE DISMINUYEN EL CRÉDITO FISCAL"
@@ -333,6 +350,12 @@ msgstr "Fecha contable"
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
 msgid "Accounting Date: This Year"
 msgstr "Fecha contable: Este año"
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+msgid "Accounting Settings"
+msgstr "Ajustes de contabilidad"
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__active
@@ -2098,6 +2121,16 @@ msgstr ""
 "El crédito fiscal especificado en el presente comprobante solo podrá ser "
 "calculado a efectos del Régimen de Sostenimiento e Inclusión Fiscal para "
 "Pequeños Contribuyentes de la Ley Nº 27.618."
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_tax_group.py:0
+msgid ""
+"The tax group '%s' can't be removed, since it is required in the Argentinian "
+"localization."
+msgstr ""
+"El grupo de impuestos '%s' no se puede eliminar, ya que es necesario en la "
+"localización argentina."
 
 #. module: l10n_ar
 #. odoo-python
