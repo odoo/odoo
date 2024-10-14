@@ -225,6 +225,15 @@ class TestFiscalPosition(common.TransactionCase):
             'name': 'NL NO VAT',
             'country_id': self.nl.id,
         })
+        partner_fr_vat = self.env['res.partner'].create({
+            'name': 'FR VAT',
+            'vat': 'FR23334175221',
+            'country_id': self.fr.id,
+        })
+        partner_fr_no_vat = self.env['res.partner'].create({
+            'name': 'FR NO VAT',
+            'country_id': self.fr.id,
+        })
         partner_us_vat = self.env['res.partner'].create({
             'name': 'US VAT',
             'vat': 'US34567',
@@ -276,11 +285,15 @@ class TestFiscalPosition(common.TransactionCase):
             {'partner': partner_us_nl_vat, 'delivery': partner_us_vat, 'expected_fp': fp_eu_extra},
             {'partner': partner_us_nl_vat, 'delivery': partner_us_nl_vat, 'expected_fp': fp_eu_extra},
             {'partner': partner_us_nl_vat, 'delivery': partner_us_no_vat, 'expected_fp': fp_eu_extra},
+            {'partner': partner_fr_no_vat, 'delivery': partner_nl_vat, 'expected_fp': fp_oss_nl},
+            {'partner': partner_fr_no_vat, 'delivery': partner_nl_no_vat, 'expected_fp': fp_oss_nl},
+            {'partner': partner_fr_vat, 'delivery': partner_nl_vat, 'expected_fp': fp_eu_intra},
+            {'partner': partner_fr_vat, 'delivery': partner_nl_no_vat, 'expected_fp': fp_eu_intra},
         ]
 
         for vals in data:
             fp = self.env['account.fiscal.position'].with_company(self.env.company)._get_fiscal_position(vals['partner'], vals['delivery'])
-            with self.subTest(fp=fp.name, expected_fp=vals['expected_fp'].name):
+            with self.subTest(partner=vals['partner'].name, delivery=vals['delivery'].name, fp=fp.name, expected_fp=vals['expected_fp'].name):
                 self.assertEqual(fp, vals['expected_fp'])
 
     def test_fiscal_position_constraint(self):
