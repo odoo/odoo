@@ -175,6 +175,7 @@ class Cart(PaymentPortal):
                 combo_quantity = min(combo_quantity, combo_item_quantity)
             quantity = combo_quantity
 
+        added_qty_per_line = {}
         values = order_sudo._cart_add(
             product_id=product_id,
             quantity=quantity,
@@ -184,6 +185,7 @@ class Cart(PaymentPortal):
             **kwargs
         )
         line_ids = {product_template_id: values['line_id']}
+        added_qty_per_line[values['line_id']] = values['added_qty']
 
         if linked_products and values['line_id']:
             for product_data in linked_products:
@@ -220,6 +222,7 @@ class Cart(PaymentPortal):
                     **kwargs,
                 )
                 line_ids[product_data['product_template_id']] = product_values['line_id']
+                added_qty_per_line[product_values['line_id']] = product_values['added_qty']
 
         # The validity of a combo product line can only be checked after creating all of its combo
         # item lines.
@@ -227,14 +230,17 @@ class Cart(PaymentPortal):
         if main_product_line.product_type == 'combo':
             main_product_line._check_validity()
 
-        values['notification_info'] = self._get_cart_notification_information(
-            order_sudo, line_ids.values()
-        )
-        values['notification_info']['warning'] = values.pop('warning', '')
-        values['tracking_info'] = self._get_tracking_information(order_sudo, line_ids.values())
-        values['cart_quantity'] = order_sudo.cart_quantity
-
-        return values
+        return {
+            'cart_quantity': order_sudo.cart_quantity,
+            'notification_info': {
+                **self._get_cart_notification_information(
+                    order_sudo, added_qty_per_line
+                ),
+                'warning': values.pop('warning', ''),
+            },
+            'quantity': values.pop('quantity', 0),
+            'tracking_info': self._get_tracking_information(order_sudo, line_ids.values()),
+        }
 
     @route(
         route='/shop/cart/update',
@@ -311,11 +317,11 @@ class Cart(PaymentPortal):
     def clear_cart(self):
         request.cart.order_line.unlink()
 
-    def _get_cart_notification_information(self, order, line_ids):
+    def _get_cart_notification_information(self, order, added_qty_per_line):
         """ Get the information about the sales order lines to show in the notification.
 
         :param sale.order order: The sales order.
-        :param list[int] line_ids: The ids of the lines to display in the notification.
+        :param dict added_qty_per_line: The added qty per order line.
         :rtype: dict
         :return: A dict with the following structure:
             {
@@ -326,26 +332,25 @@ class Cart(PaymentPortal):
                     'quantity': float
                     'name': str
                     'description': str
-                    'line_price_total': float
+                    'added_qty_price_total': float
                 }],
             }
         """
-        lines = order.order_line.filtered(lambda line: line.id in line_ids)
+        lines = order.order_line.filtered(lambda line: line.id in set(added_qty_per_line))
         if not lines:
             return {}
 
-        show_tax = order.website_id.show_line_subtotals_tax_selection == 'tax_included'
         return {
             'currency_id': order.currency_id.id,
             'lines': [
                 { # For the cart_notification
                     'id': line.id,
                     'image_url': order.website_id.image_url(line.product_id, 'image_128'),
-                    'quantity': line._get_displayed_quantity(),
+                    'quantity': added_qty_per_line[line.id],
                     'name': line._get_line_header(),
                     'combination_name': line._get_combination_name(),
                     'description': line._get_sale_order_line_multiline_description_variants(),
-                    'line_price_total': line.price_total if show_tax else line.price_subtotal,
+                    'price_total': line.price_unit * added_qty_per_line[line.id],
                     **self._get_additional_cart_notification_information(line),
                 } for line in lines
             ],

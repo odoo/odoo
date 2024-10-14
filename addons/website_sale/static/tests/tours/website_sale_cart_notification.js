@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add("website_sale_cart_notification", {
             trigger: '.toast-body span.text-muted.small:contains("Size: S")',
         },
         {
-            content: "check the price of 1 website_sale_cart_notification_product_2",
+            content: "check the price of 3 website_sale_cart_notification_product_2",
             trigger: '.toast-body div:contains("$ 15,000.00")',
         },
         {
@@ -64,5 +64,47 @@ registry.category("web_tour.tours").add("website_sale_cart_notification", {
             productName: "website_sale_cart_notification_product_2",
             backend: false,
         }),
+    ],
+});
+
+
+registry.category("web_tour.tours").add("website_sale_cart_notification_qty_and_total", {
+    url: "/shop",
+    steps: () => [
+        ...tourUtils.addToCart({
+            productName: "website_sale_cart_notification_product_1",
+            expectUnloadPage: true,
+        }),
+        {
+            content: "check that 1 website_sale_cart_notification_product_1 was added",
+            trigger: '.toast-body span:contains("website_sale_cart_notification_product_1")',
+        },
+        {
+            content: "check that 1 website_sale_cart_notification_product_1 was added",
+            trigger: '.toast-body span:contains("1")',
+        },
+        {
+            content: "check the price of 1 website_sale_cart_notification_product_1",
+            trigger: '.toast-body div:contains("$ 1,000.00")',
+        },
+        // Again add same product
+        {
+            content: "change quantity",
+            trigger: '#product_detail form input[name=add_qty]',
+            run: "edit 3",
+        },
+        {
+            content: "click on add to cart",
+            trigger: '#product_detail form #add_to_cart',
+            run: "click",
+        },
+        {
+            content: "check that only newly added qty showing in the notification",
+            trigger: '.toast-body span:contains("3")',
+        },
+        {
+            content: "check that price total only showing total of newly added quantity",
+            trigger: '.toast-body div:contains("$ 3,000.00")',
+        },
     ],
 });

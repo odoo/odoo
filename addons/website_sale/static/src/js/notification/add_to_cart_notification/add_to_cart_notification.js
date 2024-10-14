@@ -17,7 +17,7 @@ export class AddToCartNotification extends Component {
                     combination_name: { type: String, optional: true },
                     name: String,
                     description: { type: String, optional: true },
-                    line_price_total: Number,
+                    price_total: Number,
                 },
             },
         },
@@ -52,8 +52,8 @@ export class AddToCartNotification extends Component {
     getFormattedPrice(line) {
         const linkedLines = this.getLinkedLines(line.id);
         const price = linkedLines.length
-            ? linkedLines.reduce((price, linkedLine) => price + linkedLine.line_price_total, 0)
-            : line.line_price_total;
+            ? linkedLines.reduce((price, linkedLine) => price + linkedLine.price_total, 0)
+            : line.price_total;
         return formatCurrency(price, this.props.currency_id);
     }
 
