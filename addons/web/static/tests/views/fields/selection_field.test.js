@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryAll, queryAllValues, queryFirst, queryOne, select } from "@odoo/hoot-dom";
+import { click, queryAllValues, queryFirst, queryOne, select } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -228,73 +228,15 @@ test("required selection widget should not have blank option", async () => {
                 </form>`,
     });
 
-    expect(queryAll(".o_field_widget[name='color'] option").map((n) => n.style.display)).toEqual([
-        "",
-        "",
-        "",
-    ]);
+    expect(`.o_field_widget[name='color'] option`).toHaveCount(3);
 
-    expect(
-        queryAll(".o_field_widget[name='feedback_value'] option").map((n) => n.style.display)
-    ).toEqual(["none", "", ""]);
+    expect(`.o_field_widget[name='feedback_value'] option`).toHaveCount(2);
 
     // change value to update widget modifier values
     await click(".o_field_widget[name='feedback_value'] select");
     await select('"bad"');
     await animationFrame();
-    expect(queryAll(".o_field_widget[name='color'] option").map((n) => n.style.display)).toEqual([
-        "none",
-        "",
-        "",
-    ]);
-});
-
-test("required selection widget should have only one blank option", async () => {
-    Partner._fields.feedback_value = fields.Selection({
-        required: true,
-        selection: [
-            ["good", "Good"],
-            ["bad", "Bad"],
-        ],
-        default: "good",
-        string: "Good",
-    });
-
-    Partner._fields.color = fields.Selection({
-        selection: [
-            [false, ""],
-            ["red", "Red"],
-            ["black", "Black"],
-        ],
-        default: "red",
-        string: "Color",
-    });
-
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: /* xml */ `
-                <form>
-                    <field name="feedback_value" />
-                    <field name="color" required="feedback_value == 'bad'" />
-                </form>`,
-    });
-
-    expect(".o_field_widget[name='color'] option").toHaveCount(3, {
-        message: "Three options in non required field (one blank option)",
-    });
-
-    // change value to update widget modifier values
-    await click(".o_field_widget[name='feedback_value'] select");
-    await select('"bad"');
-    await animationFrame();
-
-    expect(queryAll(".o_field_widget[name='color'] option").map((n) => n.style.display)).toEqual([
-        "none",
-        "",
-        "",
-    ]);
+    expect(`.o_field_widget[name='color'] option`).toHaveCount(2);
 });
 
 test("selection field with placeholder", async () => {
