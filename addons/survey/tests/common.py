@@ -162,17 +162,21 @@ class SurveyCase(common.TransactionCase):
     # ------------------------------------------------------------
 
     def _access_start(self, survey):
-        return self.url_open('/survey/start/%s' % survey.access_token)
+        return self.url_open(f'/survey/start/{survey.id}/{survey.access_token}')
 
-    def _access_page(self, survey, token):
-        return self.url_open('/survey/%s/%s' % (survey.access_token, token))
+    def _access_page(self, survey, answer_token, answer_id):
+        return self.url_open(f'/survey/display/{survey.id}/{answer_id}/{survey.access_token}/{answer_token}')
 
-    def _access_begin(self, survey, token):
-        url = survey.get_base_url() + '/survey/begin/%s/%s' % (survey.access_token, token)
+    def _access_begin(self, survey, token, answer_id):
+        url = survey.get_base_url() + f'/survey/begin/{survey.id}/{answer_id}/{survey.access_token}/{token}'
         return self.opener.post(url=url, json={})
 
     def _access_submit(self, survey, token, post_data):
-        url = survey.get_base_url() + '/survey/submit/%s/%s' % (survey.access_token, token)
+        answer = self.env['survey.user_input'].sudo().search([
+                        ('survey_id', '=', survey.id),
+                        ('access_token', '=', token),
+                    ], limit=1)
+        url = survey.get_base_url() + f'/survey/submit/{survey.id}/{answer.id}/{survey.access_token}/{token}'
         return self.opener.post(url=url, json={'params': post_data})
 
     def _find_csrf_token(self, text):
@@ -196,17 +200,17 @@ class SurveyCase(common.TransactionCase):
             post_data[question.id] = str(values)
         return post_data
 
-    def _answer_question(self, question, answer, answer_token, csrf_token, button_submit='next'):
+    def _answer_question(self, question, answer, answer_token, answer_id, csrf_token, button_submit='next'):
         # Employee submits the question answer
         post_data = self._format_submission_data(question, answer, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': button_submit})
         response = self._access_submit(question.survey_id, answer_token, post_data)
         self.assertResponse(response, 200)
 
         # Employee is redirected on next question
-        response = self._access_page(question.survey_id, answer_token)
+        response = self._access_page(question.survey_id, answer_token, answer_id)
         self.assertResponse(response, 200)
 
-    def _answer_page(self, page, answers, answer_token, csrf_token):
+    def _answer_page(self, page, answers, answer_token, answer_id, csrf_token):
         post_data = {}
         for question, answer in answers.items():
             post_data[question.id] = answer.id
@@ -215,7 +219,7 @@ class SurveyCase(common.TransactionCase):
         post_data['token'] = answer_token
         response = self._access_submit(page.survey_id, answer_token, post_data)
         self.assertResponse(response, 200)
-        response = self._access_page(page.survey_id, answer_token)
+        response = self._access_page(page.survey_id, answer_token, answer_id)
         self.assertResponse(response, 200)
 
     def _format_submission_data(self, question, answer, additional_post_data):

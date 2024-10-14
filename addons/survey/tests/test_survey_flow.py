@@ -81,12 +81,12 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         self.assertAnswer(answers, 'new', self.env['survey.question'])
 
         # Customer begins survey with first page
-        r = self._access_page(survey, answer_token)
+        r = self._access_page(survey, answer_token, answers.id)
         self.assertResponse(r, 200)
         self.assertAnswer(answers, 'new', self.env['survey.question'])
         csrf_token = self._find_csrf_token(r.text)
 
-        r = self._access_begin(survey, answer_token)
+        r = self._access_begin(survey, answer_token, answers.id)
         self.assertResponse(r, 200)
 
         # Customer submit first page answers
@@ -104,7 +104,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         self.assertAnswerLines(page_0, answers, answer_data)
 
         # Customer is redirected on second page and begins filling it
-        r = self._access_page(survey, answer_token)
+        r = self._access_page(survey, answer_token, answers.id)
         self.assertResponse(r, 200)
         csrf_token = self._find_csrf_token(r.text)
 

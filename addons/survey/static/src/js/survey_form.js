@@ -346,7 +346,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         this.preventEnterSubmit = false;
         this.readonly = false;
         this._nextScreen(
-            rpc(`/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`),
+            rpc(`/survey/next_question/${this.options.surveyId}/${this.options.answerId}/${this.options.surveyToken}/${this.options.answerToken}`),
             {
                 initTimer: true,
                 isFinish,
@@ -413,7 +413,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         }
 
         const submitPromise = rpc(
-            `${route}/${this.options.surveyToken}/${this.options.answerToken}`,
+            `${route}/${this.options.surveyId}/${this.options.answerId}/${this.options.surveyToken}/${this.options.answerToken}`,
             params
         );
 

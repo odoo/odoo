@@ -263,7 +263,7 @@ class SurveyQuestion(models.Model):
         - For a section:
             - if a section has a background, then we create the background URL using this section's ID
             - if not, then we fallback on the survey background url """
-        base_bg_url = "/survey/%s/%s/get_background_image"
+        base_bg_url = "/survey/%s/%s/%s/get_background_image"
         for question in self:
             if question.is_page:
                 background_section_id = question.id if question.background_image else False
@@ -272,6 +272,7 @@ class SurveyQuestion(models.Model):
 
             if background_section_id:
                 question.background_image_url = base_bg_url % (
+                    question.survey_id.id,
                     question.survey_id.access_token,
                     background_section_id
                 )

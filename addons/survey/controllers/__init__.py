@@ -2,4 +2,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import main
+from . import compatibility
 from . import survey_session_manage

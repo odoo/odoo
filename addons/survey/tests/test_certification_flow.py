@@ -95,21 +95,21 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
         answer_token = user_inputs.access_token
 
         # Employee begins survey with first page
-        response = self._access_page(certification, answer_token)
+        response = self._access_page(certification, answer_token, user_inputs.id)
         self.assertResponse(response, 200)
         csrf_token = self._find_csrf_token(response.text)
 
-        r = self._access_begin(certification, answer_token)
+        r = self._access_begin(certification, answer_token, user_inputs.id)
         self.assertResponse(r, 200)
 
         with self.mock_mail_gateway():
-            self._answer_question(q01, q01.suggested_answer_ids.ids[3], answer_token, csrf_token)
-            self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, csrf_token)
-            self._answer_question(q03, "I think they're great!", answer_token, csrf_token)
-            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token, button_submit='previous')
-            self._answer_question(q03, "Just kidding, I don't like it...", answer_token, csrf_token)
-            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token)
-            self._answer_question(q05, [q05.suggested_answer_ids.ids[0], q05.suggested_answer_ids.ids[1], q05.suggested_answer_ids.ids[3]], answer_token, csrf_token)
+            self._answer_question(q01, q01.suggested_answer_ids.ids[3], answer_token, user_inputs.id, csrf_token)
+            self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, user_inputs.id, csrf_token)
+            self._answer_question(q03, "I think they're great!", answer_token, user_inputs.id, csrf_token)
+            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, user_inputs.id, csrf_token, button_submit='previous')
+            self._answer_question(q03, "Just kidding, I don't like it...", answer_token, user_inputs.id, csrf_token)
+            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, user_inputs.id, csrf_token)
+            self._answer_question(q05, [q05.suggested_answer_ids.ids[0], q05.suggested_answer_ids.ids[1], q05.suggested_answer_ids.ids[3]], answer_token, user_inputs.id, csrf_token)
 
         user_inputs.invalidate_recordset()
         # Check that certification is successfully passed
@@ -206,18 +206,18 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
         answer_token = user_inputs.access_token
 
         # Employee begins survey with first page
-        response = self._access_page(certification, answer_token)
+        response = self._access_page(certification, answer_token, user_inputs.id)
         self.assertResponse(response, 200)
         csrf_token = self._find_csrf_token(response.text)
 
-        r = self._access_begin(certification, answer_token)
+        r = self._access_begin(certification, answer_token, user_inputs.id)
         self.assertResponse(r, 200)
 
         with patch.object(IrMail_Server, 'connect'):
             question_ids = user_inputs.predefined_question_ids
             self.assertEqual(len(question_ids), 1, 'Only one question should have been selected by the randomization')
             # Whatever which question was selected, the correct answer is the first one
-            self._answer_question(question_ids, question_ids.suggested_answer_ids.ids[0], answer_token, csrf_token)
+            self._answer_question(question_ids, question_ids.suggested_answer_ids.ids[0], answer_token, user_inputs.id, csrf_token)
 
         statistics = user_inputs._prepare_statistics()[user_inputs]
         total_statistics = statistics['totals']
