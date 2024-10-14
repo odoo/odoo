@@ -39,6 +39,13 @@ class BaseCommon(TransactionCase):
             # avoid using the context to assign companies
             cls.env.user.company_id = independent_company
             cls.env.user.company_ids = [Command.set(independent_company.ids)]
+            # Ensure that the main company's data doesn't impact tests.
+            # Instead we set it to be the main test company instead.
+            # This is a an additional layer to avoid any side effect from (demo) data
+            # or how the database was initialized.
+            patch_main_company = patch('odoo.addons.base.models.res_company.Company._get_main_company', return_value=independent_company)
+            patch_main_company.start()
+            cls.addClassCleanup(patch_main_company.stop)
         else:
             cls.setup_main_company()
 
