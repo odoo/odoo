@@ -113,6 +113,9 @@ class Slide(models.Model):
     GOOGLE_DRIVE_DOCUMENT_ID_REGEX = r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)'
     VIMEO_VIDEO_ID_REGEX = r'\/\/(player.)?vimeo.com\/(?:[a-z]*\/)*([0-9]{6,11})\/?([0-9a-z]{6,11})?[?]?.*'
 
+    def _editable_fields(self):
+        return ['description', 'html_content']
+
     # description
     name = fields.Char('Title', required=True, translate=True)
     image_1920 = fields.Image(compute="_compute_image_1920", store=True, readonly=False)  # image.mixin override

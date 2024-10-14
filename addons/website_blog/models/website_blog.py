@@ -23,6 +23,9 @@ class Blog(models.Model):
     ]
     _order = 'name'
 
+    def _editable_fields(self):
+        return ['content']
+
     name = fields.Char('Blog Name', required=True, translate=True)
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
@@ -157,6 +160,9 @@ class BlogPost(models.Model):
         'website.cover_properties.mixin', 'website.searchable.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
+
+    def _editable_fields(self):
+        return ['content']
 
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()

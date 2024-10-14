@@ -10,27 +10,12 @@
 <t t-name="website.ImageSelector">
     <section>
         <div class="o_seo_og_image">
-            <h4><small>Select an image for social share</small></h4>
-            <div class="row">
-                <div class="col-lg-6">
-                    <t t-foreach="state.images" t-as="image" t-key="image.src">
-                        <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
-                    </t>
-                    <div class="o_meta_img_upload m-1" title="Click to choose more images" t-on-click="openMediaDialog">
-                        <i class="fa fa-upload"/>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="card p-0 mb16">
-                        <div class="card-header">Social Preview</div>
-                        <img class="card-img-top o_meta_active_img" t-att-src="activeMetaImage"/>
-                        <div class="card-body px-3 py-2">
-                            <h6 class="text-primary card-title mb0"><t t-esc="title"/></h6>
-                            <small class="card-subtitle text-muted"><t t-esc="props.url"/></small>
-                            <p t-esc="description"/>
-                        </div>
-                    </div>
-                </div>
+            <h4><small>Cover image</small></h4>
+            <t t-foreach="state.images" t-as="image" t-key="image.src">
+                <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
+            </t>
+            <div class="o_meta_img_upload m-1" title="Click to choose more images" t-on-click="openMediaDialog">
+                <i class="fa fa-upload"/>
             </div>
         </div>
     </section>
@@ -38,12 +23,9 @@
 
 <t t-name="website.Keyword">
     <tr>
-        <td t-esc="props.keyword"/>
-        <td class="text-center"><i t-if="usedInH1" class="fa fa-check" t-att-title="props.keyword + ' is used in page first level heading'"/></td>
-        <td class="text-center"><i t-if="usedInH2" class="fa fa-check" t-att-title="props.keyword + ' is used in page second level heading'"/></td>
-        <td class="text-center"><i t-if="usedInTitle" class="fa fa-check" t-att-title="props.keyword + ' is used in page title'"/></td>
-        <td class="text-center"><i t-if="usedInDescription" class=" fa fa-check" t-att-title="props.keyword + ' is used in page description'"/></td>
-        <td class="text-center"><i t-if="usedInContent" class="fa fa-check" t-att-title="props.keyword + ' is used in page content'"/></td>
+        <td class="w-25"><strong t-out="props.keyword"></strong></td>
+        <td class="text-center" t-out="mentionedIn"></td>
+        <td class="text-center" t-out="notMentionedIn"></td>
         <td class="o_seo_keyword_suggestion">
             <ul class="list-inline mb0">
                 <span t-if="!state.suggestions.length">Loading...</span>
@@ -58,41 +40,123 @@
     </tr>
 </t>
 
-<t t-name="website.MetaKeywords">
-    <section>
-        <label for="website_meta_keywords">
-            Keywords
-        </label>
-        <div class="d-flex" role="form">
-            <div class="input-group w-auto">
-                <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? 'Remove a keyword first' : 'Keyword'" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
-                <select title="The language of the keyword and related keywords."
-                        t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
-                    <t t-foreach="languages" t-as="lang" t-key="lang[0]">
-                        <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
-                    </t>
-                </select>
-                <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary" type="button">Add</button>
+<t t-name="website.SeoChecks">
+    <section class="mt-3 oe_seo_checks">
+        <h4>
+            SEO Checks
+        </h4>
+        <hr/>
+        <t t-if="state.headingsScan.missingH1">
+            <p><i class="fa fa-times text-danger me-3"></i>H1 tag is missing, please add only one</p>
+        </t>
+        <t t-elif="state.headingsScan.multipleH1">
+            <p><i class="fa fa-times text-danger me-3"></i>Multiple H1 tags detected. Please update your content to include only one H1 heading</p>
+        </t>
+        <t t-if="state.headingsScan.misplacedH1 and !state.headingsScan.missingH1">
+            <p><i class="fa fa-times text-danger me-3"></i>Misplaced H1 tag. Please place the H1 heading at the top of the page</p>
+        </t>
+        <t t-if="state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
+            <p><i class="fa fa-times text-danger me-3"></i><span t-out="state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length"></span> alt attribute(s) missing on image(s)</p>
+        </t>
+        <t t-else="">
+            <p><i class="fa fa-check text-success me-3"></i>No alt attribute missing on images</p>
+        </t>
+        <t t-foreach="state.altAttributes" t-as="img" t-key="img.id">
+            <div class="row align-items-center">
+                <div class="col-3 text-center">
+                    <img class="i img-thumbnail" alt="Preview image" t-att-src="img.src"></img>
+                </div>
+                <div class="col-9" role="form">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-model="img.decorative" t-on-change="() => imgUpdated(img)"/>
+                        <label class="form-check-label" t-att-for="'decorative-' + img.id">This image is decorative
+                            <i class="fa fa-question-circle-o" title="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
+                        </label>
+                    </div>
+                    <div t-if="!img.decorative" class="input-group mt-2">
+                        <input placeholder="Describe the image..." t-model="img.alt" type="text" t-att-class="'form-control ' + (img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-on-change="() => imgUpdated(img)"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+
+
+        <div class="mt-2" t-if="state.checkingLinks">
+            <div><i class="fa fa-spin fa-circle-o-notch text-info me-3"></i>Checking hyperlinks...</div>
+            <div class="progress bg-black-25 mt-2" style="height: 10px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" t-att-aria-valuenow="state.counterLinks" aria-valuemin="0" t-att-aria-valuemax="state.totalLinks" t-attf-style="width:#{(state.counterLinks / state.totalLinks) * 100}%;" aria-label="Progress bar"/>
             </div>
         </div>
-        <div t-if="seoContext.keywords.length" class="table-responsive mt16">
+        <div class="mt-2" t-elif="state.checkedLinks">
+            <t t-if="seoContext.brokenLinks.length > 0">
+                <t t-if="seoContext.brokenLinks.filter(link => link.broken).length">
+                    <p><i class="fa fa-times text-danger me-3"></i><span t-out="seoContext.brokenLinks.filter(link => link.broken).length"></span> broken link(s)</p>
+                </t>
+                <t t-else="">
+                    <p><i class="fa fa-check text-success me-3"></i>No broken link</p>
+                </t>
+                <t t-foreach="seoContext.brokenLinks" t-as="link" t-key="link.oldLink">
+                    <div t-if="!link.remove" class="row align-items-center mb-2">
+                        <div class="col-12" role="form">
+                            <div class="input-group w-auto">
+                                <input t-model="link.newLink" type="text" t-att-class="'form-control ' + linkClass(link)"/>
+                                <button class="btn btn-primary" t-att-disabled="state.checkingLink || !link.newLink.trim().length || (link.newLink.trim() == link.oldLink)" t-on-click="() => this.modifyLink(link)">Check</button>
+                                <button class="btn btn-danger" t-on-click="() => this.removeLink(link)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <p><i class="fa fa-check text-success me-3"></i>No broken link</p>
+            </t>
+        </div>
+        <div class="mt-2" t-else="">
+            <button class="btn btn-primary" t-on-click="getBrokenLinks">Check broken links</button>
+        </div>
+
+    </section>
+</t>
+
+<t t-name="website.MetaKeywords">
+    <section class="mt-3">
+        <h4>
+            Content Check
+        </h4>
+        <hr/>
+        <div class="table-responsive mt16">
             <table class="table table-sm">
                 <thead>
                     <tr>
                         <th>Keyword</th>
-                        <th class="text-center" title="Used in page first level heading">H1</th>
-                        <th class="text-center" title="Used in page second level heading">H2</th>
-                        <th class="text-center" title="Used in page title">T</th>
-                        <th class="text-center" title="Used in page description">D</th>
-                        <th class="text-center" title="Used in page content">C</th>
-                        <th title="Most searched topics related to your keyword, ordered by importance">Related keywords</th>
+                        <th class="text-center" title="Used in page first level heading">Menitoned in</th>
+                        <th class="text-center" title="Used in page second level heading">Not mentioned in</th>
+                        <th title="Most searched topics related to your keyword, ordered by importance">Content ideas based on Google searches</th>
                         <th class="text-center"></th>
                     </tr>
                 </thead>
                 <t t-foreach="seoContext.keywords" t-as="keyword" t-key="keyword">
                     <Keyword language="state.language" keyword="keyword" addKeyword="(keyword) => this.addKeyword(keyword)" removeKeyword="(keyword) => this.removeKeyword(keyword)"/>
                 </t>
+                <tr>
+                    <td role="form" colspan="3">
+                        <div class="input-group w-auto">
+                            <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? 'Remove a keyword first' : 'Keyword'" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
+                            <select t-if="languages.length > 1" title="The language of the keyword and related keywords."
+                                    t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
+                                <t t-foreach="languages" t-as="lang" t-key="lang[0]">
+                                    <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
+                                </t>
+                            </select>
+                            <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary" type="button">Add</button>
+                            <button t-if="!seoContext.keywords.length" t-on-click="provideKeywords" class="btn btn-secondary" type="button">
+                                Generate keywords
+                            </button>
+                        </div>
+                    </td>
+                </tr>
             </table>
+            <div t-if="state.errorMessage" class="alert alert-warning" t-out="state.errorMessage"></div>
         </div>
     </section>
 </t>
@@ -101,10 +165,27 @@
     <div class="oe_seo_preview_g">
         <div class="rc">
             <t t-if="props.isIndexed">
-                <div class="r"><t t-esc="props.title"/></div>
-                <div class="s">
-                    <div class="kv mb-1 text-muted"><t t-esc="props.url"/></div>
-                    <div class="st text-black"><t t-esc="description"/></div>
+                <div class="row">
+                    <div class="col-9">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <img class="l me-2" t-att-src="logo"></img>
+                            <div class="s">
+                                <div class="st text-black" t-out="website.currentWebsite.name"></div>
+                                <div class="kv mb-1 text-muted"><t t-out="urlToBreadcrumbs"/></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="r"><t t-esc="props.title"/></div>
+                                <div class="s">
+                                    <div class="st text-black"><t t-esc="description"/></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <img class="i" t-att-src="seoContext.metaImage"/>
+                    </div>
                 </div>
             </t>
             <t t-else="">
@@ -122,7 +203,7 @@
             <div class="col-lg-6">
                 <div class="mb-3">
                     <label for="website_meta_title">
-                        Title <i class="fa fa-question-circle-o" title="The title will take a default value unless you specify one."/>
+                        Title <i class="fa fa-question-circle-o" title="Your page title should contain max 65 characters"/>
                     </label>
                     <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70" t-ref="autofocus"/>
                 </div>
@@ -151,8 +232,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="card-header">Preview</div>
+            <div t-if="titleOrDescriptionNotSet and props.canEditSeo" class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-body my-4 d-flex flex-column align-items-center justify-content-around">
+                        <button class="btn btn-primary" t-on-click="autoFill">Auto Fill</button>
+                        <p>Use AI to propose SEO optimization for you</p>
+                    </div>
+                </div>
+            </div>
+            <div t-else="" class="col-lg-6">
+                <label>Preview</label>
                 <div class="card mb0 p-0">
                     <div class="card-body">
                         <SEOPreview isIndexed="props.isIndexed" title="title" description="description" url="url"/>
@@ -175,6 +264,7 @@
             You don't have permissions to edit this record.
         </div>
         <TitleDescription canEditDescription="canEditDescription"
+            canEditSeo="canEditSeo"
             canEditUrl="canEditUrl"
             canEditTitle="canEditTitle"
             seoNameHelp="seoNameHelp"
@@ -183,12 +273,14 @@
             defaultTitle="defaultTitle"
             previewDescription="previewDescription"
             url="url"/>
-        <MetaKeywords t-if="canEditSeo"/>
         <ImageSelector t-if="canEditSeo" previewDescription="socialPreviewDescription"
             defaultTitle="defaultTitle"
             hasSocialDefaultImage="hasSocialDefaultImage"
             pageImages="pageImages"
             url="url"/>
+        <MetaKeywords t-if="canEditSeo"/>
+        <SeoChecks t-if="canEditSeo"/>
+
     </WebsiteDialog>
 </t>
 </templates>

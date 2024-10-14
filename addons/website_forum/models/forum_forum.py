@@ -48,6 +48,9 @@ class Forum(models.Model):
             'register_text': _('Sign up'),
         }
 
+    def _editable_fields(self):
+        return ['faq', 'welcome_message']
+
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1)

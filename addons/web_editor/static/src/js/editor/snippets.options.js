@@ -7434,6 +7434,11 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     _computeWidgetState(methodName, params) {
         switch (methodName) {
+            case 'selectAttribute':
+                if (params.attributeName === "alt" && params.activeValue.trim() !== "") {
+                    this.$target[0].removeAttribute("aria-hidden");
+                }
+                break;
             case 'selectStyle': {
                 if (params.cssProperty === 'width') {
                     // TODO check how to handle this the right way (here using
