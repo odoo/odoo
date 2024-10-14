@@ -2,7 +2,8 @@ import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { unwrapContents } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, firstLeaf } from "@html_editor/utils/dom_traversal";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 const REGEX_BOOTSTRAP_COLUMN = /(?:^| )col(-[a-zA-Z]+)?(-\d+)?(?:$| )/;
 
@@ -78,7 +79,7 @@ export class ColumnPlugin extends Plugin {
         hints: [
             {
                 selector: `.odoo-editor-editable .o_text_columns div[class^='col-'],
-                            .odoo-editor-editable .o_text_columns div[class^='col-']>p:first-child`,
+                            .odoo-editor-editable .o_text_columns div[class^='col-']>${baseContainerGlobalSelector}:first-child`,
                 text: _t("Empty column"),
             },
         ],
@@ -86,6 +87,21 @@ export class ColumnPlugin extends Plugin {
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_text_columns"),
         move_node_whitelist_selectors: ".o_text_columns",
+        hint_targets_providers: (selectionData) => {
+            const anchorNode = selectionData.editableSelection.anchorNode;
+            const columnContainer = closestElement(anchorNode, "div.o_text_columns");
+            if (!columnContainer) {
+                return [];
+            }
+            const closestColumn = closestElement(anchorNode, "div[class^='col-']");
+            const closestBlockEl = closestBlock(anchorNode);
+            return [...columnContainer.querySelectorAll("div[class^='col-']")]
+                .map((column) => {
+                    const block = closestBlock(firstLeaf(column));
+                    return column === closestColumn && block !== closestBlockEl ? null : block;
+                })
+                .filter(Boolean);
+        },
     };
 
     columnize({ numberOfColumns, addParagraphAfter = true } = {}) {

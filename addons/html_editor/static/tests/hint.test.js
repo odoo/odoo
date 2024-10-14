@@ -12,7 +12,9 @@ import { insertText } from "./_helpers/user_actions";
 
 test("hints are removed when editor is destroyed", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
     editor.destroy();
     expect(getContent(el)).toBe("<p>[]</p>");
 });
@@ -23,7 +25,9 @@ test("powerbox hint is display when the selection is in the editor", async () =>
 
     setContent(el, "<p>[]</p>");
     await tick();
-    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
 
     moveSelectionOutsideEditor();
     await tick();
@@ -31,14 +35,18 @@ test("powerbox hint is display when the selection is in the editor", async () =>
 });
 
 test("placeholder is display when the selection is outside of the editor", async () => {
-    const { el } = await setupEditor("<p></p>", { config: { placeholder: "test" } });
+    const { el, editor } = await setupEditor("<p></p>", { config: { placeholder: "test" } });
     expect(getContent(el)).toBe(`<p o-we-hint-text="test" class="o-we-hint"></p>`);
 
+    editor.editable.focus();
     setContent(el, "<p>[]</p>");
     await tick();
-    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
 
     moveSelectionOutsideEditor();
+    editor.editable.blur();
     await tick();
     expect(getContent(el)).toBe(`<p o-we-hint-text="test" class="o-we-hint"></p>`);
 });
@@ -66,7 +74,9 @@ test("should not display hint in paragraph with media content", async () => {
 
 test("should not lose track of temporary hints on split block", async () => {
     const { el, editor, plugins } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
     editor.shared.split.splitBlock();
     editor.shared.history.addStep();
     await animationFrame();
