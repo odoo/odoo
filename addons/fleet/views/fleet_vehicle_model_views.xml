@@ -201,10 +201,8 @@
                 <templates>
                     <t t-name="menu">
                         <a role="menuitem" type="open" class="dropdown-item">Configuration</a>
-                        <a role="menuitem" type="object" name="toggle_active" class="dropdown-item">
-                            <t t-if="record.active.raw_value">Archive</t>
-                            <t t-else="">Restore</t>
-                        </a>
+                        <a role="menuitem" type="object" name="action_archive" class="dropdown-item" t-if="record.active.raw_value">Archive</a>
+                        <a role="menuitem" type="object" name="action_unarchive" class="dropdown-item" t-if="!record.active.raw_value">Restore</a>
                         <a role="menuitem" t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
                     </t>
                     <t t-name="card" class="flex-row p-1">

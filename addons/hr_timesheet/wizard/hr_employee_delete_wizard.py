@@ -30,7 +30,7 @@ class HrEmployeeDeleteWizard(models.TransientModel):
     def action_archive(self):
         self.ensure_one()
         if len(self.employee_ids) != 1:
-            return self.employee_ids.toggle_active()
+            return self.employee_ids.action_archive()
         return {
             'name': _('Employee Termination'),
             'type': 'ir.actions.act_window',
@@ -40,7 +40,7 @@ class HrEmployeeDeleteWizard(models.TransientModel):
             'target': 'new',
             'context': {
                 'active_id': self.employee_ids.id,
-                'toggle_active': True,
+                'employee_termination': True,
             }
         }
 

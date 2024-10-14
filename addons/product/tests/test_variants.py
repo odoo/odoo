@@ -300,12 +300,12 @@ class TestVariants(ProductVariantsCommon):
         })
         self.assertEqual(len(template.product_variant_ids), 2)
         variant_1 = template.product_variant_ids[0]
-        variant_1.toggle_active()
+        variant_1.action_archive()
         self.assertFalse(variant_1.active)
         self.assertEqual(len(template.product_variant_ids), 1)
         self.assertEqual(len(template.with_context(
             active_test=False).product_variant_ids), 2)
-        variant_1.toggle_active()
+        variant_1.action_unarchive()
         self.assertTrue(variant_1.active)
         self.assertTrue(template.active)
 
@@ -369,10 +369,10 @@ class TestVariants(ProductVariantsCommon):
         self.assertEqual(len(template.product_variant_ids), 2)
         variant_1 = template.product_variant_ids[0]
         variant_2 = template.product_variant_ids[1]
-        template.product_variant_ids.toggle_active()
+        template.product_variant_ids.action_archive()
         self.assertFalse(variant_1.active, 'Should archive all variants')
         self.assertFalse(template.active, 'Should archive related template')
-        variant_1.toggle_active()
+        variant_1.action_unarchive()
         self.assertTrue(variant_1.active, 'Should activate variant')
         self.assertFalse(variant_2.active, 'Should not re-activate other variant')
         self.assertTrue(template.active, 'Should re-activate template')
@@ -1241,7 +1241,7 @@ class TestVariantsArchive(ProductVariantsCommon):
         self.assertEqual(tmpl.barcode, '123')
         self.assertEqual(self.product.barcode, '123')
 
-        tmpl.toggle_active()
+        tmpl.action_archive()
 
         tmpl.barcode = '456'
         tmpl.invalidate_recordset(fnames=['barcode'])

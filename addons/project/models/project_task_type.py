@@ -139,12 +139,12 @@ class ProjectTaskType(models.Model):
             if stage['id'] in personal_stages_by_stage:
                 personal_stages_by_stage[stage['id']].stage_id = replacement_stage_id
 
-    def toggle_active(self):
-        res = super().toggle_active()
-        stage_active = self.filtered('active')
-        inactive_tasks = self.env['project.task'].with_context(active_test=False).search(
-            [('active', '=', False), ('stage_id', 'in', stage_active.ids)], limit=1)
-        if stage_active and inactive_tasks:
+    def action_unarchive(self):
+        res = super().action_unarchive()
+        stage_active = self.filtered(self._active_name)
+        if stage_active and self.env['project.task'].with_context(active_test=False).search_count(
+            [('active', '=', False), ('stage_id', 'in', stage_active.ids)], limit=1
+        ):
             wizard = self.env['project.task.type.delete.wizard'].create({
                 'stage_ids': stage_active.ids,
             })

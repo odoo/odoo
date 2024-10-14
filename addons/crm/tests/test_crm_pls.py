@@ -283,7 +283,7 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(leads[8].is_automated_probability, True)
 
         # Restore -> Should decrease lost
-        leads[4].toggle_active()
+        leads[4].action_unarchive()
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged
@@ -314,7 +314,7 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(lead_4_email_state_freq.lost_count, 2.1)  # unchanged
 
         # Archive (was won, now lost) -> Should decrease won and increase lost
-        leads[4].toggle_active()
+        leads[4].action_archive()
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # - 1
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # - 1
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # - 1
@@ -336,7 +336,7 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(lead_4_email_state_freq.lost_count, 3.1)  # unchanged
 
         # Restore -> Should decrease lost - at the end, frequencies should be like first frequencyes tests (except for 0.0 -> 0.1)
-        leads[4].toggle_active()
+        leads[4].action_unarchive()
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_country_freq.won_count, 0.1)  # unchanged

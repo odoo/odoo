@@ -1912,7 +1912,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         Business Flow:
             create SO
             validate the delivery
-            archive the BOM and create a new one
+            (cannot archive the BOM, because it is used in a non-invoiced line)
+            update the BOM and create a new one
             create the invoice
             post the invoice
         """
@@ -2011,8 +2012,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Deliver the products
         pick = so.picking_ids
         pick.button_validate()
-        # archive bOM and update it
-        bom.active = False
+        # Update BOM
         bom_updated = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_template.id,
             'product_id': self.variant_KIT_A.id,
@@ -2415,14 +2415,14 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
                     'tax_id': False,
                 })],
         })
-        self.bom_kit_1.toggle_active()
-        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.action_archive()
+        self.bom_kit_1.action_unarchive()
 
         so.action_confirm()
         with self.assertRaises(UserError):
             self.bom_kit_1.write({'type': 'normal'})
         with self.assertRaises(UserError):
-            self.bom_kit_1.toggle_active()
+            self.bom_kit_1.action_archive()
         with self.assertRaises(UserError):
             self.bom_kit_1.unlink()
 
@@ -2434,7 +2434,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         with self.assertRaises(UserError):
             self.bom_kit_1.write({'type': 'normal'})
         with self.assertRaises(UserError):
-            self.bom_kit_1.toggle_active()
+            self.bom_kit_1.action_archive()
         with self.assertRaises(UserError):
             self.bom_kit_1.unlink()
 
@@ -2442,8 +2442,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         invoice.action_post()
 
         self.assertEqual(invoice.state, 'posted')
-        self.bom_kit_1.toggle_active()
-        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.action_archive()
+        self.bom_kit_1.action_unarchive()
         self.bom_kit_1.write({'type': 'normal'})
         self.bom_kit_1.write({'type': 'phantom'})
         self.bom_kit_1.unlink()

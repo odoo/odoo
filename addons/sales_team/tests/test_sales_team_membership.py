@@ -153,19 +153,19 @@ class TestMembership(TestSalesCommon):
         self.assertEqual(sales_team_1.member_ids, self.user_admin | self.user_sales_leads)
 
         # activate another team membership: previous team membership should be de activated
-        new_nt.toggle_active()
+        new_nt.action_unarchive()
         self.assertTrue(new_nt.active)
         self.assertFalse(old_st_1.active)
         self.assertFalse(new_st_1.active)
         # activate another team membership: previous team membership should be de activated
-        old_st_1.toggle_active()
+        old_st_1.action_unarchive()
         self.assertFalse(new_nt.active)
         self.assertTrue(old_st_1.active)
         self.assertFalse(new_st_1.active)
 
         # try to activate duplicate memberships again, which should trigger issues
         with self.assertRaises(exceptions.UserError):
-            new_st_1.toggle_active()
+            new_st_1.action_unarchive()
 
     @users('user_sales_manager')
     def test_memberships_multi(self):
@@ -211,7 +211,7 @@ class TestMembership(TestSalesCommon):
 
         # try to activate duplicate memberships again, which should trigger issues
         with self.assertRaises(exceptions.UserError):
-            old_st_1.toggle_active()
+            old_st_1.action_unarchive()
 
     @users('user_sales_manager')
     def test_memberships_sync(self):

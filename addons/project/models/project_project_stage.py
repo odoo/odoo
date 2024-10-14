@@ -59,12 +59,12 @@ class ProjectProjectStage(models.Model):
             self.env['project.project'].search([('stage_id', 'in', self.ids)]).write({'active': False})
         return super().write(vals)
 
-    def toggle_active(self):
-        res = super().toggle_active()
-        stage_active = self.filtered('active')
-        inactive_projects = self.env['project.project'].with_context(active_test=False).search(
-            [('active', '=', False), ('stage_id', 'in', stage_active.ids)], limit=1)
-        if stage_active and inactive_projects:
+    def action_unarchive(self):
+        res = super().action_unarchive()
+        stage_active = self.filtered(self._active_name)
+        if stage_active and self.env['project.project'].with_context(active_test=False).search_count(
+            [('active', '=', False), ('stage_id', 'in', stage_active.ids)], limit=1
+        ):
             wizard = self.env['project.project.stage.delete.wizard'].create({
                 'stage_ids': stage_active.ids,
             })

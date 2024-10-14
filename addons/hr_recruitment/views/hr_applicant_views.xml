@@ -66,7 +66,7 @@
                 <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr.group_hr_user"
                         class="o_create_employee" invisible="employee_id or not active or not date_closed"/>
                 <button string="Refuse" name="archive_applicant" type="object" invisible="not active" data-hotkey="d"/>
-                <button string="Restore" name="toggle_active" type="object" invisible="active" data-hotkey="x"/>
+                <button string="Restore" name="action_unarchive" type="object" invisible="active" data-hotkey="x"/>
                 <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not active and not employee_id"/>
             </header>
             <sheet>

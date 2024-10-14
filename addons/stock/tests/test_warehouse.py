@@ -655,7 +655,7 @@ class TestWarehouse(TestStockCommon):
         custom_location = custom_location.save()
 
         # Archive warehouse
-        warehouse.toggle_active()
+        warehouse.action_archive()
         # Global rule
         self.assertFalse(warehouse.mto_pull_id.active)
 
@@ -679,7 +679,7 @@ class TestWarehouse(TestStockCommon):
         self.assertFalse(warehouse.pack_type_id.active)
 
         # Active warehouse
-        warehouse.toggle_active()
+        warehouse.action_unarchive()
         # Global rule
         self.assertTrue(warehouse.mto_pull_id.active)
 
@@ -731,11 +731,11 @@ class TestWarehouse(TestStockCommon):
         route.warehouse_ids = [(6, 0, [warehouse.id, self.warehouse_1.id])]
 
         # Pre archive a location and a route
-        warehouse.delivery_route_id.toggle_active()
-        warehouse.wh_pack_stock_loc_id.toggle_active()
+        warehouse.delivery_route_id.action_archive()
+        warehouse.wh_pack_stock_loc_id.action_archive()
 
         # Archive warehouse
-        warehouse.toggle_active()
+        warehouse.action_archive()
         # Global rule
         self.assertFalse(warehouse.mto_pull_id.active)
 
@@ -760,7 +760,7 @@ class TestWarehouse(TestStockCommon):
         self.assertFalse(warehouse.pack_type_id.active)
 
         # Active warehouse
-        warehouse.toggle_active()
+        warehouse.action_unarchive()
         # Global rule
         self.assertTrue(warehouse.mto_pull_id.active)
 

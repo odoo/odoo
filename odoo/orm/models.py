@@ -5976,24 +5976,33 @@ class BaseModel(metaclass=MetaModel):
 
     def toggle_active(self):
         "Inverses the value of :attr:`active` on the records in ``self``."
+        warnings.warn("Deprecated since 19.0, use action_archive or action_unarchive", DeprecationWarning)
         assert self._active_name, f"No 'active' field on model {self._name}"
         active_recs = self.filtered(self._active_name)
-        active_recs[self._active_name] = False
-        (self - active_recs)[self._active_name] = True
+        active_recs.action_archive()
+        (self - active_recs).action_unarchive()
 
     def action_archive(self):
-        """Sets :attr:`active` to ``False`` on a recordset, by calling
-         :meth:`toggle_active` on its currently active records.
+        """Sets :attr:`active` to ``False`` on a recordset for active records.
+
+        Note, you probably want to override `write()` method if you want to take
+        action once the active field changes.
         """
-        assert self._active_name, f"No 'active' field on model {self._name}"
-        return self.filtered(lambda record: record[self._active_name]).toggle_active()
+        field_name = self._active_name
+        assert field_name, f"No 'active' field on model {self._name}"
+        active_recs = self.filtered(lambda record: record[field_name])
+        active_recs[field_name] = False
 
     def action_unarchive(self):
-        """Sets :attr:`active` to ``True`` on a recordset, by calling
-        :meth:`toggle_active` on its currently inactive records.
+        """Sets :attr:`active` to ``True`` on a recordset for inactive records.
+
+        Note, you probably want to override `write()` method if you want to take
+        action once the active field changes.
         """
-        assert self._active_name, f"No 'active' field on model {self._name}"
-        return self.filtered(lambda record: not record[self._active_name]).toggle_active()
+        field_name = self._active_name
+        assert field_name, f"No 'active' field on model {self._name}"
+        inactive_recs = self.filtered(lambda record: not record[field_name])
+        inactive_recs[field_name] = True
 
     def _register_hook(self):
         """ stuff to do right after the registry is built """

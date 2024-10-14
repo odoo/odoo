@@ -671,13 +671,14 @@ class HrApplicant(models.Model):
                 {'stage_id': applicant.job_id.id and default_stage[applicant.job_id.id],
                  'refuse_reason_id': False})
 
-    def toggle_active(self):
-        self = self.with_context(just_unarchived=True)
-        res = super().toggle_active()
-        active_applicants = self.filtered(lambda applicant: applicant.active)
+    def action_archive(self):
+        return super(HrApplicant, self.with_context(just_unarchived=True)).action_archive()
+
+    def action_unarchive(self):
+        active_applicants = super(HrApplicant, self.with_context(just_unarchived=True)).action_unarchive()
         if active_applicants:
             active_applicants.reset_applicant()
-        return res
+        return active_applicants
 
     def action_send_email(self):
         return {

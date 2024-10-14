@@ -634,12 +634,6 @@ class ResUsers(models.Model):
         LIMIT 1
         """, tuple(group_ids), user_condition)))
 
-    def toggle_active(self):
-        for user in self:
-            if not user.active and not user.partner_id.active:
-                user.partner_id.toggle_active()
-        super().toggle_active()
-
     def onchange(self, values, field_names, fields_spec):
         # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
         # Put field values in the cache.
@@ -722,9 +716,8 @@ class ResUsers(models.Model):
             raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
         if values.get('active'):
-            for user in self:
-                if not user.active and not user.partner_id.active:
-                    user.partner_id.toggle_active()
+            # unarchive partners before unarchiving the users
+            self.partner_id.action_unarchive()
         if self == self.env.user:
             writeable = self.SELF_WRITEABLE_FIELDS
             for key in list(values):

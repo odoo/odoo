@@ -7653,7 +7653,7 @@ test("button executes action and check domain", async () => {
                     <div t-name="card">
                         <field name="foo"/>
                         <button type="object" name="a1" />
-                        <button type="object" name="toggle_active" class="toggle-active" />
+                        <button type="object" name="action_archive" class="action-archive" />
                     </div>
                 </templates>
             </kanban>`,
@@ -7662,7 +7662,7 @@ test("button executes action and check domain", async () => {
     expect(queryText("span", { root: getKanbanRecord({ index: 0 }) })).toBe("yop", {
         message: "should display 'yop' record",
     });
-    await contains("button.toggle-active", { root: getKanbanRecord({ index: 0 }) }).click();
+    await contains("button.action-archive", { root: getKanbanRecord({ index: 0 }) }).click();
     expect(queryText("span", { root: getKanbanRecord({ index: 0 }) })).not.toBe("yop", {
         message: "should have removed 'yop' record from the view",
     });

@@ -283,18 +283,19 @@ class MailActivityMixin(models.AbstractModel):
 
         return SQL.identifier(alias, 'activity_state')
 
-    def toggle_active(self):
+    def action_archive(self):
         """ Before archiving the record we should also remove its ongoing
         activities. Otherwise they stay in the systray and concerning archived
         records it makes no sense. """
-        record_to_deactivate = self.filtered(lambda rec: rec[rec._active_name])
-        if record_to_deactivate:
+        records = self.filtered(self._active_name)
+        res = super(MailActivityMixin, records).action_archive()
+        if records:
             # use a sudo to bypass every access rights; all activities should be removed
             self.env['mail.activity'].sudo().search([
                 ('res_model', '=', self._name),
-                ('res_id', 'in', record_to_deactivate.ids)
+                ('res_id', 'in', records.ids)
             ]).unlink()
-        return super(MailActivityMixin, self).toggle_active()
+        return res
 
     def activity_send_mail(self, template_id):
         """ Automatically send an email based on the given mail.template, given

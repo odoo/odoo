@@ -376,6 +376,22 @@ class ProductProduct(models.Model):
             self.env.registry.clear_cache()
         return res
 
+    def action_archive(self):
+        records = self.filtered('active')
+        super().action_archive()
+        # We deactivate product templates which are active with no active variants.
+        records.product_tmpl_id.filtered(
+            lambda product_tmpl: product_tmpl.active and not product_tmpl.product_variant_ids
+        ).action_archive()
+
+    def action_unarchive(self):
+        records = self.filtered(lambda rec: not rec.active)
+        super().action_unarchive()
+        # We activate product templates which are inactive with active variants.
+        records.product_tmpl_id.filtered(
+            lambda product_tmpl: not product_tmpl.active and product_tmpl.product_variant_ids
+        ).action_unarchive()
+
     def unlink(self):
         unlink_products = self.env['product.product']
         unlink_templates = self.env['product.template']
@@ -794,19 +810,6 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination, ignore_no_variant=True)
-
-    def toggle_active(self):
-        """ Archiving related product.template if there is not any more active product.product
-        (and vice versa, unarchiving the related product template if there is now an active product.product) """
-        result = super().toggle_active()
-        # We deactivate product templates which are active with no active variants.
-        tmpl_to_deactivate = self.filtered(lambda product: (product.product_tmpl_id.active
-                                                            and not product.product_tmpl_id.product_variant_ids)).mapped('product_tmpl_id')
-        # We activate product templates which are inactive with active variants.
-        tmpl_to_activate = self.filtered(lambda product: (not product.product_tmpl_id.active
-                                                          and product.product_tmpl_id.product_variant_ids)).mapped('product_tmpl_id')
-        (tmpl_to_deactivate + tmpl_to_activate).toggle_active()
-        return result
 
     def get_contextual_price(self):
         return self._get_contextual_price()

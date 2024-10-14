@@ -79,9 +79,9 @@ class HrJob(models.Model):
     def get_backend_menu_id(self):
         return self.env.ref('hr_recruitment.menu_hr_recruitment_root').id
 
-    def toggle_active(self):
+    def action_archive(self):
         self.filtered('active').website_published = False
-        return super().toggle_active()
+        return super().action_archive()
 
     @api.model
     def _search_get_detail(self, website, order, options):

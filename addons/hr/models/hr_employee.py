@@ -548,16 +548,18 @@ class HrEmployee(models.Model):
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return []
 
-    def toggle_active(self):
-        res = super().toggle_active()
-        unarchived_employees = self.filtered(lambda employee: employee.active)
-        unarchived_employees.write({
+    def action_unarchive(self):
+        res = super().action_unarchive()
+        self.write({
             'departure_reason_id': False,
             'departure_description': False,
             'departure_date': False
         })
+        return res
 
-        archived_employees = self.filtered(lambda e: not e.active)
+    def action_archive(self):
+        archived_employees = self.filtered('active')
+        res = super().action_archive()
         if archived_employees:
             # Empty links to this employees (example: manager, coach, time off responsible, ...)
             employee_fields_to_empty = self._get_employee_m2o_to_empty_on_archived_employees()
@@ -573,16 +575,16 @@ class HrEmployee(models.Model):
                     if employee[field] in archived_employees.user_id:
                         employee[field] = False
 
-        if len(self) == 1 and not self.active and not self.env.context.get('no_wizard', False):
-            return {
-                'type': 'ir.actions.act_window',
-                'name': _('Register Departure'),
-                'res_model': 'hr.departure.wizard',
-                'view_mode': 'form',
-                'target': 'new',
-                'context': {'active_id': self.id},
-                'views': [[False, 'form']]
-            }
+            if len(archived_employees) == 1 and not self.env.context.get('no_wizard', False):
+                return {
+                    'type': 'ir.actions.act_window',
+                    'name': _('Register Departure'),
+                    'res_model': 'hr.departure.wizard',
+                    'view_mode': 'form',
+                    'target': 'new',
+                    'context': {'active_id': self.id},
+                    'views': [[False, 'form']]
+                }
         return res
 
     @api.onchange('company_id')
