@@ -2185,10 +2185,7 @@ class JsonRPCDispatcher(Dispatcher):
         :returns: a WSGI application
         """
         error = {
-            'code': 200,  # this code is the JSON-RPC level code, it is
-                          # distinct from the HTTP status code. This
-                          # code is ignored and the value 200 (while
-                          # misleading) is totally arbitrary.
+            'code': 0,  # we don't care of this code
             'message': "Odoo Server Error",
             'data': serialize_exception(exc),
         }

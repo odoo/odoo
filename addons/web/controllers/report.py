@@ -143,7 +143,7 @@ class ReportController(http.Controller):
             _logger.warning("Error while generating report %s", reportname, exc_info=True)
             se = http.serialize_exception(e)
             error = {
-                'code': 200,
+                'code': 0,
                 'message': "Odoo Server Error",
                 'data': se
             }
