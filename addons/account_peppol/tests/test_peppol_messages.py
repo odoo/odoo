@@ -133,10 +133,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
 
     @contextmanager
     def _set_context(self, other_context):
-        previous_context = self.env.context
-        self.env.context = dict(previous_context, **other_context)
-        yield self
-        self.env.context = previous_context
+        cls = self.__class__
+        env = cls.env
+        try:
+            cls.env = env(context=dict(env.context, **other_context))
+            yield
+        finally:
+            cls.env = env
 
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
@@ -232,7 +235,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
         self.assertTrue('peppol' in wizard.sending_methods)
         with self._set_context({'error': True}):
-            wizard.action_send_and_print()
+            wizard.with_env(self.env).action_send_and_print()
 
             self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
             self.assertRecordValues(

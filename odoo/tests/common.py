@@ -423,6 +423,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
     def with_user(self, login):
         """ Change user for a given test, like with self.with_user() ... """
         old_uid = self.uid
+        old_env = self.env
         try:
             user = self.env['res.users'].sudo().search([('login', '=', login)])
             assert user, "Login %s not found" % login
@@ -433,7 +434,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         finally:
             # back
             self.uid = old_uid
-            self.env = self.env(user=self.uid)
+            self.env = old_env
 
     @contextmanager
     def debug_mode(self):
