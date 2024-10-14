@@ -8,20 +8,20 @@
             t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
             t-on-click="onGlobalClick"
             t-ref="root">
-                <t t-call="{{ this.mainTemplate }}" t-call-context="this.renderingContext"/>
+                <t t-call="{{ this.templates[this.constructor.KANBAN_CARD_ATTRIBUTE] }}" t-call-context="this.renderingContext"/>
                 <t t-call="{{ this.constructor.menuTemplate }}"/>
         </article>
     </t>
 
     <t t-name="web.KanbanRecordMenu">
         <div t-if="showMenu" class="o_dropdown_kanban bg-transparent position-absolute end-0 top-0 w-auto">
-            <Dropdown menuClass="getMenuClasses()" position="'bottom-end'">
+            <Dropdown menuClass="'o-dropdown--kanban-record-menu'" position="'bottom-end'">
                 <button class="btn o-no-caret rounded-0" title="Dropdown menu">
                     <span class="fa fa-ellipsis-v"/>
                 </button>
                 <t t-set-slot="content">
                     <KanbanDropdownMenuWrapper>
-                        <t t-call="{{ templates[this.menuTemplateName] }}" t-call-context="renderingContext"/>
+                        <t t-call="{{ this.templates[this.constructor.KANBAN_MENU_ATTRIBUTE] }}" t-call-context="renderingContext"/>
                     </KanbanDropdownMenuWrapper>
                 </t>
             </Dropdown>

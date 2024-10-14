@@ -4,7 +4,6 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -14,12 +13,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
-import {
-    LEGACY_KANBAN_BOX_ATTRIBUTE,
-    LEGACY_KANBAN_MENU_ATTRIBUTE,
-    KANBAN_CARD_ATTRIBUTE,
-    KANBAN_MENU_ATTRIBUTE,
-} from "./kanban_arch_parser";
+import { KANBAN_CARD_ATTRIBUTE, KANBAN_MENU_ATTRIBUTE } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
@@ -192,8 +186,6 @@ export class KanbanRecord extends Component {
         "progressBarState?",
     ];
     static Compiler = KanbanCompiler;
-    static LEGACY_KANBAN_BOX_ATTRIBUTE = LEGACY_KANBAN_BOX_ATTRIBUTE;
-    static LEGACY_KANBAN_MENU_ATTRIBUTE = LEGACY_KANBAN_MENU_ATTRIBUTE;
     static KANBAN_CARD_ATTRIBUTE = KANBAN_CARD_ATTRIBUTE;
     static KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
     static menuTemplate = "web.KanbanRecordMenu";
@@ -205,16 +197,12 @@ export class KanbanRecord extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
 
-        const { archInfo, Compiler, templates } = this.props;
+        const { Compiler, templates } = this.props;
         const ViewCompiler = Compiler || this.constructor.Compiler;
-        const isLegacy = archInfo.isLegacyArch;
 
-        this.templates = useViewCompiler(ViewCompiler, templates, { isLegacy });
+        this.templates = useViewCompiler(ViewCompiler, templates);
 
-        this.menuTemplateName = this.props.archInfo.isLegacyArch
-            ? this.constructor.LEGACY_KANBAN_MENU_ATTRIBUTE
-            : this.constructor.KANBAN_MENU_ATTRIBUTE;
-        this.showMenu = this.menuTemplateName in templates;
+        this.showMenu = this.constructor.KANBAN_MENU_ATTRIBUTE in templates;
 
         this.dataState = useState({ record: {}, widget: {} });
         this.createWidget(this.props);
@@ -251,9 +239,6 @@ export class KanbanRecord extends Component {
             deletable,
             editable,
         };
-        if (archInfo.isLegacyArch) {
-            this.dataState.widget.isHtmlEmpty = isHtmlEmpty;
-        }
     }
 
     getRecordClasses() {
@@ -279,19 +264,7 @@ export class KanbanRecord extends Component {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
         }
         classes.push(archInfo.cardClassName);
-        // TODO: remove when all kanban archs have been converted
-        if (archInfo.isLegacyArch) {
-            classes.push("o_legacy_kanban_record");
-        }
         return classes.join(" ");
-    }
-
-    getMenuClasses() {
-        if (this.props.archInfo.isLegacyArch) {
-            return "o-dropdown--legacy-kanban-record-menu";
-        } else {
-            return "o-dropdown--kanban-record-menu";
-        }
     }
 
     /**
@@ -371,12 +344,6 @@ export class KanbanRecord extends Component {
         }
     }
 
-    get mainTemplate() {
-        return this.props.archInfo.isLegacyArch
-            ? this.templates[this.constructor.LEGACY_KANBAN_BOX_ATTRIBUTE]
-            : this.templates[this.constructor.KANBAN_CARD_ATTRIBUTE];
-    }
-
     /**
      * Returns the card template's rendering context.
      *
@@ -396,13 +363,6 @@ export class KanbanRecord extends Component {
             widget: this.dataState.widget,
             __comp__: Object.assign(Object.create(this), { this: this }),
         };
-        if (this.props.archInfo.isLegacyArch) {
-            // deprecated, use <field name="" widget="image"/>
-            renderingContext.kanban_image = (...args) =>
-                getImageSrcFromRecordInfo(this.props.record, ...args);
-            // deprecated, use context instead
-            renderingContext.user_context = user.context;
-        }
         return renderingContext;
     }
 }
