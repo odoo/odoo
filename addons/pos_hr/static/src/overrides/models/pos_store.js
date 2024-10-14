@@ -27,9 +27,9 @@ patch(PosStore.prototype, {
     },
     checkPreviousLoggedCashier() {
         if (this.config.module_pos_hr) {
-            const saved_cashier_id = Number(sessionStorage.getItem("connected_cashier"));
-            if (saved_cashier_id) {
-                this.set_cashier(this.models["hr.employee"].get(saved_cashier_id));
+            const savedCashier = this._getConnectedCashier();
+            if (savedCashier) {
+                this.set_cashier(savedCashier);
             } else {
                 this.reset_cashier();
             }
@@ -45,7 +45,7 @@ patch(PosStore.prototype, {
     async afterProcessServerData() {
         await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_hr) {
-            const saved_cashier = Number(sessionStorage.getItem("connected_cashier"));
+            const saved_cashier = this._getConnectedCashier();
             this.hasLoggedIn = saved_cashier ? true : false;
         }
     },
@@ -121,6 +121,16 @@ patch(PosStore.prototype, {
             action,
             message,
         ]);
+    },
+    _getConnectedCashier() {
+        if (!this.config.module_pos_hr) {
+            return super._getConnectedCashier(...arguments);
+        }
+        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
+        if (cashier_id && this.models["hr.employee"].get(cashier_id)) {
+            return this.models["hr.employee"].get(cashier_id);
+        }
+        return false;
     },
 
     /**

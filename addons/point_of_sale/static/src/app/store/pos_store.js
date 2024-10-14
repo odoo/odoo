@@ -170,13 +170,13 @@ export class PosStore extends Reactive {
 
     reset_cashier() {
         this.cashier = false;
-        sessionStorage.removeItem("connected_cashier");
+        this._resetConnectedCashier();
     }
 
     checkPreviousLoggedCashier() {
-        const saved_cashier_id = Number(sessionStorage.getItem("connected_cashier"));
-        if (saved_cashier_id) {
-            this.set_cashier(this.models["res.users"].get(saved_cashier_id));
+        const savedCashier = this._getConnectedCashier();
+        if (savedCashier) {
+            this.set_cashier(savedCashier);
         }
     }
 
@@ -186,7 +186,23 @@ export class PosStore extends Reactive {
         }
 
         this.cashier = user;
-        sessionStorage.setItem("connected_cashier", user.id);
+        this._storeConnectedCashier(user);
+    }
+
+    _getConnectedCashier() {
+        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
+        if (cashier_id && this.models["res.users"].get(cashier_id)) {
+            return this.models["res.users"].get(cashier_id);
+        }
+        return false;
+    }
+
+    _storeConnectedCashier(user) {
+        sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
+    }
+
+    _resetConnectedCashier() {
+        sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
     }
 
     useProxy() {
@@ -1571,7 +1587,7 @@ export class PosStore extends Reactive {
         });
     }
     async closePos() {
-        sessionStorage.removeItem("connected_cashier");
+        this._resetConnectedCashier();
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this) {
