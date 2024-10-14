@@ -135,6 +135,36 @@ class ProjectTask(models.Model):
                         product_id=task.sale_line_id.product_id.display_name,
                     ))
 
+    def _ensure_sale_order_linked(self, sol_ids):
+        """ Orders created from project/task are supposed to be confirmed to match the typical flow from sales, but since
+        we allow SO creation from the project/task itself we want to confirm newly created SOs immediately after creation.
+        However this would leads to SOs being confirmed without a single product, so we'd rather do it on record save.
+        """
+        quotations = self.env['sale.order.line'].sudo()._read_group(
+            domain=[('state', '=', 'draft'), ('id', 'in', sol_ids)],
+            aggregates=['order_id:recordset'],
+        )[0][0]
+        if quotations:
+            quotations.action_confirm()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        tasks = super().create(vals_list)
+        sol_ids = {
+            vals['sale_line_id']
+            for vals in vals_list
+            if vals.get('sale_line_id')
+        }
+        if sol_ids:
+            tasks._ensure_sale_order_linked(list(sol_ids))
+        return tasks
+
+    def write(self, vals):
+        task = super().write(vals)
+        if sol_id := vals.get('sale_line_id'):
+            self._ensure_sale_order_linked([sol_id])
+        return task
+
     # ---------------------------------------------------
     # Actions
     # ---------------------------------------------------
