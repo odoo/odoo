@@ -6,30 +6,30 @@ import tour from 'web_tour.tour';
 tour.register('order_lunch_tour', {
     url: "/web",
     test: true,
-}, [{
-    trigger: 'a[data-menu-xmlid="lunch.menu_lunch"]',
+}, [
+    tour.stepUtils.showAppsMenuItem(),
+{
+    trigger: '.o_app[data-menu-xmlid="lunch.menu_lunch"]',
     content: _t("Start by accessing the lunch app."),
     position: 'bottom',
 },
 {
-    trigger: ".o_search_panel_filter_value .form-check-input",
-    content: _t("Restrict your search using filters"),
-    position: 'bottom',
+    content:"click on location",
+    trigger: ".lunch_location .o_input_dropdown input",
+    run: 'click',
 },
 {
-    content: 'insert text in the search bar',
-    trigger: '.o_searchview_input',
-    run: 'text pizza'
+    content: "Pick 'Farm 1' option",
+    trigger: '.o_input_dropdown li:contains(Farm 1)',
 },
 {
-    content: "Select the Transaction search option from the dropdown",
-    trigger: ".o_searchview_autocomplete li:contains(Vendor)",
+    trigger: '.lunch_location input:propValueContains(Farm 1)',
+    run: () => {},  // wait for article to be correctly loaded
 },
 {
-    trigger: "div[role=article]",
-    extra_trigger: '.o_search_panel_filter_value .form-check-input:checked',
+    trigger: "div[role='article']",
     content: _t("Click on a product you want to order and is available."),
-    position: 'bottom',
+    run: 'click'
 },
 {
     trigger: 'textarea[id="note"]',
