@@ -7,7 +7,7 @@ _logger = logging.getLogger(__name__)
 
 def _l10n_it_edi_withholding_post_init(env):
     """ Existing companies that have the Italian Chart of Accounts set """
-    for company in env['res.company'].search([('chart_template', '=', 'it')]):
+    for company in env['res.company'].search([('chart_template', '=', 'it')], order="parent_path"):
         _logger.info("Company %s already has the Italian localization installed, updating...", company.name)
         ChartTemplate = env['account.chart.template'].with_company(company)
         ChartTemplate._load_data({
