@@ -16,39 +16,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-msgid ""
-"(AR) Exento undertakes to do its best to supply performant services in due "
-"time in accordance with the agreed timeframes. However, none of its "
-"obligations can be considered as being an obligation to achieve results. "
-"(AR) Exento cannot under any circumstances, be required by the client to "
-"appear as a third party in the context of any claim for damages filed "
-"against the client by an end consumer."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-msgid ""
-"(AR) Monotributista undertakes to do its best to supply performant services "
-"in due time in accordance with the agreed timeframes. However, none of its "
-"obligations can be considered as being an obligation to achieve results. "
-"(AR) Monotributista cannot under any circumstances, be required by the "
-"client to appear as a third party in the context of any claim for damages "
-"filed against the client by an end consumer."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid ""
-"(AR) Responsable Inscripto undertakes to do its best to supply performant "
-"services in due time in accordance with the agreed timeframes. However, none"
-" of its obligations can be considered as being an obligation to achieve "
-"results. (AR) Responsable Inscripto cannot under any circumstances, be "
-"required by the client to appear as a third party in the context of any "
-"claim for damages filed against the client by an end consumer."
-msgstr ""
-
-#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.custom_header
 msgid "- Activities Start:"
 msgstr ""
@@ -210,6 +177,17 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid ""
+"A required tax group could not be found (XML ID: %s).\n"
+"Please reload your chart template in order to reinstall the required tax group.\n"
+"\n"
+"Note: You might have to relink your existing taxes to this new tax group."
+msgstr ""
+
+#. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_ac_dis_cf
 msgid "ACCOUNTING ADJUSTMENTS THAT DECREASE THE TAX CREDIT"
 msgstr ""
@@ -349,6 +327,13 @@ msgid "Accounting Documents"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "Accounting Settings"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__active
 msgid "Active"
 msgstr ""
@@ -356,14 +341,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_company__l10n_ar_afip_start_date
 msgid "Activities Start"
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid ""
-"All our contractual relations will be governed exclusively by Argentina law."
 msgstr ""
 
 #. module: l10n_ar
@@ -423,15 +400,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid ""
-"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
-"responsibility."
 msgstr ""
 
 #. module: l10n_ar
@@ -863,42 +831,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_CdM
 msgid "CdM"
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can "
-"(AR) Exento become involved in costs related to a country's legislation. The"
-" amount of the invoice will therefore be due to (AR) Exento in its entirety "
-"and does not include any costs relating to the legislation of the country in"
-" which the client is located."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can "
-"(AR) Monotributista become involved in costs related to a country's "
-"legislation. The amount of the invoice will therefore be due to (AR) "
-"Monotributista in its entirety and does not include any costs relating to "
-"the legislation of the country in which the client is located."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can "
-"(AR) Responsable Inscripto become involved in costs related to a country's "
-"legislation. The amount of the invoice will therefore be due to (AR) "
-"Responsable Inscripto in its entirety and does not include any costs "
-"relating to the legislation of the country in which the client is located."
 msgstr ""
 
 #. module: l10n_ar
@@ -1448,60 +1380,8 @@ msgid "Identification Types"
 msgstr ""
 
 #. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, (AR) Exento reserves the right to call on the services of a "
-"debt recovery company. All legal expenses will be payable by the client."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, (AR) Monotributista reserves the right to call on the services"
-" of a debt recovery company. All legal expenses will be payable by the "
-"client."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, (AR) Responsable Inscripto reserves the right to call on the "
-"services of a debt recovery company. All legal expenses will be payable by "
-"the client."
-msgstr ""
-
-#. module: l10n_ar
 #: model:product.template,name:l10n_ar.product_product_quote_despacho_product_template
 msgid "Import Clearance"
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-msgid ""
-"In order for it to be admissible, (AR) Exento must be notified of any claim "
-"by means of a letter sent by recorded delivery to its registered office "
-"within 8 days of the delivery of the goods or the provision of the services."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-msgid ""
-"In order for it to be admissible, (AR) Monotributista must be notified of "
-"any claim by means of a letter sent by recorded delivery to its registered "
-"office within 8 days of the delivery of the goods or the provision of the "
-"services."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid ""
-"In order for it to be admissible, (AR) Responsable Inscripto must be "
-"notified of any claim by means of a letter sent by recorded delivery to its "
-"registered office within 8 days of the delivery of the goods or the "
-"provision of the services."
 msgstr ""
 
 #. module: l10n_ar
@@ -1882,39 +1762,6 @@ msgid "Other VAT"
 msgstr ""
 
 #. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, (AR) Exento reserves the right to request a "
-"fixed interest payment amounting to 10% of the sum remaining due. (AR) "
-"Exento will be authorized to suspend any provision of services without prior"
-" warning in the event of late payment."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, (AR) Monotributista reserves the right to "
-"request a fixed interest payment amounting to 10% of the sum remaining due. "
-"(AR) Monotributista will be authorized to suspend any provision of services "
-"without prior warning in the event of late payment."
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, (AR) Responsable Inscripto reserves the right "
-"to request a fixed interest payment amounting to 10% of the sum remaining "
-"due. (AR) Responsable Inscripto will be authorized to suspend any provision "
-"of services without prior warning in the event of late payment."
-msgstr ""
-
-#. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_con_a_m
 msgid "PRIMARY CONSIGNMENT \"A\" VOUCHERS FOR THE MARINE FISHING SECTOR"
 msgstr ""
@@ -2126,13 +1973,6 @@ msgid "SECONDARY GRAIN LIQUIDATION"
 msgstr ""
 
 #. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
-
-#. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_liq_cca_a
 #: model:l10n_latam.document.type,name:l10n_ar.dc_liq_cca_b
 msgid "SUGAR CANE PURCHASE LIQUIDATION A"
@@ -2210,17 +2050,6 @@ msgid "Telephone service (VAT 27)"
 msgstr ""
 
 #. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid ""
-"The client explicitly waives its own standard terms and conditions, even if "
-"these were drawn up after these standard terms and conditions of sale. In "
-"order to be valid, any derogation must be expressly agreed to in advance in "
-"writing."
-msgstr ""
-
-#. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
@@ -2269,6 +2098,15 @@ msgid ""
 "The tax credit specified in this voucher may only be computed for purposes "
 "of the Tax Support and Inclusion Regime for Small Taxpayers of Law No. "
 "27,618."
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_tax_group.py:0
+#, python-format
+msgid ""
+"The tax group '%s' can't be removed, since it is required in the Argentinian"
+" localization."
 msgstr ""
 
 #. module: l10n_ar
@@ -2440,13 +2278,6 @@ msgstr ""
 msgid ""
 "You can not change %s journal's configuration if it already has validated "
 "invoices"
-msgstr ""
-
-#. module: l10n_ar
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
-#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
-msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 
 #. module: l10n_ar
