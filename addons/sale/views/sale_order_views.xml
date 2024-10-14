@@ -288,7 +288,14 @@
                 <button name="action_unlock" type="object" string="Unlock"
                         invisible="not locked" groups="sales_team.group_sale_manager"/>
                 <button name="action_preview_sale_order" string="Preview" type="object" class="btn-secondary"/>
-                <button name="action_cancel" type="object" string="Cancel" invisible="state not in ['draft', 'sent', 'sale'] or not id or locked" data-hotkey="x"/>
+                <button
+                    name="action_cancel"
+                    type="object"
+                    string="Cancel"
+                    confirm="Are you sure you want to cancel this order? This may affect related documents or processes."
+                    invisible="state not in ['draft', 'sent', 'sale'] or not id or locked"
+                    data-hotkey="x"
+                />
                 <button name="action_draft" invisible="state != 'cancel'" type="object" string="Set to Quotation" data-hotkey="w"/>
                 <t groups="sale.group_auto_done_setting">
                     <button name="action_lock" type="object" string="Lock"

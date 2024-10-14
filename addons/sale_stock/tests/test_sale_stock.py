@@ -906,9 +906,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(inv_2.state, 'draft', 'invoice should be in draft state')
 
         # check the status of invoices after cancelling the order
-        so._action_cancel()
-        wizard = self.env['sale.order.cancel'].with_context({'order_id': so.id}).create({'order_id': so.id})
-        wizard.action_cancel()
+        so.action_cancel()
         self.assertEqual(inv_1.state, 'posted', 'A posted invoice state should remain posted')
         self.assertEqual(inv_2.state, 'cancel', 'A drafted invoice state should be cancelled')
 
