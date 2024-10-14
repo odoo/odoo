@@ -20,7 +20,7 @@ export class CartNotification extends Component {
                     quantity: Number,
                     name: String,
                     description: { type: String, optional: true },
-                    line_price_total: Number,
+                    added_qty_price_total: Number,
                 },
             },
         },

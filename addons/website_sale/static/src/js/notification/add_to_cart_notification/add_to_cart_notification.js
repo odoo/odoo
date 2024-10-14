@@ -15,7 +15,7 @@ export class AddToCartNotification extends Component {
                     quantity: Number,
                     name: String,
                     description: { type: String, optional: true },
-                    line_price_total: Number,
+                    added_qty_price_total: Number,
                 },
             },
         },
@@ -50,21 +50,21 @@ export class AddToCartNotification extends Component {
     getFormattedPrice(line) {
         const linkedLines = this.getLinkedLines(line.id);
         const price = linkedLines.length
-            ? linkedLines.reduce((price, linkedLine) => price + linkedLine.line_price_total, 0)
-            : line.line_price_total;
+            ? linkedLines.reduce((price, linkedLine) => price + linkedLine.added_qty_price_total, 0)
+            : line.added_qty_price_total;
         return formatCurrency(price, this.props.currency_id);
     }
 
     /**
      * Return the product summary based on the line information.
      *
-     * The product summary is computed based on the line quantity and name, separated by the symbol
+     * The product summary is computed based on the added qty and name, separated by the symbol
      * 'x' (e.g.: 1 x Chair Floor Protection).
      *
      * @param {Object} line - The line element for which to return the product summary.
      * @return {String} - The product summary.
      */
     getProductSummary(line) {
-        return line.quantity + " x " + line.name;
+        return line.added_qty + " x " + line.name;
     }
 }
