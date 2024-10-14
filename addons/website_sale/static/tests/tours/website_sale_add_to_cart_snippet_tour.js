@@ -14,7 +14,6 @@ function editAddToCartSnippet() {
 registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         url: '/',
         edition: true,
-        test: true,
     },
     () => [
         ...insertSnippet({name: 'Add to Cart Button'}),

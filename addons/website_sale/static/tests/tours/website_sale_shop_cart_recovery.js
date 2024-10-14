@@ -9,7 +9,6 @@ var orderIdKey = 'website_sale.tour_shop_cart_recovery.orderId';
 var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';
 
 registry.category("web_tour.tours").add('shop_cart_recovery', {
-    test: true,
     url: '/shop',
     steps: () => [
         ...tourUtils.addToCart({productName: "Acoustic Bloc Screens"}),

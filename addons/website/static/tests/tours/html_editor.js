@@ -9,7 +9,6 @@ const demoCssModif = '// demo_edition';
 registerWebsitePreviewTour('html_editor_multiple_templates', {
     url: '/generic',
     edition: true,
-    test: true,
 },
     () => [
         {
@@ -87,7 +86,6 @@ registerWebsitePreviewTour('html_editor_multiple_templates', {
 
 registerWebsitePreviewTour('test_html_editor_scss', {
     url: '/contactus',
-    test: true,
 },
     () => [
         // 1. Open Html Editor and select a scss file
@@ -186,7 +184,6 @@ registerWebsitePreviewTour('test_html_editor_scss', {
 
 registerWebsitePreviewTour('test_html_editor_scss_2', {
     url: '/',
-    test: true,
 },
     () => [
         // This part of the test ensures that a restricted user can still use
@@ -261,7 +258,6 @@ registerWebsitePreviewTour(
     {
         // TODO: enable debug mode when failing tests have been fixed (props validation)
         url: "/",
-        test: true,
     },
     () => [
         {

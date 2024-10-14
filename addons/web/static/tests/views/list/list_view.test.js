@@ -971,12 +971,12 @@ test(`list view: buttons handler is called once on double click`, async () => {
             </list>
         `,
     });
-    await contains(`tbody .o_list_button > button:eq(0)`).click();
-    expect(`tbody .o_list_button > button:eq(0)`).toHaveProperty("disabled", true);
+    await contains(`tbody .o_list_button button:eq(0)`).click();
+    expect(`tbody .o_list_button button:eq(0)`).toHaveProperty("disabled", true);
 
     executeActionDef.resolve();
     await animationFrame();
-    expect(`tbody .o_list_button > button:eq(0)`).not.toHaveProperty("disabled");
+    expect(`tbody .o_list_button button:eq(0)`).not.toHaveProperty("disabled");
     expect.verifySteps(["execute_action"]);
 });
 
@@ -7190,7 +7190,7 @@ test(`click on a button in a list view`, async () => {
     });
     expect(`.o_data_row .o_list_button .o_button_icon.fa.fa-car`).toHaveCount(4);
 
-    await contains(`.o_data_row .o_list_button > button`).click();
+    await contains(`.o_data_row .o_list_button button`).click();
     // should have reloaded the view (after the action is complete)
     expect.verifySteps(["doActionButton", "web_search_read"]);
 });
@@ -7209,12 +7209,16 @@ test(`invisible attrs in readonly and editable list`, async () => {
         `,
     });
     expect(`.o_field_cell:eq(2)`).toHaveInnerHTML("");
-    expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML("");
+    expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML(
+        `<div class="d-flex flex-wrap gap-1"></div>`
+    );
 
     // edit first row
     await contains(`.o_field_cell`).click();
     expect(`.o_field_cell:eq(2)`).toHaveInnerHTML("");
-    expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML("");
+    expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML(
+        `<div class="d-flex flex-wrap gap-1"></div>`
+    );
 
     await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
     // click on the invisible field's cell to edit first row

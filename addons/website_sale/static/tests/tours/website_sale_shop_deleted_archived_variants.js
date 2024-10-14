@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 
 // This tour relies on a data created from the python test.
 registry.category("web_tour.tours").add('tour_shop_deleted_archived_variants', {
-    test: true,
     url: '/shop?search=Test Product 2',
     steps: () => [
     {
