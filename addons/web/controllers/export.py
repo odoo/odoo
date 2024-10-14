@@ -593,7 +593,7 @@ class CSVExport(ExportFormat, http.Controller):
         except Exception as exc:
             _logger.exception("Exception during request handling.")
             payload = json.dumps({
-                'code': 200,
+                'code': 0,
                 'message': "Odoo Server Error",
                 'data': http.serialize_exception(exc)
             })
@@ -641,7 +641,7 @@ class ExcelExport(ExportFormat, http.Controller):
         except Exception as exc:
             _logger.exception("Exception during request handling.")
             payload = json.dumps({
-                'code': 200,
+                'code': 0,
                 'message': "Odoo Server Error",
                 'data': http.serialize_exception(exc)
             })
