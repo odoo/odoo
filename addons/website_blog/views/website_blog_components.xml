@@ -243,7 +243,7 @@ Options:
             </div>
         </div>
 
-        <div t-else="" groups="website.group_website_designer" class="o_wblog_sidebar_block pb-5">
+        <div t-else="" groups="website_blog.group_website_blog_manager" class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Tags</h6>
             <em t-ignore="True" class="text-muted">No tags defined yet.</em>
         </div>
@@ -305,7 +305,7 @@ Display a sidebar beside the post content.
                 </div>
             </t>
             <t t-else="">
-                <div class="mb-4 bg-100 py-2 px-3 border" groups="website.group_website_designer">
+                <div class="mb-4 bg-100 py-2 px-3 border" groups="website_blog.group_website_blog_manager">
                     <h6 class="text-muted"><em>No tags defined</em></h6>
                     <a role="menuitem" t-attf-href="/odoo/action-{{action}}/{{main_object.id}}?menu_id={{menu or main_object.env.ref('website.menu_website_configuration').id}}"
                         title='Edit in backend' id="edit-in-backend">Add some</a>
