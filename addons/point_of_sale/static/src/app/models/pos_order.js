@@ -40,6 +40,17 @@ export class PosOrder extends Base {
                 ? vals.tracking_number
                 : ((this.session?.id % 10) * 100 + (this.sequence_number % 100)).toString();
 
+        // amount_tax = fields.Float(string='Taxes', digits=0, readonly=True, required=True)
+        // amount_total = fields.Float(string='Total', digits=0, readonly=True, required=True)
+        // amount_paid = fields.Float(string='Paid', digits=0, required=True)
+        // amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
+        // margin = fields.Monetary(string="Margin", compute='_compute_margin')
+        // margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
+        // is_total_cost_computed = fields.Boolean(compute='_compute_is_total_cost_computed',
+        //     help="Allows to know if all the total cost of the order lines have already been computed")
+        // lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', copy=True)
+        // company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, index=True)
+
         if (!vals.lines) {
             this.lines = [];
         }
@@ -506,6 +517,8 @@ export class PosOrder extends Base {
             const newPaymentline = this.models["pos.payment"].create({
                 pos_order_id: this,
                 payment_method_id: payment_method,
+
+                amount: 0,
             });
 
             this.select_paymentline(newPaymentline);

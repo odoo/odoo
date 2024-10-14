@@ -18,6 +18,35 @@ class PosConfig(models.Model):
     _description = 'Point of Sale Configuration'
     _check_company_auto = True
 
+    def sync_from_ui_2(self, queue):
+        get_record = lambda model, id: self.env[model].search([('uuid', '=', id)], limit=1) if type(id) == str else self.env[model].browse(id)
+        for [model, id, vals] in queue:
+            vals = self.update_vals(model, id, vals)
+            db_record = get_record(model, id)
+            for key in vals:
+                if self.env[model]._fields[key].type == 'many2one':
+                    vals[key] = get_record(self.env[model]._fields[key].comodel_name, vals[key]).id
+                if self.env[model]._fields[key].type in ('many2many', 'one2many'):
+                    vals[key] = [get_record(self.env[model]._fields[key].comodel_name, related_id).id for related_id in vals[key]]
+            if db_record:
+                db_record.write(vals)
+            else:
+                self.env[model].create([{
+                    **vals,
+                    'uuid': id
+                }])
+        return
+
+    def update_vals(self, model, id, vals):
+        match model:
+            case 'pos.order':
+                vals['session_id'] = self.current_session_id.id
+            case _:
+                pass
+        # for key in vals:
+
+        return vals
+
     def _default_warehouse_id(self):
         warehouse = self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
         if not warehouse:

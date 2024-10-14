@@ -23,10 +23,12 @@ export class PosPayment extends Base {
 
     set_amount(value) {
         this.pos_order_id.assert_editable();
+        console.log("amount before", this.amount);
         this.amount = roundDecimals(
             parseFloat(value) || 0,
             this.pos_order_id.currency.decimal_places
         );
+        console.log("amount after", this.amount);
     }
 
     get_amount() {

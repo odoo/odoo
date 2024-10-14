@@ -7,7 +7,7 @@ patch(ProductInfoBanner.prototype, {
         return `${result} ${this.props.product.self_order_available ? "bg-success" : "bg-danger"}`;
     },
     async switchSelfAvailability() {
-        await this.pos.data.write("product.product", [this.props.product.id], {
+        this.props.product.update({
             self_order_available: !this.props.product.self_order_available,
         });
     },
