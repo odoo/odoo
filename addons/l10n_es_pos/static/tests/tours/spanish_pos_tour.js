@@ -5,6 +5,8 @@ import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
+import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as Utils from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 import { checkSimplifiedInvoiceNumber, pay } from "./helpers/receipt_helpers";
 
@@ -55,5 +57,20 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             PaymentScreen.clickPaymentMethod("Customer Account"),
             PaymentScreen.clickValidate(),
             Dialog.is({ title: "Customer Required" }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartnerDetailsButton("Partner Test 1"),
+            Utils.selectButton("Settle due accounts"),
+            Utils.selectButton("Bank"),
+            PaymentScreen.clickValidate(),
+            Chrome.confirmPopup(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
