@@ -23,11 +23,17 @@ class SpreadsheetMixin(models.AbstractModel):
 
     @api.depends("spreadsheet_binary_data")
     def _compute_spreadsheet_data(self):
-        for spreadsheet in self.with_context(bin_size=False):
-            if not spreadsheet.spreadsheet_binary_data:
-                spreadsheet.spreadsheet_data = False
-            else:
-                spreadsheet.spreadsheet_data = base64.b64decode(spreadsheet.spreadsheet_binary_data).decode()
+        attachments = self.env['ir.attachment'].with_context(bin_size=False).search([
+            ('res_model', '=', self._name),
+            ('res_field', '=', 'spreadsheet_binary_data'),
+            ('res_id', 'in', self.ids),
+        ])
+        data = {
+            attachment.res_id: attachment.raw
+            for attachment in attachments
+        }
+        for spreadsheet in self:
+            spreadsheet.spreadsheet_data = data.get(spreadsheet.id, False)
 
     def _inverse_spreadsheet_data(self):
         for spreadsheet in self:
