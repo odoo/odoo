@@ -41,6 +41,58 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(num_of_simp_invoices, 3)
         self.assertEqual(num_of_regular_invoices, 1)
 
+    def test_l10n_es_pos_reconcile(self):
+        if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
+            self.skipTest("pos_settle_due module is required for this test")
+
+        # create customer account payment method
+        self.customer_account_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Customer Account',
+            'split_transactions': True,
+        })
+        # add customer account payment method to pos config
+        self.main_pos_config.write({
+            'payment_method_ids': [Command.link(self.customer_account_payment_method.id)],
+        })
+
+        self.assertEqual(self.partner_test_1.total_due, 0)
+
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        current_session = self.main_pos_config.current_session_id
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner_test_1.id,
+            'lines': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 10,
+                'discount': 0,
+                'qty': 1,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'amount_paid': 10.0,
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': True,
+            'last_order_preparation_change': '{}'
+        })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': 10.0,
+            'payment_method_id': self.customer_account_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        self.assertEqual(self.partner_test_1.total_due, 10)
+        current_session.action_pos_session_closing_control()
+
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'l10n_es_pos_settle_account_due', login="accountman")
+
     def test_spanish_pos_invoice_no_certificate(self):
         """This test make sure that the invoice generated in spanish PoS are not proforma invoices when no certificate exists"""
 
