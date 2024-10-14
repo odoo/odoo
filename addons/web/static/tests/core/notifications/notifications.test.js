@@ -292,3 +292,23 @@ test("notification coming when NotificationManager not mounted yet", async () =>
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
 });
+
+test("notification autocloses after a specified delay", async () => {
+    await makeMockEnv();
+    const { Component: NotificationContainer, props } = registry
+        .category("main_components")
+        .get("NotificationContainer");
+
+    await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
+    getService("notification").add("custom autoclose delay notification", {
+        autocloseDelay: 1000,
+    });
+
+    await advanceTime(500);
+    await animationFrame();
+    expect(".o_notification").toHaveCount(1);
+
+    await advanceTime(500);
+    await animationFrame();
+    expect(".o_notification").toHaveCount(0);
+});
