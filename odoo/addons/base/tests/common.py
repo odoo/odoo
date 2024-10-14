@@ -401,11 +401,24 @@ class MockSmtplibCase:
             self.emails,
         )
 
+        debug_info = ''
         matching_emails_count = len(list(matching_emails))
-
-        self.assertTrue(
-            matching_emails_count == emails_count,
-            msg='Emails not sent, %i emails match the condition but %i are expected' % (matching_emails_count, emails_count),
+        if matching_emails_count != emails_count:
+            emails_from = []
+            for email in self.emails:
+                from_found = next((
+                    line.split('From:')[1].strip() for line in email['message'].splitlines()
+                    if line.startswith('From:')), '')
+                emails_from.append(from_found)
+            debug_info = '\n'.join(
+                f"SMTP-From: {email['smtp_from']}, SMTP-To: {email['smtp_to_list']}, Msg-From: {email_msg_from}, From_filter: {email['from_filter']})"
+                for email, email_msg_from in zip(self.emails, emails_from)
+            )
+        self.assertEqual(
+            matching_emails_count, emails_count,
+            msg=f'Incorrect emails sent: {matching_emails_count} found, {emails_count} expected'
+                f'\nConditions\nSMTP-From: {smtp_from}, SMTP-To: {smtp_to_list}, Msg-From: {message_from}, From_filter: {from_filter}'
+                f'\nNot found in\n{debug_info}'
         )
 
     @classmethod
