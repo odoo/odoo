@@ -57,7 +57,7 @@
                                 فاتورة ملغاة
                             </span>
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
-                                إشعار خصم
+                                إشعار دائن
                             </span>
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
                                 إشعار خصم المسودة
@@ -66,7 +66,7 @@
                                 إشعار خصم ملغاة
                             </span>
                             <span t-elif="o.move_type == 'in_refund'">
-                                إشعار خصم المورد
+                                إشعار مدين
                             </span>
                             <span t-elif="o.move_type == 'in_invoice'">
                                 فاتورة المورد
@@ -140,7 +140,7 @@
                             <strong style="white-space:nowrap">Reference:
                             </strong>
                         </div>
-                        <div class="col-2">
+                        <div class="col-8">
                             <span t-field="o.ref"/>
                         </div>
                         <div class="col-2 text-end">
@@ -480,10 +480,10 @@
 
                 <p name="payment_communication" t-if="0"></p>
                 <div class="row" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
-                    <div class="col-2 offset-6">
+                    <div class="col-2">
                         <strong>Payment Reference:</strong>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2 text-center">
                         <span class="fw-bold" t-field="o.payment_reference"/>
                     </div>
                     <div class="col-2 text-end">
@@ -494,10 +494,10 @@
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" t-out="o.invoice_payment_term_id.note"/>
+                            <span t-out="o.invoice_payment_term_id.note"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
+                            <span dir="rtl" t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" t-out="o_sec.invoice_payment_term_id.note"/>
                         </div>
 
                     </div>
