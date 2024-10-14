@@ -66,10 +66,21 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'partner_id': cls.env.company.partner_id.id,
         })
 
+<<<<<<< 18.0
     def create_move(self, partner, company=None):
+||||||| 1b1de50729c741d03b11d0fdc24cebf3df4b083a
+    def create_move(self, partner):
+=======
+    def create_move(self, partner, **kwargs):
+>>>>>>> 6338186975f3f89ee6a72154a040bbde40c5776d
         return self.env['account.move'].create({
             'move_type': 'out_invoice',
+<<<<<<< 18.0
             'company_id': (company or self.env.company).id,
+||||||| 1b1de50729c741d03b11d0fdc24cebf3df4b083a
+=======
+            'company_id': self.env.company.id,
+>>>>>>> 6338186975f3f89ee6a72154a040bbde40c5776d
             'partner_id': partner.id,
             'date': '2023-01-01',
             'ref': 'Test reference',
@@ -83,6 +94,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                     'product_id': self.product_a.id,
                 }),
             ],
+            **kwargs,
         })
 
     @classmethod
@@ -350,6 +362,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_endpoint': '0477472701',
             }])
 
+<<<<<<< 18.0
     def test_peppol_send_multi_async(self):
         company_2 = self.setup_other_company()['company']
         company_2.write({
@@ -392,3 +405,43 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         self.env.ref('account.ir_cron_account_move_send').with_company(company_2).method_direct_trigger()
         # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should fail to send
         self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'to_send'])
+||||||| 1b1de50729c741d03b11d0fdc24cebf3df4b083a
+=======
+    def test_move_default_enabled(self):
+        invalid_company = self.setup_other_company()['company']
+        self.assertFalse(invalid_company.peppol_eas)
+        # valid partner, valid company
+        move = self.create_move(self.valid_partner, company_id=self.env.company.id)
+        move.action_post()
+        self.assertTrue(move._is_peppol_enabled_by_default())
+        # valid partner, invalid company
+        move = self.create_move(self.valid_partner, company_id=invalid_company.id)
+        move.action_post()
+        self.assertFalse(move._is_peppol_enabled_by_default())
+        # invalid partner, valid company
+        move = self.create_move(self.invalid_partner, company_id=self.env.company.id)
+        move.action_post()
+        self.assertFalse(move._is_peppol_enabled_by_default())
+        # invalid partner, invalid company
+        move = self.create_move(self.invalid_partner, company_id=invalid_company.id)
+        move.action_post()
+        self.assertFalse(move._is_peppol_enabled_by_default())
+
+    def test_wizard_default_enabled(self):
+        valid_move, invalid_move = self.create_move(self.valid_partner), self.create_move(self.invalid_partner)
+        (valid_move + invalid_move).action_post()
+        self.assertTrue(valid_move._is_peppol_enabled_by_default())
+        self.assertFalse(invalid_move._is_peppol_enabled_by_default())
+
+        # single wizards
+        valid_single_wizard, invalid_single_wizard = self.create_send_and_print(valid_move), self.create_send_and_print(invalid_move)
+        self.assertRecordValues(valid_single_wizard + invalid_single_wizard, [
+            {'enable_peppol': True, 'checkbox_send_peppol': True},
+            {'enable_peppol': True, 'checkbox_send_peppol': False},
+        ])
+        # multi wizard
+        mixed_multi_wizard = self.create_send_and_print(valid_move + invalid_move)
+        self.assertRecordValues(mixed_multi_wizard, [
+            {'enable_peppol': True, 'checkbox_send_peppol': True},
+        ])
+>>>>>>> 6338186975f3f89ee6a72154a040bbde40c5776d

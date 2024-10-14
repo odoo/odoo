@@ -50,3 +50,11 @@ class AccountMove(models.Model):
                 move.peppol_move_state = False
             else:
                 move.peppol_move_state = move.peppol_move_state
+
+    def _is_peppol_enabled_by_default(self):
+        """ Tells if Peppol can be used by default on the move (the configuration is correct).
+        This is mainly used in account.move.send to preset checkboxes in the wizard, and defines the
+        behavior in automatic invoicing flows.
+        """
+        self.ensure_one()
+        return self.peppol_move_state == 'ready'
