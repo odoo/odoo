@@ -22,7 +22,7 @@ export class CartNotification extends Component {
                     name: String,
                     combination_name: { type: String, optional: true },
                     description: { type: String, optional: true },
-                    line_price_total: Number,
+                    price_total: Number,
                 },
             },
         },
