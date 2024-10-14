@@ -114,6 +114,106 @@ export class TicketScreen extends Component {
             }
         }
     }
+<<<<<<< 18.0
+||||||| 89a5aa30d84cd212f9962f65e7aa89060b22f0cd
+    onCreateNewOrder() {
+        this.pos.add_new_order();
+        this.pos.showScreen("ProductScreen");
+    }
+    _selectNextOrder(currentOrder) {
+        const currentOrderIndex = this._getOrderList().indexOf(currentOrder);
+        const orderList = this._getOrderList();
+        this.pos.set_order(orderList[currentOrderIndex + 1] || orderList[currentOrderIndex - 1]);
+    }
+    async onDeleteOrder(order) {
+        const screen = order.get_screen_data();
+
+        if (
+            ["ProductScreen", "PaymentScreen"].includes(screen.name) &&
+            order.get_orderlines().length > 0
+        ) {
+            const confirmed = await ask(this.dialog, {
+                title: _t("Existing orderlines"),
+                body: _t(
+                    "%s has a total amount of %s, are you sure you want to delete this order?",
+                    order.name,
+                    this.getTotal(order)
+                ),
+            });
+            if (!confirmed) {
+                return false;
+            }
+            if (this.state.selectedOrder === order) {
+                this.state.selectedOrder = null;
+            }
+        }
+
+        order.uiState.displayed = false;
+        if (order.id === this.pos.get_order()?.id) {
+            this._selectNextOrder(order);
+        }
+
+        const result = await this.pos.deleteOrders([order]);
+        if (!result) {
+            order.uiState.displayed = true;
+        } else {
+            if (this.pos.get_open_orders().length > 0) {
+                this.state.selectedOrder = this.pos.get_open_orders()[0];
+            }
+        }
+
+        return true;
+    }
+=======
+    onCreateNewOrder() {
+        this.pos.add_new_order();
+        this.pos.showScreen("ProductScreen");
+    }
+    _selectNextOrder(currentOrder) {
+        const currentOrderIndex = this._getOrderList().indexOf(currentOrder);
+        const orderList = this._getOrderList();
+        this.pos.set_order(orderList[currentOrderIndex + 1] || orderList[currentOrderIndex - 1]);
+    }
+    async onDeleteOrder(order) {
+        const screen = order.get_screen_data();
+
+        if (
+            ["ProductScreen", "PaymentScreen"].includes(screen.name) &&
+            order.get_orderlines().length > 0
+        ) {
+            const confirmed = await ask(this.dialog, {
+                title: _t("Existing orderlines"),
+                body: _t(
+                    "%s has a total amount of %s, are you sure you want to delete this order?",
+                    order.name,
+                    this.getTotal(order)
+                ),
+            });
+            if (!confirmed) {
+                return false;
+            }
+            if (this.state.selectedOrder?.id === order.id) {
+                this.state.selectedOrder = null;
+            }
+        }
+
+        order.uiState.displayed = false;
+        if (order.id === this.pos.get_order()?.id) {
+            this._selectNextOrder(order);
+        }
+
+        const result = await this.pos.deleteOrders([order]);
+        if (!result) {
+            order.uiState.displayed = true;
+        } else {
+            if (this.pos.get_open_orders().length > 0) {
+                this.state.selectedOrder = this.pos.get_open_orders()[0];
+            }
+        }
+
+        return true;
+    }
+>>>>>>> 2317b447cba9f9e96290480eb9f78650c563e914
     async onNextPage() {
         if (this.state.page < this.getNbrPages()) {
             this.state.page += 1;
