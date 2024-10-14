@@ -2911,6 +2911,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(mo.state, 'draft')
         mo.action_confirm()
+        mo.invalidate_recordset(['reservation_state']) # Compute should be called after action_confirm since we write on state.
 
         wo_1, wo_2, wo_3 = mo.workorder_ids
         self.assertEqual(mo.state, 'confirmed')
@@ -3434,7 +3435,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(mo_backorder.workorder_ids[0].state, 'cancel')
         self.assertEqual(mo_backorder.workorder_ids[1].state, 'ready')
-        self.assertEqual(mo_backorder.workorder_ids[2].state, 'ready')
+        self.assertEqual(mo_backorder.workorder_ids[2].state, 'pending')
         self.assertFalse(mo_backorder.workorder_ids[0].date_start)
         self.assertEqual(mo_backorder.workorder_ids[1].date_start, datetime(2023, 3, 1, 12, 0))
         self.assertEqual(mo_backorder.workorder_ids[2].date_start, datetime(2023, 3, 1, 12, 45))

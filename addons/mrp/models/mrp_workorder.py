@@ -66,8 +66,8 @@ class MrpWorkorder(models.Model):
         ('progress', 'In Progress'),
         ('done', 'Finished'),
         ('cancel', 'Cancelled')], string='Status',
-        compute='_compute_state', store=True,
-        default='pending', copy=False, readonly=True, recursive=True, index=True)
+        store=True,
+        default='pending', copy=False, readonly=True, index=True)
     leave_id = fields.Many2one(
         'resource.calendar.leaves',
         help='Slot into workcenter calendar once planned',
@@ -149,12 +149,7 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids.state', 'qty_ready')
-    def _compute_state(self):
-        # Force to compute the production_availability right away.
-        # It is a trick to force that the state of workorder is computed at the end of the
-        # cyclic depends with the mo.state, mo.reservation_state and wo.state and avoid recursion error
-        self.mapped('production_availability')
+    def _recompute_state(self):
         for workorder in self:
             if workorder.state not in ('pending', 'waiting', 'ready'):
                 continue
@@ -231,6 +226,7 @@ class MrpWorkorder(models.Model):
                 workorder.production_id.qty_producing = workorder.qty_producing
                 workorder.production_id._set_qty_producing()
 
+    @api.depends('state', 'production_state', 'qty_produced', 'qty_producing', 'qty_remaining', 'blocked_by_workorder_ids')
     def _compute_qty_ready(self):
         for workorder in self:
             if workorder.production_state not in ('confirmed', 'progress') or workorder.state in ('cancel', 'done'):
@@ -244,6 +240,7 @@ class MrpWorkorder(models.Model):
                 if wo.state != 'cancel':
                     workorder_qty_ready = min(workorder_qty_ready, wo.qty_produced + wo.qty_reported_from_previous_wo)
             workorder.qty_ready = workorder_qty_ready - workorder.qty_produced - workorder.qty_reported_from_previous_wo
+        self._recompute_state()
 
     # Both `date_start` and `date_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
@@ -506,6 +503,15 @@ class MrpWorkorder(models.Model):
                     production.workorder_ids.filtered(lambda w: w.state != 'done').qty_producing = min_wo_qty
             self._set_qty_producing()
 
+        workorders_to_update = None
+        for wo in self:
+            if 'state' in values and wo.needed_by_workorder_ids:
+                if wo.state in ('done', 'cancel'):
+                    workorders_to_update = wo.needed_by_workorder_ids.filtered(lambda w: w.state == "pending")
+                else:
+                    workorders_to_update = wo.needed_by_workorder_ids.filtered(lambda w: w.state in ('waiting', 'ready'))
+            if workorders_to_update:
+                workorders_to_update._recompute_state()
         return res
 
     @api.model_create_multi
