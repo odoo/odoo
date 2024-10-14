@@ -425,7 +425,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         hr_leave_start_datetime = datetime(next_monday.year, next_monday.month, next_monday.day, 8, 0, 0) # monday next week
         hr_leave_end_datetime = hr_leave_start_datetime + timedelta(days=4, hours=9) # friday next week
 
-        self.env.company = self.test_company
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=self.test_company.ids))
 
         internal_project = self.test_company.internal_project_id
         internal_task_leaves = self.test_company.leave_timesheet_task_id
