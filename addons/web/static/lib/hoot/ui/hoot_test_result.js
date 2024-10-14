@@ -16,8 +16,6 @@ import { HootTechnicalValue } from "./hoot_technical_value";
  * }} TestResultProps
  */
 
-const MATCHERS_DOC_URL = `https://github.com/odoo/odoo/blob/master/addons/web/static/lib/hoot/README.md`;
-
 /** @extends {Component<TestResultProps, import("../hoot").Environment>} */
 export class HootTestResult extends Component {
     static components = { HootLink, HootTechnicalValue };
@@ -59,7 +57,8 @@ export class HootTestResult extends Component {
                                     <i t-if="assertion.modifiers.rejects" class="fa fa-times text-skip" />
                                     <i t-elif="assertion.modifiers.resolves" class="fa fa-arrow-right text-skip" />
                                     <i t-if="assertion.modifiers.not" class="fa fa-exclamation text-skip" />
-                                    <a t-att-href="getLinkHref(assertion.label)" target="_blank" class="hoot-link text-skip">
+                                    <!-- TODO: add documentation links once they exist -->
+                                    <a href="#" class="hoot-link text-skip">
                                         <strong t-esc="assertion.label" />
                                     </a>
                                 </t>
@@ -189,12 +188,5 @@ export class HootTestResult extends Component {
                 return "bg-skip-900";
             }
         }
-    }
-
-    /**
-     * @param {string} label
-     */
-    getLinkHref(label) {
-        return `${MATCHERS_DOC_URL}#${label}`;
     }
 }
