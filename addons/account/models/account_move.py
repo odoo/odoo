@@ -503,6 +503,7 @@ class AccountMove(models.Model):
         tracking=True,
         compute='_compute_invoice_default_sale_person',
         store=True,
+        readonly=False,
     )
     # Technical field used to fit the generic behavior in mail templates.
     user_id = fields.Many2one(string='User', related='invoice_user_id')
