@@ -46,7 +46,7 @@ export class KanbanRenderer extends Component {
     };
     static props = [
         "archInfo",
-        "Compiler?", // optional in stable for backward compatibility
+        "Compiler?",
         "list",
         "deleteRecord",
         "openRecord",
@@ -129,7 +129,11 @@ export class KanbanRenderer extends Component {
         }
 
         useBounceButton(this.rootRef, (clickedEl) => {
-            if (this.props.list.isGrouped ? !this.props.list.recordCount : !this.props.list.count || this.props.list.model.useSampleModel) {
+            if (
+                this.props.list.isGrouped
+                    ? !this.props.list.recordCount
+                    : !this.props.list.count || this.props.list.model.useSampleModel
+            ) {
                 return clickedEl.matches(
                     [
                         ".o_kanban_renderer",

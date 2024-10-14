@@ -148,7 +148,7 @@
         }
     }
 
-    .o_kanban_record:not(.o_legacy_kanban_record) {
+    .o_kanban_record {
         --fieldWidget-display: block;
         --Tag-max-width: 100%;
         --Tag-font-size: #{$o-font-size-base-smaller};
@@ -269,7 +269,7 @@
         }
     }
 
-    &.o_kanban_ungrouped .o_kanban_record:not(.o_legacy_kanban) {
+    &.o_kanban_ungrouped .o_kanban_record {
         flex-grow: 1;
         @include media-breakpoint-down(md) {
             flex-shrink: 0;
