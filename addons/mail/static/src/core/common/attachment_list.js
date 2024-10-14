@@ -4,6 +4,7 @@ import { Component, useState } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
+import { FileViewer } from "./file_viewer";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -81,12 +82,18 @@ export class AttachmentList extends Component {
      */
     onClickUnlink(attachment) {
         if (this.env.inComposer) {
-            return this.props.unlinkAttachment(attachment);
+            this.props.unlinkAttachment(attachment);
+            return Promise.resolve(true);
         }
-        this.dialog.add(ConfirmationDialog, {
-            body: _t('Do you really want to delete "%s"?', attachment.filename),
-            cancel: () => {},
-            confirm: () => this.onConfirmUnlink(attachment),
+        return new Promise(resolve => {
+            this.dialog.add(ConfirmationDialog, {
+                body: _t('Do you really want to delete "%s"?', attachment.filename),
+                cancel: () => resolve(false),
+                confirm: () => {
+                    this.onConfirmUnlink(attachment);
+                    resolve(true)
+                },
+            });
         });
     }
 
@@ -99,6 +106,12 @@ export class AttachmentList extends Component {
 
     onImageLoaded() {
         this.env.onImageLoaded?.();
+    }
+
+    onOpen(attachment) {
+        this.fileViewer.open(attachment, this.props.attachments, FileViewer, {
+            onClickUnlink: this.onClickUnlink.bind(this),
+        });
     }
 
     get isInChatWindowAndIsAlignedRight() {
