@@ -542,6 +542,11 @@ class Project(models.Model):
         return project
 
     def write(self, vals):
+        if 'access_token' in vals and vals['access_token'] != '':
+            self.ensure_one()  # We are not supposed to add a single access token to multiple project
+            if self.privacy_visibility != 'portal':
+                vals['access_token'] = ''
+
         # directly compute is_favorite to dodge allow write access right
         if 'is_favorite' in vals:
             vals.pop('is_favorite')
@@ -882,6 +887,7 @@ class Project(models.Model):
             portal_users = project.message_partner_ids.user_ids.filtered('share')
             project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
             project.mapped('tasks')._change_project_privacy_visibility()
+            project.access_token = ''
 
     # ---------------------------------------------------
     # Project sharing
