@@ -1210,6 +1210,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Parse form data into address values, and extract incompatible data as extra form data.
         address_values, extra_form_data = self._parse_form_data(form_data)
 
+        is_anonymous_cart = order_sudo._is_anonymous_cart()
+        is_main_address = is_anonymous_cart or order_sudo.partner_id.id == partner_sudo.id
         # Validate the address values and highlights the problems in the form, if any.
         invalid_fields, missing_fields, error_messages = self._validate_address_values(
             address_values,
@@ -1217,6 +1219,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             address_type,
             use_delivery_as_billing,
             required_fields,
+            is_main_address=is_main_address,
             **extra_form_data,
         )
         if error_messages:
@@ -1242,10 +1245,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         elif not self._are_same_addresses(address_values, partner_sudo):
             partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
 
-        partner_id = partner_sudo.id
-        is_anonymous_cart = order_sudo._is_anonymous_cart()
         partner_fnames = set()
-        if is_anonymous_cart or order_sudo.partner_id.id == partner_id:  # Main address updated.
+        if is_main_address:  # Main address updated.
             partner_fnames.add('partner_id')  # Force the re-computation of partner-based fields.
 
         if address_type == 'billing':
@@ -1259,7 +1260,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if use_delivery_as_billing:
                 partner_fnames.add('partner_invoice_id')
 
-        order_sudo._update_address(partner_id, partner_fnames)
+        order_sudo._update_address(partner_sudo.id, partner_fnames)
 
         if is_anonymous_cart:
             # Unsubscribe the public partner if the cart was previously anonymous.
@@ -1361,6 +1362,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         address_type,
         use_delivery_as_billing,
         required_fields,
+        is_main_address,
         **_kwargs,
     ):
         """ Validate the address values and return the invalid fields, the missing fields, and any
@@ -1374,6 +1376,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                                              billing and the delivery address.
         :param str required_fields: The additional required address values, as a comma-separated
                                     list of `res.partner` fields.
+        :param bool is_main_address: Whether the provided address is meant to be the main address of
+                                     the customer.
         :param dict _kwargs: Locally unused parameters including the extra form data.
         :return: The invalid fields, the missing fields, and any error messages.
         :rtype: tuple[set, set, list]
@@ -1459,6 +1463,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             required_field_set |= self._get_mandatory_delivery_address_fields(country)
         if address_type == 'billing' or use_delivery_as_billing:
             required_field_set |= self._get_mandatory_billing_address_fields(country)
+            if not is_main_address:
+                commercial_fields = ResPartnerSudo._commercial_fields()
+                for fname in commercial_fields:
+                    if fname in required_field_set and fname not in address_values:
+                        required_field_set.remove(fname)
 
         # Verify that no required field has been left empty.
         for field_name in required_field_set:
