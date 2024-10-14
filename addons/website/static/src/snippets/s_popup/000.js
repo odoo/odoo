@@ -3,6 +3,7 @@ odoo.define('website.s_popup', function (require) {
 
 const config = require('web.config');
 const { _t } = require("@web/core/l10n/translation");
+const { getTabableElements } = require('@web/core/utils/ui');
 const dom = require('web.dom');
 const publicWidget = require('web.public.widget');
 const { getCookie, setCookie, deleteCookie } = require("web.utils.cookies");
@@ -118,6 +119,7 @@ const PopupWidget = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off('mouseleave.open_popup');
+        this.releaseFocus && this.releaseFocus();
         this.$target.find('.modal').modal('hide');
         clearTimeout(this.timeout);
     },
@@ -168,6 +170,51 @@ const PopupWidget = publicWidget.Widget.extend({
             return;
         }
         this.$target.find('.modal').modal('show');
+        this.releaseFocus = this._trapFocus();
+    },
+    /**
+     * Traps the focus within the modal.
+     * Returns a function that refocuses the element that was focused before the
+     * modal opened.
+     *
+     * @returns {Function}
+     */
+    _trapFocus() {
+        let tabableEls = getTabableElements(this.el);
+        const previouslyFocusedEl = document.activeElement || document.body;
+        if (tabableEls.length) {
+            tabableEls[0].focus();
+        } else {
+            this.el.focus();
+        }
+        // The focus should stay free for no backdrop popups.
+        if (this.el.querySelector(".s_popup_no_backdrop")) {
+            return () => previouslyFocusedEl.focus();
+        }
+        const _onKeydown = (ev) => {
+            if (ev.key !== "Tab") {
+                return;
+            }
+            // Update tabableEls: they might have changed in the meantime.
+            tabableEls = getTabableElements(this.el);
+            if (!tabableEls.length) {
+                ev.preventDefault();
+                return;
+            }
+            if (!ev.shiftKey && ev.target === tabableEls[tabableEls.length - 1]) {
+                ev.preventDefault();
+                tabableEls[0].focus();
+            }
+            if (ev.shiftKey && ev.target === tabableEls[0]) {
+                ev.preventDefault();
+                tabableEls[tabableEls.length - 1].focus();
+            }
+        };
+        this.el.addEventListener("keydown", _onKeydown);
+        return () => {
+            this.el.removeEventListener("keydown", _onKeydown);
+            previouslyFocusedEl.focus();
+        };
     },
 
     //--------------------------------------------------------------------------
@@ -191,6 +238,10 @@ const PopupWidget = publicWidget.Widget.extend({
         this.$target.find('.media_iframe_video iframe').each((i, iframe) => {
             iframe.src = '';
         });
+        this.releaseFocus && this.releaseFocus();
+        // Reset to avoid calling it twice. It may happen with cookie bars or in
+        // the destroy.
+        this.releaseFocus = null;
     },
     /**
      * @private
