@@ -18,7 +18,7 @@ export function useArchiveEmployee() {
                 target: "new",
                 context: {
                     active_id: id,
-                    toggle_active: true,
+                    employee_termination: true,
                 },
             },
             {

@@ -408,10 +408,8 @@
                             <t t-if="widget.deletable">
                                 <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                             </t>
-                            <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
-                                <t t-if="record.active.raw_value">Archive</t>
-                                <t t-if="!record.active.raw_value">Restore</t>
-                            </a>
+                            <a role="menuitem" type="object" name="action_archive" class="dropdown-item o_kanban_mailing_active" t-if="record.active.raw_value">Archive</a>
+                            <a role="menuitem" type="object" name="action_unarchive" class="dropdown-item o_kanban_mailing_active" t-if="!record.active.raw_value">Restore</a>
                         </t>
                         <t t-name="card">
                             <field name="subject" class="my-1 text-truncate fs-3 fw-bold"/>

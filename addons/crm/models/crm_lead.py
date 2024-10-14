@@ -982,17 +982,19 @@ class CrmLead(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
-    def toggle_active(self):
-        """ When archiving: mark probability as 0. When re-activating
-        update probability again, for leads and opportunities. """
-        res = super().toggle_active()
-        activated = self.filtered(lambda lead: lead.active)
-        archived = self.filtered(lambda lead: not lead.active)
+    def action_archive(self):
+        """ When archiving: mark probability as 0."""
+        res = super().action_archive()
+        self.write({'probability': 0, 'automated_probability': 0})
+        return res
+
+    def action_unarchive(self):
+        """ When re-activating update probability again, for leads and opportunities. """
+        activated = self.filtered(lambda rec: not rec.active)
+        res = super().action_unarchive()
         if activated:
             activated.write({'lost_reason_id': False})
             activated._compute_probabilities()
-        if archived:
-            archived.write({'probability': 0, 'automated_probability': 0})
         return res
 
     def action_set_lost(self, **additional_values):

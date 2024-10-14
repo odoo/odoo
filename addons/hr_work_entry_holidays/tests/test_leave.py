@@ -122,7 +122,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         work_entry = self.create_work_entry(datetime(2019, 10, 10, 9, 0), datetime(2019, 10, 10, 18, 0))
         self.assertTrue(work_entry.active)
         self.assertEqual(work_entry.state, 'conflict', "Attendance work entries should conflict with the leave")
-        work_entry.toggle_active()
+        work_entry.action_archive()
         self.assertEqual(work_entry.state, 'cancelled', "Attendance work entries should be cancelled and not conflict")
         self.assertFalse(work_entry.active)
 

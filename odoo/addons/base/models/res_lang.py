@@ -302,13 +302,15 @@ class ResLang(models.Model):
 
     # ------------------------------------------------------------
 
-    def toggle_active(self):
-        super().toggle_active()
+    def action_unarchive(self):
+        activated = self.filtered(lambda rec: not rec.active)
+        res = super(ResLang, activated).action_unarchive()
         # Automatically load translation
-        active_lang = [lang.code for lang in self.filtered(lambda l: l.active)]
-        if active_lang:
+        if activated:
+            active_lang = activated.mapped('code')
             mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
             mods._update_translations(active_lang)
+        return res
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -413,8 +415,7 @@ class ResLang(models.Model):
 
     def action_activate_langs(self):
         """ Activate the selected languages """
-        for lang in self.filtered(lambda l: not l.active):
-            lang.toggle_active()
+        self.action_unarchive()
         message = _("The languages that you selected have been successfully installed. Users can choose their favorite language in their preferences.")
         return {
             'type': 'ir.actions.client',

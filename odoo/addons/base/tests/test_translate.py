@@ -1696,7 +1696,7 @@ class TestLanguageInstallPerformance(TransactionCase):
         self.assertFalse(fr_BE.active)
 
         t0 = time.time()
-        fr_BE.toggle_active()
+        fr_BE.action_unarchive()
         t1 = time.time()
         _stats_logger.info("installed language fr_BE in %.3fs", t1 - t0)
 

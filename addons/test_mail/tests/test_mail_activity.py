@@ -397,10 +397,10 @@ class TestActivityMixin(TestActivityCommon):
             'test_mail.mail_act_test_todo',
             user_id=self.user_admin.id)
         self.assertEqual(rec.activity_ids, new_act)
-        rec.toggle_active()
+        rec.action_archive()
         self.assertEqual(rec.active, False)
         self.assertEqual(rec.activity_ids, self.env['mail.activity'])
-        rec.toggle_active()
+        rec.action_unarchive()
         self.assertEqual(rec.active, True)
         self.assertEqual(rec.activity_ids, self.env['mail.activity'])
 

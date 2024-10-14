@@ -4078,7 +4078,7 @@ class TestOptionalViews(ViewCase):
         """ Change active states of v2 and v3, check that the results
         are as expected
         """
-        self.v2.toggle_active()
+        self.v2.action_archive()
         context = {'check_view_ids': self.View.search([]).ids}
         arch = self.v0.with_context(context).get_combined_arch()
         self.assertEqual(
@@ -4089,7 +4089,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.v3.toggle_active()
+        self.v3.action_unarchive()
         context = {'check_view_ids': self.View.search([]).ids}
         arch = self.v0.with_context(context).get_combined_arch()
         self.assertEqual(
@@ -4101,7 +4101,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.v2.toggle_active()
+        self.v2.action_unarchive()
         context = {'check_view_ids': self.View.search([]).ids}
         arch = self.v0.with_context(context).get_combined_arch()
         self.assertEqual(

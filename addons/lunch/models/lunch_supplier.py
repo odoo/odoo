@@ -198,6 +198,12 @@ class LunchSupplier(models.Model):
         if values.get('company_id'):
             self.env['lunch.order'].search([('supplier_id', 'in', self.ids)]).write({'company_id': values['company_id']})
         res = super().write(values)
+        if 'active' in values:
+            active_suppliers = self.filtered(lambda s: s.active)
+            inactive_suppliers = self - active_suppliers
+            Product = self.env['lunch.product'].with_context(active_test=False)
+            Product.search([('supplier_id', 'in', active_suppliers.ids)]).write({'active': True})
+            Product.search([('supplier_id', 'in', inactive_suppliers.ids)]).write({'active': False})
         if not CRON_DEPENDS.isdisjoint(values):
             # flush automatic_email_time field to call _sql_constraints
             if 'automatic_email_time' in values:
@@ -214,16 +220,6 @@ class LunchSupplier(models.Model):
         res = super().unlink()
         crons.unlink()
         server_actions.unlink()
-        return res
-
-    def toggle_active(self):
-        """ Archiving related lunch product """
-        res = super().toggle_active()
-        active_suppliers = self.filtered(lambda s: s.active)
-        inactive_suppliers = self - active_suppliers
-        Product = self.env['lunch.product'].with_context(active_test=False)
-        Product.search([('supplier_id', 'in', active_suppliers.ids)]).write({'active': True})
-        Product.search([('supplier_id', 'in', inactive_suppliers.ids)]).write({'active': False})
         return res
 
     def _cancel_future_days(self, weekdays):

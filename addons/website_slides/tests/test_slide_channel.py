@@ -41,7 +41,7 @@ class TestSlidesManagement(slides_common.SlidesCase):
             self.assertTrue(slide.active, "All slide should be archived when a channel is archived")
             self.assertTrue(slide.is_published, "All slide should be unpublished when a channel is archived")
 
-        self.channel.toggle_active()
+        self.channel.action_archive()
         self.assertFalse(self.channel.active)
         self.assertFalse(self.channel.is_published)
         # channel_partner should still NOT be marked as completed

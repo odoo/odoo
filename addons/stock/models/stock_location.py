@@ -557,10 +557,14 @@ class StockRoute(models.Model):
         if not self.warehouse_selectable:
             self.warehouse_ids = [(5, 0, 0)]
 
-    def toggle_active(self):
-        for route in self:
-            route.with_context(active_test=False).rule_ids.filtered(lambda ru: ru.active == route.active).toggle_active()
-        super().toggle_active()
+    def write(self, vals):
+        if 'active' in vals:
+            rules = self.with_context(active_test=False).rule_ids
+            if vals['active']:
+                rules.action_unarchive()
+            else:
+                rules.action_archive()
+        return super().write(vals)
 
     @api.constrains('company_id')
     def _check_company_consistency(self):

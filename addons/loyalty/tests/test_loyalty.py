@@ -159,8 +159,8 @@ class TestLoyalty(TransactionCase):
             ],
         })
         before_archived_reward_ids = self.program.reward_ids
-        self.program.toggle_active()
-        self.program.toggle_active()
+        self.program.action_archive()
+        self.program.action_unarchive()
         after_archived_reward_ids = self.program.reward_ids
         self.assertEqual(before_archived_reward_ids, after_archived_reward_ids)
 

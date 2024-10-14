@@ -326,7 +326,7 @@ class TestWebsiteSaleImage(HttpCase):
         # when there are no template image but there are variants, the image must be obtained from the first variant
         self.assertEqual(product_red, template._get_image_holder())
 
-        product_red.toggle_active()
+        product_red.action_archive()
 
         # but when some variants are not available, the image must be obtained from the first available variant
         self.assertEqual(product_green, template._get_image_holder())
