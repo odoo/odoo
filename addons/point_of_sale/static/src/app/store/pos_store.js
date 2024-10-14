@@ -194,14 +194,14 @@ export class PosStore extends Reactive {
         this.config.iface_printers = !!this.unwatched.printers.length;
 
         // Monitor product pricelist
-        this.models["product.product"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
-        this.models["product.pricelist.item"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
+        ["product.product", "product.pricelist.item"].forEach((model) => {
+            ["create", "update"].forEach((event) => {
+                this.models[model].addEventListener(
+                    event,
+                    this.computeProductPricelistCache.bind(this)
+                );
+            });
+        });
         if (this.data.loadedIndexedDBProducts && this.data.loadedIndexedDBProducts.length > 0) {
             await this._loadMissingPricelistItems(this.data.loadedIndexedDBProducts);
             delete this.data.loadedIndexedDBProducts;
