@@ -8,10 +8,10 @@
         <t t-else="">
             <select class="o_input pe-3" t-on-change="onChange" t-att-id="props.id">
                 <option
+                    t-if="!isRequired"
                     t-att-selected="false === value"
                     t-att-value="stringify(false)"
                     t-esc="this.props.placeholder || ''"
-                    t-attf-style="{{ isRequired ? 'display:none' : '' }}"
                 />
                 <t t-foreach="options" t-as="option" t-key="option[0]">
                     <option
