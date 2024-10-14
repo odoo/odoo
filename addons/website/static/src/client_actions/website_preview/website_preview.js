@@ -26,6 +26,7 @@ import {
     useState,
     useExternalListener,
 } from "@odoo/owl";
+import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 
 class BlockPreview extends Component {}
 BlockPreview.template = 'website.BlockPreview';
@@ -353,6 +354,17 @@ export class WebsitePreview extends Component {
         this.title.setParts({ action: currentTitle });
     }
 
+    _createNewPage(ev) {
+        const currentTargetEl = ev.currentTarget;
+        currentTargetEl.removeAttribute('data-post_force-top-window');
+        currentTargetEl.href = "#";
+        this.dialogService.add(AddPageDialog, {
+            onAddPage: () => this.websiteContext.showNewContentModal = false,
+            websiteId: this.websiteService.currentWebsite.id,
+            name: "page",
+        });
+    }
+
     _onPageLoaded(ev) {
         // FIX Chrome-only. If you have the backend in a language A but the
         // website in English only, you can 1) modify a record's (event,
@@ -404,6 +416,9 @@ export class WebsitePreview extends Component {
         this._replaceBrowserUrl();
         this.iframe.el.contentWindow.addEventListener('hashchange', this._replaceBrowserUrl.bind(this));
         this.iframe.el.contentWindow.addEventListener('pagehide', this._onPageHide.bind(this));
+        const createPageBUttonEl =
+            this.iframe.el.contentDocument.querySelector(".js_disable_on_click");
+        createPageBUttonEl?.addEventListener("click", this._createNewPage.bind(this));
 
         this.websiteService.pageDocument = this.iframe.el.contentDocument;
 
@@ -531,6 +546,9 @@ export class WebsitePreview extends Component {
             $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
             this._cleanIframeFallback();
         }
+        const createPageBUttonEl =
+            this.iframe.el.contentDocument.querySelector(".js_disable_on_click");
+        createPageBUttonEl?.removeEventListener("click", this._createNewPage.bind(this));
     }
     _onPageHide() {
         this.lastHiddenPageURL = this.iframe.el && this.iframe.el.contentWindow.location.href;
