@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { BuilderOverlayPlugin } from "@mysterious_egg/builder_overlay_plugin/builder_overlay_plugin";
-import { useService } from "@web/core/utils/hooks";
+// import { useService } from "@web/core/utils/hooks";
 
 const BUILDER_PLUGIN = [BuilderOverlayPlugin];
 
@@ -24,7 +24,7 @@ export class SnippetsMenu extends Component {
     static props = ["iframe", "closeEditor"];
 
     setup() {
-        const actionService = useService("action");
+        // const actionService = useService("action");
         this.pages = [blockTab, customizeTab];
         this.state = useState({
             canUndo: true,
@@ -38,15 +38,15 @@ export class SnippetsMenu extends Component {
             },
             this.env.services,
         );
-        onMounted(() => {
-            actionService.setActionMode("fullscreen");
-        });
+        // onMounted(() => {
+        //     // actionService.setActionMode("fullscreen");
+        // });
         onIframeLoaded(this.props.iframe, () => {
             this.editor.attachTo(this.props.iframe.contentDocument.body);
         });
         onWillDestroy(() => {
             this.editor.destroy();
-            actionService.setActionMode("current");
+            // actionService.setActionMode("current");
         });
     }
 
