@@ -719,6 +719,7 @@ export async function toInline($editable, cssRules, $iframe) {
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     await svgToPng($editable);
+    await webpToPng($editable);
 
     // Fix img-fluid for Outlook.
     for (const image of editable.querySelectorAll('img.img-fluid')) {
@@ -1232,6 +1233,40 @@ function normalizeRem($editable, rootFontSize=16) {
         _hideForOutlook(td, 'opening');
     }
 }
+
+/**
+ * Convert image element to an image element with type png
+ *
+ * @param {img} HTMLElement
+ */
+
+async function convertToPng(img) {
+    // Make sure the image is loaded before we convert it.
+    await new Promise(resolve => {
+        img.onload = () => resolve();
+        if (img.complete) {
+            resolve();
+        }
+    });
+    const image = document.createElement('img');
+    const canvas = document.createElement('CANVAS');
+    const width = _getWidth(img);
+    const height = _getHeight(img);
+
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
+    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+
+    for (const attribute of img.attributes) {
+        image.setAttribute(attribute.name, attribute.value);
+    }
+
+    image.setAttribute('src', canvas.toDataURL('png'));
+    image.setAttribute('width', width);
+    image.setAttribute('height', height);
+    return image;
+}
+
 /**
  * Convert images of type svg to png.
  *
@@ -1239,32 +1274,37 @@ function normalizeRem($editable, rootFontSize=16) {
  */
 async function svgToPng($editable) {
     for (const svg of $editable.find('img[src*=".svg"]')) {
-        // Make sure the svg is loaded before we convert it.
-        await new Promise(resolve => {
-            svg.onload = () => resolve();
-            if (svg.complete) {
-                resolve();
-            }
-        });
-        const image = document.createElement('img');
-        const canvas = document.createElement('CANVAS');
-        const width = _getWidth(svg);
-        const height = _getHeight(svg);
-
-        canvas.setAttribute('width', width);
-        canvas.setAttribute('height', height);
-        canvas.getContext('2d').drawImage(svg, 0, 0, width, height);
-
-        for (const attribute of svg.attributes) {
-            image.setAttribute(attribute.name, attribute.value);
-        }
-
-        image.setAttribute('src', canvas.toDataURL('png'));
-        image.setAttribute('width', width);
-        image.setAttribute('height', height);
-
+        const image = await convertToPng(svg);
         svg.before(image);
         svg.remove();
+    }
+}
+
+/**
+ * Convert images of type webp to png.
+ *
+ * @param {JQuery} $editable
+ */
+async function webpToPng($editable) {
+    for (const webp of $editable.find('img[src*=".webp"]')) {
+        const image = await convertToPng(webp);
+        webp.before(image);
+        webp.remove();
+    }
+
+    for (const webp of $editable.find('[style*="background-image"][style*=".webp"]')) {
+        // Create an image element with the background image and replace the url
+        // with the png converted image url
+        const width = _getWidth(webp);
+        const height = _getHeight(webp);
+        const tempImage = document.createElement("img");
+        tempImage.setAttribute("src", webp.style.backgroundImage.slice(5, -2));
+        tempImage.setAttribute("width", width);
+        tempImage.setAttribute("height", height);
+        webp.before(tempImage);
+        const image = await convertToPng(tempImage);
+        webp.style.backgroundImage = `url(${image.getAttribute("src")})`;
+        tempImage.remove();
     }
 }
 
