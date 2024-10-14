@@ -152,18 +152,6 @@ class MaintenanceEquipment(models.Model):
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
     equipment_properties = fields.Properties('Properties', definition='category_id.equipment_properties_definition', copy=True)
-    match_serial = fields.Boolean(compute='_compute_match_serial')
-
-    @api.depends('serial_no')
-    def _compute_match_serial(self):
-        matched_serial_data = self.env['stock.lot']._read_group(
-            [('name', 'in', self.mapped('serial_no'))],
-            ['name'],
-            ['__count'],
-        )
-        matched_serial_count = dict(matched_serial_data)
-        for equipment in self:
-            equipment.match_serial = matched_serial_count.get(equipment.serial_no, 0)
 
     @api.onchange('category_id')
     def _onchange_category_id(self):
@@ -195,12 +183,6 @@ class MaintenanceEquipment(models.Model):
         search_domain = self.env['ir.rule']._compute_domain(categories._name)
         category_ids = categories.sudo()._search(search_domain, order=categories._order)
         return categories.browse(category_ids)
-
-    def action_open_matched_serial(self):
-        self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
-        action['context'] = {'search_default_name': self.serial_no}
-        return action
 
 
 class MaintenanceRequest(models.Model):
