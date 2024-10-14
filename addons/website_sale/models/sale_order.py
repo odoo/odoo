@@ -340,6 +340,7 @@ class SaleOrder(models.Model):
         self._verify_cart_after_update()
 
         return {
+            'added_qty': quantity,
             'line_id': order_line.id,
             'quantity': quantity,
             'warning': warning,
@@ -419,11 +420,13 @@ class SaleOrder(models.Model):
             # the requested quantity update.
             warning = ''
 
+        added_qty = quantity - order_line.product_uom_qty  # new_qty - old_qty
         order_line = self._cart_update_order_line(order_line, quantity, **kwargs)
         if not self.env.context.get('skip_cart_verification'):
             self._verify_cart_after_update()
 
         return {
+            'added_qty': added_qty,
             'line_id': order_line.id,
             'quantity': quantity,
             'warning': warning,
