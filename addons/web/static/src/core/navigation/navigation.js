@@ -42,6 +42,10 @@ class NavigationItem {
             this.target = el;
         }
 
+        if (this.el.ariaSelected !== true) {
+            this.el.ariaSelected = false;
+        }
+
         const onFocus = () => this.setActive(false);
         const onMouseEnter = () => this._onMouseEnter();
 
@@ -64,6 +68,7 @@ class NavigationItem {
         scrollTo(this.target);
         this._setActiveItem(this.index);
         this.target.classList.add(ACTIVE_ELEMENT_CLASS);
+        this.target.ariaSelected = true;
 
         if (focus && !this._options.virtualFocus) {
             throttledFocus.cancel();
@@ -73,6 +78,7 @@ class NavigationItem {
 
     setInactive(blur = true) {
         this.target.classList.remove(ACTIVE_ELEMENT_CLASS);
+        this.target.ariaSelected = false;
         if (blur && !this._options.virtualFocus) {
             this.target.blur();
         }
@@ -300,6 +306,7 @@ export class Navigator {
         this.activeItem?.setInactive(false);
         this.activeItem = this.items[index];
         this.activeItemIndex = index;
+        this._options.onNavigate?.(this.items[index]);
     }
 
     /**
@@ -318,6 +325,7 @@ export class Navigator {
  * @property {NavigationHotkeys} hotkeys
  * @property {Function} onEnabled
  * @property {Function} onMouseEnter
+ * @property {Function} onNavigate
  * @property {Boolean} [virtualFocus=false] - If true, items are only visually
  * focused so the actual focus can be kept on another input.
  * @property {string} [itemsSelector=":scope .o-navigable"] - The selector used to get the list

@@ -1,12 +1,40 @@
 import { Deferred } from "@web/core/utils/concurrency";
-import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
-import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
+import { useAutofocus, useChildRef, useForwardRefToParent } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { usePosition } from "@web/core/position/position_hook";
 import { Component, onWillUpdateProps, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { useSourceLoader } from "@web/core/autocomplete/autocomplete_utils";
+
+/**
+ * @typedef Source
+ * @param {bool} isLoading
+ * @param {string} placeholder
+ * @param {string} optionTemplate
+ * @param {Array<Option>} options
+ */
+
+/**
+ * @typedef Option
+ * @param {number} id
+ * @param {string} label
+ * @param {string} classList
+ */
+
+function getIndices(optionEl) {
+    if (optionEl) {
+        const sourceIndex = parseInt(optionEl.dataset.source);
+        const optionIndex = parseInt(optionEl.dataset.option);
+        return [sourceIndex, optionIndex];
+    } else {
+        return [-1, -1];
+    }
+}
 
 export class AutoComplete extends Component {
+    static components = { Dropdown, DropdownItem };
     static template = "web.AutoComplete";
     static props = {
         value: { type: String, optional: true },
@@ -40,6 +68,7 @@ export class AutoComplete extends Component {
         autofocus: { type: Boolean, optional: true },
         class: { type: String, optional: true },
         slots: { type: Object, optional: true },
+        menuClass: { type: String, optional: true },
     };
     static defaultProps = {
         value: "",
@@ -47,11 +76,11 @@ export class AutoComplete extends Component {
         autocomplete: "new-password",
         autoSelect: false,
         dropdown: true,
-        onInput: () => {},
-        onCancel: () => {},
-        onChange: () => {},
-        onBlur: () => {},
-        onFocus: () => {},
+        onInput: () => { },
+        onCancel: () => { },
+        onChange: () => { },
+        onBlur: () => { },
+        onFocus: () => { },
         searchOnInputClick: true,
         inputDebounceDelay: 250,
     };
@@ -61,197 +90,125 @@ export class AutoComplete extends Component {
     }
 
     setup() {
-        this.nextSourceId = 0;
-        this.nextOptionId = 0;
-        this.sources = [];
         this.inEdition = false;
+        this.didNavigate = false;
+
+        this.root = useRef("root");
+        this.inputRef = useForwardRefToParent("input");
+        this.menuRef = useChildRef();
+        this.dropdown = useDropdownState();
 
         this.state = useState({
-            navigationRev: 0,
             optionsRev: 0,
-            open: false,
-            activeSourceOption: null,
             value: this.props.value,
+            activeIndices: [-1, -1],
         });
 
-        this.inputRef = useForwardRefToParent("input");
-        this.listRef = useRef("sourcesList");
+        onWillUpdateProps((nextProps) => this.updateProps(nextProps));
+
         if (this.props.autofocus) {
             useAutofocus({ refName: "input" });
         }
-        this.root = useRef("root");
-
-        this.debouncedProcessInput = useDebounced(async () => {
-            const currentPromise = this.pendingPromise;
-            this.pendingPromise = null;
-            this.props.onInput({
-                inputValue: this.inputRef.el.value,
-            });
-            try {
-                await this.open(true);
-                currentPromise.resolve();
-            } catch {
-                currentPromise.reject();
-            } finally {
-                if (currentPromise === this.loadingPromise) {
-                    this.loadingPromise = null;
-                }
-            }
-        }, this.timeout);
 
         useExternalListener(window, "scroll", this.externalClose, true);
         useExternalListener(window, "pointerdown", this.externalClose, true);
 
-        this.hotkey = useService("hotkey");
-        this.hotkeysToRemove = [];
-
-        onWillUpdateProps((nextProps) => {
-            if (this.props.value !== nextProps.value || this.forceValFromProp) {
-                this.forceValFromProp = false;
-                if (!this.inEdition) {
-                    this.state.value = nextProps.value;
-                    this.inputRef.el.value = nextProps.value;
+        this.sourceLoader = useSourceLoader({
+            sources: this.props.sources,
+            inputRef: this.inputRef,
+            timeout: this.timeout,
+            onSourcesLoaded: () => {
+                if (!this.sourceLoader.hasOptions) {
+                    this.dropdown.close();
                 }
-                this.close();
-            }
+            },
+            onProcessInput: () => {
+                this.props.onInput({
+                    inputValue: this.inputRef.el.value,
+                })
+                this.open();
+            },
         });
+    }
 
-        // position and size
-        if (this.props.dropdown) {
-            usePosition("sourcesList", () => this.targetDropdown, this.dropdownOptions);
-        } else {
-            this.open(false);
+    updateProps(nextProps) {
+        if (this.props.value !== nextProps.value || this.forceValFromProp) {
+            this.forceValFromProp = false;
+            if (!this.inEdition) {
+                this.state.value = nextProps.value;
+                this.inputRef.el.value = nextProps.value;
+            }
+            this.close();
         }
     }
 
-    get targetDropdown() {
-        return this.inputRef.el;
-    }
-
-    get activeSourceOptionId() {
-        if (!this.isOpened || !this.state.activeSourceOption) {
-            return undefined;
-        }
-        const [sourceIndex, optionIndex] = this.state.activeSourceOption;
-        const source = this.sources[sourceIndex];
-        return `${this.props.id || "autocomplete"}_${sourceIndex}_${
-            source.isLoading ? "loading" : optionIndex
-        }`;
-    }
-
-    get dropdownOptions() {
+    get navigationOptions() {
         return {
-            position: "bottom-start",
+            virtualFocus: true,
+            onEnabled: (navigator) => {
+                this.navigator = navigator;
+                this.navigator.items[0]?.setActive(true);
+            },
+            onNavigate: (item) => {
+                this.state.activeIndices = getIndices(this.navigator?.activeItem?.el);
+            },
+            hotkeys: {
+                // Remove dropdown default navigation
+                tab: { callback: () => {} },
+                "shift+tab": { callback: () => {} },
+                enter: { callback: () => {} },
+                escape: async () => {
+                    this.close();
+                    this.cancel();
+                },
+            },
         };
     }
 
-    get isOpened() {
-        return this.state.open;
+    get sources() {
+        return this.sourceLoader.sources;
     }
 
-    get hasOptions() {
-        for (const source of this.sources) {
-            if (source.isLoading || source.options.length) {
-                return true;
-            }
+    get dropdownClass() {
+        let classList = "o-autocomplete--dropdown-menu ui-widget show mt-0";
+        if (this.props.dropdown) {
+            classList += " dropdown-menu ui-autocomplete";
+        } else {
+            classList += " list-group";
         }
-        return false;
+        if (this.props.menuClass) {
+            classList += " " + this.props.menuClass;
+        }
+        return classList;
     }
 
     get activeOption() {
-        const [sourceIndex, optionIndex] = this.state.activeSourceOption;
-        return this.sources[sourceIndex].options[optionIndex];
+        const [sourceIndex, optionIndex] = this.state.activeIndices;
+        return this.sources[sourceIndex]?.options[optionIndex] ?? null;
     }
 
-    open(useInput = false) {
-        this.state.open = true;
-        return this.loadSources(useInput);
+    getOptionId(sourceIndex, optionIndex = "loading") {
+        return `${this.props.id || 'autocomplete'}_${sourceIndex}_${optionIndex}`;
+    }
+
+    open() {
+        this.dropdown.open();
     }
 
     close() {
-        this.state.open = false;
-        this.state.activeSourceOption = null;
+        this.dropdown.close();
+        this.sourceLoader.clear();
     }
 
     cancel() {
-        if (this.inputRef.el.value.length) {
-            if (this.props.autoSelect) {
-                this.inputRef.el.value = this.props.value;
-                this.props.onCancel();
-            }
+        if (this.inputRef.el && this.inputRef.el.value.length && this.props.autoSelect) {
+            this.inputRef.el.value = this.props.value;
+            this.props.onCancel();
         }
-        this.close();
-    }
-
-    async loadSources(useInput) {
-        this.sources = [];
-        this.state.activeSourceOption = null;
-        const proms = [];
-        for (const pSource of this.props.sources) {
-            const source = this.makeSource(pSource);
-            this.sources.push(source);
-
-            const options = this.loadOptions(
-                pSource.options,
-                useInput ? this.inputRef.el.value.trim() : ""
-            );
-            if (options instanceof Promise) {
-                source.isLoading = true;
-                const prom = options.then((options) => {
-                    source.options = options.map((option) => this.makeOption(option));
-                    source.isLoading = false;
-                    this.state.optionsRev++;
-                });
-                proms.push(prom);
-            } else {
-                source.options = options.map((option) => this.makeOption(option));
-            }
-        }
-
-        await Promise.all(proms);
-        this.navigate(0);
-    }
-    get displayOptions() {
-        return !this.props.dropdown || (this.isOpened && this.hasOptions);
-    }
-    loadOptions(options, request) {
-        if (typeof options === "function") {
-            return options(request);
-        } else {
-            return options;
-        }
-    }
-    makeOption(option) {
-        return Object.assign(Object.create(option), {
-            id: ++this.nextOptionId,
-        });
-    }
-    makeSource(source) {
-        return {
-            id: ++this.nextSourceId,
-            options: [],
-            isLoading: false,
-            placeholder: source.placeholder,
-            optionTemplate: source.optionTemplate,
-            optionSlot: source.optionSlot,
-        };
-    }
-
-    isActiveSourceOption([sourceIndex, optionIndex]) {
-        return (
-            this.state.activeSourceOption &&
-            this.state.activeSourceOption[0] === sourceIndex &&
-            this.state.activeSourceOption[1] === optionIndex
-        );
     }
 
     selectOption(option, params = {}) {
         this.inEdition = false;
-        if (option.unselectable) {
-            this.inputRef.el.value = "";
-            this.close();
-            return;
-        }
 
         if (this.props.resetOnSelect) {
             this.inputRef.el.value = "";
@@ -265,53 +222,6 @@ export class AutoComplete extends Component {
         this.close();
     }
 
-    navigate(direction) {
-        let step = Math.sign(direction);
-        if (!step) {
-            this.state.activeSourceOption = null;
-            step = 1;
-        } else {
-            this.state.navigationRev++;
-        }
-
-        if (this.state.activeSourceOption) {
-            let [sourceIndex, optionIndex] = this.state.activeSourceOption;
-            let source = this.sources[sourceIndex];
-
-            optionIndex += step;
-            if (0 > optionIndex || optionIndex >= source.options.length) {
-                sourceIndex += step;
-                source = this.sources[sourceIndex];
-
-                while (source && source.isLoading) {
-                    sourceIndex += step;
-                    source = this.sources[sourceIndex];
-                }
-
-                if (source) {
-                    optionIndex = step < 0 ? source.options.length - 1 : 0;
-                }
-            }
-
-            this.state.activeSourceOption = source ? [sourceIndex, optionIndex] : null;
-        } else {
-            let sourceIndex = step < 0 ? this.sources.length - 1 : 0;
-            let source = this.sources[sourceIndex];
-
-            while (source && source.isLoading) {
-                sourceIndex += step;
-                source = this.sources[sourceIndex];
-            }
-
-            if (source) {
-                const optionIndex = step < 0 ? source.options.length - 1 : 0;
-                if (optionIndex < source.options.length) {
-                    this.state.activeSourceOption = [sourceIndex, optionIndex];
-                }
-            }
-        }
-    }
-
     onInputBlur() {
         if (this.ignoreBlur) {
             this.ignoreBlur = false;
@@ -322,13 +232,21 @@ export class AutoComplete extends Component {
         });
         this.inEdition = false;
     }
+
     onInputClick() {
-        if (!this.isOpened && this.props.searchOnInputClick) {
-            this.open(this.inputRef.el.value.trim() !== this.props.value.trim());
+        if (!this.dropdown.isOpen && this.props.searchOnInputClick) {
+            this.sourceLoader.load(this.inputRef.el.value.trim() !== this.props.value.trim());
+            this.open();
         } else {
             this.close();
         }
     }
+
+    onInputFocus(ev) {
+        this.inputRef.el.setSelectionRange(0, this.inputRef.el.value.length);
+        this.props.onFocus(ev);
+    }
+
     onInputChange(ev) {
         if (this.ignoreBlur) {
             ev.stopImmediatePropagation();
@@ -337,124 +255,62 @@ export class AutoComplete extends Component {
             inputValue: this.inputRef.el.value,
         });
     }
-    async onInput() {
+
+    onInput() {
         this.inEdition = true;
-        this.pendingPromise = this.pendingPromise || new Deferred();
-        this.loadingPromise = this.pendingPromise;
-        this.debouncedProcessInput();
+        this.sourceLoader.processInput();
     }
 
-    onInputFocus(ev) {
-        this.inputRef.el.setSelectionRange(0, this.inputRef.el.value.length);
-        this.props.onFocus(ev);
-    }
-
-    get autoCompleteRootClass() {
-        let classList = "";
-        if (this.props.class) {
-            classList += this.props.class;
-        }
-        if (this.props.dropdown) {
-            classList += " dropdown";
-        }
-        return classList;
-    }
-
-    get ulDropdownClass() {
-        let classList = "";
-        if (this.props.dropdown) {
-            classList += " dropdown-menu ui-autocomplete";
-        } else {
-            classList += " list-group";
-        }
-        return classList;
-    }
-
+    /**
+     * @param {KeyboardEvent} ev
+     */
     async onInputKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
-        const isSelectKey = hotkey === "enter" || hotkey === "tab";
 
-        if (this.loadingPromise && isSelectKey) {
+        const isSelectKey = hotkey === "enter" || hotkey === "tab";
+        if (this.sourceLoader.isLoading && isSelectKey) {
             if (hotkey === "enter") {
                 ev.stopPropagation();
                 ev.preventDefault();
             }
-
-            await this.loadingPromise;
+            await this.sourceLoader.waitUntilLoaded();
         }
 
-        switch (hotkey) {
-            case "enter":
-                if (!this.isOpened || !this.state.activeSourceOption) {
-                    return;
-                }
-                this.selectOption(this.activeOption);
-                break;
-            case "escape":
-                if (!this.isOpened) {
-                    return;
-                }
-                this.cancel();
-                break;
-            case "tab":
-            case "shift+tab":
-                if (!this.isOpened) {
-                    return;
-                }
-                if (
-                    this.props.autoSelect &&
-                    this.state.activeSourceOption &&
-                    (this.state.navigationRev > 0 || this.inputRef.el.value.length > 0)
-                ) {
-                    this.selectOption(this.activeOption);
-                }
-                this.close();
-                return;
-            case "arrowup":
-                this.navigate(-1);
-                if (!this.isOpened) {
-                    this.open(true);
-                }
-                this.scroll();
-                break;
-            case "arrowdown":
-                this.navigate(+1);
-                if (!this.isOpened) {
-                    this.open(true);
-                }
-                this.scroll();
-                break;
-            default:
-                return;
+        if (["arrowup", "arrowdown"].includes(hotkey)) {
+            if (!this.dropdown.isOpen) {
+                this.sourceLoader.load(true);
+                this.open();
+            } else {
+                this.didNavigate = true;
+            }
         }
 
-        ev.stopPropagation();
-        ev.preventDefault();
+        const activeOption = this.activeOption || this.sources[0]?.options[0];
+        if (hotkey === "tab" || hotkey === "shift+tab") {
+            if (
+                this.props.autoSelect &&
+                activeOption &&
+                (this.didNavigate || this.inputRef.el.value.length > 0)
+            ) {
+                this.selectOption(activeOption);
+            }
+            this.close();
+        } else if (this.dropdown.isOpen && hotkey === "enter" && activeOption) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            this.selectOption(activeOption);
+        }
     }
 
-    onOptionMouseEnter(indices) {
-        this.state.activeSourceOption = indices;
-    }
-    onOptionMouseLeave() {
-        this.state.activeSourceOption = null;
-    }
     onOptionClick(option) {
         this.selectOption(option);
         this.inputRef.el.focus();
     }
 
-    externalClose(ev) {
-        if (this.isOpened && !this.root.el.contains(ev.target)) {
+    externalClose(event) {
+        if (!this.root.el.contains(event.target) && (!this.menuRef.el || !this.menuRef.el.contains(event.target))) {
             this.cancel();
-        }
-    }
-
-    scroll() {
-        if (!this.activeSourceOptionId) {
-            return;
-        }
-        if (isScrollableY(this.listRef.el)) {
-            scrollTo(this.listRef.el.querySelector(`#${this.activeSourceOptionId}`));
+            this.close();
         }
     }
 }

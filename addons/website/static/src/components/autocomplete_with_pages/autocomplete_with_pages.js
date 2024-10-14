@@ -110,7 +110,7 @@ export class AutoCompleteWithPages extends AutoComplete {
     }
     isActiveSourceOption(indices) {
         if (!this._isCategory(this.getOption(indices))) {
-            return super.isActiveSourceOption(...arguments);
+            // return super.isActiveSourceOption(...arguments);
         }
     }
     /**

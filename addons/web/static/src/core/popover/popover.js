@@ -56,6 +56,7 @@ export class Popover extends Component {
         class: "",
         closeOnClickAway: () => true,
         closeOnEscape: true,
+        closeOnScrollAway: false,
         componentProps: {},
         fixedPosition: false,
         position: "bottom",
@@ -104,6 +105,7 @@ export class Popover extends Component {
         // Control props
         closeOnClickAway: { optional: true, type: Function },
         closeOnEscape: { optional: true, type: Boolean },
+        closeOnScrollAway: { optional: true, type: Boolean },
         setActiveElement: { optional: true, type: Boolean },
 
         // Technical props
