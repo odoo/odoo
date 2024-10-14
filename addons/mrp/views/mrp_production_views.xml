@@ -475,7 +475,6 @@
                         </page>
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
                             <field name="workorder_ids"
-                                widget="mrp_workorder_one2many"
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)"
                                 context="{'list_view_ref': 'mrp.mrp_production_workorder_tree_editable_view_mo_form', 'default_product_uom_id': product_uom_id, 'from_manufacturing_order': True}"/>
                         </page>
