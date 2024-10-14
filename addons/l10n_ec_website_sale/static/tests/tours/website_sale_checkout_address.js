@@ -24,3 +24,38 @@ registry.category("web_tour.tours").add("shop_checkout_address_ec", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("tour_new_billing_ec", {
+    test: true,
+    url: "/shop",
+    steps: () => [
+        ...tourUtils.addToCart({ productName: "Test Product" }),
+        tourUtils.goToCart({ quantity: 1 }),
+        {
+            content: "Go to checkout",
+            trigger: "a:contains('Checkout')",
+            run: "click",
+        },
+        {
+            content: "Fill vat",
+            trigger: "#o_vat",
+            run: "fill 111111111111",
+        },
+        {
+            content: "Save address",
+            trigger: "button#save_address",
+            run: "click",
+        },
+        {
+            content: "Add new billing address",
+            trigger: '.all_billing a[href^="/shop/address?address_type=billing"]:contains("Add address")',
+            run: "click",
+        },
+        ...tourUtils.fillAdressForm(),
+        {
+            content: "Save address",
+            trigger: "button#save_address",
+            run: "click",
+        },
+    ],
+});
