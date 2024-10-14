@@ -231,12 +231,13 @@ class Employee(models.Model):
                 contract_start = datetime.combine(contract.date_start, time.min, employee_tz)
                 contract_end = datetime.combine(contract.date_end or date.max, time.max, employee_tz)
                 calendar = contract.resource_calendar_id or contract.company_id.resource_calendar_id
-                lunch_intervals = calendar._attendance_intervals_batch(
-                    max(start, contract_start),
-                    min(stop, contract_end),
-                    resources=self.resource_id,
-                    lunch=True)[self.resource_id.id]
-                duration_data = duration_data | lunch_intervals
+                if not calendar.flexible_hours:
+                    lunch_intervals = calendar._attendance_intervals_batch(
+                        max(start, contract_start),
+                        min(stop, contract_end),
+                        resources=self.resource_id,
+                        lunch=True)[self.resource_id.id]
+                    duration_data = duration_data | lunch_intervals
             return duration_data
 
     def _get_expected_attendances(self, date_from, date_to):
