@@ -2181,10 +2181,10 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 smtp_to_list = ['find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com']
             elif recipient == new_partners[3]:
                 smtp_to_list = ['find.me.multi.2@test.example.com']
-            # bike@home: name is recognized as email
+            # bike@home: name is not recognized as email anymore
             elif recipient == new_partners[2]:
                 self.assertEqual(recipient, partner_at_tofind)
-                smtp_to_list = ['NotBike@Home', 'find.me.at@test.example.com']
+                smtp_to_list = ['find.me.at@test.example.com']
             else:
                 smtp_to_list = [recipient.email_normalized]
             self.assertSMTPEmailsSent(
@@ -3212,10 +3212,10 @@ class TestComposerResultsMass(TestMailComposer):
                     smtp_to_list = ['find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com']
                 elif recipient == new_partners[3]:
                     smtp_to_list = ['find.me.multi.2@test.example.com']
-                # bike@home: name is recognized as email
+                # bike@home: name is not recognized as email anymore
                 elif recipient == new_partners[2]:
                     self.assertEqual(recipient, partner_at_tofind)
-                    smtp_to_list = ['NotBike@Home', 'find.me.at@test.example.com']
+                    smtp_to_list = ['find.me.at@test.example.com']
                 else:
                     smtp_to_list = [recipient.email_normalized]
                 self.assertSMTPEmailsSent(
