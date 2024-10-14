@@ -4,6 +4,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
+import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import { checkSimplifiedInvoiceNumber, pay } from "./utils/receipt_util";
 
@@ -53,5 +54,25 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             PaymentScreen.clickPaymentMethod("Customer Account"),
             PaymentScreen.clickValidate(),
             Dialog.is({ title: "Customer Required" }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartnerOptions("Partner Test 1"),
+            {
+                isActive: ["auto"],
+                trigger: "div.o_popover :contains('Settle Due Accounts')",
+                content: "Check the popover opened",
+                run: "click",
+            },
+            Utils.selectButton("Bank"),
+            PaymentScreen.clickValidate(),
+            Chrome.confirmPopup(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
