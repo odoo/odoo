@@ -366,6 +366,35 @@ describe("Selection collapsed", () => {
                     contentAfter: "<p><br></p><p>[]<br></p>",
                 });
             });
+
+            test("should outdent an empty list to a paragraph in the list's direction", async () => {
+                await testEditor({
+                    contentBefore: unformat(`
+                        <ul>
+                            <li>abc</li>
+                            <li class="oe-nested">
+                                <ul dir="rtl" style="text-align: right;">
+                                    <li>abc</li>
+                                    <li>[]<br></li>
+                                </ul>
+                            </li>
+                        </ul>`),
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>abc</li>
+                            <li class="oe-nested">
+                                <ul dir="rtl" style="text-align: right;">
+                                    <li>abc</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p dir="rtl">[]<br></p>`),
+                });
+            });
         });
         describe("Complex merges", () => {
             test("should merge a list item into a paragraph", async () => {

@@ -531,7 +531,7 @@ export class ListPlugin extends Plugin {
     outdentTopLevelLI(li) {
         const cursors = this.dependencies.selection.preserveSelection();
         const ul = li.parentNode;
-        const dir = ul.getAttribute("dir");
+        const dir = li.getAttribute("dir") || ul.getAttribute("dir");
         let p;
         let toMove = li.lastChild;
         while (toMove) {
@@ -705,7 +705,12 @@ export class ListPlugin extends Plugin {
             // Remove LI marker on first backspace.
             closestLIendContainer.classList.add("oe-nested");
         } else {
-            // Fully outdent LI.
+            // Fully outdent the LI but keep its direction.
+            const list = closestElement(closestLIendContainer, "ul[dir], ol[dir]");
+            const dir = list?.getAttribute("dir");
+            if (dir) {
+                closestLIendContainer.setAttribute("dir", dir);
+            }
             this.liToBlocks(closestLIendContainer);
         }
         return true;
