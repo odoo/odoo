@@ -4,8 +4,8 @@
             <button t-att-title="props.title" class="btn btn-light fa fa-plus-square-o"> </button>
             <t t-set-slot="content">
                 <t t-foreach="this.paddings" t-as="padding" t-key="padding">
-                    <DropdownItem onSelected="() => this.onSelected(padding)">
-                        <div class="user-select-none" t-esc="padding"/>
+                    <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(padding)">
+                        <t t-esc="padding"/>
                     </DropdownItem>
                 </t>
             </t>
