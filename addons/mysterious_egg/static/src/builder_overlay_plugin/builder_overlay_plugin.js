@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
 import { BuilderOverlay } from "./builder_overlay";
 
 export class BuilderOverlayPlugin extends Plugin {
@@ -10,8 +9,12 @@ export class BuilderOverlayPlugin extends Plugin {
     static dependencies = ["selection", "overlay"];
 
     setup() {
-        this.selectors = ["img", "div[data-name]", "section"];
-        console.log("initialized");
+        this.selectors = ["div[data-name]", "section"];
+        this.overlay = this.shared.createOverlay(BuilderOverlay, {
+            positionOptions: {
+                position: "center",
+            },
+        });
     }
 
     onSelectionChange(selection) {
@@ -30,19 +33,10 @@ export class BuilderOverlayPlugin extends Plugin {
     }
 
     openBuilderOverlay(target) {
-        //  NOT WORKING and in WIP: use overlay service instead
-        if (registry.category("main_components").contains("BuilderOverlay")) {
-            registry.category("main_components").remove("BuilderOverlay");
-        }
-        registry.category("main_components").add("BuilderOverlay", {
-            Component: BuilderOverlay,
-            props: {
-                target,
-            },
+        this.removeCurrentOverlay?.();
+        this.removeCurrentOverlay = this.services.overlay.add(BuilderOverlay, {
+            target,
+            container: this.document.documentElement,
         });
-    }
-
-    destroy() {
-        registry.category("main_components").remove("BuilderOverlay");
     }
 }
