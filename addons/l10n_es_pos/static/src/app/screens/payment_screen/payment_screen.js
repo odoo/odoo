@@ -5,7 +5,7 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 
 patch(PaymentScreen.prototype, {
     async validateOrder(isForceValidate) {
-        if (this.pos.config.is_spanish) {
+        if (this.pos.config.is_spanish && !this.skipAutomaticInvoicing()) {
             const order = this.currentOrder;
             order.is_l10n_es_simplified_invoice =
                 order.canBeSimplifiedInvoiced() && !order.to_invoice;
@@ -31,6 +31,18 @@ patch(PaymentScreen.prototype, {
             }
         }
         return await super.validateOrder(...arguments);
+    },
+    skipAutomaticInvoicing() {
+        const order = this.currentOrder;
+        if (
+            this.pos.config.is_spanish &&
+            order.is_settling_account &&
+            order.lines.length === 0 &&
+            !order.to_invoice
+        ) {
+            return true;
+        }
+        return false;
     },
     shouldDownloadInvoice() {
         return this.pos.config.is_spanish
