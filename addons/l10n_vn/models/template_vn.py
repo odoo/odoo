@@ -10,8 +10,8 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_vn_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'chart131',
-            'property_account_payable_id': 'chart331',
+            'property_account_receivable_id': 'chart1311',
+            'property_account_payable_id': 'chart3311',
             'property_account_expense_categ_id': 'chart1561',
             'property_account_income_categ_id': 'chart5111',
             'display_invoice_amount_total_words': True,
@@ -26,7 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'bank_account_code_prefix': '112',
                 'cash_account_code_prefix': '111',
                 'transfer_account_code_prefix': '113',
-                'account_default_pos_receivable_account_id': 'chart131',
+                'account_default_pos_receivable_account_id': 'chart1311',
                 'income_currency_exchange_account_id': 'chart515',
                 'expense_currency_exchange_account_id': 'chart635',
                 'account_journal_early_pay_discount_loss_account_id': 'chart635',
