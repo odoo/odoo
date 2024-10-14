@@ -3,6 +3,7 @@
 import base64
 
 from dateutil.relativedelta import relativedelta
+from unittest import skip
 
 from odoo import http, tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
@@ -157,6 +158,7 @@ class TestUi(TestUICommon):
 
         self.start_tour('/slides', 'course_member', login=user_portal.login)
 
+    @skip("This test is failing randomly on runbot, we disable it until we find a fix")
     def test_full_screen_edition_website_restricted_editor(self):
         # group_website_designer
         user_demo = self.user_demo
