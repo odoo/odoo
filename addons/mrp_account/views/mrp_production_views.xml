@@ -18,6 +18,13 @@
                         </div>
                     </button>
                 </t>
+                <button name="action_view_move_wip" type="object" class="oe_stat_button" icon="fa-book"
+                        groups="account.group_account_user" invisible="wip_move_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="wip_move_count"/></span>
+                        <span class="o_stat_text">WIP</span>
+                    </div>
+                </button>
             </xpath>
         </field>
     </record>
