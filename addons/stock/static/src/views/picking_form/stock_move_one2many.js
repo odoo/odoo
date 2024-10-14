@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { AutoColumnWidthListRenderer } from "@stock/views/list/auto_column_width_list_renderer";
+import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
-export class MovesListRenderer extends AutoColumnWidthListRenderer {
+export class MovesListRenderer extends ListRenderer {
     static recordRowTemplate = "stock.MovesListRenderer.RecordRow";
 
     processAllColumn(allColumns, list) {
