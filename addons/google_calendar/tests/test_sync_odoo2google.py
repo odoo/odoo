@@ -798,3 +798,46 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
             'transparency': 'opaque',
         }, timeout=3)
+
+    @patch_api
+    def test_partner_type_change(self):
+        """Test syncing an event with a private address attendee using
+        a user without access to private addresses.
+        """
+        user = self.env['res.users'].create({
+            'name': 'user1',
+            'login': 'user1',
+            'email': 'user1@odoo.com',
+        })
+        private_partner = self.env['res.partner'].create({
+            'name': 'Private Contact',
+            'email': 'private_email@example.com',
+            'type': 'private',
+        })
+        event = self.env['calendar.event'].create({
+            'name': "Private Event",
+            'user_id': user.id,
+            'start': datetime(2020, 1, 13, 16, 55),
+            'stop': datetime(2020, 1, 13, 19, 55),
+            'partner_ids': [(4, private_partner.id)],
+            'privacy': 'private',
+            'need_sync': False,
+        })
+        event = event.with_user(user)
+        event.env.invalidate_all()
+        event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventInserted({
+            'id': False,
+            'start': {'dateTime': '2020-01-13T16:55:00+00:00'},
+            'end': {'dateTime': '2020-01-13T19:55:00+00:00'},
+            'summary': 'Private Event',
+            'description': '',
+            'location': '',
+            'visibility': 'private',
+            'guestsCanModify': True,
+            'reminders': {'overrides': [], 'useDefault': False},
+            'organizer': {'email': 'user1@odoo.com', 'self': True},
+            'attendees': [{'email': 'private_email@example.com', 'responseStatus': 'needsAction'}],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
+            'transparency': 'opaque',
+        })

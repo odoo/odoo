@@ -267,9 +267,9 @@ class Meeting(models.Model):
 
         attendees = self.attendee_ids
         attendee_values = [{
-            'email': attendee.partner_id.email_normalized,
+            'email': attendee.partner_id.sudo().email_normalized,
             'responseStatus': attendee.state or 'needsAction',
-        } for attendee in attendees if attendee.partner_id.email_normalized]
+        } for attendee in attendees if attendee.partner_id.sudo().email_normalized]
         # We sort the attendees to avoid undeterministic test fails. It's not mandatory for Google.
         attendee_values.sort(key=lambda k: k['email'])
         values = {
