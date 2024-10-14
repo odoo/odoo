@@ -12,12 +12,12 @@ export class AddToCartNotification extends Component {
                     id: Number,
                     linked_line_id: { type: Number, optional: true },
                     image_url: String,
-                    quantity: Number,
+                    added_qty: Number,
                     uom_name: { type: String, optional: true },
                     combination_name: { type: String, optional: true },
                     name: String,
                     description: { type: String, optional: true },
-                    line_price_total: Number,
+                    added_qty_price_total: Number,
                 },
             },
         },
@@ -52,8 +52,8 @@ export class AddToCartNotification extends Component {
     getFormattedPrice(line) {
         const linkedLines = this.getLinkedLines(line.id);
         const price = linkedLines.length
-            ? linkedLines.reduce((price, linkedLine) => price + linkedLine.line_price_total, 0)
-            : line.line_price_total;
+            ? linkedLines.reduce((price, linkedLine) => price + linkedLine.added_qty_price_total, 0)
+            : line.added_qty_price_total;
         return formatCurrency(price, this.props.currency_id);
     }
 
