@@ -282,7 +282,22 @@ class AccountMove(models.Model):
             if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_ids):
                 vat_taxable |= line
 
-        profits_tax_group = self.env['account.chart.template'].with_company(self.company_id).ref('tax_group_percepcion_ganancias')
+        profits_tax_group = self.env['account.chart.template'].with_company(self.company_id).ref(
+            'tax_group_percepcion_ganancias',
+            raise_if_not_found=False,
+        )
+        if not profits_tax_group:
+            raise RedirectWarning(
+                message=_(
+                    "A required tax group could not be found (XML ID: %s).\n"
+                    "Please reload your chart template in order to reinstall the required tax group.\n\n"
+                    "Note: You might have to relink your existing taxes to this new tax group.",
+                    'tax_group_percepcion_ganancias',
+                ),
+                action=self.env.ref('account.action_account_config').id,
+                button_text=_("Accounting Settings"),
+            )
+
         return {'vat_amount': sign * sum(vat_taxes.mapped(amount_field)),
                 # For invoices of letter C should not pass VAT
                 'vat_taxable_amount': sign * sum(vat_taxable.mapped(amount_field)) if self.l10n_latam_document_type_id.l10n_ar_letter != 'C' else self.amount_untaxed,
