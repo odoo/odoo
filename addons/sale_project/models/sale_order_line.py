@@ -51,7 +51,6 @@ class SaleOrderLine(models.Model):
 
                 if not sale_order:
                     sale_order = self.env['sale.order'].create(so_create_values)
-                    sale_order.action_confirm()
                 default_values['order_id'] = sale_order.id
             if product_name := self.env.context.get('sol_product_name') or self.env.context.get('default_name'):
                 product = self.env['product.product'].search([
