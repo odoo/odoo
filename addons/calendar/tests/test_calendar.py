@@ -318,7 +318,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
                     ])
                 self.assertEqual(len(mail), 1)
 
-        def _test_emails_has_attachment(self, partners, attachments_names=["fileText_attachment.txt"]):
+        def _test_emails_has_attachment(self, partners, attachments_names=["fileText_attachment.txt"], checksums=None):
             # check that every email has specified extra attachments
             for partner in partners:
                 mail = self.env['mail.message'].sudo().search([
@@ -326,6 +326,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
                 ])
                 extra_attachments = mail.attachment_ids.filtered(lambda attachment: attachment.name in attachments_names)
                 self.assertEqual(len(extra_attachments), len(attachments_names))
+                if checksums:
+                    self.assertEqual(extra_attachments.mapped('checksum'), checksums)
 
         attachments = self.env['ir.attachment'].create([{
             'datas': base64.b64encode(bytes("Event Attachment", 'utf-8')),
@@ -355,7 +357,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         # every partner should have 1 mail sent
         _test_one_mail_per_attendee(self, partners)
-        _test_emails_has_attachment(self, partners)
+        _test_emails_has_attachment(self, partners, checksums=[attachments[0].checksum])
 
         # adding more partners to the event
         partners.extend([
@@ -398,7 +400,9 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'start': "2023-10-06 12:00:00",
             'stop': "2023-10-06 13:00:00",
         })
-        _test_emails_has_attachment(self, partners=[partner_staff, new_partner], attachments_names=[a.name for a in attachments])
+        _test_emails_has_attachment(
+            self, partners=[partner_staff, new_partner], attachments_names=[a.name for a in attachments], checksums=attachments.mapped('checksum')
+        )
 
     def test_event_creation_internal_user_invitation_ics(self):
         """ Check that internal user can read invitation.ics attachment """
