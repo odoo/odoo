@@ -147,6 +147,7 @@ export class ListRenderer extends Component {
             elements: ".o_row_draggable",
             handle: ".o_handle_cell",
             cursor: "grabbing",
+            placeholderClasses: ["d-table-row"],
             // Hooks
             onDragStart: (params) => {
                 const { element } = params;
