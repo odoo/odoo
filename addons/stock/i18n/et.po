@@ -3,12 +3,18 @@
 # 	* stock
 # 
 # Translators:
-# Eneli Õigus <enelioigus@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Stevin Lilla, 2024
-# Anna, 2024
 # Siim Raasuke, 2024
+# Arma Gedonsky <armagedonsky@hot.ee>, 2024
+# Eneli Õigus <enelioigus@gmail.com>, 2024
+# Egon Raamat <egon@avalah.ee>, 2024
+# Rivo Zängov <eraser@eraser.ee>, 2024
+# Piia Paurson <piia@avalah.ee>, 2024
+# JanaAvalah, 2024
+# Leaanika Randmets, 2024
 # Katrin Kampura, 2024
+# Anna, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Katrin Kampura, 2024\n"
+"Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -183,6 +189,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
+"%(warehouse)s on võimalik saada %(free_qty)s %(uom)s, samas kui tellitav "
+"kogus on %(qty_to_order)s %(uom)s."
 
 #. module: stock
 #. odoo-python
@@ -205,13 +213,13 @@ msgstr "%s (koopia)"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "%s [reverted]"
-msgstr ""
+msgstr "%s [tagastatud]"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 msgid "%s days"
-msgstr ""
+msgstr "%s päeva"
 
 #. module: stock
 #. odoo-python
@@ -309,6 +317,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Uus: Siire on loodud, kuid pole veel kinnitatud.\n"
+"* Ootab teist tegevust: Seotud siire peab olema enne seda siiret tehtud staatuses.\n"
+"* Ootab saadavust: Siire on kinnitatud, kuid toodet ei ole võimalik reserveerida.\n"
+"* Saadaval: Siirdel olev toode on reserveeritud.\n"
+"* Tehtud: Toode on kohaletoimetatud ning siire on kinnitatud."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -325,6 +338,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Tarnija asukoht: Virtuaalne asukoht, mis tähistab lähtekohta toodetele, mis saabuvad tarnijatelt. \n"
+"* Vaade: Virtuaalne asukoht, mida kasutatakse loomaks teie ladudele hierarhilisi struktuure, koondades selle alamasukohad ; ei saa otseselt tooteid sisaldada \n"
+"* Sisemine asukoht: Füüsiline asukoht teie enda ladudes\n"
+"* Kliendi asukoht: Virtuaalne asukoht, mis tähistab teie klientidele saadetud toodete sihtkoha asukohta\n"
+"* Inventuuri kadu: inventuuride taseme korrigeerimiseks kasutatavate inventuuri toimingute vastena kasutatav virtuaalne asukoht (füüsilised varud)\n"
+"* Tootmine: tootmistoimingute virtuaalne asukoht: see asukoht kasutab komponente ja toodab valmistooteid\n"
+"* Transiidi asukoht: vastaspoole asukoht, mida tuleks kasutada ettevõttevahelistes või ladude vahelistes operatsioonides"
 
 #. module: stock
 #. odoo-python
@@ -450,6 +470,8 @@ msgid ""
 "<br/>\n"
 "                    <strong>Current Inventory: </strong>"
 msgstr ""
+"<br/>\n"
+"                    <strong>Hetke laoseis: </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -465,6 +487,7 @@ msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
 msgstr ""
+"<br>Nõudlus on tekkinud <b>%s</b> ja selle täitmiseks käivitatakse reegel."
 
 #. module: stock
 #. odoo-python
@@ -597,7 +620,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Allocation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Jaotamine</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -1094,17 +1117,17 @@ msgstr "Kõik"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "All Categories"
-msgstr ""
+msgstr "Kõik kategooriad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "All Companies"
-msgstr ""
+msgstr "Kõik ettevõtted"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "All Products"
-msgstr ""
+msgstr "Kõik tooted"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -1184,6 +1207,9 @@ msgid ""
 "Annual inventory month for products not in a location with a cyclic "
 "inventory date. Set to no month if no automatic annual inventory."
 msgstr ""
+"Aastainventuuri kuu toodete jaoks, mis pole asukohas, kus tehakse "
+"regulaarset inventuuri. Tehakse kuus, kuhu pole määratud iga-aastast "
+"regulaarset inventuuri."
 
 #. module: stock
 #. odoo-python
@@ -1553,7 +1579,7 @@ msgstr "Mass-sisu"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
-msgstr ""
+msgstr "Põhiosa kaal"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
@@ -1563,7 +1589,7 @@ msgstr "Partiide kaupa"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
 msgid "By Quantity"
-msgstr ""
+msgstr "Koguse järgi"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__serial
@@ -1667,7 +1693,7 @@ msgstr "Mahutavus pakendite kaupa"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Product"
-msgstr ""
+msgstr "Mahutavus toodete kaupa"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
@@ -1730,6 +1756,8 @@ msgid ""
 "Changing the company of this record is forbidden at this point, you should "
 "rather archive it and create a new one."
 msgstr ""
+"Selle kirje ettevõtte muutmine on keelatud, peaksite selle pigem arhiveerima"
+" ja looma uue."
 
 #. module: stock
 #. odoo-python
@@ -1987,6 +2015,8 @@ msgid ""
 "Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
+"Kaaluge tootedete varude täiendamise asemel nendel päevadel tooteprognoosi, määrake 0 (just-in-time).\n"
+"Väärtus sõltub marsruudi tüübist (Osta või Tooda)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
@@ -2822,6 +2852,9 @@ msgid ""
 "of the product in this packaging: whether it will be bought, manufactured, "
 "replenished on order, etc."
 msgstr ""
+"Olenevalt paigaldatud moodulitest võimaldab see määrata toote marsruudi "
+"selles pakendis: kas seda ostetakse, toodetakse, täiendatakse tellimisel "
+"jne."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -3133,7 +3166,7 @@ msgstr "Tehtud (kelle poolt?)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
 msgid "Done Packaging Quantity"
-msgstr ""
+msgstr "Tehtud pakendi kogus"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3326,7 +3359,7 @@ msgstr "Lemmik"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__favorite_user_ids
 msgid "Favorite User"
-msgstr ""
+msgstr "Lemmik kasutaja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
@@ -4218,6 +4251,7 @@ msgid ""
 "Indicates the gap between the product's theoretical quantity and its counted"
 " quantity."
 msgstr ""
+"Näitab erinevust toote teoreetilise koguse ja loendatava koguse vahel."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -4320,6 +4354,8 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
 msgstr ""
+"Ettevõttesisene tootekood juhuks, kui see erineb tootja "
+"partii/seerianumberist"
 
 #. module: stock
 #. odoo-python
@@ -4623,6 +4659,8 @@ msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
 msgstr ""
+"Säilitage <strong>erinevust</strong> (loendatud kogust uuendatakse, et "
+"kajastada sama erinevust, mis tekkis loendamisel)"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_print_labels
@@ -5201,7 +5239,7 @@ msgstr "Märgi tähistatuks"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Max"
-msgstr ""
+msgstr "Maksimaalne"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -5281,7 +5319,7 @@ msgstr "Meetod"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Min"
-msgstr ""
+msgstr "Minimaalne"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -5998,7 +6036,7 @@ msgstr "Tellimuse allkirjastas %s"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "Ordered"
-msgstr ""
+msgstr "Tellitud"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
@@ -6787,7 +6825,7 @@ msgstr "Toote kogus on uuendatud"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "Product Relocated"
-msgstr ""
+msgstr "Ümberpaigutatud toode"
 
 #. module: stock
 #. odoo-javascript
@@ -6799,7 +6837,7 @@ msgstr "Toote tellimine"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Toote täiendamise kombinatsioon"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
@@ -6845,7 +6883,7 @@ msgstr "Toote variatsioonid"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Product barcode"
-msgstr ""
+msgstr "Toote triipkood"
 
 #. module: stock
 #. odoo-python
@@ -7963,6 +8001,8 @@ msgstr "Planeeritud kuupäev"
 #: model:ir.model.fields,help:stock.field_stock_move_line__scheduled_date
 msgid "Scheduled date until move is done, then date of actual move processing"
 msgstr ""
+"Planeeritud kuupäev kuni siire on tehtud, seejärel regeliku siirde "
+"protsessimise kuupäev"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -8158,7 +8198,7 @@ msgstr "Jada"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Sequence %(code)s"
-msgstr ""
+msgstr "Järjekord %(code)s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -8305,7 +8345,7 @@ msgstr "Saatmistingimus"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Saadetise kaal"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8563,7 +8603,7 @@ msgstr "Tähistatud tooted"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit konnektor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -9000,7 +9040,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
 msgid "The company is automatically set from your user preferences."
-msgstr ""
+msgstr "Ettevõte on määratakse automaatselt kasutaja eelistuste alusel."
 
 #. module: stock
 #. odoo-python
@@ -9188,7 +9228,7 @@ msgstr ""
 msgid ""
 "The selected Inventory Frequency (Days) creates a date too far into the "
 "future."
-msgstr ""
+msgstr "Valitud inventuuri sageduse kuupäev on liiga kauges tulevikus."
 
 #. module: stock
 #. odoo-python
@@ -9227,7 +9267,7 @@ msgstr "Lao tegevus, kus pakkimine toimus"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__rule_id
 msgid "The stock rule that created this stock move"
-msgstr ""
+msgstr "Sellele laosiirdele loodud laoreegel"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
@@ -9711,7 +9751,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
-msgstr ""
+msgstr "Pakendi kogukaal."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9734,7 +9774,7 @@ msgstr "Jälitatavuse aruanne"
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Jälgi laoseisu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
@@ -10076,7 +10116,7 @@ msgstr "Mõõtühikute kategooriad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__uom_id
 msgid "Uom"
-msgstr ""
+msgstr "Mõõtühik"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -10468,7 +10508,7 @@ msgstr "Kaal"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Saadetise kaal"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
@@ -10931,7 +10971,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot modify inventory loss quantity"
-msgstr ""
+msgstr "Te ei saa varude kadude kogust muuta"
 
 #. module: stock
 #. odoo-python
@@ -11006,6 +11046,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
+"Te ei saa reserveeringust vabastada laosiiret, mis on \"Tehtud\" staatuses."
 
 #. module: stock
 #. odoo-python
@@ -11160,6 +11201,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Teie lõuna on kohale toimetatud.\n"
+"Nautige oma sööki!"
 
 #. module: stock
 #. odoo-python
@@ -11203,7 +11246,7 @@ msgstr "]<br/>minimaalne:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
-msgstr ""
+msgstr "barcodelookup.com"
 
 #. module: stock
 #. odoo-javascript
@@ -11304,7 +11347,7 @@ msgstr "nt. kaheetapiline vastuvõtt"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "e.g. d7vctmiv2rwgenebha8bxq7irooudn"
-msgstr ""
+msgstr "nt d7vctmiv2rwgenebha8bxq7irooudn"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo

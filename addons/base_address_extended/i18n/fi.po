@@ -3,8 +3,14 @@
 # 	* base_address_extended
 # 
 # Translators:
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Tiffany Chang, 2024
+# Kari Lindgren <karisatu@gmail.com>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Mikko Salmela <salmemik@gmail.com>, 2024
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Martin Trigaux, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # 
 msgid ""
@@ -24,12 +30,12 @@ msgstr ""
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
 msgid "<span class=\"o_stat_text\">Cities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kaupungit</span>"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "<span> - </span>"
-msgstr ""
+msgstr "<span> - </span>"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
@@ -39,12 +45,14 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
+"Valitse tämä varmistaaksesi, että jokainen osoite sisältää kaupungin, joka "
+"on tämän maan kaupunkien luettelossa."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
 #: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
-msgstr ""
+msgstr "Kaupungit"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_city
@@ -59,24 +67,24 @@ msgstr "Kaupunki"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
 msgid "City ID"
-msgstr ""
+msgstr "Kaupunki ID"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontakti"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_country
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__country_id
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Country"
-msgstr ""
+msgstr "Maa"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Luonut"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_date
@@ -86,7 +94,7 @@ msgstr "Luotu"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näyttönimi"
 
 #. module: base_address_extended
 #: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
@@ -95,50 +103,53 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
+"Näytä ja hallitse partneritietueisiin liitettäviä kaupunkeja.\n"
+"                Huomaa, että kunkin maan osalta voidaan valita erikseen pakollinen\n"
+"                tarkistus siitä, että kyseisessä maassa on listalla oleva kaupunki."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
 msgid "Door"
-msgstr ""
+msgstr "Ovi"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Door #"
-msgstr ""
+msgstr "Ovi #"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr ""
+msgstr "Pakota kaupunkien tarkistus"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
 msgid "House"
-msgstr ""
+msgstr "Talo"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "House #"
-msgstr ""
+msgstr "Talo #"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimeksi päivittänyt"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
@@ -148,41 +159,41 @@ msgstr "Nimi"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
 msgid "Search City"
-msgstr ""
+msgstr "Etsi kaupunkia"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "State"
-msgstr ""
+msgstr "Alue"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Street"
-msgstr ""
+msgstr "Katuosoite"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Street 2..."
-msgstr ""
+msgstr "Katuosoite 2..."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr ""
+msgstr "Kadun nimi"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Street..."
-msgstr ""
+msgstr "Katu..."
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "ZIP"
-msgstr ""
+msgstr "Postinumero"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__zipcode
 msgid "Zip"
-msgstr ""
+msgstr "Postinumero"

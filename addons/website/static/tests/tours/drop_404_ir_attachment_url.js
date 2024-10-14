@@ -7,7 +7,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('drop_404_ir_attachment_url', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

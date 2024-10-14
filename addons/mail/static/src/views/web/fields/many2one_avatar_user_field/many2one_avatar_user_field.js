@@ -57,6 +57,7 @@ export const many2OneAvatarUserField = {
     ...many2OneAvatarField,
     component: Many2OneAvatarUserField,
     additionalClasses: ["o_field_many2one_avatar"],
+    listViewWidth: [110],
     extractProps(fieldInfo, dynamicInfo) {
         const props = many2OneAvatarField.extractProps(...arguments);
         props.withCommand = fieldInfo.viewType === "form" || fieldInfo.viewType === "list";

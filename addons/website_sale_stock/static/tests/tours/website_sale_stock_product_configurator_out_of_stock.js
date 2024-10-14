@@ -7,7 +7,6 @@ import stockConfiguratorTourUtils from '@website_sale_stock/js/tours/product_con
 registry
     .category('web_tour.tours')
     .add('website_sale_stock_product_configurator_out_of_stock', {
-        test: true,
         url: '/shop?search=Main product',
         steps: () => [
             {

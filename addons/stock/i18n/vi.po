@@ -751,7 +751,7 @@ msgstr "<span>Số lượng còn lại chưa giao:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>ngày</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -821,7 +821,7 @@ msgstr "<strong>Khối lượng tối thiểu:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order</strong>"
-msgstr ""
+msgstr "<strong>Đơn hàng</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -1108,7 +1108,7 @@ msgstr "Lập lịch trình nâng cao"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_order
 msgid "Advanced: Apply Procurement Rules"
-msgstr "Nâng cao: Áp dụng quy tắc thu mua"
+msgstr "Nâng cao: Áp dụng quy tắc mua sắm"
 
 #. module: stock
 #. odoo-python
@@ -1620,7 +1620,7 @@ msgid ""
 msgstr ""
 "Theo mặc định, hệ thống sẽ lấy từ hàng tồn kho ở địa điểm nguồn và đợi hàng "
 "một cách thụ động. Khả năng khác cho phép bạn trực tiếp tạo một hoạt động "
-"thu mua tại địa điểm nguồn (và do đó bỏ qua hàng tồn kho hiện tại) để có "
+"mua sắm tại địa điểm nguồn (và do đó bỏ qua hàng tồn kho hiện tại) để có "
 "được sản phẩm. Nếu chúng ta muốn dịch chuyển theo chuỗi và để dịch chuyển "
 "này đợi dịch chuyển trước, thì nên chọn tùy chọn thứ hai này."
 
@@ -2579,7 +2579,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Ngày"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
@@ -3450,7 +3450,7 @@ msgstr "Cố định"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_id
 msgid "Fixed Procurement Group"
-msgstr "Nhóm thu mua cố định"
+msgstr "Nhóm mua sắm cố định"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -5460,8 +5460,8 @@ msgid ""
 "one big picking."
 msgstr ""
 "Những dịch chuyển dược tạo thông qua điểm đặt hàng này sẽ được đưa vào trong"
-" nhóm cung ứng. Nếu không, các dịch chuyển được tạo ra bởi quy tắc tồn kho "
-"sẽ được nhóm lại thành một phiếu lấy hàng lớn. "
+" nhóm mua sắm. Nếu không, các dịch chuyển được tạo ra bởi quy tắc tồn kho sẽ"
+" được nhóm lại thành một phiếu lấy hàng lớn. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -6713,7 +6713,7 @@ msgstr "Xử lý các hoạt động nhanh hơn với mã vạch"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
 msgid "Procurement"
-msgstr "Thu mua"
+msgstr "Mua sắm"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
@@ -6721,18 +6721,18 @@ msgstr "Thu mua"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__group_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__group_id
 msgid "Procurement Group"
-msgstr "Nhóm thu mua"
+msgstr "Nhóm mua sắm"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.procurement_group_form_view
 msgid "Procurement group"
-msgstr "Nhóm thu mua"
+msgstr "Nhóm mua sắm"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.ir_cron_scheduler_action_ir_actions_server
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 msgid "Procurement: run scheduler"
-msgstr "Thu mua: chạy trình lập kế hoạch"
+msgstr "Mua sắm: chạy trình lập kế hoạch"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__produce_line_ids
@@ -7040,7 +7040,7 @@ msgstr "Thông báo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_propagation_option
 msgid "Propagation of Procurement Group"
-msgstr "Thông báo nhóm thu mua"
+msgstr "Thông báo nhóm mua sắm"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_carrier
@@ -8163,7 +8163,7 @@ msgstr "Phế phẩm"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 msgid "Search Procurement"
-msgstr "Tìm kiếm hoạt động thu mua"
+msgstr "Tìm kiếm hoạt động mua sắm"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
@@ -9270,7 +9270,7 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
 msgstr ""
-"Số lượng thu mua sẽ được làm tròn thành bội số của trường này. Nếu bằng 0, "
+"Số lượng mua sắm sẽ được làm tròn thành bội số của trường này. Nếu bằng 0, "
 "thì sẽ không được làm tròn."
 
 #. module: stock
@@ -9385,8 +9385,8 @@ msgid ""
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
 msgstr ""
-"Kho hàng để thông báo khi dịch chuyển/thu mua được tạo, kho hàng này có thể "
-"khác với kho hàng mà quy tắc cung ứng này thuộc về (VD: đối với quy tắc tái "
+"Kho hàng để thông báo khi dịch chuyển/mua sắm được tạo, kho hàng này có thể "
+"khác với kho hàng mà quy tắc mua sắm này thuộc về (VD: đối với quy tắc tái "
 "đặt hàng từ một kho hàng khác)."
 
 #. module: stock
@@ -10766,7 +10766,7 @@ msgid ""
 " Min Quantity."
 msgstr ""
 "Khi tồn kho ảo xuống dưới số lượng tối thiểu được chỉ định cho trường này, "
-"Odoo sẽ tạo một phiếu thu mua để đưa số lượng dự báo lên cao hơn Số lượng "
+"Odoo sẽ tạo một phiếu mua sắm để đưa số lượng dự báo lên cao hơn Số lượng "
 "tối thiểu này."
 
 #. module: stock
@@ -10776,7 +10776,7 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
-"Khi tồn kho ảo xuống dưới số lượng tối thiểu, Odoo sẽ tạo một phiếu thu mua "
+"Khi tồn kho ảo xuống dưới số lượng tối thiểu, Odoo sẽ tạo một phiếu mua sắm "
 "để đưa số lượng dự báo lên đến (hoặc gần đến) Số lượng tối đa được chỉ định "
 "cho trường này (hoặc đến Số lượng tối thiểu, tùy theo giá trị nào lớn hơn)."
 
@@ -10938,10 +10938,10 @@ msgid ""
 "                routes can be assigned to a product, a product category or be fixed\n"
 "                on procurement or sales order."
 msgstr ""
-"Ở đây, bạn có thể xác định những tuyến cung ứng chính chạy xuyên suốt\n"
-"                kho hàng và xác định các luồng sản phẩm của mình. Các tuyến cung ứng này\n"
+"Ở đây, bạn có thể xác định những tuyến mua sắm chính chạy xuyên suốt\n"
+"                kho hàng và xác định các luồng sản phẩm của mình. Các tuyến mua sắm này\n"
 "                có thể được chỉ định cho một sản phẩm, một danh mục sản phẩm hoặc được\n"
-"                cố định theo đơn thu mua hoặc đơn bán hàng."
+"                cố định theo đơn mua sắm hoặc đơn bán hàng."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -11667,8 +11667,8 @@ msgid ""
 "the warehouse to consider for the route selection on the next procurement "
 "(if any)."
 msgstr ""
-"kho hàng để xem xét lựa chọn tuyến cung ứng trong lần cung ứng tiếp theo "
-"(nếu có)."
+"kho hàng để xem xét lựa chọn tuyến mua sắm trong lần mua sắm tiếp theo (nếu "
+"có)."
 
 #. module: stock
 #. odoo-javascript

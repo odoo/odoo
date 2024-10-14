@@ -351,30 +351,25 @@ class WebsiteHrRecruitment(WebsiteForm):
             return False
         return super()._should_log_authenticate_message(record)
 
-    def insert_record(self, request, model, values, custom, meta=None):
-        record_id = super().insert_record(request, model, values, custom, meta=meta)
-        model_name = model.sudo().model
-        default_field = model.website_form_default_field_id
-        if model_name == 'hr.applicant' and default_field:
-            # remove custom and authenticate message (warnings) from the description
-            applicant = request.env[model_name].sudo().browse(record_id)
-            applicant[default_field.name] = values.get(default_field.name, '')
-        return record_id
-
     def extract_data(self, model, values):
-        data = super().extract_data(model, values)
+        candidate = False
         if model.model == 'hr.applicant':
-            candidate = False
-            if values.get('email_from') and values.get('partner_phone'):
+            # pop the fields since there are only useful to generate a candidate record
+            partner_name = values.pop('partner_name')
+            partner_phone = values.pop('partner_phone', None)
+            partner_email = values.pop('email_from', None)
+            if partner_phone and partner_email:
                 candidate = request.env['hr.candidate'].sudo().search([
-                    ('email_from', '=', values['email_from']),
-                    ('partner_phone', '=', values['partner_phone']),
+                    ('email_from', '=', partner_email),
+                    ('partner_phone', '=', partner_phone),
                 ], limit=1)
             if not candidate:
                 candidate = request.env['hr.candidate'].sudo().create({
-                    'partner_name': values['partner_name'],
-                    'email_from': values.get('email_from'),
-                    'partner_phone': values.get('partner_phone'),
+                    'partner_name': partner_name,
+                    'email_from': partner_email,
+                    'partner_phone': partner_phone,
                 })
+        data = super().extract_data(model, values)
+        if candidate:
             data['record']['candidate_id'] = candidate.id
         return data

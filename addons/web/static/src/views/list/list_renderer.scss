@@ -167,12 +167,9 @@
                 justify-content: flex-end;
             }
             &.o_list_button {
-                white-space: nowrap;
-                > button {
+                > div > button {
+                    white-space: nowrap;
                     padding: 0 5px;
-                    &:not(:last-child) {
-                        margin-right: 3px;
-                    }
                 }
             }
 
@@ -187,6 +184,9 @@
                 > .o_field_text {
                     // text field with widget, className inside the td
                     white-space: pre !important;
+                }
+                &.o_list_button > div {
+                    flex-wrap: nowrap !important;
                 }
             }
         }

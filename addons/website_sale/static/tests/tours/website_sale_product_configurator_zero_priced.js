@@ -7,7 +7,6 @@ import websiteConfiguratorTourUtils from '@website_sale/js/tours/product_configu
 registry
     .category('web_tour.tours')
     .add('website_sale_product_configurator_zero_priced', {
-        test: true,
         url: '/shop?search=Main product',
         steps: () => [
             {

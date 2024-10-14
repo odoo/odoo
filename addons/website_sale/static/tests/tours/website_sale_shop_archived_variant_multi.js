@@ -14,7 +14,6 @@ function assert(current, expected, info) {
 }
 
 registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
-    test: true,
     url: '/shop?search=Test Product 2',
     steps: () => [
     {
@@ -65,7 +64,6 @@ registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
 ]});
 
 registry.category("web_tour.tours").add('test_09_pills_variant', {
-    test: true,
     url: '/shop?search=Test Product 2',
     steps: () => [
     {

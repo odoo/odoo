@@ -1315,9 +1315,6 @@ msgid ""
 "Accounting Data for Türkiye Payroll Rules\n"
 "==========================================\n"
 msgstr ""
-"\n"
-"土耳其薪酬規則會計數據\n"
-"==========================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll_account
@@ -1885,8 +1882,6 @@ msgid ""
 "\n"
 "Accounting reports for Türkiye\n"
 msgstr ""
-"\n"
-"Accounting reports for Türkiye\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports
@@ -3147,6 +3142,48 @@ msgid ""
 "-------------------------------------------------\n"
 "Create electronic sales invoices with Avatax.\n"
 msgstr ""
+"\n"
+"Base module for the Brazilian localization\n"
+"==========================================\n"
+"\n"
+"This module consists of:\n"
+"\n"
+"- Generic Brazilian chart of accounts\n"
+"- Brazilian taxes such as:\n"
+"\n"
+"  - IPI\n"
+"  - ICMS\n"
+"  - PIS\n"
+"  - COFINS\n"
+"  - ISS\n"
+"  - IR\n"
+"  - CSLL\n"
+"\n"
+"- Document Types as NFC-e, NFS-e, etc.\n"
+"- Identification Documents as CNPJ and CPF\n"
+"\n"
+"In addition to this module, the Brazilian Localizations is also\n"
+"extended and complemented with several additional modules.\n"
+"\n"
+"Brazil - Accounting Reports (l10n_br_reports)\n"
+"---------------------------------------------\n"
+"Adds a simple tax report that helps check the tax amount per tax group\n"
+"in a given period of time. Also adds the P&L and BS adapted for the\n"
+"Brazilian market.\n"
+"\n"
+"Avatax Brazil (l10n_br_avatax)\n"
+"------------------------------\n"
+"Add Brazilian tax calculation via Avatax and all necessary fields needed to\n"
+"configure Odoo in order to properly use Avatax and send the needed fiscal\n"
+"information to retrieve the correct taxes.\n"
+"\n"
+"Avatax for SOs in Brazil (l10n_br_avatax_sale)\n"
+"----------------------------------------------\n"
+"Same as the l10n_br_avatax module with the extension to the sales order module.\n"
+"\n"
+"Electronic invoicing through Avatax (l10n_br_edi)\n"
+"-------------------------------------------------\n"
+"Create electronic sales invoices with Avatax.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cy
@@ -11115,6 +11152,26 @@ msgid ""
 "* Contingency documents not implemented\n"
 "* Future implementation will have auto synchronization of Vendor bills.\n"
 msgstr ""
+"\n"
+"This module integrate Odoo so you can issue electronic documents (CFE) to DGI. Example: e-Ticket, e-Invoice and related Debit and Credit Notes.\n"
+"\n"
+"After the CFE has been issued, and since the invoice validation is asynchronous, Odoo will run a scheduled action that will connect to DGI to check/update CFE state (Waiting DGI Response, Approved or Rejected)\n"
+"\n"
+"NOTE: Every connection is made using a third-party software named Uruware\n"
+"\n"
+"Configuration\n"
+"-------------\n"
+"\n"
+"1. Need to have an Uruguayan Company (with the Uruguayan COA installed)\n"
+"2. Go to Settings / Accounting / Uruguay Localization section and configure the fields to connect to UCFE: Uruware's platform for connecting to the Dirección General Impositiva (DGI)\n"
+"3. Go to Settings / Users / Companies / Companies and set the Tax ID number, DGI Main House or Branch Code, all your Address related  fields.\n"
+"4. Go to Invoices and validate them. Then use Send and Print to send to the government and generate a CFE. You will see a new field \"CFE Status\" that will show you the status of the electronic document: initially, it will be in \"Waiting DGI response\", and after some time it will be automatically updated to Approved/Rejected. You will also receive the legal PDF and XML files related to the CFE as attachments to the document.\n"
+"\n"
+"Known issues / Roadmap\n"
+"======================\n"
+"\n"
+"* Contingency documents not implemented\n"
+"* Future implementation will have auto synchronization of Vendor bills.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
@@ -11601,9 +11658,6 @@ msgid ""
 "Türkiye Payroll and Tax Rules\n"
 "============================\n"
 msgstr ""
-"\n"
-"土耳其薪酬管理及稅務規則\n"
-"============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -11617,14 +11671,6 @@ msgid ""
 "\n"
 "This was done in collaboration with Broadmax Partner in Türkiye.\n"
 msgstr ""
-"\n"
-"土耳其會計賬目總表\n"
-"========================================\n"
-"    * 定義預設賬目總表\n"
-"    * 定義預設稅項\n"
-"    * 定義預設稅務報告\n"
-"\n"
-"這是與土耳其的 Broadmax 合作夥伴合作完成的。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -41586,27 +41632,27 @@ msgstr "Tunisia - Accounting Reports"
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__turkey
 #: model:res.country,name:base.tr
 msgid "Türkiye"
-msgstr "土耳其"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
 msgid "Türkiye - Accounting"
-msgstr "Türkiye - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
 msgid "Türkiye - Accounting Reports"
-msgstr "Türkiye - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
 msgid "Türkiye - Payroll"
-msgstr "土耳其 - 薪酬管理"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll_account
 msgid "Türkiye - Payroll with Accounting"
-msgstr "土耳其 - 薪酬管理及會計"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.tm

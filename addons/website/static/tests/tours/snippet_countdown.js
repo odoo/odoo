@@ -8,7 +8,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('snippet_countdown', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

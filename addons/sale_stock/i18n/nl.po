@@ -85,7 +85,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference</strong>"
-msgstr ""
+msgstr "<strong>Klantreferentie</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -111,7 +111,7 @@ msgstr ""
 "  - Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
 "  - Analytisch van declaraties: het aantal is de som van de geboekte declaraties\n"
 "  - Urenstaat: het aantal is de som van de uren die zijn vastgelegd voor taken die aan deze verkoopregel zijn gekoppeld\n"
-"  - Voorraadverplaatsingen: het aantal komt van de bevestigd pickings\n"
+"  - Voorraadverplaatsingen: het aantal komt van de bevestigd voorraadverplaatsingen\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -235,7 +235,7 @@ msgstr "Boekdatum"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr "Uitzondering(en) opgetreden in de picking:"
+msgstr "Er zijn uitzonderingen opgetreden bij het orderverzamelen:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -288,7 +288,7 @@ msgstr "Volledig geleverd"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr "Heeft te late picking"
+msgstr "Heeft vertraagde leveringen"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -789,6 +789,8 @@ msgstr "Wanneer verzenden starten"
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
 msgstr ""
+"Je moet een magazijn hebben voor een regel met een leveringsdienst bij een "
+"ander bedrijf."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

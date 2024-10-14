@@ -113,6 +113,7 @@ export class ListMany2ManyTagsAvatarUserField extends WithUserChatter(
 export const listMany2ManyTagsAvatarUserField = {
     ...listMany2ManyTagsAvatarField,
     component: ListMany2ManyTagsAvatarUserField,
+    listViewWidth: [120],
     additionalClasses: ["o_field_many2many_tags_avatar", "o_field_many2many_tags_avatar_list"],
 };
 

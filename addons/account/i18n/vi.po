@@ -3,9 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Nancy Momoland <thanh.np2502@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
+# Nancy Momoland <thanh.np2502@gmail.com>, 2024
 # Thi Huong Nguyen, 2024
 # 
 msgid ""
@@ -49,10 +49,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Chọn 'Bán hàng' đối với sổ nhật ký hoá đơn bán hàng.\n"
-"        Chọn 'Mua hàng' đối với sổ nhật ký hoá đơn mua hàng.\n"
-"        Chọn 'Tiền mặt', 'Ngân hàng', hoặc \"Thẻ\" đối với các sổ nhật ký ghi nhận những khoản thanh toán mua hàng hoặc bán hàng.\n"
-"        Chọn 'Chung' đối với các sổ nhật ký dành cho những hoạt động khác."
+"         Chọn 'Bán hàng' đối với sổ nhật ký hoá đơn bán hàng.\n"
+"         Chọn 'Mua hàng' đối với sổ nhật ký hoá đơn mua hàng.\n"
+"         Chọn 'Tiền mặt' hoặc 'Ngân hàng' đối với các sổ nhật ký ghi nhận những khoản thanh toán mua hàng hoặc bán hàng.\n"
+"         Chọn 'Chung' đối với các sổ nhật ký dành cho những hoạt động khác."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -83,13 +83,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " for '%s'"
-msgstr "'%s'"
+msgstr " cho '%s'"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " valid until %s"
-msgstr "có hiệu lực đến %s"
+msgstr " hiệu lực đến %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -877,6 +877,14 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Alias Domain"
 msgstr ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Cấu hình miền bí danh"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+msgid ""
+"<small class=\"form-text text-muted\">\n"
+"                    You can choose how you want us to send your invoices, and with which electronic format.\n"
+"                </small>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1728,6 +1736,8 @@ msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
+"Tài khoản %(account)s sẽ được chia thành %(num_accounts)s, một cho mỗi công "
+"ty:\n"
 
 #. module: account
 #. odoo-python
@@ -1850,7 +1860,7 @@ msgstr "Thay thế tài khoản"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
-msgstr "Đảo bút toán tài khoản"
+msgstr "Đảo bút toán kế toán"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
@@ -2676,7 +2686,7 @@ msgstr "Cho phép sử dụng kế toán phân tích."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Already Paid:"
-msgstr "Đã thanh toán"
+msgstr "Đã thanh toán:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -3072,7 +3082,7 @@ msgstr "Đã lưu trữ"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Are you sure? This will perform the following operations:\n"
-msgstr ""
+msgstr "Bạn có chắc không? Thao tác này sẽ thực hiện các hoạt động sau:\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3395,6 +3405,7 @@ msgstr "Ngân hàng & tiền mặt"
 #: code:addons/account/models/account_move.py:0
 msgid "Bank & Cash accounts cannot be shared between companies."
 msgstr ""
+"Tài khoản ngân hàng và tiền mặt không thể được chia sẻ giữa các công ty."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -6790,6 +6801,11 @@ msgid "Electronic Data Interchange"
 msgstr "Trao đổi dữ liệu điện tử"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+msgid "Electronic format"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email Alias"
@@ -8563,7 +8579,7 @@ msgstr "Nhập các điều khoản & điều kiện của bạn vào đây..."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_amount
 msgid "Installments Switch Amount"
-msgstr "Installments Switch Amount"
+msgstr "Số tiền chuyển đổi trả góp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_html
@@ -8574,7 +8590,7 @@ msgstr "Installments Switch Html"
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__integer
 msgid "Integer"
-msgstr "Integer"
+msgstr "Số nguyên"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__integer_rounding
@@ -12618,20 +12634,6 @@ msgid "RD Expenses"
 msgstr "Chi phí RD"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "Đánh giá"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Đánh số thứ tự lại"
@@ -12681,6 +12683,11 @@ msgstr "Nhận"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__inbound
 msgid "Receive Money"
 msgstr "Nhận tiền"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+msgid "Receive invoices"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -13552,6 +13559,13 @@ msgstr "Bảo mật bút toán đã ghi sổ bằng hash"
 #: model:ir.model.fields,field_description:account.field_account_move__secured
 msgid "Secured"
 msgstr "Được bảo mật"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_secure_entries_wizard.py:0
+msgid ""
+"Securing these entries will also secure entries after the selected date."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17265,7 +17279,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
 msgid "Used"
-msgstr "Đã sử dụng"
+msgstr "Đã dùng"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__include_initial_balance
@@ -17736,7 +17750,7 @@ msgstr "Dòng công cụ"
 #. module: account
 #: model:account.account,name:account.1_wip
 msgid "Work in Progress"
-msgstr "Đang thực hiện"
+msgstr "Đang tiến hành"
 
 #. module: account
 #. odoo-javascript
@@ -17827,7 +17841,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only Print & Send sales documents."
-msgstr "Bạn chỉ có thể In & Gửi tài liệu bán hàng"
+msgstr "Bạn chỉ có thể In và Gửi chứng từ bán hàng."
 
 #. module: account
 #. odoo-python
@@ -18162,6 +18176,7 @@ msgstr "Bạn không thể xóa dòng thuế vì nó sẽ ảnh hưởng đến 
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
+"Bạn không thể xóa các bút toán thuộc về một sổ nhật ký đã được khoá sổ."
 
 #. module: account
 #. odoo-python
@@ -18723,6 +18738,8 @@ msgid "bills for"
 msgstr "các hoá đơn cuối cùng cho"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_sending_method__email
 msgid "by Email"
 msgstr "bằng email"

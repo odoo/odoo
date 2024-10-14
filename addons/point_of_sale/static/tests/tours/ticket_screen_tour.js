@@ -11,7 +11,6 @@ import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -160,7 +159,6 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -186,7 +184,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
 });
 
 registry.category("web_tour.tours").add("LotRefundTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -212,7 +209,6 @@ registry.category("web_tour.tours").add("LotRefundTour", {
 });
 
 registry.category("web_tour.tours").add("RefundFewQuantities", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
