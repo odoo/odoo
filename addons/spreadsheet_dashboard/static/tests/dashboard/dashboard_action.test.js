@@ -7,7 +7,7 @@ import {
     defineSpreadsheetDashboardModels,
     getDashboardServerData,
 } from "@spreadsheet_dashboard/../tests/helpers/data";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -145,19 +145,16 @@ test("display no dashboard message", async () => {
 
 test("display error message", async () => {
     onErrorHoot((ev) => ev.preventDefault());
-    await createSpreadsheetDashboard({
-        mockRPC: function (route, args) {
-            if (
-                args.model === "spreadsheet.dashboard" &&
-                args.method === "get_readonly_dashboard" &&
-                args.args[0] === 2
-            ) {
-                const error = new RPCError();
-                error.data = {};
-                throw error;
-            }
+    onRpc(
+        "/spreadsheet/dashboard/data/2",
+        () => {
+            const error = new RPCError();
+            error.data = {};
+            throw error;
         },
-    });
+        { pure: true }
+    );
+    await createSpreadsheetDashboard();
     const fixture = getFixture();
     const spreadsheets = fixture.querySelectorAll(".o_search_panel li");
     expect(".o-spreadsheet").toHaveCount(1, { message: "It should display the spreadsheet" });
