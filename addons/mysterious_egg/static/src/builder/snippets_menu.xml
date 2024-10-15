@@ -24,7 +24,7 @@
                     <BlockTab editor="editor"/>
                 </t>
                 <t t-if="state.activeTab === 'customize'">
-                    <CustomizeTab editor="editor" />
+                    <CustomizeTab editor="editor" currentSnippet="state.selectedSnippet" />
                 </t>
                 <t t-if="state.activeTab === 'theme'">
                     theme
