@@ -51,7 +51,15 @@ class User(models.Model):
         self.env['hr.leave'].flush_model(['user_id', 'state', 'date_from', 'date_to'])
         self.env.cr.execute('''SELECT res_users.%s FROM res_users
                             JOIN hr_leave ON hr_leave.user_id = res_users.id
+<<<<<<< HEAD
                             AND state = 'validate'
+||||||| parent of 9460ebb0e815 (temp)
+                            AND state = 'validate'
+                            AND hr_leave.active = 't'
+=======
+                            AND hr_leave.state = 'validate'
+                            AND hr_leave.active = 't'
+>>>>>>> 9460ebb0e815 (temp)
                             AND res_users.active = 't'
                             AND date_from <= %%s AND date_to >= %%s''' % field, (now, now))
         return [r[0] for r in self.env.cr.fetchall()]
