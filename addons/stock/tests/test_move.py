@@ -291,6 +291,83 @@ class StockMove(TransactionCase):
         # there should be no quant amymore in the stock location
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 0.0)
+    
+    def test_in_out_consu_putaway(self):
+        """ Send a consumable product to a client. Check that a move line is created using
+            putaway location as source
+        """
+        self.product.type = 'consu'
+        shelf_location = self.env.ref("stock.stock_location_components")
+        putaway = self.env["stock.putaway.rule"].create(
+            {
+                "product_id": self.product.id,
+                "location_in_id": self.stock_location.id,
+                "location_out_id": shelf_location.id,
+            }
+        )
+        # creation
+        move_in = self.env['stock.move'].create({
+            'name': 'test_in_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 100.0,
+        })
+        self.assertEqual(move_in.state, 'draft')
+
+        # confirmation
+        move_in._action_confirm()
+        self.assertEqual(move_in.state, 'assigned')
+        self.assertEqual(len(move_in.move_line_ids), 1)
+        # fill the move line
+        move_line = move_in.move_line_ids[0]
+        self.assertEqual(move_line.location_id, self.supplier_location)
+        self.assertEqual(move_line.location_dest_id, shelf_location)
+        self.assertEqual(move_line.product_qty, 100.0)
+        self.assertEqual(move_line.qty_done, 0.0)
+        move_line.qty_done = 100.0
+
+        # validation
+        move_in._action_done()
+        self.assertEqual(move_in.state, 'done')
+        # no quants are created in the stock location since it's a consumable
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, shelf_location), 0.0)
+        self.assertEqual(len(self.gather_relevant(self.product, shelf_location)), 0.0)
+        
+        # creation
+        move_out = self.env['stock.move'].create({
+            'name': 'test_out_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 100.0,
+        })
+        self.assertEqual(move_out.state, 'draft')
+
+        # confirmation
+        move_out._action_confirm()
+        self.assertEqual(move_out.state, 'assigned')
+        self.assertEqual(len(move_out.move_line_ids), 1)
+        # fill the move line
+        move_line = move_out.move_line_ids[0]
+        self.assertEqual(move_line.location_id, shelf_location)
+        self.assertEqual(move_line.location_dest_id, self.customer_location)
+        self.assertEqual(move_line.product_qty, 100.0)
+        self.assertEqual(move_line.qty_done, 0.0)
+        move_line.qty_done = 100.0
+
+        # validation
+        move_out._action_done()
+        self.assertEqual(move_out.state, 'done')
+
+        # no quants are created in the customer location since it's a consumable
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.customer_location), 0.0)
+        self.assertEqual(len(self.gather_relevant(self.product, self.customer_location)), 0.0)
+        # there should be no quant amymore in the stock location
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
+        self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 0.0)
 
     def test_mixed_tracking_reservation_1(self):
         """ Send products tracked by lot to a customer. In your stock, there are tracked and
