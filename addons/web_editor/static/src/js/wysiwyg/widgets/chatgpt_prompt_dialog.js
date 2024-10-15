@@ -2,9 +2,10 @@
 
 import { ChatGPTDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_dialog';
 import { useState, useEffect, useRef } from "@odoo/owl";
-import { useAutofocus } from "@web/core/utils/hooks";
+import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
+import { scrollTo } from "@web/core/utils/scrolling";
 
 export class ChatGPTPromptDialog extends ChatGPTDialog {
     static template = 'web_editor.ChatGPTPromptDialog';
@@ -34,12 +35,23 @@ export class ChatGPTPromptDialog extends ChatGPTDialog {
             messages: [],
         });
         this.promptInputRef = useRef('promptInput');
+        this.modalRef = useChildRef();
         useAutofocus({ refName: 'promptInput' });
         useEffect(() => {
             // Resize the textarea to fit its content.
             this.promptInputRef.el.style.height = 0;
             this.promptInputRef.el.style.height = this.promptInputRef.el.scrollHeight + 'px';
         }, () => [this.state.prompt]);
+        useEffect(() => {
+            // Scroll to the latest message whenever new message
+            // is inserted.
+            const modalEl = this.modalRef.el.querySelector("main.modal-body");
+            const lastMessageEl = modalEl.lastElementChild;
+            scrollTo(lastMessageEl, {
+                behavior: "smooth",
+                isAnchor: true,
+            })
+        }, () => [this.state.conversationHistory.length]);
     }
 
     //--------------------------------------------------------------------------
