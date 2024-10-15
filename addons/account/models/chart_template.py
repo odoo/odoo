@@ -186,6 +186,7 @@ class AccountChartTemplate(models.AbstractModel):
             tracking_disable=True,
             delay_account_group_sync=True,
             lang='en_US',
+            chart_template_load=True,
         )
         company = self.env['res.company'].browse(company.id)  # also update company.pool
 
