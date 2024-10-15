@@ -23,6 +23,9 @@ export function useTestClientAction() {
     };
 }
 
+/**
+ * @param {{ env: import("@web/env").OdooEnv }} [options]
+ */
 export async function mountWebClient(options) {
     await mountWithCleanup(WebClient, options);
     // Wait for visual changes caused by a potential loadState
