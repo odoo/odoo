@@ -8,6 +8,9 @@ odoo.define('pos_coupon.PaymentScreen', function (require) {
     const PosCouponPaymentScreen = (PaymentScreen) =>
         class extends PaymentScreen {
             async _postPushOrderResolve(order, server_ids) {
+                if(this.env.pos.coupon_programs.length === 0) {
+                    return super._postPushOrderResolve(order, server_ids);
+                }
                 const bookedCouponIds = new Set(
                     Object.values(order.bookedCouponCodes)
                         .map((couponCode) => couponCode.coupon_id)
