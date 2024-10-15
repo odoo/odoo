@@ -650,18 +650,6 @@ export function makeActionManager(env, router = _router) {
             selectRecord: openFormView,
             createRecord: () => openFormView(false),
         });
-        const currentState = {
-            resId: viewProps.resId,
-            active_id: action.context.active_id || false,
-        };
-        viewProps.updateActionState = (controller, patchState) => {
-            const oldState = { ...currentState };
-            Object.assign(currentState, patchState);
-            const changed = !shallowEqual(currentState, oldState);
-            if (changed && target !== "new" && controller.isMounted) {
-                pushState();
-            }
-        };
         if (view.type === "form") {
             if (target === "new") {
                 viewProps.mode = "edit";
@@ -701,6 +689,19 @@ export function makeActionManager(env, router = _router) {
         if (!viewProps.resId) {
             viewProps.resId = action.res_id || false;
         }
+
+        const currentState = {
+            resId: viewProps.resId,
+            active_id: action.context.active_id || false,
+        };
+        viewProps.updateActionState = (controller, patchState) => {
+            const oldState = { ...currentState };
+            Object.assign(currentState, patchState);
+            const changed = !shallowEqual(currentState, oldState);
+            if (changed && target !== "new" && controller.isMounted) {
+                pushState();
+            }
+        };
 
         viewProps.noBreadcrumbs =
             "no_breadcrumbs" in action.context ? action.context.no_breadcrumbs : target === "new";
@@ -835,6 +836,12 @@ export function makeActionManager(env, router = _router) {
                 useDebugCategory("action", { action });
                 useChildSubEnv({
                     config: controller.config,
+                    pushStateBeforeReload: () => {
+                        if (this.isMounted) {
+                            return;
+                        }
+                        pushState(nextStack);
+                    },
                 });
                 if (action.target !== "new") {
                     this.__beforeLeave__ = new CallbackRecorder();
@@ -1640,11 +1647,11 @@ export function makeActionManager(env, router = _router) {
         }
     }
 
-    function pushState() {
-        if (!controllerStack.length) {
+    function pushState(cStack = controllerStack) {
+        if (!cStack.length) {
             return;
         }
-        const actions = controllerStack.map((controller) => {
+        const actions = cStack.map((controller) => {
             const { action, props, displayName } = controller;
             const actionState = { displayName };
             if (action.path || action.id) {
@@ -1677,7 +1684,7 @@ export function makeActionManager(env, router = _router) {
             actionStack: actions,
         };
         const stateKeys = [...PATH_KEYS];
-        const { action, props, currentState } = controllerStack.at(-1);
+        const { action, props, currentState } = cStack.at(-1);
         if (props.type !== "form" && props.type !== action.views?.[0][1]) {
             // add view_type only when it's not already known implicitly
             stateKeys.push("view_type");
@@ -1687,7 +1694,7 @@ export function makeActionManager(env, router = _router) {
         }
         Object.assign(newState, pick(newState.actionStack.at(-1), ...stateKeys));
 
-        controllerStack.at(-1).state = newState;
+        cStack.at(-1).state = newState;
         router.pushState(newState, { replace: true });
     }
     return {
