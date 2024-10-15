@@ -27,6 +27,11 @@ export class RtcSession extends Record {
     // Server data
     /** @type {boolean} */
     channelMember = Record.one("discuss.channel.member", { inverse: "rtcSession" });
+    persona = Record.one("Persona", {
+        compute() {
+            return this.channelMember?.persona;
+        },
+    });
     /** @type {boolean} */
     isCameraOn;
     /** @type {boolean} */
