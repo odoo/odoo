@@ -44,7 +44,7 @@
                         <div t-attf-class="mb-3 row o_url_input#{state.isButton ? ' d-none' : ''}">
                             <label class="col-form-label col-md-3" for="o_link_dialog_url_input">URL or Email</label>
                             <div class="col-md-9">
-                                <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required" t-ref="inputUrl" t-on-keydown="ev => ev.key === 'Enter' &amp;&amp; this.onSave(ev)"/>
+                                <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required" t-ref="inputUrl" t-on-keydown="onUrlKeydown"/>
                                 <div class="form-check o_strip_domain d-none">
                                     <input type="checkbox" id="o_link_dialog_url_strip_domain" checked="checked" class="form-check-input"/>
                                     <label for="o_link_dialog_url_strip_domain" class="form-check-label fw-normal">
