@@ -60,8 +60,9 @@ registry
     })
     .add("search", {
         title: "Search",
-        image: "/website/static/src/img/snippets_thumbs/s_searchbar_input.svg",
+        image: "/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg",
         templateContent: "website.s_searchbar_input",
+        //TODO t-forbid-sanitize="form"
     })
     .add("text_highlight", {
         title: "Text Highlight",
