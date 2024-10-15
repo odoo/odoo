@@ -5,10 +5,12 @@
             <attribute name="t-if" add="!this.props.product.event_id" separator=" and " />
         </xpath>
         <xpath expr="//div[hasclass('product-information-tag')]" position="after">
-            <div t-if="displayRemainingSeats"
-                class="shadow-sm m-1 py-1 px-2 rounded position-absolute top-0 end-0"
-                t-attf-class="{{ this.props.product.event_id.seats_available === 0 ? 'bg-danger text-white' : 'bg-white'}}">
-                <span t-esc="this.props.product.event_id.seats_available" /> left
+            <t t-set="availableSeats" t-value="this.totalTicketSeats" />
+            <div t-if="displayRemainingSeats" class="shadow-sm m-1 py-1 px-2 rounded position-absolute top-0 end-0 bg-white">
+                <span t-if="availableSeats > 0">
+                    <t t-esc="availableSeats" /> left
+                </span>
+                <span t-else="">Unlimited</span>
             </div>
         </xpath>
     </t>

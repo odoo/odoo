@@ -4,6 +4,14 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ProductCard.prototype, {
     get displayRemainingSeats() {
-        return Boolean(this.props.product.event_id) && this.props.product.event_id.seats_limited;
+        return Boolean(this.props.product.event_id);
+    },
+    get totalTicketSeats() {
+        return (
+            this.props.product.event_id?.event_ticket_ids?.reduce(
+                (acc, ticket) => acc + ticket.seats_available,
+                0
+            ) || 0
+        );
     },
 });
