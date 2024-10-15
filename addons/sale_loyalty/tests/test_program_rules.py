@@ -284,8 +284,8 @@ class TestProgramRules(TestSaleCouponCommon):
         discounts = set(order.order_line.mapped('name')) - {'Product A'}
         self.assertEqual(len(discounts), 1, "The order should contains the Product A line and a discount")
         # The name of the discount is dynamically changed to smth looking like:
-        # "Discount: Get 5% discount if buy at least 2 Product - On product with following tax: Tax 15.00%"
-        self.assertTrue('Discount: 5% on your order' in discounts.pop(), "The discount should be a 5% discount")
+        # "Discount Get 5% discount if buy at least 2 Product - On product with following tax: Tax 15.00%"
+        self.assertTrue('Discount 5% on your order' in discounts.pop(), "The discount should be a 5% discount")
 
         sol.product_uom_qty = 5
         order._update_programs_and_rewards()
@@ -293,7 +293,7 @@ class TestProgramRules(TestSaleCouponCommon):
         self._claim_reward(order, p2)
         discounts = set(order.order_line.mapped('name')) - {'Product A'}
         self.assertEqual(len(discounts), 1, "The order should contains the Product A line and a discount")
-        self.assertTrue('Discount: 10% on your order' in discounts.pop(), "The discount should be a 10% discount")
+        self.assertTrue('Discount 10% on your order' in discounts.pop(), "The discount should be a 10% discount")
 
     @freeze_time('2011-11-02 09:00:21')
     def test_program_rules_validity_dates(self):
