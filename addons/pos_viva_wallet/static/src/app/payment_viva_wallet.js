@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { sprintf } from "@web/core/utils/strings";
+import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
 
 export class PaymentVivaWallet extends PaymentInterface {
@@ -80,7 +81,7 @@ export class PaymentVivaWallet extends PaymentInterface {
             sessionId: line.sessionId,
             terminalId: line.payment_method_id.viva_wallet_terminal_id,
             cashRegisterId: this.pos.get_cashier().name,
-            amount: line.amount * 100,
+            amount: roundPrecision(line.amount * 100),
             currencyCode: this.pos.currency.iso_numeric.toString(),
             merchantReference: line.sessionId + "/" + this.pos.session.id,
             customerTrns: customerTrns,
