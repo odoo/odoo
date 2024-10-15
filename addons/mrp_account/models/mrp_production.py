@@ -82,6 +82,7 @@ class MrpProduction(models.Model):
         """
         super(MrpProduction, self)._cal_price(consumed_moves)
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        currency = self.env.company.currency_id
         work_center_cost = 0
         finished_move = self.move_finished_ids.filtered(
             lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and float_compare(x.quantity_done, 0, precision_digits=precision) > 0
@@ -99,13 +100,13 @@ class MrpProduction(models.Model):
             )
             byproduct_cost_share = 0
             for byproduct in byproduct_moves:
-                if float_is_zero(byproduct.cost_share, precision_rounding=0.0001) or float_is_zero(byproduct.quantity_done, precision_digits=precision):
+                if float_is_zero(byproduct.cost_share, precision_rounding=0.0001) or not byproduct.quantity_done:
                     continue
                 byproduct_cost_share += byproduct.cost_share
                 if byproduct.product_id.cost_method in ('fifo', 'average'):
-                    byproduct.price_unit = total_cost * byproduct.cost_share / 100 / byproduct.product_uom._compute_quantity(byproduct.quantity_done, byproduct.product_id.uom_id)
+                    byproduct.price_unit = currency.round(total_cost * byproduct.cost_share / 100 / byproduct.product_uom._compute_quantity(byproduct.quantity_done, byproduct.product_id.uom_id))
             if finished_move.product_id.cost_method in ('fifo', 'average'):
-                finished_move.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / qty_done
+                finished_move.price_unit = currency.round(total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / qty_done)
         return True
 
     def _get_backorder_mo_vals(self):
