@@ -257,11 +257,25 @@ class WebsiteForm(http.Controller):
     def _should_log_authenticate_message(self, record):
         return True
 
-    def insert_record(self, request, model, values, custom, meta=None):
-        model_name = model.sudo().model
+    def _get_default_field_data(self, model_name, values, default_field):
+        return values.get(default_field.name, '')
+
+    def _get_custom_label(self, model_name, _custom_label, custom):
+        return _custom_label + custom if custom else ''
+
+    def _update_values(self, model_name, values):
         if model_name == 'mail.mail':
             email_from = _('"%(company)s form submission" <%(email)s>', company=request.env.company.name, email=request.env.company.email)
             values.update({'reply_to': values.get('email_from'), 'email_from': email_from})
+
+    def _update_custom(self, model_name, custom):
+        pass
+
+    def insert_record(self, request, model, values, custom, meta=None):
+        model_name = model.sudo().model
+        self._update_values(model_name, values)
+        self._update_custom(model_name, custom)
+
         record = request.env[model_name].with_user(SUPERUSER_ID).with_context(
             mail_create_nosubscribe=True,
         ).create(values)
@@ -277,11 +291,11 @@ class WebsiteForm(http.Controller):
                     authenticate_message = _("This %(model_name)s was submitted by %(user_name)s (%(user_email)s) on behalf of %(form_email)s",
                         model_name=model.name, user_name=request.env.user.name, user_email=user_email, form_email=form_email)
             else:
-                warning_icon = "/!\\ "
+                warning_icon = "⚠️"
                 authenticate_message = _("EXTERNAL SUBMISSION - Customer not verified")
             if authenticate_message and self._should_log_authenticate_message(record):
                 record._message_log(
-                    body=Markup('<div class="alert alert-info" role="alert">{warning_icon}{message}</div>').format(warning_icon=warning_icon, message=authenticate_message),
+                    body=Markup('<div class="alert alert-info" role="alert">{warning_icon} {message}</div>').format(warning_icon=warning_icon, message=authenticate_message),
                 )
 
         if custom or meta or authenticate_message:
@@ -289,8 +303,8 @@ class WebsiteForm(http.Controller):
             if model_name == 'mail.mail':
                 _custom_label = "%s\n___________\n\n" % _("This message has been posted on your website!")
             default_field = model.website_form_default_field_id
-            default_field_data = values.get(default_field.name, '')
-            custom_label = _custom_label + custom if custom else ''
+            default_field_data = self._get_default_field_data(model_name, values, default_field)
+            custom_label = self._get_custom_label(model_name, _custom_label, custom)
             meta_label = self._meta_label + "\n________\n\n" + meta if meta else ''
             custom_content = ''
             for text in [authenticate_message, default_field_data, custom_label, meta_label]:
