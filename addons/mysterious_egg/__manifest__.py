@@ -29,18 +29,12 @@
 
     'assets': {
         'web.assets_backend': [
-            'mysterious_egg/static/src/website_builder_action.js',
-            'mysterious_egg/static/src/website_builder_action.xml',
-            'mysterious_egg/static/src/website_systray_item.js',
-            'mysterious_egg/static/src/website_systray_item.xml',
+            'mysterious_egg/static/src/builder/**/*',
+            ('remove', 'mysterious_egg/static/src/builder/**/*'),
         ],
         # this bundle is lazy loaded when the editor is ready
         'website.assets_builder': [
-            'mysterious_egg/static/src/**/*',
-            ('remove', 'mysterious_egg/static/src/website_builder_action.js'),
-            ('remove', 'mysterious_egg/static/src/website_builder_action.xml'),
-            ('remove', 'mysterious_egg/static/src/website_systray_item.js'),
-            ('remove', 'mysterious_egg/static/src/website_systray_item.xml'),
+            'mysterious_egg/static/src/builder/**/*',
         ]
     },
 }
