@@ -4,7 +4,7 @@
 <t t-name="mysterious_egg.WebsiteBuilder">
     <div class="d-flex h-100 w-100" t-ref="container">
         <div class="o-website-preview flex-grow-1">
-            <iframe t-att-src="initialUrl" class="h-100 w-100" t-ref="iframe" />
+            <iframe t-att-src="initialUrl" class="h-100 w-100" t-ref="iframe" t-on-load="onIframeLoad"/>
         </div>
         <div  t-attf-style="width:{{state.isEditing ? 288 : 0}}px" class="o-website-snippetsmenu border-start border-dark">
             <LazyComponent  t-if="state.isEditing" Component="'website.SnippetsMenu'" props="menuProps" bundle="'website.assets_builder'"/>
