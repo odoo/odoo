@@ -1949,9 +1949,9 @@ test("Copy Message Link", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message:eq(0) [title='Expand']");
-    await contains("[title='Copy Message Link']", { count: 0 });
+    await contains("[title='Copy Link']", { count: 0 });
     await click(".o-mail-Message:eq(1) [title='Expand']");
-    await click("[title='Copy Message Link']");
+    await click("[title='Copy Link']");
     await assertSteps([url(`/mail/message/${messageId_2}`)]);
     await press(["ctrl", "v"]);
     await click(".o-mail-Composer-send:enabled");
