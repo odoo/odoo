@@ -39,7 +39,7 @@ class Company(models.Model):
     all_child_ids = fields.One2many('res.company', 'parent_id', context={'active_test': False})
     parent_path = fields.Char(index=True)
     parent_ids = fields.Many2many('res.company', compute='_compute_parent_ids', compute_sudo=True)
-    root_id = fields.Many2one('res.company', compute='_compute_parent_ids', compute_sudo=True)
+    root_id = fields.Many2one('res.company', compute='_compute_parent_ids', compute_sudo=True, search='_search_root_id')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     report_header = fields.Html(string='Company Tagline', translate=True, help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).")
     report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
@@ -116,6 +116,11 @@ class Company(models.Model):
         for company in self.with_context(active_test=False):
             company.parent_ids = self.browse(int(id) for id in company.parent_path.split('/') if id) if company.parent_path else company
             company.root_id = company.parent_ids[0]
+
+    def _search_root_id(self, operator, value):
+        if operator == '=':
+            return ['|', ('id', '=', value), ('parent_path', '=like', f'{value}/%')]
+        raise NotImplementedError
 
     @api.depends(lambda self: [f'partner_id.{fname}' for fname in self._get_company_address_field_names()])
     def _compute_address(self):

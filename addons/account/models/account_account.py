@@ -484,8 +484,12 @@ class AccountAccount(models.Model):
 
     @api.model
     def _search_new_account_code(self, start_code, cache=None):
-        """ Get an available account code by starting from an existing code
-            and incrementing it until an available code is found.
+        """ Get an account code that is available for creating a new account in the active
+            company by starting from an existing code and incrementing it.
+
+            A code is available for creating a new account in the active company if there is no
+            account with the same code that belongs to a parent or a child company of the
+            active company - see `_ensure_code_is_unique`.
 
             Examples:
                 |  start_code  |  codes checked for availability                            |
@@ -517,7 +521,16 @@ class AccountAccount(models.Model):
             cache = {start_code}
 
         def code_is_available(new_code):
-            return new_code not in cache and not self.search_count([('code', '=', new_code)], limit=1)
+            return (
+                new_code not in cache
+                and not self.search_count(
+                    [
+                        ('company_ids', 'in', (self.env.company.parent_ids | self.env.company.child_ids).ids),
+                        ('code', '=', new_code),
+                    ],
+                    limit=1,
+                )
+            )
 
         if code_is_available(start_code):
             return start_code
