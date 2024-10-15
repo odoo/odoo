@@ -65,6 +65,14 @@ export class PaymentScreen extends Component {
         if (this.payment_methods_from_config.length == 1 && this.paymentLines.length == 0) {
             this.addNewPaymentLine(this.payment_methods_from_config[0]);
         }
+
+        //Activate the invoice option for refund orders if the original order was invoiced.
+        if (
+            this.currentOrder._isRefundOrder() &&
+            this.currentOrder.lines[0].refunded_orderline_id?.order_id?.is_to_invoice()
+        ) {
+            this.currentOrder.set_to_invoice(true);
+        }
     }
 
     getNumpadButtons() {
