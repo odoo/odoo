@@ -112,7 +112,7 @@
                     </span>
                 </button>
                 <button class="button js_invoice btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 w-md-50 lh-lg" t-att-class="{ 'highlight active': currentOrder.is_to_invoice() }"
-                    t-on-click="toggleIsToInvoice">
+                    t-on-click="toggleIsToInvoice" t-att-disabled="currentOrder.lines[0]?.refunded_orderline_id?.order_id?.is_to_invoice()">
                     <span><i class="fa fa-file-text-o me-2" />Invoice</span>
                     <i class="fa me-2" t-attf-class="{{ currentOrder.is_to_invoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" /> 
                 </button>
