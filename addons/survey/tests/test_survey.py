@@ -292,6 +292,6 @@ class TestSurveyInternals(common.TestSurveyCommon):
         invalid_records = page_without_description + text_box_1 + numerical_box \
             + matrix + simple_choice_2 + simple_choice_3 + text_box_3
         question_and_page_ids = my_survey.question_and_page_ids
-        returned_questions_and_pages = my_survey._get_pages_and_questions_to_show()
+        returned_questions_and_pages = my_survey._get_pages_and_questions_to_show(question_and_page_ids)
 
         self.assertEqual(question_and_page_ids - invalid_records, returned_questions_and_pages)
