@@ -9,7 +9,7 @@ export class BuilderOverlayPlugin extends Plugin {
     static dependencies = ["selection", "overlay"];
 
     setup() {
-        this.selectors = ["div[data-name]", "section"];
+        this.selectors = [".row > div", "div[data-name]", "section"];
         this.overlay = this.shared.createOverlay(BuilderOverlay, {
             positionOptions: {
                 position: "center",
