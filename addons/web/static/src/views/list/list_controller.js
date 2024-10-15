@@ -275,7 +275,7 @@ export class ListController extends Component {
         }
     }
 
-    async openRecord(record) {
+    async openRecord(record, force = false) {
         await record.save();
         if (this.archInfo.openAction) {
             this.actionService.doActionButton({
@@ -291,7 +291,7 @@ export class ListController extends Component {
             });
         } else {
             const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-            this.props.selectRecord(record.resId, { activeIds });
+            this.props.selectRecord(record.resId, { activeIds, force });
         }
     }
 
@@ -524,7 +524,7 @@ export class ListController extends Component {
         if (!this.isDomainSelected) {
             const resIds = await this.getSelectedResIds();
             const ids = resIds.length > 0 && resIds;
-            domain = [['id', 'in', ids]]
+            domain = [["id", "in", ids]];
         }
         return await rpc("/web/export/get_fields", {
             ...parentParams,
