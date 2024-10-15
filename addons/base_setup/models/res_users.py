@@ -3,10 +3,10 @@
 
 from odoo import models, api
 from odoo.tools.misc import str2bool
+from odoo.addons import web
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(web.ResUsers):
 
     @api.model
     def web_create_users(self, emails):

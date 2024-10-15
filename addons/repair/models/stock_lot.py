@@ -2,10 +2,10 @@
 
 from collections import defaultdict
 from odoo import api, fields, models, _
+from odoo.addons import stock
 
 
-class StockLot(models.Model):
-    _inherit = ['stock.lot']
+class StockLot(stock.StockLot):
 
     repair_line_ids = fields.Many2many('repair.order', string="Repair Orders", compute="_compute_repair_line_ids")
     repair_part_count = fields.Integer('Repair part count', compute="_compute_repair_line_ids")

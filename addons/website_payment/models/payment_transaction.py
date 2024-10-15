@@ -3,10 +3,10 @@
 
 from markupsafe import Markup
 from odoo import _, fields, models
+from odoo.addons import account_payment
 
 
-class PaymentTransaction(models.Model):
-    _inherit = ["payment.transaction"]
+class PaymentTransaction(account_payment.PaymentTransaction):
 
     is_donation = fields.Boolean(string="Is donation")
 

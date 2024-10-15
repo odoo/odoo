@@ -1,8 +1,8 @@
 from odoo import models, api
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     @api.depends('invoice_date')
     def _compute_delivery_date(self):

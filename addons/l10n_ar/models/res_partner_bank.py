@@ -2,6 +2,7 @@
 from odoo import models, api, _
 from odoo.exceptions import ValidationError
 import logging
+from odoo.addons import account
 _logger = logging.getLogger(__name__)
 
 
@@ -29,9 +30,8 @@ except ImportError:
         return number
 
 
-class ResPartnerBank(models.Model):
+class ResPartnerBank(account.ResPartnerBank):
 
-    _inherit = ['res.partner.bank']
 
     @api.model
     def _get_supported_account_types(self):

@@ -5,6 +5,7 @@ from lxml import etree
 from datetime import datetime
 
 import logging
+from odoo.addons import account_edi_ubl_cii
 
 _logger = logging.getLogger(__name__)
 
@@ -16,8 +17,7 @@ CII_NAMESPACES = {
 }
 
 
-class AccountEdiXmlCii(models.AbstractModel):
-    _inherit = ['account.edi.common']
+class AccountEdiXmlCii(models.AbstractModel, account_edi_ubl_cii.AccountEdiCommon):
     _description = "Factur-x/XRechnung CII 2.2.0"
 
     def _find_value(self, xpath, tree, nsmap=False):

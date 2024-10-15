@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import portal
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(portal.ResPartner):
 
     payment_token_ids = fields.One2many(
         string="Payment Tokens", comodel_name='payment.token', inverse_name='partner_id')

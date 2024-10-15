@@ -7,12 +7,12 @@ import uuid
 from datetime import datetime
 from werkzeug import urls
 from odoo import api, models
+from odoo.addons import gamification
 
 VALIDATION_KARMA_GAIN = 3
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(gamification.ResUsers):
 
     @property
     def SELF_READABLE_FIELDS(self):

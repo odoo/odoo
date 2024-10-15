@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import sale
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(sale.ResCompany):
     _check_company_auto = True
 
     sale_order_template_id = fields.Many2one(

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models
+from odoo.addons import sale_stock
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ["account.move.line"]
+class AccountMoveLine(sale_stock.AccountMoveLine):
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         price_unit = super(AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()

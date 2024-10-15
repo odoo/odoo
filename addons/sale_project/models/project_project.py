@@ -9,10 +9,10 @@ from odoo.osv import expression
 from odoo.tools import Query, SQL
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
+from odoo.addons import project_account
 
 
-class ProjectProject(models.Model):
-    _inherit = ['project.project']
+class ProjectProject(project_account.ProjectProject):
 
     def _domain_sale_line_id(self):
         domain = expression.AND([

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import sale
 
 
-class SaleReport(models.Model):
-    _inherit = ['sale.report']
+class SaleReport(sale.SaleReport):
 
     margin = fields.Float('Margin')
 

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
+from odoo.addons import base
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(base.ResCompany):
 
     l10n_fr_closing_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to build sale closings', readonly=True)
     siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, readonly=False)

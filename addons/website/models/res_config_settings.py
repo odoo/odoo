@@ -6,10 +6,10 @@ from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 from werkzeug import urls
+from odoo.addons import web, portal, digest, google_recaptcha, auth_signup, mail
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(digest.ResConfigSettings, web.ResConfigSettings, portal.ResConfigSettings, auth_signup.ResConfigSettings, mail.ResConfigSettings, google_recaptcha.ResConfigSettings):
 
     def _default_website(self):
         return self.env['website'].search([('company_id', '=', self.env.company.id)], limit=1)

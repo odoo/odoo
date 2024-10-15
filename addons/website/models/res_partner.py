@@ -3,10 +3,10 @@
 import werkzeug.urls
 
 from odoo import models, fields, api
+from odoo.addons import web, portal, website, auth_signup, mail
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner', 'website.published.multi.mixin']
+class ResPartner(web.ResPartner, portal.ResPartner, auth_signup.ResPartner, mail.ResPartner, website.WebsitePublishedMultiMixin):
 
     visitor_ids = fields.One2many('website.visitor', 'partner_id', string='Visitors')
 

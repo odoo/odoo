@@ -1,8 +1,8 @@
 from odoo import api, fields, models
+from odoo.addons import sale
 
 
-class SaleOrderCancel(models.TransientModel):
-    _inherit = ["sale.order.cancel"]
+class SaleOrderCancel(sale.SaleOrderCancel):
 
     display_purchase_orders_alert = fields.Boolean(
         string="Purchase Order Alert",

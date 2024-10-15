@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import mrp
 
 
-class MrpConsumptionWarning(models.TransientModel):
-    _inherit = ['mrp.consumption.warning']
+class MrpConsumptionWarning(mrp.MrpConsumptionWarning):
 
     def action_confirm(self):
         if self.mrp_production_ids._get_subcontract_move():

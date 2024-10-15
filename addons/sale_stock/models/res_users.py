@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons import sales_team, stock
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(sales_team.ResUsers, stock.ResUsers):
 
     property_warehouse_id = fields.Many2one('stock.warehouse', string='Default Warehouse', company_dependent=True, check_company=True)
 

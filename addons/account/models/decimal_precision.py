@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import product
 
 
-class DecimalPrecision(models.Model):
-    _inherit = ['decimal.precision']
+class DecimalPrecision(product.DecimalPrecision):
 
     def precision_get(self, application):
         if application == 'Discount' and self.env.context.get('ignore_discount_precision'):

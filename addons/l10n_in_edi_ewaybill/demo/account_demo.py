@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from odoo import api, models
+from odoo.addons import l10n_in
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ["account.chart.template"]
+class AccountChartTemplate(l10n_in.AccountChartTemplate):
 
     def _post_load_demo_data(self, company=False):
         if company and company.account_fiscal_country_id.code == 'IN':

@@ -7,10 +7,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools import SQL
 from odoo.tools.convert import convert_file
+from odoo.addons import hr, mail
 
 
-class HrJob(models.Model):
-    _inherit = ["mail.alias.mixin", "hr.job"]
+class HrJob(mail.MailAliasMixin, hr.HrJob):
     _order = "sequence, name asc"
 
     @api.model

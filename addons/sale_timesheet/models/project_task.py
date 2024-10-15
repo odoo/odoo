@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons import sale_project, hr_timesheet
 
 
-class ProjectTask(models.Model):
-    _inherit = ["project.task"]
+class ProjectTask(sale_project.ProjectTask, hr_timesheet.ProjectTask):
 
     def _get_default_partner_id(self, project, parent):
         res = super()._get_default_partner_id(project, parent)

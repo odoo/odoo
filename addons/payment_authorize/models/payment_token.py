@@ -7,12 +7,12 @@ from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 from .authorize_request import AuthorizeAPI
+from odoo.addons import payment
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentToken(models.Model):
-    _inherit = ['payment.token']
+class PaymentToken(payment.PaymentToken):
 
     authorize_profile = fields.Char(
         string="Authorize.Net Profile ID",

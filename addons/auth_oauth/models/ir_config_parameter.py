@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import mail
 
 
-class IrConfig_Parameter(models.Model):
-    _inherit = ['ir.config_parameter']
+class IrConfig_Parameter(mail.IrConfig_Parameter):
 
     def init(self, force=False):
         super().init(force=force)

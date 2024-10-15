@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import bus
 
 
-class IrModel(models.Model):
-    _inherit = ['ir.model']
+class IrModel(bus.IrModel):
     _order = 'is_mail_thread DESC, name ASC'
 
     is_mail_thread = fields.Boolean(

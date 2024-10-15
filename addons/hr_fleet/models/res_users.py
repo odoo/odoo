@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons import hr
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(hr.ResUsers):
 
     employee_cars_count = fields.Integer(related='employee_id.employee_cars_count')
 

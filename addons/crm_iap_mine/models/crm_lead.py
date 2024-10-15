@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import iap_crm
 
 
-class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+class CrmLead(iap_crm.CrmLead):
 
     lead_mining_request_id = fields.Many2one('crm.iap.lead.mining.request', string='Lead Mining Request', index='btree_not_null')
 

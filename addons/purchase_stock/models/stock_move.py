@@ -5,10 +5,10 @@ from collections import deque
 from odoo import api, Command, fields, models, _
 from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
+from odoo.addons import stock_account
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(stock_account.StockMove):
 
     purchase_line_id = fields.Many2one(
         'purchase.order.line', 'Purchase Order Line',

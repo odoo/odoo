@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
-    _inherit = ["account.tax"]
+class AccountTax(account.AccountTax):
 
     l10n_pe_edi_tax_code = fields.Selection(
         [

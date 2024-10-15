@@ -5,10 +5,10 @@ import uuid
 from odoo import models, fields, _
 from odoo.exceptions import UserError
 from odoo.http import Stream
+from odoo.addons import mail
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(mail.IrAttachment):
     _cloud_storage_upload_url_time_to_expiry = 300  # 300 seconds
     _cloud_storage_download_url_time_to_expiry = 300  # 300 seconds
 

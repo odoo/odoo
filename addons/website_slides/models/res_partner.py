@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.addons import website
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(website.ResPartner):
 
     slide_channel_ids = fields.Many2many(
         'slide.channel', string='eLearning Courses',

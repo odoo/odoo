@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import hr_work_entry_holidays
 
 
-class HrWorkEntry(models.Model):
-    _inherit = ['hr.work.entry']
+class HrWorkEntry(hr_work_entry_holidays.HrWorkEntry):
 
     def _filter_french_part_time_entries(self):
         french_part_time_work_entries = self.filtered(lambda w:

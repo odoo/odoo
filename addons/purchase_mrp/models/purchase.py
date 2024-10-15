@@ -5,10 +5,10 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.tools import OrderedSet
+from odoo.addons import purchase_stock
 
 
-class PurchaseOrder(models.Model):
-    _inherit = ['purchase.order']
+class PurchaseOrder(purchase_stock.PurchaseOrder):
 
     mrp_production_count = fields.Integer(
         "Count of MO Source",
@@ -48,8 +48,7 @@ class PurchaseOrder(models.Model):
         return action
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = ['purchase.order.line']
+class PurchaseOrderLine(purchase_stock.PurchaseOrderLine):
 
     def _compute_qty_received(self):
         kit_lines = self.env['purchase.order.line']

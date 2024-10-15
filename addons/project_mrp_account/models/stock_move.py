@@ -3,10 +3,10 @@
 from odoo import _, models
 from odoo.exceptions import ValidationError
 from odoo.tools import format_list
+from odoo.addons import mrp_account
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(mrp_account.StockMove):
 
     def _get_analytic_distribution(self):
         distribution = self.raw_material_production_id.project_id._get_analytic_distribution()

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import mrp
 
 
-class ChangeProductionQty(models.TransientModel):
-    _inherit = ['change.production.qty']
+class ChangeProductionQty(mrp.ChangeProductionQty):
 
     @api.model
     def _need_quantity_propagation(self, move, qty):

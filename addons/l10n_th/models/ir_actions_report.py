@@ -1,9 +1,9 @@
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class IrActionsReport(models.Model):
-    _inherit = ['ir.actions.report']
+class IrActionsReport(account.IrActionsReport):
 
     def _pre_render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         # Check for reports only available for invoices.

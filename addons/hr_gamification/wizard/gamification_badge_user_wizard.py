@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError
+from odoo.addons import gamification
 
 
-class GamificationBadgeUserWizard(models.TransientModel):
-    _inherit = ['gamification.badge.user.wizard']
+class GamificationBadgeUserWizard(gamification.GamificationBadgeUserWizard):
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=False)
     user_id = fields.Many2one('res.users', string='User', compute='_compute_user_id',

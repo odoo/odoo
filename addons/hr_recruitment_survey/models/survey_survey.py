@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import survey
 
 
-class SurveySurvey(models.Model):
-    _inherit = ['survey.survey']
+class SurveySurvey(survey.SurveySurvey):
 
     survey_type = fields.Selection(selection_add=[('recruitment', 'Recruitment')], ondelete={'recruitment': 'set default'})
     hr_job_ids = fields.One2many("hr.job", "survey_id", string="Job Position")

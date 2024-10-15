@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import resource_mail
 
 
-class ResourceResource(models.Model):
-    _inherit = ["resource.resource"]
+class ResourceResource(resource_mail.ResourceResource):
 
     user_id = fields.Many2one(copy=False)
     employee_id = fields.One2many('hr.employee', 'resource_id', check_company=True, context={'active_test': False})

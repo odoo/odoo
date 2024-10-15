@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import iap_mail
 
 
-class IapAccount(models.Model):
-    _inherit = ['iap.account']
+class IapAccount(iap_mail.IapAccount):
 
     sender_name = fields.Char(help="This is the name that will be displayed as the sender of the SMS.", readonly=True)
 

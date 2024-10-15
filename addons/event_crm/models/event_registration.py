@@ -6,10 +6,10 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.phone_validation.tools import phone_validation
+from odoo.addons import event
 
 
-class EventRegistration(models.Model):
-    _inherit = ['event.registration']
+class EventRegistration(event.EventRegistration):
 
     lead_ids = fields.Many2many(
         'crm.lead', string='Leads', copy=False, readonly=True,

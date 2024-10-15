@@ -2,10 +2,10 @@
 
 from odoo import models, api, _
 from odoo.addons.account.models.chart_template import template
+from odoo.addons import account, l10n_latam_invoice_document
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(l10n_latam_invoice_document.AccountChartTemplate, account.AccountChartTemplate):
 
     @api.model
     def _get_ar_responsibility_match(self, chart_template):

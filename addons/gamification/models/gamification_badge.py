@@ -6,12 +6,13 @@ from datetime import date
 
 from odoo import api, fields, models, _, exceptions
 from odoo.tools import SQL
+from odoo.addons import mail, base
 
 
 _logger = logging.getLogger(__name__)
 
 
-class GamificationBadge(models.Model):
+class GamificationBadge(models.Model, mail.MailThread, base.ImageMixin):
     """Badge object that users can send and receive"""
 
     CAN_GRANT = 1
@@ -21,7 +22,6 @@ class GamificationBadge(models.Model):
     TOO_MANY = 5
 
     _description = 'Gamification Badge'
-    _inherit = ['mail.thread', 'image.mixin']
 
     name = fields.Char('Badge', required=True, translate=True)
     active = fields.Boolean('Active', default=True)

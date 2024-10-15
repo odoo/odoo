@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import point_of_sale, sale_management
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order', 'pos.load.mixin']
+class SaleOrder(sale_management.SaleOrder, point_of_sale.PosLoadMixin):
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_origin_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
     pos_order_count = fields.Integer(string='Pos Order Count', compute='_count_pos_order', readonly=True, groups="point_of_sale.group_pos_user")
@@ -49,8 +49,7 @@ class SaleOrder(models.Model):
             sale_order.amount_unpaid = sale_order.amount_total - (total_invoice_paid + total_pos_paid)
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line', 'pos.load.mixin']
+class SaleOrderLine(sale_management.SaleOrderLine, point_of_sale.PosLoadMixin):
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_line_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
 

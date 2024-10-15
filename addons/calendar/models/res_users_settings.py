@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import mail
 
 
-class ResUsersSettings(models.Model):
-    _inherit = ["res.users.settings"]
+class ResUsersSettings(mail.ResUsersSettings):
 
     # Calendar module settings.
     calendar_default_privacy = fields.Selection(

@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.osv import expression
+from odoo.addons import hr_timesheet
 
 
-class AccountAnalyticLine(models.Model):
-    _inherit = ['account.analytic.line']
+class AccountAnalyticLine(hr_timesheet.AccountAnalyticLine):
 
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request', copy=False, index='btree_not_null', export_string_translation=False)
     global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", index='btree_not_null', ondelete='cascade', export_string_translation=False)

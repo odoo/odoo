@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import portal, base_geolocalize, website_partner, crm, account
 
 
-class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+class ResPartner(base_geolocalize.ResPartner, crm.ResPartner, account.ResPartner, website_partner.ResPartner, portal.ResPartner):
 
     @api.model
     def default_get(self, fields_list):

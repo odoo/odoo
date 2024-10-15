@@ -3,10 +3,10 @@
 
 from odoo import models, api, _
 from odoo.exceptions import ValidationError
+from odoo.addons import point_of_sale
 
 
-class PosConfig(models.Model):
-    _inherit = ['pos.config']
+class PosConfig(point_of_sale.PosConfig):
 
     @api.constrains('payment_method_ids')
     def _check_online_payment_methods(self):

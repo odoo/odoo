@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import account, sale
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(sale.AccountMove, account.AccountMove):
 
     def _get_action_per_item(self):
         action = self.env.ref('account.action_move_out_invoice_type').id

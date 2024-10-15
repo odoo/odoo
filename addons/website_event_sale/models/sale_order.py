@@ -2,10 +2,10 @@
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.addons import event_sale, website_sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ["sale.order"]
+class SaleOrder(event_sale.SaleOrder, website_sale.SaleOrder):
 
     def _cart_find_product_line(self, product_id=None, line_id=None, event_ticket_id=False, **kwargs):
         lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
@@ -94,8 +94,7 @@ class SaleOrder(models.Model):
             attendees.action_cancel()
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ["sale.order.line"]
+class SaleOrderLine(event_sale.SaleOrderLine, website_sale.SaleOrderLine):
 
     @api.depends('product_id.display_name', 'event_ticket_id.display_name')
     def _compute_name_short(self):

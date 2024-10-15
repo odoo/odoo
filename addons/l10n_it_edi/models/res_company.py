@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import account_edi_proxy_client
 
 TAX_SYSTEM = [
     ("RF01", "[RF01] Ordinario"),
@@ -25,8 +26,7 @@ TAX_SYSTEM = [
 ]
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(account_edi_proxy_client.ResCompany):
 
     l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16, related='partner_id.l10n_it_codice_fiscale',
         store=True, readonly=False, help="Fiscal code of your company")

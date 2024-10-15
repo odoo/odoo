@@ -6,11 +6,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 from odoo.tools.misc import clean_context
+from odoo.addons import mail
 
 
-class MrpUnbuild(models.Model):
+class MrpUnbuild(models.Model, mail.MailThread, mail.MailActivityMixin):
     _description = "Unbuild Order"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
 
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda s: s.env._('New'))

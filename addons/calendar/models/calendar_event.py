@@ -26,6 +26,7 @@ from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
 from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
@@ -64,10 +65,9 @@ def get_weekday_occurence(date):
     return occurence_in_month
 
 
-class CalendarEvent(models.Model):
+class CalendarEvent(models.Model, mail.MailThread):
     _description = "Calendar Event"
     _order = "start desc"
-    _inherit = ["mail.thread"]
     _systray_view = 'calendar'
 
     DISCUSS_ROUTE = 'calendar/join_videocall'

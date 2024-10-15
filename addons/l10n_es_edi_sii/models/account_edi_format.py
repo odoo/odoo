@@ -14,6 +14,7 @@ import base64
 import math
 import json
 import requests
+from odoo.addons import account_edi
 
 
 # Custom patches to perform the WSDL requests.
@@ -59,8 +60,7 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
         return conn
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = ['account.edi.format']
+class AccountEdiFormat(account_edi.AccountEdiFormat):
 
     # -------------------------------------------------------------------------
     # ES EDI

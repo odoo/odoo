@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     l10n_pl_vat_b_spv = fields.Boolean(
         string='B_SPV',

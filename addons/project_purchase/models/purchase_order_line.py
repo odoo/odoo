@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import purchase
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = ['purchase.order.line']
+class PurchaseOrderLine(purchase.PurchaseOrderLine):
 
     @api.depends('product_id', 'order_id.partner_id', 'order_id.project_id')
     def _compute_analytic_distribution(self):

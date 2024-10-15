@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import analytic
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = ['account.analytic.account']
+class AccountAnalyticAccount(analytic.AccountAnalyticAccount):
     _description = 'Analytic Account'
 
     project_ids = fields.One2many('project.project', 'account_id', string='Projects', export_string_translation=False)

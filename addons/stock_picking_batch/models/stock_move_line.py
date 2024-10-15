@@ -7,10 +7,10 @@ from odoo import _, Command, fields, models
 from odoo.osv import expression
 from odoo.tools.float_utils import float_is_zero
 from odoo.tools.misc import OrderedSet
+from odoo.addons import stock
 
 
-class StockMoveLine(models.Model):
-    _inherit = ["stock.move.line"]
+class StockMoveLine(stock.StockMoveLine):
 
     batch_id = fields.Many2one(related='picking_id.batch_id', store=True)
 

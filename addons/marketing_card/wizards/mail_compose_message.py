@@ -2,13 +2,13 @@ import re
 from markupsafe import Markup
 
 from odoo import api, models
+from odoo.addons import mass_mailing
 
 CARD_IMAGE_URL = re.compile(r'src=".*?/web/image/card.campaign/[0-9]+/image_preview"')
 CARD_PREVIEW_URL = re.compile(r'href=".*?/cards/[0-9]+/preview"')
 
 
-class MailComposeMessage(models.TransientModel):
-    _inherit = ['mail.compose.message']
+class MailComposeMessage(mass_mailing.MailComposeMessage):
 
     def _prepare_mail_values_dynamic(self, res_ids):
         """Replace generic card urls with the specific res_id url."""

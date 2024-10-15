@@ -3,10 +3,10 @@
 
 from odoo import models, _
 from odoo.exceptions import UserError
+from odoo.addons import stock
 
 
-class StockLot(models.Model):
-    _inherit = ['stock.lot']
+class StockLot(stock.StockLot):
 
     def _check_create(self):
         active_mo_id = self.env.context.get('active_mo_id')

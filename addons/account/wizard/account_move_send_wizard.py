@@ -1,10 +1,10 @@
 from odoo import api, fields, models
 from odoo.tools.misc import get_lang
+from odoo.addons import account
 
 
-class AccountMoveSendWizard(models.TransientModel):
+class AccountMoveSendWizard(models.TransientModel, account.AccountMoveSend):
     """Wizard that handles the sending a single invoice."""
-    _inherit = ['account.move.send']
     _description = "Account Move Send Wizard"
 
     move_id = fields.Many2one(comodel_name='account.move', required=True)

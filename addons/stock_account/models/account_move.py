@@ -2,10 +2,10 @@
 
 from odoo import fields, models, api
 from odoo.tools import float_is_zero
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     stock_move_id = fields.Many2one('stock.move', string='Stock Move', index='btree_not_null')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_id', string='Stock Valuation Layer')
@@ -237,8 +237,7 @@ class AccountMove(models.Model):
         return []
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(account.AccountMoveLine):
 
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_line_id', string='Stock Valuation Layer')
     cogs_origin_id = fields.Many2one(  # technical field used to keep track in the originating line of the anglo-saxon lines

@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.tools.misc import format_datetime
+from odoo.addons import stock
 
 
-class StockQuantityHistory(models.TransientModel):
-    _inherit = ['stock.quantity.history']
+class StockQuantityHistory(stock.StockQuantityHistory):
 
     def open_at_date(self):
         active_model = self.env.context.get('active_model')

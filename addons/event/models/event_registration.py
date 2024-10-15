@@ -7,12 +7,12 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.addons.event.tools.esc_label_tools import print_event_attendees, setup_printer, layout_96x82, layout_96x134
 from odoo.tools import email_normalize, email_normalize_all
 from odoo.exceptions import AccessError, ValidationError
+from odoo.addons import portal, mail
 _logger = logging.getLogger(__name__)
 
 
-class EventRegistration(models.Model):
+class EventRegistration(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin):
     _description = 'Event Registration'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
 
     @api.model

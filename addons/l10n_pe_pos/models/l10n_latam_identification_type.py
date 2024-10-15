@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
+from odoo.addons import point_of_sale, l10n_pe
 
 
-class L10n_LatamIdentificationType(models.Model):
-    _inherit = ['l10n_latam.identification.type', 'pos.load.mixin']
+class L10n_LatamIdentificationType(l10n_pe.L10n_LatamIdentificationType, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):

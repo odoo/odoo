@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
+from odoo.addons import website_profile
 
 
-class Website(models.Model):
-    _inherit = ['website']
+class Website(website_profile.Website):
 
     forum_count = fields.Integer(readonly=True, default=0)
 

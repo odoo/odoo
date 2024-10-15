@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
+from odoo.addons import website_sale_stock, base_geolocalize
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(base_geolocalize.ResConfigSettings, website_sale_stock.ResConfigSettings):
 
     def action_view_in_store_delivery_methods(self):
         """ Return an action to browse pickup delivery methods in list view, or in form view if

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import hr
 
 
-class HrEmployee(models.Model):
-    _inherit = ["hr.employee"]
+class HrEmployee(hr.HrEmployee):
 
     # YTI Rename into candidate_ids
     candidate_id = fields.One2many('hr.candidate', 'employee_id', 'Candidate', groups="hr.group_hr_user")

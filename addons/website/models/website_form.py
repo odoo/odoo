@@ -5,10 +5,10 @@ from ast import literal_eval
 from odoo import models, fields, api, SUPERUSER_ID
 from odoo.http import request
 from odoo.osv import expression
+from odoo.addons import web, mail, website
 
 
-class Website(models.Model):
-    _inherit = ['website']
+class Website(models.Model, website.Website):
 
     def _website_form_last_record(self):
         if request and request.session.form_builder_model_model:
@@ -16,9 +16,8 @@ class Website(models.Model):
         return False
 
 
-class IrModel(models.Model):
+class IrModel(web.IrModel, mail.IrModel):
     _description = 'Models'
-    _inherit = ['ir.model']
 
     website_form_access = fields.Boolean('Allowed to use in forms', help='Enable the form builder feature for this model.')
     website_form_default_field_id = fields.Many2one('ir.model.fields', 'Field for custom form data', domain="[('model', '=', model), ('ttype', '=', 'text')]", help="Specify the field which will contain meta and custom form fields datas.")
@@ -127,10 +126,9 @@ class IrModel(models.Model):
         )
 
 
-class IrModelFields(models.Model):
+class IrModelFields(mail.IrModelFields):
     """ fields configuration for form builder """
     _description = 'Fields'
-    _inherit = ['ir.model.fields']
 
     def init(self):
         # set all existing unset website_form_blacklisted fields to ``true``

@@ -2,11 +2,11 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.osv import expression
+from odoo.addons import hr
 
 
-class HrLeaveReport(models.Model):
+class HrLeaveReport(models.Model, hr.HrManagerDepartmentReport):
     _description = 'Time Off Summary / Report'
-    _inherit = ["hr.manager.department.report"]
     _auto = False
     _order = "date_from DESC, employee_id"
 

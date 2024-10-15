@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, models
 from odoo.osv import expression
 from odoo.tools import html2plaintext
+from odoo.addons import survey
 
 
-class SurveyUser_Input(models.Model):
-    _inherit = ['survey.user_input']
+class SurveyUser_Input(survey.SurveyUser_Input):
 
     def _mark_done(self):
         """ Will add certification to employee's resume if

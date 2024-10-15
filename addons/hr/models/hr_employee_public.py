@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.addons import hr
 
 
-class HrEmployeePublic(models.Model):
-    _inherit = ["hr.employee.base"]
+class HrEmployeePublic(models.Model, hr.HrEmployeeBase):
     _description = 'Public Employee'
     _order = 'name'
     _auto = False

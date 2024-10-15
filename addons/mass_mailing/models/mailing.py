@@ -25,6 +25,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from odoo.tools.image import ImageProcess
+from odoo.addons import utm, mail, link_tracker
 
 _logger = logging.getLogger(__name__)
 
@@ -38,14 +39,9 @@ DEFAULT_IMAGE_CHUNK_SIZE = 32768
 mso_re = re.compile(r"\[if mso\]>[\s\S]*<!\[endif\]")
 
 
-class MailingMailing(models.Model):
+class MailingMailing(models.Model, mail.MailThread, mail.MailActivityMixin, mail.MailRenderMixin, link_tracker.MailRenderMixin, utm.UtmSourceMixin):
     """ Mass Mailing models the sending of emails to a list of recipients for a mass mailing campaign."""
     _description = 'Mass Mailing'
-    _inherit = ['mail.thread',
-                'mail.activity.mixin',
-                'mail.render.mixin',
-                'utm.source.mixin'
-    ]
     _order = 'calendar_date DESC'
     _rec_name = "subject"
     _systray_view = 'list'

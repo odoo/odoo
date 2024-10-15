@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import mass_mailing, website
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(website.ResCompany, mass_mailing.ResCompany):
 
     def _get_social_media_links(self):
         social_media_links = super()._get_social_media_links()

@@ -5,10 +5,10 @@ from datetime import timedelta
 
 
 from odoo import api, fields, models, _
+from odoo.addons import base_setup
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(base_setup.ResUsers):
 
     microsoft_calendar_rtoken = fields.Char('Microsoft Refresh Token', copy=False, groups="base.group_system")
     microsoft_calendar_token = fields.Char('Microsoft User token', copy=False, groups="base.group_system")

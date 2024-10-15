@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import website_crm
 
 
-class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+class CrmLead(website_crm.CrmLead):
 
     visitor_sessions_count = fields.Integer('# Sessions', compute="_compute_visitor_sessions_count", groups="im_livechat.im_livechat_group_user")
 

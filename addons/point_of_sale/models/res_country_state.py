@@ -1,8 +1,8 @@
 from odoo import models, api
+from odoo.addons import point_of_sale, base
 
 
-class ResCountryState(models.Model):
-    _inherit = ['res.country.state', 'pos.load.mixin']
+class ResCountryState(base.ResCountryState, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

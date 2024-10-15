@@ -1,8 +1,8 @@
 from odoo import models, fields, api
+from odoo.addons import point_of_sale
 
 
-class PosPayment(models.Model):
-    _inherit = ["pos.payment"]
+class PosPayment(point_of_sale.PosPayment):
 
     employee_id = fields.Many2one('hr.employee', string='Cashier', related='pos_order_id.employee_id', store=True, index=True)
 

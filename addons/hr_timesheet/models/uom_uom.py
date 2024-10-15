@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import uom
 
 
-class UomUom(models.Model):
-    _inherit = ['uom.uom']
+class UomUom(uom.UomUom):
 
     def _unprotected_uom_xml_ids(self):
         # Override

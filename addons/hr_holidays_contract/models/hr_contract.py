@@ -3,10 +3,10 @@
 from datetime import date
 from odoo import api, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import hr_contract
 
 
-class HrContract(models.Model):
-    _inherit = ['hr.contract']
+class HrContract(hr_contract.HrContract):
     _description = 'Employee Contract'
 
     @api.constrains('date_start', 'date_end', 'state')

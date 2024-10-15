@@ -1,14 +1,13 @@
 from odoo import fields, models
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
-    _inherit = ["account.tax"]
+class AccountTax(account.AccountTax):
 
     l10n_de_datev_code = fields.Char(size=4, help="4 digits code use by Datev", tracking=True)
 
 
-class ProductTemplate(models.Model):
-    _inherit = ["product.template"]
+class ProductTemplate(account.ProductTemplate):
 
     def _get_product_accounts(self):
         """ As taxes with a different rate need a different income/expense account, we add this logic in case people only use

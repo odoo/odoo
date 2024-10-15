@@ -10,12 +10,12 @@ from odoo.fields import Command
 
 from odoo.addons.payment_authorize import const
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
+from odoo.addons import payment
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('authorize', 'Authorize.Net')], ondelete={'authorize': 'set default'})

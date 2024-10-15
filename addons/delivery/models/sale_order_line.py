@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import sale
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(sale.SaleOrderLine):
 
     is_delivery = fields.Boolean(string="Is a Delivery", default=False)
     product_qty = fields.Float(

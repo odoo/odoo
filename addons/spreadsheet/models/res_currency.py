@@ -1,8 +1,8 @@
 from odoo import api, models
+from odoo.addons import base
 
 
-class ResCurrency(models.Model):
-    _inherit = ["res.currency"]
+class ResCurrency(base.ResCurrency):
 
     @api.model
     def get_company_currency_for_spreadsheet(self, company_id=None):

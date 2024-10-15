@@ -2,10 +2,10 @@
 
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.addons import point_of_sale
 
 
-class AccountFiscalPosition(models.Model):
-    _inherit = ["account.fiscal.position"]
+class AccountFiscalPosition(point_of_sale.AccountFiscalPosition):
 
     def write(self, vals):
         if "tax_ids" in vals:

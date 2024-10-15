@@ -11,6 +11,7 @@ from stdnum.eu.vat import check_vies
 
 from odoo import api, fields, models, _
 from odoo.tools.image import base64_to_image
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
@@ -25,8 +26,7 @@ VAT_COUNTRY_MAPPING = {
 }
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(mail.ResPartner):
 
     partner_gid = fields.Integer('Company database ID')
     additional_info = fields.Char('Additional info')

@@ -3,10 +3,10 @@
 
 
 from odoo import models, fields
+from odoo.addons import account_edi
 
 
-class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+class AccountJournal(account_edi.AccountJournal):
 
     l10n_eg_branch_id = fields.Many2one('res.partner', string='Branch', copy=False,
                                         help="Address of the subdivision of the company.  You can just put the "

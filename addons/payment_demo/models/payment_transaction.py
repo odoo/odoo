@@ -4,12 +4,12 @@ import logging
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import payment
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = ['payment.transaction']
+class PaymentTransaction(payment.PaymentTransaction):
 
     capture_manually = fields.Boolean(related='provider_id.capture_manually')
 

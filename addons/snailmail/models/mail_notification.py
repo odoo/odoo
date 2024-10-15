@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
+from odoo.addons import mail
 
 
-class MailNotification(models.Model):
-    _inherit = ['mail.notification']
+class MailNotification(mail.MailNotification):
 
     notification_type = fields.Selection(selection_add=[('snail', 'Snailmail')], ondelete={'snail': 'cascade'})
     letter_id = fields.Many2one('snailmail.letter', string="Snailmail Letter", index='btree_not_null', ondelete='cascade')

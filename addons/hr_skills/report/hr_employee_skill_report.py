@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, tools
+from odoo.addons import hr
 
 
-class HrEmployeeSkillReport(models.BaseModel):
+class HrEmployeeSkillReport(models.BaseModel, hr.HrManagerDepartmentReport):
     _auto = False
-    _inherit = ["hr.manager.department.report"]
     _description = 'Employee Skills Report'
     _order = 'employee_id, level_progress desc'
 

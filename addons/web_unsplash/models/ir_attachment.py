@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import html_editor
 
 
-class IrAttachment(models.Model):
+class IrAttachment(html_editor.IrAttachment):
 
-    _inherit = ["ir.attachment"]
 
     def _can_bypass_rights_on_media_dialog(self, **attachment_data):
         # We need to allow and sudo the case of an "url + file" attachment,

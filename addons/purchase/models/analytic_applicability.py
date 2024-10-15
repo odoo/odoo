@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
+from odoo.addons import account
 
 
-class AccountAnalyticApplicability(models.Model):
-    _inherit = ['account.analytic.applicability']
+class AccountAnalyticApplicability(account.AccountAnalyticApplicability):
     _description = "Analytic Plan's Applicabilities"
 
     business_domain = fields.Selection(

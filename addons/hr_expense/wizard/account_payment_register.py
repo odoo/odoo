@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
+from odoo.addons import account
 
 
-class AccountPaymentRegister(models.TransientModel):
-    _inherit = ['account.payment.register']
+class AccountPaymentRegister(account.AccountPaymentRegister):
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS

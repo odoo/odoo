@@ -3,10 +3,10 @@
 
 from odoo import models
 from stdnum import luhn
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(account.AccountMove):
 
     def _get_invoice_reference_no_invoice(self):
         """ This computes the reference based on the Odoo format.

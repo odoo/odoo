@@ -1,8 +1,8 @@
 from odoo import models, fields
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
-    _inherit = ['account.tax']
+class AccountTax(account.AccountTax):
     _description = 'ETA tax codes mixin'
 
     l10n_eg_eta_code = fields.Selection(

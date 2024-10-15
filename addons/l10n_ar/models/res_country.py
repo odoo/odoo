@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import base
 
 
-class ResCountry(models.Model):
+class ResCountry(base.ResCountry):
 
-    _inherit = ['res.country']
 
     l10n_ar_afip_code = fields.Char('AFIP Code', size=3, help='This code will be used on electronic invoice')
     l10n_ar_natural_vat = fields.Char(

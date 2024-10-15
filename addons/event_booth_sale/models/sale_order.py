@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.addons import event_sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(event_sale.SaleOrder):
 
     event_booth_ids = fields.One2many('event.booth', 'sale_order_id', string='Booths')
     event_booth_count = fields.Integer(string='Booth Count', compute='_compute_event_booth_count')

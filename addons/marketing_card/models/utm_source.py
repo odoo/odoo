@@ -1,8 +1,8 @@
 from odoo import _, api, models, exceptions
+from odoo.addons import mass_mailing
 
 
-class UtmSource(models.Model):
-    _inherit = ['utm.source']
+class UtmSource(mass_mailing.UtmSource):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_utm_source_marketing_card(self):

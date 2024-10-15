@@ -1,8 +1,8 @@
 from odoo import _, api, exceptions, fields, models, osv
+from odoo.addons import mass_mailing
 
 
-class MailingMailing(models.Model):
-    _inherit = ['mailing.mailing']
+class MailingMailing(mass_mailing.MailingMailing):
 
     mailing_model_id = fields.Many2one(compute="_compute_mailing_model_id", store=True, readonly=False)
     card_requires_sync_count = fields.Integer(compute="_compute_card_requires_sync_count")

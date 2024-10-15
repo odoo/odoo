@@ -8,10 +8,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import models, api, _
 from odoo.osv import expression
 from odoo.tools import date_utils
+from odoo.addons import account
 
 
-class AccountAccount(models.Model):
-    _inherit = ["account.account"]
+class AccountAccount(account.AccountAccount):
 
     @api.model
     def _get_date_period_boundaries(self, date_period, company):

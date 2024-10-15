@@ -2,13 +2,13 @@
 
 from odoo import models
 from odoo.http import request
+from odoo.addons import web, bus
 
 
 CONTEXT_KEYS = ['editable', 'edit_translations', 'translatable']
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(bus.IrHttp, web.IrHttp):
 
     @classmethod
     def _get_web_editor_context(cls):

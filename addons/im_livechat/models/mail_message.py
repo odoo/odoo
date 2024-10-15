@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import rating, mail
 
 
-class MailMessage(models.Model):
-    _inherit = ['mail.message']
+class MailMessage(mail.MailMessage, rating.MailMessage):
 
     parent_author_name = fields.Char(compute="_compute_parent_author_name")
     parent_body = fields.Html(compute="_compute_parent_body")

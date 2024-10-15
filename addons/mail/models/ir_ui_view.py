@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models
+from odoo.addons import web
 
 
-class IrUiView(models.Model):
-    _inherit = ['ir.ui.view']
+class IrUiView(web.IrUiView):
 
     type = fields.Selection(selection_add=[('activity', 'Activity')])
 

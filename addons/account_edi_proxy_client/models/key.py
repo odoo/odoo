@@ -1,10 +1,10 @@
 from cryptography.fernet import Fernet
 
 from odoo import api, models
+from odoo.addons import certificate
 
 
-class CertificateKey(models.Model):
-    _inherit = ['certificate.key']
+class CertificateKey(certificate.CertificateKey):
 
     @api.model
     def _account_edi_fernet_decrypt(self, key, message):

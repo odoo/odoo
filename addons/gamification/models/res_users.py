@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models
 from odoo.tools import SQL
+from odoo.addons import mail
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(mail.ResUsers):
 
     karma = fields.Integer('Karma', compute='_compute_karma', store=True, readonly=False)
     karma_tracking_ids = fields.One2many('gamification.karma.tracking', 'user_id', string='Karma Changes', groups="base.group_system")

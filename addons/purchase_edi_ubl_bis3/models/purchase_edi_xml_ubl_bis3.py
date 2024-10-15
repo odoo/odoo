@@ -2,10 +2,10 @@ from lxml import etree
 
 from odoo import models, _
 from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.addons import account_edi_ubl_cii
 
 
-class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
-    _inherit = ['account.edi.xml.ubl_bis3']
+class PurchaseEdiXmlUbl_Bis3(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl_Bis3):
     _description = "UBL BIS 3 Peppol Order transaction 3.4"
 
     # -------------------------------------------------------------------------

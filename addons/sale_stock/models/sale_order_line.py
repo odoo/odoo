@@ -8,10 +8,10 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import float_compare
 from odoo.exceptions import UserError
+from odoo.addons import sale
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(sale.SaleOrderLine):
 
     qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
     route_id = fields.Many2one('stock.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')

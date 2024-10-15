@@ -1,5 +1,6 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
 EXEMPTION_REASON_CODES = [
@@ -21,8 +22,7 @@ EXEMPTION_REASON_CODES = [
 ]
 
 
-class AccountTax(models.Model):
-    _inherit = ['account.tax']
+class AccountTax(account.AccountTax):
 
     l10n_sa_is_retention = fields.Boolean("Is Retention", default=False,
                                           help="Determines whether or not a tax counts as a Withholding Tax")

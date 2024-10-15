@@ -5,6 +5,7 @@ from lxml import etree
 from odoo import models, fields
 from odoo.tools.misc import file_path
 import re
+from odoo.addons import account_edi_ubl_cii
 
 TAX_EXEMPTION_CODES = ['VATEX-SA-29', 'VATEX-SA-29-7', 'VATEX-SA-30']
 TAX_ZERO_RATE_CODES = ['VATEX-SA-32', 'VATEX-SA-33', 'VATEX-SA-34-1', 'VATEX-SA-34-2', 'VATEX-SA-34-3', 'VATEX-SA-34-4',
@@ -19,8 +20,7 @@ PAYMENT_MEANS_CODE = {
 }
 
 
-class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
-    _inherit = ['account.edi.xml.ubl_21']
+class AccountEdiXmlUbl_21Zatca(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl_21):
     _description = "UBL 2.1 (ZATCA)"
 
     def _l10n_sa_get_namespaces(self):

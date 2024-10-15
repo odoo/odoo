@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models, fields
+from odoo.addons import im_livechat
 
 
-class ChatbotScriptStep(models.Model):
-    _inherit = ['chatbot.script.step']
+class ChatbotScriptStep(im_livechat.ChatbotScriptStep):
 
     step_type = fields.Selection(
         selection_add=[('create_lead', 'Create Lead')], ondelete={'create_lead': 'cascade'})

@@ -4,10 +4,10 @@ from markupsafe import Markup
 
 from odoo import models
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import bus
 
 
-class BusListenerMixin(models.AbstractModel):
-    _inherit = ["bus.listener.mixin"]
+class BusListenerMixin(bus.BusListenerMixin):
 
     def _bus_send_transient_message(self, channel, content):
         """Posts a fake message in the given ``channel``, only visible for ``self`` listeners."""

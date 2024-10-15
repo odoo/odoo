@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import base
 
 
-class IrBinary(models.AbstractModel):
-    _inherit = ["ir.binary"]
+class IrBinary(base.IrBinary):
 
     def _find_record_check_access(self, record, access_token, field):
         if record._name in ["res.partner", "mail.guest"] and field == "avatar_128":

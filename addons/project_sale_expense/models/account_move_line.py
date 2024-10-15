@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale_expense, sale_project
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(sale_project.AccountMoveLine, sale_expense.AccountMoveLine):
 
     def _sale_determine_order(self):
         """ For move lines created from expense, we override the normal behavior.

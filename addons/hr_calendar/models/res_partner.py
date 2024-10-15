@@ -9,10 +9,10 @@ from odoo import api, models
 
 from odoo.osv import expression
 from odoo.addons.resource.models.utils import Intervals
+from odoo.addons import calendar, hr
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(hr.ResPartner, calendar.ResPartner):
 
     def _get_employees_from_attendees(self, everybody=False):
         domain = [

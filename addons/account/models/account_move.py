@@ -35,6 +35,7 @@ from odoo.tools import (
     SQL,
 )
 from odoo.tools.mail import email_re, email_split, is_html_empty
+from odoo.addons import account, portal, product, mail
 
 
 _logger = logging.getLogger(__name__)
@@ -76,8 +77,7 @@ ALLOWED_MIMETYPES = {
 EMPTY = object()
 
 
-class AccountMove(models.Model):
-    _inherit = ['portal.mixin', 'mail.thread.main.attachment', 'mail.activity.mixin', 'sequence.mixin', 'product.catalog.mixin']
+class AccountMove(models.Model, portal.PortalMixin, mail.MailThreadMainAttachment, mail.MailActivityMixin, account.SequenceMixin, product.ProductCatalogMixin):
     _description = "Journal Entry"
     _order = 'date desc, name desc, invoice_date desc, id desc'
     _mail_post_access = 'read'

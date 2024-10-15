@@ -2,10 +2,10 @@
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.addons import account, base_vat
 
 
-class AccountFiscalPosition(models.Model):
-    _inherit = ['account.fiscal.position']
+class AccountFiscalPosition(account.AccountFiscalPosition, base_vat.AccountFiscalPosition):
 
     @api.ondelete(at_uninstall=False)
     def _never_unlink_declaration_of_intent_fiscal_position(self):

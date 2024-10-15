@@ -14,14 +14,14 @@ from odoo.http import request
 from odoo.tools import sql
 
 from odoo.addons.auth_totp.models.totp import TOTP, TOTP_SECRET_SIZE
+from odoo.addons import web
 
 _logger = logging.getLogger(__name__)
 
 compress = functools.partial(re.sub, r'\s', '')
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(web.ResUsers):
 
     totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS, compute='_compute_totp_secret', inverse='_inverse_token')
     totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled', search='_totp_enable_search')

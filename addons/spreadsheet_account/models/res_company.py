@@ -1,10 +1,10 @@
 from odoo import models, api, fields
 
 from odoo.tools import date_utils
+from odoo.addons import account
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(account.ResCompany):
 
     @api.model
     def get_fiscal_dates(self, payload):

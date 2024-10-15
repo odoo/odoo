@@ -10,14 +10,14 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_round, lazy, str2bool
+from odoo.addons import sale
 
 
 def _generate_random_reward_code():
     return str(random.getrandbits(32))
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale.SaleOrder):
 
     # Contains how much points should be given to a coupon upon validating the order
     applied_coupon_ids = fields.Many2many(

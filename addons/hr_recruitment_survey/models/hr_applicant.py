@@ -3,10 +3,10 @@
 from datetime import timedelta
 from odoo import fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import hr_recruitment
 
 
-class HrApplicant(models.Model):
-    _inherit = ["hr.applicant"]
+class HrApplicant(hr_recruitment.HrApplicant):
 
     survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=True)
     response_ids = fields.One2many('survey.user_input', 'applicant_id', string="Responses")

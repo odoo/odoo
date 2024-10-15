@@ -9,13 +9,13 @@ from odoo.exceptions import MissingError
 from odoo.http import request
 from odoo.modules.module import get_manifest
 from odoo.tools import escape_psql, split_every, SQL
+from odoo.addons import base
 
 _logger = logging.getLogger(__name__)
 
 
-class IrModuleModule(models.Model):
+class IrModuleModule(base.IrModuleModule):
     _description = 'Module'
-    _inherit = ['ir.module.module']
 
     # The order is important because of dependencies (page need view, menu need page)
     _theme_model_names = OrderedDict([

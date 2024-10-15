@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models
+from odoo.addons import account_edi_ubl_cii
 
 
-class AccountEdiXmlUbl_Sg(models.AbstractModel):
-    _inherit = ["account.edi.xml.ubl_bis3"]
+class AccountEdiXmlUbl_Sg(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl_Bis3):
     _description = "SG BIS Billing 3.0"
 
     """

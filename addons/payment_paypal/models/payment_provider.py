@@ -13,13 +13,13 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment_paypal import const
 from odoo.addons.payment_paypal.controllers.main import PaypalController
+from odoo.addons import payment
 
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('paypal', "PayPal")], ondelete={'paypal': 'set default'}

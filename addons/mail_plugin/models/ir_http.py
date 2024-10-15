@@ -5,10 +5,10 @@ from werkzeug.exceptions import BadRequest
 
 from odoo import models
 from odoo.http import request
+from odoo.addons import web
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(web.IrHttp):
 
     @classmethod
     def _auth_method_outlook(cls):

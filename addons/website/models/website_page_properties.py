@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import website
 
 
 class WebsitePagePropertiesBase(models.TransientModel):
@@ -127,11 +128,8 @@ class WebsitePagePropertiesBase(models.TransientModel):
         return not view.visibility
 
 
-class WebsitePageProperties(models.TransientModel):
+class WebsitePageProperties(models.TransientModel, website.WebsitePagePropertiesBase):
     _description = "Page Properties"
-    _inherit = [
-        'website.page.properties.base',
-    ]
 
     target_model_id = fields.Many2one('website.page')
     name = fields.Char(related='target_model_id.name', readonly=False)

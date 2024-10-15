@@ -2,18 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import hr
 
 
-class HrEmployee(models.Model):
-    _inherit = ["hr.employee"]
+class HrEmployee(hr.HrEmployee):
 
     subordinate_ids = fields.One2many('hr.employee', string='Subordinates', compute='_compute_subordinates', help="Direct and indirect subordinates",
                                       compute_sudo=True)
     is_subordinate = fields.Boolean(compute="_compute_is_subordinate", search="_search_is_subordinate")
 
 
-class HrEmployeePublic(models.Model):
-    _inherit = ["hr.employee.public"]
+class HrEmployeePublic(hr.HrEmployeePublic):
 
     subordinate_ids = fields.One2many('hr.employee.public', string='Subordinates', compute='_compute_subordinates', help="Direct and indirect subordinates",
                                       compute_sudo=True)

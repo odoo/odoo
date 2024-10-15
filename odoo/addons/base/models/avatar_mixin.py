@@ -5,6 +5,7 @@ from base64 import b64encode
 from hashlib import sha512
 from odoo import models, fields, api
 from odoo.tools import html_escape, file_open
+from odoo.addons import base
 
 
 def get_hsl_from_seed(seed):
@@ -18,8 +19,7 @@ def get_hsl_from_seed(seed):
     return f'hsl({hue:.0f}, {sat:.0f}%, {lig:.0f}%)'
 
 
-class AvatarMixin(models.AbstractModel):
-    _inherit = ['image.mixin']
+class AvatarMixin(models.AbstractModel, base.ImageMixin):
     _description = "Avatar Mixin"
     _avatar_name_field = "name"
 

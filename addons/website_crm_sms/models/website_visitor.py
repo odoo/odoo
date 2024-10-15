@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import website_sms
 
 
-class WebsiteVisitor(models.Model):
-    _inherit = ['website.visitor']
+class WebsiteVisitor(website_sms.WebsiteVisitor):
 
     def _check_for_sms_composer(self):
         check = super(WebsiteVisitor, self)._check_for_sms_composer()

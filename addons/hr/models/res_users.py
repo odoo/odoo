@@ -6,6 +6,7 @@ from markupsafe import Markup
 from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.tools.misc import clean_context
+from odoo.addons import base_setup, digest, web, phone_validation
 
 
 HR_READABLE_FIELDS = [
@@ -75,8 +76,7 @@ HR_WRITABLE_FIELDS = [
 ]
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(base_setup.ResUsers, digest.ResUsers, phone_validation.ResUsers, web.ResUsers):
 
     def _employee_ids_domain(self):
         # employee_ids is considered a safe field and as such will be fetched as sudo.

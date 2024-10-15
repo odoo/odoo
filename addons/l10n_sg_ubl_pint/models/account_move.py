@@ -1,10 +1,10 @@
 import uuid
 
 from odoo import models
+from odoo.addons import account_edi_ubl_cii
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account_edi_ubl_cii.AccountMove):
 
     def _l10n_sg_get_uuid(self):
         """ SG Pint requires us to generate a uuid, to avoid storing a new field on the move,

@@ -8,12 +8,12 @@ from odoo.tools import float_round
 from odoo.tools.misc import clean_context
 
 from collections import defaultdict
+from odoo.addons import product, mail
 
 
-class MrpBom(models.Model):
+class MrpBom(models.Model, mail.MailThread, product.ProductCatalogMixin):
     """ Defines bills of material for a product or a product template """
     _description = 'Bill of Material'
-    _inherit = ['mail.thread', 'product.catalog.mixin']
     _rec_name = 'product_tmpl_id'
     _rec_names_search = ['product_tmpl_id', 'code']
     _order = "sequence, id"

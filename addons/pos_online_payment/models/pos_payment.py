@@ -4,12 +4,12 @@
 import logging
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import point_of_sale
 
 _logger = logging.getLogger(__name__)
 
 
-class PosPayment(models.Model):
-    _inherit = ['pos.payment']
+class PosPayment(point_of_sale.PosPayment):
 
     online_account_payment_id = fields.Many2one('account.payment', string='Online accounting payment', readonly=True) # One2one
 

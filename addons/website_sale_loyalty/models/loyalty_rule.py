@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import loyalty
 
 
-class LoyaltyRule(models.Model):
-    _inherit = ['loyalty.rule']
+class LoyaltyRule(loyalty.LoyaltyRule):
 
     website_id = fields.Many2one(related='program_id.website_id', store=True)
 

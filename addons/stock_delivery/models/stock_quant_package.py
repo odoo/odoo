@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import stock
 
 
-class StockQuantPackage(models.Model):
-    _inherit = ["stock.quant.package"]
+class StockQuantPackage(stock.StockQuantPackage):
 
     @api.depends('quant_ids', 'package_type_id')
     def _compute_weight(self):

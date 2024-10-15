@@ -11,11 +11,11 @@ from odoo.exceptions import AccessDenied, UserError
 from odoo.addons.auth_signup.models.res_users import SignupError
 
 from odoo.addons import base
+from odoo.addons import web, auth_signup, base_setup
 base.models.res_users.USER_PRIVATE_FIELDS.append('oauth_access_token')
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(web.ResUsers, base_setup.ResUsers, auth_signup.ResUsers):
 
     oauth_provider_id = fields.Many2one('auth.oauth.provider', string='OAuth Provider')
     oauth_uid = fields.Char(string='OAuth User ID', help="Oauth Provider user_id", copy=False)

@@ -9,6 +9,7 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import html_translate
+from odoo.addons import test_new_api
 
 _logger = logging.getLogger('precompute_setter')
 
@@ -293,8 +294,7 @@ class Test_New_ApiMultiLine(models.Model):
     tags = fields.Many2many('test_new_api.multi.tag')
 
 
-class Test_New_ApiMultiLine2(models.Model):
-    _inherit = ['test_new_api.multi.line']
+class Test_New_ApiMultiLine2(models.Model, test_new_api.Test_New_ApiMultiLine):
     _description = 'Test New API Multi Line 2'
 
 
@@ -1153,8 +1153,7 @@ class Test_New_ApiMixin(models.AbstractModel):
 
 
 # pylint: disable=E0102
-class Test_New_ApiDisplay(models.Model):  # noqa: F811
-    _inherit = ['test_new_api.mixin', 'test_new_api.display']
+class Test_New_ApiDisplay(models.Model, test_new_api.Test_New_ApiMixin, test_new_api.Test_New_ApiDisplay):  # noqa: F811
 
 
 class Test_New_ApiModel_Active_Field(models.Model):
@@ -1275,8 +1274,7 @@ class Test_New_ApiModel_Selection_Base(models.Model):
 
 
 # pylint: disable=E0102
-class Test_New_ApiModel_Selection_Base(models.Model):  # noqa: F811
-    _inherit = ['test_new_api.model_selection_base']
+class Test_New_ApiModel_Selection_Base(models.Model, test_new_api.Test_New_ApiModel_Selection_Base):  # noqa: F811
     _description = "Model with a selection field extension with ondelete null"
 
     my_selection = fields.Selection(selection_add=[
@@ -1285,8 +1283,7 @@ class Test_New_ApiModel_Selection_Base(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class Test_New_ApiModel_Selection_Base(models.Model):  # noqa: F811
-    _inherit = ['test_new_api.model_selection_base']
+class Test_New_ApiModel_Selection_Base(models.Model, test_new_api.Test_New_ApiModel_Selection_Base):  # noqa: F811
     _description = "Model with a selection field extension without ondelete"
 
     my_selection = fields.Selection(selection_add=[
@@ -1330,8 +1327,7 @@ class Test_New_ApiModel_Selection_Required(models.Model):
 
 
 # pylint: disable=E0102
-class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
-    _inherit = ['test_new_api.model_selection_required']
+class Test_New_ApiModel_Selection_Required(models.Model, test_new_api.Test_New_ApiModel_Selection_Required):  # noqa: F811
     _description = "Model with a selection field extension with ondelete default"
 
     my_selection = fields.Selection(selection_add=[
@@ -1340,8 +1336,7 @@ class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
-    _inherit = ['test_new_api.model_selection_required']
+class Test_New_ApiModel_Selection_Required(models.Model, test_new_api.Test_New_ApiModel_Selection_Required):  # noqa: F811
     _description = "Model with a selection field extension with ondelete cascade"
 
     my_selection = fields.Selection(selection_add=[
@@ -1350,8 +1345,7 @@ class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
-    _inherit = ['test_new_api.model_selection_required']
+class Test_New_ApiModel_Selection_Required(models.Model, test_new_api.Test_New_ApiModel_Selection_Required):  # noqa: F811
     _description = "Model with a selection field extension with ondelete set <option>"
 
     my_selection = fields.Selection(selection_add=[
@@ -1360,8 +1354,7 @@ class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
-    _inherit = ['test_new_api.model_selection_required']
+class Test_New_ApiModel_Selection_Required(models.Model, test_new_api.Test_New_ApiModel_Selection_Required):  # noqa: F811
     _description = "Model with a selection field extension with multiple ondelete policies"
 
     my_selection = fields.Selection(selection_add=[
@@ -1371,8 +1364,7 @@ class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
 
 
 # pylint: disable=E0102
-class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
-    _inherit = ['test_new_api.model_selection_required']
+class Test_New_ApiModel_Selection_Required(models.Model, test_new_api.Test_New_ApiModel_Selection_Required):  # noqa: F811
     _description = "Model with a selection field extension with ondelete callback"
 
     my_selection = fields.Selection(selection_add=[
@@ -1401,8 +1393,7 @@ class Test_New_ApiModel_Selection_Required_For_Write_Override(models.Model):
 
 
 # pylint: disable=E0102
-class Test_New_ApiModel_Selection_Required_For_Write_Override(models.Model):  # noqa: F811
-    _inherit = ['test_new_api.model_selection_required_for_write_override']
+class Test_New_ApiModel_Selection_Required_For_Write_Override(models.Model, test_new_api.Test_New_ApiModel_Selection_Required_For_Write_Override):  # noqa: F811
 
     my_selection = fields.Selection(selection_add=[
         ('divinity', "Divinity: Original Sin 2"),

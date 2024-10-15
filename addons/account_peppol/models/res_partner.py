@@ -10,13 +10,13 @@ from urllib import parse
 from odoo import api, fields, models
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons import account_edi_ubl_cii
 
 TIMEOUT = 10
 NON_PEPPOL_FORMAT = (False, 'facturx', 'oioubl_201', 'ciusro')
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account_edi_ubl_cii.ResPartner):
 
     invoice_sending_method = fields.Selection(
         selection_add=[('peppol', 'by Peppol')],

@@ -1,8 +1,8 @@
 from odoo import api,models
+from odoo.addons import purchase_stock
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = ['purchase.order.line']
+class PurchaseOrderLine(purchase_stock.PurchaseOrderLine):
 
     def _prepare_account_move_line(self, move=False):
         res = super()._prepare_account_move_line(move)

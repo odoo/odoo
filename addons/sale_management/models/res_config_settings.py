@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import digest, sale
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(sale.ResConfigSettings, digest.ResConfigSettings):
 
     group_sale_order_template = fields.Boolean(
         "Quotation Templates", implied_group='sale_management.group_sale_order_template')

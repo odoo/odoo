@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.osv.expression import OR
+from odoo.addons import mrp_subcontracting
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(mrp_subcontracting.StockPicking):
 
     def action_view_stock_valuation_layers(self):
         action = super(StockPicking, self).action_view_stock_valuation_layers()

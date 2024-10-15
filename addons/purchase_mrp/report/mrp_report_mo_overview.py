@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import mrp
 
 
-class ReportMrpReport_Mo_Overview(models.AbstractModel):
-    _inherit = ['report.mrp.report_mo_overview']
+class ReportMrpReport_Mo_Overview(mrp.ReportMrpReport_Mo_Overview):
 
     def _get_extra_replenishments(self, product):
         res = super()._get_extra_replenishments(product)

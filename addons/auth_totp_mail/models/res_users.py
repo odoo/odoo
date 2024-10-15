@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
+from odoo.addons import auth_totp, mail
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(auth_totp.ResUsers, mail.ResUsers):
 
     def write(self, vals):
         res = super().write(vals)

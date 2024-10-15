@@ -7,10 +7,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_round
+from odoo.addons import utm, link_tracker
 
 
-class UtmCampaign(models.Model):
-    _inherit = ['utm.campaign']
+class UtmCampaign(utm.UtmCampaign, link_tracker.UtmCampaign):
 
     mailing_mail_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',

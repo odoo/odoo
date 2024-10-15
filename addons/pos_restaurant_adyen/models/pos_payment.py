@@ -5,12 +5,12 @@ import json
 import requests
 
 from odoo import models
+from odoo.addons import pos_restaurant
 
 TIMEOUT = 10
 
 
-class PosPayment(models.Model):
-    _inherit = ['pos.payment']
+class PosPayment(pos_restaurant.PosPayment):
 
     def _update_payment_line_for_tip(self, tip_amount):
         """Capture the payment when a tip is set."""

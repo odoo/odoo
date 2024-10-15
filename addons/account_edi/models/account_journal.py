@@ -5,10 +5,10 @@ from odoo import api, models, fields, _
 from odoo.exceptions import UserError
 
 from collections import defaultdict
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+class AccountJournal(account.AccountJournal):
 
     edi_format_ids = fields.Many2many(comodel_name='account.edi.format',
                                       string='Electronic invoicing',

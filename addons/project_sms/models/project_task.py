@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import project
 
 
-class ProjectTask(models.Model):
-    _inherit = ["project.task"]
+class ProjectTask(project.ProjectTask):
 
     def _send_sms(self):
         for task in self:

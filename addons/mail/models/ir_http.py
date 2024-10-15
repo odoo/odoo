@@ -4,10 +4,10 @@ import odoo
 from odoo import api, models, fields
 from odoo.http import request
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import base_setup, web_tour, bus
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(base_setup.IrHttp, bus.IrHttp, web_tour.IrHttp):
 
     def session_info(self):
         """Override to add the current user data (partner or guest) if applicable."""

@@ -8,12 +8,12 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.addons import base
 
 
-class LunchProduct(models.Model):
+class LunchProduct(models.Model, base.ImageMixin):
     """ Products available to order. A product is linked to a specific vendor. """
     _description = 'Lunch Product'
-    _inherit = ['image.mixin']
     _order = 'name'
     _check_company_auto = True
 

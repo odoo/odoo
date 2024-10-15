@@ -2,10 +2,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import sale
 
 
-class ProductDocument(models.Model):
-    _inherit = ['product.document']
+class ProductDocument(sale.ProductDocument):
 
     shown_on_product_page = fields.Boolean(string="Publish on website")
 

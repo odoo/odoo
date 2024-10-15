@@ -5,10 +5,10 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools import float_round, float_repr
+from odoo.addons import l10n_id
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(l10n_id.AccountMove):
 
     l10n_id_tax_number = fields.Char(string="Tax Number", copy=False)
     l10n_id_replace_invoice_id = fields.Many2one('account.move', string="Replace Invoice", domain="['|', '&', '&', ('state', '=', 'posted'), ('partner_id', '=', partner_id), ('reversal_move_ids', '!=', False), ('state', '=', 'cancel')]", copy=False, index='btree_not_null')

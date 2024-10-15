@@ -5,6 +5,7 @@ from urllib.parse import quote
 from odoo import api, models, fields
 from odoo.tools.image import base64_to_image
 from odoo.exceptions import UserError
+from odoo.addons import bus
 
 SUPPORTED_IMAGE_MIMETYPES = {
     'image/gif': '.gif',
@@ -17,9 +18,8 @@ SUPPORTED_IMAGE_MIMETYPES = {
 }
 
 
-class IrAttachment(models.Model):
+class IrAttachment(bus.IrAttachment):
 
-    _inherit = ["ir.attachment"]
 
     local_url = fields.Char("Attachment URL", compute='_compute_local_url')
     image_src = fields.Char(compute='_compute_image_src')

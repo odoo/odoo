@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import account, base_vat
 
 TEST_GST_NUMBER = "36AABCT1332L011"
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(base_vat.ResPartner, account.ResPartner):
 
     l10n_in_gst_treatment = fields.Selection([
             ('regular', 'Registered Business - Regular'),

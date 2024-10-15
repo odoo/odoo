@@ -7,14 +7,11 @@ from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import escape_psql, SQL
 from odoo.tools.translate import _
+from odoo.addons import website
 
 
-class WebsitePage(models.Model):
+class WebsitePage(models.Model, website.WebsitePublishedMultiMixin, website.WebsiteSearchableMixin):
     _inherits = {'ir.ui.view': 'view_id'}
-    _inherit = [
-        'website.published.multi.mixin',
-        'website.searchable.mixin',
-    ]
     _description = 'Page'
     _order = 'website_id'
 

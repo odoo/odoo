@@ -3,10 +3,10 @@
 
 
 from odoo import api, fields, models
+from odoo.addons import account
 
 
-class ProductTemplate(models.Model):
-    _inherit = ["product.template"]
+class ProductTemplate(account.ProductTemplate):
 
     l10n_eg_eta_code = fields.Char('ETA Item code', compute='_compute_l10n_eg_eta_code',
                                    inverse='_set_l10n_eg_eta_code',
@@ -39,8 +39,7 @@ class ProductTemplate(models.Model):
         return templates
 
 
-class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+class ProductProduct(account.ProductProduct):
 
     l10n_eg_eta_code = fields.Char('ETA Code', copy=False,
                                    help="This can be an EGS or GS1 product code, which is needed for the e-invoice.  "

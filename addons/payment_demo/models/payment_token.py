@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details
 
 from odoo import fields, models
+from odoo.addons import payment
 
 
-class PaymentToken(models.Model):
-    _inherit = ['payment.token']
+class PaymentToken(payment.PaymentToken):
 
     demo_simulated_state = fields.Selection(
         string="Simulated State",

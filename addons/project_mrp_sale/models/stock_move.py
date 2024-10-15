@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale_stock, mrp
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(mrp.StockMove, sale_stock.StockMove):
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()

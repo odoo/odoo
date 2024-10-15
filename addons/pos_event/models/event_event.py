@@ -1,8 +1,8 @@
 from odoo import api, fields, models
+from odoo.addons import point_of_sale, event_product
 
 
-class EventEvent(models.Model):
-    _inherit = ['event.event', 'pos.load.mixin']
+class EventEvent(event_product.EventEvent, point_of_sale.PosLoadMixin):
 
     image_1024 = fields.Image("PoS Image", max_width=1024, max_height=1024)
 

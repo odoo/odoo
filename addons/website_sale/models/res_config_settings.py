@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.addons import website, website_payment, digest, sale
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(website.ResConfigSettings, sale.ResConfigSettings, website_payment.ResConfigSettings, digest.ResConfigSettings):
 
     # Groups
     group_delivery_invoice_address = fields.Boolean(

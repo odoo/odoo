@@ -1,8 +1,8 @@
 from odoo import models, Command
+from odoo.addons import sale_edi_ubl, account_edi_ubl_cii
 
 
-class SaleEdiXmlUbl_Bis3(models.AbstractModel):
-    _inherit = ['sale.edi.common', 'account.edi.xml.ubl_bis3']
+class SaleEdiXmlUbl_Bis3(models.AbstractModel, sale_edi_ubl.SaleEdiCommon, account_edi_ubl_cii.AccountEdiXmlUbl_Bis3):
     _description = "UBL BIS Ordering 3.0"
 
     # -------------------------------------------------------------------------

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import mass_mailing
 
 
-class MailingList(models.Model):
-    _inherit = ['mailing.list']
+class MailingList(mass_mailing.MailingList):
 
     contact_count_sms = fields.Integer(compute="_compute_mailing_list_statistics", string="SMS Contacts")
 

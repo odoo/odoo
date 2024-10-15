@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
-    _inherit = ['account.tax']
+class AccountTax(account.AccountTax):
 
     l10n_ee_kmd_inf_code = fields.Selection(
         selection=[

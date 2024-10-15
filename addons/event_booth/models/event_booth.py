@@ -3,15 +3,11 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons import portal, mail, event_booth
 
 
-class EventBooth(models.Model):
+class EventBooth(models.Model, event_booth.EventTypeBooth, mail.MailThread, portal.MailThread, mail.MailActivityMixin):
     _description = 'Event Booth'
-    _inherit = [
-        'event.type.booth',
-        'mail.thread',
-        'mail.activity.mixin'
-    ]
 
     # owner
     event_type_id = fields.Many2one(ondelete='set null', required=False)

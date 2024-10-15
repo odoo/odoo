@@ -2,10 +2,10 @@ from base64 import b64encode
 from odoo import models, _
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons import account_edi_ubl_cii
 
 
-class AccountMoveSend(models.AbstractModel):
-    _inherit = ['account.move.send']
+class AccountMoveSend(account_edi_ubl_cii.AccountMoveSend):
 
     # -------------------------------------------------------------------------
     # ALERTS

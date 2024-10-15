@@ -19,6 +19,7 @@ from odoo.tools import date_utils, email_split, is_html_empty, groupby, parse_co
 from odoo.tools.misc import get_lang
 
 from . import crm_stage
+from odoo.addons import utm, calendar, base, phone_validation, mail
 
 _logger = logging.getLogger(__name__)
 
@@ -85,17 +86,9 @@ PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger clu
 PLS_UPDATE_BATCH_STEP = 5000
 
 
-class CrmLead(models.Model):
+class CrmLead(models.Model, mail.MailThreadCc, mail.MailThreadBlacklist, phone_validation.MailThreadPhone, mail.MailActivityMixin, calendar.MailActivityMixin, utm.UtmMixin, base.FormatAddressMixin, mail.MailTrackingDurationMixin):
     _description = "Lead/Opportunity"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread.cc',
-                'mail.thread.blacklist',
-                'mail.thread.phone',
-                'mail.activity.mixin',
-                'utm.mixin',
-                'format.address.mixin',
-                'mail.tracking.duration.mixin',
-               ]
     _primary_email = 'email_from'
     _check_company_auto = True
     _track_duration_field = 'stage_id'

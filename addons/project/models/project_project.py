@@ -14,19 +14,11 @@ from odoo.tools.misc import unquote
 from odoo.tools.translate import _
 from .project_update import STATUS_COLOR
 from .project_task import CLOSED_STATES
+from odoo.addons import rating, portal, mail, analytic
 
 
-class ProjectProject(models.Model):
+class ProjectProject(models.Model, portal.PortalMixin, mail.MailAliasMixin, rating.RatingParentMixin, mail.MailThread, portal.MailThread, rating.MailThread, mail.MailActivityMixin, mail.MailTrackingDurationMixin, analytic.AnalyticPlanFieldsMixin):
     _description = "Project"
-    _inherit = [
-        'portal.mixin',
-        'mail.alias.mixin',
-        'rating.parent.mixin',
-        'mail.thread',
-        'mail.activity.mixin',
-        'mail.tracking.duration.mixin',
-        'analytic.plan.fields.mixin',
-    ]
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
     _systray_view = 'activity'

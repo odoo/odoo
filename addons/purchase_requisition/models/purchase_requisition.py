@@ -3,11 +3,11 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from collections import defaultdict
+from odoo.addons import portal, mail, analytic
 
 
-class PurchaseRequisition(models.Model):
+class PurchaseRequisition(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = "Purchase Requisition"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "id desc"
 
     name = fields.Char(
@@ -159,8 +159,7 @@ class PurchaseRequisition(models.Model):
             raise UserError(_('You can only delete draft or cancelled requisitions.'))
 
 
-class PurchaseRequisitionLine(models.Model):
-    _inherit = ['analytic.mixin']
+class PurchaseRequisitionLine(models.Model, analytic.AnalyticMixin):
     _description = "Purchase Requisition Line"
     _rec_name = 'product_id'
 

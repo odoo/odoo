@@ -3,11 +3,11 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import portal, mail
 
 
-class HrDepartment(models.Model):
+class HrDepartment(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin):
     _description = "Department"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "name"
     _rec_name = 'complete_name'
     _parent_store = True

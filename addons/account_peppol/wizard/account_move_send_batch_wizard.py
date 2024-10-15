@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import account
 
 
-class AccountMoveSendBatchWizard(models.TransientModel):
-    _inherit = ['account.move.send.batch.wizard']
+class AccountMoveSendBatchWizard(account.AccountMoveSendBatchWizard):
 
     def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False):
         # EXTENDS 'account'

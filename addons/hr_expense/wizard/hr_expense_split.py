@@ -3,10 +3,10 @@ from copy import deepcopy
 
 from odoo import fields, models, api, Command
 from odoo.tools import float_compare
+from odoo.addons import analytic
 
 
-class HrExpenseSplit(models.TransientModel):
-    _inherit = ['analytic.mixin']
+class HrExpenseSplit(models.TransientModel, analytic.AnalyticMixin):
     _description = 'Expense Split'
     _check_company_auto = True
 

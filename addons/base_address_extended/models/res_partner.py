@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.addons import contacts
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(contacts.ResPartner):
 
     street_name = fields.Char(
         'Street Name', compute='_compute_street_data', inverse='_inverse_street_data', store=True)

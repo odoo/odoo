@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ["sale.order"]
+class SaleOrder(sale.SaleOrder):
 
     l10n_ec_sri_payment_id = fields.Many2one(
         comodel_name="l10n_ec.sri.payment",

@@ -5,12 +5,12 @@ import calendar
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.barcode import get_barcode_check_digit
+from odoo.addons import barcodes
 
 FNC1_CHAR = '\x1D'
 
 
-class BarcodeNomenclature(models.Model):
-    _inherit = ['barcode.nomenclature']
+class BarcodeNomenclature(barcodes.BarcodeNomenclature):
 
     is_gs1_nomenclature = fields.Boolean(
         string="Is GS1 Nomenclature",

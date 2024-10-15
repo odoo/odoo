@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api
+from odoo.addons import l10n_ar, l10n_latam_check
 
 
-class AccountMove(models.Model):
+class AccountMove(l10n_ar.AccountMove, l10n_latam_check.AccountMove):
 
-    _inherit = ['account.move']
 
     l10n_ar_withholding_ids = fields.One2many(
         'account.move.line', 'move_id', string='Withholdings',

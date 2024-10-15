@@ -4,10 +4,10 @@
 from collections import defaultdict
 from odoo import fields, models
 from odoo.tools import float_compare, float_is_zero
+from odoo.addons import product
 
 
-class ProductLabelLayout(models.TransientModel):
-    _inherit = ['product.label.layout']
+class ProductLabelLayout(product.ProductLabelLayout):
 
     move_ids = fields.Many2many('stock.move')
     move_quantity = fields.Selection([

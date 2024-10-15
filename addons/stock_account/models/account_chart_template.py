@@ -3,10 +3,10 @@
 
 from odoo import models, _
 from odoo.addons.account.models.chart_template import template
+from odoo.addons import account
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ["account.chart.template"]
+class AccountChartTemplate(account.AccountChartTemplate):
 
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)

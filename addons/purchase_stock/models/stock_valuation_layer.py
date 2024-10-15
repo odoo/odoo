@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import stock_account
 
 
-class StockValuationLayer(models.Model):
-    _inherit = ['stock.valuation.layer']
+class StockValuationLayer(stock_account.StockValuationLayer):
 
     def _get_layer_price_unit(self):
         """ This function returns the value of product in a layer per unit, relative to the aml

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
+from odoo.addons import website_event_track
 
 
-class EventEvent(models.Model):
-    _inherit = ["event.event"]
+class EventEvent(website_event_track.EventEvent):
 
     def action_mass_mailing_track_speakers(self):
         mass_mailing_action = dict(

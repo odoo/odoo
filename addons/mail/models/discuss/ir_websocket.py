@@ -5,10 +5,10 @@ import re
 from odoo import models
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import bus
 
 
-class IrWebsocket(models.AbstractModel):
-    _inherit = ["ir.websocket"]
+class IrWebsocket(bus.IrWebsocket):
 
     def _get_missed_presences_identity_domains(self, presence_channels):
         identity_domain = super()._get_missed_presences_identity_domains(presence_channels)

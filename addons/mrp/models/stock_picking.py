@@ -5,10 +5,10 @@ from ast import literal_eval
 
 from odoo import _, api, fields, models
 from odoo.osv import expression
+from odoo.addons import stock
 
 
-class StockPickingType(models.Model):
-    _inherit = ['stock.picking.type']
+class StockPickingType(stock.StockPickingType):
 
     code = fields.Selection(selection_add=[
         ('mrp_operation', 'Manufacturing')
@@ -117,8 +117,7 @@ class StockPickingType(models.Model):
         return records + mrp_records
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(stock.StockPicking):
 
     has_kits = fields.Boolean(compute='_compute_has_kits')
     production_count = fields.Integer(

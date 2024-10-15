@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api
+from odoo.addons import account
 
 
-class AccountTaxGroup(models.Model):
+class AccountTaxGroup(account.AccountTaxGroup):
 
-    _inherit = ['account.tax.group']
 
     # values from http://www.afip.gob.ar/fe/documentos/otros_Tributos.xlsx
     l10n_ar_tribute_afip_code = fields.Selection([

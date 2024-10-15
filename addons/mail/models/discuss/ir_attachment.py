@@ -2,10 +2,10 @@
 
 from odoo import models, fields
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import html_editor, bus
 
 
-class IrAttachment(models.Model):
-    _inherit = ["ir.attachment"]
+class IrAttachment(bus.IrAttachment, html_editor.IrAttachment):
 
     voice_ids = fields.One2many("discuss.voice.metadata", "attachment_id")
 

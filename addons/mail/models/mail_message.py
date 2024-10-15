@@ -13,12 +13,13 @@ from odoo.osv import expression
 from odoo.tools import clean_context, format_list, groupby, SQL
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import bus
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
 
 
-class MailMessage(models.Model):
+class MailMessage(models.Model, bus.BusListenerMixin):
     """ Message model (from notifications to user input).
 
     Note:: State management / Error codes / Failure types summary
@@ -65,7 +66,6 @@ class MailMessage(models.Model):
     See ``mailing.trace`` model in mass_mailing application for mailing trace
     information.
     """
-    _inherit = ["bus.listener.mixin"]
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'record_name'

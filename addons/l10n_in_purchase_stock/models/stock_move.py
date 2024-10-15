@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import purchase_stock, l10n_in_stock
 
 
-class StockMove(models.Model):
-    _inherit = ["stock.move"]
+class StockMove(l10n_in_stock.StockMove, purchase_stock.StockMove):
 
     def _l10n_in_get_product_price_unit(self):
         self.ensure_one()

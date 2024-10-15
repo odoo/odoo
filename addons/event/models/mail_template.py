@@ -3,10 +3,10 @@
 
 from odoo import api, models
 from odoo.osv import expression
+from odoo.addons import mail
 
 
-class MailTemplate(models.Model):
-    _inherit = ['mail.template']
+class MailTemplate(mail.MailTemplate):
 
     @api.model
     def _search_display_name(self, operator, value):

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import stock
 
 
-class StockWarnInsufficientQtyRepair(models.TransientModel):
-    _inherit = ['stock.warn.insufficient.qty']
+class StockWarnInsufficientQtyRepair(models.TransientModel, stock.StockWarnInsufficientQty):
     _description = 'Warn Insufficient Repair Quantity'
 
     repair_id = fields.Many2one('repair.order', string='Repair')

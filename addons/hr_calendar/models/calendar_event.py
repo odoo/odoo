@@ -5,10 +5,10 @@ from pytz import UTC
 from odoo import api, fields, models
 
 from odoo.addons.resource.models.utils import Intervals, sum_intervals, timezone_datetime
+from odoo.addons import calendar
 
 
-class CalendarEvent(models.Model):
-    _inherit = ["calendar.event"]
+class CalendarEvent(calendar.CalendarEvent):
 
     unavailable_partner_ids = fields.Many2many('res.partner', compute='_compute_unavailable_partner_ids')
 

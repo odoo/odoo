@@ -8,12 +8,12 @@ from odoo import api, models, Command
 from odoo.tools import email_normalize
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons import calendar, google_calendar
 
 _logger = logging.getLogger(__name__)
 
 
-class CalendarRecurrence(models.Model):
-    _inherit = ['calendar.recurrence', 'google.calendar.sync']
+class CalendarRecurrence(calendar.CalendarRecurrence, google_calendar.GoogleCalendarSync):
 
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):

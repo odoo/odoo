@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
+from odoo.addons import sale_purchase_stock
 
 
-class PurchaseOrder(models.Model):
-    _inherit = ['purchase.order']
+class PurchaseOrder(sale_purchase_stock.PurchaseOrder):
 
     dropship_picking_count = fields.Integer("Dropship Count", compute='_compute_incoming_picking_count')
 

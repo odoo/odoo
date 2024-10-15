@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.tools import float_is_zero
+from odoo.addons import mrp
 
 
-class ReportMrpReport_Mo_Overview(models.AbstractModel):
-    _inherit = ['report.mrp.report_mo_overview']
+class ReportMrpReport_Mo_Overview(mrp.ReportMrpReport_Mo_Overview):
 
     def _get_unit_cost(self, move):
         valuation_layers = move.sudo().stock_valuation_layer_ids

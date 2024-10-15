@@ -3,10 +3,10 @@
 
 from odoo import fields, models
 from odoo.tools import float_round, groupby
+from odoo.addons import mrp, stock_account
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(mrp.ProductTemplate, stock_account.ProductTemplate):
 
     def _get_product_accounts(self):
         accounts = super()._get_product_accounts()
@@ -26,8 +26,7 @@ class ProductTemplate(models.Model):
             return templates.mapped('product_variant_id').button_bom_cost()
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(mrp.ProductProduct, stock_account.ProductProduct):
 
     def button_bom_cost(self):
         self.ensure_one()
@@ -111,8 +110,7 @@ class ProductProduct(models.Model):
             return bom.product_uom_id._compute_price(total / bom.product_qty, self.uom_id)
 
 
-class ProductCategory(models.Model):
-    _inherit = ['product.category']
+class ProductCategory(stock_account.ProductCategory):
 
     property_stock_account_production_cost_id = fields.Many2one(
         'account.account', 'Production Account', company_dependent=True, ondelete='restrict',

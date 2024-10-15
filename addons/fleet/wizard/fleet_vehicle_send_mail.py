@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import mail
 
 
-class FleetVehicleSendMail(models.TransientModel):
-    _inherit = ['mail.composer.mixin']
+class FleetVehicleSendMail(models.TransientModel, mail.MailComposerMixin):
     _description = 'Send mails to Drivers'
 
     vehicle_ids = fields.Many2many('fleet.vehicle', string='Vehicles', required=True)

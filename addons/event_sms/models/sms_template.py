@@ -3,10 +3,10 @@
 
 from odoo import api, models
 from odoo.osv import expression
+from odoo.addons import sms
 
 
-class SmsTemplate(models.Model):
-    _inherit = ['sms.template']
+class SmsTemplate(sms.SmsTemplate):
 
     @api.model
     def _search_display_name(self, operator, value):

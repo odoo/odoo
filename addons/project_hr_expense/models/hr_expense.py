@@ -1,8 +1,8 @@
 from odoo import api, models
+from odoo.addons import hr_expense
 
 
-class HrExpense(models.Model):
-    _inherit = ['hr.expense']
+class HrExpense(hr_expense.HrExpense):
 
     def _compute_analytic_distribution(self):
         project_id = self.env.context.get('project_id')

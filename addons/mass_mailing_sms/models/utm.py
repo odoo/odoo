@@ -4,10 +4,10 @@
 from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import mass_mailing
 
 
-class UtmCampaign(models.Model):
-    _inherit = ['utm.campaign']
+class UtmCampaign(mass_mailing.UtmCampaign):
 
     mailing_sms_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',
@@ -77,8 +77,7 @@ class UtmCampaign(models.Model):
         return ab_testing_campaign
 
 
-class UtmMedium(models.Model):
-    _inherit = ['utm.medium']
+class UtmMedium(mass_mailing.UtmMedium):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_utm_medium_sms(self):

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import stock
 
 
-class StockPackageDestination(models.TransientModel):
-    _inherit = ["stock.package.destination"]
+class StockPackageDestination(stock.StockPackageDestination):
 
     def _compute_move_line_ids(self):
         destination_without_batch = self.env['stock.package.destination']

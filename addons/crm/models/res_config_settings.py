@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import format_list
+from odoo.addons import base_setup, mail, digest
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(base_setup.ResConfigSettings, mail.ResConfigSettings, digest.ResConfigSettings):
 
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     group_use_recurring_revenues = fields.Boolean(string="Recurring Revenues", implied_group='crm.group_use_recurring_revenues')

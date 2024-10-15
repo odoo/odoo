@@ -5,6 +5,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
+from odoo.addons import account
 
 
 REGEX_FORMULA_OBJECT = re.compile(r'((?:product\[\')(?P<field>\w+)(?:\'\]))+')
@@ -18,8 +19,7 @@ FORMULA_ALLOWED_TOKENS = {
 }
 
 
-class AccountTax(models.Model):
-    _inherit = ["account.tax"]
+class AccountTax(account.AccountTax):
 
     amount_type = fields.Selection(
         selection_add=[('code', "Custom Formula")],

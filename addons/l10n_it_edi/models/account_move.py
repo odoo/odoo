@@ -11,6 +11,7 @@ from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, cleanup_xml_node, float_is_zero
+from odoo.addons import l10n_it
 
 _logger = logging.getLogger(__name__)
 
@@ -49,8 +50,7 @@ def get_datetime(tree, xpath):
     return False
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_it.AccountMove):
 
     l10n_it_edi_state = fields.Selection(
         string="SDI State",

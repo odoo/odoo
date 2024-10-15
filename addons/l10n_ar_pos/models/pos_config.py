@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import point_of_sale
 
 
-class PosConfig(models.Model):
-    _inherit = ['pos.config']
+class PosConfig(point_of_sale.PosConfig):
 
     def get_limited_partners_loading(self):
         partner_ids = super().get_limited_partners_loading()

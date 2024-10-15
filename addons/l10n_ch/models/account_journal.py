@@ -7,10 +7,10 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.base_iban.models.res_partner_bank import validate_iban
 from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+class AccountJournal(account.AccountJournal):
 
     invoice_reference_model = fields.Selection(selection_add=[
         ('ch', 'Switzerland')

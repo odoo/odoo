@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api
+from odoo.addons import point_of_sale, hr
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(point_of_sale.ResConfigSettings, hr.ResConfigSettings):
 
     # pos.config fields
     pos_basic_employee_ids = fields.Many2many(related='pos_config_id.basic_employee_ids', readonly=False,

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale
 
 
-class SaleAdvancePaymentInv(models.TransientModel):
-    _inherit = ["sale.advance.payment.inv"]
+class SaleAdvancePaymentInv(sale.SaleAdvancePaymentInv):
 
     def _prepare_invoice_values(self, order, so_line, accounts):
         res = super()._prepare_invoice_values(order, so_line, accounts)

@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import split_every
+from odoo.addons import stock
 
 
-class StockWarehouse(models.Model):
-    _inherit = ['stock.warehouse']
+class StockWarehouse(stock.StockWarehouse):
 
     manufacture_to_resupply = fields.Boolean(
         'Manufacture to Resupply', default=True,
@@ -280,8 +280,7 @@ class StockWarehouse(models.Model):
         return res
 
 
-class StockWarehouseOrderpoint(models.Model):
-    _inherit = ["stock.warehouse.orderpoint"]
+class StockWarehouseOrderpoint(stock.StockWarehouseOrderpoint):
 
     @api.constrains('product_id')
     def check_product_is_not_kit(self):

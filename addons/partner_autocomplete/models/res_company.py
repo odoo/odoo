@@ -8,14 +8,14 @@ import threading
 from odoo.addons.iap.tools import iap_tools
 from odoo import api, fields, models, _
 from odoo.tools.mail import email_domain_extract, url_domain_extract
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
 COMPANY_AC_TIMEOUT = 5
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(mail.ResCompany):
 
     partner_gid = fields.Integer('Company database ID', related="partner_id.partner_gid", inverse="_inverse_partner_gid", store=True)
     iap_enrich_auto_done = fields.Boolean('Enrich Done')

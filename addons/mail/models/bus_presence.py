@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
+from odoo.addons import bus
 
 
-class BusPresence(models.Model):
-    _inherit = ['bus.presence']
+class BusPresence(bus.BusPresence):
 
     guest_id = fields.Many2one('mail.guest', 'Guest', ondelete='cascade')
 

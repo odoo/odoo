@@ -7,6 +7,7 @@ from odoo.tools.translate import xml_translate
 from odoo.modules.module import get_resource_from_path
 
 from odoo.addons.base.models.ir_asset import AFTER_DIRECTIVE, APPEND_DIRECTIVE, BEFORE_DIRECTIVE, DEFAULT_SEQUENCE, INCLUDE_DIRECTIVE, PREPEND_DIRECTIVE, REMOVE_DIRECTIVE, REPLACE_DIRECTIVE
+from odoo.addons import web, portal, web_editor, website, base, mail
 
 _logger = logging.getLogger(__name__)
 
@@ -347,8 +348,7 @@ class ThemeUtils(models.AbstractModel):
         self._toggle_view(xml_id, False)
 
 
-class IrUiView(models.Model):
-    _inherit = ['ir.ui.view']
+class IrUiView(web.IrUiView, web_editor.IrUiView, portal.IrUiView, mail.IrUiView):
 
     theme_template_id = fields.Many2one('theme.ir.ui.view', copy=False)
 
@@ -374,26 +374,22 @@ class IrUiView(models.Model):
         return res
 
 
-class IrAsset(models.Model):
-    _inherit = ['ir.asset']
+class IrAsset(base.IrAsset):
 
     theme_template_id = fields.Many2one('theme.ir.asset', copy=False)
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(mail.IrAttachment):
 
     key = fields.Char(copy=False)
     theme_template_id = fields.Many2one('theme.ir.attachment', copy=False)
 
 
-class WebsiteMenu(models.Model):
-    _inherit = ['website.menu']
+class WebsiteMenu(models.Model, website.WebsiteMenu):
 
     theme_template_id = fields.Many2one('theme.website.menu', copy=False)
 
 
-class WebsitePage(models.Model):
-    _inherit = ['website.page']
+class WebsitePage(models.Model, website.WebsitePage):
 
     theme_template_id = fields.Many2one('theme.website.page', copy=False)

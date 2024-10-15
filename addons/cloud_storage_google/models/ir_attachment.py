@@ -14,6 +14,7 @@ from odoo import models
 from odoo.exceptions import ValidationError
 
 from ..utils.cloud_storage_google_utils import generate_signed_url_v4
+from odoo.addons import cloud_storage
 
 CloudStorageGoogleCredentials = {}  # {db_name: (account_info, credential)}
 
@@ -31,8 +32,7 @@ def get_cloud_storage_google_credential(env):
     return credential
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(cloud_storage.IrAttachment):
     _cloud_storage_google_url_pattern = re.compile(r'https://storage\.googleapis\.com/(?P<bucket_name>[\w\-.]+)/(?P<blob_name>[^?]+)')
 
     def _get_cloud_storage_google_info(self):

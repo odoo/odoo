@@ -3,10 +3,10 @@
 
 
 from odoo import models, fields, api
+from odoo.addons import account
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account.ResPartner):
 
     l10n_eg_building_no = fields.Char('Building No.')
 

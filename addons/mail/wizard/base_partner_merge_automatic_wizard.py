@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
 from odoo.tools import format_list
+from odoo.addons import base
 
 
-class BasePartnerMergeAutomaticWizard(models.TransientModel):
+class BasePartnerMergeAutomaticWizard(base.BasePartnerMergeAutomaticWizard):
 
-    _inherit = ['base.partner.merge.automatic.wizard']
 
     def _log_merge_operation(self, src_partners, dst_partner):
         super()._log_merge_operation(src_partners, dst_partner)

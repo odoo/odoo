@@ -3,10 +3,10 @@
 
 from operator import itemgetter
 from odoo import api, models
+from odoo.addons import web
 
 
-class IrUiView(models.Model):
-    _inherit = ['ir.ui.view']
+class IrUiView(web.IrUiView):
 
     @api.model
     def _validate_custom_views(self, model):

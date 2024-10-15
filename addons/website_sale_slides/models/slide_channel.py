@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
+from odoo.addons import website_slides
 
 
-class SlideChannel(models.Model):
-    _inherit = ['slide.channel']
+class SlideChannel(website_slides.SlideChannel):
 
     def _get_default_product_id(self):
         product_courses = self.env['product.product'].search(

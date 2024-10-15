@@ -6,12 +6,12 @@ import time
 
 from odoo import models
 from odoo.http import request
+from odoo.addons import website, mail
 
 _logger = logging.getLogger(__name__)
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(mail.IrHttp, website.IrHttp):
 
     @classmethod
     def _serve_page(cls):

@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.tools import format_datetime
+from odoo.addons import rating, portal
 
 
-class MailMessage(models.Model):
-    _inherit = ['mail.message']
+class MailMessage(portal.MailMessage, rating.MailMessage):
 
     def _portal_get_default_format_properties_names(self, options=None):
         """ Add request for rating information

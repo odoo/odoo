@@ -12,13 +12,13 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_razorpay import const
+from odoo.addons import payment
 
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('razorpay', "Razorpay")], ondelete={'razorpay': 'set default'}

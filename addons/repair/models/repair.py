@@ -8,6 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, clean_context
 from odoo.tools.misc import format_date, groupby
+from odoo.addons import portal, product, mail
 
 MAP_REPAIR_TO_PICKING_LOCATIONS = {
     'location_id': 'default_location_src_id',
@@ -17,10 +18,9 @@ MAP_REPAIR_TO_PICKING_LOCATIONS = {
 }
 
 
-class RepairOrder(models.Model):
+class RepairOrder(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin, product.ProductCatalogMixin):
     """ Repair Orders """
     _description = 'Repair Order'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
     _order = 'priority desc, create_date desc'
     _check_company_auto = True
 

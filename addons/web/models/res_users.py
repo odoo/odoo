@@ -2,10 +2,10 @@
 
 from odoo import api, models
 from odoo.osv import expression
+from odoo.addons import base
 
 
-class ResUsers(models.Model):
-    _inherit = ["res.users"]
+class ResUsers(base.ResUsers):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):

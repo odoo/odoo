@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, api
+from odoo.addons import account, l10n_latam_invoice_document
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(account.AccountChartTemplate, l10n_latam_invoice_document.AccountChartTemplate):
 
     @api.model
     def _get_demo_data_move(self, company=False):

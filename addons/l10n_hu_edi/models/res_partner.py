@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import account, base_vat, web
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account.ResPartner, web.ResPartner, base_vat.ResPartner):
 
     l10n_hu_group_vat = fields.Char(
         string='Group Tax ID',

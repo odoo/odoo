@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import mrp
 
 
-class MrpRoutingWorkcenter(models.Model):
-    _inherit = ['mrp.routing.workcenter']
+class MrpRoutingWorkcenter(mrp.MrpRoutingWorkcenter):
 
     def _total_cost_per_hour(self):
         self.ensure_one()

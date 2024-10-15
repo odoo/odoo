@@ -3,12 +3,12 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import mail, microsoft_outlook
 
 
-class FetchmailServer(models.Model):
+class FetchmailServer(mail.FetchmailServer, microsoft_outlook.MicrosoftOutlookMixin):
     """Add the Outlook OAuth authentication on the incoming mail servers."""
 
-    _inherit = ['fetchmail.server', 'microsoft.outlook.mixin']
 
     _OUTLOOK_SCOPE = 'https://outlook.office.com/IMAP.AccessAsUser.All'
 

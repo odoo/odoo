@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
+from odoo.addons import website_sale
 
 
-class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+class ProductProduct(website_sale.ProductProduct):
 
     channel_ids = fields.One2many('slide.channel', 'product_id', string='Courses')
 

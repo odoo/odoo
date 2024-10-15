@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import web, mail
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(web.ResCompany, mail.ResCompany):
 
     payment_onboarding_payment_method = fields.Selection(
         string="Selected onboarding payment method",

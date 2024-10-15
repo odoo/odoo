@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import l10n_es, account_edi
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_es.AccountMove, account_edi.AccountMove):
 
     l10n_es_edi_is_required = fields.Boolean(
         string="Is the Spanish EDI needed",

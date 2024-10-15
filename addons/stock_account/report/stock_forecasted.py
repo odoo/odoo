@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.tools.float_utils import float_is_zero, float_repr
+from odoo.addons import stock
 
 
-class StockForecasted_Product_Product(models.AbstractModel):
-    _inherit = ['stock.forecasted_product_product']
+class StockForecasted_Product_Product(stock.StockForecasted_Product_Product):
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         """ Overrides to computes the valuations of the stock. """

@@ -13,12 +13,12 @@ from odoo.exceptions import AccessError
 from .error_codes import ERROR_CODES
 
 import logging
+from odoo.addons import l10n_in_edi
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = ["account.edi.format"]
+class AccountEdiFormat(l10n_in_edi.AccountEdiFormat):
 
     def _l10n_in_edi_ewaybill_base_irn_or_direct(self, move):
         """

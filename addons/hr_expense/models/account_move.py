@@ -4,10 +4,10 @@ from odoo import models, fields, api, _
 from odoo.api import ondelete
 from odoo.exceptions import UserError
 from odoo.tools.misc import frozendict
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(account.AccountMove):
 
     expense_sheet_id = fields.Many2one(comodel_name='hr.expense.sheet', ondelete='set null', copy=False, index='btree_not_null')
     show_commercial_partner_warning = fields.Boolean(compute='_compute_show_commercial_partner_warning')

@@ -3,11 +3,11 @@
 
 from odoo import fields, models, _, Command
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons import website
 
 
-class Website(models.Model):
+class Website(website.Website):
 
-    _inherit = ["website"]
 
     channel_id = fields.Many2one('im_livechat.channel', string='Website Live Chat Channel')
 

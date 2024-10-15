@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
+from odoo.addons import point_of_sale
 
 
-class PosOrder(models.Model):
-    _inherit = ['pos.order']
+class PosOrder(point_of_sale.PosOrder):
 
     currency_rate = fields.Float(compute='_compute_currency_rate', store=True, digits=0, readonly=True)
     crm_team_id = fields.Many2one('crm.team', string="Sales Team", ondelete="set null")
@@ -160,8 +160,7 @@ class PosOrder(models.Model):
         return inv_line_vals
 
 
-class PosOrderLine(models.Model):
-    _inherit = ['pos.order.line']
+class PosOrderLine(point_of_sale.PosOrderLine):
 
     sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order")
     sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line")

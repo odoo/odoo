@@ -3,10 +3,10 @@
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import format_duration
+from odoo.addons import sale_project
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ["sale.order.line"]
+class SaleOrderLine(sale_project.SaleOrderLine):
 
     qty_delivered_method = fields.Selection(selection_add=[('timesheet', 'Timesheets')])
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)

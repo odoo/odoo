@@ -2,12 +2,12 @@
 
 from odoo import api, fields, models
 import logging
+from odoo.addons import l10n_in_stock
 
 _logger = logging.getLogger(__name__)
 
 
-class StockMove(models.Model):
-    _inherit = ["stock.move"]
+class StockMove(l10n_in_stock.StockMove):
     _description = "Stock Move Ewaybill"
 
     l10n_in_ewaybill_id = fields.One2many(related="picking_id.l10n_in_ewaybill_id")

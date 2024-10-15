@@ -5,16 +5,16 @@ from collections import defaultdict
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.tools import email_normalize
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import base_setup, web_tour, bus
 
 
-class ResUsers(models.Model):
+class ResUsers(base_setup.ResUsers, bus.ResUsers, web_tour.ResUsers):
     """ Update of res.users class
         - add a preference about sending emails about notifications
         - make a new user follow itself
         - add a welcome message
         - add suggestion preference
     """
-    _inherit = ['res.users']
 
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),

@@ -14,12 +14,12 @@ from odoo.http import request
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError
+from odoo.addons import base_setup, mail, web
 
 _logger = logging.getLogger(__name__)
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(base_setup.ResUsers, mail.ResUsers, web.ResUsers):
 
     state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
                  selection=[('new', 'Never Connected'), ('active', 'Confirmed')])

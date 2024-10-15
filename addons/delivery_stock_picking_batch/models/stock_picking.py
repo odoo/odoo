@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons import stock_picking_batch, stock_delivery
 
 
-class StockPickingType(models.Model):
-    _inherit = ["stock.picking.type"]
+class StockPickingType(stock_picking_batch.StockPickingType):
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -26,8 +26,7 @@ class StockPickingType(models.Model):
         return super()._get_batch_group_by_keys() + ['batch_group_by_carrier']
 
 
-class StockPicking(models.Model):
-    _inherit = ["stock.picking"]
+class StockPicking(stock_delivery.StockPicking, stock_picking_batch.StockPicking):
 
     def _get_possible_pickings_domain(self):
         domain = super()._get_possible_pickings_domain()

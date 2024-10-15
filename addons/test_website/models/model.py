@@ -3,20 +3,15 @@
 
 from odoo import api, fields, models
 from odoo.tools.translate import html_translate
+from odoo.addons import website
 
 
-class Website(models.Model):
-    _inherit = ["website"]
+class Website(website.Website):
 
     name_translated = fields.Char(translate=True)
 
 
-class TestModel(models.Model):
-    _inherit = [
-        'website.seo.metadata',
-        'website.published.mixin',
-        'website.searchable.mixin',
-    ]
+class TestModel(models.Model, website.WebsiteSeoMetadata, website.WebsitePublishedMixin, website.WebsiteSearchableMixin):
     _description = 'Website Model Test'
 
     name = fields.Char(required=True, translate=True)
@@ -60,10 +55,7 @@ class TestTag(models.Model):
     name = fields.Char(required=True)
 
 
-class TestModelMultiWebsite(models.Model):
-    _inherit = [
-        'website.published.multi.mixin',
-    ]
+class TestModelMultiWebsite(models.Model, website.WebsitePublishedMultiMixin):
     _description = 'Multi Website Model Test'
 
     name = fields.Char(required=True)
@@ -74,11 +66,7 @@ class TestModelMultiWebsite(models.Model):
     website_id = fields.Many2one('website', string='Website', ondelete='cascade')
 
 
-class TestModelExposed(models.Model):
-    _inherit = [
-        'website.seo.metadata',
-        'website.published.mixin',
-    ]
+class TestModelExposed(models.Model, website.WebsiteSeoMetadata, website.WebsitePublishedMixin):
     _description = 'Website Model Test Exposed'
     _rec_name = "name"
 

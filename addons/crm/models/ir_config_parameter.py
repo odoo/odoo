@@ -3,10 +3,10 @@
 
 from odoo import api, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.addons import mail
 
 
-class IrConfig_Parameter(models.Model):
-    _inherit = ['ir.config_parameter']
+class IrConfig_Parameter(mail.IrConfig_Parameter):
 
     def write(self, vals):
         result = super().write(vals)

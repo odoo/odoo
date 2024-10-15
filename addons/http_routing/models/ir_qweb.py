@@ -3,6 +3,7 @@
 import logging
 from odoo import models
 from odoo.http import request
+from odoo.addons import base
 
 _logger = logging.getLogger(__name__)
 BAD_REQUEST = """Missing request.is_frontend attribute.
@@ -31,8 +32,7 @@ temporary hide the incoming http request.
 """
 
 
-class IrQweb(models.AbstractModel):
-    _inherit = ["ir.qweb"]
+class IrQweb(base.IrQweb):
 
     def _prepare_environment(self, values):
         irQweb = super()._prepare_environment(values)

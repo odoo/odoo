@@ -1,10 +1,10 @@
 import re
 from odoo import models, fields, _
 from odoo.exceptions import UserError
+from odoo.addons import base_vat
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(base_vat.ResCompany):
 
     l10n_sa_private_key_id = fields.Many2one(string="ZATCA Private key", comodel_name='certificate.key', copy=False, domain=[('public', '=', False)],
                                         help="The private key used to generate the CSR and obtain certificates",)

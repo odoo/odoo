@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import mail, crm
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ["res.config.settings"]
+class ResConfigSettings(crm.ResConfigSettings, mail.ResConfigSettings):
 
     @api.model
     def get_values(self):

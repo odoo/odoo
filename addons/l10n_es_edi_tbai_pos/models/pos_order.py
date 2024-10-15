@@ -1,10 +1,10 @@
 from odoo import api, fields, models
 from odoo.addons.l10n_es_edi_tbai.models.account_move import TBAI_REFUND_REASONS
 from odoo.exceptions import UserError
+from odoo.addons import point_of_sale
 
 
-class PosOrder(models.Model):
-    _inherit = ['pos.order']
+class PosOrder(point_of_sale.PosOrder):
 
     l10n_es_tbai_state = fields.Selection([
             ('to_send', 'To Send'),

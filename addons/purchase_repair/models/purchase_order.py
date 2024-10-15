@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, _
+from odoo.addons import purchase
 
 
-class PurchaseOrder(models.Model):
-    _inherit = ['purchase.order']
+class PurchaseOrder(purchase.PurchaseOrder):
 
     repair_count = fields.Integer(string='Count of source repairs', compute='_compute_repair_count', groups='stock.group_stock_user')
 

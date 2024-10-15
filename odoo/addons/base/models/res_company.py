@@ -10,14 +10,14 @@ from odoo import api, fields, models, tools, _, Command, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools import html2plaintext, file_open, ormcache
+from odoo.addons import base
 
 _logger = logging.getLogger(__name__)
 
 
-class ResCompany(models.Model):
+class ResCompany(models.Model, base.FormatAddressMixin, base.FormatVatLabelMixin):
     _description = 'Companies'
     _order = 'sequence, name'
-    _inherit = ['format.address.mixin', 'format.vat.label.mixin']
     _parent_store = True
 
     def copy(self, default=None):

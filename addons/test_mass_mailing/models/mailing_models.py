@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import utm, mass_mailing, mail
 
 
-class MailingTestCustomer(models.Model):
+class MailingTestCustomer(models.Model, mass_mailing.MailThread):
     """ A model inheriting from mail.thread with a partner field, to test
     mass mailing flows involving checking partner email. """
     _description = 'Mailing with partner'
-    _inherit = ['mail.thread']
 
     name = fields.Char()
     email_from = fields.Char(compute='_compute_email_from', readonly=False, store=True)
@@ -33,30 +33,27 @@ class MailingTestCustomer(models.Model):
         return default_recipients
 
 
-class MailingTestSimple(models.Model):
+class MailingTestSimple(models.Model, mass_mailing.MailThread):
     """ Model only inheriting from mail.thread to test base mailing features and
     performances. """
     _description = 'Simple Mailing'
-    _inherit = ['mail.thread']
     _primary_email = 'email_from'
 
     name = fields.Char()
     email_from = fields.Char()
 
 
-class MailingTestUtm(models.Model):
+class MailingTestUtm(models.Model, mass_mailing.MailThread, utm.UtmMixin):
     """ Model inheriting from mail.thread and utm.mixin for checking utm of mailing
     is caught and set on reply """
     _description = 'Mailing: UTM enabled to test UTM sync with mailing'
-    _inherit = ['mail.thread', 'utm.mixin']
 
     name = fields.Char()
 
 
-class MailingTestBlacklist(models.Model):
+class MailingTestBlacklist(models.Model, mail.MailThreadBlacklist):
     """ Model using blacklist mechanism for mass mailing features. """
     _description = 'Mailing Blacklist Enabled'
-    _inherit = ['mail.thread.blacklist']
     _order = 'name ASC, id DESC'
     _primary_email = 'email_from'
 
@@ -79,11 +76,10 @@ class MailingTestBlacklist(models.Model):
         return default_recipients
 
 
-class MailingTestOptout(models.Model):
+class MailingTestOptout(models.Model, mail.MailThreadBlacklist):
     """ Model using blacklist mechanism and a hijacked opt-out mechanism for
     mass mailing features. """
     _description = 'Mailing Blacklist / Optout Enabled'
-    _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'
 
     name = fields.Char()
@@ -114,9 +110,8 @@ class MailingTestOptout(models.Model):
         return default_recipients
 
 
-class MailingTestPartner(models.Model):
+class MailingTestPartner(models.Model, mail.MailThreadBlacklist):
     _description = 'Mailing Model with partner_id'
-    _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'
 
     name = fields.Char()
@@ -124,20 +119,18 @@ class MailingTestPartner(models.Model):
     partner_id = fields.Many2one('res.partner', 'Customer')
 
 
-class MailingPerformance(models.Model):
+class MailingPerformance(models.Model, mass_mailing.MailThread):
     """ A very simple model only inheriting from mail.thread to test pure mass
     mailing performances. """
     _description = 'Mailing: base performance'
-    _inherit = ['mail.thread']
 
     name = fields.Char()
     email_from = fields.Char()
 
 
-class MailingPerformanceBlacklist(models.Model):
+class MailingPerformanceBlacklist(models.Model, mail.MailThreadBlacklist):
     """ Model using blacklist mechanism for mass mailing performance. """
     _description = 'Mailing: blacklist performance'
-    _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'  # blacklist field to check
 
     name = fields.Char()

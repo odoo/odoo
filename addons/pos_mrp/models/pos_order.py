@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import point_of_sale
 
 
-class PosOrderLine(models.Model):
-    _inherit = ["pos.order.line"]
+class PosOrderLine(point_of_sale.PosOrderLine):
 
     def _get_stock_moves_to_consider(self, stock_moves, product):
         self.ensure_one()
@@ -17,8 +17,7 @@ class PosOrderLine(models.Model):
         return stock_moves.filtered(lambda ml: ml.product_id.id in ml_product_to_consider and ml.bom_line_id)
 
 
-class PosOrder(models.Model):
-    _inherit = ["pos.order"]
+class PosOrder(point_of_sale.PosOrder):
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         bom = product.env['mrp.bom']._bom_find(product, company_id=self.mapped('picking_ids.move_line_ids').company_id.id, bom_type='phantom')[product]

@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import point_of_sale
 
 
-class IrBinary(models.AbstractModel):
-    _inherit = ["ir.binary"]
+class IrBinary(point_of_sale.IrBinary):
 
     def _find_record_check_access(self, record, access_token, field):
         if record._name in ["product.product", "pos.category"] and field in ["image_128", "image_512"]:

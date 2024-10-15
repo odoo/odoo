@@ -6,12 +6,12 @@ from struct import error as StructError
 import io
 import logging
 import zipfile
+from odoo.addons import product
 
 _logger = logging.getLogger(__name__)
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(product.IrAttachment):
 
     def _build_zip_from_attachments(self):
         """ Return the zip bytes content resulting from compressing the attachments in `self`"""

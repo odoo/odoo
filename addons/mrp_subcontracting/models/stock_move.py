@@ -7,10 +7,10 @@ from odoo import fields, models, api, _
 from odoo.exceptions import AccessError
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import OrderedSet
+from odoo.addons import mrp
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(mrp.StockMove):
 
     is_subcontract = fields.Boolean('The move is a subcontract receipt')
     show_subcontracting_details_visible = fields.Boolean(

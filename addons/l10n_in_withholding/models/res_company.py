@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import l10n_in
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(l10n_in.ResCompany):
 
     l10n_in_withholding_account_id = fields.Many2one(
         comodel_name='account.account',

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale_margin, pos_sale
 
 
-class SaleReport(models.Model):
-    _inherit = ["sale.report"]
+class SaleReport(pos_sale.SaleReport, sale_margin.SaleReport):
 
     def _fill_pos_fields(self, additional_fields):
         values = super()._fill_pos_fields(additional_fields)

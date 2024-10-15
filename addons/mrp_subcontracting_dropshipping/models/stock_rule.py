@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import mrp_subcontracting, stock_dropshipping
 
 
-class StockRule(models.Model):
-    _inherit = ['stock.rule']
+class StockRule(mrp_subcontracting.StockRule, stock_dropshipping.StockRule):
 
     def _prepare_purchase_order(self, company_id, origins, values):
         if 'partner_id' not in values[0] \

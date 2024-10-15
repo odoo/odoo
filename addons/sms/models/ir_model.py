@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import mail
 
 
-class IrModel(models.Model):
-    _inherit = ['ir.model']
+class IrModel(mail.IrModel):
 
     is_mail_thread_sms = fields.Boolean(
         string="Mail Thread SMS", default=False,

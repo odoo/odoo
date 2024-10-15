@@ -2,10 +2,10 @@
 
 from odoo import api, models
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import calendar, hr
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(hr.ResPartner, calendar.ResPartner):
 
     def _compute_im_status(self):
         super(ResPartner, self)._compute_im_status()

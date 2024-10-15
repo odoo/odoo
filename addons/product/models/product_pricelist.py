@@ -2,10 +2,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import mail
 
 
-class ProductPricelist(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+class ProductPricelist(models.Model, mail.MailThread, mail.MailActivityMixin):
     _description = "Pricelist"
     _rec_names_search = ['name', 'currency_id']  # TODO check if should be removed
     _order = "sequence, id, name"

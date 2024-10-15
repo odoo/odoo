@@ -7,10 +7,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import AND
 from odoo.tools import float_is_zero, format_list
+from odoo.addons import portal, mail
 
 
-class StockPickingBatch(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+class StockPickingBatch(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin):
     _description = "Batch Transfer"
     _order = "name desc"
 

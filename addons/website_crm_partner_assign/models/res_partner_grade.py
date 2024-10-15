@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import website
 
 
-class ResPartnerGrade(models.Model):
+class ResPartnerGrade(models.Model, website.WebsitePublishedMixin):
     _order = 'sequence'
-    _inherit = ['website.published.mixin']
     _description = 'Partner Grade'
 
     sequence = fields.Integer('Sequence')

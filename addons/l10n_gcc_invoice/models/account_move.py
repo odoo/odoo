@@ -4,6 +4,7 @@
 import logging
 
 from odoo import fields, models, api
+from odoo.addons import account
 
 
 _logger = logging.getLogger(__name__)
@@ -15,8 +16,7 @@ except ImportError:
     num2words = None
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     narration = fields.Html(translate=True)
 
@@ -67,8 +67,7 @@ class AccountMove(models.Model):
         self.filtered('id')._load_narration_translation()
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(account.AccountMoveLine):
 
     l10n_gcc_invoice_tax_amount = fields.Float(string='Tax Amount', compute='_compute_tax_amount', digits='Product Price')
     l10n_gcc_line_name = fields.Char(compute='_compute_l10n_gcc_line_name')

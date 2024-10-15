@@ -1,9 +1,9 @@
 from odoo import api, fields, models
 from odoo.tools import frozendict
+from odoo.addons import account, account_tax_python
 
 
-class AccountTax(models.Model):
-    _inherit = ['account.tax']
+class AccountTax(account_tax_python.AccountTax, account.AccountTax):
 
     l10n_in_reverse_charge = fields.Boolean("Reverse charge", help="Tick this if this tax is reverse charge. Only for Indian accounting")
     l10n_in_tax_type = fields.Selection(

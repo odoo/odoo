@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import mail, maintenance
 
 
 class MaintenanceStage(models.Model):
@@ -19,8 +20,7 @@ class MaintenanceStage(models.Model):
     done = fields.Boolean('Request Done')
 
 
-class MaintenanceEquipmentCategory(models.Model):
-    _inherit = ['mail.alias.mixin', 'mail.thread']
+class MaintenanceEquipmentCategory(models.Model, mail.MailAliasMixin, mail.MailThread):
     _description = 'Maintenance Equipment Category'
 
     @api.depends('equipment_ids')
@@ -115,8 +115,7 @@ class MaintenanceMixin(models.AbstractModel):
             record.maintenance_open_count = len(record.maintenance_ids.filtered(lambda mr: not mr.stage_id.done and not mr.archive))
 
 
-class MaintenanceEquipment(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'maintenance.mixin']
+class MaintenanceEquipment(models.Model, mail.MailThread, mail.MailActivityMixin, maintenance.MaintenanceMixin):
     _description = 'Maintenance Equipment'
     _check_company_auto = True
 
@@ -203,8 +202,7 @@ class MaintenanceEquipment(models.Model):
         return action
 
 
-class MaintenanceRequest(models.Model):
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
+class MaintenanceRequest(models.Model, mail.MailThreadCc, mail.MailActivityMixin):
     _description = 'Maintenance Request'
     _order = "id desc"
     _check_company_auto = True

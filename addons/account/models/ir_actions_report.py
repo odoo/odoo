@@ -5,10 +5,10 @@ from zlib import error as zlib_error
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import pdf
+from odoo.addons import base
 
 
-class IrActionsReport(models.Model):
-    _inherit = ['ir.actions.report']
+class IrActionsReport(base.IrActionsReport):
 
     is_invoice_report = fields.Boolean(
         string="Invoice report",

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import base
 
 
-class IrMail_Server(models.Model):
-    _inherit = ['ir.mail_server']
+class IrMail_Server(base.IrMail_Server):
 
     mail_template_ids = fields.One2many(
         comodel_name='mail.template',

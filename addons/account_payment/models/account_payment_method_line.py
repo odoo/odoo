@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.addons import account
 
 
-class AccountPaymentMethodLine(models.Model):
-    _inherit = ["account.payment.method.line"]
+class AccountPaymentMethodLine(account.AccountPaymentMethodLine):
 
     payment_provider_id = fields.Many2one(
         comodel_name='payment.provider',

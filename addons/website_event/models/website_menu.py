@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import website
 
 
-class WebsiteMenu(models.Model):
-    _inherit = ["website.menu"]
+class WebsiteMenu(website.WebsiteMenu):
 
     def unlink(self):
         """ Override to synchronize event configuration fields with menu deletion. """

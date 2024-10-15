@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
+from odoo.addons import account, l10n_latam_invoice_document
 
 
-class AccountMoveReversal(models.TransientModel):
-    _inherit = ["account.move.reversal"]
+class AccountMoveReversal(account.AccountMoveReversal, l10n_latam_invoice_document.AccountMoveReversal):
 
     def _compute_document_type(self):
         """ If a l10n_latam_document_type_id was set, change it in the case of Brazil to be

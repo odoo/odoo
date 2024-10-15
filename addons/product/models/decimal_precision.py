@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
+from odoo.addons import base
 
 
-class DecimalPrecision(models.Model):
-    _inherit = ['decimal.precision']
+class DecimalPrecision(base.DecimalPrecision):
 
     @api.onchange('digits')
     def _onchange_digits(self):

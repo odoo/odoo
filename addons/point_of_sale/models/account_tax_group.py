@@ -1,8 +1,8 @@
 from odoo import api, models
+from odoo.addons import account, point_of_sale
 
 
-class AccountTaxGroup(models.Model):
-    _inherit = ['account.tax.group', 'pos.load.mixin']
+class AccountTaxGroup(account.AccountTaxGroup, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_domain(self, data):

@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api, exceptions, _
 from odoo.tools import float_round
+from odoo.addons import hr
 
 
-class HrEmployee(models.Model):
-    _inherit = ["hr.employee"]
+class HrEmployee(hr.HrEmployee):
 
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False,

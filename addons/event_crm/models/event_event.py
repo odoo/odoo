@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import event
 
 
-class EventEvent(models.Model):
-    _inherit = ["event.event"]
+class EventEvent(event.EventEvent):
 
     lead_ids = fields.One2many(
         'crm.lead', 'event_id', string="Leads", groups='sales_team.group_sale_salesman',

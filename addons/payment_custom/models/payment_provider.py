@@ -4,10 +4,10 @@ from odoo import _, api, fields, models
 from odoo.osv.expression import AND
 
 from odoo.addons.payment_custom import const
+from odoo.addons import payment
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     _sql_constraints = [(
         'custom_providers_setup',

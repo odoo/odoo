@@ -3,10 +3,10 @@
 from odoo import api, fields, models
 
 from .hr_homeworking import DAYS
+from odoo.addons import hr
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = ["hr.employee.base"]
+class HrEmployeeBase(hr.HrEmployeeBase):
 
     monday_location_id = fields.Many2one('hr.work.location', string='Monday')
     tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday')

@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import account
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(account.AccountMoveLine):
 
     def _compute_account_id(self):
         # OVERRIDE

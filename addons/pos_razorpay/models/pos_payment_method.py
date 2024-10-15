@@ -2,10 +2,10 @@ from odoo.exceptions import UserError
 from odoo import fields, models, api, _
 
 from .razorpay_pos_request import RazorpayPosRequest
+from odoo.addons import point_of_sale
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ['pos.payment.method']
+class PosPaymentMethod(point_of_sale.PosPaymentMethod):
 
     razorpay_tid = fields.Char(string='Razorpay Device Serial No', help='Device Serial No \n ex: 7000012300')
     razorpay_allowed_payment_modes = fields.Selection(selection=[('all', 'All'), ('card', 'Card'), ('upi', 'UPI'), ('bharatqr', 'BHARATQR')], default='all', help='Choose allow payment mode: \n All/Card/UPI or QR')

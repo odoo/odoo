@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import mail
 
 
-class MailMessage(models.Model):
-    _inherit = ["mail.message"]
+class MailMessage(models.Model, mail.MailMessage):
 
     def _extras_to_store(self, store: Store, format_reply):
         super()._extras_to_store(store, format_reply=format_reply)

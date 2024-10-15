@@ -13,6 +13,7 @@ from odoo.tools import unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
 from collections import defaultdict
 from odoo.tools.translate import LazyTranslate
+from odoo.addons import base
 
 _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
@@ -36,8 +37,7 @@ DISPLAY_DATE_FORMATS = {
 }
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(base.Base):
 
     @api.model
     @api.readonly
@@ -1049,8 +1049,7 @@ class Base(models.AbstractModel):
                 self.update_field_translations(field_name, translations)
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(base.ResCompany):
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -3,10 +3,10 @@
 
 from odoo import fields, models, _
 from odoo.exceptions import AccessError
+from odoo.addons import digest
 
 
-class DigestDigest(models.Model):
-    _inherit = ['digest.digest']
+class DigestDigest(digest.DigestDigest):
 
     kpi_hr_recruitment_new_colleagues = fields.Boolean('New Employees')
     kpi_hr_recruitment_new_colleagues_value = fields.Integer(compute='_compute_kpi_hr_recruitment_new_colleagues_value')

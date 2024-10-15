@@ -1,10 +1,10 @@
 from odoo import models
 from odoo.addons.account.models.chart_template import template
+from odoo.addons import l10n_ar, l10n_latam_check
 
 
-class AccountChartTemplate(models.AbstractModel):
+class AccountChartTemplate(l10n_ar.AccountChartTemplate, l10n_latam_check.AccountChartTemplate):
 
-    _inherit = ['account.chart.template']
 
     # ar base
     @template('ar_base', 'account.account')

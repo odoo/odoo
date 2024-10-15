@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import loyalty
 
 
-class LoyaltyReward(models.Model):
-    _inherit = ['loyalty.reward']
+class LoyaltyReward(loyalty.LoyaltyReward):
 
     def _get_discount_product_values(self):
         res = super()._get_discount_product_values()

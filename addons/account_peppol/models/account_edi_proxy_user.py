@@ -7,13 +7,13 @@ from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import A
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.exceptions import UserError
 from odoo.tools import split_every
+from odoo.addons import account_edi_proxy_client
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
 
 
-class Account_Edi_Proxy_ClientUser(models.Model):
-    _inherit = ['account_edi_proxy_client.user']
+class Account_Edi_Proxy_ClientUser(account_edi_proxy_client.Account_Edi_Proxy_ClientUser):
 
     peppol_verification_code = fields.Char(string='SMS verification code')
     proxy_type = fields.Selection(selection_add=[('peppol', 'PEPPOL')], ondelete={'peppol': 'cascade'})

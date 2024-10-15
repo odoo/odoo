@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account
 
 
-class UomUom(models.Model):
-    _inherit = ["uom.uom"]
+class UomUom(account.UomUom):
 
     # As per GST Rules you need to Specify UQC given by GST.
     l10n_in_code = fields.Char("Indian GST UQC", help="Unique Quantity Code (UQC) under GST")

@@ -4,10 +4,10 @@
 import json
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
+from odoo.addons import l10n_in_edi
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(l10n_in_edi.AccountMove):
 
     # Transaction Details
     l10n_in_type_id = fields.Many2one("l10n.in.ewaybill.type", "E-waybill Document Type", tracking=True)

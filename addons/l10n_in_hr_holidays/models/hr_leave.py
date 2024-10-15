@@ -3,10 +3,10 @@
 from datetime import datetime, timedelta
 
 from odoo import models, fields
+from odoo.addons import hr_holidays
 
 
-class HrLeave(models.Model):
-    _inherit = ["hr.leave"]
+class HrLeave(hr_holidays.HrLeave):
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
 

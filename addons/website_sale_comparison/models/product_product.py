@@ -3,10 +3,10 @@
 from collections import OrderedDict
 
 from odoo import models
+from odoo.addons import website_sale
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(website_sale.ProductProduct):
 
     def _prepare_categories_for_display(self):
         """On the comparison page group on the same line the values of each

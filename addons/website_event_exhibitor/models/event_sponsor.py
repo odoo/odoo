@@ -8,19 +8,14 @@ from odoo import api, fields, models, _
 from odoo.addons.resource.models.utils import float_to_time
 from odoo.tools import is_html_empty
 from odoo.tools.translate import html_translate
+from odoo.addons import portal, website, mail, website_jitsi
 
 
-class EventSponsor(models.Model):
+class EventSponsor(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin, website.WebsitePublishedMixin, website_jitsi.ChatRoomMixin):
     _description = 'Event Sponsor'
     _order = "sequence, sponsor_type_id"
     # _order = 'sponsor_type_id, sequence' TDE FIXME
     _rec_name = 'name'
-    _inherit = [
-        'mail.thread',
-        'mail.activity.mixin',
-        'website.published.mixin',
-        'chat.room.mixin'
-    ]
 
     def _default_sponsor_type_id(self):
         return self.env['event.sponsor.type'].search([], order="sequence desc", limit=1).id

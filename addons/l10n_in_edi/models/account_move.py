@@ -5,10 +5,10 @@ import json
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import l10n_in, account_edi
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(account_edi.AccountMove, l10n_in.AccountMove):
 
     l10n_in_edi_cancel_reason = fields.Selection(selection=[
         ("1", "Duplicate"),

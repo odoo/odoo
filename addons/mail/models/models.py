@@ -10,12 +10,12 @@ from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
 
 import logging
+from odoo.addons import web
 
 _logger = logging.getLogger(__name__)
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(web.Base):
 
     def _valid_field_parameter(self, field, name):
         # allow tracking on abstract models; see also 'mail.thread'

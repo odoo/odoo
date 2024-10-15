@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import crm
 
 
-class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+class CrmLead(crm.CrmLead):
 
     visitor_ids = fields.Many2many('website.visitor', string="Web Visitors")
     visitor_page_count = fields.Integer('# Page Views', compute="_compute_visitor_page_count")

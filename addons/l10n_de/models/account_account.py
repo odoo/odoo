@@ -1,9 +1,9 @@
 from odoo import models, _
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountAccount(models.Model):
-    _inherit = ['account.account']
+class AccountAccount(account.AccountAccount):
 
     def write(self, vals):
         if (

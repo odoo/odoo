@@ -5,12 +5,12 @@ import logging
 
 from odoo import api, fields, models
 from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
+from odoo.addons import event_booth
 
 _logger = logging.getLogger(__name__)
 
 
-class EventBoothCategory(models.Model):
-    _inherit = ['event.booth.category']
+class EventBoothCategory(event_booth.EventBoothCategory):
 
     def _default_product_id(self):
         return self.env.ref('event_booth_sale.product_product_event_booth', raise_if_not_found=False)

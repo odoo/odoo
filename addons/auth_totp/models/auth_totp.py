@@ -2,16 +2,16 @@
 from odoo import models
 
 import logging
+from odoo.addons import base
 _logger = logging.getLogger(__name__)
 
 
-class Auth_TotpDevice(models.Model):
+class Auth_TotpDevice(models.Model, base.ResUsersApikeys):
 
     # init is overriden in res.users.apikeys to create a secret column 'key'
     # use a different model to benefit from the secured methods while not mixing
     # two different concepts
 
-    _inherit = ["res.users.apikeys"]
     _description = "Authentication Device"
     _auto = False
 

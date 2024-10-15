@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
+from odoo.addons import base_vat, contacts
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(contacts.ResPartner, base_vat.ResPartner):
 
     l10n_latam_identification_type_id = fields.Many2one('l10n_latam.identification.type',
         string="Identification Type", index='btree_not_null', auto_join=True,

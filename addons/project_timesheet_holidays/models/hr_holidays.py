@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import hr_holidays
 
 
-class HrLeaveType(models.Model):
-    _inherit = ["hr.leave.type"]
+class HrLeaveType(hr_holidays.HrLeaveType):
 
     timesheet_generate = fields.Boolean(
         'Generate Timesheets', compute='_compute_timesheet_generate', store=True, readonly=False,
@@ -50,8 +50,7 @@ class HrLeaveType(models.Model):
                     "leave the internal project and task empty.", holiday_status.name))
 
 
-class HrLeave(models.Model):
-    _inherit = ["hr.leave"]
+class HrLeave(hr_holidays.HrLeave):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'holiday_id', string="Analytic Lines")
 

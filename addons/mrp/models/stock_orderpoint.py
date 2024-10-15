@@ -6,10 +6,10 @@ from odoo.tools.float_utils import float_is_zero
 from odoo.osv.expression import AND
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, time
+from odoo.addons import stock
 
 
-class StockWarehouseOrderpoint(models.Model):
-    _inherit = ['stock.warehouse.orderpoint']
+class StockWarehouseOrderpoint(stock.StockWarehouseOrderpoint):
 
     show_bom = fields.Boolean('Show BoM column', compute='_compute_show_bom')
     bom_id = fields.Many2one(

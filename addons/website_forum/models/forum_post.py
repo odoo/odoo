@@ -11,17 +11,13 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import sql, SQL
 from odoo.tools.json import scriptsafe as json_safe
+from odoo.addons import website, mail
 
 _logger = logging.getLogger(__name__)
 
 
-class ForumPost(models.Model):
+class ForumPost(models.Model, mail.MailThread, website.WebsiteSeoMetadata, website.WebsiteSearchableMixin):
     _description = 'Forum Post'
-    _inherit = [
-        'mail.thread',
-        'website.seo.metadata',
-        'website.searchable.mixin',
-    ]
     _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
 
     name = fields.Char('Title')

@@ -15,12 +15,12 @@ from odoo.addons.resource.models.utils import make_aware, Intervals
 from odoo.tools.date_utils import start_of, end_of
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.misc import get_lang
+from odoo.addons import resource, mail
 
 
-class MrpWorkcenter(models.Model):
+class MrpWorkcenter(models.Model, mail.MailThread, resource.ResourceMixin):
     _description = 'Work Center'
     _order = "sequence, id"
-    _inherit = ['mail.thread', 'resource.mixin']
     _check_company_auto = True
 
     # resource

@@ -9,16 +9,15 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv.expression import AND
 from odoo.tools import format_date
+from odoo.addons import hr_holidays, hr_holidays_contract
 
 
-class HrLeaveType(models.Model):
-    _inherit = ['hr.leave.type']
+class HrLeaveType(hr_holidays.HrLeaveType):
 
     work_entry_type_id = fields.Many2one('hr.work.entry.type', string='Work Entry Type')
 
 
-class HrLeave(models.Model):
-    _inherit = ['hr.leave']
+class HrLeave(hr_holidays.HrLeave, hr_holidays_contract.HrLeave):
 
     def _prepare_resource_leave_vals(self):
         vals = super(HrLeave, self)._prepare_resource_leave_vals()

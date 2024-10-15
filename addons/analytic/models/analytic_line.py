@@ -5,6 +5,7 @@ from lxml.builder import E
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv.expression import OR
+from odoo.addons import analytic
 
 
 class AnalyticPlanFieldsMixin(models.AbstractModel):
@@ -127,8 +128,7 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
         return arch, view
 
 
-class AccountAnalyticLine(models.Model):
-    _inherit = ['analytic.plan.fields.mixin']
+class AccountAnalyticLine(models.Model, analytic.AnalyticPlanFieldsMixin):
     _description = 'Analytic Line'
     _order = 'date desc, id desc'
     _check_company_auto = True

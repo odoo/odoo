@@ -6,10 +6,10 @@ from pytz import timezone
 
 from odoo import models
 from odoo.addons.resource.models.utils import Intervals
+from odoo.addons import hr
 
 
-class ResourceResource(models.Model):
-    _inherit = ['resource.resource']
+class ResourceResource(hr.ResourceResource):
 
     def _get_calendars_validity_within_period(self, start, end, default_company=None):
         assert start.tzinfo and end.tzinfo

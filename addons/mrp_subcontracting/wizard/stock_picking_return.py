@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
+from odoo.addons import stock
 
 
-class StockReturnPicking(models.TransientModel):
-    _inherit = ['stock.return.picking']
+class StockReturnPicking(stock.StockReturnPicking):
 
     def _prepare_picking_default_values(self):
         vals = super()._prepare_picking_default_values()
@@ -14,8 +14,7 @@ class StockReturnPicking(models.TransientModel):
         return vals
 
 
-class StockReturnPickingLine(models.TransientModel):
-    _inherit = ['stock.return.picking.line']
+class StockReturnPickingLine(stock.StockReturnPickingLine):
 
     def _prepare_move_default_values(self, new_picking):
         vals = super()._prepare_move_default_values(new_picking)

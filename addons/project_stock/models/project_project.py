@@ -2,10 +2,10 @@
 
 from odoo import models, _
 from odoo.osv.expression import AND
+from odoo.addons import project
 
 
-class ProjectProject(models.Model):
-    _inherit = ['project.project']
+class ProjectProject(project.ProjectProject):
 
     def action_open_deliveries(self):
         self.ensure_one()

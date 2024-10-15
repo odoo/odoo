@@ -3,6 +3,7 @@ from lxml import etree
 
 from odoo import _, models, Command
 from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.addons import account_edi_ubl_cii
 
 UBL_NAMESPACES = {
     'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
@@ -10,8 +11,7 @@ UBL_NAMESPACES = {
 }
 
 
-class AccountEdiXmlUbl_20(models.AbstractModel):
-    _inherit = ['account.edi.common']
+class AccountEdiXmlUbl_20(models.AbstractModel, account_edi_ubl_cii.AccountEdiCommon):
     _description = "UBL 2.0"
 
     def _find_value(self, xpath, tree, nsmap=False):

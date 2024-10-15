@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import stock
 
 
-class StockLocation(models.Model):
-    _inherit = ['stock.location']
+class StockLocation(stock.StockLocation):
 
     is_subcontracting_location = fields.Boolean(
         "Is a Subcontracting Location?",

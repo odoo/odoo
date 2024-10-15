@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
+from odoo.addons import mrp
 
 
-class MrpBom(models.Model):
-    _inherit = ['mrp.bom']
+class MrpBom(mrp.MrpBom):
 
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids', 'byproduct_ids', 'operation_ids')
     def _check_bom_lines(self):
@@ -22,8 +22,7 @@ class MrpBom(models.Model):
         return res
 
 
-class MrpBomLine(models.Model):
-    _inherit = ['mrp.bom.line']
+class MrpBomLine(mrp.MrpBomLine):
 
     cost_share = fields.Float(
         "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!

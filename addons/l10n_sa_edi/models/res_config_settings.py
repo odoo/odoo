@@ -1,8 +1,8 @@
 from odoo import models, fields, api, _
+from odoo.addons import base_vat
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(base_vat.ResConfigSettings):
 
     l10n_sa_api_mode = fields.Selection(related='company_id.l10n_sa_api_mode', readonly=False)
 

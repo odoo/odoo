@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import web, portal, digest, base_setup, analytic, mail
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(analytic.ResConfigSettings, base_setup.ResConfigSettings, mail.ResConfigSettings, portal.ResConfigSettings, web.ResConfigSettings, digest.ResConfigSettings):
 
     module_hr_timesheet = fields.Boolean(string="Task Logs")
     group_project_rating = fields.Boolean("Customer Ratings", implied_group='project.group_project_rating')

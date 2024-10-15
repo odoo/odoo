@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import account
 
 
-class AccountMoveReversal(models.TransientModel):
-    _inherit = ['account.move.reversal']
+class AccountMoveReversal(account.AccountMoveReversal):
 
     def reverse_moves(self, is_modify=False):
         action = super().reverse_moves(is_modify=is_modify)

@@ -2,10 +2,10 @@
 
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.addons import sale_stock
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(sale_stock.StockPicking):
 
     def button_validate(self):
         res = super().button_validate()

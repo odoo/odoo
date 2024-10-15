@@ -8,11 +8,11 @@ from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, float_round, float_compare, OrderedSet
 
 import logging
+from odoo.addons import stock
 _logger = logging.getLogger(__name__)
 
 
-class StockMove(models.Model):
-    _inherit = ["stock.move"]
+class StockMove(stock.StockMove):
 
     to_refund = fields.Boolean(string="Update quantities on SO/PO", copy=True,
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')

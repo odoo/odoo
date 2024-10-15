@@ -2,10 +2,10 @@
 
 from datetime import datetime, timedelta
 from odoo import api, Command, models
+from odoo.addons import account, l10n_latam_invoice_document
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ["account.chart.template"]
+class AccountChartTemplate(l10n_latam_invoice_document.AccountChartTemplate, account.AccountChartTemplate):
 
     @api.model
     def _get_demo_data_move(self, company=False):

@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import web, mail, social_media
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(web.ResCompany, social_media.ResCompany, mail.ResCompany):
 
     website_id = fields.Many2one('website', compute='_compute_website_id', store=True)
 

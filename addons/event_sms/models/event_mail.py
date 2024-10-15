@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import event
 
 
-class EventTypeMail(models.Model):
-    _inherit = ['event.type.mail']
+class EventTypeMail(event.EventTypeMail):
 
     notification_type = fields.Selection(selection_add=[('sms', 'SMS')])
     template_ref = fields.Reference(ondelete={'sms.template': 'cascade'}, selection_add=[('sms.template', 'SMS')])
@@ -16,8 +16,7 @@ class EventTypeMail(models.Model):
         sms_schedulers.notification_type = 'sms'
 
 
-class EventMail(models.Model):
-    _inherit = ['event.mail']
+class EventMail(event.EventMail):
 
     notification_type = fields.Selection(selection_add=[('sms', 'SMS')])
     template_ref = fields.Reference(ondelete={'sms.template': 'cascade'}, selection_add=[('sms.template', 'SMS')])

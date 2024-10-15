@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import account
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(account.AccountChartTemplate):
 
     def _get_property_accounts(self, additional_properties):
         property_accounts = super()._get_property_accounts(additional_properties)

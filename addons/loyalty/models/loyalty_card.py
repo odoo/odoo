@@ -6,10 +6,10 @@ from uuid import uuid4
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import format_amount
+from odoo.addons import portal
 
 
-class LoyaltyCard(models.Model):
-    _inherit = ['mail.thread']
+class LoyaltyCard(models.Model, portal.MailThread):
     _description = 'Loyalty Coupon'
     _rec_name = 'code'
 

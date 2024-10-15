@@ -3,6 +3,7 @@
 
 from odoo.addons.l10n_ec.models.res_partner import PartnerIdTypeEc
 from odoo import fields, models, api
+from odoo.addons import account_debit_note, l10n_latam_invoice_document, account
 
 _DOCUMENTS_MAPPING = {
     "01": [
@@ -127,8 +128,7 @@ _DOCUMENTS_MAPPING = {
 }
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(account_debit_note.AccountMove, l10n_latam_invoice_document.AccountMove, account.AccountMove):
 
     l10n_ec_sri_payment_id = fields.Many2one(
         comodel_name="l10n_ec.sri.payment",

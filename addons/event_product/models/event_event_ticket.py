@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models, fields
+from odoo.addons import event
 
 
-class EventEventTicket(models.Model):
-    _inherit = ['event.event.ticket']
+class EventEventTicket(event.EventEventTicket):
     _order = "event_id, sequence, price, name, id"
 
     price_reduce_taxinc = fields.Float(

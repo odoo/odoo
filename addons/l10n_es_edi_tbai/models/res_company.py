@@ -4,6 +4,7 @@
 import markupsafe
 from odoo import api, fields, models, release
 from odoo.tools import LazyTranslate
+from odoo.addons import l10n_es
 
 _lt = LazyTranslate(__name__)
 
@@ -40,8 +41,7 @@ L10N_ES_TBAI_LICENSE_DICT = {
 }
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(l10n_es.ResCompany):
 
     l10n_es_tbai_certificate_id = fields.Many2one(
         string="Certificate (TicketBAI)",

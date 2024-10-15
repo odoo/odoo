@@ -5,6 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
+from odoo.addons import purchase
 
 
 class PurchaseOrderGroup(models.Model):
@@ -19,8 +20,7 @@ class PurchaseOrderGroup(models.Model):
         return res
 
 
-class PurchaseOrder(models.Model):
-    _inherit = ['purchase.order']
+class PurchaseOrder(purchase.PurchaseOrder):
 
     requisition_id = fields.Many2one('purchase.requisition', string='Agreement', copy=False)
     requisition_type = fields.Selection(related='requisition_id.requisition_type')
@@ -258,8 +258,7 @@ class PurchaseOrder(models.Model):
             self.alternative_po_ids += rfqs.mapped('alternative_po_ids')
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = ['purchase.order.line']
+class PurchaseOrderLine(purchase.PurchaseOrderLine):
 
     price_total_cc = fields.Monetary(compute='_compute_price_total_cc', string="Company Subtotal", currency_field="company_currency_id", store=True)
     company_currency_id = fields.Many2one(related="company_id.currency_id", string="Company Currency")

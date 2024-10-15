@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import payment
 
 
-class PaymentMethod(models.Model):
-    _inherit = ['payment.method']
+class PaymentMethod(payment.PaymentMethod):
 
     def _get_fiscal_country_codes(self):
         return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))

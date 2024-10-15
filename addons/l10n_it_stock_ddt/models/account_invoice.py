@@ -3,10 +3,10 @@
 
 from odoo import models, api, fields, _
 from odoo.tools.float_utils import float_compare
+from odoo.addons import l10n_it_edi, stock_account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_it_edi.AccountMove, stock_account.AccountMove):
 
     l10n_it_ddt_ids = fields.Many2many('stock.picking', compute="_compute_ddt_ids")
     l10n_it_ddt_count = fields.Integer(compute="_compute_ddt_ids")

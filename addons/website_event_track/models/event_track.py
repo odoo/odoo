@@ -9,12 +9,12 @@ from odoo import api, fields, models, tools
 from odoo.osv import expression
 from odoo.tools.mail import is_html_empty
 from odoo.tools.translate import _, html_translate
+from odoo.addons import portal, website, mail
 
 
-class EventTrack(models.Model):
+class EventTrack(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin, website.WebsiteSeoMetadata, website.WebsitePublishedMixin):
     _description = 'Event Track'
     _order = 'priority, date'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'website.seo.metadata', 'website.published.mixin']
 
     @api.model
     def _get_default_stage_id(self):

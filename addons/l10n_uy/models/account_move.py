@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
+from odoo.addons import account, l10n_latam_invoice_document
 
 # Let us match the document types to properly suggest the DN and CN documents
 # NOTE: this can be avoided if we have an extra subclassification of UY documents
@@ -12,9 +13,8 @@ UY_DOC_SUBTYPES = [
 ]
 
 
-class AccountMove(models.Model):
+class AccountMove(account.AccountMove, l10n_latam_invoice_document.AccountMove):
 
-    _inherit = ['account.move']
 
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the

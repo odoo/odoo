@@ -7,6 +7,7 @@ import operator as py_operator
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.addons import product, stock
 
 
 OPERATORS = {
@@ -19,8 +20,7 @@ OPERATORS = {
 }
 
 
-class ProductTemplate(models.Model):
-    _inherit = ["product.template"]
+class ProductTemplate(product.ProductTemplate, stock.ProductTemplate):
 
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_tmpl_id', 'BoM Components')
     bom_ids = fields.One2many('mrp.bom', 'product_tmpl_id', 'Bill of Materials')
@@ -112,8 +112,7 @@ class ProductTemplate(models.Model):
         return super()._get_backend_root_menu_ids() + [self.env.ref('mrp.menu_mrp_root').id]
 
 
-class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+class ProductProduct(product.ProductProduct, stock.ProductProduct):
 
     variant_bom_ids = fields.One2many('mrp.bom', 'product_id', 'BOM Product Variants')
     bom_line_ids = fields.One2many('mrp.bom.line', 'product_id', 'BoM Components')

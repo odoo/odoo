@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import stock
 
 
-class StockLocation(models.Model):
-    _inherit = ["stock.location"]
+class StockLocation(stock.StockLocation):
 
     valuation_in_account_id = fields.Many2one(
         'account.account', 'Stock Valuation Account (Incoming)',

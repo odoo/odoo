@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import l10n_in
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(l10n_in.ResConfigSettings):
 
     l10n_in_withholding_account_id = fields.Many2one(
         related='company_id.l10n_in_withholding_account_id',

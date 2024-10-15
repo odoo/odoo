@@ -6,11 +6,11 @@ import base64
 from odoo import api, fields, models
 
 from odoo.tools.misc import file_open
+from odoo.addons import base
 
 
-class LunchProductCategory(models.Model):
+class LunchProductCategory(models.Model, base.ImageMixin):
     """ Category of the product such as pizza, sandwich, pasta, chinese, burger... """
-    _inherit = ['image.mixin']
     _description = 'Lunch Product Category'
 
     @api.model

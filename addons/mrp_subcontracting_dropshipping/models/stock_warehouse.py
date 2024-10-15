@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import mrp_subcontracting
 
 
-class StockWarehouse(models.Model):
-    _inherit = ['stock.warehouse']
+class StockWarehouse(mrp_subcontracting.StockWarehouse):
 
     subcontracting_dropshipping_to_resupply = fields.Boolean(
         'Dropship Subcontractors', default=True,

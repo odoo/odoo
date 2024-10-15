@@ -5,12 +5,12 @@ import base64
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import mail, microsoft_outlook
 
 
-class IrMail_Server(models.Model):
+class IrMail_Server(mail.IrMail_Server, microsoft_outlook.MicrosoftOutlookMixin):
     """Add the Outlook OAuth authentication on the outgoing mail servers."""
 
-    _inherit = ['ir.mail_server', 'microsoft.outlook.mixin']
 
     _OUTLOOK_SCOPE = 'https://outlook.office.com/SMTP.Send'
 

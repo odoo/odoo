@@ -3,15 +3,11 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
+from odoo.addons import website, mail
 
 
-class ForumTag(models.Model):
+class ForumTag(models.Model, mail.MailThread, website.WebsiteSearchableMixin, website.WebsiteSeoMetadata):
     _description = "Forum Tag"
-    _inherit = [
-        'mail.thread',
-        'website.searchable.mixin',
-        'website.seo.metadata',
-    ]
 
     name = fields.Char('Name', required=True)
     color = fields.Integer('Color')

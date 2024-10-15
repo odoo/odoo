@@ -4,10 +4,10 @@
 from odoo import models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
+from odoo.addons import mail
 
 
-class MailActivitySchedule(models.TransientModel):
-    _inherit = ['mail.activity.schedule']
+class MailActivitySchedule(mail.MailActivitySchedule):
 
     def action_create_calendar_event(self):
         self.ensure_one()

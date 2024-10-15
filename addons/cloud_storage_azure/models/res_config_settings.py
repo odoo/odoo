@@ -5,9 +5,10 @@ from datetime import datetime, timedelta, timezone
 
 from odoo import models, fields, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.addons import cloud_storage
 
 
-class ResConfigSettings(models.TransientModel):
+class ResConfigSettings(cloud_storage.ResConfigSettings):
     """
     Instructions:
     cloud_storage_azure_account_name, cloud_storage_azure_container_name:
@@ -18,7 +19,6 @@ class ResConfigSettings(models.TransientModel):
         invalidate the cached value for
         get_cloud_storage_azure_user_delegation_key
     """
-    _inherit = ['res.config.settings']
 
     cloud_storage_provider = fields.Selection(selection_add=[('azure', 'Azure Cloud Storage')])
 

@@ -9,10 +9,10 @@ from odoo.tools import float_compare
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import groupby
+from odoo.addons import stock
 
 
-class StockRule(models.Model):
-    _inherit = ['stock.rule']
+class StockRule(stock.StockRule):
 
     action = fields.Selection(selection_add=[
         ('buy', 'Buy')

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.addons import delivery, sale
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(sale.SaleOrderLine, delivery.SaleOrderLine):
 
     name_short = fields.Char(compute='_compute_name_short')
     shop_warning = fields.Char(string="Warning")

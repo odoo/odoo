@@ -7,12 +7,12 @@ import logging
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
+from odoo.addons import sale
 
 _logger = logging.getLogger(__name__)
 
 
-class SaleOrder(models.Model):
-    _inherit = ["sale.order"]
+class SaleOrder(sale.SaleOrder):
 
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',

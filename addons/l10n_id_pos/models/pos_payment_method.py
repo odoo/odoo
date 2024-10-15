@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import UserError
 from odoo import _, models
+from odoo.addons import point_of_sale
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ["pos.payment.method"]
+class PosPaymentMethod(point_of_sale.PosPaymentMethod):
 
     def l10n_id_verify_qris_status(self, trx_uuid):
         """ Verify qris payment status from the provided transaction UUID

@@ -7,11 +7,11 @@ from odoo.exceptions import ValidationError
 from odoo.tools.image import is_image_size_above
 
 from odoo.addons.web_editor.tools import get_video_embed_code, get_video_thumbnail
+from odoo.addons import base
 
 
-class ProductImage(models.Model):
+class ProductImage(models.Model, base.ImageMixin):
     _description = "Product Image"
-    _inherit = ['image.mixin']
     _order = 'sequence, id'
 
     name = fields.Char(string="Name", required=True)

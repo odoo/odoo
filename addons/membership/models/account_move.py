@@ -4,10 +4,10 @@
 from odoo import api, fields, models
 
 from datetime import date
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     def button_draft(self):
         # OVERRIDE to update the cancel date.
@@ -39,8 +39,7 @@ class AccountMove(models.Model):
         return res
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(account.AccountMoveLine):
 
     def write(self, vals):
         # OVERRIDE

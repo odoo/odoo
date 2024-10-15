@@ -3,9 +3,9 @@
 # Copyright (C) 2004-2008 PC Solutions (<http://pcsol.be>). All Rights Reserved
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountBankStatementLine(models.Model):
-    _inherit = ['account.bank.statement.line']
+class AccountBankStatementLine(account.AccountBankStatementLine):
 
     pos_session_id = fields.Many2one('pos.session', string="Session", copy=False)

@@ -4,10 +4,10 @@ from odoo import _, api, fields, models
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale_collect import const
+from odoo.addons import payment_custom
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment_custom.PaymentProvider):
 
     custom_mode = fields.Selection(
         selection_add=[('on_site', "Pay on site")]

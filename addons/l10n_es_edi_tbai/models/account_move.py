@@ -8,6 +8,7 @@ from psycopg2.errors import LockNotAvailable
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import l10n_es
 
 TBAI_REFUND_REASONS = [
     ('R1', "R1: Art. 80.1, 80.2, 80.6 and rights founded error"),
@@ -18,8 +19,7 @@ TBAI_REFUND_REASONS = [
 ]
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_es.AccountMove):
 
     l10n_es_tbai_state = fields.Selection([
             ('to_send', 'To Send'),

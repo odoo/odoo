@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import hr_expense
 
 
-class HrExpenseSplit(models.TransientModel):
-    _inherit = ["hr.expense.split"]
+class HrExpenseSplit(hr_expense.HrExpenseSplit):
 
     def default_get(self, fields):
         result = super(HrExpenseSplit, self).default_get(fields)

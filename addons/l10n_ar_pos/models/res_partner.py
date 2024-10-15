@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from odoo import models, api, _
 from odoo.exceptions import UserError
+from odoo.addons import l10n_ar, point_of_sale
 
 
-class ResPartner(models.Model):
+class ResPartner(l10n_ar.ResPartner, point_of_sale.ResPartner):
 
-    _inherit = ['res.partner']
 
     @api.ondelete(at_uninstall=False)
     def _ar_unlink_except_master_data(self):

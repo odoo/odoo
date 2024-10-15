@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.osv.expression import AND
+from odoo.addons import project_stock_account
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(project_stock_account.StockMove):
 
     def _get_valid_moves_domain(self):
         domain = super()._get_valid_moves_domain()

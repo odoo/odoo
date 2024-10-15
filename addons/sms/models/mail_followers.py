@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import mail
 
 
-class MailFollowers(models.Model):
-    _inherit = ['mail.followers']
+class MailFollowers(mail.MailFollowers):
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None):
         recipients_data = super()._get_recipient_data(records, message_type, subtype_id, pids=pids)

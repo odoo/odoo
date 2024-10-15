@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import purchase_stock
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ["account.move.line"]
+class AccountMoveLine(purchase_stock.AccountMoveLine):
 
     def _get_stock_valuation_layers(self, move):
         """ Do not handle the invoice correction for kit. It has to be done

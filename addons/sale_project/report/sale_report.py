@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons import sale
 
 
-class SaleReport(models.Model):
-    _inherit = ['sale.report']
+class SaleReport(sale.SaleReport):
 
     project_id = fields.Many2one(comodel_name='project.project', readonly=True)
 

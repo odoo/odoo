@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.addons import point_of_sale
 
 
-class PosConfig(models.Model):
-    _inherit = ['pos.config']
+class PosConfig(point_of_sale.PosConfig):
 
     basic_employee_ids = fields.Many2many(
         'hr.employee', 'pos_hr_basic_employee_hr_employee', string="Employees with basic access",

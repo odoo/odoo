@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models
+from odoo.addons import base
 
 
-class IrQweb(models.AbstractModel):
-    _inherit = ["ir.qweb"]
+class IrQweb(base.IrQweb):
 
     def _get_bundles_to_pregenarate(self):
         js_assets, css_assets = super()._get_bundles_to_pregenarate()

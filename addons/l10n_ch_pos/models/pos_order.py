@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
+from odoo.addons import point_of_sale
 
 
-class PosOrder(models.Model):
-    _inherit = ["pos.order"]
+class PosOrder(point_of_sale.PosOrder):
 
     def _get_partner_bank_id(self):
         bank_partner_id = super()._get_partner_bank_id()

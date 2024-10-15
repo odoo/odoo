@@ -6,10 +6,10 @@ from collections import defaultdict
 from odoo import models, api
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.misc import formatLang
+from odoo.addons import stock_account, sale
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(sale.AccountMove, stock_account.AccountMove):
 
     def _stock_account_get_last_step_stock_moves(self):
         """ Overridden from stock_account.
@@ -134,8 +134,7 @@ class AccountMove(models.Model):
                 move.incoterm_location = incoterm_res
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ["account.move.line"]
+class AccountMoveLine(sale.AccountMoveLine, stock_account.AccountMoveLine):
 
     def _sale_can_be_reinvoice(self):
         self.ensure_one()

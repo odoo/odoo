@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import purchase_stock, sale_purchase
 
 
-class PurchaseOrder(models.Model):
-    _inherit = ['purchase.order']
+class PurchaseOrder(purchase_stock.PurchaseOrder, sale_purchase.PurchaseOrder):
 
     @api.depends('order_line.move_dest_ids.group_id.sale_id', 'order_line.move_ids.move_dest_ids.group_id.sale_id')
     def _compute_sale_order_count(self):
@@ -19,8 +19,7 @@ class PurchaseOrder(models.Model):
         return super()._get_sale_orders() | linked_so | group_so
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = ['purchase.order.line']
+class PurchaseOrderLine(purchase_stock.PurchaseOrderLine, sale_purchase.PurchaseOrderLine):
 
     def _prepare_stock_moves(self, picking):
         res = super()._prepare_stock_moves(picking)

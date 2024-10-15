@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
+from odoo.addons import sale_stock, website_sale, stock_delivery
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(website_sale.SaleOrderLine, sale_stock.SaleOrderLine, stock_delivery.SaleOrderLine):
 
     def _set_shop_warning_stock(self, desired_qty, new_qty):
         self.ensure_one()

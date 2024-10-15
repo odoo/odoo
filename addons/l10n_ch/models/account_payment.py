@@ -3,10 +3,10 @@ import re
 
 from odoo import _, models, fields, api
 from odoo.tools import mod10r
+from odoo.addons import account
 
 
-class AccountPayment(models.Model):
-    _inherit = ["account.payment"]
+class AccountPayment(account.AccountPayment):
 
     l10n_ch_reference_warning_msg = fields.Char(compute='_compute_l10n_ch_reference_warning_msg')
 

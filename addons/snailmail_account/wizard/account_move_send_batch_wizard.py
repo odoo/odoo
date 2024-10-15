@@ -1,8 +1,8 @@
 from odoo import _, fields, models
+from odoo.addons import account
 
 
-class AccountMoveSendBatchWizard(models.TransientModel):
-    _inherit = ['account.move.send.batch.wizard']
+class AccountMoveSendBatchWizard(account.AccountMoveSendBatchWizard):
 
     send_by_post_stamps = fields.Integer(compute='_compute_send_by_post_stamps')
 

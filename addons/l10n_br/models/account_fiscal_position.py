@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
+from odoo.addons import account
 
 SOUTH_SOUTHEAST = {"PR", "RS", "SC", "SP", "ES", "MG", "RJ"}
 NORTH_NORTHEAST_MIDWEST = {
@@ -9,8 +10,7 @@ NORTH_NORTHEAST_MIDWEST = {
 }
 
 
-class AccountFiscalPosition(models.Model):
-    _inherit = ['account.fiscal.position']
+class AccountFiscalPosition(account.AccountFiscalPosition):
 
     l10n_br_fp_type = fields.Selection(
         selection=[

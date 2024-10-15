@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account
 
 _TYPE_EC = [
     ("vat05", "VAT 5%"),
@@ -24,8 +25,7 @@ _TYPE_EC = [
 ]
 
 
-class AccountTaxGroup(models.Model):
-    _inherit = ["account.tax.group"]
+class AccountTaxGroup(account.AccountTaxGroup):
 
     l10n_ec_type = fields.Selection(
         _TYPE_EC, string="Type Ecuadorian Tax", help="Ecuadorian taxes subtype"

@@ -3,10 +3,10 @@
 from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.addons import point_of_sale, barcodes, stock_account
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company', 'pos.load.mixin']
+class ResCompany(stock_account.ResCompany, barcodes.ResCompany, point_of_sale.PosLoadMixin):
 
     point_of_sale_update_stock_quantities = fields.Selection([
             ('closing', 'At the session closing'),

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import web, portal, base_setup, web_tour, mail
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(base_setup.IrHttp, web.IrHttp, mail.IrHttp, portal.IrHttp, web_tour.IrHttp):
 
     def session_info(self):
         """ The widget 'timesheet_uom' needs to know which UoM conversion factor and which javascript

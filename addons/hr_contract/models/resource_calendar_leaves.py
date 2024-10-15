@@ -4,10 +4,10 @@ from datetime import datetime
 from pytz import timezone, utc
 
 from odoo import models
+from odoo.addons import resource
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = ['resource.calendar.leaves']
+class ResourceCalendarLeaves(resource.ResourceCalendarLeaves):
 
     def _compute_calendar_id(self):
         def date2datetime(date, tz):

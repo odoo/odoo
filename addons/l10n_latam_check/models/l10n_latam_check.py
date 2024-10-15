@@ -6,15 +6,15 @@ import stdnum
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import index_exists
+from odoo.addons import portal, mail
 
 
 _logger = logging.getLogger(__name__)
 
 
-class L10n_LatamCheck(models.Model):
+class L10n_LatamCheck(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = 'Account payment check'
     _check_company_auto = True
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     payment_id = fields.Many2one(
         'account.payment',

@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details
 from odoo import fields, models, api
+from odoo.addons import account, l10n_latam_base, base_vat, base_address_extended
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(base_vat.ResPartner, base_address_extended.ResPartner, l10n_latam_base.ResPartner, account.ResPartner):
 
     l10n_pe_district = fields.Many2one(
         'l10n_pe.res.city.district', string='District',

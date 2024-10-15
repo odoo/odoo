@@ -2,10 +2,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from stdnum.in_ import pan, gstin
+from odoo.addons import account, base_vat
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(base_vat.ResCompany, account.ResCompany):
 
     l10n_in_upi_id = fields.Char(string="UPI Id")
     l10n_in_hsn_code_digit = fields.Selection(

@@ -12,16 +12,16 @@ from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.osv import expression
 from odoo.addons.website.models import ir_http
 from odoo.exceptions import AccessError
+from odoo.addons import web_editor, portal, mail, http_routing
 
 
 _logger = logging.getLogger(__name__)
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
 
-class IrQweb(models.AbstractModel):
+class IrQweb(web_editor.IrQweb, http_routing.IrQweb, portal.IrQweb, mail.IrQweb):
     """ IrQweb object for rendering stuff in the website context """
 
-    _inherit = ['ir.qweb']
 
     URL_ATTRS = {
         'form': 'action',

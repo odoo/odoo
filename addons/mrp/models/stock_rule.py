@@ -8,10 +8,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.tools import float_compare, OrderedSet
+from odoo.addons import stock
 
 
-class StockRule(models.Model):
-    _inherit = ['stock.rule']
+class StockRule(stock.StockRule):
     action = fields.Selection(selection_add=[
         ('manufacture', 'Manufacture')
     ], ondelete={'manufacture': 'cascade'})
@@ -232,8 +232,7 @@ class StockRule(models.Model):
         return new_move_vals
 
 
-class ProcurementGroup(models.Model):
-    _inherit = ['procurement.group']
+class ProcurementGroup(stock.ProcurementGroup):
 
     mrp_production_ids = fields.One2many('mrp.production', 'procurement_group_id')
 

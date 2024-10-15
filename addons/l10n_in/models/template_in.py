@@ -2,10 +2,10 @@
 from odoo import models, fields, _
 from odoo.addons.account.models.chart_template import template
 from odoo import Command
+from odoo.addons import account
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(account.AccountChartTemplate):
 
     @template('in')
     def _get_in_template_data(self):

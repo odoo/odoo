@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
+from odoo.addons import sale_loyalty
 
 
-class LoyaltyReward(models.Model):
-    _inherit = ['loyalty.reward']
+class LoyaltyReward(sale_loyalty.LoyaltyReward):
 
     reward_type = fields.Selection(
         selection_add=[('shipping', 'Free Shipping')],

@@ -22,6 +22,7 @@ from odoo.osv.expression import FALSE_DOMAIN
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.http_routing.models import ir_http
 from odoo.addons.portal.controllers.portal import _build_url_w_params
+from odoo.addons import web, portal, web_editor, utm, google_recaptcha, http_routing, auth_signup, mail
 
 logger = logging.getLogger(__name__)
 
@@ -58,8 +59,7 @@ def get_request_website():
     return request and getattr(request, 'website', False) or False
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(web.IrHttp, web_editor.IrHttp, http_routing.IrHttp, portal.IrHttp, auth_signup.IrHttp, mail.IrHttp, google_recaptcha.IrHttp, utm.IrHttp):
 
     def routing_map(self, key=None):
         if not key and request:

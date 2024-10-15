@@ -2,10 +2,10 @@
 
 
 from odoo import api, models
+from odoo.addons import mail
 
 
-class BasePartnerMergeAutomaticWizard(models.TransientModel):
-    _inherit = ['base.partner.merge.automatic.wizard']
+class BasePartnerMergeAutomaticWizard(mail.BasePartnerMergeAutomaticWizard):
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):

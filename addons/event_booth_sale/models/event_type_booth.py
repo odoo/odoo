@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import event_booth
 
 
-class EventTypeBooth(models.Model):
-    _inherit = ['event.type.booth']
+class EventTypeBooth(event_booth.EventTypeBooth):
 
     product_id = fields.Many2one(related='booth_category_id.product_id')
     price = fields.Float(related='booth_category_id.price', store=True)

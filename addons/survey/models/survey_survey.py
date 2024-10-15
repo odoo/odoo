@@ -11,15 +11,15 @@ from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
+from odoo.addons import mail
 
 
-class SurveySurvey(models.Model):
+class SurveySurvey(models.Model, mail.MailThread, mail.MailActivityMixin):
     """ Settings for a multi-page/multi-question survey. Each survey can have one or more attached pages
     and each page can display one or more questions. """
     _description = 'Survey'
     _order = 'create_date DESC'
     _rec_name = 'title'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
     def _get_default_access_token(self):

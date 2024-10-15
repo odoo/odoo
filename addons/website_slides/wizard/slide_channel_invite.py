@@ -6,14 +6,14 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
 emails_split = re.compile(r"[;,\n\r]+")
 
 
-class SlideChannelInvite(models.TransientModel):
-    _inherit = ['mail.composer.mixin']
+class SlideChannelInvite(models.TransientModel, mail.MailComposerMixin):
     _description = 'Channel Invitation Wizard'
 
     # composer content

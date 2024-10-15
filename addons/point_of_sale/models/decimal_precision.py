@@ -1,8 +1,8 @@
 from odoo import models, api
+from odoo.addons import account, point_of_sale
 
 
-class DecimalPrecision(models.Model):
-    _inherit = ['decimal.precision', 'pos.load.mixin']
+class DecimalPrecision(account.DecimalPrecision, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

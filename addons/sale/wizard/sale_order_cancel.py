@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import mail
 
 
-class SaleOrderCancel(models.TransientModel):
-    _inherit = ['mail.composer.mixin']
+class SaleOrderCancel(models.TransientModel, mail.MailComposerMixin):
     _description = "Sales Order Cancel"
 
     @api.model

@@ -1,8 +1,8 @@
 from odoo import _, models
+from odoo.addons import account
 
 
-class AccountMoveSendWizard(models.TransientModel):
-    _inherit = ['account.move.send.wizard']
+class AccountMoveSendWizard(account.AccountMoveSendWizard):
 
     def _compute_extra_edi_checkboxes(self):
         super()._compute_extra_edi_checkboxes()

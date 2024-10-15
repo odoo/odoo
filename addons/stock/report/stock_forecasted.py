@@ -7,6 +7,7 @@ from datetime import date
 from odoo import api, models
 from odoo.osv.expression import AND
 from odoo.tools import float_is_zero, format_date, float_round, float_compare
+from odoo.addons import stock
 
 
 class StockForecasted_Product_Product(models.AbstractModel):
@@ -431,9 +432,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
         return move_ids
 
 
-class StockForecasted_Product_Template(models.AbstractModel):
+class StockForecasted_Product_Template(models.AbstractModel, stock.StockForecasted_Product_Product):
     _description = "Stock Replenishment Report"
-    _inherit = ['stock.forecasted_product_product']
 
     @api.model
     def get_report_values(self, docids, data=None):

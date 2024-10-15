@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import product
 
 
-class ProductAttribute(models.Model):
-    _inherit = ['product.attribute']
+class ProductAttribute(product.ProductAttribute):
 
     visibility = fields.Selection(
         selection=[('visible', "Visible"), ('hidden', "Hidden")],

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account, portal, product
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(product.ResPartner, portal.ResPartner, account.ResPartner):
 
     loyalty_card_count = fields.Integer(
         string="Active loyalty cards",

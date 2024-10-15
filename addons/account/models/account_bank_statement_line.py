@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 from xmlrpc.client import MAXINT
 
 from odoo.tools import create_index, SQL
+from odoo.addons import account
 
 
 class AccountBankStatementLine(models.Model):
@@ -834,7 +835,6 @@ class AccountBankStatementLine(models.Model):
 
 
 # a lot of SQL queries
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(models.Model, account.AccountMove):
 
     statement_line_ids = fields.One2many('account.bank.statement.line', 'move_id', string='Statements')

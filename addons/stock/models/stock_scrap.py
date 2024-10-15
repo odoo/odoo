@@ -5,10 +5,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import clean_context
+from odoo.addons import portal, mail
 
 
-class StockScrap(models.Model):
-    _inherit = ['mail.thread']
+class StockScrap(models.Model, mail.MailThread, portal.MailThread):
     _order = 'id desc'
     _description = 'Scrap'
 

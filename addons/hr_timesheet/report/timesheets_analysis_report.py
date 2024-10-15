@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 from odoo.tools.sql import drop_view_if_exists, SQL
+from odoo.addons import hr
 
 
-class TimesheetsAnalysisReport(models.Model):
-    _inherit = ["hr.manager.department.report"]
+class TimesheetsAnalysisReport(models.Model, hr.HrManagerDepartmentReport):
     _description = "Timesheets Analysis Report"
     _auto = False
 

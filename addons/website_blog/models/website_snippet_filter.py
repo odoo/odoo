@@ -4,10 +4,10 @@
 from datetime import timedelta
 
 from odoo import models, fields, _
+from odoo.addons import website
 
 
-class WebsiteSnippetFilter(models.Model):
-    _inherit = ['website.snippet.filter']
+class WebsiteSnippetFilter(website.WebsiteSnippetFilter):
 
     def _get_hardcoded_sample(self, model):
         samples = super()._get_hardcoded_sample(model)

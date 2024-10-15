@@ -6,10 +6,10 @@ import itertools
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import groupby
+from odoo.addons import mail
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = ['mail.thread']
+class AccountAnalyticAccount(models.Model, mail.MailThread):
     _description = 'Analytic Account'
     _order = 'plan_id, name asc'
     _check_company_auto = True

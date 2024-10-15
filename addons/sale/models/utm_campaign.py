@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import utm
 
 
-class UtmCampaign(models.Model):
-    _inherit = ['utm.campaign']
+class UtmCampaign(utm.UtmCampaign):
     _description = 'UTM Campaign'
 
     quotation_count = fields.Integer('Quotation Count',

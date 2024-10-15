@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
+from odoo.addons import l10n_in
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(l10n_in.AccountMove):
 
     l10n_in_partner_gstin_status = fields.Boolean(
         string="GST Status",

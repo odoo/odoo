@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
+from odoo.addons import base_setup
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(base_setup.ResUsers):
 
     def _can_manage_unsplash_settings(self):
         self.ensure_one()

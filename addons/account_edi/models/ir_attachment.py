@@ -2,10 +2,10 @@
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(account.IrAttachment):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_government_document(self):

@@ -7,10 +7,10 @@ from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError
 from odoo.tools import format_list
 from odoo.tools.misc import OrderedSet
+from odoo.addons import purchase
 
 
-class PurchaseOrder(models.Model):
-    _inherit = ['purchase.order']
+class PurchaseOrder(purchase.PurchaseOrder):
 
     @api.model
     def _default_picking_type(self):

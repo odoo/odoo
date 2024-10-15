@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.tools import is_html_empty, lazy
+from odoo.addons import web_editor, mail, http_routing
 
 
-class IrQweb(models.AbstractModel):
-    _inherit = ["ir.qweb"]
+class IrQweb(web_editor.IrQweb, http_routing.IrQweb, mail.IrQweb):
 
     def _prepare_frontend_environment(self, values):
         """ Returns ir.qweb with context and update values with portal specific

@@ -5,10 +5,10 @@ import itertools
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_is_zero
 from odoo.tools.misc import groupby
+from odoo.addons import stock
 
 
-class StockQuant(models.Model):
-    _inherit = ['stock.quant']
+class StockQuant(stock.StockQuant):
 
     value = fields.Monetary('Value', compute='_compute_value', groups='stock.group_stock_manager')
     currency_id = fields.Many2one('res.currency', compute='_compute_value', groups='stock.group_stock_manager')

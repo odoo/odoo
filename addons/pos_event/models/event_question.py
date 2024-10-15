@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import event, point_of_sale
 
 
-class EventQuestion(models.Model):
-    _inherit = ['event.question', 'pos.load.mixin']
+class EventQuestion(event.EventQuestion, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

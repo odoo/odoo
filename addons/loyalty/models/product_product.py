@@ -3,10 +3,10 @@
 
 from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import account, product
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(product.ProductProduct, account.ProductProduct):
 
     def write(self, vals):
         if not vals.get('active', True) and any(product.active for product in self):

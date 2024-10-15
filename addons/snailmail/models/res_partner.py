@@ -4,10 +4,10 @@
 
 from odoo import api, models
 from odoo.addons.snailmail.country_utils import SNAILMAIL_COUNTRIES
+from odoo.addons import mail
 
 
-class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+class ResPartner(mail.ResPartner):
 
     def write(self, vals):
         letter_address_vals = {}

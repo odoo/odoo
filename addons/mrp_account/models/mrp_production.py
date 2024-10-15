@@ -5,10 +5,10 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.tools import float_round
+from odoo.addons import mrp
 
 
-class MrpProduction(models.Model):
-    _inherit = ['mrp.production']
+class MrpProduction(mrp.MrpProduction):
 
     extra_cost = fields.Float(copy=False, string='Extra Unit Cost')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')

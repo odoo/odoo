@@ -2,10 +2,10 @@
 from collections import Counter
 
 from odoo import fields, models, _
+from odoo.addons import hr_expense
 
 
-class HrExpenseSheet(models.Model):
-    _inherit = ["hr.expense.sheet"]
+class HrExpenseSheet(hr_expense.HrExpenseSheet):
 
     sale_order_count = fields.Integer(compute='_compute_sale_order_count')
 

@@ -1,8 +1,8 @@
 from odoo import api, Command, fields, models
+from odoo.addons import web
 
 
-class BaseDocumentLayout(models.TransientModel):
-    _inherit = ['base.document.layout']
+class BaseDocumentLayout(web.BaseDocumentLayout):
 
     from_invoice = fields.Boolean()
     qr_code = fields.Boolean(related='company_id.qr_code', readonly=False)

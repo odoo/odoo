@@ -1,9 +1,9 @@
 from odoo import _, api, models
 from odoo.exceptions import UserError
+from odoo.addons import mail
 
 
-class MailTemplate(models.Model):
-    _inherit = ['mail.template']
+class MailTemplate(mail.MailTemplate):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_mail_template(self):

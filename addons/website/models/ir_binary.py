@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import mail
 
 
-class IrBinary(models.AbstractModel):
-    _inherit = ['ir.binary']
+class IrBinary(mail.IrBinary):
 
     def _find_record(
             self, xmlid=None, res_model='ir.attachment', res_id=None,

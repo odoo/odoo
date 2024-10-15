@@ -3,10 +3,10 @@
 
 from odoo import fields, models
 from dateutil.relativedelta import relativedelta
+from odoo.addons import hr
 
 
-class MailActivitySchedule(models.TransientModel):
-    _inherit = ['mail.activity.schedule']
+class MailActivitySchedule(hr.MailActivitySchedule):
 
     def _compute_plan_date(self):
         todo = self.filtered(lambda s: s.res_model == 'hr.employee')

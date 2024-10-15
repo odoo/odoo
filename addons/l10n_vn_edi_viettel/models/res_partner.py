@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account.ResPartner):
 
     invoice_edi_format = fields.Selection(selection_add=[('vn_sinvoice', 'SInvoice file')])
     l10n_vn_edi_symbol = fields.Many2one(

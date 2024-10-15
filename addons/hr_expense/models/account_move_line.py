@@ -4,10 +4,10 @@
 from odoo import api, fields, models
 from odoo.tools import SQL
 from odoo.tools.misc import frozendict
+from odoo.addons import account
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ["account.move.line"]
+class AccountMoveLine(account.AccountMoveLine):
 
     expense_id = fields.Many2one('hr.expense', string='Expense', copy=True) # copy=True, else we don't know price is tax incl.
 

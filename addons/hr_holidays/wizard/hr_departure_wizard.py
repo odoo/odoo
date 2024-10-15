@@ -3,10 +3,10 @@
 from datetime import datetime, timedelta
 
 from odoo import _, models
+from odoo.addons import hr
 
 
-class HrDepartureWizard(models.TransientModel):
-    _inherit = ['hr.departure.wizard']
+class HrDepartureWizard(hr.HrDepartureWizard):
 
     def action_register_departure(self):
         super(HrDepartureWizard, self).action_register_departure()

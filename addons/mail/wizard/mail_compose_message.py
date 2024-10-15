@@ -11,6 +11,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.mail import is_html_empty, email_normalize, email_split_and_format
 from odoo.addons.mail.tools.parser import parse_res_ids
+from odoo.addons import mail
 
 
 def _reopen(self, res_id, model, context=None):
@@ -27,7 +28,7 @@ def _reopen(self, res_id, model, context=None):
             }
 
 
-class MailComposeMessage(models.TransientModel):
+class MailComposeMessage(models.TransientModel, mail.MailComposerMixin):
     """ Generic message composition wizard. You may inherit from this wizard
         at model and view levels to provide specific features.
 
@@ -37,7 +38,6 @@ class MailComposeMessage(models.TransientModel):
             contain template placeholders that will be merged with actual data
             before being sent to each recipient.
     """
-    _inherit = ['mail.composer.mixin']
     _description = 'Email composition wizard'
     _log_access = True
     _batch_size = 50

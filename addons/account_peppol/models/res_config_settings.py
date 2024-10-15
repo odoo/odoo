@@ -4,10 +4,10 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.addons import account
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(account.ResConfigSettings):
 
     account_peppol_edi_user = fields.Many2one(
         comodel_name='account_edi_proxy_client.user',

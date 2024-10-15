@@ -4,12 +4,12 @@ from werkzeug import urls
 from odoo import api, fields, models
 from odoo.http import request
 from odoo.tools.json import scriptsafe as json_scriptsafe
+from odoo.addons import mail
 
 
-class IrActionsServer(models.Model):
+class IrActionsServer(mail.IrActionsServer):
     """ Add website option in server actions. """
 
-    _inherit = ['ir.actions.server']
 
     xml_id = fields.Char('External ID', compute='_compute_xml_id', help="ID of the action if defined in a XML file")
     website_path = fields.Char('Website Path')

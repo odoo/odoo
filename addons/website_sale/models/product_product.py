@@ -4,10 +4,10 @@ from werkzeug.urls import url_join
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import sale
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(sale.ProductProduct):
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name='product.ribbon')
     website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)

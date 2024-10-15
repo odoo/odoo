@@ -4,6 +4,7 @@ from __future__ import division
 from itertools import count, zip_longest
 
 from odoo import api, fields, models, Command
+from odoo.addons import web
 
 
 class Test_Testing_UtilitiesA(models.Model):
@@ -344,8 +345,7 @@ class O2m_Changes_ChildrenLines(models.Model):
     vv = fields.Integer()
 
 
-class ResConfigTest(models.Model):
-    _inherit = ['res.config.settings']
+class ResConfigTest(models.Model, web.ResConfigSettings):
 
     _description = 'Config test'
 

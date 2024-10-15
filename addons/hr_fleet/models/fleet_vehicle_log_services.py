@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import fleet
 
 
-class FleetVehicleLogServices(models.Model):
-    _inherit = ['fleet.vehicle.log.services']
+class FleetVehicleLogServices(fleet.FleetVehicleLogServices):
 
     purchaser_employee_id = fields.Many2one(
         'hr.employee', string="Driver (Employee)",

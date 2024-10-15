@@ -9,10 +9,10 @@ from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import json
+from odoo.addons import account, base_vat
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(account.ResCompany, base_vat.ResCompany):
 
     l10n_ro_edi_client_id = fields.Char(string='Client ID')
     l10n_ro_edi_client_secret = fields.Char(string='Client Secret')

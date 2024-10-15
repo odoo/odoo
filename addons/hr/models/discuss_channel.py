@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import mail
 
 
-class DiscussChannel(models.Model):
-    _inherit = ['discuss.channel']
+class DiscussChannel(mail.DiscussChannel):
 
     subscription_department_ids = fields.Many2many(
         'hr.department', string='HR Departments',

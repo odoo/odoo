@@ -6,13 +6,13 @@ import logging
 from odoo import fields, models
 
 from odoo.addons.payment_aps import const
+from odoo.addons import payment
 
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('aps', "Amazon Payment Services")], ondelete={'aps': 'set default'}

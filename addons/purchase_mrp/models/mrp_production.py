@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, Command, fields, models, _
+from odoo.addons import mrp
 
 
-class MrpProduction(models.Model):
-    _inherit = ['mrp.production']
+class MrpProduction(mrp.MrpProduction):
 
     purchase_order_count = fields.Integer(
         "Count of generated PO",

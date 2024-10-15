@@ -4,10 +4,10 @@ from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import SQL
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import bus
 
 
-class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+class ResPartner(bus.ResPartner):
 
     channel_ids = fields.Many2many(
         "discuss.channel",

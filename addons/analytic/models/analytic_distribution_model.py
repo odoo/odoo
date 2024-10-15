@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 from odoo.tools import SQL
 from odoo.exceptions import UserError
+from odoo.addons import analytic
 
 
-class AccountAnalyticDistributionModel(models.Model):
-    _inherit = ['analytic.mixin']
+class AccountAnalyticDistributionModel(models.Model, analytic.AnalyticMixin):
     _description = 'Analytic Distribution Model'
     _rec_name = 'create_date'
     _order = 'sequence, id desc'

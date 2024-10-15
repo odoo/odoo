@@ -10,12 +10,12 @@ from odoo.tools import format_amount
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import utils as adyen_utils
 from odoo.addons.payment_adyen import const
+from odoo.addons import payment
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = ['payment.transaction']
+class PaymentTransaction(payment.PaymentTransaction):
 
     #=== BUSINESS METHODS ===#
 

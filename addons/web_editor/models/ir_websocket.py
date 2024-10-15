@@ -5,10 +5,10 @@ import re
 
 from odoo import models
 from odoo.exceptions import AccessDenied
+from odoo.addons import bus
 
 
-class IrWebsocket(models.AbstractModel):
-    _inherit = ['ir.websocket']
+class IrWebsocket(bus.IrWebsocket):
 
     def _build_bus_channel_list(self, channels):
         if self.env.uid:

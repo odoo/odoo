@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import web
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(web.Base):
 
     @api.model
     def hierarchy_read(self, domain, specification, parent_field, child_field=None, order=None):

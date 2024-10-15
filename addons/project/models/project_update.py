@@ -8,6 +8,7 @@ from werkzeug.urls import url_encode
 from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import format_amount, formatLang
+from odoo.addons import mail
 
 STATUS_COLOR = {
     'on_track': 20,  # green / success
@@ -21,10 +22,9 @@ STATUS_COLOR = {
 }
 
 
-class ProjectUpdate(models.Model):
+class ProjectUpdate(models.Model, mail.MailThreadCc, mail.MailActivityMixin):
     _description = 'Project Update'
     _order = 'id desc'
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
 
     def default_get(self, fields):
         result = super().default_get(fields)

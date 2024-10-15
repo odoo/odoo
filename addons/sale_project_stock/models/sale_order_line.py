@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale_stock, sale_project
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(sale_project.SaleOrderLine, sale_stock.SaleOrderLine):
 
     def _get_action_per_item(self):
         """ Get action per Sales Order Item to display the stock moves linked

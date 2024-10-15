@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import web_editor
 
 
-class HtmlFieldHistoryTest(models.Model):
+class HtmlFieldHistoryTest(models.Model, web_editor.HtmlFieldHistoryMixin):
     _description = "Test html_field_history Model"
-    _inherit = ["html.field.history.mixin"]
 
     def _get_versioned_fields(self):
         return [

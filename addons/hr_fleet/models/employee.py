@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import hr
 
 
-class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+class HrEmployee(hr.HrEmployee):
 
     employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_manager")
     car_ids = fields.One2many(
@@ -86,7 +86,6 @@ class HrEmployee(models.Model):
                     car.driver_id = user.partner_id
 
 
-class HrEmployeePublic(models.Model):
-    _inherit = ['hr.employee.public']
+class HrEmployeePublic(hr.HrEmployeePublic):
 
     mobility_card = fields.Char(readonly=True)

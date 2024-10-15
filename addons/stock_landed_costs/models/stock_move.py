@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import purchase_stock, stock_account
 
 
-class StockMove(models.Model):
-    _inherit = ["stock.move"]
+class StockMove(stock_account.StockMove, purchase_stock.StockMove):
 
     def _get_stock_valuation_layer_ids(self):
         self.ensure_one()

@@ -4,10 +4,10 @@
 import re
 
 from odoo import api, fields, models
+from odoo.addons import website_event_track
 
 
-class EventTrack(models.Model):
-    _inherit = ['event.track']
+class EventTrack(website_event_track.EventTrack):
 
     youtube_video_url = fields.Char('YouTube Video Link')
     youtube_video_id = fields.Char('YouTube video ID', compute='_compute_youtube_video_id',

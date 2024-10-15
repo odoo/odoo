@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 from odoo.tools.translate import html_translate
+from odoo.addons import base
 
 
-class GamificationKarmaRank(models.Model):
+class GamificationKarmaRank(models.Model, base.ImageMixin):
     _description = 'Rank based on karma'
-    _inherit = ['image.mixin']
     _order = 'karma_min'
 
     name = fields.Text(string='Rank Name', translate=True, required=True)

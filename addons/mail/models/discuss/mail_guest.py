@@ -13,6 +13,7 @@ from odoo.exceptions import UserError
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
 from odoo.addons.bus.websocket import wsrequest
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import base, bus
 
 
 def add_guest_to_context(func):
@@ -40,9 +41,8 @@ def add_guest_to_context(func):
     return wrapper
 
 
-class MailGuest(models.Model):
+class MailGuest(models.Model, base.AvatarMixin, bus.BusListenerMixin):
     _description = "Guest"
-    _inherit = ["avatar.mixin", "bus.listener.mixin"]
     _avatar_name_field = "name"
     _cookie_name = 'dgid'
     _cookie_separator = '|'

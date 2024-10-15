@@ -5,10 +5,10 @@ from datetime import datetime
 
 from odoo import api, fields, models
 from odoo.tools import SQL
+from odoo.addons import mail
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(mail.ResPartner):
 
     meeting_count = fields.Integer("# Meetings", compute='_compute_meeting_count')
     meeting_ids = fields.Many2many('calendar.event', 'calendar_event_res_partner_rel', 'res_partner_id',

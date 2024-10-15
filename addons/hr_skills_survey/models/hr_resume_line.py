@@ -3,10 +3,10 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.addons import hr_skills
 
 
-class HrResumeLine(models.Model):
-    _inherit = ['hr.resume.line']
+class HrResumeLine(hr_skills.HrResumeLine):
 
     display_type = fields.Selection(selection_add=[('certification', 'Certification')])
     department_id = fields.Many2one(related="employee_id.department_id", store=True)

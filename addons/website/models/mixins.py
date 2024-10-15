@@ -12,6 +12,7 @@ from odoo.osv import expression
 from odoo.exceptions import AccessError
 from odoo.tools import escape_psql
 from odoo.tools.json import scriptsafe as json_safe
+from odoo.addons import website
 
 logger = logging.getLogger(__name__)
 
@@ -229,8 +230,7 @@ class WebsitePublishedMixin(models.AbstractModel):
         return _("You do not have the rights to publish/unpublish")
 
 
-class WebsitePublishedMultiMixin(models.AbstractModel, WebsitePublishedMixin):
-    _inherit = ['website.published.mixin', 'website.multi.mixin']
+class WebsitePublishedMultiMixin(models.AbstractModel, WebsitePublishedMixin, website.WebsitePublishedMixin, website.WebsiteMultiMixin):
     _description = 'Multi Website Published Mixin'
 
     website_published = fields.Boolean(compute='_compute_website_published',

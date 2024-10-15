@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.osv import expression
+from odoo.addons import mail, base
 
 
 FUEL_TYPES = [
@@ -18,8 +19,7 @@ FUEL_TYPES = [
 ]
 
 
-class FleetVehicleModel(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'avatar.mixin']
+class FleetVehicleModel(models.Model, mail.MailThread, mail.MailActivityMixin, base.AvatarMixin):
     _description = 'Model of a vehicle'
     _order = 'name asc'
 

@@ -15,12 +15,12 @@ from odoo.tools import formatLang, float_round, float_repr, cleanup_xml_node, gr
 from odoo.tools.misc import split_every
 from odoo.addons.base_iban.models.res_partner_bank import normalize_iban
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import format_bool, L10nHuEdiConnection, L10nHuEdiConnectionError
+from odoo.addons import account_debit_note, l10n_hu, account
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account_debit_note.AccountMove, l10n_hu.AccountMove):
 
     l10n_hu_payment_mode = fields.Selection(
         [
@@ -1030,8 +1030,7 @@ class AccountMove(models.Model):
         return tax_totals
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(account.AccountMoveLine):
 
     @api.depends('move_id.delivery_date')
     def _compute_currency_rate(self):

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import hr
 
 
-class HrDepartment(models.Model):
-    _inherit = ['hr.department']
+class HrDepartment(hr.HrDepartment):
 
     def _compute_expense_sheets_to_approve(self):
         expense_sheet_data = self.env['hr.expense.sheet']._read_group([('department_id', 'in', self.ids), ('state', '=', 'submit')], ['department_id'], ['__count'])

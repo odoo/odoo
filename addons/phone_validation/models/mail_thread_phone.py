@@ -7,11 +7,12 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 from odoo.tools import create_index
+from odoo.addons import mail
 
 PHONE_REGEX_PATTERN = r'[\s\\./\(\)\-]'
 
 
-class MailThreadPhone(models.AbstractModel):
+class MailThreadPhone(models.AbstractModel, mail.MailThread):
     """ Purpose of this mixin is to offer two services
 
       * compute a sanitized phone number based on _phone_get_number_fields.
@@ -29,7 +30,6 @@ class MailThreadPhone(models.AbstractModel):
         this method can be called safely);
     """
     _description = 'Phone Blacklist Mixin'
-    _inherit = ['mail.thread']
     _phone_search_min_length = 3
 
     phone_sanitized = fields.Char(

@@ -3,10 +3,10 @@
 from collections import OrderedDict
 
 from odoo import models
+from odoo.addons import product
 
 
-class ProductTemplateAttributeLine(models.Model):
-    _inherit = ['product.template.attribute.line']
+class ProductTemplateAttributeLine(product.ProductTemplateAttributeLine):
 
     def _prepare_single_value_for_display(self):
         """On the product page group together the attribute lines that concern

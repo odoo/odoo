@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import stock
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(stock.ResConfigSettings):
 
     stock_move_sms_validation = fields.Boolean(
         related='company_id.stock_move_sms_validation',

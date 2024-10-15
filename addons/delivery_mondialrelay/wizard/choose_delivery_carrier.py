@@ -4,10 +4,10 @@
 from odoo import fields, models, api, _
 from odoo.tools.json import scriptsafe as json_safe
 from odoo.exceptions import ValidationError
+from odoo.addons import stock_delivery
 
 
-class ChooseDeliveryCarrier(models.TransientModel):
-    _inherit = ['choose.delivery.carrier']
+class ChooseDeliveryCarrier(stock_delivery.ChooseDeliveryCarrier):
 
     shipping_zip = fields.Char(related='order_id.partner_shipping_id.zip')
     shipping_country_code = fields.Char(related='order_id.partner_shipping_id.country_id.code')

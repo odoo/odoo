@@ -2,6 +2,7 @@
 
 from odoo import api, Command, fields, models
 from odoo.tools.misc import groupby
+from odoo.addons import stock
 
 MAP_REPAIR_LINE_TYPE_TO_MOVE_LOCATIONS_FROM_REPAIR = {
     'add': {'location_id': 'location_id', 'location_dest_id': 'location_dest_id'},
@@ -10,8 +11,7 @@ MAP_REPAIR_LINE_TYPE_TO_MOVE_LOCATIONS_FROM_REPAIR = {
 }
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(stock.StockMove):
 
     repair_id = fields.Many2one('repair.order', check_company=True)
     repair_line_type = fields.Selection([

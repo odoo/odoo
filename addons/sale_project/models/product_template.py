@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError
+from odoo.addons import account, sale
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(sale.ProductTemplate, account.ProductTemplate):
 
     @api.model
     def _selection_service_policy(self):

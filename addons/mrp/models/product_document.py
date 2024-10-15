@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import product
 
 
-class ProductDocument(models.Model):
-    _inherit = ['product.document']
+class ProductDocument(product.ProductDocument):
 
     def _default_attached_on_mrp(self):
         return "bom" if self.env.context.get('attached_on_bom') else "hidden"

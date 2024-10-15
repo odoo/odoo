@@ -1,9 +1,9 @@
 from odoo import _, models
 from odoo.addons.account.models.chart_template import template
+from odoo.addons import account
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(account.AccountChartTemplate):
 
     @template('es_coop_full')
     def _get_es_coop_full_template_data(self):

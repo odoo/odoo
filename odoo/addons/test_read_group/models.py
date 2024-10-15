@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models
+from odoo.addons import base
 
 
 class Test_Read_GroupOn_Date(models.Model):
@@ -99,8 +100,7 @@ class Test_Read_GroupTask(models.Model):
     date = fields.Date()
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(base.ResPartner):
 
     date = fields.Date()
 

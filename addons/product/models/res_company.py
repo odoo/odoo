@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
+from odoo.addons import mail
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(mail.ResCompany):
 
     @api.model_create_multi
     def create(self, vals_list):

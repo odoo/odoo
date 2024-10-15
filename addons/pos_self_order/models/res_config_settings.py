@@ -9,10 +9,10 @@ from odoo.exceptions import ValidationError
 from odoo.tools.misc import split_every
 from odoo.osv.expression import AND
 from werkzeug.urls import url_unquote
+from odoo.addons import pos_restaurant
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ["res.config.settings"]
+class ResConfigSettings(pos_restaurant.ResConfigSettings):
 
     pos_self_ordering_takeaway = fields.Boolean(related="pos_config_id.self_ordering_takeaway", readonly=False)
     pos_self_ordering_service_mode = fields.Selection(related="pos_config_id.self_ordering_service_mode", readonly=False, required=True)

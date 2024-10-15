@@ -3,10 +3,10 @@
 
 from odoo import fields, models, _
 from odoo.exceptions import AccessError
+from odoo.addons import digest
 
 
-class DigestDigest(models.Model):
-    _inherit = ['digest.digest']
+class DigestDigest(digest.DigestDigest):
 
     kpi_pos_total = fields.Boolean('POS Sales')
     kpi_pos_total_value = fields.Monetary(compute='_compute_kpi_pos_total_value')

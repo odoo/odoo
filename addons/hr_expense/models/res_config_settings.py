@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
+from odoo.addons import account, hr
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(account.ResConfigSettings, hr.ResConfigSettings):
 
     hr_expense_alias_prefix = fields.Char(
         'Default Alias Name for Expenses',

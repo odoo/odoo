@@ -6,6 +6,7 @@ from urllib.parse import urljoin
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import account
 
 QRIS_TIMEOUT = 35  # They say that the time to get a response vary between 6 to 30s
 
@@ -25,8 +26,7 @@ def _l10n_id_make_qris_request(endpoint, params):
     return response
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ["res.partner.bank"]
+class ResPartnerBank(account.ResPartnerBank):
 
     l10n_id_qris_api_key = fields.Char("QRIS API Key", groups="base.group_system")
     l10n_id_qris_mid = fields.Char("QRIS Merchant ID", groups="base.group_system")

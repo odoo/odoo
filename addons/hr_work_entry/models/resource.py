@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons import resource
 
 
-class ResourceCalendarAttendance(models.Model):
-    _inherit = ['resource.calendar.attendance']
+class ResourceCalendarAttendance(resource.ResourceCalendarAttendance):
 
     def _default_work_entry_type_id(self):
         return self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
@@ -20,8 +20,7 @@ class ResourceCalendarAttendance(models.Model):
         return res
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = ['resource.calendar.leaves']
+class ResourceCalendarLeaves(resource.ResourceCalendarLeaves):
 
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', 'Work Entry Type',

@@ -17,15 +17,15 @@ from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.tools import convert, format_duration
+from odoo.addons import portal, mail
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
 
 
-class HrAttendance(models.Model):
+class HrAttendance(models.Model, mail.MailThread, portal.MailThread):
     _description = "Attendance"
     _order = "check_in desc"
-    _inherit = ["mail.thread"]
 
     def _default_employee(self):
         return self.env.user.employee_id

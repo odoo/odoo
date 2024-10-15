@@ -4,10 +4,10 @@
 import json
 
 from odoo import _, api, models, modules
+from odoo.addons import web, digest, base_setup, resource, web_tour, mail
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(base_setup.ResUsers, mail.ResUsers, resource.ResUsers, web.ResUsers, web_tour.ResUsers, digest.ResUsers):
 
     @api.model
     def _get_activity_groups(self):

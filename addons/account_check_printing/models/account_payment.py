@@ -5,12 +5,12 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import formatLang, format_date
 from odoo.tools.sql import column_exists, create_column
+from odoo.addons import account
 
 INV_LINES_PER_STUB = 9
 
 
-class AccountPayment(models.Model):
-    _inherit = ["account.payment"]
+class AccountPayment(account.AccountPayment):
 
     check_amount_in_words = fields.Char(
         string="Amount in Words",

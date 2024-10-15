@@ -9,17 +9,11 @@ from odoo.addons.website.tools import text_from_html
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 from odoo.tools import html_escape
+from odoo.addons import website, mail
 
 
-class BlogBlog(models.Model):
+class BlogBlog(models.Model, mail.MailThread, website.WebsiteSeoMetadata, website.WebsiteMultiMixin, website.WebsiteCover_PropertiesMixin, website.WebsiteSearchableMixin):
     _description = 'Blog'
-    _inherit = [
-        'mail.thread',
-        'website.seo.metadata',
-        'website.multi.mixin',
-        'website.cover_properties.mixin',
-        'website.searchable.mixin',
-    ]
     _order = 'name'
 
     name = fields.Char('Blog Name', required=True, translate=True)
@@ -133,9 +127,8 @@ class BlogTagCategory(models.Model):
     ]
 
 
-class BlogTag(models.Model):
+class BlogTag(models.Model, website.WebsiteSeoMetadata):
     _description = 'Blog Tag'
-    _inherit = ['website.seo.metadata']
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
@@ -148,10 +141,8 @@ class BlogTag(models.Model):
     ]
 
 
-class BlogPost(models.Model):
+class BlogPost(models.Model, mail.MailThread, website.WebsiteSeoMetadata, website.WebsitePublishedMultiMixin, website.WebsiteCover_PropertiesMixin, website.WebsiteSearchableMixin):
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
-        'website.cover_properties.mixin', 'website.searchable.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
 

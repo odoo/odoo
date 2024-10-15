@@ -4,10 +4,10 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.addons import mail
 
 
-class FleetVehicleLogContract(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+class FleetVehicleLogContract(models.Model, mail.MailThread, mail.MailActivityMixin):
     _description = 'Vehicle Contract'
     _order = 'state desc,expiration_date'
 

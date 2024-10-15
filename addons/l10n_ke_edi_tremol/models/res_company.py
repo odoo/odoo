@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import l10n_ke
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(l10n_ke.ResCompany):
 
     l10n_ke_cu_proxy_address = fields.Char(
         default="http://localhost:8069",

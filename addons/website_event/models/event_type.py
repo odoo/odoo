@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import event
 
 
-class EventType(models.Model):
-    _inherit = ['event.type']
+class EventType(event.EventType):
 
     website_menu = fields.Boolean('Display a dedicated menu on Website')
     community_menu = fields.Boolean(

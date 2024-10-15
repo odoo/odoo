@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
+from odoo.addons import account
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ['res.partner.bank']
+class ResPartnerBank(account.ResPartnerBank):
 
     def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'sct_qr':

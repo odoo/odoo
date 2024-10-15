@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
 from odoo.osv.expression import AND
+from odoo.addons import point_of_sale
 
 
-class ReportPos_HrSingle_Employee_Sales_Report(models.AbstractModel):
-    _inherit = ['report.point_of_sale.report_saledetails']
+class ReportPos_HrSingle_Employee_Sales_Report(models.AbstractModel, point_of_sale.ReportPoint_Of_SaleReport_Saledetails):
     _description = 'Session sales details for a single employee'
 
     def _get_domain(self, date_start=False, date_stop=False, config_ids=False, session_ids=False, employee_id=False):

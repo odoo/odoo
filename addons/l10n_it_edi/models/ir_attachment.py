@@ -6,14 +6,14 @@ from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 from lxml import etree
 import logging
 import re
+from odoo.addons import account
 
 _logger = logging.getLogger(__name__)
 
 FATTURAPA_FILENAME_RE = "[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))"
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(account.IrAttachment):
 
     def _decode_edi_l10n_it_edi(self, name, content):
         """ Decodes a  into a list of one dictionary representing an attachment.

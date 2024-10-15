@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons import mrp_subcontracting, mrp_account
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(mrp_subcontracting.ProductProduct, mrp_account.ProductProduct):
 
     def _compute_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
         """ Add the price of the subcontracting supplier if it exists with the bom configuration.

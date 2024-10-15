@@ -12,10 +12,10 @@ from odoo.fields import Command
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero
+from odoo.addons import delivery, sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale.SaleOrder, delivery.SaleOrder):
 
     website_id = fields.Many2one(
         help="Website through which this order was placed for eCommerce orders.",

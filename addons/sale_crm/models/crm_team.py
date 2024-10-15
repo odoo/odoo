@@ -3,10 +3,10 @@
 
 from odoo import models,fields, api, _
 from odoo.tools import SQL
+from odoo.addons import crm, sale
 
 
-class CrmTeam(models.Model):
-    _inherit = ['crm.team']
+class CrmTeam(sale.CrmTeam, crm.CrmTeam):
 
     def _compute_dashboard_button_name(self):
         super(CrmTeam, self)._compute_dashboard_button_name()

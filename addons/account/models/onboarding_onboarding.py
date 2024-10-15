@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import onboarding
 
 
-class OnboardingOnboarding(models.Model):
-    _inherit = ['onboarding.onboarding']
+class OnboardingOnboarding(onboarding.OnboardingOnboarding):
 
     # Invoice Onboarding
     @api.model

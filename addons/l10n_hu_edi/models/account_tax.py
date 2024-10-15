@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.tools.translate import LazyTranslate
+from odoo.addons import account
 
 _lt = LazyTranslate(__name__)
 
@@ -44,8 +45,7 @@ _DEFAULT_TAX_REASONS = {
 }
 
 
-class AccountTax(models.Model):
-    _inherit = ['account.tax']
+class AccountTax(account.AccountTax):
 
     l10n_hu_tax_type = fields.Selection(
         _SELECTION_TAX_TYPE,

@@ -3,10 +3,10 @@
 import itertools
 
 from odoo import models, fields
+from odoo.addons import account, product
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(account.ProductTemplate):
 
     def _get_template_matrix(self, **kwargs):
         self.ensure_one()
@@ -60,8 +60,7 @@ class ProductTemplate(models.Model):
         }
 
 
-class ProductTemplateAttributeValue(models.Model):
-    _inherit = ["product.template.attribute.value"]
+class ProductTemplateAttributeValue(product.ProductTemplateAttributeValue):
 
     def _grid_header_cell(self, fro_currency, to_currency, company, display_extra=True):
         """Generate a header matrix cell for 1 or multiple attributes.

@@ -10,12 +10,12 @@ from odoo.addons.google_calendar.models.google_sync import google_calendar_token
 from odoo.addons.google_account.models import google_service
 from odoo.loglevels import exception_to_unicode
 from odoo.tools import str2bool
+from odoo.addons import calendar
 
 _logger = logging.getLogger(__name__)
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(calendar.ResUsers):
 
     google_calendar_rtoken = fields.Char(related='res_users_settings_id.google_calendar_rtoken', groups="base.group_system")
     google_calendar_token = fields.Char(related='res_users_settings_id.google_calendar_token', groups="base.group_system")

@@ -4,10 +4,10 @@ from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons import mail
 
 
-class MailActivitySchedule(models.TransientModel):
-    _inherit = ['mail.activity.schedule']
+class MailActivitySchedule(mail.MailActivitySchedule):
 
     department_id = fields.Many2one('hr.department', compute='_compute_department_id')
     plan_department_filterable = fields.Boolean(compute='_compute_plan_department_filterable')

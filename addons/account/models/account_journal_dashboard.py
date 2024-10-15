@@ -12,6 +12,7 @@ from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, SQL
 from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
+from odoo.addons import account
 
 
 def group_by_journal(vals_list):
@@ -21,8 +22,7 @@ def group_by_journal(vals_list):
     return res
 
 
-class AccountJournal(models.Model):
-    _inherit = ["account.journal"]
+class AccountJournal(models.Model, account.AccountJournal):
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')

@@ -4,10 +4,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.payment_demo import const
+from odoo.addons import payment
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     code = fields.Selection(selection_add=[('demo', 'Demo')], ondelete={'demo': 'set default'})
 

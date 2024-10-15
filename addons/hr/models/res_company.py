@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import web
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(web.ResCompany):
 
     hr_presence_control_email_amount = fields.Integer(string="# emails to send")
     hr_presence_control_ip_list = fields.Char(string="Valid IP addresses")

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import hr_holidays, hr_attendance
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(hr_attendance.ResUsers, hr_holidays.ResUsers):
 
     request_overtime = fields.Boolean(compute='_compute_request_overtime')
 

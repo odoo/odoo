@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import stock
 
 
-class StockForecasted_Product_Product(models.AbstractModel):
-    _inherit = ['stock.forecasted_product_product']
+class StockForecasted_Product_Product(stock.StockForecasted_Product_Product):
 
     def _get_reservation_data(self, move):
         if move.repair_id and move.repair_line_type:

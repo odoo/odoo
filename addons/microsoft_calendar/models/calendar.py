@@ -12,6 +12,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_normalize
 from odoo.osv import expression
+from odoo.addons import calendar, microsoft_calendar
 
 ATTENDEE_CONVERTER_O2M = {
     'needsAction': 'notresponded',
@@ -35,8 +36,7 @@ MAX_RECURRENT_EVENT = 720
 _logger = logging.getLogger(__name__)
 
 
-class CalendarEvent(models.Model):
-    _inherit = ['calendar.event', 'microsoft.calendar.sync']
+class CalendarEvent(calendar.CalendarEvent, microsoft_calendar.MicrosoftCalendarSync):
 
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
 

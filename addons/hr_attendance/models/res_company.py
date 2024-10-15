@@ -5,10 +5,10 @@ from odoo.osv.expression import OR
 
 import uuid
 from werkzeug.urls import url_join
+from odoo.addons import hr, barcodes
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(hr.ResCompany, barcodes.ResCompany):
 
     def _default_company_token(self):
         return str(uuid.uuid4())

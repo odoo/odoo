@@ -3,10 +3,10 @@
 
 from odoo import api, models
 from odoo.tools import float_compare
+from odoo.addons import sale_stock
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(sale_stock.SaleOrderLine):
 
     @api.depends('product_uom_qty', 'qty_delivered', 'product_id', 'state')
     def _compute_qty_to_deliver(self):

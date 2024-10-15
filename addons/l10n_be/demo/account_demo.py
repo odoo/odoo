@@ -1,8 +1,8 @@
 from odoo import api, models, Command
+from odoo.addons import account
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ["account.chart.template"]
+class AccountChartTemplate(account.AccountChartTemplate):
 
     @api.model
     def _get_demo_data(self, company=False):

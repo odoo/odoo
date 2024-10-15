@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import website, sale
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(website.ResCompany, sale.ResCompany):
 
     def _get_default_pricelist_vals(self):
         """ Override of product. Called at company creation or activation of the pricelist setting.

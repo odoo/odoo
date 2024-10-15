@@ -2,10 +2,10 @@
 
 from odoo import fields, models
 from odoo.tools import float_is_zero
+from odoo.addons import project_stock_account, sale_stock
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(sale_stock.StockMove, project_stock_account.StockMove):
 
     def _sale_get_invoice_price(self, order):
         """ Based on the current stock move, compute the price to reinvoice the analytic line that is going to be created (so the

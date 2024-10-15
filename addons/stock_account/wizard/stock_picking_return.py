@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import stock
 
 
-class StockReturnPickingLine(models.TransientModel):
-    _inherit = ["stock.return.picking.line"]
+class StockReturnPickingLine(stock.StockReturnPickingLine):
 
     to_refund = fields.Boolean(string="Update quantities on SO/PO", default=True,
         help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')

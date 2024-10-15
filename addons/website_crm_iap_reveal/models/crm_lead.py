@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import website_crm, crm_iap_mine, iap_crm
 
 
-class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+class CrmLead(iap_crm.CrmLead, crm_iap_mine.CrmLead, website_crm.CrmLead):
 
     reveal_ip = fields.Char(string='IP Address')
     reveal_iap_credits = fields.Integer(string='IAP Credits')

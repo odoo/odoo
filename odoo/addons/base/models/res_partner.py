@@ -18,6 +18,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 import typing
+from odoo.addons import base
 if typing.TYPE_CHECKING:
     from .res_users import ResUsers
     from .res_bank import ResPartnerBank
@@ -185,9 +186,8 @@ class ResPartnerTitle(models.Model):
     shortcut = fields.Char(string='Abbreviation', translate=True)
 
 
-class ResPartner(models.Model):
+class ResPartner(models.Model, base.FormatAddressMixin, base.FormatVatLabelMixin, base.AvatarMixin):
     _description = 'Contact'
-    _inherit = ['format.address.mixin', 'format.vat.label.mixin', 'avatar.mixin']
     _order = "complete_name ASC, id DESC"
     _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
     _allow_sudo_commands = False

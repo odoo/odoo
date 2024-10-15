@@ -4,12 +4,12 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import point_of_sale
 
 _logger = logging.getLogger(__name__)
 
 
-class PosConfig(models.Model):
-    _inherit = ['pos.config']
+class PosConfig(point_of_sale.PosConfig):
 
     adyen_ask_customer_for_tip = fields.Boolean('Ask Customers For Tip')
 

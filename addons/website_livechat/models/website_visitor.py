@@ -6,10 +6,10 @@ from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import get_lang
 from odoo.tools.sql import column_exists, create_column
+from odoo.addons import website
 
 
-class WebsiteVisitor(models.Model):
-    _inherit = ['website.visitor']
+class WebsiteVisitor(website.WebsiteVisitor):
 
     livechat_operator_id = fields.Many2one('res.partner', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index='btree_not_null')
     livechat_operator_name = fields.Char('Operator Name', related="livechat_operator_id.name")

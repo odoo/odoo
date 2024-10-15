@@ -4,10 +4,10 @@ from ast import literal_eval
 
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
+from odoo.addons import hr, hr_hourly_cost
 
 
-class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+class HrEmployee(hr.HrEmployee, hr_hourly_cost.HrEmployee):
 
     has_timesheet = fields.Boolean(compute='_compute_has_timesheet', groups="hr.group_hr_user,base.group_system", export_string_translation=False)
 

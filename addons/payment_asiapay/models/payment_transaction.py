@@ -10,13 +10,13 @@ from odoo.exceptions import ValidationError
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_asiapay import const
 from odoo.addons.payment_asiapay.controllers.main import AsiaPayController
+from odoo.addons import payment
 
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = ['payment.transaction']
+class PaymentTransaction(payment.PaymentTransaction):
 
     @api.model
     def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):

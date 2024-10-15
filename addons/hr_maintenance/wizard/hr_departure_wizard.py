@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, fields, models
+from odoo.addons import hr
 
 
-class HrDepartureWizard(models.TransientModel):
-    _inherit = ['hr.departure.wizard']
+class HrDepartureWizard(hr.HrDepartureWizard):
 
     unassign_equipment = fields.Boolean("Free Equiments", default=True, help="Unassign Employee from Equipments")
 

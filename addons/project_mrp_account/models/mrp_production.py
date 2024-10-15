@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import project_mrp, mrp_account
 
 
-class MrpProduction(models.Model):
-    _inherit = ['mrp.production']
+class MrpProduction(mrp_account.MrpProduction, project_mrp.MrpProduction):
 
     has_analytic_account = fields.Boolean(compute='_compute_has_analytic_account')
 

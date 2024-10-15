@@ -13,14 +13,14 @@ import psycopg2.errors
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.addons.l10n_in_ewaybill_stock.tools.ewaybill_api import EWayBillApi, EWayBillError
+from odoo.addons import portal, mail
 
 
 _logger = logging.getLogger(__name__)
 
 
-class L10nInEwaybill(models.Model):
+class L10nInEwaybill(models.Model, portal.PortalMixin, portal.MailThread, mail.MailThread, mail.MailActivityMixin):
     _description = "e-Waybill"
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _check_company_auto = True
 
     # Ewaybill details generated from the API

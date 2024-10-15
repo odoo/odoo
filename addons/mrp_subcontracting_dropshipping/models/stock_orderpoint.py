@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import mrp
 
 
-class StockWarehouseOrderpoint(models.Model):
-    _inherit = ['stock.warehouse.orderpoint']
+class StockWarehouseOrderpoint(mrp.StockWarehouseOrderpoint):
 
     def _prepare_procurement_values(self, date=False, group=False):
         vals = super()._prepare_procurement_values(date, group)

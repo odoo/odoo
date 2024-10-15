@@ -3,10 +3,10 @@
 
 from odoo import api, exceptions, models
 from odoo.addons.phone_validation.tools import phone_validation
+from odoo.addons import mail
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(mail.Base):
 
     # ------------------------------------------------------------
     # FIELDS HELPERS

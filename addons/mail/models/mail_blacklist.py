@@ -3,11 +3,11 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+from odoo.addons import mail
 
 
-class MailBlacklist(models.Model):
+class MailBlacklist(models.Model, mail.MailThread):
     """ Model of blacklisted email addresses to stop sending emails."""
-    _inherit = ['mail.thread']
     _description = 'Mail Blacklist'
     _rec_name = 'email'
 

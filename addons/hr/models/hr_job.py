@@ -3,11 +3,11 @@
 
 from odoo import api, fields, models, _
 from odoo.addons.web_editor.tools import handle_history_divergence
+from odoo.addons import portal, mail
 
 
-class HrJob(models.Model):
+class HrJob(models.Model, mail.MailThread, portal.MailThread):
     _description = "Job Position"
-    _inherit = ['mail.thread']
     _order = 'sequence'
 
     active = fields.Boolean(default=True)

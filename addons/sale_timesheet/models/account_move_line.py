@@ -3,10 +3,10 @@
 from collections import defaultdict
 
 from odoo import api, models
+from odoo.addons import sale_project
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(sale_project.AccountMoveLine):
 
     @api.model
     def _timesheet_domain_get_invoiced_lines(self, sale_line_delivery):

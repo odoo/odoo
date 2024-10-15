@@ -4,9 +4,10 @@ from odoo import api, fields, Command, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import clean_context
 from odoo.tools import format_date
+from odoo.addons import mail
 
 
-class HrExpenseSheet(models.Model):
+class HrExpenseSheet(models.Model, mail.MailThreadMainAttachment, mail.MailActivityMixin):
     """
         Here are the rights associated with the expense flow
 
@@ -26,7 +27,6 @@ class HrExpenseSheet(models.Model):
                     Manager                 Always
         =================================================================================
     """
-    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _description = "Expense Report"
     _order = "accounting_date desc, id desc"
     _check_company_auto = True

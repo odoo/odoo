@@ -10,6 +10,7 @@ from odoo.addons.base_iban.models.res_partner_bank import normalize_iban, pretty
 from odoo.exceptions import ValidationError
 from odoo.tools import LazyTranslate
 from odoo.tools.misc import mod10r
+from odoo.addons import account
 
 _lt = LazyTranslate(__name__)
 
@@ -39,8 +40,7 @@ def check_qr_iban_range(iban):
     return re.match(r'\d+', iid) and 30000 <= int(iid) <= 31999 # Those values for iid are reserved for QR-IBANs only
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ['res.partner.bank']
+class ResPartnerBank(account.ResPartnerBank):
 
     l10n_ch_qr_iban = fields.Char(string='QR-IBAN',
                                   compute='_compute_l10n_ch_qr_iban',

@@ -6,10 +6,10 @@ from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
+from odoo.addons import account, product
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(account.ProductTemplate):
 
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased', digits='Product Unit of Measure')
     purchase_method = fields.Selection([
@@ -54,8 +54,7 @@ class ProductTemplate(models.Model):
         return action
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(account.ProductProduct):
 
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased',
         digits='Product Unit of Measure')
@@ -114,15 +113,13 @@ class ProductProduct(models.Model):
         return super()._get_backend_root_menu_ids() + [self.env.ref('purchase.menu_purchase_root').id]
 
 
-class ProductSupplierinfo(models.Model):
-    _inherit = ["product.supplierinfo"]
+class ProductSupplierinfo(product.ProductSupplierinfo):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
 
 
-class ProductPackaging(models.Model):
-    _inherit = ['product.packaging']
+class ProductPackaging(product.ProductPackaging):
 
     purchase = fields.Boolean("Purchase", default=True, help="If true, the packaging can be used for purchase orders")

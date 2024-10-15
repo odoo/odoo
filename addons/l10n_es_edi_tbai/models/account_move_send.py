@@ -1,8 +1,8 @@
 from odoo import _, api, models
+from odoo.addons import account
 
 
-class AccountMoveSend(models.AbstractModel):
-    _inherit = ['account.move.send']
+class AccountMoveSend(account.AccountMoveSend):
 
     @api.model
     def _is_tbai_applicable(self, move):

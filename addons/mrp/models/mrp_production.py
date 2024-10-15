@@ -18,15 +18,15 @@ from odoo.tools import float_compare, float_round, float_is_zero, format_datetim
 from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
+from odoo.addons import product, mail
 
 SIZE_BACK_ORDER_NUMERING = 3
 
 
-class MrpProduction(models.Model):
+class MrpProduction(models.Model, mail.MailThread, mail.MailActivityMixin, product.ProductCatalogMixin):
     """ Manufacturing Orders """
     _description = 'Manufacturing Order'
     _date_name = 'date_start'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
     _order = 'priority desc, date_start asc,id'
 
     @api.model

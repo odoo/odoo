@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo import api
+from odoo.addons import mail
 
 
-class MailThread(models.AbstractModel):
-    _inherit = ['mail.thread']
+class MailThread(mail.MailThread):
 
     def _notify_cancel_snail(self):
         author_id = self.env.user.id

@@ -12,10 +12,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.release import version
 from odoo.tools import SQL
+from odoo.addons import mail
 
 
-class CrmTeam(models.Model):
-    _inherit = ['mail.thread']
+class CrmTeam(models.Model, mail.MailThread):
     _description = "Sales Team"
     _order = "sequence ASC, create_date DESC, id DESC"
     _check_company_auto = True

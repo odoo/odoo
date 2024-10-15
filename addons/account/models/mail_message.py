@@ -2,6 +2,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv.expression import OR
+from odoo.addons import portal
 
 bypass_token = object()
 DOMAINS = {
@@ -16,8 +17,7 @@ DOMAINS = {
 }
 
 
-class MailMessage(models.Model):
-    _inherit = ['mail.message']
+class MailMessage(portal.MailMessage):
 
     account_audit_log_preview = fields.Text(string="Description", compute="_compute_account_audit_log_preview")
     account_audit_log_move_id = fields.Many2one(

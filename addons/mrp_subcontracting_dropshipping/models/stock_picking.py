@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.tools import float_compare
+from odoo.addons import mrp_subcontracting, stock_dropshipping
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(mrp_subcontracting.StockPicking, stock_dropshipping.StockPicking):
 
     def _compute_is_dropship(self):
         dropship_subcontract_pickings = self.filtered(lambda p: p.location_dest_id.is_subcontracting_location and p.location_id.usage == 'supplier')

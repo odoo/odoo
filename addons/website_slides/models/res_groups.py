@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import mail
 
 
-class ResGroups(models.Model):
-    _inherit = ['res.groups']
+class ResGroups(mail.ResGroups):
 
     def write(self, vals):
         """ Automatically subscribe new users to linked slide channels """

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import purchase_stock, stock_account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(stock_account.AccountMove, purchase_stock.AccountMove):
 
     landed_costs_ids = fields.One2many('stock.landed.cost', 'vendor_bill_id', string='Landed Costs')
     landed_costs_visible = fields.Boolean(compute='_compute_landed_costs_visible')
@@ -52,8 +52,7 @@ class AccountMove(models.Model):
         return posted
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(stock_account.AccountMoveLine, purchase_stock.AccountMoveLine):
 
     product_type = fields.Selection(related='product_id.type', readonly=True)
     is_landed_costs_line = fields.Boolean()

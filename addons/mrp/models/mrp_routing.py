@@ -4,11 +4,11 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
+from odoo.addons import mail
 
 
-class MrpRoutingWorkcenter(models.Model):
+class MrpRoutingWorkcenter(models.Model, mail.MailThread, mail.MailActivityMixin):
     _description = 'Work Center Usage'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     _order = 'bom_id, sequence, id'
     _check_company_auto = True

@@ -5,10 +5,10 @@ from odoo import models, fields, api, _
 from odoo.addons.mail.tools.mail_validation import mail_validate
 from odoo.exceptions import ValidationError
 from odoo.tools import float_repr
+from odoo.addons import account, account_qr_code_emv
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ["res.partner.bank"]
+class ResPartnerBank(account.ResPartnerBank, account_qr_code_emv.ResPartnerBank):
 
     proxy_type = fields.Selection(
         selection_add=[

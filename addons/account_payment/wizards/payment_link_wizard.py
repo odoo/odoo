@@ -4,10 +4,10 @@ from odoo import _, api, fields, models
 from odoo.tools import format_date, formatLang
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons import payment
 
 
-class PaymentLinkWizard(models.TransientModel):
-    _inherit = ['payment.link.wizard']
+class PaymentLinkWizard(payment.PaymentLinkWizard):
 
     invoice_amount_due = fields.Monetary(
         string="Amount Due",

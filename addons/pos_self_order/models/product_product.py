@@ -2,10 +2,10 @@
 from __future__ import annotations
 from typing import List, Dict
 from odoo import api, models, fields
+from odoo.addons import point_of_sale
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(point_of_sale.ProductTemplate):
 
     self_order_available = fields.Boolean(
         string="Available in Self Order",
@@ -33,8 +33,7 @@ class ProductTemplate(models.Model):
         return res
 
 
-class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+class ProductProduct(point_of_sale.ProductProduct):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

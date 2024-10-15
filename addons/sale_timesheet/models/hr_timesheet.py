@@ -6,6 +6,7 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import format_list
 from odoo.tools.misc import unquote
+from odoo.addons import hr_timesheet
 
 TIMESHEET_INVOICE_TYPES = [
     ('billable_time', 'Billed on Timesheets'),
@@ -20,8 +21,7 @@ TIMESHEET_INVOICE_TYPES = [
 ]
 
 
-class AccountAnalyticLine(models.Model):
-    _inherit = ['account.analytic.line']
+class AccountAnalyticLine(hr_timesheet.AccountAnalyticLine):
 
     def _domain_so_line(self):
         domain = expression.AND([

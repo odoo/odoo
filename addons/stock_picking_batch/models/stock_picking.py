@@ -4,10 +4,10 @@
 from odoo import _, api, Command, fields, models
 from odoo.osv import expression
 from odoo.exceptions import ValidationError
+from odoo.addons import stock
 
 
-class StockPickingType(models.Model):
-    _inherit = ["stock.picking.type"]
+class StockPickingType(stock.StockPickingType):
 
     count_picking_batch = fields.Integer(compute='_compute_picking_count')
     count_picking_wave = fields.Integer(compute='_compute_picking_count')
@@ -83,8 +83,7 @@ class StockPickingType(models.Model):
                 raise ValidationError(_("If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."))
 
 
-class StockPicking(models.Model):
-    _inherit = ["stock.picking"]
+class StockPicking(stock.StockPicking):
 
     batch_id = fields.Many2one(
         'stock.picking.batch', string='Batch Transfer',

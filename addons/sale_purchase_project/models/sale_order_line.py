@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale_purchase, sale_project
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(sale_purchase.SaleOrderLine, sale_project.SaleOrderLine):
 
     def _purchase_service_prepare_line_values(self, purchase_order, quantity=False):
         purchase_line_vals = super()._purchase_service_prepare_line_values(purchase_order, quantity)

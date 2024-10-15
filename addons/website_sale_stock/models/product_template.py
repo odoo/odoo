@@ -3,10 +3,10 @@
 from odoo import fields, models
 from odoo.http import request
 from odoo.tools.translate import html_translate
+from odoo.addons import sale_stock, website_sale, stock_delivery
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(website_sale.ProductTemplate, sale_stock.ProductTemplate, stock_delivery.ProductTemplate):
 
     allow_out_of_stock_order = fields.Boolean(string='Continue selling when out-of-stock', default=True)
 

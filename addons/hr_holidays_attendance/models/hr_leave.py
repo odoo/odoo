@@ -7,10 +7,10 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
+from odoo.addons import hr_holidays
 
 
-class HrLeave(models.Model):
-    _inherit = ['hr.leave']
+class HrLeave(hr_holidays.HrLeave):
 
     overtime_id = fields.Many2one('hr.attendance.overtime', string='Extra Hours')
     employee_overtime = fields.Float(related='employee_id.total_overtime', groups='base.group_user')

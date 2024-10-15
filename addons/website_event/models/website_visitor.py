@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons import website
 
 
-class WebsiteVisitor(models.Model):
-    _inherit = ['website.visitor']
+class WebsiteVisitor(website.WebsiteVisitor):
 
     event_registration_ids = fields.One2many(
         'event.registration', 'visitor_id', string='Event Registrations',

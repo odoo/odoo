@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import calendar, hr, digest, web_tour
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(hr.ResUsers, calendar.ResUsers, web_tour.ResUsers, digest.ResUsers):
 
     def _create_recruitment_interviewers(self):
         if not self:

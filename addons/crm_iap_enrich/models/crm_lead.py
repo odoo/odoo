@@ -8,12 +8,12 @@ from psycopg2 import OperationalError
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.iap.tools import iap_tools
+from odoo.addons import iap_crm
 
 _logger = logging.getLogger(__name__)
 
 
-class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+class CrmLead(iap_crm.CrmLead):
 
     iap_enrich_done = fields.Boolean(string='Enrichment done', help='Whether IAP service for lead enrichment based on email has been performed on this lead.')
     show_enrich_button = fields.Boolean(string='Allow manual enrich', compute="_compute_show_enrich_button")

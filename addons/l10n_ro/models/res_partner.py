@@ -8,10 +8,10 @@
 # Copyright (C) 2009 (<http://www.filsystem.ro>)
 
 from odoo import api, fields, models
+from odoo.addons import account, base_vat
 
 
-class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+class ResPartner(account.ResPartner, base_vat.ResPartner):
 
     @api.model
     def _commercial_fields(self):

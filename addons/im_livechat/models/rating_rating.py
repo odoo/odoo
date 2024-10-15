@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import rating
 
 
-class RatingRating(models.Model):
+class RatingRating(rating.RatingRating):
 
-    _inherit = ["rating.rating"]
 
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):

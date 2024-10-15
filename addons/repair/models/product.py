@@ -3,10 +3,10 @@
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import stock
 
 
-class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+class ProductProduct(stock.ProductProduct):
 
     product_catalog_product_is_in_repair = fields.Boolean(
         compute='_compute_product_is_in_repair',
@@ -37,7 +37,6 @@ class ProductProduct(models.Model):
         return super()._count_returned_sn_products_domain(sn_lot, or_domains)
 
 
-class ProductTemplate(models.Model):
-    _inherit = ["product.template"]
+class ProductTemplate(stock.ProductTemplate):
 
     create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user')

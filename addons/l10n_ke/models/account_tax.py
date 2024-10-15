@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
-    _inherit = ['account.tax']
+class AccountTax(account.AccountTax):
 
     l10n_ke_item_code_id = fields.Many2one(
         'l10n_ke.item.code',

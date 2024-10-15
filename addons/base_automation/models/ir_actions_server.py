@@ -5,10 +5,10 @@ from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo import api, exceptions, fields, models, _
 
 from .base_automation import get_webhook_request_payload
+from odoo.addons import mail, sms
 
 
-class IrActionsServer(models.Model):
-    _inherit = ["ir.actions.server"]
+class IrActionsServer(mail.IrActionsServer, sms.IrActionsServer):
 
     name = fields.Char(compute='_compute_name', store=True, readonly=False)
 

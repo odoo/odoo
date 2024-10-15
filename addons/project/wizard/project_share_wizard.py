@@ -3,10 +3,10 @@
 import operator
 
 from odoo import Command, api, fields, models, _
+from odoo.addons import portal
 
 
-class ProjectShareWizard(models.TransientModel):
-    _inherit = ['portal.share']
+class ProjectShareWizard(models.TransientModel, portal.PortalShare):
     _description = 'Project Sharing'
 
     @api.model

@@ -5,15 +5,15 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, html2plaintext, plaintext2html
 
 from markupsafe import Markup
+from odoo.addons import rating, mail
 
 
-class DiscussChannel(models.Model):
+class DiscussChannel(rating.RatingMixin, mail.DiscussChannel):
     """ Chat Session
         Reprensenting a conversation between users.
         It extends the base method for anonymous usage.
     """
 
-    _inherit = ['rating.mixin', 'discuss.channel']
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})

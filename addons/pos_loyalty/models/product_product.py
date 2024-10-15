@@ -1,8 +1,8 @@
 from odoo import api, models
+from odoo.addons import loyalty, point_of_sale
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(loyalty.ProductProduct, point_of_sale.ProductProduct):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

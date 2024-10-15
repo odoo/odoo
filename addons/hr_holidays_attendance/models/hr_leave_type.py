@@ -3,10 +3,10 @@
 
 from odoo.tools.misc import format_duration
 from odoo import _, api, fields, models
+from odoo.addons import hr_holidays
 
 
-class HrLeaveType(models.Model):
-    _inherit = ['hr.leave.type']
+class HrLeaveType(hr_holidays.HrLeaveType):
 
     overtime_deductible = fields.Boolean(
         "Deduct Extra Hours", default=False,

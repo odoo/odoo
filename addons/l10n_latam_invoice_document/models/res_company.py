@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
+from odoo.addons import account
 
 
-class ResCompany(models.Model):
+class ResCompany(account.ResCompany):
 
-    _inherit = ["res.company"]
 
     def _localization_use_documents(self):
         """ This method is to be inherited by localizations and return True if localization use documents """

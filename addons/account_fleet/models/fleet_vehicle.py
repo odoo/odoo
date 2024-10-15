@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, models, fields
+from odoo.addons import fleet
 
 
-class FleetVehicle(models.Model):
-    _inherit = ['fleet.vehicle']
+class FleetVehicle(fleet.FleetVehicle):
 
     bill_count = fields.Integer(compute='_compute_move_ids', string="Bills Count")
     account_move_ids = fields.One2many('account.move', compute='_compute_move_ids')

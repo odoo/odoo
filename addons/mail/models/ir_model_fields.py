@@ -3,10 +3,10 @@
 
 from odoo import fields, models
 from odoo.tools import groupby
+from odoo.addons import base
 
 
-class IrModelFields(models.Model):
-    _inherit = ['ir.model.fields']
+class IrModelFields(base.IrModelFields):
 
     tracking = fields.Integer(
         string="Enable Ordered Tracking",

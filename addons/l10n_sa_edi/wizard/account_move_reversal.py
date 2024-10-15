@@ -2,10 +2,10 @@
 from odoo import models
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountMoveReversal(models.TransientModel):
-    _inherit = ['account.move.reversal']
+class AccountMoveReversal(account.AccountMoveReversal):
 
     def reverse_moves(self, is_modify=False):
         self.ensure_one()

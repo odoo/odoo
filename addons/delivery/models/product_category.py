@@ -3,10 +3,10 @@
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.addons import sale
 
 
-class ProductCategory(models.Model):
-    _inherit = ["product.category"]
+class ProductCategory(sale.ProductCategory):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_delivery_category(self):

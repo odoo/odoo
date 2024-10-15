@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api
+from odoo.addons import point_of_sale
 
 
-class PosOrderLine(models.Model):
-    _inherit = ['pos.order.line']
+class PosOrderLine(point_of_sale.PosOrderLine):
 
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     event_registration_ids = fields.One2many('event.registration', 'pos_order_line_id', string='Event Registrations')

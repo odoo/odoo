@@ -16,6 +16,7 @@ from odoo.tools import format_date, format_datetime, format_time, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
+from odoo.addons import portal, mail
 
 _logger = logging.getLogger(__name__)
 
@@ -89,10 +90,9 @@ class EventType(models.Model):
                 template.seats_max = 0
 
 
-class EventEvent(models.Model):
+class EventEvent(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin):
     """Event"""
     _description = 'Event'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_begin, id'
 
     @api.model

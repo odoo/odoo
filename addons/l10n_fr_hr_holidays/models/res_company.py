@@ -3,10 +3,10 @@
 
 from odoo import fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import hr, resource
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(hr.ResCompany, resource.ResCompany):
 
     l10n_fr_reference_leave_type = fields.Many2one(
         'hr.leave.type',

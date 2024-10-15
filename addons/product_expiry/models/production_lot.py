@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.addons import stock
 
 
-class StockLot(models.Model):
-    _inherit = ['stock.lot']
+class StockLot(stock.StockLot):
 
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
@@ -89,8 +89,7 @@ class StockLot(models.Model):
         })
 
 
-class ProcurementGroup(models.Model):
-    _inherit = ['procurement.group']
+class ProcurementGroup(stock.ProcurementGroup):
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):

@@ -5,10 +5,10 @@ from odoo import api, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv.expression import AND
 from odoo.tools import format_date
+from odoo.addons import hr_holidays
 
 
-class HrLeave(models.Model):
-    _inherit = ['hr.leave']
+class HrLeave(hr_holidays.HrLeave):
 
     def _compute_resource_calendar_id(self):
         super()._compute_resource_calendar_id()

@@ -1,10 +1,10 @@
 import uuid
 from odoo import models, api
 from odoo.osv import expression
+from odoo.addons import pos_self_order, pos_razorpay
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ['pos.payment.method']
+class PosPaymentMethod(pos_razorpay.PosPaymentMethod, pos_self_order.PosPaymentMethod):
 
     def _payment_request_from_kiosk(self, order):
         if self.use_payment_terminal != 'razorpay':

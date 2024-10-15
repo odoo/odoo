@@ -11,6 +11,7 @@ from requests.exceptions import HTTPError, RequestException
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import file_open
+from odoo.addons import account_debit_note, account_edi
 
 ZATCA_API_URLS = {
     "sandbox": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/",
@@ -32,8 +33,7 @@ SANDBOX_AUTH = {
 }
 
 
-class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+class AccountJournal(account_edi.AccountJournal, account_debit_note.AccountJournal):
 
     """
         In order to clear/report an invoice through the ZATCA API, we need to onboard each journal by following

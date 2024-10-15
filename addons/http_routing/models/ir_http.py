@@ -18,6 +18,7 @@ from odoo.addons.base.models.res_lang import LangData
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, Response
 from odoo.osv import expression
+from odoo.addons import web
 
 _logger = logging.getLogger(__name__)
 
@@ -41,8 +42,7 @@ class ModelConverter(ir_http.ModelConverter):
         return record.with_context(_converter_value=value)
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(web.IrHttp):
 
     rerouting_limit = 10
 

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import base
 
 
-class ResCurrency(models.Model):
-    _inherit = ['res.currency']
+class ResCurrency(base.ResCurrency):
 
     def _activate_group_multi_currency(self):
         # for Sale/ POS - Multi currency flows require pricelists

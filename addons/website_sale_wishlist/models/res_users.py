@@ -1,9 +1,9 @@
 from odoo import api, fields, models
 from odoo.http import request
+from odoo.addons import website, digest
 
 
-class ResUsers(models.Model):
-    _inherit = ["res.users"]
+class ResUsers(website.ResUsers, digest.ResUsers):
 
     def _check_credentials(self, credential, env):
         """Make all wishlists from session belong to its owner user."""

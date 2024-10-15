@@ -3,10 +3,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
+from odoo.addons import website_livechat
 
 
-class ChatbotScriptStep(models.Model):
-    _inherit = ['chatbot.script.step']
+class ChatbotScriptStep(website_livechat.ChatbotScriptStep):
 
     def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
         values = super()._chatbot_crm_prepare_lead_values(discuss_channel, description)

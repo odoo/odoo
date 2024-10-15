@@ -4,10 +4,10 @@
 
 from odoo import fields, models, api
 from markupsafe import escape
+from odoo.addons import point_of_sale
 
 
-class Pos_Self_OrderCustom_Link(models.Model):
-    _inherit = ["pos.load.mixin"]
+class Pos_Self_OrderCustom_Link(models.Model, point_of_sale.PosLoadMixin):
     _description = (
         "Custom links that the restaurant can configure to be displayed on the self order screen"
     )

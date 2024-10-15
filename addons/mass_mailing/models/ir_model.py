@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import mail
 
 
-class IrModel(models.Model):
-    _inherit = ['ir.model']
+class IrModel(mail.IrModel):
 
     is_mailing_enabled = fields.Boolean(
         string="Mailing Enabled",

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
+from odoo.addons import website_sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ["sale.order"]
+class SaleOrder(website_sale.SaleOrder):
 
     def _action_confirm(self):
         """ If the product of an order line is a 'course', we add the client of the sale_order

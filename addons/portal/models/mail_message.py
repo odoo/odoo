@@ -4,10 +4,10 @@ from odoo import models
 from odoo.http import request
 from odoo.tools import format_datetime, groupby
 from odoo.addons.portal.utils import get_portal_partner
+from odoo.addons import mail
 
 
-class MailMessage(models.Model):
-    _inherit = ['mail.message']
+class MailMessage(mail.MailMessage):
 
     def portal_message_format(self, options=None):
         """ Simpler and portal-oriented version of 'message_format'. Purpose

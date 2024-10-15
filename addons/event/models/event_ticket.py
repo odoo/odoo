@@ -6,6 +6,7 @@ import json
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.misc import formatLang
+from odoo.addons import event
 
 
 class EventTypeTicket(models.Model):
@@ -42,12 +43,11 @@ class EventTypeTicket(models.Model):
         return ['sequence', 'name', 'description', 'seats_max']
 
 
-class EventEventTicket(models.Model):
+class EventEventTicket(models.Model, event.EventTypeTicket):
     """ Ticket model allowing to have different kind of registrations for a given
     event. Ticket are based on ticket type as they share some common fields
     and behavior. Those models come from <= v13 Odoo event.event.ticket that
     modeled both concept: tickets for event templates, and tickets for events. """
-    _inherit = ['event.type.ticket']
     _description = 'Event Ticket'
     _order = "event_id, sequence, name, id"
 

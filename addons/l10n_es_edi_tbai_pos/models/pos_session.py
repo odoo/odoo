@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import point_of_sale
 
 
-class PosSession(models.Model):
-    _inherit = ['pos.session']
+class PosSession(point_of_sale.PosSession):
 
     def _load_pos_data(self, models_to_load):
         data = super()._load_pos_data(models_to_load)

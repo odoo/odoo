@@ -6,10 +6,10 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.sale_pdf_quote_builder import utils
+from odoo.addons import sale
 
 
-class ProductDocument(models.Model):
-    _inherit = ['product.document']
+class ProductDocument(sale.ProductDocument):
 
     attached_on_sale = fields.Selection(
         selection_add=[('inside', "Inside quote pdf")],

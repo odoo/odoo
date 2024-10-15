@@ -4,10 +4,10 @@ import base64
 import json
 
 from odoo import SUPERUSER_ID, _, api, models
+from odoo.addons import account
 
 
-class AccountMoveSend(models.AbstractModel):
-    _inherit = ['account.move.send']
+class AccountMoveSend(account.AccountMoveSend):
 
     @api.model
     def _is_vn_edi_applicable(self, move):

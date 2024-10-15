@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale_stock
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(sale_stock.AccountMove):
 
     def _l10n_in_get_warehouse_address(self):
         res = super()._l10n_in_get_warehouse_address()

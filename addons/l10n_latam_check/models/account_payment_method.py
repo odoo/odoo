@@ -1,8 +1,8 @@
 from odoo import models, api
+from odoo.addons import account
 
 
-class AccountPaymentMethod(models.Model):
-    _inherit = ['account.payment.method']
+class AccountPaymentMethod(account.AccountPaymentMethod):
 
     @api.model
     def _get_payment_method_information(self):

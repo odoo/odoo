@@ -5,12 +5,12 @@ import pprint
 
 from odoo import _, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import payment
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentToken(models.Model):
-    _inherit = ['payment.token']
+class PaymentToken(payment.PaymentToken):
 
     stripe_payment_method = fields.Char(string="Stripe Payment Method ID", readonly=True)
     stripe_mandate = fields.Char(string="Stripe Mandate", readonly=True)

@@ -6,12 +6,12 @@ from ast import literal_eval
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
+from odoo.addons import hr_holidays, hr
 
 _logger = logging.getLogger(__name__)
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = ['hr.employee.base']
+class HrEmployeeBase(hr.HrEmployeeBase, hr_holidays.HrEmployeeBase):
 
     email_sent = fields.Boolean(default=False)
     ip_connected = fields.Boolean(default=False)

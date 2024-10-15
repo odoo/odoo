@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import stock
 
 
-class StockReplenishMixin(models.AbstractModel):
-    _inherit = ['stock.replenish.mixin']
+class StockReplenishMixin(stock.StockReplenishMixin):
 
     bom_id = fields.Many2one('mrp.bom', string="Bill of Material")
     show_bom = fields.Boolean(compute='_compute_show_bom')

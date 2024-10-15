@@ -1,10 +1,10 @@
 
 import threading
 from odoo import api, fields, models
+from odoo.addons import base_setup, digest, web
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(base_setup.ResConfigSettings, digest.ResConfigSettings, web.ResConfigSettings):
 
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Company Working Hours',

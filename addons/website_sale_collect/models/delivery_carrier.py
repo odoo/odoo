@@ -6,10 +6,10 @@ from odoo.http import request
 from odoo.tools.misc import format_duration
 
 from odoo.addons.website_sale_collect import utils
+from odoo.addons import website_sale, stock_delivery
 
 
-class DeliveryCarrier(models.Model):
-    _inherit = ['delivery.carrier']
+class DeliveryCarrier(website_sale.DeliveryCarrier, stock_delivery.DeliveryCarrier):
 
     delivery_type = fields.Selection(
         selection_add=[('in_store', "Pick up in store")], ondelete={'in_store': 'set default'}

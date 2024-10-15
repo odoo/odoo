@@ -3,10 +3,10 @@
 
 from odoo import api, models, fields
 from odoo.osv import expression
+from odoo.addons import purchase_stock, sale_stock, stock
 
 
-class StockRule(models.Model):
-    _inherit = ['stock.rule']
+class StockRule(sale_stock.StockRule, purchase_stock.StockRule):
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
@@ -22,8 +22,7 @@ class StockRule(models.Model):
         return super()._get_partner_id(values, rule)
 
 
-class ProcurementGroup(models.Model):
-    _inherit = ["procurement.group"]
+class ProcurementGroup(sale_stock.ProcurementGroup, purchase_stock.ProcurementGroup):
 
     @api.model
     def _get_rule_domain(self, location, values):
@@ -33,8 +32,7 @@ class ProcurementGroup(models.Model):
         return domain
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(sale_stock.StockPicking, purchase_stock.StockPicking):
 
     is_dropship = fields.Boolean("Is a Dropship", compute='_compute_is_dropship')
 
@@ -48,8 +46,7 @@ class StockPicking(models.Model):
         return super()._is_to_external_location() or self.is_dropship
 
 
-class StockPickingType(models.Model):
-    _inherit = ['stock.picking.type']
+class StockPickingType(stock.StockPickingType):
 
     code = fields.Selection(
         selection_add=[('dropship', 'Dropship')], ondelete={'dropship': lambda recs: recs.write({'code': 'outgoing', 'active': False})})
@@ -81,8 +78,7 @@ class StockPickingType(models.Model):
                 record.show_picking_type = True
 
 
-class StockLot(models.Model):
-    _inherit = ['stock.lot']
+class StockLot(sale_stock.StockLot, purchase_stock.StockLot):
 
     def _compute_last_delivery_partner_id(self):
         super()._compute_last_delivery_partner_id()

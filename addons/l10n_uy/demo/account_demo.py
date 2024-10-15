@@ -3,13 +3,13 @@ import time
 import logging
 from odoo import api, models, Command
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import account, l10n_latam_invoice_document
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountChartTemplate(models.AbstractModel):
+class AccountChartTemplate(account.AccountChartTemplate, l10n_latam_invoice_document.AccountChartTemplate):
 
-    _inherit = ["account.chart.template"]
 
     @api.model
     def _get_demo_data(self, company=False):

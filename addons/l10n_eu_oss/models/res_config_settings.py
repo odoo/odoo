@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import account
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(account.ResConfigSettings):
 
     l10n_eu_oss_eu_country = fields.Boolean('Is European country?', compute='_compute_l10n_eu_oss_european_country')
 

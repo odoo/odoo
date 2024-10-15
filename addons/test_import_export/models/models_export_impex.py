@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.osv.expression import FALSE_DOMAIN
+from odoo.addons import test_import_export
 
 
 def selection_fn(self):
@@ -102,15 +103,13 @@ class ExportOne2manyMultipleChild(models.Model):
             record.display_name = f"{self._name}:{record.value}"
 
 
-class ExportOne2manyChild1(models.Model):
+class ExportOne2manyChild1(test_import_export.ExportOne2manyMultipleChild):
     _name = 'export.one2many.child.1'
-    _inherit = ['export.one2many.multiple.child']
     _description = 'Export One to Many Child 1'
 
 
-class ExportOne2manyChild2(models.Model):
+class ExportOne2manyChild2(test_import_export.ExportOne2manyMultipleChild):
     _name = 'export.one2many.child.2'
-    _inherit = ['export.one2many.multiple.child']
     _description = 'Export One To Many Child 2'
 
 

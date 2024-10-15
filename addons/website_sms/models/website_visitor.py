@@ -3,10 +3,10 @@
 
 from odoo import models, _
 from odoo.exceptions import UserError
+from odoo.addons import website
 
 
-class WebsiteVisitor(models.Model):
-    _inherit = ['website.visitor']
+class WebsiteVisitor(website.WebsiteVisitor):
 
     def _check_for_sms_composer(self):
         """ Purpose of this method is to actualize visitor model prior to contacting

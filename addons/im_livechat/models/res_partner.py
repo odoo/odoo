@@ -4,11 +4,11 @@ from markupsafe import Markup
 
 from odoo import api, models, fields, _
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import mail
 
 
-class ResPartner(models.Model):
+class ResPartner(mail.ResPartner):
     """Update of res.partner class to take into account the livechat username."""
-    _inherit = ['res.partner']
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
 

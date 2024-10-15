@@ -11,16 +11,16 @@ from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
+from odoo.addons import calendar, mail
 
 
 MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}
 
 
-class HrLeaveAllocation(models.Model):
+class HrLeaveAllocation(models.Model, mail.MailThread, calendar.MailActivityMixin):
     """ Allocation Requests Access specifications: similar to leave requests """
     _description = "Time Off Allocation"
     _order = "create_date desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
     def _default_holiday_status_id(self):

@@ -8,18 +8,12 @@ from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
+from odoo.addons import rating, website, sale
 
 _logger = logging.getLogger(__name__)
 
 
-class ProductTemplate(models.Model):
-    _inherit = [
-        'rating.mixin',
-        'product.template',
-        'website.seo.metadata',
-        'website.published.multi.mixin',
-        'website.searchable.mixin',
-    ]
+class ProductTemplate(rating.RatingMixin, sale.ProductTemplate, website.WebsiteSeoMetadata, website.WebsitePublishedMultiMixin, website.WebsiteSearchableMixin):
     _mail_post_access = 'read'
     _check_company_auto = True
 

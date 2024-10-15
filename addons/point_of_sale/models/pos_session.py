@@ -10,12 +10,12 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.tools import float_is_zero, float_compare, convert, plaintext2html
 from odoo.service.common import exp_version
 from odoo.osv.expression import AND
+from odoo.addons import point_of_sale, portal, mail, stock
 
 
-class PosSession(models.Model):
+class PosSession(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin, point_of_sale.PosBusMixin, point_of_sale.PosLoadMixin):
     _order = 'id desc'
     _description = 'Point of Sale Session'
-    _inherit = ['mail.thread', 'mail.activity.mixin', "pos.bus.mixin", 'pos.load.mixin']
 
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
@@ -1872,8 +1872,7 @@ class PosSession(models.Model):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 
 
-class ProcurementGroup(models.Model):
-    _inherit = ['procurement.group']
+class ProcurementGroup(stock.ProcurementGroup):
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):

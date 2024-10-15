@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import pos_restaurant
 
 
-class PosOrder(models.Model):
-    _inherit = ['pos.order']
+class PosOrder(pos_restaurant.PosOrder):
 
     def action_pos_order_paid(self):
         res = super(PosOrder, self).action_pos_order_paid()

@@ -9,13 +9,13 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.image import is_image_size_above
+from odoo.addons import mail, base
 
 _logger = logging.getLogger(__name__)
 PRICE_CONTEXT_KEYS = ['pricelist', 'quantity', 'uom', 'date']
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
+class ProductTemplate(models.Model, mail.MailThread, mail.MailActivityMixin, base.ImageMixin):
     _description = "Product"
     _order = "is_favorite desc, name"
     _check_company_auto = True

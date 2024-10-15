@@ -4,10 +4,10 @@ from datetime import datetime
 
 from odoo import fields, models
 from odoo.osv.expression import AND
+from odoo.addons import resource
 
 
-class ResourceCalendar(models.Model):
-    _inherit = ['resource.calendar']
+class ResourceCalendar(resource.ResourceCalendar):
 
     contracts_count = fields.Integer("# Contracts using it", compute='_compute_contracts_count', groups="hr_contract.group_hr_contract_manager")
 

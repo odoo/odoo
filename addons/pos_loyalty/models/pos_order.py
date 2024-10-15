@@ -5,10 +5,10 @@ from collections import defaultdict
 from odoo import _, models
 from odoo.tools import float_compare
 import base64
+from odoo.addons import point_of_sale
 
 
-class PosOrder(models.Model):
-    _inherit = ['pos.order']
+class PosOrder(point_of_sale.PosOrder):
 
     def validate_coupon_programs(self, point_changes, new_codes):
         """

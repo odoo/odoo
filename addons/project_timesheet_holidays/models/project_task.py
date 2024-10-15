@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import hr_timesheet
 
 
-class ProjectTask(models.Model):
-    _inherit = ['project.task']
+class ProjectTask(hr_timesheet.ProjectTask):
 
     leave_types_count = fields.Integer(compute='_compute_leave_types_count', string="Time Off Types Count")
     is_timeoff_task = fields.Boolean("Is Time off Task", compute="_compute_is_timeoff_task", search="_search_is_timeoff_task", export_string_translation=False)

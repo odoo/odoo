@@ -13,6 +13,7 @@ from odoo.osv import expression
 from odoo.tools import float_round
 
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.addons import mail
 
 
 WEEKDAY_TO_NAME = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
@@ -31,9 +32,8 @@ def time_to_float(t):
     return float_round(t.hour + t.minute/60 + t.second/3600, precision_digits=2)
 
 
-class LunchSupplier(models.Model):
+class LunchSupplier(models.Model, mail.MailThread, mail.MailActivityMixin):
     _description = 'Lunch Supplier'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True)
 

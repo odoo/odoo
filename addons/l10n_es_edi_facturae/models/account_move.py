@@ -12,6 +12,7 @@ from odoo.exceptions import UserError
 from odoo.tools import float_round, float_repr, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
 from odoo.addons.l10n_es_edi_facturae.xml_utils import (
+from odoo.addons import l10n_es
     NS_MAP,
     _canonicalize_node,
     _reference_digests,
@@ -51,8 +52,7 @@ COUNTRY_CODE_MAP = {
 REVERSED_COUNTRY_CODE = {v: k for k, v in COUNTRY_CODE_MAP.items()}
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_es.AccountMove):
 
     l10n_es_edi_facturae_xml_id = fields.Many2one(
         comodel_name='ir.attachment',

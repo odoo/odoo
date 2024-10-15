@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account, base_vat
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(account.ResConfigSettings, base_vat.ResConfigSettings):
 
     l10n_ar_tax_base_account_id = fields.Many2one(
         comodel_name='account.account',

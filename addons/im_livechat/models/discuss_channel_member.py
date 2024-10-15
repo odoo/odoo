@@ -4,10 +4,10 @@ from datetime import datetime, timedelta
 
 from odoo import api, models, fields
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import mail
 
 
-class DiscussChannelMember(models.Model):
-    _inherit = ['discuss.channel.member']
+class DiscussChannelMember(mail.DiscussChannelMember):
 
     @api.autovacuum
     def _gc_unpin_livechat_sessions(self):

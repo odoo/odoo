@@ -3,10 +3,10 @@
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 import re
+from odoo.addons import l10n_latam_invoice_document
 
 
-class L10n_LatamDocumentType(models.Model):
-    _inherit = ["l10n_latam.document.type"]
+class L10n_LatamDocumentType(l10n_latam_invoice_document.L10n_LatamDocumentType):
 
     internal_type = fields.Selection(
         selection_add=[

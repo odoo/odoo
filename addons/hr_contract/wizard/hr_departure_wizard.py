@@ -3,10 +3,10 @@
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import hr
 
 
-class HrDepartureWizard(models.TransientModel):
-    _inherit = ['hr.departure.wizard']
+class HrDepartureWizard(hr.HrDepartureWizard):
 
     def _get_employee_departure_date(self):
         employee = self.env['hr.employee'].browse(self.env.context['active_id'])

@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 from collections import defaultdict
+from odoo.addons import hr_holidays, hr_timesheet
 
 
-class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+class HrEmployee(hr_timesheet.HrEmployee, hr_holidays.HrEmployee):
 
     @api.model_create_multi
     def create(self, vals_list):

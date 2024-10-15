@@ -1,8 +1,8 @@
 from odoo import api, fields, models
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
-    _inherit = ['account.tax']
+class AccountTax(account.AccountTax):
 
     ubl_cii_tax_category_code = fields.Selection(
         help="The VAT category code used for electronic invoicing purposes.",

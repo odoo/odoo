@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account, hr
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(account.ResCompany, hr.ResCompany):
 
     expense_journal_id = fields.Many2one(
         "account.journal",

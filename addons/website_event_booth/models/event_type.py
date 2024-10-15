@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import website_event, event_booth
 
 
-class EventType(models.Model):
-    _inherit = ['event.type']
+class EventType(website_event.EventType, event_booth.EventType):
 
     booth_menu = fields.Boolean(
         string='Booths on Website', compute='_compute_booth_menu',

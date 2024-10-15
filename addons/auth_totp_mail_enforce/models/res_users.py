@@ -11,6 +11,7 @@ from odoo.http import request
 from odoo.tools.misc import babel_locale_parse, hmac
 
 from odoo.addons.auth_totp.models.totp import hotp, TOTP
+from odoo.addons import auth_totp, mail
 
 _logger = logging.getLogger(__name__)
 
@@ -20,8 +21,7 @@ TOTP_RATE_LIMITS = {
 }
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(auth_totp.ResUsers, mail.ResUsers):
 
     def _mfa_type(self):
         r = super()._mfa_type()

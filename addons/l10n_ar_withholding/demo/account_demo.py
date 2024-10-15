@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models
+from odoo.addons import l10n_ar, l10n_latam_check
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ["account.chart.template"]
+class AccountChartTemplate(l10n_ar.AccountChartTemplate, l10n_latam_check.AccountChartTemplate):
 
     def _post_load_demo_data(self, company=False):
         result = super()._post_load_demo_data(company)

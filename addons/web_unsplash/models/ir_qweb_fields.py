@@ -1,10 +1,10 @@
 from werkzeug import urls
 
 from odoo import models, api
+from odoo.addons import web_editor
 
 
-class IrQwebFieldImage(models.AbstractModel):
-    _inherit = ['ir.qweb.field.image']
+class IrQwebFieldImage(web_editor.IrQwebFieldImage):
 
     @api.model
     def from_html(self, model, field, element):

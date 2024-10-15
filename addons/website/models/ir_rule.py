@@ -1,9 +1,9 @@
 from odoo import api, models
 from odoo.addons.website.models import ir_http
+from odoo.addons import base
 
 
-class IrRule(models.Model):
-    _inherit = ['ir.rule']
+class IrRule(base.IrRule):
 
     @api.model
     def _eval_context(self):

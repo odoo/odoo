@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons import account
 
 
 class L10n_Eg_EdiUomCode(models.Model):
@@ -11,8 +12,7 @@ class L10n_Eg_EdiUomCode(models.Model):
     code = fields.Char(required=True)
 
 
-class UomUom(models.Model):
-    _inherit = ['uom.uom']
+class UomUom(account.UomUom):
 
     l10n_eg_unit_code_id = fields.Many2one('l10n_eg_edi.uom.code', string='ETA Unit Code',
                                            help='This is the type of unit according to egyptian tax authority')

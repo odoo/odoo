@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import hr_timesheet
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(hr_timesheet.ResCompany):
 
     leave_timesheet_task_id = fields.Many2one(
         'project.task', string="Time Off Task",

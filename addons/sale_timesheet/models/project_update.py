@@ -4,10 +4,10 @@
 from odoo import api, models
 from odoo.tools import float_utils, formatLang
 from odoo.tools.misc import format_duration
+from odoo.addons import hr_timesheet
 
 
-class ProjectUpdate(models.Model):
-    _inherit = ['project.update']
+class ProjectUpdate(hr_timesheet.ProjectUpdate):
 
     @api.model
     def _get_template_values(self, project):

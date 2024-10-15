@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api, _
 from odoo.tools import plaintext2html
+from odoo.addons import point_of_sale
 
 
-class PosSession(models.Model):
-    _inherit = ['pos.session']
+class PosSession(point_of_sale.PosSession):
     employee_id = fields.Many2one(
         "hr.employee",
         string="Cashier",

@@ -13,9 +13,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import convert, format_date
+from odoo.addons import hr, mail, resource, base
 
 
-class HrEmployee(models.Model):
+class HrEmployee(models.Model, hr.HrEmployeeBase, mail.MailThreadMainAttachment, mail.MailActivityMixin, resource.ResourceMixin, base.AvatarMixin):
     """
     NB: Any field only available on the model hr.employee (i.e. not on the
     hr.employee.public model) should have `groups="hr.group_hr_user"` on its
@@ -25,7 +26,6 @@ class HrEmployee(models.Model):
     """
     _description = "Employee"
     _order = 'name'
-    _inherit = ['hr.employee.base', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
 
     @api.model

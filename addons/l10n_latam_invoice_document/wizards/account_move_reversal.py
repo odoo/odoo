@@ -2,10 +2,10 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountMoveReversal(models.TransientModel):
-    _inherit = ["account.move.reversal"]
+class AccountMoveReversal(account.AccountMoveReversal):
 
     l10n_latam_use_documents = fields.Boolean(compute='_compute_documents_info')
     l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False, store=True)
