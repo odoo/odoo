@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
     steps: () => [
         {
             content: "Check portal is loaded",
-            trigger: 'a[href*="/my/account"]:contains("Edit"):first',
+            trigger: 'a[role="button"]:contains("Edit"):first',
             run: "click",
         },
         {
@@ -27,8 +27,29 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
             run: "click",
         },
         {
+            content: "Address view is opened",
+            trigger: 'a[href*="/my/home"]',
+            run: "click",
+        },
+        {
             content: "Check that we are back on the portal",
-            trigger: 'a[href*="/my/account"]:contains("Edit"):first',
+            trigger: 'a[role="button"]:contains("Edit"):first',
+        }
+    ]
+});
+
+registry.category("web_tour.tours").add('portal_load_homepage_forbidden', {
+    test: true,
+    url: '/my',
+    steps: () => [
+        {
+            content: "Check portal is loaded",
+            trigger: 'a[role="button"]:contains("Edit"):first',
+            run: "click",
+        },
+        {
+            content: "Load my account details",
+            trigger: 'h1:contains("403: Forbidden")',
         }
     ]
 });
