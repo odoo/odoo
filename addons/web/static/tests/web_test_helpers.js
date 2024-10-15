@@ -1,3 +1,4 @@
+import { WebClient } from "@web/webclient/webclient";
 import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";
 import { IrAttachment } from "./_framework/mock_server/mock_models/ir_attachment";
@@ -13,6 +14,8 @@ import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
 import { defineModels } from "./_framework/mock_server/mock_server";
+import { animationFrame } from "@odoo/hoot-dom";
+import { mountWithCleanup } from "./_framework/component_test_helpers";
 
 /**
  * @typedef {import("./_framework/mock_server/mock_fields").FieldType} FieldType
@@ -164,3 +167,16 @@ export const webModels = {
     ResPartner,
     ResUsers,
 };
+
+/**
+ * @param {{ env: import("@web/env").OdooEnv }} [options]
+ */
+export async function mountWebClient(options) {
+    await mountWithCleanup(WebClient, options);
+    // Wait for visual changes caused by a potential loadState
+    await animationFrame();
+    // wait for BlankComponent
+    await animationFrame();
+    // wait for the regular rendering
+    await animationFrame();
+}
