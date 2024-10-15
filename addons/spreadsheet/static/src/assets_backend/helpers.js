@@ -1,4 +1,4 @@
-import { loadBundle } from "@web/core/assets";
+import { loadBundle, loadJS } from "@web/core/assets";
 
 /**
  * Load external libraries required for o-spreadsheet
@@ -6,4 +6,5 @@ import { loadBundle } from "@web/core/assets";
  */
 export async function loadSpreadsheetDependencies() {
     await loadBundle("web.chartjs_lib");
+    await loadJS("/spreadsheet/static/lib/chartjs-chart-geo/chartjs-chart-geo.js");
 }
