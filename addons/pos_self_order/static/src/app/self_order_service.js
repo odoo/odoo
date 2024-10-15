@@ -264,7 +264,7 @@ export class SelfOrder extends Reactive {
                     combo_line_id: comboLine.combo_line_id,
                     price_unit: comboLine.price_unit,
                     order_id: this.currentOrder,
-                    qty: 1,
+                    qty: qty,
                     attribute_value_ids: comboLine.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,
@@ -763,7 +763,7 @@ export class SelfOrder extends Reactive {
     verifyCart() {
         let result = true;
         for (const line of this.currentOrder.unsentLines) {
-            if (line.combo_parent_uuid) {
+            if (line.combo_parent_id) {
                 continue;
             }
 
