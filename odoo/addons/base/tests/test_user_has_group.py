@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.exceptions import ValidationError
 from odoo import Command
+from unittest.mock import patch
 
 
 class TestHasGroup(TransactionCase):
@@ -284,3 +285,28 @@ class TestHasGroup(TransactionCase):
         user2 = self.env['res.users'].new({'partner_id': self.test_user.partner_id.id}, origin=self.test_user)
         self.assertEqual(user2.has_group(self.group0), True)
         self.assertEqual(user2.has_group(self.group1), False)
+
+
+@tagged('post_install', '-at_install')
+class TestResUserSettingIds(TransactionCase):
+    def test_portal_no_res_users_settings(self):
+        def res_users_settings_create_forbidden(record, vals):
+            raise Exception("No res user settings should be created for portal user")
+
+        with patch('odoo.addons.base.models.res_users_settings.ResUsersSettings.create', res_users_settings_create_forbidden):
+            portal_user = self.env['res.users'].create({
+                'login': 'portalTest',
+                'name': 'Portal test',
+            })
+            self.env.flush_all()
+        self.assertTrue(portal_user._is_portal())
+        self.assertFalse(portal_user.res_users_settings_ids, "Portal user should not have res.users.settings after creation")
+
+    def test_internal_res_users_settings(self):
+        internal_user = self.env['res.users'].create({
+            'login': 'portalTest',
+            'name': 'Portal test',
+            'groups_id': [(4, self.env.ref('base.group_user').id)],
+        })
+        self.assertTrue(internal_user._is_internal())
+        self.assertTrue(internal_user.res_users_settings_ids, "Internal user should not have res.users.settings after creation")
