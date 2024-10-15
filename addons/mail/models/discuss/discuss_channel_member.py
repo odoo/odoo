@@ -109,6 +109,7 @@ class ChannelMember(models.Model):
                       WHERE mail_message.model = 'discuss.channel'
                         AND mail_message.message_type NOT IN ('notification', 'user_notification')
                         AND mail_message.id >= discuss_channel_member.new_message_separator
+                        AND mail_message.body != ''
                         AND discuss_channel_member.id IN %(ids)s
                    GROUP BY discuss_channel_member.id
             """, {'ids': tuple(self.ids)})

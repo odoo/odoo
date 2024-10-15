@@ -4533,6 +4533,13 @@ class MailThread(models.AbstractModel):
         empty_messages = message.sudo()._filter_empty()
         empty_messages._cleanup_side_records()
         empty_messages.write({'pinned_at': None})
+        # Notify front-end of messages deletion for accurate counters
+        if empty_messages:
+            self.env['bus.bus']._sendone(
+                empty_messages._bus_notification_target(),
+                'mail.message/delete',
+                {'message_ids': empty_messages.ids}
+            )
         attachments = message.attachment_ids.sorted("id")
         broadcast_store = Store(attachments)
         res = {

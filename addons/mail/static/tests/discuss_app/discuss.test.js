@@ -2190,3 +2190,57 @@ test("Read of unread chat where new message is deleted should mark as read [REQU
         contains: [".badge", { count: 0 }],
     });
 });
+
+test("Deleting a message decreases the message unread counter", async () => {
+    const pyEnv = await startServer();
+    const bobUserId = pyEnv["res.users"].create({ name: "bob" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "bob", user_ids: [bobUserId] });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    const messageId = pyEnv["mail.message"].create({
+        author_id: bobPartnerId,
+        body: "Hey!",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    pyEnv["discuss.channel.member"].write([memberId], {
+        seen_message_id: messageId,
+        message_unread_counter: 0,
+    });
+    await start();
+    await openDiscuss();
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Regrettable message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-DiscussSidebar-item", {
+        text: "bob",
+        contains: [".badge", { text: "2" }],
+    });
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/update_content", {
+            message_id: 2,
+            body: "",
+            attachment_ids: [],
+        })
+    );
+    await contains(".o-mail-DiscussSidebar-item", {
+        text: "bob",
+        contains: [".badge", { text: "1" }],
+    });
+    await click("button", { text: "bob" });
+    await contains("span", { text: "1 new messageMark as Read" });
+});
