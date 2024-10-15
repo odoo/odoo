@@ -991,44 +991,6 @@ var SnippetEditor = publicWidget.Widget.extend({
         return result;
     },
     /**
-     * Called when an "over" dropzone event happens after an other "over"
-     * without an "out" between them. It escapes the previous dropzone.
-     *
-     * @private
-     * @param {Object} self
-     *      the same `self` variable as when we are in `_onDragAndDropStart`
-     * @param {Element} currentDropzoneEl
-     *      the dropzone over which we are currently dragging
-     */
-    _outPreviousDropzone(self, currentDropzoneEl) {
-        const previousDropzoneEl = this;
-        const rowEl = previousDropzoneEl.parentNode;
-
-        if (rowEl.classList.contains('o_grid_mode')) {
-            self.dragState.gridMode = false;
-            const fromGridToGrid = currentDropzoneEl.classList.contains('oe_grid_zone');
-            if (fromGridToGrid) {
-                // If we went from a grid dropzone to an other grid one.
-                rowEl.style.removeProperty('position');
-            } else {
-                // If we went from a grid dropzone to a normal one.
-                gridUtils._gridCleanUp(rowEl, self.$target[0]);
-                self.$target[0].style.removeProperty('z-index');
-            }
-
-            // Removing the drag helper and the background grid and
-            // resizing the grid and the dropzone.
-            self.dragState.dragHelperEl.remove();
-            self.dragState.backgroundGridEl.remove();
-            self.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
-            gridUtils._resizeGrid(rowEl);
-            self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
-            const rowCount = parseInt(rowEl.dataset.rowCount);
-            previousDropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
-        }
-        previousDropzoneEl.classList.remove('invisible');
-    },
-    /**
      * Changes some behaviors before the drag and drop.
      *
      * @private
@@ -1241,10 +1203,6 @@ var SnippetEditor = publicWidget.Widget.extend({
         }
     },
     dropzoneOver({ dropzone }) {
-        if (this.dropped) {
-            this.$target.detach();
-        }
-
         // Prevent a column to be trapped in an upper grid dropzone at
         // the start of the drag.
         if (this.dragState.isColumn && this.dragState.overFirstDropzone) {
@@ -1267,14 +1225,6 @@ var SnippetEditor = publicWidget.Widget.extend({
         const $dropzone = $(dropzone.el).first().after(this.$target);
         $dropzone.addClass('invisible');
 
-        // Checking if the "out" event happened before dropzone.el "over": if
-        // `this.dragState.currentDropzoneEl` exists, "out" didn't
-        // happen because it deletes it. We are therefore in the case
-        // of an "over" after an "over" and we need to escape the
-        // previous dropzone first.
-        if (this.dragState.currentDropzoneEl) {
-            this._outPreviousDropzone.apply(this.dragState.currentDropzoneEl, [this, $dropzone[0]]);
-        }
         this.dragState.currentDropzoneEl = $dropzone[0];
 
         if ($dropzone[0].classList.contains('oe_grid_zone')) {
@@ -1344,41 +1294,34 @@ var SnippetEditor = publicWidget.Widget.extend({
         }
     },
     dropzoneOut({ dropzone }) {
+        if (!this.dragState.currentDropzoneEl) {
+            // The "over" has been cancelled due to glued dropzone -> don't do
+            // anything.
+            return;
+        }
         const rowEl = dropzone.el.parentNode;
 
-        // Checking if the "out" event happens right after the "over"
-        // of the same dropzone. If it is not the case, we don't do
-        // anything since the previous dropzone was already escaped (at
-        // the start of the over).
-        const sameDropzoneAsCurrent = this.dragState.currentDropzoneEl === dropzone.el;
+        if (rowEl.classList.contains('o_grid_mode')) {
+            // Removing the listener + cleaning.
+            this.dragState.gridMode = false;
+            gridUtils._gridCleanUp(rowEl, this.$target[0]);
+            this.$target[0].style.removeProperty('z-index');
 
-        if (sameDropzoneAsCurrent) {
-            if (rowEl.classList.contains('o_grid_mode')) {
-                // Removing the listener + cleaning.
-                this.dragState.gridMode = false;
-                gridUtils._gridCleanUp(rowEl, this.$target[0]);
-                this.$target[0].style.removeProperty('z-index');
-
-                // Removing the drag helper and the background grid and
-                // resizing the grid and the dropzone.
-                this.dragState.dragHelperEl.remove();
-                this.dragState.backgroundGridEl.remove();
-                this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
-                gridUtils._resizeGrid(rowEl);
-                this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
-                const rowCount = parseInt(rowEl.dataset.rowCount);
-                dropzone.el.style.gridRowEnd = Math.max(rowCount + 1, 1);
-            }
-
-            var prev = this.$target.prev();
-            if (dropzone.el === prev[0]) {
-                this.dropped = false;
-                this.$target.detach();
-                $(dropzone.el).removeClass('invisible');
-            }
-
-            delete this.dragState.currentDropzoneEl;
+            // Removing the drag helper and the background grid and
+            // resizing the grid and the dropzone.
+            this.dragState.dragHelperEl.remove();
+            this.dragState.backgroundGridEl.remove();
+            this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
+            gridUtils._resizeGrid(rowEl);
+            this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
+            const rowCount = parseInt(rowEl.dataset.rowCount);
+            dropzone.el.style.gridRowEnd = Math.max(rowCount + 1, 1);
         }
+        this.dropped = false;
+        this.$target.detach();
+        $(dropzone.el).removeClass('invisible');
+
+        delete this.dragState.currentDropzoneEl;
     },
     /**
      * Called when the snippet is dropped after being dragged thanks to the
@@ -3695,12 +3638,6 @@ class SnippetsMenu extends Component {
                     dropzone.el.classList.add("o_dropzone_highlighted");
                     return;
                 }
-                if (dropped) {
-                    $toInsert.detach();
-                    $toInsert.addClass('oe_snippet_body');
-                    [...$dropZones].forEach(dropzoneEl =>
-                        dropzoneEl.classList.remove("invisible"));
-                }
                 dropped = true;
                 $(dropzone.el).first().after($toInsert).addClass('invisible');
                 $toInsert.removeClass('oe_snippet_body');
@@ -3711,13 +3648,10 @@ class SnippetsMenu extends Component {
                     dropzone.el.classList.remove("o_dropzone_highlighted");
                     return;
                 }
-                var prev = $toInsert.prev();
-                if (dropzone.el === prev[0]) {
-                    dropped = false;
-                    $toInsert.detach();
-                    $(dropzone.el).removeClass('invisible');
-                    $toInsert.addClass('oe_snippet_body');
-                }
+                dropped = false;
+                $toInsert.detach();
+                $(dropzone.el).removeClass('invisible');
+                $toInsert.addClass('oe_snippet_body');
                 this._onDropZoneOut();
             },
             onDragEnd: async ({ x, y, helper }) => {
