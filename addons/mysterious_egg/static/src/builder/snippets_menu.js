@@ -4,7 +4,7 @@ import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
 import { registry } from "@web/core/registry";
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { BuilderOverlayPlugin } from "@mysterious_egg/builder_overlay_plugin/builder_overlay_plugin";
+import { BuilderOverlayPlugin } from "./builder_overlay_plugin/builder_overlay_plugin";
 // import { useService } from "@web/core/utils/hooks";
 
 const BUILDER_PLUGIN = [BuilderOverlayPlugin];
