@@ -805,11 +805,11 @@ const ColorPaletteWidget = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onColorPickerPreview: function (ev) {
+    _onColorPickerPreview: async function (ev) {
         if (ev.target === this.gradientColorPicker) {
             this._updateGradientColor(ev, true);
         } else {
-            this.trigger_up('color_hover', Object.assign(this.getSelectedColors(), {
+            await this.trigger_up('color_hover', Object.assign(this.getSelectedColors(), {
                 color: ev.data.cssColor,
                 target: this.colorPicker.el,
             }));
