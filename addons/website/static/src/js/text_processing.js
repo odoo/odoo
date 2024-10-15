@@ -297,7 +297,7 @@ export function applyTextHighlight(topTextEl, highlightID) {
         return;
     }
     const style = window.getComputedStyle(topTextEl);
-    if (!style.getPropertyValue("--text-highlight-width")) {
+    if (!style.getPropertyValue("--text-highlight-width") && style.fontSize) {
         // The default value for `--text-highlight-width` is 0.1em.
         topTextEl.style.setProperty("--text-highlight-width", `${Math.round(parseFloat(style.fontSize) * 0.1)}px`);
     }
