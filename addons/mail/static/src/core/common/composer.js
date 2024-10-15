@@ -88,8 +88,12 @@ export class Composer extends Component {
         super.setup();
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
-        this.SEND_KEYBIND_TO_SEND = markup(
-            _t("<samp>%(send_keybind)s</samp><i> to send</i>", { send_keybind: this.sendKeybind })
+        this.OR_PRESS_SEND_KEYBIND = markup(
+            _t("or press %(send_keybind)s", {
+                send_keybind: this.sendKeybinds
+                    .map((key) => `<samp>${escape(key)}</samp>`)
+                    .join(" + "),
+            })
         );
         this.store = useState(useService("mail.store"));
         this.attachmentUploader = useAttachmentUploader(
@@ -291,8 +295,8 @@ export class Composer extends Component {
         return this.props.type === "note" ? _t("Log") : _t("Send");
     }
 
-    get sendKeybind() {
-        return this.props.mode === "extended" ? _t("CTRL-Enter") : _t("Enter");
+    get sendKeybinds() {
+        return this.props.mode === "extended" ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
     }
 
     get showComposerAvatar() {
