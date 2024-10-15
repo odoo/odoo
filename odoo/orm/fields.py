@@ -422,18 +422,18 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             attrs['readonly'] = attrs.get('readonly', True)
         if attrs.get('precompute'):
             if not attrs.get('compute') and not attrs.get('related'):
-                warnings.warn(f"precompute attribute doesn't make any sense on non computed field {self}")
+                warnings.warn(f"precompute attribute doesn't make any sense on non computed field {self}", stacklevel=1)
                 attrs['precompute'] = False
             elif not attrs.get('store'):
-                warnings.warn(f"precompute attribute has no impact on non stored field {self}")
+                warnings.warn(f"precompute attribute has no impact on non stored field {self}", stacklevel=1)
                 attrs['precompute'] = False
         if attrs.get('company_dependent'):
             if attrs.get('required'):
-                warnings.warn(f"company_dependent field {self} cannot be required")
+                warnings.warn(f"company_dependent field {self} cannot be required", stacklevel=1)
             if attrs.get('translate'):
-                warnings.warn(f"company_dependent field {self} cannot be translated")
+                warnings.warn(f"company_dependent field {self} cannot be translated", stacklevel=1)
             if self.type not in COMPANY_DEPENDENT_FIELDS:
-                warnings.warn(f"company_dependent field {self} is not one of the allowed types {COMPANY_DEPENDENT_FIELDS}")
+                warnings.warn(f"company_dependent field {self} is not one of the allowed types {COMPANY_DEPENDENT_FIELDS}", stacklevel=1)
             attrs['copy'] = attrs.get('copy', False)
             # speed up search and on delete
             attrs['index'] = attrs.get('index', 'btree_not_null')
@@ -447,7 +447,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             attrs['_depends_context'] = tuple(attrs.pop('depends_context'))
 
         if 'group_operator' in attrs:
-            warnings.warn("Since Odoo 18, 'group_operator' is deprecated, use 'aggregator' instead", DeprecationWarning, 2)
+            warnings.warn("Since Odoo 18, 'group_operator' is deprecated, use 'aggregator' instead", DeprecationWarning, stacklevel=2)
             attrs['aggregator'] = attrs.pop('group_operator')
 
         return attrs
@@ -506,10 +506,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                 self.setup_nonrelated(model)
 
             if not isinstance(self.required, bool):
-                warnings.warn(f'Property {self}.required should be a boolean ({self.required}).')
+                warnings.warn(f'Property {self}.required should be a boolean ({self.required}).', stacklevel=1)
 
             if not isinstance(self.readonly, bool):
-                warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).')
+                warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).', stacklevel=1)
 
             self._setup_done = True
 
@@ -784,12 +784,12 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                     )
                 if field is self and index and not self.recursive:
                     self.recursive = True
-                    warnings.warn(f"Field {self} should be declared with recursive=True")
+                    warnings.warn(f"Field {self} should be declared with recursive=True", stacklevel=1)
 
                 # precomputed fields can depend on non-precomputed ones, as long
                 # as they are reachable through at least one many2one field
                 if check_precompute and field.store and field.compute and not field.precompute:
-                    warnings.warn(f"Field {self} cannot be precomputed as it depends on non-precomputed field {field}")
+                    warnings.warn(f"Field {self} cannot be precomputed as it depends on non-precomputed field {field}", stacklevel=1)
                     self.precompute = False
 
                 if field_seq and not field_seq[-1]._description_searchable:
@@ -798,7 +798,8 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                     warnings.warn(
                         f"Field {field_seq[-1]!r} in dependency of {self} should be searchable. "
                         f"This is necessary to determine which records to recompute when {field} is modified. "
-                        f"You should either make the field searchable, or simplify the field dependency."
+                        f"You should either make the field searchable, or simplify the field dependency.",
+                        stacklevel=1,
                     )
 
                 field_seq.append(field)

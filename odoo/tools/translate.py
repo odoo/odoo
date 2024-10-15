@@ -1638,20 +1638,6 @@ class TranslationImporter:
             _logger.info("translations are loaded successfully")
 
 
-def trans_load(cr, filepath, lang, verbose=True, overwrite=False):
-    warnings.warn('The function trans_load is deprecated in favor of TranslationImporter', DeprecationWarning)
-    translation_importer = TranslationImporter(cr, verbose=verbose)
-    translation_importer.load_file(filepath, lang)
-    translation_importer.save(overwrite=overwrite)
-
-
-def trans_load_data(cr, fileobj, fileformat, lang, verbose=True, overwrite=False):
-    warnings.warn('The function trans_load_data is deprecated in favor of TranslationImporter', DeprecationWarning)
-    translation_importer = TranslationImporter(cr, verbose=verbose)
-    translation_importer.load(fileobj, fileformat, lang)
-    translation_importer.save(overwrite=overwrite)
-
-
 def get_locales(lang=None):
     if lang is None:
         lang = locale.getlocale()[0]

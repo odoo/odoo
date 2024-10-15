@@ -246,46 +246,6 @@ class WebsiteHrRecruitment(WebsiteForm):
             'default': default,
         })
 
-    # Compatibility routes
-
-    @http.route([
-        '/jobs/country/<model("res.country"):country>',
-        '/jobs/department/<model("hr.department"):department>',
-        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>',
-        '/jobs/office/<int:office_id>',
-        '/jobs/country/<model("res.country"):country>/office/<int:office_id>',
-        '/jobs/department/<model("hr.department"):department>/office/<int:office_id>',
-        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
-        '/jobs/employment_type/<int:contract_type_id>',
-        '/jobs/country/<model("res.country"):country>/employment_type/<int:contract_type_id>',
-        '/jobs/department/<model("hr.department"):department>/employment_type/<int:contract_type_id>',
-        '/jobs/office/<int:office_id>/employment_type/<int:contract_type_id>',
-        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/employment_type/<int:contract_type_id>',
-        '/jobs/country/<model("res.country"):country>/office/<int:office_id>/employment_type/<int:contract_type_id>',
-        '/jobs/department/<model("hr.department"):department>/office/<int:office_id>/employment_type/<int:contract_type_id>',
-        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>/employment_type/<int:contract_type_id>',
-    ], type='http', auth="public", website=True, sitemap=False)
-    def jobs_compatibility(self, country=None, department=None, office_id=None, contract_type_id=None, **kwargs):
-        """
-        Deprecated since Odoo 16.3: those routes are kept by compatibility.
-        They should not be used in Odoo code anymore.
-        """
-        warnings.warn(
-            "This route is deprecated since Odoo 16.3: the jobs list is now available at /jobs or /jobs/page/XXX",
-            DeprecationWarning
-        )
-        url_params = {
-            'country_id': country and country.id,
-            'department_id': department and department.id,
-            'office_id': office_id,
-            'contract_type_id': contract_type_id,
-            **kwargs,
-        }
-        return request.redirect(
-            '/jobs?%s' % url_encode(url_params),
-            code=301,
-        )
-
     @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public", website=True)
     def check_recent_application(self, field, value, job_id):
         def refused_applicants_condition(applicant):

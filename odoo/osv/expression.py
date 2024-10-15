@@ -746,7 +746,7 @@ def check_leaf(element):
 def get_unaccent_wrapper(cr):
     warnings.warn(
         "Since 18.0, deprecated method, use env.registry.unaccent instead",
-        DeprecationWarning, 2,
+        DeprecationWarning, stacklevel=2,
     )
     return odoo.modules.registry.Registry(cr.dbname).unaccent
 

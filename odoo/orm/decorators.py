@@ -397,8 +397,9 @@ def model_create_single(method: CreateLegacyCallee[S]) -> CreateCaller[S]:
             records = model.create([vals, ...])
     """
     warnings.warn(
-        f"The model {method.__module__} is not overriding the create method in batch",
-        DeprecationWarning
+        f"Since 18.0, `create` must be batched, an override in {method.__module__} is in single mode",
+        DeprecationWarning,
+        stacklevel=3,
     )
     wrapper = typing.cast('CreateCaller[S]', _model_create_single(method))  # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
