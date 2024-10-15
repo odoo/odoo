@@ -1,22 +1,29 @@
-.block.to_install {
-    position: relative;
+.o-snippets-menu {
+    .block {
+        background-color: rgba(62, 62, 70, 0.9);
 
-    .btn {
-        width: 80%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-    }
+        &.to_install{
+            .img-container {
+                position: relative;
 
-    &:not(:hover) .btn {
-        display: none;
-    }
+                .btn {
+                    width: 80%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    -ms-transform: translate(-50%, -50%);
+                }
 
-    img {
-        opacity: .4;
-        filter: saturate(0) blur(1px);
+                &:not(:hover) .btn {
+                    display: none;
+                }
+
+                img {
+                    opacity: .4;
+                    filter: saturate(0) blur(1px);
+                }
+            }
+        }
     }
 }
-

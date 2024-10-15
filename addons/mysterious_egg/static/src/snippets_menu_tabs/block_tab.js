@@ -22,23 +22,47 @@ export class BlockTab extends Component {
         this.orm = useService("orm");
     }
 
-    get categoriesBy3() {
-        const categories = registry
+    get snippetCategories() {
+        return registry
             .category("website.snippets")
-            .category("block.categories")
+            .category("category")
             .getEntries()
             .filter(
                 ([, category]) =>
                     category.isAvailable === undefined || category.isAvailable(this.env)
             );
-        return splitArrayBy3(categories);
+    }
+
+    get innerContentSnippets() {
+        return registry
+            .category("website.snippets")
+            .category("inner_content")
+            .getEntries()
+            .filter(
+                ([, category]) =>
+                    category.isAvailable === undefined || category.isAvailable(this.env)
+            );
+    }
+
+    get innerContentBy3() {
+        const innertContents = registry
+            .category("website.snippets")
+            .category("inner_content")
+            .getEntries()
+            .filter(
+                ([, category]) =>
+                    category.isAvailable === undefined || category.isAvailable(this.env)
+            );
+        return splitArrayBy3(innertContents);
     }
 
     onClickInstall(snippet) {
         // TODO: Should be the app name, not the snippet name ... Maybe both ?
         const bodyText = _t("Do you want to install %s App?", snippet.title);
         const linkText = _t("More info about this app.");
-        const linkUrl = "/odoo/action-base.open_module_tree/" + encodeURIComponent(snippet.install);
+        // TODO: extract moduleId;
+        const linkUrl =
+            "/odoo/action-base.open_module_tree/" + encodeURIComponent(snippet.moduleId);
 
         this.dialog.add(ConfirmationDialog, {
             title: _t("Install %s", snippet.title),
