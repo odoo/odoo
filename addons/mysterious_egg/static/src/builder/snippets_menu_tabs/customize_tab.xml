@@ -2,8 +2,15 @@
 <templates xml:space="preserve">
 
 <t t-name="mysterious_egg.CustomizeTab">
-    <div> CUSTOMIZE </div>
-    <Toolbar class="'flex-wrap h-auto'" toolbar="props.editor.shared.getToolbarInfo()"/>
+    <t t-if="!props.currentSnippet">
+        <div class="text-center pt-5">
+            Select a block on your page to style it.
+        </div>
+    </t>
+    <t t-else="">
+        <t t-esc="props.currentSnippet.tagName"/>
+        <Toolbar class="'flex-wrap h-auto'" toolbar="props.editor.shared.getToolbarInfo()"/>
+    </t>
 </t>
 
 </templates>

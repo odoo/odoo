@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, onMounted, useState } from "@odoo/owl";
+import { Component, onWillDestroy, onMounted, useState, useSubEnv } from "@odoo/owl";
 import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
 import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
 import { registry } from "@web/core/registry";
@@ -30,13 +30,20 @@ export class SnippetsMenu extends Component {
             canUndo: true,
             canRedo: true,
             activeTab: "blocks",
+            selectedSnippet: undefined,
         });
         this.editor = new Editor(
             {
                 disableFloatingToolbar: true,
                 Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN],
+                resources: {
+                    onSnippetChange: (element) => {
+                        this.state.selectedSnippet = element;
+                        this.setTab("customize");
+                    },
+                },
             },
-            this.env.services,
+            this.env.services
         );
         // onMounted(() => {
         //     // actionService.setActionMode("fullscreen");
