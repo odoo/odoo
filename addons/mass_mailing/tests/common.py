@@ -187,7 +187,7 @@ class MassMailCase(MailCase, MockLinkTracker):
     # TOOLS
     # ------------------------------------------------------------
 
-    def gateway_mail_bounce(self, mailing, record, bounce_base_values=None):
+    def gateway_mail_trace_bounce(self, mailing, record, bounce_base_values=None):
         """ Generate a bounce at mailgateway level.
 
         :param mailing: a ``mailing.mailing`` record on which we find a trace
@@ -198,6 +198,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         trace = mailing.mailing_trace_ids.filtered(
             lambda t: t.model == record._name and t.res_id == record.id
         )
+        self.assertTrue(trace)
 
         parsed_bounce_values = {
             'email_from': 'some.email@external.example.com',  # TDE check: email_from -> trace email ?
@@ -216,7 +217,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         self.env['mail.thread']._routing_handle_bounce(False, parsed_bounce_values)
         return trace
 
-    def gateway_mail_click(self, mailing, record, click_label):
+    def gateway_mail_trace_click(self, mailing, record, click_label):
         """ Simulate a click on a sent email.
 
         :param mailing: a ``mailing.mailing`` record on which we find a trace
@@ -227,6 +228,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         trace = mailing.mailing_trace_ids.filtered(
             lambda t: t.model == record._name and t.res_id == record.id
         )
+        self.assertTrue(trace)
 
         email = self._find_sent_mail_wemail(trace.email)
         self.assertTrue(bool(email))
@@ -248,7 +250,7 @@ class MassMailCase(MailCase, MockLinkTracker):
             raise AssertionError('url %s not found in mailing %s for record %s' % (click_label, mailing, record))
         return trace
 
-    def gateway_mail_open(self, mailing, record):
+    def gateway_mail_trace_open(self, mailing, record):
         """ Simulate opening an email through blank.gif icon access. As we
         don't want to use the whole Http layer just for that we will just
         call 'set_opened()' on trace, until having a better option.
@@ -260,7 +262,26 @@ class MassMailCase(MailCase, MockLinkTracker):
         trace = mailing.mailing_trace_ids.filtered(
             lambda t: t.model == record._name and t.res_id == record.id
         )
+        self.assertTrue(trace)
+
         trace.set_opened()
+        return trace
+
+    def gateway_mail_trace_reply(self, mailing, record):
+        """ Simulate replying to an email. As we don't want to use the whole
+        mail and gateway layer just for that we will just call 'set_replied()'
+        on trace.
+
+        :param mailing: a ``mailing.mailing`` record on which we find a trace
+          to open;
+        :param record: record which should open;
+        """
+        trace = mailing.mailing_trace_ids.filtered(
+            lambda t: t.model == record._name and t.res_id == record.id
+        )
+        self.assertTrue(trace)
+
+        trace.set_replied()
         return trace
 
     @classmethod
