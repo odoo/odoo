@@ -372,6 +372,7 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
                 trigger: '.category-button:eq(1) > span:contains("AAB")',
                 run: "click",
             },
+            ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
             {
                 trigger: '.category-button:eq(2) > span:contains("AAX")',
             },
