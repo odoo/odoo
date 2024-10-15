@@ -8673,9 +8673,9 @@ test(`translate event correctly handled with multiple controllers`, async () => 
 
     await contains(`[name="product_id"] .o_external_button`, { visible: false }).click();
     await contains(`.o_field_translate`).click();
-    expect(`.o_dialog:eq(1) span.o_field_translate`).toHaveCount(1);
+    expect(`.o_dialog:eq(1) button.o_field_translate`).toHaveCount(1);
 
-    await contains(`.o_dialog:eq(1) span.o_field_translate`).click();
+    await contains(`.o_dialog:eq(1) button.o_field_translate`).click();
     expect.verifySteps(["get_field_translations"]);
 });
 
