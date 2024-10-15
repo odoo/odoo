@@ -141,14 +141,14 @@ class TestImport(common.TransactionCase):
             "Code, Klingon",
             "The direct code translation was not applied"
         )
-        context = None
+        context = None  # noqa: F841
 
         # Comparison of lazy strings must be explicitely casted to string
         with self.assertRaises(NotImplementedError):
-            TRANSLATED_TERM == "Code, English"
+            _ = TRANSLATED_TERM == "Code, English"
         self.assertEqual(str(TRANSLATED_TERM), "Code Lazy, English", "The translation should not be applied yet")
 
-        context = {'lang': "tlh"}
+        context = {'lang': "tlh"}  # noqa: F841
         self.assertEqual(str(TRANSLATED_TERM), "Code Lazy, Klingon", "The lazy code translation was not applied")
 
         self.assertEqual("Do you speak " + TRANSLATED_TERM, "Do you speak Code Lazy, Klingon", "str + _lt concatenation failed")
@@ -157,9 +157,9 @@ class TestImport(common.TransactionCase):
 
         # test lazy translation in another module
         self.env['res.lang']._activate_lang('fr_FR')
-        context = {'lang': 'en_US'}
+        context = {'lang': 'en_US'}  # noqa: F841
         self.assertEqual(str(BOOLEAN_TRANSLATIONS[0]), 'yes')
-        context = {'lang': 'fr_FR'}
+        context = {'lang': 'fr_FR'}  # noqa: F841
         self.assertEqual(str(BOOLEAN_TRANSLATIONS[0]), 'oui')
 
     def test_import_from_csv_file(self):

@@ -467,9 +467,9 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertTrue(p1 in ps)
 
         with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in res\.partner.*"):
-            42 in ps
+            _ = 42 in ps
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*"):
-            self.env['ir.ui.menu'] in ps
+            _ = self.env['ir.ui.menu'] in ps
 
     @mute_logger('odoo.models')
     def test_80_lazy_contains(self):
@@ -479,9 +479,9 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertTrue(p1 in ps)
 
         with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in res\.partner.*"):
-            lazy(lambda: 42) in ps
+            _ = lazy(lambda: 42) in ps
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*"):
-            lazy(lambda: self.env['ir.ui.menu']) in ps
+            _ = lazy(lambda: self.env['ir.ui.menu']) in ps
 
     @mute_logger('odoo.models')
     def test_80_set_operations(self):
@@ -521,23 +521,23 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertNotEqual(ps, ms)
 
         with self.assertRaisesRegex(TypeError, r"unsupported operand types in: res\.partner.* \+ 'string'"):
-            ps + 'string'
+            _ = ps + 'string'
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*"):
-            ps + ms
+            _ = ps + ms
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*"):
-            ps - ms
+            _ = ps - ms
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*"):
-            ps & ms
+            _ = ps & ms
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*"):
-            ps | ms
+            _ = ps | ms
         with self.assertRaises(TypeError):
-            ps < ms
+            _ = ps < ms
         with self.assertRaises(TypeError):
-            ps <= ms
+            _ = ps <= ms
         with self.assertRaises(TypeError):
-            ps > ms
+            _ = ps > ms
         with self.assertRaises(TypeError):
-            ps >= ms
+            _ = ps >= ms
 
     @mute_logger('odoo.models')
     def test_80_lazy_set_operations(self):
@@ -577,23 +577,23 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertNotEqual(ps, ms)
 
         with self.assertRaisesRegex(TypeError, r"unsupported operand types in: res\.partner.* \+ 'string'"):
-            ps + 'string'
+            _ = ps + 'string'
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*"):
-            ps + ms
+            _ = ps + ms
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*"):
-            ps - ms
+            _ = ps - ms
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*"):
-            ps & ms
+            _ = ps & ms
         with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*"):
-            ps | ms
+            _ = ps | ms
         with self.assertRaises(TypeError):
-            ps < ms
+            _ = ps < ms
         with self.assertRaises(TypeError):
-            ps <= ms
+            _ = ps <= ms
         with self.assertRaises(TypeError):
-            ps > ms
+            _ = ps > ms
         with self.assertRaises(TypeError):
-            ps >= ms
+            _ = ps >= ms
 
     @mute_logger('odoo.models')
     def test_80_filter(self):
