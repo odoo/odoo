@@ -397,14 +397,16 @@ class Registry(Mapping):
                     warnings.warn(
                         f"{model_name}: inconsistent 'compute_sudo' for computed fields {fnames}. "
                         f"Either set 'compute_sudo' to the same value on all those fields, or "
-                        f"use distinct compute methods for sudoed and non-sudoed fields."
+                        f"use distinct compute methods for sudoed and non-sudoed fields.",
+                        stacklevel=1,
                     )
                 if len({field.precompute for field in fields}) > 1:
                     fnames = ", ".join(field.name for field in fields)
                     warnings.warn(
                         f"{model_name}: inconsistent 'precompute' for computed fields {fnames}. "
                         f"Either set all fields as precompute=True (if possible), or "
-                        f"use distinct compute methods for precomputed and non-precomputed fields."
+                        f"use distinct compute methods for precomputed and non-precomputed fields.",
+                        stacklevel=1,
                     )
                 if len({field.store for field in fields}) > 1:
                     fnames1 = ", ".join(field.name for field in fields if not field.store)
@@ -412,7 +414,8 @@ class Registry(Mapping):
                     warnings.warn(
                         f"{model_name}: inconsistent 'store' for computed fields, "
                         f"accessing {fnames1} may recompute and update {fnames2}. "
-                        f"Use distinct compute methods for stored and non-stored fields."
+                        f"Use distinct compute methods for stored and non-stored fields.",
+                        stacklevel=1,
                     )
         return computed
 
@@ -671,6 +674,7 @@ class Registry(Mapping):
                         warnings.warn(
                             "PostgreSQL function 'unaccent' is present but not immutable, "
                             "therefore trigram indexes may not be effective.",
+                            stacklevel=1,
                         )
                     expression = f'{column_expression} gin_trgm_ops'
                     method = 'gin'

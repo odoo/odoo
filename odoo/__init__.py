@@ -34,7 +34,7 @@ def registry(database_name=None):
     the fly.
     """
     import warnings  # noqa: PLC0415
-    warnings.warn("Use directly odoo.modules.registry.Registry", DeprecationWarning, 2)
+    warnings.warn("Since 18.0: call odoo.modules.registry.Registry directly", DeprecationWarning, stacklevel=2)
     if database_name is None:
         import threading
         database_name = threading.current_thread().dbname

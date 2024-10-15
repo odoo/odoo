@@ -172,25 +172,7 @@ class IrModuleModule(models.Model):
             path = os.path.join(module.name, 'static/description/index.html')
             try:
                 with tools.file_open(path, 'rb') as desc_file:
-                    doc = desc_file.read()
-                    if doc.startswith(XML_DECLARATION):
-                        warnings.warn(
-                            f"XML declarations in HTML module descriptions are "
-                            f"deprecated since Odoo 17, {module.name} can just "
-                            f"have a UTF8 description with not need for a "
-                            f"declaration.",
-                            category=DeprecationWarning,
-                        )
-                    else:
-                        try:
-                            doc = doc.decode()
-                        except UnicodeDecodeError:
-                            warnings.warn(
-                                f"Non-UTF8 module descriptions are deprecated "
-                                f"since Odoo 17 ({module.name}'s description "
-                                f"is not utf-8)",
-                                category=DeprecationWarning,
-                            )
+                    doc = desc_file.read().decode()
                     html = lxml.html.document_fromstring(doc)
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):

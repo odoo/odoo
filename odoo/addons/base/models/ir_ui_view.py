@@ -1555,13 +1555,7 @@ actual arch.
                     # exist on the comodel and field 'bar' must be in the view
                     desc = (f'domain of <field name="{name}">' if node.get('domain')
                             else f"domain of python field {name!r}")
-                    try:
-                        self._validate_domain_identifiers(node, name_manager, domain, desc, field.comodel_name, node_info)
-                    except ValueError as e:
-                        if 'Modifier must be a domain' in str(e):
-                            warnings.warn(f"Non-domain syntaxes are deprecated for attribute 'domain': {desc}\n{domain!r}", DeprecationWarning, 2)
-                        else:
-                            raise
+                    self._validate_domain_identifiers(node, name_manager, domain, desc, field.comodel_name, node_info)
 
             elif validate and node.get('domain'):
                 msg = _(

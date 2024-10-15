@@ -12,7 +12,6 @@ import os
 import re
 import sys
 import traceback
-import warnings
 from os.path import join as opj
 from os.path import normpath
 
@@ -40,19 +39,16 @@ except ImportError:
 __all__ = [
     "adapt_version",
     "check_manifest_dependencies",
-    "check_resource_path",
     "get_manifest",
     "get_module_path",
-    "get_module_resource",
     "get_modules",
     "get_modules_with_version",
     "get_resource_from_path",
-    "get_resource_path",
     "initialize_sys_path",
     "load_openerp_module",
 ]
 
-MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
+MANIFEST_NAMES = ['__manifest__.py']
 README = ['README.rst', 'README.md', 'README.txt']
 
 _DEFAULT_MANIFEST = {
@@ -197,29 +193,6 @@ def get_module_path(module, downloaded=False, display_warning=True):
         _logger.warning('module %s: module not found', module)
     return False
 
-def get_resource_path(module, *args):
-    """Return the full path of a resource of the given module.
-
-    :param module: module name
-    :param list(str) args: resource path components within module
-
-    :rtype: str
-    :return: absolute path to the resource
-    """
-    warnings.warn(
-        f"Since 17.0: use tools.misc.file_path instead of get_resource_path({module}, {args})",
-        DeprecationWarning,
-    )
-    resource_path = opj(module, *args)
-    try:
-        return file_path(resource_path)
-    except (FileNotFoundError, ValueError):
-        return False
-
-# backwards compatibility
-get_module_resource = get_resource_path
-check_resource_path = get_resource_path
-
 def get_resource_from_path(path):
     """Tries to extract the module name and the resource's relative path
     out of an absolute resource path.
@@ -273,13 +246,6 @@ def module_manifest(path):
     for manifest_name in MANIFEST_NAMES:
         candidate = opj(path, manifest_name)
         if os.path.isfile(candidate):
-            if manifest_name == '__openerp__.py':
-                warnings.warn(
-                    "__openerp__.py manifests are deprecated since 17.0, "
-                    f"rename {candidate!r} to __manifest__.py "
-                    "(valid since 10.0)",
-                    category=DeprecationWarning
-                )
             return candidate
 
 def get_module_root(path):

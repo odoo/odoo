@@ -115,10 +115,6 @@ class ormcache(object):
             counter.err += 1
             return self.method(*args, **kwargs)
 
-    def clear(self, model, *args):
-        """ Clear the registry cache """
-        warnings.warn('Deprecated method ormcache.clear(model, *args), use registry.clear_cache() instead')
-        model.pool.clear_all_caches()
 
 class ormcache_context(ormcache):
     """ This LRU cache decorator is a variant of :class:`ormcache`, with an
