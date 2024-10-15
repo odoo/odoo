@@ -150,17 +150,44 @@ class SQLCollector(Collector):
         init_thread = self.profiler.init_thread
         if not hasattr(init_thread, 'query_hooks'):
             init_thread.query_hooks = []
+            init_thread.init_hooks = []
         init_thread.query_hooks.append(self.hook)
+        if self.profiler.params.get('explain_sql'):
+            init_thread.init_hooks.append(self.init_hook)
 
     def stop(self):
         self.profiler.init_thread.query_hooks.remove(self.hook)
+        if self.profiler.params.get('explain_sql'):
+            self.profiler.init_thread.init_hooks.remove(self.init_hook)
+
+    def init_hook(self, cr):
+        cr._obj.execute("""
+            LOAD 'auto_explain';
+            SET auto_explain.log_min_duration = 1;
+            SET auto_explain.log_analyze = true;
+            SET auto_explain.log_verbose = true;
+            SET auto_explain.log_triggers = true;
+            SET auto_explain.log_buffers = true;
+            SET client_min_messages = log;
+        """)
+        cr._cnx.notices.clear()
 
     def hook(self, cr, query, params, query_start, query_time):
+        last_explain = False
+        if cr._cnx.notices:
+            explain_log = cr._cnx.notices[-1].split('\n')
+            cr._cnx.notices.clear()
+            idx = next((i for i, r in enumerate(explain_log) if 'cost=' in r), 0)  # filter out the query
+            duration = re.findall(r'duration: (.*)  ', explain_log[0])[0]
+            last_explain = '\n'.join(explain_log[idx:])
+            last_explain += f" Execution Time: {duration}"
+
         self.add({
             'query': str(query),
             'full_query': str(cr._format(query, params)),
             'start': query_start,
             'time': query_time,
+            'explain': last_explain,
         })
 
 
