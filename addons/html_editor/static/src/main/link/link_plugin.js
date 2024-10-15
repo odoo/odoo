@@ -60,6 +60,9 @@ function isSelectionHasLink(selection) {
  */
 function isPositionAtEdgeofLink(link, offset) {
     const childNodes = [...link.childNodes];
+    if (!childNodes.length) {
+        return "end";
+    }
     let firstVisibleIndex = childNodes.findIndex(isVisible);
     firstVisibleIndex = firstVisibleIndex === -1 ? 0 : firstVisibleIndex;
     if (offset <= firstVisibleIndex) {
