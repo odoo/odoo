@@ -296,7 +296,11 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             if set(sent_email['email_to']) == set([email_to]):
                 break
         else:
-            raise AssertionError('sent mail not found for email_to %s' % (email_to))
+            debug_info = '\n'.join(
+                f"From: {mail['email_from']} - To {mail['email_to']}"
+                for mail in self._mails
+            )
+            raise AssertionError(f'sent mail not found for email_to {email_to}\n{debug_info}')
         return sent_email
 
     def _filter_mail(self, status=None, mail_message=None, author=None, email_from=None):
@@ -472,6 +476,18 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 if fname == 'headers':
                     fvalue = literal_eval(mail[fname])
                     self.assertDictEqual(fvalue, expected_fvalue)
+                elif fname == 'attachments_info':
+                    for attachment_info in expected_fvalue:
+                        attachment = next((attach for attach in mail.attachment_ids if attach.name == attachment_info['name']), False)
+                        self.assertTrue(
+                            bool(attachment),
+                            f'Attachment {attachment_info["name"]} not found in attachments',
+                        )
+                        if attachment_info.get('raw'):
+                            self.assertEqual(attachment[1], attachment_info['raw'])
+                        if attachment_info.get('type'):
+                            self.assertEqual(attachment[2], attachment_info['type'])
+                    self.assertEqual(len(expected_fvalue), len(mail.attachment_ids))
                 else:
                     self.assertEqual(
                         mail[fname], expected_fvalue,
@@ -695,10 +711,10 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         )
         debug_info = ''
         if not sent_mail:
-            debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails)
+            debug_info = '\n-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails)
         self.assertTrue(
             bool(sent_mail),
-            'Expected mail from %s to %s not found in %s' % (expected['email_from'], expected['email_to'], debug_info)
+            'Expected mail from %s to %s not found in %s\n' % (expected['email_from'], expected['email_to'], debug_info)
         )
 
         # assert values
