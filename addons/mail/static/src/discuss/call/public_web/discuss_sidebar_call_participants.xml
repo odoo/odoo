@@ -2,12 +2,10 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCallParticipants">
         <t t-if="sessions.length gt 0">
-            <Dropdown t-if="compact" state="floating" position="'right-middle'" manual="true" menuClass="'py-0'">
+            <Dropdown t-if="compact" state="floating" position="'right-start'" manual="true" menuClass="'py-0'">
                 <t t-call="mail.DiscussSidebarCallParticipants.main"/>
                 <t t-set-slot="content">
-                    <div t-ref="floating">
-                        <DiscussSidebarCallParticipants thread="props.thread" compact="false"/>
-                    </div>
+                    <div class="p-2" t-ref="floating"><t t-call="mail.DiscussSidebarCallParticipants.list"/></div>
                 </t>
             </Dropdown>
             <t t-else="" t-call="mail.DiscussSidebarCallParticipants.main"/>
@@ -15,41 +13,30 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCallParticipants.main">
-        <div class="o-mail-DiscussSidebarCallParticipants d-flex flex-column gap-1 py-1" t-att-class="{ 'position-relative': compact, 'ps-4 pe-2 mx-2': props.compact === undefined and !compact, 'px-2': props.compact === false, 'rounded-3': props.compact === undefined }" t-ref="root">
-            <t t-if="store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCallParticipants.participant">
-                <t t-set="session" t-value="lastActiveSession"/>
-            </t>
-            <t t-else="">
-                <t t-foreach="sessions" t-as="session" t-key="session.id" t-call="mail.DiscussSidebarCallParticipants.participant">
-                    <t t-set="session" t-value="session"/>
-                </t>
-            </t>
+        <div class="o-mail-DiscussSidebarCallParticipants d-flex py-1" t-att-class="{ 'justify-content-center': compact, 'ps-3 pe-2 mx-2': props.compact === undefined and !compact, 'px-2': props.compact === false, 'rounded-3': props.compact === undefined }" t-ref="root">
+            <button class="btn btn-link p-0 align-self-start" t-if="!compact">
+                <i class="oi smaller me-1" t-att-class="{'oi-chevron-down': !state.expanded, 'oi-chevron-right': state.expanded}" t-att-title="title" t-on-click="() => state.expanded = !state.expanded"/>
+            </button>
+            <AvatarStack
+                t-if="!state.expanded"
+                direction="compact ? 'v' : 'h'"
+                avatarClass="(p) => this.avatarClass(p)"
+                max="compact ? 1 : 4"
+                personas="sessions.map((s) => s.channelMember.persona)"
+            />
+            <t t-else="" t-call="mail.DiscussSidebarCallParticipants.list"/>
         </div>
     </t>
 
-    <t t-name="mail.DiscussSidebarCallParticipants.participant">
-        <t t-set="channelMember" t-value="session.channelMember"/>
-        <div class="d-flex text-reset overflow-hidden align-items-center" t-att-class="{ 'justify-content-center bg-inherit': compact, 'me-2': !compact and props.compact === undefined }">
-            <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:24px;height:24px">
-                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-src="channelMember.persona.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar"/>
-            </div>
-            <span t-if="!compact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bolder smaller user-select-none" t-att-title="channelMember.persona.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
-                <t t-esc="channelMember.persona.name"/>
-            </span>
-            <div t-if="!compact" class="flex-grow-1"/>
-            <div class="o-mail-DiscussSidebarCallParticipants-status" t-att-class="{ 'position-absolute bg-inherit p-0 rounded-circle o-compact d-flex smaller start-0 text-start': compact, 'ms-1 d-flex align-items-center justify-content-center': !compact }">
-                <t t-if="compact">
-                    <span t-if="session.shortStatus" t-att-class="{
-                        [`fa ${callActionsRegistry.get('mute').icon}`]: session.shortStatus === 'mute',
-                        [`fa ${callActionsRegistry.get('deafen').icon}`]: session.shortStatus === 'deafen',
-                        'o-live bg-danger o-text-white rounded': session.shortStatus === 'live',
-                    }"><t t-if="session.shortStatus === 'live'">LIVE</t></span>
-                </t>
-                <t t-else="">
-                    <span t-if="session.isMute" class="p-1 fa" t-att-class="callActionsRegistry.get('mute').icon"/>
-                    <span t-if="session.isDeaf" class="p-1 fa" t-att-class="callActionsRegistry.get('deafen').icon"/>
-                    <span t-if="session.isScreenSharingOn" class="o-live bg-danger o-text-white rounded">LIVE</span>
-                </t>
+    <t t-name="mail.DiscussSidebarCallParticipants.list">
+        <div class="d-flex flex-column gap-1">
+            <div class="d-flex align-items-center" t-foreach="sessions" t-as="session" t-key="session.localId">
+                <t t-set="persona" t-value="session.persona"/>
+                <img t-att-src="persona?.avatarUrl" class="rounded-circle" t-att-title="persona?.name" t-att-class="{'o-mail-DiscussSidebarCallParticipants-avatar o-isTalking': session.isActuallyTalking}" style="width:24px;height:24px"/>
+                <span class="mx-1 text-truncate fw-bolder smaller" t-esc="persona?.name"/>
+                <span t-if="session.isMute" class="px-1 fa" t-att-class="callActionsRegistry.get('mute').icon"/>
+                <span t-if="session.isDeaf" class="px-1 fa position-relative" t-att-class="callActionsRegistry.get('deafen').icon" style="top: -2px;"/>
+                <span t-if="session.isScreenSharingOn" class="badge bg-danger o-text-white" style="font-size: 0.6rem;">LIVE</span>
             </div>
         </div>
     </t>

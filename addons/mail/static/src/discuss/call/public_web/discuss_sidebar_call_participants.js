@@ -1,10 +1,13 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useEffect, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Thread } from "@mail/core/common/thread_model";
+import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { callActionsRegistry } from "../common/call_actions";
 import { useHover } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { _t } from "@web/core/l10n/translation";
+
 /**
  * @typedef {Object} Props
  * @property {import("models").Thread} thread
@@ -13,7 +16,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 export class DiscussSidebarCallParticipants extends Component {
     static template = "mail.DiscussSidebarCallParticipants";
     static props = { thread: { type: Thread }, compact: { type: Boolean, optional: true } };
-    static components = { DiscussSidebarCallParticipants, Dropdown };
+    static components = { AvatarStack, DiscussSidebarCallParticipants, Dropdown };
 
     setup() {
         super.setup();
@@ -23,7 +26,19 @@ export class DiscussSidebarCallParticipants extends Component {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
         });
+        this.state = useState({ expanded: false });
         this.floating = useDropdownState();
+        useEffect(
+            (selfSession, compact) => {
+                if (selfSession?.in(this.sessions) && !compact) {
+                    this.state.expanded = true;
+                }
+                if (compact) {
+                    this.state.expanded = false;
+                }
+            },
+            () => [this.rtc.selfSession, this.compact]
+        );
     }
 
     get callActionsRegistry() {
@@ -66,5 +81,18 @@ export class DiscussSidebarCallParticipants extends Component {
                 ) ?? 1
             );
         });
+    }
+
+    /**
+     * @param {import("models").Persona} persona
+     */
+    avatarClass(persona) {
+        return this.state.expanded && persona.currentRtcSession?.isActuallyTalking
+            ? "o-mail-DiscussSidebarCallParticipants-avatar o-isTalking"
+            : "";
+    }
+
+    get title() {
+        return this.state.expanded ? _t("Collapse") : _t("Expand");
     }
 }
