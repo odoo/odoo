@@ -54,10 +54,6 @@ function logHistoryInteractions() {
     });
 }
 
-/**
- * @param {{ env: import("@web/env").OdooEnv }} [options]
- */
-
 defineActions([
     {
         id: 1,

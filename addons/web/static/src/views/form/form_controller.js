@@ -224,6 +224,7 @@ export class FormController extends Component {
         onError((error) => {
             const suggestedCompany = error.cause?.data?.context?.suggested_company;
             if (error.cause?.data?.name === "odoo.exceptions.AccessError" && suggestedCompany) {
+                this.env.pushStateBeforeReload();
                 const activeCompanyIds = this.companyService.activeCompanyIds;
                 activeCompanyIds.push(suggestedCompany.id);
                 this.companyService.setCompanies(activeCompanyIds, true);
