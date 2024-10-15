@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_website_sale.address" name="Address Management" inherit_id="website_sale.address">
+        <xpath expr="//div[@id='div_street']" position="before">
+            <t t-if="res_company.country_id.code == 'IN' and request.env.company.country_code == 'IN'">
+                <div name="l10n_in_gst_treatment_container" class="col-lg-12 mb-2">
+                    <label class="col-form-label" for="l10n_in_gst_treatment">GST Treatment</label>
+                    <select name="l10n_in_gst_treatment" class="form-select">
+                        <option value="" disabled="true" t-att-selected="not partner_sudo.l10n_in_gst_treatment">Please Select...</option>
+                        <t t-foreach="l10n_in_gst_treatments" t-as="gst_treatment">
+                            <option t-att-value="gst_treatment[0]" t-att-selected="partner_sudo.l10n_in_gst_treatment == gst_treatment[0]">
+                                <t t-esc="gst_treatment[1]"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_website_sale.account" name="Contact Details" inherit_id="portal.portal_my_details_fields">
+        <xpath expr="//input[@name='vat']/parent::div" position="after">
+            <t t-if="res_company.country_id.code == 'IN' and request.env.company.country_code == 'IN'">
+                <div name="l10n_in_gst_treatment_container" class="col-xl-6 mb-2">
+                    <label class="col-form-label" for="l10n_in_gst_treatment">GST Treatment</label>
+                    <select name="l10n_in_gst_treatment" class="form-select">
+                        <option value="" disabled="true" t-att-selected="not partner.l10n_in_gst_treatment">Please Select...</option>
+                        <t t-foreach="l10n_in_gst_treatments" t-as="gst_treatment">
+                            <option t-att-value="gst_treatment[0]" t-att-selected="partner.l10n_in_gst_treatment == gst_treatment[0]">
+                                <t t-esc="gst_treatment[1]"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-foreach='countries or []']//option" position="attributes">
+            <attribute name="t-att-code">country.code</attribute>
+        </xpath>
+    </template>
+
+    <template id="portal_my_details" name="Contact Details" inherit_id="portal.portal_my_details">
+        <xpath expr="//form" position="attributes">
+            <attribute name="t-att-data-company-country-code">res_company.country_id.code</attribute>
+        </xpath>
+    </template>
+</odoo>
