@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PosConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
+        <xpath expr="//Dialog" position="attributes">
+            <attribute name="hideCloseButton">props.hideCloseButton</attribute>
+        </xpath>
+    </t>
+
+</templates>

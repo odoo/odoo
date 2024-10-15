@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PosDialog" t-inherit="web.Dialog" t-inherit-mode="extension">
+        <xpath expr="//t[@t-slot='header']/t" position="before">
+            <t t-set="hideCloseButton" t-value="props.hideCloseButton"/>
+        </xpath>
+    </t>
+
+    <t t-name="point_of_sale.PosDialog.header" t-inherit="web.Dialog.header" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='!fullscreen']" position="attributes">
+            <attribute name="t-if">!fullscreen and !hideCloseButton</attribute>
+        </xpath>
+    </t>
+
+</templates>
