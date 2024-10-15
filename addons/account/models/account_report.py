@@ -151,6 +151,12 @@ class AccountReport(models.Model):
                       'The parent must always come first.', line.name, line.parent_id.name))
             previous_lines |= line
 
+    @api.constrains('availability_condition', 'country_id')
+    def _validate_availability_condition(self):
+        for record in self:
+            if record.availability_condition == 'country' and not record.country_id:
+                raise ValidationError(_("The Availability is set to 'Country Matches' but the field Country is not set."))
+
     @api.onchange('availability_condition')
     def _onchange_availability_condition(self):
         if self.availability_condition != 'country':
