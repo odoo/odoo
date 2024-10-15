@@ -55,10 +55,7 @@ class PosOrder(models.Model):
 
     def _process_saved_order(self, draft):
         res = super()._process_saved_order(draft)
-
-        if self.env.context.get('from_self') is not True:
-            self._send_notification(self)
-
+        self._send_notification(self)
         return res
 
     @api.model
@@ -68,14 +65,25 @@ class PosOrder(models.Model):
         self._send_notification(order_ids)
         return super().remove_from_ui(server_ids)
 
+    def get_order_and_related_data(self):
+        return {
+            'pos.order': self.read(self._load_pos_self_data_fields(self.config_id.id), load=False),
+            'pos.order.line': self.lines.read(self._load_pos_self_data_fields(self.config_id.id), load=False),
+            'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(self.config_id.id), load=False),
+            'pos.payment.method': self.payment_ids.mapped('payment_method_id').read(self.env['pos.payment.method']._load_pos_data_fields(self.config_id.id), load=False),
+            'product.attribute.custom.value': self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(self.config_id.id), load=False),
+        }
+
     def _send_notification(self, order_ids):
+        grouped_orders = {}
         for order in order_ids:
-            order._notify('ORDER_STATE_CHANGED', {
-                'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                'pos.payment': order.payment_ids.read(order.payment_ids._load_pos_data_fields(order.config_id.id), load=False),
-                'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(self.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
-                'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(order.config_id.id), load=False),
+            grouped_orders.setdefault(order.session_id.config_id, self.env['pos.order'])
+            grouped_orders[order.session_id.config_id] |= order
+
+        for config, orders in grouped_orders.items():
+            config._notify("ORDER_STATE_CHANGED", {
+                'order_ids': orders.ids,
+                'from_self': self.env.context.get('from_self', False),
             })
 
     def action_pos_order_paid(self):

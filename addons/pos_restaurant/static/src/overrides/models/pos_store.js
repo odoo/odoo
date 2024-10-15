@@ -37,6 +37,12 @@ patch(PosStore.prototype, {
                 autocloseDelay: 7000,
             });
         });
+        this.onNotified("ORDER_STATE_CHANGED", async ({ order_ids, from_self }) => {
+            if (!from_self) {
+                return;
+            }
+            await this.data.callRelated("pos.order", "get_order_and_related_data", [order_ids]);
+        });
     },
     get firstScreen() {
         const screen = super.firstScreen;

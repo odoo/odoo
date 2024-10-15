@@ -170,11 +170,17 @@ export class SelfOrder extends Reactive {
         };
 
         this.orderSubscribtion.add(order.access_token);
-        const onNotified = getOnNotified(this.bus, order.access_token);
-        onNotified("ORDER_STATE_CHANGED", (data) => {
-            handleMessage(data);
+        const onConfigNotified = getOnNotified(this.bus, this.access_token);
+        onConfigNotified("ORDER_STATE_CHANGED", async ({ order_ids, from_self }) => {
+            if (!from_self && order_ids.includes(order.id)) {
+                const records = await this.data.call("pos.order", "get_order_and_related_data", [
+                    [order.id],
+                ]);
+                handleMessage(records);
+            }
         });
-        onNotified("ORDER_CHANGED", (data) => {
+        const onOrderNotified = getOnNotified(this.bus, order.access_token);
+        onOrderNotified("ORDER_CHANGED", (data) => {
             handleMessage(data);
         });
     }
