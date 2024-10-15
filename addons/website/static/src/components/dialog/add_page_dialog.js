@@ -1,5 +1,6 @@
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { ensureJQuery } from "@web/core/ensure_jquery";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { rpc } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
@@ -300,6 +301,7 @@ export class AddPageTemplates extends Component {
         super.setup();
         this.tabsRef = useRef("tabs");
         this.panesRef = useRef("panes");
+        useAutofocus();
 
         this.state = useState({
             pages: [{
@@ -359,14 +361,29 @@ export class AddPageTemplates extends Component {
         const activeTabEl = this.tabsRef.el.querySelector(".active");
         const activePaneEl = this.panesRef.el.querySelector(".active");
         activeTabEl?.classList?.remove("active");
+        activeTabEl?.setAttribute("tabIndex", -1);
         activePaneEl?.classList?.remove("active");
         activePaneEl?.setAttribute("inert", true); // Make sure trapFocus() works.
         const tabEl = this.tabsRef.el.querySelector(`[data-id=${id}]`);
         const paneEl = this.panesRef.el.querySelector(`[data-id=${id}]`);
         tabEl.classList.add("active");
+        tabEl.tabIndex = 0;
         paneEl.classList.add("active");
         paneEl.removeAttribute("inert");
         this.props.onTemplatePageChanged(tabEl.dataset.id === "basic" ? "" : tabEl.textContent);
+    }
+
+    onTabKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (!["arrowleft", "arrowright", "arrowdown", "arrowup"].includes(hotkey)) {
+            return;
+        }
+        const currentTabEl = this.tabsRef.el.querySelector(`[data-id=${ev.target.dataset.id}]`);
+        if (["arrowleft", "arrowup"].includes(hotkey)) {
+            currentTabEl.previousElementSibling?.focus();
+        } else {
+            currentTabEl.nextElementSibling?.focus();
+        }
     }
 }
 
