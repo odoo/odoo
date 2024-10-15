@@ -77,8 +77,6 @@ class Partner(models.Model):
 
     def _get_suggested_invoice_edi_format(self):
         # EXTENDS 'account'
-        res = super()._get_suggested_invoice_edi_format()
-        if self.country_code == 'ES' and self.company_id.currency_id.name == 'EUR':
+        if self.country_code == 'ES':
             return 'es_facturae'
-        else:
-            return res
+        return super()._get_suggested_invoice_edi_format()
