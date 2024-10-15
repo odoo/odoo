@@ -1322,32 +1322,29 @@ def formatLang(
     value: float | typing.Literal[''],
     digits: int = 2,
     grouping: bool = True,
-    monetary: bool | Sentinel = SENTINEL,
     dp: str | None = None,
-    currency_obj=None,
+    currency_obj: typing.Any | None = None,
     rounding_method: typing.Literal['HALF-UP', 'HALF-DOWN', 'HALF-EVEN', "UP", "DOWN"] = 'HALF-EVEN',
     rounding_unit: typing.Literal['decimals', 'units', 'thousands', 'lakhs', 'millions'] = 'decimals',
 ) -> str:
     """
     This function will format a number `value` to the appropriate format of the language used.
 
-    :param Object env: The environment.
-    :param float value: The value to be formatted.
-    :param int digits: The number of decimals digits.
-    :param bool grouping: Usage of language grouping or not.
-    :param bool monetary: Usage of thousands separator or not.
-        .. deprecated:: 13.0
-    :param str dp: Name of the decimals precision to be used. This will override ``digits``
+    :param env: The environment.
+    :param value: The value to be formatted.
+    :param digits: The number of decimals digits.
+    :param grouping: Usage of language grouping or not.
+    :param dp: Name of the decimals precision to be used. This will override ``digits``
                    and ``currency_obj`` precision.
-    :param Object currency_obj: Currency to be used. This will override ``digits`` precision.
-    :param str rounding_method: The rounding method to be used:
+    :param currency_obj: Currency to be used. This will override ``digits`` precision.
+    :param rounding_method: The rounding method to be used:
         **'HALF-UP'** will round to the closest number with ties going away from zero,
         **'HALF-DOWN'** will round to the closest number with ties going towards zero,
         **'HALF_EVEN'** will round to the closest number with ties going to the closest
         even number,
         **'UP'** will always round away from 0,
         **'DOWN'** will always round towards 0.
-    :param str rounding_unit: The rounding unit to be used:
+    :param rounding_unit: The rounding unit to be used:
         **decimals** will round to decimals with ``digits`` or ``dp`` precision,
         **units** will round to units without any decimals,
         **thousands** will round to thousands without any decimals,
@@ -1355,10 +1352,7 @@ def formatLang(
         **millions** will round to millions without any decimals.
 
     :returns: The value formatted.
-    :rtype: str
     """
-    if monetary is not SENTINEL:
-        warnings.warn("monetary argument deprecated since 13.0", DeprecationWarning, 2)
     # We don't want to return 0
     if value == '':
         return ''

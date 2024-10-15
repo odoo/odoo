@@ -13,12 +13,9 @@ from .module import (
     check_manifest_dependencies,
     check_version,
     get_module_path,
-    get_module_resource,  # backward-compatibility
     get_modules,
     get_modules_with_version,
     get_resource_from_path,
-    get_resource_path,
-    check_resource_path,  # backward-compatibility
     initialize_sys_path,
     get_manifest,
     load_openerp_module,

@@ -401,7 +401,7 @@ class configmanager:
         cls._log = _dangerous_logger.log
 
         for message, args, kwargs in cls._warn_entries:
-            warnings.warn(message, *args, **kwargs)
+            warnings.warn(message, *args, **kwargs, stacklevel=1)
         cls._warn_entries.clear()
         cls._warn = warnings.warn
 
