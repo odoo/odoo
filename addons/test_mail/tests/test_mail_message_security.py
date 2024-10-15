@@ -365,8 +365,10 @@ class TestMailMessageAccess(MessageAccessCommon):
 
         new_mail = self.env['mail.mail'].sudo().search([
             ('mail_message_id', '=', new_msg.id),
-            ('references', '=', f'{message.message_id} {new_msg.message_id}'),
         ])
+        self.assertEqual(
+            new_mail.references, new_msg.message_id,
+            'References should not include message parent message_id, as it is a note hence internal')
         self.assertTrue(new_mail)
         self.assertEqual(new_msg.parent_id, message)
 

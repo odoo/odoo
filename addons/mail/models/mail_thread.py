@@ -3712,14 +3712,24 @@ class MailThread(models.AbstractModel):
             # replace new lines by spaces to conform to email headers requirements
             mail_subject = ' '.join(mail_subject.splitlines())
 
-        # compute references: set references to the parent and add current message just to
+        # compute references: set references to parents likely to be sent and add current message just to
         # have a fallback in case replies mess with Messsage-Id in the In-Reply-To (e.g. amazon
         # SES SMTP may replace Message-Id and In-Reply-To refers an internal ID not stored in Odoo)
         message_sudo = message.sudo()
-        if message_sudo.parent_id:
-            references = f'{message_sudo.parent_id.message_id} {message_sudo.message_id}'
-        else:
-            references = message_sudo.message_id
+        outgoing_types = ('comment', 'auto_comment', 'email', 'email_outgoing')
+        note_type = self.env.ref('mail.mt_note')
+        ancestors = self.env['mail.message'].sudo().search(
+            [
+                ('model', '=', message_sudo.model), ('res_id', '=', message_sudo.res_id),
+                ('message_type', 'in', outgoing_types),
+                ('id', '!=', message_sudo.id),
+                ('subtype_id', '!=', note_type.id),  # filters out notes, using subtype which is indexed
+            ], limit=16, order='id DESC',
+        )
+        # filter out internal messages that are not notes, manually because of indexes
+        ancestors = ancestors.filtered(lambda m: not m.is_internal and m.subtype_id and not m.subtype_id.internal)[:3]
+        # order frrom oldest to newest
+        references = ' '.join(m.message_id for m in (ancestors[::-1] + message_sudo))
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,
