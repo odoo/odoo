@@ -374,6 +374,7 @@
 
             <!-- Inner snippets -->
             <snippets id="snippet_content" string="Inner content">
+                <t t-snippet="website.s_disclaimer" string="Disclaimer"/>
                 <t t-snippet="website.s_button" string="Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.svg"/>
                 <t t-snippet="website.s_image" string="Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image.svg"/>
                 <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg"/>
@@ -914,7 +915,7 @@
     </div>
 
     <!-- Background -->
-    <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr, .s_cta_badge'"/>
+    <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr, .s_cta_badge, .s_disclaimer'"/>
     <t t-set="only_bg_color_exclude" t-valuef=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable, [data-snippet] :not(.oe_structure) > .s_hr, #{card_parent_handlers}"/>
 
     <t t-set="base_only_bg_image_selector" t-value="'.s_tabs .oe_structure > *, footer .oe_structure > *'"/>

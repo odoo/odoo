@@ -29,6 +29,7 @@ class TestSnippets(HttpCase):
             's_instagram_page',  # avoid call to instagram.com
             's_image',  # Avoid specific case where the media dialog opens on drop
             's_snippet_group',  # Snippet groups are not snippets
+            's_disclaimer',  # Avoid special case where snippet should be dropped outside #wrap
         ]
         snippets_names = ','.join({
             f"{el.attrib['data-snippet']}:{el.getparent().attrib.get('data-o-group', '')}"
@@ -89,6 +90,9 @@ class TestSnippets(HttpCase):
 
     def test_12_snippet_images_wall(self):
         self.start_tour('/', 'snippet_images_wall', login='admin')
+
+    def test_13_snippet_disclaimer(self):
+        self.start_tour("/", "snippet_disclaimer", login="admin")
 
     def test_snippet_popup_with_scrollbar_and_animations(self):
         website = self.env.ref('website.default_website')
