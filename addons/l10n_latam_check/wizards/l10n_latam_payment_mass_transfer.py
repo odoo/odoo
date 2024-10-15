@@ -52,7 +52,7 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
                 raise UserError(_("The register payment wizard should only be called on account.payment records."))
             checks = self.env['l10n_latam.check'].browse(self._context.get('active_ids', []))
             if checks.filtered(lambda x: x.payment_method_line_id.code != 'new_third_party_checks'):
-                raise 'You have select some payments that are not checks. Please call this action from the Third Party Checks menu'
+                raise UserError(_('You have selected payments which are not checks. Please call this action from the Third Party Checks menu'))
             elif not all(check.payment_id.state != 'draft' for check in checks):
                 raise UserError(_("All the selected checks must be posted"))
             currency_ids = checks.mapped('currency_id')
