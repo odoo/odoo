@@ -5,91 +5,515 @@
             <div class="carousel-inner row w-100 mx-auto">
                 <div role="option" class="carousel-item active" style="min-height: 357.875px;">
                     <div class="row">
-                        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
-                            <div class="o_carousel_product_card bg-transparent w-100 card border-0">
-                                <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" href="#">
-                                    <div class="overflow-hidden rounded">
-                                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" src="/website_sale/static/src/img/product_previews/product_1.jpg"/>
-                                    </div>
-                                </a>
-                                <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                                    <div class="h6 card-title">Three-Seat Sofa</div>
-                                    <div>
-                                        <div class="mt-2">
+                        <t t-out="0"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_dynamic_filter_product_data">
+        <t t-set="products" t-value="[
+                {'img_src': '/website_sale/static/src/img/product_previews/product_1.jpg', 'img_alt': '', 'product_name': 'Three-Seat Sofa', 'product_price': '1,500.00'},
+                {'img_src': '/website_sale/static/src/img/product_previews/product_2.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Customizable Desk', 'product_price': '750.00'},
+                {'img_src': '/website_sale/static/src/img/product_previews/product_3.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Conference Chair', 'product_price': '33.00'},
+                {'img_src': '/website_sale/static/src/img/product_previews/product_4.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Cabinet with Doors', 'product_price': '140.00'}
+            ]"/>
+            
+            <t t-foreach="products" t-as="product">
+                <t t-call="#{template_name}">
+                    <t t-set="img_src" t-value="product['img_src']"/>
+                    <t t-set="img_alt" t-value="product['img_alt']"/>
+                    <t t-set="product_name" t-value="product['product_name']"/>
+                    <t t-set="product_price" t-value="product['product_price']"/>
+                </t>
+            </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_borderless_1_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
+                <div class="o_carousel_product_card bg-transparent w-100 card border-0">
+                    <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" href="#">
+                        <div class="overflow-hidden rounded">
+                            <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src"  t-att-alt="img_alt"/>
+                        </div>
+                    </a>
+                    <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
+                        <div class="h6 card-title" t-esc="product_name"></div>
+                        <div>
+                            <div class="mt-2">
+                                <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
+                                    <span class="oe_currency_value" t-esc="product_price"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </template>
+
+
+    <template id="s_dynamic_filter_template_product_product_borderless_1_preview_data" name="Borderless Product n°1">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <t t-call="website_sale.s_dynamic_filter_product_data">
+                <t t-set="template_name" t-value="'website_sale.s_dynamic_filter_template_product_product_borderless_1_data'"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_centered_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
+            <div class="o_carousel_product_card card w-100">
+                <a class="o_carousel_product_img_link position-absolute mx-auto" href="#">
+                    <img class="card-img-top rounded-0" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
+                </a>
+                <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
+                    <div class="card-title h5 text-center" t-esc="product_name"></div>
+                    <div class="text-center">
+                        <div class="h5">
+                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
+                                <span class="oe_currency_value" t-esc="product_price"></span>
+                            </span>
+                        </div>
+                        <div class="h6 mb-0">
+                        </div>
+                    </div>
+                </div>
+                <div class="o_carousel_product_card_footer d-flex align-items-center justify-content-center pb-4">
+                    <a class="btn btn-primary d-block" href="#">
+                        View Product
+                    </a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_centered_preview_data" name="Centered Product">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <div class="s_dynamic_snippet_row row g-3">
+                <t t-call="website_sale.s_dynamic_filter_product_data">
+                    <t t-set="template_name" t-value="'website_sale.s_dynamic_filter_template_product_product_centered_data'"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_card_group_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-6">
+            <div class="o_carousel_product_card card w-100 rounded-0 border-top-0 border-start-0" >
+                <div class="o_carousel_product_card_body card-body justify-content-between h-100 p-3">
+                    <div class="row h-100">
+                        <div class="col-8 d-flex flex-column">
+                            <div class="card-title h5" t-esc="product_name"></div>
+                                <div class="d-flex justify-content-between align-items-center flex-wrap w-100 mt-auto">
+                                    <div class="h5 text-primary mb-0 me-2">
+                                        <span class="fw-bold">From</span>
                                             <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                                <span class="oe_currency_value">1,500.00</span>
+                                                <span class="oe_currency_value" t-esc="product_price"></span>
                                             </span>
-                                        </div>
+                                            <span class="fw-bold">
+                                                /
+                                                3
+                                                Hours
+                                            </span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
-                            <div class="o_carousel_product_card bg-transparent w-100 card border-0">
-                                <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" href="#">
-                                    <div class="overflow-hidden rounded">
-                                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" src="/website_sale/static/src/img/product_previews/product_2.jpg" alt="Warranty (2 year)"/>
-                                    </div>
+                        <div class="col-4 position-static">
+                            <div class="overflow-hidden position-static">
+                                <a class="stretched-link o_dynamic_product_hovered" href="#">
+                                    <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
                                 </a>
-                                <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                                    <div class="h6 card-title">Customizable Desk</div>
-                                    <div>
-                                        <div class="mt-2">
-                                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                                <span class="oe_currency_value">750.00</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
-                        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
-                            <div class="o_carousel_product_card bg-transparent w-100 card border-0">
-                                <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" href="#">
-                                    <div class="overflow-hidden rounded">
-                                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" src="/website_sale/static/src/img/product_previews/product_3.jpg" alt="Warranty (2 year)"/>
-                                    </div>
-                                </a>
-                                <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                                    <div class="h6 card-title">Conference Chair</div>
-                                    <div>
-                                        <div class="mt-2">
-                                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                                <span class="oe_currency_value">33.00</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <template id="s_dynamic_filter_template_product_product_card_group_preview_data" name="Card group">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <div class="s_dynamic_snippet_row row g-3">
+                <t t-set="products" t-value="[
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_1.jpg', 'img_alt': '', 'product_name': 'Three-Seat Sofa', 'product_price': '1,500.00'},
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_2.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Customizable Desk', 'product_price': '750.00'},
+                ]"/>
+                
+                <t t-foreach="products" t-as="product">
+                    <t t-call="website_sale.s_dynamic_filter_template_product_product_card_group_data">
+                        <t t-set="img_src" t-value="product['img_src']"/>
+                        <t t-set="img_alt" t-value="product['img_alt']"/>
+                        <t t-set="product_name" t-value="product['product_name']"/>
+                        <t t-set="product_price" t-value="product['product_price']"/>
+                    </t>
+                </t>
+            </div>
+            <div class="s_dynamic_snippet_row row g-3">
+                <t t-set="products" t-value="[
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_3.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Conference Chair', 'product_price': '33.00'},
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_4.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Cabinet with Doors', 'product_price': '140.00'}
+                ]"/>
+                
+                <t t-foreach="products" t-as="product">
+                    <t t-call="website_sale.s_dynamic_filter_template_product_product_card_group_data">
+                        <t t-set="img_src" t-value="product['img_src']"/>
+                        <t t-set="img_alt" t-value="product['img_alt']"/>
+                        <t t-set="product_name" t-value="product['product_name']"/>
+                        <t t-set="product_price" t-value="product['product_price']"/>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_borderless_2_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
+            <div class="o_carousel_product_card card w-100 border-0 bg-transparent">
+                <a class="o_carousel_product_img_link o_dynamic_product_hovered" href="#">
+                    <div class="overflow-hidden rounded">
+                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
+                    </div>
+                </a>
+                <div class="o_carousel_product_card_body h-100 p-3 d-flex flex-column justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
+                        <div class="h5 mb-0 me-4">
+                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
+                                <span class="oe_currency_value" t-esc="product_price"></span>
+                            </span>
                         </div>
-                        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
-                            <div class="o_carousel_product_card bg-transparent w-100 card border-0">
-                                <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" href="#">
-                                    <div class="overflow-hidden rounded">
-                                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" src="/website_sale/static/src/img/product_previews/product_4.jpg" alt="Warranty (2 year)"/>
-                                    </div>
-                                </a>
-                                <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                                    <div class="h6 card-title">Cabinet with Doors</div>
-                                    <div>
-                                        <div class="mt-2">
-                                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
-                                                <span class="oe_currency_value">140.00</span>
-                                            </span>
-                                        </div>
-                                    </div>
+                        <div class="h6 mb-0">
+                        </div>
+                    </div>
+                    <div class="card-title h6 flex-grow-1 w-100 mt-2 mb-3" t-esc="product_name"></div>
+                    <div class="text-end o_dynamic_snippet_btn_wrapper">
+                        <button type="button" role="button" class="btn btn-primary js_add_cart w-100" title="Add to Cart" >
+                    Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_borderless_2_preview_data" name="Borderless Product n°2">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <t t-call="website_sale.s_dynamic_filter_product_data">
+                <t t-set="template_name" t-value="'website_sale.s_dynamic_filter_template_product_product_borderless_2_data'"/>
+            </t> 
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_add_to_cart_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
+            <div class="o_carousel_product_card card h-100 w-100">
+                <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" href="#">
+                    <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
+                </a>
+                <div class="o_carousel_product_card_body card-body d-flex flex-wrap">
+                    <a class="text-decoration-none d-block w-100" href="#">
+                        <div class="h6 card-title mb-0" t-esc="product_name"></div>
+                    </a>
+                    <div class="mt-2">
+                    </div>
+                    <div class="w-100 d-flex flex-wrap flex-md-column flex-lg-row align-items-center align-self-end justify-content-between mt-3">
+                        <div class="py-2">
+                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
+                                <span class="oe_currency_value" t-esc="product_price"></span>
+                            </span>
+                        </div>
+                        <div class="o_dynamic_snippet_btn_wrapper">
+                            <button type="button" role="button" class="btn btn-primary js_add_cart ms-auto" title="Add to Cart" >
+                                <i class="fa fa-fw fa-shopping-cart" >​</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_add_to_cart_preview_data" name="Classic Card">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <t t-call="website_sale.s_dynamic_filter_product_data">
+                <t t-set="template_name" t-value="'website_sale.s_dynamic_filter_template_product_product_add_to_cart_data'"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_view_detail_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-4">
+            <div class="o_carousel_product_card card h-100 w-100">
+                <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" href="#">
+                    <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
+                </a>
+                <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
+                    <div class="card-title h5" t-esc="product_name"></div>
+                    <div class="card-text flex-grow-1 text-muted h6"></div>
+                    <div class="mt-2">
+                    </div>
+                    <div class="d-flex justify-content-between flex-wrap flex-md-column flex-lg-row align-items-center align-self-end w-100 mt-2 pt-3 border-top">
+                        <div class="pb-2">
+                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
+                                <span class="oe_currency_value" t-esc="product_price"></span>
+                            </span>
+                        </div>
+                        <a class="btn btn-primary" href="#">
+                            View product
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_view_detail_preview_data" name="Classic Card - Detailed">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <t t-set="products" t-value="[
+                {'img_src': '/website_sale/static/src/img/product_previews/product_1.jpg', 'img_alt': '', 'product_name': 'Three-Seat Sofa', 'product_price': '1,500.00'},
+                {'img_src': '/website_sale/static/src/img/product_previews/product_2.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Customizable Desk', 'product_price': '750.00'},
+                {'img_src': '/website_sale/static/src/img/product_previews/product_3.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Conference Chair', 'product_price': '33.00'},
+            ]"/>
+
+            <t t-foreach="products" t-as="product">
+                <t t-call="website_sale.s_dynamic_filter_template_product_product_view_detail_data">
+                    <t t-set="img_src" t-value="product['img_src']"/>
+                    <t t-set="img_alt" t-value="product['img_alt']"/>
+                    <t t-set="product_name" t-value="product['product_name']"/>
+                    <t t-set="product_price" t-value="product['product_price']"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_horizontal_card_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-4">
+            <div class="o_carousel_product_card card w-100 border-0 bg-light p-3">
+                <div class="row h-100 p-0">
+                    <div class="col-lg-4 position-static">
+                        <a class="stretched-link o_dynamic_product_hovered" href="#">
+                            <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
+                        </a>
+                    </div>
+                    <div class="o_carousel_product_card_body col-lg-8 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="card-title h6" t-esc="product_name"></div>
+                        </div>
+                        <div>
+                            <div class="mb-1">
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="my-2">
+                                    <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
+                                        <span class="oe_currency_value" t-esc="product_price"></span>
+                                    </span>
+                                </div>
+                                <div class="o_dynamic_snippet_btn_wrapper ms-auto">
+                                    <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart" >
+                                        <i class="fa fa-fw fa-shopping-cart">​</i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <a class="carousel-control-prev" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous" href="#s_dynamic_snippet_1">
-                <span class="fa fa-chevron-circle-left fa-2x"></span>
-            </a>
-            <a class="carousel-control-next" data-bs-slide="next" role="button" aria-label="Next" title="Next" href="#s_dynamic_snippet_1">
-                <span class="fa fa-chevron-circle-right fa-2x"></span>
-            </a>
         </div>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_horizontal_card_preview_data" name="Horizontal Card">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <div class="s_dynamic_snippet_row row g-3">
+                <t t-set="products" t-value="[
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_1.jpg', 'img_alt': '', 'product_name': 'Three-Seat Sofa', 'product_price': '1,500.00'},
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_2.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Customizable Desk', 'product_price': '750.00'},
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_3.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Conference Chair', 'product_price': '33.00'},
+                ]"/>
+
+                <t t-foreach="products" t-as="product">
+                    <t t-call="website_sale.s_dynamic_filter_template_product_product_horizontal_card_data">
+                        <t t-set="img_src" t-value="product['img_src']"/>
+                        <t t-set="img_alt" t-value="product['img_alt']"/>
+                        <t t-set="product_name" t-value="product['product_name']"/>
+                        <t t-set="product_price" t-value="product['product_price']"/>
+                    </t>
+                </t>
+            </div>
+            <div class="s_dynamic_snippet_row row g-3">
+                <t t-set="products" t-value="[
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_1.jpg', 'img_alt': '', 'product_name': 'Three-Seat Sofa', 'product_price': '1,500.00'},
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_2.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Customizable Desk', 'product_price': '750.00'},
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_3.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Conference Chair', 'product_price': '33.00'},
+                ]"/>
+
+                <t t-foreach="products" t-as="product">
+                    <t t-call="website_sale.s_dynamic_filter_template_product_product_horizontal_card_data">
+                        <t t-set="img_src" t-value="product['img_src']"/>
+                        <t t-set="img_alt" t-value="product['img_alt']"/>
+                        <t t-set="product_name" t-value="product['product_name']"/>
+                        <t t-set="product_price" t-value="product['product_price']"/>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_horizontal_card_2_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-6">
+            <div class="o_carousel_product_card card w-100 border-0 o_dynamic_product_hovered o_cc o_cc5">
+                <a class="stretched-link" href="#">
+                    <img class="img img-fluid position-absolute w-100 h-100 o_img_product_cover" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
+                </a>
+                <div class="o_carousel_product_card_body d-flex flex-column justify-content-between h-100 bg-black-50 p-3 position-relative">
+                    <div class="mb-3">
+                        <div class="card-title h5" t-esc="product_name"></div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
+                        <div class="h5 mb-0 me-2">
+                            <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
+                                <span class="oe_currency_value" t-esc="product_price"></span>
+                            </span>
+                        </div>
+                        <div class="o_dynamic_snippet_btn_wrapper">
+                            <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart" >
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="s_dynamic_filter_template_product_product_horizontal_card_2_preview_data" name="Horizontal Card width covered image">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <div class="s_dynamic_snippet_row row g-3">
+                <t t-set="products" t-value="[
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_1.jpg', 'img_alt': '', 'product_name': 'Three-Seat Sofa', 'product_price': '1,500.00'},
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_2.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Customizable Desk', 'product_price': '750.00'},
+                ]"/>
+                <t t-foreach="products" t-as="product">
+                    <t t-call="website_sale.s_dynamic_filter_template_product_product_horizontal_card_2_data">
+                        <t t-set="img_src" t-value="product['img_src']"/>
+                        <t t-set="img_alt" t-value="product['img_alt']"/>
+                        <t t-set="product_name" t-value="product['product_name']"/>
+                        <t t-set="product_price" t-value="product['product_price']"/>
+                    </t>
+                </t>
+            </div>
+            <div class="s_dynamic_snippet_row row g-3">
+                <t t-set="products" t-value="[
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_3.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Conference Chair', 'product_price': '33.00'},
+                    {'img_src': '/website_sale/static/src/img/product_previews/product_4.jpg', 'img_alt': 'Warranty (2 year)', 'product_name': 'Cabinet with Doors', 'product_price': '140.00'}
+                ]"/>
+                <t t-foreach="products" t-as="product">
+                    <t t-call="website_sale.s_dynamic_filter_template_product_product_horizontal_card_2_data">
+                        <t t-set="img_src" t-value="product['img_src']"/>
+                        <t t-set="img_alt" t-value="product['img_alt']"/>
+                        <t t-set="product_name" t-value="product['product_name']"/>
+                        <t t-set="product_price" t-value="product['product_price']"/>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_mini_image_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
+            <div class="card h-100 border-0 w-100 rounded-0 bg-transparent">
+                <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" href="#">
+                    <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
+                </a>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_mini_image_preview_data" name="Image only">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <t t-call="website_sale.s_dynamic_filter_product_data">
+                <t t-set="template_name" t-value="'website_sale.s_dynamic_filter_template_product_product_mini_image_data'"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_mini_name_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
+            <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered">
+                <a class="o_carousel_product_img_link overflow-hidden" href="#">
+                    <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
+                </a>
+                <div class="h6 text-center mt-2 p-2" t-esc="product_name"></div>
+                <div class="text-center">
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_mini_name_preview_data" name="Image with name">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <t t-call="website_sale.s_dynamic_filter_product_data">
+                <t t-set="template_name" t-value="'website_sale.s_dynamic_filter_template_product_product_mini_name_data'"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_mini_price_data">
+        <div class="d-flex flex-grow-0 flex-shrink-0 col-3">
+            <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered">
+                <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" href="#">
+                    <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="img_src" t-att-alt="img_alt"/>
+                </a>
+                <div class="o_carousel_product_card_body mt-2 d-flex justify-content-between">
+                    <div class="ms-auto">
+                        <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
+                            $ <span class="oe_currency_value" t-esc="product_price"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_mini_price_preview_data" name="Image with price">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <t t-call="website_sale.s_dynamic_filter_product_data">
+                <t t-set="template_name" t-value="'website_sale.s_dynamic_filter_template_product_product_mini_price_data'"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="s_dynamic_filter_template_product_product_banner_preview_data" name="Large Banner">
+        <t t-call="website_sale.s_dynamic_snippet_products_preview_data">
+            <div class="d-flex flex-grow-0 flex-shrink-0 col-12">
+                <div class="o_carousel_product_card card w-100">
+                    <div class="row flex-row-reverse">
+                        <div class="col-lg-6 d-flex align-items-center justify-content-center justify-content-lg-end o_wrap_product_img position-relative">
+                            <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" src="/website_sale/static/src/img/product_previews/product_1.jpg"/>
+                        </div>
+                        <div class="col-lg-6 px-5 d-flex align-items-center">
+                            <div class="o_carousel_product_card_body card-body p-5">
+                                <div class="card-title h1">Three-Seat Sofa</div>
+                                <div class="d-flex align-items-center my-4">
+                                    <div class="h4 mb-0 me-3">
+                                        <span class="fw-bold" name="product_price" data-oe-type="monetary" data-oe-expression="data['price']">
+                                            <span class="oe_currency_value">1,500.00</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <button type="button" role="button" class="btn btn-primary js_add_cart mt-1" title="Add to Cart" >
+                                        Add to Cart
+                                    </button>
+                                    <a class="btn btn-secondary me-1 mt-1" href="#">
+                                        View Product
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
     </template>
 </odoo>
