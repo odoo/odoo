@@ -56,3 +56,7 @@ export function hasTouch() {
 export function maxTouchPoints() {
     return browser.navigator.maxTouchPoints || 1;
 }
+
+export function hasNoHoveringCapability() {
+    return browser.matchMedia("(any-hover: none)").matches;
+}

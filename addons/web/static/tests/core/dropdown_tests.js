@@ -437,6 +437,9 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test(
         "siblings dropdowns: when one is open, others can be toggled on mouse-enter",
         async (assert) => {
+            patchWithCleanup(browser, {
+                matchMedia: () => ({ matches: false }),
+            });
             assert.expect(13);
             const beforeOpenProm = makeDeferred();
             class Parent extends owl.Component {
@@ -580,6 +583,9 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("siblings dropdowns: toggler focused on mouseenter", async (assert) => {
+        patchWithCleanup(browser, {
+            matchMedia: () => ({ matches: false }),
+        });
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`
         <div>
