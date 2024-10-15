@@ -34,12 +34,12 @@ export class ListContainer extends Component {
     };
     static template = xml`
         <div class="overflow-hidden d-flex flex-grow-1" t-attf-class="{{props.class}}">
-            <button t-if="props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg me-1" t-on-click="props.onClickPlus">
+            <button t-if="props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg me-1 my-2" t-on-click="props.onClickPlus">
                 <i class="fa fa-fw fa-plus-circle" aria-hidden="true"/>
             </button>
             <button t-if="this.sizing.isLarger or props.forceSmall" t-on-click="toggle"
-                class="btn btn-secondary mx-1 fa fa-caret-down" />
-            <div class="overflow-hidden w-100 position-relative">
+                class="btn btn-secondary mx-1 fa fa-caret-down my-2" />
+            <div class="overflow-hidden w-100 position-relative py-2">
                 <div t-ref="container" class="d-flex w-100">
                     <div t-if="!props.forceSmall" t-foreach="props.items" t-as="item" t-key="item_index" t-att-class="{'invisible': shouldBeInvisible(item_index)}">
                         <t t-slot="default" item="item"/>

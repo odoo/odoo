@@ -8,12 +8,14 @@
             forceSmall="ui.isSmall and !env.inDialog"
         >
             <t t-set="order" t-value="scope.item" />
-            <button t-esc="order.getName()"
-                t-att-class="{ 'active': pos.get_order()?.id === order.id }"
-                class="btn btn-lg btn-secondary text-truncate mx-1"
-                style="min-width: 4rem;"
-                t-on-click="() => this.selectFloatingOrder(order)"
-            />
+            <div id="floating-order-container" class="position-relative">
+                <button t-esc="order.getName()"
+                    t-att-class="{ 'active': pos.get_order()?.id === order.id }"
+                    class="btn btn-lg btn-secondary text-truncate mx-1"
+                    style="min-width: 4rem;"
+                    t-on-click="() => this.selectFloatingOrder(order)"
+                />
+            </div>
         </ListContainer>
     </t>
 </templates>
