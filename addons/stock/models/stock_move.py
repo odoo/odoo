@@ -2170,13 +2170,13 @@ Please change the quantity done or the rounding precision of your unit of measur
                                                          order='reservation_date, priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
 
-    def _rollup_move_origs(self, seen=False):
+    def _rollup_move_origs(self, seen=False, ignore_states=('done', 'cancel')):
         if not seen:
             seen = OrderedSet()
         for dst in self.move_orig_ids:
-            if dst.id not in seen and dst.state not in ('done', 'cancel'):
+            if dst.id not in seen and dst.state not in ignore_states:
                 seen.add(dst.id)
-                dst._rollup_move_origs(seen)
+                dst._rollup_move_origs(seen=seen, ignore_states=ignore_states)
         return seen
 
     def _rollup_move_dests(self, seen):
