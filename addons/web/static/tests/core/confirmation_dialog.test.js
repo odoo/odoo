@@ -166,6 +166,52 @@ test("clicking on 'Cancel'", async () => {
     expect.verifySteps(["Cancel action", "Close action"]);
 });
 
+test("hotkey on 'Ok'", async () => {
+    const env = await makeDialogMockEnv();
+    await mountWithCleanup(ConfirmationDialog, {
+        env,
+        props: {
+            body: "Some content",
+            title: "Confirmation",
+            close: () => {
+                expect.step("Close action");
+            },
+            confirm: () => {
+                expect.step("Confirm action");
+            },
+            cancel: () => {
+                throw new Error("should not be called");
+            },
+        },
+    });
+    expect.verifySteps([]);
+    await press("alt+q");
+    expect.verifySteps(["Confirm action", "Close action"]);
+});
+
+test("hotkey on 'Cancel'", async () => {
+    const env = await makeDialogMockEnv();
+    await mountWithCleanup(ConfirmationDialog, {
+        env,
+        props: {
+            body: "Some content",
+            title: "Confirmation",
+            close: () => {
+                expect.step("Close action");
+            },
+            confirm: () => {
+                throw new Error("should not be called");
+            },
+            cancel: () => {
+                expect.step("Cancel action");
+            },
+        },
+    });
+    expect.verifySteps([]);
+    await press("alt+x");
+    expect.verifySteps(["Cancel action", "Close action"]);
+});
+
 test("can't click twice on 'Ok'", async () => {
     const env = await makeDialogMockEnv();
     await mountWithCleanup(ConfirmationDialog, {
