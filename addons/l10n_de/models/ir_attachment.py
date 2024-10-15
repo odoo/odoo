@@ -14,6 +14,7 @@ class IrAttachment(models.Model):
         audit_trail_attachments = self.filtered(lambda attachment:
             attachment.res_model == 'account.move'
             and attachment.res_id
+            and attachment.raw
             and guess_mimetype(attachment.raw) in (
                 'application/pdf',
                 'application/xml',
