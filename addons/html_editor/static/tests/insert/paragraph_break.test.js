@@ -393,11 +393,10 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p>[]<b>abc</b></p>",
                 stepFunction: splitBlock,
-                contentAfterEdit: "<p><br></p><p><b>[]abc</b></p>",
+                contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b><br></p><p><b>[]abc</b></p>`,
                 contentAfter: "<p><br></p><p><b>[]abc</b></p>",
             });
             await testEditor({
-                // That selection is equivalent to []<b>
                 contentBefore: "<p><b>[]abc</b></p>",
                 stepFunction: splitBlock,
                 contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b><br></p><p><b>[]abc</b></p>`,
@@ -439,7 +438,7 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p><b>abc</b>[]</p>",
                 stepFunction: splitBlock,
-                contentAfterEdit: `<p><b>abc</b></p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentAfterEdit: `<p><b>abc</b></p><p><b data-oe-zws-empty-inline="">[]\u200b</b><br></p>`,
                 contentAfter: "<p><b>abc</b></p><p>[]<br></p>",
             });
             await testEditor({
