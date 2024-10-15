@@ -221,7 +221,7 @@ def html_normalize(src, filter_callback=None):
         return src
 
     # html: remove encoding attribute inside tags
-    src = re.sub(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', "", src, re.IGNORECASE | re.DOTALL)
+    src = re.sub(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', "", src)
 
     src = src.replace('--!>', '-->')
     src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
