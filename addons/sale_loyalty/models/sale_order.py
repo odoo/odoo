@@ -2,7 +2,6 @@
 
 import itertools
 import random
-
 from collections import defaultdict
 
 from odoo import _, api, fields, models
@@ -600,15 +599,15 @@ class SaleOrder(models.Model):
                 continue
             mapped_taxes = self.fiscal_position_id.map_tax(tax)
             tax_desc = ''
-            if any(t.name for t in mapped_taxes):
+            if len(discountable_per_tax) > 1 and any(t.name for t in mapped_taxes):
                 tax_desc = _(
-                    ' - On product with the following taxes: %(taxes)s',
+                    ' - On products with the following taxes: %(taxes)s',
                     taxes=", ".join(mapped_taxes.mapped('name')),
                 )
             reward_dict[tax] = {
                 **base_reward_line_values,
                 'name': _(
-                    'Discount: %(desc)s%(tax_str)s',
+                    'Discount %(desc)s%(tax_str)s',
                     desc=reward.description,
                     tax_str=tax_desc,
                 ) if mapped_taxes else reward.description,
