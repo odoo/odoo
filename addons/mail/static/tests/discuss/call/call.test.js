@@ -386,3 +386,44 @@ test("show call participants in discuss sidebar", async () => {
         ],
     });
 });
+
+test("expand call participants when joining a call", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const partners = pyEnv["res.partner"].create([
+        { name: "Alice" },
+        { name: "Bob" },
+        { name: "Cathy" },
+        { name: "David" },
+        { name: "Eric" },
+        { name: "Frank" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (const partner of partners) {
+        const memberId = pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: partner,
+        });
+        pyEnv["discuss.channel.rtc.session"].create({
+            channel_member_id: memberId,
+            channel_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebarCallParticipants img", { count: 4 });
+    await contains("img[title='Alice']");
+    await contains("img[title='Bob']");
+    await contains("img[title='Cathy']");
+    await contains("img[title='David']");
+    await contains(".o-mail-DiscussSidebarCallParticipants span", { text: "+2" });
+    await click("[title='Join Call']");
+    await contains(".o-mail-DiscussSidebarCallParticipants img", { count: 7 });
+    await contains("img[title='Alice']");
+    await contains("img[title='Bob']");
+    await contains("img[title='Cathy']");
+    await contains("img[title='David']");
+    await contains("img[title='Eric']");
+    await contains("img[title='Frank']");
+    await contains("img[title='Mitchell Admin']");
+});
