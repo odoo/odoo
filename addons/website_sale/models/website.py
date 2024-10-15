@@ -263,7 +263,9 @@ class Website(models.Model):
             pricelists |= partner_pricelist
 
         # This method is cached, must not return records! See also #8795
-        return pricelists.ids
+        # sudo is needed to ensure no records rules are applied during the sorted call,
+        # we only want to reorder the records on hand, not filter them.
+        return pricelists.sudo().sorted().ids
 
     def get_pricelist_available(self, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
@@ -347,11 +349,11 @@ class Website(models.Model):
             if available_pricelists and pricelist not in available_pricelists:
                 # If there is at least one pricelist in the available pricelists
                 # and the chosen pricelist is not within them
-                # it then choose the first available pricelist based on _order of the model.
+                # it then choose the first available pricelist.
                 # This can only happen when the pricelist is the public user pricelist and this pricelist is not in the available pricelist for this localization
                 # If the user is signed in, and has a special pricelist (different than the public user pricelist),
                 # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
-                pricelist = available_pricelists.sorted()[0]
+                pricelist = available_pricelists[0]
 
         return pricelist
 
