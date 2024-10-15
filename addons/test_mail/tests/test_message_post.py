@@ -1440,7 +1440,6 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertSentEmail(
             self.user_employee.partner_id,
             [self.partner_1],
-            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
             # references should be sorted from the oldest to the newest
             references=f'{parent_msg.message_id} {msg.message_id}',
         )
@@ -1462,8 +1461,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             body_content='<p>Test Answer Bis</p>',
             reply_to=msg.reply_to,
             subject=self.test_record.name,
-            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
-            references=f'{parent_msg.message_id} {new_msg.message_id}',
+            references=f'{parent_msg.message_id} {msg.message_id} {new_msg.message_id}',
         )
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')

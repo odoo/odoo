@@ -290,7 +290,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=29):
+        with self.assertQueryCount(employee=29):  # sometimes +1
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
