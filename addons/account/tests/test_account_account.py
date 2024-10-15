@@ -604,6 +604,70 @@ class TestAccountAccount(TestAccountMergeCommon):
         )
         self.assertFalse(account.id in results_2, "Deprecated account should NOT appear in account suggestions")
 
+    def test_placeholder_code_and_display_name(self):
+        """ Test that the placeholder code is '{code_in_company} ({company})'
+            where `company` is the first company in the environment that is
+            a child of any company in `account.company_ids`, and
+
+            the display name is:
+              - either '{code} {name}' if the active company is a child of any
+                company in `account.company_ids`, or otherwise
+              - '{code_in_company} {name} ({company})' where `company` is
+                the first company in the environment that is a child of any
+                company in `account.company_ids`.
+
+            Check that the `_field_to_sql` corresponds (for placeholder_code).
+        """
+        def get_placeholder_code_via_sql(account):
+            account_query = account._as_query()
+            placeholder_code_sql = account_query.select(account._field_to_sql('account_account', 'placeholder_code', account_query))
+            placeholder_code = self.env.execute_query(placeholder_code_sql)[0][0]
+            return placeholder_code
+
+        branch = self.env['res.company'].create({
+            'name': 'Branch',
+            'parent_id': self.company_data['company'].id,
+        })
+        account = self.env['account.account'].create([{
+            'name': 'My account',
+            'company_ids': [Command.set(self.company_data['company'].ids)],
+            'code_mapping_ids': [
+                Command.create({'company_id': self.company_data['company'].id, 'code': '180001'}),
+                Command.create({'company_id': self.company_data_2['company'].id, 'code': '180002'}),
+            ]
+        }])
+
+        # Use `with_company` in order to force an order for `allowed_company_ids` in the context.
+        self.assertRecordValues(account.with_company(self.company_data['company']), [{
+            'placeholder_code': '180001 (company_1_data)',
+            'display_name': '180001 My account',
+        }])
+        self.assertEqual(get_placeholder_code_via_sql(account.with_company(self.company_data['company'])), '180001 (company_1_data)')
+
+        self.assertRecordValues(account.with_company(branch), [{
+            'placeholder_code': '180001 (Branch)',
+            'display_name': '180001 My account'
+        }])
+        self.assertEqual(get_placeholder_code_via_sql(account.with_company(branch)), '180001 (Branch)')
+
+        account_context_1 = account.with_context({
+            'allowed_company_ids': [self.company_data_2['company'].id, self.company_data['company'].id]
+        })
+        self.assertRecordValues(account_context_1, [{
+            'placeholder_code': '180001 (company_1_data)',
+            'display_name': '180001 My account (company_1_data)',
+        }])
+        self.assertEqual(get_placeholder_code_via_sql(account_context_1), '180001 (company_1_data)')
+
+        account_context_2 = account.with_context({
+            'allowed_company_ids': [self.company_data_2['company'].id, branch.id]
+        })
+        self.assertRecordValues(account_context_2, [{
+            'placeholder_code': '180001 (Branch)',
+            'display_name': '180001 My account (Branch)',
+        }])
+        self.assertEqual(get_placeholder_code_via_sql(account_context_2), '180001 (Branch)')
+
     @freeze_time('2017-01-01')
     def test_account_opening_balance(self):
         company = self.env.company

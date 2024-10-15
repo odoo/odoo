@@ -1726,20 +1726,22 @@ class AccountMoveLine(models.Model):
             return {}
 
         # Override in order to not read the complete move line table and use the index instead
-        query_account = self.env['account.account']._search([('company_ids', 'in', self.env.companies.ids), ('code', '!=', False)])
-        account_code_alias = self.env['account.account']._field_to_sql('account_account', 'code', query_account)
+        query_account = self.env['account.account']._search([('company_ids', 'in', self.env.companies.ids)])
+        code = self.env['account.account']._field_to_sql('account_account', 'code', query_account)
+        placeholder_code = self.env['account.account']._field_to_sql('account_account', 'placeholder_code', query_account)
 
         query_line = self._search(domain, limit=1)
         query_line.add_where('account_account.id = account_move_line.account_id')
 
         account_codes = self.env.execute_query(SQL(
             """
-            SELECT %(account_code_alias)s AS code
+            SELECT COALESCE(%(code)s, %(placeholder_code)s) AS code
               FROM %(account_table)s
              WHERE EXISTS(%(line_select)s)
                AND %(where_clause)s
             """,
-            account_code_alias=account_code_alias,
+            code=code,
+            placeholder_code=placeholder_code,
             account_table=query_account.from_clause,
             line_select=query_line.select(),
             where_clause=query_account.where_clause,
@@ -1747,6 +1749,7 @@ class AccountMoveLine(models.Model):
         return {
             (root := self.env['account.root']._from_account_code(code)).id: {'id': root.id, 'display_name': root.display_name}
             for code, in account_codes
+            if code
         }
 
     # -------------------------------------------------------------------------
