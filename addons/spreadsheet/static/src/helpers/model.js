@@ -19,9 +19,9 @@ import {
  */
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
-    const { data, revisions } = await env.services.orm.call(resModel, "join_spreadsheet_session", [
-        resId,
-    ]);
+    const { data, revisions } = await env.services.http.get(
+        `/spreadsheet/data/${resModel}/${resId}`
+    );
     return createSpreadsheetModel({ env, data, revisions });
 }
 
@@ -116,13 +116,20 @@ export async function freezeOdooData(model) {
                     for (let row = top; row <= bottom; row++) {
                         for (let col = left; col <= right; col++) {
                             const xc = toXC(col, row);
-                            const evaluatedCell = model.getters.getEvaluatedCell({ sheetId, col, row });
+                            const evaluatedCell = model.getters.getEvaluatedCell({
+                                sheetId,
+                                col,
+                                row,
+                            });
                             sheet.cells[xc] = {
                                 ...sheet.cells[xc],
                                 content: evaluatedCell.value.toString(),
                             };
                             if (evaluatedCell.format) {
-                                sheet.cells[xc].format = getItemId(evaluatedCell.format, data.formats);
+                                sheet.cells[xc].format = getItemId(
+                                    evaluatedCell.format,
+                                    data.formats
+                                );
                             }
                         }
                     }

@@ -4,10 +4,12 @@ import {
     defineModels,
     fields,
     models,
+    onRpc,
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
+import { RPCError } from "@web/core/network/rpc";
 
 /**
  * @typedef {object} ServerData
@@ -119,6 +121,27 @@ export function getBasicListArchs() {
         "partner,false,form": /* xml */ `<form/>`,
     };
 }
+
+function mockSpreadsheetDataController(request) {
+    const parts = request.url.split("/");
+    const resModel = parts.at(-2);
+    const resId = parseInt(parts.at(-1));
+    const record = this.env[resModel].search_read([["id", "=", resId]])[0];
+    if (!record) {
+        const error = new RPCError(`Spreadsheet ${resId} does not exist`);
+        error.data = {};
+        throw error;
+    }
+    return {
+        data: JSON.parse(record.spreadsheet_data),
+        name: record.name,
+        revisions: [],
+        isReadonly: false,
+        writable_rec_name_field: "name",
+    };
+}
+
+onRpc("/spreadsheet/data/*", mockSpreadsheetDataController, { pure: true });
 
 export function defineSpreadsheetModels() {
     defineModels(SpreadsheetModels);

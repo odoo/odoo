@@ -653,6 +653,9 @@ export class MockServer {
             }
             if (!isNil(result) || (options.alwaysReturns ?? routeOptions.alwaysReturns)) {
                 if (options.pure ?? routeOptions.pure) {
+                    if (result instanceof Error) {
+                        throw result;
+                    }
                     return result;
                 }
                 if (result instanceof RPCError) {

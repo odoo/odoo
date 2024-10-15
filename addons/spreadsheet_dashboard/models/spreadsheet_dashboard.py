@@ -43,24 +43,16 @@ class SpreadsheetDashboard(models.Model):
         else:
             self.sudo().favorite_user_ids = [Command.link(current_user_id)]
 
-    def get_readonly_dashboard(self):
-        self.ensure_one()
+    def _get_serialized_readonly_dashboard(self):
         snapshot = json.loads(self.spreadsheet_data)
-        if self._dashboard_is_empty() and self.sample_dashboard_file_path:
-            sample_data = self._get_sample_dashboard()
-            if sample_data:
-                return {
-                    "snapshot": sample_data,
-                    "is_sample": True,
-                }
         user_locale = self.env['res.lang']._get_user_spreadsheet_locale()
         snapshot.setdefault('settings', {})['locale'] = user_locale
         default_currency = self.env['res.currency'].get_company_currency_for_spreadsheet()
-        return {
+        return json.dumps({
             'snapshot': snapshot,
             'revisions': [],
             'default_currency': default_currency,
-        }
+        })
 
     def _get_sample_dashboard(self):
         try:

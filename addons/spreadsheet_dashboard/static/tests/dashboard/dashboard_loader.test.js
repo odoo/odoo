@@ -11,7 +11,7 @@ import {
     DashboardLoader,
     Status,
 } from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_loader";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
 
 defineSpreadsheetDashboardModels();
@@ -96,16 +96,11 @@ test("load spreadsheet data", async () => {
 });
 
 test("load spreadsheet data only once", async () => {
+    onRpc("/spreadsheet/dashboard/data/3", () => expect.step("spreadsheet 3 loaded"));
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
             if (args.model === "spreadsheet.dashboard" && args.method === "read") {
                 // read names
-                expect.step(`spreadsheet ${args.args[0]} loaded`);
-            }
-            if (
-                args.model === "spreadsheet.dashboard" &&
-                args.method === "get_readonly_dashboard"
-            ) {
                 expect.step(`spreadsheet ${args.args[0]} loaded`);
             }
         },
@@ -160,6 +155,8 @@ test("don't return empty dashboard group", async () => {
 });
 
 test("load multiple spreadsheets", async () => {
+    onRpc("/spreadsheet/dashboard/data/1", () => expect.step("spreadsheet 1 loaded"));
+    onRpc("/spreadsheet/dashboard/data/2", () => expect.step("spreadsheet 2 loaded"));
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
             if (args.method === "web_search_read" && args.model === "spreadsheet.dashboard.group") {
@@ -167,12 +164,6 @@ test("load multiple spreadsheets", async () => {
             }
             if (args.method === "read" && args.model === "spreadsheet.dashboard") {
                 // read names
-                expect.step(`spreadsheet ${args.args[0]} loaded`);
-            }
-            if (
-                args.model === "spreadsheet.dashboard" &&
-                args.method === "get_readonly_dashboard"
-            ) {
                 expect.step(`spreadsheet ${args.args[0]} loaded`);
             }
         },
@@ -191,18 +182,16 @@ test("load multiple spreadsheets", async () => {
 });
 
 test("load spreadsheet data with error", async () => {
-    const loader = await createDashboardLoader({
-        mockRPC: function (route, args) {
-            if (
-                args.method === "get_readonly_dashboard" &&
-                args.model === "spreadsheet.dashboard"
-            ) {
-                const error = new RPCError();
-                error.data = { message: "Bip" };
-                throw error;
-            }
+    onRpc(
+        "/spreadsheet/dashboard/data/*",
+        () => {
+            const error = new RPCError();
+            error.data = { message: "Bip" };
+            throw error;
         },
-    });
+        { pure: true }
+    );
+    const loader = await createDashboardLoader();
     await loader.load();
     const result = loader.getDashboard(3);
     expect(result.status).toBe(Status.Loading);
@@ -278,28 +267,23 @@ test("Model is in dashboard mode [2]", async () => {
 });
 
 test("default currency format", async () => {
-    const loader = await createDashboardLoader({
-        mockRPC: function (route, args) {
-            if (
-                args.model === "spreadsheet.dashboard" &&
-                args.method === "get_readonly_dashboard"
-            ) {
-                return {
-                    data: {},
-                    revisions: [],
-                    default_currency: {
-                        code: "Odoo",
-                        symbol: "θ",
-                        position: "after",
-                        decimalPlaces: 2,
-                    },
-                };
-            }
-            if (args.method === "get_company_currency_for_spreadsheet") {
-                throw new Error("Should not make any RPC");
-            }
+    onRpc(
+        "/spreadsheet/dashboard/data/*",
+        () => {
+            return {
+                data: {},
+                revisions: [],
+                default_currency: {
+                    code: "Odoo",
+                    symbol: "θ",
+                    position: "after",
+                    decimalPlaces: 2,
+                },
+            };
         },
-    });
+        { pure: true }
+    );
+    const loader = await createDashboardLoader();
     await loader.load();
     const result = loader.getDashboard(3);
     expect(result.status).toBe(Status.Loading);
