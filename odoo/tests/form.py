@@ -601,19 +601,20 @@ class Form:
                     subfields = field_info['edition_view']['fields']
                 field_value = values[fname]
                 for cmd in value:
-                    if cmd[0] == Command.CREATE:
-                        vals = UpdateDict(convert_read_to_form(dict.fromkeys(subfields, False), subfields))
-                        self._apply_onchange_(vals, subfields, cmd[2])
-                        field_value.create(vals)
-                    elif cmd[0] == Command.UPDATE:
-                        vals = field_value.get_vals(cmd[1])
-                        self._apply_onchange_(vals, subfields, cmd[2])
-                    elif cmd[0] in (Command.DELETE, Command.UNLINK):
-                        field_value.remove(cmd[1])
-                    elif cmd[0] == Command.LINK:
-                        field_value.add(cmd[1], convert_read_to_form(cmd[2], subfields))
-                    else:
-                        assert False, "Unexpected onchange() result"
+                    match cmd[0]:
+                        case Command.CREATE:
+                            vals = UpdateDict(convert_read_to_form(dict.fromkeys(subfields, False), subfields))
+                            self._apply_onchange_(vals, subfields, cmd[2])
+                            field_value.create(vals)
+                        case Command.UPDATE:
+                            vals = field_value.get_vals(cmd[1])
+                            self._apply_onchange_(vals, subfields, cmd[2])
+                        case Command.DELETE | Command.UNLINK:
+                            field_value.remove(cmd[1])
+                        case Command.LINK:
+                            field_value.add(cmd[1], convert_read_to_form(cmd[2], subfields))
+                        case c:
+                            raise ValueError(f"Unexpected onchange() o2m command {c!r}")
             else:
                 values[fname] = value
             values._changed.add(fname)
@@ -1000,8 +1001,7 @@ def _cleanup_from_default(type_, value):
         return value
 
     if type_ == 'one2many':
-        assert False, "not implemented yet"
-        return [cmd for cmd in value if cmd[0] != Command.SET]
+        raise NotImplementedError()
     elif type_ == 'datetime' and isinstance(value, datetime):
         return odoo.fields.Datetime.to_string(value)
     elif type_ == 'date' and isinstance(value, date):
