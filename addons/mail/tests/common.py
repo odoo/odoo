@@ -480,7 +480,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 for mail in self._new_mails
             )
             raise AssertionError(
-                f'mail.mail not found for ID {mail_id} / message {mail_message} / status {status} / author {author} ({email_from})\n{debug_info}'
+                f'mail.mail not found for ID {mail_id} / message {mail_message} / status {status} / '
+                f'author {author} ({email_from})\n{debug_info}'
             )
         return mail
 
@@ -503,8 +504,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 f'From: {mail.author_id} ({mail.email_from}) - To: {sorted(mail.recipient_ids.ids)} (State: {mail.state})'
                 for mail in self._new_mails
             )
-            recipients_info = f'Missing: {[f"{r.name} ({r.id})" for r in recipients if r.id not in filtered.recipient_ids.ids]}'
             author_info = f'{author.name} ({author.id})' if isinstance(author, self.env['res.partner'].__class__) else author
+            recipients_info = f'Missing: {[f"{r.name} ({r.id})" for r in recipients if r.id not in filtered.recipient_ids.ids]}'
             raise AssertionError(
                 f'mail.mail not found for message {mail_message} / status {status} / recipients {sorted(recipients.ids)} / '
                 f'author {author_info}, email_from ({email_from})\n{recipients_info}\n{debug_info}'
@@ -531,7 +532,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 for mail in self._new_mails
             )
             raise AssertionError(
-                f'mail.mail not found for message {mail_message} / status {status} / email_to {email_to} / author {author} ({email_from})\n{debug_info}'
+                f'mail.mail not found for message {mail_message} / status {status} / email_to {email_to} / '
+                f'author {author} ({email_from})\n{debug_info}'
             )
         return mail
 
@@ -884,11 +886,18 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
         # (partial) content check
         for val in content_check:
-            if val in expected:
-                self.assertIn(
-                    expected[val], sent_mail[val[:-8]],
-                    'Value for %s: %s does not contain %s' % (val, sent_mail[val[:-8]], expected[val])
-                )
+            if val == 'references_content' and val in expected:
+                if not expected['references_content']:
+                    self.assertFalse(sent_mail['references'])
+                else:
+                    for reference in expected['references_content']:
+                        self.assertIn(reference, sent_mail['references'])
+            else:
+                if val in expected:
+                    self.assertIn(
+                        expected[val], sent_mail[val[:-8]],
+                        'Value for %s: %s does not contain %s' % (val, sent_mail[val[:-8]], expected[val])
+                    )
 
         if 'headers' in expected:
             for key, value in expected['headers'].items():
@@ -1392,7 +1401,7 @@ class MailCase(MockEmail):
             email_values = {
                 'body_content': mbody,
                 'email_from': message.email_from,
-                'references_content': message.message_id,
+                'references_content': [message.message_id],
             }
             if message_info.get('email_values'):
                 email_values.update(message_info['email_values'])
@@ -1415,7 +1424,7 @@ class MailCase(MockEmail):
                     self.assertMailMail(
                         partners,
                         mail_status,
-                        author=message_info.get('mail_mail_values', {}).get('author_id') or message.author_id,
+                        author=message_info.get('mail_mail_values', {}).get('author_id', message.author_id),
                         content=mbody,
                         email_to_recipients=group['email_to_recipients'] or None,
                         email_values=email_values,
