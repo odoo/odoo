@@ -206,7 +206,7 @@ class HTML_Editor(http.Controller):
             subst = ("\\g<0>\n\t<style>\n\t\t:root { \n\t\t\t" +
                      declaration +
                      ";\n\t\t}\n\t</style>")
-            svg = re.sub(regex, subst, svg, 0, re.MULTILINE)
+            svg = re.sub(regex, subst, svg, flags=re.MULTILINE)
         return svg
 
     def _clean_context(self):
