@@ -50,6 +50,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'vat': "ESA12345674",
             'country_id': self.env.ref("base.es").id,
             'email': "email@gmail.com",
+            'invoice_edi_format': False,
         })
         self._get_main_company().partner_id.write({
             'bank_ids': [Command.create({'acc_number': 'FOO42'})]
