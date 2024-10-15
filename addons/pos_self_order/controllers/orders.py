@@ -15,7 +15,11 @@ class PosSelfOrderController(http.Controller):
 
         # Create the order
         tracking_prefix, ref_prefix = self._get_prefixes(device_type)
-        pos_reference, sequence_number, tracking_number = pos_session.get_next_order_refs(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
+        sequence_number = order.get('sequence_number')
+        pos_reference = order.get('pos_reference')
+        tracking_number = order.get('tracking_number')
+        if not (sequence_number and pos_reference and tracking_number):
+            pos_reference, sequence_number, tracking_number = pos_session.get_next_order_refs(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
         fiscal_position = (
             pos_config.takeaway_fp_id
             if is_takeaway
