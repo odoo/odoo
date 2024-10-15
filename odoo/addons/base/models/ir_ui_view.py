@@ -27,7 +27,7 @@ from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
-from odoo.addons import base
+from .ir_model import Base
 
 _logger = logging.getLogger(__name__)
 
@@ -2361,8 +2361,7 @@ class ResetViewArchWizard(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
-class Base(models.AbstractModel, base.Base):
-
+class Base(models.AbstractModel, Base):
 
     _date_name = 'date'         #: field to use for default calendar view
 

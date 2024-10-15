@@ -3,7 +3,7 @@
 from . import assetsbundle
 
 from .ir_model import (
-    IrModel, IrModelAccess, IrModelConstraint, IrModelData, IrModelFields,
+    Base, IrModel, IrModelAccess, IrModelConstraint, IrModelData, IrModelFields,
     IrModelFieldsSelection, IrModelInherit, IrModelRelation, WizardIrModelMenuCreate,
 )
 from .ir_sequence import IrSequence, IrSequenceDate_Range
