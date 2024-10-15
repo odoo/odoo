@@ -148,7 +148,7 @@ var FileWidget = SearchableMediaWidget.extend({
     }),
     existingAttachmentsTemplate: undefined,
 
-    IMAGE_MIMETYPES: ['image/jpg', 'image/jpeg', 'image/jpe', 'image/png', 'image/svg+xml', 'image/gif'],
+    IMAGE_MIMETYPES: ['image/jpg', 'image/jpeg', 'image/jpe', 'image/png', 'image/svg+xml', 'image/gif', 'image/webp'],
     IMAGE_EXTENSIONS: ['.jpg', '.jpeg', '.jpe', '.png', '.svg', '.gif'],
     NUMBER_OF_ATTACHMENTS_TO_DISPLAY: 30,
     MAX_DB_ATTACHMENTS: 5,
@@ -678,15 +678,23 @@ var FileWidget = SearchableMediaWidget.extend({
     /**
      * @private
      */
-    _onURLInputChange: function () {
+    _onURLInputChange: async function () {
         const inputValue = this.$urlInput.val().split('?')[0];
         var emptyValue = (inputValue === '');
-
         var isURL = /^.+\..+$/.test(inputValue); // TODO improve
         var isImage = _.any(this.IMAGE_EXTENSIONS, function (format) {
             return inputValue.endsWith(format);
         });
 
+        if (isURL && !isImage) {
+            try {
+                const response = await fetch(inputValue);
+                const contentType = response.headers.get('Content-Type');
+                isImage = this.IMAGE_MIMETYPES.includes(contentType);
+            }  catch (error) {
+                this.$urlWarning.removeClass('d-none');
+            }
+        }
         this._updateAddUrlUi(emptyValue, isURL, isImage);
     },
     /**
