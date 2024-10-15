@@ -394,7 +394,7 @@ class ResCompany(models.Model):
         for company in companies:
             if root_template := company.parent_ids[0].chart_template:
                 def try_loading(company=company):
-                    self.env['account.chart.template']._load(
+                    self.env['account.chart.template'].sudo()._load(
                         root_template,
                         company,
                         install_demo=False,
