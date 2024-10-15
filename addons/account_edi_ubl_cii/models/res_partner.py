@@ -21,6 +21,7 @@ class ResPartner(models.Model):
         ],
     )
     is_ubl_format = fields.Boolean(compute='_compute_is_ubl_format')
+    is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')
     peppol_endpoint = fields.Char(
         string="Peppol Endpoint",
         help="Unique identifier used by the BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'.",
@@ -126,30 +127,53 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_ubl_cii_formats(self):
-        return ['ubl_bis3', 'xrechnung', 'ubl_a_nz', 'nlcius', 'facturx', 'ubl_sg']
+        return list(self._get_ubl_cii_formats_info().keys())
+
+    @api.model
+    def _get_ubl_cii_formats_info(self):
+        return {
+            'ubl_bis3': {'countries': list(EAS_MAPPING), 'on_peppol': True, 'sequence': 200},
+            'xrechnung': {'countries': ['DE'], 'on_peppol': True},
+            'ubl_a_nz': {'countries': ['NZ', 'AU'], 'on_peppol': True},
+            'nlcius': {'countries': ['NL'], 'on_peppol': True},
+            'ubl_sg': {'countries': ['SG'], 'on_peppol': True},
+            'facturx': {'countries': ['FR'], 'on_peppol': False},
+        }
 
     @api.model
     def _get_ubl_cii_formats_by_country(self):
+        formats_info = self._get_ubl_cii_formats_info()
+        countries = {country for format_val in formats_info.values() for country in (format_val.get('countries') or [])}
         return {
-            'DE': 'xrechnung',
-            'AU': 'ubl_a_nz',
-            'NZ': 'ubl_a_nz',
-            'NL': 'nlcius',
-            'FR': 'facturx',
-            'SG': 'ubl_sg',
+            country_code: [
+                format_key
+                for format_key, format_val in formats_info.items() if country_code in (format_val.get('countries') or [])
+            ]
+            for country_code in countries
         }
 
-    def _get_suggested_invoice_edi_format(self):
-        # EXTENDS 'account'
-        res = super()._get_suggested_invoice_edi_format()
+    def _get_suggested_ubl_cii_edi_format(self):
+        self.ensure_one()
+        formats_info = self._get_ubl_cii_formats_info()
         format_mapping = self._get_ubl_cii_formats_by_country()
         country_code = self._deduce_country_code()
         if country_code in format_mapping:
-            return format_mapping[country_code]
-        elif country_code in EAS_MAPPING:
-            return 'ubl_bis3'
-        else:
-            return res
+            formats_by_country = format_mapping[country_code]
+            # return the format with the smallest sequence
+            if len(formats_by_country) == 1:
+                return formats_by_country[0]
+            else:
+                return min(formats_by_country, key=lambda e: formats_info[e].get('sequence', 100))  # we use a sequence of 100 by default
+        return False
+
+    def _get_suggested_invoice_edi_format(self):
+        # EXTENDS 'account'
+        return super()._get_suggested_invoice_edi_format() or self._get_suggested_ubl_cii_edi_format()
+
+    @api.model
+    def _get_peppol_formats(self):
+        formats_info = self._get_ubl_cii_formats_info()
+        return [format_key for format_key, format_vals in formats_info.items() if format_vals.get('on_peppol')]
 
     def _peppol_eas_endpoint_depends(self):
         # field dependencies of methods _compute_peppol_endpoint() and _compute_peppol_eas()
@@ -166,6 +190,12 @@ class ResPartner(models.Model):
     def _compute_is_ubl_format(self):
         for partner in self:
             partner.is_ubl_format = partner.invoice_edi_format in self._get_ubl_cii_formats()
+
+    @api.depends_context('company')
+    @api.depends('invoice_edi_format')
+    def _compute_is_peppol_edi_format(self):
+        for partner in self:
+            partner.is_peppol_edi_format = partner.invoice_edi_format in self._get_peppol_formats()
 
     @api.depends(lambda self: self._peppol_eas_endpoint_depends() + ['peppol_eas'])
     def _compute_peppol_endpoint(self):

@@ -12,14 +12,8 @@ class ResPartner(models.Model):
             return self.env['account.edi.xml.oioubl_201']
         return super()._get_edi_builder(invoice_edi_format)
 
-    def _get_ubl_cii_formats(self):
-        # EXTENDS 'account'
-        formats = super()._get_ubl_cii_formats()
-        formats.append('oioubl_201')
-        return formats
-
-    def _get_ubl_cii_formats_by_country(self):
-        # EXTENDS 'account'
-        mapping = super()._get_ubl_cii_formats_by_country()
-        mapping['DK'] = 'oioubl_201'
-        return mapping
+    def _get_ubl_cii_formats_info(self):
+        # EXTENDS 'account_edi_ubl_cii'
+        formats_info = super()._get_ubl_cii_formats_info()
+        formats_info['oioubl_201'] = {'countries': ['DK']}
+        return formats_info

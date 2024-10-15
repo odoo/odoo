@@ -12,7 +12,6 @@ from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account.models.company import PEPPOL_LIST
 
 TIMEOUT = 10
-NON_PEPPOL_FORMAT = (False, 'facturx', 'oioubl_201', 'ciusro')
 
 
 class ResPartner(models.Model):
@@ -32,7 +31,6 @@ class ResPartner(models.Model):
         string='Peppol endpoint verification',
         company_dependent=True,
     )
-    is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -143,16 +141,6 @@ class ResPartner(models.Model):
                 partner.button_account_peppol_check_partner_endpoint(company=company)
 
     # -------------------------------------------------------------------------
-    # COMPUTE METHODS
-    # -------------------------------------------------------------------------
-
-    @api.depends_context('company')
-    @api.depends('invoice_edi_format')
-    def _compute_is_peppol_edi_format(self):
-        for partner in self:
-            partner.is_peppol_edi_format = partner.invoice_edi_format not in NON_PEPPOL_FORMAT
-
-    # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
@@ -201,7 +189,7 @@ class ResPartner(models.Model):
     @api.model
     @handle_demo
     def _get_peppol_verification_state(self, peppol_endpoint, peppol_eas, invoice_edi_format):
-        if (not (peppol_eas and peppol_endpoint) or invoice_edi_format in NON_PEPPOL_FORMAT):
+        if not (peppol_eas and peppol_endpoint) or invoice_edi_format not in self._get_peppol_formats():
             return False
 
         edi_identification = f"{peppol_eas}:{peppol_endpoint}".lower()
