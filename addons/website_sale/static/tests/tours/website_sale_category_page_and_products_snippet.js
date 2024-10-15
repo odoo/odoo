@@ -21,7 +21,7 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
     },
     {
         content: "Click on the s_dynamic_snippet_products snippet.",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_dynamic_snippet_products"]',
+        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_dynamic_filter_template_product_product_borderless_1"]',
         run: "click",
     },
 

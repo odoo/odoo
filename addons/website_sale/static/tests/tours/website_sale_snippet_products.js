@@ -10,7 +10,15 @@ import {
 import { goToCart } from '@website_sale/js/tours/tour_utils';
 
 const optionBlock = 'dynamic_snippet_products';
-const productsSnippet = {id: "s_dynamic_snippet_products", name: "Products", groupName: "Products"};
+const productsSnippet = {
+    id: "s_dynamic_filter_template_product_product_borderless_1",
+    name: "Products",
+    groupName: "Products",
+};
+const modifiedProductsSnippet = {
+    ...productsSnippet,
+    id: "s_product_product_borderless_1",
+};
 const templates = [
     "dynamic_filter_template_product_product_add_to_cart",
     "dynamic_filter_template_product_product_view_detail",
@@ -29,10 +37,23 @@ const templates = [
 function changeTemplate(templateKey) {
     const templateClass = templateKey.replace(/dynamic_filter_template_/, "s_");
     return [
-        changeOption(optionBlock, 'we-select[data-name="template_opt"] we-toggler', 'template'),
-        changeOption(optionBlock, `we-button[data-select-data-attribute="website_sale.${templateKey}"]`),
         {
-            content: 'Check the template is applied',
+            content: "click on snippet",
+            trigger: ":iframe .s_dynamic_snippet_products",
+            run: "click",
+        },
+        {
+            content: "click on replace button",
+            trigger: ":iframe button.o_snippet_replace",
+            run: "click",
+        },
+        {
+            content: "select template",
+            trigger: `.o_add_snippet_dialog :iframe section[data-template-key="website_sale.${templateKey}"]`,
+            run: "click",
+        },
+        {
+            content: "Check the template is applied",
             trigger: `:iframe .s_dynamic_snippet_products.${templateClass} .carousel`,
         },
     ];
@@ -49,7 +70,7 @@ registerWebsitePreviewTour('website_sale.snippet_products', {
     }
     return [
         ...insertSnippet(productsSnippet),
-        ...clickOnSnippet(productsSnippet),
+        ...clickOnSnippet(modifiedProductsSnippet),
         ...templatesSteps,
         ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
         ...clickOnSave(),
@@ -67,8 +88,13 @@ registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
 },
 () => [
     ...insertSnippet(productsSnippet),
-    ...clickOnSnippet(productsSnippet),
+    ...clickOnSnippet(modifiedProductsSnippet),
     ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
+    {
+        content: "Click on dropped snippet to open options",
+        trigger: ":iframe section.s_dynamic_snippet_products",
+        run: "click",
+    },
     changeOption(optionBlock, 'we-select[data-name="filter_opt"] we-toggler', 'filter'),
     changeOption(optionBlock, 'we-select[data-name="filter_opt"] we-button:contains("Recently Viewed")', 'filter'),
     ...clickOnSave(),
