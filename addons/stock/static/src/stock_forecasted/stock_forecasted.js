@@ -68,6 +68,7 @@ export class StockForecasted extends Component {
         this.resModel = this.context.active_model || this.context.params?.active_model;
         //Following is used as a fallback when the forecast is not called by an action but through browser's history
         if (!this.resModel) {
+<<<<<<< 18.0
             let resModel = this.props.action.res_model;
             if (resModel) {
                 if (/^\d+$/.test(resModel)) {
@@ -76,6 +77,16 @@ export class StockForecasted extends Component {
                     resModel = actionModel[0]?.model;
                 }
                 this.resModel = resModel;
+||||||| 834dcf2bb92136da62e16ed13b8061c5f8c27268
+            if (this.props.action.res_model) {
+                const actionModel = await this.orm.read('ir.model', [Number(this.props.action.res_model)], ['model']);
+                if (actionModel[0]?.model) {
+                    this.resModel = actionModel[0].model
+                }
+=======
+            if (this.props.action.res_model) {
+                this.resModel = this.props.action.res_model;
+>>>>>>> 8e337c7a79b6166d847e5b0cc0fc7e96567ecf9b
             } else if (this.props.action._originalAction) {
                 const originalContextAction = JSON.parse(this.props.action._originalAction).context;
                 if (typeof originalContextAction === "string") {
