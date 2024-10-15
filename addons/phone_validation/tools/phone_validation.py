@@ -35,7 +35,7 @@ try:
                 # people may enter 0033... instead of +33...
                 if number.startswith('00'):
                     try:
-                        phone_nbr = phone_parse(f'+{number.lstrip("00")}', country_code)
+                        phone_nbr = phone_parse(f'+{number.removeprefix("00")}', country_code)
                     except UserError:
                         raise UserError(_lt('Impossible number %s: too many digits.', number))
                 # people may enter 33... instead of +33...
