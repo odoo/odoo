@@ -414,26 +414,12 @@ class TestTracking(MailCommon):
             'body_html': '''<div>WOOP WOOP</div>''',
         })
 
-        def _track_subtype(self, init_values):
-            if 'name' in init_values and init_values['name'] == magic_code:
-                return 'mail.mt_name_changed'
-            return False
-        self.patch(self.registry('mail.test.container'), '_track_subtype', _track_subtype)
-
-        def _track_template(self, changes):
-            res = {}
-            if 'name' in changes:
-                res['name'] = (mail_template, {'composition_mode': 'mass_mail'})
-            return res
-        self.patch(self.registry('mail.test.container'), '_track_template', _track_template)
-
-        cls = type(self.env['mail.test.container'])
-        self.assertFalse(hasattr(getattr(cls, 'name'), 'track_visibility'))
-        getattr(cls, 'name').track_visibility = 'always'
-
-        @self.addCleanup
-        def cleanup():
-            del getattr(cls, 'name').track_visibility
+        ContainerModel = self.registry['mail.test.container']
+        self.assertFalse(hasattr(ContainerModel.name, 'track_visibility'))
+        ContainerModel.name.track_visibility = 'always'
+        self.addCleanup(delattr, ContainerModel.name, 'track_visibility')
+        self.patch(ContainerModel, '_track_subtype', lambda self, init_values: 'mail.mt_name_changed' if 'name' in init_values and init_values['name'] == magic_code else False)
+        self.patch(ContainerModel, '_track_template', lambda self, changes: {'name': (mail_template, {'composition_mode': 'mass_mail'})} if 'name' in changes else {})
 
         test_mail_record = self.env['mail.test.container'].create({
             'name': 'Zizizatestmailname',
