@@ -13,15 +13,8 @@ class ResPartner(models.Model):
             return self.env['account.edi.xml.pint_anz']
         return super()._get_edi_builder(invoice_edi_format)
 
-    def _get_ubl_cii_formats(self):
-        # EXTENDS 'account'
-        formats = super()._get_ubl_cii_formats()
-        formats.append('pint_anz')
-        return formats
-
-    def _get_ubl_cii_formats_by_country(self):
-        # EXTENDS 'account'
-        mapping = super()._get_ubl_cii_formats_by_country()
-        mapping['AU'] = 'pint_anz'
-        mapping['NZ'] = 'pint_anz'
-        return mapping
+    def _get_ubl_cii_formats_info(self):
+        # EXTENDS 'account_edi_ubl_cii'
+        formats_info = super()._get_ubl_cii_formats_info()
+        formats_info['pint_anz'] = {'countries': ['AU', 'NZ'], 'on_peppol': True, 'sequence': 90}  # has priority over UBL_ANZ from 'account_edi_ubl_cii'
+        return formats_info
