@@ -871,12 +871,18 @@ export class PosStore extends Reactive {
             if (curLine.id !== line.id) {
                 if (curLine.can_be_merged_with(line) && merge !== false) {
                     to_merge_orderline = curLine;
+                    break;
                 }
             }
         }
 
         if (to_merge_orderline) {
             to_merge_orderline.merge(line);
+            if (line.combo_line_ids?.length) {
+                for (const comboLine of [...line.combo_line_ids]) {
+                    comboLine.delete();
+                }
+            }
             line.delete();
             this.selectOrderLine(order, to_merge_orderline);
         } else if (!selectedOrderline) {
@@ -1429,6 +1435,11 @@ export class PosStore extends Reactive {
         ]);
     }
     showScreen(name, props) {
+        if (name === "") {
+            const screenData = this.getEmptyOrderScreen();
+            name = screenData.name;
+            props = screenData.props;
+        }
         this.previousScreen = this.mainScreen.component?.name;
         name = !name ? this.firstScreen : name;
         const component = registry.category("pos_screens").get(name);
@@ -1503,6 +1514,10 @@ export class PosStore extends Reactive {
         this.addOrderIfEmpty();
         const { name: screenName } = this.get_order().get_screen_data();
         this.showScreen(screenName);
+    }
+
+    getEmptyOrderScreen() {
+        return { name: "ProductScreen" };
     }
 
     addOrderIfEmpty() {

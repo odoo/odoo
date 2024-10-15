@@ -5,10 +5,43 @@ export const computeComboLines = (
     childLineConf,
     pricelist,
     decimalPrecision,
-    productTemplateAttributeValueById
+    productTemplateAttributeValueById,
+    priceUnit = false
 ) => {
     const combolines = [];
-    const parentLstPrice = parentProduct.get_price(pricelist, 1);
+    childLineConf = computeComboLinesPrice(
+        parentProduct,
+        childLineConf,
+        pricelist,
+        decimalPrecision,
+        productTemplateAttributeValueById,
+        priceUnit
+    );
+
+    for (const conf of childLineConf) {
+        const attribute_value_ids = conf.configuration?.attribute_value_ids.map(
+            (id) => productTemplateAttributeValueById[id]
+        );
+        combolines.push({
+            combo_line_id: conf.combo_line_id,
+            price_unit: conf.price_unit,
+            attribute_value_ids,
+            attribute_custom_values: conf.configuration?.attribute_custom_values || {},
+        });
+    }
+
+    return combolines;
+};
+
+export const computeComboLinesPrice = (
+    parentProduct,
+    childLineConf,
+    pricelist,
+    decimalPrecision,
+    productTemplateAttributeValueById,
+    priceUnit = false
+) => {
+    const parentLstPrice = priceUnit === false ? parentProduct.get_price(pricelist, 1) : priceUnit;
     const originalTotal = childLineConf.reduce((acc, conf) => {
         const originalPrice = conf.combo_line_id.combo_id.base_price;
         return acc + originalPrice;
@@ -33,13 +66,7 @@ export const computeComboLines = (
             .map((attr) => attr?.price_extra || 0)
             .reduce((acc, price) => acc + price, 0);
         const totalPriceExtra = priceUnit + attributesPriceExtra + comboLine.combo_price;
-        combolines.push({
-            combo_line_id: comboLine,
-            price_unit: totalPriceExtra,
-            attribute_value_ids,
-            attribute_custom_values: conf.configuration?.attribute_custom_values || {},
-        });
+        conf.price_unit = totalPriceExtra;
     }
-
-    return combolines;
+    return childLineConf;
 };

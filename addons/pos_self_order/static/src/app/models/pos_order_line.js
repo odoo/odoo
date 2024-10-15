@@ -17,6 +17,7 @@ patch(PosOrderline.prototype, {
                 custom_attribute_value_ids: JSON.stringify(
                     this.custom_attribute_value_ids.map((a) => a.id).sort()
                 ),
+                part_of_combo: Boolean(this.combo_parent_id),
             };
         }
 
@@ -34,6 +35,7 @@ patch(PosOrderline.prototype, {
                 change.custom_attribute_value_ids
                     ? change.custom_attribute_value_ids
                     : false,
+            part_of_combo: Boolean(this.combo_parent_id),
         };
         return diff;
     },

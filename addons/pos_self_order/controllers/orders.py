@@ -75,7 +75,7 @@ class PosSelfOrderController(http.Controller):
                 fiscal_pos = pos_config.takeaway_fp_id
 
             if len(line.combo_line_ids) > 0:
-                original_total = sum(line.combo_line_ids.mapped("combo_line_id").combo_id.mapped("base_price"))
+                original_total = sum(line.combo_line_ids.combo_line_id.combo_id.mapped("base_price"))
                 remaining_total = lst_price
                 factor = lst_price / original_total if original_total > 0 else 1
 

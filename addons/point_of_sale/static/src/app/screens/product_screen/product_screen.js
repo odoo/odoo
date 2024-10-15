@@ -135,11 +135,19 @@ export class ProductScreen extends Component {
     getNumpadButtons() {
         return getButtons(DEFAULT_LAST_ROW, [
             { value: "quantity", text: _t("Qty") },
-            { value: "discount", text: _t("% Disc"), disabled: !this.pos.config.manual_discount },
+            {
+                value: "discount",
+                text: _t("% Disc"),
+                disabled:
+                    !this.pos.config.manual_discount ||
+                    Boolean(this.currentOrder?.get_selected_orderline()?.combo_parent_id),
+            },
             {
                 value: "price",
                 text: _t("Price"),
-                disabled: !this.pos.cashierHasPriceControlRights(),
+                disabled:
+                    !this.pos.cashierHasPriceControlRights() ||
+                    Boolean(this.currentOrder?.get_selected_orderline()?.combo_parent_id),
             },
             BACKSPACE,
         ]).map((button) => ({
