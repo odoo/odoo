@@ -532,7 +532,7 @@ class PurchaseOrder(models.Model):
                 if line.display_type == 'line_section':
                     pending_section = line
                     continue
-                if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                if not float_is_zero(line.qty_to_invoice, precision_digits=precision) or self.env.context.get('fill_qty_to_invoice_zero_line', False):
                     if pending_section:
                         line_vals = pending_section._prepare_account_move_line()
                         line_vals.update({'sequence': sequence})
