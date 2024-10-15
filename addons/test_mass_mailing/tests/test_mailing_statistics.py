@@ -42,11 +42,11 @@ class TestMailingStatistics(TestMassMailCommon):
         self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, target_records[0], use_in_reply_to=True)
         self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, target_records[1], use_in_reply_to=True)
         self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, target_records[2], use_in_reply_to=True)
-        self.gateway_mail_click(mailing, target_records[0], 'https://www.odoo.be')
-        self.gateway_mail_click(mailing, target_records[2], 'https://www.odoo.be')
-        self.gateway_mail_click(mailing, target_records[3], 'https://www.odoo.be')
+        self.gateway_mail_trace_click(mailing, target_records[0], 'https://www.odoo.be')
+        self.gateway_mail_trace_click(mailing, target_records[2], 'https://www.odoo.be')
+        self.gateway_mail_trace_click(mailing, target_records[3], 'https://www.odoo.be')
         self.assertEqual(target_records[12].message_bounce, 0)
-        self.gateway_mail_bounce(mailing, target_records[12])
+        self.gateway_mail_trace_bounce(mailing, target_records[12])
         self.assertEqual(target_records[12].message_bounce, 1)
 
         # check mailing statistics
