@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add('update_billing_shipping_address', {
         ...tourUtils.addToCart({productName: "Office Chair Black TEST"}),
         tourUtils.goToCart({quantity: 1}),
         tourUtils.goToCheckout(),
+        tourUtils.confirmOrder(),
         {
             content: "Edit Address",
             trigger: '#delivery_and_billing a:contains("Edit")',
