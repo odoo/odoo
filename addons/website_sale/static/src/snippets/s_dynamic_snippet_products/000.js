@@ -145,7 +145,7 @@ const DynamicSnippetProductsCard = WebsiteSale.extend({
      */
     async _onClickAddToCart(ev) {
         const button = ev.currentTarget
-        if (!button.dataset.productSelected) {
+        if (!button.dataset.productSelected || button.dataset.isCombo) {
             const dummy_form = document.createElement('form');
             dummy_form.setAttribute('method', 'post');
             dummy_form.setAttribute('action', '/shop/cart/update');
