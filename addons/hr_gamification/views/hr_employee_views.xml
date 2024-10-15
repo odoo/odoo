@@ -6,7 +6,6 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-
             <xpath expr="//page[@name='public']" position="after">
                 <page string="Received Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
@@ -19,11 +18,10 @@
                         </p>
                     </div>
                     <div class="mt-2">
-                        <field name="badge_ids" mode="kanban" />
+                        <field name="badge_ids" mode="kanban" widget="many2many"/>
                     </div>
                 </page>
             </xpath>
-
         </field>
     </record>
 
@@ -32,7 +30,6 @@
         <field name="model">hr.employee.public</field>
         <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
         <field name="arch" type="xml">
-
             <xpath expr="//page[@name='public']" position="after">
                 <page string="Received Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
@@ -47,7 +44,6 @@
                     <field name="badge_ids" mode="kanban" widget="many2many"/>
                 </page>
             </xpath>
-
         </field>
     </record>
 

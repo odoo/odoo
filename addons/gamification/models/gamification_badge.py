@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -31,7 +30,8 @@ class GamificationBadge(models.Model):
         ('bronze', 'Bronze'), ('silver', 'Silver'), ('gold', 'Gold')],
         string='Forum Badge Level', default='bronze')
 
-    rule_auth = fields.Selection([
+    rule_auth = fields.Selection(
+        selection=[
             ('everyone', 'Everyone'),
             ('users', 'A selected list of users'),
             ('having', 'People having some badges'),
@@ -219,3 +219,12 @@ class GamificationBadge(models.Model):
 
         # badge.rule_auth == 'everyone' -> no check
         return self.CAN_GRANT
+
+    def get_granted_employees(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Granted Users',
+            'view_mode': 'kanban,list,form',
+            'res_model': 'res.users',
+            'domain': [('id', 'in', self.unique_owner_ids.ids)]
+        }

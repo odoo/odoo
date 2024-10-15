@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="goals_menu_groupby_action2" model="ir.actions.act_window">
+            <field name="res_model">gamification.goal</field>
+            <field name="name">Goals History</field>
+            <field name="view_mode">list,kanban</field>
+            <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_definition': True}</field>
+            <field name="domain">[('challenge_id.challenge_category', '=', 'hr')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new goal
+                </p><p>
+                    A goal is defined by a user and a goal type.
+                    Goals can be created automatically by using challenges.
+                </p>
+            </field>
+        </record>
+</odoo>
