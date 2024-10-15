@@ -14,7 +14,7 @@ export class BuilderOverlay extends Component {
             position: "center",
             container: () => this.props.container,
             onPositioned: () => {
-                this.size.height = this.props.target.clientHeight; 
+                this.size.height = this.props.target.clientHeight;
                 this.size.width = this.props.target.clientWidth;
             },
         });

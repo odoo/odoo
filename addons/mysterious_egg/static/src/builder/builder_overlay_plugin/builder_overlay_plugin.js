@@ -24,9 +24,12 @@ export class BuilderOverlayPlugin extends Plugin {
         }
 
         for (const selector of this.selectors) {
-            const overlaySelector = selectionNode.closest(selector);
-            if (overlaySelector) {
-                this.openBuilderOverlay(overlaySelector);
+            const snippetElement = selectionNode.closest(selector);
+            if (snippetElement) {
+                this.openBuilderOverlay(snippetElement);
+                for (const handler of this.resources.onSnippetChange || []) {
+                    handler(snippetElement);
+                }
                 return;
             }
         }
