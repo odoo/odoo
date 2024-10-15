@@ -176,7 +176,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         else:
             self._assertion_report = None
         self._ordinary_tables: set[str] | None = None  # cached names of regular tables
-        self._constraint_queue: deque[tuple] = deque()  # queue of functions to call on finalization of constraints
+        self._table_stacks: dict[str, dict[tuple, None]] = defaultdict(dict)  # functions to call on finalization of constraints
+                                                                              # internal dict is used as set with move-to-end
         self.__caches: dict[str, LRU] = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
 
         # modules fully loaded (maintained during init phase by `loading` module)
@@ -558,34 +559,49 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
 
-    def post_constraint(self, func, *args, **kwargs):
+    def post_constraint(self, key, func_data):
         """ Call the given function, and delay it if it fails during an upgrade. """
         try:
-            if (func, args, kwargs) not in self._constraint_queue:
-                # Module A may try to apply a constraint and fail but another module B inheriting
-                # from Module A may try to reapply the same constraint and succeed, however the
-                # constraint would already be in the _constraint_queue and would be executed again
-                # at the end of the registry cycle, this would fail (already-existing constraint)
-                # and generate an error, therefore a constraint should only be applied if it's
-                # not already marked as "to be applied".
-                func(*args, **kwargs)
-        except Exception as e:
+            func_data[0](*func_data[1:])
+        except sql.TableError as e:
             if self._is_install:
-                _schema.error(*e.args)
+                _schema.error(e.args[0])
             else:
-                _schema.info(*e.args)
-                self._constraint_queue.append((func, args, kwargs))
+                _schema.info(e.args[0])
+                # Try to apply the constraint once the registry is fully loaded. We keep multiple
+                # constraints under same key because we still want to attempt to add a constraint
+                # even if some override failed. Do not add duplicated entries, if an entry is double
+                # move it to the end instead. Below is a poor-man move-to-end implementation using a
+                # standard dict.
+                self._table_stacks[key].pop(func_data, None)
+                self._table_stacks[key][func_data] = None
+        else:
+            # If a module successfully applies a constraint, we remove all queued constraints with
+            # same name ignoring the definition. In effect, if module A defines a constraint that is
+            # overridden by module B (loaded after) with a different definition, whenever we load A,
+            # the original constraint may fail to be applied, hence it is queued. The issue is that
+            # later when we post process the queue the constraint still fails to be added. The
+            # solution is to clean the previously enqeueud constraints that were just overriden.
+            same = self._table_stacks.pop(key, None)
+            if same:
+                _schema.info("Skipping already applied constraints: %s", list(same))
 
     def finalize_constraints(self) -> None:
         """ Call the delayed functions from above. """
-        while self._constraint_queue:
-            func, args, kwargs = self._constraint_queue.popleft()
-            try:
-                func(*args, **kwargs)
-            except Exception as e:
-                # warn only, this is not a deployment showstopper, and
-                # can sometimes be a transient error
-                _schema.warning(*e.args)
+        for key, funcs_data in reversed(self._table_stacks.items()):
+            errors = []
+            for func_data in reversed(funcs_data):
+                try:
+                    func_data[0](*func_data[1:])
+                except sql.TableError as e:
+                    errors.append(e.args[0])
+                else:
+                    if errors:
+                        _schema.warning("%s applied with previous errors:\n%s", key, "\n".join(errors))
+                    break
+            else:
+                _schema.error("Couldn't apply %s, errors:\n%s", key, "\n".join(errors))
+        self._table_stacks.clear()
 
     def init_models(self, cr: Cursor, model_names: Iterable[str], context: dict[str, typing.Any], install: bool = True):
         """ Initialize a list of models (given by their name). Call methods

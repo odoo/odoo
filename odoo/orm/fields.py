@@ -1105,7 +1105,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             def add_not_null():
                 # flush values before adding NOT NULL constraint
                 model.flush_model([self.name])
-                model.pool.post_constraint(apply_required, model, self.name)
+                model.pool.post_constraint(f"field_not_null:{model}.{self.name}", (apply_required, model, self.name))
 
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)

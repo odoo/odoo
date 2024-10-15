@@ -407,6 +407,10 @@ def get_depending_views(cr, table, column):
     return cr.fetchall()
 
 
+class TableError(Exception):
+    pass
+
+
 def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """
     query = SQL(
@@ -418,7 +422,7 @@ def set_not_null(cr, tablename, columnname):
             cr.execute(query, log_exceptions=False)
             _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
     except Exception:
-        raise Exception("Table %r: unable to set NOT NULL on column %r", tablename, columnname)
+        raise TableError("Table %r: unable to set NOT NULL on column %r" % (tablename, columnname))
 
 
 def drop_not_null(cr, tablename, columnname):
@@ -458,7 +462,7 @@ def add_constraint(cr, tablename, constraintname, definition):
             cr.execute(query2, log_exceptions=False)
             _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
     except Exception:
-        raise Exception("Table %r: unable to add constraint %r as %s", tablename, constraintname, definition)
+        raise TableError("Table %r: unable to add constraint %r as %s" % (tablename, constraintname, definition))
 
 
 def drop_constraint(cr, tablename, constraintname):
@@ -592,25 +596,32 @@ def create_index(
     add_index(cr, indexname, tablename, definition, unique=unique, comment=comment)
 
 
-def add_index(cr, indexname, tablename, definition, *, unique: bool, comment=''):
+def add_index(cr, indexname, tablename, definition, unique: bool, comment=''):
     """ Create an index. """
     if isinstance(definition, str):
         definition = SQL(definition.replace('%', '%%'))
     else:
         definition = SQL(definition)
-    cr.execute(SQL(
+    query1 = SQL(
         "CREATE %sINDEX %s ON %s %s",
         SQL("UNIQUE ") if unique else SQL(),
         SQL.identifier(indexname),
         SQL.identifier(tablename),
         definition,
-    ))
+    )
     if comment:
-        cr.execute(SQL(
+        query2 = SQL(
             "COMMENT ON INDEX %s IS %s",
             SQL.identifier(indexname), comment,
-        ))
-    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition.code)
+        )
+    try:
+        with cr.savepoint(flush=False):
+            cr.execute(query1, log_exceptions=False)
+            if comment:
+                cr.execute(query2, log_exceptions=False)
+            _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition.code)
+    except Exception:
+        raise TableError("Table %r: unable to add index %r as %s" % (tablename, indexname, definition))
 
 
 def create_unique_index(cr, indexname, tablename, expressions):
