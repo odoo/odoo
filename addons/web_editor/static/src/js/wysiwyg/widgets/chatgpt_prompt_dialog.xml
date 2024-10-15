@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web_editor.ChatGPTPromptDialog">
-    <Dialog size="'lg'" title.translate="Generate Text with AI">
+    <Dialog size="'lg'" title.translate="Generate Text with AI" modalRef="modalRef">
         <div t-foreach="state.messages" t-as="message" t-key="message_index"
             class="position-relative py-1 px-3"
             t-att-class="message_index ? 'mt-2' : 'mt-0'">
