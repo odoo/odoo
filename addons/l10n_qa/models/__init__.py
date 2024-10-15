@@ -1,1 +1,1 @@
-from . import template_qa
+from .template_qa import AccountChartTemplate

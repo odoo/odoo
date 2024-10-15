@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from . import models
+from .models import (
+    IrActionsReport, MailMessage, MailNotification, MailThread, ResCompany,
+    ResConfigSettings, ResPartner, SnailmailLetter,
+)
 from . import country_utils
-from . import wizard
+from .wizard import SnailmailLetterFormatError, SnailmailLetterMissingRequiredFields

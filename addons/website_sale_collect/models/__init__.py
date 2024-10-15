@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import delivery_carrier
-from . import payment_provider
-from . import product_template
-from . import res_config_settings
-from . import sale_order
-from . import stock_warehouse
-from . import website
+from .delivery_carrier import DeliveryCarrier
+from .payment_provider import PaymentProvider
+from .product_template import ProductTemplate
+from .res_config_settings import ResConfigSettings
+from .sale_order import SaleOrder
+from .stock_warehouse import StockWarehouse
+from .website import Website

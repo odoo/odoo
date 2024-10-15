@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import (
+    AccountChartTemplate, AccountJournal, AccountMove, AccountPayment,
+    IrActionsReport, ResPartnerBank,
+)
 from . import report
-from . import wizard
+from .wizard import AccountSetupBankManualConfig, L10n_ChQr_InvoiceWizard
 
 
 def init_settings(env):

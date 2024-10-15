@@ -1,2 +1,2 @@
-from . import models
+from .models import PosPaymentMethod, PosSession
 from . import controllers

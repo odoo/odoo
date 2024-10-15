@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import demo
+from .models import (
+    AccountEdiFormat, AccountMove, L10nInEwaybillType, ResCompany,
+    ResConfigSettings,
+)
+from .demo import AccountChartTemplate

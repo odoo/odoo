@@ -1,1 +1,1 @@
-from . import models
+from .models import EventEvent, EventEventTicket, EventTypeTicket, ProductProduct, ProductTemplate

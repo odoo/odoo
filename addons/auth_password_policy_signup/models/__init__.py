@@ -1,1 +1,1 @@
-from . import ir_http
+from .ir_http import IrHttp

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from . import barcode_events_mixin
-from . import barcode_nomenclature
-from . import barcode_rule
-from . import ir_http
-from . import res_company
+from .barcode_events_mixin import BarcodesBarcode_Events_Mixin
+from .barcode_nomenclature import BarcodeNomenclature
+from .barcode_rule import BarcodeRule
+from .ir_http import IrHttp
+from .res_company import ResCompany

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import crm_lead
-from . import crm_team
-from . import res_users
-from . import sale_order
+from .crm_lead import CrmLead
+from .crm_team import CrmTeam
+from .res_users import ResUsers
+from .sale_order import SaleOrder

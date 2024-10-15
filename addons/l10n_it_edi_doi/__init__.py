@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import (
+    AccountChartTemplate, AccountFiscalPosition, AccountMove, AccountTax,
+    L10n_It_Edi_DoiDeclaration_Of_Intent, ResCompany, ResPartner, SaleOrder,
+)
 
 
 def _l10n_it_edi_doi_post_init(env):

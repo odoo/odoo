@@ -2,5 +2,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controller
-from . import models
+from .models import LinkTracker, LinkTrackerClick, LinkTrackerCode, MailRenderMixin, UtmCampaign
 from . import tools

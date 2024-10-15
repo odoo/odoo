@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import spreadsheet_dashboard_group
-from . import spreadsheet_dashboard
-from . import spreadsheet_dashboard_share
+from .spreadsheet_dashboard_group import SpreadsheetDashboardGroup
+from .spreadsheet_dashboard import SpreadsheetDashboard
+from .spreadsheet_dashboard_share import SpreadsheetDashboardShare

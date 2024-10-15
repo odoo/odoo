@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import hr_contract
-from . import hr_employee
-from . import hr_payroll_structure_type
-from . import ir_ui_menu
-from . import res_company
-from . import res_config_settings
-from . import res_users
-from . import resource
-from . import resource_calendar_leaves
-from . import resource_resource
+from .hr_contract import HrContract
+from .hr_employee import HrEmployee, HrEmployeeBase, HrEmployeePublic
+from .hr_payroll_structure_type import HrPayrollStructureType
+from .ir_ui_menu import IrUiMenu
+from .res_company import ResCompany
+from .res_config_settings import ResConfigSettings
+from .res_users import ResUsers
+from .resource import ResourceCalendar
+from .resource_calendar_leaves import ResourceCalendarLeaves
+from .resource_resource import ResourceResource

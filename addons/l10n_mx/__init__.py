@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import AccountAccount, AccountChartTemplate, AccountTax, ResBank, ResPartnerBank
 
 
 def _enable_group_uom_post_init(env):

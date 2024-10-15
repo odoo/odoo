@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 from . import controllers
-from . import models
-from . import wizard
+from .models import Auth_TotpDevice, ResUsers
+from .wizard import Auth_TotpWizard

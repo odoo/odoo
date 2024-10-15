@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import wizard
+from .models import (
+    DeliveryCarrier, ProductTemplate, SaleOrder, SaleOrderLine, StockMove,
+    StockMoveLine, StockPackageType, StockPicking, StockQuantPackage, StockRoute,
+)
+from .wizard import ChooseDeliveryCarrier, ChooseDeliveryPackage, StockReturnPicking
 
 
 def _auto_install_sale_app(env):

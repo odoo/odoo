@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import res_company
+from .res_company import ResCompany

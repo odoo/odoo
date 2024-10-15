@@ -2,9 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
-from . import report
-from . import wizard
+from .models import (
+    AccountAnalyticAccount, DigestDigest, IrUiMenu, MailMessage,
+    ProjectCollaborator, ProjectMilestone, ProjectProject, ProjectProjectStage, ProjectTags,
+    ProjectTask, ProjectTaskRecurrence, ProjectTaskStagePersonal, ProjectTaskType, ProjectUpdate,
+    ResConfigSettings, ResPartner,
+)
+from .report import ProjectTaskBurndownChartReport, ReportProjectTaskUser
+from .wizard import (
+    ProjectProjectStageDeleteWizard, ProjectShareCollaboratorWizard,
+    ProjectShareWizard, ProjectTaskTypeDeleteWizard,
+)
 
 from odoo.tools.sql import create_index
 

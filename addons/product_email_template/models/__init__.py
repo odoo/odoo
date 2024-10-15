@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from . import product
-from . import account_move
+from .product import ProductTemplate
+from .account_move import AccountMove

@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import models
-from . import report
-from . import wizard
+from .models import (
+    AccountAnalyticAccount, AccountAnalyticApplicability, AccountAnalyticLine,
+    AccountMove, AccountMoveLine, MrpProduction, MrpRoutingWorkcenter, MrpWorkcenter,
+    MrpWorkcenterProductivity, MrpWorkorder, ProductCategory, ProductProduct, ProductTemplate,
+    StockMove,
+)
+from .report import ReportMrpReport_Mo_Overview
+from .wizard import MrpAccountWipAccounting, MrpAccountWipAccountingLine
 
 
 def _configure_journals(env):

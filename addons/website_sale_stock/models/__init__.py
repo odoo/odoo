@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import website
-from . import product_product
-from . import product_template
-from . import res_config_settings
-from . import sale_order
-from . import sale_order_line
-from . import stock_picking
+from .website import Website
+from .product_product import ProductProduct
+from .product_template import ProductTemplate
+from .res_config_settings import ResConfigSettings
+from .sale_order import SaleOrder
+from .sale_order_line import SaleOrderLine
+from .stock_picking import StockPicking

@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import res_users
-from . import calendar
-from . import crm_lead
-from . import crm_lost_reason
-from . import crm_stage
-from . import crm_team
-from . import crm_team_member
-from . import ir_config_parameter
-from . import res_config_settings
-from . import res_partner
-from . import digest
-from . import crm_lead_scoring_frequency
-from . import utm
-from . import crm_recurring_plan
-from . import mail_activity
+from .res_users import ResUsers
+from .calendar import CalendarEvent
+from .crm_lead import CrmLead
+from .crm_lost_reason import CrmLostReason
+from .crm_stage import CrmStage
+from .crm_team import CrmTeam
+from .crm_team_member import CrmTeamMember
+from .ir_config_parameter import IrConfig_Parameter
+from .res_config_settings import ResConfigSettings
+from .res_partner import ResPartner
+from .digest import DigestDigest
+from .crm_lead_scoring_frequency import CrmLeadScoringFrequency, CrmLeadScoringFrequencyField
+from .utm import UtmCampaign
+from .crm_recurring_plan import CrmRecurringPlan
+from .mail_activity import MailActivity

@@ -1,3 +1,3 @@
-from . import pos_config
-from . import pos_order
-from . import res_config_settings
+from .pos_config import PosConfig
+from .pos_order import PosOrder
+from .res_config_settings import ResConfigSettings

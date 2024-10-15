@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import account_move
-from . import account_move_send
-from . import account_tax
+from .account_move import AccountMove, AccountMoveLine
+from .account_move_send import AccountMoveSend
+from .account_tax import AccountTax
 from . import l10n_hu_edi_connection
-from . import product
-from . import res_partner
-from . import res_company
-from . import res_config_settings
-from . import template_hu
-from . import uom_uom
+from .product import ProductTemplate
+from .res_partner import ResPartner
+from .res_company import ResCompany
+from .res_config_settings import ResConfigSettings
+from .template_hu import AccountChartTemplate
+from .uom_uom import UomUom

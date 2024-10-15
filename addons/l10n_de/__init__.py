@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import (
+    AccountAccount, AccountChartTemplate, AccountJournal, AccountMove, AccountTax,
+    IrActionsReport, IrAttachment, ProductTemplate, ResCompany,
+)
 
 
 def _post_init_hook(env):

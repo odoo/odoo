@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import event_event
-from . import event_track
-from . import event_track_visitor
-from . import event_quiz
+from .event_event import EventEvent
+from .event_track import EventTrack
+from .event_track_visitor import EventTrackVisitor
+from .event_quiz import EventQuiz, EventQuizAnswer, EventQuizQuestion

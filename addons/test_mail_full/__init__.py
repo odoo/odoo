@@ -1,2 +1,5 @@
 from . import controllers
-from . import models
+from .models import (
+    MailTestPortal, MailTestPortalNoPartner, MailTestRating, MailTestRatingThread,
+    MailTestRatingThreadRead,
+)

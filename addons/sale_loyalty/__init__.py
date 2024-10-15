@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import wizard
+from .models import (
+    LoyaltyCard, LoyaltyHistory, LoyaltyProgram, LoyaltyReward, SaleOrder,
+    SaleOrderCouponPoints, SaleOrderLine,
+)
+from .wizard import SaleLoyaltyCouponWizard, SaleLoyaltyRewardWizard
 
 
 def uninstall_hook(env):

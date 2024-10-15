@@ -1,4 +1,7 @@
 # -*- encoding: utf-8 -*-
 
-from . import models
-from . import wizard
+from .models import (
+    AccountEdiDocument, AccountEdiFormat, AccountJournal, AccountMove,
+    AccountMoveSend, IrActionsReport, IrAttachment,
+)
+from .wizard import AccountResequenceWizard

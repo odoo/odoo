@@ -2,5 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
-from . import report
+from .models import (
+    LunchAlert, LunchCashmove, LunchLocation, LunchOrder, LunchProduct,
+    LunchProductCategory, LunchSupplier, LunchTopping, ResCompany, ResConfigSettings, ResUsers,
+)
+from .report import LunchCashmoveReport

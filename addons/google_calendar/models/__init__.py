@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import res_config_settings
-from . import google_sync
-from . import calendar
-from . import calendar_recurrence_rule
-from . import res_users
-from . import res_users_settings
-from . import calendar_attendee
+from .res_config_settings import ResConfigSettings
+from .google_sync import GoogleCalendarSync
+from .calendar import CalendarEvent
+from .calendar_recurrence_rule import CalendarRecurrence
+from .res_users import ResUsers
+from .res_users_settings import ResUsersSettings
+from .calendar_attendee import CalendarAttendee

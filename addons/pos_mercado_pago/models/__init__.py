@@ -1,3 +1,3 @@
 from . import mercado_pago_pos_request
-from . import pos_payment_method
-from . import pos_session
+from .pos_payment_method import PosPaymentMethod
+from .pos_session import PosSession

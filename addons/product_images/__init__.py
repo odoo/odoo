@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import wizard
+from .models import IrCronTrigger, ProductProduct, ResConfigSettings
+from .wizard import ProductFetchImageWizard
 
 
 def uninstall_hook(env):

@@ -1,1 +1,1 @@
-from . import account_move_send_wizard
+from .account_move_send_wizard import AccountMoveSendWizard

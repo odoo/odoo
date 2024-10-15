@@ -1,2 +1,2 @@
 from . import template_sn
-from . import template_sn_syscebnl
+from .template_sn_syscebnl import AccountChartTemplate

@@ -1,1 +1,1 @@
-from . import template_cy
+from .template_cy import AccountChartTemplate

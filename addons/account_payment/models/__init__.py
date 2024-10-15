@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import account_journal
-from . import account_move
-from . import account_payment
-from . import account_payment_method
-from . import account_payment_method_line
-from . import onboarding_onboarding_step
-from . import payment_provider
-from . import payment_transaction
+from .account_journal import AccountJournal
+from .account_move import AccountMove
+from .account_payment import AccountPayment
+from .account_payment_method import AccountPaymentMethod
+from .account_payment_method_line import AccountPaymentMethodLine
+from .onboarding_onboarding_step import OnboardingOnboardingStep
+from .payment_provider import PaymentProvider
+from .payment_transaction import PaymentTransaction

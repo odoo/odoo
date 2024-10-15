@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import link_tracker
+from .link_tracker import LinkTracker

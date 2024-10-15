@@ -1,3 +1,3 @@
-from . import account_edi_proxy_user
-from . import key
-from . import res_company
+from .account_edi_proxy_user import Account_Edi_Proxy_ClientUser
+from .key import CertificateKey
+from .res_company import ResCompany

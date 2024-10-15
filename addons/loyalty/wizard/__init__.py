@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import base_partner_merge
-from . import loyalty_card_update_balance
-from . import loyalty_generate_wizard
+from .base_partner_merge import BasePartnerMergeAutomaticWizard
+from .loyalty_card_update_balance import LoyaltyCardUpdateBalance
+from .loyalty_generate_wizard import LoyaltyGenerateWizard

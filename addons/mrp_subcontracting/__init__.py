@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from . import models
-from . import report
-from . import wizard
+from .models import (
+    MrpBom, MrpProduction, ProductProduct, ProductSupplierinfo, ResCompany,
+    ResPartner, StockLocation, StockMove, StockMoveLine, StockPicking, StockQuant,
+    StockReplenishMixin, StockRule, StockWarehouse,
+)
+from .report import ReportMrpReport_Bom_Structure
+from .wizard import (
+    ChangeProductionQty, MrpConsumptionWarning, StockReturnPicking,
+    StockReturnPickingLine,
+)
 from . import controllers
 
 

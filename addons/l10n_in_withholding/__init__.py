@@ -1,5 +1,8 @@
-from . import models
-from . import wizard
+from .models import (
+    AccountAccount, AccountChartTemplate, AccountMove, AccountMoveLine,
+    AccountPayment, AccountTax, L10n_InSectionAlert, ResCompany, ResConfigSettings,
+)
+from .wizard import L10n_InWithholdWizard, L10n_InWithholdWizardLine
 
 import logging
 

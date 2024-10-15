@@ -1,8 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
-from . import report
+from .models import (
+    AccountMove, CrmTeam, DeliveryCarrier, DigestDigest, IrHttp, PaymentToken,
+    ProductAttribute, ProductDocument, ProductImage, ProductPricelist, ProductProduct,
+    ProductPublicCategory, ProductRibbon, ProductTag, ProductTemplate,
+    ProductTemplateAttributeLine, ProductTemplateAttributeValue, ResCompany, ResConfigSettings,
+    ResPartner, SaleOrder, SaleOrderLine, Website, WebsiteBaseUnit, WebsiteMenu,
+    WebsiteSaleExtraField, WebsiteSnippetFilter, WebsiteTrack, WebsiteVisitor,
+)
+from .report import SaleReport
 
 
 def _post_init_hook(env):

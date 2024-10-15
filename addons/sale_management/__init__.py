@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import (
+    DigestDigest, ResCompany, ResConfigSettings, SaleOrder, SaleOrderLine,
+    SaleOrderOption, SaleOrderTemplate, SaleOrderTemplateLine, SaleOrderTemplateOption,
+)
 from . import controllers
 from odoo.tools.sql import column_exists, create_column
 

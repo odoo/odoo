@@ -2,9 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
-from . import report
-from . import wizard
+from .models import (
+    CalendarEvent, HrDepartment, HrEmployee, HrEmployeeBase, HrLeave,
+    HrLeaveAccrualLevel, HrLeaveAccrualPlan, HrLeaveAllocation, HrLeaveMandatoryDay, HrLeaveType,
+    MailMessageSubtype, ResPartner, ResUsers, ResourceCalendar, ResourceCalendarLeaves,
+)
+from .report import (
+    HrLeaveEmployeeTypeReport, HrLeaveReport, HrLeaveReportCalendar,
+    ReportHr_HolidaysReport_Holidayssummary,
+)
+from .wizard import (
+    HrDepartureWizard, HrHolidaysCancelLeave, HrHolidaysSummaryEmployee,
+    HrLeaveAllocationGenerateMultiWizard, HrLeaveGenerateMultiWizard,
+)
 
 from odoo import api, SUPERUSER_ID
 

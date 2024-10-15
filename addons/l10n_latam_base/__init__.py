@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import models
+from .models import L10n_LatamIdentificationType, ResCompany, ResPartner
 
 
 def _set_default_identification_type(env):

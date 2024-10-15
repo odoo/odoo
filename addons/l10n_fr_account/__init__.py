@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
-from . import models
-from . import wizard
+from .models import AccountChartTemplate, AccountMove, ResCompany
+from .wizard import L10n_FrFecExportWizard
 
 from odoo.addons.account.models.chart_template import preserve_existing_tags_on_taxes
 

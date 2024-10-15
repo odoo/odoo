@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import ir_http
-from . import ir_qweb
-from . import res_lang
+from .ir_http import IrHttp
+from .ir_qweb import IrQweb
+from .res_lang import ResLang

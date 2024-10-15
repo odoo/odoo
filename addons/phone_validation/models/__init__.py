@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import phone_blacklist
-from . import mail_thread_phone
-from . import models
-from . import res_partner
-from . import res_users
+from .phone_blacklist import PhoneBlacklist
+from .mail_thread_phone import MailThreadPhone
+from .models import Base
+from .res_partner import ResPartner
+from .res_users import ResUsers

@@ -1,1 +1,1 @@
-from . import models
+from .models import PurchaseEdiXmlUbl_Bis3, PurchaseOrder

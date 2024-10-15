@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import models
-from . import wizard
+from .models import (
+    AccountJournal, AccountPayment, AccountPaymentMethod, ResCompany,
+    ResConfigSettings,
+)
+from .wizard import PrintPrenumberedChecks
 
 
 def create_check_sequence_on_bank_journals(env):

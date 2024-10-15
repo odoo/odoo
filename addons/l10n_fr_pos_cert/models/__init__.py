@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import account_fiscal_position
-from . import res_company
-from . import pos
-from . import account_closing
+from .account_fiscal_position import AccountFiscalPosition
+from .res_company import ResCompany
+from .pos import PosConfig, PosOrder, PosOrderLine, PosSession
+from .account_closing import AccountSaleClosing

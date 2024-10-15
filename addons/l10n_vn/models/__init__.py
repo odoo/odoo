@@ -1,4 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import account_move
-from . import res_bank
-from . import template_vn
+from .account_move import AccountMove
+from .res_bank import ResPartnerBank
+from .template_vn import AccountChartTemplate

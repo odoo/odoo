@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import product_attribute
-from . import product_attribute_category
-from . import product_product
-from . import product_template_attribute_line
+from .product_attribute import ProductAttribute
+from .product_attribute_category import ProductAttributeCategory
+from .product_product import ProductProduct
+from .product_template_attribute_line import ProductTemplateAttributeLine

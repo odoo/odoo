@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import res_company # has to be before hr_holidays to create needed columns on res.company
-from . import account_analytic
-from . import hr_holidays
-from . import project_task
-from . import res_config_settings
-from . import resource_calendar_leaves
-from . import hr_employee
+from .res_company import ResCompany  # has to be before hr_holidays to create needed columns on res.company
+from .account_analytic import AccountAnalyticLine
+from .hr_holidays import HrLeave, HrLeaveType
+from .project_task import ProjectTask
+from .res_config_settings import ResConfigSettings
+from .resource_calendar_leaves import ResourceCalendarLeaves
+from .hr_employee import HrEmployee

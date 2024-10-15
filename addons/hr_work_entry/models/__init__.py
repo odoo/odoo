@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import hr_work_entry
-from . import resource
-from . import hr_employee
+from .hr_work_entry import HrUserWorkEntryEmployee, HrWorkEntry, HrWorkEntryType
+from .resource import ResourceCalendarAttendance, ResourceCalendarLeaves
+from .hr_employee import HrEmployee

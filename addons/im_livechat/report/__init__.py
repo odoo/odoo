@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
-from . import im_livechat_report_channel
-from . import im_livechat_report_operator
+from .im_livechat_report_channel import Im_LivechatReportChannel
+from .im_livechat_report_operator import Im_LivechatReportOperator

@@ -1,2 +1,2 @@
 # coding: utf-8
-from . import sale_report
+from .sale_report import SaleReport

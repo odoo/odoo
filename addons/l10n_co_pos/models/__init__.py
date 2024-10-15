@@ -1,1 +1,1 @@
-from . import pos_order
+from .pos_order import PosOrder

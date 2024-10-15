@@ -1,8 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
-from . import wizards
+from .models import (
+    AccountJournal, AccountMove, AccountPayment, AccountPaymentMethod,
+    AccountPaymentMethodLine, OnboardingOnboardingStep, PaymentTransaction,
+)
+from .wizards import (
+    AccountPaymentRegister, PaymentLinkWizard, PaymentRefundWizard,
+    ResConfigSettings,
+)
 
 
 def post_init_hook(env):

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from . import models
+from .models import (
+    BarcodeNomenclature, BarcodeRule, BarcodesBarcode_Events_Mixin, IrHttp,
+    ResCompany,
+)
 
 
 def _assign_default_nomeclature_id(env):

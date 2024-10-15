@@ -1,8 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
-from . import wizard
+from .models import (
+    AccountJournal, AccountMove, AccountMoveSend, Account_Edi_Proxy_ClientUser,
+    ResCompany, ResConfigSettings, ResPartner,
+)
+from .wizard import (
+    AccountMoveSendBatchWizard, AccountMoveSendWizard, Account_PeppolService,
+    Account_PeppolServiceWizard, PeppolRegistration,
+)
 from . import tools
 
 

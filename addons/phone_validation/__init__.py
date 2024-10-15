@@ -3,5 +3,5 @@
 
 from . import lib
 from . import tools
-from . import models
-from . import wizard
+from .models import Base, MailThreadPhone, PhoneBlacklist, ResPartner, ResUsers
+from .wizard import PhoneBlacklistRemove

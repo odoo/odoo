@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import wizard
+from .models import (
+    ProcurementGroup, ProductProduct, ProductTemplate, ResConfigSettings, StockLot,
+    StockMove, StockMoveLine, StockPicking, StockQuant,
+)
+from .wizard import ExpiryPickingConfirmation
 
 from odoo import api, SUPERUSER_ID, Command
 

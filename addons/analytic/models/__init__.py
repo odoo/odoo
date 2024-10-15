@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import analytic_plan
-from . import analytic_account
-from . import analytic_line
-from . import analytic_mixin
-from . import analytic_distribution_model
-from . import res_config_settings
+from .analytic_plan import AccountAnalyticApplicability, AccountAnalyticPlan
+from .analytic_account import AccountAnalyticAccount
+from .analytic_line import AccountAnalyticLine, AnalyticPlanFieldsMixin
+from .analytic_mixin import AnalyticMixin
+from .analytic_distribution_model import AccountAnalyticDistributionModel
+from .res_config_settings import ResConfigSettings

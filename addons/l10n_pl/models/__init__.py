@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import product
-from . import account_move
-from . import res_partner
-from . import res_company
-from . import res_config_settings
-from . import l10n_pl_tax_office
-from . import template_pl
+from .product import ProductTemplate
+from .account_move import AccountMove
+from .res_partner import ResPartner
+from .res_company import ResCompany
+from .res_config_settings import ResConfigSettings
+from .l10n_pl_tax_office import L10n_PlL10n_Pl_Tax_Office
+from .template_pl import AccountChartTemplate

@@ -2,49 +2,71 @@
 
 from . import assetsbundle
 
-from . import ir_model
-from . import ir_sequence
-from . import ir_ui_menu
-from . import ir_ui_view
-from . import ir_asset
-from . import ir_actions
-from . import ir_embedded_actions
-from . import ir_actions_report
-from . import ir_attachment
-from . import ir_binary
-from . import ir_cron
-from . import ir_filters
-from . import ir_default
-from . import ir_exports
-from . import ir_rule
-from . import ir_config_parameter
-from . import ir_autovacuum
-from . import ir_mail_server
-from . import ir_fields
-from . import ir_qweb
-from . import ir_qweb_fields
-from . import ir_http
-from . import ir_logging
-from . import ir_module
-from . import ir_demo
-from . import ir_demo_failure
-from . import report_layout
-from . import report_paperformat
+from .ir_model import (
+    IrModel, IrModelAccess, IrModelConstraint, IrModelData, IrModelFields,
+    IrModelFieldsSelection, IrModelInherit, IrModelRelation, WizardIrModelMenuCreate,
+)
+from .ir_sequence import IrSequence, IrSequenceDate_Range
+from .ir_ui_menu import IrUiMenu
+from .ir_ui_view import Base, IrUiView, IrUiViewCustom, ResetViewArchWizard
+from .ir_asset import IrAsset
+from .ir_actions import (
+    IrActionsAct_Url, IrActionsAct_Window, IrActionsAct_WindowView,
+    IrActionsAct_Window_Close, IrActionsActions, IrActionsClient, IrActionsServer, IrActionsTodo,
+)
+from .ir_embedded_actions import IrEmbeddedActions
+from .ir_actions_report import IrActionsReport
+from .ir_attachment import IrAttachment
+from .ir_binary import IrBinary
+from .ir_cron import IrCron, IrCronProgress, IrCronTrigger
+from .ir_filters import IrFilters
+from .ir_default import IrDefault
+from .ir_exports import IrExports, IrExportsLine
+from .ir_rule import IrRule
+from .ir_config_parameter import IrConfig_Parameter
+from .ir_autovacuum import IrAutovacuum
+from .ir_mail_server import IrMail_Server
+from .ir_fields import IrFieldsConverter
+from .ir_qweb import IrQweb
+from .ir_qweb_fields import (
+    IrQwebField, IrQwebFieldBarcode, IrQwebFieldContact, IrQwebFieldDate,
+    IrQwebFieldDatetime, IrQwebFieldDuration, IrQwebFieldFloat, IrQwebFieldFloat_Time,
+    IrQwebFieldHtml, IrQwebFieldImage, IrQwebFieldImage_Url, IrQwebFieldInteger,
+    IrQwebFieldMany2many, IrQwebFieldMany2one, IrQwebFieldMonetary, IrQwebFieldQweb,
+    IrQwebFieldRelative, IrQwebFieldSelection, IrQwebFieldText, IrQwebFieldTime,
+)
+from .ir_http import IrHttp
+from .ir_logging import IrLogging
+from .ir_module import (
+    IrModuleCategory, IrModuleModule, IrModuleModuleDependency,
+    IrModuleModuleExclusion,
+)
+from .ir_demo import IrDemo
+from .ir_demo_failure import IrDemo_Failure, IrDemo_FailureWizard
+from .report_layout import ReportLayout
+from .report_paperformat import ReportPaperformat
 
-from . import ir_profile
-from . import image_mixin
-from . import avatar_mixin
+from .ir_profile import BaseEnableProfilingWizard, IrProfile
+from .image_mixin import ImageMixin
+from .avatar_mixin import AvatarMixin
 
-from . import res_country
-from . import res_lang
-from . import res_partner
-from . import res_bank
-from . import res_config
-from . import res_currency
-from . import res_company
-from . import res_users
-from . import res_users_settings
-from . import res_users_deletion
-from . import res_device
+from .res_country import ResCountry, ResCountryGroup, ResCountryState
+from .res_lang import ResLang
+from .res_partner import (
+    FormatAddressMixin, FormatVatLabelMixin, ResPartner, ResPartnerCategory,
+    ResPartnerIndustry, ResPartnerTitle,
+)
+from .res_bank import ResBank, ResPartnerBank
+from .res_config import ResConfig, ResConfigSettings
+from .res_currency import ResCurrency, ResCurrencyRate
+from .res_company import ResCompany
+from .res_users import (
+    ChangePasswordOwn, ChangePasswordUser, ChangePasswordWizard, ResGroups,
+    ResUsers, ResUsersApikeys, ResUsersApikeysDescription, ResUsersApikeysShow,
+    ResUsersIdentitycheck, ResUsersLog,
+)
+from .res_users_settings import ResUsersSettings
+from .res_users_deletion import ResUsersDeletion
+from .res_device import ResDevice, ResDeviceLog
 
-from . import decimal_precision
+from .decimal_precision import DecimalPrecision

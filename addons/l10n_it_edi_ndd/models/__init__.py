@@ -1,3 +1,3 @@
-from . import account_move
-from . import account_payment_methode_line
-from . import l10n_it_document_type
+from .account_move import AccountMove
+from .account_payment_methode_line import AccountPaymentMethodLine
+from .l10n_it_document_type import L10n_ItDocumentType

@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import membership_invoice
+from .membership_invoice import MembershipInvoice

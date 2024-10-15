@@ -1,1 +1,1 @@
-from . import l10n_in_withhold_wizard
+from .l10n_in_withhold_wizard import L10n_InWithholdWizard, L10n_InWithholdWizardLine

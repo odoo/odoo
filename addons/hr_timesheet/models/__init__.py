@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import analytic_applicability
-from . import hr_employee
-from . import hr_timesheet
-from . import ir_http
-from . import ir_ui_menu
-from . import res_company
-from . import res_config_settings
-from . import project_project
-from . import project_task
-from . import project_update
-from . import project_collaborator
-from . import uom_uom
+from .analytic_applicability import AccountAnalyticApplicability
+from .hr_employee import HrEmployee
+from .hr_timesheet import AccountAnalyticLine
+from .ir_http import IrHttp
+from .ir_ui_menu import IrUiMenu
+from .res_company import ResCompany
+from .res_config_settings import ResConfigSettings
+from .project_project import ProjectProject
+from .project_task import ProjectTask
+from .project_update import ProjectUpdate
+from .project_collaborator import ProjectCollaborator
+from .uom_uom import UomUom

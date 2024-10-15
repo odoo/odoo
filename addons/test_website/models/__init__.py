@@ -1,3 +1,3 @@
-from . import model
-from . import res_config_settings
-from . import website
+from .model import TestModel, TestModelExposed, TestModelMultiWebsite, TestSubmodel, TestTag
+from .res_config_settings import ResConfigSettings
+from .website import Website

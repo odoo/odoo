@@ -1,1 +1,1 @@
-from . import mail_compose_message
+from .mail_compose_message import MailComposeMessage

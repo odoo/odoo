@@ -13,6 +13,9 @@ except ImportError:
     pass
 
 from . import controllers
-from . import models
+from .models import (
+    IrHttp, IrQweb, IrUiView, MailMessage, MailThread, PortalMixin,
+    ResConfigSettings, ResPartner, ResUsersApikeysDescription,
+)
 from . import utils
-from . import wizard
+from .wizard import PortalShare, PortalWizard, PortalWizardUser

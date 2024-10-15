@@ -1,1 +1,1 @@
-from . import account_tax
+from .account_tax import AccountTax

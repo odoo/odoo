@@ -1,10 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import (
+    AccountAnalyticApplicability, AccountAnalyticLine, AccountChartTemplate,
+    AccountMove, AccountMoveLine, CrmTeam, PaymentProvider, PaymentTransaction,
+    ProductAttributeCustomValue, ProductDocument, ProductPackaging, ProductProduct,
+    ProductTemplate, ResCompany, ResPartner, SaleOrder, SaleOrderLine, UtmCampaign,
+)
 from . import controllers
-from . import report
-from . import wizard
+from .report import AccountInvoiceReport, SaleReport
+from .wizard import (
+    BaseDocumentLayout, PaymentLinkWizard, ResConfigSettings,
+    SaleAdvancePaymentInv, SaleMassCancelOrders, SaleOrderCancel, SaleOrderDiscount,
+    SalePaymentProviderOnboardingWizard,
+)
 
 
 def _post_init_hook(env):
