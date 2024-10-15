@@ -58,7 +58,7 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
         }
         // handle success
         request.addEventListener("load", () => {
-            if (request.status === 502) {
+            if (request.status === 502 || request.status === 503) {
                 // If Odoo is behind another server (eg.: nginx)
                 if (!settings.silent) {
                     bus.trigger("RPC:RESPONSE", data.id);
