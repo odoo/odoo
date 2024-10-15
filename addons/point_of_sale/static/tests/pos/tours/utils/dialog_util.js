@@ -1,4 +1,4 @@
-import { negate } from "@point_of_sale/../tests/tours/utils/common";
+import { negate } from "@point_of_sale/../tests/pos/tours/utils/common";
 
 export function confirm(confirmationText, button = ".btn-primary") {
     let trigger = `.modal .modal-footer ${button}`;

@@ -1,6 +1,6 @@
-import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
-import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
-import { isSyncStatusConnected } from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import { isSyncStatusConnected } from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 
 export function clickDiscard() {
     return {

@@ -82,7 +82,7 @@
         "pos_self_order.assets_tests": [
             ("include", "point_of_sale.base_tests"),
             "pos_self_order/static/tests/**/*",
-            "point_of_sale/static/tests/tours/utils/numpad_util.js",
+            "point_of_sale/static/tests/pos/tours/utils/numpad_util.js",
         ],
     },
     'post_init_hook': '_post_self_order_post_init',

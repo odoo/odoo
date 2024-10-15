@@ -1,4 +1,4 @@
-import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as Order from "@point_of_sale/../tests/generic_components_helpers/order_widget_util";
 
 export function clickOrderline(productName) {
     return Order.hasLine({ productName, run: "click" });

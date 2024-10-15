@@ -1,10 +1,10 @@
-import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
-import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import { back as utilsBack, inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
-import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
-import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
-import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
-import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as Numpad from "@point_of_sale/../tests/pos/tours/utils/numpad_util";
+import * as Order from "@point_of_sale/../tests/generic_components_helpers/order_widget_util";
+import { back as utilsBack, inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
+import * as TextInputPopup from "@point_of_sale/../tests/pos/tours/utils/text_input_popup_util";
+import * as Dialog from "@point_of_sale/../tests/pos/tours/utils/dialog_util";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 
 export function clickLine(productName, quantity = "1.0") {
     return inLeftSide([

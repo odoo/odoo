@@ -4,7 +4,7 @@ import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirmation_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
-import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as Numpad from "@point_of_sale/../tests/pos/tours/utils/numpad_util";
 
 registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
     test: true,

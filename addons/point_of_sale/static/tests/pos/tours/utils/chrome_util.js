@@ -1,5 +1,5 @@
-import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
-import { negate } from "@point_of_sale/../tests/tours/utils/common";
+import * as Dialog from "@point_of_sale/../tests/pos/tours/utils/dialog_util";
+import { negate } from "@point_of_sale/../tests/pos/tours/utils/common";
 
 export function confirmPopup() {
     return [Dialog.confirm()];

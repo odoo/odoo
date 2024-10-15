@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
-import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
-import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as Dialog from "@point_of_sale/../tests/pos/tours/utils/dialog_util";
+import * as Numpad from "@point_of_sale/../tests/pos/tours/utils/numpad_util";
 
 function selectNthOrder(n) {
     return [

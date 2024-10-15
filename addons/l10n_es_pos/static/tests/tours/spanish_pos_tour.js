@@ -1,9 +1,9 @@
-import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
-import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
-import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
-import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
-import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
+import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as Dialog from "@point_of_sale/../tests/pos/tours/utils/dialog_util";
+import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 import { registry } from "@web/core/registry";
 import { checkSimplifiedInvoiceNumber, pay } from "./utils/receipt_util";
 

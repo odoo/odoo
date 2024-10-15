@@ -1,10 +1,10 @@
 import * as PosHr from "@pos_hr/../tests/tours/utils/pos_hr_helpers";
-import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
-import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
-import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
-import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
-import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
-import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
+import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as NumberPopup from "@point_of_sale/../tests/pos/tours/utils/number_popup_util";
+import * as Dialog from "@point_of_sale/../tests/pos/tours/utils/dialog_util";
+import * as SelectionPopup from "@point_of_sale/../tests/pos/tours/utils/selection_popup_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosHrTour", {

@@ -1,6 +1,6 @@
 import { queryOne } from "@odoo/hoot-dom";
-import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
-import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as NumberPopup from "@point_of_sale/../tests/pos/tours/utils/number_popup_util";
+import * as Dialog from "@point_of_sale/../tests/pos/tours/utils/dialog_util";
 
 export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
     let trigger = `.floor-map .table${withClass}`;

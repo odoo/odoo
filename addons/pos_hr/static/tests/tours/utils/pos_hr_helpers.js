@@ -1,6 +1,6 @@
-import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
-import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
-import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
+import * as SelectionPopup from "@point_of_sale/../tests/pos/tours/utils/selection_popup_util";
+import * as Dialog from "@point_of_sale/../tests/pos/tours/utils/dialog_util";
+import * as NumberPopup from "@point_of_sale/../tests/pos/tours/utils/number_popup_util";
 
 export function clickLoginButton() {
     return [
