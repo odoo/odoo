@@ -19,6 +19,11 @@ class AccountChartTemplate(models.AbstractModel):
         demo_data = {}
         if company.account_fiscal_country_id.code == "IN":
             if company.state_id:
+
+                self.env['res.config.settings'].create({
+                    'l10n_in_is_gst_registered': True,
+                }).execute()
+
                 demo_data = {
                     'res.partner.category': self._get_demo_data_res_partner_category(company),
                     'res.partner': self._get_demo_data_partner(company),
