@@ -29,7 +29,7 @@
 
     'assets': {
         'web.assets_backend': [
-            'mysterious_egg/static/src/builder/**/*',
+            'mysterious_egg/static/src/**/*',
             ('remove', 'mysterious_egg/static/src/builder/**/*'),
         ],
         # this bundle is lazy loaded when the editor is ready
