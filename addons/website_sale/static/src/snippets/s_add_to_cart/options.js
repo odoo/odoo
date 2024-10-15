@@ -39,7 +39,7 @@ options.registry.AddToCart = options.Class.extend({
         this._resetAction();
         this._setButtonDisabled(false);
 
-        await this._fetchVariants(widgetValue);
+        await this._fetchProductData(widgetValue);
         this.rerender = true;
         this._updateButton();
 
@@ -73,13 +73,24 @@ options.registry.AddToCart = options.Class.extend({
     },
 
     /**
-     * Fetches the variants ids from the server
+     * Fetch data about the provided product template from the server.
+     *
+     * More precisely, this method fetches:
+     * - The template's variant ids,
+     * - Whether the template is a combo product.
+     *
+     * @param productTemplateId The id of the product template whose data to fetch.
      */
-    async _fetchVariants(productTemplateId) {
+    async _fetchProductData(productTemplateId) {
         const response = await this.orm.searchRead(
-            "product.product", [["product_tmpl_id", "=", parseInt(productTemplateId)]], ["id"]
+            'product.product',
+            [['product_tmpl_id', '=', parseInt(productTemplateId)]],
+            ['id', 'type'],
         );
         this.$target[0].dataset.variants = response.map(variant => variant.id);
+        // If the template is a combo product, it has only one variant (i.e. `response` has a single
+        // item).
+        this.$target[0].dataset.isCombo = response.some(variant => variant.type === 'combo');
     },
 
 
@@ -132,6 +143,7 @@ options.registry.AddToCart = options.Class.extend({
         // it mimics the previous logic. We'll fix this later on.
         buttonEl.dataset.productVariantId =
             variantIds.length > 1 ? this.$target[0].dataset.productVariant : variantIds[0];
+        buttonEl.dataset.isCombo = this.$target[0].dataset.isCombo;
         buttonEl.dataset.action = this.$target[0].dataset.action;
         this._updateButtonContent();
     },
