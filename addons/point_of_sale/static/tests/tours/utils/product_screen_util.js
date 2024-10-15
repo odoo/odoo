@@ -368,11 +368,17 @@ export function selectedOrderlineHas(productName, quantity, price) {
 export function orderIsEmpty() {
     return inLeftSide(Order.doesNotHaveLine());
 }
-export function productIsDisplayed(name) {
+
+/**
+ * @param {number} position The position of the product in the list. If -1 (default), the product can be anywhere in the list.
+ */
+export function productIsDisplayed(name, position = -1) {
     return [
         {
             content: `'${name}' should be displayed`,
-            trigger: `.product-list .product-name:contains("${name}")`,
+            trigger: `.product-list ${
+                position > -1 ? `article:eq(${position})` : ""
+            } .product-name:contains("${name}")`,
         },
     ];
 }
