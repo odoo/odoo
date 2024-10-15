@@ -91,6 +91,18 @@ export class DeletePlugin extends Plugin {
     setup() {
         this.findPreviousPosition = this.makeFindPositionFn("backward");
         this.findNextPosition = this.makeFindPositionFn("forward");
+        this.config.disableFloatingToolbar = true;
+
+        const loggerArea = this.document.createElement("div");
+        this.editable.before(loggerArea);
+        this.log = (message) => {
+            const p = this.document.createElement("P");
+            p.textContent = message;
+            loggerArea.append(p);
+            if (loggerArea.childElementCount > 5) {
+                loggerArea.firstChild.remove();
+            }
+        };
     }
 
     handleCommand(command, payload) {
@@ -162,8 +174,10 @@ export class DeletePlugin extends Plugin {
 
         if (!selection.isCollapsed) {
             this.deleteSelection(selection);
+            console.log("delete selection called");
         } else if (direction === "backward") {
             this.deleteBackward(selection, granularity);
+            console.log("delete backward called");
         } else if (direction === "forward") {
             this.deleteForward(selection, granularity);
         } else {
@@ -1178,6 +1192,7 @@ export class DeletePlugin extends Plugin {
         };
         const argsForDelete = handledInputTypes[ev.inputType];
         if (argsForDelete) {
+            this.log(`onBeforeInputDelete: ${serializeCurrentSelection()}`);
             ev.preventDefault();
             if (isAndroid()) {
                 this.handleBeforeInputAndroid(argsForDelete);
@@ -1218,6 +1233,7 @@ export class DeletePlugin extends Plugin {
         const lastRecodedSelection = this.getLastRecordedSelection();
         if (lastRecodedSelection && !selectionsAreEqual(lastRecodedSelection, currentSelection)) {
             this.shared.setSelection(lastRecodedSelection, { normalize: false });
+            console.log("selection fixed pre-delete");
             this.dispatch("HISTORY_STAGE_SELECTION");
         }
     }
@@ -1243,6 +1259,7 @@ export class DeletePlugin extends Plugin {
     }
 
     onSelectionChange({ editableSelection }) {
+        this.log(`onSelectionChange: ${serializeCurrentSelection()}`);
         this.recordSelection(editableSelection);
 
         if (this.runOnceOnSelectionChange) {
@@ -1270,6 +1287,7 @@ export class DeletePlugin extends Plugin {
         let lastSelection = this.selectionHistory?.at(-1);
         while (lastSelection && !lastSelection.trusted && lastSelection.timestamp > now - DELTA) {
             // Discard non-legit selection.
+            console.log("non-legit recorded selection discarded");
             this.selectionHistory.pop();
             lastSelection = this.selectionHistory.at(-1);
         }
@@ -1369,3 +1387,9 @@ export class DeletePlugin extends Plugin {
         return { startContainer, startOffset, endContainer, endOffset, commonAncestorContainer };
     }
 }
+
+const serializeCurrentSelection = () => {
+    const { anchorNode, anchorOffset, focusNode, focusOffset, isCollapsed } =
+        document.getSelection();
+    return `{ anchorNode: ${anchorNode?.nodeName}, anchorOffset: ${anchorOffset}, focusNode: ${focusNode?.nodeName}, focusOffset: ${focusOffset}, isCollapsed: ${isCollapsed} }`;
+};
