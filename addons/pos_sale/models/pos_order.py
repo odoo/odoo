@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import float_compare, float_is_zero, format_date
 
 
 class PosOrder(models.Model):
@@ -60,7 +60,11 @@ class PosOrder(models.Model):
                         self.env['sale.advance.payment.inv']._prepare_down_payment_section_values(sale_order_origin)
                     )
                 order_reference = line.name
-                sale_order_line_description = _("Down payment (ref: %(order_reference)s on \n %(date)s)", order_reference=order_reference, date=line.order_id.date_order.strftime('%m-%d-%y'))
+
+                if order.partner_id.lang and order.partner_id.lang != line.env.lang:
+                    line = line.with_context(lang=order.partner_id.lang)
+
+                sale_order_line_description = _("Down payment (ref: %(order_reference)s on \n %(date)s)", order_reference=order_reference, date=format_date(line.env, line.order_id.date_order))
                 sale_line = self.env['sale.order.line'].create({
                     'order_id': sale_order_origin.id,
                     'product_id': line.product_id.id,
