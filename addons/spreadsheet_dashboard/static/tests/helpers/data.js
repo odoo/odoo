@@ -1,5 +1,5 @@
 import { SpreadsheetModels, defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
-import { fields, models } from "@web/../tests/web_test_helpers";
+import { fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
 
 export function getDashboardServerData() {
@@ -27,19 +27,6 @@ export class SpreadsheetDashboard extends models.Model {
         for (const record of this) {
             record.is_favorite = record.favorite_user_ids.includes(this.env.uid);
         }
-    }
-
-    get_readonly_dashboard(id) {
-        const dashboard = this.env["spreadsheet.dashboard"].search_read([["id", "=", id]])[0];
-        if (!dashboard) {
-            const error = new RPCError();
-            error.data = {};
-            throw error;
-        }
-        return {
-            snapshot: JSON.parse(dashboard.spreadsheet_data),
-            revisions: [],
-        };
     }
 
     _records = [
@@ -81,6 +68,23 @@ export class SpreadsheetDashboardGroup extends models.Model {
         { id: 2, name: "Container 2", published_dashboard_ids: [3] },
     ];
 }
+
+function mockDashboardDataController(request) {
+    const parts = request.url.split("/");
+    const resId = parseInt(parts.at(-1));
+    const record = this.env["spreadsheet.dashboard"].search_read([["id", "=", resId]])[0];
+    if (!record) {
+        const error = new RPCError(`Dashboard ${resId} does not exist`);
+        error.data = {};
+        throw error;
+    }
+    return {
+        snapshot: JSON.parse(record.spreadsheet_data),
+        revisions: [],
+    };
+}
+
+onRpc("/spreadsheet/dashboard/data/*", mockDashboardDataController, { pure: true });
 
 export function defineSpreadsheetDashboardModels() {
     const SpreadsheetDashboardModels = [SpreadsheetDashboard, SpreadsheetDashboardGroup];
