@@ -812,6 +812,9 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                 try:
                     field = Model._fields[fname]
                 except KeyError:
+                    if registry.registry_invalidated:
+                        # the registry is modified and the field is popped
+                        break
                     raise ValueError(
                         f"Wrong @depends on '{self.compute}' (compute method of field {self}). "
                         f"Dependency field '{fname}' not found in model {model_name}."

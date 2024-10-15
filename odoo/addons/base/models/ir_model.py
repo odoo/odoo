@@ -865,7 +865,7 @@ class IrModelFields(models.Model):
                 if field.state == 'manual' and field.ttype == 'many2many':
                     rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
                     tables_to_drop.add(rel_name)
-            if field.state == 'manual' and is_model:
+            if is_model and (field.state == 'manual' or self._context.get(MODULE_UNINSTALL_FLAG)):
                 model._pop_field(field.name)
 
         if tables_to_drop:
@@ -2425,19 +2425,6 @@ class IrModelData(models.Model):
                 constraint_ids.append(data.res_id)
             else:
                 records_items.append((data.model, data.res_id))
-
-        # avoid prefetching fields that are going to be deleted: during uninstall, it is
-        # possible to perform a recompute (via flush) after the database columns have been
-        # deleted but before the new registry has been created, meaning the recompute will
-        # be executed on a stale registry, and if some of the data for executing the compute
-        # methods is not in cache it will be fetched, and fields that exist in the registry but not
-        # in the database will be prefetched, this will of course fail and prevent the uninstall.
-        for ir_field in self.env['ir.model.fields'].browse(field_ids):
-            model = self.pool.get(ir_field.model)
-            if model is not None:
-                field = model._fields.get(ir_field.name)
-                if field is not None:
-                    field.prefetch = False
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []
