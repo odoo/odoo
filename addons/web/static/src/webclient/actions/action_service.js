@@ -613,6 +613,22 @@ export function makeActionManager(env, router = _router) {
         if (typeof groupBy === "string") {
             groupBy = [groupBy];
         }
+        const openFormView = (resId, { activeIds, mode } = {}) => {
+            if (target !== "new") {
+                if (_getView("form")) {
+                    return switchView("form", { mode, resId, resIds: activeIds });
+                } else {
+                    return doAction(
+                        {
+                            type: "ir.actions.act_window",
+                            res_model: action.res_model,
+                            views: [[false, "form"]],
+                        },
+                        { props: { mode, resId, resIds: activeIds } }
+                    );
+                }
+            }
+        };
         const viewProps = Object.assign({}, props, {
             context,
             display: { mode: target === "new" ? "inDialog" : target },
@@ -622,16 +638,8 @@ export function makeActionManager(env, router = _router) {
             loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
             type: view.type,
-            selectRecord: async (resId, { activeIds, mode }) => {
-                if (target !== "new" && _getView("form")) {
-                    await switchView("form", { mode, resId, resIds: activeIds });
-                }
-            },
-            createRecord: async () => {
-                if (target !== "new" && _getView("form")) {
-                    await switchView("form", { resId: false });
-                }
-            },
+            selectRecord: openFormView,
+            createRecord: () => openFormView(false),
         });
         const currentState = {
             resId: viewProps.resId,

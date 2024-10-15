@@ -97,7 +97,7 @@ test.tags("desktop")("rainbowman integrated to webClient", async () => {
     await animationFrame();
     expect(".o_reward").toHaveCount(1);
     expect(".o_kanban_view").toHaveCount(1);
-    await contains(".o_kanban_record").click();
+    await contains(".o_reward").click();
     expect(".o_reward").toHaveCount(0);
     expect(".o_kanban_view").toHaveCount(1);
     getService("effect").add({ type: "rainbow_man", message: "", fadeout: "no" });
