@@ -87,6 +87,26 @@ class ModelWithoutAccess(models.Model):
     another_field = fields.Char()
 
 
+class ApprovalRequest(models.Model):
+    _name = _description = 'test_base_automation.approval_request'
+
+    name = fields.Char()
+    request_status = fields.Selection([
+        ('new', 'To Submit'),
+        ('pending', 'Submitted'),
+        ('approved', 'Approved'),
+        ('refused', 'Refused'),
+        ('cancel', 'Canceled'),
+    ], default="new")
+    request_owner_id = fields.Many2one('res.users')
+    approver_ids = fields.One2many('test_base_automation.approver', 'request_id')
+
+
+class ApprovalApprover(models.Model):
+    _name = _description = 'test_base_automation.approver'
+
+    request_id = fields.Many2one('test_base_automation.approval_request', ondelete='cascade')
+
 class Project(models.Model):
     _name = _description = 'test_base_automation.project'
 

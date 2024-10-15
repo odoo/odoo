@@ -47,6 +47,7 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
         self.user_admin = self.env.ref('base.user_admin')
         self.lead_model = self.env.ref('test_base_automation.model_base_automation_lead_test')
         self.project_model = self.env.ref('test_base_automation.model_test_base_automation_project')
+        self.approval_request_model = self.env.ref('test_base_automation.model_test_base_automation_approval_request')
         self.test_mail_template_automation = self.env['mail.template'].create(
             {
                 'name': 'Template Automation',
@@ -96,6 +97,23 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
         tag = self.env['test_base_automation.tag'].create(vals)
         self.addCleanup(tag.unlink)
         return tag
+
+    def create_approval_request(self, **kwargs):
+        vals = {
+            'name': 'Approval Request Test',
+            'request_owner_id': self.user_root.id
+        }
+        vals.update(kwargs)
+        approval_request = self.env['test_base_automation.approval_request'].create(vals)
+        self.addCleanup(approval_request.unlink)
+        return approval_request
+
+    def create_approver(self, **kwargs):
+        vals = {}
+        vals.update(kwargs)
+        approver = self.env['test_base_automation.approver'].create(vals)
+        self.addCleanup(approver.unlink)
+        return approver
 
     def test_000_on_create_or_write(self):
         """
@@ -854,6 +872,91 @@ if env.context.get('old_values', None):  # on write
         self.assertEqual(called_count, 0)
         lead.unlink()
         self.assertEqual(called_count, 1)
+
+    # Only available in approvals app
+    def test_140_on_request_status_set(self):
+        request_status_field = self.env['ir.model.fields'].search([
+            ('model_id', '=', self.approval_request_model.id),
+            ('name', '=', 'request_status'),
+        ])
+        create_automation(
+            self,
+            model_id=self.approval_request_model.id,
+            trigger='on_request_status_set',
+            trigger_field_ids=[request_status_field.id],
+            filter_domain="[('request_status', '=', 'pending')]",
+            _actions={'state': 'code', 'code': "record.write({'name': record.name + '!'})"},
+        )
+        approval_request = self.create_approval_request()
+        self.assertEqual(approval_request.name, 'Approval Request Test')
+        self.assertEqual(approval_request.request_status, 'new')
+        approval_request.write({'request_status': 'approved'})
+        self.assertEqual(approval_request.name, 'Approval Request Test')
+        approval_request.write({'request_status': 'pending'})
+        self.assertEqual(approval_request.name, 'Approval Request Test!')
+        approval_request.write({'request_status': 'pending'})
+        self.assertEqual(approval_request.name, 'Approval Request Test!')
+        approval_request.write({'request_status': 'new'})
+        self.assertEqual(approval_request.name, 'Approval Request Test!')
+        approval_request.write({'request_status': 'pending'})
+        self.assertEqual(approval_request.name, 'Approval Request Test!!')
+
+    # Only available in approvals app
+    def test_150_on_request_owner_set(self):
+        request_owner_field = self.env['ir.model.fields'].search([
+            ('model_id', '=', self.approval_request_model.id),
+            ('name', '=', 'request_owner_id'),
+        ])
+        create_automation(
+            self,
+            model_id=self.approval_request_model.id,
+            trigger='on_request_owner_set',
+            trigger_field_ids=[request_owner_field.id],
+            filter_domain="[('request_owner_id', '!=', False)]",
+            _actions={'state': 'code', 'code': "record.write({'name': record.name + '!'})"},
+        )
+        approval_request = self.create_approval_request()
+        self.assertEqual(approval_request.name, 'Approval Request Test!')
+        approval_request.write({'request_owner_id': self.user_demo.id})
+        self.assertEqual(approval_request.name, 'Approval Request Test!!')
+        approval_request.write({'request_owner_id': self.user_demo.id})
+        self.assertEqual(approval_request.name, 'Approval Request Test!!')
+        approval_request.write({'request_owner_id': self.user_admin.id})
+        self.assertEqual(approval_request.name, 'Approval Request Test!!!')
+        approval_request.write({'request_owner_id': False})
+        self.assertEqual(approval_request.name, 'Approval Request Test!!!')
+        approval_request.write({'request_owner_id': self.user_demo.id})
+        self.assertEqual(approval_request.name, 'Approval Request Test!!!!')
+
+    # Only available in approvals app
+    def test_160_on_approvers_list_set(self):
+        approver_ids_field = self.env['ir.model.fields'].search([
+            ('model_id', '=', self.approval_request_model.id),
+            ('name', '=', 'approver_ids'),
+        ])
+        create_automation(
+            self,
+            model_id=self.approval_request_model.id,
+            trigger='on_approvers_list_set',
+            trigger_field_ids=[approver_ids_field.id],
+            filter_domain="[('approver_ids', '!=', False)]",
+            _actions={'state': 'code', 'code': "record.write({'name': record.name + '!'})"},
+        )
+        approver1 = self.create_approver()
+        approval_request = self.create_approval_request()
+        self.assertEqual(approval_request.name, 'Approval Request Test')
+        approval_request.write({'approver_ids': [Command.set([approver1.id])]})
+        self.assertEqual(approval_request.name, 'Approval Request Test!')
+        approval_request.write({'approver_ids': [Command.set([approver1.id])]})
+        self.assertEqual(approval_request.name, 'Approval Request Test!')
+
+        approver2 = self.create_approver()
+        approval_request.write({'approver_ids': [Command.link(approver2.id)]})
+        self.assertEqual(approval_request.name, 'Approval Request Test!!')
+        approval_request.write({'approver_ids': [Command.clear()]})
+        self.assertEqual(approval_request.name, 'Approval Request Test!!')
+        approval_request.write({'approver_ids': [Command.set([approver1.id, approver2.id])]})
+        self.assertEqual(approval_request.name, 'Approval Request Test!!!')
 
     def test_004_check_method(self):
         model = self.env["ir.model"]._get("base.automation.lead.test")
