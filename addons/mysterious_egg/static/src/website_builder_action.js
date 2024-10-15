@@ -82,6 +82,10 @@ class WebsiteBuilder extends Component {
             registry.category("systray").remove("website.WebsiteSystrayItem");
         }, 200);
     }
+
+    onIframeLoad(ev) {
+        history.pushState(null, "", ev.target.contentWindow.location.pathname);
+    }
 }
 
 registry.category("actions").add("egg_website_preview", WebsiteBuilder);
