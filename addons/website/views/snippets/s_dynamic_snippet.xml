@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="website.s_dynamic_snippet_template">
-        <section t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic s_dynamic_empty pt32 pb32" t-att-data-snippet="snippet_name" t-att-data-custom-template-data="custom_template_data or '{}'">
+        <section t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic s_dynamic_empty pt32 pb32" 
+                    t-att-data-snippet="snippet_name" t-att-data-custom-template-data="custom_template_data or '{}'"
+                    t-att-data-template-key="snippet_template_key"
+                    t-att-data-number-of-elements="snippet_no_of_element"
+                    t-att-data-row-per-slide="snippet_row_per_slide"
+                    t-att-data-number-of-elements-small-devices="snippet_element_on_small_device">
             <div class="container">
                 <div class="row s_nb_column_fixed">
                     <section class="s_dynamic_snippet_title oe_unremovable oe_unmovable d-flex flex-column flex-md-row justify-content-between mb-lg-0 pb-3 pb-md-0">
