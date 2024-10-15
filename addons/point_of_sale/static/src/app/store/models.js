@@ -1658,7 +1658,7 @@ export class Order extends PosModel {
             footer: this.pos.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?
             shippingDate:
-                this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
+                this.shippingDate && formatDate(DateTime.fromSQL(this.shippingDate)),
             headerData: {
                 ...this.pos.getReceiptHeaderData(this),
                 trackingNumber: this.trackingNumber,
