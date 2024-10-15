@@ -1535,6 +1535,7 @@ function removeBlacklistedStyles(rule, node, checkBlacklisted) {
  * @returns {Object} {[styleName]: string}
  */
 function _getMatchedCSSRules(node, cssRules, checkBlacklisted = false) {
+    // just for testing
     node.matches = node.matches || node.webkitMatchesSelector || node.mozMatchesSelector || node.msMatchesSelector || node.oMatchesSelector;
     const styles = cssRules
         .map((rule) => removeBlacklistedStyles(rule, node, checkBlacklisted))
