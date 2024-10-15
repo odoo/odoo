@@ -2,15 +2,34 @@
 <templates xml:space="preserve">
 
 <t t-name="mysterious_egg.BlockTab">
-    <div> BLOCK </div>
-    <div t-foreach="this.categoriesBy3" t-as="categories" t-key="categories_index" class="d-flex flex-row justify-content-center">
-        <t t-foreach="categories" t-as="category" t-key="category[0]">
-            <div class="d-flex flex-column m-1 block" t-att-class="category[1].install ? 'to_install' : '' " style="background-color: rgba(62, 62, 70, 0.9);">
-                <img t-att-src="category[1].image"/>
-                <button t-if="category[1].install" class="btn btn-primary" t-on-click="onClickInstall">install</button>
-                <span class="text-center" t-esc="category[1].title"/>
+    <div>Categories</div>
+    <div class="container">
+        <div class="row">
+            <div t-foreach="this.snippetCategories" t-as="snippet" t-key="snippet[0]" class="col-4 p-1">
+                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet[1].install ? 'to_install' : '' ">
+                    <div class="img-container">
+                        <img t-att-src="snippet[1].image" class="w-100"/>
+                        <button t-if="snippet[1].install" class="btn btn-primary" t-on-click="onClickInstall">install</button>
+                    </div>
+                    <span class="text-center" t-esc="snippet[1].title"/>
+                </div>
             </div>
-        </t>
+        </div>
+    </div>
+
+    <div>Inner content</div>
+    <div class="container">
+        <div class="row">
+            <div t-foreach="this.innerContentSnippets" t-as="snippet" t-key="snippet[0]" class="col-4 p-1">
+                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet[1].install ? 'to_install' : '' ">
+                    <div class="img-container">
+                        <img t-att-src="snippet[1].image" class="w-100"/>
+                        <button t-if="snippet[1].install" class="btn btn-primary" t-on-click="onClickInstall">install</button>
+                    </div>
+                    <span class="text-center" t-esc="snippet[1].title"/>
+                </div>
+            </div>
+        </div>
     </div>
 </t>
 

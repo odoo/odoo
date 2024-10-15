@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 
 registry
     .category("website.snippets")
-    .category("block.categories")
+    .category("category")
     .add("custom", {
         title: "Custom",
         image: "/website/static/src/img/snippets_thumbs/s_media_list.svg",
@@ -57,5 +57,3 @@ registry
         image: "/website/static/src/img/snippets_thumbs/s_event_upcoming_snippet.svg",
         install: "website_event",
     });
-
-// registry.category("website.snippets").category("block").category("inner_content").add("");
