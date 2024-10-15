@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+# ruff: noqa: E402
 
 def _set_fiscal_country(env):
     """ Sets the fiscal country on existing companies when installing the module.
@@ -14,7 +15,6 @@ def _account_post_init(env):
     _set_fiscal_country(env)
 
 # imported here to avoid dependency cycle issues
-# pylint: disable=wrong-import-position
 from . import controllers
 from .models import (
     AccountAccount, AccountAccountTag, AccountAnalyticAccount,
