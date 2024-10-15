@@ -397,7 +397,7 @@ describe(parseUrl(import.meta.url), () => {
         `);
 
         monitorEvents("body", (ev) => ev.type.startsWith("key") && formatKeyBoardEvent(ev));
-        monitorEvents("li", (ev) => `${ev.target.id}.${ev.type}`);
+        monitorEvents("li", (ev) => `${ev.currentTarget.id}.${ev.type}`);
 
         // Drag & cancel
         await (await drag("#first-item")).cancel();
@@ -560,7 +560,7 @@ describe(parseUrl(import.meta.url), () => {
         `);
 
         monitorEvents("body", (ev) => ev.type.startsWith("key") && formatKeyBoardEvent(ev));
-        monitorEvents("li", (ev) => `${ev.target.id}.${ev.type}`);
+        monitorEvents("li", (ev) => `${ev.currentTarget.id}.${ev.type}`);
 
         // Drag & cancel
         await (await drag("#first-item")).cancel();
@@ -1564,7 +1564,7 @@ describe(parseUrl(import.meta.url), () => {
 
         const { innerHeight } = window;
 
-        on(window, "resize", () => expect.step("window.resize"));
+        after(on(window, "resize", () => expect.step("window.resize")));
 
         await resize({ width: 300 });
 

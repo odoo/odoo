@@ -20,7 +20,6 @@ import {
     queryRect,
     waitFor,
     waitForNone,
-    waitUntil,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
 import { getParentFrame } from "@web/../lib/hoot-dom/helpers/dom";
@@ -52,10 +51,13 @@ const expectSelector = (...queryAllSelectors) => {
         const selector = queryAllSelectors.join(", ");
         const fnNodes = queryAll(selector);
         expect(fnNodes).toEqual(queryAll`${selector}`, {
-            message: `queryAll should return the same result from a tagged template literal`,
+            message: (pass, r) => [
+                queryAll,
+                r`should return the same result from a tagged template literal`,
+            ],
         });
         expect(fnNodes).toEqual(nodes, {
-            message: `"${selector}" should match ${nodes.length} nodes`,
+            message: (pass, r) => [selector, r`should match`, nodes.length, r`nodes`],
         });
     };
 
@@ -432,29 +434,6 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         }
 
         expect.verifySteps(["none"]);
-    });
-
-    test("waitUntil: already true", async () => {
-        await expect(waitUntil(() => true)).resolves.toBe(true);
-    });
-
-    test("waitUntil: rejects", async () => {
-        await expect(waitUntil(() => false, { timeout: 1 })).rejects.toThrow();
-    });
-
-    test("waitUntil: lazy", async () => {
-        let value = "";
-        waitUntil(() => value).then((v) => expect.step(v));
-
-        expect.verifySteps([]);
-
-        value = "test";
-
-        expect.verifySteps([]);
-
-        await animationFrame();
-
-        expect.verifySteps(["test"]);
     });
 
     describe("query", () => {

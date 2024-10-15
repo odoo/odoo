@@ -4,7 +4,7 @@ import { Component, useState, xml } from "@odoo/owl";
 import { Tag } from "../core/tag";
 import { Test } from "../core/test";
 import { subscribeToURLParams } from "../core/url";
-import { formatTime, ordinal } from "../hoot_utils";
+import { formatHumanReadable, formatTime, getTypeOf, ordinal } from "../hoot_utils";
 import { HootLink } from "./hoot_link";
 import { HootTechnicalValue } from "./hoot_technical_value";
 
@@ -15,8 +15,6 @@ import { HootTechnicalValue } from "./hoot_technical_value";
  *  test: Test;
  * }} TestResultProps
  */
-
-const MATCHERS_DOC_URL = `https://github.com/odoo/odoo/blob/master/addons/web/static/lib/hoot/README.md`;
 
 /** @extends {Component<TestResultProps, import("../hoot").Environment>} */
 export class HootTestResult extends Component {
@@ -59,15 +57,33 @@ export class HootTestResult extends Component {
                                     <i t-if="assertion.modifiers.rejects" class="fa fa-times text-skip" />
                                     <i t-elif="assertion.modifiers.resolves" class="fa fa-arrow-right text-skip" />
                                     <i t-if="assertion.modifiers.not" class="fa fa-exclamation text-skip" />
-                                    <a t-att-href="getLinkHref(assertion.label)" target="_blank" class="hoot-link text-skip">
+                                    <!-- TODO: add documentation links once they exist -->
+                                    <a href="#" class="hoot-link text-skip">
                                         <strong t-esc="assertion.label" />
                                     </a>
                                 </t>
                                 <span
-                                    class="truncate"
+                                    class="flex gap-1 truncate items-center"
                                     t-att-title="assertion.message"
-                                    t-esc="assertion.message"
-                                />
+                                >
+                                    <t t-foreach="assertion.messageParts" t-as="part" t-key="part_index">
+                                        <t t-if="part.type and part.type !== 'raw'">
+                                            <t t-if="part.type.endsWith('[]')">
+                                                <strong class="hoot-array">
+                                                    <t>[</t>
+                                                    <span t-attf-class="hoot-{{ part.type.slice(0, -2) }}" t-esc="part.slice(1, -1)" />
+                                                    <t>]</t>
+                                                </strong>
+                                            </t>
+                                            <t t-else="">
+                                                <strong t-attf-class="hoot-{{ part.type }}" t-esc="part" />
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="part" />
+                                        </t>
+                                    </t>
+                                </span>
                             </div>
                             <t t-set="timestamp" t-value="formatTime(assertion.ts - (result.ts || 0), 'ms')" />
                             <small class="text-muted flex items-center" t-att-title="timestamp">
@@ -120,9 +136,8 @@ export class HootTestResult extends Component {
                     </button>
                     <t t-if="state.showCode">
                         <pre
-                            class="px-2 py-1 rounded bg-white text-black dark:bg-black dark:text-white animate-slide-down overflow-auto"
-                            t-esc="props.test.code"
-                        />
+                            class="p-2 rounded bg-white text-black dark:bg-black dark:text-white animate-slide-down overflow-auto"
+                        ><code class="language-javascript" t-out="props.test.code" /></pre>
                     </t>
                 </div>
             </t>
@@ -130,7 +145,9 @@ export class HootTestResult extends Component {
     `;
 
     Tag = Tag;
+    formatHumanReadable = formatHumanReadable;
     formatTime = formatTime;
+    getTypeOf = getTypeOf;
     ordinal = ordinal;
 
     setup() {
@@ -171,12 +188,5 @@ export class HootTestResult extends Component {
                 return "bg-skip-900";
             }
         }
-    }
-
-    /**
-     * @param {string} label
-     */
-    getLinkHref(label) {
-        return `${MATCHERS_DOC_URL}#${label}`;
     }
 }

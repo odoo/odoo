@@ -69,10 +69,7 @@ import { Deferred, waitUntil } from "./time";
  *  raw?: boolean;
  * }} QueryTextOptions
  *
- * @typedef {{
- *  message?: string | () => string;
- *  timeout?: number;
- * }} WaitOptions
+ * @typedef {import("./time").WaitOptions} WaitOptions
  */
 
 /**
@@ -626,16 +623,20 @@ const parseSelector = (selector) => {
  * @param {"html" | "xml"} type
  */
 const parseXml = (xmlString, type) => {
-    const document = parser.parseFromString(`<templates>${xmlString}</templates>`, `text/${type}`);
+    const wrapperTag = type === "html" ? "body" : "templates";
+    const document = parser.parseFromString(
+        `<${wrapperTag}>${xmlString}</${wrapperTag}>`,
+        `text/${type}`
+    );
     if (document.getElementsByTagName("parsererror").length) {
-        const trimmed = xmlString.length > 80 ? xmlString.slice(0, 80) + "..." : xmlString;
+        const trimmed = xmlString.length > 80 ? xmlString.slice(0, 80) + "…" : xmlString;
         throw new HootDomError(
             `error while parsing ${trimmed}: ${getNodeText(
                 document.getElementsByTagName("parsererror")[0]
             )}`
         );
     }
-    return document.documentElement.childNodes;
+    return document.getElementsByTagName(wrapperTag)[0].childNodes;
 };
 
 /**
@@ -1004,25 +1005,6 @@ export function getNodeText(node, options) {
 }
 
 /**
- * Returns the parent `<iframe>` of a given node (if any).
- *
- * @param {Node} node
- * @returns {HTMLIFrameElement | null}
- */
-export function getParentFrame(node) {
-    const nodeDocument = node.ownerDocument;
-    const view = nodeDocument.defaultView;
-    if (view !== view.parent) {
-        for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
-            if (iframe.contentDocument === nodeDocument) {
-                return iframe;
-            }
-        }
-    }
-    return null;
-}
-
-/**
  * @template {Node} T
  * @param {T} node
  * @returns {T extends Element ? CSSStyleDeclaration : null}
@@ -1075,29 +1057,31 @@ export function isEmpty(value) {
 }
 
 /**
- * Returns whether the given target is an {@link EventTarget}.
+ * Returns whether the given object is an {@link EventTarget}.
  *
  * @template T
- * @param {T} target
+ * @param {T} object
  * @returns {T extends EventTarget ? true : false}
  * @example
  *  isEventTarget(window); // true
  * @example
  *  isEventTarget(new App()); // false
  */
-export function isEventTarget(target) {
-    return target && typeof target.addEventListener === "function";
+export function isEventTarget(object) {
+    return object && typeof object.addEventListener === "function";
 }
 
 /**
  * Returns whether the given object is a {@link Node} object.
+ * Note that it is independant from the {@link Node} class itself to support
+ * cross-window checks.
  *
  * @template T
  * @param {T} object
  * @returns {T extends Node ? true : false}
  */
 export function isNode(object) {
-    return typeof object === "object" && Boolean(object?.nodeType);
+    return object && typeof object.nodeType === "number" && typeof object.nodeName === "string";
 }
 
 /**
@@ -1382,6 +1366,25 @@ export function getNextFocusableElement(options) {
     const focusableEls = getFocusableElements(parent, options);
     const index = focusableEls.indexOf(getActiveElement(parent));
     return focusableEls[index + 1] || null;
+}
+
+/**
+ * Returns the parent `<iframe>` of a given node (if any).
+ *
+ * @param {Node} node
+ * @returns {HTMLIFrameElement | null}
+ */
+export function getParentFrame(node) {
+    const nodeDocument = node.ownerDocument;
+    const view = nodeDocument.defaultView;
+    if (view !== view.parent) {
+        for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
+            if (iframe.contentDocument === nodeDocument) {
+                return iframe;
+            }
+        }
+    }
+    return null;
 }
 
 /**

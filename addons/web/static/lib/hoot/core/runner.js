@@ -11,6 +11,7 @@ import {
     HootError,
     INCLUDE_LEVEL,
     Markup,
+    STORAGE,
     batch,
     createReporting,
     deepEqual,
@@ -20,6 +21,9 @@ import {
     formatTime,
     getFuzzyScore,
     normalize,
+    storageGet,
+    storageSet,
+    stringify,
 } from "../hoot_utils";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
@@ -33,7 +37,7 @@ import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag } from "./tag";
 import { Test, testError } from "./test";
-import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
+import { EXCLUDE_PREFIX, createUrlFromId, setParams, urlParams } from "./url";
 
 /**
  * @typedef {{
@@ -309,6 +313,10 @@ export class Runner {
          */
         done: new Set(),
         /**
+         * List of IDs of tests that have failed (previously AND during this run).
+         */
+        failedIds: new Set(storageGet(STORAGE.failed)),
+        /**
          * @type {Record<string, GlobalIssueReport>}
          */
         globalErrors: {},
@@ -546,21 +554,24 @@ export class Runner {
             );
         }
         const runFn = this.dry ? null : fn;
-        let test = markRaw(new Test(parentSuite, name, config, runFn));
+        let test = markRaw(new Test(parentSuite, name, config));
         const originalTest = this.tests.get(test.id);
         if (originalTest) {
             if (this.dry || originalTest.run) {
                 throw testError(
                     { name, parent: parentSuite },
-                    `a test with that name already exists in the suite "${parentSuite.name}"`
+                    `a test with that name already exists in the suite ${stringify(
+                        parentSuite.name
+                    )}`
                 );
             }
             test = originalTest;
-            test.setRunFn(runFn);
         } else {
             parentSuite.addJob(test);
             this.tests.set(test.id, test);
         }
+
+        test.setRunFn(runFn);
 
         this._applyTagModifiers(test);
 
@@ -988,6 +999,11 @@ export class Runner {
             test.runCount++;
             if (lastResults.pass) {
                 logger.logTest(test);
+
+                if (this.state.failedIds.has(test.id)) {
+                    this.state.failedIds.delete(test.id);
+                    storageSet(STORAGE.failed, [...this.state.failedIds]);
+                }
             } else {
                 const failReasons = [];
                 const failedAssertions = lastResults.assertions.filter(
@@ -1007,7 +1023,12 @@ export class Runner {
                         ...lastResults.errors.map((e) => `\n${e.message}`)
                     );
                 }
-                logger.error([`Test "${test.fullName}" failed:`, ...failReasons].join("\n"));
+                logger.error(
+                    [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n")
+                );
+
+                this.state.failedIds.add(test.id);
+                storageSet(STORAGE.failed, [...this.state.failedIds]);
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
@@ -1067,11 +1088,13 @@ export class Runner {
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
+            const link = createUrlFromId(this.state.failedIds, "test");
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
                 `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
             logger.error("test failed (see above for details)");
+            logger.error("failed tests link:", link.toString());
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
@@ -1191,8 +1214,8 @@ export class Runner {
      * @param {Job} job
      */
     _applyTagModifiers(job) {
-        let skip = false;
-        let ignoreSkip = false;
+        let shouldSkip = false;
+        let [ignoreSkip] = this._getExplicitIncludeStatus(job);
         for (const tag of job.tags) {
             this.tags.set(tag.name, tag);
             switch (tag.name) {
@@ -1207,7 +1230,9 @@ export class Runner {
                 case Tag.ONLY:
                     if (!this.dry) {
                         logger.warn(
-                            `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
+                            `${stringify(job.fullName)} is marked as ${stringify(
+                                tag.name
+                            )}. This is not suitable for CI`
                         );
                     }
                     this._include(
@@ -1218,7 +1243,7 @@ export class Runner {
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
-                    skip = true;
+                    shouldSkip = true;
                     break;
                 case Tag.TODO:
                     job.config.todo = true;
@@ -1226,10 +1251,12 @@ export class Runner {
             }
         }
 
-        if (skip) {
+        if (shouldSkip) {
             if (ignoreSkip) {
                 logger.warn(
-                    `test "${job.fullName}" is explicitly included but marked as skipped: "skip" modifier has been ignored`
+                    `${stringify(
+                        job.fullName
+                    )} is marked as skipped but explicitly included: "skip" modifier has been ignored`
                 );
             } else {
                 job.config.skip = true;
@@ -1503,6 +1530,14 @@ export class Runner {
         }
         if (this.config.test) {
             this._checkUrlValidity("test", "tests", this.tests);
+        }
+
+        // Cleanup invalid tests from storage
+        const failedIds = [...this.state.failedIds];
+        const existingFailed = failedIds.filter((id) => this.tests.has(id));
+        if (existingFailed.length !== failedIds.length) {
+            this.state.failedIds = new Set(existingFailed);
+            storageSet(STORAGE.failed, existingFailed);
         }
 
         this._populateState = true;
