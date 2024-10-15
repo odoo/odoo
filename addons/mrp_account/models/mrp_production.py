@@ -3,7 +3,7 @@
 from ast import literal_eval
 
 from odoo import api, fields, models, _
-from odoo.tools import float_round
+from odoo.tools import float_round, float_is_zero, float_compare
 
 
 class MrpProduction(models.Model):
@@ -81,9 +81,11 @@ class MrpProduction(models.Model):
         """Set a price unit on the finished move according to `consumed_moves`.
         """
         super(MrpProduction, self)._cal_price(consumed_moves)
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         work_center_cost = 0
         finished_move = self.move_finished_ids.filtered(
-            lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity_done > 0)
+            lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and float_compare(x.quantity_done, 0, precision_digits=precision) > 0
+        )
         if finished_move:
             finished_move.ensure_one()
             for work_order in self.workorder_ids:
@@ -92,10 +94,12 @@ class MrpProduction(models.Model):
                 finished_move.quantity_done, finished_move.product_id.uom_id)
             extra_cost = self.extra_cost * qty_done
             total_cost = - sum(consumed_moves.sudo().stock_valuation_layer_ids.mapped('value')) + work_center_cost + extra_cost
-            byproduct_moves = self.move_byproduct_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity_done > 0)
+            byproduct_moves = self.move_byproduct_ids.filtered(
+                lambda m: m.state not in ('done', 'cancel') and float_compare(m.quantity_done, 0, precision_digits=precision) > 0
+            )
             byproduct_cost_share = 0
             for byproduct in byproduct_moves:
-                if byproduct.cost_share == 0:
+                if float_is_zero(byproduct.cost_share, precision_rounding=0.0001) or float_is_zero(byproduct.quantity_done, precision_digits=precision):
                     continue
                 byproduct_cost_share += byproduct.cost_share
                 if byproduct.product_id.cost_method in ('fifo', 'average'):
