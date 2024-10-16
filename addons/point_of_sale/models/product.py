@@ -180,10 +180,8 @@ class ProductProduct(models.Model):
 
     def _get_archived_combinations_per_product_tmpl_id(self, product_tmpl_ids):
         archived_combinations = {}
-        for product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', 'in', product_tmpl_ids), ('active', '=', False)]):
-            if not archived_combinations.get(product.product_tmpl_id.id):
-                archived_combinations[product.product_tmpl_id.id] = []
-            archived_combinations[product.product_tmpl_id.id].append(product.product_template_attribute_value_ids.ids)
+        for product_tmpl in self.env['product.template'].browse(product_tmpl_ids):
+            archived_combinations[product_tmpl.id] = product_tmpl._get_attribute_exclusions()['archived_combinations']
         return archived_combinations
 
     @api.ondelete(at_uninstall=False)
