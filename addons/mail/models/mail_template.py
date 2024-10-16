@@ -386,7 +386,7 @@ class MailTemplate(models.Model):
         existing_pids = set()
         if all_partner_to:
             existing_pids = set(self.env['res.partner'].sudo().browse(list(all_partner_to)).exists().ids)
-        for res_id, record_values in render_results.items():
+        for record_values in render_results.values():
             partner_to = record_values.pop('partner_to', '')
             if partner_to:
                 tpl_partner_ids = set(self._parse_partner_to(partner_to)) & existing_pids
@@ -484,7 +484,7 @@ class MailTemplate(models.Model):
         }
 
         render_results = {}
-        for _lang, (template, template_res_ids) in self._classify_per_lang(res_ids).items():
+        for (template, template_res_ids) in self._classify_per_lang(res_ids).values():
             # render fields not rendered by sub methods
             fields_torender = {
                 field for field in render_fields_set

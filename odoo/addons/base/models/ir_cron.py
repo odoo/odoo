@@ -415,7 +415,7 @@ class IrCron(models.Model):
             cron = env[cls._name].browse(job['id'])
 
             status = None
-            for i in range(MAX_BATCH_PER_CRON_JOB):
+            for _i in range(MAX_BATCH_PER_CRON_JOB):
                 cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
                 job_cr.commit()
 

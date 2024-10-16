@@ -62,7 +62,7 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
                 'tax_amount': taxes_vals['tax_amount'],
                 'tax_subtotal_vals': [],
             }
-            for _grouping_key, vals in taxes_vals['tax_details'].items():
+            for vals in taxes_vals['tax_details'].values():
                 tax_totals_vals['tax_subtotal_vals'].append({
                     'currency': company_currency,
                     'currency_dp': company_currency.decimal_places,

@@ -1116,7 +1116,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_21_datetime(self):
         """ test datetime fields """
-        for i in range(0, 10):
+        for _i in range(0, 10):
             self.assertEqual(fields.Datetime.now().microsecond, 0)
 
         record = self.env['test_new_api.mixed'].create({})
@@ -3533,11 +3533,11 @@ class TestX2many(TransactionExpressionCase):
         # in case the type of `res.partner.user_ids` changes in a future release.
         # if `res.partner.user_ids` is no longer a one2many, this test must be adapted.
         self.assertEqual(self.env['res.partner']._fields['user_ids'].type, 'one2many')
-        my_partner = my_user.partner_id
+        p = my_user.partner_id
 
         for Partner, my_partner in [
-            (self.env['res.partner'].with_user(admin_user), my_partner.with_user(admin_user)),
-            (self.env['res.partner'].sudo(), my_partner.sudo()),
+            (self.env['res.partner'].with_user(admin_user), p.with_user(admin_user)),
+            (self.env['res.partner'].sudo(), p.sudo()),
         ]:
             # 1.0 Command.CREATE
             # Case: a public/portal user creating a new users with arbitrary values
@@ -3600,14 +3600,14 @@ class TestX2many(TransactionExpressionCase):
         public_group = self.env['test_new_api.group'].with_user(admin_user).create({
             'name': 'public'
         }).with_user(self.env.user)
-        my_user = self.env['test_new_api.user'].with_user(admin_user).create({
+        u = self.env['test_new_api.user'].with_user(admin_user).create({
             'name': 'foo',
             'group_ids': [public_group.id],
         }).with_user(self.env.user)
 
         for User, my_user in [
-            (self.env['test_new_api.user'].with_user(admin_user), my_user.with_user(admin_user)),
-            (self.env['test_new_api.user'].sudo(), my_user.sudo()),
+            (self.env['test_new_api.user'].with_user(admin_user), u.with_user(admin_user)),
+            (self.env['test_new_api.user'].sudo(), u.sudo()),
         ]:
             # 2.0 Command.CREATE
             # Case: a public/portal user creating a new users with arbitrary values

@@ -242,7 +242,7 @@ class Test_Testing_UtilitiesOnchange_Parent(models.Model):
     @api.onchange('line_ids')
     def _onchange_line_ids(self):
         for line in self.line_ids.filtered(lambda l: l.flag):
-            self.env['test_testing_utilities.onchange_line'].new({'parent': self.id})
+            self.env['test_testing_utilities.onchange_line'].new({'parent': line.id})
 
 
 class Test_Testing_UtilitiesOnchange_Line(models.Model):

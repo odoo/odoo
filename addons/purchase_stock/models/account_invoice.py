@@ -3,7 +3,7 @@
 
 from odoo import fields, models, api
 from odoo.tools import float_compare, float_is_zero
-from odoo.tools.misc import groupby
+from odoo.tools.misc import unique
 
 
 class AccountMove(models.Model):
@@ -129,12 +129,12 @@ class AccountMove(models.Model):
             svls, _amls = valued_lines._apply_price_difference()
             stock_valuation_layers |= svls
 
-        for (product, company), dummy in groupby(stock_valuation_layers, key=lambda svl: (svl.product_id, svl.company_id)):
+        for product, company in unique((svl.product_id, svl.company_id) for svl in stock_valuation_layers):
             product = product.with_company(company.id)
             if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                 product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
-        for (lot, company), dummy in groupby(stock_valuation_layers, key=lambda svl: (svl.lot_id, svl.company_id)):
+        for lot, company in unique((svl.lot_id, svl.company_id) for svl in stock_valuation_layers):
             if not lot:
                 continue
             lot = lot.with_company(company.id)

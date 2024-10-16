@@ -4598,7 +4598,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
         uncommented_regexp = r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)'''
         views = self.env['ir.ui.view'].search([('type', 'in', ('list', 'form')), '|', ('arch_db', 'like', 'invisible=_True_'), ('arch_db', 'like', 'invisible=_1_')])
         for view in views:
-            for field, _val, comment in re.findall(uncommented_regexp, view.arch_db):
+            for _field, _val, comment in re.findall(uncommented_regexp, view.arch_db):
                 if (not comment or not comment.startswith('<!--')) and view.model_data_id:
                     views = module = view.model_data_id.module
                     if module in only_log_modules:
@@ -4655,7 +4655,7 @@ class ViewModifiers(ViewCase):
                 node = etree.fromstring(what) if isinstance(what, str) else what
             modifiers = {attr: node.attrib[attr] for attr in node.attrib if attr in ir_ui_view.VIEW_MODIFIERS}
             vnames = set()
-            for attr, expr in modifiers.items():
+            for expr in modifiers.values():
                 vnames |= view_validation.get_expression_field_names(expr) - {'id'}
             assert vnames == expected_vnames, f"{vnames!r} != {expected_vnames!r}"
 

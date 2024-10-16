@@ -174,7 +174,7 @@ class IrModuleModule(models.Model):
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read().decode()
                     html = lxml.html.document_fromstring(doc)
-                    for element, attribute, link, pos in html.iterlinks():
+                    for element, _attribute, _link, _pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
                     module.description_html = tools.html_sanitize(lxml.html.tostring(html, encoding='unicode'))

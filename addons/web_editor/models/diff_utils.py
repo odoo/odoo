@@ -197,7 +197,7 @@ def generate_comparison(new_content, old_content):
                     comparison.insert(start_index + 1, line)
 
         if operation_type == PATCH_OPERATION_REPLACE:
-            for i, line in enumerate(patch_content_line):
+            for line in patch_content_line:
                 addition_flagged_line = re.sub(
                     HTML_TAG_ISOLATION_REGEX, ADDITION_COMPARISON_REGEX, line
                 )

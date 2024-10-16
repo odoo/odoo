@@ -190,8 +190,8 @@ class Speedscope:
             level = 0
             if continuous:
                 level = -1
-                for level, at_level in enumerate(zip(current_stack_ids, entry_stack_ids)):
-                    current, new = at_level
+                for current, new in zip(current_stack_ids, entry_stack_ids):
+                    level += 1
                     if current != new:
                         break
                 else:

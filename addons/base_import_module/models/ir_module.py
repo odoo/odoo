@@ -150,7 +150,7 @@ class IrModuleModule(models.Model):
         path_static = opj(path, 'static')
         IrAttachment = self.env['ir.attachment']
         if os.path.isdir(path_static):
-            for root, dirs, files in os.walk(path_static):
+            for root, _dirs, files in os.walk(path_static):
                 for static_file in files:
                     full_path = opj(root, static_file)
                     with file_open(full_path, 'rb', env=self.env) as fp:

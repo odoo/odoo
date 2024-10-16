@@ -958,7 +958,7 @@ class TestMailMailServer(MailCommon):
                 mails._send(mail_server=mail_server)
 
             self.assertEqual(len(self.emails), 2)
-            for mail, outgoing_email in zip(mails, self.emails):
+            for outgoing_email in self.emails:
                 message_raw = outgoing_email['message']
                 message_parsed = message_from_string(message_raw)
                 message_cleaned = re.sub(r'[\s=]', '', message_raw)

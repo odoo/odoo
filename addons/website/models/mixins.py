@@ -355,7 +355,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
             result['_mapping'] = mapping
         html_fields = [config['name'] for config in mapping.values() if config.get('html')]
         if html_fields:
-            for result, data in zip(self, results_data):
+            for data in results_data:
                 for html_field in html_fields:
                     if data[html_field]:
                         if html_field == 'arch':

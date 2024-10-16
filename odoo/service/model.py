@@ -77,7 +77,7 @@ def _as_validation_error(env, exc):
     unknown = env._('Unknown')
     model = DotDict({'_name': 'unknown', '_description': unknown})
     field = DotDict({'name': 'unknown', 'string': unknown})
-    for _name, rclass in env.registry.items():
+    for rclass in env.registry.values():
         if exc.diag.table_name == rclass._table:
             model = rclass
             field = model._fields.get(exc.diag.column_name) or field

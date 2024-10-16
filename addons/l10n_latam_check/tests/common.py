@@ -32,6 +32,6 @@ class L10nLatamCheckTest(AccountTestInvoicingCommon):
         cls.assertTrue(cls.third_party_check_journal, 'Third party check journal was not created so we can run the tests')
         cls.assertTrue(cls.rejected_check_journal, 'Rejected check journal was not created so we can run the tests')
 
-        for company, journals in third_party_checks_journals.grouped('company_id').items():
+        for company in third_party_checks_journals.grouped('company_id'):
             outstanding_account = cls.outbound_payment_method_line.payment_account_id.copy({'company_ids': [Command.set(company.ids)]})
             cls.bank_journal.outbound_payment_method_line_ids.filtered(lambda m: m.company_id == company).payment_account_id = outstanding_account

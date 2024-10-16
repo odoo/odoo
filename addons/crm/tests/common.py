@@ -390,7 +390,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         # duplicates (currently only with email)
         dups_data = []
         if email_dup_count and not partner_ids:
-            for idx, lead_data in enumerate(leads_data):
+            for lead_data in leads_data:
                 if not lead_data.get('partner_id') and lead_data['email_from']:
                     dup_data = dict(lead_data)
                     dup_data['name'] = 'Duplicated-%s' % dup_data['name']
@@ -507,11 +507,11 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             yield
         finally:
             # support specific values caller may want to check in addition to generic tests
-            for fname, expected in expected.items():
-                if expected is False:
+            for fname, e_val in expected.items():
+                if e_val is False:
                     self.assertFalse(opportunity[fname], "%s must be False" % fname)
                 else:
-                    self.assertEqual(opportunity[fname], expected, "%s must be equal to %s" % (fname, expected))
+                    self.assertEqual(opportunity[fname], e_val, "%s must be equal to %s" % (fname, e_val))
 
             # classic fields: first not void wins or specific computation
             for fname in fields_all:

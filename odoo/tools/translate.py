@@ -1416,7 +1416,7 @@ class TranslationModuleReader(TranslationReader):
 
         for (path, recursive) in self._path_list:
             _logger.debug("Scanning files of modules at %s", path)
-            for root, dummy, files in os.walk(path, followlinks=True):
+            for root, _dummy, files in os.walk(path, followlinks=True):
                 for fname in fnmatch.filter(files, '*.py'):
                     self._babel_extract_terms(fname, path, root, 'python',
                                               extra_comments=[PYTHON_TRANSLATION_COMMENT],

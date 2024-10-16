@@ -2550,7 +2550,7 @@ class AccountMoveLine(models.Model):
 
             caba_lines_to_reconcile = full_batch['caba_lines_to_reconcile']
             exchange_move = full_batch['exchange_move']
-            for (dummy, account, repartition_line), amls_to_reconcile in caba_lines_to_reconcile.items():
+            for (_dummy, account, repartition_line), amls_to_reconcile in caba_lines_to_reconcile.items():
                 if not account.reconcile:
                     continue
 
@@ -2856,7 +2856,7 @@ class AccountMoveLine(models.Model):
 
             existing_line_vals_list = move_vals['line_ids']
             next_sequence = len(existing_line_vals_list)
-            for grouping_key, values in account_vals_to_fix.items():
+            for values in account_vals_to_fix.values():
 
                 if currency.is_zero(values['amount_currency']):
                     continue

@@ -852,7 +852,7 @@ class BaseModel(metaclass=MetaModel):
         # collect onchange methods on the model's class
         cls = self.env.registry[self._name]
         methods = defaultdict(list)
-        for attr, func in getmembers(cls, is_onchange):
+        for _attr, func in getmembers(cls, is_onchange):
             missing = []
             for name in func._onchange:
                 if name not in cls._fields:
@@ -3348,7 +3348,7 @@ class BaseModel(metaclass=MetaModel):
         cr = self._cr
         foreign_key_re = re.compile(r'\s*foreign\s+key\b.*', re.I)
 
-        for (key, definition, message) in self._sql_constraints:
+        for (key, definition, _message) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
             if len(conname) > 63:
                 hashed_conname = sql.make_identifier(conname)

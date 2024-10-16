@@ -60,7 +60,7 @@ def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ign
         len_prefix += 1
 
     with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED, allowZip64=True) as zipf:
-        for dirpath, dirnames, filenames in os.walk(path):
+        for dirpath, _dirnames, filenames in os.walk(path):
             filenames = sorted(filenames, key=fnct_sort)
             for fname in filenames:
                 bname, ext = os.path.splitext(fname)

@@ -467,7 +467,7 @@ class PosOrder(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
-        for pos_order in self.filtered(lambda pos_order: pos_order.state not in ['draft', 'cancel']):
+        if any(pos_order.state not in ['draft', 'cancel'] for pos_order in self):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
 
     @api.model_create_multi

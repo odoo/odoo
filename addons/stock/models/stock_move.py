@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import itertools
 from ast import literal_eval
 from collections import defaultdict
 from datetime import timedelta
@@ -1324,7 +1324,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         picking to assign them to. """
         Picking = self.env['stock.picking']
         grouped_moves = groupby(self, key=lambda m: m._key_assign_picking())
-        for group, moves in grouped_moves:
+        for _group, moves in grouped_moves:
             moves = self.env['stock.move'].concat(*moves)
             new_picking = False
             # Could pass the arguments contained in group but they are the same
@@ -1829,7 +1829,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                             break
 
                 if missing_reserved_quantity and move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
-                    for i in range(0, int(missing_reserved_quantity)):
+                    for _i in range(int(missing_reserved_quantity)):
                         move_line_vals_list.append(move._prepare_move_line_vals(quantity=1))
                 elif missing_reserved_quantity:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
@@ -2132,13 +2132,12 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
-            result = set()
             visited |= self
-            for move in self.move_orig_ids:
-                if move.state not in ('done', 'cancel'):
-                    for document, responsible, visited in move._get_upstream_documents_and_responsibles(visited):
-                        result.add((document, responsible, visited))
-            return result
+            return set(itertools.chain.from_iterable(
+                move._get_upstream_documents_and_responsibles(visited)
+                for move in self.move_orig_ids
+                if move.state not in ('done', 'cancel')
+            ))
         else:
             return []
 
@@ -2175,7 +2174,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 res.append((0, 0, vals))
             else:
                 uom_qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id)
-                for i in range(0, int(uom_qty)):
+                for _i in range(0, int(uom_qty)):
                     vals = self._prepare_move_line_vals(quantity=0)
                     vals['quantity'] = 1
                     vals['product_uom_id'] = self.product_id.uom_id.id

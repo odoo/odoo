@@ -57,11 +57,11 @@ class TestWebsiteEvent(TransactionCase):
             'svg': svg_image_data
         }
 
-        for expected_type, image_data in image_data.items():
+        for expected_type, d in image_data.items():
             # Create a website record
             website = self.env['website'].create({
                 'name': 'Test Website',
-                'favicon': base64.b64encode(image_data)
+                'favicon': base64.b64encode(d)
             })
 
             # Call the method to compute app_icon
