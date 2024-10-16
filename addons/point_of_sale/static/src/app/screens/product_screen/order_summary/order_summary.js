@@ -1,5 +1,5 @@
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, useEffect } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { useService } from "@web/core/utils/hooks";
@@ -27,15 +27,6 @@ export class OrderSummary extends Component {
             triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
             useWithBarcode: true,
         });
-        useEffect(
-            () => {
-                const lines = this.pos.get_order().lines;
-                if (lines.length && !lines.some((l) => l.isSelected())) {
-                    this.pos.selectOrderLine(this.currentOrder, lines.at(-1));
-                }
-            },
-            () => []
-        );
     }
 
     get currentOrder() {

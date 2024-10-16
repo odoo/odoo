@@ -12,6 +12,7 @@ import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/o
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -267,10 +268,12 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2.0"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("5"),
-            ProductScreen.selectedOrderlineHas("Coca-Cola", "2.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.clickNumpad("1"),
-            ProductScreen.selectedOrderlineHas("Coca-Cola", "1.0"),
+            inLeftSide([
+                ...ProductScreen.clickLine("Coca-Cola", "2.0"),
+                ...ProductScreen.selectedOrderlineHasDirect("Coca-Cola", "2.0"),
+                ...["⌫", "1"].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Coca-Cola", "1.0"),
+            ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
