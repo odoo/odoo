@@ -77,7 +77,7 @@ const TableOfContent = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
-        this._scrollTarget.removeEventListener("scroll", this._onScrollBound);
+        this._scrollTarget?.removeEventListener("scroll", this._onScrollBound);
         const indexCallback = extraMenuUpdateCallbacks.indexOf(this._updateTableOfContentNavbarPositionBound);
         if (indexCallback >= 0) {
             extraMenuUpdateCallbacks.splice(indexCallback, 1);
