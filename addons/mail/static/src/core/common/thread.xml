@@ -13,7 +13,7 @@
                     <t t-if="props.thread.loadOlder and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadOlder"/>
                     <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
                 </t>
-                <span t-else="" t-ref="load-newer"/>
+                <span t-else="" t-ref="load-newer" style="height: 1px;"/>
                 <t t-set="messages" t-value="props.order === 'asc' ? props.thread.nonEmptyMessages : [...props.thread.nonEmptyMessages].reverse()"/>
                 <t t-if="state.mountedAndLoaded" t-foreach="messages" t-as="msg" t-key="msg.id">
                     <t t-set="prevMsg" t-value="messages[msg_index -1]"/>
@@ -40,7 +40,7 @@
                         showDates="props.showDates"
                     />
                 </t>
-                <span t-if="props.order === 'asc'" t-ref="load-newer"/>
+                <span t-if="props.order === 'asc'" t-ref="load-newer" style="height: 1px;"/>
                 <t t-else="">
                     <t t-if="props.thread.loadOlder and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadOlder"/>
                     <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
