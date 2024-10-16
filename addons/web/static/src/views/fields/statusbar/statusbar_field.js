@@ -283,6 +283,7 @@ export class StatusBarField extends Component {
 
     /**
      * @param {StatusBarItem} item
+     * TODO: unused, remove in master
      */
     getItemAriaLabel(item) {
         if (item.isSelected) {
