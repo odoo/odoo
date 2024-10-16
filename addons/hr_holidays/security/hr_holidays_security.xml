@@ -143,7 +143,11 @@
         <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="domain_force">[
             '|',
-                ('employee_id', '=', False),
+                '&amp;',
+                    ('employee_id', '=', False),
+                    '|',
+                        ('employee_ids', '=', False),
+                        ('employee_ids.company_id', 'in', company_ids),
                 ('employee_id.company_id', 'in', company_ids),
             ('holiday_status_id.company_id', 'in', company_ids + [False])
         ]</field>
