@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Form view to send sms from res.partner -->
+    <record id="action_res_partner_view_form" model="ir.actions.act_window">
+        <field name="name">Send Twilio SMS</field>
+        <field name="res_model">sms.builder</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_partner_id': active_id,
+        }</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">form</field>
+    </record>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Form View of twilio sms group -->
+    <record id="twilio_sms_group_view_form" model="ir.ui.view">
+        <field name="name">twilio.sms.group.view.form</field>
+        <field name="model">twilio.sms.group</field>
+        <field name="arch" type="xml">
+            <form name="Contacts">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <div class="d-flex">
+                                <field class="text-break" name="name"/>
+                            </div>
+                        </h1>
+                    </div>
+                    <field name="contact_ids" widget="many2many" mode="tree">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="twilio_contact_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Twilio SMS Group tree view  -->
+    <record id="twilio_sms_group_view_tree" model="ir.ui.view">
+        <field name="name">twilio.sms.group.view.tree</field>
+        <field name="model">twilio.sms.group</field>
+        <field name="arch" type="xml">
+            <tree name="twilio_contact_tree">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Twilio SMS Group menu action  -->
+    <record id="twilio_sms_group_action" model="ir.actions.act_window">
+        <field name="name">Groups</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">twilio.sms.group</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate Twilio SMS Group
+            </p>
+        </field>
+    </record>
+    <!--    Twilio SMS Group menu  -->
+    <menuitem id="twilio_sms_group_menu" name="Groups"
+              parent="twilio_configuration_menu"
+              action="twilio_sms_group_action"
+              sequence="7"/>
+</odoo>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Twilio SMS Form View-->
+    <record id="twilio_sms_view_form" model="ir.ui.view">
+        <field name="name">twilio.sms.view.form</field>
+        <field name="model">twilio.sms</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button id="action_confirm_sms" name="action_confirm_sms"
+                            string="Send" class="btn-primary"
+                            type="object" invisible="state in ['confirm','sent']"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <div class="d-flex">
+                                <field class="text-break" name="name"/>
+                            </div>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="account_id"/>
+                            <field name="partner_id"/>
+                            <field name="template_body_id"/>
+                        </group>
+                        <group>
+                            <field name="content"/>
+                            <field name="scheduled_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Twilio SMS Tree view  -->
+    <record id="twilio_sms_view_tree" model="ir.ui.view">
+        <field name="name">twilio.sms.view.tree</field>
+        <field name="model">twilio.sms</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="scheduled_date"/>
+                <field name="account_id"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Twilio SMS Action   -->
+    <record id="twilio_sms_action" model="ir.actions.act_window">
+        <field name="name">Twilio SMS</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">twilio.sms</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!--    Twilio SMS Menu -->
+    <menuitem id="twilio_sms_menu" name="SMS" parent="twilio_menu_root"
+              action="twilio_sms_action"
+              sequence="1"/>
+</odoo>

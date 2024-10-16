@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Sms builder form view -->
+    <record id="sms_builder_view_form" model="ir.ui.view">
+        <field name="name">sms.builder.view.form</field>
+        <field name="model">sms.builder</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form name="Message Content">
+                <group>
+                    <group>
+                        <field name="account_id"/>
+                        <field name="partner_id"/>
+                        <field name="template_id"/>
+                    </group>
+                    <group>
+                        <field name="receiving_number"/>
+                        <field name="text_message" widget="sms_widget"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_confirm_sms" type="object"
+                            string="Send" class="btn-primary"
+                            data-hotkey="q"/>
+                    <button special="cancel" data-hotkey="z" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

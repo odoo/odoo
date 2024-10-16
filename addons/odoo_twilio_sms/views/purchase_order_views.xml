@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit purchase order form view for adding Twilio SMS button -->
+    <record id="purchase_order_form" model="ir.ui.view">
+        <field name="name">purchase.order.view.form.inherit.odoo.twilio.sms</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_rfq_send']" position="after">
+                <button name="action_purchase_twilio_sms" type="object"
+                        string="Send SMS Via Twilio"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

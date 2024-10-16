@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Inherit sale order form view to add Twilio sms button-->
+    <record id="crm_lead_view_form_twilio" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.odoo.twilio.sms</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_twilio_sms" type="object"
+                        string="Send SMS Via Twilio"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- <record id="crm_lead_act_window_sms_composer_multi_twilio" model="ir.actions.act_window">
+        <field name="name">Send Twilio SMS Text Message</field>
+        <field name="res_model">sms.builder</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_partner_id': self.partner_id.id
+            'default_res_id': active_id,
+        }</field>
+        <field name="binding_model_id" ref="crm.model_crm_lead"/>
+        <field name="binding_view_types">form</field>
+    </record> -->
+</odoo>

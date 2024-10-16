@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Form View of twilio.account -->
+    <record id="twilio_account_view_form" model="ir.ui.view">
+        <field name="name">twilio.account.view.form</field>
+        <field name="model">twilio.account</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button id="test_connection" name="action_test_connection"
+                            string="TEST CONNECTION" class="btn-primary"
+                            type="object" invisible="state != 'new'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <div class="d-flex">
+                                <field class="text-break" name="name"/>
+                            </div>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="account_sid" password="True"/>
+                            <field name="auth_token" password="True"/>
+                        </group>
+                        <group>
+                            <field name="from_number"/>
+                            <field name="to_number"/>
+                            <field name="body"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Tree View of twilio.account -->
+    <record id="twilio_account_view_tree" model="ir.ui.view">
+        <field name="name">twilio.account.view.tree</field>
+        <field name="model">twilio.account</field>
+        <field name="arch" type="xml">
+            <tree name="twilio_tree">
+                <field name="name"/>
+                <field name="account_sid"/>
+                <field name="auth_token"/>
+                <field name="from_number"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirm'"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Action for twilio  -->
+    <record id="twilio_account_action" model="ir.actions.act_window">
+        <field name="name">Twilio Account</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">twilio.account</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate Account Details
+            </p>
+        </field>
+    </record>
+    <!-- Twilio menu -->
+    <menuitem id="twilio_menu_root" name="Twilio" sequence="2"
+              web_icon="odoo_twilio_sms,static/description/icon.png"/>
+    <!-- Configuration menu -->
+    <menuitem id="twilio_configuration_menu" name="Configuration"
+              parent="twilio_menu_root" sequence="2"/>
+    <!--    Twilio Account menu -->
+    <menuitem id="twilio_account_menu" name="Twilio Account"
+              parent="twilio_configuration_menu" action="twilio_account_action"
+              sequence="4"/>
+</odoo>
