@@ -19,6 +19,7 @@ export const FONT_SIZE_CLASSES = [
     "h6-fs",
     "base-fs",
     "small",
+    "o_small-fs",
 ];
 
 export const TEXT_STYLE_CLASSES = ["display-1", "display-2", "display-3", "display-4", "lead"];
