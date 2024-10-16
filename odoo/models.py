@@ -4275,8 +4275,7 @@ class BaseModel(metaclass=MetaModel):
         :return: the base url for this record
         :rtype: str
         """
-        if len(self) > 1:
-            raise ValueError("Expected singleton or no record: %s" % self)
+        self.ensure_one()
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     def _check_company_domain(self, companies):
