@@ -52,9 +52,10 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
         with ZipFile(BytesIO(res.content)) as zip_file:
-            self.assertEqual(len(zip_file.filelist), 2)
-            self.assertTrue(zip_file.NameToInfo.get(self.invoices[0].invoice_pdf_report_id.name))
-            self.assertTrue(zip_file.NameToInfo.get(self.invoices[1].invoice_pdf_report_id.name))
+            self.assertEqual(
+                zip_file.namelist(),
+                self.invoices.invoice_pdf_report_id.mapped('name'),
+            )
 
     def test_download_invoice_documents_filetype_one(self):
         url = f'/account/download_invoice_documents/{self.invoices[0].id}/pdf'
@@ -69,6 +70,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
         with ZipFile(BytesIO(res.content)) as zip_file:
-            self.assertEqual(len(zip_file.filelist), 2)
-            self.assertTrue(zip_file.NameToInfo.get(self.invoices[0].invoice_pdf_report_id.name))
-            self.assertTrue(zip_file.NameToInfo.get(self.invoices[1].invoice_pdf_report_id.name))
+            self.assertEqual(
+                zip_file.namelist(),
+                self.invoices.invoice_pdf_report_id.mapped('name'),
+            )

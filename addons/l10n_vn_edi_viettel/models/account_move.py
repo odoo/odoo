@@ -261,9 +261,9 @@ class AccountMove(models.Model):
         # The content of the inner zip is a xsl file as well as a xml file.
         # In our case the xsl file is not important, so we can simply ignore it.
         with zipfile.ZipFile(io.BytesIO(file_bytes)) as zip_file:
-            inner_zip_bytes = zip_file.read(zip_file.filelist[0])
+            inner_zip_bytes = zip_file.read(zip_file.infolist()[0])
             with zipfile.ZipFile(io.BytesIO(inner_zip_bytes)) as inner_zip:
-                for file in inner_zip.filelist:
+                for file in inner_zip.infolist():
                     if file.filename.endswith('.xml'):
                         return {
                             'name': file.filename,

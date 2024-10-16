@@ -263,14 +263,14 @@ class IrModuleModule(models.Model):
 
         module_names = []
         with zipfile.ZipFile(module_file, "r") as z:
-            for zf in z.filelist:
+            for zf in z.infolist():
                 if zf.file_size > MAX_FILE_SIZE:
                     raise UserError(_("File '%s' exceed maximum allowed file size", zf.filename))
 
             with file_open_temporary_directory(self.env) as module_dir:
                 manifest_files = [
                     file
-                    for file in z.filelist
+                    for file in z.infolist()
                     if file.filename.count('/') == 1
                     and file.filename.split('/')[1] in MANIFEST_NAMES
                 ]
@@ -290,7 +290,7 @@ class IrModuleModule(models.Model):
                         if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
                             continue
                         module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
-                for file in z.filelist:
+                for file in z.infolist():
                     filename = file.filename
                     mod_name = filename.split('/')[0]
                     is_data_file = filename in module_data_files[mod_name]
@@ -497,7 +497,7 @@ class IrModuleModule(models.Model):
         with zipfile.ZipFile(BytesIO(zip_data), "r") as z:
             manifest_files = [
                 file
-                for file in z.filelist
+                for file in z.infolist()
                 if file.filename.count('/') == 1
                 and file.filename.split('/')[1] in MANIFEST_NAMES
             ]

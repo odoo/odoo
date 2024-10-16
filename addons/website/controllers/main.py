@@ -990,7 +990,7 @@ class Website(Home):
         readable_data = BytesIO(binary_data)
         if zipfile.is_zipfile(readable_data):
             with zipfile.ZipFile(readable_data, "r") as zip_file:
-                for entry in zip_file.filelist:
+                for entry in zip_file.infolist():
                     if entry.file_size > MAX_FONT_FILE_SIZE:
                         raise UserError(_("File '%s' exceeds maximum allowed file size", entry.filename))
                     if entry.filename.rsplit('.', 1)[-1].lower() not in SUPPORTED_FONT_EXTENSIONS \
