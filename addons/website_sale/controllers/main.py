@@ -207,7 +207,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return fuzzy_search_term, product_count, search_result
 
     def _shop_get_query_url_kwargs(
-        self, category, search, min_price, max_price, order=None, tags=None, **post
+        self, category, search, min_price, max_price, order=None, tags=None, attribute_value=None, **post
     ):
         return {
             'category': category,
@@ -216,6 +216,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'min_price': min_price,
             'max_price': max_price,
             'order': order,
+            'attribute_value': attribute_value,
         }
 
     def _get_additional_shop_values(self, values):
@@ -270,6 +271,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
+        if attrib_list:
+            post['attribute_value'] = attrib_list
 
         filter_by_tags_enabled = website.is_view_active('website_sale.filter_products_tags')
         if filter_by_tags_enabled:
@@ -310,8 +313,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         url = '/shop'
         if search:
             post['search'] = search
-        if attrib_list:
-            post['attribute_value'] = attrib_list
 
         options = self._get_search_options(
             category=category,
