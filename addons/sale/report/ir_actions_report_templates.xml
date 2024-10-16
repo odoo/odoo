@@ -5,9 +5,9 @@
         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
         <t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
         <t t-set="address">
-            <div t-field="doc.partner_id"
+            <div t-field="doc.partner_id" class="mb-0"
                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-            <p t-if="doc.partner_id.vat">
+            <p t-if="doc.partner_id.vat" class="mb-0">
                 <t t-if="doc.company_id.account_fiscal_country_id.vat_label" t-out="doc.company_id.account_fiscal_country_id.vat_label"/>
                 <t t-else="">Tax ID</t>: <span t-field="doc.partner_id.vat"/>
             </p>
@@ -116,7 +116,7 @@
                                 <td name="td_priceunit" class="text-end text-nowrap">
                                     <span t-field="line.price_unit">3</span>
                                 </td>
-                                <td t-if="display_discount" class="text-end">
+                                <td name="td_discount" t-if="display_discount" class="text-end">
                                     <span t-field="line.discount">-</span>
                                 </td>
                                 <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_id])"/>

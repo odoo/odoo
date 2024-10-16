@@ -4,7 +4,7 @@
         <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales: Send Quotation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
@@ -15,21 +15,11 @@
         <t t-set="doc_name" t-value="'quotation' if object.state in ('draft', 'sent') else 'order'"/>
         Hello,
         <br/><br/>
-        Your
-        <t t-if="ctx.get('proforma')">
-            Pro forma invoice for <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;"  t-out="object.name or ''">S00052</span>
-            <t t-if="object.origin">
-                (with reference: <t t-out="object.origin or ''"></t> )
-            </t>
-            amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is available.
+        Your <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;" t-out="object.name or ''"></span>
+        <t t-if="object.origin">
+            (with reference: <t t-out="object.origin or ''">S00052</t> )
         </t>
-        <t t-else="">
-            <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;" t-out="object.name or ''"></span>
-            <t t-if="object.origin">
-                (with reference: <t t-out="object.origin or ''">S00052</t> )
-            </t>
-            amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
-        </t>
+        amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
         <br/>
         <t t-set="documents" t-value="object._get_product_documents()"/>
         <t t-if="documents">
@@ -61,6 +51,40 @@
 </div>
             </field>
             <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_proforma" model="mail.template">
+            <field name="name">Sales: Send Proforma</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="description">Used by salespeople when they send proforma to prospects</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        <t t-set="doc_name" t-value="'quotation' if object.state in ('draft', 'sent') else 'order'"/>
+        Hello,
+        <br/><br/>
+        Your Pro forma invoice for <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;"  t-out="object.name or ''">S00052</span>
+        <t t-if="object.origin">
+            (with reference: <t t-out="object.origin or ''"></t> )
+        </t>
+        amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is available.
+        <br/><br/>
+        Do not hesitate to contact us if you have any questions.
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br/><br/>
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+        <br/><br/>
+    </p>
+</div>
+            </field>
+            <field name="report_template_ids" eval="[(4, ref('sale.action_report_pro_forma_invoice'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
