@@ -1410,17 +1410,20 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so_form.partner_id = self.partner_a
         with so_form.order_line.new() as line:
             line.product_id = self.product_a
-            line.product_uom_qty = 10
+            line.product_uom_qty = 20
         so = so_form.save()
         so.action_confirm()
 
         self.assertEqual(so.order_line.product_packaging_id, packaging)
+        self.assertEqual(so.picking_ids.move_ids.product_packaging_qty, 2)
 
         with Form(so) as so_form:
             with so_form.order_line.edit(0) as line:
-                line.product_uom_qty = 8
+                line.product_uom_qty = 10
 
-        self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
+        self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 10)
+        self.assertEqual(so.picking_ids.move_ids.product_packaging_qty, 1)
+        self.assertEqual(so.order_line.product_packaging_id, packaging)
 
     def test_backorder_and_decrease_sol_qty(self):
         """

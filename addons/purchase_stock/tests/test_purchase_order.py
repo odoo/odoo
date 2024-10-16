@@ -521,17 +521,20 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po_form.partner_id = self.partner_a
         with po_form.order_line.new() as line:
             line.product_id = self.product_a
-            line.product_qty = 10
+            line.product_qty = 20
         po = po_form.save()
         po.button_confirm()
 
         self.assertEqual(po.order_line.product_packaging_id, packaging)
+        self.assertEqual(po.picking_ids.move_ids.product_packaging_qty, 2)
 
         with Form(po) as po_form:
             with po_form.order_line.edit(0) as line:
-                line.product_qty = 8
+                line.product_qty = 10
 
-        self.assertEqual(po.picking_ids.move_ids.product_uom_qty, 8)
+        self.assertEqual(po.picking_ids.move_ids.product_qty, 10)
+        self.assertEqual(po.picking_ids.move_ids.product_packaging_qty, 1)
+        self.assertEqual(po.order_line.product_packaging_id, packaging)
 
     def test_packaging_propagation(self):
         """ Editing the packaging on an purchase.order.line

@@ -53,6 +53,12 @@ class ProductPackaging(models.Model):
             return rounded_qty if float_compare(rounded_qty, product_qty, precision_rounding=default_uom.rounding) else product_qty
         return product_qty
 
+    @api.depends('name', 'qty', 'product_uom_id')
+    def _compute_display_name(self):
+        for pkg in self:
+            name = _("%s (%s %s)", pkg.name, pkg.qty, pkg.product_uom_id.name)
+            pkg.display_name = name
+
     def _find_suitable_product_packaging(self, product_qty, uom_id):
         """ try find in `self` if a packaging's qty in given uom is a divisor of
         the given product_qty. If so, return the one with greatest divisor.
@@ -65,15 +71,15 @@ class ProductPackaging(models.Model):
         return self.env['product.packaging']
 
     def _compute_qty(self, qty, qty_uom=False):
-        """Returns the qty of this packaging that qty converts to.
-        A float is returned because there are edge cases where some users use
-        "part" of a packaging
+        """Returns the rounded-up quantity of this packaging that qty converts to.
+        rounded-up quantity is returned because there are edge cases where some users use
+        "part" of a packaging, but actual packages cannot be broken.
 
         :param qty: float of product quantity (given in product UoM if no qty_uom provided)
         :param qty_uom: Optional uom of quantity
-        :returns: float of packaging qty
+        :returns: float of packaging qty rounded up to the nearest whole number
         """
         self.ensure_one()
         if qty_uom:
             qty = qty_uom._compute_quantity(qty, self.product_uom_id)
-        return float_round(qty / self.qty, precision_rounding=self.product_uom_id.rounding)
+        return float_round(qty / self.qty, precision_rounding=self.product_uom_id.rounding, rounding_method='HALF_UP')
