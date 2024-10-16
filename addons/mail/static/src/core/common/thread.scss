@@ -27,8 +27,14 @@
     }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .o-mail-Thread-banner {
     z-index: $o-mail-NavigableList-zIndex - 1;
+    animation: fadeIn 0.25s ease-out;
 }
 
 .o-mail-Thread-bannerHover:hover {
