@@ -529,8 +529,15 @@ class MailMail(models.Model):
         Return iterators over
             mail_server_id, email_from, Records<mail.mail>.ids
         """
+<<<<<<< 088cef5c2a6fc2e3ec139471f08418387636cc8c
         mail_values = self.read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
         all_mail_servers = self.env['ir.mail_server'].sudo().search([], order='sequence, id')
+||||||| f41b36e2b0125b4f8b6a3e36ee4f5ccac8871360
+        mail_values = self.read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
+=======
+        mail_values = self.with_context(prefetch_fields=False).read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'], load='')
+        self.env['ir.mail_server'].browse(values['mail_server_id'] or False for values in mail_values).mapped('display_name')
+>>>>>>> e2ddd94782a791b3a341218209a1a7379de2137f
 
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
@@ -538,9 +545,19 @@ class MailMail(models.Model):
             # protect against ill-formatted email_from when formataddr was used on an already formatted email
             emails_from = tools.mail.email_split_and_format_normalize(values['email_from'])
             email_from = emails_from[0] if emails_from else values['email_from']
+<<<<<<< 088cef5c2a6fc2e3ec139471f08418387636cc8c
             mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
             alias_domain_id = values['record_alias_domain_id'][0] if values['record_alias_domain_id'] else False
             key = (mail_server_id, alias_domain_id, email_from, mail._filter_mail_mail_servers(all_mail_servers))
+||||||| f41b36e2b0125b4f8b6a3e36ee4f5ccac8871360
+            mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
+            alias_domain_id = values['record_alias_domain_id'][0] if values['record_alias_domain_id'] else False
+            key = (mail_server_id, alias_domain_id, email_from)
+=======
+            mail_server_id = values['mail_server_id'] if values['mail_server_id'] else False
+            alias_domain_id = values['record_alias_domain_id'] if values['record_alias_domain_id'] else False
+            key = (mail_server_id, alias_domain_id, email_from)
+>>>>>>> e2ddd94782a791b3a341218209a1a7379de2137f
             group_per_email_from[key].append(values['id'])
 
         group_per_smtp_from = defaultdict(list)
@@ -854,7 +871,14 @@ class MailMail(models.Model):
             if auto_commit is True:
                 if post_send_callback:
                     post_send_callback([mail_id])
+<<<<<<< 088cef5c2a6fc2e3ec139471f08418387636cc8c
                 self.env.cr.commit()
+||||||| f41b36e2b0125b4f8b6a3e36ee4f5ccac8871360
+                self._cr.commit()
+=======
+                self._cr.commit()
+            mail.invalidate_recordset(['body_html'])
+>>>>>>> e2ddd94782a791b3a341218209a1a7379de2137f
         if post_send_callback:
             post_send_callback(self.ids)
         return True
