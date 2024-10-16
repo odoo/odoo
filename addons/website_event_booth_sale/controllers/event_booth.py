@@ -3,6 +3,7 @@
 
 import json
 
+from odoo import exceptions
 from odoo.http import request, route
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 
@@ -28,7 +29,11 @@ class WebsiteEventBoothController(WebsiteEventController):
         if not booth_category.exists():
             return json.dumps({'error': 'boothCategoryError'})
 
-        booth_values = self._prepare_booth_registration_values(event, kwargs)
+        try:
+            booth_values = self._prepare_booth_registration_values(event, kwargs)
+        except exceptions.UserError as e:
+            return json.dumps({'customError': e.name})
+
         order_sudo = request.website.sale_get_order(force_create=True)
         order_sudo._cart_update(
             product_id=booth_category.product_id.id,

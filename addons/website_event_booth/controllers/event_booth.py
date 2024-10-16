@@ -5,7 +5,7 @@ import json
 import werkzeug
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import exceptions, http, tools
+from odoo import exceptions, http, tools, _
 from odoo.http import request
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 
@@ -92,7 +92,12 @@ class WebsiteEventBoothController(WebsiteEventController):
 
         if not booths:
             return json.dumps({'error': 'boothError'})
-        booth_values = self._prepare_booth_registration_values(event, kwargs)
+
+        try:
+            booth_values = self._prepare_booth_registration_values(event, kwargs)
+        except exceptions.UserError as e:
+            return json.dumps({'customError': e.name})
+
         booths.action_confirm(booth_values)
 
         return self._prepare_booth_registration_success_values(event.name, booth_values)
@@ -102,9 +107,18 @@ class WebsiteEventBoothController(WebsiteEventController):
 
     def _prepare_booth_registration_partner_values(self, event, kwargs):
         if request.env.user._is_public():
-            conctact_email_normalized = tools.email_normalize(kwargs['contact_email'])
-            contact_name_email = tools.formataddr((kwargs['contact_name'], conctact_email_normalized))
-            partner = request.env['res.partner'].sudo().find_or_create(contact_name_email)
+            contact_email_normalized = tools.email_normalize(kwargs['contact_email'])
+            partner = request.env['res.partner'].sudo().search([
+                ('email_normalized', '=', contact_email_normalized)
+            ], limit=1)
+            if partner and partner.user_ids:
+                raise exceptions.UserError(_('Please connect to book your booths.'))
+            elif not partner:
+                # call find_or_create even though we know there is none
+                # -> to avoid duplicating the create logic inside 'find_or_create'
+                contact_name_email = tools.formataddr((kwargs['contact_name'], contact_email_normalized))
+                partner = request.env['res.partner'].sudo().find_or_create(contact_name_email)
+
             if not partner.name and kwargs.get('contact_name'):
                 partner.name = kwargs['contact_name']
             if not partner.phone and kwargs.get('contact_phone'):

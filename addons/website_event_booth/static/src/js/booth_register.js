@@ -222,6 +222,9 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
                 window.location.href = jsonResponse.redirect;
             } else if (jsonResponse.error) {
                 this._updateErrorDisplay(jsonResponse.error);
+            } else if (jsonResponse.customError) {
+                this.$('.o_wbooth_registration_error_section').removeClass('d-none');
+                this.$('.o_wbooth_registration_error_message').text(jsonResponse.customError);
             }
         }
 
