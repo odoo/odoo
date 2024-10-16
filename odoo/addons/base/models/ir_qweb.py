@@ -389,7 +389,7 @@ from dateutil.relativedelta import relativedelta
 from psycopg2.extensions import TransactionRollbackError
 
 from odoo import api, models, tools
-from odoo.orm import registry
+from odoo.modules.registry import _REGISTRY_CACHES
 from odoo.tools import config, safe_eval, pycompat
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
@@ -2688,7 +2688,7 @@ def render(template_name, values, load, **options):
     """
     class MockPool:
         db_name = None
-        _Registry__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in registry._REGISTRY_CACHES.items()}
+        _Registry__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
         _Registry__caches_groups = {}
         for cache_name, cache in _Registry__caches.items():
             _Registry__caches_groups.setdefault(cache_name.split('.')[0], []).append(cache)
