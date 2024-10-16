@@ -215,39 +215,39 @@ class TestMassMailing(TestMassMailCommon):
                 # -> email_to_recipients: email_to for outgoing emails, list means several recipients
                 self.assertMailTraces(
                     [
-                        {'email': 'customer.multi.1@example.com, "Test Multi 2" <customer.multi.2@example.com>',
+                        {'email': 'customer.multi.1@example.com',
                          'email_to_mail': False,  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_mult.name}" <customer.multi.1@example.com>', f'"{customer_mult.name}" <customer.multi.2@example.com>']],
                          'failure_type': False,
                          'partner': customer_mult,
                          'trace_status': 'sent'},
-                        {'email': '"Formatted Customer" <test.customer.format@example.com>',
+                        {'email': 'test.customer.format@example.com',
                          'email_to_mail': False,  # using recipient_ids, not email_to
                          # mail to avoids double encapsulation
                          'email_to_recipients': [[f'"{customer_fmt.name}" <test.customer.format@example.com>']],
                          'failure_type': False,
                          'partner': customer_fmt,
                          'trace_status': 'sent'},
-                        {'email': '"Unicode Customer" <test.customer.😊@example.com>',
+                        {'email': 'test.customer.😊@example.com',
                          'email_to_mail': False,  # using recipient_ids, not email_to
                          # mail to avoids double encapsulation
                          'email_to_recipients': [[f'"{customer_unic.name}" <test.customer.😊@example.com>']],
                          'failure_type': False,
                          'partner': customer_unic,
                          'trace_status': 'sent'},
-                        {'email': 'TEST.CUSTOMER.CASE@EXAMPLE.COM',
+                        {'email': 'test.customer.case@example.com',
                          'email_to_mail': False,  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_case.name}" <test.customer.case@example.com>']],
                          'failure_type': False,
                          'partner': customer_case,
                          'trace_status': 'sent'},  # lower cased
-                        {'email': 'test.customer.weird@example.com Weird Format',
+                        {'email': 'test.customer.weird@example.comweirdformat',
                          'email_to_mail': False,  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_weird.name}" <test.customer.weird@example.comweirdformat>']],
                          'failure_type': False,
                          'partner': customer_weird,
                          'trace_status': 'sent'},  # concatenates everything after domain
-                        {'email': 'Weird Format2 test.customer.weird.2@example.com',
+                        {'email': 'test.customer.weird.2@example.com',
                          'email_to_mail': False,  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_weird_2.name}" <test.customer.weird.2@example.com>']],
                          'failure_type': False,
