@@ -13,13 +13,14 @@
     </t>
 
     <t t-name="web.StatusBarField">
-        <div class="o_statusbar_status" t-ref="root" role="radiogroup">
+        <div class="o_statusbar_status" t-ref="root" role="radiogroup" aria-label="Statusbar">
             <Dropdown position="'bottom-end'">
                 <button
                     t-ref="after"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
                     t-att-disabled="props.isDisabled"
+                    aria-label="More..."
                 >
                     ...
                 </button>
@@ -40,7 +41,6 @@
                     }"
                     t-att-disabled="props.isDisabled || item.isSelected"
                     role="radio"
-                    t-att-aria-label="getItemTooltip(item)"
                     t-att-aria-checked="item.isSelected.toString()"
                     t-att-aria-current="item.isSelected and 'step'"
                     t-att-data-value="item.value"
@@ -54,6 +54,7 @@
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
                     t-att-disabled="props.isDisabled"
+                    aria-label="More..."
                 >
                     ...
                 </button>
