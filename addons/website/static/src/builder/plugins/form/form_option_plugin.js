@@ -32,6 +32,7 @@ import {
     setActiveProperties,
     setVisibilityDependency,
     getParsedDataFor,
+    rerenderField,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -194,6 +195,8 @@ export class FormOptionPlugin extends Plugin {
             },
         ],
         so_content_addition_selector: [".s_website_form"],
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        on_cloned_handlers: this.onCloned.bind(this),
     };
     setup() {
         this.modelsCache = new SyncCache(this._fetchModels.bind(this));
@@ -370,11 +373,14 @@ export class FormOptionPlugin extends Plugin {
         if (formInfo) {
             const formatInfo = getDefaultFormat(el);
             formInfo.formFields.forEach((field) => {
-                field.formatInfo = formatInfo;
+                // Create a shallow copy of field to prevent unintended
+                // mutations to the original field stored in the registry
+                const _field = { ...field };
+                _field.formatInfo = formatInfo;
                 const locationEl = el.querySelector(
                     ".s_website_form_submit, .s_website_form_recaptcha"
                 );
-                locationEl.insertAdjacentElement("beforebegin", renderField(field));
+                locationEl.insertAdjacentElement("beforebegin", renderField(_field));
             });
         }
     }
@@ -714,6 +720,63 @@ export class FormOptionPlugin extends Plugin {
             valueList,
             conditionValueList,
         };
+    }
+    /**
+     * Handler called when a snippet is dropped.
+     *
+     * Re-renders all the fields inside the dropped snippet to ensure each
+     * field gets a unique ID.
+     *
+     * @param {Object} params
+     * @param {HTMLElement} params.snippetEl - The dropped snippet element.
+     */
+    async onSnippetDropped({ snippetEl }) {
+        await this.rerenderFieldsInElement(snippetEl);
+    }
+    /**
+     * Handler called when an element is cloned.
+     *
+     * Re-renders all the fields in the cloned element to ensure each field gets
+     * a unique ID.
+     *
+     * @param {Object} params
+     * @param {HTMLElement} params.cloneEl - The cloned element.
+     */
+    async onCloned({ cloneEl }) {
+        await this.rerenderFieldsInElement(cloneEl);
+    }
+    /**
+     * Re-renders all valid fields inside the given element to ensure
+     * each field gets a unique ID.
+     *
+     * Handles:
+     * - A single field element
+     * - A form element
+     * - Any container that may include one or more forms
+     *
+     * @param {HTMLElement} rootEl
+     */
+    async rerenderFieldsInElement(rootEl) {
+        if (rootEl.matches("[data-name='Field']:not(.s_website_form_dnone)")) {
+            // The root element is a single field - rerender it directly
+            const { fields } = await this.loadFieldOptionData(rootEl);
+            rerenderField(rootEl, fields);
+        } else {
+            // The root element may be a form or contain multiple forms -
+            // rerender them all
+            for (const formEl of selectElements(rootEl, ".s_website_form")) {
+                const formFieldsToRerender = formEl.querySelectorAll(
+                    "[data-name='Field']:not(.s_website_form_dnone)"
+                );
+                if (formFieldsToRerender.length === 0) {
+                    continue;
+                }
+                const { fields } = await this.loadFieldOptionData(formFieldsToRerender[0]);
+                for (const fieldEl of formFieldsToRerender) {
+                    rerenderField(fieldEl, fields);
+                }
+            }
+        }
     }
 }
 
