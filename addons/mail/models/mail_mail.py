@@ -545,7 +545,7 @@ class MailMail(models.Model):
         Return iterators over
             mail_server_id, email_from, Records<mail.mail>.ids
         """
-        mail_values = self.read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
+        mail_values = self.with_context(prefetch_fields=False).read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
 
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
@@ -835,6 +835,7 @@ class MailMail(models.Model):
                 if post_send_callback:
                     post_send_callback([mail_id])
                 self._cr.commit()
+            mail.invalidate_recordset(['body_html'])
         if post_send_callback:
             post_send_callback(self.ids)
         return True
