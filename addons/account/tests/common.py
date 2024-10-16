@@ -10,6 +10,7 @@ import json
 import base64
 from contextlib import contextmanager
 from functools import wraps
+from itertools import count
 from lxml import etree
 from unittest import SkipTest
 from unittest.mock import patch
@@ -951,12 +952,10 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         results = json.loads(self.env['ir.config_parameter'].get_param('account.tests_shared_js_python', '[]'))
 
         self.assertEqual(len(results), len(self.js_tests))
-        index = 1
-        for (js_test, expected_values, assert_function), results in zip(self.js_tests, results):
-            js_test.update(results)
+        for index, (js_test, expected_values, assert_function), r in zip(count(1), self.js_tests, results):
+            js_test.update(r)
             with self.subTest(test=js_test['test'], index=index):
                 assert_function(js_test, expected_values)
-            index += 1
 
     # -------------------------------------------------------------------------
     # Multi-lines document creation

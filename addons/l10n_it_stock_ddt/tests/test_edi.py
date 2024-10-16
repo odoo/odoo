@@ -118,7 +118,7 @@ class TestItEdiDDT(TestItEdi):
             self.sale_order.action_confirm()
 
             # Create two pickings, so 2 DDTs
-            for dummy in range(2):
+            for _i in range(2):
                 self._create_delivery(self.sale_order, 1)
 
         # Create one invoice

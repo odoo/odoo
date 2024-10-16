@@ -144,7 +144,7 @@ class AccountMoveSend(models.AbstractModel):
                 # the response only contains message uuids,
                 # so we have to rely on the order to connect peppol messages to account.move
                 invoices = self.env['account.move']
-                for message, (invoice, invoice_data) in zip(response['messages'], invoices_data_peppol.items()):
+                for message, (invoice, _invoice_data) in zip(response['messages'], invoices_data_peppol.items()):
                     invoice.peppol_message_uuid = message['message_uuid']
                     invoice.peppol_move_state = 'processing'
                     invoices |= invoice

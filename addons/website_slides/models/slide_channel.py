@@ -1244,8 +1244,8 @@ class SlideChannel(models.Model):
                 tags = ChannelTag
             # Group by group_id
             # OR inside a group, AND between groups.
-            for tags in tags.grouped('group_id').values():
-                domain.append([('tag_ids', 'in', tags.ids)])
+            for tags_ in tags.grouped('group_id').values():
+                domain.append([('tag_ids', 'in', tags_.ids)])
         if slide_category and 'nbr_%s' % slide_category in self:
             domain.append([('nbr_%s' % slide_category, '>', 0)])
         search_fields = ['name']

@@ -165,7 +165,7 @@ class SaleOrder(models.Model):
             }
 
         if self.tasks_count > 1:  # cross project kanban task
-            for idx, (view_id, view_type) in enumerate(action['views']):
+            for idx, (_view_id, view_type) in enumerate(action['views']):
                 if view_type == 'kanban':
                     action['views'][idx] = (kanban_view_id, 'kanban')
                 elif view_type == 'list':

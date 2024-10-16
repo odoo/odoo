@@ -177,7 +177,7 @@ class Selection(Field[str | typing.Literal[False]]):
             if 'selection' in field.args:
                 value_modules.clear()
                 if isinstance(field.args['selection'], list):
-                    for value, label in field.args['selection']:
+                    for value, _label in field.args['selection']:
                         value_modules[value].add(module)
             if 'selection_add' in field.args:
                 for value_label in field.args['selection_add']:

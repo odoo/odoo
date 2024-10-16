@@ -690,7 +690,7 @@ will update the cost of every lot/serial number in stock."),
         for product, location, lot, qty in lots:
             if location._should_be_valued():
                 lot_by_product[product][lot] += qty
-        for product, location, lot, qty in neg_lots:
+        for _product, location, lot, _qty in neg_lots:
             if location._should_be_valued():
                 raise UserError(_("Lot %(lot)s has a negative quantity in stock. Correct this \
                         quantity before enabling lot valuation", lot=lot))

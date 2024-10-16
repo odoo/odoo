@@ -7,7 +7,7 @@ from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, clean_context
-from odoo.tools.misc import format_date, groupby
+from odoo.tools.misc import format_date, unique
 
 MAP_REPAIR_TO_PICKING_LOCATIONS = {
     'location_id': 'default_location_src_id',
@@ -642,7 +642,7 @@ class RepairOrder(models.Model):
 
         picking_type_by_company_user = {}
         without_default_warehouse_companies = set()
-        for (company, user), dummy in groupby(self, lambda r: (r.company_id, r.user_id)):
+        for company, user in unique((r.company_id, r.user_id) for r in self):
             default_warehouse = user.with_company(company.id)._get_default_warehouse_id()
             if default_warehouse and default_warehouse.repair_type_id:
                 picking_type_by_company_user[(company, user)] = default_warehouse.repair_type_id

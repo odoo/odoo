@@ -2427,7 +2427,7 @@ class CrmLead(models.Model):
         # get current frequencies related to the target leads
         leads_frequency_values_by_team = dict((team_id, []) for team_id in team_ids)
         leads_pls_fields = set()  # ensure to keep each field unique (can have multiple tag_id leads_values_dict)
-        for lead_id, values in leads_values_dict.items():
+        for values in leads_values_dict.values():
             team_id = values.get('team_id', 0)  # If team_id is unset, consider it as team 0
             lead_frequency_values = {'count': 1}
             for field, value in values['values']:

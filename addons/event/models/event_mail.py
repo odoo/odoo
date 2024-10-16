@@ -270,7 +270,7 @@ class EventMail(models.Model):
     def _create_missing_mail_registrations(self, registrations):
         new = self.env["event.mail.registration"]
         for scheduler in self:
-            for chunk in tools.split_every(500, registrations.ids, self.env["event.registration"].browse):
+            for _chunk in tools.split_every(500, registrations.ids, self.env["event.registration"].browse):
                 new += self.env['event.mail.registration'].create([{
                     'registration_id': registration.id,
                     'scheduler_id': scheduler.id,

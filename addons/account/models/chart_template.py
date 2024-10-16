@@ -468,7 +468,7 @@ class AccountChartTemplate(models.AbstractModel):
             untranslatable_fields = untranslatable_model_fields.get(model_name, [])
             if not untranslatable_fields:
                 continue
-            for _xmlid, record in records.items():
+            for record in records.values():
                 for field in untranslatable_fields:
                     if field not in record:
                         continue
@@ -903,7 +903,7 @@ class AccountChartTemplate(models.AbstractModel):
             existing_accounts[account_xml_id] = None
 
         # Assign the account based on the map
-        for field, account_name in field_and_names:
+        for field, _account_name in field_and_names:
             for tax_group in tax_group_data.values():
                 tax_group[field] = existing_accounts.get(account_template_xml_id)
 

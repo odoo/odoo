@@ -83,7 +83,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
         moves = self.env['account.move'].sudo().search(
             self._get_unhashed_moves_in_hashed_period_domain(company_id, hash_date, [('state', '=', 'posted')])
         )
-        for journal, journal_moves in moves.grouped('journal_id').items():
+        for journal_moves in moves.grouped('journal_id').values():
             for chain_moves in journal_moves.grouped('sequence_prefix').values():
                 chain_info = chain_moves._get_chain_info(force_hash=True)
                 if chain_info is False:

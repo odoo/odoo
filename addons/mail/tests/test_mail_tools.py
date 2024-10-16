@@ -88,19 +88,19 @@ class TestMailTools(MailCommon):
         test_partner = self.test_partner.with_env(self.env)
 
         # standard test, no multi-email, to assert base behavior
-        sources = [(self._test_email, True), (self._test_email, False),]
-        expected = [follower_partner, test_partner]
-        for (source, follower_check), expected in zip(sources, expected):
+        cases = [(self._test_email, True), (self._test_email, False)]
+        for source, follower_check in cases:
+            expected_partner = follower_partner if follower_check else test_partner
             with self.subTest(source=source, follower_check=follower_check):
                 partner = self.env['res.partner']._mail_find_partner_from_emails(
                     [source], records=linked_record if follower_check else None
                 )[0]
-                self.assertEqual(partner, expected)
+                self.assertEqual(partner, expected_partner)
 
         # formatted email
         encapsulated_test_email = f'"Robert Astaire" <{self._test_email}>'
         (follower_partner + test_partner).sudo().write({'email': encapsulated_test_email})
-        sources = [
+        cases = [
             (self._test_email, True),  # normalized
             (self._test_email, False),  # normalized
             (encapsulated_test_email, True),  # encapsulated, same
@@ -108,41 +108,34 @@ class TestMailTools(MailCommon):
             (f'"AnotherName" <{self._test_email}', True),  # same normalized, other name
             (f'"AnotherName" <{self._test_email}', False),  # same normalized, other name
         ]
-        expected = [follower_partner, test_partner,
-                    follower_partner, test_partner,
-                    follower_partner, test_partner,
-                    follower_partner, test_partner]
-        for (source, follower_check), expected in zip(sources, expected):
+        for source, follower_check in cases:
+            expected_partner = follower_partner if follower_check else test_partner
             with self.subTest(source=source, follower_check=follower_check):
                 partner = self.env['res.partner']._mail_find_partner_from_emails(
                     [source], records=linked_record if follower_check else None
                 )[0]
-                self.assertEqual(partner, expected,
+                self.assertEqual(partner, expected_partner,
                                 'Mail: formatted email is recognized through usage of normalized email')
 
         # multi-email
         _test_email_2 = '"Robert Astaire" <not.alfredoastaire@test.example.com>'
         (follower_partner + test_partner).sudo().write({'email': f'{self._test_email}, {_test_email_2}'})
-        sources = [
-            (self._test_email, True),  # first email
-            (self._test_email, False),  # first email
-            (_test_email_2, True),  # second email
-            (_test_email_2, False),  # second email
-            ('not.alfredoastaire@test.example.com', True),  # normalized second email in field
-            ('not.alfredoastaire@test.example.com', False),  # normalized second email in field
-            (f'{self._test_email}, {_test_email_2}', True),  # multi-email, both matching, depends on comparison
-            (f'{self._test_email}, {_test_email_2}', False)  # multi-email, both matching, depends on comparison
+        cases = [
+            (self._test_email, True, follower_partner),  # first email
+            (self._test_email, False, test_partner),  # first email
+            (_test_email_2, True, self.env['res.partner']),  # second email
+            (_test_email_2, False, self.env['res.partner']),  # second email
+            ('not.alfredoastaire@test.example.com', True, self.env['res.partner']),  # normalized second email in field
+            ('not.alfredoastaire@test.example.com', False, self.env['res.partner']),  # normalized second email in field
+            (f'{self._test_email}, {_test_email_2}', True, follower_partner),  # multi-email, both matching, depends on comparison
+            (f'{self._test_email}, {_test_email_2}', False, test_partner),  # multi-email, both matching, depends on comparison
         ]
-        expected = [follower_partner, test_partner,
-                    self.env['res.partner'], self.env['res.partner'],
-                    self.env['res.partner'], self.env['res.partner'],
-                    follower_partner, test_partner]
-        for (source, follower_check), expected in zip(sources, expected):
+        for source, follower_check, expected_partner in cases:
             with self.subTest(source=source, follower_check=follower_check):
                 partner = self.env['res.partner']._mail_find_partner_from_emails(
                     [source], records=linked_record if follower_check else None
                 )[0]
-                self.assertEqual(partner, expected,
+                self.assertEqual(partner, expected_partner,
                                 'Mail (FIXME): partial recognition of multi email through email_normalize')
 
         # test users with same email, priority given to current user

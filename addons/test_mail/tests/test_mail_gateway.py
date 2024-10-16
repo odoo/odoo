@@ -1239,7 +1239,7 @@ class TestMailgateway(MailCommon):
         self.assertEqual(yet_other_record.message_bounce, 0)
 
         extra = self.fake_email.message_id
-        for i in range(10):
+        for _i in range(10):
             record = self.format_and_process(
                 test_mail_data.MAIL_BOUNCE, f'A third name <{self.partner_1.email}>',
                 f'groups@{self.alias_domain}',

@@ -1379,7 +1379,7 @@ class MailingMailing(models.Model):
 
         # Apply the changes.
         urls = self._create_attachments_from_inline_images([(image, original_id) for (image, _, _, original_id) in conversion_info])
-        for ((image, node, old_url, original_id), new_url) in zip(conversion_info, urls):
+        for ((_image, node, old_url, _original_id), new_url) in zip(conversion_info, urls):
             did_modify_body = True
             if node.tag == 'img':
                 node.attrib['src'] = new_url

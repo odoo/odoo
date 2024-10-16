@@ -109,7 +109,7 @@ class LinkTracker(models.Model):
                 continue
 
             utms = {}
-            for key, field_name, cook in self.env['utm.mixin'].tracking_fields():
+            for key, field_name, _cook in self.env['utm.mixin'].tracking_fields():
                 field = self._fields[field_name]
                 attr = tracker[field_name]
                 if field.type == 'many2one':

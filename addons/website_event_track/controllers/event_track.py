@@ -259,7 +259,7 @@ class EventTrackController(http.Controller):
 
             time_slots_count = int(((end_time_slot - start_time_slot).total_seconds() / 3600) * 4)
             current_time_slot = start_time_slot
-            for i in range(0, time_slots_count + 1):
+            for _i in range(0, time_slots_count + 1):
                 global_time_slots_by_day[day][current_time_slot] = tracks_by_rounded_times.get(current_time_slot, {})
                 global_time_slots_by_day[day][current_time_slot]['formatted_time'] = self._get_locale_time(current_time_slot, lang_code)
                 current_time_slot = current_time_slot + timedelta(minutes=15)

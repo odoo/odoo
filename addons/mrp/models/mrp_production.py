@@ -2098,11 +2098,11 @@ class MrpProduction(models.Model):
             if another_action:
                 return another_action
             return True
-        context = self.env.context.copy()
-        context = {k: v for k, v in context.items() if not k.startswith('default_')}
-        for k, v in context.items():
-            if k.startswith('skip_'):
-                context[k] = False
+        context = {
+            k: False if k.startswith('skip_') else v
+            for k, v in self.env.context.items()
+            if not k.startswith('default_')
+        }
         another_action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',

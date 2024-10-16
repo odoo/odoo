@@ -22,8 +22,7 @@ class TestRecurrentEvents(TransactionCase):
         events = events.sorted('start')
         self.assertEqual(len(events), len(dates), "Wrong number of events in the recurrence")
         self.assertTrue(all(events.mapped('active')), "All events should be active")
-        for event, dates in zip(events, dates):
-            start, stop = dates
+        for event, (start, stop) in zip(events, dates):
             self.assertEqual(event.start, start)
             self.assertEqual(event.stop, stop)
 

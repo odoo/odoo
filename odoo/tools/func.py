@@ -108,7 +108,7 @@ def frame_codeinfo(fframe, back=0):
     try:
         if not fframe:
             return "<unknown>", ''
-        for i in range(back):
+        for _i in range(back):
             fframe = fframe.f_back
         try:
             fname = getsourcefile(fframe)

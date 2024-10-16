@@ -1102,7 +1102,7 @@ class Many2many(_RelationalMulti[M]):
             if to_create:
                 # create lines in batch, and link them
                 lines = comodel.create([vals for ids, vals in to_create])
-                for line, (ids, vals) in zip(lines, to_create):
+                for line, (ids, _vals) in zip(lines, to_create):
                     relation_add(ids, line.id)
 
             if to_delete:

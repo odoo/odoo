@@ -271,7 +271,7 @@ class SlideSlide(models.Model):
             if slide.channel_id.id not in channel_slides:
                 channel_slides[slide.channel_id.id] = slide.channel_id.slide_ids
 
-        for cid, slides in channel_slides.items():
+        for slides in channel_slides.values():
             current_category = self.env['slide.slide']
             slide_list = list(slides)
             slide_list.sort(key=lambda s: (s.sequence, not s.is_category))

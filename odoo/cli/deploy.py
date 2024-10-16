@@ -51,7 +51,7 @@ class Deploy(Command):
         try:
             print("Zipping module directory...")
             with zipfile.ZipFile(temp, 'w') as zfile:
-                for root, dirs, files in os.walk(path):
+                for root, _dirs, files in os.walk(path):
                     for file in files:
                         file_path = os.path.join(root, file)
                         zfile.write(file_path, file_path.split(container).pop())

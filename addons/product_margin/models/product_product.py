@@ -162,7 +162,7 @@ class ProductProduct(models.Model):
         ctx['force_company'] = company_id
         invoice_types = ('in_invoice', 'in_refund')
         self.env.cr.execute(sqlstr, (tuple(self.ids), states, payment_states, invoice_types, date_from, date_to, company_id))
-        for product_id, avg, qty, total, dummy in self.env.cr.fetchall():
+        for product_id, avg, qty, total, _dummy in self.env.cr.fetchall():
             res[product_id]['purchase_avg_price'] = avg and avg or 0.0
             res[product_id]['purchase_num_invoiced'] = qty and qty or 0.0
             res[product_id]['total_cost'] = total and total or 0.0

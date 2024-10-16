@@ -137,7 +137,7 @@ class Cloc(object):
 
         module_name = os.path.basename(path)
         self.book(module_name)
-        for root, dirs, files in os.walk(path):
+        for root, _dirs, files in os.walk(path):
             for file_name in files:
                 file_path = os.path.join(root, file_name)
 

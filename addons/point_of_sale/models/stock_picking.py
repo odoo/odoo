@@ -92,7 +92,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         lines_by_product = groupby(sorted(lines, key=lambda l: l.product_id.id), key=lambda l: l.product_id.id)
         move_vals = []
-        for dummy, olines in lines_by_product:
+        for _product, olines in lines_by_product:
             order_lines = self.env['pos.order.line'].concat(*olines)
             move_vals.append(self._prepare_stock_move_vals(order_lines[0], order_lines))
         moves = self.env['stock.move'].create(move_vals)

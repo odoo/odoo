@@ -95,7 +95,7 @@ class StockQuant(TransactionCase):
     def test_get_available_quantity_2(self):
         """ Quantity availability with multiple quants in a location.
         """
-        for i in range(3):
+        for _i in range(3):
             self.env['stock.quant'].create({
                 'product_id': self.product.id,
                 'location_id': self.stock_location.id,
@@ -106,7 +106,7 @@ class StockQuant(TransactionCase):
     def test_get_available_quantity_3(self):
         """ Quantity availability with multiple quants (including negatives ones) in a location.
         """
-        for i in range(3):
+        for _i in range(3):
             self.env['stock.quant'].create({
                 'product_id': self.product.id,
                 'location_id': self.stock_location.id,
@@ -204,7 +204,7 @@ class StockQuant(TransactionCase):
     def test_increase_available_quantity_2(self):
         """ Increase the available quantity when multiple quants are already in a location.
         """
-        for i in range(2):
+        for _i in range(2):
             self.env['stock.quant'].create({
                 'product_id': self.product.id,
                 'location_id': self.stock_location.id,
@@ -292,7 +292,7 @@ class StockQuant(TransactionCase):
     def test_decrease_available_quantity_2(self):
         """ Decrease the available quantity when multiple quants are already in a location.
         """
-        for i in range(2):
+        for _i in range(2):
             self.env['stock.quant'].create({
                 'product_id': self.product.id,
                 'location_id': self.stock_location.id,
@@ -355,7 +355,7 @@ class StockQuant(TransactionCase):
         """ Increase the reserved quantity of quantity x when there's two quants in a given
         location which have an available quantity of x together.
         """
-        for i in range(2):
+        for _i in range(2):
             self.env['stock.quant'].create({
                 'product_id': self.product.id,
                 'location_id': self.stock_location.id,
@@ -1389,7 +1389,7 @@ class StockQuantRemovalStrategy(TransactionCase):
                     'quantity': number_of_packages,
                 }))
                 continue
-            for dummy in range(number_of_packages):
+            for _dummy in range(number_of_packages):
                 package = packages[0]
                 packages = packages[1:]
                 ml_vals_list.append(dict(**ml_common_vals, **{

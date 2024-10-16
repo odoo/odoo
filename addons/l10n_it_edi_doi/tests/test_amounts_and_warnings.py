@@ -350,7 +350,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'remaining': -2000.0,
         }])
 
-        for i in range(2):
+        for _i in range(2):
             self.env['sale.advance.payment.inv'].with_context({
                    'active_model': 'sale.order',
                    'active_ids': [order.id],

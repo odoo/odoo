@@ -3194,7 +3194,7 @@ class NameManager:
                 continue
 
             missing_groups = self.group_definitions.empty
-            for groups, use, node in used:
+            for groups, _use, _node in used:
                 missing_groups |= groups
 
             missing_fields[name] = (missing_groups, used)

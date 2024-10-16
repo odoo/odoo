@@ -49,7 +49,7 @@ class ReportHr_HolidaysReport_Holidayssummary(models.AbstractModel):
     def _get_day(self, start_date):
         res = []
         start_date = fields.Date.from_string(start_date)
-        for x in range(0, 60):
+        for _x in range(0, 60):
             color = '#ababab' if self._date_is_day_off(start_date) else ''
             res.append({'day_str': babel.dates.get_day_names('abbreviated', locale=get_lang(self.env).code)[start_date.weekday()], 'day': start_date.day, 'color': color})
             start_date = start_date + relativedelta(days=1)
@@ -89,8 +89,8 @@ class ReportHr_HolidaysReport_Holidayssummary(models.AbstractModel):
             date_from = fields.Datetime.context_timestamp(holiday, date_from).date()
             date_to = fields.Datetime.from_string(holiday.date_to)
             date_to = fields.Datetime.context_timestamp(holiday, date_to).date()
-            for index in range(0, ((date_to - date_from).days + 1)):
-                if date_from >= start_date and date_from <= end_date:
+            for _index in range((date_to - date_from).days + 1):
+                if start_date <= date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = COLORS_MAP[holiday.holiday_status_id.color]
                 date_from += timedelta(1)
             count += holiday.number_of_days

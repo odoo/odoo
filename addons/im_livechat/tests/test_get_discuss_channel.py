@@ -17,7 +17,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         For every 5 channels opening, we check that all operators were assigned.
         """
 
-        for i in range(5):
+        for _i in range(5):
             discuss_channels = self._open_livechat_discuss_channel()
             channel_operator_ids = [channel_info['operator']['id'] for channel_info in discuss_channels]
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
@@ -248,7 +248,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
 
     def _open_livechat_discuss_channel(self):
         discuss_channels = []
-        for i in range(5):
+        for _i in range(5):
             data = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'Anonymous', 'channel_id': self.livechat_channel.id})
             discuss_channels.append(data["discuss.channel"][0])
             # send a message to mark this channel as 'active'

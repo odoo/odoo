@@ -244,7 +244,7 @@ class SurveyCase(common.TransactionCase):
 
     def _create_one_question_per_type(self):
         all_questions = self.env['survey.question']
-        for (question_type, dummy) in self.env['survey.question']._fields['question_type'].selection:
+        for (question_type, _dummy) in self.env['survey.question']._fields['question_type'].selection:
             kwargs = {}
             if question_type == 'multiple_choice':
                 kwargs['labels'] = [{'value': 'MChoice0'}, {'value': 'MChoice1'}]
@@ -259,7 +259,7 @@ class SurveyCase(common.TransactionCase):
 
     def _create_one_question_per_type_with_scoring(self):
         all_questions = self.env['survey.question']
-        for (question_type, dummy) in self.env['survey.question']._fields['question_type'].selection:
+        for (question_type, _dummy) in self.env['survey.question']._fields['question_type'].selection:
             kwargs = {}
             kwargs['question_type'] = question_type
             if question_type == 'numerical_box':

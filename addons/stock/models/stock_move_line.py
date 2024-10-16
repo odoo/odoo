@@ -361,12 +361,11 @@ class StockMoveLine(models.Model):
                     move_to_recompute_state |= move
         move_to_recompute_state._recompute_state()
 
-        for ml, vals in zip(mls, vals_list):
+        for ml in mls:
             if ml.state == 'done':
                 if ml.product_id.is_storable:
                     Quant = self.env['stock.quant']
                     quantity = ml.product_uom_id._compute_quantity(ml.quantity, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
-                    in_date = None
                     available_qty, in_date = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                     if available_qty < 0 and ml.lot_id:
                         # see if we can compensate the negative quants with some untracked quants
@@ -590,7 +589,7 @@ class StockMoveLine(models.Model):
             elif not ml.is_inventory:
                 ml_ids_to_delete.add(ml.id)
 
-        for (product, company), mls in ml_ids_to_check.items():
+        for (product, _company), mls in ml_ids_to_check.items():
             mls = self.env['stock.move.line'].browse(mls)
             lots = self.env['stock.lot'].search([
                 '|', ('company_id', '=', False), ('company_id', '=', ml.company_id.id),

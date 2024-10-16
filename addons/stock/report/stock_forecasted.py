@@ -335,7 +335,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 location_id = wh_stock_location.id
             currents[(product.id, location_id)] += quantity
         moves_data = {}
-        for _, out_moves in outs_per_product.items():
+        for out_moves in outs_per_product.values():
             # to handle multiple out wtih same in (ex: same pick/pack for 2 outs)
             used_reserved_moves = defaultdict(float)
             # for all out moves, check for linked moves and count reserved quantity

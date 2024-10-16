@@ -1608,7 +1608,7 @@ class AccountMove(models.Model):
         except AccountEdiProxyError as pe:
             raise UserError(_("An error occurred while downloading updates from the Proxy Server: (%(code)s) %(message)s", code=pe.code, message=pe.message)) from pe
 
-        for _id_transaction, notification in notifications.items():
+        for notification in notifications.values():
             encrypted_update_content = notification.get('file')
             encryption_key = notification.get('key')
             if (encrypted_update_content and encryption_key):

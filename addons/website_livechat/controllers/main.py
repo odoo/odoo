@@ -46,8 +46,8 @@ class WebsiteLivechat(LivechatController):
                 total_ratings_per_partner[partner_id] += 1
 
         for partner_id, rating in ratings_per_partner.items():
-            for k, v in ratings_per_partner[partner_id].items():
-                ratings_per_partner[partner_id][k] = round(100 * v / total_ratings_per_partner[partner_id], 1)
+            for k, v in rating.items():
+                rating[k] = round(100 * v / total_ratings_per_partner[partner_id], 1)
 
         # the value dict to render the template
         values = {

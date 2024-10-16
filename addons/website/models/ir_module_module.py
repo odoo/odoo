@@ -257,11 +257,11 @@ class IrModuleModule(models.Model):
         for module in self:
             _logger.info('Unload theme %s for website %s from template.' % (self.mapped('name'), website.id))
 
-            for model_name in self._theme_model_names:
-                template = self._get_module_data(model_name)
+            for model_name in module._theme_model_names:
+                template = module._get_module_data(model_name)
                 models = template.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).mapped('copy_ids').filtered(lambda m: m.website_id == website)
                 models.unlink()
-                self._theme_cleanup(model_name, website)
+                module._theme_cleanup(model_name, website)
 
     def _theme_cleanup(self, model_name, website):
         """

@@ -51,7 +51,7 @@ class ResPartner(models.Model):
         employees = sum(employees_by_partner.values(), start=self.env['hr.employee'])
         calendar_periods_by_employee = employees._get_calendar_periods(start_period, stop_period)
         for employee, calendar_periods in calendar_periods_by_employee.items():
-            for (start, stop, calendar) in calendar_periods:
+            for _start, _stop, calendar in calendar_periods:
                 employees_by_calendar[calendar].append(employee)
 
         # Compute all work intervals per calendar

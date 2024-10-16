@@ -244,16 +244,16 @@ def get_view_id_and_type(action, view_type: str | None) -> tuple[int | None, str
     view_modes = action.view_mode.split(',')
     if not view_type:
         view_type = view_modes[0]
-    for view_id, action_view_type in action.views:
-        if view_type == action_view_type:
-            break
-    else:
+
+    try:
+        view_id = next(view_id for view_id, action_view_type in action.views if view_type == action_view_type)
+    except StopIteration:
         if view_type not in view_modes:
             raise BadRequest(request.env._(
                 "Invalid view type '%(view_type)s' for action id=%(action)s",
                 view_type=view_type,
                 action=action.id,
-            ))
+            )) from None
         view_id = False
     return view_id, view_type
 

@@ -2516,7 +2516,13 @@ class TestComposerResultsMass(TestMailComposer):
                     )
 
         # expect duplicates
-        for composer_attachment, template_changes in zip([False, composer_attachment, [], composer_attachment], [[], [], [same_attachments], [same_attachments]]):
+        cases = [
+            (False, []),
+            (composer_attachment, []),
+            ([], [same_attachments]),
+            (composer_attachment, [same_attachments]),
+        ]
+        for composer_attachment, template_changes in cases:
             test_template_values = dict(base_template_values)
             for change in template_changes:
                 test_template_values.update(change)

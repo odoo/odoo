@@ -2075,7 +2075,7 @@ class ResUsers(models.Model):  # noqa: F811
     def fields_get(self, allfields=None, attributes=None):
         res = super().fields_get(allfields, attributes=attributes)
         # add reified groups fields
-        for app, kind, gs, category_name in self.env['res.groups'].sudo().get_groups_by_application():
+        for app, kind, gs, _category_name in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
                 # 'User Type' should not be 'False'. A user is either 'employee', 'portal' or 'public' (required).
                 selection_vals = [(False, '')]
