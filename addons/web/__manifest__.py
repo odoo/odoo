@@ -467,6 +467,9 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_backend'),
             ('include', 'web.assets_backend_lazy'),
 
+            # This library is only included in the frontend bundle, but we don't want to include it completely
+            'web/static/src/legacy/js/core/minimal_dom.js',
+
             'web/static/src/public/public_component_service.js',
             'web/static/tests/legacy/patch_translations.js',
             'web/static/lib/qunit/qunit-2.9.1.css',
