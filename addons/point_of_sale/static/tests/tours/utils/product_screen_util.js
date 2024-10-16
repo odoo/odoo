@@ -7,7 +7,7 @@ import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 export function clickLine(productName, quantity = "1.0") {
-    return inLeftSide([
+    return [
         ...Order.hasLine({
             withoutClass: ".selected",
             run: "click",
@@ -15,7 +15,7 @@ export function clickLine(productName, quantity = "1.0") {
             quantity,
         }),
         ...Order.hasLine({ withClass: ".selected", productName, quantity }),
-    ]);
+    ].flat();
 }
 export function clickReview() {
     return {
@@ -384,6 +384,21 @@ export function selectedOrderlineHas(productName, quantity, price) {
         })
     );
 }
+export function selectedOrderlineHasDirect(productName, quantity, price) {
+    return Order.hasLine({
+        withClass: ".selected",
+        productName,
+        quantity,
+        price,
+    });
+}
+export function orderLineHas(productName, quantity, price) {
+    return Order.hasLine({
+        productName,
+        quantity,
+        price,
+    });
+}
 export function orderIsEmpty() {
     return inLeftSide(Order.doesNotHaveLine());
 }
@@ -445,7 +460,8 @@ export function checkFirstLotNumber(number) {
  * @param {string} expectedTotal
  */
 export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal) {
-    const res = clickDisplayedProduct(productName);
+    const initialStep = clickDisplayedProduct(productName);
+    const res = [];
     const mapKey = (key) => {
         if (key === "-") {
             return "+/-";
@@ -456,35 +472,32 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
         val
             .toString()
             .split("")
-            .flatMap((key) => clickNumpad(mapKey(key)));
-    res.push(...selectedOrderlineHas(productName, "1.00"));
+            .flatMap((key) => Numpad.click(mapKey(key)));
+    res.push(...selectedOrderlineHasDirect(productName, "1.00"));
     if (unitPrice) {
         res.push(
             ...[
-                clickNumpad("Price"),
-                modeIsActive("Price"),
+                Numpad.click("Price"),
+                Numpad.isActive("Price"),
                 numpadWrite(unitPrice),
-                clickNumpad("Qty"),
-                modeIsActive("Qty"),
+                Numpad.click("Qty"),
+                Numpad.isActive("Qty"),
             ].flat()
         );
     }
     if (quantity.toString() !== "1") {
         res.push(...numpadWrite(quantity));
     }
-    res.push(...selectedOrderlineHas(productName, quantity, expectedTotal));
-    return res;
+    res.push(...selectedOrderlineHasDirect(productName, quantity, expectedTotal));
+    return [initialStep, inLeftSide(res)].flat();
 }
 export function addCustomerNote(note) {
-    return inLeftSide(
-        [
-            clickControlButton("Customer Note"),
-            TextInputPopup.inputText(note),
-            Dialog.confirm(),
-        ].flat()
-    );
+    return [
+        clickControlButton("Customer Note"),
+        TextInputPopup.inputText(note),
+        Dialog.confirm(),
+    ].flat();
 }
-
 export function addInternalNote(note) {
     return inLeftSide(
         [clickInternalNoteButton(), TextInputPopup.inputText(note), Dialog.confirm()].flat()
