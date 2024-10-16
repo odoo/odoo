@@ -16,16 +16,43 @@ class LicensePlateOrders(models.Model):
     state = fields.Selection([
         ('open', 'Open'),
         ('closed', 'Closed'),
-    ], string='State', default='open')
+    ], string='DR License Plate State', default='open')
+    license_plate_state = fields.Selection([
+        ('available', 'Available'),
+        ('not_available', 'Not Available')], string='License Plate State')
     automation_manual = fields.Selection([('automation', 'Automation'),
                                           ('manual', 'Manual')], string='Automation Manual')
+    delivery_receipt_order_id = fields.Many2one('delivery.receipt.orders',
+                                                string='Delivery Receipt Order')
+    picking_id = fields.Many2one(
+        comodel_name='stock.picking',
+        string='Receipt Order'
+    )
+    partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer')
+    tenant_code_id = fields.Many2one(
+        'tenant.code.configuration',
+        string='Tenant Code',
+        related='partner_id.tenant_code_id',
+        readonly=True
+    )
+    site_code_id = fields.Many2one('site.code.configuration',
+                                   related='picking_id.site_code_id', string='Site Code')
 
 
     def action_open(self):
         for rec in self:
             rec.state = 'open'
 
-
+    def check_and_update_license_plate_state(self):
+        """
+        Check if all lines in the license plate order have is_remaining_qty set to True.
+        If they do, update the license_plate_state to 'not_available'.
+        """
+        all_remaining = all(line.is_remaining_qty for line in self.license_plate_order_line_ids)
+        if all_remaining:
+            self.license_plate_state = 'not_available'
+        else:
+            self.license_plate_state = 'available'
 
 class LicensePlateOrdersLine(models.Model):
     _name = 'license.plate.orders.line'
@@ -46,11 +73,12 @@ class LicensePlateOrdersLine(models.Model):
     )
     quantity = fields.Float(string='Quantity', required=True)
     sku_code = fields.Char(string='SKU')
-    barcode = fields.Char(string='Barcode')
     state = fields.Selection([
         ('open', 'Open'),
         ('closed', 'Closed'),
     ], string='State', default='open')
+    remaining_qty = fields.Float('Remaining Quantity')
+    is_remaining_qty = fields.Boolean(string='Remaining', default=False)
 
     def button_close_license_plate(self):
         """

@@ -8,8 +8,7 @@ class DeliveryReceiptOrders(models.Model):
     _name = 'delivery.receipt.orders'
     _description = 'Delivery Receipt Orders'
 
-    name = fields.Char(string='Reference', required=True,
-                       default=lambda self: self.env['ir.sequence'].next_by_code('delivery.receipt.orders') or '')
+    name = fields.Char(string='Reference', required=True,default=lambda self: _('New'))
     receipt_number = fields.Char(string="Scan Barcode of receipt")
     process_type = fields.Selection([
         ('automation', 'Automation Process'),
@@ -34,6 +33,14 @@ class DeliveryReceiptOrders(models.Model):
         inverse_name='delivery_receipt_order_line_id',
         string='Product Lines'
     )
+    tenant_code_id = fields.Many2one(
+        'tenant.code.configuration',
+        string='Tenant Code',
+        related='partner_id.tenant_code_id',
+        readonly=True
+    )
+    site_code_id = fields.Many2one('site.code.configuration',
+                                   related='picking_id.site_code_id', string='Site Code')
 
 
     def button_action_draft(self):
@@ -77,6 +84,13 @@ class DeliveryReceiptOrders(models.Model):
             # Change the state to 'done' if validation passes
             order.state = 'done'
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('name') or vals['name'] == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('delivery.receipt.orders') or _('New')
+        return super().create(vals_list)
+
 
 class DeliveryReceiptOrdersLine(models.Model):
     _name = 'delivery.receipt.orders.line'
@@ -97,7 +111,6 @@ class DeliveryReceiptOrdersLine(models.Model):
     )
     quantity = fields.Float(string='Quantity', required=True)
     sku_code = fields.Char(related='product_id.default_code',string='SKU')
-    barcode = fields.Char(string='Barcode')
     state = fields.Selection([
         ('open', 'Open'),
         ('closed', 'Closed'),

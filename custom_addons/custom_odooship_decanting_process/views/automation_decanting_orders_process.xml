@@ -17,13 +17,28 @@
                     <group>
                         <group>
                             <field name="name" readonly="1"/>
-                            <field name="pallet_barcode"/>
+                            <field name="pallet_barcode" invisible="1"/>
                             <field name="hu_barcode" invisible="1"/>
+                            <field name="license_plate_id"
+                                   placeholder="Scan License Plate Barcode here"/>
                         </group>
                         <group>
-                            <field name="crate_barcode"/>
+                            <field name="crate_barcode"
+                                   placeholder="Scan Crate Barcode here"/>
                             <field name="container_id"/>
                             <field name="container_partition"/>
+                            <field name="container_code"/>
+                        </group>
+                    </group>
+                    <hr/>
+                    <group string="Customer Information">
+                        <group>
+                            <field name="picking_id"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="tenant_code_id"/>
+                            <field name="site_code_id"/>
                         </group>
                     </group>
                     <notebook>
@@ -33,6 +48,8 @@
                                     <field name="product_id"/>
                                     <field name="sku_code"/>
                                     <field name="quantity"/>
+                                    <field name="available_quantity"/>
+                                    <field name="remaining_quantity" column_invisible="1" />
                                     <field name="partition_code" readonly="True"/>
                                     <field name="bin_code" readonly="True"/>
                                     <field name="available_product_ids" column_invisible="1"/>
@@ -52,10 +69,8 @@
         <field name="arch" type="xml">
             <tree string="Automation Decanting Orders Process">
                 <field name="name"/>
-                <field name="pallet_barcode"/>
-                <field name="hu_barcode"/>
+                <field name="license_plate_id"/>
                 <field name="crate_barcode"/>
-                <field name="compartments"/>
                 <field name="container_id"/>
             </tree>
         </field>
