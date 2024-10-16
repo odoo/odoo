@@ -255,7 +255,6 @@
                                     <field name="name" widget="section_and_note_text" optional="show"/>
                                     <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="is_downpayment"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
-                                           optional="hide"
                                            groups="analytic.group_analytic_accounting"
                                            options="{'product_field': 'product_id', 'business_domain': 'purchase_order', 'amount_field': 'price_subtotal'}"/>
                                     <field name="product_qty" readonly="is_downpayment"/>
