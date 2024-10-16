@@ -1961,41 +1961,26 @@ class BaseModel(metaclass=MetaModel):
             return []
 
         query = self._search(domain)
+        query.limit = limit
+        query.offset = offset
 
         groupby_terms: dict[str, SQL] = {
             spec: self._read_group_groupby(spec, query)
             for spec in groupby
         }
+        if groupby_terms:
+            query.groupby = SQL(", ").join(groupby_terms.values())
+            query.having = self._read_group_having(having, query)
+            # _read_group_orderby may possibly extend query.groupby for orderby
+            query.order = self._read_group_orderby(order, groupby_terms, query)
+
         select_terms: list[SQL] = [
             self._read_group_select(spec, query)
             for spec in aggregates
         ]
-        sql_having = self._read_group_having(having, query)
-        sql_order, sql_extra_groupby = self._read_group_orderby(order, groupby_terms, query)
-
-        groupby_terms = list(groupby_terms.values())
-
-        query_parts = [
-            SQL("SELECT %s", SQL(", ").join(groupby_terms + select_terms)),
-            SQL("FROM %s", query.from_clause),
-        ]
-        if query.where_clause:
-            query_parts.append(SQL("WHERE %s", query.where_clause))
-        if groupby_terms:
-            if sql_extra_groupby:
-                groupby_terms.append(sql_extra_groupby)
-            query_parts.append(SQL("GROUP BY %s", SQL(", ").join(groupby_terms)))
-        if sql_having:
-            query_parts.append(SQL("HAVING %s", sql_having))
-        if sql_order:
-            query_parts.append(SQL("ORDER BY %s", sql_order))
-        if limit:
-            query_parts.append(SQL("LIMIT %s", limit))
-        if offset:
-            query_parts.append(SQL("OFFSET %s", offset))
 
         # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
-        row_values = self.env.execute_query(SQL("\n").join(query_parts))
+        row_values = self.env.execute_query(query.select(*groupby_terms.values(), *select_terms))
 
         if not row_values:
             return row_values
@@ -2183,7 +2168,7 @@ class BaseModel(metaclass=MetaModel):
         return stack[0]
 
     def _read_group_orderby(self, order: str, groupby_terms: dict[str, SQL],
-                            query: Query) -> tuple[SQL, SQL]:
+                            query: Query) -> SQL:
         """ Return (<SQL expression>, <SQL expression>)
         corresponding to the given order and groupby terms.
 
@@ -2198,10 +2183,9 @@ class BaseModel(metaclass=MetaModel):
             traverse_many2one = False
 
         if not order:
-            return SQL(), SQL()
+            return SQL()
 
         orderby_terms = []
-        extra_groupby_terms = []
 
         for order_part in order.split(','):
             order_match = regex_order.match(order_part)
@@ -2227,21 +2211,13 @@ class BaseModel(metaclass=MetaModel):
                 traverse_many2one and field and field.type == 'many2one'
                 and self.env[field.comodel_name]._order != 'id'
             ):
-                # this generates an extra clause to add in the group by
-                sql_order = self._order_to_sql(f'{term} {direction} {nulls}', query)
-                orderby_terms.append(sql_order)
-                sql_order_str = self.env.cr.mogrify(sql_order).decode()
-                extra_groupby_terms.extend(
-                    SQL(order.strip().split()[0])
-                    for order in sql_order_str.split(",")
-                    if order.strip()
-                )
-
+                if sql_order := self._order_to_sql(f'{term} {direction} {nulls}', query):
+                    orderby_terms.append(sql_order)
             else:
                 sql_expr = groupby_terms[term]
                 orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
 
-        return SQL(", ").join(orderby_terms), SQL(", ").join(extra_groupby_terms)
+        return SQL(", ").join(orderby_terms)
 
     @api.model
     def _read_group_empty_value(self, spec):
@@ -2985,9 +2961,6 @@ class BaseModel(metaclass=MetaModel):
         if field.company_dependent:
             fallback = field.get_company_dependent_fallback(self)
             fallback = field.convert_to_column(field.convert_to_write(fallback, self), self)
-            # in _read_group_orderby the result of field to sql will be mogrified and split to
-            # e.g SQL('COALESCE(%s->%s') and SQL('to_jsonb(%s))::boolean') as 2 orderby values
-            # and concatenated by SQL(',') in the final result, which works in an unexpected way
             sql_field = SQL(
                 "COALESCE(%(column)s->%(company_id)s,to_jsonb(%(fallback)s::%(column_type)s))",
                 column=sql_field,
@@ -5556,7 +5529,7 @@ class BaseModel(metaclass=MetaModel):
         """
         order = order or self._order
         if not order:
-            return []
+            return SQL()
         self._check_qorder(order)
 
         alias = alias or self._table
@@ -5618,6 +5591,8 @@ class BaseModel(metaclass=MetaModel):
                 sql_field = self._field_to_sql(alias, field_name, query)
 
             if coorder == 'id':
+                if query.groupby:
+                    query.groupby = SQL('%s, %s', query.groupby, sql_field)
                 return SQL("%s %s %s", sql_field, direction, nulls)
 
             # instead of ordering by the field's raw value, use the comodel's
@@ -5646,6 +5621,8 @@ class BaseModel(metaclass=MetaModel):
         sql_field = self._field_to_sql(alias, field_name, query)
         if field.type == 'boolean':
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
+        if query.groupby:
+            query.groupby = SQL('%s, %s', query.groupby, sql_field)
 
         return SQL("%s %s %s", sql_field, direction, nulls)
 
