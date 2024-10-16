@@ -18,7 +18,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
-import { router, startRouter } from "@web/core/browser/router";
+import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { WebClient } from "@web/webclient/webclient";
@@ -174,7 +174,6 @@ beforeEach(() => {
         origin: "http://example.com",
     });
     redirect("/odoo");
-    startRouter();
 });
 
 test(`basic action as App`, async () => {
