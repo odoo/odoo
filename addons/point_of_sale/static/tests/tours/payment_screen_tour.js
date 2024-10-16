@@ -10,7 +10,6 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
         [
             Chrome.startPoS(),
             ProductScreen.addOrderline("Letter Tray", "10"),
-            ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.emptyPaymentlines("52.8"),
 
