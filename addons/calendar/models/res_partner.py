@@ -23,6 +23,7 @@ class Partner(models.Model):
 
     def _compute_meeting(self):
         if self.ids:
+            self._check_parent_id()  # check for cycle in partners hierarchy
             all_partners = self.with_context(active_test=False).search_read([('id', 'child_of', self.ids)], ["parent_id"])
             all_partners_parents = {p["id"]: p['parent_id'][0] for p in all_partners if p.get('parent_id')}
 
