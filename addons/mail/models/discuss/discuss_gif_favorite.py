@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class DiscussGifFavorite(models.Model):
@@ -15,3 +15,8 @@ class DiscussGifFavorite(models.Model):
             "User should not have duplicated favorite GIF",
         ),
     ]
+
+    @api.depends('create_uid', 'tenor_gif_id')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = f"{rec.create_uid.name} - {rec.tenor_gif_id}"
