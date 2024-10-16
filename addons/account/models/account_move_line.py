@@ -464,6 +464,8 @@ class AccountMoveLine(models.Model):
                 product = line.product_id.with_context(lang=line.partner_id.lang)
             else:
                 product = line.product_id
+            if not product:
+                return False
 
             if product.partner_ref:
                 values.append(product.partner_ref)
