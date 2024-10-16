@@ -43,13 +43,13 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
             'name': 'Bank Current Account - (test)',
             'account_type': 'asset_cash',
         })
+        self.env.company.expense_account_id = a_expense
+        self.env.company.income_account_id = a_sale
 
         IrDefault = self.env['ir.default']
         IrDefault.set('res.partner', 'property_account_receivable_id', a_recv.id, company_id=self.env.company.id)
         IrDefault.set('res.partner', 'property_account_payable_id', a_pay.id, company_id=self.env.company.id)
         IrDefault.set('res.partner', 'property_account_position_id', False, company_id=self.env.company.id)
-        IrDefault.set('product.category', 'property_account_expense_categ_id', a_expense.id, company_id=self.env.company.id)
-        IrDefault.set('product.category', 'property_account_income_categ_id', a_sale.id, company_id=self.env.company.id)
 
         self.expenses_journal = self.env['account.journal'].create({
             'name': 'Vendor Bills - Test',

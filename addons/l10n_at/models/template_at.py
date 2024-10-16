@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'visible': True,
             'property_account_receivable_id': 'chart_at_template_2000',
             'property_account_payable_id': 'chart_at_template_3300',
-            'property_account_income_categ_id': 'chart_at_template_4000',
-            'property_account_expense_categ_id': 'chart_at_template_5010',
             'property_stock_account_input_categ_id': 'chart_at_template_3740',
             'property_stock_account_output_categ_id': 'chart_at_template_5000',
             'property_stock_valuation_account_id': 'chart_at_template_1600',
@@ -37,6 +35,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'paperformat_id': 'l10n_din5008.paperformat_euro_din',
                 'account_sale_tax_id': 'account_tax_template_sales_20_code022',
                 'account_purchase_tax_id': 'account_tax_template_purchase_20_code060',
+                'income_account_id': 'chart_at_template_4000',
+                'expense_account_id': 'chart_at_template_5010',
             },
         }
 

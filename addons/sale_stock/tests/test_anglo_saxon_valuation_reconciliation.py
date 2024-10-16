@@ -155,6 +155,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         wh = self.env['stock.warehouse'].search([
             ('company_id', '=', self.env.company.id),
         ])
+        product_category = self.env['product.category'].create({'name': 'Product Category'})
         stock_loc = wh.lot_stock_id
         in_type = wh.in_type_id
         product_1, product_2, = tuple(self.env['product.product'].create([{
@@ -162,6 +163,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
             'list_price': 10 * i,
             'standard_price': 10 * i,
             'is_storable': True,
+            'categ_id': product_category.id,
         } for i in range(1, 3)]))
         product_1.categ_id.property_valuation = 'real_time'
         product_1.categ_id.property_cost_method = 'fifo'

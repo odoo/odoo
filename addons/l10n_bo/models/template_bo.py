@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'l10n_bo_1121',
             'property_account_payable_id': 'l10n_bo_2121',
-            'property_account_expense_categ_id': 'l10n_bo_53008',
-            'property_account_income_categ_id': 'l10n_bo_4101',
             'property_stock_account_input_categ_id': 'l10n_bo_11341',
             'property_stock_account_output_categ_id': 'l10n_bo_11342',
             'property_stock_valuation_account_id': 'l10n_bo_1131',
@@ -37,5 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'l10n_bo_5601',
                 'account_sale_tax_id': 'l10n_bo_iva_13_sale',
                 'account_purchase_tax_id': 'l10n_bo_iva_13_purchase',
+                'income_account_id': 'l10n_bo_4101',
+                'expense_account_id': 'l10n_bo_53008',
             },
         }

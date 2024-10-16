@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '5',
             'property_account_receivable_id': 'nz_11200',
             'property_account_payable_id': 'nz_21200',
-            'property_account_expense_categ_id': 'nz_51110',
-            'property_account_income_categ_id': 'nz_41110',
             'property_stock_account_input_categ_id': 'nz_21210',
             'property_stock_account_output_categ_id': 'nz_11340',
             'property_stock_valuation_account_id': 'nz_11330',
@@ -41,5 +39,7 @@ class AccountChartTemplate(models.AbstractModel):
                 # Changing the opening date to the first day of the fiscal year.
                 # This way the opening entries will be set to the 31st of March.
                 'account_opening_date': fields.Date.context_today(self).replace(month=4, day=1),
+                'expense_account_id': 'nz_51110',
+                'income_account_id': 'nz_41110',
             },
         }

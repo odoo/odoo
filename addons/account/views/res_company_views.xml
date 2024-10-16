@@ -8,6 +8,10 @@
             <xpath expr="//field[@name='country_id']" position="after">
                 <field name="account_enabled_tax_country_ids" invisible="1"/>
             </xpath>
+            <field name="currency_id" position="after">
+                <field name="income_account_id"/>
+                <field name="expense_account_id"/>
+            </field>
             <xpath expr="//sheet" position="after">
                 <chatter/>
             </xpath>

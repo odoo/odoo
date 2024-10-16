@@ -18,7 +18,6 @@ class TestPurchaseRequisitionSale(TransactionCase):
 
         cls.sub_service = cls.env['product.product'].create({
             'name': 'Subcontracted service',
-            'categ_id': cls.env.ref('product.product_category_all').id,
             'type': 'service',
             'seller_ids': [Command.create({
                 'partner_id': cls.vendor_1.id,

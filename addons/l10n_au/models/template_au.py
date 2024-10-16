@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'au_11200',
             'property_stock_account_production_cost_id': 'au_11350',
             'property_account_payable_id': 'au_21200',
-            'property_account_expense_categ_id': 'au_51110',
-            'property_account_income_categ_id': 'au_41110',
             'property_stock_account_input_categ_id': 'au_21210',
             'property_stock_account_output_categ_id': 'au_11340',
             'property_stock_valuation_account_id': 'au_11330',
@@ -41,5 +39,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_opening_date': fields.Date.context_today(self).replace(month=7, day=1),
                 'account_sale_tax_id': 'au_tax_sale_10',
                 'account_purchase_tax_id': 'au_tax_purchase_10_service',
+                'income_account_id': 'au_41110',
+                'expense_account_id': 'au_51110',
             },
         }

@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '4',
             'property_account_receivable_id': 'account_1410',
             'property_account_payable_id': 'account_1610',
-            'property_account_expense_categ_id': 'account_3400',
-            'property_account_income_categ_id': 'account_8400',
             'property_stock_account_input_categ_id': 'account_3970',
             'property_stock_account_output_categ_id': 'account_3980',
             'property_stock_valuation_account_id': 'account_3960',
@@ -35,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'account_2670',
                 'account_sale_tax_id': 'tax_ust_19_skr03',
                 'account_purchase_tax_id': 'tax_vst_19_skr03',
+                'expense_account_id': 'account_3400',
+                'income_account_id': 'account_8400',
             },
         }
 
