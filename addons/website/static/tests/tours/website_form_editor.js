@@ -141,6 +141,38 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
             run: 'drag_and_drop iframe #wrap',
         }, {
+            content: "Check if the form snippet is dropped",
+            trigger: "iframe .s_website_form_field",
+            run: () => null,
+        },
+        // Check if fields in two form snippet have unique IDs
+        {
+            content: "Drop another form snippet",
+            trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
+            run: 'drag_and_drop iframe #wrap',
+        }, {
+            content: "Check if there are two form snippets on the page",
+            trigger: "iframe .s_website_form:nth-of-type(2) .s_website_form_field",
+            run: () => null,
+        }, {
+            content: "Check that the first field of both the form snippets have different IDs",
+            trigger: "iframe .s_website_form:nth-of-type(1) input[name='name']",
+            run: function() {
+                const firstFieldForm1El = this.$anchor[0];
+                const firstFieldForm2El = firstFieldForm1El.ownerDocument.querySelector(
+                    ".s_website_form:nth-of-type(2) input[name='name']"
+                );
+                if (firstFieldForm1El.id === firstFieldForm2El.id) {
+                    console.error("The first fields of two different form snippet have the same ID");
+                }
+            },
+        }, {
+            content: "Click on the second form",
+            trigger: "iframe .s_website_form:nth-of-type(2)",
+        }, {
+            content: "Remove the second snippet",
+            trigger: "iframe .oe_overlay.oe_active .oe_snippet_remove"
+        }, {
             content: "Select form by clicking on an input field",
             extra_trigger: 'iframe .s_website_form_field',
             trigger: 'iframe section.s_website_form input',
