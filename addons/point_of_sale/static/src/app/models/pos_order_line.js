@@ -366,11 +366,23 @@ export class PosOrderline extends Base {
     }
 
     get unitDisplayPrice() {
-        if (this.config.iface_tax_included === "total") {
-            return this.allUnitPrices.priceWithTax;
-        } else {
-            return this.allUnitPrices.priceWithoutTax;
-        }
+        const prices =
+            this.combo_line_ids.length > 0
+                ? this.combo_line_ids.reduce(
+                      (acc, cl) => {
+                          const clPrices = cl.getAllPrices(1);
+                          return {
+                              priceWithTax: acc.priceWithTax + clPrices.priceWithTax,
+                              priceWithoutTax: acc.priceWithoutTax + clPrices.priceWithoutTax,
+                          };
+                      },
+                      { priceWithTax: 0, priceWithoutTax: 0 }
+                  )
+                : this.getAllPrices(1);
+
+        return this.config.iface_tax_included === "total"
+            ? prices.priceWithTax
+            : prices.priceWithoutTax;
     }
 
     getUnitDisplayPriceBeforeDiscount() {
@@ -617,7 +629,13 @@ export class PosOrderline extends Base {
             ? // free if the discount is 100
               _t("Free")
             : this.combo_line_ids.length > 0
-            ? // empty string if it is a combo parent line
+            ? // total of all combo lines if it is combo parent
+              formatCurrency(
+                  this.combo_line_ids.reduce((total, cl) => total + cl.getDisplayPrice(), 0),
+                  this.currency
+              )
+            : this.combo_parent_id
+            ? // empty string if it has combo parent
               ""
             : formatCurrency(this.getDisplayPrice(), this.currency);
     }
