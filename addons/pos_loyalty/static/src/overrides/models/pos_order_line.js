@@ -12,12 +12,6 @@ patch(PosOrderline, {
             type: "many2one",
             local: true,
         },
-        gift_code: {
-            model: "pos.order.line",
-            name: "gift_code",
-            type: "char",
-            local: true,
-        },
         _gift_barcode: {
             model: "pos.order.line",
             name: "_gift_barcode",
@@ -42,6 +36,16 @@ patch(PosOrderline, {
 });
 
 patch(PosOrderline.prototype, {
+    setup(vals) {
+        super.setup(...arguments);
+        this.uiState = {
+            ...this.uiState,
+            program_type: "",
+            gift_code: "",
+            e_wallet_id: null,
+            gift_card_expiration_date: null,
+        };
+    },
     serialize(options = {}) {
         const json = super.serialize(...arguments);
         if (options.orm && json.coupon_id < 0) {
@@ -52,6 +56,8 @@ patch(PosOrderline.prototype, {
     setOptions(options) {
         if (options.eWalletGiftCardProgram) {
             this.update({ _e_wallet_program_id: options.eWalletGiftCardProgram });
+            this.uiState.program_type = options.eWalletGiftCardProgram.program_type;
+            this.uiState.e_wallet_id = options.eWalletGiftCardProgram.id;
         }
         if (options.giftBarcode) {
             this.update({ _gift_barcode: options.giftBarcode });
@@ -62,12 +68,16 @@ patch(PosOrderline.prototype, {
         return super.setOptions(...arguments);
     },
     getEWalletGiftCardProgramType() {
-        return this._e_wallet_program_id && this._e_wallet_program_id.program_type;
+        return (
+            (this._e_wallet_program_id && this._e_wallet_program_id.program_type) ||
+            this.uiState.program_type
+        );
     },
     ignoreLoyaltyPoints({ program }) {
         return (
             ["gift_card", "ewallet"].includes(program.program_type) &&
-            this._e_wallet_program_id?.id !== program.id
+            ((this._e_wallet_program_id && this._e_wallet_program_id.id !== program.id) ||
+                this.uiState.e_wallet_id !== program.id)
         );
     },
     isGiftCardOrEWalletReward() {
