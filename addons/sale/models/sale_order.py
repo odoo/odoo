@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -25,6 +26,8 @@ SALE_ORDER_STATE = [
     ('sale', "Sales Order"),
     ('cancel', "Cancelled"),
 ]
+
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -952,7 +955,11 @@ class SaleOrder(models.Model):
         self.filtered(lambda so: so._should_be_locked()).action_lock()
 
         if self.env.context.get('send_email'):
-            self._send_order_confirmation_mail()
+            try:
+                with self.env.cr.savepoint():
+                    self._send_order_confirmation_mail()
+            except UserError:
+                _logger.warning("Sending of confirmation for orders %s has failed", self.ids, exc_info=True)
 
         return True
 
