@@ -81,6 +81,7 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
             for combo_item in selected_combo_items:
                 item_values = order_sudo._cart_update(
                     product_id=combo_item['product_id'],
+                    line_id=False,
                     set_qty=quantity,
                     product_custom_attribute_values=combo_item['product_custom_attribute_values'],
                     no_variant_attribute_value_ids=[
