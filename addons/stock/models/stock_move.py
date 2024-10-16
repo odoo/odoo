@@ -1596,7 +1596,7 @@ class StockMove(models.Model):
                 if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                     assigned_moves_ids.add(move.id)
                 elif not move.move_orig_ids:
-                    if move.procure_method == 'make_to_order':
+                    if move._procure_method_is_mto():
                         continue
                     # If we don't need any quantity, consider the move assigned.
                     need = missing_reserved_quantity
@@ -1656,6 +1656,9 @@ class StockMove(models.Model):
         if not self.env.context.get('bypass_entire_pack'):
             self.picking_id._check_entire_pack()
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
+
+    def _procure_method_is_mto(self):
+        return self.procure_method == 'make_to_order'
 
     def _action_cancel(self):
         if any(move.state == 'done' and not move.scrapped for move in self):
