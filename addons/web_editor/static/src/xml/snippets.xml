@@ -95,7 +95,7 @@
         <div class="o_colorpicker_sections py-3 px-2" data-color-tab="custom-colors">
             <div class="o_colorpicker_section_container"/>
             <t t-if="!this.props.excluded.includes('custom')">
-                <Colorpicker
+                <ColorPicker
                     document="this.props.document"
                     defaultColor="this.state.customDefaultColor"
                     noTransparency="!!this.props.noTransparency"
@@ -108,7 +108,7 @@
         <div class="o_colorpicker_sections py-3 px-2" data-color-tab="gradients">
             <div class="o_colorpicker_section_container"/>
             <t t-if="state.showGradientPicker">
-                <Colorpicker
+                <ColorPicker
                     document="this.props.document"
                     stopClickPropagation="true"
                     selectedColor="this.state.gradientSelectedColor"

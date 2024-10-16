@@ -10,8 +10,8 @@ import { debounce, useThrottleForAnimation } from "@web/core/utils/timing";
 
 import { Component, onMounted, onWillUpdateProps, useExternalListener, useRef } from "@odoo/owl";
 
-export class Colorpicker extends Component {
-    static template = "web.Colorpicker";
+export class ColorPicker extends Component {
+    static template = "web.ColorPicker";
     static props = {
         document: { type: true, optional: true },
         defaultColor: { type: String, optional: true },
