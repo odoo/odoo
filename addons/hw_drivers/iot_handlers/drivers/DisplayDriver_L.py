@@ -71,7 +71,7 @@ class DisplayDriver(Driver):
     def run(self):
         while self.device_identifier != 'distant_display' and not self._stopped.is_set() and "pos_customer_display" not in self.url:
             time.sleep(60)
-            if self.url != 'http://localhost:8069/point_of_sale/display/' + self.device_identifier and self.browser.chromium_additional_args != self.browser.kiosk_args:
+            if self.url != 'http://localhost:8069/point_of_sale/display/' + self.device_identifier and self.browser.state != BrowserState.KIOSK:
                 # Refresh the page every minute
                 self.browser.refresh()
 
