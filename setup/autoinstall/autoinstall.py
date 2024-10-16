@@ -21,9 +21,7 @@ parser.add_argument("-y", help="Yes to all, don't ask anything", action='store_t
 parser.add_argument("-a", help="Propose/install everything", action='store_true')
 parser.add_argument("-v", "--verbose", help="Verbose mode", action='store_true')
 
-
 features_group = parser.add_argument_group('Features group selection')
-
 features_group.add_argument("--nodefault", '-n', help="Don't install default set", action='store_true')
 features_group.add_argument("--dev", "-d", help="Install additional dev tools and add dev remotes (chrome, ruff, ..)", action='store_true')
 features_group.add_argument("--opt", "-o", help="Install additional optional dependencies (gevent, wkhtml, ebaysdk, ...)", action='store_true')
@@ -79,7 +77,6 @@ if args.opt:
     args.pdf = True
     args.rtlcss = True
 
-
 # prototype example of using click for interactive mode, to remove if overkill
 if args.interactive:
     try:
@@ -124,79 +121,25 @@ if not odoo_dir.is_dir() and not args.git_clone and args.docker:
     raise Exception(f"Odoo directory not found, enable git_clone or clone odoo repository manually in {odoo_dir} or specify a valid src-dir")
 
 commands_to_execute = []
-to_confirm = []
+commands_summaries = []
 
-# START DEPS
-base_packages = ' '.join([  # noqa: FLY002
-    'python3-decorator',
-    'python3-dateutil',
-    'python3-babel',  # locale
-    'python3-idna',  # domain encoding for mail server rfc5890 (could be make optionnal)
-    'python3-passlib',  # password hashing and totp
-    'python3-pil',  # image resize
-    'python3-psutil',  # server.py memory_info
-    'python3-reportlab',  # tools for pdf banners, qrcode, ... (could be make optionnal)
-    'python3-requests',  # gravatar, database load, webhook, ... (could be make optionnal)
-    '"python3-lxml-html-clean|python3-lxml"',  # data files and views
-    'python3-openssl',  # mail server connect
-    'python3-polib',  # to import tranlsations (could be make optionnal)
-    'python3-psycopg2',
-    '"python3-pypdf2|python3-pypdf"',  # OdooPdfFileWriter and others, (could be make optionnal)
-    'python3-werkzeug',
-    'python3-zeep',  # mainly for l10n and enterprise, (could be make optionnal)
-    'python3-rjsmin',  # js assets bundle generation
-    'python3-docutils',  # ir_module get_desc fallback, could be removed maybe
-    # unsure for vobject 5
-    #  num2words, logging warning if not installed but not needed to install
-])
-default_packages = ' '.join([  # noqa: FLY002
-    'adduser',
-    'postgresql-client'
-    '"fonts-dejavu-core|fonts-freefont-ttf|fonts-freefont-otf|fonts-noto-core" fonts-inconsolata fonts-font-awesome fonts-roboto-unhinted gsfonts',
-    'libjs-underscore lsb-base',
-    'python3-asn1crypto python3-cbor2',
-    'python3-chardet python3-dateutil python3-decorator python3-freezegun python3-geoip2 python3-jinja2',
-    'python3-libsass python3-num2words python3-ofxparse python3-openpyxl',
-    'python3-polib python3-psutil "python3-pypdf2|python3-pypdf" python3-qrcode',
-    'python3-renderpm python3-stdnum python3-tz python3-vobject python3-werkzeug python3-xlsxwriter',
-    'python3-xlrd',
-])
-dev_packages = 'pylint python3-ipython python3-pudb'
-# flake8 python3-dev python3-mock
-dev_pip_packages = 'ruff==0.4.7'
+# CONFIGURATIONS
 
-opt_packages = ' '.join([  # noqa: FLY002
-    'python3-gevent',  # multiworker
-    'python3-websocket',  # bus, looks mandatory (WTF? installed by another one?)
-    #'publicsuffix',
-    'python3-dbfread',  # enterprise
-    'python3-markdown',  # upgrade util
-    'python3-phonenumbers',  # phone_validation, enterprise, ... # TODO check why not in default_packages
-    'python3-google-auth',  # cloud storage, enterprise
-    # 'libpq-dev', # unsure, related to psycopg2
-    'python3-jwt',  # enterprise
-    'python3-html2text',  # i
-    # 'python3-suds', # unsure, alternative to zeep
-    'python3-xmlsec',  # enterprise
-])
-# apt-transport-https build-essential ca-certificates curl file fonts-freefont-ttf fonts-noto-cjk gawk gnupg gsfonts libldap2-dev libjpeg9-dev libsasl2-dev libxslt1-dev lsb-release npm ocrmypdf sed sudo unzip xfonts-75dpi zip zlib1g-dev
-opt_pip_packages = 'ebaysdk==2.1.5 pdf417gen==0.7.1'
-# END DEPS
+if args.git_use_ssh:
+    git_base = 'git@github.com:'
+    suffix = '.git'
+else:
+    git_base = 'https://github.com/'
+    suffix = ''
+
+# clone_params = '--filter=tree:0'
+clone_params = '--filter=blob:none'
+# --filter=tree:0 could be another faster option but is less practical on usage for blames
 
 
 def main():
-    if args.git_clone and ask("Clone odoo repositories %s" % ('' if is_installed('git') else "and install git")):
-
-        if args.git_use_ssh:
-            git_base = 'git@github.com:'
-            suffix = '.git'
-        else:
-            git_base = 'https://github.com/'
-            suffix = ''
-
-        #clone_params = '--filter=tree:0'
-        clone_params = '--filter=blob:none'
-        # --filter=tree:0 could be another faster option but is less practical on usage for blames
+    has_git = is_installed('git')
+    if args.git_clone and ask("Clone odoo repositories %s" % ('' if has_git else "and install git")):
         def clone(repo):
             repo_dir = base_dir / 'odoo'
             if not repo_dir.is_dir():
@@ -212,7 +155,7 @@ def main():
 
 
         # TODO write config file for srcdir
-        if not is_installed('git'):
+        if not has_git:
             run('sudo apt-get install git')
         if not base_dir.is_dir():
             run('mkdir -p %s' % base_dir)
@@ -304,7 +247,66 @@ def main():
         if args.dryrun:
             print(command)
         else:
-            run_now(command)
+            execute(command)
+
+
+# START DEPS
+base_packages = ' '.join([  # noqa: FLY002
+    'python3-decorator',
+    'python3-dateutil',
+    'python3-babel',  # locale
+    'python3-idna',  # domain encoding for mail server rfc5890 (could be make optionnal)
+    'python3-passlib',  # password hashing and totp
+    'python3-pil',  # image resize
+    'python3-psutil',  # server.py memory_info
+    'python3-reportlab',  # tools for pdf banners, qrcode, ... (could be make optionnal)
+    'python3-requests',  # gravatar, database load, webhook, ... (could be make optionnal)
+    '"python3-lxml-html-clean|python3-lxml"',  # data files and views
+    'python3-openssl',  # mail server connect
+    'python3-polib',  # to import tranlsations (could be make optionnal)
+    'python3-psycopg2',
+    '"python3-pypdf2|python3-pypdf"',  # OdooPdfFileWriter and others, (could be make optionnal)
+    'python3-werkzeug',
+    'python3-zeep',  # mainly for l10n and enterprise, (could be make optionnal)
+    'python3-rjsmin',  # js assets bundle generation
+    'python3-docutils',  # ir_module get_desc fallback, could be removed maybe
+    # unsure for vobject 5
+    #  num2words, logging warning if not installed but not needed to install
+])
+default_packages = ' '.join([  # noqa: FLY002
+    'adduser',
+    'postgresql-client'
+    '"fonts-dejavu-core|fonts-freefont-ttf|fonts-freefont-otf|fonts-noto-core" fonts-inconsolata fonts-font-awesome fonts-roboto-unhinted gsfonts',
+    'libjs-underscore lsb-base',
+    'python3-asn1crypto python3-cbor2',
+    'python3-chardet python3-dateutil python3-decorator python3-freezegun python3-geoip2 python3-jinja2',
+    'python3-libsass python3-num2words python3-ofxparse python3-openpyxl',
+    'python3-polib python3-psutil "python3-pypdf2|python3-pypdf" python3-qrcode',
+    'python3-renderpm python3-stdnum python3-tz python3-vobject python3-werkzeug python3-xlsxwriter',
+    'python3-xlrd',
+])
+dev_packages = 'pylint python3-ipython python3-pudb'
+# flake8 python3-dev python3-mock
+dev_pip_packages = 'ruff==0.4.7'
+
+opt_packages = ' '.join([  # noqa: FLY002
+    'python3-gevent',  # multiworker
+    'python3-websocket',  # bus, looks mandatory (WTF? installed by another one?)
+    #'publicsuffix',
+    'python3-dbfread',  # enterprise
+    'python3-markdown',  # upgrade util
+    'python3-phonenumbers',  # phone_validation, enterprise, ... # TODO check why not in default_packages
+    'python3-google-auth',  # cloud storage, enterprise
+    # 'libpq-dev', # unsure, related to psycopg2
+    'python3-jwt',  # enterprise
+    'python3-html2text',  # i
+    # 'python3-suds', # unsure, alternative to zeep
+    'python3-xmlsec',  # enterprise
+])
+# apt-transport-https build-essential ca-certificates curl file fonts-freefont-ttf fonts-noto-cjk gawk gnupg gsfonts libldap2-dev libjpeg9-dev libsasl2-dev libxslt1-dev lsb-release npm ocrmypdf sed sudo unzip xfonts-75dpi zip zlib1g-dev
+opt_pip_packages = 'ebaysdk==2.1.5 pdf417gen==0.7.1'
+# END DEPS
+
 
 
 def run(command):
@@ -319,29 +321,15 @@ def run(command):
 run.updated = False
 
 
-def run_now(command):
+def execute(command):
     print('>', command)
     res = subprocess.run(command, shell=True)
     if res.returncode != 0:
         sys.exit(res.returncode)
 
 def ask(message):
-    if not args.interactive or args.y:
-        to_confirm.append(message)
-        return True
-    message = message + " [Y/n]"
-    r = None
-    while r not in ['y', 'n']:
-        r = input(message).lower()
-    return r == 'y'
-
-
-def ask_run(message, command):
-    if args.verbose:
-        message = message + "\n" + command
-
-    if ask(message):
-        run(command)
+    commands_summaries.append(message)
+    return True
 
 
 def install_package(*packages):
