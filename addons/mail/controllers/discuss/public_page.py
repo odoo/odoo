@@ -52,10 +52,15 @@ class PublicPageController(http.Controller):
     @http.route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
     @add_guest_to_context
     def discuss_channel(self, channel_id):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].sudo().search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        return self._response_discuss_public_template(Store(), channel)
+        guest = channel.env["mail.guest"]._get_guest_from_context()
+        guest_already_member = channel in guest.sudo().channel_ids
+        store = Store()
+        if guest and not guest_already_member:
+            store.add({"shouldDisplayWelcomeViewInitially": True})
+        return self._response_discuss_public_template(store, channel)
 
     def _response_discuss_channel_from_token(self, create_token, channel_name=None, default_display_mode=False):
         # sudo: ir.config_parameter - reading hard-coded key and using it in a simple condition
@@ -89,15 +94,16 @@ class PublicPageController(http.Controller):
         group_public_id = channel.group_public_id or channel.parent_channel_id.sudo().group_public_id
         if group_public_id and group_public_id not in request.env.user.groups_id:
             raise request.not_found()
-        guest_already_known = channel.env["mail.guest"]._get_guest_from_context()
         with replace_exceptions(UserError, by=NotFound()):
             # sudo: mail.guest - creating a guest and its member inside a channel of which they have the token
             __, guest = channel.sudo()._find_or_create_persona_for_channel(
                 guest_name=_("Guest"),
                 country_code=request.geoip.country_code,
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
+                add_to_channel=False,
             )
-        if guest and not guest_already_known:
+        guest_already_member = channel in guest.sudo().channel_ids
+        if guest and not guest_already_member:
             store.add({"shouldDisplayWelcomeViewInitially": True})
             channel = channel.with_context(guest=guest)
         return self._response_discuss_public_template(store, channel)
@@ -107,7 +113,7 @@ class PublicPageController(http.Controller):
             {
                 "companyName": request.env.company.name,
                 "inPublicPage": True,
-                "discuss_public_thread": Store.one(channel),
+                "discuss_public_thread": Store.one(channel.sudo()),
             }
         )
         return request.render(
