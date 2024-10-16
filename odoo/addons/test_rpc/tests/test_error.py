@@ -21,19 +21,18 @@ class TestError(common.HttpCase):
     def test_01_create(self):
         """ Create: mandatory field not provided """
         self.rpc("test_rpc.model_b", "create", {"name": "B1"})
-        try:
-            with mute_logger("odoo.sql_db"):
-                self.rpc("test_rpc.model_b", "create", {})
-            raise
-        except Exception as e:
-            self.assertIn("The operation cannot be completed:", e.faultString)
-            self.assertIn("Create/update: a mandatory field is not set.", e.faultString)
-            self.assertIn(
-                "Delete: another model requires the record being deleted. If possible, archive it instead.",
-                e.faultString,
-            )
-            self.assertIn("Model: Model B (test_rpc.model_b)", e.faultString)
-            self.assertIn("Field: Name (name)", e.faultString)
+        with self.assertRaises(Fault) as ctx, mute_logger("odoo.sql_db"):
+            self.rpc("test_rpc.model_b", "create", {})
+
+        e = ctx.exception
+        self.assertIn("The operation cannot be completed:", e.faultString)
+        self.assertIn("Create/update: a mandatory field is not set.", e.faultString)
+        self.assertIn(
+            "Delete: another model requires the record being deleted. If possible, archive it instead.",
+            e.faultString,
+        )
+        self.assertIn("Model: Model B (test_rpc.model_b)", e.faultString)
+        self.assertIn("Field: Name (name)", e.faultString)
 
     def test_02_delete(self):
         """ Delete: NOT NULL and ON DELETE RESTRICT constraints """
@@ -41,32 +40,30 @@ class TestError(common.HttpCase):
         b2 = self.rpc("test_rpc.model_b", "create", {"name": "B2"})
         self.rpc("test_rpc.model_a", "create", {"name": "A1", "field_b1": b1, "field_b2": b2})
 
-        try:
-            with mute_logger("odoo.sql_db"):
-                self.rpc("test_rpc.model_b", "unlink", b1)
-            raise
-        except Exception as e:
-            self.assertIn("The operation cannot be completed:", e.faultString)
-            self.assertIn(
-                "another model requires the record being deleted. If possible, archive it instead.",
-                e.faultString,
-            )
-            self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
-            self.assertIn("Constraint: test_rpc_model_a_field_b1_fkey", e.faultString)
+        with self.assertRaises(Fault) as ctx, mute_logger("odoo.sql_db"):
+            self.rpc("test_rpc.model_b", "unlink", b1)
+
+        e = ctx.exception
+        self.assertIn("The operation cannot be completed:", e.faultString)
+        self.assertIn(
+            "another model requires the record being deleted. If possible, archive it instead.",
+            e.faultString,
+        )
+        self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
+        self.assertIn("Constraint: test_rpc_model_a_field_b1_fkey", e.faultString)
 
         # Unlink b2 => ON DELETE RESTRICT constraint raises
-        try:
-            with mute_logger("odoo.sql_db"):
-                self.rpc("test_rpc.model_b", "unlink", b2)
-            raise
-        except Exception as e:
-            self.assertIn("The operation cannot be completed:", e.faultString)
-            self.assertIn(
-                " another model requires the record being deleted. If possible, archive it instead.",
-                e.faultString,
-            )
-            self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
-            self.assertIn("Constraint: test_rpc_model_a_field_b2_fkey", e.faultString)
+        with self.assertRaises(Fault) as ctx, mute_logger("odoo.sql_db"):
+            self.rpc("test_rpc.model_b", "unlink", b2)
+
+        e = ctx.exception
+        self.assertIn("The operation cannot be completed:", e.faultString)
+        self.assertIn(
+            " another model requires the record being deleted. If possible, archive it instead.",
+            e.faultString,
+        )
+        self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
+        self.assertIn("Constraint: test_rpc_model_a_field_b2_fkey", e.faultString)
 
     def test_03_sql_constraint(self):
         with mute_logger("odoo.sql_db"):
