@@ -20,22 +20,22 @@
                         <group>
                             <field name="name" readonly="1"/>
                             <field name="date" readonly="1"/>
+                            <field name="picking_id" required="True"/>
                         </group>
                         <group>
-                            <field name="picking_id"/>
+                            <field name="site_code_id"/>
                             <field name="partner_id"/>
+                            <field name="tenant_code_id"/>
                         </group>
                     </group>
                     <notebook>
                         <page id="product" name="Product">
                             <field name="delivery_receipt_orders_line_ids" widget="section_and_note_one2many" mode="tree">
-                                <tree editable='bottom'>
+                                <tree editable='bottom' create="0" edit="0">
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                         <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
-<!--                                        <create name="add_license_plate_control" string="Add License Plate"-->
-<!--                                                context="{'default_display_type': 'line_section', 'default_license_plate_barcode': True}"/>-->
                                     </control>
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"
@@ -46,7 +46,6 @@
                                     <field name="quantity"/>
                                     <field name="available_quantity" column_invisible="1"/>
                                     <field name="remaining_quantity" column_invisible="1"/>
-                                    <field name="barcode" column_invisible="1"/>
                                     <field name="state"/>
                                     <field name="display_type" column_invisible="1"/>
                                     <field name="display_type_line_section" column_invisible="True"/>

@@ -38,24 +38,26 @@ class DeliveryReceiptWizard(models.TransientModel):
     def action_add_lines(self):
         """
         This method adds lines to the delivery receipt order based on the
-        license plate barcode and the lines entered the wizard.
+        license plate barcode and the lines entered in the wizard.
         It creates a section line for the license plate and product lines
-        for each entry in line_ids.
+        for each entry in line_ids. If the product already exists, it combines the quantities.
         """
         active_id = self.env.context.get('active_id')
         delivery_order = self.env['delivery.receipt.orders'].browse(active_id)
+
         # Prepare data for License Plate Order
         license_plate_order_lines = []
+
         # Use the barcode as the section name
         section_name = self.license_plate_barcode
-        # Create a section line
+
+        # Create a section line for the license plate
         self.env['delivery.receipt.orders.line'].create({
             'delivery_receipt_order_line_id': delivery_order.id,
             'product_id': False,  # No product for section header
             'name': section_name,
             'quantity': 0,
             'sku_code': '',
-            'barcode': '',  # No barcode for section line
             'available_quantity': 0,
             'remaining_quantity': 0,
             'display_type': 'line_section',  # Indicate this is a section
@@ -63,43 +65,128 @@ class DeliveryReceiptWizard(models.TransientModel):
         })
         print("Section name created:", section_name)
 
+        # Dictionary to keep track of products already added to the License Plate Order
+        license_plate_product_map = {}
+
+        # Iterate through each line entered in the wizard
         for line in self.line_ids:
             # Search for the product based on the provided barcode
             product = self.env['product.product'].search([('barcode', '=', line.barcode)], limit=1)
             if not product:
                 raise UserError(_("No product found for barcode: %s") % line.barcode)
-            # Create product line
             self.env['delivery.receipt.orders.line'].create({
                 'delivery_receipt_order_line_id': delivery_order.id,
                 'product_id': line.product_id.id,
                 'name': line.product_id.name,
                 'sku_code': product.default_code,
                 'quantity': line.quantity,
-                'barcode': product.barcode,  # Include product's barcode in the product line
                 'available_quantity': line.available_quantity,
                 'remaining_quantity': line.remaining_quantity,
                 'license_plate_closed': True,
                 'state': 'closed',
             })
-            # Prepare line data for the license plate order
-            license_plate_order_lines.append([0, 0, {
-                'product_id': line.product_id.id,
-                'sku_code': line.product_id.default_code,
-                'barcode': product.barcode,
-                'quantity': line.quantity,
-            }])
+            # Check if the product already exists in the license_plate_product_map
+            if line.product_id.id in license_plate_product_map:
+                # If the product exists, update the quantity
+                license_plate_product_map[line.product_id.id]['quantity'] += line.quantity
+                # license_plate_product_map[line.product_id.id]['remaining_qty'] += line.remaining_quantity
+            else:
+                # If it's a new product, add it to the map
+                license_plate_product_map[line.product_id.id] = {
+                    'product_id': line.product_id.id,
+                    'name': line.product_id.name,
+                    'sku_code': product.default_code,
+                    'quantity': line.quantity,
+                    # 'available_quantity': line.available_quantity,
+                    # 'remaining_qty': line.remaining_quantity,
+                }
+
+            # Update remaining quantity in stock move lines
             move_lines = self.picking_id.move_ids_without_package.filtered(
                 lambda m: m.product_id == line.product_id)
             move_lines.remaining_qty = sum(line.mapped('remaining_quantity'))  # Sum of all quantities from the picking
             move_lines.is_remaining_qty = True
-        # Create License Plate Record
+
+        # Create License Plate Order lines from the product map
+        for product_data in license_plate_product_map.values():
+            license_plate_order_lines.append([0, 0, product_data])
+
+        # Create License Plate Record with all the lines
         self.env['license.plate.orders'].create({
             'name': self.license_plate_barcode,
             'state': 'closed',
             'automation_manual': self.automation_manual,
+            'delivery_receipt_order_id': delivery_order.id,
+            'picking_id': self.picking_id.id,
             'license_plate_order_line_ids': license_plate_order_lines,  # Pass the list of lines
         })
+
         return {'type': 'ir.actions.act_window_close'}
+
+    # def action_add_lines(self):
+    #     """
+    #     This method adds lines to the delivery receipt order based on the
+    #     license plate barcode and the lines entered the wizard.
+    #     It creates a section line for the license plate and product lines
+    #     for each entry in line_ids.
+    #     """
+    #     active_id = self.env.context.get('active_id')
+    #     delivery_order = self.env['delivery.receipt.orders'].browse(active_id)
+    #     # Prepare data for License Plate Order
+    #     license_plate_order_lines = []
+    #     # Use the barcode as the section name
+    #     section_name = self.license_plate_barcode
+    #     # Create a section line
+    #     self.env['delivery.receipt.orders.line'].create({
+    #         'delivery_receipt_order_line_id': delivery_order.id,
+    #         'product_id': False,  # No product for section header
+    #         'name': section_name,
+    #         'quantity': 0,
+    #         'sku_code': '',
+    #         'available_quantity': 0,
+    #         'remaining_quantity': 0,
+    #         'display_type': 'line_section',  # Indicate this is a section
+    #         'license_plate_closed': True,
+    #     })
+    #     print("Section name created:", section_name)
+    #
+    #     for line in self.line_ids:
+    #         # Search for the product based on the provided barcode
+    #         product = self.env['product.product'].search([('barcode', '=', line.barcode)], limit=1)
+    #         if not product:
+    #             raise UserError(_("No product found for barcode: %s") % line.barcode)
+    #         # Create product line
+    #         self.env['delivery.receipt.orders.line'].create({
+    #             'delivery_receipt_order_line_id': delivery_order.id,
+    #             'product_id': line.product_id.id,
+    #             'name': line.product_id.name,
+    #             'sku_code': product.default_code,
+    #             'quantity': line.quantity,
+    #             'available_quantity': line.available_quantity,
+    #             'remaining_quantity': line.remaining_quantity,
+    #             'license_plate_closed': True,
+    #             'state': 'closed',
+    #         })
+    #         # Prepare line data for the license plate order
+    #         license_plate_order_lines.append([0, 0, {
+    #             'product_id': line.product_id.id,
+    #             'sku_code': line.product_id.default_code,
+    #             'quantity': line.quantity,
+    #         }])
+    #         move_lines = self.picking_id.move_ids_without_package.filtered(
+    #             lambda m: m.product_id == line.product_id)
+    #         move_lines.remaining_qty = sum(line.mapped('remaining_quantity'))  # Sum of all quantities from the picking
+    #         move_lines.is_remaining_qty = True
+    #     # Create License Plate Record
+    #     self.env['license.plate.orders'].create({
+    #         'name': self.license_plate_barcode,
+    #         'state': 'closed',
+    #         'automation_manual': self.automation_manual,
+    #         'delivery_receipt_order_id': delivery_order.id,
+    #         'picking_id': self.picking_id.id,
+    #         'license_plate_order_line_ids': license_plate_order_lines,  # Pass the list of lines
+    #     })
+    #     return {'type': 'ir.actions.act_window_close'}
 
 
 class DeliveryReceiptWizardLine(models.TransientModel):
@@ -169,13 +256,14 @@ class DeliveryReceiptWizardLine(models.TransientModel):
     def onchange_quantity(self):
         for line in self:
             line._compute_remaining_quantity()
-            if line.remaining_quantity < line.quantity:
-                return {
-                    'warning': {
-                        'title': _("Invalid Quantity "),
-                        'message': _("The selected quantity is greater than actual remaining quantity."),
+            if line.remaining_quantity < 0:
+                if line.remaining_quantity < line.quantity:
+                    return {
+                        'warning': {
+                            'title': _("Invalid Quantity "),
+                            'message': _("The selected quantity is greater than actual remaining quantity."),
+                        }
                     }
-                }
 
     @api.onchange('product_id')
     def onchange_product_id(self):

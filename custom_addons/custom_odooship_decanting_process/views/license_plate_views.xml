@@ -21,23 +21,34 @@
             <field name="arch" type="xml">
                 <form string="License Plate Order">
                     <header>
-                        <field name="state" widget="statusbar" statusbar_visible="open,close"/>
+                        <field name="license_plate_state" widget="statusbar" statusbar_visible="available,not_available"/>
                     </header>
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="automation_manual"/>
+                            <group>
+                                <field name="name" readonly="True"/>
+                                <field name="automation_manual" readonly="True"/>
+                                <field name="delivery_receipt_order_id" readonly="True"/>
+                                <field name="picking_id" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="tenant_code_id"/>
+                                <field name="site_code_id"/>
+                                <field name="state" string="DR License Plate State" readonly="1"/>
+                            </group>
                         </group>
-                        <group>
-                            <field name="license_plate_order_line_ids">
-                                <tree editable="bottom">
-                                    <field name="name"/>
+                        <group string="Product Details">
+                            <field name="license_plate_order_line_ids" string="Product Details">
+                                <tree editable="bottom" create="0" edit="0" delete="0">
+                                    <field name="name" column_invisible="True"/>
                                     <field name="product_id"/>
-                                    <field name="quantity"/>
                                     <field name="sku_code"/>
-                                    <field name="barcode"/>
-                                    <field name="state"/>
-                                    <field name="sequence"/>
+                                    <field name="quantity"/>
+                                    <field name="remaining_qty"/>
+                                    <field name="is_remaining_qty" column_invisible="1"/>
+                                    <field name="state" column_invisible="True"/>
+                                    <field name="sequence" column_invisible="True"/>
                                 </tree>
                             </field>
                         </group>
@@ -57,9 +68,7 @@
                     <field name="product_id"/>
                     <field name="quantity"/>
                     <field name="sku_code"/>
-                    <field name="barcode"/>
                     <field name="state"/>
-                    <field name="sequence"/>
                 </tree>
             </field>
         </record>
@@ -77,9 +86,7 @@
                             <field name="product_id"/>
                             <field name="quantity"/>
                             <field name="sku_code"/>
-                            <field name="barcode"/>
                             <field name="state"/>
-                            <field name="sequence"/>
                         </group>
                         <footer>
                             <button name="button_close_license_plate" type="object"
@@ -106,7 +113,5 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_license_plate_orders_line_tree"/>
         </record>
-
-
     </data>
 </odoo>
