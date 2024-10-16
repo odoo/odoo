@@ -1466,14 +1466,8 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             if field.store:
                 env.remove_to_compute(field, records)
 
-        try:
-            with records.env.protecting(fields, records):
-                records._compute_field_value(self)
-        except Exception:
-            for field in fields:
-                if field.store:
-                    env.add_to_compute(field, records)
-            raise
+        with records.env.protecting(fields, records):
+            records._compute_field_value(self)
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
