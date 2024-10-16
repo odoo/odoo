@@ -12,6 +12,13 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
             },
         },
         {
+            content: "Guest shouldn't join channel until click on 'Join Channel'",
+            trigger: "body",
+            run() {
+                window.location.reload();
+            },
+        },
+        {
             content: "Click join",
             trigger: "button[title='Join Channel']",
             run: "click",
