@@ -304,25 +304,26 @@ QUnit.module('convert_inline', {}, function () {
             stepFunction: convertInline.cardToTable,
             after: getRegularTableHtml(3, 1, 12, 100)
                 .replace('role=\"presentation\"', 'role=\"presentation\" class=\"card\"')
-                .replace(/<td[^>]*>\(0, 0\)<\/td>/,
+                .replace(/<td[^>]*>\(0, 0\)<\/td><\/tr><tr>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
                         `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: inherit;\"><tr>` +
+                        `font-size: unset; line-height: inherit; table-layout: fixed;\"><tr>` +
                             `<td class="card-header"><span>HEADER</span></td>` +
-                        `</tr></table></td>`)
+                        `</tr></table>` +
+                    `</td></tr><tr style="height: 0px;">`)
                 .replace(/<td[^>]*>\(1, 0\)<\/td>/,
-                    `<td>` +
+                    `<td style="height: 100%;">` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
-                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: inherit;\"><tr>` +
+                        `role=\"presentation\" height="100%" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
+                        `font-size: unset; line-height: inherit; table-layout: fixed; height: 100%;\"><tr>` +
                             `<td class="card-body"><h2 class="card-title">TITLE</h2><small>BODY <img></small></td>` +
                         `</tr></table></td>`)
                 .replace(/<td[^>]*>\(2, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
                         `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: inherit;\"><tr>` +
+                        `font-size: unset; line-height: inherit; table-layout: fixed;\"><tr>` +
                             `<td class="card-footer"><a href="#" class="btn">FOOTER</a></td>` +
                         `</tr></table></td>`),
         });
