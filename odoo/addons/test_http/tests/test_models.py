@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import html
 from http import HTTPStatus
 
-import odoo
+import markupsafe
+
+import odoo.http
 from odoo.tests import tagged
 from odoo.tests.common import new_test_user, Like
 from odoo.tools import mute_logger
@@ -61,12 +61,13 @@ class TestHttpModels(TestHttpBase):
             ''')
         )
 
-    @mute_logger('odoo.http')
     def test_models3_stargate_ko(self):
         milky_way = self.env.ref('test_http.milky_way')
-        res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
+        with self.assertLogs("odoo.http", level="WARNING") as logs:
+            res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
         self.assertEqual(res.status_code, 400)
-        self.assertIn("The goa'uld destroyed the gate", html.unescape(res.text))
+        self.assertIn(markupsafe.escape("The goa'uld destroyed the gate"), res.text)
+        self.assertEqual(logs.output, ["WARNING:odoo.http:The goa'uld destroyed the gate"])
 
     def test_models4_stargate_setname(self):
         milky_way = self.env.ref('test_http.milky_way')
