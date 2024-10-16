@@ -897,6 +897,25 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'subtotals_order': ["Untaxed Amount"],
         })
 
+    def test_round_globally_taxes_base(self):
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        tax = self.env['account.tax'].create({
+            'name': '21%',
+            'amount_type': 'percent',
+            'amount': 21.0
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'price_unit': 5.75,
+                'discount': 18.0,
+                'quantity': 5,
+                'tax_ids': [tax.id],
+            }) for i in range(6)]
+        })
+        self.assertEqual(invoice.currency_id.compare_amounts(invoice.amount_tax, 29.71), 0)
+
     def test_cash_rounding_amount_total_rounded(self):
         tax_15 = self.env['account.tax'].create({
             'name': "tax_15",

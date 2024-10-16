@@ -363,9 +363,14 @@ export const accountTaxHelpers = {
         } else if (!precision_rounding) {
             precision_rounding = 0.01;
         }
+        let raw_price = price_unit * quantity
+        if (precision_rounding) {
+            raw_price = roundPrecision(raw_price, precision_rounding);
+        }
         return {
             product: product_values,
             price_unit: price_unit,
+            raw_price: raw_price,
             quantity: quantity,
             rounding_method: rounding_method,
             precision_rounding: precision_rounding,
@@ -386,9 +391,7 @@ export const accountTaxHelpers = {
             return evaluation_context.quantity * evaluation_context.quantity_multiplicator;
         }
 
-        let raw_base =
-            evaluation_context.quantity * evaluation_context.price_unit +
-            evaluation_context.extra_base;
+        let raw_base = evaluation_context.raw_price + evaluation_context.extra_base;
         if (
             "incl_base_multiplicator" in evaluation_context &&
             ((price_include && !special_mode) || special_mode === "total_included")
@@ -411,9 +414,7 @@ export const accountTaxHelpers = {
         const amount_type = tax_data.amount_type;
         const total_tax_amount = evaluation_context.total_tax_amount;
         const special_mode = evaluation_context.special_mode;
-        const raw_base =
-            evaluation_context.quantity * evaluation_context.price_unit +
-            evaluation_context.extra_base;
+        const raw_base = evaluation_context.raw_price + evaluation_context.extra_base;
 
         if (price_include) {
             const base = special_mode === "total_excluded" ? raw_base : raw_base - total_tax_amount;
@@ -521,8 +522,7 @@ export const accountTaxHelpers = {
             }
             total_included = total_excluded + tax_amount;
         } else {
-            total_excluded = total_included =
-                evaluation_context.quantity * evaluation_context.price_unit;
+            total_excluded = total_included = evaluation_context.raw_price;
             if (rounding_method === "round_per_line") {
                 total_excluded = total_included = roundPrecision(total_excluded, prec_rounding);
             }
