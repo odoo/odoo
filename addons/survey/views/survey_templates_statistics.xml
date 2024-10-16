@@ -71,7 +71,7 @@
         <t t-set="table_data" t-value="question_data['table_data']"/>
 
         <div>
-        <div class="d-flex align-items-start mb-2">
+        <div class="d-flex align-items-start mb-2 flex-wrap">
             <div class="mr-auto">
                 <h5 t-field="question.title" class="mb-1"/>
                 <div t-if="question_scoring">
@@ -107,28 +107,28 @@
                 </div>
             </div>
             <!-- Question info -->
-            <span class="badge badge-info" t-field='question.question_type'/>
+            <span class="badge badge-info m-1" t-field='question.question_type'/>
             <t t-if="question.question_type == 'matrix'">
-                <span class="badge badge-info ml-2" t-field='question.matrix_subtype'/>
+                <span class="badge badge-info m-1" t-field='question.matrix_subtype'/>
             </t>
             <!-- Scoring info -->
             <t t-if="question_scoring">
                 <t t-if="question.question_type in ['simple_choice', 'multiple_choice'] or question.is_scored_question">
-                    <span class="badge badge-success ml-3"><span t-esc="question_data['right_inputs_count']"></span> Correct</span>
+                    <span class="badge badge-success m-1"><span t-esc="question_data['right_inputs_count']"></span> Correct</span>
                 </t>
                 <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
-                    <span class="badge badge-warning ml-1" t-if="question.question_type == 'multiple_choice'">
+                    <span class="badge badge-warning m-1" t-if="question.question_type == 'multiple_choice'">
                         <span t-esc="question_data['partial_inputs_count']"></span> Partial
                     </span>
                 </t>
             </t>
             <!-- Inputs info -->
-            <span class="badge badge-info ml-3"><span t-esc="len(question_data['answer_input_done_ids'])"></span> Answered</span>
-            <span class="badge badge-info ml-1"><span t-esc="len(question_data['answer_input_skipped_ids'])"></span> Skipped</span>
+            <span class="badge badge-info m-1"><span t-esc="len(question_data['answer_input_done_ids'])"></span> Answered</span>
+            <span class="badge badge-info m-1"><span t-esc="len(question_data['answer_input_skipped_ids'])"></span> Skipped</span>
         </div>
 
         <!-- Question Description -->
-        <div class="ml-3 text-muted" t-field="question.description"/>
+        <div class="text-muted" t-field="question.description"/>
             <t t-if="question.question_type in ['text_box', 'char_box', 'datetime']">
                 <t t-call="survey.question_result_text"/>
             </t>
@@ -186,10 +186,10 @@
 
     <template id="question_result_number_or_date" name="Question: number or date result (numerical_box or date)">
         <t t-if="question.question_type == 'numerical_box'">
-            <span class="float-right mt8">
+            <span class="float-md-right d-flex justify-content-end m-2">
                 <span class="badge badge-secondary only_left_radius">Maximum </span> <span class="badge badge-success only_right_radius" t-esc="question_data['numerical_max']"></span>
-                <span class="badge badge-secondary only_left_radius">Minimum </span> <span class="badge badge-danger only_right_radius" t-esc="question_data['numerical_min']"></span>
-                <span class="badge badge-secondary only_left_radius">Average </span> <span class="badge badge-warning only_right_radius" t-esc="question_data['numerical_average']"></span>
+                <span class="badge badge-secondary only_left_radius ml-1">Minimum </span> <span class="badge badge-danger only_right_radius" t-esc="question_data['numerical_min']"></span>
+                <span class="badge badge-secondary only_left_radius ml-1">Average </span> <span class="badge badge-warning only_right_radius" t-esc="question_data['numerical_average']"></span>
             </span>
         </t>
 
