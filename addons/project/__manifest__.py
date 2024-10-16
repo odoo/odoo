@@ -117,7 +117,7 @@
             'web/static/lib/odoo_ui_icons/*',
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
-            'web/static/src/core/colorpicker/colorpicker.scss',
+            'web/static/src/core/color_picker/color_picker.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
             'web/static/src/legacy/scss/ui.scss',
