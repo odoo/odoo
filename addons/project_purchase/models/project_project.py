@@ -77,9 +77,9 @@ class ProjectProject(models.Model):
     def action_profitability_items(self, section_name, domain=None, res_id=False):
         if section_name == 'purchase_order':
             action = {
-                'name': self.env._('Purchase Order Items'),
+                'name': self.env._('Purchase Orders'),
                 'type': 'ir.actions.act_window',
-                'res_model': 'purchase.order.line',
+                'res_model': 'purchase.order',
                 'views': [[False, 'list'], [False, 'form']],
                 'domain': domain,
                 'context': {
@@ -169,9 +169,10 @@ class ProjectProject(models.Model):
                 section_id = 'purchase_order'
                 purchase_order_costs = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
                 if with_action:
-                    args = [section_id, [('id', 'in', invoice_lines.purchase_line_id.ids)]]
-                    if len(invoice_lines.purchase_line_id) == 1:
-                        args.append(invoice_lines.purchase_line_id.id)
+                    purchase_order = invoice_lines.purchase_line_id.order_id
+                    args = [section_id, [('id', 'in', purchase_order.ids)]]
+                    if len(purchase_order) == 1:
+                        args.append(purchase_order.id)
                     action = {'name': 'action_profitability_items', 'type': 'object', 'args': json.dumps(args)}
                     purchase_order_costs['action'] = action
                 costs['data'].append(purchase_order_costs)
