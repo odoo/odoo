@@ -259,7 +259,7 @@ class HrExpense(models.Model):
                         company=expense.company_id,
                         date=expense.date or date_today,
                     )
-                else:
+                elif expense.currency_rate != 1:
                     expense.currency_rate = expense.total_amount / expense.total_amount_currency if expense.total_amount_currency else 1.0
             else:  # Mono-currency case computation shortcut, no need for the label if there is no conversion
                 expense.currency_rate = 1.0
