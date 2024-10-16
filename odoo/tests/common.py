@@ -791,23 +791,6 @@ class SingleTransactionCase(BaseCase):
 class ChromeBrowserException(Exception):
     pass
 
-def fmap(future, map_fun):
-    """Maps a future's result through a callback.
-
-    Resolves to the application of ``map_fun`` to the result of ``future``.
-
-    .. warning:: this does *not* recursively resolve futures, if that's what
-                 you need see :func:`fchain`
-    """
-    fmap_future = Future()
-    @future.add_done_callback
-    def _(f):
-        try:
-            fmap_future.set_result(map_fun(f.result()))
-        except Exception as e:
-            fmap_future.set_exception(e)
-    return fmap_future
-
 def fchain(future, next_callback):
     """Chains a future's result to a new future through a callback.
 
@@ -1213,11 +1196,17 @@ class ChromeBrowser:
 
         log_type = type
         _logger = self._logger.getChild('browser')
+        level = self._TO_LEVEL.get(log_type, logging.INFO)
+        if self._result.done() and self.had_failure and level > logging.RUNBOT:
+            message = f'{log_type} message received while result already set:\n {message}'
+            log_type = 'runbot'
+            level = logging.RUNBOT
+
         _logger.log(
-            self._TO_LEVEL.get(log_type, logging.INFO),
+            level,
             "%s%s",
             "Error received after termination: " if self._result.done() else "",
-            message # might still have %<x> characters
+            message, # might still have %<x> characters
         )
 
         if log_type == 'error':
@@ -1225,8 +1214,6 @@ class ChromeBrowser:
             if self._result.done():
                 return
             if not self.error_checker or self.error_checker(message):
-                self.take_screenshot()
-                self._save_screencast()
                 try:
                     self._result.set_exception(ChromeBrowserException(message))
                 except CancelledError:
@@ -1236,6 +1223,8 @@ class ChromeBrowser:
                         "Trying to set result to failed (%s) but found the future settled (%s)",
                         message, self._result
                     )
+                self.take_screenshot()
+                self._save_screencast()
         elif 'test successful' in message:
             if self.test_class.allow_end_on_form:
                 self._result.set_result(True)
@@ -1286,12 +1275,12 @@ which leads to stray network requests and inconsistencies."""
             message += '\n' + stack
 
         if self._result.done():
-            self._logger.getChild('browser').error(
-                "Exception received after termination: %s", message)
+            log = self._logger.getChild('browser').error
+            if self._result._exception or self._result._result:
+                log = self._logger.getChild('browser').runbot
+            log("Exception received after termination: %s", message)
             return
 
-        self.take_screenshot()
-        self._save_screencast()
         try:
             self._result.set_exception(ChromeBrowserException(message))
         except CancelledError:
@@ -1301,6 +1290,9 @@ which leads to stray network requests and inconsistencies."""
                 "Trying to set result to failed (%s) but found the future settled (%s)",
                 message, self._result
             )
+
+        self.take_screenshot()
+        self._save_screencast()
 
     def _handle_frame_stopped_loading(self, frameId):
         wait = self._frames.pop(frameId, None)
@@ -1326,6 +1318,7 @@ which leads to stray network requests and inconsistencies."""
         'debug': logging.DEBUG,
         'log': logging.INFO,
         'info': logging.INFO,
+        'runbot': logging.RUNBOT,
         'warning': logging.WARNING,
         'error': logging.ERROR,
         # TODO: what do with
@@ -1460,11 +1453,14 @@ which leads to stray network requests and inconsistencies."""
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
-                return
+                return  # successful
         except CancelledError:
             # regular-ish shutdown
             return
         except Exception as e:
+            if not self._result.done():
+                self._result.set_exception(e)
+            self.had_failure = True
             err = e
 
         self.take_screenshot()
