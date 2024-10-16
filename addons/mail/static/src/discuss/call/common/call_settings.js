@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
+import { useMicrophoneVolume } from "@mail/utils/common/hooks";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 export class CallSettings extends Component {
@@ -20,6 +21,7 @@ export class CallSettings extends Component {
         this.notification = useService("notification");
         this.store = useState(useService("mail.store"));
         this.rtc = useState(useService("discuss.rtc"));
+        this.microphoneVolume = useMicrophoneVolume();
         this.state = useState({
             userDevices: [],
         });
@@ -50,6 +52,14 @@ export class CallSettings extends Component {
             }
             this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
         });
+    }
+
+    get stopText() {
+        return _t("Stop");
+    }
+
+    get testText() {
+        return _t("Test");
     }
 
     get pushToTalkKeyText() {
@@ -111,10 +121,6 @@ export class CallSettings extends Component {
 
     onChangeDelay(ev) {
         this.store.settings.setDelayValue(ev.target.value);
-    }
-
-    onChangeThreshold(ev) {
-        this.store.settings.setThresholdValue(parseFloat(ev.target.value));
     }
 
     onChangeBlur(ev) {
