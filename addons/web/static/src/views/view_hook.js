@@ -1,34 +1,8 @@
-import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { evaluateExpr } from "@web/core/py_js/py";
 
-import { useComponent, useEffect, xml } from "@odoo/owl";
-
-export function useViewArch(arch, params = {}) {
-    const CATEGORY = "__processed_archs__";
-
-    arch = arch.trim();
-    const processedRegistry = registry.category(CATEGORY);
-
-    let processedArch;
-    if (!processedRegistry.contains(arch)) {
-        processedArch = {};
-        processedRegistry.add(arch, processedArch);
-    } else {
-        processedArch = processedRegistry.get(arch);
-    }
-
-    const { compile, extract } = params;
-    if (!("template" in processedArch) && compile) {
-        processedArch.template = xml`${compile(arch)}`;
-    }
-    if (!("extracted" in processedArch) && extract) {
-        processedArch.extracted = extract(arch);
-    }
-
-    return processedArch;
-}
+import { useComponent, useEffect } from "@odoo/owl";
 
 /**
  * Allows for a component (usually a View component) to handle links with
