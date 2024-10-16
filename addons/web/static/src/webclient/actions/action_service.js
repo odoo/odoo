@@ -622,11 +622,11 @@ export function makeActionManager(env, router = _router) {
         if (typeof groupBy === "string") {
             groupBy = [groupBy];
         }
-        const openFormView = (resId, { activeIds, mode } = {}) => {
+        const openFormView = (resId, { activeIds, mode, force } = {}) => {
             if (target !== "new") {
                 if (_getView("form")) {
                     return switchView("form", { mode, resId, resIds: activeIds });
-                } else {
+                } else if (force || !resId) {
                     return doAction(
                         {
                             type: "ir.actions.act_window",

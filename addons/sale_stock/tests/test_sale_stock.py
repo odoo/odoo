@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 
+from odoo import Command
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 from odoo.tests import Form, tagged
-from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -2076,3 +2076,43 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertTrue(delivery_2)
         self.assertEqual(delivery_2.move_ids.product_uom_qty, 3.0)
         self.assertEqual(so.order_line.qty_delivered, 5.0)
+
+    def test_warehouse_redirect_warnings(self):
+        """
+        Check that the correct warnings are raised when you try to confirm
+        a SO for a storable product without warehouse.
+        """
+        new_company = self.env['res.company'].create({'name': 'Company 2'})
+        # Warhouses are created for new companies in test mode but not IRL
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)], limit=1)
+        warehouse.active = False
+        storable_product = self.env['product.product'].create({
+            'name': 'Lovely Product',
+            'is_storable': True,
+        })
+        so = self.env['sale.order'].with_company(new_company).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': storable_product.name,
+                    'product_id': storable_product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': storable_product.uom_id.id,
+                }),
+            ],
+        })
+        # Since you dont have any warehouse for your company  you should raise a RedirectWarning
+        error_message = "Please create a warehouse for company Company 2."
+        with self.assertRaisesRegex(RedirectWarning, error_message), self.env.cr.savepoint():
+            so.with_company(new_company).action_confirm()
+        warehouse.active = True
+        # Since you have a warehouse which is not linked to the SO you should raise a UserError
+        error_message = "You must set a warehouse on your sale order to proceed."
+        with self.assertRaisesRegex(UserError, error_message), self.env.cr.savepoint():
+            so.with_company(new_company).action_confirm()
+        # check the flow with 2 available warehouses for that company
+        self.env['stock.warehouse'].create({'name': 'Warehouse 2', 'code': 'WH2', 'company_id': new_company.id})
+        # Since you have a warehouse which is not linked to the SO you should raise a UserError
+        error_message = "You must set a warehouse on your sale order to proceed."
+        with self.assertRaisesRegex(UserError, error_message), self.env.cr.savepoint():
+            so.with_company(new_company).action_confirm()
