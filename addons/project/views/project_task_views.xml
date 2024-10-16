@@ -61,7 +61,7 @@
                     <field name="project_id" string="Project"/>
                 </field>
                 <field name="partner_id" position="after">
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
                 </field>
                 <filter name="stage" position="before">
@@ -562,7 +562,7 @@
                             <group>
                                 <group>
                                     <field name="parent_id" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form','search_default_project_id': project_id, 'search_default_open_tasks': 1}"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
                                     <field name="displayed_image_id" groups="base.group_no_one" options="{'no_create': True}"/>

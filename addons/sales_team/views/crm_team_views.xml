@@ -43,7 +43,7 @@
                             <field name="sequence" invisible="1"/>
                             <field name="is_membership_multi" invisible="1"/>
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="member_company_ids" invisible="1"/>
                         </group>

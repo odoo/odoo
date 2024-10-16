@@ -63,7 +63,7 @@
                         </group>
                         <group name="resource_company">
                             <field name="active" invisible="1"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                             <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
                             <field name="tz_offset" invisible="1"/>
                         </group>
