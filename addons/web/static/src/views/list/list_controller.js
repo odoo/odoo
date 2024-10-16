@@ -411,8 +411,8 @@ export class ListController extends Component {
             );
 
         return {
-            action: [...staticActionItems, ...(actionMenus.action || [])],
-            print: actionMenus.print,
+            action: [...staticActionItems, ...(actionMenus?.action || [])],
+            print: actionMenus?.print,
         };
     }
 
