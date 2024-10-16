@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Form view of Site Code Configuration -->
+    <record id="view_site_code_configuration" model="ir.ui.view">
+        <field name="name">site.code.configuration.form</field>
+        <field name="model">site.code.configuration</field>
+        <field name="arch" type="xml">
+            <form string="Site Code Configuration">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+<!--    Tree View of Site Code Configuration-->
+    <record id="tree_view_site_code_configuration" model="ir.ui.view">
+        <field name="name">site.code.configuration.tree</field>
+        <field name="model">site.code.configuration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+<!--    Action for Site Code configuration model-->
+    <record id="action_site_code_configuration" model="ir.actions.act_window">
+        <field name="name">Site Code</field>
+        <field name="res_model">site.code.configuration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

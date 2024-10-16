@@ -45,4 +45,18 @@
               action="action_license_plate_orders"
               parent="container_configuration_menu"
               sequence="70"/>
+
+    <!--    Site Code Configuration menu in Inventory configuration-->
+    <menuitem id="menu_site_code_configuration"
+              name="Site Code"
+              action="action_site_code_configuration"
+              parent="stock.menu_stock_config_settings"
+              sequence="90"/>
+
+    <!--    Tenant  Code Configuration menu in Inventory configuration-->
+    <menuitem id="menu_tenant_code_configuration"
+              name="Tenant Code"
+              action="action_tenant_code_configuration"
+              parent="stock.menu_stock_config_settings"
+              sequence="80"/>
 </odoo>
