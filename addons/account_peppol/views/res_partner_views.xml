@@ -7,8 +7,18 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
             <data>
+                <xpath expr="//field[@name='invoice_sending_method']" position="before">
+                    <field name="available_peppol_sending_methods" invisible="1"/>
+                    <field name="available_peppol_edi_formats" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_sending_method']" position="attributes">
+                    <attribute name="widget">filterable_selection</attribute>
+                    <attribute name="options">{'whitelist_fname': 'available_peppol_sending_methods'}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='invoice_edi_format']" position="attributes">
                     <attribute name="required">invoice_sending_method == 'peppol'</attribute>
+                    <attribute name="widget">filterable_selection</attribute>
+                    <attribute name="options">{'whitelist_fname': 'available_peppol_edi_formats'}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='peppol_eas']" position="before">
                     <field name="bank_account_count" invisible="1"/>

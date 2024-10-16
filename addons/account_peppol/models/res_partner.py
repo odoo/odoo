@@ -20,7 +20,8 @@ class ResPartner(models.Model):
     invoice_sending_method = fields.Selection(
         selection_add=[('peppol', 'by Peppol')],
     )
-
+    available_peppol_sending_methods = fields.Json(compute='_compute_available_peppol_sending_methods')
+    available_peppol_edi_formats = fields.Json(compute='_compute_available_peppol_edi_formats')
     peppol_verification_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),
@@ -31,6 +32,27 @@ class ResPartner(models.Model):
         string='Peppol endpoint verification',
         company_dependent=True,
     )
+
+    # -------------------------------------------------------------------------
+    # COMPUTE METHODS
+    # -------------------------------------------------------------------------
+
+    @api.depends_context('company')
+    @api.depends('company_id')
+    def _compute_available_peppol_sending_methods(self):
+        methods = dict(self._fields['invoice_sending_method'].selection)
+        if self.env.company.country_code not in PEPPOL_LIST:
+            methods.pop('peppol')
+        self.available_peppol_sending_methods = list(methods)
+
+    @api.depends_context('company')
+    @api.depends('invoice_sending_method')
+    def _compute_available_peppol_edi_formats(self):
+        for partner in self:
+            if partner.invoice_sending_method == 'peppol':
+                partner.available_peppol_edi_formats = self._get_peppol_formats()
+            else:
+                partner.available_peppol_edi_formats = list(dict(self._fields['invoice_edi_format'].selection))
 
     # -------------------------------------------------------------------------
     # HELPERS
