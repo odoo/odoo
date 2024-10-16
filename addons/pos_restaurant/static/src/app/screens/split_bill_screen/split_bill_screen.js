@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/components/order_widget/order_widget";
@@ -13,6 +14,7 @@ export class SplitBillScreen extends Component {
 
     setup() {
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         this.qtyTracker = useState({});
         this.priceTracker = useState({});
     }
@@ -27,6 +29,10 @@ export class SplitBillScreen extends Component {
 
     get newOrderPrice() {
         return Object.values(this.priceTracker).reduce((a, b) => a + b, 0);
+    }
+
+    getNumberOfProducts() {
+        return Object.values(this.qtyTracker).reduce((a, b) => a + b, 0);
     }
 
     onClickLine(line) {
