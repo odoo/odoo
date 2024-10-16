@@ -741,10 +741,9 @@ class Meeting(models.Model):
         the calendar defaut privacy of an user from a 'calendar.event' record, since it is a res.users field.
         Otherwise we would have to create a new computed field on that model, which we don't want.
         """
-        if not self.env.su:
-            for event in self:
-                if event._check_private_event_conditions():
-                    raise self.env['ir.rule']._make_access_error("write", event)
+        for event in self:
+            if event._check_private_event_conditions():
+                raise self.env['ir.rule']._make_access_error("write", event)
 
     def _check_private_event_conditions(self):
         """ Checks if the event is private, returning True if the conditions match and False otherwise. """

@@ -11,4 +11,3 @@ from . import test_event_notifications
 from . import test_mail_activity_mixin
 from . import test_res_partner
 from . import test_recurrence_rule
-from . import test_res_users
