@@ -676,7 +676,7 @@ class MailThread(models.AbstractModel):
             raise
 
         default_composition_mode = 'mass_mail' if len(self) != 1 else 'comment'
-        for _field_name, (template, post_kwargs) in templates.items():
+        for (template, post_kwargs) in templates.values():
             if not template:
                 continue
 

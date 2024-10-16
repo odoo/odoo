@@ -204,7 +204,7 @@ class Properties(Field):
         # ids per model we need to fetch in batch to put in cache
         ids_per_model = defaultdict(OrderedSet)
 
-        for record, record_values in zip(records, values_list):
+        for record_values in values_list:
             for property_definition in record_values:
                 comodel = property_definition.get('comodel')
                 type_ = property_definition.get('type')

@@ -1475,7 +1475,7 @@ class TestReports(TestReportsCommon):
         sources_to_lines = report_values['sources_to_lines']
         self.assertEqual(len(sources_to_lines), 2, "The report has wrong number of outgoing pickings.")
         all_lines = []
-        for dummy, lines in sources_to_lines.items():
+        for lines in sources_to_lines.values():
             for line in lines:
                 self.assertFalse(line['is_qty_assignable'], "The receipt IS DRAFT => its move quantities ARE NOT available to assign.")
                 all_lines.append(line)
@@ -1501,7 +1501,7 @@ class TestReports(TestReportsCommon):
         move_ids = []
         qtys = []
         in_ids = []
-        for dummy, lines in sources_to_lines.items():
+        for lines in sources_to_lines.values():
             for line in lines:
                 self.assertTrue(line['is_qty_assignable'], "The receipt IS DONE => all of its move quantities ARE assignable")
                 all_lines.append(line)
@@ -1927,7 +1927,7 @@ class TestReports(TestReportsCommon):
         })
 
         sources_to_lines = Report._get_report_values(docids=[immediate_receipt_transfer.id])['sources_to_lines']
-        for _, lines in sources_to_lines.items():
+        for lines in sources_to_lines.values():
             for line in lines:
                 self.assertFalse(line['is_qty_assignable'])
 

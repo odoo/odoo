@@ -451,7 +451,7 @@ class Base(models.AbstractModel):
             chain_is_fully_included = True
             while chain_is_fully_included and record_id:
                 known_status = records_to_keep.get(record_id)
-                if known_status != None:
+                if known_status is not None:
                     # the record and its known ancestors have already been considered
                     chain_is_fully_included = known_status
                     break
@@ -462,8 +462,8 @@ class Base(models.AbstractModel):
                 else:
                     chain_is_fully_included = False
 
-            for id, record in ancestor_chain.items():
-                records_to_keep[id] = chain_is_fully_included
+            for r_id in ancestor_chain:
+                records_to_keep[r_id] = chain_is_fully_included
 
         # we keep initial order
         return [rec for rec in records if records_to_keep.get(rec['id'])]

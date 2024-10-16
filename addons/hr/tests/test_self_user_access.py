@@ -166,7 +166,7 @@ class TestSelfAccessRights(TestHrCommon):
 
     # Write res.users #
     def testWriteSelfUserEmployeeSettingFalse(self):
-        for f, v in self.self_protected_fields_user.items():
+        for f in self.self_protected_fields_user:
             with self.assertRaises(AccessError):
                 self.richard.with_user(self.richard).write({f: 'dummy'})
 

@@ -29,7 +29,7 @@ class UtmMixin(models.AbstractModel):
         if not self.env.is_superuser() and self.env.user.has_group('sales_team.group_sale_salesman'):
             return values
 
-        for url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():
+        for _url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():
             if field_name in fields:
                 field = self._fields[field_name]
                 value = False

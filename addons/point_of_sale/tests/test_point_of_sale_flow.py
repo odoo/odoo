@@ -693,7 +693,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         untax, atax = self.compute_tax(tracked_product, 1.15, 1)
 
-        for dummy in range(qty):
+        for _i in range(qty):
             pos_order = self.PosOrder.create({
                 'company_id': self.env.company.id,
                 'session_id': self.pos_config.current_session_id.id,

@@ -157,7 +157,7 @@ class ReportStockReport_Reception(models.AbstractModel):
 
         # dates aren't auto-formatted when printed in report :(
         sources_to_formatted_scheduled_date = defaultdict(list)
-        for source, dummy in sources_to_lines.items():
+        for source in sources_to_lines:
             sources_to_formatted_scheduled_date[source] = self._get_formatted_scheduled_date(source[0])
 
         return {

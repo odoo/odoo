@@ -347,7 +347,7 @@ class Reader:
         # Each byte we read is less significant, so we increase the significance of the
         # value we already read and increment by the current byte
         node_len = 0
-        for dummy in range(1, bytes_read + 1):
+        for _dummy in range(1, bytes_read + 1):
             current_byte, offset = self.consume('B', stream, offset)
             node_len = (node_len << 8) + current_byte
 

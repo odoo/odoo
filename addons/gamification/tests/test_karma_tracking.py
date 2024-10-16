@@ -38,7 +38,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
     @classmethod
     def _create_trackings(cls, user, karma, steps, track_date, days_delta=1):
         old_value = user.karma
-        for step in range(steps):
+        for _step in range(steps):
             new_value = old_value + karma
             cls.env['gamification.karma.tracking'].create([{
                 'user_id': user.id,

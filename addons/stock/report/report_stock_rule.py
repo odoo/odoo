@@ -53,9 +53,7 @@ class ReportStockReport_Stock_Rule(models.AbstractModel):
                 color_index = color_index + 1
                 for rule in rules_to_display:
                     rule_loc = [r for r in rules_and_loc if r['rule'] == rule][0]
-                    res = []
-                    for x in range(len(locations_names)):
-                        res.append([])
+                    res = [[] for _loc in locations_names]
                     idx = locations_names.index(rule_loc['destination'].display_name)
                     tpl = (rule, 'destination', route_color, )
                     res[idx] = tpl

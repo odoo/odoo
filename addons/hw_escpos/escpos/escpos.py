@@ -19,7 +19,7 @@ try:
 except ImportError:
     jcconv = None
 
-try: 
+try:
     import qrcode
 except ImportError:
     qrcode = None
@@ -35,7 +35,7 @@ def utfstr(stuff):
         return str(stuff)
 
 class StyleStack:
-    """ 
+    """
     The stylestack is used by the xml receipt serializer to compute the active styles along the xml
     document. Styles are just xml attributes, there is no css mechanism. But the style applied by
     the attributes are inherited by deeper nodes.
@@ -62,7 +62,7 @@ class StyleStack:
             'value-decimals-separator':  '.',
             'value-thousands-separator': ',',
             'value-width':               0,
-            
+
         }
 
         self.types = { # attribute types, default is string and can be ommitted
@@ -74,7 +74,7 @@ class StyleStack:
             'value-width':      'int',
         }
 
-        self.cmds = { 
+        self.cmds = {
             # translation from styles to escpos commands
             # some style do not correspond to escpos command are used by
             # the serializer instead
@@ -120,7 +120,7 @@ class StyleStack:
             },
         }
 
-        self.push(self.defaults) 
+        self.push(self.defaults)
 
     def get(self,style):
         """ what's the value of a style at the current stack level"""
@@ -176,7 +176,7 @@ class StyleStack:
         return cmd
 
 class XmlSerializer:
-    """ 
+    """
     Converts the xml inline / block tree structure to a string,
     keeping track of newlines and spacings.
     The string is outputted asap to the provided escpos driver.
@@ -241,7 +241,7 @@ class XmlSerializer:
         self.escpos._raw(raw)
 
 class XmlLineSerializer:
-    """ 
+    """
     This is used to convert a xml tree into a single line, with a left and a right part.
     The content is not output to escpos directly, and is intended to be fedback to the
     XmlSerializer as the content of a block entity.
@@ -303,7 +303,7 @@ class XmlLineSerializer:
 
     def get_line(self):
         return ' ' * self.indent * self.tabwidth + self.lbuffer + ' ' * (self.width - self.clwidth - self.crwidth) + self.rbuffer
-    
+
 
 class Escpos:
     """ ESC/POS Printer object """
@@ -328,7 +328,7 @@ class Escpos:
         cont = 0
         buffer = ""
 
-       
+
         self._raw(S_RASTER_N)
         buffer = b"%02X%02X%02X%02X" % (int((size[0]/size[1])/8), 0, size[1], 0)
         self._raw(codecs.decode(buffer, 'hex'))
@@ -356,7 +356,7 @@ class Escpos:
                 output(string)
             else:
                 self._raw(string)
-       
+
         raw += S_RASTER_N.encode('utf-8')
         buffer = "%02X%02X%02X%02X" % (int((size[0]/size[1])/8), 0, size[1], 0)
         raw += codecs.decode(buffer, 'hex')
@@ -378,8 +378,6 @@ class Escpos:
         """ Parse image and prepare it to a printable format """
         pixels   = []
         pix_line = ""
-        im_left  = ""
-        im_right = ""
         switch   = 0
         img_size = [ 0, 0 ]
 
@@ -390,10 +388,8 @@ class Escpos:
             raise ImageSizeError()
 
         im_border = self._check_image_size(im.size[0])
-        for i in range(im_border[0]):
-            im_left += "0"
-        for i in range(im_border[1]):
-            im_right += "0"
+        im_left = "0" * im_border[0]
+        im_right = "0" * im_border[1]
 
         for y in range(im.size[1]):
             img_size[1] += 1
@@ -415,7 +411,7 @@ class Escpos:
                         break
                     elif im_color > (255 * 3 / pattern_len * pattern_len) and im_color <= (255 * 3):
                         pix_line += im_pattern[-1]
-                        break 
+                        break
             pix_line += im_right
             img_size[0] += im_border[1]
 
@@ -452,7 +448,7 @@ class Escpos:
                 img.paste(img_rgba)
 
             print('convert image')
-        
+
             pix_line, img_size = self._convert_image(img)
 
             print('print image')
@@ -500,9 +496,9 @@ class Escpos:
             self._raw(BARCODE_TXT_BTH)
         elif pos.upper() == "ABOVE":
             self._raw(BARCODE_TXT_ABV)
-        else:  # DEFAULT POSITION: BELOW 
+        else:  # DEFAULT POSITION: BELOW
             self._raw(BARCODE_TXT_BLW)
-        # Type 
+        # Type
         if bc.upper() == "UPC-A":
             self._raw(BARCODE_UPC_A)
         elif bc.upper() == "UPC-E":
@@ -609,7 +605,7 @@ class Escpos:
 
             elif elem.tag == 'value':
                 serializer.start_inline(stylestack)
-                serializer.pre(format_value( 
+                serializer.pre(format_value(
                                               elem.text,
                                               decimals=stylestack.get('value-decimals'),
                                               width=stylestack.get('value-width'),
@@ -617,7 +613,7 @@ class Escpos:
                                               thousands_separator=stylestack.get('value-thousands-separator'),
                                               autoint=(stylestack.get('value-autoint') == 'on'),
                                               symbol=stylestack.get('value-symbol'),
-                                              position=stylestack.get('value-symbol-position') 
+                                              position=stylestack.get('value-symbol-position')
                                             ))
                 serializer.end_entity()
 
@@ -695,9 +691,9 @@ class Escpos:
             stylestack.pop()
 
         try:
-            stylestack      = StyleStack() 
-            serializer      = XmlSerializer(self)
-            root            = ET.fromstring(xml.encode('utf-8'))
+            stylestack = StyleStack()
+            serializer = XmlSerializer(self)
+            root = ET.fromstring(xml.encode('utf-8'))
 
             self._raw(stylestack.to_escpos())
 
@@ -729,12 +725,12 @@ class Escpos:
                 pass
 
         self.extra_chars = 0
-        
-        def encode_char(char):  
-            """ 
-            Encodes a single utf-8 character into a sequence of 
-            esc-pos code page change instructions and character declarations 
-            """ 
+
+        def encode_char(char):
+            """
+            Encodes a single utf-8 character into a sequence of
+            esc-pos code page change instructions and character declarations
+            """
             char_utf8 = char.encode('utf-8')
             encoded  = ''
             encoding = self.encoding # we reuse the last encoding to prevent code page switches at every character
@@ -773,19 +769,19 @@ class Escpos:
                 try:
                     if encoding == 'katakana': # Japanese characters
                         if jcconv:
-                            # try to convert japanese text to a half-katakanas 
+                            # try to convert japanese text to a half-katakanas
                             kata = jcconv.kata2half(jcconv.hira2kata(char_utf8))
                             if kata != char_utf8:
                                 self.extra_chars += len(kata.decode('utf-8')) - 1
                                 # the conversion may result in multiple characters
-                                return encode_str(kata.decode('utf-8')) 
+                                return encode_str(kata.decode('utf-8'))
                         else:
                              kata = char_utf8
-                        
+
                         if kata in TXT_ENC_KATAKANA_MAP:
                             encoded = TXT_ENC_KATAKANA_MAP[kata]
                             break
-                        else: 
+                        else:
                             raise ValueError()
                     else:
                         # First 127 symbols are covered by cp437.
@@ -813,7 +809,7 @@ class Escpos:
                 encoded = bytes(encodings[encoding], 'utf-8') + encoded
 
             return encoded
-        
+
         def encode_str(txt):
             buffer = b''
             for c in txt:
@@ -822,10 +818,10 @@ class Escpos:
 
         txt = encode_str(txt)
 
-        # if the utf-8 -> codepage conversion inserted extra characters, 
+        # if the utf-8 -> codepage conversion inserted extra characters,
         # remove double spaces to try to restore the original string length
         # and prevent printing alignment issues
-        while self.extra_chars > 0: 
+        while self.extra_chars > 0:
             dspace = txt.find('  ')
             if dspace > 0:
                 txt = txt[:dspace] + txt[dspace+1:]
@@ -834,7 +830,7 @@ class Escpos:
                 break
 
         self._raw(txt)
-        
+
     def set(self, align='left', font='a', type='normal', width=1, height=1):
         """ Set text properties """
         # Align

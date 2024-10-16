@@ -426,7 +426,7 @@ class ProjectProject(models.Model):
         total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
         total_costs = {'billed': 0.0, 'to_bill': 0.0}
         convert_company = self.company_id or self.env.company
-        for timesheet_invoice_type, dummy, currency, amount, ids in aa_line_read_group:
+        for timesheet_invoice_type, _dummy, currency, amount, ids in aa_line_read_group:
             amount = currency._convert(amount, self.currency_id, convert_company)
             invoice_type = timesheet_invoice_type
             cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})

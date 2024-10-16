@@ -324,12 +324,12 @@ class ResourceCalendar(models.Model):
         end = end_dt.astimezone(utc)
         bounds_per_tz = {
             tz: (start_dt.astimezone(tz), end_dt.astimezone(tz))
-            for tz in resources_per_tz.keys()
+            for tz in resources_per_tz
         }
         # Use the outer bounds from the requested timezones
-        for tz, bounds in bounds_per_tz.items():
-            start = min(start, bounds[0].replace(tzinfo=utc))
-            end = max(end, bounds[1].replace(tzinfo=utc))
+        for low, high in bounds_per_tz.values():
+            start = min(start, low.replace(tzinfo=utc))
+            end = max(end, high.replace(tzinfo=utc))
         # Generate once with utc as timezone
         days = rrule(DAILY, start.date(), until=end.date(), byweekday=weekdays)
         ResourceCalendarAttendance = self.env['resource.calendar.attendance']
@@ -519,7 +519,7 @@ class ResourceCalendar(models.Model):
         `day_total` is a dict {date: n_hours} with the number of hours for each day.
         """
         day_hours = defaultdict(float)
-        for start, stop, meta in intervals:
+        for start, stop, _meta in intervals:
             day_hours[start.date()] += (stop - start).total_seconds() / 3600
 
         # compute number of days the hours span over
@@ -551,7 +551,7 @@ class ResourceCalendar(models.Model):
         result = defaultdict(lambda: defaultdict(float))
         for resource in resources_list:
             day_total = result[resource.id]
-            for start, stop, meta in intervals[resource.id]:
+            for start, stop, _meta in intervals[resource.id]:
                 day_total[start.date()] += (stop - start).total_seconds() / 3600
         return result
 
@@ -687,7 +687,7 @@ class ResourceCalendar(models.Model):
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt + delta * n
-                for start, stop, meta in get_intervals(dt, dt + delta)[resource_id]:
+                for start, stop, _meta in get_intervals(dt, dt + delta)[resource_id]:
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
                         return revert(start + timedelta(hours=hours))
@@ -698,7 +698,7 @@ class ResourceCalendar(models.Model):
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt - delta * n
-                for start, stop, meta in reversed(get_intervals(dt - delta, dt)[resource_id]):
+                for start, stop, _meta in reversed(get_intervals(dt - delta, dt)[resource_id]):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
                         return revert(stop - timedelta(hours=hours))
@@ -728,7 +728,7 @@ class ResourceCalendar(models.Model):
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt + delta * n
-                for start, stop, meta in get_intervals(dt, dt + delta)[False]:
+                for start, stop, _meta in get_intervals(dt, dt + delta)[False]:
                     found.add(start.date())
                     if len(found) == days:
                         return revert(stop)
@@ -740,7 +740,7 @@ class ResourceCalendar(models.Model):
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt - delta * n
-                for start, stop, meta in reversed(get_intervals(dt - delta, dt)[False]):
+                for start, _stop, _meta in reversed(get_intervals(dt - delta, dt)[False]):
                     found.add(start.date())
                     if len(found) == days:
                         return revert(start)

@@ -2108,7 +2108,7 @@ class Website(models.Model):
             domain = AND(domain)
             records = model.search_read(domain, direct_fields, limit=limit)
             for record in records:
-                for field, value in record.items():
+                for value in record.values():
                     if isinstance(value, str):
                         value = value.lower()
                         yield from re.findall(match_pattern, value)

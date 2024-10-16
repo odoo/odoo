@@ -53,7 +53,7 @@ class IrModel(models.Model):
         model = self.env[model_name]
         fields_get = model.fields_get()
 
-        for key, val in model._inherits.items():
+        for val in model._inherits.values():
             fields_get.pop(val, None)
 
         # Unrequire fields with default values

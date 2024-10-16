@@ -616,7 +616,7 @@ class AccountPaymentRegister(models.TransientModel):
         for batch_result in batch_results:
             all_lines |= batch_result['lines']
         all_lines = all_lines.sorted(key=lambda line: (line.move_id, line.date_maturity))
-        for move, lines in all_lines.grouped('move_id').items():
+        for lines in all_lines.grouped('move_id').values():
             installments = lines._get_installments_data(payment_currency=self.currency_id, payment_date=self.payment_date, next_payment_date=next_payment_date)
             last_installment_mode = False
             for installment in installments:

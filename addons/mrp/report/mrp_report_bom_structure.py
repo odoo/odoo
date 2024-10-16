@@ -848,6 +848,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         # Consider workcenter and alternatives
         workcenters = operation.workcenter_id | operation.workcenter_id.alternative_workcenter_ids
         best_date_finished = datetime.max
+        best_date_start = best_workcenter = best_duration_expected = None
         for workcenter in workcenters:
             if not workcenter.resource_calendar_id:
                 raise UserError(_('There is no defined calendar on workcenter %s.', workcenter.name))

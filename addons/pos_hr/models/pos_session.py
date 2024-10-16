@@ -34,10 +34,10 @@ class PosSession(models.Model):
         author_id = self.employee_id._get_related_partners() or self.user_id
         self.message_post(body=plaintext2html(_('Closed Register')), author_id=author_id.id)
 
-    def _aggregate_payments_amounts_by_employee(self, payments):
+    def _aggregate_payments_amounts_by_employee(self, all_payments):
         payments_by_employee = {}
 
-        for employee, payments in payments.grouped('employee_id').items():
+        for employee, payments in all_payments.grouped('employee_id').items():
             payments_by_employee[employee.id] = {
                 'id': employee.id,
                 'name': employee.name,

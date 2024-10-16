@@ -394,7 +394,7 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
         self.efaktur.write({'min': "0000000000001"})
 
         # Suppose we use the range 4 times, then the next_num = 5 and availability = 6
-        for i in range(4):
+        for _i in range(4):
             self.efaktur.pop_number()
 
         # Once a range is used, then we can't change the min to any number

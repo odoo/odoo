@@ -624,7 +624,7 @@ class IrQwebFieldDuration(models.AbstractModel):
             sign = '-'
 
         if options.get('digital'):
-            for unit, label, secs_per_unit in TIMEDELTA_UNITS:
+            for _unit, _label, secs_per_unit in TIMEDELTA_UNITS:
                 if secs_per_unit > 3600:
                     continue
                 v, r = divmod(r, secs_per_unit)
@@ -633,7 +633,7 @@ class IrQwebFieldDuration(models.AbstractModel):
                 sections.append(u"%02.0f" % int(round(v)))
             return sign + u':'.join(sections)
 
-        for unit, label, secs_per_unit in TIMEDELTA_UNITS:
+        for _unit, _label, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
             if not v:
                 continue

@@ -61,7 +61,7 @@ class TestSmsTemplate(SMSCommon, TestSMSRecipients):
                 self.assertTrue(False)
 
         tpl_to_rids = self.sms_template._classify_per_lang((self.test_record | test_record_2).ids)
-        for lang, (tpl, rids) in tpl_to_rids.items():
+        for lang, (_tpl, rids) in tpl_to_rids.items():
             # TDE FIXME: False or en_US ?
             if lang == 'en_US':
                 self.assertEqual(rids, self.test_record.ids)
