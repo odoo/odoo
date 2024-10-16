@@ -13,16 +13,14 @@ import lxml
 import base64
 
 import odoo
-from odoo import api, http
-from odoo.addons import __path__ as ADDONS_PATH
+from odoo import api
 from odoo.addons.base.models.assetsbundle import AssetsBundle, XMLAssetError, ANY_UNIQUE
 from odoo.addons.base.models.ir_asset import AssetPaths
 from odoo.addons.base.models.ir_attachment import IrAttachment
-from odoo.modules.module import get_manifest
+from odoo.modules.module import load_manifest
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase
-from odoo.addons.base.models.ir_qweb import QWebException
-from odoo.tools import mute_logger, func
+from odoo.tools import mute_logger
 from odoo.tools.misc import file_path
 
 GETMTINE = os.path.getmtime
@@ -99,19 +97,21 @@ class TestAddonPaths(TransactionCase):
         ])
 
 
+class Manifests(dict):
+    def __missing__(self, key):
+        self[key] = load_manifest(key)
+        return self[key]
+
+
 class AddonManifestPatched(TransactionCase):
     def setUp(self):
         super().setUp()
 
         self.installed_modules = {'base', 'test_assetsbundle'}
-        self.manifests = {
-            'base': get_manifest('base'),
-            'web': get_manifest('web'),
-            'test_assetsbundle': get_manifest('test_assetsbundle'),
-        }
+        self.manifests = Manifests()
 
         self.patch(self.env.registry, '_init_modules', self.installed_modules)
-        self.patch(odoo.modules.module, '_get_manifest_cached', Mock(side_effect=lambda module: self.manifests.get(module, {})))
+        self.patch(odoo.modules.module, '_get_manifest_cached', lambda module: self.manifests[module])
 
 
 class FileTouchable(AddonManifestPatched):
