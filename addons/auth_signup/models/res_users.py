@@ -194,12 +194,20 @@ class ResUsers(models.Model):
         self.mapped('partner_id').signup_prepare(signup_type=signup_type)
 
         # send email to users with their signup url
-        account_created_template = None
+        internal_account_created_template = None
+        portal_account_created_template = None
         if create_mode:
-            account_created_template = self.env.ref('auth_signup.set_password_email', raise_if_not_found=False)
-            if account_created_template and account_created_template._name != 'mail.template':
-                _logger.error("Wrong set password template %r", account_created_template)
-                return
+            if any(not user._is_portal() for user in self):
+                internal_account_created_template = self.env.ref('auth_signup.set_password_email', raise_if_not_found=False)
+                if internal_account_created_template and internal_account_created_template._name != 'mail.template':
+                    _logger.error("Wrong set password template %r", internal_account_created_template)
+                    return
+
+            if any(user._is_portal() for user in self):
+                portal_account_created_template = self.env.ref('auth_signup.portal_set_password_email', raise_if_not_found=False)
+                if portal_account_created_template and portal_account_created_template._name != 'mail.template':
+                    _logger.error("Wrong set password template %r", portal_account_created_template)
+                    return
 
         email_values = {
             'email_cc': False,
@@ -215,6 +223,7 @@ class ResUsers(models.Model):
                 raise UserError(_("Cannot send email: user %s has no email address.", user.name))
             email_values['email_to'] = user.email
             with contextlib.closing(self.env.cr.savepoint()):
+                account_created_template = portal_account_created_template if user._is_portal() else internal_account_created_template
                 if account_created_template:
                     account_created_template.send_mail(
                         user.id, force_send=True,
