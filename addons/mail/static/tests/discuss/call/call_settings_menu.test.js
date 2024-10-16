@@ -49,7 +49,8 @@ test("Renders the call settings", async () => {
     await contains("option[value=mockVideoDeviceId]", { count: 0 });
     await contains("button", { text: "Voice Detection" });
     await contains("button", { text: "Push to Talk" });
-    await contains("label", { text: "Voice detection threshold" });
+    await contains("span", { text: "Voice detection sensitivity" });
+    await contains("button", { text: "Test" });
     await contains("label", { text: "Show video participants only" });
     await contains("label", { text: "Blur video background" });
 });
@@ -65,7 +66,7 @@ test("activate push to talk", async () => {
     await click("button", { text: "Push to Talk" });
     await contains("i[aria-label='Register new key']");
     await contains("label", { text: "Delay after releasing push-to-talk" });
-    await contains("label", { text: "Voice detection threshold", count: 0 });
+    await contains("label", { text: "Voice detection sensitivity", count: 0 });
 });
 
 test("activate blur", async () => {

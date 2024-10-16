@@ -148,16 +148,18 @@ async function _loadAudioWorkletProcessor(
         onThreshold,
         onTic,
         volumeThreshold = 0.3,
+        normalizationParameters = { boost: 1, shift: 0.6 },
     } = {}
 ) {
     await audioContext.resume();
     // Safari does not support Worklet.addModule
-    await audioContext.audioWorklet.addModule("/mail/rtc/audio_worklet_processor");
+    await audioContext.audioWorklet.addModule("/mail/rtc/audio_worklet_processor_v2");
     const thresholdProcessor = new window.AudioWorkletNode(audioContext, "audio-processor", {
         processorOptions: {
             minimumActiveCycles,
             volumeThreshold,
             frequencyRange,
+            normalizationParameters,
             postAllTics: !!onTic,
         },
     });

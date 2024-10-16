@@ -12,6 +12,7 @@ import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
+import { monitorAudio } from "@mail/utils/common/media_monitoring";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -295,6 +296,60 @@ export function useMessageHighlight(duration = 2000) {
             return scrollPromise;
         },
         highlightedMessageId: null,
+    });
+    return state;
+}
+
+export function useMicrophoneVolume() {
+    let isClosed = false;
+    let audioTrack = null;
+    let disconnectAudioMonitor;
+    let audioMonitorPromise;
+    const store = useService("mail.store");
+    const state = useState({
+        isReady: true,
+        isActive: false,
+        value: 0,
+        toggle: async () => {
+            if (!state.isReady) {
+                return;
+            }
+            state.isReady = false;
+            disconnectAudioMonitor?.();
+            disconnectAudioMonitor = undefined;
+            if (audioTrack) {
+                audioTrack.stop();
+                audioTrack = null;
+                state.isReady = true;
+                state.isActive = false;
+                state.value = 0;
+                return;
+            }
+            const audioStream = await browser.navigator.mediaDevices.getUserMedia({
+                audio: store.settings.audioConstraints,
+            });
+            const track = audioStream.getAudioTracks()[0];
+            if (isClosed) {
+                track.stop();
+                return;
+            }
+            audioMonitorPromise = monitorAudio(track, {
+                onTic: (value) => {
+                    state.value = value;
+                },
+                processInterval: 100,
+            });
+            disconnectAudioMonitor = await audioMonitorPromise;
+            audioTrack = track;
+            state.isActive = true;
+            state.isReady = true;
+        },
+    });
+    onWillUnmount(async () => {
+        isClosed = true;
+        await audioMonitorPromise;
+        audioTrack?.stop();
+        disconnectAudioMonitor?.();
     });
     return state;
 }

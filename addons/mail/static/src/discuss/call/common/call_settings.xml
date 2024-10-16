@@ -36,13 +36,25 @@
                 <span t-if="store.settings.use_push_to_talk and !isMobileOS and !pttExtService.isEnabled" class="small text-muted fst-italic mb-3" t-out="pttExtService.downloadText"/>
             </div>
             <div class="d-flex flex-column">
-                <label t-if="!store.settings.use_push_to_talk" class="d-flex flex-column flex-wrap flex-grow-1 align-items-start" title="Voice detection threshold" aria-label="Voice detection threshold">
-                    <span class="me-2 my-1 text-truncate text-wrap">Voice detection threshold</span>
-                    <div class="d-flex w-100 align-items-center">
-                        <input class="flex-grow-1 form-range" type="range" min="0.001" max="1" step="0.001" t-att-value="store.settings.voiceActivationThreshold" t-on-change="onChangeThreshold"/>
-                        <span class="p-1 text-end"><t t-out="Math.floor(store.settings.voiceActivationThreshold * 100)"/>%</span>
+                <t t-if="!store.settings.use_push_to_talk">
+                    <span class="me-2 my-1 text-truncate text-wrap">Voice detection sensitivity</span>
+                    <div class="d-flex align-items-center w-100 h-100">
+                        <button class="btn btn-primary" t-on-click="microphoneVolume.toggle" t-att-disabled="!microphoneVolume.isReady">
+                            <div class="position-relative">
+                                <span class="d-flex invisible text-nowrap">
+                                    <t t-out="testText.length > stopText.length ? testText : stopText"/>
+                                </span>
+                                <span class="position-absolute end-0 top-0">
+                                    <t t-if="microphoneVolume.isActive" t-out="stopText"/>
+                                    <t t-else="" t-out="testText"/>
+                                </span>
+                            </div>
+                        </button>
+                        <label class="w-100 d-flex ms-2" title="Voice detection sensitivity" aria-label="Voice detection sensitivity">
+                            <input class="o-Discuss-CallSettings-thresholdInput form-range rounded" t-attf-style="--volume: {{microphoneVolume.value * 100}}%;" type="range" min="0.001" max="1" step="0.001" t-model="store.settings.voiceActivationThreshold"/>
+                        </label>
                     </div>
-                </label>
+                </t>
                 <div t-if="store.settings.use_push_to_talk" class="d-flex" t-att-class="{'flex-column': props.isCompact}">
                     <div t-if="!isMobileOS" class="d-flex flex-column align-items-center" t-att-class="{'me-1 w-50': !props.isCompact}">
                         <label class="d-flex flex-column align-items-start flex-wrap w-100" title="Push-to-talk key" aria-label="Push-to-talk key">
