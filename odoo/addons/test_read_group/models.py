@@ -68,6 +68,14 @@ class Order(models.Model):
 
     line_ids = fields.One2many('test_read_group.order.line', 'order_id')
     date = fields.Date()
+    company_dependent_name = fields.Char(company_dependent=True)
+    many2one_id = fields.Many2one('test_read_group.order')
+
+    @property
+    def _order(self):
+        if self.env.context.get('test_read_group_order_company_dependent'):
+            return 'company_dependent_name'
+        return super()._order
 
 
 class OrderLine(models.Model):
