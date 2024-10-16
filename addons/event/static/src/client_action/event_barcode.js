@@ -61,8 +61,10 @@ export class EventScanView extends Component {
      * When scanning a barcode, call Registration.register_attendee() to get
      * formatted registration information, notably its status or event-related
      * information. Open a confirmation / choice Dialog to confirm attendee.
+     * @param {Object} barcode
+     * @param {function} onNextScanTriggered
      */
-    async onBarcodeScanned(barcode) {
+    async onBarcodeScanned(barcode, onNextScanTriggered = () => {}) {
         const result = await this.orm.call("event.registration", "register_attendee", [], {
             barcode: barcode,
             event_id: this.eventId,
@@ -81,7 +83,7 @@ export class EventScanView extends Component {
                 EventRegistrationSummaryDialog,
                 {
                     playSound: (type) => this.playSound(type),
-                    doNextScan: () => this.doNextScan(),
+                    doNextScan: onNextScanTriggered,
                     registration: result
                 }
             );
@@ -103,7 +105,7 @@ export class EventScanView extends Component {
         }
 
         if (barcode) {
-            await this.onBarcodeScanned(barcode);
+            await this.onBarcodeScanned(barcode, this.doNextScan.bind(this));
             if ("vibrate" in window.navigator) {
                 window.navigator.vibrate(100);
             }

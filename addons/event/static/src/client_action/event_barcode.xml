@@ -11,7 +11,7 @@
                     <a t-if="!isDisplayStandalone" class="btn btn-secondary d-flex align-items-center justify-content-center fw-bolder" href="/scoped_app?app_id=event&amp;path=odoo/registration-desk" target="_blank">Install</a>
                 </div>
                 <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center vh-50">
-                    <BarcodeScanner onBarcodeScanned="(ev) => this.onBarcodeScanned(ev)"/>
+                    <BarcodeScanner onBarcodeScanned="(ev) => this.onBarcodeScanned(ev, doNextScan.bind(this))"/>
                     <div class="my-5 text-center">
                         <h5 class="mt8 text-muted">Scan or Tap</h5>
                     </div>
