@@ -29,13 +29,13 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             combo.isNotSelected("Combo Product 7"),
             Dialog.confirm(),
             inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Office Combo"),
+                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1.0", "62.1"),
                 ...ProductScreen.clickLine("Combo Product 3"),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 3", "1.0", "13.43"),
+                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 3", "1.0"),
                 ...ProductScreen.clickLine("Combo Product 5"),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 5", "1.0", "18.67"),
+                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 5", "1.0"),
                 ...ProductScreen.clickLine("Combo Product 8"),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 8", "1.0", "30.00"),
+                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 8", "1.0"),
             ]),
             // check that you can select a customer which triggers a recomputation of the price
             ...ProductScreen.clickPartnerButton(),
@@ -45,9 +45,10 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             inLeftSide([
                 ...ProductScreen.clickLine("Combo Product 3"),
                 Numpad.click("2"),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 3", "2.0", "26.86"),
+                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 3", "2.0"),
                 ...ProductScreen.orderLineHas("Combo Product 5", "2.0"),
-                ...ProductScreen.orderLineHas("Combo Product 8", "2.0", "60.00"),
+                ...ProductScreen.orderLineHas("Combo Product 8", "2.0"),
+                ...ProductScreen.orderLineHas("Office Combo", "2.0", "124.2"),
             ]),
 
             // check that removing a combo product removes all the combo products
@@ -92,10 +93,10 @@ registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Combo"),
             inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Combo"),
-                ...ProductScreen.orderLineHas("Desk Organizer", "1.0", "4.45"),
-                ...ProductScreen.orderLineHas("Desk Pad", "1.0", "1.59"),
-                ...ProductScreen.orderLineHas("Whiteboard Pen", "1.0", "0.96"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Combo", "1.0", "7.00"),
+                ...ProductScreen.orderLineHas("Desk Organizer", "1.0"),
+                ...ProductScreen.orderLineHas("Desk Pad", "1.0"),
+                ...ProductScreen.orderLineHas("Whiteboard Pen", "1.0"),
             ]),
             ProductScreen.totalAmountIs("7.00"),
             ProductScreen.clickPayButton(),
@@ -117,21 +118,13 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             combo.select("Combo Product 6"),
             Dialog.confirm(),
 
-            inLeftSide([
-                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "8.33"),
-                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "16.67"),
-                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "25.00"),
-            ]),
+            inLeftSide([...ProductScreen.orderLineHas("Office Combo", "1.0", "50.00")]),
             ProductScreen.totalAmountIs("50.00"),
             inLeftSide(Order.hasTax("4.55")),
 
             // Test than changing the fp, doesn't change the price of the combo
             ProductScreen.clickFiscalPosition("test fp"),
-            inLeftSide([
-                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "16.67"),
-                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "25.00"),
-                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "8.33"),
-            ]),
+            inLeftSide([...ProductScreen.orderLineHas("Office Combo", "1.0", "50.00")]),
             ProductScreen.totalAmountIs("50.00"),
             inLeftSide(Order.hasTax("2.38")),
             ProductScreen.isShown(),
