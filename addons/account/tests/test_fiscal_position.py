@@ -335,6 +335,7 @@ class TestFiscalPosition(common.TransactionCase):
         fiscal_positions = self.fp.create([{
             'name': f'fiscal_position_{sequence}',
             'auto_apply': True,
+            'country_id': self.jc.country_id.id,
             'sequence': sequence
         } for sequence in range(1, 3)])
-        self.assertEqual(self.fp._get_fiscal_position(self.env.company.partner_id), fiscal_positions[0])
+        self.assertEqual(self.fp._get_fiscal_position(self.jc), fiscal_positions[0])
