@@ -29,6 +29,15 @@ export class PosOrderline extends Base {
         };
     }
 
+    getDefaultVals() {
+        const result = super.getDefaultVals();
+        return {
+            price_subtotal: 0,
+            price_subtotal_incl: 0,
+            ...result,
+        };
+    }
+
     set_full_product_name() {
         this.full_product_name = constructFullProductName(this);
     }

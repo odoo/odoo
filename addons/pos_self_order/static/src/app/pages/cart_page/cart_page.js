@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_table";
@@ -16,6 +16,9 @@ export class CartPage extends Component {
         this.state = useState({
             selectTable: false,
             cancelConfirmation: false,
+        });
+        onWillStart(() => {
+            this.selfOrder.currentOrder?.recomputeOrderData();
         });
     }
 
@@ -127,6 +130,8 @@ export class CartPage extends Component {
         } else {
             this.selfOrder.removeLine(line);
         }
+
+        this.selfOrder.currentOrder?.recomputeOrderData();
     }
 
     async _changeQuantity(line, increase) {
@@ -146,6 +151,7 @@ export class CartPage extends Component {
             }
         }
 
+        this.selfOrder.currentOrder?.recomputeOrderData();
         line.setDirty();
     }
 

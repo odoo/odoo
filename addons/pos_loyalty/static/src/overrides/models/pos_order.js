@@ -7,6 +7,7 @@ import {
     compute_price_force_price_include,
     getTaxesAfterFiscalPosition,
 } from "@point_of_sale/app/models/utils/tax_utils";
+import { uuidv4 } from "@point_of_sale/utils";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -325,12 +326,19 @@ patch(PosOrder.prototype, {
                 // Not a loyalty program, skip
                 continue;
             }
-            const loyaltyCard =
-                this.models["loyalty.card"].get(coupon_id) ||
-                this.models["loyalty.card"].create({
+            let loyaltyCard;
+            if (this.models["loyalty.card"].get(coupon_id)) {
+                loyaltyCard = this.models["loyalty.card"].get(coupon_id);
+            } else {
+                const uuid = uuidv4();
+                // set `_generate_code` from `loyalty.card` model
+                const code = `044${uuid.substring(7, uuid.length - 18)}`;
+                loyaltyCard = this.models["loyalty.card"].create({
                     id: coupon_id,
                     points: 0,
+                    code,
                 });
+            }
             let [won, spent, total] = [0, 0, 0];
             const balance = loyaltyCard.points;
             won += points - this._getPointsCorrection(program);

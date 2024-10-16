@@ -127,3 +127,12 @@ export function loadAllImages(el) {
 export function parseUTCString(utcStr) {
     return parseDateTime(utcStr, { format: "yyyy-MM-dd HH:mm:ss", tz: "utc" });
 }
+
+export function assignIfMissing(dest, src) {
+    for (const [key, srcValue] of Object.entries(src)) {
+        if (!(key in dest)) {
+            dest[key] = srcValue;
+        }
+    }
+    return dest;
+}

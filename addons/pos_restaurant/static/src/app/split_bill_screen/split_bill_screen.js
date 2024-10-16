@@ -104,8 +104,7 @@ export class SplitBillScreen extends Component {
                         qty: this.qtyTracker[line.uuid],
                         order_id: newOrder.id,
                     },
-                    false,
-                    true
+                    { ignoreRelations: false, fromSerialized: true }
                 );
 
                 if (line.get_quantity() === this.qtyTracker[line.uuid]) {

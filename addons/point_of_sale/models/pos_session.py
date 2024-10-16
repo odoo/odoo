@@ -111,6 +111,7 @@ class PosSession(models.Model):
                     'model': params.model_name,
                     'compute': bool(params.compute),
                     'related': bool(params.related),
+                    'required': params.required,
                     'relation': params.comodel_name,
                     'type': params.type,
                 }
@@ -124,6 +125,7 @@ class PosSession(models.Model):
                     'type': params.type,
                     'compute': bool(params.compute),
                     'related': bool(params.related),
+                    'required': params.required,
                 }
 
     @api.model

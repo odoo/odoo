@@ -58,6 +58,19 @@ export class PosOrder extends Base {
                 inputTipAmount: "",
             },
         };
+        this.recomputeOrderData();
+    }
+
+    getDefaultVals() {
+        const result = super.getDefaultVals();
+        return {
+            name: "",
+            amount_tax: 0,
+            amount_total: 0,
+            amount_paid: 0,
+            amount_return: 0,
+            ...result,
+        };
     }
 
     get user() {
@@ -135,14 +148,14 @@ export class PosOrder extends Base {
         return this.lines.length;
     }
     recomputeOrderData() {
-        this.amount_paid = this.get_total_paid();
-        this.amount_tax = this.get_total_tax();
-        this.amount_total = this.get_total_with_tax();
-        this.amount_return = this.get_change();
         this.lines.forEach((line) => {
             line.price_subtotal = line.get_price_without_tax();
             line.price_subtotal_incl = line.get_price_with_tax();
         });
+        this.amount_paid = this.get_total_paid();
+        this.amount_tax = this.get_total_tax();
+        this.amount_total = this.get_total_with_tax();
+        this.amount_return = this.get_change();
     }
 
     // NOTE args added [unwatchedPrinter]
@@ -508,6 +521,7 @@ export class PosOrder extends Base {
             const newPaymentline = this.models["pos.payment"].create({
                 pos_order_id: this,
                 payment_method_id: payment_method,
+                uuid: uuidv4(),
             });
 
             this.select_paymentline(newPaymentline);
