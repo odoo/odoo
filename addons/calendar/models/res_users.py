@@ -75,8 +75,9 @@ class Users(models.Model):
 
     @api.depends("res_users_settings_id.calendar_default_privacy")
     def _compute_calendar_default_privacy(self):
+        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
         for user in self:
-            user.calendar_default_privacy = user.res_users_settings_id.calendar_default_privacy
+            user.calendar_default_privacy = user.res_users_settings_id.calendar_default_privacy or default_user.calendar_default_privacy or 'private'
 
     def _inverse_calendar_res_users_settings(self):
         """
@@ -84,9 +85,10 @@ class Users(models.Model):
         fields in 'res.users'. If there is no 'res.users.settings' record for the user, then the record is created.
         """
         for user in self:
-            settings = self.env["res.users.settings"]._find_or_create_for_user(user)
-            configuration = {field: user[field] for field in self._get_user_calendar_configuration_fields()}
-            settings.update(configuration)
+            settings = user.sudo().res_users_settings_ids
+            if settings:
+                configuration = {field: user[field] for field in self._get_user_calendar_configuration_fields()}
+                settings.update(configuration)
 
     @api.model
     def _get_user_calendar_configuration_fields(self) -> list[str]:
