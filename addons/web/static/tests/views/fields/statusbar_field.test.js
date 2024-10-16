@@ -390,7 +390,7 @@ test("statusbar: choose an item from the folded menu", async () => {
         `,
     });
 
-    expect("[aria-label='Current state is aaa']").toHaveText("aaa", {
+    expect("[aria-checked='true']").toHaveText("aaa", {
         message: "default status is 'aaa'",
     });
 
@@ -403,7 +403,7 @@ test("statusbar: choose an item from the folded menu", async () => {
     await click(".o-dropdown--menu .dropdown-item");
     await animationFrame();
 
-    expect("[aria-label='Current state is second record']").toHaveText("second record", {
+    expect("[aria-checked='true']").toHaveText("second record", {
         message: "status has changed to the selected dropdown item",
     });
 });
