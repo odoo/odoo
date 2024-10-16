@@ -32,8 +32,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'uy_code_4303',
                 'account_sale_tax_id': 'vat1',
                 'account_purchase_tax_id': 'vat4',
-                'deferred_expense_account_id': 'uy_code_11407',
-                'deferred_revenue_account_id': 'uy_code_21321',
             },
         }
 
