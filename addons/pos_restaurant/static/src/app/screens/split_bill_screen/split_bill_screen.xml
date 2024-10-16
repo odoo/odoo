@@ -5,10 +5,10 @@
         <div class="splitbill-screen screen h-100 bg-200">
             <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center bg-view">
-                    <button class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
-                        <i class="oi oi-chevron-left fa-fw"/>
+                    <button  t-if="!this.ui.isSmall" class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
+                        <i class="oi oi-chevron-left fa-fw"/> Back
                     </button>
-                    <div class="top-content-center flex-grow-1 pe-5">
+                    <div class="top-content-center flex-grow-1" t-att-class="{'pe-5':!this.ui.isSmall}">
                         <h4 class="mb-0">Bill Splitting</h4>
                     </div>
                 </div>
@@ -26,14 +26,28 @@
                     </div>
                     <div class="controls flex-column flex-nowrap w-100 w-lg-50">
                         <div class="order-info mb-2 mt-2 mt-lg-0 py-3 py-lg-4 rounded-3 text-center bg-view">
-                            <span class="subtotal text-success">
-                                <t t-esc="env.utils.formatCurrency(newOrderPrice)" />
-                            </span>
-                        </div>
-                        <div class="pay-button">
-                            <div class="button btn btn-lg btn-primary py-3 py-lg-5 w-100" t-on-click="createSplittedOrder">
-                                <span>Split Order</span>
+                            <div class="d-flex flex-row justify-content-center align-items-baseline fs-1">
+                                <span class="subtotal text-success">
+                                    <t t-esc="env.utils.formatCurrency(newOrderPrice)" />
+                                </span>
+                                <span class="fs-4 text-start ms-2">
+                                    / <t t-esc="env.utils.formatCurrency(currentOrder.getTotalWithTax())" />
+                                </span>
                             </div>
+                            <div class="fs-4">
+                                <t t-esc="this.getNumberOfProducts()" /> product(s) selected
+                            </div>
+                        </div>
+
+                        <div class="pay-button" t-att-class="{'d-flex flex-row bg-white p-2 gap-2 rounded-3':this.ui.isSmall}">
+                            <button class="button btn btn-lg btn-primary py-3 py-lg-5 w-100"
+                                t-att-disabled="!this.getNumberOfProducts()"
+                                t-on-click="createSplittedOrder">
+                                <span>Split Order</span>
+                            </button>
+                            <button t-if="this.ui.isSmall" class="button back back-button btn btn-secondary btn-lg lh-lg w-100" t-on-click="back">
+                                <span>Back</span>
+                            </button>
                         </div>
                     </div>
                 </div>
