@@ -61,7 +61,9 @@ export class PublicReadonlySpreadsheet extends Component {
         this.data = await this.http.get(this.props.dataUrl);
         this.model = new Model(
             this.data,
-            { mode: this.props.mode === "dashboard" ? "dashboard" : "readonly" },
+            {
+                mode: this.props.mode === "dashboard" ? "dashboard" : "readonly",
+            },
             this.data.revisions || []
         );
         if (this.env.debug) {
