@@ -46,7 +46,7 @@
         <t t-if="question_count == 0 or original_search" t-call="website_forum.no_results_message">
             <t t-set="record_name_plural">posts</t>
             <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
-            <t t-set="go_back_url" t-valuef="/forum/#{_forum_slug}/"/>
+            <t t-set="go_back_url" t-valuef="#{forum_base_path or '/forum'}/#{_forum_slug}/"/>
         </t>
         <t t-call="website.pager"/>
     </t>
@@ -60,10 +60,10 @@
         <div t-if="forum and forum.has_pending_post" class="alert border" role="alert">
             <b>You already have a pending post.</b><br/>
             <p>Please wait for a moderator to validate your previous post before continuing.</p>
-            <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="fa fa-angle-left me-2"/>Back to All Posts</a>
+            <a t-attf-href="#{ forum_base_path or '/forum' }/#{ slug(forum) }" title="All Topics"><i class="fa fa-angle-left me-2"/>Back to All Posts</a>
         </div>
 
-        <form t-else="" t-attf-action="/forum/#{slug(forum)}/new" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable mt-lg-3">
+        <form t-else="" t-attf-action="#{ forum_base_path or '/forum' }/#{slug(forum)}/new" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable mt-lg-3">
             <div class="row mb-3">
                 <label class="form-label col-lg-2" for="content">Title</label>
                 <div class="col">
@@ -125,7 +125,7 @@
                     <button type="submit" t-attf-class="o_wforum_submit_post #{ 'oe_social_share_call' if forum.allow_share else '' } btn btn-primary #{ 'karma_required' if user.karma &lt; forum.karma_ask else ''}"
                     t-att-data-karma="forum.karma_ask"
                     data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
-                    <a class="btn btn-link" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }">Discard</a>
+                    <a class="btn btn-link" title="Back to Question" t-attf-href="#{ forum_base_path or '/forum' }/#{ slug(forum) }">Discard</a>
                 </div>
             </div>
         </form>
@@ -154,7 +154,7 @@
             </article>
         </div>
 
-        <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable">
+        <form t-attf-action="#{forum_base_path or '/forum'}/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div t-if="not is_answer" class="row mb-3">
                 <label class="form-label col-lg-2" for="post_name">Title</label>
@@ -218,7 +218,7 @@
             <div class="row mb-5">
                 <div class="col offset-lg-2">
                     <button type="submit" class="o_wforum_submit_post btn btn-primary">Save Changes</button>
-                    <a class="btn btn-link" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }/#{ slug(post)}">
+                    <a class="btn btn-link" title="Back to Question" t-attf-href="#{forum_base_path or '/forum'}/#{ slug(forum) }/#{ slug(post)}">
                         Discard
                     </a>
                 </div>
@@ -236,7 +236,7 @@
                 <ul class="pagination overflow-auto mt0 mb0">
                     <t t-foreach="pager_tag_chars" t-as="tuple_char">
                         <li t-if="tuple_char_index &lt; 11" t-attf-class="page-item #{ 'active' if active_char_tag == tuple_char[1] else '' }">
-                            <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ quote_plus(tuple_char[1] )}?#{ keep_query('filters', 'search') }"
+                            <a t-attf-href="#{forum_base_path or '/forum'}/#{ slug(forum) }/tag/#{ quote_plus(tuple_char[1] )}?#{ keep_query('filters', 'search') }"
                                class="page-link">
                                 <t t-out="tuple_char[0]"/>
                             </a>
@@ -249,7 +249,7 @@
                 <select name="filter" class="form-select w-auto" onchange="location = this.value;">
                     <t t-foreach="pager_tag_chars" t-as="tuple_char">
                         <option t-if="active_char_tag == tuple_char[1]" selected="selected" value="" t-out="tuple_char[0]"/>
-                        <option t-else="" t-attf-value="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1]) + '?' + keep_query('filters')}"
+                        <option t-else="" t-attf-value="#{forum_base_path or '/forum'}/#{slug(forum)}/tag/#{quote_plus(tuple_char[1]) + '?' + keep_query('filters')}"
                                 t-out="tuple_char[0]"
                         />
                     </t>
@@ -269,7 +269,7 @@
                         <t t-set="follow_btn_classes" t-value="'opacity-50'"/>
                     </t>
                     <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } o_js_forum_tag_link btn-link #{ '' if tag.message_is_follower else 'text-muted' }"
-                       t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }">
+                       t-attf-href="#{forum_base_path or '/forum'}/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }">
                         <t t-out="tag.name"/>&amp;nbsp;
                         <span class="small">(<t t-out="tag.posts_count"/>)</span>
                     </a>
@@ -278,7 +278,7 @@
         </div>
         <t t-else="">
             <t t-set="tag_filter" t-value="keep_query('filters').split('=')[1] if keep_query('filters') else ''"/>
-            <t t-set="go_back_url" t-valuef="/forum/#{ slug(forum) }/tag"/>
+            <t t-set="go_back_url" t-valuef="#{forum_base_path or '/forum'}/#{ slug(forum) }/tag"/>
             <t t-set="record_name_plural">tags</t>
             <t t-call="website_forum.no_results_message">
                 <t t-if="tag_filter and tag_filter != 'all'" t-set="result_msg">

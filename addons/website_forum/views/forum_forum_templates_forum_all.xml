@@ -35,7 +35,7 @@
     <t t-foreach="sorted_forums" t-as="forum">
         <t t-set="has_desc" t-value="forum.description"/>
         <div t-attf-class="#{col_class}">
-            <a t-attf-href="/forum/#{slug(forum)}"
+            <a t-attf-href="#{forum_base_path or '/forum'}/#{slug(forum)}"
                 class="card oe_img_bg h-100 justify-content-end shadow-sm border-0 p-3 pt-5 text-reset text-decoration-none transition-base"
                 t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920') if forum.image_1920 else ''}')"
             >
@@ -55,7 +55,7 @@
                         <span class="badge bg-dark me-1">Last post:</span>
                         <object>
                             <a
-                                t-attf-href="/forum/#{slug(forum)}/#{slug(forum.last_post_id)}"
+                                t-attf-href="#{forum_base_path or '/forum'}/#{slug(forum)}/#{slug(forum.last_post_id)}"
                                 t-out="forum.last_post_id.name"
                             />
                         </object>

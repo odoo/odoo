@@ -15,6 +15,12 @@
             </t>
         </xpath>
     </template>
+
+    <template id="back_to_course">
+        <a t-if="not forum_embed" t-attf-href="/slides/#{slug(forum.slide_channel_id)}#{'/' + slug(category) if category else ''}" t-out="forum.name"/>
+        <span t-else="" t-out="forum.name"/>
+    </template>
+
     <template name="Replace Breadcrumb Root" id="website_slides_forum_breadcrumb" inherit_id="website_forum.forum_model_nav" active="True">
         <xpath expr="//nav[@id='o_wforum_nav']" position="before">
             <t t-if="forum and forum.slide_channel_id" t-set="breadcrumb_kind" t-value="'slides'"/>
@@ -22,17 +28,17 @@
         <xpath expr="//div[hasclass('o_wforum_breadcrumb_root_single')]" position="inside">
             <ol t-if="breadcrumb_kind == 'slides'" class="breadcrumb order-first col-10 col-lg flex-grow-1 flex-nowrap my-0 p-0 fs-5">
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/slides/#{slug(forum.slide_channel_id)}#{'/' + slug(category) if category else ''}" t-out="forum.name"/>
+                    <t t-call="website_slides_forum.back_to_course"/>
                 </li>
                 <li class="breadcrumb-item text-nowrap">
-                    <a t-attf-href="/forum/#{ slug(forum) }">Forum</a>
+                    <a t-attf-href="#{ forum_base_path or '/forum' }/#{ slug(forum) }">Forum</a>
                 </li>
             </ol>
         </xpath>
         <xpath expr="//div[hasclass('o_wforum_breadcrumb_root_list_or_edit')]" position="inside">
             <ol t-if="breadcrumb_kind == 'slides'" class="breadcrumb order-first col-10 col-lg flex-grow-1 flex-nowrap my-0 p-0 fs-5">
                 <li class="breadcrumb-item text-nowrap">
-                    <a t-attf-href="/slides/#{slug(forum.slide_channel_id)}#{'/' + slug(category) if category else ''}" t-out="forum.name"/>
+                   <t t-call="website_slides_forum.back_to_course"/>
                 </li>
                 <li class="breadcrumb-item text-nowrap">
                     <strong>Forum</strong>

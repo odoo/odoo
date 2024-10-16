@@ -2,9 +2,8 @@
 
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add('forum_question', {
+const tourForumQuestion = {
     test: true,
-    url: '/forum/help-1',
     steps: () => [
     {
         content: "Ask the question in this forum by clicking on the button.",
@@ -42,14 +41,14 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Click to post your question.",
         trigger: 'button:contains("Post")',
         run: "click",
-    }, {
-        content: "This page contain new created question.",
-        trigger: '#wrap:has(.fa-star)',
     },
     {
         content: "Close modal once modal animation is done.",
         trigger: ".modal .modal-header button.btn-close",
         run: "click",
+    }, {
+        content: "This page contain new created question.",
+        trigger: '.o_wforum_post_content:contains("First Question")',
     },
     {
         content: "Check that the code still exists as it was written.",
@@ -101,4 +100,14 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Congratulations! You just created and post your first question and answer.",
         trigger: '.o_wforum_validate_toggler',
     }]
+}
+
+registry.category("web_tour.tours").add('forum_question', {
+    ...tourForumQuestion,
+    url: '/forum/help-1',
+});
+
+registry.category("web_tour.tours").add('forum_question_embed', {
+    ...tourForumQuestion,
+    url: '/forum/embed/help-1',
 });
