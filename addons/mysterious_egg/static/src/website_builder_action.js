@@ -84,7 +84,7 @@ class WebsiteBuilder extends Component {
     }
 
     onIframeLoad(ev) {
-        history.pushState(null, "", ev.target.contentWindow.location.pathname);
+        // history.pushState(null, "", ev.target.contentWindow.location.pathname);
     }
 }
 
