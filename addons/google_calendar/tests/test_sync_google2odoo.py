@@ -282,8 +282,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
             'summary': 'coucou',
-            'start': {'date': str(event.start_date)},
-            'end': {'date': str(event.stop_date + relativedelta(days=1))},
+            'start': {'date': str(event.start_date), 'dateTime': None},
+            'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'declined'}],
             'extendedProperties': {'private': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'reminders': {'overrides': [], 'useDefault': False},
@@ -1269,10 +1269,12 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-13T16:55:00+01:00',
+                'date': None,
                 'timeZone': 'Europe/Brussels'
             },
             'end': {
                 'dateTime': '2020-01-13T19:55:00+01:00',
+                'date': None,
                 'timeZone': 'Europe/Brussels'
             },
             'transparency': 'opaque',
@@ -1300,8 +1302,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         # guestsCanModify property is not properly handled yet
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
-            'start': {'date': str(event.start_date)},
-            'end': {'date': str(event.stop_date + relativedelta(days=1))},
+            'start': {'date': str(event.start_date), 'dateTime': None},
+            'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'coucou',
             'description': '',
             'location': '',
