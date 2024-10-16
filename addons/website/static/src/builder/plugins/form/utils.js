@@ -40,13 +40,16 @@ export function getParsedDataFor(formId, parentEl) {
  * Returns a field object
  *
  * @param {string} type the type of the field
- * @param {string} name The name of the field used also as label
+ * @param {string} label The label of the field. Also used as the field's
+ *                       name if no `name` is provided.
+ * @param {string} [name] The name of the field. Falls back to `label` if
+ *                        not specified
  * @returns {Object}
  */
-export function getCustomField(type, name) {
+export function getCustomField(type, label, name = "") {
     return {
-        name: name,
-        string: name,
+        name: name || label,
+        string: label,
         custom: true,
         type: type,
         // Default values for x2many fields and selection
@@ -337,7 +340,8 @@ export function getActiveField(fieldEl, { noRecords, fields } = {}) {
     let field;
     const labelText = fieldEl.querySelector(".s_website_form_label_content")?.innerText || "";
     if (isFieldCustom(fieldEl)) {
-        field = getCustomField(fieldEl.dataset.type, labelText);
+        const inputName = fieldEl.querySelector(".s_website_form_input").getAttribute("name");
+        field = getCustomField(fieldEl.dataset.type, labelText, inputName);
     } else {
         field = Object.assign({}, fields[getFieldName(fieldEl)]);
         field.string = labelText;
@@ -521,4 +525,17 @@ export function setVisibilityDependency(fieldEl, value) {
     delete fieldEl.dataset.visibilityCondition;
     delete fieldEl.dataset.visibilityComparator;
     fieldEl.dataset.visibilityDependency = value;
+}
+
+/**
+ * Re-renders a form field in the DOM.
+ *
+ * @param {HTMLElement} fieldEl - The original field element to be re-rendered.
+ * @param {Object<string, Object>} fields - A map of all fields in the form.
+ */
+export function rerenderField(fieldEl, fields) {
+    const field = getActiveField(fieldEl, { fields });
+    delete field.id;
+    const newFieldEl = renderField(field);
+    replaceFieldElement(fieldEl, newFieldEl);
 }
