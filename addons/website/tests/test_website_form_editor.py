@@ -70,6 +70,9 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     def test_website_form_nested_forms(self):
         self.start_tour('/my/account', 'website_form_nested_forms', login='admin')
 
+    def test_website_form_duplicate_field_ids(self):
+        self.start_tour('/', 'website_form_duplicate_field_ids', login='admin')
+
 @tagged('post_install', '-at_install')
 class TestWebsiteForm(TransactionCase):
 

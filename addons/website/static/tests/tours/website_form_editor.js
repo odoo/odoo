@@ -153,6 +153,17 @@ const addCustomField = function (name, type, label, required, display) {
 const addExistingField = function (name, type, label, required, display) {
     return addField(name, type, label, required, false, display);
 };
+const compareIds = ({ content, firstElSelector, secondElSelector, errorMessage }) => ({
+    content,
+    trigger: `:iframe ${firstElSelector}`,
+    run: function () {
+        const firstEl = this.anchor;
+        const secondEl = firstEl.ownerDocument.querySelector(secondElSelector);
+        if (firstEl.id === secondEl.id) {
+            console.error(errorMessage);
+        }
+    },
+});
 
 registerWebsitePreviewTour("website_form_editor_tour", {
     url: '/',
@@ -1143,3 +1154,101 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+registerWebsitePreviewTour("website_form_duplicate_field_ids", {
+    url: '/',
+    edition: true,
+}, () => [
+    // Fields in two form snippet should have unique IDs
+    {
+        content: "Drop a form snippet",
+        trigger: ".o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Form'].o_draggable .o_snippet_thumbnail",
+        run: "drag_and_drop :iframe #wrap",
+    },
+    {
+        content: "Check if form snippet is dropped",
+        trigger: ":iframe .s_website_form_field",
+    },
+    ...insertSnippet({
+        id: "s_title_form",
+        name: "Title - Form",
+        groupName: "Contact & Forms",
+    }),
+    compareIds({
+        content: "Check that the first field of both the form snippets have different IDs",
+        firstElSelector: ".s_website_form input[name='name']",
+        secondElSelector: ".s_title_form .s_website_form input[name='name']",
+        errorMessage: "The first fields of two different form snippet have the same ID",
+    }),
+    {
+        content: "Click on the form snippet",
+        trigger: ":iframe .s_website_form",
+        run: "click",
+    },
+    {
+        content: "Delete the form snippet",
+        trigger: "[data-container-title='Form'] .options-container-header .oe_snippet_remove",
+        run: "click",
+    },
+    // Cloning a snippet with form in it should generate new IDs for the cloned
+    // form fields
+    {
+        content: "Click on 'Title - Form' snippet",
+        trigger: ":iframe .s_title_form",
+        run: "click",
+    },
+    {
+        content: "Clone the 'Title - Form' snippet",
+        trigger: "[data-container-title='Title - Form'] .options-container-header .oe_snippet_clone",
+        run: "click",
+    },
+    {
+        content: "Check if the form is cloned",
+        trigger: ":iframe .s_title_form:nth-of-type(2)",
+    },
+    compareIds({
+        content: "Check if the first field of forms in original and cloned snippets have different IDs",
+        firstElSelector: ".s_title_form .s_website_form input[name='name']",
+        secondElSelector: ".s_title_form:nth-of-type(2) .s_website_form input[name='name']",
+        errorMessage: "The first fields of original and cloned form snippet have the same ID",
+    }),
+    // Cloning a form itself should should generate new IDs for the cloned form
+    // fields
+    {
+        content: "Click on the form in 'Title - Form' snippet",
+        trigger: ":iframe .s_title_form .s_website_form",
+        run: "click",
+    },
+    {
+        content: "Clone the form",
+        trigger: "[data-container-title='Form'] .options-container-header .oe_snippet_clone",
+        run: "click",
+    },
+    {
+        content: "Check if the form is cloned",
+        trigger: ":iframe .s_title_form .s_website_form:nth-of-type(2)",
+    },
+    compareIds({
+        content: "Check if the first field of original and cloned form snippets have different IDs",
+        firstElSelector: ".s_title_form .s_website_form input[name='name']",
+        secondElSelector: ".s_title_form .s_website_form:nth-of-type(2) input[name='name']",
+        errorMessage: "The first fields of original and cloned form snippet have the same ID",
+    }),
+    // Cloning a field should generate new ID for the cloned field
+    {
+        content: "Click on the name field",
+        trigger: ":iframe .s_title_form .s_website_form input[name='name']",
+        run: "click",
+    },
+    {
+        content: "Clone the name field",
+        trigger: "[data-container-title='Field'] .options-container-header .oe_snippet_clone",
+        run: "click",
+    },
+    compareIds({
+        content: "Check if both, original and cloned name fields have unique IDs",
+        firstElSelector: ".s_title_form .s_website_form input[name='name']",
+        secondElSelector: ".s_title_form [data-name='Field']:nth-of-type(3) input[name='name']",
+        errorMessage: "Original and cloned fields have the same ID",
+    })
+]);
