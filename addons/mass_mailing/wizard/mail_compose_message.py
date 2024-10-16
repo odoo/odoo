@@ -72,9 +72,13 @@ class MailComposeMessage(models.TransientModel):
         trace_values_all = dict.fromkeys(mail_values_all.keys(), False)
         recipients_info = self._get_recipients_data(mail_values_all)
         for res_id, mail_values in mail_values_all.items():
+            emails = recipients_info[res_id]['mail_to_normalized']
+            # if mail_to is void, keep falsy values to allow searching / debugging traces
+            if not emails:
+                emails = recipients_info[res_id]['mail_to']
+            email = emails[0] if emails else ''
             trace_vals = {
-                # if mail_to is void, keep falsy values to allow searching / debugging traces
-                'email': recipients_info[res_id]['mail_to'][0] if recipients_info[res_id]['mail_to'] else '',
+                'email': email,
                 'mass_mailing_id': self.mass_mailing_id.id,
                 'model': self.model,
                 'res_id': res_id,
