@@ -46,7 +46,7 @@ export class DashboardLoader {
      * @param {OdooEnv} env
      * @param {ORM} orm
      */
-    constructor(env, orm) {
+    constructor(env, orm, geoJsonService) {
         /** @private */
         this.env = env;
         /** @private */
@@ -55,6 +55,7 @@ export class DashboardLoader {
         this.groups = [];
         /** @private @type {Object<number, Dashboard>} */
         this.dashboards = {};
+        this.geoJsonService = geoJsonService;
     }
 
     /**
@@ -236,6 +237,7 @@ export class DashboardLoader {
                 custom: { env: this.env, orm: this.orm, odooDataProvider },
                 mode: "dashboard",
                 defaultCurrency: createDefaultCurrency(currency),
+                external: { geoJsonService: this.geoJsonService },
             },
             revisions
         );
