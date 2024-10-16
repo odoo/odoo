@@ -3,11 +3,11 @@ import base64
 from odoo import _, api, fields, models, exceptions
 
 from .card_template import TEMPLATE_DIMENSIONS
+from odoo.addons import mass_mailing, mail, link_tracker
 
 
-class CardCampaign(models.Model):
+class CardCampaign(models.Model, mail.MailActivityMixin, link_tracker.MailRenderMixin, mass_mailing.MailRenderMixin, mass_mailing.MailThread):
     _description = 'Marketing Card Campaign'
-    _inherit = ['mail.activity.mixin', 'mail.render.mixin', 'mail.thread']
     _order = 'id DESC'
 
     def _default_card_template_id(self):

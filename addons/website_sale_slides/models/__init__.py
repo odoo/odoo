@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import product_product
-from . import product_template
-from . import sale_order
-from . import slide_channel
+from .product_product import ProductProduct
+from .product_template import ProductTemplate
+from .sale_order import SaleOrder
+from .slide_channel import SlideChannel

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import purchase_report
-from . import stock_forecasted
-from . import report_stock_rule
-from . import vendor_delay_report
+from .purchase_report import PurchaseReport
+from .stock_forecasted import StockForecasted_Product_Product
+from .report_stock_rule import ReportStockReport_Stock_Rule
+from .vendor_delay_report import VendorDelayReport

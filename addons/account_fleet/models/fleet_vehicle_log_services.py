@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import fleet
 
 
-class FleetVehicleLogServices(models.Model):
-    _inherit = ['fleet.vehicle.log.services']
+class FleetVehicleLogServices(fleet.FleetVehicleLogServices):
 
     account_move_line_id = fields.Many2one(comodel_name='account.move.line')  # One2one
     account_move_state = fields.Selection(related='account_move_line_id.parent_state')

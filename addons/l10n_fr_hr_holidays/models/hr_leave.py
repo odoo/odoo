@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
+from odoo.addons import hr_holidays
 
 
-class HrLeave(models.Model):
-    _inherit = ['hr.leave']
+class HrLeave(hr_holidays.HrLeave):
 
     l10n_fr_date_to_changed = fields.Boolean(export_string_translation=False)
 

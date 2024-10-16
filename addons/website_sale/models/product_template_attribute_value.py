@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import product
 
 
-class ProductTemplateAttributeValue(models.Model):
-    _inherit = ['product.template.attribute.value']
+class ProductTemplateAttributeValue(product.ProductTemplateAttributeValue):
 
     def _get_extra_price(self, combination_info):
         self.ensure_one()

@@ -4,10 +4,10 @@
 from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.osv import expression
+from odoo.addons import mass_mailing
 
 
-class MailingMailing(models.Model):
-    _inherit = ['mailing.mailing']
+class MailingMailing(mass_mailing.MailingMailing):
 
     sale_quotation_count = fields.Integer('Quotation Count', compute='_compute_sale_quotation_count')
     sale_invoiced_amount = fields.Integer('Invoiced Amount', compute='_compute_sale_invoiced_amount')

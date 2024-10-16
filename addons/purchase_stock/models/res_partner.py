@@ -5,10 +5,10 @@ from datetime import timedelta, datetime, time
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.addons import purchase
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(purchase.ResPartner):
 
     purchase_line_ids = fields.One2many('purchase.order.line', 'partner_id', string="Purchase Lines")
     on_time_rate = fields.Float(

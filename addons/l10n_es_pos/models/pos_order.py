@@ -1,8 +1,8 @@
 from odoo import api, fields, models
+from odoo.addons import point_of_sale
 
 
-class PosOrder(models.Model):
-    _inherit = ["pos.order"]
+class PosOrder(point_of_sale.PosOrder):
 
     is_l10n_es_simplified_invoice = fields.Boolean("Simplified invoice")
     l10n_es_simplified_invoice_number = fields.Char("Simplified invoice number", compute="_compute_l10n_es_simplified_invoice_number")

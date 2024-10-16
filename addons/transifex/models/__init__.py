@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import transifex_code_translation
-from . import transifex_translation
+from .models import Base
+from .transifex_code_translation import TransifexCodeTranslation
+from .transifex_translation import TransifexTranslation

@@ -1,3 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import template_syscohada
+from .template_syscohada import AccountChartTemplate
 from . import template_syscebnl

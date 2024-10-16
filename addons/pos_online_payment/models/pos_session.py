@@ -4,10 +4,10 @@
 from collections import defaultdict
 from odoo import models, tools, _
 from odoo.exceptions import UserError
+from odoo.addons import point_of_sale
 
 
-class PosSession(models.Model):
-    _inherit = ['pos.session']
+class PosSession(point_of_sale.PosSession):
 
     def _accumulate_amounts(self, data):
         data = super()._accumulate_amounts(data)

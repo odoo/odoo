@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import mail
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(mail.IrAttachment):
 
     @api.model_create_multi
     def create(self, vals_list):

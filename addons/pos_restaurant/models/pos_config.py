@@ -5,10 +5,10 @@ from odoo import api, fields, models, _
 import json
 from collections import defaultdict
 from odoo.tools import convert
+from odoo.addons import point_of_sale
 
 
-class PosConfig(models.Model):
-    _inherit = ['pos.config']
+class PosConfig(point_of_sale.PosConfig):
 
     iface_splitbill = fields.Boolean(string='Bill Splitting', help='Enables Bill Splitting in the Point of Sale.')
     iface_printbill = fields.Boolean(string='Bill Printing', help='Allows to print the Bill before payment.')

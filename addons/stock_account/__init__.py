@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import report
-from . import wizard
+from .models import (
+    AccountAnalyticAccount, AccountAnalyticPlan, AccountChartTemplate, AccountMove,
+    AccountMoveLine, ProductCategory, ProductProduct, ProductTemplate, ResCompany,
+    ResConfigSettings, StockLocation, StockLot, StockMove, StockMoveLine, StockPicking,
+    StockQuant, StockValuationLayer,
+)
+from .report import StockForecasted_Product_Product
+from .wizard import (
+    StockQuantityHistory, StockRequestCount, StockReturnPickingLine,
+    StockValuationLayerRevaluation,
+)
 
 
 def _configure_journals(env):

@@ -4,12 +4,12 @@ from odoo import fields, models, _
 from odoo.exceptions import AccessError, UserError
 
 from .mercado_pago_pos_request import MercadoPagoPosRequest
+from odoo.addons import point_of_sale
 
 _logger = logging.getLogger(__name__)
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ['pos.payment.method']
+class PosPaymentMethod(point_of_sale.PosPaymentMethod):
 
     mp_bearer_token = fields.Char(
         string="Production user token",

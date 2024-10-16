@@ -1,8 +1,8 @@
 from odoo import _, api, models, Command
+from odoo.addons import sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale.SaleOrder):
 
     def _get_order_edi_decoder(self, file_data):
         """ Override of sale to add edi decoder for xml files.

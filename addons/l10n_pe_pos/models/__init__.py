@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import l10n_pe_res_city_district
-from . import pos_session
-from . import res_partner
-from . import l10n_latam_identification_type
-from . import res_city
-from . import pos_config
+from .l10n_pe_res_city_district import L10n_PeResCityDistrict
+from .pos_session import PosSession
+from .res_partner import ResPartner
+from .l10n_latam_identification_type import L10n_LatamIdentificationType
+from .res_city import ResCity
+from .pos_config import PosConfig

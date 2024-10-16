@@ -8,12 +8,12 @@ from xml.sax.saxutils import escape, quoteattr
 from odoo import _, api, fields, models, tools, SUPERUSER_ID
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
+from odoo.addons import account
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountMoveSend(models.AbstractModel):
-    _inherit = ['account.move.send']
+class AccountMoveSend(account.AccountMoveSend):
 
     # -------------------------------------------------------------------------
     # ALERTS

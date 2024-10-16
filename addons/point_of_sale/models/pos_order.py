@@ -15,12 +15,12 @@ from odoo.tools import float_is_zero, float_round, float_repr, float_compare, fo
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
 import base64
+from odoo.addons import point_of_sale, portal, mail, account
 
 _logger = logging.getLogger(__name__)
 
 
-class PosOrder(models.Model):
-    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin", "mail.thread"]
+class PosOrder(models.Model, portal.PortalMixin, point_of_sale.PosBusMixin, point_of_sale.PosLoadMixin, mail.MailThread, portal.MailThread):
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
 
@@ -1270,10 +1270,9 @@ class PosOrder(models.Model):
         self.message_post(body=body)
 
 
-class PosOrderLine(models.Model):
+class PosOrderLine(models.Model, point_of_sale.PosLoadMixin):
     _description = "Point of Sale Order Lines"
     _rec_name = "product_id"
-    _inherit = ['pos.load.mixin']
 
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
     name = fields.Char(string='Line No', required=True, copy=False)
@@ -1636,10 +1635,9 @@ class PosOrderLine(models.Model):
         return original_price - self.price_subtotal_incl
 
 
-class PosPackOperationLot(models.Model):
+class PosPackOperationLot(models.Model, point_of_sale.PosLoadMixin):
     _description = "Specify product lot/serial number in pos order line"
     _rec_name = "lot_name"
-    _inherit = ['pos.load.mixin']
 
     pos_order_line_id = fields.Many2one('pos.order.line')
     order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
@@ -1655,8 +1653,7 @@ class PosPackOperationLot(models.Model):
         return ['lot_name', 'pos_order_line_id']
 
 
-class AccountCashRounding(models.Model):
-    _inherit = ['account.cash.rounding', 'pos.load.mixin']
+class AccountCashRounding(account.AccountCashRounding, point_of_sale.PosLoadMixin):
 
     @api.constrains('rounding', 'rounding_method', 'strategy')
     def _check_session_state(self):

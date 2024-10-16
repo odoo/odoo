@@ -5,10 +5,10 @@ from stdnum.fr import siret
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
+from odoo.addons import account
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account.ResPartner):
 
     invoice_edi_format = fields.Selection(
         selection_add=[

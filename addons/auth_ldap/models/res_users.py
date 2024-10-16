@@ -5,10 +5,10 @@ from odoo.exceptions import AccessDenied
 
 from odoo import api, models, SUPERUSER_ID
 from odoo.modules.registry import Registry
+from odoo.addons import base_setup
 
 
-class ResUsers(models.Model):
-    _inherit = ["res.users"]
+class ResUsers(base_setup.ResUsers):
 
     @classmethod
     def _login(cls, db, credential, user_agent_env):

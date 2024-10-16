@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
+from .models import (
+    HrAttendance, HrAttendanceOvertime, HrEmployee, HrEmployeeBase,
+    HrEmployeePublic, ResCompany, ResConfigSettings, ResUsers,
+)
 
 
 def post_init_hook(env):

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import portal
 
 
-class PortalWizardUser(models.TransientModel):
-    _inherit = ['portal.wizard.user']
+class PortalWizardUser(portal.PortalWizardUser):
 
     def _get_similar_users_domain(self, portal_users_with_email):
         """ Returns the domain needed to find the users that have the same email

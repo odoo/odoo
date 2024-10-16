@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
+from odoo.addons import point_of_sale, l10n_in
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_in.AccountMove, point_of_sale.AccountMove):
 
     @api.depends('pos_session_ids')
     def _compute_l10n_in_state_id(self):

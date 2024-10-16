@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import google_gmail_mixin
+from .google_gmail_mixin import GoogleGmailMixin
 
-from . import fetchmail_server
-from . import ir_mail_server
-from . import res_config_settings
+from .fetchmail_server import FetchmailServer
+from .ir_mail_server import IrMail_Server
+from .res_config_settings import ResConfigSettings

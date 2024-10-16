@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import survey
 
 
-class SurveySurvey(models.Model):
-    _inherit = ['survey.survey']
+class SurveySurvey(survey.SurveySurvey):
 
     certification_validity_months = fields.Integer(
         'Validity', required=False,

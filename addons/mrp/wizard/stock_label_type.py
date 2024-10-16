@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
+from odoo.addons import stock
 
 
-class PickingLabelType(models.TransientModel):
-    _inherit = ['picking.label.type']
+class PickingLabelType(stock.PickingLabelType):
 
     production_ids = fields.Many2many('mrp.production')
 

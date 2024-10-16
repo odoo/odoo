@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.addons import website_sale
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(website_sale.ProductTemplate):
 
     service_tracking = fields.Selection(selection_add=[
         ('course', 'Course Access'),

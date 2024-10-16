@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models
+from odoo.addons import base
 
 
-class IrQweb(models.AbstractModel):
+class IrQweb(base.IrQweb):
     """Add ``raise_on_forbidden_code_for_model`` option for qweb.
 
     When this option is activated, only a whitelist of expressions
     is allowed for the given model.
     """
 
-    _inherit = ["ir.qweb"]
 
     allowed_directives = (
         "out",

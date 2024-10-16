@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import account, base_vat
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(account.ResConfigSettings, base_vat.ResConfigSettings):
 
     l10n_ro_edi_client_id = fields.Char(related='company_id.l10n_ro_edi_client_id', readonly=False)
     l10n_ro_edi_client_secret = fields.Char(related='company_id.l10n_ro_edi_client_secret', readonly=False)

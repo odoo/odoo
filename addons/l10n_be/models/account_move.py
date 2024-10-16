@@ -8,14 +8,14 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 """
 account.move object: add support for Belgian structured communication
 """
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     def _get_invoice_reference_be_partner(self):
         """ This computes the reference based on the belgian national standard

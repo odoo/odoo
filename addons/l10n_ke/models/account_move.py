@@ -1,8 +1,8 @@
 from odoo import models, fields
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     l10n_ke_wh_certificate_number = fields.Char(
         string="Withholding Certificate Number",

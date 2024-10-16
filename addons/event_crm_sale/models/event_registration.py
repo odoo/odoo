@@ -4,10 +4,10 @@
 from collections import defaultdict
 
 from odoo import models
+from odoo.addons import event_crm, event_sale
 
 
-class EventRegistration(models.Model):
-    _inherit = ['event.registration']
+class EventRegistration(event_crm.EventRegistration, event_sale.EventRegistration):
 
     def _get_lead_grouping(self, rules, rule_to_new_regs):
         """ Override to support sale-order based grouping and update.

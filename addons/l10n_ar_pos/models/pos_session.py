@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models, api
+from odoo.addons import point_of_sale
 
 
-class PosSession(models.Model):
-    _inherit = ['pos.session']
+class PosSession(point_of_sale.PosSession):
 
     @api.model
     def _load_pos_data_models(self, config_id):

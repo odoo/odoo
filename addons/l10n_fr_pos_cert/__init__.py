@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import report
+from .models import (
+    AccountFiscalPosition, AccountSaleClosing, PosConfig, PosOrder, PosOrderLine,
+    PosSession, ResCompany,
+)
+from .report import ReportL10n_Fr_Pos_CertReport_Pos_Hash_Integrity
 
 
 def _setup_inalterability(env):

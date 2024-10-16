@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import account_edi_ubl_cii
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account_edi_ubl_cii.AccountMove):
 
     peppol_message_uuid = fields.Char(string='PEPPOL message ID')
     peppol_move_state = fields.Selection(

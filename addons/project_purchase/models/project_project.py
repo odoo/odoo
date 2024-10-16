@@ -4,10 +4,10 @@ import json
 
 from odoo import fields, models
 from odoo.osv import expression
+from odoo.addons import project_account
 
 
-class ProjectProject(models.Model):
-    _inherit = ["project.project"]
+class ProjectProject(project_account.ProjectProject):
 
     purchase_orders_count = fields.Integer('# Purchase Orders', compute='_compute_purchase_orders_count', groups='purchase.group_purchase_user', export_string_translation=False)
 

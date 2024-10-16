@@ -2,9 +2,30 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
-from . import report
-from . import wizard
+from .models import (
+    BarcodeRule, IrActionsReport, ProcurementGroup, ProductCategory,
+    ProductPackaging, ProductProduct, ProductRemoval, ProductTemplate, ResCompany,
+    ResConfigSettings, ResPartner, ResUsers, StockLocation, StockLot, StockMove, StockMoveLine,
+    StockPackageType, StockPackage_Level, StockPicking, StockPickingType, StockPutawayRule,
+    StockQuant, StockQuantPackage, StockReplenishMixin, StockRoute, StockRule, StockScrap,
+    StockScrapReasonTag, StockStorageCategory, StockStorageCategoryCapacity, StockWarehouse,
+    StockWarehouseOrderpoint, UomUom,
+)
+from .report import (
+    ReportStockLabel_Lot_Template_View, ReportStockLabel_Product_Product_View,
+    ReportStockQuantity, ReportStockReport_Reception, ReportStockReport_Stock_Rule,
+    StockForecasted_Product_Product, StockForecasted_Product_Template, StockLotReport,
+    StockTraceabilityReport,
+)
+from .wizard import (
+    LotLabelLayout, PickingLabelType, ProductLabelLayout, ProductReplenish,
+    StockBackorderConfirmation, StockBackorderConfirmationLine, StockChangeProductQty,
+    StockInventoryAdjustmentName, StockInventoryConflict, StockInventoryWarning,
+    StockOrderpointSnooze, StockPackageDestination, StockQuantRelocate, StockQuantityHistory,
+    StockReplenishmentInfo, StockReplenishmentOption, StockRequestCount, StockReturnPicking,
+    StockReturnPickingLine, StockRulesReport, StockTrackConfirmation, StockTrackLine,
+    StockWarnInsufficientQty, StockWarnInsufficientQtyScrap,
+)
 
 
 # TODO: Apply proper fix & remove in master

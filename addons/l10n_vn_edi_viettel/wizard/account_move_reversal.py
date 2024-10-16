@@ -2,10 +2,10 @@
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountMoveReversal(models.TransientModel):
-    _inherit = ['account.move.reversal']
+class AccountMoveReversal(account.AccountMoveReversal):
 
     l10n_vn_edi_adjustment_type = fields.Selection(
         selection=[

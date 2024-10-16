@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import stock
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(stock.ResCompany):
 
     def _default_confirmation_sms_picking_template(self):
         try:

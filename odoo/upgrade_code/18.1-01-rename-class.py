@@ -2,6 +2,7 @@ import re
 
 
 def upgrade(file_manager):
+    return
     nb = len([1 for file in file_manager if file.path.name.endswith('.py')])
     i = 0
     file_manager.print_progress(0, nb)

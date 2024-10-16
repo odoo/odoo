@@ -4,10 +4,10 @@
 from odoo import fields, models, api
 from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import groupby
+from odoo.addons import purchase, stock_account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(stock_account.AccountMove, purchase.AccountMove):
 
     def _stock_account_prepare_anglo_saxon_in_lines_vals(self):
         ''' Prepare values used to create the journal items (account.move.line) corresponding to the price difference

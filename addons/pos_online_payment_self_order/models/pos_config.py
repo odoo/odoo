@@ -3,10 +3,10 @@
 from typing import Dict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from odoo.addons import pos_self_order, pos_online_payment
 
 
-class PosConfig(models.Model):
-    _inherit = ['pos.config']
+class PosConfig(pos_online_payment.PosConfig, pos_self_order.PosConfig):
 
     self_order_online_payment_method_id = fields.Many2one('pos.payment.method', string='Self Online Payment', help="The online payment method to use when a customer pays a self-order online.", domain=[('is_online_payment', '=', True)], store=True, readonly=False)
 

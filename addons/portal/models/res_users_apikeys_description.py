@@ -3,10 +3,10 @@
 
 from odoo import models, _
 from odoo.exceptions import AccessError
+from odoo.addons import base
 
 
-class ResUsersApikeysDescription(models.TransientModel):
-    _inherit = ['res.users.apikeys.description']
+class ResUsersApikeysDescription(base.ResUsersApikeysDescription):
 
     def check_access_make_key(self):
         try:

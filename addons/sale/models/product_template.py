@@ -7,10 +7,10 @@ from odoo.exceptions import ValidationError
 from odoo.tools import float_round, format_list
 
 from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
+from odoo.addons import account
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(account.ProductTemplate):
     _check_company_auto = True
 
     service_type = fields.Selection(

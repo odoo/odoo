@@ -2,11 +2,11 @@
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
+from odoo.addons import account, account_debit_note
 
 
-class AccountJournal(models.Model):
+class AccountJournal(account.AccountJournal, account_debit_note.AccountJournal):
 
-    _inherit = ["account.journal"]
 
     l10n_latam_use_documents = fields.Boolean(
         'Use Documents?', help="If active: will be using for legal invoicing (invoices, debit/credit notes)."

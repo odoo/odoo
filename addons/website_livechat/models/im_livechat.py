@@ -3,11 +3,11 @@
 
 from odoo import api, models, fields
 from odoo.tools.translate import html_translate
+from odoo.addons import im_livechat, website
 
 
-class Im_LivechatChannel(models.Model):
+class Im_LivechatChannel(im_livechat.Im_LivechatChannel, website.WebsitePublishedMixin):
 
-    _inherit = ['im_livechat.channel', 'website.published.mixin']
 
     def _compute_website_url(self):
         super()._compute_website_url()

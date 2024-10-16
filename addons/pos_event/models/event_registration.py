@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api
+from odoo.addons import event, point_of_sale
 
 
-class EventRegistration(models.Model):
-    _inherit = ['event.registration', 'pos.load.mixin']
+class EventRegistration(event.EventRegistration, point_of_sale.PosLoadMixin):
 
     pos_order_id = fields.Many2one(related='pos_order_line_id.order_id', string='PoS Order')
     pos_order_line_id = fields.Many2one('pos.order.line', string='PoS Order Line', ondelete='cascade', copy=False)

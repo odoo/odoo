@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import hr_work_entry, hr_contract
 
 
-class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+class HrEmployee(hr_work_entry.HrEmployee, hr_contract.HrEmployee):
 
     def generate_work_entries(self, date_start, date_stop, force=False):
         date_start = fields.Date.to_date(date_start)

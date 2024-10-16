@@ -2,10 +2,10 @@
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import l10n_in_stock
 
 
-class StockPicking(models.Model):
-    _inherit = ["stock.picking"]
+class StockPicking(l10n_in_stock.StockPicking):
 
     l10n_in_ewaybill_id = fields.One2many('l10n.in.ewaybill', 'picking_id', string='Ewaybill')
 

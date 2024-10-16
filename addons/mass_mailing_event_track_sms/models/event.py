@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import website_event_track
 
 
-class EventEvent(models.Model):
-    _inherit = ["event.event"]
+class EventEvent(website_event_track.EventEvent):
 
     def action_mass_mailing_track_speakers(self):
         # Minimal override: set form view being the one mixing sms and mail (not prioritized one)

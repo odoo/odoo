@@ -4,12 +4,12 @@
 import logging
 from markupsafe import Markup
 from odoo import _, api, fields, models
+from odoo.addons import l10n_it_edi
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_it_edi.AccountMove):
 
     l10n_it_amount_vat_signed = fields.Monetary(string='VAT', compute='_compute_amount_extended', currency_field='company_currency_id')
     l10n_it_amount_pension_fund_signed = fields.Monetary(string='Pension Fund', compute='_compute_amount_extended', currency_field='company_currency_id')

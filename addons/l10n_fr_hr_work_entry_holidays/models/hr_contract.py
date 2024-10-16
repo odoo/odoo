@@ -6,10 +6,10 @@ import pytz
 
 from odoo import models
 from odoo.addons.resource.models.utils import datetime_to_string
+from odoo.addons import hr_work_entry_holidays
 
 
-class HrContract(models.Model):
-    _inherit = ['hr.contract']
+class HrContract(hr_work_entry_holidays.HrContract):
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
         # Add the work entries difference for french payroll

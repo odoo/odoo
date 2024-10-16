@@ -5,10 +5,10 @@ from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from . import membership
+from odoo.addons import account
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account.ResPartner):
 
     associate_member = fields.Many2one('res.partner', string='Associate Member',
         help="A member with whom you want to associate your membership."

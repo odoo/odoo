@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import mail
 
 
-class FleetVehicleLogServices(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+class FleetVehicleLogServices(models.Model, mail.MailThread, mail.MailActivityMixin):
     _rec_name = 'service_type_id'
     _description = 'Services for vehicles'
 

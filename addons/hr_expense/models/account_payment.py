@@ -3,10 +3,10 @@
 from odoo import models, fields, _
 from odoo.api import ondelete
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountPayment(models.Model):
-    _inherit = ["account.payment"]
+class AccountPayment(account.AccountPayment):
 
     expense_sheet_id = fields.Many2one(related='move_id.expense_sheet_id')
 

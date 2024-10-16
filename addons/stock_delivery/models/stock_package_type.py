@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import stock
 
 
-class StockPackageType(models.Model):
-    _inherit = ['stock.package.type']
+class StockPackageType(stock.StockPackageType):
 
     shipper_package_code = fields.Char('Carrier Code')
     package_carrier_type = fields.Selection([('none', 'No carrier integration')], string='Carrier', default='none')

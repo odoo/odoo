@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import web
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(web.ResCompany):
 
     resource_calendar_ids = fields.One2many(
         'resource.calendar', 'company_id', 'Working Hours')

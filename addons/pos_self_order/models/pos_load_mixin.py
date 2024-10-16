@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, api
+from odoo.addons import point_of_sale
 
 
-class PosLoadMixin(models.AbstractModel):
-    _inherit = ["pos.load.mixin"]
+class PosLoadMixin(point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_self_data_domain(self, data):

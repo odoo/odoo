@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
+class AccountJournal(account.AccountJournal):
 
-    _inherit = ['account.journal']
 
     invoice_reference_model = fields.Selection(selection_add=[
         ('fi', 'Finnish Standard Reference'),

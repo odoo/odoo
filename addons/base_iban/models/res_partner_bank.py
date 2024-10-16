@@ -5,6 +5,7 @@ import re
 from odoo import api, models
 from odoo.exceptions import UserError, ValidationError
 from odoo. tools import LazyTranslate
+from odoo.addons import account
 
 _lt = LazyTranslate(__name__)  # TODO pass env to functions and remove _lt
 
@@ -48,8 +49,7 @@ def validate_iban(iban):
         raise ValidationError(_lt("This IBAN does not pass the validation check, please verify it."))
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ["res.partner.bank"]
+class ResPartnerBank(account.ResPartnerBank):
 
     @api.model
     def _get_supported_account_types(self):

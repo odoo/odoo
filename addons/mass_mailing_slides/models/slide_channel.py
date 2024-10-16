@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
+from odoo.addons import website_slides
 
 
-class SlideChannel(models.Model):
-    _inherit = ["slide.channel"]
+class SlideChannel(website_slides.SlideChannel):
 
     def action_mass_mailing_attendees(self):
         domain = repr([('slide_channel_ids', 'in', self.ids)])

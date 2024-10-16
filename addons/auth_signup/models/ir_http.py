@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.http import request
+from odoo.addons import base_setup, mail, web
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(base_setup.IrHttp, mail.IrHttp, web.IrHttp):
 
     @classmethod
     def _pre_dispatch(cls, rule, args):

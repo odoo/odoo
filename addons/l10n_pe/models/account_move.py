@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
+from odoo.addons import account_debit_note, l10n_latam_invoice_document, account
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(l10n_latam_invoice_document.AccountMove, account_debit_note.AccountMove, account.AccountMove):
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()

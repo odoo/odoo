@@ -8,12 +8,12 @@ from ast import literal_eval
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import float_round
+from odoo.addons import sales_team
 
 _logger = logging.getLogger(__name__)
 
 
-class CrmTeamMember(models.Model):
-    _inherit = ['crm.team.member']
+class CrmTeamMember(sales_team.CrmTeamMember):
 
     # assignment
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")

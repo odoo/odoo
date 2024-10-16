@@ -1,8 +1,8 @@
 from odoo import api, fields, models
+from odoo.addons import base
 
 
-class ResCurrencyRate(models.Model):
-    _inherit = ["res.currency.rate"]
+class ResCurrencyRate(base.ResCurrencyRate):
 
     @api.model
     def _get_rate_for_spreadsheet(self, currency_from_code, currency_to_code, date=None, company_id=None):

@@ -6,12 +6,12 @@ from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_custom.controllers.main import CustomController
+from odoo.addons import payment
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = ['payment.transaction']
+class PaymentTransaction(payment.PaymentTransaction):
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return custom-specific rendering values.

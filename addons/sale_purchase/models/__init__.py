@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import product_template
-from . import sale_order
-from . import sale_order_line
-from . import purchase_order
+from .product_template import ProductTemplate
+from .sale_order import SaleOrder
+from .sale_order_line import SaleOrderLine
+from .purchase_order import PurchaseOrder, PurchaseOrderLine

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import product, stock
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(product.ResPartner, stock.ResPartner):
 
     property_stock_subcontractor = fields.Many2one(
         'stock.location', string="Subcontractor Location", company_dependent=True,

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import pos_sale
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(pos_sale.SaleOrderLine):
 
     def _get_sale_order_fields(self):
         field_names = super()._get_sale_order_fields()

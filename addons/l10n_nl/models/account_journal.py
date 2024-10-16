@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+class AccountJournal(account.AccountJournal):
 
     @api.model
     def _prepare_liquidity_account_vals(self, company, code, vals):

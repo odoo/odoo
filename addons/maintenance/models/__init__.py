@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from . import maintenance
-from . import res_config_settings
+from .maintenance import (
+    MaintenanceEquipment, MaintenanceEquipmentCategory, MaintenanceMixin,
+    MaintenanceRequest, MaintenanceStage, MaintenanceTeam,
+)
+from .res_config_settings import ResConfigSettings

@@ -2,10 +2,10 @@
 
 from odoo import api, models, tools
 from odoo.http import request
+from odoo.addons import web, mail
 
 
-class IrUiMenu(models.Model):
-    _inherit = ['ir.ui.menu']
+class IrUiMenu(web.IrUiMenu, mail.IrUiMenu):
 
     @api.model
     @tools.ormcache_context('self._uid', keys=('lang', 'force_action',))

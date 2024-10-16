@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import account, base_vat, web
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(account.ResConfigSettings, web.ResConfigSettings, base_vat.ResConfigSettings):
 
     l10n_hu_tax_regime = fields.Selection(
         related='company_id.l10n_hu_tax_regime',

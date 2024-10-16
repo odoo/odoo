@@ -7,10 +7,10 @@ from odoo.tools import float_is_zero, float_repr, float_round, float_compare
 from odoo.exceptions import ValidationError
 from collections import defaultdict
 from datetime import datetime
+from odoo.addons import account, stock
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(stock.ProductTemplate, account.ProductTemplate):
 
     cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
@@ -123,8 +123,7 @@ will update the cost of every lot/serial number in stock."),
         return accounts
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(stock.ProductProduct, account.ProductProduct):
 
     value_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
     quantity_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
@@ -869,8 +868,7 @@ will update the cost of every lot/serial number in stock."),
         return valuation / qty_to_invoice
 
 
-class ProductCategory(models.Model):
-    _inherit = ['product.category']
+class ProductCategory(stock.ProductCategory, account.ProductCategory):
 
     property_valuation = fields.Selection([
         ('manual_periodic', 'Manual'),

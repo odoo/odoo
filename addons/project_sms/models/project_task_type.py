@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import project
 
 
-class ProjectTaskType(models.Model):
-    _inherit = ["project.task.type"]
+class ProjectTaskType(project.ProjectTaskType):
 
     sms_template_id = fields.Many2one('sms.template', string="SMS Template",
         domain=[('model', '=', 'project.task')],

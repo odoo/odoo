@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import web, portal, bus
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(bus.IrHttp, web.IrHttp, portal.IrHttp):
 
     def session_info(self):
         """

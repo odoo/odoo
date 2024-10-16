@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models
 from odoo.tools.misc import str2bool
+from odoo.addons import sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale.SaleOrder):
 
     pending_email_template_id = fields.Many2one(
         string="Pending Email Template",

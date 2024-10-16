@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons import base
 
 
 class Test_UninstallModel(models.Model):
@@ -20,8 +21,7 @@ class Test_UninstallModel(models.Model):
     ]
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(base.ResUsers):
 
     _sql_constraints = [
         ('test_uninstall_res_user_unique_constraint', 'unique (password)', 'Test uninstall unique constraint'),

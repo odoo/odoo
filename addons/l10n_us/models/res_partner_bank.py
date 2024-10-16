@@ -4,10 +4,10 @@
 import re
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
+from odoo.addons import base
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ['res.partner.bank']
+class ResPartnerBank(base.ResPartnerBank):
 
     aba_routing = fields.Char(string="ABA/Routing", help="American Bankers Association Routing Number")
 

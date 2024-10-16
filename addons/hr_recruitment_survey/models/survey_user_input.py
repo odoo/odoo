@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import survey
 
 
-class SurveyUser_Input(models.Model):
-    _inherit = ["survey.user_input"]
+class SurveyUser_Input(survey.SurveyUser_Input):
 
     applicant_id = fields.Many2one('hr.applicant', string='Applicant', index='btree_not_null')
 

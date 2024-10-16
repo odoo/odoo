@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import point_of_sale
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(point_of_sale.ProductProduct):
 
     def _load_pos_data(self, data):
         res = super()._load_pos_data(data)

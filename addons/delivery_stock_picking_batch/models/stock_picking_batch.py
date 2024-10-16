@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import stock_picking_batch
 
 
-class StockPickingBatch(models.Model):
-    _inherit = ["stock.picking.batch"]
+class StockPickingBatch(stock_picking_batch.StockPickingBatch):
 
     def _is_picking_auto_mergeable(self, picking):
         """ Verifies if a picking can be safely inserted into the batch without violating auto_batch_constrains.

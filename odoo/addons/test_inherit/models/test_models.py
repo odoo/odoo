@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
+from odoo.addons import web, test_new_api, test_inherit
 
 
 # We inherit from the parent model, and we add some fields in the child model
@@ -13,8 +14,7 @@ class Test_Inherit_Daughter(models.Model):
 
 
 # pylint: disable=E0102
-class Test_Inherit_Daughter(models.Model):  # noqa: F811
-    _inherit = ['test_inherit_daughter']
+class Test_Inherit_Daughter(models.Model, test_inherit.Test_Inherit_Daughter):  # noqa: F811
 
     # simply redeclare the field without adding any option
     template_id = fields.Many2one()
@@ -23,8 +23,7 @@ class Test_Inherit_Daughter(models.Model):  # noqa: F811
     name = fields.Char(default='Baz')
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(web.ResPartner):
 
     # define a one2many field based on the inherited field partner_id (from test.inherit.mother, with template_id)
     daughter_ids = fields.One2many('test_inherit_daughter', 'partner_id', string="My daughter_ids")
@@ -43,8 +42,7 @@ class Test_Inherit_Property(models.Model):
 
 
 # pylint: disable=E0102
-class Test_Inherit_Property(models.Model):  # noqa: F811
-    _inherit = ['test_inherit_property']
+class Test_Inherit_Property(models.Model, test_inherit.Test_Inherit_Property):  # noqa: F811
 
     # override property_foo with a plain normal field
     property_foo = fields.Integer(company_dependent=False)
@@ -69,8 +67,7 @@ class Test_Inherit_Parent(models.AbstractModel):
         return 'P1'
 
 
-class Test_Inherit_Child(models.AbstractModel):
-    _inherit = ['test_inherit_parent']
+class Test_Inherit_Child(models.AbstractModel, test_inherit.Test_Inherit_Parent):
     _description = 'Test Inherit Child'
 
     bar = fields.Integer()
@@ -80,8 +77,7 @@ class Test_Inherit_Child(models.AbstractModel):
 
 
 # pylint: disable=E0102
-class Test_Inherit_Parent(models.AbstractModel):  # noqa: F811
-    _inherit = ['test_inherit_parent']
+class Test_Inherit_Parent(models.AbstractModel, test_inherit.Test_Inherit_Parent):  # noqa: F811
 
     foo = fields.Integer()
 
@@ -100,8 +96,7 @@ class Test_Inherit_Parent(models.AbstractModel):  # noqa: F811
 #
 
 
-class Test_New_ApiSelection(models.Model):
-    _inherit = ['test_new_api.selection']
+class Test_New_ApiSelection(test_new_api.Test_New_ApiSelection):
 
     state = fields.Selection(selection_add=[('bar', 'Bar'), ('baz', 'Baz')])
     other = fields.Selection('_other_values')
@@ -121,8 +116,7 @@ class Test_Inherit_Mixin(models.AbstractModel):
     published = fields.Boolean()
 
 
-class Test_New_ApiMessage(models.Model):
-    _inherit = ['test_new_api.message']
+class Test_New_ApiMessage(test_new_api.Test_New_ApiMessage):
 
     body = fields.Text(translate=True)  # Test conversion of char (with trigram indexed) to jsonb postgreSQL type
 

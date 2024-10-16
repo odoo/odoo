@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import mail
 
 
-class MailComposeMessage(models.TransientModel):
-    _inherit = ['mail.compose.message']
+class MailComposeMessage(mail.MailComposeMessage):
 
     def _action_send_mail(self, auto_commit=False):
         if self.model == 'repair.order':

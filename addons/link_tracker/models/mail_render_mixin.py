@@ -11,10 +11,10 @@ from werkzeug import urls
 from odoo import api, models, tools
 from odoo.addons.link_tracker.tools.html import find_links_with_urls_and_labels
 from odoo.tools.mail import is_html_empty, URL_SKIP_PROTOCOL_REGEX, TEXT_URL_REGEX
+from odoo.addons import mail
 
 
-class MailRenderMixin(models.AbstractModel):
-    _inherit = ["mail.render.mixin"]
+class MailRenderMixin(mail.MailRenderMixin):
 
     # ------------------------------------------------------------
     # TOOLS

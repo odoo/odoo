@@ -1,1 +1,1 @@
-from . import event_sale_report
+from .event_sale_report import EventSaleReport

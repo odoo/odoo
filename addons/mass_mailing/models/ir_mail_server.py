@@ -3,10 +3,10 @@
 
 from odoo import _, fields, models
 from odoo.tools.misc import format_date
+from odoo.addons import mail
 
 
-class IrMail_Server(models.Model):
-    _inherit = ['ir.mail_server']
+class IrMail_Server(mail.IrMail_Server):
 
     active_mailing_ids = fields.One2many(
         comodel_name='mailing.mailing',

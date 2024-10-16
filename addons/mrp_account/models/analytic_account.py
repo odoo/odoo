@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import account, stock_account
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = ['account.analytic.account']
+class AccountAnalyticAccount(stock_account.AccountAnalyticAccount):
     _description = 'Analytic Account'
 
     production_ids = fields.Many2many('mrp.production')
@@ -73,14 +73,12 @@ class AccountAnalyticAccount(models.Model):
         return result
 
 
-class AccountAnalyticLine(models.Model):
-    _inherit = ['account.analytic.line']
+class AccountAnalyticLine(account.AccountAnalyticLine):
 
     category = fields.Selection(selection_add=[('manufacturing_order', 'Manufacturing Order')])
 
 
-class AccountAnalyticApplicability(models.Model):
-    _inherit = ['account.analytic.applicability']
+class AccountAnalyticApplicability(account.AccountAnalyticApplicability):
     _description = "Analytic Plan's Applicabilities"
 
     business_domain = fields.Selection(

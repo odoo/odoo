@@ -1,10 +1,10 @@
 from markupsafe import Markup
 
 from odoo import _, models
+from odoo.addons import account_edi_ubl_cii
 
 
-class SaleEdiCommon(models.AbstractModel):
-    _inherit = ['account.edi.common']
+class SaleEdiCommon(models.AbstractModel, account_edi_ubl_cii.AccountEdiCommon):
     _description = "Common functions for EDI orders"
 
     # -------------------------------------------------------------------------

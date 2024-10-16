@@ -1,1 +1,1 @@
-from . import product_template
+from .product_template import ProductTemplate, ProductTemplateAttributeValue

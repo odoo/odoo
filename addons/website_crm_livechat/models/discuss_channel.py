@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import website_livechat
 
 
-class DiscussChannel(models.Model):
-    _inherit = ['discuss.channel']
+class DiscussChannel(website_livechat.DiscussChannel):
 
     def _convert_visitor_to_lead(self, partner, key):
         """ When website is installed, we can link the created lead from /lead command

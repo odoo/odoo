@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons import mail
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(mail.ResCompany):
 
     lunch_minimum_threshold = fields.Float()
     lunch_notify_message = fields.Html(

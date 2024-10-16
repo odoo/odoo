@@ -10,10 +10,10 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons import calendar, google_calendar
 
 
-class CalendarEvent(models.Model):
-    _inherit = ['calendar.event', 'google.calendar.sync']
+class CalendarEvent(calendar.CalendarEvent, google_calendar.GoogleCalendarSync):
 
     MEET_ROUTE = 'meet.google.com'
 

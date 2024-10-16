@@ -2,9 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
-from . import report
-from . import wizard
+from .models import (
+    AccountAnalyticApplicability, AccountAnalyticLine, HrEmployee, IrHttp,
+    IrUiMenu, ProjectCollaborator, ProjectProject, ProjectTask, ProjectUpdate, ResCompany,
+    ResConfigSettings, UomUom,
+)
+from .report import ReportProjectTaskUser, TimesheetsAnalysisReport
+from .wizard import HrEmployeeDeleteWizard
 
 from odoo import fields
 

@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import fleet
 
 
-class FleetVehicle(models.Model):
-    _inherit = ['fleet.vehicle']
+class FleetVehicle(fleet.FleetVehicle):
 
     mobility_card = fields.Char(compute='_compute_mobility_card', store=True)
     driver_employee_id = fields.Many2one(

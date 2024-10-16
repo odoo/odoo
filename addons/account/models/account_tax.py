@@ -14,6 +14,7 @@ import ast
 import copy
 import math
 import re
+from odoo.addons import portal
 
 TYPE_TAX_USE = [
     ('sale', 'Sales'),
@@ -83,8 +84,7 @@ class AccountTaxGroup(models.Model):
         ], limit=1))
 
 
-class AccountTax(models.Model):
-    _inherit = ['mail.thread']
+class AccountTax(models.Model, portal.MailThread):
     _description = 'Tax'
     _order = 'sequence,id'
     _check_company_auto = True

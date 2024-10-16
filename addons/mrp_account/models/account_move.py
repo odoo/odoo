@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 
 from collections import defaultdict
+from odoo.addons import stock_account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(stock_account.AccountMove):
 
     wip_production_ids = fields.Many2many(
         'mrp.production', string="Relevant WIP MOs",
@@ -39,8 +39,7 @@ class AccountMove(models.Model):
         return action
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ["account.move.line"]
+class AccountMoveLine(stock_account.AccountMoveLine):
 
     def _get_invoiced_qty_per_product(self):
         # Replace the kit-type products with their components

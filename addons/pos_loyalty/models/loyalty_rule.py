@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons import loyalty, point_of_sale
 
 
-class LoyaltyRule(models.Model):
-    _inherit = ['loyalty.rule', 'pos.load.mixin']
+class LoyaltyRule(loyalty.LoyaltyRule, point_of_sale.PosLoadMixin):
 
     valid_product_ids = fields.Many2many(
         'product.product', "Valid Products", compute='_compute_valid_product_ids',

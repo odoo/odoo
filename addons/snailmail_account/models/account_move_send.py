@@ -1,8 +1,8 @@
 from odoo import api, models, _
+from odoo.addons import account
 
 
-class AccountMoveSend(models.AbstractModel):
-    _inherit = ['account.move.send']
+class AccountMoveSend(account.AccountMoveSend):
 
     # -------------------------------------------------------------------------
     # ALERTS

@@ -2,11 +2,11 @@
 from odoo import _, models
 from odoo.exceptions import UserError
 import re
+from odoo.addons import l10n_latam_invoice_document
 
 
-class L10n_LatamDocumentType(models.Model):
+class L10n_LatamDocumentType(l10n_latam_invoice_document.L10n_LatamDocumentType):
 
-    _inherit = ['l10n_latam.document.type']
 
     def _format_document_number(self, document_number):
         """ format and validate the document_number"""

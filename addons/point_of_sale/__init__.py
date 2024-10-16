@@ -1,10 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import (
+    AccountBankStatementLine, AccountCashRounding, AccountFiscalPosition,
+    AccountFiscalPositionTax, AccountJournal, AccountMove, AccountMoveLine, AccountPayment,
+    AccountTax, AccountTaxGroup, BarcodeRule, DecimalPrecision, DigestDigest, IrBinary, IrUiView,
+    MailComposeMessage, PosBill, PosBusMixin, PosCategory, PosConfig, PosLoadMixin, PosNote,
+    PosOrder, PosOrderLine, PosPackOperationLot, PosPayment, PosPaymentMethod, PosPrinter,
+    PosSession, ProcurementGroup, ProductAttribute, ProductAttributeCustomValue, ProductCategory,
+    ProductCombo, ProductComboItem, ProductPackaging, ProductPricelist, ProductPricelistItem,
+    ProductProduct, ProductTemplate, ProductTemplateAttributeLine, ProductTemplateAttributeValue,
+    ReportPoint_Of_SaleReport_Saledetails, ResCompany, ResConfigSettings, ResCountry,
+    ResCountryState, ResCurrency, ResLang, ResPartner, ResUsers, StockMove, StockPicking,
+    StockPickingType, StockRule, StockWarehouse, UomCategory, UomUom,
+)
 from . import controllers
-from . import report
-from . import wizard
+from .report import ReportPoint_Of_SaleReport_Invoice, ReportPosOrder
+from .wizard import (
+    PosCloseSessionWizard, PosDailySalesReportsWizard, PosDetailsWizard,
+    PosMakePayment,
+)
 
 
 def uninstall_hook(env):

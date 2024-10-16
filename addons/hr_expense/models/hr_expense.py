@@ -7,10 +7,10 @@ import werkzeug
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_split, float_repr, float_round, is_html_empty
+from odoo.addons import mail, analytic
 
 
-class HrExpense(models.Model):
-    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin', 'analytic.mixin']
+class HrExpense(models.Model, mail.MailThreadMainAttachment, mail.MailActivityMixin, analytic.AnalyticMixin):
     _description = "Expense"
     _order = "date desc, id desc"
     _check_company_auto = True

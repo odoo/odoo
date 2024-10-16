@@ -4,10 +4,10 @@
 from odoo import models, _
 
 import threading
+from odoo.addons import stock
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(stock.StockPicking):
 
     def _pre_action_done_hook(self):
         res = super()._pre_action_done_hook()

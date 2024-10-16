@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import SQL
+from odoo.addons import sales_team
 
 
-class CrmTeam(models.Model):
-    _inherit = ['crm.team']
+class CrmTeam(sales_team.CrmTeam):
 
     invoiced = fields.Float(
         compute='_compute_invoiced',

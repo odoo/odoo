@@ -3,10 +3,10 @@
 
 
 from odoo import models
+from odoo.addons import account_edi
 
 
-class AccountEdiDocument(models.Model):
-    _inherit = ['account.edi.document']
+class AccountEdiDocument(account_edi.AccountEdiDocument):
 
     def _prepare_jobs(self):
         """

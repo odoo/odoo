@@ -12,12 +12,12 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 import logging
+from odoo.addons import portal, mail
 _logger = logging.getLogger(__name__)
 
 
-class HrContract(models.Model):
+class HrContract(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin):
     _description = 'Contract'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
     name = fields.Char('Contract Reference', required=True)

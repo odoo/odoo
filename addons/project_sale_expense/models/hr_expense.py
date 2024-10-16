@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import project_hr_expense, sale_expense
 
 
-class HrExpense(models.Model):
-    _inherit = ["hr.expense"]
+class HrExpense(sale_expense.HrExpense, project_hr_expense.HrExpense):
 
     @api.depends('sale_order_id')
     def _compute_analytic_distribution(self):

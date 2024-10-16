@@ -28,6 +28,7 @@ from odoo.tools import (
 from odoo.tools.mail import html_keep_url
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons import utm, portal, product, mail
 
 _logger = logging.getLogger(__name__)
 
@@ -46,8 +47,7 @@ SALE_ORDER_STATE = [
 ]
 
 
-class SaleOrder(models.Model):
-    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+class SaleOrder(models.Model, portal.PortalMixin, product.ProductCatalogMixin, mail.MailThread, mail.MailActivityMixin, utm.UtmMixin):
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True

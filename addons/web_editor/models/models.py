@@ -3,10 +3,10 @@
 from hashlib import sha256
 
 from odoo import api, models
+from odoo.addons import web
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(web.Base):
 
     @api.model
     def _get_view_field_attributes(self):

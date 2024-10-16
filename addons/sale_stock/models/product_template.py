@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import stock_account, sale
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(sale.ProductTemplate, stock_account.ProductTemplate):
 
     @api.depends('type')
     def _compute_expense_policy(self):

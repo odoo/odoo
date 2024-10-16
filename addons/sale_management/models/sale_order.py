@@ -6,10 +6,10 @@ from datetime import timedelta
 from odoo import SUPERUSER_ID, api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools import is_html_empty
+from odoo.addons import sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale.SaleOrder):
 
     sale_order_template_id = fields.Many2one(
         comodel_name='sale.order.template',

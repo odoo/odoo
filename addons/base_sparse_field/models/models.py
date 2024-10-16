@@ -4,17 +4,16 @@ from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from odoo.addons import base
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(base.Base):
 
     def _valid_field_parameter(self, field, name):
         return name == 'sparse' or super()._valid_field_parameter(field, name)
 
 
-class IrModelFields(models.Model):
-    _inherit = ['ir.model.fields']
+class IrModelFields(base.IrModelFields):
 
     ttype = fields.Selection(selection_add=[
         ('serialized', 'serialized'),

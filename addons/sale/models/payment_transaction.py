@@ -5,10 +5,10 @@ from dateutil import relativedelta
 
 from odoo import _, api, Command, fields, models, SUPERUSER_ID
 from odoo.tools import str2bool
+from odoo.addons import account_payment
 
 
-class PaymentTransaction(models.Model):
-    _inherit = ['payment.transaction']
+class PaymentTransaction(account_payment.PaymentTransaction):
 
     sale_order_ids = fields.Many2many('sale.order', 'sale_order_transaction_rel', 'transaction_id', 'sale_order_id',
                                       string='Sales Orders', copy=False, readonly=True)

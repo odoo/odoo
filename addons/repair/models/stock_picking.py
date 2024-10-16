@@ -6,10 +6,10 @@ import time
 from odoo import _, api, fields, models
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import clean_context
+from odoo.addons import stock
 
 
-class StockPickingType(models.Model):
-    _inherit = ['stock.picking.type']
+class StockPickingType(stock.StockPickingType):
 
     code = fields.Selection(selection_add=[
         ('repair_operation', 'Repair')
@@ -193,8 +193,7 @@ class StockPickingType(models.Model):
         return self.env['ir.actions.actions']._for_xml_id('repair.action_repair_picking_type_kanban')
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(stock.StockPicking):
 
     is_repairable = fields.Boolean(compute='_compute_is_repairable')
     repair_ids = fields.One2many('repair.order', 'picking_id')

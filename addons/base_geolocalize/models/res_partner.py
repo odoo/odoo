@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models, _
 from odoo.tools import config
+from odoo.addons import web
 
 
-class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+class ResPartner(web.ResPartner):
 
     date_localization = fields.Date(string='Geolocation Date')
 

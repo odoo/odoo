@@ -1,8 +1,8 @@
 from odoo import models, fields
+from odoo.addons import l10n_ar
 
 
-class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+class ResPartner(l10n_ar.ResPartner):
 
     l10n_ar_partner_tax_ids = fields.One2many(
         'l10n_ar.partner.tax',

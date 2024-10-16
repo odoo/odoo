@@ -4,10 +4,10 @@ from odoo import _, models
 from odoo.exceptions import ValidationError
 from odoo.osv.expression import OR
 from odoo.tools import format_list
+from odoo.addons import stock_account
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(stock_account.StockMove):
 
     def _get_analytic_distribution(self):
         if not self.picking_type_id.analytic_costs:

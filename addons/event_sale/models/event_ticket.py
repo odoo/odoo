@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import event_product
 
 
-class EventEventTicket(models.Model):
-    _inherit = ['event.event.ticket']
+class EventEventTicket(event_product.EventEventTicket):
     _order = "event_id, sequence, price, name, id"
 
     def _get_ticket_multiline_description(self):

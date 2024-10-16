@@ -1,1 +1,1 @@
-from . import models
+from .models import AccountEdiXmlPint_Jp, ResPartner

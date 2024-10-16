@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import point_of_sale
 
 
-class PosOrder(models.Model):
-    _inherit = ["pos.order"]
+class PosOrder(point_of_sale.PosOrder):
 
     def _prepare_invoice_vals(self):
         move_vals = super()._prepare_invoice_vals()

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import stdnum
 from odoo import api, fields, models
+from odoo.addons import account, l10n_latam_base, base_vat, contacts
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(contacts.ResPartner, base_vat.ResPartner, l10n_latam_base.ResPartner, account.ResPartner):
 
     l10n_cl_sii_taxpayer_type = fields.Selection(
         [

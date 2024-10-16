@@ -1,1 +1,1 @@
-from . import bill_to_po_wizard
+from .bill_to_po_wizard import BillToPoWizard

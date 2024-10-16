@@ -4,12 +4,12 @@ import logging
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import account_edi_proxy_client
 
 _logger = logging.getLogger(__name__)
 
 
-class Account_Edi_Proxy_ClientUser(models.Model):
-    _inherit = ['account_edi_proxy_client.user']
+class Account_Edi_Proxy_ClientUser(account_edi_proxy_client.Account_Edi_Proxy_ClientUser):
 
     proxy_type = fields.Selection(selection_add=[('l10n_it_edi', 'Italian EDI')], ondelete={'l10n_it_edi': 'cascade'})
 

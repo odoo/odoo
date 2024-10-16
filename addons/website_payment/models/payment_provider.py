@@ -7,10 +7,10 @@ from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
+from odoo.addons import account_payment
 
 
-class PaymentProvider(models.Model):
-    _inherit = ["payment.provider"]
+class PaymentProvider(account_payment.PaymentProvider):
 
     website_id = fields.Many2one(
         "website",

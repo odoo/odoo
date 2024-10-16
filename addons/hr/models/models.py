@@ -3,10 +3,10 @@
 
 from odoo import models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
+from odoo.addons import phone_validation, web
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(phone_validation.Base, web.Base):
 
     def _alias_get_error(self, message, message_dict, alias):
         if alias.alias_contact == 'employees':

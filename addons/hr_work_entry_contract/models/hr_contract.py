@@ -15,10 +15,10 @@ from odoo.tools import ormcache, format_list
 from odoo.exceptions import UserError
 
 from .hr_work_intervals import WorkIntervals
+from odoo.addons import hr_contract
 
 
-class HrContract(models.Model):
-    _inherit = ['hr.contract']
+class HrContract(hr_contract.HrContract):
     _description = 'Employee Contract'
 
     date_generated_from = fields.Datetime(string='Generated From', readonly=True, required=True,

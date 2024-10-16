@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import models
+from .models import (
+    AccountChartTemplate, AccountMove, L10n_PlL10n_Pl_Tax_Office, ProductTemplate,
+    ResCompany, ResConfigSettings, ResPartner,
+)
 
 def _preserve_tag_on_taxes(env):
     from odoo.addons.account.models.chart_template import preserve_existing_tags_on_taxes

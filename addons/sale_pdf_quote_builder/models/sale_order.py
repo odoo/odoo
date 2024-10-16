@@ -3,10 +3,10 @@
 import json
 
 from odoo import _, api, fields, models
+from odoo.addons import sale_management
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale_management.SaleOrder):
 
     available_product_document_ids = fields.Many2many(
         string="Available Product Documents",

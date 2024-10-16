@@ -5,10 +5,10 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models
 from odoo.tools import format_amount
+from odoo.addons import account_payment
 
 
-class PaymentLinkWizard(models.TransientModel):
-    _inherit = ['payment.link.wizard']
+class PaymentLinkWizard(account_payment.PaymentLinkWizard):
     _description = 'Generate Sales Payment Link'
 
     amount_paid = fields.Monetary(string="Already Paid", readonly=True)

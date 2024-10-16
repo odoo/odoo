@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import hr
 
 
-class HrEmployeePublic(models.Model):
-    _inherit = ['hr.employee.public']
+class HrEmployeePublic(hr.HrEmployeePublic):
 
     # These are required for manual attendance
     attendance_state = fields.Selection(related='employee_id.attendance_state', readonly=True,

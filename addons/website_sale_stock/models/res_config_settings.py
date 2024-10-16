@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import sale_stock, website_sale
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(website_sale.ResConfigSettings, sale_stock.ResConfigSettings):
 
     allow_out_of_stock_order = fields.Boolean(
         string='Continue selling when out-of-stock',

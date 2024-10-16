@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import crm
 
 
-class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+class CrmLead(crm.CrmLead):
     _mailing_enabled = True

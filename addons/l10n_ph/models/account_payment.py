@@ -2,10 +2,10 @@
 
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountPayment(models.Model):
-    _inherit = ["account.payment"]
+class AccountPayment(account.AccountPayment):
 
     def action_open_l10n_ph_2307_wizard(self):
         self.ensure_one()

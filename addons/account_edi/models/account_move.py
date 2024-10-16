@@ -7,10 +7,10 @@ from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     edi_document_ids = fields.One2many(
         comodel_name='account.edi.document',

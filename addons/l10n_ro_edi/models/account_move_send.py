@@ -1,8 +1,8 @@
 from odoo import _, api, models
+from odoo.addons import account_edi_ubl_cii
 
 
-class AccountMoveSend(models.AbstractModel):
-    _inherit = ['account.move.send']
+class AccountMoveSend(account_edi_ubl_cii.AccountMoveSend):
 
     @api.model
     def _is_ro_edi_applicable(self, move):

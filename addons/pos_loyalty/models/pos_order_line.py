@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import point_of_sale
 
 
-class PosOrderLine(models.Model):
-    _inherit = ['pos.order.line']
+class PosOrderLine(point_of_sale.PosOrderLine):
 
     is_reward_line = fields.Boolean(
         help="Whether this line is part of a reward or not.")

@@ -3,6 +3,7 @@ from inspect import getmembers, ismodule, isclass, isfunction
 
 from odoo import api, models, fields
 from odoo.tools.misc import get_flag
+from odoo.addons import base
 
 
 def templ(env, code, name=None, country='', **kwargs):
@@ -21,8 +22,7 @@ template_class = isclass
 template_function = lambda f: isfunction(f) and hasattr(f, '_l10n_template') and f._l10n_template[1] == 'template_data'
 
 
-class IrModuleModule(models.Model):
-    _inherit = ["ir.module.module"]
+class IrModuleModule(base.IrModuleModule):
 
     account_templates = fields.Binary(compute='_compute_account_templates', exportable=False)
 

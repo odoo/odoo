@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
+from odoo.addons import web_tour, mail, contacts, digest
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(contacts.ResUsers, mail.ResUsers, web_tour.ResUsers, digest.ResUsers):
 
     @api.model
     def _get_activity_groups(self):

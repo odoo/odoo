@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import hr_recruitment
 
 
-class HrJob(models.Model):
-    _inherit = ["hr.job"]
+class HrJob(hr_recruitment.HrJob):
 
     survey_id = fields.Many2one(
         'survey.survey', "Interview Form",

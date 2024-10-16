@@ -4,10 +4,10 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.addons import sale_project
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(sale_project.AccountMove):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'timesheet_invoice_id', string='Timesheets', readonly=True, copy=False, export_string_translation=False)
     timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count', compute_sudo=True, export_string_translation=False)

@@ -3,10 +3,10 @@
 
 from odoo import _, fields, models, api
 from odoo.exceptions import UserError
+from odoo.addons import stock_delivery
 
 
-class DeliveryCarrier(models.Model):
-    _inherit = ['delivery.carrier']
+class DeliveryCarrier(stock_delivery.DeliveryCarrier):
 
     is_mondialrelay = fields.Boolean(compute='_compute_is_mondialrelay', search='_search_is_mondialrelay')
     mondialrelay_brand = fields.Char(string='Brand Code', default='BDTEST  ')

@@ -3,10 +3,10 @@
 from odoo import models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
+from odoo.addons import point_of_sale
 
 
-class PosConfig(models.Model):
-    _inherit = ['pos.config']
+class PosConfig(point_of_sale.PosConfig):
 
     def open_ui(self):
         for config in self:

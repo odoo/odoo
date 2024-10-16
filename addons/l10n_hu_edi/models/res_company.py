@@ -9,10 +9,10 @@ from lxml import etree
 from odoo import models, fields, _
 from odoo.exceptions import UserError
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConnection, L10nHuEdiConnectionError, XML_NAMESPACES
+from odoo.addons import account, base_vat, web
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(account.ResCompany, web.ResCompany, base_vat.ResCompany):
 
     l10n_hu_group_vat = fields.Char(
         related='partner_id.l10n_hu_group_vat',

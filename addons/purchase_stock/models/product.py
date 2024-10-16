@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons import purchase, stock_account
 
 
-class ProductCategory(models.Model):
-    _inherit = ["product.category"]
+class ProductCategory(stock_account.ProductCategory):
 
     property_account_creditor_price_difference_categ = fields.Many2one(
         'account.account', string="Price Difference Account",
@@ -14,8 +14,7 @@ class ProductCategory(models.Model):
         help="This account will be used to value price difference between purchase price and accounting cost.")
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(stock_account.ProductTemplate, purchase.ProductTemplate):
 
     property_account_creditor_price_difference = fields.Many2one(
         'account.account', string="Price Difference Account", company_dependent=True, ondelete='restrict',
@@ -32,8 +31,7 @@ class ProductTemplate(models.Model):
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(stock_account.ProductProduct, purchase.ProductProduct):
 
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines") # used to compute quantities
 
@@ -89,8 +87,7 @@ class ProductProduct(models.Model):
         return expression.OR(domains) if domains else []
 
 
-class ProductSupplierinfo(models.Model):
-    _inherit = ['product.supplierinfo']
+class ProductSupplierinfo(purchase.ProductSupplierinfo):
 
     last_purchase_date = fields.Date('Last Purchase', compute='_compute_last_purchase_date')
     show_set_supplier_button = fields.Boolean(

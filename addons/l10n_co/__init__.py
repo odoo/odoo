@@ -8,4 +8,4 @@
 #               Nhomar Hernandez (Vauxoo)
 #               Humberto Ochoa (Vauxoo)
 
-from . import models
+from .models import AccountChartTemplate, L10n_LatamIdentificationType, ResPartner

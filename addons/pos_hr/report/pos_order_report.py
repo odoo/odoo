@@ -3,10 +3,10 @@
 from functools import partial
 
 from odoo import models, fields
+from odoo.addons import point_of_sale
 
 
-class ReportPosOrder(models.Model):
-    _inherit = ["report.pos.order"]
+class ReportPosOrder(point_of_sale.ReportPosOrder):
     employee_id = fields.Many2one('hr.employee', string='Employee', readonly=True)
 
     def _select(self):

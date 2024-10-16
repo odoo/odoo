@@ -3,10 +3,10 @@
 
 from odoo import _, api, models
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ["account.journal"]
+class AccountJournal(account.AccountJournal):
 
     def _get_available_payment_method_lines(self, payment_type):
         lines = super()._get_available_payment_method_lines(payment_type)

@@ -1,1 +1,1 @@
-from . import account_move_send_batch_wizard
+from .account_move_send_batch_wizard import AccountMoveSendBatchWizard

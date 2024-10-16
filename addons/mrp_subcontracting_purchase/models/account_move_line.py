@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.tools import float_is_zero
+from odoo.addons import purchase_mrp
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(purchase_mrp.AccountMoveLine):
 
     def _get_price_unit_val_dif_and_relevant_qty(self):
         price_unit_val_dif, relevant_qty = super()._get_price_unit_val_dif_and_relevant_qty()

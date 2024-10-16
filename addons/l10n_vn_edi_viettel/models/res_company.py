@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(account.ResCompany):
 
     l10n_vn_edi_username = fields.Char(
         string='SInvoice Username',

@@ -4,10 +4,10 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv.expression import AND
+from odoo.addons import stock, stock_account
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(stock_account.StockPicking):
 
     purchase_id = fields.Many2one(
         'purchase.order', related='move_ids.purchase_line_id.order_id',
@@ -39,8 +39,7 @@ class StockPicking(models.Model):
         return [('purchase_id.date_order', operator, date_value)]
 
 
-class StockWarehouse(models.Model):
-    _inherit = ['stock.warehouse']
+class StockWarehouse(stock.StockWarehouse):
 
     buy_to_resupply = fields.Boolean('Buy to Resupply', default=True,
                                      help="When products are bought, they can be delivered to this warehouse")
@@ -102,8 +101,7 @@ class StockWarehouse(models.Model):
         return res
 
 
-class StockReturnPicking(models.TransientModel):
-    _inherit = ["stock.return.picking"]
+class StockReturnPicking(stock.StockReturnPicking):
 
     def _prepare_move_default_values(self, return_line, new_picking):
         vals = super()._prepare_move_default_values(return_line, new_picking)
@@ -118,8 +116,7 @@ class StockReturnPicking(models.TransientModel):
         return picking
 
 
-class StockWarehouseOrderpoint(models.Model):
-    _inherit = ["stock.warehouse.orderpoint"]
+class StockWarehouseOrderpoint(stock.StockWarehouseOrderpoint):
 
     show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
     supplier_id = fields.Many2one(
@@ -244,8 +241,7 @@ class StockWarehouseOrderpoint(models.Model):
         return super()._set_default_route_id()
 
 
-class StockLot(models.Model):
-    _inherit = ['stock.lot']
+class StockLot(stock_account.StockLot):
 
     purchase_order_ids = fields.Many2many('purchase.order', string="Purchase Orders", compute='_compute_purchase_order_ids', readonly=True, store=False)
     purchase_order_count = fields.Integer('Purchase order count', compute='_compute_purchase_order_ids')
@@ -269,8 +265,7 @@ class StockLot(models.Model):
         return action
 
 
-class ProcurementGroup(models.Model):
-    _inherit = ['procurement.group']
+class ProcurementGroup(stock.ProcurementGroup):
 
     purchase_line_ids = fields.One2many('purchase.order.line', 'group_id', string='Linked Purchase Order Lines', copy=False)
 

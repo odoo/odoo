@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import product, digest
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(product.ResConfigSettings, digest.ResConfigSettings):
 
     module_product_expiry = fields.Boolean("Expiration Dates",
         help="Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n Such dates are set automatically at lot/serial number creation based on values set on the product (in days).")

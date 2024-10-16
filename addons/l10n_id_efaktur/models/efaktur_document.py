@@ -3,6 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, RedirectWarning
 from odoo.tools import float_repr, float_round
+from odoo.addons import portal, mail
 
 FK_HEAD_LIST = ['FK', 'KD_JENIS_TRANSAKSI', 'FG_PENGGANTI', 'NOMOR_FAKTUR', 'MASA_PAJAK', 'TAHUN_PAJAK', 'TANGGAL_FAKTUR', 'NPWP', 'NAMA', 'ALAMAT_LENGKAP', 'JUMLAH_DPP', 'JUMLAH_PPN', 'JUMLAH_PPNBM', 'ID_KETERANGAN_TAMBAHAN', 'FG_UANG_MUKA', 'UANG_MUKA_DPP', 'UANG_MUKA_PPN', 'UANG_MUKA_PPNBM', 'REFERENSI', 'KODE_DOKUMEN_PENDUKUNG']
 
@@ -15,9 +16,8 @@ def _csv_row(data, delimiter=',', quote='"'):
     return quote + (quote + delimiter + quote).join([str(x).replace(quote, '\\' + quote) for x in data]) + quote + '\n'
 
 
-class L10n_Id_EfakturDocument(models.Model):
+class L10n_Id_EfakturDocument(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = "E-faktur Document"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
 
     name = fields.Char(
         compute='_compute_name',

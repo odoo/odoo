@@ -7,10 +7,10 @@ from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.exceptions import UserError
+from odoo.addons import analytic
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = ['analytic.mixin']
+class PurchaseOrderLine(models.Model, analytic.AnalyticMixin):
     _description = 'Purchase Order Line'
     _order = 'order_id, sequence, id'
 

@@ -4,10 +4,10 @@ from markupsafe import Markup
 
 from odoo import models, _
 from odoo.tools import html2plaintext
+from odoo.addons import im_livechat
 
 
-class DiscussChannel(models.Model):
-    _inherit = ['discuss.channel']
+class DiscussChannel(im_livechat.DiscussChannel):
 
     def execute_command_lead(self, **kwargs):
         key = kwargs['body']

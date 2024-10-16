@@ -1,9 +1,9 @@
 from odoo import models, Command, api, _
 from odoo.addons.account.models.chart_template import template
+from odoo.addons import account
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(account.AccountChartTemplate):
 
     @api.model
     def _get_third_party_checks_country_codes(self):

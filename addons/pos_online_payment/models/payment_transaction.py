@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
+from odoo.addons import account_payment
 
 
-class PaymentTransaction(models.Model):
-    _inherit = ['payment.transaction']
+class PaymentTransaction(account_payment.PaymentTransaction):
 
     pos_order_id = fields.Many2one('pos.order', string='POS Order', help='The Point of Sale order linked to the payment transaction', readonly=True)
 

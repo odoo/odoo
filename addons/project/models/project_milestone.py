@@ -7,11 +7,11 @@ from odoo import api, fields, models
 from odoo.tools import format_date
 
 from .project_task import CLOSED_STATES
+from odoo.addons import rating, portal, mail
 
 
-class ProjectMilestone(models.Model):
+class ProjectMilestone(models.Model, mail.MailThread, portal.MailThread, rating.MailThread):
     _description = "Project Milestone"
-    _inherit = ['mail.thread']
     _order = 'sequence, deadline, is_reached desc, name'
 
     def _get_default_project_id(self):

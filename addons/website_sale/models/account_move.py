@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models
 from odoo.tools.sql import column_exists, create_column
+from odoo.addons import sale
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(sale.AccountMove):
 
     website_id = fields.Many2one(
         'website', compute='_compute_website_id', string='Website',

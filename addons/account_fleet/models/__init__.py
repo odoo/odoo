@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import account_move
-from . import fleet_vehicle
-from . import fleet_vehicle_log_services
+from .account_move import AccountMove, AccountMoveLine
+from .fleet_vehicle import FleetVehicle
+from .fleet_vehicle_log_services import FleetVehicleLogServices

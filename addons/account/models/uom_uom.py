@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import product
 
 
-class UomUom(models.Model):
-    _inherit = ["uom.uom"]
+class UomUom(product.UomUom):
 
     fiscal_country_codes = fields.Char(compute="_compute_fiscal_country_codes")
 

@@ -5,10 +5,10 @@ import pytz
 
 from odoo import models
 from odoo.osv.expression import OR
+from odoo.addons import hr_work_entry_contract, hr_holidays_contract
 
 
-class HrContract(models.Model):
-    _inherit = ['hr.contract']
+class HrContract(hr_holidays_contract.HrContract, hr_work_entry_contract.HrContract):
     _description = 'Employee Contract'
 
     # override to add work_entry_type from leave

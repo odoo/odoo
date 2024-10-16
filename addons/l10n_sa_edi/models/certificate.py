@@ -6,6 +6,7 @@ from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes, serialization
 
 from odoo import api, models, service
+from odoo.addons import certificate
 
 CERT_TEMPLATE_NAME = {
     'prod': b'\x0c\x12ZATCA-Code-Signing',
@@ -14,8 +15,7 @@ CERT_TEMPLATE_NAME = {
 }
 
 
-class CertificateCertificate(models.Model):
-    _inherit = ['certificate.certificate']
+class CertificateCertificate(certificate.CertificateCertificate):
 
     def _l10n_sa_get_issuer_name(self):
         self.ensure_one()

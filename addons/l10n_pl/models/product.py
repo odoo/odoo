@@ -1,8 +1,8 @@
 from odoo import models, fields
+from odoo.addons import account
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(account.ProductTemplate):
 
     l10n_pl_vat_gtu = fields.Selection(
         string='GTU Codes',

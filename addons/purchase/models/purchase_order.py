@@ -13,10 +13,10 @@ from odoo.osv import expression
 from odoo.tools import format_amount, format_date, format_list, formatLang, groupby
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import portal, product, mail
 
 
-class PurchaseOrder(models.Model):
-    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin']
+class PurchaseOrder(models.Model, portal.PortalMixin, product.ProductCatalogMixin, portal.MailThread, mail.MailActivityMixin):
     _description = "Purchase Order"
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'

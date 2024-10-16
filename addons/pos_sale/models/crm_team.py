@@ -5,10 +5,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from datetime import datetime
 import pytz
+from odoo.addons import sale
 
 
-class CrmTeam(models.Model):
-    _inherit = ['crm.team']
+class CrmTeam(sale.CrmTeam):
 
     pos_config_ids = fields.One2many('pos.config', 'crm_team_id', string="Point of Sales")
     pos_sessions_open_count = fields.Integer(string='Open POS Sessions', compute='_compute_pos_sessions_open_count')

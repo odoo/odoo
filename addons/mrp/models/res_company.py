@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import product, resource, stock
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(product.ResCompany, stock.ResCompany, resource.ResCompany):
 
     manufacturing_lead = fields.Float(
         'Manufacturing Lead Time', default=0.0, required=True,

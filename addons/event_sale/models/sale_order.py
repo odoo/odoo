@@ -5,10 +5,10 @@ from werkzeug.urls import url_encode, url_join
 from odoo import fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.addons import sale_management
 
 
-class SaleOrder(models.Model):
-    _inherit = ["sale.order"]
+class SaleOrder(sale_management.SaleOrder):
 
     attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
 

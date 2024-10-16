@@ -5,10 +5,10 @@ from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import SQL
 from odoo.tools.misc import unquote
+from odoo.addons import project
 
 
-class ProjectTask(models.Model):
-    _inherit = ["project.task"]
+class ProjectTask(project.ProjectTask):
 
     def _domain_sale_line_id(self):
         domain = expression.AND([

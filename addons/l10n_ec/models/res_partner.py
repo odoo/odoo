@@ -4,6 +4,7 @@ import enum
 import stdnum
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import account, l10n_latam_base
 
 
 def verify_final_consumer(vat):
@@ -48,9 +49,8 @@ class PartnerIdTypeEc(enum.Enum):
                 return cls.OUT_PASSPORT
 
 
-class ResPartner(models.Model):
+class ResPartner(l10n_latam_base.ResPartner, account.ResPartner):
 
-    _inherit = ["res.partner"]
 
     l10n_ec_vat_validation = fields.Char(
         string="VAT Error message validation",

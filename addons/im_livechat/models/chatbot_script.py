@@ -4,11 +4,11 @@
 from odoo import api, models, fields
 from odoo.http import request
 from odoo.tools import email_normalize, get_lang, html2plaintext, is_html_empty, plaintext2html
+from odoo.addons import utm, base
 
 
-class ChatbotScript(models.Model):
+class ChatbotScript(models.Model, base.ImageMixin, utm.UtmSourceMixin):
     _description = 'Chatbot Script'
-    _inherit = ['image.mixin', 'utm.source.mixin']
     _rec_name = 'title'
     _order = 'title, id'
 

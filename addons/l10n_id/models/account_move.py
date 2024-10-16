@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, _
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     l10n_id_qris_transaction_ids = fields.Many2many('l10n_id.qris.transaction')
 

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import web, auth_signup, base_setup
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(web.ResConfigSettings, base_setup.ResConfigSettings, auth_signup.ResConfigSettings):
 
     @api.model
     def get_uri(self):

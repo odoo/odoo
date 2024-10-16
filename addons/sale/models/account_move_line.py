@@ -3,10 +3,10 @@
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
+from odoo.addons import account
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(account.AccountMoveLine):
 
     is_downpayment = fields.Boolean()
     sale_line_ids = fields.Many2many(

@@ -13,6 +13,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list, get_lang, html_escape
+from odoo.addons import mail, bus
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
 <circle cx="265.03" cy="265.03" r="265.03" fill="#875a7b"/>
@@ -24,11 +25,10 @@ group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 53
 </svg>'''
 
 
-class DiscussChannel(models.Model):
+class DiscussChannel(models.Model, mail.MailThread, bus.BusListenerMixin):
     _description = 'Discussion Channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ["mail.thread", "bus.listener.mixin"]
 
     MAX_BOUNCE_LIMIT = 10
 

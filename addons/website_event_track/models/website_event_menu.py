@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import website_event
 
 
-class WebsiteEventMenu(models.Model):
-    _inherit = ["website.event.menu"]
+class WebsiteEventMenu(website_event.WebsiteEventMenu):
 
     menu_type = fields.Selection(
         selection_add=[('track', 'Event Tracks Menus'), ('track_proposal', 'Event Proposals Menus')],

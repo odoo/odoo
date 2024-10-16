@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import mail
 
 
-class MailMessage(models.Model):
-    _inherit = ['mail.message']
+class MailMessage(mail.MailMessage):
 
     rating_ids = fields.One2many("rating.rating", "message_id", string="Related ratings")
     rating_id = fields.Many2one("rating.rating", compute="_compute_rating_id")

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import mrp_subcontracting, stock_dropshipping
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(mrp_subcontracting.ResCompany, stock_dropshipping.ResCompany):
 
     dropship_subcontractor_pick_type_id = fields.Many2one('stock.picking.type')
 

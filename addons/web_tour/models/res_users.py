@@ -1,8 +1,8 @@
 from odoo import models, fields, api
+from odoo.addons import web
 
 
-class ResUsers(models.Model):
-    _inherit = ["res.users"]
+class ResUsers(web.ResUsers):
 
     tour_enabled = fields.Boolean(compute='_compute_tour_enabled', store=True, readonly=False)
 

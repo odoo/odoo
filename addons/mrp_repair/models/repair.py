@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields, _
+from odoo.addons import mrp, repair
 
 
-class RepairOrder(models.Model):
-    _inherit = ['repair.order']
+class RepairOrder(repair.RepairOrder):
 
     production_count = fields.Integer(
         'Count of MOs generated',
@@ -74,8 +74,7 @@ class RepairOrder(models.Model):
         }
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(repair.StockMove, mrp.StockMove):
 
     def _prepare_phantom_line_vals(self, bom_line, qty):
         self.ensure_one()

@@ -12,14 +12,14 @@ from odoo.exceptions import UserError
 from odoo import fields, models, api, _
 from datetime import datetime
 from dateutil import tz
+from odoo.addons import point_of_sale
 
 _logger = logging.getLogger(__name__)
 REQUEST_TIMEOUT = 30
 iv = b'@@@@&&&&####$$$$'
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ['pos.payment.method']
+class PosPaymentMethod(point_of_sale.PosPaymentMethod):
 
     paytm_tid = fields.Char(string='PayTM Terminal ID', help="Terminal model or Activation code \n ex: 70000123")
     channel_id = fields.Char(string='PayTM Channel ID', default='EDC')

@@ -10,12 +10,12 @@ from odoo.osv import expression
 from odoo.tools import float_compare, format_list, groupby
 from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
+from odoo.addons import mail
 
 
-class ProductProduct(models.Model):
+class ProductProduct(models.Model, mail.MailThread, mail.MailActivityMixin):
     _description = "Product Variant"
     _inherits = {'product.template': 'product_tmpl_id'}
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'is_favorite desc, default_code, name, id'
     _check_company_domain = models.check_company_domain_parent_of
 

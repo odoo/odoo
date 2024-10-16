@@ -7,10 +7,10 @@ from odoo.osv import expression
 from odoo.tools import SQL
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.translate import _
+from odoo.addons import sale_project, hr_timesheet
 
 
-class ProjectProject(models.Model):
-    _inherit = ['project.project']
+class ProjectProject(sale_project.ProjectProject, hr_timesheet.ProjectProject):
 
     @api.model
     def default_get(self, fields):

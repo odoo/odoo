@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import hr_holidays
 
 
-class HrLeaveAccrualLevel(models.Model):
-    _inherit = ["hr.leave.accrual.level"]
+class HrLeaveAccrualLevel(hr_holidays.HrLeaveAccrualLevel):
 
     frequency_hourly_source = fields.Selection(
         selection=[

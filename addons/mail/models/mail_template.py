@@ -10,13 +10,13 @@ from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import is_html_empty
 from odoo.tools.safe_eval import safe_eval, time
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
 
-class MailTemplate(models.Model):
+class MailTemplate(models.Model, mail.MailRenderMixin, mail.TemplateResetMixin):
     "Templates for sending email"
-    _inherit = ['mail.render.mixin', 'template.reset.mixin']
     _description = 'Email Templates'
     _order = 'user_id,name,id'
 

@@ -2,4 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
+from .models import (
+    EventEvent, EventTrack, EventTrackLocation, EventTrackStage, EventTrackTag,
+    EventTrackTagCategory, EventTrackVisitor, EventType, ResConfigSettings, Website,
+    WebsiteEventMenu, WebsiteMenu, WebsiteVisitor,
+)

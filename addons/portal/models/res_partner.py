@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import web, mail, auth_signup
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(web.ResPartner, mail.ResPartner, auth_signup.ResPartner):
 
     def _can_edit_name(self):
         """ Name can be changed more often than the VAT """

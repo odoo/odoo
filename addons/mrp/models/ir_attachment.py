@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import product
 
 
-class IrAttachment(models.Model):
-    _inherit = ["ir.attachment"]
+class IrAttachment(product.IrAttachment):
 
     def _post_add_create(self, **kwargs):
         super()._post_add_create(**kwargs)

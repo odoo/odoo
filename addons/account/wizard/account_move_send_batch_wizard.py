@@ -1,9 +1,9 @@
 from odoo import _, api, Command, fields, models
+from odoo.addons import account
 
 
-class AccountMoveSendBatchWizard(models.TransientModel):
+class AccountMoveSendBatchWizard(models.TransientModel, account.AccountMoveSend):
     """Wizard that handles the sending of multiple invoices."""
-    _inherit = ['account.move.send']
     _description = "Account Move Send Batch Wizard"
 
     move_ids = fields.Many2many(comodel_name='account.move', required=True)

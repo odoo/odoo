@@ -7,10 +7,10 @@ from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import format_amount
 from odoo.tools.sql import column_exists, create_column, create_index
+from odoo.addons import sale_management
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ["sale.order.line"]
+class SaleOrderLine(sale_management.SaleOrderLine):
 
     # used to know if generate a task and/or a project, depending on the product settings
     is_service = fields.Boolean("Is a Service", compute='_compute_is_service', store=True, compute_sudo=True, export_string_translation=False)

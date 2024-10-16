@@ -4,10 +4,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import format_date
+from odoo.addons import account
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(account.IrAttachment):
 
     @api.ondelete(at_uninstall=True)
     def _except_audit_trail(self):

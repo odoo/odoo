@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     l10n_sg_permit_number = fields.Char(string="Permit No.")
 

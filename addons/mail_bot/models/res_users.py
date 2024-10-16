@@ -3,10 +3,10 @@
 from markupsafe import Markup
 
 from odoo import models, fields, _
+from odoo.addons import mail
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(mail.ResUsers):
 
     odoobot_state = fields.Selection(
         [

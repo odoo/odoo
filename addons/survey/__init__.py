@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
+from .models import (
+    GamificationBadge, GamificationChallenge, ResPartner, SurveyQuestion,
+    SurveyQuestionAnswer, SurveySurvey, SurveyUser_Input, SurveyUser_InputLine,
+)
 from . import report
-from . import wizard
+from .wizard import SurveyInvite

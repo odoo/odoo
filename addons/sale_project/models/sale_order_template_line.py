@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale_management
 
 
-class SaleOrderTemplateLine(models.Model):
-    _inherit = ['sale.order.template.line']
+class SaleOrderTemplateLine(sale_management.SaleOrderTemplateLine):
 
     def _prepare_order_line_values(self):
         res = super()._prepare_order_line_values()

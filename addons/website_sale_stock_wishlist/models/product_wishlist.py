@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api
+from odoo.addons import website_sale_wishlist
 
 
-class ProductWishlist(models.Model):
-    _inherit = ["product.wishlist"]
+class ProductWishlist(website_sale_wishlist.ProductWishlist):
 
     stock_notification = fields.Boolean(compute='_compute_stock_notification', default=False, required=True)
 

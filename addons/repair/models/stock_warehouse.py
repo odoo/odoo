@@ -3,10 +3,10 @@
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
+from odoo.addons import stock
 
 
-class StockWarehouse(models.Model):
-    _inherit = ['stock.warehouse']
+class StockWarehouse(stock.StockWarehouse):
 
     repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True)
     repair_mto_pull_id = fields.Many2one(

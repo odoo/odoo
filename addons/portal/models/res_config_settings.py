@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import web, mail, auth_signup
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(web.ResConfigSettings, mail.ResConfigSettings, auth_signup.ResConfigSettings):
 
     portal_allow_api_keys = fields.Boolean(
         string='Customer API Keys',

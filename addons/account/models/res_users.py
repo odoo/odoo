@@ -3,10 +3,10 @@
 
 from odoo import api, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import mail
 
 
-class ResGroups(models.Model):
-    _inherit = ['res.groups']
+class ResGroups(mail.ResGroups):
 
     @api.model
     def get_application_groups(self, domain):

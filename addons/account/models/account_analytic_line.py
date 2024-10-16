@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import analytic
 
 
-class AccountAnalyticLine(models.Model):
-    _inherit = ['account.analytic.line']
+class AccountAnalyticLine(analytic.AccountAnalyticLine):
     _description = 'Analytic Line'
 
     product_id = fields.Many2one(

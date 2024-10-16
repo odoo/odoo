@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import hr
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = ["hr.employee.base"]
+class HrEmployeeBase(hr.HrEmployeeBase):
 
     goal_ids = fields.One2many('gamification.goal', string='Employee HR Goals', compute='_compute_employee_goals')
     badge_ids = fields.One2many(

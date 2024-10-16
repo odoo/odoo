@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
+from odoo.addons import point_of_sale, l10n_es
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(point_of_sale.AccountMove, l10n_es.AccountMove):
 
     def _compute_l10n_es_is_simplified(self):
         super()._compute_l10n_es_is_simplified()

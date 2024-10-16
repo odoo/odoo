@@ -1,15 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
+from odoo.addons import mail
 
 
 MILKY_WAY_REGIONS = ['P3X', 'P4X', 'P2X', 'P5C']
 PEGASUS_REGIONS = ['M4R', 'P3Y', 'M6R']
 
 
-class Test_HttpStargate(models.Model):
+class Test_HttpStargate(models.Model, mail.MailThread, mail.MailActivityMixin):
     _description = 'Stargate'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(required=True, store=True, compute='_compute_name', readonly=False)
     address = fields.Char(required=True)

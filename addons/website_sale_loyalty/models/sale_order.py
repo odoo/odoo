@@ -7,10 +7,10 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv import expression
+from odoo.addons import sale_loyalty, website_sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(website_sale.SaleOrder, sale_loyalty.SaleOrder):
 
     # List of disabled rewards for automatic claim
     disabled_auto_rewards = fields.Many2many("loyalty.reward", relation="sale_order_disabled_auto_rewards_rel")

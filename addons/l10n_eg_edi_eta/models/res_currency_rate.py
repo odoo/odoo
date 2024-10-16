@@ -4,10 +4,10 @@
 
 from odoo import models, api, _
 from odoo.tools import float_compare
+from odoo.addons import base
 
 
-class ResCurrencyRate(models.Model):
-    _inherit = ['res.currency.rate']
+class ResCurrencyRate(base.ResCurrencyRate):
 
     @api.onchange('company_rate')
     def _onchange_rate_warning(self):

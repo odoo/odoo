@@ -10,6 +10,7 @@ from odoo import api, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
+from odoo.addons import web
 
 _logger = logging.getLogger(__name__)
 
@@ -21,8 +22,7 @@ EDITING_ATTRIBUTES = MOVABLE_BRANDING + [
 ]
 
 
-class IrUiView(models.Model):
-    _inherit = ['ir.ui.view']
+class IrUiView(web.IrUiView):
 
     def _get_cleaned_non_editing_attributes(self, attributes):
         """

@@ -10,10 +10,10 @@ from odoo import _, api, fields, models
 from odoo.osv import expression
 from odoo.addons.resource.models.utils import Intervals
 from odoo.exceptions import UserError
+from odoo.addons import hr
 
 
-class HrEmployeePublic(models.Model):
-    _inherit = ['hr.employee.public']
+class HrEmployeePublic(hr.HrEmployeePublic):
 
     first_contract_date = fields.Date(compute='_compute_manager_only_fields', search='_search_first_contract_date')
 
@@ -25,16 +25,14 @@ class HrEmployeePublic(models.Model):
         return [('id', 'in', employees.ids)]
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = ["hr.employee.base"]
+class HrEmployeeBase(hr.HrEmployeeBase):
 
     @api.model
     def _get_new_hire_field(self):
         return 'first_contract_date'
 
 
-class HrEmployee(models.Model):
-    _inherit = ["hr.employee"]
+class HrEmployee(hr.HrEmployee):
 
     legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user")
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")

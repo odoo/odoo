@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import base_document_layout
-from . import mass_cancel_orders
-from . import payment_link_wizard
-from . import payment_provider_onboarding_wizard
-from . import res_config_settings
-from . import sale_make_invoice_advance
-from . import sale_order_cancel
-from . import sale_order_discount
+from .base_document_layout import BaseDocumentLayout
+from .mass_cancel_orders import SaleMassCancelOrders
+from .payment_link_wizard import PaymentLinkWizard
+from .payment_provider_onboarding_wizard import SalePaymentProviderOnboardingWizard
+from .res_config_settings import ResConfigSettings
+from .sale_make_invoice_advance import SaleAdvancePaymentInv
+from .sale_order_cancel import SaleOrderCancel
+from .sale_order_discount import SaleOrderDiscount

@@ -2,10 +2,10 @@ from datetime import datetime, timezone
 import random
 from odoo import models, api
 from odoo.addons.pos_adyen.models.pos_payment_method import UNPREDICTABLE_ADYEN_DATA
+from odoo.addons import pos_self_order, pos_adyen
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ["pos.payment.method"]
+class PosPaymentMethod(pos_adyen.PosPaymentMethod, pos_self_order.PosPaymentMethod):
 
     @api.model
     def _get_valid_acquirer_data(self):

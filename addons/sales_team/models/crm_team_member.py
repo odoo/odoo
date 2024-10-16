@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, fields, models, _
+from odoo.addons import mail
 
 
-class CrmTeamMember(models.Model):
-    _inherit = ['mail.thread']
+class CrmTeamMember(models.Model, mail.MailThread):
     _description = 'Sales Team Member'
     _rec_name = 'user_id'
     _order = 'create_date ASC, id'

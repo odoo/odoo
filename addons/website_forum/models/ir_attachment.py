@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import website, mail
 
 
-class IrAttachment(models.Model):
+class IrAttachment(mail.IrAttachment, website.IrAttachment):
 
-    _inherit = ["ir.attachment"]
 
     def _can_bypass_rights_on_media_dialog(self, **attachment_data):
         # Bypass the attachment create ACL and let the user create the image

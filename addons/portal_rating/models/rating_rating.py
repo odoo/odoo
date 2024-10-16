@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, exceptions, _
+from odoo.addons import rating
 
 
-class RatingRating(models.Model):
-    _inherit = ['rating.rating']
+class RatingRating(rating.RatingRating):
 
     # Adding information for comment a rating message
     publisher_comment = fields.Text("Publisher comment")

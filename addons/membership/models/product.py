@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import account
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(account.ProductTemplate):
 
     membership = fields.Boolean(help='Check if the product is eligible for membership.')
     membership_date_from = fields.Date(string='Membership Start Date',

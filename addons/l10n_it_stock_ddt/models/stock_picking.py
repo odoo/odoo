@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
+from odoo.addons import stock_delivery, stock, stock_account
 
 
-class StockPicking(models.Model):
-    _inherit = ["stock.picking"]
+class StockPicking(stock_delivery.StockPicking, stock_account.StockPicking):
 
     l10n_it_transport_reason = fields.Selection([('sale', 'Sale'),
                                                  ('outsourcing', 'Outsourcing'),
@@ -54,8 +54,7 @@ class StockPicking(models.Model):
             picking.l10n_it_ddt_number = picking.picking_type_id.l10n_it_ddt_sequence_id.next_by_id()
 
 
-class StockPickingType(models.Model):
-    _inherit = ['stock.picking.type']
+class StockPickingType(stock.StockPickingType):
 
     l10n_it_ddt_sequence_id = fields.Many2one('ir.sequence')
 

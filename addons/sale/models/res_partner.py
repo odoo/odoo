@@ -3,10 +3,10 @@
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.osv import expression
+from odoo.addons import account, mail, payment, web
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(mail.ResPartner, account.ResPartner, payment.ResPartner, web.ResPartner):
 
     sale_order_count = fields.Integer(
         string="Sale Order Count",

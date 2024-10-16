@@ -4,10 +4,10 @@
 import json
 
 from odoo import api, fields, models, modules, _
+from odoo.addons import mass_mailing
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(mass_mailing.ResUsers):
 
     @api.model
     def _get_activity_groups(self):

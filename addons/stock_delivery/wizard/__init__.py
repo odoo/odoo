@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import choose_delivery_package
-from . import choose_delivery_carrier
-from . import stock_return_picking
+from .choose_delivery_package import ChooseDeliveryPackage
+from .choose_delivery_carrier import ChooseDeliveryCarrier
+from .stock_return_picking import StockReturnPicking

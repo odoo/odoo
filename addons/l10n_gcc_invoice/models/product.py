@@ -3,10 +3,10 @@
 import re
 
 from odoo import models
+from odoo.addons import account
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(account.ProductProduct):
 
     def _compute_display_name(self):
         """ In a string consisting of space-delimited substrings, force a double-space between

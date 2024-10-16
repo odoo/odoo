@@ -15,6 +15,7 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools import SQL, unique
 from odoo.addons.base_vat.models.res_partner import _ref_vat
+from odoo.addons import portal, product
 
 _logger = logging.getLogger(__name__)
 
@@ -328,8 +329,7 @@ class AccountFiscalPositionAccount(models.Model):
     ]
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(product.ResPartner, portal.ResPartner):
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')

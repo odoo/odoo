@@ -1,9 +1,9 @@
 from odoo import models
+from odoo.addons import account, l10n_latam_invoice_document, l10n_latam_base
 
 
-class ResCompany(models.Model):
+class ResCompany(l10n_latam_invoice_document.ResCompany, l10n_latam_base.ResCompany, account.ResCompany):
 
-    _inherit = ["res.company"]
 
     def _localization_use_documents(self):
         self.ensure_one()

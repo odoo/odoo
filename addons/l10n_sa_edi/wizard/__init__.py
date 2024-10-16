@@ -1,3 +1,3 @@
-from . import account_move_reversal
-from . import account_debit_note
-from . import l10n_sa_edi_otp_wizard
+from .account_move_reversal import AccountMoveReversal
+from .account_debit_note import AccountDebitNote
+from .l10n_sa_edi_otp_wizard import L10n_Sa_EdiOtpWizard

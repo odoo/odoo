@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
 from odoo.addons.account.models.chart_template import template
+from odoo.addons import account, l10n_latam_invoice_document
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(l10n_latam_invoice_document.AccountChartTemplate, account.AccountChartTemplate):
 
     @template('ec')
     def _get_ec_template_data(self):

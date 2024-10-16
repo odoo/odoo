@@ -11,13 +11,13 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from ...tools import jwt, discuss
+from odoo.addons import bus
 
 _logger = logging.getLogger(__name__)
 SFU_MODE_THRESHOLD = 3
 
 
-class DiscussChannelMember(models.Model):
-    _inherit = ["bus.listener.mixin"]
+class DiscussChannelMember(models.Model, bus.BusListenerMixin):
     _description = "Channel Member"
     _rec_names_search = ["channel_id", "partner_id", "guest_id"]
     _bypass_create_check = {}

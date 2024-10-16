@@ -1,10 +1,10 @@
 from odoo import models
 from odoo.tools import config
+from odoo.addons import base
 init = config['init']
 
 
-class IrQweb(models.AbstractModel):
-    _inherit = ['ir.qweb']
+class IrQweb(base.IrQweb):
 
     def _register_hook(self):
         super()._register_hook()

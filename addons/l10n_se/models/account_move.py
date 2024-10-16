@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from stdnum import luhn
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     def _get_invoice_reference_se_ocr2(self, reference):
         self.ensure_one()

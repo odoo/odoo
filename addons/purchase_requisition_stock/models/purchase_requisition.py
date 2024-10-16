@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import purchase_requisition
 
 
-class PurchaseRequisition(models.Model):
-    _inherit = ['purchase.requisition']
+class PurchaseRequisition(purchase_requisition.PurchaseRequisition):
 
     def _default_picking_type_id(self):
         picking_type = self.env['stock.picking.type'].search([('warehouse_id.company_id', '=', self.env.company.id), ('code', '=', 'incoming')], limit=1)
@@ -19,8 +19,7 @@ class PurchaseRequisition(models.Model):
         domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]")
 
 
-class PurchaseRequisitionLine(models.Model):
-    _inherit = ["purchase.requisition.line"]
+class PurchaseRequisitionLine(purchase_requisition.PurchaseRequisitionLine):
 
     move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
 

@@ -3,10 +3,10 @@
 
 from odoo import models, fields, api, tools
 from odoo.osv import expression
+from odoo.addons import pos_self_order, pos_online_payment
 
 
-class PosOrder(models.Model):
-    _inherit = ['pos.order']
+class PosOrder(pos_online_payment.PosOrder, pos_self_order.PosOrder):
 
     use_self_order_online_payment = fields.Boolean(compute='_compute_use_self_order_online_payment', store=True, readonly=True)
 

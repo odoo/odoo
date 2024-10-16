@@ -1,1 +1,1 @@
-from . import stock_move
+from .stock_move import StockMove

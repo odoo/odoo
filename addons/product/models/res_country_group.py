@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import base
 
 
-class ResCountryGroup(models.Model):
-    _inherit = ['res.country.group']
+class ResCountryGroup(base.ResCountryGroup):
 
     pricelist_ids = fields.Many2many(
         comodel_name='product.pricelist',

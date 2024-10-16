@@ -5,11 +5,11 @@ from collections import defaultdict
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.sql import column_exists, create_column, drop_index, index_exists
+from odoo.addons import account, account_debit_note
 
 
-class AccountMove(models.Model):
+class AccountMove(account.AccountMove, account_debit_note.AccountMove):
 
-    _inherit = ["account.move"]
 
     _sql_constraints = [(
         'unique_name', "", "Another entry with the same name already exists.",

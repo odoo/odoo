@@ -3,10 +3,10 @@
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import mrp
 
 
-class StockQuant(models.Model):
-    _inherit = ['stock.quant']
+class StockQuant(mrp.StockQuant):
 
     is_subcontract = fields.Boolean(store=False, search='_search_is_subcontract')
 

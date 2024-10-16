@@ -3,11 +3,11 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import web
 
 
-class ResConfigSettings(models.TransientModel):
+class ResConfigSettings(web.ResConfigSettings):
 
-    _inherit = ['res.config.settings']
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)

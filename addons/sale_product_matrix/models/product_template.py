@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.addons import product_matrix, sale
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(sale.ProductTemplate, product_matrix.ProductTemplate):
 
     product_add_mode = fields.Selection(
         selection=[

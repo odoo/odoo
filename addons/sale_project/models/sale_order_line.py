@@ -6,10 +6,10 @@ from odoo import api, Command, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import format_list
 from odoo.tools.sql import column_exists, create_column
+from odoo.addons import sale_management, sale_service
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ["sale.order.line"]
+class SaleOrderLine(sale_management.SaleOrderLine, sale_service.SaleOrderLine):
 
     qty_delivered_method = fields.Selection(selection_add=[('milestones', 'Milestones')])
     project_id = fields.Many2one(

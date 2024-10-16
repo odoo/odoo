@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, Command
+from odoo.addons import calendar, hr, resource
 
 
-class ResUsers(models.Model):
-    _inherit = ["res.users"]
+class ResUsers(hr.ResUsers, calendar.ResUsers, resource.ResUsers):
 
     leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
     show_leaves = fields.Boolean(related='employee_id.show_leaves')

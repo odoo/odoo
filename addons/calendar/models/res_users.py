@@ -7,10 +7,10 @@ from odoo import api, fields, models, modules, _
 from odoo.exceptions import AccessError
 
 from pytz import timezone, UTC
+from odoo.addons import mail
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(mail.ResUsers):
 
     calendar_default_privacy = fields.Selection(
         [('public', 'Public'),

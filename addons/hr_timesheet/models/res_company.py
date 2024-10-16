@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import hr
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(hr.ResCompany):
 
     @api.model
     def _default_project_time_mode_id(self):

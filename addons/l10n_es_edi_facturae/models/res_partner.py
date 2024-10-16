@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import check_barcode_encoding
+from odoo.addons import l10n_es
 
 
 class L10n_Es_Edi_FacturaeAc_Role_Type(models.Model):
@@ -10,8 +11,7 @@ class L10n_Es_Edi_FacturaeAc_Role_Type(models.Model):
     name = fields.Char(required=True, translate=True)
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(l10n_es.ResPartner):
 
     invoice_edi_format = fields.Selection(selection_add=[('es_facturae', 'Facturae')])
     type = fields.Selection(selection_add=[('facturae_ac', 'FACe Center'), ('other',)])

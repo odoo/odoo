@@ -6,10 +6,10 @@ from odoo.tools import float_repr
 from datetime import datetime
 from base64 import b64decode, b64encode
 from lxml import etree
+from odoo.addons import l10n_gcc_invoice, account_edi_ubl_cii, account_edi, l10n_sa, account_debit_note, account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account_edi.AccountMove, account_edi_ubl_cii.AccountMove, account_debit_note.AccountMove, l10n_sa.AccountMove):
 
     l10n_sa_uuid = fields.Char(string='Document UUID (SA)', copy=False, help="Universally unique identifier of the Invoice")
 
@@ -205,8 +205,7 @@ class AccountMove(models.Model):
         return len(zatca_doc_ids) > 0 and not any(zatca_doc_ids.filtered(lambda d: d.state == 'to_send'))
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(account.AccountMoveLine, l10n_gcc_invoice.AccountMoveLine):
 
     def _apply_retention_tax_filter(self, tax_values):
         return not tax_values['tax_id'].l10n_sa_is_retention

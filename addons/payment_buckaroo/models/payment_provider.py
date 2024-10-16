@@ -7,10 +7,10 @@ from werkzeug import urls
 from odoo import fields, models
 
 from odoo.addons.payment_buckaroo import const
+from odoo.addons import payment
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('buckaroo', "Buckaroo")], ondelete={'buckaroo': 'set default'})

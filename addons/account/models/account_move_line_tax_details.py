@@ -2,10 +2,10 @@
 
 from odoo import api, models
 from odoo.tools import SQL
+from odoo.addons import account
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(models.Model, account.AccountMoveLine):
 
     @api.model
     def _get_query_tax_details_from_domain(self, domain, fallback=True) -> SQL:

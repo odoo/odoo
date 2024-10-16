@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.tools.sql import create_index
+from odoo.addons import rating, portal, mail
 
 
-class MailMessage(models.Model):
-    _inherit = ['mail.message']
+class MailMessage(mail.MailMessage, portal.MailMessage, rating.MailMessage):
 
     def init(self):
         super().init()

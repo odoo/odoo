@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import l10n_id
 
 
-class L10n_IdQrisTransaction(models.Model):
-    _inherit = ["l10n_id.qris.transaction"]
+class L10n_IdQrisTransaction(l10n_id.L10n_IdQrisTransaction):
 
     def _get_supported_models(self):
         return super()._get_supported_models() + ['pos.order']

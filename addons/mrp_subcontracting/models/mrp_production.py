@@ -5,10 +5,10 @@ from collections import defaultdict
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.addons import mrp
 
 
-class MrpProduction(models.Model):
-    _inherit = ['mrp.production']
+class MrpProduction(mrp.MrpProduction):
     _rec_names_search = ['name', 'incoming_picking.name']
 
     move_line_raw_ids = fields.One2many(

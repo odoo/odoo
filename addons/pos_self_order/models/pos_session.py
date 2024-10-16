@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api, _, fields
+from odoo.addons import pos_restaurant
 
 
-class PosSession(models.Model):
-    _inherit = ['pos.session']
+class PosSession(pos_restaurant.PosSession):
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import website_event, event_booth
 
 
-class EventEvent(models.Model):
-    _inherit = ['event.event']
+class EventEvent(website_event.EventEvent, event_booth.EventEvent):
 
     exhibition_map = fields.Image(string='Exhibition Map', max_width=1024, max_height=1024)
     # frontend menu management

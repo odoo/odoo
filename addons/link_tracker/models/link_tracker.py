@@ -12,13 +12,14 @@ from odoo.addons.mail.tools import link_preview
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.mail import validate_url
+from odoo.addons import utm
 
 LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'label')
 
 _logger = logging.getLogger(__name__)
 
 
-class LinkTracker(models.Model):
+class LinkTracker(models.Model, utm.UtmMixin):
     """ Link trackers allow users to wrap any URL into a short URL that can be
     tracked by Odoo. Clicks are counter on each link. A tracker is linked to
     UTMs allowing to analyze marketing actions.
@@ -29,7 +30,6 @@ class LinkTracker(models.Model):
     _rec_name = "short_url"
     _description = "Link Tracker"
     _order = "count DESC"
-    _inherit = ["utm.mixin"]
 
     # URL info
     url = fields.Char(string='Target URL', required=True)

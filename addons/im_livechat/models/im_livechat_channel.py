@@ -7,16 +7,16 @@ import re
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
+from odoo.addons import rating
 
 
-class Im_LivechatChannel(models.Model):
+class Im_LivechatChannel(models.Model, rating.RatingParentMixin):
     """ Livechat Channel
         Define a communication channel, which can be accessed with 'script_external' (script tag to put on
         external website), 'script_internal' (code to be integrated with odoo website) or via 'web_page' link.
         It provides rating tools, and access rules for anonymous people.
     """
 
-    _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
     _rating_satisfaction_days = 14  # include only last 14 days to compute satisfaction
 

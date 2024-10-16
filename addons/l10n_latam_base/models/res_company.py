@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
+from odoo.addons import base_vat
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(base_vat.ResCompany):
 
     @api.model_create_multi
     def create(self, vals_list):

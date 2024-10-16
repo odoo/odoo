@@ -5,10 +5,10 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import account
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ["res.partner.bank"]
+class ResPartnerBank(account.ResPartnerBank):
 
     aba_bsb = fields.Char(string='BSB', help='Bank State Branch code - needed if payment is to be made using ABA files')
 

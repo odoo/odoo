@@ -14,6 +14,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, format_list, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.addons import portal, mail
 
 
 class StockPickingType(models.Model):
@@ -524,8 +525,7 @@ class StockPickingType(models.Model):
             picking_type.kanban_dashboard_graph = json.dumps(graph_data)
 
 
-class StockPicking(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+class StockPicking(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin):
     _description = "Transfer"
     _order = "priority desc, scheduled_date asc, id desc"
 

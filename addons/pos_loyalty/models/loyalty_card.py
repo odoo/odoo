@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import loyalty, point_of_sale
 
 
-class LoyaltyCard(models.Model):
-    _inherit = ['loyalty.card', 'pos.load.mixin']
+class LoyaltyCard(loyalty.LoyaltyCard, point_of_sale.PosLoadMixin):
 
     source_pos_order_id = fields.Many2one('pos.order', "PoS Order Reference",
         help="PoS order where this coupon was generated.")

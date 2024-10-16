@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import mail, link_tracker
 
 
-class MailRenderMixin(models.AbstractModel):
-    _inherit = ["mail.render.mixin"]
+class MailRenderMixin(mail.MailRenderMixin, link_tracker.MailRenderMixin):
 
     @api.model
     def _render_template_postprocess(self, model, rendered):

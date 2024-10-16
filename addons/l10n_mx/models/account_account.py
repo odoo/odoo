@@ -1,8 +1,8 @@
 from odoo import api, Command, models
+from odoo.addons import account
 
 
-class AccountAccount(models.Model):
-    _inherit = ['account.account']
+class AccountAccount(account.AccountAccount):
 
     @api.model_create_multi
     def create(self, vals_list):

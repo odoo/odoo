@@ -1,9 +1,9 @@
 from odoo import models
 from odoo.addons.account.models.chart_template import template
+from odoo.addons import l10n_in
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(l10n_in.AccountChartTemplate):
 
     @template('in', 'account.account')
     def _get_in_withholding_account_account(self):

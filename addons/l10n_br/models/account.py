@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
+class AccountTax(account.AccountTax):
     """ Add fields used to define some brazilian taxes """
-    _inherit = ['account.tax']
 
     tax_discount = fields.Boolean(string='Discount this Tax in Price',
                                   help="Mark it for (ICMS, PIS e etc.).")

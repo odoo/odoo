@@ -8,12 +8,12 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_is_zero
 from odoo.tools.sql import column_exists, create_column
 from datetime import datetime
+from odoo.addons import account_edi
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account_edi.AccountMove):
 
     l10n_eg_long_id = fields.Char(string='ETA Long ID', compute='_compute_eta_long_id')
     l10n_eg_qr_code = fields.Char(string='ETA QR Code', compute='_compute_eta_qr_code_str')

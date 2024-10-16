@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 from odoo.tools import float_is_zero
+from odoo.addons import event
 
 
-class EventRegistration(models.Model):
-    _inherit = ['event.registration']
+class EventRegistration(event.EventRegistration):
 
     # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', copy=False)

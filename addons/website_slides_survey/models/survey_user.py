@@ -3,10 +3,10 @@
 
 from odoo import fields, models, api
 from odoo.osv import expression
+from odoo.addons import survey
 
 
-class SurveyUser_Input(models.Model):
-    _inherit = ['survey.user_input']
+class SurveyUser_Input(survey.SurveyUser_Input):
 
     slide_id = fields.Many2one('slide.slide', 'Related course slide',
         help="The related course slide when there is no membership information")

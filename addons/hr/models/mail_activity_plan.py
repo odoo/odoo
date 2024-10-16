@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import mail
 
 
-class MailActivityPlan(models.Model):
-    _inherit = ['mail.activity.plan']
+class MailActivityPlan(mail.MailActivityPlan):
 
     department_id = fields.Many2one(
         'hr.department', check_company=True,

@@ -1,9 +1,9 @@
 
 from odoo import models
+from odoo.addons import hr
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(hr.ResConfigSettings):
 
     def create(self, vals):
         configs = super().create(vals)

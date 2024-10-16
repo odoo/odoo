@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import account_move
-from . import mrp_production
-from . import sale_order
-from . import sale_order_line
-from . import stock_move_line
-from . import stock_rule
-from . import mrp_bom
+from .account_move import AccountMoveLine
+from .mrp_production import MrpProduction
+from .sale_order import SaleOrder
+from .sale_order_line import SaleOrderLine
+from .stock_move_line import StockMoveLine
+from .stock_rule import StockRule
+from .mrp_bom import MrpBom

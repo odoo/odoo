@@ -4,10 +4,10 @@
 from odoo import _, api, models
 from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
+from odoo.addons import stock
 
 
-class StockMoveLine(models.Model):
-    _inherit = ['stock.move.line']
+class StockMoveLine(stock.StockMoveLine):
 
     # -------------------------------------------------------------------------
     # CRUD

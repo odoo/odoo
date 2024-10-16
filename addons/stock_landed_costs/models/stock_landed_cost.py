@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_is_zero
+from odoo.addons import portal, mail
 
 
 SPLIT_METHOD = [
@@ -17,9 +18,8 @@ SPLIT_METHOD = [
 ]
 
 
-class StockLandedCost(models.Model):
+class StockLandedCost(models.Model, portal.MailThread, mail.MailActivityMixin):
     _description = 'Stock Landed Cost'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
 
     def _default_account_journal_id(self):

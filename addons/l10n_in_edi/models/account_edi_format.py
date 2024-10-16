@@ -14,12 +14,12 @@ from odoo.tools import html_escape, float_is_zero, float_compare
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.iap import jsonrpc
 import logging
+from odoo.addons import account_edi
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = ["account.edi.format"]
+class AccountEdiFormat(account_edi.AccountEdiFormat):
 
     def _is_enabled_by_default_on_journal(self, journal):
         self.ensure_one()

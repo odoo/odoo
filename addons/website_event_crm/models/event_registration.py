@@ -3,10 +3,10 @@
 
 from odoo import models, _
 from markupsafe import Markup
+from odoo.addons import event_crm, website_event
 
 
-class EventRegistration(models.Model):
-    _inherit = ['event.registration']
+class EventRegistration(event_crm.EventRegistration, website_event.EventRegistration):
 
     def _get_lead_description_registration(self, line_suffix=''):
         """Add the questions and answers linked to the registrations into the description of the lead."""

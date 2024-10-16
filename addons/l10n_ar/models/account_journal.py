@@ -2,11 +2,11 @@
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
+from odoo.addons import account, l10n_latam_invoice_document
 
 
-class AccountJournal(models.Model):
+class AccountJournal(l10n_latam_invoice_document.AccountJournal, account.AccountJournal):
 
-    _inherit = ["account.journal"]
 
     l10n_ar_afip_pos_system = fields.Selection(
         selection='_get_l10n_ar_afip_pos_types_selection', string='AFIP POS System',

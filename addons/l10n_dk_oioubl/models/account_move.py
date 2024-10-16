@@ -1,8 +1,8 @@
 from odoo import api, models
+from odoo.addons import account_edi_ubl_cii
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account_edi_ubl_cii.AccountMove):
 
     @api.model
     def _get_ubl_cii_builder_from_xml_tree(self, tree):

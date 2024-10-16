@@ -5,10 +5,10 @@ from markupsafe import Markup
 
 from odoo import fields, models
 from odoo.tools.misc import file_open
+from odoo.addons import mail
 
 
-class MailComposeMessage(models.TransientModel):
-    _inherit = ['mail.compose.message']
+class MailComposeMessage(mail.MailComposeMessage):
 
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', ondelete='cascade')
     campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign', ondelete='set null')

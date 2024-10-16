@@ -1,2 +1,2 @@
-from . import snailmail_letter_format_error
-from . import snailmail_letter_missing_required_fields
+from .snailmail_letter_format_error import SnailmailLetterFormatError
+from .snailmail_letter_missing_required_fields import SnailmailLetterMissingRequiredFields

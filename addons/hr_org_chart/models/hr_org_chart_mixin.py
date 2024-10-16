@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import hr
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = ["hr.employee.base"]
+class HrEmployeeBase(hr.HrEmployeeBase):
 
     child_all_count = fields.Integer(
         'Indirect Subordinates Count',

@@ -3,10 +3,10 @@
 from odoo import fields, models, api
 from odoo.addons.l10n_es_edi_tbai.models.account_move import TBAI_REFUND_REASONS
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountMoveReversal(models.TransientModel):
-    _inherit = ['account.move.reversal']
+class AccountMoveReversal(account.AccountMoveReversal):
 
     l10n_es_tbai_is_required = fields.Boolean(
         compute="_compute_l10n_es_tbai_is_required", readonly=True,

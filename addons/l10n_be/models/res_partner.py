@@ -4,10 +4,10 @@
 # Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
 
 from odoo import api, models
+from odoo.addons import account, base_vat
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account.ResPartner, base_vat.ResPartner):
 
     @api.depends('vat', 'country_id')
     def _compute_company_registry(self):

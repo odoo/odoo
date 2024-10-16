@@ -7,12 +7,12 @@ import odoo
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import mail, bus
 
 
-class ResPartner(models.Model):
+class ResPartner(bus.ResPartner, mail.MailActivityMixin, mail.MailThreadBlacklist):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
-    _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
     _mail_flat_thread = False
 
     # override to add and order tracking

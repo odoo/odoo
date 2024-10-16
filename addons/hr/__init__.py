@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import wizard
-from . import report
+from .models import (
+    Base, DiscussChannel, HrContractType, HrDepartment, HrDepartureReason,
+    HrEmployee, HrEmployeeBase, HrEmployeeCategory, HrEmployeePublic, HrJob, HrWorkLocation,
+    IrUiMenu, MailActivityPlan, MailActivityPlanTemplate, MailAlias, ResCompany,
+    ResConfigSettings, ResPartner, ResUsers, ResourceResource,
+)
+from .wizard import HrDepartureWizard, MailActivitySchedule
+from .report import HrManagerDepartmentReport
 
 
 def _install_hr_localization(env):

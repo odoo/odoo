@@ -3,10 +3,10 @@
 
 from odoo import models, fields, _
 from odoo.http import request
+from odoo.addons import website_sale
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(website_sale.ProductProduct):
 
     stock_notification_partner_ids = fields.Many2many('res.partner', relation='stock_notification_product_partner_rel', string='Back in stock Notifications')
 

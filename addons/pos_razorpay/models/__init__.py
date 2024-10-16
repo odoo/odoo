@@ -1,2 +1,2 @@
-from . import pos_payment_method
-from . import pos_payment
+from .pos_payment_method import PosPaymentMethod
+from .pos_payment import PosPayment

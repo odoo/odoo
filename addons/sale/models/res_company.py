@@ -2,10 +2,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import account, mail, payment, web
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(mail.ResCompany, account.ResCompany, payment.ResCompany, web.ResCompany):
     _check_company_auto = True
 
     _sql_constraints = [

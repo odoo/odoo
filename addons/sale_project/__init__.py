@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import (
+    AccountMove, AccountMoveLine, ProductProduct, ProductTemplate,
+    ProjectMilestone, ProjectProject, ProjectTask, ProjectTaskRecurrence, ResConfigSettings,
+    SaleOrder, SaleOrderLine, SaleOrderTemplateLine,
+)
 from . import controllers
-from . import report
+from .report import ReportProjectTaskUser, SaleReport
 
 def _set_allow_billable_in_project(env):
     Project = env['project.project']

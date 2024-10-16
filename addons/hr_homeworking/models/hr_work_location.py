@@ -4,10 +4,10 @@
 from odoo import _, api, models
 from odoo.exceptions import UserError
 from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
+from odoo.addons import hr
 
 
-class HrWorkLocation(models.Model):
-    _inherit = ["hr.work.location"]
+class HrWorkLocation(hr.HrWorkLocation):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_by_employee(self):

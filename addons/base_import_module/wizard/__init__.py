@@ -1,1 +1,1 @@
-from . import base_module_uninstall
+from .base_module_uninstall import BaseModuleUninstall

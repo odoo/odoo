@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import loyalty_card
-from . import loyalty_program
-from . import loyalty_rule
-from . import sale_order_line
-from . import sale_order
+from .loyalty_card import LoyaltyCard
+from .loyalty_program import LoyaltyProgram
+from .loyalty_rule import LoyaltyRule
+from .sale_order_line import SaleOrderLine
+from .sale_order import SaleOrder

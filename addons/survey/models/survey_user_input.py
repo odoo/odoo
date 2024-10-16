@@ -10,16 +10,16 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_is_zero
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
 
-class SurveyUser_Input(models.Model):
+class SurveyUser_Input(models.Model, mail.MailThread, mail.MailActivityMixin):
     """ Metadata for a set of one user's answers to a particular survey """
     _description = "Survey User Input"
     _rec_name = "survey_id"
     _order = "create_date desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     # answer description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, index=True, ondelete='cascade')

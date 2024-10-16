@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import stock_picking_batch
 
 
-class StockPicking(models.Model):
-    _inherit = ["stock.picking"]
+class StockPicking(stock_picking_batch.StockPicking):
 
     zip = fields.Char(related='partner_id.zip', string='Zip', search="_search_zip")
 

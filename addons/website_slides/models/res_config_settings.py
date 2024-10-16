@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import website
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ["res.config.settings"]
+class ResConfigSettings(website.ResConfigSettings):
 
     website_slide_google_app_key = fields.Char(related='website_id.website_slide_google_app_key', readonly=False)
     module_website_sale_slides = fields.Boolean(string="Sell on eCommerce")

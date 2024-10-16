@@ -5,10 +5,10 @@ from datetime import time, timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_round
+from odoo.addons import account, product
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(account.ProductProduct):
 
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit of Measure')
 
@@ -99,8 +99,7 @@ class ProductProduct(models.Model):
         return super(ProductProduct, self - self.browse(linked_product_ids))._filter_to_unlink()
 
 
-class ProductAttributeCustomValue(models.Model):
-    _inherit = ["product.attribute.custom.value"]
+class ProductAttributeCustomValue(product.ProductAttributeCustomValue):
 
     sale_order_line_id = fields.Many2one('sale.order.line', string="Sales Order Line", ondelete='cascade')
 
@@ -109,7 +108,6 @@ class ProductAttributeCustomValue(models.Model):
     ]
 
 
-class ProductPackaging(models.Model):
-    _inherit = ['product.packaging']
+class ProductPackaging(product.ProductPackaging):
 
     sales = fields.Boolean("Sales", default=True, help="If true, the packaging can be used for sales orders")

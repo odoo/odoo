@@ -2,10 +2,10 @@
 
 from odoo import api, models
 from odoo.addons.base.models.res_users import is_selection_groups
+from odoo.addons import base_setup, web_tour, bus
 
 
-class ResUsers(models.Model):
-    _inherit = ["res.users"]
+class ResUsers(base_setup.ResUsers, bus.ResUsers, web_tour.ResUsers):
 
     @api.model_create_multi
     def create(self, vals_list):

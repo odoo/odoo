@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import project
 
 
-class ProjectUpdate(models.Model):
-    _inherit = ["project.update"]
+class ProjectUpdate(project.ProjectUpdate):
 
     display_timesheet_stats = fields.Boolean(compute="_compute_display_timesheet_stats", export_string_translation=False)
     allocated_time = fields.Integer("Allocated Time", readonly=True)

@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(account.AccountMove):
 
     def _get_name_invoice_report(self):
         self.ensure_one()

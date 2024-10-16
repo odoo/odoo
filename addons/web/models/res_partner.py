@@ -5,6 +5,7 @@ import logging
 from base64 import b64decode
 
 from odoo import models
+from odoo.addons import base
 
 _logger = logging.getLogger(__name__)
 
@@ -15,8 +16,7 @@ except ImportError:
     vobject = None
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(base.ResPartner):
 
     def _build_vcard(self):
         """ Build the partner's vCard.

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import project
 
 
-class ProjectProjectStage(models.Model):
-    _inherit = ['project.project.stage']
+class ProjectProjectStage(project.ProjectProjectStage):
 
     sms_template_id = fields.Many2one('sms.template', string="SMS Template",
         domain=[('model', '=', 'project.project')],

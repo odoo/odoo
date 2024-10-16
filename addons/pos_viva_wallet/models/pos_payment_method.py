@@ -5,13 +5,13 @@ import requests
 
 from odoo import fields, models, api, tools, _
 from odoo.exceptions import UserError, AccessError
+from odoo.addons import point_of_sale
 
 _logger = logging.getLogger(__name__)
 TIMEOUT = 10
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ['pos.payment.method']
+class PosPaymentMethod(point_of_sale.PosPaymentMethod):
 
     # Viva Wallet
     viva_wallet_merchant_id = fields.Char(string="Merchant ID", help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/merchant-id-and-api-key/')

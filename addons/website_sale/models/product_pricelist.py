@@ -4,10 +4,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.website.models import ir_http
+from odoo.addons import product
 
 
-class ProductPricelist(models.Model):
-    _inherit = ['product.pricelist']
+class ProductPricelist(product.ProductPricelist):
 
     #=== DEFAULT METHODS ===#
 

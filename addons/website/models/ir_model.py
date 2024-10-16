@@ -2,10 +2,10 @@
 
 from . import ir_http
 from odoo import models
+from odoo.addons import web, mail, web_editor
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(web.Base, web_editor.Base, mail.Base):
 
     def get_base_url(self):
         """

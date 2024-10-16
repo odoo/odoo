@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import website_sale_stock
 
 
-class Website(models.Model):
-    _inherit = ['website']
+class Website(website_sale_stock.Website):
 
     in_store_dm_id = fields.Many2one(
         string="In-store Delivery Method",

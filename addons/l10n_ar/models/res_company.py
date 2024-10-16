@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
+from odoo.addons import account, l10n_latam_invoice_document, l10n_latam_base
 
 
-class ResCompany(models.Model):
+class ResCompany(l10n_latam_invoice_document.ResCompany, l10n_latam_base.ResCompany, account.ResCompany):
 
-    _inherit = ["res.company"]
 
     l10n_ar_gross_income_number = fields.Char(
         related='partner_id.l10n_ar_gross_income_number', string='Gross Income Number', readonly=False,

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import onboarding_onboarding
-from . import onboarding_onboarding_step
-from . import onboarding_progress
-from . import onboarding_progress_step
+from .onboarding_onboarding import OnboardingOnboarding
+from .onboarding_onboarding_step import OnboardingOnboardingStep
+from .onboarding_progress import OnboardingProgress
+from .onboarding_progress_step import OnboardingProgressStep

@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models
 from odoo.tools import convert
+from odoo.addons import hr
 
 
-class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+class HrEmployee(hr.HrEmployee):
 
     resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")
     employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills",

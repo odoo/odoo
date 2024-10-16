@@ -3,10 +3,10 @@
 
 from odoo import fields, models, _
 from odoo.exceptions import AccessError
+from odoo.addons import digest
 
 
-class DigestDigest(models.Model):
-    _inherit = ['digest.digest']
+class DigestDigest(digest.DigestDigest):
 
     kpi_project_task_opened = fields.Boolean('Open Tasks')
     kpi_project_task_opened_value = fields.Integer(compute='_compute_project_task_opened_value', export_string_translation=False)

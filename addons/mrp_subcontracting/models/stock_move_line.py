@@ -3,10 +3,10 @@
 
 
 from odoo import _, api, models
+from odoo.addons import mrp
 
 
-class StockMoveLine(models.Model):
-    _inherit = ['stock.move.line']
+class StockMoveLine(mrp.StockMoveLine):
 
     @api.onchange('lot_name', 'lot_id')
     def _onchange_serial_number(self):

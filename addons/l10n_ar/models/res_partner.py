@@ -4,13 +4,13 @@ from odoo.exceptions import UserError, ValidationError
 import stdnum.ar
 import re
 import logging
+from odoo.addons import account, l10n_latam_base
 
 _logger = logging.getLogger(__name__)
 
 
-class ResPartner(models.Model):
+class ResPartner(l10n_latam_base.ResPartner, account.ResPartner):
 
-    _inherit = ['res.partner']
 
     l10n_ar_vat = fields.Char(
         compute='_compute_l10n_ar_vat', string="VAT", help='Computed field that returns VAT or nothing if this one'

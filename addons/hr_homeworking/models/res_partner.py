@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import hr
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(hr.ResPartner):
 
     def _compute_im_status(self):
         super()._compute_im_status()

@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import template_ug
+from .template_ug import AccountChartTemplate

@@ -1,9 +1,9 @@
 from odoo.addons.l10n_it_edi_ndd.models.account_payment_methode_line import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo import api, fields, models
+from odoo.addons import l10n_it_edi
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_it_edi.AccountMove):
 
     l10n_it_payment_method = fields.Selection(
         selection=L10N_IT_PAYMENT_METHOD_SELECTION,

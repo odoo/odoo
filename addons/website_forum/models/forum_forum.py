@@ -9,19 +9,13 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.tools.translate import html_translate
+from odoo.addons import website, mail, base
 
 MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
 
 
-class ForumForum(models.Model):
+class ForumForum(models.Model, mail.MailThread, base.ImageMixin, website.WebsiteSeoMetadata, website.WebsiteMultiMixin, website.WebsiteSearchableMixin):
     _description = 'Forum'
-    _inherit = [
-        'mail.thread',
-        'image.mixin',
-        'website.seo.metadata',
-        'website.multi.mixin',
-        'website.searchable.mixin',
-    ]
     _order = "sequence, id"
 
     @api.model

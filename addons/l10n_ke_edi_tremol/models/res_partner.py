@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account.ResPartner):
 
     l10n_ke_exemption_number = fields.Char(
         string='Exemption Number',

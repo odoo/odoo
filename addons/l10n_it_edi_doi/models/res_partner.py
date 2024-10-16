@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import l10n_it_edi, sale
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(l10n_it_edi.ResPartner, sale.ResPartner):
 
     l10n_it_edi_doi_ids = fields.One2many(
         'l10n_it_edi_doi.declaration_of_intent',

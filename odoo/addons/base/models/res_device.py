@@ -9,6 +9,7 @@ from odoo.http import GeoIP, request, root
 from odoo.tools import SQL, OrderedSet, unique
 from odoo.tools.translate import _
 from .res_users import check_identity
+from odoo.addons import base
 
 _logger = logging.getLogger(__name__)
 
@@ -128,8 +129,7 @@ class ResDeviceLog(models.Model):
         _logger.info("GC device logs delete %d entries", self.env.cr.rowcount)
 
 
-class ResDevice(models.Model):
-    _inherit = ["res.device.log"]
+class ResDevice(models.Model, base.ResDeviceLog):
     _description = "Devices"
     _auto = False
 

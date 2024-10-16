@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, api, models
+from odoo.addons import account, base_vat
 
 
-class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+class ResPartner(account.ResPartner, base_vat.ResPartner):
 
     branch_code = fields.Char("Branch Code", default='000', compute='_compute_branch_code', store=True)
     first_name = fields.Char("First Name")

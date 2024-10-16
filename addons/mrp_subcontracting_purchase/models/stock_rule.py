@@ -1,8 +1,8 @@
 from odoo import models, _
+from odoo.addons import mrp_subcontracting
 
 
-class StockRule(models.Model):
-    _inherit = ['stock.rule']
+class StockRule(mrp_subcontracting.StockRule):
 
     def _get_lead_days(self, product, **values):
         """For subcontracting, we need to consider both vendor lead time and

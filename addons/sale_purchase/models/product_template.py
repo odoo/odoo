@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import purchase, sale
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(sale.ProductTemplate, purchase.ProductTemplate):
 
     service_to_purchase = fields.Boolean(
         "Subcontract Service", company_dependent=True, copy=False,

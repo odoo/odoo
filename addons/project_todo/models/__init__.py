@@ -1,2 +1,2 @@
-from . import project_task
-from . import res_users
+from .project_task import ProjectTask
+from .res_users import ResUsers

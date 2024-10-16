@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.http import request
+from odoo.addons import portal_rating, website
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(website.IrHttp, portal_rating.IrHttp):
 
     @classmethod
     def _pre_dispatch(cls, rule, args):

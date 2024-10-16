@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account, stock
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(stock.ResConfigSettings, account.ResConfigSettings):
 
     module_stock_landed_costs = fields.Boolean("Landed Costs",
         help="Affect landed costs on reception operations and split them among products to update their cost price.")

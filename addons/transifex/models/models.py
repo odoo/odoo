@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import web
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(web.Base):
 
     def get_field_translations(self, field_name, langs=None):
         """ get model/model_term translations for records with transifex url

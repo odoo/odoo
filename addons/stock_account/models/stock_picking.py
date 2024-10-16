@@ -4,10 +4,10 @@
 from ast import literal_eval
 
 from odoo import models, fields
+from odoo.addons import stock
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(stock.StockPicking):
 
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
 

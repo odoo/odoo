@@ -13,6 +13,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
+from odoo.addons import rating, website, mail, base
 
 _logger = logging.getLogger(__name__)
 
@@ -270,18 +271,9 @@ class SlideChannelPartner(models.Model):
         expired_invitations.unlink()
 
 
-class SlideChannel(models.Model):
+class SlideChannel(models.Model, rating.RatingMixin, mail.MailActivityMixin, base.ImageMixin, website.WebsiteCover_PropertiesMixin, website.WebsiteSeoMetadata, website.WebsitePublishedMultiMixin, website.WebsiteSearchableMixin):
     """ A channel is a container of slides. """
     _description = 'Course'
-    _inherit = [
-        'rating.mixin',
-        'mail.activity.mixin',
-        'image.mixin',
-        'website.cover_properties.mixin',
-        'website.seo.metadata',
-        'website.published.multi.mixin',
-        'website.searchable.mixin',
-    ]
     _order = 'sequence, id'
     _partner_unfollow_enabled = True
 

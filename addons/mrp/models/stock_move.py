@@ -7,10 +7,10 @@ from odoo import _, api, Command, fields, models
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 from odoo.exceptions import ValidationError
+from odoo.addons import stock
 
 
-class StockMoveLine(models.Model):
-    _inherit = ['stock.move.line']
+class StockMoveLine(stock.StockMoveLine):
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
@@ -180,8 +180,7 @@ class StockMoveLine(models.Model):
             return super()._get_linkable_moves()
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(stock.StockMove):
 
     created_production_id = fields.Many2one('mrp.production', 'Created Production Order', check_company=True, index=True)
     production_id = fields.Many2one(

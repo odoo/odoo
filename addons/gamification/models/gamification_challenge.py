@@ -10,6 +10,7 @@ from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models
 from odoo.http import SESSION_LIFETIME
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
@@ -46,7 +47,7 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
     return fields.Datetime.to_string(start_date), fields.Datetime.to_string(end_date)
 
 
-class GamificationChallenge(models.Model):
+class GamificationChallenge(models.Model, mail.MailThread):
     """Gamification challenge
 
     Set of predifined objectives assigned to people with rules for recurrence and
@@ -58,7 +59,6 @@ class GamificationChallenge(models.Model):
     """
 
     _description = 'Gamification Challenge'
-    _inherit = ['mail.thread']
     _order = 'end_date, start_date, name, id'
 
     @api.model

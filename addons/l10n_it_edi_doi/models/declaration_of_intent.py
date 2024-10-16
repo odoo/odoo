@@ -3,10 +3,10 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.misc import formatLang
+from odoo.addons import mail
 
 
-class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
-    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
+class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model, mail.MailThreadMainAttachment, mail.MailActivityMixin):
     _description = "Declaration of Intent"
     _order = 'protocol_number_part1, protocol_number_part2'
 

@@ -15,6 +15,7 @@ from odoo.tools import format_list, SQL
 from odoo.addons.resource.models.utils import filter_domain_leaf
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import rating, portal, mail, web_editor
 
 
 PROJECT_TASK_READABLE_FIELDS = {
@@ -79,17 +80,9 @@ CLOSED_STATES = {
 }
 
 
-class ProjectTask(models.Model):
+class ProjectTask(models.Model, portal.PortalMixin, mail.MailThreadCc, mail.MailActivityMixin, rating.RatingMixin, mail.MailTrackingDurationMixin, web_editor.HtmlFieldHistoryMixin):
     _description = "Task"
     _date_name = "date_assign"
-    _inherit = [
-        'portal.mixin',
-        'mail.thread.cc',
-        'mail.activity.mixin',
-        'rating.mixin',
-        'mail.tracking.duration.mixin',
-        'html.field.history.mixin',
-    ]
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_deadline asc, id desc"
     _primary_email = 'email_from'

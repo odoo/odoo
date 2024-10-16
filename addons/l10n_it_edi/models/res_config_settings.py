@@ -2,10 +2,10 @@
 
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
+from odoo.addons import account, base_vat
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(account.ResConfigSettings, base_vat.ResConfigSettings):
 
     is_edi_proxy_active = fields.Boolean(compute='_compute_is_edi_proxy_active')
     l10n_it_edi_proxy_current_state = fields.Char(compute='_compute_l10n_it_edi_proxy_current_state')

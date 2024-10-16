@@ -1,1 +1,1 @@
-from . import account_resequence
+from .account_resequence import AccountResequenceWizard

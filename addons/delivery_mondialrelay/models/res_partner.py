@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import delivery
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(delivery.ResPartner):
 
     is_mondialrelay = fields.Boolean(compute='_compute_is_mondialrelay')
 

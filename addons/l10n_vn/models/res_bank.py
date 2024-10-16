@@ -2,10 +2,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import account, account_qr_code_emv
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ['res.partner.bank']
+class ResPartnerBank(account_qr_code_emv.ResPartnerBank, account.ResPartnerBank):
 
     proxy_type = fields.Selection(selection_add=[('merchant_id', 'Merchant ID'),
                                                  ('payment_service', 'Payment Service'),

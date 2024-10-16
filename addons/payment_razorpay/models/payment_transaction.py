@@ -12,13 +12,13 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_razorpay import const
+from odoo.addons import payment
 
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = ['payment.transaction']
+class PaymentTransaction(payment.PaymentTransaction):
 
     def _get_specific_processing_values(self, processing_values):
         """ Override of `payment` to return razorpay-specific processing values.

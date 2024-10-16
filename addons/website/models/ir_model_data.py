@@ -4,12 +4,12 @@ import logging
 
 from odoo import api, models
 from odoo.http import request
+from odoo.addons import base
 
 _logger = logging.getLogger(__name__)
 
 
-class IrModelData(models.Model):
-    _inherit = ['ir.model.data']
+class IrModelData(base.IrModelData):
 
     @api.model
     def _process_end_unlink_record(self, record):

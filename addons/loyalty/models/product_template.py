@@ -3,10 +3,10 @@
 
 from odoo import _, api, models
 from odoo.exceptions import UserError
+from odoo.addons import account, product
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(product.ProductTemplate, account.ProductTemplate):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_loyalty_products(self):

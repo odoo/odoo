@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.addons import account_edi_ubl_cii
 
 TAX_EXEMPTION_MAPPING = {
     'VATEX-EU-79-C': 'Exempt based on article 79, point c of Council Directive 2006/112/EC',
@@ -63,8 +64,7 @@ TAX_EXEMPTION_MAPPING = {
 }
 
 
-class AccountEdiCommon(models.AbstractModel):
-    _inherit = ["account.edi.common"]
+class AccountEdiCommon(account_edi_ubl_cii.AccountEdiCommon):
 
     def _get_tax_unece_codes(self, customer, supplier, tax):
         if tax.ubl_cii_tax_category_code:

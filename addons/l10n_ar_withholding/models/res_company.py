@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
+from odoo.addons import l10n_ar
 
 
-class ResCompany(models.Model):
+class ResCompany(l10n_ar.ResCompany):
 
-    _inherit = ['res.company']
 
     l10n_ar_tax_base_account_id = fields.Many2one(
         comodel_name='account.account',

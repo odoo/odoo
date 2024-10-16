@@ -6,12 +6,12 @@ import requests
 from odoo import api, models, _
 from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import website
 
 logger = logging.getLogger(__name__)
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(website.IrHttp):
 
     @api.model
     def get_frontend_session_info(self):

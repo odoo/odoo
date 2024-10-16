@@ -3,10 +3,10 @@
 from odoo import _, api, models
 from odoo.exceptions import UserError
 from odoo.tools import split_every
+from odoo.addons import account, point_of_sale
 
 
-class AccountTax(models.Model):
-    _inherit = ['account.tax', 'pos.load.mixin']
+class AccountTax(account.AccountTax, point_of_sale.PosLoadMixin):
 
     def write(self, vals):
         forbidden_fields = {

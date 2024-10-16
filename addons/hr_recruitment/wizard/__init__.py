@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import applicant_refuse_reason
-from . import applicant_send_mail
-from . import candidate_send_mail
-from . import mail_activity_schedule
+from .applicant_refuse_reason import ApplicantGetRefuseReason
+from .applicant_send_mail import ApplicantSendMail
+from .candidate_send_mail import CandidateSendMail
+from .mail_activity_schedule import MailActivitySchedule

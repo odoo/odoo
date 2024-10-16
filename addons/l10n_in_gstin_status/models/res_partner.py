@@ -6,12 +6,12 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
+from odoo.addons import l10n_in
 
 _logger = logging.getLogger(__name__)
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(l10n_in.ResPartner):
 
     l10n_in_gstin_verified_status = fields.Boolean(
         string="GST Status",

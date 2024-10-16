@@ -1,5 +1,9 @@
 from . import controllers
-from . import models
+from .models import (
+    AccountFiscalPosition, IrBinary, IrHttp, PosCategory, PosConfig, PosLoadMixin,
+    PosOrder, PosOrderLine, PosPaymentMethod, PosSession, Pos_Self_OrderCustom_Link,
+    ProductProduct, ProductTemplate, ResConfigSettings, RestaurantFloor, RestaurantTable,
+)
 
 
 def _post_self_order_post_init(env):

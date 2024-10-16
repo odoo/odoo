@@ -10,13 +10,13 @@ from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
+from odoo.addons import web, portal, web_editor, website, mail
 
 _logger = logging.getLogger(__name__)
 
 
-class IrUiView(models.Model):
+class IrUiView(web.IrUiView, web_editor.IrUiView, portal.IrUiView, mail.IrUiView, website.WebsiteSeoMetadata):
 
-    _inherit = ["ir.ui.view", "website.seo.metadata"]
 
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', 'view_id')

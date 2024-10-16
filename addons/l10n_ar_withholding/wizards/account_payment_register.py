@@ -4,12 +4,12 @@ import logging
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError
 from datetime import datetime
+from odoo.addons import l10n_latam_check
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountPaymentRegister(models.TransientModel):
-    _inherit = ['account.payment.register']
+class AccountPaymentRegister(l10n_latam_check.AccountPaymentRegister):
 
     l10n_ar_withholding_ids = fields.One2many(
         'l10n_ar.payment.register.withholding', 'payment_register_id', string="Withholdings",

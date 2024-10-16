@@ -1,8 +1,8 @@
 from odoo import models, fields
+from odoo.addons import website_sale
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(website_sale.ResConfigSettings):
 
     google_places_api_key = fields.Char(
         string='Google Places API Key',

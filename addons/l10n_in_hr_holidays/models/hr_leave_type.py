@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import hr_holidays
 
 
-class HrLeaveType(models.Model):
-    _inherit = ["hr.leave.type"]
+class HrLeaveType(hr_holidays.HrLeaveType):
 
     l10n_in_is_sandwich_leave = fields.Boolean(
         help="""If a leave is covering holidays, the holiday period will be included in the requested time.

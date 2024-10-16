@@ -1,8 +1,8 @@
 from odoo import api, models, fields
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+class AccountJournal(account.AccountJournal):
 
     l10n_tr_default_sales_return_account_id = fields.Many2one(
         comodel_name='account.account',

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import mrp_subcontracting, purchase_mrp
 
 
-class ReportMrpReport_Bom_Structure(models.AbstractModel):
-    _inherit = ['report.mrp.report_bom_structure']
+class ReportMrpReport_Bom_Structure(mrp_subcontracting.ReportMrpReport_Bom_Structure, purchase_mrp.ReportMrpReport_Bom_Structure):
 
     @api.model
     def _is_buy_route(self, rules, product, bom):

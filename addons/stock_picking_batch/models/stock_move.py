@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.osv import expression
+from odoo.addons import stock
 
 
-class StockMove(models.Model):
-    _inherit = ["stock.move"]
+class StockMove(stock.StockMove):
 
     def _search_picking_for_assignation_domain(self):
         domain = super()._search_picking_for_assignation_domain()

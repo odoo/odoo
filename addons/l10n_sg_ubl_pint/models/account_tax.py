@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
+from odoo.addons import account_edi_ubl_cii_tax_extension
 
 
-class AccountTax(models.Model):
-    _inherit = ["account.tax"]
+class AccountTax(account_edi_ubl_cii_tax_extension.AccountTax):
 
     # The classification is too precise to be able to do any kind of guessing, so we need it set.
     # See https://docs.peppol.eu/poac/sg/2024-Q2/pint-sg/bis/#_goods_and_services_tax_gst

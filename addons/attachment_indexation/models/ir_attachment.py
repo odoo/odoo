@@ -7,6 +7,7 @@ import zipfile
 
 from odoo import api, models
 from odoo.tools.lru import LRU
+from odoo.addons import base
 
 _logger = logging.getLogger(__name__)
 
@@ -34,8 +35,7 @@ def textToString(element):
     return buff
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(base.IrAttachment):
 
     def _index_docx(self, bin_data):
         '''Index Microsoft .docx documents'''

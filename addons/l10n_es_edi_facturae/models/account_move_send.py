@@ -2,12 +2,12 @@ import logging
 
 from odoo import _, models, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountMoveSend(models.AbstractModel):
-    _inherit = ['account.move.send']
+class AccountMoveSend(account.AccountMoveSend):
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS

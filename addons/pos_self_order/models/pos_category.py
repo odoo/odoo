@@ -3,10 +3,10 @@
 
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api, _
+from odoo.addons import point_of_sale
 
 
-class PosCategory(models.Model):
-    _inherit = ["pos.category"]
+class PosCategory(point_of_sale.PosCategory):
 
 
     hour_until = fields.Float(string='Availability Until', default=24.0, help="The product will be available until this hour.")

@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, _
+from odoo.addons import phone_validation, web
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(phone_validation.ResPartner, web.ResPartner):
 
     employee_ids = fields.One2many(
         'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_user",

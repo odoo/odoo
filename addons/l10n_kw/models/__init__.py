@@ -1,1 +1,1 @@
-from . import template_kw
+from .template_kw import AccountChartTemplate

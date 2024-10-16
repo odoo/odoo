@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
+from odoo.addons import base
 
 
-class IrModel(models.Model):
-    _inherit = ["ir.model"]
+class IrModel(base.IrModel):
 
     @api.model
     def display_name_for(self, models):

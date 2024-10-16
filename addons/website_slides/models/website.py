@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import website, website_profile
 
 
-class Website(models.Model):
-    _inherit = ["website"]
+class Website(website.Website, website_profile.Website):
 
     website_slide_google_app_key = fields.Char('Google Doc Key', groups='base.group_system')
 

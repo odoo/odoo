@@ -12,6 +12,7 @@ import logging
 from odoo import api, models, fields
 from odoo.tools import _, zeep, LazyTranslate
 from odoo.exceptions import ValidationError
+from odoo.addons import account
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
@@ -86,8 +87,7 @@ _region_specific_vat_codes = {
 }
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account.ResPartner):
 
     vies_valid = fields.Boolean(
         string="Intra-Community Valid",

@@ -1,8 +1,8 @@
 from odoo import models, fields
+from odoo.addons import l10n_in_withholding
 
 
-class AccountPayment(models.Model):
-    _inherit = ["account.payment"]
+class AccountPayment(l10n_in_withholding.AccountPayment):
 
     l10n_in_withhold_move_ids = fields.One2many(
         'account.move', 'l10n_in_withholding_ref_payment_id',

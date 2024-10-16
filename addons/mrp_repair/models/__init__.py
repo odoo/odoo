@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import repair
-from . import production
+from .repair import RepairOrder, StockMove
+from .production import MrpProduction

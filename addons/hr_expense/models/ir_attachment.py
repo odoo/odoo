@@ -1,8 +1,8 @@
 from odoo import models, api
+from odoo.addons import account
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(account.IrAttachment):
 
     @api.model_create_multi
     def create(self, vals_list):

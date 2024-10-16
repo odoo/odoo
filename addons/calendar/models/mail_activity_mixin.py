@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import mail
 
 
-class MailActivityMixin(models.AbstractModel):
-    _inherit = ['mail.activity.mixin']
+class MailActivityMixin(mail.MailActivityMixin):
 
     activity_calendar_event_id = fields.Many2one(
         'calendar.event', string="Next Activity Calendar Event",

@@ -5,10 +5,10 @@ import json
 from odoo import _, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.addons import website_sale_stock
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(website_sale_stock.SaleOrder):
 
     def set_delivery_line(self, carrier, amount):
         """ Override of `website_sale` to recompute warehouse when a new delivery method

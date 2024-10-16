@@ -2,10 +2,10 @@
 import re
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.addons import sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ["sale.order"]
+class SaleOrder(sale.SaleOrder):
 
     def write(self, values):
         # We compute the l10n_fi/SaleOrder.reference from itself the same way

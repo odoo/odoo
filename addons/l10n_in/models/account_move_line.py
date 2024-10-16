@@ -1,8 +1,8 @@
 from odoo import api, fields, models
+from odoo.addons import account
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ["account.move.line"]
+class AccountMoveLine(account.AccountMoveLine):
 
     l10n_in_hsn_code = fields.Char(string="HSN/SAC Code", compute="_compute_l10n_in_hsn_code", store=True, readonly=False, copy=False)
 

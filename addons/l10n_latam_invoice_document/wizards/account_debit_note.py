@@ -1,9 +1,9 @@
 from odoo import models
+from odoo.addons import l10n_latam_invoice_document
 
 
-class AccountDebitNote(models.TransientModel):
+class AccountDebitNote(models.TransientModel, l10n_latam_invoice_document.AccountDebitNote):
 
-    _inherit = ['account.debit.note']
 
     def create_debit(self):
         """ Properly compute the latam document type of type debit note. """

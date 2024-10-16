@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api, _
+from odoo.addons import account
 
 
-class AccountFiscalPosition(models.Model):
+class AccountFiscalPosition(account.AccountFiscalPosition):
 
-    _inherit = ['account.fiscal.position']
 
     l10n_ar_afip_responsibility_type_ids = fields.Many2many(
         'l10n_ar.afip.responsibility.type', 'l10n_ar_afip_reponsibility_type_fiscal_pos_rel',

@@ -5,10 +5,10 @@ from ast import literal_eval
 from collections import defaultdict
 
 from odoo import models
+from odoo.addons import project
 
 
-class ProjectProject(models.Model):
-    _inherit = ['project.project']
+class ProjectProject(project.ProjectProject):
 
     def _add_purchase_items(self, profitability_items, with_action=True):
         domain = self._get_add_purchase_items_domain()

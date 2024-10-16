@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.tools import float_compare, float_is_zero, float_round
+from odoo.addons import account, analytic
 
 
-class AccountAnalyticPlan(models.Model):
-    _inherit = ['account.analytic.plan']
+class AccountAnalyticPlan(analytic.AccountAnalyticPlan):
 
     def _calculate_distribution_amount(self, amount, percentage, total_percentage, distribution_on_each_plan):
         """
@@ -30,8 +30,7 @@ class AccountAnalyticPlan(models.Model):
         return calculated_amount
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = ['account.analytic.account']
+class AccountAnalyticAccount(account.AccountAnalyticAccount):
 
     def _perform_analytic_distribution(self, distribution, amount, unit_amount, lines, obj, additive=False):
         """

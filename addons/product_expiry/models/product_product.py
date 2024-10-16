@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import stock
 
 
-class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+class ProductProduct(stock.ProductProduct):
 
     def action_open_quants(self):
         # Override to hide the `removal_date` column if not needed.
@@ -14,8 +14,7 @@ class ProductProduct(models.Model):
         return super().action_open_quants()
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(stock.ProductTemplate):
 
     use_expiration_date = fields.Boolean(string='Use Expiration Date',
         help='When this box is ticked, you have the possibility to specify dates to manage'

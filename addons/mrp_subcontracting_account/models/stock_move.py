@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import mrp_subcontracting, mrp_account
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(mrp_subcontracting.StockMove, mrp_account.StockMove):
 
     def _should_force_price_unit(self):
         self.ensure_one()

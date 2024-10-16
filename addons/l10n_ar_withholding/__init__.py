@@ -1,7 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import wizards
+from .models import (
+    AccountChartTemplate, AccountMove, AccountPayment, AccountTax,
+    L10n_ArEarningsScale, L10n_ArEarningsScaleLine, L10n_ArPartnerTax, ResCompany,
+    ResConfigSettings, ResPartner,
+)
+from .wizards import AccountPaymentRegister, L10n_ArPaymentRegisterWithholding
 from . import demo
 
 import logging

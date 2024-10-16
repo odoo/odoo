@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale_stock, mrp
 
 
-class StockMoveLine(models.Model):
-    _inherit = ['stock.move.line']
+class StockMoveLine(mrp.StockMoveLine, sale_stock.StockMoveLine):
 
     def _compute_sale_price(self):
         kit_lines = self.filtered(lambda move_line: move_line.move_id.bom_line_id.bom_id.type == 'phantom')

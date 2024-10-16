@@ -8,6 +8,7 @@ from re import findall as regex_findall, split as regex_split
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.addons import portal, mail
 
 OPERATORS = {
     '<': py_operator.lt,
@@ -19,8 +20,7 @@ OPERATORS = {
 }
 
 
-class StockLot(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+class StockLot(models.Model, mail.MailThread, portal.MailThread, mail.MailActivityMixin):
     _description = 'Lot/Serial'
     _check_company_auto = True
     _order = 'name, id'

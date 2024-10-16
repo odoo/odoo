@@ -7,10 +7,10 @@ from odoo.tools import float_is_zero, float_compare
 
 from itertools import groupby
 from collections import defaultdict
+from odoo.addons import point_of_sale, stock, stock_account
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(stock_account.StockPicking):
 
     pos_session_id = fields.Many2one('pos.session', index=True)
     pos_order_id = fields.Many2one('pos.order', index=True)
@@ -159,8 +159,7 @@ class StockPicking(models.Model):
         return res
 
 
-class StockPickingType(models.Model):
-    _inherit = ['stock.picking.type', 'pos.load.mixin']
+class StockPickingType(stock.StockPickingType, point_of_sale.PosLoadMixin):
 
     @api.depends('warehouse_id')
     def _compute_hide_reservation_method(self):
@@ -187,14 +186,12 @@ class StockPickingType(models.Model):
         return ['id', 'use_create_lots', 'use_existing_lots']
 
 
-class ProcurementGroup(models.Model):
-    _inherit = ['procurement.group']
+class ProcurementGroup(stock.ProcurementGroup):
 
     pos_order_id = fields.Many2one('pos.order', 'POS Order')
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(stock_account.StockMove):
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()

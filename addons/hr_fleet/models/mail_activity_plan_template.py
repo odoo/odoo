@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo import exceptions
+from odoo.addons import hr
 
 
-class MailActivityPlanTemplate(models.Model):
-    _inherit = ['mail.activity.plan.template']
+class MailActivityPlanTemplate(hr.MailActivityPlanTemplate):
 
     responsible_type = fields.Selection(
         selection_add=[('fleet_manager', "Fleet Manager")],

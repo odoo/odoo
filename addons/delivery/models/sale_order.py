@@ -4,10 +4,10 @@ import json
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale.SaleOrder):
 
     pickup_location_data = fields.Json()
     carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method", check_company=True, help="Fill this field if you plan to invoice the shipping based on picking.")

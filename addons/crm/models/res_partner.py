@@ -2,10 +2,10 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons import calendar, mail, contacts, phone_validation
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(mail.ResPartner, calendar.ResPartner, contacts.ResPartner, phone_validation.ResPartner):
 
     opportunity_ids = fields.One2many('crm.lead', 'partner_id', string='Opportunities', domain=[('type', '=', 'opportunity')])
     opportunity_count = fields.Integer(

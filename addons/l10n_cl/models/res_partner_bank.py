@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
+from odoo.addons import base
 
 
-class ResBank(models.Model):
-    _inherit = ['res.bank']
+class ResBank(base.ResBank):
 
     def _get_fiscal_country_codes(self):
         return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))

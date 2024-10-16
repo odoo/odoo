@@ -6,11 +6,11 @@ import random
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.addons import point_of_sale
 
 
-class PosCategory(models.Model):
+class PosCategory(models.Model, point_of_sale.PosLoadMixin):
     _description = "Point of Sale Category"
-    _inherit = ['pos.load.mixin']
     _order = "sequence, name"
 
     @api.constrains('parent_id')

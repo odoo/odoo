@@ -1,4 +1,5 @@
 from odoo import fields, models
+from odoo.addons import account
 
 L10N_IT_PAYMENT_METHOD_SELECTION = [
     ('MP01', "MP01 - Cash"),
@@ -27,8 +28,7 @@ L10N_IT_PAYMENT_METHOD_SELECTION = [
 ]
 
 
-class AccountPaymentMethodLine(models.Model):
-    _inherit = ["account.payment.method.line"]
+class AccountPaymentMethodLine(account.AccountPaymentMethodLine):
 
     l10n_it_payment_method = fields.Selection(
         selection=L10N_IT_PAYMENT_METHOD_SELECTION,

@@ -4,10 +4,10 @@ from odoo import models, _
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
 
 from stdnum.no import mva
+from odoo.addons import account_edi_ubl_cii
 
 
-class AccountEdiXmlUbl_Bis3(models.AbstractModel):
-    _inherit = ['account.edi.xml.ubl_21']
+class AccountEdiXmlUbl_Bis3(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl_21):
     _description = "UBL BIS Billing 3.0.12"
 
     """

@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons import calendar, microsoft_calendar
 
 
-class CalendarRecurrence(models.Model):
-    _inherit = ['calendar.recurrence', 'microsoft.calendar.sync']
+class CalendarRecurrence(calendar.CalendarRecurrence, microsoft_calendar.MicrosoftCalendarSync):
 
 
     # Don't sync by default. Sync only when the recurrence is applied

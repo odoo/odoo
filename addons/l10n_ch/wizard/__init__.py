@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from . import setup_wizards
-from . import qr_invoice_wizard
+from .setup_wizards import AccountSetupBankManualConfig
+from .qr_invoice_wizard import L10n_ChQr_InvoiceWizard

@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import barcode
-from . import ir_actions_report
-from . import product_strategy
-from . import res_company
-from . import res_partner
-from . import res_users
-from . import res_config_settings
-from . import stock_location
-from . import stock_move
-from . import stock_move_line
-from . import stock_orderpoint
-from . import stock_lot
-from . import stock_picking
-from . import stock_quant
-from . import stock_replenish_mixin
-from . import stock_rule
-from . import stock_warehouse
-from . import stock_scrap
-from . import product
-from . import stock_package_level
-from . import stock_package_type
-from . import stock_storage_category
+from .barcode import BarcodeRule
+from .ir_actions_report import IrActionsReport
+from .product_strategy import ProductRemoval, StockPutawayRule
+from .res_company import ResCompany
+from .res_partner import ResPartner
+from .res_users import ResUsers
+from .res_config_settings import ResConfigSettings
+from .stock_location import StockLocation, StockRoute
+from .stock_move import StockMove
+from .stock_move_line import StockMoveLine
+from .stock_orderpoint import StockWarehouseOrderpoint
+from .stock_lot import StockLot
+from .stock_picking import StockPicking, StockPickingType
+from .stock_quant import StockQuant, StockQuantPackage
+from .stock_replenish_mixin import StockReplenishMixin
+from .stock_rule import ProcurementGroup, StockRule
+from .stock_warehouse import StockWarehouse
+from .stock_scrap import StockScrap, StockScrapReasonTag
+from .product import ProductCategory, ProductPackaging, ProductProduct, ProductTemplate, UomUom
+from .stock_package_level import StockPackage_Level
+from .stock_package_type import StockPackageType
+from .stock_storage_category import StockStorageCategory, StockStorageCategoryCapacity

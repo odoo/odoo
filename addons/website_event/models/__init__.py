@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import event_event
-from . import event_registration
-from . import event_tag_category
-from . import event_tag
-from . import event_type
-from . import website
-from . import website_event_menu
-from . import website_menu
-from . import website_snippet_filter
-from . import website_visitor
+from .event_event import EventEvent
+from .event_registration import EventRegistration
+from .event_tag_category import EventTagCategory
+from .event_tag import EventTag
+from .event_type import EventType
+from .website import Website
+from .website_event_menu import WebsiteEventMenu
+from .website_menu import WebsiteMenu
+from .website_snippet_filter import WebsiteSnippetFilter
+from .website_visitor import WebsiteVisitor

@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import account
 
 
-class UomUom(models.Model):
-    _inherit = ['uom.uom']
+class UomUom(account.UomUom):
 
     l10n_es_edi_facturae_uom_code = fields.Selection(
         selection=[

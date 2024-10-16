@@ -10,10 +10,10 @@ from odoo import api, models, fields, tools
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.link_preview import get_link_preview_from_url
+from odoo.addons import bus
 
 
-class MailLinkPreview(models.Model):
-    _inherit = ["bus.listener.mixin"]
+class MailLinkPreview(models.Model, bus.BusListenerMixin):
     _description = "Store link preview data"
 
     message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade')

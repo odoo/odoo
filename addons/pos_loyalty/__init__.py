@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import (
+    BarcodeRule, LoyaltyCard, LoyaltyMail, LoyaltyProgram, LoyaltyReward,
+    LoyaltyRule, PosConfig, PosOrder, PosOrderLine, PosSession, ProductProduct, ResPartner,
+)
 
 
 def uninstall_hook(env):

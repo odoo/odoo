@@ -5,8 +5,11 @@ import psycopg2.errors
 
 from odoo import _
 
-from . import models
-from . import wizard
+from .models import (
+    AccountChartTemplate, AccountMove, AccountMoveLine, AccountMoveSend,
+    AccountTax, ProductTemplate, ResCompany, ResConfigSettings, ResPartner, UomUom,
+)
+from .wizard import AccountMoveReversal, L10n_Hu_EdiCancellation, L10n_Hu_EdiTax_Audit_Export
 
 _logger = logging.getLogger(__name__)
 

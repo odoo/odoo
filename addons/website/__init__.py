@@ -1,8 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
-from . import wizard
+from .models import (
+    Base, BasePartnerMergeAutomaticWizard, IrActionsServer, IrAsset, IrAttachment,
+    IrBinary, IrHttp, IrModel, IrModelData, IrModelFields, IrModuleModule, IrQweb,
+    IrQwebFieldContact, IrQwebFieldHtml, IrRule, IrUiMenu, IrUiView, ResCompany,
+    ResConfigSettings, ResLang, ResPartner, ResUsers, ThemeIrAsset, ThemeIrAttachment,
+    ThemeIrUiView, ThemeUtils, ThemeWebsiteMenu, ThemeWebsitePage, Web_EditorAssets, Website,
+    WebsiteConfiguratorFeature, WebsiteControllerPage, WebsiteCover_PropertiesMixin, WebsiteMenu,
+    WebsiteMultiMixin, WebsitePage, WebsitePageProperties, WebsitePagePropertiesBase,
+    WebsitePublishedMixin, WebsiteRewrite, WebsiteRoute, WebsiteSearchableMixin,
+    WebsiteSeoMetadata, WebsiteSnippetFilter, WebsiteTrack, WebsiteVisitor,
+    WebsitePublishedMultiMixin,
+)
+from .wizard import (
+    BaseLanguageInstall, PortalWizardUser,
+    WebsiteCustom_Blocked_Third_Party_Domains, WebsiteRobots,
+)
 
 import odoo
 from odoo import api, SUPERUSER_ID

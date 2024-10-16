@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import base
 
 
-class BaseLanguageInstall(models.TransientModel):
+class BaseLanguageInstall(base.BaseLanguageInstall):
 
-    _inherit = ["base.language.install"]
 
     website_ids = fields.Many2many('website', string='Websites to translate')
 

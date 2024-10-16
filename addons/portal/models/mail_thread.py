@@ -5,10 +5,10 @@ import hmac
 
 from odoo import api, fields, models, _
 from odoo.addons.portal.utils import validate_thread_with_hash_pid, validate_thread_with_token
+from odoo.addons import mail
 
 
-class MailThread(models.AbstractModel):
-    _inherit = ['mail.thread']
+class MailThread(mail.MailThread):
 
     _mail_post_token_field = 'access_token' # token field for external posts, to be overridden
 

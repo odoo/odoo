@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import purchase, stock_account
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(stock_account.ResConfigSettings, purchase.ResConfigSettings):
 
     module_stock_dropshipping = fields.Boolean("Dropshipping")
     days_to_purchase = fields.Float(

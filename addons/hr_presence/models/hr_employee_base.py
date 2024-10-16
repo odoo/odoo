@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
+from odoo.addons import hr_holidays, hr
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = ["hr.employee.base"]
+class HrEmployeeBase(hr.HrEmployeeBase, hr_holidays.HrEmployeeBase):
 
     @api.depends("user_id.im_status", "hr_presence_state_display")
     def _compute_presence_state(self):

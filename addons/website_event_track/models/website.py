@@ -8,10 +8,10 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.image import ImageProcess
 from odoo.tools.translate import _
+from odoo.addons import website_event
 
 
-class Website(models.Model):
-    _inherit = ["website"]
+class Website(website_event.Website):
 
     app_icon = fields.Image(
         string='Website App Icon',

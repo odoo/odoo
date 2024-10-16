@@ -3,13 +3,13 @@
 
 from odoo import api, fields, models, _
 from odoo.tools import email_normalize
+from odoo.addons import test_mail, mail
 
 
-class MailTestSimple(models.Model):
+class MailTestSimple(models.Model, mail.MailThread):
     """ A very simple model only inheriting from mail.thread when only
     communication history is necessary. """
     _description = 'Simple Chatter Model'
-    _inherit = ['mail.thread']
 
     name = fields.Char()
     email_from = fields.Char()
@@ -30,17 +30,15 @@ class MailTestSimple(models.Model):
         return headers
 
 
-class MailTestSimpleMainAttachment(models.Model):
+class MailTestSimpleMainAttachment(models.Model, test_mail.MailTestSimple, mail.MailThreadMainAttachment):
     _description = 'Simple Chatter Model With Main Attachment Management'
-    _inherit = ['mail.test.simple', 'mail.thread.main.attachment']
 
 
-class MailTestSimpleUnfollow(models.Model):
+class MailTestSimpleUnfollow(models.Model, mail.MailThread):
     """ A very simple model only inheriting from mail.thread when only
     communication history is necessary with unfollow link enabled in
     notification emails even for non-internal user. """
     _description = 'Simple Chatter Model'
-    _inherit = ['mail.thread']
     _partner_unfollow_enabled = True
 
     name = fields.Char()
@@ -48,11 +46,10 @@ class MailTestSimpleUnfollow(models.Model):
     email_from = fields.Char()
 
 
-class MailTestAliasOptional(models.Model):
+class MailTestAliasOptional(models.Model, mail.MailAliasMixinOptional):
     """ A chatter model inheriting from the alias mixin using optional alias_id
     field, hence no inherits. """
     _description = 'Chatter Model using Optional Alias Mixin'
-    _inherit = ['mail.alias.mixin.optional']
 
     name = fields.Char()
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
@@ -68,11 +65,10 @@ class MailTestAliasOptional(models.Model):
         return values
 
 
-class MailTestGateway(models.Model):
+class MailTestGateway(models.Model, mail.MailThreadBlacklist):
     """ A very simple model only inheriting from mail.thread to test pure mass
     mailing features and base performances. """
     _description = 'Simple Chatter Model for Mail Gateway'
-    _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'
 
     name = fields.Char()
@@ -90,30 +86,27 @@ class MailTestGateway(models.Model):
         return super().message_new(msg_dict, custom_values=defaults)
 
 
-class MailTestGatewayCompany(models.Model):
+class MailTestGatewayCompany(models.Model, test_mail.MailTestGateway):
     """ A very simple model only inheriting from mail.thread to test pure mass
     mailing features and base performances, with a company field. """
     _description = 'Simple Chatter Model for Mail Gateway with company'
-    _inherit = ['mail.test.gateway']
 
     company_id = fields.Many2one('res.company', 'Company')
 
 
-class MailTestGatewayMainAttachment(models.Model):
+class MailTestGatewayMainAttachment(models.Model, test_mail.MailTestGateway, mail.MailThreadMainAttachment):
     """ A very simple model only inheriting from mail.thread to test pure mass
     mailing features and base performances, with a company field and main
     attachment management. """
     _description = 'Simple Chatter Model for Mail Gateway with company'
-    _inherit = ['mail.test.gateway', 'mail.thread.main.attachment']
 
     company_id = fields.Many2one('res.company', 'Company')
 
 
-class MailTestGatewayGroups(models.Model):
+class MailTestGatewayGroups(models.Model, mail.MailThreadBlacklist, mail.MailAliasMixin):
     """ A model looking like discussion channels / groups (flat thread and
     alias). Used notably for advanced gatewxay tests. """
     _description = 'Channel/Group-like Chatter Model for Mail Gateway'
-    _inherit = ['mail.thread.blacklist', 'mail.alias.mixin']
     _mail_flat_thread = False
     _primary_email = 'email_from'
 
@@ -144,11 +137,10 @@ class MailTestGatewayGroups(models.Model):
         )
 
 
-class MailTestTrack(models.Model):
+class MailTestTrack(models.Model, mail.MailThread):
     """ This model can be used in tests when automatic subscription and simple
     tracking is necessary. Most features are present in a simple way. """
     _description = 'Standard Chatter Model'
-    _inherit = ['mail.thread']
 
     name = fields.Char()
     email_from = fields.Char()
@@ -170,11 +162,10 @@ class MailTestTrack(models.Model):
         return super()._track_get_default_log_message(changes)
 
 
-class MailTestActivity(models.Model):
+class MailTestActivity(models.Model, mail.MailThread, mail.MailActivityMixin):
     """ This model can be used to test activities in addition to simple chatter
     features. """
     _description = 'Activity Model'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char()
     date = fields.Date()
@@ -193,11 +184,10 @@ class MailTestActivity(models.Model):
                                attachment_ids=attachment_ids)
 
 
-class MailTestTicket(models.Model):
+class MailTestTicket(models.Model, mail.MailThread):
     """ This model can be used in tests when complex chatter features are
     required like modeling tasks or tickets. """
     _description = 'Ticket-like model'
-    _inherit = ['mail.thread']
     _primary_email = 'email_from'
 
     name = fields.Char()
@@ -318,15 +308,11 @@ class MailTestTicket(models.Model):
         return recipients
 
 
-class MailTestTicketEl(models.Model):
+class MailTestTicketEl(models.Model, test_mail.MailTestTicket, mail.MailThreadBlacklist):
     """ Just mail.test.ticket, but exclusion-list enabled. Kept as different
     model to avoid messing with existing tests, notably performance, and ease
     backward comparison. """
     _description = 'Ticket-like model with exclusion list'
-    _inherit = [
-        'mail.test.ticket',
-        'mail.thread.blacklist',
-    ]
     _primary_email = 'email_from'
 
     email_from = fields.Char(
@@ -339,24 +325,22 @@ class MailTestTicketEl(models.Model):
             ticket.email_from = ticket.customer_id.email_formatted
 
 
-class MailTestTicketMc(models.Model):
+class MailTestTicketMc(models.Model, test_mail.MailTestTicket):
     """ Just mail.test.ticket, but multi company. Kept as different model to
     avoid messing with existing tests, notably performance, and ease backward
     comparison. """
     _description = 'Ticket-like model'
-    _inherit = ['mail.test.ticket']
     _primary_email = 'email_from'
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     container_id = fields.Many2one('mail.test.container.mc', tracking=True)
 
 
-class MailTestContainer(models.Model):
+class MailTestContainer(models.Model, mail.MailThread, mail.MailAliasMixin):
     """ This model can be used in tests when container records like projects
     or teams are required. """
     _description = 'Project-like model with alias'
     _mail_post_access = 'read'
-    _inherit = ['mail.thread', 'mail.alias.mixin']
 
     name = fields.Char()
     description = fields.Text()
@@ -396,24 +380,22 @@ class MailTestContainer(models.Model):
         return values
 
 
-class MailTestContainerMc(models.Model):
+class MailTestContainerMc(models.Model, test_mail.MailTestContainer):
     """ Just mail.test.container, but multi company. Kept as different model to
     avoid messing with existing tests, notably performance, and ease backward
     comparison. """
     _description = 'Project-like model with alias (MC)'
     _mail_post_access = 'read'
-    _inherit = ['mail.test.container']
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
 
 
-class MailTestComposerMixin(models.Model):
+class MailTestComposerMixin(models.Model, mail.MailComposerMixin):
     """ A simple invite-like wizard using the composer mixin, rendering on
     composer source test model. Purpose is to have a minimal composer which
     runs on other records and check notably dynamic template support and
     translations. """
     _description = 'Invite-like Wizard'
-    _inherit = ['mail.composer.mixin']
 
     name = fields.Char('Name')
     author_id = fields.Many2one('res.partner')
@@ -424,10 +406,9 @@ class MailTestComposerMixin(models.Model):
         self.render_model = 'mail.test.composer.source'
 
 
-class MailTestComposerSource(models.Model):
+class MailTestComposerSource(models.Model, mail.MailThreadBlacklist):
     """ A simple model on which invites are sent. """
     _description = 'Invite-like Source'
-    _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'
 
     name = fields.Char('Name')
@@ -445,10 +426,9 @@ class MailTestComposerSource(models.Model):
         return ['customer_id']
 
 
-class MailTestMailTrackingDuration(models.Model):
+class MailTestMailTrackingDuration(models.Model, mail.MailThread, mail.MailTrackingDurationMixin):
     _description = 'Fake model to test the mixin mail.tracking.duration.mixin'
     _track_duration_field = 'customer_id'
-    _inherit = ['mail.thread', 'mail.tracking.duration.mixin']
 
     name = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)

@@ -6,11 +6,11 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.osv import expression
 import ast
+from odoo.addons import hr
 
 
-class HrDepartment(models.Model):
+class HrDepartment(hr.HrDepartment):
 
-    _inherit = ['hr.department']
 
     absence_of_today = fields.Integer(
         compute='_compute_leave_count', string='Absence by Today')

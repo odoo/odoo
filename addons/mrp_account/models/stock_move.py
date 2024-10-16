@@ -4,10 +4,10 @@ from collections import defaultdict
 
 from odoo import models
 from odoo.tools import float_round
+from odoo.addons import mrp, stock_account
 
 
-class StockMove(models.Model):
-    _inherit = ["stock.move"]
+class StockMove(mrp.StockMove, stock_account.StockMove):
 
     def _filter_anglo_saxon_moves(self, product):
         res = super(StockMove, self)._filter_anglo_saxon_moves(product)

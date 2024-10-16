@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.osv import expression
+from odoo.addons import purchase_stock
 
 
-class StockReplenishMixin(models.AbstractModel):
-    _inherit = ['stock.replenish.mixin']
+class StockReplenishMixin(purchase_stock.StockReplenishMixin):
 
     def _get_allowed_route_domain(self):
         domains = super()._get_allowed_route_domain()

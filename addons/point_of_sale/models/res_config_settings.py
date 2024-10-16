@@ -3,11 +3,12 @@
 from odoo import api, fields, models
 
 import logging
+from odoo.addons import digest, stock_account
 
 _logger = logging.getLogger(__name__)
 
 
-class ResConfigSettings(models.TransientModel):
+class ResConfigSettings(stock_account.ResConfigSettings, digest.ResConfigSettings):
     """
     NOTES
     1. Fields with name starting with 'pos_' are removed from the vals before super call to `create`.
@@ -20,7 +21,6 @@ class ResConfigSettings(models.TransientModel):
        call, not before `create` is called. Because of this, vals contains a lot of field before
        super call, then the number of fields is reduced after.
     """
-    _inherit = ['res.config.settings']
 
     def _default_pos_config(self):
         # Default to the last modified pos.config.

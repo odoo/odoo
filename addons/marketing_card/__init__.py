@@ -1,3 +1,6 @@
 from . import controllers
-from . import models
-from . import wizards
+from .models import (
+    CardCampaign, CardCampaignTag, CardCard, CardTemplate, MailingMailing,
+    UtmSource,
+)
+from .wizards import MailComposeMessage

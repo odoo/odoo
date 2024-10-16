@@ -3,11 +3,11 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import gamification
 
 
-class GamificationBadgeUser(models.Model):
+class GamificationBadgeUser(gamification.GamificationBadgeUser):
     """User having received a badge"""
-    _inherit = ['gamification.badge.user']
 
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True)
 
@@ -28,8 +28,7 @@ class GamificationBadgeUser(models.Model):
         }
 
 
-class GamificationBadge(models.Model):
-    _inherit = ['gamification.badge']
+class GamificationBadge(gamification.GamificationBadge):
 
     granted_employees_count = fields.Integer(compute="_compute_granted_employees_count")
 

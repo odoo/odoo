@@ -1,10 +1,10 @@
 from odoo import fields, models, api, Command, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date
+from odoo.addons import account
 
 
-class AccountPayment(models.Model):
-    _inherit = ['account.payment']
+class AccountPayment(account.AccountPayment):
 
     l10n_latam_new_check_ids = fields.One2many('l10n_latam.check', 'payment_id', string='Checks')
     l10n_latam_move_check_ids = fields.Many2many(

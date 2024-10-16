@@ -1,1 +1,1 @@
-from . import spreadsheet_mixin_test
+from .spreadsheet_mixin_test import SpreadsheetTest

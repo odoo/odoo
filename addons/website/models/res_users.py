@@ -4,12 +4,12 @@ import logging
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.addons import web, mail, digest, auth_signup
 
 _logger = logging.getLogger(__name__)
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(digest.ResUsers, web.ResUsers, auth_signup.ResUsers, mail.ResUsers):
 
     website_id = fields.Many2one('website', related='partner_id.website_id', store=True, related_sudo=False, readonly=False)
 

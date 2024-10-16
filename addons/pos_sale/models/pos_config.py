@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import point_of_sale
 
 
-class PosConfig(models.Model):
-    _inherit = ['pos.config']
+class PosConfig(point_of_sale.PosConfig):
 
     crm_team_id = fields.Many2one(
         'crm.team', string="Sales Team", ondelete="set null",

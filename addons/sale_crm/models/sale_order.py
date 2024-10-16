@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale.SaleOrder):
 
     opportunity_id = fields.Many2one(
         'crm.lead', string='Opportunity', check_company=True,

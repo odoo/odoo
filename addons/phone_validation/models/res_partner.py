@@ -2,10 +2,10 @@
 
 from odoo import api, models
 from odoo.addons.phone_validation.tools import phone_validation
+from odoo.addons import mail
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(mail.ResPartner):
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):

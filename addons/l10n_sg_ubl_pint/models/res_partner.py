@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields
+from odoo.addons import account_edi_ubl_cii
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account_edi_ubl_cii.ResPartner):
 
     invoice_edi_format = fields.Selection(selection_add=[('pint_sg', "PINT Singapore")])
 

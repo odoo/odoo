@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import mail, iap
 
 
-class IapAccount(models.Model):
-    _inherit = ['iap.account', 'mail.thread']
+class IapAccount(iap.IapAccount, mail.MailThread):
 
     # Add tracking to the base fields
     company_ids = fields.Many2many('res.company', tracking=True)

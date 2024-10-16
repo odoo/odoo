@@ -8,10 +8,10 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 
 from odoo import api, fields, models, _, service
 from odoo.tools import file_open, split_every
+from odoo.addons import pos_restaurant
 
 
-class PosConfig(models.Model):
-    _inherit = ["pos.config"]
+class PosConfig(pos_restaurant.PosConfig):
 
     def _self_order_kiosk_default_languages(self):
         return self.env["res.lang"].get_installed()

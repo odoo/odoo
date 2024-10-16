@@ -7,10 +7,10 @@ from odoo import Command, api, models
 from .eu_account_map import EU_ACCOUNT_MAP
 from .eu_tag_map import EU_TAG_MAP
 from .eu_tax_map import EU_TAX_MAP
+from odoo.addons import account
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(account.ResCompany):
 
     @api.model
     def _map_all_eu_companies_taxes(self):

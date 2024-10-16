@@ -5,10 +5,10 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import stdnum.de.stnr
 import stdnum.exceptions
+from odoo.addons import account, base_vat
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(base_vat.ResCompany, account.ResCompany):
 
     l10n_de_stnr = fields.Char(
         string="St.-Nr.",

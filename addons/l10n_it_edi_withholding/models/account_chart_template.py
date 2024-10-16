@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.addons.account.models.chart_template import template
+from odoo.addons import l10n_it
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(l10n_it.AccountChartTemplate):
 
     @template('it', 'account.account')
     def _get_it_withholding_account_account(self):

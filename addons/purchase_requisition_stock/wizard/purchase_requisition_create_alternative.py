@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, Command, models
+from odoo.addons import purchase_requisition
 
 
-class PurchaseRequisitionCreateAlternative(models.TransientModel):
-    _inherit = ['purchase.requisition.create.alternative']
+class PurchaseRequisitionCreateAlternative(purchase_requisition.PurchaseRequisitionCreateAlternative):
 
     def _get_alternative_values(self):
         vals = super(PurchaseRequisitionCreateAlternative, self)._get_alternative_values()

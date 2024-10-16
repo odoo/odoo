@@ -3,10 +3,10 @@
 
 from odoo import Command
 from odoo import models, _
+from odoo.addons import event_booth_sale, website_sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(event_booth_sale.SaleOrder, website_sale.SaleOrder):
 
     def _cart_find_product_line(
         self, product_id=None, line_id=None,

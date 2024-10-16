@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 from odoo.tools.sql import column_exists, create_column
+from odoo.addons import account
 
 
-class ProductTemplate(models.Model):
-    _inherit = ["product.template"]
+class ProductTemplate(account.ProductTemplate):
 
     @api.model
     def default_get(self, fields):

@@ -5,10 +5,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.addons import crm
 
 
-class CrmLead(models.Model):
-    _inherit = ['crm.lead']
+class CrmLead(crm.CrmLead):
 
     sale_amount_total = fields.Monetary(compute='_compute_sale_data', string="Sum of Orders", help="Untaxed Total of Confirmed Orders", currency_field='company_currency')
     quotation_count = fields.Integer(compute='_compute_sale_data', string="Number of Quotations")

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import resource
 
 
-class ResourceTest(models.Model):
+class ResourceTest(models.Model, resource.ResourceMixin):
     _description = 'Test Resource Model'
-    _inherit = ['resource.mixin']
 
     name = fields.Char()

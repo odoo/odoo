@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import base
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(base.ResPartner):
 
     siret = fields.Char(string='SIRET', size=14)
 

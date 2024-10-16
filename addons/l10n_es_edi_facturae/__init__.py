@@ -2,8 +2,11 @@
 import csv
 
 from odoo.tools import file_open
-from . import models
-from . import wizard
+from .models import (
+    AccountMove, AccountMoveSend, AccountTax, CertificateCertificate,
+    L10n_Es_Edi_FacturaeAc_Role_Type, ResCompany, ResPartner, UomUom,
+)
+from .wizard import AccountMoveReversal
 
 def _edit_tax_types(env, template_data):
     """

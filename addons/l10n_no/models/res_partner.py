@@ -1,9 +1,9 @@
 # coding: utf-8
 from odoo import fields, models
+from odoo.addons import account, base_vat
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(base_vat.ResPartner, account.ResPartner):
 
     l10n_no_bronnoysund_number = fields.Char(string='Register of Legal Entities (Brønnøysund Register Center)', size=9)
 

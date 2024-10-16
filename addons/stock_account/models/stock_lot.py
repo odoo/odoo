@@ -5,10 +5,10 @@ from ast import literal_eval
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
+from odoo.addons import stock
 
 
-class StockLot(models.Model):
-    _inherit = ['stock.lot']
+class StockLot(stock.StockLot):
 
     value_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
     quantity_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)

@@ -6,10 +6,10 @@ from odoo.fields import Datetime
 from odoo.http import request
 from odoo.modules.registry import Registry
 from odoo.addons.bus.websocket import wsrequest
+from odoo.addons import mail
 
 
-class IrWebsocket(models.AbstractModel):
-    _inherit = ['ir.websocket']
+class IrWebsocket(mail.IrWebsocket):
 
     def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
         super()._update_bus_presence(inactivity_period, im_status_ids_by_model)

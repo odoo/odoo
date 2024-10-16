@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, Command, models
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+class AccountJournal(account.AccountJournal):
 
     @api.model
     def _prepare_liquidity_account_vals(self, company, code, vals):

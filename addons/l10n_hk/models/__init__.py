@@ -1,3 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from . import res_bank
-from . import template_hk
+from .res_bank import ResPartnerBank
+from .template_hk import AccountChartTemplate

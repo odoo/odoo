@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
+from odoo.addons import mail
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(mail.ResUsers):
 
     def _deactivate_portal_user(self, **post):
         """Blacklist the phone of the user after deleting it."""

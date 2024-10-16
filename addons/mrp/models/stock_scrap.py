@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.addons import stock
 
 
-class StockScrap(models.Model):
-    _inherit = ['stock.scrap']
+class StockScrap(stock.StockScrap):
 
     production_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',

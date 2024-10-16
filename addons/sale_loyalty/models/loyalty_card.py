@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import loyalty
 
 
-class LoyaltyCard(models.Model):
-    _inherit = ['loyalty.card']
+class LoyaltyCard(loyalty.LoyaltyCard):
 
     order_id = fields.Many2one(
         comodel_name='sale.order',

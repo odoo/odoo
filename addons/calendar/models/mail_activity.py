@@ -3,10 +3,10 @@
 
 from odoo import models, fields, tools, _
 from odoo.tools import is_html_empty
+from odoo.addons import mail
 
 
-class MailActivity(models.Model):
-    _inherit = ["mail.activity"]
+class MailActivity(mail.MailActivity):
 
     calendar_event_id = fields.Many2one('calendar.event', string="Calendar Meeting", ondelete='cascade')
 

@@ -4,10 +4,10 @@
 from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
+from odoo.addons import account, base_vat
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(base_vat.ResConfigSettings, account.ResConfigSettings):
 
     group_l10n_in_reseller = fields.Boolean(implied_group='l10n_in.group_l10n_in_reseller', string="Manage Reseller(E-Commerce)")
     l10n_in_edi_production_env = fields.Boolean(

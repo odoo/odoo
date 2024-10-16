@@ -1,8 +1,8 @@
 from odoo import models, api
+from odoo.addons import point_of_sale, http_routing
 
 
-class ResLang(models.Model):
-    _inherit = ['res.lang', 'pos.load.mixin']
+class ResLang(http_routing.ResLang, point_of_sale.PosLoadMixin):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

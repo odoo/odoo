@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
+from odoo.addons import website_profile, auth_signup
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(auth_signup.ResUsers, website_profile.ResUsers):
 
     create_date = fields.Datetime('Create Date', readonly=True, index=True)
 

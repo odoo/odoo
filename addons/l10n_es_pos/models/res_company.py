@@ -1,8 +1,8 @@
 from odoo import api, models
+from odoo.addons import point_of_sale, l10n_es
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(point_of_sale.ResCompany, l10n_es.ResCompany):
 
     @api.model
     def _load_pos_data_fields(self, config_id):

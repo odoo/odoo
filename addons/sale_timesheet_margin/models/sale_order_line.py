@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
+from odoo.addons import sale_margin, sale_timesheet
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ["sale.order.line"]
+class SaleOrderLine(sale_margin.SaleOrderLine, sale_timesheet.SaleOrderLine):
 
     @api.depends('analytic_line_ids.amount', 'qty_delivered_method')
     def _compute_purchase_price(self):

@@ -5,10 +5,10 @@ from markupsafe import Markup
 
 from odoo import api, models, _
 from odoo.addons.website.tools import add_form_signature
+from odoo.addons import web_editor
 
 
-class IrQwebFieldContact(models.AbstractModel):
-    _inherit = ['ir.qweb.field.contact']
+class IrQwebFieldContact(web_editor.IrQwebFieldContact):
 
     @api.model
     def get_available_options(self):
@@ -21,8 +21,7 @@ class IrQwebFieldContact(models.AbstractModel):
         return options
 
 
-class IrQwebFieldHtml(models.AbstractModel):
-    _inherit = ['ir.qweb.field.html']
+class IrQwebFieldHtml(web_editor.IrQwebFieldHtml):
 
     @api.model
     def value_to_html(self, value, options):

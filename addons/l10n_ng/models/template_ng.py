@@ -2,10 +2,10 @@
 
 from odoo import _, models
 from odoo.addons.account.models.chart_template import template
+from odoo.addons import account
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(account.AccountChartTemplate):
 
     @template('ng', 'account.account')
     def _get_ng_account_account(self):

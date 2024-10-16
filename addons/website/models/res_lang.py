@@ -4,10 +4,10 @@ from odoo import models, tools, _
 from odoo.addons.base.models.res_lang import LangDataDict, LangData
 from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.addons import http_routing
 
 
-class ResLang(models.Model):
-    _inherit = ["res.lang"]
+class ResLang(http_routing.ResLang):
 
     def write(self, vals):
         if 'active' in vals and not vals['active']:

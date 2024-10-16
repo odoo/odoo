@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
+from odoo.addons import l10n_es
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(l10n_es.ResCompany):
 
     l10n_es_sii_certificate_id = fields.Many2one(
         string="Certificate (SII)",

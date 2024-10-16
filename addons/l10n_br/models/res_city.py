@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api
+from odoo.addons import base_address_extended
 
 
-class ResCity(models.Model):
-    _inherit = ["res.city"]
+class ResCity(base_address_extended.ResCity):
 
     l10n_br_zip_range_ids = fields.One2many(
         string="Zip Ranges",

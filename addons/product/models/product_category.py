@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import mail
 
 
-class ProductCategory(models.Model):
-    _inherit = ['mail.thread']
+class ProductCategory(models.Model, mail.MailThread):
     _description = "Product Category"
     _parent_name = "parent_id"
     _parent_store = True

@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import stock_dropshipping
 
 
-class PurchaseOrder(models.Model):
-    _inherit = ['purchase.order']
+class PurchaseOrder(stock_dropshipping.PurchaseOrder):
 
     default_location_dest_id_is_subcontracting_loc = fields.Boolean(related='picking_type_id.default_location_dest_id.is_subcontracting_location')
 

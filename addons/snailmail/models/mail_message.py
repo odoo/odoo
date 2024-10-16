@@ -1,9 +1,9 @@
 
 from odoo import api, fields, models
+from odoo.addons import mail
 
 
-class MailMessage(models.Model):
-    _inherit = ['mail.message']
+class MailMessage(mail.MailMessage):
 
     snailmail_error = fields.Boolean(
         string="Snailmail message in error",

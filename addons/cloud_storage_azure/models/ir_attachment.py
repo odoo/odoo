@@ -8,6 +8,7 @@ from odoo import models
 from odoo.exceptions import ValidationError
 
 from ..utils.cloud_storage_azure_utils import generate_blob_sas, get_user_delegation_key, ClientAuthenticationError
+from odoo.addons import cloud_storage
 
 CloudStorageAzureUserDelegationKeys = {}  # {db_name: (config, user_delegation_key or exception)}
 
@@ -58,8 +59,7 @@ def get_cloud_storage_azure_user_delegation_key(env):
     return user_delegation_key
 
 
-class IrAttachment(models.Model):
-    _inherit = ['ir.attachment']
+class IrAttachment(cloud_storage.IrAttachment):
     _cloud_storage_azure_url_pattern = re.compile(r'https://(?P<account_name>[\w]+).blob.core.windows.net/(?P<container_name>[\w]+)/(?P<blob_name>[^?]+)')
 
     def _get_cloud_storage_azure_info(self):

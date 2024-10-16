@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
+from .models import (
+    IrHttp, OnboardingOnboardingStep, PaymentMethod, PaymentProvider, PaymentToken,
+    PaymentTransaction, ResCompany, ResCountry, ResPartner,
+)
 from . import utils
-from . import wizards
+from .wizards import PaymentCaptureWizard, PaymentLinkWizard, PaymentProviderOnboardingWizard
 
 
 def setup_provider(env, code):

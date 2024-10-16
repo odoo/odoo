@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from .models import (
+    AccountChartTemplate, AccountMove, AccountMoveLine, AccountTax, IapAccount,
+    L10n_InPortCode, ProductTemplate, ResCompany, ResConfigSettings, ResCountryState, ResPartner,
+    UomUom,
+)
 from . import demo
 
 def init_settings(env):

@@ -3,10 +3,10 @@
 
 from odoo import _, models
 from odoo.fields import Command
+from odoo.addons import sale_loyalty, delivery
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale_loyalty.SaleOrder, delivery.SaleOrder):
 
     # delivery overrides
 

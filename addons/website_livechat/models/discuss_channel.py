@@ -3,10 +3,10 @@
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
+from odoo.addons import im_livechat
 
 
-class DiscussChannel(models.Model):
-    _inherit = ['discuss.channel']
+class DiscussChannel(im_livechat.DiscussChannel):
 
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor', index='btree_not_null')
 

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import loyalty
 
 
-class LoyaltyHistory(models.Model):
-    _inherit = ['loyalty.history']
+class LoyaltyHistory(loyalty.LoyaltyHistory):
 
     def _get_order_portal_url(self):
         if self.order_id and self.order_model == 'sale.order':

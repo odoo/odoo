@@ -6,10 +6,10 @@ import time
 
 from odoo import api, fields, models
 from odoo.tools.sql import SQL
+from odoo.addons import account
 
 
-class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+class ProductProduct(account.ProductProduct):
 
     date_from = fields.Date(compute='_compute_product_margin_fields_values', string='Margin Date From')
     date_to = fields.Date(compute='_compute_product_margin_fields_values', string='Margin Date To')

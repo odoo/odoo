@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
-from . import product_wishlist
-from . import res_users
+from .product_wishlist import ProductProduct, ProductTemplate, ProductWishlist, ResPartner
+from .res_users import ResUsers

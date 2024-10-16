@@ -31,6 +31,7 @@ from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
 from itertools import islice
+from odoo.addons import base
 
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -134,9 +135,8 @@ else:
         _logger.info('Wkhtmltoimage seems to be broken.')
 
 
-class IrActionsReport(models.Model):
+class IrActionsReport(models.Model, base.IrActionsActions):
     _description = 'Report Action'
-    _inherit = ['ir.actions.actions']
     _table = 'ir_act_report_xml'
     _order = 'name, id'
     _allow_sudo_commands = False

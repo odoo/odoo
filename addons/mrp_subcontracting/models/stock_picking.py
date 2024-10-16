@@ -7,10 +7,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare
 from dateutil.relativedelta import relativedelta
+from odoo.addons import mrp
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(mrp.StockPicking):
 
     move_line_ids_without_package = fields.One2many(
         domain=['&', '|', ('location_dest_id.usage', '!=', 'production'), ('move_id.picking_code', '!=', 'outgoing'),

@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.addons.base.models.res_lang import LangDataDict
+from odoo.addons import base
 
 
-class ResLang(models.Model):
-    _inherit = ["res.lang"]
+class ResLang(base.ResLang):
 
     def _get_frontend(self) -> LangDataDict:
         """ Return the available languages for current request

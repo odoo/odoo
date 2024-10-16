@@ -3,10 +3,10 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConnection
+from odoo.addons import account
 
 
-class AccountMoveSend(models.AbstractModel):
-    _inherit = ['account.move.send']
+class AccountMoveSend(account.AccountMoveSend):
 
     @api.model
     def _is_hu_edi_applicable(self, move):

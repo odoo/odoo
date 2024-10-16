@@ -1,8 +1,8 @@
 from odoo import models, api
+from odoo.addons import digest
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(digest.ResUsers):
 
     @api.model
     def _load_pos_data_domain(self, data):

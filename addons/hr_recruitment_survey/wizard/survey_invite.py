@@ -4,10 +4,10 @@ from markupsafe import Markup
 
 from odoo import fields, models, _
 from odoo.tools.misc import clean_context
+from odoo.addons import survey
 
 
-class SurveyInvite(models.TransientModel):
-    _inherit = ["survey.invite"]
+class SurveyInvite(survey.SurveyInvite):
 
     applicant_id = fields.Many2one('hr.applicant', string='Applicant')
 

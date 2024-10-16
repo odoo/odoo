@@ -5,10 +5,10 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 import pytz
 from datetime import datetime
+from odoo.addons import resource
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = ["resource.calendar.leaves"]
+class ResourceCalendarLeaves(resource.ResourceCalendarLeaves):
 
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request')
 
@@ -155,8 +155,7 @@ class ResourceCalendarLeaves(models.Model):
         return res
 
 
-class ResourceCalendar(models.Model):
-    _inherit = ["resource.calendar"]
+class ResourceCalendar(resource.ResourceCalendar):
 
     associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
 

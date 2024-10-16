@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import bus
 
 
-class BusListenerMixin(models.AbstractModel):
-    _inherit = ["bus.listener.mixin"]
+class BusListenerMixin(bus.BusListenerMixin):
 
     def _bus_send_store(
         self, /, *args, notification_type="mail.record/insert", subchannel=None, **kwargs

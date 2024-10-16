@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import point_of_sale
 
 
-class PosOrderLine(models.Model):
-    _inherit = ["pos.order.line"]
+class PosOrderLine(point_of_sale.PosOrderLine):
 
     l10n_in_hsn_code = fields.Char(string="HSN/SAC Code", compute="_compute_l10n_in_hsn_code", store=True, readonly=False, copy=False)
 

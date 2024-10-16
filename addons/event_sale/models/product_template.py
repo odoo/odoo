@@ -1,8 +1,8 @@
 from odoo import _, api, models
+from odoo.addons import event_product
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(event_product.ProductTemplate):
 
     def _prepare_service_tracking_tooltip(self):
         if self.service_tracking == 'event':

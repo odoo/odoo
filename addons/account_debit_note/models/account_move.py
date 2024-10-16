@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(account.AccountMove):
 
     debit_origin_id = fields.Many2one('account.move', 'Original Invoice Debited', readonly=True, copy=False, index='btree_not_null')
     debit_note_ids = fields.One2many('account.move', 'debit_origin_id', 'Debit Notes',

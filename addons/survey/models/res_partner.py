@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import mail, auth_signup
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(auth_signup.ResPartner, mail.ResPartner):
 
     certifications_count = fields.Integer('Certifications Count', compute='_compute_certifications_count')
     certifications_company_count = fields.Integer('Company Certifications Count', compute='_compute_certifications_company_count')

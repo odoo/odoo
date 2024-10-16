@@ -7,12 +7,12 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, Command
 from odoo.tools.misc import file_open, formatLang
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import account
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ["account.chart.template"]
+class AccountChartTemplate(models.AbstractModel, account.AccountChartTemplate):
 
     @api.model
     def _get_demo_data(self, company=False):

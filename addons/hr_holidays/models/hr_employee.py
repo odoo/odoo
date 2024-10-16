@@ -9,10 +9,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
+from odoo.addons import hr
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = ["hr.employee.base"]
+class HrEmployeeBase(hr.HrEmployeeBase):
 
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off',
@@ -272,8 +272,7 @@ class HrEmployeeBase(models.AbstractModel):
         return res
 
 
-class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+class HrEmployee(hr.HrEmployee):
 
     current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_current_leave', string="Current Time Off Type",
                                        groups="hr.group_hr_user")

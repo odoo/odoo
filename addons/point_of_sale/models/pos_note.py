@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import point_of_sale
 
 
-class PosNote(models.Model):
+class PosNote(models.Model, point_of_sale.PosLoadMixin):
     _description = 'PoS Note'
-    _inherit = ['pos.load.mixin']
 
     name = fields.Char(required=True)
     sequence = fields.Integer('Sequence', default=1)

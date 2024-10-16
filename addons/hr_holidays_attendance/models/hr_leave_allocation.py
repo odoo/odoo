@@ -6,10 +6,10 @@ from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.addons import hr_holidays
 
 
-class HrLeaveAllocation(models.Model):
-    _inherit = ['hr.leave.allocation']
+class HrLeaveAllocation(hr_holidays.HrLeaveAllocation):
 
     def default_get(self, fields):
         res = super().default_get(fields)

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import stock_account, sale
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(sale.ResCompany, stock_account.ResCompany):
 
     security_lead = fields.Float(
         'Sales Safety Days', default=0.0, required=True,

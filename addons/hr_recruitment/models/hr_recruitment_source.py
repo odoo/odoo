@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import utm
 
 
-class HrRecruitmentSource(models.Model):
+class HrRecruitmentSource(models.Model, utm.UtmSourceMixin):
     _description = "Source of Applicants"
-    _inherit = ['utm.source.mixin']
 
     email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
     has_domain = fields.Char(compute='_compute_has_domain')

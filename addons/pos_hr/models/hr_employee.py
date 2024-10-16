@@ -6,10 +6,10 @@ import hashlib
 from odoo import api, models, _
 from odoo.exceptions import UserError
 from odoo.tools import format_list
+from odoo.addons import hr
 
 
-class HrEmployee(models.Model):
-    _inherit = ['hr.employee']
+class HrEmployee(hr.HrEmployee):
 
     @api.model
     def _load_pos_data_domain(self, data):

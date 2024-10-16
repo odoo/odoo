@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import wizard
-from . import report
+from .models import (
+    ProductProduct, ProductTemplate, RepairOrder, RepairTags, SaleOrder,
+    SaleOrderLine, StockLot, StockMove, StockMoveLine, StockPicking, StockPickingType,
+    StockTraceabilityReport, StockWarehouse,
+)
+from .wizard import StockWarnInsufficientQtyRepair
+from .report import StockForecasted_Product_Product
 
 from odoo import api, SUPERUSER_ID
 

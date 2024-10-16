@@ -3,10 +3,10 @@
 
 from odoo import models
 from odoo.osv.expression import AND
+from odoo.addons import hr_attendance
 
 
-class HrAttendance(models.Model):
-    _inherit = ["hr.attendance"]
+class HrAttendance(hr_attendance.HrAttendance):
 
     def _get_overtime_leave_domain(self):
         domain = super()._get_overtime_leave_domain()

@@ -4,10 +4,10 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
 from odoo.tools import create_index
 from odoo.tools import SQL
+from odoo.addons import account, mail
 
 
-class AccountPayment(models.Model):
-    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
+class AccountPayment(models.Model, mail.MailThreadMainAttachment, mail.MailActivityMixin):
     _description = "Payments"
     _order = "date desc, name desc"
     _check_company_auto = True
@@ -1124,7 +1124,6 @@ class AccountPayment(models.Model):
 
 
 # a lot of SQL queries
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(models.Model, account.AccountMove):
 
     payment_ids = fields.One2many('account.payment', 'move_id', string='Payments')

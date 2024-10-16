@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
+from odoo.addons import point_of_sale, account_payment
 
 
-class AccountPayment(models.Model):
-    _inherit = ['account.payment']
+class AccountPayment(point_of_sale.AccountPayment, account_payment.AccountPayment):
 
     pos_order_id = fields.Many2one('pos.order', string='POS Order', help='The Point of Sale order linked to this payment', readonly=True)
 

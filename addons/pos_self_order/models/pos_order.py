@@ -4,10 +4,10 @@
 from typing import Dict
 
 from odoo import models, fields, api
+from odoo.addons import point_of_sale, pos_restaurant
 
 
-class PosOrderLine(models.Model):
-    _inherit = ["pos.order.line"]
+class PosOrderLine(point_of_sale.PosOrderLine):
 
     combo_id = fields.Many2one('product.combo', string='Combo reference')
 
@@ -32,8 +32,7 @@ class PosOrderLine(models.Model):
         return super().write(vals)
 
 
-class PosOrder(models.Model):
-    _inherit = ["pos.order"]
+class PosOrder(pos_restaurant.PosOrder):
 
     table_stand_number = fields.Char(string="Table Stand Number")
 

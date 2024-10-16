@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import hr
 
 
-class IrUiMenu(models.Model):
-    _inherit = ['ir.ui.menu']
+class IrUiMenu(hr.IrUiMenu):
 
     def _load_menus_blacklist(self):
         res = super()._load_menus_blacklist()

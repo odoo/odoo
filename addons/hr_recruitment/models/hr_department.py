@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
+from odoo.addons import hr
 
 
-class HrDepartment(models.Model):
-    _inherit = ['hr.department']
+class HrDepartment(hr.HrDepartment):
 
     new_applicant_count = fields.Integer(
         compute='_compute_new_applicant_count', string='New Applicant', compute_sudo=True)

@@ -4,10 +4,10 @@ import threading
 
 from odoo import api, models, tools, _
 from odoo.exceptions import ValidationError
+from odoo.addons import sale_project
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(sale_project.ProductProduct):
 
     @tools.ormcache()
     def _get_default_uom_id(self):

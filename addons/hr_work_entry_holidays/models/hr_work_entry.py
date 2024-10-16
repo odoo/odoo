@@ -4,10 +4,10 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.addons import hr_work_entry_contract
 
 
-class HrWorkEntry(models.Model):
-    _inherit = ['hr.work.entry']
+class HrWorkEntry(hr_work_entry_contract.HrWorkEntry):
 
     leave_id = fields.Many2one('hr.leave', string='Time Off')
     leave_state = fields.Selection(related='leave_id.state')
@@ -100,8 +100,7 @@ class HrWorkEntry(models.Model):
         return durations_by_leave_type
 
 
-class HrWorkEntryType(models.Model):
-    _inherit = ['hr.work.entry.type']
+class HrWorkEntryType(hr_work_entry_contract.HrWorkEntryType):
     _description = 'HR Work Entry Type'
 
     leave_type_ids = fields.One2many(

@@ -14,13 +14,13 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import const, utils as stripe_utils
 from odoo.addons.payment_stripe.controllers.main import StripeController
 from odoo.addons.payment_stripe.controllers.onboarding import OnboardingController
+from odoo.addons import payment
 
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('stripe', "Stripe")], ondelete={'stripe': 'set default'})

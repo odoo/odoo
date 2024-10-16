@@ -11,12 +11,12 @@ from odoo.exceptions import ValidationError
 from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment_mollie import const
 from odoo.addons.payment_mollie.controllers.main import MollieController
+from odoo.addons import payment
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTransaction(models.Model):
-    _inherit = ['payment.transaction']
+class PaymentTransaction(payment.PaymentTransaction):
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Mollie-specific rendering values.

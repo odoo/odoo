@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import sale
 
 
-class SaleOrderCancel(models.TransientModel):
-    _inherit = ['sale.order.cancel']
+class SaleOrderCancel(sale.SaleOrderCancel):
 
     display_delivery_alert = fields.Boolean('Delivery Alert', compute='_compute_display_delivery_alert')
 

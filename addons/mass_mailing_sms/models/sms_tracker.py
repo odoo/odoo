@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import sms
 
 
-class SmsTracker(models.Model):
-    _inherit = ["sms.tracker"]
+class SmsTracker(sms.SmsTracker):
 
     SMS_STATE_TO_TRACE_STATUS = {
         'error': 'error',

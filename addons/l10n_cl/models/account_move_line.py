@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
 from odoo.tools.float_utils import float_repr
+from odoo.addons import account, l10n_latam_invoice_document
 
 
-class AccountMoveLine(models.Model):
+class AccountMoveLine(l10n_latam_invoice_document.AccountMoveLine, account.AccountMoveLine):
 
-    _inherit = ['account.move.line']
 
     def _l10n_cl_prices_and_taxes(self):
         """ this method is preserved here to allow compatibility with old templates,

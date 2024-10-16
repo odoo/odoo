@@ -4,15 +4,12 @@
 import datetime
 
 from odoo import api, fields, models
+from odoo.addons import website, website_jitsi
 
 
-class EventMeetingRoom(models.Model):
+class EventMeetingRoom(models.Model, website_jitsi.ChatRoomMixin, website.WebsitePublishedMixin):
     _description = "Event Meeting Room"
     _order = "is_pinned DESC, id"
-    _inherit = [
-        'chat.room.mixin',
-        'website.published.mixin',
-    ]
 
     _DELAY_CLEAN = datetime.timedelta(hours=4)
 

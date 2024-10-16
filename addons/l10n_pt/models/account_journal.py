@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+class AccountJournal(account.AccountJournal):
 
     def _prepare_liquidity_account_vals(self, company, code, vals):
         account_vals = super()._prepare_liquidity_account_vals(company, code, vals)

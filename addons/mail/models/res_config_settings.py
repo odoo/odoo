@@ -5,12 +5,12 @@ import datetime
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import base_setup
 
 
-class ResConfigSettings(models.TransientModel):
+class ResConfigSettings(base_setup.ResConfigSettings):
     """ Inherit the base settings to add a counter of failed email + configure
     the alias domain. """
-    _inherit = ['res.config.settings']
 
     external_email_server_default = fields.Boolean(
         "Use Custom Email Servers",

@@ -4,10 +4,10 @@
 from odoo import _, api, models
 
 from odoo.exceptions import UserError
+from odoo.addons import utm
 
 
-class UtmMedium(models.Model):
-    _inherit = ['utm.medium']
+class UtmMedium(utm.UtmMedium):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_mailings(self):

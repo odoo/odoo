@@ -6,13 +6,13 @@ import werkzeug
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, AccessError
+from odoo.addons import point_of_sale
 
 _logger = logging.getLogger(__name__)
 TIMEOUT = 10
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ['pos.payment.method']
+class PosPaymentMethod(point_of_sale.PosPaymentMethod):
 
     def _get_payment_terminal_selection(self):
         return super()._get_payment_terminal_selection() + [('stripe', 'Stripe')]

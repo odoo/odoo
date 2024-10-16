@@ -4,10 +4,10 @@ import contextlib
 
 from odoo import api, models
 from odoo.exceptions import AccessError
+from odoo.addons import web
 
 
-class IrUiMenu(models.Model):
-    _inherit = ['ir.ui.menu']
+class IrUiMenu(web.IrUiMenu):
 
     @api.model
     def _get_best_backend_root_menu_id_for_model(self, res_model):

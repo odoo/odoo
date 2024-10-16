@@ -2,10 +2,10 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import payment
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     journal_id = fields.Many2one(
         string="Payment Journal",

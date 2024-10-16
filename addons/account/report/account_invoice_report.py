@@ -5,6 +5,7 @@ from odoo.tools import SQL
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 from functools import lru_cache
+from odoo.addons import account
 
 
 class AccountInvoiceReport(models.Model):
@@ -173,9 +174,8 @@ class ReportAccountReport_Invoice(models.AbstractModel):
         }
 
 
-class ReportAccountReport_Invoice_With_Payments(models.AbstractModel):
+class ReportAccountReport_Invoice_With_Payments(models.AbstractModel, account.ReportAccountReport_Invoice):
     _description = 'Account report with payment lines'
-    _inherit = ['report.account.report_invoice']
 
     @api.model
     def _get_report_values(self, docids, data=None):

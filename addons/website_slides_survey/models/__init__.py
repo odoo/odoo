@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import slide_slide
-from . import slide_channel
-from . import survey_user
-from . import survey_survey
+from .slide_slide import SlideSlide, SlideSlidePartner
+from .slide_channel import SlideChannel, SlideChannelPartner
+from .survey_user import SurveyUser_Input
+from .survey_survey import SurveySurvey

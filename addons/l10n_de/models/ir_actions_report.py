@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import account
 
 
-class IrActionsReport(models.Model):
-    _inherit = ['ir.actions.report']
+class IrActionsReport(account.IrActionsReport):
 
     def _get_rendering_context(self, report, docids, data):
         data = super()._get_rendering_context(report, docids, data)

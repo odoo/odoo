@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import api, models, fields
+from odoo.addons import account
 
 
-class AccountSetupBankManualConfig(models.TransientModel):
-    _inherit = ['account.setup.bank.manual.config']
+class AccountSetupBankManualConfig(account.AccountSetupBankManualConfig):
 
     @api.onchange('acc_number')
     def _onchange_recompute_qr_iban(self):

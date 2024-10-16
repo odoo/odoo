@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models
 import re
+from odoo.addons import account, base_vat
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(account.ResCompany, base_vat.ResCompany):
 
     org_number = fields.Char(compute='_compute_org_number')
 

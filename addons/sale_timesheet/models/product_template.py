@@ -4,10 +4,10 @@ import threading
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import sale_project
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(sale_project.ProductTemplate):
 
     def _selection_service_policy(self):
         service_policies = super()._selection_service_policy()

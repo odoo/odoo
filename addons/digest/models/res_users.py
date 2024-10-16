@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
+from odoo.addons import resource, mail
 
 
-class ResUsers(models.Model):
-    _inherit = ["res.users"]
+class ResUsers(mail.ResUsers, resource.ResUsers):
 
     @api.model_create_multi
     def create(self, vals_list):

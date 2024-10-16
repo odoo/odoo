@@ -1,2 +1,2 @@
-from . import account_move_send
-from . import res_partner
+from .account_move_send import AccountMoveSend
+from .res_partner import ResPartner

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
+from odoo.addons import delivery
 
 
-class ChooseDeliveryCarrier(models.TransientModel):
-    _inherit = ['choose.delivery.carrier']
+class ChooseDeliveryCarrier(delivery.ChooseDeliveryCarrier):
 
     @api.depends('carrier_id')
     def _compute_invoicing_message(self):

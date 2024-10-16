@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
+from odoo.addons import hr
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(hr.ResUsers):
 
     vehicle = fields.Char(related="employee_id.vehicle")
     bank_account_id = fields.Many2one(related="employee_id.bank_account_id")

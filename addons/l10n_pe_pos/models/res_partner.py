@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import _, api, models
 from odoo.exceptions import UserError
+from odoo.addons import point_of_sale, l10n_pe
 
 
-class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+class ResPartner(l10n_pe.ResPartner, point_of_sale.ResPartner):
 
     @api.ondelete(at_uninstall=False)
     def _pe_unlink_except_master_data(self):

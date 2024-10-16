@@ -1,1 +1,1 @@
-from . import wizard
+from .wizard import AccountUpdateTaxTagsWizard

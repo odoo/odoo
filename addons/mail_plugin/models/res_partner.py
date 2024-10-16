@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
+from odoo.addons import web, contacts
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(web.ResPartner, contacts.ResPartner):
 
     iap_enrich_info = fields.Text('IAP Enrich Info', help='IAP response stored as a JSON string',
                                   compute='_compute_partner_iap_info')

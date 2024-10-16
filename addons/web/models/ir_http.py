@@ -8,6 +8,7 @@ from odoo import api, models, fields
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
 from odoo.tools import ormcache, config
 from odoo.tools.misc import str2bool
+from odoo.addons import base
 
 
 """
@@ -27,8 +28,7 @@ comma (eg: 'tests, assets').
 ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests', 'disable-t-cache']
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(base.IrHttp):
 
     bots = ["bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "whatsapp", "trendsmapresolver", "pinterest", "instagram"]
 

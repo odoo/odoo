@@ -5,15 +5,10 @@ from werkzeug.urls import url_join
 from odoo import api, fields, models, _
 from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
+from odoo.addons import hr_recruitment, website
 
 
-class HrJob(models.Model):
-    _inherit = [
-        'hr.job',
-        'website.seo.metadata',
-        'website.published.multi.mixin',
-        'website.searchable.mixin',
-    ]
+class HrJob(hr_recruitment.HrJob, website.WebsiteSeoMetadata, website.WebsitePublishedMultiMixin, website.WebsiteSearchableMixin):
 
     @mute_logger('odoo.addons.base.models.ir_qweb')
     def _get_default_website_description(self):

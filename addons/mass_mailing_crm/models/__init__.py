@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import crm_lead
-from . import mailing_mailing
-from . import utm
+from .crm_lead import CrmLead
+from .mailing_mailing import MailingMailing
+from .utm import UtmCampaign

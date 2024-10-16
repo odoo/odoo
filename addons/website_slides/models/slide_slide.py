@@ -17,6 +17,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
 from odoo.tools import html2plaintext, sql
+from odoo.addons import website, portal_rating, base
 
 _logger = logging.getLogger(__name__)
 
@@ -87,14 +88,7 @@ class SlideTag(models.Model):
     ]
 
 
-class SlideSlide(models.Model):
-    _inherit = [
-        'mail.thread',
-        'image.mixin',
-        'website.seo.metadata',
-        'website.published.mixin',
-        'website.searchable.mixin',
-    ]
+class SlideSlide(models.Model, portal_rating.MailThread, base.ImageMixin, website.WebsiteSeoMetadata, website.WebsitePublishedMixin, website.WebsiteSearchableMixin):
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {

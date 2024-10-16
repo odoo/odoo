@@ -4,14 +4,14 @@
 import logging
 
 from odoo import fields, models
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
 
-class MailAliasMixin(models.AbstractModel):
+class MailAliasMixin(models.AbstractModel, mail.MailAliasMixinOptional):
     """ A mixin for models that inherits mail.alias to have a one-to-one relation
     between the model and its alias. """
-    _inherit = ['mail.alias.mixin.optional']
     _inherits = {'mail.alias': 'alias_id'}
     _description = 'Email Aliases Mixin'
 

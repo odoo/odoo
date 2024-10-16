@@ -3,10 +3,10 @@
 
 from collections import defaultdict
 from odoo import api, fields, models, _
+from odoo.addons import sale_stock
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale_stock.SaleOrder):
 
     mrp_production_count = fields.Integer(
         "Count of MO generated",

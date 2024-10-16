@@ -6,6 +6,7 @@ from datetime import datetime
 from odoo.fields import Datetime, Date
 from odoo.tools.misc import format_date
 import pytz
+from odoo.addons import point_of_sale, l10n_fr_account
 
 
 def ctx_tz(record, field):
@@ -21,8 +22,7 @@ def ctx_tz(record, field):
     return Datetime.context_timestamp(record, timestamp)
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(l10n_fr_account.ResCompany, point_of_sale.ResCompany):
 
     l10n_fr_pos_cert_sequence_id = fields.Many2one('ir.sequence')
 

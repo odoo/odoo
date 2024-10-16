@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
+from odoo.addons import mail
 
 
-class MailComposerMixin(models.AbstractModel):
+class MailComposerMixin(models.AbstractModel, mail.MailRenderMixin):
     """ Mixin used to edit and render some fields used when sending emails or
     notifications based on a mail template.
 
@@ -16,7 +17,6 @@ class MailComposerMixin(models.AbstractModel):
     It is meant to evolve in a near future with upcoming support of qweb and fine
     grain control of rendering access.
     """
-    _inherit = ['mail.render.mixin']
     _description = 'Mail Composer Mixin'
 
     # Content

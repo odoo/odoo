@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
+from odoo.addons import uom
 
 
-class UomUom(models.Model):
-    _inherit = ['uom.uom']
+class UomUom(uom.UomUom):
 
     @api.onchange('rounding')
     def _onchange_rounding(self):

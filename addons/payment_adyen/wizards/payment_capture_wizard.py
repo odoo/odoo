@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import payment
 
 
-class PaymentCaptureWizard(models.TransientModel):
-    _inherit = ['payment.capture.wizard']
+class PaymentCaptureWizard(payment.PaymentCaptureWizard):
 
     has_adyen_tx = fields.Boolean(compute='_compute_has_adyen_tx')
 

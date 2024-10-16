@@ -1,2 +1,2 @@
-from . import account_edi_xml_oioubl_201
-from . import res_partner
+from .account_edi_xml_oioubl_201 import AccountEdiXmlOioubl_201
+from .res_partner import ResPartner

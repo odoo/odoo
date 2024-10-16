@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import pos_adyen
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ['pos.payment.method']
+class PosPaymentMethod(pos_adyen.PosPaymentMethod):
 
     adyen_merchant_account = fields.Char(help='The POS merchant account code used in Adyen')
 

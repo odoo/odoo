@@ -1,8 +1,8 @@
 from odoo import models, api
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ["account.journal"]
+class AccountJournal(account.AccountJournal):
 
     def _default_outbound_payment_methods(self):
         res = super()._default_outbound_payment_methods()

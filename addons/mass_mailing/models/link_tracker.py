@@ -2,16 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import link_tracker
 
 
-class LinkTracker(models.Model):
-    _inherit = ["link.tracker"]
+class LinkTracker(link_tracker.LinkTracker):
 
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
 
 
-class LinkTrackerClick(models.Model):
-    _inherit = ["link.tracker.click"]
+class LinkTrackerClick(link_tracker.LinkTrackerClick):
 
     mailing_trace_id = fields.Many2one('mailing.trace', string='Mail Statistics', index='btree_not_null')
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', index='btree_not_null')

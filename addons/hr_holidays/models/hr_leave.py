@@ -18,6 +18,7 @@ from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.misc import format_date
 from odoo.tools.translate import _
 from odoo.osv import expression
+from odoo.addons import calendar, mail
 
 _logger = logging.getLogger(__name__)
 
@@ -32,7 +33,7 @@ def get_employee_from_context(values, context, user_employee_id):
     return employee_id_value or context.get('default_employee_id', context.get('employee_id', user_employee_id))
 
 
-class HrLeave(models.Model):
+class HrLeave(models.Model, mail.MailThreadMainAttachment, calendar.MailActivityMixin):
     """ Time Off Requests Access specifications
 
      - a regular employee / user
@@ -69,7 +70,6 @@ class HrLeave(models.Model):
     """
     _description = "Time Off"
     _order = "date_from desc"
-    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
     @api.model

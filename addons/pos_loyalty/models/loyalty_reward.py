@@ -4,10 +4,10 @@
 from odoo import models, api
 import ast
 import json
+from odoo.addons import loyalty, point_of_sale
 
 
-class LoyaltyReward(models.Model):
-    _inherit = ['loyalty.reward', 'pos.load.mixin']
+class LoyaltyReward(loyalty.LoyaltyReward, point_of_sale.PosLoadMixin):
 
     def _get_discount_product_values(self):
         res = super()._get_discount_product_values()

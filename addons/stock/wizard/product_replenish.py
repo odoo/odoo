@@ -7,10 +7,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.misc import clean_context
+from odoo.addons import stock
 
 
-class ProductReplenish(models.TransientModel):
-    _inherit = ['stock.replenish.mixin']
+class ProductReplenish(models.TransientModel, stock.StockReplenishMixin):
     _description = 'Product Replenish'
     _check_company_auto = True
 

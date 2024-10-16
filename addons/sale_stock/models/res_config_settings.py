@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import stock_account, sale
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(sale.ResConfigSettings, stock_account.ResConfigSettings):
 
     security_lead = fields.Float(related='company_id.security_lead', string="Security Lead Time", readonly=False)
     use_security_lead = fields.Boolean(

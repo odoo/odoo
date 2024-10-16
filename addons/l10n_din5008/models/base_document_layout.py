@@ -3,10 +3,10 @@ import re
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, models, fields
+from odoo.addons import account
 
 
-class BaseDocumentLayout(models.TransientModel):
-    _inherit = ['base.document.layout']
+class BaseDocumentLayout(account.BaseDocumentLayout):
 
     @api.model
     def _default_report_footer(self):

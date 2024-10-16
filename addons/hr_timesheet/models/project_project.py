@@ -6,10 +6,10 @@ from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.tools import SQL
 from odoo.tools.translate import _
+from odoo.addons import project
 
 
-class ProjectProject(models.Model):
-    _inherit = ["project.project"]
+class ProjectProject(project.ProjectProject):
 
     allow_timesheets = fields.Boolean(
         "Timesheets", compute='_compute_allow_timesheets', store=True, readonly=False,

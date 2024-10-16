@@ -3,12 +3,12 @@ import re
 from odoo import api, models, _
 from odoo.exceptions import UserError
 import logging
+from odoo.addons import account
 
 log = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     @api.model
     def number2numeric(self, number):

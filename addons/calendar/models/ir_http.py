@@ -5,10 +5,10 @@ from werkzeug.exceptions import BadRequest
 
 from odoo import models
 from odoo.http import request
+from odoo.addons import mail
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(mail.IrHttp):
 
     @classmethod
     def _auth_method_calendar(cls):

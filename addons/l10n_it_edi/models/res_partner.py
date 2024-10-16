@@ -5,10 +5,10 @@ from stdnum.it import codicefiscale, iva
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import account, base_vat
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account.ResPartner, base_vat.ResPartner):
 
     invoice_edi_format = fields.Selection(selection_add=[('it_edi_xml', 'FatturaPA')])
     l10n_it_pec_email = fields.Char(string="PEC e-mail")

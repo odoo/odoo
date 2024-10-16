@@ -3,10 +3,10 @@
 from ast import literal_eval
 
 from odoo import fields, models, api
+from odoo.addons import hr_recruitment
 
 
-class HrCandidate(models.Model):
-    _inherit = ['hr.candidate']
+class HrCandidate(hr_recruitment.HrCandidate):
 
     candidate_skill_ids = fields.One2many('hr.candidate.skill', 'candidate_id', string="Skills")
     skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True)

@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import l10n_ro, account_edi_ubl_cii
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(account_edi_ubl_cii.ResPartner, l10n_ro.ResPartner):
 
     invoice_edi_format = fields.Selection(selection_add=[('ciusro', "CIUSRO")])
 

@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import mail
 
 
-class MailActivityPlanTemplate(models.Model):
-    _inherit = ['mail.activity.plan.template']
+class MailActivityPlanTemplate(mail.MailActivityPlanTemplate):
 
     responsible_type = fields.Selection(selection_add=[
         ('coach', 'Coach'),

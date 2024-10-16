@@ -6,12 +6,12 @@ import requests
 from odoo import api, models, _
 from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import base_setup
 
 logger = logging.getLogger(__name__)
 
 
-class IrHttp(models.AbstractModel):
-    _inherit = ['ir.http']
+class IrHttp(base_setup.IrHttp):
 
     def session_info(self):
         session_info = super().session_info()

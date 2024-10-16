@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import product_label_report
-from . import product_pricelist_report
+from .product_label_report import (
+    ReportProductReport_Producttemplatelabel2x7,
+    ReportProductReport_Producttemplatelabel4x12,
+    ReportProductReport_Producttemplatelabel4x12noprice,
+    ReportProductReport_Producttemplatelabel4x7, ReportProductReport_Producttemplatelabel_Dymo,
+)
+from .product_pricelist_report import ReportProductReport_Pricelist

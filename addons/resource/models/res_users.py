@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import web
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(web.ResUsers):
 
     resource_ids = fields.One2many(
         'resource.resource', 'user_id', 'Resources')

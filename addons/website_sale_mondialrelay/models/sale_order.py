@@ -2,10 +2,10 @@
 
 from odoo import _, models
 from odoo.exceptions import ValidationError
+from odoo.addons import delivery_mondialrelay, website_sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(website_sale.SaleOrder, delivery_mondialrelay.SaleOrder):
 
     def _check_cart_is_ready_to_be_paid(self):
         if (

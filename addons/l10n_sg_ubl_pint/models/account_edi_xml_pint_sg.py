@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
+from odoo.addons import account_edi_ubl_cii
 
 
 SG_TAX_CATEGORIES = {'SR', 'SRCA-S', 'SRCA-C', 'SROVR-RS', 'SROVR-LVG', 'SRLVG', 'ZR', 'ES33', 'ESN33', 'DS', 'OS', 'NG', 'NA'}
 
 
-class AccountEdiXmlPint_Sg(models.AbstractModel):
-    _inherit = ["account.edi.xml.ubl_bis3"]
+class AccountEdiXmlPint_Sg(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl_Bis3):
     _description = "Singapore implementation of Peppol International (PINT) model for Billing"
     """
     Pint is a standard for International Billing from Peppol. It is based on Peppol BIS Billing 3.

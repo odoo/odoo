@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from . import models
-from . import wizard
+from .models import DeliveryCarrier, ResPartner, SaleOrder
+from .wizard import ChooseDeliveryCarrier

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details
 
 from odoo import fields, models
+from odoo.addons import sale_project, hr_timesheet
 
 
-class ReportProjectTaskUser(models.Model):
-    _inherit = ['report.project.task.user']
+class ReportProjectTaskUser(sale_project.ReportProjectTaskUser, hr_timesheet.ReportProjectTaskUser):
 
     remaining_hours_so = fields.Float('Time Remaining on SO', readonly=True, groups="hr_timesheet.group_hr_timesheet_user")
 

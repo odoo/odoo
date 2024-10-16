@@ -9,12 +9,12 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.addons.mail.tools import discuss, jwt
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons import bus
 
 _logger = logging.getLogger(__name__)
 
 
-class DiscussChannelRtcSession(models.Model):
-    _inherit = ["bus.listener.mixin"]
+class DiscussChannelRtcSession(models.Model, bus.BusListenerMixin):
     _description = 'Mail RTC session'
     _rec_name = 'channel_member_id'
 

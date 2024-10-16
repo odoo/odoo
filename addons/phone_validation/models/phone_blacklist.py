@@ -3,11 +3,11 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import _, SQL
+from odoo.addons import mail
 
 
-class PhoneBlacklist(models.Model):
+class PhoneBlacklist(models.Model, mail.MailThread):
     """ Blacklist of phone numbers. Used to avoid sending unwanted messages to people. """
-    _inherit = ['mail.thread']
     _description = 'Phone Blacklist'
     _rec_name = 'number'
 

@@ -3,10 +3,10 @@
 
 from odoo import _, api, fields, models
 from odoo.osv.expression import AND
+from odoo.addons import stock
 
 
-class ProductReplenish(models.TransientModel):
-    _inherit = ['product.replenish']
+class ProductReplenish(stock.ProductReplenish):
 
     @api.model
     def default_get(self, fields):

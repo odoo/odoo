@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import event_sale
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(event_sale.SaleOrderLine):
 
     event_booth_category_id = fields.Many2one('event.booth.category', string='Booths Category', ondelete='set null')
     event_booth_pending_ids = fields.Many2many(

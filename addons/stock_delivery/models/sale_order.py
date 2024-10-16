@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
+from odoo.addons import sale_stock, delivery
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale_stock.SaleOrder, delivery.SaleOrder):
 
     def set_delivery_line(self, carrier, amount):
         res = super().set_delivery_line(carrier, amount)
@@ -45,8 +45,7 @@ class SaleOrder(models.Model):
         return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
 
 
-class SaleOrderLine(models.Model):
-    _inherit = ['sale.order.line']
+class SaleOrderLine(sale_stock.SaleOrderLine, delivery.SaleOrderLine):
 
     def _prepare_procurement_values(self, group_id):
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)

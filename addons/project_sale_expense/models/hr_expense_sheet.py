@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import sale_expense
 
 
-class HrExpenseSheet(models.Model):
-    _inherit = ["hr.expense.sheet"]
+class HrExpenseSheet(sale_expense.HrExpenseSheet):
 
     def _do_create_moves(self):
         """ When creating the move of the expense, if the AA is given in the project of the SO, we take it as reference in the distribution.

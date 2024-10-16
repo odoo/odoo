@@ -1,8 +1,8 @@
 from odoo import models, fields, api, Command
+from odoo.addons import account
 
 
-class AccountPaymentRegister(models.TransientModel):
-    _inherit = ['account.payment.register']
+class AccountPaymentRegister(account.AccountPaymentRegister):
 
     l10n_latam_new_check_ids = fields.One2many('l10n_latam.payment.register.check', 'payment_register_id', string="New Checks")
     l10n_latam_move_check_ids = fields.Many2many(

@@ -1,2 +1,2 @@
 from . import template_ci
-from . import template_ci_syscebnl
+from .template_ci_syscebnl import AccountChartTemplate

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import website_sale
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(website_sale.ResConfigSettings):
 
     is_newsletter_enabled = fields.Boolean()
     newsletter_id = fields.Many2one(related='website_id.newsletter_id', readonly=False)

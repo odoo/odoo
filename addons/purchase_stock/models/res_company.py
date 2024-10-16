@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import purchase, stock_account
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(stock_account.ResCompany, purchase.ResCompany):
 
     days_to_purchase = fields.Float(
         string='Days to Purchase',

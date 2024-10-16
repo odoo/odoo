@@ -5,10 +5,10 @@ from collections import defaultdict
 from pytz import timezone, utc
 
 from odoo import api, fields, models, _
+from odoo.addons import hr_holidays
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = ["resource.calendar.leaves"]
+class ResourceCalendarLeaves(hr_holidays.ResourceCalendarLeaves):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'global_leave_id', string="Analytic Lines", export_string_translation=False)
 

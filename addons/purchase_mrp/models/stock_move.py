@@ -4,10 +4,10 @@
 from odoo import _, models, fields
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.exceptions import UserError
+from odoo.addons import purchase_stock, mrp
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(mrp.StockMove, purchase_stock.StockMove):
 
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         vals = super(StockMove, self)._prepare_phantom_move_values(bom_line, product_qty, quantity_done)

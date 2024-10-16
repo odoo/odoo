@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import l10n_es
 
 
-class AccountTax(models.Model):
-    _inherit = ['account.tax']
+class AccountTax(l10n_es.AccountTax):
 
     l10n_es_edi_facturae_tax_type = fields.Selection([
         ('01', 'Value-Added Tax'),

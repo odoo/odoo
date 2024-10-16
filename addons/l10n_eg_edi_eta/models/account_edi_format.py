@@ -12,6 +12,7 @@ from json.decoder import JSONDecodeError
 
 from odoo import api, models, _
 from odoo.tools.float_utils import json_float_round
+from odoo.addons import account_edi
 
 _logger = logging.getLogger(__name__)
 
@@ -26,8 +27,7 @@ ETA_DOMAINS = {
 }
 
 
-class AccountEdiFormat(models.Model):
-    _inherit = ['account.edi.format']
+class AccountEdiFormat(account_edi.AccountEdiFormat):
 
     @api.model
     def _l10n_eg_get_eta_qr_domain(self, production_enviroment=False):

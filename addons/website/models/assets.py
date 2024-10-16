@@ -7,10 +7,10 @@ import requests
 from werkzeug.urls import url_parse
 
 from odoo import api, models
+from odoo.addons import web_editor
 
 
-class Web_EditorAssets(models.AbstractModel):
-    _inherit = ['web_editor.assets']
+class Web_EditorAssets(web_editor.Web_EditorAssets):
 
     @api.model
     def make_scss_customization(self, url, values):

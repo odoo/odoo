@@ -8,9 +8,10 @@ from markupsafe import Markup
 
 from odoo import api, models, fields
 from odoo.tools import html_escape as escape
+from odoo.addons import base
 
 
-class IrQwebFieldImage(models.AbstractModel):
+class IrQwebFieldImage(base.IrQwebFieldImage):
     """
     Widget options:
 
@@ -18,7 +19,6 @@ class IrQwebFieldImage(models.AbstractModel):
         set as attribute on the generated <img> tag
     """
     _description = 'Qweb Field Image'
-    _inherit = ['ir.qweb.field.image']
 
     def _get_src_urls(self, record, field_name, options):
         """Considering the rendering options, returns the src and data-zoom-image urls.
@@ -113,9 +113,8 @@ class IrQwebFieldImage(models.AbstractModel):
         return Markup(''.join(img))
 
 
-class IrQwebFieldImage_Url(models.AbstractModel):
+class IrQwebFieldImage_Url(base.IrQwebFieldImage_Url):
     _description = 'Qweb Field Image'
-    _inherit = ['ir.qweb.field.image_url']
 
     def _get_src_urls(self, record, field_name, options):
         image_url = record[options.get('preview_image', field_name)]

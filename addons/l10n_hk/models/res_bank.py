@@ -5,10 +5,10 @@ import re
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import single_email_re
+from odoo.addons import account, account_qr_code_emv
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ['res.partner.bank']
+class ResPartnerBank(account_qr_code_emv.ResPartnerBank, account.ResPartnerBank):
 
     proxy_type = fields.Selection(selection_add=[('id', "FPS ID"), ('mobile', "Mobile Number"), ('email', "Email Address")],
                                   ondelete={'id': 'set default', 'mobile': 'set default', 'email': 'set default'})

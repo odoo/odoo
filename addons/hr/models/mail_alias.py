@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import mail
 
 
-class MailAlias(models.Model):
-    _inherit = ['mail.alias']
+class MailAlias(mail.MailAlias):
 
     alias_contact = fields.Selection(selection_add=[
         ('employees', 'Authenticated Employees'),

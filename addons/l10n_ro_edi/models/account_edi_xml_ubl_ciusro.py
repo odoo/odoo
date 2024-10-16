@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, _
+from odoo.addons import account_edi_ubl_cii
 
 
 SECTOR_RO_CODES = ('SECTOR1', 'SECTOR2', 'SECTOR3', 'SECTOR4', 'SECTOR5', 'SECTOR6')
@@ -10,8 +11,7 @@ def get_formatted_sector_ro(city: str):
     return city.upper().replace(' ', '')
 
 
-class AccountEdiXmlUbl_Ro(models.AbstractModel):
-    _inherit = ["account.edi.xml.ubl_bis3"]
+class AccountEdiXmlUbl_Ro(models.AbstractModel, account_edi_ubl_cii.AccountEdiXmlUbl_Bis3):
     _description = "CIUS RO"
 
     def _export_invoice_filename(self, invoice):

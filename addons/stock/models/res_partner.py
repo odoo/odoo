@@ -3,10 +3,10 @@
 
 from odoo import fields, models
 from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
+from odoo.addons import product
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(product.ResPartner):
     _check_company_auto = True
 
     property_stock_customer = fields.Many2one(

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import project
 
 
-class ProjectMilestone(models.Model):
-    _inherit = ['project.milestone']
+class ProjectMilestone(project.ProjectMilestone):
 
     def _default_sale_line_id(self):
         project_id = self._context.get('default_project_id')

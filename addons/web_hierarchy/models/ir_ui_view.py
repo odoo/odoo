@@ -4,6 +4,7 @@ from lxml import etree
 
 from odoo import fields, models, _
 from odoo.tools import format_list
+from odoo.addons import web
 
 HIERARCHY_VALID_ATTRIBUTES = {
     '__validate__',                     # ir.ui.view implementation detail
@@ -21,8 +22,7 @@ HIERARCHY_VALID_ATTRIBUTES = {
 }
 
 
-class IrUiView(models.Model):
-    _inherit = ['ir.ui.view']
+class IrUiView(web.IrUiView):
 
     type = fields.Selection(selection_add=[('hierarchy', "Hierarchy")])
 

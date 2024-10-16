@@ -7,12 +7,12 @@ from datetime import datetime, timedelta
 from odoo import api, models, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import file_open
+from odoo.addons import account
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ["account.chart.template"]
+class AccountChartTemplate(account.AccountChartTemplate):
 
     @api.model
     def _get_demo_data(self, company=False):

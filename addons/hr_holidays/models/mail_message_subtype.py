@@ -4,12 +4,12 @@
 import logging
 
 from odoo import api, models
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
 
-class MailMessageSubtype(models.Model):
-    _inherit = ['mail.message.subtype']
+class MailMessageSubtype(mail.MailMessageSubtype):
 
     def _get_department_subtype(self):
         return self.search([

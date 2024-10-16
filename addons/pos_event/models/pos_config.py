@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
+from odoo.addons import point_of_sale
 
 
-class PosConfig(models.Model):
-    _inherit = ['pos.config']
+class PosConfig(point_of_sale.PosConfig):
 
     def _update_events_seats(self, events):
         data = []

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import l10n_in
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company"]
+class ResCompany(l10n_in.ResCompany):
 
     l10n_in_edi_username = fields.Char("E-invoice (IN) Username", groups="base.group_system")
     l10n_in_edi_password = fields.Char("E-invoice (IN) Password", groups="base.group_system")

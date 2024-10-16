@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
+from odoo.addons import sale
 
 
-class CrmTeam(models.Model):
-    _inherit = ['crm.team']
+class CrmTeam(sale.CrmTeam):
 
     website_ids = fields.One2many(
         string="Websites", comodel_name='website', inverse_name='salesteam_id',

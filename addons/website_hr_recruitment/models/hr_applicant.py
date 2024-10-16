@@ -3,11 +3,11 @@
 
 from odoo import models, _
 from odoo.exceptions import UserError
+from odoo.addons import hr_recruitment
 
 
-class HrApplicant(models.Model):
+class HrApplicant(hr_recruitment.HrApplicant):
 
-    _inherit = ['hr.applicant']
 
     def website_form_input_filter(self, request, values):
         if 'partner_name' in values:

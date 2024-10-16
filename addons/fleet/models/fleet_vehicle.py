@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
+from odoo.addons import mail, base
 
 
 #Some fields don't have the exact same name
@@ -19,8 +20,7 @@ MODEL_FIELDS_TO_VEHICLE = {
 }
 
 
-class FleetVehicle(models.Model):
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'avatar.mixin']
+class FleetVehicle(models.Model, mail.MailThread, mail.MailActivityMixin, base.AvatarMixin):
     _description = 'Vehicle'
     _order = 'license_plate asc, acquisition_date asc'
     _rec_names_search = ['name', 'driver_id.name']

@@ -1,8 +1,8 @@
 from odoo import api, fields, models
+from odoo.addons import point_of_sale
 
 
-class PosConfig(models.Model):
-    _inherit = ["pos.config"]
+class PosConfig(point_of_sale.PosConfig):
 
     is_spanish = fields.Boolean(string="Company located in Spain", compute="_compute_is_spanish")
     l10n_es_simplified_invoice_journal_id = fields.Many2one(

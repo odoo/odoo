@@ -3,10 +3,10 @@
 
 from odoo import _, models
 from collections import defaultdict
+from odoo.addons import auth_totp
 
 
-class Auth_TotpDevice(models.Model):
-    _inherit = ["auth_totp.device"]
+class Auth_TotpDevice(auth_totp.Auth_TotpDevice):
 
     def unlink(self):
         """ Notify users when trusted devices are removed from their account. """

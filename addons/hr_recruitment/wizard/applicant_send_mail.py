@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.addons import mail
 
 
-class ApplicantSendMail(models.TransientModel):
-    _inherit = ['mail.composer.mixin']
+class ApplicantSendMail(models.TransientModel, mail.MailComposerMixin):
     _description = 'Send mails to applicants'
 
     applicant_ids = fields.Many2many('hr.applicant', string='Applications', required=True)

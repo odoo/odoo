@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
+from odoo.addons import account
 
 
-class AccountMoveSendWizard(models.TransientModel):
-    _inherit = ['account.move.send.wizard']
+class AccountMoveSendWizard(account.AccountMoveSendWizard):
 
     def action_send_and_print(self, allow_fallback_pdf=False):
         # EXTENDS 'account'

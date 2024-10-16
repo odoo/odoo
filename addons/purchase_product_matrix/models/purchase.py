@@ -3,10 +3,10 @@
 import json
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import purchase
 
 
-class PurchaseOrder(models.Model):
-    _inherit = ['purchase.order']
+class PurchaseOrder(purchase.PurchaseOrder):
 
     report_grids = fields.Boolean(string="Print Variant Grids", default=True, help="If set, the matrix of configurable products will be shown on the report of this order.")
 
@@ -160,8 +160,7 @@ class PurchaseOrder(models.Model):
         return matrixes
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = ["purchase.order.line"]
+class PurchaseOrderLine(purchase.PurchaseOrderLine):
 
     product_template_id = fields.Many2one('product.template', string='Product Template', related="product_id.product_tmpl_id", domain=[('purchase_ok', '=', True)])
     is_configurable_product = fields.Boolean('Is the product configurable?', related="product_template_id.has_configurable_attributes")

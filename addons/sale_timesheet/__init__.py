@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import controllers
-from . import models
-from . import wizard
-from . import report
+from .models import (
+    AccountAnalyticLine, AccountMove, AccountMoveLine, HrEmployee, ProductProduct,
+    ProductTemplate, ProjectProject, ProjectSaleLineEmployeeMap, ProjectTask, ProjectUpdate,
+    ResConfigSettings, SaleOrder, SaleOrderLine,
+)
+from .wizard import ProjectCreateInvoice, SaleAdvancePaymentInv
+from .report import ReportProjectTaskUser, TimesheetsAnalysisReport
 
 
 def uninstall_hook(env):

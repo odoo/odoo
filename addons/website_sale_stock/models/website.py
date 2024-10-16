@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import website_sale
 
 
-class Website(models.Model):
-    _inherit = ['website']
+class Website(website_sale.Website):
 
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
 

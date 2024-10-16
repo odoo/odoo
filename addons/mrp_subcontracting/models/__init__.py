@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from . import mrp_bom
-from . import product
-from . import res_company
-from . import res_partner
-from . import stock_location
-from . import stock_move
-from . import stock_move_line
-from . import stock_picking
-from . import stock_quant
-from . import stock_replenish_mixin
-from . import stock_rule
-from . import stock_warehouse
-from . import mrp_production
+from .mrp_bom import MrpBom
+from .product import ProductProduct, ProductSupplierinfo
+from .res_company import ResCompany
+from .res_partner import ResPartner
+from .stock_location import StockLocation
+from .stock_move import StockMove
+from .stock_move_line import StockMoveLine
+from .stock_picking import StockPicking
+from .stock_quant import StockQuant
+from .stock_replenish_mixin import StockReplenishMixin
+from .stock_rule import StockRule
+from .stock_warehouse import StockWarehouse
+from .mrp_production import MrpProduction

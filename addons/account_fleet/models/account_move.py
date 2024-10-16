@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
+from odoo.addons import account
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove):
 
     def _post(self, soft=True):
         vendor_bill_service = self.env.ref('account_fleet.data_fleet_service_type_vendor_bill', raise_if_not_found=False)
@@ -29,8 +29,7 @@ class AccountMove(models.Model):
         return posted
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(account.AccountMoveLine):
 
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle', index='btree_not_null')
     # used to decide whether the vehicle_id field is editable

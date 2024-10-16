@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import mail, digest
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(mail.ResConfigSettings, digest.ResConfigSettings):
 
     group_mass_mailing_campaign = fields.Boolean(
         string="Mailing Campaigns",

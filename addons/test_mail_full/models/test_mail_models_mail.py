@@ -2,16 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import portal, mail_bot, rating, mass_mailing, test_mail_full, sms, mail
 
 
-class MailTestPortal(models.Model):
+class MailTestPortal(models.Model, portal.PortalMixin, mail.MailThread, mail_bot.MailThread, portal.MailThread, rating.MailThread, mass_mailing.MailThread, sms.MailThread):
     """ A model inheriting from mail.thread and portal.mixin with some fields
     used for portal sharing, like a partner, ..."""
     _description = 'Chatter Model for Portal'
-    _inherit = [
-        'portal.mixin',
-        'mail.thread',
-    ]
 
     name = fields.Char('Name')
     partner_id = fields.Many2one('res.partner', 'Customer')
@@ -23,13 +20,9 @@ class MailTestPortal(models.Model):
             record.access_url = '/my/test_portal/%s' % self.id
 
 
-class MailTestPortalNoPartner(models.Model):
+class MailTestPortalNoPartner(models.Model, mail.MailThread, mail_bot.MailThread, portal.MailThread, rating.MailThread, mass_mailing.MailThread, sms.MailThread, portal.PortalMixin):
     """ A model inheriting from portal, but without any partner field """
     _description = 'Chatter Model for Portal (no partner field)'
-    _inherit = [
-        'mail.thread',
-        'portal.mixin',
-    ]
 
     name = fields.Char()
 
@@ -39,15 +32,10 @@ class MailTestPortalNoPartner(models.Model):
             record.access_url = '/my/test_portal_no_partner/%s' % self.id
 
 
-class MailTestRating(models.Model):
+class MailTestRating(models.Model, rating.RatingMixin, mail.MailActivityMixin, portal.PortalMixin):
     """ A model inheriting from rating.mixin (which inherits from mail.thread) with some fields used for SMS
     gateway, like a partner, a specific mobile phone, ... """
     _description = 'Rating Model (ticket-like)'
-    _inherit = [
-        'rating.mixin',
-        'mail.activity.mixin',
-        'portal.mixin',
-    ]
     _mailing_enabled = True
     _order = 'name asc, id asc'
 
@@ -97,7 +85,7 @@ class MailTestRating(models.Model):
         return self.customer_id
 
 
-class MailTestRatingThread(models.Model):
+class MailTestRatingThread(models.Model, mail.MailThread, mail_bot.MailThread, portal.MailThread, rating.MailThread, mass_mailing.MailThread, sms.MailThread):
     """A model inheriting from mail.thread with minimal fields for testing
      rating submission without the rating mixin but with the same test code:
 
@@ -105,7 +93,6 @@ class MailTestRatingThread(models.Model):
      - user_id: value returned by the base _rating_get_operator method
      """
     _description = 'Model for testing rating without the rating mixin'
-    _inherit = ['mail.thread']
     _order = 'name asc, id asc'
 
     name = fields.Char('Name')
@@ -119,10 +106,9 @@ class MailTestRatingThread(models.Model):
         return self.customer_id or super()._rating_get_partner()
 
 
-class MailTestRatingThreadRead(models.Model):
+class MailTestRatingThreadRead(models.Model, test_mail_full.MailTestRatingThread):
     """Same as MailTestRatingThread but post accessible on read by portal users."""
 
     _description = "Read-post rating model"
-    _inherit = ["mail.test.rating.thread"]
     _order = "name asc, id asc"
     _mail_post_access = "read"

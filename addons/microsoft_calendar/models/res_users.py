@@ -12,12 +12,12 @@ from odoo.loglevels import exception_to_unicode
 from odoo.addons.microsoft_account.models import microsoft_service
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import InvalidSyncToken
 from odoo.tools import str2bool
+from odoo.addons import calendar, microsoft_account
 
 _logger = logging.getLogger(__name__)
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(microsoft_account.ResUsers, calendar.ResUsers):
 
     microsoft_calendar_sync_token = fields.Char(related='res_users_settings_id.microsoft_calendar_sync_token', groups='base.group_system')
     microsoft_synchronization_stopped = fields.Boolean(related='res_users_settings_id.microsoft_synchronization_stopped', readonly=False, groups='base.group_system')

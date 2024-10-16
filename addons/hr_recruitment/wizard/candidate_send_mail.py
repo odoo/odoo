@@ -1,8 +1,8 @@
 from odoo import api, fields, models, _
+from odoo.addons import mail
 
 
-class CandidateSendMail(models.TransientModel):
-    _inherit = ["mail.composer.mixin"]
+class CandidateSendMail(models.TransientModel, mail.MailComposerMixin):
     _description = "Send mails to candidates"
 
     candidate_ids = fields.Many2many("hr.candidate", string="Candidates", required=True)

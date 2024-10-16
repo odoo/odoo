@@ -1,1 +1,1 @@
-from . import ir_attachment
+from .ir_attachment import IrAttachment

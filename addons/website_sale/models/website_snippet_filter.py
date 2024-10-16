@@ -4,10 +4,10 @@ from collections import Counter
 
 from odoo import _, api, fields, models
 from odoo.osv import expression
+from odoo.addons import website
 
 
-class WebsiteSnippetFilter(models.Model):
-    _inherit = ['website.snippet.filter']
+class WebsiteSnippetFilter(website.WebsiteSnippetFilter):
 
     product_cross_selling = fields.Boolean(
         string="About cross selling products",

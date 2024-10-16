@@ -4,10 +4,10 @@
 from odoo import models, _
 
 from werkzeug import urls
+from odoo.addons import link_tracker
 
 
-class LinkTracker(models.Model):
-    _inherit = ['link.tracker']
+class LinkTracker(link_tracker.LinkTracker):
 
     def action_visit_page_statistics(self):
         return {

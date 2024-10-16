@@ -7,12 +7,12 @@ from datetime import datetime
 
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
+from odoo.addons import l10n_ke
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_ke.AccountMove):
 
     l10n_ke_cu_datetime = fields.Datetime(string='CU Signing Date and Time', copy=False)
     l10n_ke_cu_serial_number = fields.Char(string='CU Serial Number', copy=False)

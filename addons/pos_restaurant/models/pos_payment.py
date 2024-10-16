@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import point_of_sale
 
 
-class PosPayment(models.Model):
-    _inherit = ['pos.payment']
+class PosPayment(point_of_sale.PosPayment):
 
     def _update_payment_line_for_tip(self, tip_amount):
         """Inherit this method to perform reauthorization or capture on electronic payment."""

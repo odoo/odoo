@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import account_payment, website, portal
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ['res.config.settings']
+class ResConfigSettings(website.ResConfigSettings, account_payment.ResConfigSettings, portal.ResConfigSettings):
 
     providers_state = fields.Selection(
         selection=[

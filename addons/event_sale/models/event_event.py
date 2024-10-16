@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import event_product
 
 
-class EventEvent(models.Model):
-    _inherit = ['event.event']
+class EventEvent(event_product.EventEvent):
 
     sale_order_lines_ids = fields.One2many(
         'sale.order.line', 'event_id',

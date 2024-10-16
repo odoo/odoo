@@ -3,10 +3,10 @@
 # Copyright (C) 2004-2008 PC Solutions (<http://pcsol.be>). All Rights Reserved
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ['account.journal']
+class AccountJournal(account.AccountJournal):
 
     pos_payment_method_ids = fields.One2many('pos.payment.method', 'journal_id', string='Point of Sale Payment Methods')
 

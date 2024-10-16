@@ -7,10 +7,10 @@ import werkzeug.exceptions
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.image import image_data_uri
+from odoo.addons import portal, mail, base
 
 
-class ResPartnerBank(models.Model):
-    _inherit = ['res.partner.bank', 'mail.thread', 'mail.activity.mixin']
+class ResPartnerBank(base.ResPartnerBank, portal.MailThread, mail.MailActivityMixin):
 
     journal_id = fields.One2many(
         'account.journal', 'bank_account_id', domain=[('type', '=', 'bank')], string='Account Journal', readonly=True,

@@ -6,6 +6,7 @@ from stdnum import get_cc_module, ean
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons import account_edi_proxy_client
 
 try:
     import phonenumbers
@@ -46,8 +47,7 @@ PEPPOL_ENDPOINT_SANITIZERS = {
 }
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(account_edi_proxy_client.ResCompany):
 
     account_peppol_contact_email = fields.Char(
         string='Primary contact email',

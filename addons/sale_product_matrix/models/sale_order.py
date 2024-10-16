@@ -3,10 +3,10 @@
 import json
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import sale
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(sale.SaleOrder):
 
     # if set, the matrix of the products configurable by matrix will be shown
     # on the report of the order.

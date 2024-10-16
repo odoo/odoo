@@ -1,3 +1,3 @@
 from . import controllers
-from . import models
-from . import wizard
+from .models import AccountMoveSend, ResPartner
+from .wizard import AccountMoveSendBatchWizard

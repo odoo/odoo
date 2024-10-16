@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import sale_management
 
 
-class SaleOrderTemplate(models.Model):
-    _inherit = ['sale.order.template']
+class SaleOrderTemplate(sale_management.SaleOrderTemplate):
 
     quotation_document_ids = fields.Many2many(
         string="Headers and footers",

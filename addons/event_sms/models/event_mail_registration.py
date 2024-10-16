@@ -1,8 +1,8 @@
 from odoo import fields, models
+from odoo.addons import event
 
 
-class EventMailRegistration(models.Model):
-    _inherit = ['event.mail.registration']
+class EventMailRegistration(event.EventMailRegistration):
 
     def _execute_on_registrations(self):
         todo = self.filtered(

@@ -4,10 +4,10 @@
 import re
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from odoo.addons import account
 
 
-class AccountJournal(models.Model):
-    _inherit = ["account.journal"]
+class AccountJournal(account.AccountJournal):
 
     def _default_outbound_payment_methods(self):
         res = super()._default_outbound_payment_methods()

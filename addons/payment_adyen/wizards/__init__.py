@@ -1,2 +1,2 @@
 
-from . import payment_capture_wizard
+from .payment_capture_wizard import PaymentCaptureWizard

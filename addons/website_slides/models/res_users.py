@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, _
+from odoo.addons import website, website_profile
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(website.ResUsers, website_profile.ResUsers):
 
     @api.model_create_multi
     def create(self, vals_list):

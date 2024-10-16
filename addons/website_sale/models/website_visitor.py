@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import website
 
 
-class WebsiteVisitor(models.Model):
-    _inherit = ['website.visitor']
+class WebsiteVisitor(website.WebsiteVisitor):
 
     visitor_product_count = fields.Integer(
         string="Product Views",

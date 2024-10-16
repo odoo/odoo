@@ -3,10 +3,10 @@
 
 from odoo import api, models, Command
 from odoo.tools import html2plaintext
+from odoo.addons import project
 
 
-class ProjectTask(models.Model):
-    _inherit = ['project.task']
+class ProjectTask(project.ProjectTask):
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -1,2 +1,2 @@
 from . import template_gw
-from . import template_gw_syscebnl
+from .template_gw_syscebnl import AccountChartTemplate

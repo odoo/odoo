@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons import mrp
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(mrp.ResCompany):
 
     subcontracting_location_id = fields.Many2one('stock.location')
 

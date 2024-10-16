@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import point_of_sale
 
 
-class PosPrinter(models.Model):
+class PosPrinter(models.Model, point_of_sale.PosLoadMixin):
 
     _description = 'Point of Sale Printer'
-    _inherit = ['pos.load.mixin']
 
     name = fields.Char('Printer Name', required=True, default='Printer', help='An internal identification of the printer')
     printer_type = fields.Selection(string='Printer Type', default='iot',

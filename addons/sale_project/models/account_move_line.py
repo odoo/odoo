@@ -2,10 +2,10 @@
 
 from odoo import models
 from odoo.osv.expression import AND, OR
+from odoo.addons import account, sale
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(sale.AccountMoveLine, account.AccountMoveLine):
 
     def _compute_analytic_distribution(self):
         # when a project creates an aml, it adds an analytic account to it. the following filter is to save this

@@ -3,10 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons import utm, account_payment
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move', 'utm.mixin']
+class AccountMove(account_payment.AccountMove, utm.UtmMixin):
 
     @api.model
     def _get_invoice_default_sale_team(self):

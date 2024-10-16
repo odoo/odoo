@@ -5,10 +5,10 @@ import json
 
 from odoo import models, fields
 from collections import defaultdict
+from odoo.addons import project_hr_expense, sale_project
 
 
-class ProjectProject(models.Model):
-    _inherit = ['project.project']
+class ProjectProject(sale_project.ProjectProject, project_hr_expense.ProjectProject):
 
     def _get_expenses_profitability_items(self, with_action=True):
         expenses_read_group = self.env['hr.expense']._read_group(

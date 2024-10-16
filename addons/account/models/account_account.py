@@ -9,6 +9,7 @@ from odoo import api, fields, models, _, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools import SQL, Query
+from odoo.addons import portal
 
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
@@ -16,8 +17,7 @@ ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
 ACCOUNT_CODE_NUMBER_REGEX = re.compile(r'(.*?)(\d*)(\D*?)$')
 
 
-class AccountAccount(models.Model):
-    _inherit = ['mail.thread']
+class AccountAccount(models.Model, portal.MailThread):
     _description = "Account"
     _order = "code, placeholder_code"
     _check_company_auto = True

@@ -3,13 +3,13 @@
 from odoo import api, models
 
 from odoo.addons.spreadsheet.utils.formatting import (
+from odoo.addons import http_routing
     strftime_format_to_spreadsheet_date_format,
     strftime_format_to_spreadsheet_time_format,
 )
 
 
-class ResLang(models.Model):
-    _inherit = ["res.lang"]
+class ResLang(http_routing.ResLang):
 
     @api.model
     def get_locales_for_spreadsheet(self):

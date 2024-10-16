@@ -4,12 +4,12 @@ import logging
 
 from odoo import api, fields, models
 from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
+from odoo.addons import event
 
 _logger = logging.getLogger(__name__)
 
 
-class EventTypeTicket(models.Model):
-    _inherit = ['event.type.ticket']
+class EventTypeTicket(event.EventTypeTicket):
     _order = "sequence, price, name, id"
 
     def _default_product_id(self):

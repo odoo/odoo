@@ -3,10 +3,10 @@
 
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.addons import mrp
 
 
-class MrpBom(models.Model):
-    _inherit = ['mrp.bom']
+class MrpBom(mrp.MrpBom):
 
     def toggle_active(self):
         self.filtered(lambda bom: bom.active)._ensure_bom_is_free()

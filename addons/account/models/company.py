@@ -12,6 +12,7 @@ from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.base_vat.models.res_partner import _ref_vat
+from odoo.addons import portal, product
 
 
 MONTH_SELECTION = [
@@ -50,8 +51,7 @@ LOCK_DATE_FIELDS = [
 ]
 
 
-class ResCompany(models.Model):
-    _inherit = ["res.company", "mail.thread"]
+class ResCompany(product.ResCompany, portal.MailThread):
 
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection(MONTH_SELECTION, default='12', required=True)

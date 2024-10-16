@@ -5,10 +5,10 @@ import json
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import sale_stock
 
 
-class StockPicking(models.Model):
-    _inherit = ['stock.picking']
+class StockPicking(sale_stock.StockPicking):
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()

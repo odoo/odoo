@@ -7,16 +7,11 @@ from odoo.addons.hr_recruitment.models.hr_applicant import AVAILABLE_PRIORITIES
 from odoo import api, models, fields, SUPERUSER_ID, tools, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.addons import phone_validation, mail, calendar
 
 
-class HrCandidate(models.Model):
+class HrCandidate(models.Model, mail.MailThreadCc, mail.MailThreadMainAttachment, mail.MailThreadBlacklist, phone_validation.MailThreadPhone, calendar.MailActivityMixin):
     _description = "Candidate"
-    _inherit = ['mail.thread.cc',
-               'mail.thread.main.attachment',
-               'mail.thread.blacklist',
-               'mail.thread.phone',
-               'mail.activity.mixin',
-    ]
     _order = "priority desc, availability asc, id desc"
     _mailing_enabled = True
     _primary_email = 'email_from'

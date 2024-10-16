@@ -21,6 +21,7 @@ from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory, ormcache
+from odoo.addons import base
 
 _logger = logging.getLogger(__name__)
 
@@ -28,8 +29,7 @@ APPS_URL = "https://apps.odoo.com"
 MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 
 
-class IrModuleModule(models.Model):
-    _inherit = ["ir.module.module"]
+class IrModuleModule(base.IrModuleModule):
 
     imported = fields.Boolean(string="Imported Module")
     module_type = fields.Selection([

@@ -1,3 +1,3 @@
-from . import account_move_reversal
-from . import l10n_hu_edi_cancellation
-from . import l10n_hu_edi_tax_audit_export
+from .account_move_reversal import AccountMoveReversal
+from .l10n_hu_edi_cancellation import L10n_Hu_EdiCancellation
+from .l10n_hu_edi_tax_audit_export import L10n_Hu_EdiTax_Audit_Export

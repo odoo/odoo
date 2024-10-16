@@ -13,6 +13,7 @@ from requests import RequestException
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons import l10n_vn
 
 SINVOICE_API_URL = 'https://api-vinvoice.viettel.vn/services/einvoiceapplication/api/'
 SINVOICE_TIMEOUT = 60  # They recommend between 60 and 90 seconds, but 60s is already quite long.
@@ -32,8 +33,7 @@ def _l10n_vn_edi_send_request(method, url, json_data=None, params=None, headers=
         return {}, _('Something went wrong, please try again later: %s', err)
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_vn.AccountMove):
 
     # EDI values
     l10n_vn_edi_invoice_state = fields.Selection(

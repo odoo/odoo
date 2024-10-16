@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
+from odoo.addons import event
 
 
-class EventEvent(models.Model):
-    _inherit = ["event.event"]
+class EventEvent(event.EventEvent):
 
     def action_mass_mailing_attendees(self):
         return {

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, tools
+from odoo.addons import maintenance
 
 
-class MaintenanceEquipment(models.Model):
-    _inherit = ['maintenance.equipment']
+class MaintenanceEquipment(maintenance.MaintenanceEquipment):
 
     employee_id = fields.Many2one('hr.employee', compute='_compute_equipment_assign',
         store=True, readonly=False, string='Assigned Employee', tracking=True)
@@ -77,8 +77,7 @@ class MaintenanceEquipment(models.Model):
         return super(MaintenanceEquipment, self)._track_subtype(init_values)
 
 
-class MaintenanceRequest(models.Model):
-    _inherit = ['maintenance.request']
+class MaintenanceRequest(maintenance.MaintenanceRequest):
 
     @api.returns('self')
     def _default_employee_get(self):

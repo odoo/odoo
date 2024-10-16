@@ -2,11 +2,11 @@
 
 from odoo import models, fields
 from odoo.tools.sql import column_exists, create_column
+from odoo.addons import account
 
 
-class AccountMoveLine(models.Model):
+class AccountMoveLine(account.AccountMoveLine):
 
-    _inherit = ['account.move.line']
 
     def _auto_init(self):
         # Skip the computation of the field `l10n_latam_document_type_id` at the module installation

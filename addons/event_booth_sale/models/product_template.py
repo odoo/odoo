@@ -1,8 +1,8 @@
 from odoo import _, api, fields, models
+from odoo.addons import event_sale
 
 
-class ProductTemplate(models.Model):
-    _inherit = ['product.template']
+class ProductTemplate(event_sale.ProductTemplate):
 
     service_tracking = fields.Selection(selection_add=[
         ('event_booth', 'Event Booth'),

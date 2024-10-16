@@ -4,10 +4,10 @@
 from odoo import api, fields, models, _
 from odoo.tools import SQL
 from odoo.exceptions import UserError
+from odoo.addons import account
 
 
-class AccountAnalyticApplicability(models.Model):
-    _inherit = ['account.analytic.applicability']
+class AccountAnalyticApplicability(account.AccountAnalyticApplicability):
     _description = "Analytic Plan's Applicabilities"
 
     business_domain = fields.Selection(
@@ -24,8 +24,7 @@ class AccountAnalyticApplicability(models.Model):
             applicability.display_account_prefix = True
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = ['account.analytic.account']
+class AccountAnalyticAccount(account.AccountAnalyticAccount):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_account_in_analytic_distribution(self):

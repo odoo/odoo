@@ -7,10 +7,10 @@ from odoo.tools.float_utils import float_round
 from odoo.tools.misc import groupby
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
+from odoo.addons import delivery
 
 
-class DeliveryCarrier(models.Model):
-    _inherit = ['delivery.carrier']
+class DeliveryCarrier(delivery.DeliveryCarrier):
 
     # -------------------------------- #
     # Internals for shipping providers #

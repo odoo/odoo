@@ -6,10 +6,10 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.tools.image import image_data_uri
+from odoo.addons import account_debit_note, account
 
 
-class AccountMove(models.Model):
-    _inherit = ["account.move"]
+class AccountMove(account_debit_note.AccountMove, account.AccountMove):
 
     l10n_in_gst_treatment = fields.Selection([
             ('regular', 'Registered Business - Regular'),

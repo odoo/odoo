@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
-    _inherit = ["account.tax"]
+class AccountTax(account.AccountTax):
 
     def _hook_compute_is_used(self, taxes_to_compute):
         # OVERRIDE in order to fetch taxes used in expenses

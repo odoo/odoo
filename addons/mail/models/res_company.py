@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields, tools
+from odoo.addons import web
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(web.ResCompany):
 
     def _default_alias_domain_id(self):
         return self.env['mail.alias.domain'].search([], limit=1)

@@ -2,10 +2,10 @@
 
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons import account
 
 
-class AccountPayment(models.Model):
-    _inherit = ['account.payment']
+class AccountPayment(account.AccountPayment):
 
     # == Business fields ==
     payment_transaction_id = fields.Many2one(

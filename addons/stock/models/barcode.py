@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import barcodes_gs1_nomenclature
 
 
-class BarcodeRule(models.Model):
-    _inherit = ['barcode.rule']
+class BarcodeRule(barcodes_gs1_nomenclature.BarcodeRule):
 
     type = fields.Selection(selection_add=[
         ('weight', 'Weighted Product'),

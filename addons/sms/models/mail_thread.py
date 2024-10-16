@@ -5,12 +5,12 @@ import logging
 
 from odoo import api, Command, models, fields
 from odoo.tools import html2plaintext, plaintext2html
+from odoo.addons import mail
 
 _logger = logging.getLogger(__name__)
 
 
-class MailThread(models.AbstractModel):
-    _inherit = ['mail.thread']
+class MailThread(mail.MailThread):
 
     message_has_sms_error = fields.Boolean(
         'SMS Delivery error', compute='_compute_message_has_sms_error', search='_search_message_has_sms_error',

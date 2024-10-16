@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import account, base_vat
 
 
-class ResPartner(models.Model):
+class ResPartner(account.ResPartner, base_vat.ResPartner):
     """Inherit res.partner object to add NPWP field and Kode Transaksi"""
-    _inherit = ["res.partner"]
 
     l10n_id_pkp = fields.Boolean(string="Is PKP", compute='_compute_l10n_id_pkp', store=True, readonly=False, help="Denoting whether the following partner is taxable")
     l10n_id_nik = fields.Char(string='NIK')

@@ -1,10 +1,10 @@
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
+from odoo.addons import l10n_latam_invoice_document
 
 
-class L10n_LatamDocumentType(models.Model):
+class L10n_LatamDocumentType(l10n_latam_invoice_document.L10n_LatamDocumentType):
 
-    _inherit = ['l10n_latam.document.type']
 
     l10n_ar_letter = fields.Selection(
         selection='_get_l10n_ar_letters',

@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.addons import account, sale
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(account.AccountMove, sale.AccountMove):
 
     def _invoice_paid_hook(self):
         """ When an invoice linked to a sales order selling registrations is

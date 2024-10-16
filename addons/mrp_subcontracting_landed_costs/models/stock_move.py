@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import stock_landed_costs, mrp_subcontracting
 
 
-class StockMove(models.Model):
-    _inherit = ['stock.move']
+class StockMove(stock_landed_costs.StockMove, mrp_subcontracting.StockMove):
 
     def _get_stock_valuation_layer_ids(self):
         self.ensure_one()

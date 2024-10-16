@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import project
 
 
-class ProjectCollaborator(models.Model):
-    _inherit = ['project.collaborator']
+class ProjectCollaborator(project.ProjectCollaborator):
 
     @api.model
     def _toggle_project_sharing_portal_rules(self, active):

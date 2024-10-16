@@ -5,10 +5,10 @@ import base64
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_repr
+from odoo.addons import account, l10n_gcc_invoice
 
 
-class AccountMove(models.Model):
-    _inherit = ['account.move']
+class AccountMove(l10n_gcc_invoice.AccountMove, account.AccountMove):
 
     l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
     l10n_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date', readonly=True, copy=False)

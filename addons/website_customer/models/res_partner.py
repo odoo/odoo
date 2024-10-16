@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import website_partner, website, website_crm_partner_assign
 
 
-class ResPartner(models.Model):
+class ResPartner(website_crm_partner_assign.ResPartner, website_partner.ResPartner):
 
-    _inherit = ['res.partner']
 
     website_tag_ids = fields.Many2many(
         'res.partner.tag',
@@ -21,10 +21,9 @@ class ResPartner(models.Model):
         return self.env.ref('contacts.menu_contacts').id
 
 
-class ResPartnerTag(models.Model):
+class ResPartnerTag(models.Model, website.WebsitePublishedMixin):
 
     _description = 'Partner Tags - These tags can be used on website to find customers by sector, or ...'
-    _inherit = ['website.published.mixin']
 
     @api.model
     def get_selection_class(self):

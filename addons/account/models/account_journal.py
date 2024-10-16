@@ -7,6 +7,7 @@ from odoo.tools import groupby
 from collections import defaultdict
 import logging
 import re
+from odoo.addons import portal, mail
 
 _logger = logging.getLogger(__name__)
 
@@ -30,14 +31,9 @@ class AccountJournalGroup(models.Model):
     ]
 
 
-class AccountJournal(models.Model):
+class AccountJournal(models.Model, portal.PortalMixin, mail.MailAliasMixinOptional, portal.MailThread, mail.MailActivityMixin):
     _description = "Journal"
     _order = 'sequence, type, code'
-    _inherit = ['portal.mixin',
-                'mail.alias.mixin.optional',
-                'mail.thread',
-                'mail.activity.mixin',
-               ]
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
     _rec_names_search = ['name', 'code']

@@ -4,12 +4,12 @@ from odoo.osv import expression
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
 from dateutil.relativedelta import relativedelta
 import logging
+from odoo.addons import account, l10n_latam_invoice_document
 _logger = logging.getLogger(__name__)
 
 
-class AccountMove(models.Model):
+class AccountMove(l10n_latam_invoice_document.AccountMove, account.AccountMove):
 
-    _inherit = ['account.move']
 
     @api.model
     def _l10n_ar_get_document_number_parts(self, document_number, document_type_code):

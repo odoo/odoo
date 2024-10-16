@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import pos_self_order, pos_stripe
 
 
-class PosPaymentMethod(models.Model):
-    _inherit = ["pos.payment.method"]
+class PosPaymentMethod(pos_stripe.PosPaymentMethod, pos_self_order.PosPaymentMethod):
 
     def _payment_request_from_kiosk(self, order):
         if self.use_payment_terminal != 'stripe':

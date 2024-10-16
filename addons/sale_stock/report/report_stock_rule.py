@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.addons import stock
 
 
-class ReportStockReport_Stock_Rule(models.AbstractModel):
-    _inherit = ['report.stock.report_stock_rule']
+class ReportStockReport_Stock_Rule(stock.ReportStockReport_Stock_Rule):
 
     @api.model
     def _get_routes(self, data):

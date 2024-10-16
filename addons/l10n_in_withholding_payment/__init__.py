@@ -1,2 +1,2 @@
-from . import models
-from . import wizard
+from .models import AccountMove, AccountPayment
+from .wizard import L10n_InWithholdWizard

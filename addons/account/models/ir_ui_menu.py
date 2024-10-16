@@ -1,8 +1,8 @@
 from odoo import models
+from odoo.addons import web, mail
 
 
-class IrUiMenu(models.Model):
-    _inherit = ['ir.ui.menu']
+class IrUiMenu(web.IrUiMenu, mail.IrUiMenu):
 
     def _load_menus_blacklist(self):
         res = super()._load_menus_blacklist()

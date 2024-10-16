@@ -5,10 +5,10 @@ import uuid
 from typing import Dict, Callable, List, Optional
 
 from odoo import api, fields, models
+from odoo.addons import pos_restaurant
 
 
-class RestaurantTable(models.Model):
-    _inherit = ["restaurant.table"]
+class RestaurantTable(pos_restaurant.RestaurantTable):
 
     identifier = fields.Char(
         "Security Token",
@@ -36,8 +36,7 @@ class RestaurantTable(models.Model):
         return [('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']['data']])]
 
 
-class RestaurantFloor(models.Model):
-    _inherit = ["restaurant.floor"]
+class RestaurantFloor(pos_restaurant.RestaurantFloor):
 
     @api.model
     def _load_pos_self_data_fields(self, config_id):

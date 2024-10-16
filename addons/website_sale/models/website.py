@@ -4,12 +4,12 @@ from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.translate import _, LazyTranslate
+from odoo.addons import website
 
 _lt = LazyTranslate(__name__)
 
 
-class Website(models.Model):
-    _inherit = ['website']
+class Website(website.Website):
 
     #=== DEFAULT METHODS ===#
 

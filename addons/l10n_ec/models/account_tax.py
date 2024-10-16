@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import account
 
 
-class AccountTax(models.Model):
+class AccountTax(account.AccountTax):
 
-    _inherit = ["account.tax"]
 
     l10n_ec_code_base = fields.Char(
         string="Code base",

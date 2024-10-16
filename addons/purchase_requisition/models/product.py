@@ -2,17 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons import purchase
 
 
-class ProductSupplierinfo(models.Model):
-    _inherit = ['product.supplierinfo']
+class ProductSupplierinfo(purchase.ProductSupplierinfo):
 
     purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Agreement')
     purchase_requisition_line_id = fields.Many2one('purchase.requisition.line')
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductProduct(purchase.ProductProduct):
 
     def _prepare_sellers(self, params=False):
         sellers = super(ProductProduct, self)._prepare_sellers(params=params)

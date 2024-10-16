@@ -1,10 +1,10 @@
 # coding: utf-8
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, api
+from odoo.addons import account, l10n_latam_base
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(l10n_latam_base.ResPartner, account.ResPartner):
 
     @api.constrains('vat', 'country_id', 'l10n_latam_identification_type_id')
     def check_vat(self):

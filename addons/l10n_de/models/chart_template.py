@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.models.chart_template import template
 from odoo import models
+from odoo.addons import account
 
 
-class AccountChartTemplate(models.AbstractModel):
-    _inherit = ['account.chart.template']
+class AccountChartTemplate(account.AccountChartTemplate):
 
     @template('de_skr03', 'res.company')
     @template('de_skr04', 'res.company')

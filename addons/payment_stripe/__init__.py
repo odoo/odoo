@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
-from . import models
+from .models import PaymentProvider, PaymentToken, PaymentTransaction
 
 import odoo.addons.payment as payment  # prevent circular import error with payment
 

@@ -4,10 +4,10 @@
 from odoo import models, fields, _
 from odoo.exceptions import UserError
 from odoo.tools import html_escape
+from odoo.addons import l10n_in_edi
 
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = ["res.config.settings"]
+class ResConfigSettings(l10n_in_edi.ResConfigSettings):
 
     l10n_in_edi_ewaybill_username = fields.Char("Indian EDI Stock username",
         related="company_id.l10n_in_edi_ewaybill_username", readonly=False)

@@ -7,12 +7,12 @@ from odoo.osv import expression
 from lxml import etree, html
 import logging
 from random import randint
+from odoo.addons import website
 
 _logger = logging.getLogger(__name__)
 
 
-class WebsiteSnippetFilter(models.Model):
-    _inherit = ['website.published.multi.mixin']
+class WebsiteSnippetFilter(models.Model, website.WebsitePublishedMultiMixin):
     _description = 'Website Snippet Filter'
     _order = 'name ASC'
 

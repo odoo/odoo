@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons import website_event
 
 
-class EventType(models.Model):
-    _inherit = ['event.type']
+class EventType(website_event.EventType):
 
     website_track = fields.Boolean(
         string='Tracks on Website', compute='_compute_website_track_menu_data',

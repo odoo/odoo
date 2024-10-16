@@ -6,10 +6,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_asiapay import const
+from odoo.addons import payment
 
 
-class PaymentProvider(models.Model):
-    _inherit = ['payment.provider']
+class PaymentProvider(payment.PaymentProvider):
 
     code = fields.Selection(
         selection_add=[('asiapay', "AsiaPay")], ondelete={'asiapay': 'set default'}

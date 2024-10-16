@@ -5,10 +5,10 @@ from odoo import fields, models
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 from collections import defaultdict
+from odoo.addons import purchase, stock_account
 
 
-class AccountMoveLine(models.Model):
-    _inherit = ['account.move.line']
+class AccountMoveLine(stock_account.AccountMoveLine, purchase.AccountMoveLine):
 
     def _get_valued_in_moves(self):
         self.ensure_one()

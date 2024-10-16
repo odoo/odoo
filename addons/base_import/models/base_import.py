@@ -27,6 +27,7 @@ from odoo.exceptions import UserError
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, parse_version
+from odoo.addons import web
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -117,8 +118,7 @@ class ImportValidationError(Exception):
         self.field_type = kwargs.get('field_type')
 
 
-class Base(models.AbstractModel):
-    _inherit = ['base']
+class Base(web.Base):
 
     @api.model
     def get_import_templates(self):
@@ -150,8 +150,7 @@ class Base_ImportMapping(models.Model):
     field_name = fields.Char()
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(web.ResUsers):
 
     def _can_import_remote_urls(self):
         """ Hook to decide whether the current user is allowed to import

@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import api, exceptions, fields, models, tools, _
+from odoo.addons import web, mail
 
 class SignupError(Exception):
     pass
@@ -21,8 +22,7 @@ def now(**kwargs):
     return datetime.now() + timedelta(**kwargs)
 
 
-class ResPartner(models.Model):
-    _inherit = ['res.partner']
+class ResPartner(mail.ResPartner, web.ResPartner):
 
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
 

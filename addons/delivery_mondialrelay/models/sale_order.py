@@ -3,10 +3,10 @@
 
 from odoo import models, _
 from odoo.exceptions import UserError
+from odoo.addons import stock_delivery
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(stock_delivery.SaleOrder):
 
     def action_confirm(self):
         unmatch = self.filtered(lambda so: so.carrier_id.is_mondialrelay != so.partner_shipping_id.is_mondialrelay)

@@ -6,12 +6,12 @@ import logging
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.addons import mass_mailing
 
 _logger = logging.getLogger(__name__)
 
 
-class MailingMailing(models.Model):
-    _inherit = ['mailing.mailing']
+class MailingMailing(mass_mailing.MailingMailing):
 
     @api.model
     def default_get(self, fields):

@@ -3,10 +3,10 @@
 
 from odoo import _, models
 from odoo.exceptions import ValidationError
+from odoo.addons import sale_stock, website_sale, stock_delivery
 
 
-class SaleOrder(models.Model):
-    _inherit = ['sale.order']
+class SaleOrder(website_sale.SaleOrder, sale_stock.SaleOrder, stock_delivery.SaleOrder):
 
     def _get_warehouse_available(self):
         self.ensure_one()

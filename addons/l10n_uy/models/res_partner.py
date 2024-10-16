@@ -4,12 +4,12 @@ import re
 from odoo import api, models, _
 
 from odoo.exceptions import ValidationError
+from odoo.addons import account, l10n_latam_base
 
 _logger = logging.getLogger(__name__)
 
 
-class ResPartner(models.Model):
-    _inherit = ["res.partner"]
+class ResPartner(account.ResPartner, l10n_latam_base.ResPartner):
 
     @api.constrains("vat", "l10n_latam_identification_type_id")
     def check_vat(self):

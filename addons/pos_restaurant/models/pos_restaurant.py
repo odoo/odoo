@@ -3,13 +3,13 @@
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
+from odoo.addons import point_of_sale
 
 
-class RestaurantFloor(models.Model):
+class RestaurantFloor(models.Model, point_of_sale.PosLoadMixin):
 
     _description = 'Restaurant Floor'
     _order = "sequence, name"
-    _inherit = ['pos.load.mixin']
 
     name = fields.Char('Floor Name', required=True)
     pos_config_ids = fields.Many2many('pos.config', string='Point of Sales', domain="[('module_pos_restaurant', '=', True)]")
@@ -81,10 +81,9 @@ class RestaurantFloor(models.Model):
         return True
 
 
-class RestaurantTable(models.Model):
+class RestaurantTable(models.Model, point_of_sale.PosLoadMixin):
 
     _description = 'Restaurant Table'
-    _inherit = ['pos.load.mixin']
 
     floor_id = fields.Many2one('restaurant.floor', string='Floor')
     table_number = fields.Integer('Table Number', required=True, help='The number of the table as displayed on the floor plan', default=0)

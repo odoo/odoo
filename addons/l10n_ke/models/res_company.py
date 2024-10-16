@@ -2,10 +2,10 @@
 
 
 from odoo import fields, models
+from odoo.addons import account
 
 
-class ResCompany(models.Model):
-    _inherit = ['res.company']
+class ResCompany(account.ResCompany):
 
     l10n_ke_oscu_is_active = fields.Boolean(
         string="Is OSCU active?",

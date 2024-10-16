@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons import project
 
 
-class ReportProjectTaskUser(models.Model):
-    _inherit = ["report.project.task.user"]
+class ReportProjectTaskUser(project.ReportProjectTaskUser):
 
     allocated_hours = fields.Float('Allocated Time', readonly=True, groups="hr_timesheet.group_hr_timesheet_user")
     effective_hours = fields.Float('Time Spent', readonly=True, groups="hr_timesheet.group_hr_timesheet_user")

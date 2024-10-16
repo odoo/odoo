@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models, tools
+from odoo.addons import mail
 
 
-class MailThreadCc(models.AbstractModel):
-    _inherit = ['mail.thread']
+class MailThreadCc(models.AbstractModel, mail.MailThread):
     _description = 'Email CC management'
 
     email_cc = fields.Char('Email cc')

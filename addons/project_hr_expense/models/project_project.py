@@ -4,10 +4,10 @@ import json
 
 from odoo import models
 from odoo.osv import expression
+from odoo.addons import project_account
 
 
-class ProjectProject(models.Model):
-    _inherit = ['project.project']
+class ProjectProject(project_account.ProjectProject):
 
     # ----------------------------
     #  Actions
