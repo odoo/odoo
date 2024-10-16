@@ -15,7 +15,6 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             // press close button in receipt screen
             Chrome.startPoS(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
-            ProductScreen.selectedOrderlineHas("Letter Tray", "10"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Addison Olson"),
             ProductScreen.clickPayButton(),
@@ -66,7 +65,10 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
 
             // Test customer note in receipt
             ProductScreen.addOrderline("Desk Pad", "1", "5"),
-            ProductScreen.addCustomerNote("Test customer note"),
+            inLeftSide([
+                { ...ProductScreen.clickLine("Desk Pad")[0], isActive: ["mobile"] },
+                ...ProductScreen.addCustomerNote("Test customer note"),
+            ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -97,7 +99,7 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Desk Pad", "5", "5"),
-            ProductScreen.selectedOrderlineHas("Desk Pad", "5"),
+            inLeftSide(ProductScreen.orderLineHas("Desk Pad", "5")),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.validateButtonIsHighlighted(true),

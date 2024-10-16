@@ -1420,6 +1420,9 @@ export class PosStore extends Reactive {
         );
     }
     showScreen(name, props) {
+        if (name === "ProductScreen") {
+            this.get_order()?.deselect_orderline();
+        }
         this.previousScreen = this.mainScreen.component?.name;
         const component = registry.category("pos_screens").get(name);
         this.mainScreen = { component, props };
