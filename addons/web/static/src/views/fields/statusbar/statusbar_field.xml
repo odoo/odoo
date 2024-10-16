@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.StatusBarField" owl="1">
-        <div class="o_statusbar_status">
+        <div role="radiogroup" class="o_statusbar_status" aria-label="Statusbar">
             <t t-set="items" t-value="computeItems()" />
 
             <t t-if="items.folded.length">
@@ -28,7 +28,6 @@
                         class="btn o_arrow_button_current o_arrow_button disabled text-uppercase"
                         disabled="disabled"
                         role="radio"
-                        aria-label="Current state"
                         aria-checked="true"
                         aria-current="step"
                         t-att-disabled="isDisabled"
@@ -42,7 +41,6 @@
                         class="btn o_arrow_button disabled text-uppercase"
                         disabled="disabled"
                         role="radio"
-                        aria-label="Not active state"
                         aria-checked="false"
                         t-att-disabled="isDisabled"
                         t-att-data-value="item.id"
@@ -54,7 +52,6 @@
                         type="button"
                         class="btn o_arrow_button text-uppercase"
                         role="radio"
-                        aria-label="Not active state, click to change it"
                         aria-checked="false"
                         t-att-data-value="item.id"
                         t-esc="item.name"
