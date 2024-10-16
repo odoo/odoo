@@ -13,6 +13,7 @@
     </t>
 
     <t t-name="web.StatusBarField">
+<<<<<<< saas-17.2
         <div class="o_statusbar_status" t-ref="root" role="radiogroup">
             <Dropdown position="'bottom-end'">
                 <button
@@ -27,6 +28,28 @@
                     <t t-call="web.StatusBarField.Dropdown">
                         <t t-set="items" t-value="items.after" />
                     </t>
+||||||| fe2958eb0dd2b244e1a37fa1ddb8e0dcef4ec237
+        <div class="o_statusbar_status" t-ref="root" role="radiogroup">
+            <button
+                t-ref="after"
+                type="button"
+                class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
+            >
+                <t t-call="web.StatusBarField.Dropdown">
+                    <t t-set="label">...</t>
+                    <t t-set="items" t-value="items.after" />
+=======
+        <div class="o_statusbar_status" t-ref="root" role="radiogroup" aria-label="Statusbar">
+            <button
+                t-ref="after"
+                type="button"
+                class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
+                aria-label="More..."
+            >
+                <t t-call="web.StatusBarField.Dropdown">
+                    <t t-set="label">...</t>
+                    <t t-set="items" t-value="items.after" />
+>>>>>>> a1cde1778aece39048e22da424697a6d32024e81
                 </t>
             </Dropdown>
             <t t-foreach="items.inline" t-as="item" t-key="item.value">
@@ -40,7 +63,6 @@
                     }"
                     t-att-disabled="props.isDisabled || item.isSelected"
                     role="radio"
-                    t-att-aria-label="getItemTooltip(item)"
                     t-att-aria-checked="item.isSelected.toString()"
                     t-att-aria-current="item.isSelected and 'step'"
                     t-att-data-value="item.value"
@@ -48,6 +70,7 @@
                     t-on-click="() => this.selectItem(item)"
                 />
             </t>
+<<<<<<< saas-17.2
             <Dropdown position="'bottom-start'">
                 <button
                     t-ref="before"
@@ -61,6 +84,26 @@
                     <t t-call="web.StatusBarField.Dropdown">
                         <t t-set="items" t-value="items.before" />
                     </t>
+||||||| fe2958eb0dd2b244e1a37fa1ddb8e0dcef4ec237
+            <button
+                t-ref="before"
+                type="button"
+                class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
+            >
+                <t t-call="web.StatusBarField.Dropdown">
+                    <t t-set="label">...</t>
+                    <t t-set="items" t-value="items.before" />
+=======
+            <button
+                t-ref="before"
+                type="button"
+                class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
+                aria-label="More..."
+            >
+                <t t-call="web.StatusBarField.Dropdown">
+                    <t t-set="label">...</t>
+                    <t t-set="items" t-value="items.before" />
+>>>>>>> a1cde1778aece39048e22da424697a6d32024e81
                 </t>
             </Dropdown>
             <Dropdown position="'bottom-end'">

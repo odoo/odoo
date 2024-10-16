@@ -10,9 +10,9 @@
                             class="o_priority_star fa"
                             role="radio"
                             t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o'"
-                            t-att-tabindex="value_index === state.index ? 0 : -1"
+                            tabindex="0"
                             t-att-data-tooltip="getTooltip(value[1])"
-                            t-att-aria-checked="value_index lte index"
+                            t-att-aria-checked="value_index === index ? 'true' : 'false'"
                             t-att-aria-label="value[1]"
                         />
                     </t>
@@ -22,9 +22,9 @@
                             class="o_priority_star fa"
                             role="radio"
                             t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o'"
-                            t-att-tabindex="value_index === state.index ? 0 : -1"
+                            tabindex="0"
                             t-att-data-tooltip="getTooltip(value[1])"
-                            t-att-aria-checked="value_index lte index"
+                            t-att-aria-checked="value_index === index ? 'true' : 'false'"
                             t-att-aria-label="value[1]"
                             t-on-click.prevent.stop="() => this.onStarClicked(value[0])"
                             t-on-mouseenter="() => state.index = value_index"
