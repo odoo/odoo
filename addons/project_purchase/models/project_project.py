@@ -75,29 +75,31 @@ class ProjectProject(models.Model):
         return action_window
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
-        if section_name == 'purchase_order':
-            action = {
-                'name': self.env._('Purchase Order Items'),
-                'type': 'ir.actions.act_window',
-                'res_model': 'purchase.order.line',
-                'views': [[False, 'list'], [False, 'form']],
-                'domain': domain,
-                'context': {
-                    'create': False,
-                    'edit': False,
-                },
+        if section_name != 'purchase_order':
+            return super().action_profitability_items(section_name, domain, res_id)
+        purchase_orders = self.env['purchase.order'].search([
+            ('order_line.analytic_distribution', 'in', self.account_id.ids),
+            ('invoice_status', '=', 'invoiced'),
+        ])
+        res = {
+            'name': self.env._('Purchase Order Items'),
+            'res_model': 'purchase.order',
+            'views': [[False, 'list'], [False, 'form']],
+            'type': 'ir.actions.act_window',
+            'domain': [('id', 'in', purchase_orders.ids)],
+            'context': {
+                'create': False,
+                'edit': False,
             }
-            if res_id:
-                action['res_id'] = res_id
-                if 'views' in action:
-                    action['views'] = [
-                        (view_id, view_type)
-                        for view_id, view_type in action['views']
-                        if view_type == 'form'
-                    ] or [False, 'form']
-                action['view_mode'] = 'form'
-            return action
-        return super().action_profitability_items(section_name, domain, res_id)
+        }
+        if res_id:
+            res.update({
+                'name': self.env._('Purchase Order'),
+                'views': [[False, 'form']],
+                'view_mode': 'form',
+                'res_id':purchase_orders.id
+            })
+        return res
 
     # ----------------------------
     #  Project Updates
