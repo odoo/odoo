@@ -287,7 +287,7 @@ class SaleOrder(models.Model):
         if add_qty and (not product or not product._is_add_to_cart_allowed()):
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
-        if line_id:
+        if line_id is not False:
             order_line = self._cart_find_product_line(product_id, line_id, **kwargs)[:1]
         else:
             order_line = self.env['sale.order.line']

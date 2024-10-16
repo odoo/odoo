@@ -88,6 +88,7 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
                     ],
                     linked_line_id=values['line_id'],
                     combo_item_id=combo_item['combo_item_id'],
+                    line_id=False
                     **kwargs,
                 )
                 line_ids.append(item_values['line_id'])
