@@ -47,9 +47,6 @@ export const viewService = {
 
         function clearCache() {
             cache = {};
-            const processedArchs = registry.category("__processed_archs__");
-            processedArchs.content = {};
-            processedArchs.trigger("UPDATE");
         }
 
         env.bus.addEventListener("CLEAR-CACHES", clearCache);
