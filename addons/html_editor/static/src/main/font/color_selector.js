@@ -1,5 +1,5 @@
 import { Component, useRef, useState } from "@odoo/owl";
-import { Colorpicker } from "@web/core/colorpicker/colorpicker";
+import { ColorPicker } from "@web/core/color_picker/color_picker";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { isCSSColor } from "@web/core/utils/colors";
@@ -32,7 +32,7 @@ const DEFAULT_GRADIENT_COLORS = [
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
-    static components = { Dropdown, Colorpicker, GradientPicker };
+    static components = { Dropdown, ColorPicker, GradientPicker };
     static props = {
         type: String, // either foreground or background
         getUsedCustomColors: Function,

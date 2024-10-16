@@ -139,7 +139,7 @@ Featuring
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
-            'web/static/src/core/colorpicker/colorpicker.scss',
+            'web/static/src/core/color_picker/color_picker.scss',
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/views/fields/signature/signature_field.scss',
             'web/static/src/legacy/scss/ui.scss',
