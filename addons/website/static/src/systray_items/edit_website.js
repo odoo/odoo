@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { AddPageDialog } from "../components/dialog/add_page_dialog";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -17,6 +18,7 @@ class EditWebsiteSystray extends Component {
     static props = {};
     setup() {
         this.websiteService = useService('website');
+        this.dialogService = useService("dialog");
         this.websiteContext = useState(this.websiteService.context);
 
         this.state = useState({
@@ -102,6 +104,12 @@ class EditWebsiteSystray extends Component {
         } else {
             this.websiteContext.edition = true;
         }
+    }
+
+    async createPage() {
+        this.dialogService.add(AddPageDialog, {
+            websiteId: this.websiteService.currentWebsite.id,
+        });
     }
 }
 

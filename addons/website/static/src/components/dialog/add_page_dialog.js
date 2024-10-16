@@ -27,6 +27,10 @@ export class AddPageConfirmDialog extends Component {
             optional: true,
         },
         name: String,
+        url: {
+            type: String,
+            optional: true,
+        },
     };
     static defaultProps = {
         onAddPage: NO_OP,
@@ -46,8 +50,16 @@ export class AddPageConfirmDialog extends Component {
 
         this.state = useState({
             addMenu: true,
-            name: this.props.name,
+            name: this.props.name || this._tryGuessName(this.props.url),
         });
+    }
+
+    _tryGuessName(url) {
+        if (!url) {
+            return null;
+        }
+        const urlParts = url.replace(/^\/*/, "").split(/[-+_]|%20/);
+        return urlParts.map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
     }
 
     onChangeAddMenu(value) {
@@ -454,6 +466,7 @@ export class AddPageDialog extends Component {
             websiteId: this.props.websiteId,
             sectionsArch: sectionsArch,
             name: name || this.lastTabName,
+            url: (this.website.is404 && this.website.currentLocation) || undefined,
         });
     }
 
