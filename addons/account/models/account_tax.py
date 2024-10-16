@@ -1120,9 +1120,13 @@ class AccountTax(models.Model):
             precision_rounding = None
         elif not precision_rounding:
             precision_rounding = 0.01
+        raw_price = quantity * price_unit
+        if precision_rounding and self.env.context.get('round_base', True):
+            raw_price = float_round(raw_price, precision_rounding=precision_rounding)
         return {
             'product': product_values,
             'price_unit': price_unit,
+            'raw_price': raw_price,
             'quantity': quantity,
             'rounding_method': rounding_method,
             'precision_rounding': precision_rounding,
@@ -1147,7 +1151,7 @@ class AccountTax(models.Model):
         if amount_type == 'fixed':
             return evaluation_context['quantity'] * evaluation_context['quantity_multiplicator']
 
-        raw_base = (evaluation_context['quantity'] * evaluation_context['price_unit']) + evaluation_context['extra_base']
+        raw_base = evaluation_context['raw_price'] + evaluation_context['extra_base']
         if (
             'incl_base_multiplicator' in evaluation_context
             and ((price_include and not special_mode) or special_mode == 'total_included')
@@ -1173,7 +1177,7 @@ class AccountTax(models.Model):
         amount_type = tax_data['amount_type']
         total_tax_amount = evaluation_context['total_tax_amount']
         special_mode = evaluation_context['special_mode']
-        raw_base = (evaluation_context['quantity'] * evaluation_context['price_unit']) + evaluation_context['extra_base']
+        raw_base = evaluation_context['raw_price'] + evaluation_context['extra_base']
 
         if price_include:
             base = raw_base if special_mode == 'total_excluded' else raw_base - total_tax_amount
@@ -1261,7 +1265,7 @@ class AccountTax(models.Model):
             tax_amount = sum(tax_data['tax_amount_factorized'] for tax_data in eval_taxes_data)
             total_included = total_excluded + tax_amount
         else:
-            total_included = total_excluded = evaluation_context['quantity'] * evaluation_context['price_unit']
+            total_included = total_excluded = evaluation_context['raw_price']
             if rounding_method == 'round_per_line':
                 total_included = total_excluded = float_round(
                     total_excluded,

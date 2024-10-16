@@ -162,7 +162,7 @@ class AccountTaxPython(models.Model):
         self._check_formula(tax_data)
 
         # Safe eval.
-        raw_base = (evaluation_context['quantity'] * evaluation_context['price_unit']) + evaluation_context['extra_base']
+        raw_base = evaluation_context['raw_price'] + evaluation_context['extra_base']
         formula_context = {
             'price_unit': evaluation_context['price_unit'],
             'quantity': evaluation_context['quantity'],
