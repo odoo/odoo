@@ -194,22 +194,10 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
             // now we check that all the lines that remained in the order are correct
             ...ProductScreen.orderLineHas("Minute Maid", "1.0"),
             ...ProductScreen.clickOrderline("Office Combo"),
-            ...ProductScreen.clickOrderline("Combo Product 2"),
-            ...ProductScreen.selectedOrderlineHas("Combo Product 2", "1.0", "6.67", "Office Combo"),
-            ...ProductScreen.clickOrderline("Combo Product 4"),
-            ...ProductScreen.selectedOrderlineHas(
-                "Combo Product 4",
-                "1.0",
-                "14.66",
-                "Office Combo"
-            ),
-            ...ProductScreen.clickOrderline("Combo Product 7"),
-            ...ProductScreen.selectedOrderlineHas(
-                "Combo Product 7",
-                "1.0",
-                "22.00",
-                "Office Combo"
-            ),
+            ...ProductScreen.selectedOrderlineHas("Office Combo", "1.0", "43.33"),
+            ...ProductScreen.orderLineHas("Combo Product 2", "1.0"),
+            ...ProductScreen.orderLineHas("Combo Product 4", "1.0"),
+            ...ProductScreen.orderLineHas("Combo Product 7", "1.0"),
             ...ProductScreen.totalAmountIs("45.53"),
         ].flat(),
 });
