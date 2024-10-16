@@ -5,6 +5,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_scre
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
+import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("ChromeTour", {
     checkDelay: 50,
@@ -46,7 +47,10 @@ registry.category("web_tour.tours").add("ChromeTour", {
             TicketScreen.selectOrder("-0001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.productIsDisplayed("Desk Pad"),
-            ProductScreen.selectedOrderlineHas("Desk Pad", "1.0", "2.0"),
+            inLeftSide([
+                ...ProductScreen.clickLine("Desk Pad"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "1.0", "2.0"),
+            ]),
 
             // Select order 2, should be at Payment Screen
             Chrome.clickMenuOption("Orders"),
