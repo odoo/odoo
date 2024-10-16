@@ -221,4 +221,28 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             assert.containsNone(fixture, "table .o_optional_columns_dropdown_toggle");
         }
     );
+
+    QUnit.test("list view header buttons are shift on the cog menus", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <list>
+                    <header>
+                        <button name="x" type="object" class="plaf" string="plaf"/>
+                    </header>
+                    <field name="foo"/>
+                </list>
+            `,
+        });
+
+        const getTextMenu = () => [...fixture.querySelectorAll(`.o_popover .o-dropdown-item`)].map((e) => e.innerText.trim());
+        assert.containsOnce(fixture, ".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog");
+        await click(fixture, ".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog");
+        assert.deepEqual(getTextMenu(), ["Export All"]);
+        await triggerEvents(fixture, ".o_data_row:nth-child(1)", ["touchstart", "touchend"]);
+        await click(fixture, ".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog");
+        assert.deepEqual(getTextMenu(), ["plaf", "Export", "Duplicate", "Delete"]);
+    });
 });
