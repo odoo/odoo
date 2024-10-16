@@ -42,9 +42,9 @@ class Browser:
         # helpers.get_version returns a string formatted as: <L|W><version> (L: Linux, W: Windows)
         self.browser = 'chromium-browser' if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION else 'firefox'
         self.browser_process_name = 'chromium' if self.browser == 'chromium-browser' else self.browser
+        self.state = BrowserState.NORMAL
         self._x_screen = _x_screen
         self._set_environment(env)
-        self._state = BrowserState.NORMAL
 
     def _set_environment(self, env):
         """
@@ -64,7 +64,7 @@ class Browser:
         :param state: State of the browser (normal, kiosk, fullscreen)
         """
         self.url = url or self.url
-        self._state = state
+        self.state = state
 
         # Reopen to take new url or additional args into account
         self.close_browser()
@@ -139,5 +139,5 @@ class Browser:
 
     def disable_kiosk_mode(self):
         """Removes arguments to chromium-browser cli to open it without kiosk mode"""
-        if self._state == BrowserState.KIOSK:
+        if self.state == BrowserState.KIOSK:
             self.open_browser(state=BrowserState.FULLSCREEN)
