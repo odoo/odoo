@@ -251,7 +251,7 @@ class AccountFiscalPosition(models.Model):
         eu_delivery = delivery.country_code in eu_country_codes
         domestic_delivery = delivery_country == company.country_id
 
-        vat_required = bool(partner.vat) or domestic_delivery
+        vat_required = bool(partner.vat) or (bool(partner.vat) and domestic_delivery)
 
         # If the delivery is within the EU, the partner does not have a valid EU VAT number and is not from the EU,
         # then assign the company's country as the delivery country and force vat_required to True
