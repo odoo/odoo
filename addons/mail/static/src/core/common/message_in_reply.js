@@ -22,7 +22,9 @@ export class MessageInReply extends Component {
         }
 
         if (this.props.message.parentMessage.author) {
-            return this.props.message.parentMessage.author.avatarUrl;
+            return this.props.message.parentMessage.author.avatarUrl(
+                this.props.message.parentMessage.thread
+            );
         }
 
         return this.store.DEFAULT_AVATAR;

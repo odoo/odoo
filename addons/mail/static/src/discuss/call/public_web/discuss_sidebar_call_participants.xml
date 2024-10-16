@@ -32,7 +32,7 @@
         <div class="d-flex flex-column gap-1">
             <div class="d-flex align-items-center" t-foreach="sessions" t-as="session" t-key="session.localId">
                 <t t-set="persona" t-value="session.persona"/>
-                <img t-att-src="persona?.avatarUrl" class="rounded-circle" t-att-title="persona?.name" t-att-class="{'o-mail-DiscussSidebarCallParticipants-avatar o-isTalking': session.isActuallyTalking}" style="width:24px;height:24px"/>
+                <img t-att-src="persona?.avatarUrl()" class="rounded-circle" t-att-title="persona?.name" t-att-class="{'o-mail-DiscussSidebarCallParticipants-avatar o-isTalking': session.isActuallyTalking}" style="width:24px;height:24px"/>
                 <span class="mx-1 text-truncate fw-bolder smaller" t-esc="persona?.name"/>
                 <span t-if="session.isMute" class="px-1 fa" t-att-class="callActionsRegistry.get('mute').icon"/>
                 <span t-if="session.isDeaf" class="px-1 fa position-relative" t-att-class="callActionsRegistry.get('deafen').icon" style="top: -2px;"/>

@@ -273,7 +273,6 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             )
             self.assertEqual(format_res["author"]["id"], record.customer_id.id)
             self.assertEqual(format_res["author"]["name"], record.customer_id.display_name)
-            self.assertEqual(format_res['author_avatar_url'], f'/web/image/mail.message/{message.id}/author_avatar/50x50')
             self.assertEqual(format_res['date'], datetime(2023, 5, 15, 10, 30, 5))
             self.assertEqual(' '.join(format_res['published_date_str'].split()), 'May 15, 2023, 10:30:05 AM')
             self.assertEqual(format_res['id'], message.id)

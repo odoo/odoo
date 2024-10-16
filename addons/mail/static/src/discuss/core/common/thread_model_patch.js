@@ -73,7 +73,7 @@ const threadPatch = {
             });
         }
         if (this.channel_type === "chat" && this.correspondent) {
-            return this.correspondent.persona.avatarUrl;
+            return this.correspondent.persona.avatarUrl();
         }
         return super.avatarUrl;
     },

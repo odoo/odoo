@@ -20,7 +20,7 @@ class IrBinary(models.AbstractModel):
 
     def _find_record(
             self, xmlid=None, res_model='ir.attachment', res_id=None,
-            access_token=None, field=None
+            access_token=None, field=None, **kwargs
     ):
         """
         Find and return a record either using an xmlid either a model+id
@@ -45,10 +45,10 @@ class IrBinary(models.AbstractModel):
         if not record:
             raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")
 
-        record = self._find_record_check_access(record, access_token, field)
+        record = self._find_record_check_access(record, access_token, field, **kwargs)
         return record
 
-    def _find_record_check_access(self, record, access_token, field):
+    def _find_record_check_access(self, record, access_token, field, **kwargs):
         if record._name == 'ir.attachment':
             return record.validate_access(access_token)
 

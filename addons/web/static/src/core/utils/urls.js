@@ -68,7 +68,8 @@ export function url(route, queryParams, options = {}) {
  * @param {string|import('luxon').DateTime} [options.unique]
  * @param {number} [options.width]
  */
-export function imageUrl(model, id, field, { filename, height, unique, width } = {}) {
+export function imageUrl(model, id, field, params = {}) {
+    const { filename, height, unique, width, ...extraParams } = params;
     let route = `/web/image/${model}/${id}/${field}`;
     if (width && height) {
         route = `${route}/${width}x${height}`;
@@ -89,7 +90,7 @@ export function imageUrl(model, id, field, { filename, height, unique, width } =
             }
         }
     }
-    return url(route, urlParams);
+    return url(route, { ...urlParams, ...extraParams });
 }
 
 /**

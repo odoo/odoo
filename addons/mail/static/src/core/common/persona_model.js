@@ -91,15 +91,23 @@ export class Persona extends Record {
         return this.email.substring(0, this.email.lastIndexOf("@"));
     }
 
-    get avatarUrl() {
+    avatarUrl(thread) {
+        const params = { unique: this.write_date };
+        if (!this.store.self.isInternalUser && thread && thread.model !== "discuss.channel") {
+            Object.assign(params, {
+                thread_model: thread.model,
+                thread_id: thread.id,
+                ...thread.rpcParams,
+            });
+        }
         if (this.type === "partner") {
-            return imageUrl("res.partner", this.id, "avatar_128", { unique: this.write_date });
+            return imageUrl("res.partner", this.id, "avatar_128", params);
         }
         if (this.type === "guest") {
-            return imageUrl("mail.guest", this.id, "avatar_128", { unique: this.write_date });
+            return imageUrl("mail.guest", this.id, "avatar_128", params);
         }
         if (this.userId) {
-            return imageUrl("res.users", this.userId, "avatar_128", { unique: this.write_date });
+            return imageUrl("res.users", this.userId, "avatar_128", params);
         }
         return this.store.DEFAULT_AVATAR;
     }

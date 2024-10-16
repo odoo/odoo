@@ -179,9 +179,10 @@ class Binary(http.Controller):
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                       filename_field='name', filename=None, mimetype=None, unique=False,
                       download=False, width=0, height=0, crop=False, access_token=None,
-                      nocache=False):
+                      nocache=False, **kwargs):
         try:
-            record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token, field=field)
+            record = request.env['ir.binary']._find_record(xmlid, model, id and int(id),
+                                                           access_token, field=field, **kwargs)
             stream = request.env['ir.binary']._get_image_stream_from(
                 record, field, filename=filename, filename_field=filename_field,
                 mimetype=mimetype, width=int(width), height=int(height), crop=crop,

@@ -6,7 +6,7 @@ from odoo import models
 class IrBinary(models.AbstractModel):
     _inherit = ["ir.binary"]
 
-    def _find_record_check_access(self, record, access_token, field):
+    def _find_record_check_access(self, record, access_token, field, **kwargs):
         if record._name in ["res.partner", "mail.guest"] and field == "avatar_128":
             current_partner, current_guest = self.env["res.partner"]._get_current_persona()
             if current_partner or current_guest:
@@ -21,4 +21,4 @@ class IrBinary(models.AbstractModel):
                     domain.append(("channel_member_ids", "any", [("guest_id", "=", current_guest.id)]))
                 if self.env["discuss.channel"].search_count(domain, limit=1):
                     return record.sudo()
-        return super()._find_record_check_access(record, access_token, field)
+        return super()._find_record_check_access(record, access_token, field, **kwargs)

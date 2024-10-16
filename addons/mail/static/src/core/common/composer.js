@@ -186,6 +186,10 @@ export class Composer extends Component {
         });
     }
 
+    get avatarUrl() {
+        return this.store.self.avatarUrl(this.thread);
+    }
+
     get pickerSettings() {
         return {
             anchor: this.props.mode === "extended" ? undefined : this.mainActionsRef,

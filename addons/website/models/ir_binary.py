@@ -6,7 +6,7 @@ class IrBinary(models.AbstractModel):
 
     def _find_record(
             self, xmlid=None, res_model='ir.attachment', res_id=None,
-            access_token=None, field=None
+            access_token=None, field=None, **kwargs
     ):
         record = None
         if xmlid:
@@ -20,11 +20,12 @@ class IrBinary(models.AbstractModel):
                 record = Attachment.search(domain, limit=1)
 
         if not record:
-            record = super()._find_record(xmlid, res_model, res_id, access_token, field=field)
+            record = super()._find_record(xmlid, res_model, res_id, access_token, field=field,
+                                          **kwargs)
 
         return record
 
-    def _find_record_check_access(self, record, access_token, field):
+    def _find_record_check_access(self, record, access_token, field, **kwargs):
         if (
             'website_published' in record._fields
             and field in record._fields
@@ -33,4 +34,4 @@ class IrBinary(models.AbstractModel):
         ):
             return record.sudo()
 
-        return super()._find_record_check_access(record, access_token, field=field)
+        return super()._find_record_check_access(record, access_token, field=field, **kwargs)

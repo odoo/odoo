@@ -22,23 +22,6 @@ class PortalChatter(http.Controller):
         """ Tells if we can effectively post on the model based on content. """
         return bool(message) or bool(attachment_ids)
 
-    @http.route('/mail/avatar/mail.message/<int:res_id>/author_avatar/<int:width>x<int:height>', type='http', auth='public')
-    def portal_avatar(self, res_id=None, height=50, width=50, access_token=None, _hash=None, pid=None):
-        """Get the avatar image in the chatter of the portal"""
-        if access_token or (_hash and pid):
-            message = request.env["mail.message"].browse(int(res_id)).exists().filtered(
-                lambda msg: request.env[msg.model]._get_thread_with_access(
-                    msg.res_id, token=access_token, hash=_hash, pid=pid and int(pid)
-                )
-            )
-        else:
-            message = request.env.ref('web.image_placeholder').sudo()
-        # in case there is no message, it creates a stream with the placeholder image
-        stream = request.env['ir.binary']._get_image_stream_from(
-            message, field_name='author_avatar', width=int(width), height=int(height),
-        )
-        return stream.get_response()
-
     @http.route("/portal/chatter_init", type="json", auth="public", website=True)
     def portal_chatter_init(self, thread_model, thread_id, **kwargs):
         store = Store()

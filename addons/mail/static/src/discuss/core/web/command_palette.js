@@ -95,7 +95,7 @@ commandProviderRegistry.add("mail.partner", {
                     },
                     name: partner.name,
                     props: {
-                        imgUrl: partner.avatarUrl,
+                        imgUrl: partner.avatarUrl(),
                         persona: partner,
                         counter: chat ? chat.importantCounter : undefined,
                     },
