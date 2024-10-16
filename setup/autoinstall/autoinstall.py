@@ -3,17 +3,21 @@ import argparse
 import os
 import subprocess
 import sys
-
 from pathlib import Path
 
 if os.geteuid() == 0:
     raise Exception("This script should not be run as root")
 
+user_name = os.getenv('USER')
+
+# TODO write config file for srcdir
+
 base_dir = Path.home() / 'src' / 'master'
 # note, repositories are automaticaly set in a master directory to allow an easy setup of multiverse later
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dryrun", help="Only log install commands, don't execute them", action='store_true')
+parser.set_defaults(disable_default_set=False)
+parser.add_argument("--dry-run", help="Only log install commands, don't execute them", action='store_true')
 # install without asking
 parser.add_argument("--interactive", "-i", help="Interactive install, ask before each option", action='store_true')
 parser.add_argument("-y", help="Yes to all, don't ask anything", action='store_true')
@@ -21,233 +25,372 @@ parser.add_argument("-y", help="Yes to all, don't ask anything", action='store_t
 parser.add_argument("-a", help="Propose/install everything", action='store_true')
 parser.add_argument("-v", "--verbose", help="Verbose mode", action='store_true')
 
+
+class strore_true_no_default(argparse.Action):
+    def __init__(self, nargs=0, **kw):
+        super().__init__(nargs=nargs, **kw)
+
+    def __call__(self, parser, args, values, option_string=None):
+        setattr(args, self.dest, True)
+        args.disable_default_set = True
+
+
 features_group = parser.add_argument_group('Features group selection')
-features_group.add_argument("--nodefault", '-n', help="Don't install default set", action='store_true')
-features_group.add_argument("--dev", "-d", help="Install additional dev tools and add dev remotes (chrome, ruff, ..)", action='store_true')
-features_group.add_argument("--opt", "-o", help="Install additional optional dependencies (gevent, wkhtml, ebaysdk, ...)", action='store_true')
-features_group.add_argument("--docker", help="Install docker and build a ready to used docker image", action='store_true')
+features_group.add_argument("--default", help="Don't install default set", action='store_true')
+features_group.add_argument("--dev", "-d", help="Install additional dev tools and add dev remotes (chrome, ruff, ..)", action=strore_true_no_default)
+features_group.add_argument("--opt", "-o", help="Install additional optional dependencies (gevent, wkhtml, ebaysdk, ...)", action=strore_true_no_default)
+features_group.add_argument("--docker", help="Install docker and build a ready to used docker image. Implies --odoo-repo if odoo sources are missing", action=strore_true_no_default)
 
 individual_features = parser.add_argument_group('Individual feature selection')
-individual_features.add_argument("--git-clone", help="Clone odoo git repository (enabled by default)", action='store_true')
-individual_features.add_argument("--postgres", help="Install postgres (enabled by default)", action='store_true')
-individual_features.add_argument("--minimal-packages", help="Install packages needed to run odoo core (enabled by default)", action='store_true')
-individual_features.add_argument("--default-packages", help="Install default packages needed by some community modules (enabled by default) (implies base-packages)", action='store_true')
-individual_features.add_argument("--dev-packages", help="Install dev packages (enabled by dev)", action='store_true')
-individual_features.add_argument("--dev-remote", help="Add git dev remotes (enabled by dev)", action='store_true')
-individual_features.add_argument("--dev-repos", help="Add documentation and upgrade-utils repos (enabled by dev)", action='store_true')
-individual_features.add_argument("--chrome", '-c', help="Install chrome latest (enabled by dev)", action='store_true')
-individual_features.add_argument("--pdf", '-w', help="Install wkhtmltopdf -- qt patched -- (enabled by opt)", action='store_true')
-individual_features.add_argument("--opt-packages", help="Install optional packages, for multiworker, enterprise and other advanced features (enabled by opt)", action='store_true')
-individual_features.add_argument("--rtlcss", help="Install rtlcss (enabled by opt)", action='store_true')
+individual_features.add_argument("--odoo-repo", help="Clone odoo git repository. Will install git if missing. (enabled by default)", action=strore_true_no_default)
+individual_features.add_argument("--private-repo", "-e", help="Clone enterprise and upgrade git repository. Will install git if missing. (enabled by default)", action=strore_true_no_default)
+individual_features.add_argument("--postgres", help="Install postgres (enabled by default)", action=strore_true_no_default)
+individual_features.add_argument("--minimal-packages", help="Install packages needed to run odoo core (enabled by default)", action=strore_true_no_default)
+individual_features.add_argument("--default-packages", help="Install default packages needed by some community modules (enabled by default) (implies base-packages)", action=strore_true_no_default)
+individual_features.add_argument("--dev-packages", help="Install dev packages (enabled by dev)", action=strore_true_no_default)
+individual_features.add_argument("--dev-remote", help="Add git dev remotes (enabled by dev)", action=strore_true_no_default)
+individual_features.add_argument("--dev-repos", help="Add documentation and upgrade-utils repos (enabled by dev)", action=strore_true_no_default)
+individual_features.add_argument("--chrome", '-c', help="Install chrome latest (enabled by dev)", action=strore_true_no_default)
+individual_features.add_argument("--pdf", '-w', help="Install wkhtmltopdf -- qt patched -- (enabled by opt)", action=strore_true_no_default)
+individual_features.add_argument("--opt-packages", help="Install optional packages, for multiworker, and other advanced features (enabled by opt)", action=strore_true_no_default)
+individual_features.add_argument("--rtlcss", help="Install rtlcss (enabled by opt)", action=strore_true_no_default)
 
 configuration = parser.add_argument_group('Configuration')
 configuration.add_argument("--src-dir", help=f"Place where source should be clone, default to {base_dir}", default=base_dir)
-configuration.add_argument("--git-use-ssh", help=f"Place where source should be clone, default to {base_dir}", action='store_true')
-configuration.add_argument("--branch", help=f"Branch to checkout after clone")
+configuration.add_argument("--git-use-http", help=f"Use HTTP instead of SSH for git operations", action='store_true')
+configuration.add_argument("--branch", help="Branch to checkout after clone")
+
 
 args = parser.parse_args()
-args.default = True
 
-if args.nodefault:
-    args.default = False
-    if args.a:
-        raise Exception("Can't use -a and --nodefault at the same time")
+base_dir = Path(args.src_dir)
+odoo_dir = base_dir / 'odoo'
 
-## disable default if a specific default option is selected
-#if args.postgres or args.git_clone or args.default_packages or args.minimal_packages:
-#    # if manually selecting a default option, disable other option
-#    args.default = False
+if not args.disable_default_set:
+    args.default = True
 
 # option implications
 if args.a:
+    args.default = True
     args.dev = True
     args.opt = True
-if args.default:
-    args.git_clone = True
-    args.postgres = True
-    args.minimal_packages = True
-    args.default_packages = True
+
 if args.dev:
     args.dev_packages = True
     args.dev_remote = True
     args.dev_repos = True
     args.chrome = True
+
 if args.opt:
     args.opt_packages = True
     args.pdf = True
     args.rtlcss = True
 
-# prototype example of using click for interactive mode, to remove if overkill
-if args.interactive:
-    try:
-        from pick import Picker
-    except ModuleNotFoundError:
-        input("pick is required for interactive mode and will be installed, press enter to continue")
-        subprocess.run('pip install --break-system-package pick', shell=True)
-        import importlib
-        import site
-        importlib.reload(site)
-        from pick import Picker
+if args.default:
+    args.odoo_repo = True
+    args.postgres = True
+    args.minimal_packages = True
+    args.default_packages = True
 
-    title = 'Please choose the component you want to install/setup. Press [Enter] to continue'
-    options = [
-        "git_clone",
-        "postgres",
-        "minimal_packages",
-        "default_packages",
-        "dev_packages",
-        "dev_remote",
-        "dev_repos",
-        "chrome",
-        "opt_packages",
-        "pdf",
-        "rtlcss",
-    ]
-    actions = [action for action in parser._actions if action.dest in options]
-    options_names = [action.help.split('(')[0] for action in actions]
-    selected_indexes = [index for index, action in enumerate(actions) if getattr(args, action.dest)]
-    picker = Picker(options_names, title, multiselect=True, min_selection_count=1)
-    picker.selected_indexes = selected_indexes
-    selected = picker.start()
-    selected_index = [s[1] for s in selected]
-    for index, action in enumerate(actions):
-        option = action.dest
-        setattr(args, option, index in selected_index)
-    args.interactive = False
+if args.docker and not args.odoo_repo and not odoo_dir.is_dir():
+    args.odoo_repo = True
 
-base_dir = Path(args.src_dir)
-odoo_dir = base_dir / 'odoo'
-if not odoo_dir.is_dir() and not args.git_clone and args.docker:
-    raise Exception(f"Odoo directory not found, enable git_clone or clone odoo repository manually in {odoo_dir} or specify a valid src-dir")
 
-commands_to_execute = []
+if not args.odoo_repo and not odoo_dir.is_dir():
+    print("WARNING: the currently selected options won't clone odoo but no odoo source dir was found. You may want to enable --default, --odoo-repo or specify --src-dir to solve this issue")
+
 commands_summaries = []
 
 # CONFIGURATIONS
 
-if args.git_use_ssh:
-    git_base = 'git@github.com:'
-    suffix = '.git'
-else:
-    git_base = 'https://github.com/'
+if args.git_use_http:
+    git_base_url = 'https://github.com/'
     suffix = ''
+else:
+    git_base_url = 'git@github.com:'
+    suffix = '.git'
 
 # clone_params = '--filter=tree:0'
 clone_params = '--filter=blob:none'
 # --filter=tree:0 could be another faster option but is less practical on usage for blames
 
 
+def clone(repo, org='odoo'):
+    check_repo_exist = f'git -C {base_dir / repo} status > /dev/null 2>&1'
+    clone = f'git -C {base_dir} clone {clone_params} {git_base_url}{org}/{repo}{suffix}'
+    return f'{check_repo_exist} || {clone}'
+
+
+def install(*packages):
+    return 'sudo DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends ' + ' '.join(packages)
+
+
+def is_installed(package):
+    try:
+        subprocess.check_output(f"dpkg -l {package} | grep -E '^ii'", shell=True, stderr=subprocess.DEVNULL)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+class Operation:
+    operations = []
+    def __init__(self, enabled, message, *commands):
+        self.enabled = enabled
+        self.message = message
+        self.commands = commands
+        Operation.operations.append(self)
+
+    @property
+    def description(operation):
+        description = operation.message
+        if args.verbose:
+            description += '\n' + ('\n'.join(['\t \t > ' + command for command in operation.commands]))
+        return description
+
+    def __repr__(self):
+        return f'Operation({self.enabled}, {self.message})'
+
 def main():
     has_git = is_installed('git')
-    if args.git_clone and ask("Clone odoo repositories %s" % ('' if has_git else "and install git")):
-        def clone(repo):
-            repo_dir = base_dir / 'odoo'
-            if not repo_dir.is_dir():
-                run(f'git -C {base_dir} clone {clone_params} {git_base}odoo/{repo}{suffix}')
-            else:
-                print(f"{repo} repo already cloned")
+    has_postgres = is_installed('postgresql-common')
+    has_chrome = is_installed('google-chrome-*') or is_installed('chromium')
+    has_wkhtml = is_installed('wkhtmlto*')
+    has_docker = is_installed('docker-buildx')
+    has_rtl_css = subprocess.run('rtlcss --version > /dev/null 2>&1', shell=True).returncode != 0
+    odoo_dir_exists = odoo_dir.is_dir()
 
-            if args.dev_remote and ask("Add odoo-dev remote"):
-                # add dev remote
-                run(f'(git -C {odoo_dir} remote | grep dev) || git -C {odoo_dir} remote add dev {git_base}odoo-dev/odoo{suffix}')
-            if args.branch and ask(f"Checkout `{args.branch}` branch"):
-                run(f'((git -C {repo_dir} fetch origin {args.branch} || git -C {repo_dir} fetch dev {args.branch}) && git -C {repo_dir} checkout {args.branch}) || echo "Was not able to checkout branch {args.branch}, skipping"')
+    if not has_git:
+        Operation(
+            args.odoo_repo,
+            "Install git",
+            install('git'),
+        )
+
+    if not odoo_dir_exists:
+        Operation(
+            args.odoo_repo,
+            "Clone odoo repository",
+            f'mkdir -p {base_dir}',
+            clone('odoo'),
+        )
+    else:
+        print('An odoo repository was detected')
+
+    if not odoo_dir_exists or not subprocess.run(f'git -C {odoo_dir} remote | grep dev > /dev/null 2>&1', shell=True).returncode == 0:
+        Operation(
+            args.dev_remote,
+            "Add odoo-dev/odoo remote",
+            f'git -C {odoo_dir} remote add dev {git_base_url}odoo-dev/odoo{suffix}',
+        )
+
+    if args.branch:
+        Operation(
+            True,
+            f"Checkout `{args.branch}` branch",
+            f'(git -C {odoo_dir} fetch origin {args.branch}  > /dev/null 2>&1 || git -C {odoo_dir} fetch dev {args.branch}  > /dev/null 2>&1) && git -C {odoo_dir} checkout {args.branch} || git git -C {odoo_dir} rebase',
+        )
+
+    if not (base_dir / 'documentation').is_dir():
+        Operation(
+            args.dev_repos,
+            "Clone documentation repository",
+            clone('documentation'),
+        )
+
+    if not (base_dir / 'design-theme').is_dir():
+        Operation(
+            args.dev_repos,
+            "Clone design-theme repository",
+            clone('design-theme'),
+        )
+
+    if not (base_dir / 'upgrade-util').is_dir():
+        Operation(
+            args.dev_repos,
+            "Clone upgrade-util repository",
+            clone('upgrade-util'),
+        )
+
+    if not (base_dir / 'enterprise').is_dir():
+        Operation(
+            args.private_repo,
+            "Clone enterprise repository",
+            clone('enterprise'),
+        )
+
+    if not (base_dir / 'upgrade').is_dir():
+        Operation(
+            args.private_repo,
+            "Clone enterprise repository",
+            clone('upgrade'),
+        )
+
+    if not has_postgres:
+        Operation(
+            args.postgres,
+            "Install postgres",
+            install('postgresql postgresql-client'),
+            'sudo service postgresql start',
+        )
+    else:
+        print('An install of postgres was detected')
 
 
-        # TODO write config file for srcdir
-        if not has_git:
-            run('sudo apt-get install git')
-        if not base_dir.is_dir():
-            run('mkdir -p %s' % base_dir)
-        clone('odoo')
+    check_user_exist = '(psql postgres -c "\\l" > /dev/null 2>&1)'
+    if subprocess.run(check_user_exist, shell=True).returncode != 0:
+        Operation(
+            args.postgres,
+            "Create the potgresql user",
+            f'(sudo -u postgres createuser -d -R -S {user_name} && createdb {user_name})',
+        )
 
-        if args.dev_repos and ask("Clone documentation and upgrade-util repositories"):
-            clone('documentation')
-            clone('upgrade-util')
-        # note: this won't work if a github user is not setup, should we fallback on https?
+    # todo create template and add it to config
 
-    if args.postgres:
-        if is_installed('postgresql-common'):
-            if args.verbose:
-                print("Postgres installation detected, skipping install")
-        else:
-            if ask("Install potgress"):
-                run('sudo apt-get install postgresql postgresql-client')
-                run('sudo service postgresql start')
-        if ask("Create the potgresql user"):
-            check_user_exist = r'(psql postgres -c "\l" > /dev/null)'
-            create_user = '(sudo -u postgres createuser -d -R -S $(whoami) && createdb $(whoami))'
-            run(f'{check_user_exist} || {create_user}')
+    Operation(
+        args.minimal_packages,
+        "Install minimal debian packages (odoo core)",
+        install(base_packages),
+    )
+    Operation(
+        args.default_packages,
+        "Install default dependencies debian packages (modules)",
+        install(default_packages),
+    )
+    Operation(
+        args.dev_packages,
+        "Install dev dependencies debian packages, npm packages and pip packages",
+        install(dev_packages),
+        f'pip3 install --break-system-packages {dev_pip_packages}',
+        install('npm'),
+        'NODE_PATH=/usr/lib/node_modules/',
+        'export NODE_PATH=/usr/lib/node_modules/',
+        'export npm_config_prefix=/usr',
+        'sudo npm install --force -g es-check@6.0.0 eslint@8.1.0 prettier@2.7.1 eslint-config-prettier@8.5.0 eslint-plugin-prettier@4.2.1',
+    )
 
-    if args.docker and ask("Install docker"):
-        if not is_installed('docker'):
-            run('sudo apt-get install docker.io')
-        run('sudo service docker start')
-        run('sudo groupadd docker || echo "group docker already exists, skipping"')
+    Operation(
+        args.opt,
+        "Install optional debian packages",
+        install(opt_packages),
+        f'pip3 install --break-system-packages {opt_pip_packages}',
+    )
 
-        # TODO this following part may actually be moved to a more apropriate tooling in odoo/dev/tools
-        run(f'{odoo_dir}/setup/autoinstall/docker/build')
-
-    if args.minimal_packages and ask("Install minimal debian packages (odoo core)"):
-        run(f'sudo apt-get install --no-install-recommends {base_packages}')
-        if args.default_packages and ask("Install default dependencies debian packages (modules)"):
-            run(f'sudo apt-get install --no-install-recommends {default_packages}')
-
-    if args.dev_packages and ask("Install dev dependencies"):
-        run(f'sudo apt-get install --no-install-recommends {dev_packages}')
-        run(f'pip install --break-system-packages {dev_pip_packages}')
-        if not is_installed('npm'):
-            run('sudo apt-get install --no-install-recommends npm')
-        run('NODE_PATH=/usr/lib/node_modules/')
-        run('export NODE_PATH=/usr/lib/node_modules/')
-        run('export npm_config_prefix=/usr')
-        run('sudo npm install --force -g es-check@6.0.0 eslint@8.1.0 prettier@2.7.1 eslint-config-prettier@8.5.0 eslint-plugin-prettier@4.2.1')
-
-    if args.opt and ask("Install optional debian packages"):
-        run(f'sudo apt-get install --no-install-recommends {opt_packages}')
-        run(f'pip install --break-system-packages {opt_pip_packages}')
-
-    missing_chrome = not is_installed('google-chrome-*') and not is_installed('chromium')
-    if missing_chrome and args.chrome and ask("Install chrome"):
-        # TODO user repositories
+    if not has_chrome:
         chrome_url = 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
-        y = "-y" if not args.interactive else ''
-        run(f"""curl -sSL {chrome_url} -o /tmp/chrome.deb \
-            && sudo apt-get {y} install --no-install-recommends /tmp/chrome.deb \
-            && rm /tmp/chrome.deb
-            """)
+        Operation(
+            args.chrome,
+            "Install chrome",
+            f'curl -sSL {chrome_url} -o /tmp/chrome.deb',
+            install('/tmp/chrome.deb'),
+            'rm /tmp/chrome.deb',
+        )
+    else:
+        print('An install of chrome was detected')
 
-    missing_wkhtml = not is_installed('wkhtmlto*')
-    if missing_wkhtml and args.pdf and ask("Install wkhtmltopdf"):
+    if not has_wkhtml:
         version = "0.12.6.1-2"
         distro = "jammy"  # todo make dynamic for debian
-        run(f'curl -sSL https://github.com/wkhtmltopdf/packaging/releases/download/{version}/wkhtmltox_{version}.{distro}_amd64.deb -o /tmp/wkhtml.deb \
-            && sudo apt-get -y install --no-install-recommends --fix-missing -qq /tmp/wkhtml.deb \
-            && rm /tmp/wkhtml.deb')
+        Operation(
+            args.pdf,
+            "Install wkhtmltopdf",
+            f'curl -sSL https://github.com/wkhtmltopdf/packaging/releases/download/{version}/wkhtmltox_{version}.{distro}_amd64.deb -o /tmp/wkhtml.deb',
+            'sudo apt-get -y install --no-install-recommends --fix-missing -qq /tmp/wkhtml.deb',
+            'rm /tmp/wkhtml.deb'
+        )
+    else:
+        print('An install of wkhtml was detected')
 
-    missing_rtlcss = subprocess.run('rtlcss --version > /dev/null 2>&1', shell=True).returncode != 0
-    if missing_rtlcss and args.rtlcss and ask("Install node"):
-        if not is_installed('npm'):
-            run('sudo apt-get install --no-install-recommends npm')
-        run('export NODE_PATH=/usr/lib/node_modules/')
-        run('export npm_config_prefix=/usr')
-        # todo check if root and force is necessary
-        run('sudo npm install --force -g rtlcss@3.4.0')
+    if has_rtl_css:
+        Operation(
+            args.rtlcss,
+            "Install rtlcss",
+            install('npm'),
+            'export NODE_PATH=/usr/lib/node_modules/',
+            'export npm_config_prefix=/usr',
+            'sudo npm install --force -g rtlcss@3.4.0',
+        )
+    else:
+        print('An install of rtlcss was detected')
 
-    if to_confirm:
-        print("The script will:")
-        for c in to_confirm:
-            print('\t', '-', c)
-        if not args.y:
-            while res := input("Press enter to continue, type 'exit' to abort:"):
-                if res == 'exit':
-                    sys.exit(1)
+    if not has_docker:
+        install_docker = [install('docker.io', 'docker-buildx')]
+    else:
+        print('An install of docker was detected')
+        install_docker = []
 
-    for command in commands_to_execute:
-        if args.dryrun:
-            print(command)
-        else:
-            execute(command)
+    Operation(
+        args.docker,
+        "Install docker, configure current user and build odoo docker image",
+        *install_docker,
+        'sudo service docker start',
+        'sudo groupadd docker || echo "group docker already exists, skipping"',
+        'sudo usermod -aG docker $USER',
+        f'/bin/sh {odoo_dir}/setup/autoinstall/docker/build',
+    )
+
+    # Check if an apt update is needed before installing packages
+    need_update = False
+    for operation in Operation.operations:
+        if operation.enabled:
+            for command in operation.commands:
+                if 'apt' in command and 'install' in command:
+                    need_update = True
+    if need_update:
+        Operation(
+            True,
+            "Update apt",
+            'sudo apt-get update',
+        )
+        Operation.operations = [Operation.operations[-1], *Operation.operations[:-1]]  # move update to the top
+
+    # Interactive mode if requested, allow to enable/disable each operation individually
+    if args.interactive:
+        interactive_checks()
+
+    # Summary
+    print("The script will:")
+    for operation in Operation.operations:
+        if operation.enabled:
+            print('\t', '-', operation.description)
+
+    # Ask for confirmation
+    if not args.y:
+        while res := input("Press enter to continue, type 'exit' to abort:"):
+            if res == 'exit':
+                sys.exit(1)
+
+    # Start the installation
+    for operation in Operation.operations:
+        if operation.enabled:
+            for command in operation.commands:
+                print('>', command)
+                if not args.dry_run:
+                    res = subprocess.run(command, shell=True)
+                    if res.returncode != 0:
+                        sys.exit(res.returncode)
+
+
+def interactive_checks():
+    # prototype example of using click for interactive mode, to remove if overkill
+    try:
+        from pick import Picker
+    except ModuleNotFoundError:
+        input("pick is required for interactive mode and will be installed, press enter to continue")
+        subprocess.run('pip3 install --break-system-package pick', shell=True)
+        import importlib
+        import site
+        importlib.reload(site)
+        from pick import Picker
+
+    title = 'Please choose the component you want to install/setup. Press [Enter] to continue'
+    options_descriptions = [operation.message for operation in Operation.operations]
+    selected_indexes = [index for index, operation in enumerate(Operation.operations) if operation.enabled]
+    picker = Picker(options_descriptions, title, multiselect=True, min_selection_count=1)
+    picker.selected_indexes = selected_indexes
+    selected = picker.start()
+    selected_index = [s[1] for s in selected]
+    for index, operations in enumerate(Operation.operations):
+        operations.enabled = index in selected_index
 
 
 # START DEPS
@@ -304,43 +447,11 @@ opt_packages = ' '.join([  # noqa: FLY002
     'python3-xmlsec',  # enterprise
 ])
 # apt-transport-https build-essential ca-certificates curl file fonts-freefont-ttf fonts-noto-cjk gawk gnupg gsfonts libldap2-dev libjpeg9-dev libsasl2-dev libxslt1-dev lsb-release npm ocrmypdf sed sudo unzip xfonts-75dpi zip zlib1g-dev
-opt_pip_packages = 'ebaysdk==2.1.5 pdf417gen==0.7.1'
+
+# NOTE: ebaysdk==2.1.5 is needed for versions <= 17.*, not present here
+opt_pip_packages = 'pdf417gen==0.7.1'  # needed for ln10n_cl_edi
 # END DEPS
 
 
-
-def run(command):
-    if not args.interactive and ('install' in command and 'apt' in command and not '-y' in command):
-        command = command + " -y"
-    if 'apt' in command and 'install' in command and not run.updated:
-        run.updated = True
-        commands_to_execute.append('sudo apt-get update')
-    commands_to_execute.append(command)
-
-
-run.updated = False
-
-
-def execute(command):
-    print('>', command)
-    res = subprocess.run(command, shell=True)
-    if res.returncode != 0:
-        sys.exit(res.returncode)
-
-def ask(message):
-    commands_summaries.append(message)
-    return True
-
-
-def install_package(*packages):
-    run("sudo apt-get install " + " ".join(packages))
-
-
-def is_installed(package):
-    try:
-        subprocess.check_output(f"dpkg -l {package} | grep -E '^ii'", shell=True, stderr=subprocess.DEVNULL)
-        return True
-    except subprocess.CalledProcessError:
-        return False
-
-main()
+if __name__ == '__main__':
+    main()

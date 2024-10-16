@@ -1,10 +1,14 @@
 
 docker run \
-    -v /var/run/postgres:/var/run/postgres \
+    -v /var/run/postgresql:/var/run/postgresql \
     -v /home/$USER/.local/share/Odoo:/home/$USER/.local/share/Odoo \
     -v /home/$USER/.bashrc:/home/$USER/.bashrc:ro \
+    -v /home/$USER/src:/home/$USER/src:ro \
     --user $USER \
     -ti \
     --rm \
+    -p 127.0.0.1:8069:8069/tcp \
+    -p 127.0.0.1:8070:8070/tcp  \
     odoo:dev \
     /bin/bash
+    

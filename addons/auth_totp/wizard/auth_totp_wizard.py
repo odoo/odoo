@@ -44,7 +44,7 @@ class Auth_TotpWizard(models.TransientModel):
         # TODO: make "issuer" configurable through config parameter?
         if not qrcode:
             _logger.error("The qrcode library is not installed, QR codes will not be displayed.")
-            return False
+            return
         global_issuer = request and request.httprequest.host.split(':', 1)[0]
         for w in self:
             issuer = global_issuer or w.user_id.company_id.display_name
