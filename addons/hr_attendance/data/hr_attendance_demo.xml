@@ -13,6 +13,22 @@
             <field name="barcode">456</field>
         </record>
 
+        <record id="hr.employee_hne" model="hr.employee">
+            <field name="attendance_manager_id" ref="base.user_demo"/>
+        </record>
+
+        <record id="hr.employee_mit" model="hr.employee">
+            <field name="attendance_manager_id" ref="base.user_demo"/>
+        </record>
+
+        <record id="hr.employee_chs" model="hr.employee">
+            <field name="attendance_manager_id" ref="base.user_demo"/>
+        </record>
+
+        <record id="hr.employee_fme" model="hr.employee">
+            <field name="attendance_manager_id" ref="base.user_demo"/>
+        </record>
+
         <record id="attendance_root1" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 08:00:24')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 12:01:33')" name="check_out"/>
@@ -83,6 +99,46 @@
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 08:00')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 17:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+        </record>
+
+        <record id="attendance11" model="hr.attendance">
+            <field eval="(datetime.now()+timedelta(hours=-4)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
+            <field eval="(datetime.now()+timedelta(minutes=-30)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
+            <field name="employee_id" ref="hr.employee_hne"/>
+            <field name="overtime_status">to_approve</field>
+        </record>
+
+        <record id="attendance12" model="hr.attendance">
+            <field eval="(datetime.now()+timedelta(hours=-31)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
+            <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
+            <field name="employee_id" ref="hr.employee_mit"/>
+            <field name="overtime_status">refused</field>
+        </record>
+
+        <record id="attendance12_message1" model="mail.message">
+            <field name="model">hr.attendance</field>
+            <field name="res_id" ref="attendance12"/>
+            <field name="body">She didn't check-out.
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
+
+        <record id="attendance13" model="hr.attendance">
+            <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:10')" name="check_in"/>
+            <field eval="(datetime.now()+timedelta(hours=-2)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
+            <field name="employee_id" ref="hr.employee_mit"/>
+            <field name="overtime_status">approved</field>
+        </record>
+
+        <record id="attendance14" model="hr.attendance">
+            <field eval="(datetime.now()+timedelta(hours=-15)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
+            <field eval="(datetime.now()+timedelta(hours=-3)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
+            <field name="employee_id" ref="hr.employee_chs"/>
+        </record>
+        <record id="attendance14" model="hr.attendance">
+            <field name="validated_overtime_hours">2</field>
         </record>
     </data>
 </odoo>
