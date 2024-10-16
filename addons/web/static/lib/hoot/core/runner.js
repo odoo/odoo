@@ -1033,6 +1033,8 @@ export class Runner {
 
             await this._callbacks.call("after-post-test", test, handleError);
 
+            this._pushTest(test);
+
             if (this.config.bail) {
                 if (!test.config.skip && !lastResults.pass) {
                     this._failed++;
@@ -1041,7 +1043,6 @@ export class Runner {
                     return this.stop();
                 }
             }
-            this._pushTest(test);
             if (test.willRunAgain()) {
                 test.run = test.run.bind(test);
             } else {
