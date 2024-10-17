@@ -584,7 +584,8 @@ var KanbanRecord = Widget.extend({
 
             if (r.type) {
                 var formatter = field_utils.format[r.type];
-                r.value = formatter(value, self.fields[name], recordData, self.state);
+                // Avoid failing when no formatter is available e.g.: serialized
+                r.value = (formatter && formatter(value, self.fields[name], recordData, self.state)) || r.value;
             } else {
                 r.value = value;
             }
