@@ -25,6 +25,11 @@
                     <div class="h3 pe-none" t-att-class="{'text-primary': props.visible}">
                         <t t-out="props.dragTitle"/>
                     </div>
+                    <t t-if="props.dragShowCompany">
+                        <div t-att-class="{'text-primary': props.visible}">
+                            <span class="small fw-bold">(<t t-out="props.dragCompany"/>)</span>
+                        </div>
+                    </t>
                   <div class="pe-none">
                       <span t-att-class="{'invisible': !props.visible, 'text-primary': props.visible}">
                           <t t-out="props.dragText"/>
