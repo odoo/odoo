@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Form View of Shiperoo Delivery Receipt Order Process-->
+    <record id="view_delivery_receipt_orders_form" model="ir.ui.view">
+        <field name="name">delivery.receipt.orders.form</field>
+        <field name="model">delivery.receipt.orders</field>
+        <field name="arch" type="xml">
+            <form string="Manual/Automation Inbound Process">
+                <sheet string="Manual/Automation Inbound Process">
+                    <header>
+                        <button name="button_action_draft" type="object"
+                                string="Scan Licence Barcode"
+                                invisible="state in ('done')"/>
+                        <button name="button_action_done" type="object"
+                                string="Done"
+                                invisible="state in ('draft', 'done')"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="date" readonly="1"/>
+                            <field name="picking_id" required="True"/>
+                        </group>
+                        <group>
+                            <field name="site_code_id"/>
+                            <field name="partner_id"/>
+                            <field name="tenant_code_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page id="product" name="Product">
+                            <field name="delivery_receipt_orders_line_ids" widget="section_and_note_one2many" mode="tree">
+                                <tree editable='bottom' create="0" edit="0">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"
+                                           force_save="1"
+                                           create="false" required="not display_type"/>
+                                    <field name="name"/>
+                                    <field name="sku_code"/>
+                                    <field name="quantity"/>
+                                    <field name="available_quantity" column_invisible="1"/>
+                                    <field name="remaining_quantity" column_invisible="1"/>
+                                    <field name="state"/>
+                                    <field name="display_type" column_invisible="1"/>
+                                    <field name="display_type_line_section" column_invisible="True"/>
+                                    <field name="license_plate_closed" column_invisible="True"/>
+                                     <button name="button_close_license_plate" type="object"
+                                            string="Close License Plate"
+                                            invisible="license_plate_closed != False"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+<!--    Tree view of Shiperoo Delivery Receipt Orders-->
+    <record id="view_delivery_receipt_orders_tree" model="ir.ui.view">
+        <field name="name">delivery.receipt.orders.tree</field>
+        <field name="model">delivery.receipt.orders</field>
+        <field name="arch" type="xml">
+            <tree string="Manual/Automation Inbound Process">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+            </tree>
+        </field>
+    </record>
+
+<!--    Action for shiperoo delivery receipt order -->
+    <record id="action_delivery_receipt_orders" model="ir.actions.act_window">
+        <field name="name">Manual/Automation Order Process</field>
+        <field name="res_model">delivery.receipt.orders</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

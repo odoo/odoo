@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the existing form view to add configuration fields Tenant code and Site code-->
+        <record id="view_stock_picking_inherit_site_tenant_code" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit.custom</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <!-- Add the fields in the appropriate position -->
+                <xpath expr="//form/sheet/group/group" position="inside">
+                    <field name="tenant_code_id" string="Tenant ID"/>
+                    <field name="site_code_id" string="Site Code"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Form view of Tenant Code Configuration -->
+    <record id="view_tenant_code_configuration_form" model="ir.ui.view">
+        <field name="name">tenant.code.configuration.form</field>
+        <field name="model">tenant.code.configuration</field>
+        <field name="arch" type="xml">
+            <form string="Tenant Code Configuration">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    Tree View of Tenant Code Configuration-->
+    <record id="tree_view_tenant_code_configuration" model="ir.ui.view">
+        <field name="name">tenant.code.configuration.tree</field>
+        <field name="model">tenant.code.configuration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    Action for Tenant Code configuration model-->
+    <record id="action_tenant_code_configuration" model="ir.actions.act_window">
+        <field name="name">Tenant Code</field>
+        <field name="res_model">tenant.code.configuration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
