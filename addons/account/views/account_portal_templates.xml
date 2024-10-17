@@ -113,7 +113,20 @@
                 <t t-call="portal.portal_record_sidebar">
                     <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none me-lg-auto'"/>
                     <t t-set="title">
-                        <h2>
+                        <div t-if="early_payment" class="alert alert-info" role="alert">
+                            An early payment discount is available for this invoice!
+                        </div>
+                        <h2 t-if="amount">
+                            <t t-if="early_payment">
+                                <span t-esc="amount_without_discount" t-attf-class="ms-1 h5" style="text-decoration: line-through; color: grey;" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                <span t-esc="amount"
+                                      t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </t>
+                            <t t-else="1">
+                                <span t-esc="amount" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </t>
+                        </h2>
+                        <h2 t-if="0">
                             <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
                             <span t-else="1" t-field="invoice.amount_total"/>
                         </h2>
