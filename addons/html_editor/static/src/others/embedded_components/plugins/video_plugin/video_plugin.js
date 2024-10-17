@@ -33,13 +33,19 @@ export class VideoPlugin extends Plugin {
      * @param {Object} media
      */
     insertVideo(media) {
-        const videoBlock = renderToElement("html_editor.EmbeddedVideoBlueprint", {
-            embeddedProps: JSON.stringify({
-                videoId: media.videoId,
-                platform: media.platform,
-                params: media.params || {},
-            }),
-        });
+        const videoBlock = renderToElement(
+            "html_editor.EmbeddedVideoBlueprint",
+            {
+                embeddedProps: JSON.stringify({
+                    videoId: media.videoId,
+                    platform: media.platform,
+                    params: media.params || {},
+                }),
+            },
+            {
+                document: this.document,
+            }
+        );
         this.dependencies.dom.insert(videoBlock);
         this.dependencies.history.addStep();
     }
