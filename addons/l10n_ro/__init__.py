@@ -9,3 +9,5 @@
 # Copyright (C) 2009 (<http://www.filsystem.ro>)
 
 from . import models
+from .models.res_partner import ResPartner
+from .models.template_ro import AccountChartTemplate

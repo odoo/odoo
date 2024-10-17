@@ -3,3 +3,4 @@
 
 from . import controllers
 from . import models
+from .models.res_company import ResCompany

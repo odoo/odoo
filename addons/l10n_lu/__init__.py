@@ -8,4 +8,5 @@ def _post_init_hook(env):
 
 def _preserve_tag_on_taxes(env):
     from odoo.addons.account.models.chart_template import preserve_existing_tags_on_taxes
+from .models.template_lu import AccountChartTemplate
     preserve_existing_tags_on_taxes(env, 'l10n_lu')
