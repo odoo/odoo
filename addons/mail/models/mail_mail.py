@@ -56,8 +56,6 @@ class MailMail(models.Model):
     is_notification = fields.Boolean('Notification Email', help='Mail has been created to notify people of an existing mail.message')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
-    email_to = fields.Text('To', help='Message recipients (emails)')
-    email_cc = fields.Char('Cc', help='Carbon copy message recipients')
     recipient_ids = fields.Many2many('res.partner', string='To (Partners)',
         context={'active_test': False})
     # process
@@ -190,7 +188,7 @@ class MailMail(models.Model):
         SQL queries.
         """
         super()._add_inherited_fields()
-        for field in ('email_from', 'reply_to', 'subject'):
+        for field in ('email_cc', 'email_from', 'email_to', 'reply_to', 'subject'):
             self._fields[field].related_sudo = True
 
     def action_retry(self):
