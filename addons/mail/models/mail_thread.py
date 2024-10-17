@@ -33,11 +33,12 @@ from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext, parse_contact_from_email,
-    clean_context, split_every, Query, SQL, email_normalize_all,
+    clean_context, split_every, Query, SQL,
     ormcache, is_list_of,
 )
 from odoo.tools.mail import (
-    append_content_to_html, decode_message_header, email_normalize, email_split,
+    append_content_to_html, decode_message_header, email_normalize,
+    email_normalize_all, email_split,
     email_split_and_format, formataddr, html_sanitize,
     generate_tracking_message_id, mail_header_msgid_re,
 )
@@ -3189,7 +3190,7 @@ class MailThread(models.AbstractModel):
           skip message usage and spare some queries;
         """
         inbox_pids_uids = sorted(
-            [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
+            [(r["id"], r["uid"]) for r in recipients_data if r["id"] and r["notif"] == "inbox"]
         )
         if inbox_pids_uids:
             notif_create_values = [
@@ -3305,9 +3306,19 @@ class MailThread(models.AbstractModel):
                 msg_vals=msg_vals,
                 render_values=render_values,
             )
-            recipients_ids = recipients_group.get('recipients_ids')
+            # prepare recipients
+            email_cc_lst, email_to_lst = [], []
+            for email_recipient in [
+                r['email'] for r in recipients_group['recipients_data'] if not r['id']
+            ]:
+                email_normalized = email_normalize(email_recipient, strict=False)
+                if email_normalized in message.email_cc:
+                    email_cc_lst.append(email_recipient)
+                else:
+                    email_to_lst.append(email_recipient)
+            recipients_ids = recipients_group['recipients_ids']
 
-            # create email
+            # create email for partners
             for recipients_ids_chunk in split_every(gen_batch_size, recipients_ids):
                 mail_values = self._notify_by_email_get_final_mail_values(
                     recipients_ids_chunk,
@@ -3339,6 +3350,20 @@ class MailThread(models.AbstractModel):
                         'notification_type': 'email',
                         'res_partner_id': recipient_id,
                     } for recipient_id in tocreate_recipient_ids]
+                emails += new_email
+
+            # create email for email_to
+            if email_to_lst or email_cc_lst:
+                mail_values = self._notify_by_email_get_final_mail_values(
+                    [],
+                    base_mail_values,
+                    additional_values={
+                        'body_html': mail_body,
+                        'email_cc': ','.join(email_cc_lst),
+                        'email_to': ','.join(email_to_lst),
+                    },
+                )
+                new_email = SafeMail.create(mail_values)
                 emails += new_email
 
         if notif_create_values:
@@ -3813,10 +3838,12 @@ class MailThread(models.AbstractModel):
           ``MailFollowers._get_recipient_data()`` for more details) formatted
           like [
           {
-            'active': partner.active;
-            'id': id of the res.partner being recipient to notify;
-            'is_follower': follows the message related document;
-            'lang': partner.lang;
+            'active': partner.active (True if email only);
+            'id': id of the res.partner being recipient to notify. Can be empty
+                if recipient has no linked partner;
+            'is_follower': follows the message related document (False if email
+                only);
+            'lang': partner.lang (False if email only);
             'groups': res.group IDs if linked to a user;
             'notif': notification type, one of 'inbox', 'email', 'sms' (SMS App),
                 'whatsapp (WhatsAapp);
@@ -3833,10 +3860,30 @@ class MailThread(models.AbstractModel):
         message_type = msg_vals.get('message_type') if msg_vals else msg_sudo.message_type
         subtype_id = msg_vals.get('subtype_id') if msg_vals else msg_sudo.subtype_id.id
         # is it possible to have record but no subtype_id ?
-        recipients_data = []
+
+        # bootstrap with emails
+        email_cc_lst = email_split_and_format(msg_vals.get('email_cc') if msg_vals else message.email_cc)
+        email_to_lst = email_split_and_format(msg_vals.get('email_to') if msg_vals else message.email_to)
+        recipients_data = [
+            {
+                'active': True,
+                'email': email,
+                'email_normalized': email_normalize(email, strict=False),
+                'id': False,
+                'is_follower': False,
+                'lang': False,
+                'groups': [],
+                'notif': 'email',
+                'share': True,
+                'type': 'customer',
+                'uid': False,
+                'ushare': False,
+            }
+            for email in email_cc_lst + email_to_lst
+        ]
 
         res = self.env['mail.followers']._get_recipient_data(self, message_type, subtype_id, pids)[self.id if self else 0]
-        if not res:
+        if not res and not recipients_data:
             return recipients_data
 
         # notify author of its own messages, False by default
@@ -3859,7 +3906,7 @@ class MailThread(models.AbstractModel):
 
         # avoid double notification (on demand due to additional queries)
         if kwargs.pop('skip_existing', False):
-            pids = [r['id'] for r in recipients_data]
+            pids = [r['id'] for r in recipients_data if r['id']]
             if pids:
                 existing_notifications = self.env['mail.notification'].sudo().search([
                     ('res_partner_id', 'in', pids),
@@ -3908,7 +3955,8 @@ class MailThread(models.AbstractModel):
           * 'portal': recipients linked to a portal user;
           * 'follower': recipients (not internal/portal users) follower of the
             related record;
-          * 'customer': other recipients;
+          * 'customer': other recipients with a partner ID;
+          * 'contact': other recipients (e.g. email only)
 
         When having to find a group for recipients, the first matching one
         when iterating on groups is used. Reordering those groups is doable
@@ -3948,12 +3996,19 @@ class MailThread(models.AbstractModel):
                 }
             ], [
                 'customer',
+                lambda pdata: pdata['id'],
+                {
+                    'active': True,
+                    'has_button_access': False,
+                }
+            ], [
+                'contact',
                 lambda pdata: True,
                 {
                     'active': True,
                     'has_button_access': False,
                 }
-            ]
+            ],
         ]
 
     def _notify_get_recipients_groups_fillup(self, groups, model_description, msg_vals=None):
@@ -4048,7 +4103,8 @@ class MailThread(models.AbstractModel):
             for _group_name, group_func, group_data in groups:
                 if group_data['active'] and group_func(recipient_data):
                     group_data['recipients_data'].append(recipient_data)
-                    group_data['recipients_ids'].append(recipient_data['id'])
+                    if recipient_data['id']:
+                        group_data['recipients_ids'].append(recipient_data['id'])
                     break
 
         # filter out groups without recipients
@@ -4124,7 +4180,7 @@ class MailThread(models.AbstractModel):
         notif_pids = []
         no_inbox_pids = []
         for recipient in recipients_data:
-            if recipient['active']:
+            if recipient['active'] and recipient['id']:
                 notif_pids.append(recipient['id'])
                 if recipient['notif'] != 'inbox':
                     no_inbox_pids.append(recipient['id'])

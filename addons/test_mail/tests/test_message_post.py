@@ -752,14 +752,20 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
 
         with self.assertSinglePostNotifications(
-                [{'partner': self.partner_employee_2, 'type': 'inbox'}],
-                message_info={
+                [
+                    {'partner': self.partner_employee_2, 'type': 'inbox'},
+                    {
+                        'email_cc': ['"Leo Pol" <leo@test.example.com>', 'fab@test.example.com'],
+                        'email_to': ['"Gaby Tlair" <gab@test.example.com>', 'ted@test.example.com'],
+                        'type': 'email',
+                    },
+                ], message_info={
                     'content': 'Body',
                     'message_values': {
                         'author_id': self.partner_employee,
                         'body': '<p>Body</p>',
-                        'email_cc': '"Leo Pol" <leo@test.example.com>, fab@test.example.com',
-                        'email_to': '"Gaby Tlair" <gab@test.example.com>, ted@test.example.com',
+                        'email_cc': '"Leo Pol" <leo@test.example.com>,fab@test.example.com',  # normalized with comma without space
+                        'email_to': '"Gaby Tlair" <gab@test.example.com>,ted@test.example.com',  # normalized with comma without space
                         'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
                         'is_internal': False,
                         'message_type': 'comment',
@@ -769,7 +775,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         'res_id': test_record.id,
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
-                }
+                },
             ):
             new_message = test_record.message_post(
                 body='Body',
