@@ -19,7 +19,6 @@ The actual till still requires one user but an unlimited number of employees can
         'views/pos_payment_view.xml',
         'views/pos_order_report_view.xml',
         'views/single_employee_sales_report.xml',
-        'views/multi_employee_sales_report.xml',
         'views/res_config_settings_views.xml',
         'wizard/pos_daily_sales_reports.xml',
     ],
@@ -31,9 +30,6 @@ The actual till still requires one user but an unlimited number of employees can
         ],
         'web.assets_tests': [
             'pos_hr/static/tests/**/*',
-        ],
-        'web.assets_backend': [
-            'pos_hr/static/src/app/print_report_button/*',
         ],
     },
     'license': 'LGPL-3',
