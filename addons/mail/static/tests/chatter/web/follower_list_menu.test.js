@@ -228,12 +228,12 @@ test("Load 20 recipients at once", async () => {
 test("Load Followers in alphabetical order", async () => {
     const pyEnv = await startServer();
     const partnerData = [
-        { display_name: "testuser", name: "testuser", email: "testuser@example.com" },
-        { display_name: "Testuser", name: "Testuser", email: "testuser1234@example.com" },
-        { display_name: "1Testuser", name: "1Testuser", email: "testuser@exam2ple.com" },
-        { display_name: "1testuser", name: "1testuser", email: "testuser23@example.com" },
-        { display_name: "Utestuser", name: "Utestuser", email: "btestuser@example.com" },
-        { display_name: "tsuser", name: "tsuser", email: "bid@example.com" },
+        { name: "testuser", email: "testuser@example.com" },
+        { name: "Testuser", email: "testuser1234@example.com" },
+        { name: "1Testuser", email: "testuser@exam2ple.com" },
+        { name: "1testuser", email: "testuser23@example.com" },
+        { name: "Utestuser", email: "btestuser@example.com" },
+        { name: "tsuser", email: "bid@example.com" },
     ];
     const partnerIds = pyEnv["res.partner"].create(partnerData);
     pyEnv["mail.followers"].create(

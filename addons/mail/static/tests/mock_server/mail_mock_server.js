@@ -773,57 +773,36 @@ async function mail_message_update_content(request) {
 }
 
 registerRoute("/discuss/channel/<int:cid>/partner/<int:pid>/avatar_128", partnerAvatar128);
-
-registerRoute("/mail/message/get_followers", message_get_followers);
 /** @type {RouteCallback} */
-async function message_get_followers(request) {
-    const {
-        thread_id,
-        thread_model,
-        limit,
-        offset,
-        filter_recipients = false,
-    } = await parseRequestParams(request);
-    if (filter_recipients) {
-        // not implemented for the simplicity
-    }
+async function partnerAvatar128(request, { cid, pid }) {
+    return [cid, pid];
+}
+
+registerRoute("/mail/thread/get_followers", mail_thread_get_followers);
+/** @type {RouteCallback} */
+async function mail_thread_get_followers(request) {
+    const { thread_id, thread_model, limit, offset } = await parseRequestParams(request);
 
     /** @type {import("mock_models").MailFollowers} */
     const MailFollowers = this.env["mail.followers"];
-    const followersCount = MailFollowers._filter([
-        ["res_id", "=", thread_id],
-        ["res_model", "=", thread_model],
-    ]).length;
-    const selfFollower = MailFollowers.search([
-        ["res_id", "=", thread_id],
-        ["res_model", "=", thread_model],
-        ["partner_id", "=", this.env.user.partner_id],
-    ]);
-    let followers = MailFollowers._filter([
+    const store = new mailDataHelpers.Store();
+    let totalFollowers = MailFollowers._filter([
         ["res_id", "=", thread_id],
         ["res_model", "=", thread_model],
         ["partner_id", "!=", this.env.user.partner_id],
     ]);
-
-    followers = followers.sort((a, b) => (a.name < b.name ? -1 : 1));
-    followers = followers.slice(offset, offset + limit);
-    let store = new mailDataHelpers.Store();
-    store.add("mail.followers", followers);
-    const data = store.get_result();
-    store = new mailDataHelpers.Store();
-    store.add(selfFollower);
-    const selfFollowerData = store.get_result();
-    return {
-        data: data,
-        followers: Store.many_ids(followers),
-        selfFollower: selfFollowerData,
-        followersCount: followersCount,
-    };
-}
-
-/** @type {RouteCallback} */
-async function partnerAvatar128(request, { cid, pid }) {
-    return [cid, pid];
+    totalFollowers = totalFollowers.sort((a, b) => (a.name < b.name ? -1 : 1));
+    const followers = totalFollowers.slice(offset, offset + limit);
+    store.add(followers);
+    store.add({
+        followerListView: {
+            threadId: thread_id,
+            threadModel: thread_model,
+            followersCount: totalFollowers.length,
+            followers: Store.many_ids(followers, "ADD"),
+        },
+    });
+    return store.get_result();
 }
 
 registerRoute("/mail/partner/from_email", mail_thread_partner_from_email);
@@ -1376,9 +1355,9 @@ class Store {
         if (!["ADD", "DELETE", "REPLACE"].includes(mode)) {
             throw new Error(`invalid mode for many_ids: ${mode} `);
         }
-        let res = records.map((record) =>
-            Store.one_id(records.browse(record.id), makeKwArgs({ as_thread }))
-        );
+        let res = records.map((record) => {
+            return Store.one_id(records.browse(record.id), makeKwArgs({ as_thread }));
+        });
         if (records._name === "mail.message.reaction") {
             res = [];
             const reactionGroups = groupBy(records, (r) => [r.message_id, r.content]);

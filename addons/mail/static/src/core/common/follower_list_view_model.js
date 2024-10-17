@@ -1,72 +1,36 @@
-import { Record } from "@mail/core/common/record";
+import { AND, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 
 export class FollowerListView extends Record {
-    static id = "id";
-    /** @type {Object.<number, import("models").FollowerListView>} */
-    static records = {};
+    static id = AND("threadModel", "threadId");
     /** @returns {import("models").FollowerListView} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Data} data
-     * @returns {import("models").FollowerListView|import("models").FollowerListView[]}
+     * @returns {import("models").FollowerListView}
      */
     static insert(data) {
         return super.insert(...arguments);
     }
 
     /** @type {number} */
-    id;
-    /** @type {number} */
-    thread_id;
+    threadId;
     /** @type {string} */
-    thread_model;
-
+    threadModel;
     followers = Record.many("mail.followers");
-
     /** @type {number} */
     followersCount;
 
-    selfFollower = Record.one("mail.followers");
-
-    get followersFullyLoaded() {
-        return (
-            this.followersCount ===
-            (this.selfFollower ? this.followers.length + 1 : this.followers.length)
-        );
-    }
-
-    async loadMoreFollowers() {
-        const res = await this.store.env.services.orm.call(
-            this.thread_model,
-            "message_get_followers",
-            [[this.thread_id], 20, this.followers.length]
-        );
-        if (res["mail.followers"]?.length) {
-            this.store.insert(res);
-            this.followers.add(...res["mail.followers"]);
-        }
-    }
-
-    async get_follower() {
-        const res = await rpc("/mail/message/get_followers", {
-            thread_id: this.thread_id,
-            thread_model: this.thread_model,
+    async loadFollowers(offset = this.followers.length) {
+        const res = await rpc("/mail/thread/get_followers", {
+            thread_id: this.threadId,
+            thread_model: this.threadModel,
             limit: 20,
-            offset: this.followers.length,
-            filter_recipients: false,
+            offset: offset,
         });
-        const { selfFollower, followersCount, data } = res;
-        const followers = data?.["mail.followers"] || [];
-        if (selfFollower?.["mail.followers"]?.length) {
-            [this.selfFollower] = selfFollower["mail.followers"];
-        }
-        if (followersCount) {
-            this.followersCount = followersCount;
-        }
-        this.followers.add(...followers);
+        this.store.insert(res);
     }
 }
 
