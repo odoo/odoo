@@ -86,13 +86,14 @@ class StockPickingType(models.Model):
 class StockLot(models.Model):
     _inherit = 'stock.lot'
 
-    def _compute_last_delivery_partner_id(self):
-        super()._compute_last_delivery_partner_id()
+    def _compute_partner_ids(self):
+        delivery_ids_by_lot = self._find_delivery_ids_by_lot()
         for lot in self:
-            if lot.delivery_count > 0:
-                last_delivery = max(lot.delivery_ids, key=lambda d: d.date_done)
-                if last_delivery.is_dropship:
-                    lot.last_delivery_partner_id = last_delivery.sale_id.partner_shipping_id
+            if delivery_ids_by_lot[lot.id]:
+                picking_ids = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).sorted(key='date_done', reverse=True)
+                lot.partner_ids = list(p.sale_id.partner_shipping_id.id if p.is_dropship else p.partner_id.id for p in picking_ids)
+            else:
+                lot.partner_ids = False
 
     def _get_outgoing_domain(self):
         res = super()._get_outgoing_domain()

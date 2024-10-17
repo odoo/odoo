@@ -44,7 +44,7 @@
                         <field name="ref"/>
                         <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         <field name="location_id" invisible="not location_id" groups="stock.group_stock_manager"/>
-                        <field name="last_delivery_partner_id" invisible="not last_delivery_partner_id" groups="stock.group_stock_manager"/>
+                        <field name="partner_ids" invisible="not partner_ids" widget="many2many_tags" groups="stock.group_stock_manager"/>
                     </group>
                     <group></group>
                     <field name="lot_properties" nolabel="1" columns="2" hideAddButton="1"/>
@@ -70,7 +70,7 @@
                 <field name="product_id" readonly="1"/>
                 <field name="create_date" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="last_delivery_partner_id" optional="hide" string="Transfer to"/>
+                <field name="partner_ids" optional="hide" widget="many2many_tags" string="Transfer to"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="lot_properties" optional="hide"/>
                 <field name="product_qty" optional="hide"/>
@@ -101,6 +101,7 @@
         <field name="arch" type="xml">
             <search string="Product Lots Filter">
                 <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
+                <field name="partner_ids" string="Customers"/>
                 <field name="product_id"/>
                 <field name="lot_properties"/>
                 <field name="create_date"/>
