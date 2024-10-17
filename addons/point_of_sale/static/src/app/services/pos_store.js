@@ -3,6 +3,7 @@
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
 import { floatIsZero } from "@web/core/utils/numbers";
+import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { deduceUrl, random5Chars, uuidv4, getOnNotified, Counter } from "@point_of_sale/utils";
@@ -1462,26 +1463,13 @@ export class PosStore extends Reactive {
     async sendOrderInPreparation(order, cancelled = false) {
         if (this.printers_category_ids_set.size) {
             try {
-                const changes = changesToOrder(
+                const orderChange = changesToOrder(
                     order,
                     false,
                     this.orderPreparationCategories,
                     cancelled
                 );
-                if (changes.cancelled.length > 0 || changes.new.length > 0) {
-                    const isPrintSuccessful = await order.printChanges(
-                        false,
-                        this.orderPreparationCategories,
-                        cancelled,
-                        this.unwatched.printers
-                    );
-                    if (!isPrintSuccessful) {
-                        this.dialog.add(AlertDialog, {
-                            title: _t("Printing failed"),
-                            body: _t("Failed in printing the changes in the order"),
-                        });
-                    }
-                }
+                this.printChanges(order, orderChange);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
             }
@@ -1500,6 +1488,162 @@ export class PosStore extends Reactive {
             await this.syncAllOrders();
         }
     }
+
+    async printChanges(order, orderChange) {
+        const unsuccedPrints = [];
+        const lastChangedLines = order.last_order_preparation_change.lines;
+        orderChange.new.sort((a, b) => {
+            const sequenceA = a.pos_categ_sequence;
+            const sequenceB = b.pos_categ_sequence;
+            if (sequenceA === 0 && sequenceB === 0) {
+                return a.pos_categ_id - b.pos_categ_id;
+            }
+
+            return sequenceA - sequenceB;
+        });
+
+        for (const printer of this.unwatched.printers) {
+            const changes = this._getPrintingCategoriesChanges(
+                printer.config.product_categories_ids,
+                orderChange
+            );
+            const toPrintArray = this.preparePrintingData(order, changes);
+            const diningModeUpdate = orderChange.modeUpdate;
+            if (diningModeUpdate || !Object.keys(lastChangedLines).length) {
+                // Prepare orderlines based on the dining mode update
+                const lines =
+                    diningModeUpdate && Object.keys(lastChangedLines).length
+                        ? lastChangedLines
+                        : order.lines;
+
+                // converting in format we need to show on xml
+                const orderlines = Object.entries(lines).map(([key, value]) => ({
+                    basic_name: diningModeUpdate ? value.basic_name : value.product_id.name,
+                    isCombo: diningModeUpdate ? value.isCombo : value.combo_item_id?.id,
+                    quantity: diningModeUpdate ? value.quantity : value.qty,
+                    note: value.note,
+                    attribute_value_ids: value.attribute_value_ids,
+                }));
+
+                // Print detailed receipt
+                const printed = await this.printReceipts(
+                    order,
+                    printer,
+                    "New",
+                    orderlines,
+                    true,
+                    diningModeUpdate
+                );
+                if (!printed) {
+                    unsuccedPrints.push("Detailed Receipt");
+                }
+            } else {
+                // Print all receipts related to line changes
+                for (const [key, value] of Object.entries(toPrintArray)) {
+                    const printed = await this.printReceipts(order, printer, key, value, false);
+                    if (!printed) {
+                        unsuccedPrints.push(key);
+                    }
+                }
+                // Print Order Note if changed
+                if (orderChange.generalNote) {
+                    const printed = await this.printReceipts(order, printer, "Message", []);
+                    if (!printed) {
+                        unsuccedPrints.push("General Message");
+                    }
+                }
+            }
+        }
+
+        // printing errors
+        if (unsuccedPrints.length) {
+            const failedReceipts = unsuccedPrints.join(", ");
+            this.dialog.add(AlertDialog, {
+                title: _t("Printing failed"),
+                body: _t("Failed in printing %s changes of the order", failedReceipts),
+            });
+        }
+    }
+
+    async printReceipts(order, printer, title, lines, fullReceipt = false, diningModeUpdate) {
+        let time;
+        if (order.write_date) {
+            time = order.write_date?.split(" ")[1].split(":");
+            time = time[0] + "h" + time[1];
+        }
+
+        const printingChanges = {
+            table_name: order.table_id ? order.table_id.table_number : "",
+            config_name: order.config_id.name,
+            time: order.write_date ? time : "",
+            tracking_number: order.tracking_number,
+            takeaway: order.config_id.takeaway && order.takeaway,
+            employee_name: order.employee_id?.name || order.user_id?.name,
+            order_note: order.general_note,
+            diningModeUpdate: diningModeUpdate,
+        };
+
+        const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+            operational_title: title,
+            changes: printingChanges,
+            changedlines: lines,
+            fullReceipt: fullReceipt,
+        });
+        const result = await printer.printReceipt(receipt);
+        return result.successful;
+    }
+
+    preparePrintingData(order, changes) {
+        const order_modifications = {};
+        const pdisChangedLines = order.last_order_preparation_change.lines;
+
+        if (changes["new"].length) {
+            order_modifications["New"] = changes["new"];
+        }
+        if (changes["noteUpdated"].length) {
+            order_modifications["Note"] = changes["noteUpdated"];
+        }
+        // Handle removed lines
+        if (changes["cancelled"].length) {
+            if (changes["new"].length) {
+                order_modifications["Cancelled"] = changes["cancelled"];
+            } else {
+                const allCancelled = changes["cancelled"].every((line) => {
+                    const pdisLine = pdisChangedLines[line.uuid + " - " + line.note];
+                    return !pdisLine || pdisLine.quantity <= line.quantity;
+                });
+                if (
+                    allCancelled &&
+                    Object.keys(pdisChangedLines).length == changes["cancelled"].length
+                ) {
+                    order_modifications["Cancel"] = changes["cancelled"];
+                } else {
+                    order_modifications["Cancelled"] = changes["cancelled"];
+                }
+            }
+        }
+        return order_modifications;
+    }
+
+    _getPrintingCategoriesChanges(categories, currentOrderChange) {
+        const filterFn = (change) => {
+            const product = this.models["product.product"].get(change["product_id"]);
+            const categoryIds = product.parentPosCategIds;
+
+            for (const categoryId of categoryIds) {
+                if (categories.includes(categoryId)) {
+                    return true;
+                }
+            }
+        };
+
+        return {
+            new: currentOrderChange["new"].filter(filterFn),
+            cancelled: currentOrderChange["cancelled"].filter(filterFn),
+            noteUpdated: currentOrderChange["noteUpdated"].filter(filterFn),
+        };
+    }
+
     closeScreen() {
         this.addOrderIfEmpty();
         const { name: screenName } = this.getOrder().getScreenData();

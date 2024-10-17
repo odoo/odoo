@@ -25,6 +25,9 @@ export const changesToOrder = (
         new: toAdd,
         cancelled: toRemove,
         general_customer_note: orderChanges.general_customer_note,
+        generalNote: orderChanges.internal_note,
+        noteUpdated: Object.values(orderChanges.noteUpdated),
+        modeUpdate: orderChanges.modeUpdate,
     };
 };
 
@@ -38,6 +41,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     const prepaCategoryIds = orderPreparationCategories;
     const oldChanges = order.last_order_preparation_change.lines;
     const changes = {};
+    const noteupdated = {};
     let changesCount = 0;
     let changeAbsCount = 0;
     let skipCount = 0;
@@ -53,24 +57,38 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
         );
 
         if (prepaCategoryIds.size === 0 || productCategoryIds.length > 0) {
+            const key = Object.keys(order.last_order_preparation_change.lines).find((k) =>
+                k.startsWith(orderline.uuid)
+            ); // find old data but note changed
             const quantity = orderline.getQuantity();
-            const quantityDiff = oldChanges[lineKey]
-                ? quantity - oldChanges[lineKey].quantity
+
+            const relatedKey = key !== lineKey ? key : lineKey; // if note update key would be different
+            const quantityDiff = oldChanges[relatedKey]
+                ? quantity - oldChanges[relatedKey].quantity
                 : quantity;
 
+            const lineDetails = {
+                uuid: orderline.uuid,
+                name: orderline.getFullProductName(),
+                basic_name: orderline.product_id.name,
+                isCombo: orderline.combo_item_id?.id,
+                product_id: product.id,
+                attribute_value_ids: orderline.attribute_value_ids.map((a) => a.id),
+                quantity: quantityDiff,
+                note: note,
+                pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
+                pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
+            };
+
             if (quantityDiff && orderline.skip_change === skipped) {
-                changes[lineKey] = {
-                    uuid: orderline.uuid,
-                    name: orderline.getFullProductName(),
-                    product_id: product.id,
-                    attribute_value_ids: orderline.attribute_value_ids.map((a) => a.id),
-                    quantity: quantityDiff,
-                    note: note,
-                    pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
-                    pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
-                };
+                // if note update with qty add
+                changes[lineKey] = lineDetails;
                 changesCount += quantityDiff;
                 changeAbsCount += Math.abs(quantityDiff);
+                if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
+                    lineDetails.quantity = oldChanges[relatedKey].quantity;
+                    noteupdated[lineKey] = lineDetails;
+                }
 
                 if (!orderline.skip_change) {
                     orderline.setHasChange(true);
@@ -78,9 +96,18 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
             } else {
                 if (quantityDiff) {
                     skipCount += quantityDiff;
+                    orderline.setHasChange(false);
+                } else {
+                    // If only note updated
+                    if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
+                        lineDetails.quantity = orderline.qty;
+                        noteupdated[lineKey] = lineDetails;
+                        orderline.setHasChange(true);
+                        changesCount += 1;
+                    } else {
+                        orderline.setHasChange(false);
+                    }
                 }
-
-                orderline.setHasChange(false);
             }
         } else {
             orderline.setHasChange(false);
@@ -95,6 +122,8 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     uuid: lineResume["uuid"],
                     product_id: lineResume["product_id"],
                     name: lineResume["name"],
+                    basic_name: lineResume["basic_name"],
+                    isCombo: lineResume["isCombo"],
                     note: lineResume["note"],
                     attribute_value_ids: lineResume["attribute_value_ids"],
                     quantity: -lineResume["quantity"],
@@ -110,6 +139,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     const result = {
         nbrOfSkipped: skipCount,
         nbrOfChanges: changeAbsCount,
+        noteUpdated: noteupdated,
         orderlines: changes,
         count: changesCount,
     };
@@ -122,6 +152,13 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     const lastInternalNote = order.last_order_preparation_change.internal_note || "";
     if (lastInternalNote !== order.internal_note) {
         result.internal_note = order.internal_note;
+    }
+    const sittingMode = order.last_order_preparation_change.sittingMode;
+    if (
+        (sittingMode !== "dine in" && !order.takeaway) ||
+        (sittingMode !== "takeaway" && order.takeaway)
+    ) {
+        result.modeUpdate = true;
     }
     return result;
 };

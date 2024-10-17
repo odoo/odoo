@@ -4,10 +4,8 @@ import { _t } from "@web/core/l10n/translation";
 import { formatDate, formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { omit } from "@web/core/utils/objects";
 import { parseUTCString, qrCodeSrc, random5Chars, uuidv4 } from "@point_of_sale/utils";
-import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
-import { changesToOrder } from "./utils/order_change";
 
 const { DateTime } = luxon;
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
@@ -34,6 +32,7 @@ export class PosOrder extends Base {
                   lines: {},
                   general_customer_note: "",
                   internal_note: "",
+                  sittingMode: "dine in",
               };
         this.general_customer_note = vals.general_customer_note || "";
         this.internal_note = vals.internal_note || "";
@@ -143,80 +142,8 @@ export class PosOrder extends Base {
         });
     }
 
-    // NOTE args added [unwatchedPrinter]
-    async printChanges(skipped = false, orderPreparationCategories, cancelled, unwatchedPrinter) {
-        const orderChange = changesToOrder(this, skipped, orderPreparationCategories, cancelled);
-        const d = new Date();
-
-        let isPrintSuccessful = true;
-
-        let hours = "" + d.getHours();
-        hours = hours.length < 2 ? "0" + hours : hours;
-
-        let minutes = "" + d.getMinutes();
-        minutes = minutes.length < 2 ? "0" + minutes : minutes;
-
-        orderChange.new.sort((a, b) => {
-            const sequenceA = a.pos_categ_sequence;
-            const sequenceB = b.pos_categ_sequence;
-            if (sequenceA === 0 && sequenceB === 0) {
-                return a.pos_categ_id - b.pos_categ_id;
-            }
-
-            return sequenceA - sequenceB;
-        });
-
-        for (const printer of unwatchedPrinter) {
-            const changes = this._getPrintingCategoriesChanges(
-                printer.config.product_categories_ids,
-                orderChange
-            );
-            if (changes["new"].length > 0 || changes["cancelled"].length > 0) {
-                const printingChanges = {
-                    new: changes["new"],
-                    cancelled: changes["cancelled"],
-                    table_name: this.table_id?.name,
-                    floor_name: this.table_id?.floor_id?.name,
-                    name: this.pos_reference || "unknown order",
-                    time: {
-                        hours,
-                        minutes,
-                    },
-                    tracking_number: this.tracking_number,
-                };
-                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
-                    changes: printingChanges,
-                });
-                const result = await printer.printReceipt(receipt);
-                if (!result.successful) {
-                    isPrintSuccessful = false;
-                }
-            }
-        }
-
-        return isPrintSuccessful;
-    }
-
     get isBooked() {
         return Boolean(this.uiState.booked || !this.isEmpty() || typeof this.id === "number");
-    }
-
-    _getPrintingCategoriesChanges(categories, currentOrderChange) {
-        const filterFn = (change) => {
-            const product = this.models["product.product"].get(change["product_id"]);
-            const categoryIds = product.parentPosCategIds;
-
-            for (const categoryId of categoryIds) {
-                if (categories.includes(categoryId)) {
-                    return true;
-                }
-            }
-        };
-
-        return {
-            new: currentOrderChange["new"].filter(filterFn),
-            cancelled: currentOrderChange["cancelled"].filter(filterFn),
-        };
     }
 
     get hasChange() {
@@ -239,12 +166,15 @@ export class PosOrder extends Base {
                         line.getQuantity();
                 } else {
                     this.last_order_preparation_change.lines[line.preparationKey] = {
-                        attribute_value_ids: line.attribute_value_ids.map((a) =>
-                            a.serialize({ orm: true })
-                        ),
+                        attribute_value_ids: line.attribute_value_ids.map((a) => ({
+                            ...a.serialize({ orm: true }),
+                            name: a.name,
+                        })),
                         uuid: line.uuid,
+                        isCombo: line.combo_item_id?.id,
                         product_id: line.getProduct().id,
                         name: line.getFullProductName(),
+                        basic_name: line.getProduct().name,
                         note: line.getNote(),
                         quantity: line.getQuantity(),
                     };
@@ -254,14 +184,16 @@ export class PosOrder extends Base {
         });
 
         // Checks whether an orderline has been deleted from the order since it
-        // was last sent to the preparation tools. If so we delete it to the changes.
+        // was last sent to the preparation tools or updated. If so we delete older changes.
         for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
-            if (!this.models["pos.order.line"].getBy("uuid", change.uuid)) {
+            const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
+            if (!orderline || change.note.trim() !== orderline.note.trim()) {
                 delete this.last_order_preparation_change.lines[key];
             }
         }
         this.last_order_preparation_change.general_customer_note = this.general_customer_note;
         this.last_order_preparation_change.internal_note = this.internal_note;
+        this.last_order_preparation_change.sittingMode = this.takeaway ? "takeaway" : "dine in";
     }
 
     hasSkippedChanges() {
