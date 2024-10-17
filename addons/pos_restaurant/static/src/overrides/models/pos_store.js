@@ -52,11 +52,66 @@ patch(PosStore.prototype, {
             return;
         }
 
+<<<<<<< 18.0
         const orderIds = this.models["pos.order"]
             .filter((order) => !order.finalized && typeof order.id === "number")
             .map((o) => o.id);
         const orderToLoad = new Set([...data["order_ids"], ...orderIds]);
         await this.data.read("pos.order", [...orderToLoad]);
+||||||| 3f142f332ef1eb168f91c6a83346c9c28a169aba
+            // draft table orders in the server
+            ["state", "=", "draft"],
+
+            // draft table orders in client but paid in the server
+            "&",
+            ["state", "in", ["paid", "invoiced"]],
+            ["id", "in", draftTableOrders.map((t) => t.id)],
+
+            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
+            ["table_id", "in", data["table_ids"]],
+            ["session_id", "=", odoo.pos_session_id],
+        ]);
+        for (const table of data["order_count"]) {
+            tableByIds[table.id].uiState.changeCount = table.changes;
+            tableByIds[table.id].uiState.orderCount = table.orders;
+            tableByIds[table.id].uiState.skipCount = table.skip_changes;
+        }
+=======
+            // draft table orders in the server
+            ["state", "=", "draft"],
+
+            // draft table orders in client but paid in the server
+            "&",
+            ["state", "in", ["paid", "invoiced"]],
+            ["id", "in", draftTableOrders.map((t) => t.id)],
+
+            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
+            ["table_id", "in", data["table_ids"]],
+            ["session_id", "=", odoo.pos_session_id],
+        ]);
+        for (const table of data["order_count"]) {
+            tableByIds[table.id].uiState.changeCount = table.changes;
+            tableByIds[table.id].uiState.orderCount = table.orders;
+            tableByIds[table.id].uiState.skipCount = table.skip_changes;
+        }
+        if (
+            this.selectedTable &&
+            data["table_ids"].includes(this.selectedTable.id) &&
+            this.selectedOrderUuid
+        ) {
+            const changes = this.getOrderChanges();
+            if (changes.nbrOfChanges > 0) {
+                // at this stage we are sure to be on a concurrent pos session
+                // that needs to update its data from the server
+                try {
+                    this.tableSyncing = true;
+                    await this.syncAllOrders({ cancel_table_notification: true });
+                } finally {
+                    this.tableSyncing = false;
+                }
+            }
+        }
+>>>>>>> 1799f6647369c70b5e33b170737eddada7ce3495
     },
     get categoryCount() {
         const orderChanges = this.getOrderChanges();
