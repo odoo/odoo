@@ -3,3 +3,7 @@
 
 from . import controllers
 from . import models
+from .models.ir_http import IrHttp
+from .models.mail_message import MailMessage
+from .models.mail_thread import MailThread
+from .models.rating_rating import RatingRating

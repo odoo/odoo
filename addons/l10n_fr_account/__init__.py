@@ -6,6 +6,10 @@ from . import models
 from . import wizard
 
 from odoo.addons.account.models.chart_template import preserve_existing_tags_on_taxes
+from .models.account_move import AccountMove
+from .models.res_company import ResCompany
+from .models.template_fr import AccountChartTemplate
+from .wizard.account_fr_fec_export_wizard import L10n_FrFecExportWizard
 
 
 def _l10n_fr_post_init_hook(env):

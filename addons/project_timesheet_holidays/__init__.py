@@ -2,6 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import models
+from .models.account_analytic import AccountAnalyticLine
+from .models.hr_employee import HrEmployee
+from .models.hr_holidays import HrLeave, HrLeaveType
+from .models.project_task import ProjectTask
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .models.resource_calendar_leaves import ResourceCalendarLeaves
 
 
 def post_init(env):

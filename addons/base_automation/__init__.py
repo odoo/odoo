@@ -3,3 +3,5 @@
 
 from . import models
 from . import controllers
+from .models.base_automation import BaseAutomation
+from .models.ir_actions_server import IrActionsServer

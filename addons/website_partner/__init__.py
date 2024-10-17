@@ -3,3 +3,4 @@
 
 from . import models
 from . import controllers
+from .models.res_partner import ResPartner

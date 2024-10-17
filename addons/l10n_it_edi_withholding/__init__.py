@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from . import models
+from .models.account_chart_template import AccountChartTemplate
+from .models.account_move import AccountMove
+from .models.account_tax import AccountTax
 
 _logger = logging.getLogger(__name__)
 
