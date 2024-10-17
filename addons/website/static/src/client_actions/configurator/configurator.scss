@@ -54,10 +54,6 @@
             }
         }
 
-        .o_configurator_hide {
-            opacity: 0;
-        }
-
         .o_configurator_show {
             animation: configuratorFadeIn 1s;
         }
@@ -147,6 +143,18 @@
             .dropdown {
                 box-shadow: inset 0 -3px 0 map-get($theme-colors, primary);
 
+                .dropdown-menu button:focus {
+                    outline: unset;
+                }
+
+                .dropdown-toggle {
+                    all: unset;
+
+                    &::after {
+                        content: unset;
+                    }
+                }
+
                 &.o_step_todo .fa-angle-down {
                     transform: translateY(-0.26em);
                 }
@@ -159,7 +167,7 @@
                         opacity:0;
                     }
 
-                    &:hover, &.show {
+                    &:hover, &.show, &:has(.dropdown-toggle:focus-visible) {
                         padding-right: 1.3rem!important;
 
                         .fa-angle-down {
@@ -244,6 +252,7 @@
             }
 
             .palette_card {
+                all: unset;
                 cursor: pointer;
                 box-shadow: 0 0 0 1px map-get($grays, '200');
 
@@ -251,7 +260,7 @@
                     padding-top: 20%;
                 }
 
-                &:hover, &.selected {
+                &:hover, &:focus-visible, &.selected {
                     box-shadow: 0 0 0 1px #FFF, 0 0 0 3px map-get($theme-colors, "primary")
                 }
             }
