@@ -15,6 +15,11 @@ class ResUsers(models.Model):
     def _load_pos_data(self, data):
         user = super()._load_pos_data(data)
         if user:
-            user[0]['role'] = 'manager' if data['pos.config'][0]['group_pos_manager_id'] in user[0]['groups_id'] else 'cashier'
+            if data['pos.config'][0]['group_pos_manager_id'] in user[0]['groups_id']:
+                user[0]['role'] = 'manager'
+            if data['pos.config'][0]['group_pos_user_id'] in user[0]['groups_id']:
+                user[0]['role'] = 'cashier'
+            if data['pos.config'][0]['group_pos_minimal_user_id'] in user[0]['groups_id']:
+                user[0]['role'] = 'minimal'
             del user[0]['groups_id']
-        return user
+        return user 
