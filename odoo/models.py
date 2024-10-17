@@ -2526,7 +2526,7 @@ class BaseModel(metaclass=MetaModel):
                         if granularity == 'week':
                             year, week = date_utils.weeknumber(
                                 babel.Locale.parse(locale),
-                                range_start,
+                                value,  # provide date or datetime without UTC conversion
                             )
                             label = f"W{week} {year:04}"
 
