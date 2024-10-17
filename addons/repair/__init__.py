@@ -7,6 +7,18 @@ from . import report
 
 from odoo import api, SUPERUSER_ID
 
+from .models.product import ProductProduct, ProductTemplate
+from .models.repair import RepairOrder, RepairTags
+from .models.sale_order import SaleOrder, SaleOrderLine
+from .models.stock_lot import StockLot
+from .models.stock_move import StockMove
+from .models.stock_move_line import StockMoveLine
+from .models.stock_picking import StockPicking, StockPickingType
+from .models.stock_traceability import StockTraceabilityReport
+from .models.stock_warehouse import StockWarehouse
+from .report.stock_forecasted import StockForecasted_Product_Product
+from .wizard.stock_warn_insufficient_qty import StockWarnInsufficientQtyRepair
+
 def _create_warehouse_data(env):
     """ This hook is used to add default repair picking types on every warehouse.
     It is necessary if the repair module is installed after some warehouses were already created.

@@ -2,6 +2,9 @@
 
 from . import models
 
+from .models.account_invoice import AccountMove
+from .models.stock_picking import StockPicking, StockPickingType
+
 def _create_picking_seq(env):
     ptypes = env['stock.picking.type'].search([('code', '=', 'outgoing'), ('warehouse_id', '!=', False)])
     for ptype in ptypes:

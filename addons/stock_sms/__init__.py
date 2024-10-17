@@ -4,6 +4,11 @@
 from . import models
 from . import wizard
 
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .models.stock_picking import StockPicking
+from .wizard.confirm_stock_sms import ConfirmStockSms
+
 
 def _assign_default_sms_template_picking_id(env):
     company_ids_without_default_sms_template_id = env['res.company'].search([

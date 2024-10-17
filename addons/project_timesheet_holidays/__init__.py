@@ -3,6 +3,14 @@
 
 from . import models
 
+from .models.account_analytic import AccountAnalyticLine
+from .models.hr_employee import HrEmployee
+from .models.hr_holidays import HrLeave, HrLeaveType
+from .models.project_task import ProjectTask
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .models.resource_calendar_leaves import ResourceCalendarLeaves
+
 
 def post_init(env):
     """ Set the timesheet project and task on existing leave type. Do it in post_init to

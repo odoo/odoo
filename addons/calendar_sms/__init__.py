@@ -2,3 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import models
+
+from .models.calendar_alarm import CalendarAlarm
+from .models.calendar_alarm_manager import CalendarAlarm_Manager
+from .models.calendar_event import CalendarEvent

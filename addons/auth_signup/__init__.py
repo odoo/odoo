@@ -3,3 +3,8 @@
 
 from . import controllers
 from . import models
+
+from .models.ir_http import IrHttp
+from .models.res_config_settings import ResConfigSettings
+from .models.res_partner import ResPartner
+from .models.res_users import ResUsers

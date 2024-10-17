@@ -6,6 +6,35 @@ from . import controllers
 from . import report
 from . import wizard
 
+from .models.account_move import AccountMove
+from .models.account_move_line import AccountMoveLine
+from .models.analytic import AccountAnalyticApplicability, AccountAnalyticLine
+from .models.chart_template import AccountChartTemplate
+from .models.crm_team import CrmTeam
+from .models.payment_provider import PaymentProvider
+from .models.payment_transaction import PaymentTransaction
+from .models.product_document import ProductDocument
+from .models.product_product import (
+    ProductAttributeCustomValue, ProductPackaging,
+    ProductProduct,
+)
+from .models.product_template import ProductTemplate
+from .models.res_company import ResCompany
+from .models.res_partner import ResPartner
+from .models.sale_order import SaleOrder
+from .models.sale_order_line import SaleOrderLine
+from .models.utm_campaign import UtmCampaign
+from .report.account_invoice_report import AccountInvoiceReport
+from .report.sale_report import SaleReport
+from .wizard.base_document_layout import BaseDocumentLayout
+from .wizard.mass_cancel_orders import SaleMassCancelOrders
+from .wizard.payment_link_wizard import PaymentLinkWizard
+from .wizard.payment_provider_onboarding_wizard import SalePaymentProviderOnboardingWizard
+from .wizard.res_config_settings import ResConfigSettings
+from .wizard.sale_make_invoice_advance import SaleAdvancePaymentInv
+from .wizard.sale_order_cancel import SaleOrderCancel
+from .wizard.sale_order_discount import SaleOrderDiscount
+
 
 def _post_init_hook(env):
     _synchronize_cron(env)

@@ -3,3 +3,6 @@
 
 from . import controllers
 from . import models
+
+from .models.forum_forum import ForumForum
+from .models.slide_channel import SlideChannel

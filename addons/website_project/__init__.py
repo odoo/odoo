@@ -2,3 +2,5 @@
 
 from . import controllers
 from . import models
+
+from .models.project_task import ProjectTask

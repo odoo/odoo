@@ -4,6 +4,18 @@ from . import models
 from . import wizards
 from . import demo
 
+from .demo.account_demo import AccountChartTemplate
+from .models.account_move import AccountMove
+from .models.account_payment import AccountPayment
+from .models.account_tax import AccountTax
+from .models.l10n_ar_earnings_scale import L10n_ArEarningsScale, L10n_ArEarningsScaleLine
+from .models.l10n_ar_partner_tax import L10n_ArPartnerTax
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .models.res_partner import ResPartner
+from .wizards.account_payment_register import AccountPaymentRegister
+from .wizards.l10n_ar_payment_register_withholding import L10n_ArPaymentRegisterWithholding
+
 import logging
 
 _logger = logging.getLogger(__name__)

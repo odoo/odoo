@@ -3,3 +3,6 @@
 
 from . import models
 from . import controllers
+
+from .models.product_template import ProductTemplate
+from .models.product_wishlist import ProductWishlist

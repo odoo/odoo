@@ -3,3 +3,6 @@
 
 from . import controllers
 from . import models
+
+from .models.event_booth import EventBooth
+from .models.event_booth_category import EventBoothCategory

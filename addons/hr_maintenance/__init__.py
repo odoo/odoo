@@ -3,3 +3,7 @@
 
 from . import models
 from . import wizard
+
+from .models.equipment import MaintenanceEquipment, MaintenanceRequest
+from .models.res_users import HrEmployee, ResUsers
+from .wizard.hr_departure_wizard import HrDepartureWizard

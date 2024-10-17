@@ -3,3 +3,6 @@
 
 from . import models
 from . import wizard
+
+from .models.mrp_production import MrpProduction
+from .wizard.confirm_expiry import ExpiryPickingConfirmation

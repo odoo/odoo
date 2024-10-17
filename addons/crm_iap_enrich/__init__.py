@@ -3,6 +3,9 @@
 
 from . import models
 
+from .models.crm_lead import CrmLead
+from .models.res_config_settings import ResConfigSettings
+
 
 def _synchronize_cron(env):
     cron = env.ref('crm_iap_enrich.ir_cron_lead_enrichment')

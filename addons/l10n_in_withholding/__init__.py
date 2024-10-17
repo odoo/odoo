@@ -5,6 +5,17 @@ import logging
 
 from odoo.exceptions import ValidationError
 
+from .models.account_account import AccountAccount
+from .models.account_chart_template import AccountChartTemplate
+from .models.account_move import AccountMove
+from .models.account_move_line import AccountMoveLine
+from .models.account_payment import AccountPayment
+from .models.account_tax import AccountTax
+from .models.l10n_in_section_alert import L10n_InSectionAlert
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .wizard.l10n_in_withhold_wizard import L10n_InWithholdWizard, L10n_InWithholdWizardLine
+
 _logger = logging.getLogger(__name__)
 
 

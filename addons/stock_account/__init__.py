@@ -5,6 +5,25 @@ from . import models
 from . import report
 from . import wizard
 
+from .models.account_move import AccountMove, AccountMoveLine
+from .models.analytic_account import AccountAnalyticAccount, AccountAnalyticPlan
+from .models.product import ProductCategory, ProductProduct, ProductTemplate
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .models.stock_location import StockLocation
+from .models.stock_lot import StockLot
+from .models.stock_move import StockMove
+from .models.stock_move_line import StockMoveLine
+from .models.stock_picking import StockPicking
+from .models.stock_quant import StockQuant
+from .models.stock_valuation_layer import StockValuationLayer
+from .models.template_generic_coa import AccountChartTemplate
+from .report.stock_forecasted import StockForecasted_Product_Product
+from .wizard.stock_picking_return import StockReturnPickingLine
+from .wizard.stock_quantity_history import StockQuantityHistory
+from .wizard.stock_request_count import StockRequestCount
+from .wizard.stock_valuation_layer_revaluation import StockValuationLayerRevaluation
+
 
 def _configure_journals(env):
     # if we already have a coa installed, create journal and set property field

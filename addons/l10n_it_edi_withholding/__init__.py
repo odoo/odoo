@@ -3,6 +3,10 @@
 import logging
 from . import models
 
+from .models.account_chart_template import AccountChartTemplate
+from .models.account_move import AccountMove
+from .models.account_tax import AccountTax
+
 _logger = logging.getLogger(__name__)
 
 def _l10n_it_edi_withholding_post_init(env):

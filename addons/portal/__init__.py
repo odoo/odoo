@@ -16,3 +16,15 @@ from . import controllers
 from . import models
 from . import utils
 from . import wizard
+
+from .models.ir_http import IrHttp
+from .models.ir_qweb import IrQweb
+from .models.ir_ui_view import IrUiView
+from .models.mail_message import MailMessage
+from .models.mail_thread import MailThread
+from .models.portal_mixin import PortalMixin
+from .models.res_config_settings import ResConfigSettings
+from .models.res_partner import ResPartner
+from .models.res_users_apikeys_description import ResUsersApikeysDescription
+from .wizard.portal_share import PortalShare
+from .wizard.portal_wizard import PortalWizard, PortalWizardUser

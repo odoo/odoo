@@ -3,3 +3,6 @@
 
 from . import models
 from . import wizard
+
+from .models.sale_order import SaleOrder
+from .wizard.sale_make_invoice_advance import SaleAdvancePaymentInv

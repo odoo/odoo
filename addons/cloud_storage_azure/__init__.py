@@ -2,6 +2,9 @@
 
 from . import models
 
+from .models.ir_attachment import IrAttachment
+from .models.res_config_settings import ResConfigSettings
+
 
 def uninstall_hook(env):
     ICP = env['ir.config_parameter']

@@ -10,6 +10,22 @@ from odoo import fields
 
 from odoo.addons.project import _check_exists_collaborators_for_project_sharing
 
+from .models.analytic_applicability import AccountAnalyticApplicability
+from .models.hr_employee import HrEmployee
+from .models.hr_timesheet import AccountAnalyticLine
+from .models.ir_http import IrHttp
+from .models.ir_ui_menu import IrUiMenu
+from .models.project_collaborator import ProjectCollaborator
+from .models.project_project import ProjectProject
+from .models.project_task import ProjectTask
+from .models.project_update import ProjectUpdate
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .models.uom_uom import UomUom
+from .report.project_report import ReportProjectTaskUser
+from .report.timesheets_analysis_report import TimesheetsAnalysisReport
+from .wizard.hr_employee_delete_wizard import HrEmployeeDeleteWizard
+
 
 def create_internal_project(env):
     # allow_timesheets is set by default, but erased for existing projects at

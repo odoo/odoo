@@ -5,6 +5,21 @@ from . import models
 from . import controllers
 from . import report
 
+from .models.account_move import AccountMove
+from .models.account_move_line import AccountMoveLine
+from .models.product_product import ProductProduct
+from .models.product_template import ProductTemplate
+from .models.project_milestone import ProjectMilestone
+from .models.project_project import ProjectProject
+from .models.project_task import ProjectTask
+from .models.project_task_recurrence import ProjectTaskRecurrence
+from .models.res_config_settings import ResConfigSettings
+from .models.sale_order import SaleOrder
+from .models.sale_order_line import SaleOrderLine
+from .models.sale_order_template_line import SaleOrderTemplateLine
+from .report.project_report import ReportProjectTaskUser
+from .report.sale_report import SaleReport
+
 def _set_allow_billable_in_project(env):
     Project = env['project.project']
     Task = env['project.task']

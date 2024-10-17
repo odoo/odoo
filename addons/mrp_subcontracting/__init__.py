@@ -5,6 +5,24 @@ from . import report
 from . import wizard
 from . import controllers
 
+from .models.mrp_bom import MrpBom
+from .models.mrp_production import MrpProduction
+from .models.product import ProductProduct, ProductSupplierinfo
+from .models.res_company import ResCompany
+from .models.res_partner import ResPartner
+from .models.stock_location import StockLocation
+from .models.stock_move import StockMove
+from .models.stock_move_line import StockMoveLine
+from .models.stock_picking import StockPicking
+from .models.stock_quant import StockQuant
+from .models.stock_replenish_mixin import StockReplenishMixin
+from .models.stock_rule import StockRule
+from .models.stock_warehouse import StockWarehouse
+from .report.mrp_report_bom_structure import ReportMrpReport_Bom_Structure
+from .wizard.change_production_qty import ChangeProductionQty
+from .wizard.mrp_consumption_warning import MrpConsumptionWarning
+from .wizard.stock_picking_return import StockReturnPicking, StockReturnPickingLine
+
 
 def uninstall_hook(env):
     warehouses = env["stock.warehouse"].search([])

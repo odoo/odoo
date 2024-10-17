@@ -5,6 +5,16 @@ from . import models
 from . import report
 from . import wizard
 
+from .models.account_invoice import AccountMove
+from .models.account_journal import AccountJournal
+from .models.account_payment import AccountPayment
+from .models.ir_actions_report import IrActionsReport
+from .models.res_bank import ResPartnerBank
+from .models.template_ch import AccountChartTemplate
+from .report.swissqr_report import ReportL10n_ChQr_Report_Main
+from .wizard.qr_invoice_wizard import L10n_ChQr_InvoiceWizard
+from .wizard.setup_wizards import AccountSetupBankManualConfig
+
 
 def init_settings(env):
     '''If the company is localized in Switzerland, activate the cash rounding by default.

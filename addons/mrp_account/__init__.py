@@ -4,6 +4,20 @@ from . import models
 from . import report
 from . import wizard
 
+from .models.account_move import AccountMove, AccountMoveLine
+from .models.analytic_account import (
+    AccountAnalyticAccount, AccountAnalyticApplicability,
+    AccountAnalyticLine,
+)
+from .models.mrp_production import MrpProduction
+from .models.mrp_routing import MrpRoutingWorkcenter
+from .models.mrp_workcenter import MrpWorkcenter, MrpWorkcenterProductivity
+from .models.mrp_workorder import MrpWorkorder
+from .models.product import ProductCategory, ProductProduct, ProductTemplate
+from .models.stock_move import StockMove
+from .report.mrp_report_mo_overview import ReportMrpReport_Mo_Overview
+from .wizard.mrp_wip_accounting import MrpAccountWipAccounting, MrpAccountWipAccountingLine
+
 
 def _configure_journals(env):
     # if we already have a coa installed, create journal and set property field

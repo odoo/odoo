@@ -4,6 +4,12 @@
 from . import models
 from . import report
 
+from .models.account_closing import AccountSaleClosing
+from .models.account_fiscal_position import AccountFiscalPosition
+from .models.pos import PosConfig, PosOrder, PosOrderLine, PosSession
+from .models.res_company import ResCompany
+from .report.pos_hash_integrity import ReportL10n_Fr_Pos_CertReport_Pos_Hash_Integrity
+
 
 def _setup_inalterability(env):
     # enable ping for this module

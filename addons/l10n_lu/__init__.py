@@ -3,6 +3,8 @@
 
 from . import models
 
+from .models.template_lu import AccountChartTemplate
+
 def _post_init_hook(env):
     _preserve_tag_on_taxes(env)
 

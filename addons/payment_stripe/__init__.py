@@ -3,6 +3,10 @@
 from . import controllers
 from . import models
 
+from .models.payment_provider import PaymentProvider
+from .models.payment_token import PaymentToken
+from .models.payment_transaction import PaymentTransaction
+
 import odoo.addons.payment as payment  # prevent circular import error with payment
 
 

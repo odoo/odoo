@@ -3,3 +3,6 @@
 
 from . import models
 from . import report
+
+from .models.ir_ui_menu import IrUiMenu
+from .report.hr_timesheet_attendance_report import HrTimesheetAttendanceReport

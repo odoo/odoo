@@ -6,6 +6,15 @@ from . import models
 from . import utils
 from . import wizard
 
+from .models.calendar import CalendarEvent
+from .models.calendar_attendee import CalendarAttendee
+from .models.calendar_recurrence_rule import CalendarRecurrence
+from .models.microsoft_sync import MicrosoftCalendarSync
+from .models.res_config_settings import ResConfigSettings
+from .models.res_users import ResUsers
+from .models.res_users_settings import ResUsersSettings
+from .wizard.reset_account import MicrosoftCalendarAccountReset
+
 import uuid
 
 

@@ -3,3 +3,5 @@
 
 from . import controllers
 from . import models
+
+from .models.mail_group import MailGroup

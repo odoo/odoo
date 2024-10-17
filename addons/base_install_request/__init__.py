@@ -6,6 +6,12 @@ from . import wizard
 
 from odoo import tools
 
+from .models.ir_module_module import IrModuleModule
+from .wizard.base_module_install_request import (
+    BaseModuleInstallRequest,
+    BaseModuleInstallReview,
+)
+
 
 def _auto_install_apps(env):
     if not tools.config.get('default_productivity_apps', False):

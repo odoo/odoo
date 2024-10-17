@@ -8,6 +8,29 @@ from . import wizard
 
 from odoo.tools.sql import create_index
 
+from .models.account_analytic_account import AccountAnalyticAccount
+from .models.digest_digest import DigestDigest
+from .models.ir_ui_menu import IrUiMenu
+from .models.mail_message import MailMessage
+from .models.project_collaborator import ProjectCollaborator
+from .models.project_milestone import ProjectMilestone
+from .models.project_project import ProjectProject
+from .models.project_project_stage import ProjectProjectStage
+from .models.project_tags import ProjectTags
+from .models.project_task import ProjectTask
+from .models.project_task_recurrence import ProjectTaskRecurrence
+from .models.project_task_stage_personal import ProjectTaskStagePersonal
+from .models.project_task_type import ProjectTaskType
+from .models.project_update import ProjectUpdate
+from .models.res_config_settings import ResConfigSettings
+from .models.res_partner import ResPartner
+from .report.project_report import ReportProjectTaskUser
+from .report.project_task_burndown_chart_report import ProjectTaskBurndownChartReport
+from .wizard.project_project_stage_delete import ProjectProjectStageDeleteWizard
+from .wizard.project_share_collaborator_wizard import ProjectShareCollaboratorWizard
+from .wizard.project_share_wizard import ProjectShareWizard
+from .wizard.project_task_type_delete import ProjectTaskTypeDeleteWizard
+
 
 def _check_exists_collaborators_for_project_sharing(env):
     """ Check if it exists at least a collaborator in a shared project

@@ -3,3 +3,6 @@
 
 from . import wizard
 from . import models
+
+from .models.product_product import ProductProduct
+from .wizard.product_margin import ProductMargin

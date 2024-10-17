@@ -5,6 +5,15 @@ from odoo.tools import file_open
 from . import models
 from . import wizard
 
+from .models.account_move import AccountMove
+from .models.account_move_send import AccountMoveSend
+from .models.account_tax import AccountTax
+from .models.certificate import CertificateCertificate
+from .models.res_company import ResCompany
+from .models.res_partner import L10n_Es_Edi_FacturaeAc_Role_Type, ResPartner
+from .models.uom_uom import UomUom
+from .wizard.account_move_reversal import AccountMoveReversal
+
 def _edit_tax_types(env, template_data):
     """
     Applies all existing tax l10n_es_edi_facturae_tax_type field to their proper value if any link between tax and their template is found

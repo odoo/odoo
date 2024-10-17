@@ -11,3 +11,7 @@ from odoo.addons.iap.tools.iap_tools import iap_cancel as cancel
 from odoo.addons.iap.tools.iap_tools import iap_capture as capture
 from odoo.addons.iap.tools.iap_tools import iap_charge as charge
 from odoo.addons.iap.tools.iap_tools import InsufficientCreditError
+
+from .models.iap_account import IapAccount
+from .models.iap_enrich_api import IapEnrichApi
+from .models.iap_service import IapService

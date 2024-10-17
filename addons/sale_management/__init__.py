@@ -5,6 +5,16 @@ from . import models
 from . import controllers
 from odoo.tools.sql import column_exists, create_column
 
+from .models.digest import DigestDigest
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .models.sale_order import SaleOrder
+from .models.sale_order_line import SaleOrderLine
+from .models.sale_order_option import SaleOrderOption
+from .models.sale_order_template import SaleOrderTemplate
+from .models.sale_order_template_line import SaleOrderTemplateLine
+from .models.sale_order_template_option import SaleOrderTemplateOption
+
 
 def pre_init_hook(env):
     """Do not compute the sale_order_template_id field on existing SOs."""

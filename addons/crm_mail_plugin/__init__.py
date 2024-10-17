@@ -3,3 +3,5 @@
 
 from . import models
 from . import controllers
+
+from .models.crm_lead import CrmLead

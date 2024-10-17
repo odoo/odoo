@@ -3,6 +3,11 @@
 from . import models
 from . import wizard
 
+from .models.ir_cron_trigger import IrCronTrigger
+from .models.product import ProductProduct
+from .models.res_config_settings import ResConfigSettings
+from .wizard.product_fetch_image_wizard import ProductFetchImageWizard
+
 
 def uninstall_hook(env):
     ICP = env['ir.config_parameter']

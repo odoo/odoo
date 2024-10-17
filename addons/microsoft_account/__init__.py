@@ -3,3 +3,6 @@
 
 from . import models
 from . import controllers
+
+from .models.microsoft_service import MicrosoftService
+from .models.res_users import ResUsers

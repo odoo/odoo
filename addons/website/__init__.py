@@ -9,6 +9,46 @@ from odoo import api, SUPERUSER_ID
 from odoo.http import request
 from functools import partial
 
+from .models.assets import Web_EditorAssets
+from .models.base_partner_merge import BasePartnerMergeAutomaticWizard
+from .models.ir_actions_server import IrActionsServer
+from .models.ir_binary import IrBinary
+from .models.ir_http import IrHttp
+from .models.ir_model import Base
+from .models.ir_model_data import IrModelData
+from .models.ir_module_module import IrModuleModule
+from .models.ir_qweb import IrQweb
+from .models.ir_qweb_fields import IrQwebFieldContact, IrQwebFieldHtml
+from .models.ir_rule import IrRule
+from .models.ir_ui_menu import IrUiMenu
+from .models.ir_ui_view import IrUiView
+from .models.mixins import (
+    WebsiteCover_PropertiesMixin, WebsiteMultiMixin,
+    WebsitePublishedMixin, WebsiteSearchableMixin, WebsiteSeoMetadata,
+)
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .models.res_lang import ResLang
+from .models.res_partner import ResPartner
+from .models.res_users import ResUsers
+from .models.theme_models import (
+    IrAsset, IrAttachment, ThemeIrAsset, ThemeIrAttachment,
+    ThemeIrUiView, ThemeUtils, ThemeWebsiteMenu, ThemeWebsitePage, WebsitePage,
+)
+from .models.website import Website
+from .models.website_configurator_feature import WebsiteConfiguratorFeature
+from .models.website_controller_page import WebsiteControllerPage
+from .models.website_form import IrModel, IrModelFields
+from .models.website_menu import WebsiteMenu
+from .models.website_page_properties import WebsitePageProperties, WebsitePagePropertiesBase
+from .models.website_rewrite import WebsiteRewrite, WebsiteRoute
+from .models.website_snippet_filter import WebsiteSnippetFilter
+from .models.website_visitor import WebsiteTrack, WebsiteVisitor
+from .wizard.base_language_install import BaseLanguageInstall
+from .wizard.blocked_third_party_domains import WebsiteCustom_Blocked_Third_Party_Domains
+from .wizard.portal_wizard import PortalWizardUser
+from .wizard.website_robots import WebsiteRobots
+
 
 def uninstall_hook(env):
     # Force remove ondelete='cascade' elements,

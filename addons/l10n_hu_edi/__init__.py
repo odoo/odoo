@@ -8,6 +8,19 @@ from odoo import _
 from . import models
 from . import wizard
 
+from .models.account_move import AccountMove, AccountMoveLine
+from .models.account_move_send import AccountMoveSend
+from .models.account_tax import AccountTax
+from .models.product import ProductTemplate
+from .models.res_company import ResCompany
+from .models.res_config_settings import ResConfigSettings
+from .models.res_partner import ResPartner
+from .models.template_hu import AccountChartTemplate
+from .models.uom_uom import UomUom
+from .wizard.account_move_reversal import AccountMoveReversal
+from .wizard.l10n_hu_edi_cancellation import L10n_Hu_EdiCancellation
+from .wizard.l10n_hu_edi_tax_audit_export import L10n_Hu_EdiTax_Audit_Export
+
 _logger = logging.getLogger(__name__)
 
 
