@@ -73,25 +73,34 @@ except ImportError:
 class FileAccessor:
     addon: Path
     path: Path
-    content: str
+    content: str | None
 
     def __init__(self, path: Path, addon_path: Path) -> None:
         self.path = path
         self.addon = addon_path / path.relative_to(addon_path).parts[0]
-        self._content = None
         self.dirty = False
 
     @property
     def content(self):
-        if self._content is None:
-            self._content = self.path.read_text()
+        if not hasattr(self, '_content'):
+            try:
+                self._content = self.path.read_text()
+            except FileNotFoundError:
+                self._content = None
         return self._content
 
     @content.setter
     def content(self, value):
-        if self._content != value:
+        if self.content != value:
             self._content = value
             self.dirty = True
+
+    def __apply(self):
+        if self.dirty:
+            if self._content is not None:
+                self.path.write_text(self._content)
+            else:
+                self.path.unlink()
 
 
 class FileManager:
@@ -101,6 +110,12 @@ class FileManager:
     def __init__(self, addons_path: list[str], glob: str = '**/*') -> None:
         self.addons_path = addons_path
         self.glob = glob
+        self._modules = {
+            addon.name: addon
+            for addon_path in addons_path
+            for addon in Path(addon_path).iterdir()
+            if addon.is_dir() and (addon / '__manifest__.py').exists()
+        }
         self._files = {
             str(path): FileAccessor(path, Path(addon_path))
             for addon_path in addons_path
@@ -116,8 +131,24 @@ class FileManager:
     def __len__(self):
         return len(self._files)
 
-    def get_file(self, path):
-        return self._files.get(str(path))
+    def get_modules(self) -> list[str]:
+        """ Return the list of all modules in the addons-path. """
+        return list(self._modules)
+
+    def get_file(self, module: str, file_name: str) -> FileAccessor:
+        """ Return the given file. """
+        try:
+            addon = self._modules[module]
+            path = addon / file_name
+
+            file = self._files.get(str(path))
+            if file is None:
+                file = FileAccessor(path, addon.parent)
+                self._files[str(file.path)] = file
+            return file
+
+        except KeyError:
+            raise ValueError(f"You may not access file {module}/{file_name}")
 
     if sys.stdout.isatty():
         def print_progress(self, current: int, total: int | None =None, file_name : str | Path = ""):
@@ -162,12 +193,12 @@ def migrate(
         module.upgrade(file_manager)
         file_manager.print_progress(len(file_manager))  # 100%
 
-    for file in file_manager:
+    for file in sorted(file_manager, key=lambda file: str(file.path)):
         if file.dirty:
-            print(file.path)  # noqa: T201
+            status = 'deleted' if file.content is None else 'updated'
+            print(f"{status}: {file.path}")  # noqa: T201
             if not dry_run:
-                with file.path.open("w") as f:
-                    f.write(file.content)
+                file._FileAccessor__apply()
 
     return any(file.dirty for file in file_manager)
 
