@@ -8125,7 +8125,7 @@
         getDatasetMeta(datasetIndex) {
             const dataset = this.data.datasets[datasetIndex];
             const metasets = this._metasets;
-            let meta = metasets.filter((x)=>x && x._dataset === dataset).pop();
+            let meta = metasets[datasetIndex];
             if (!meta) {
                 meta = {
                     type: null,
@@ -8141,7 +8141,7 @@
                     _parsed: [],
                     _sorted: false
                 };
-                metasets.push(meta);
+                metasets[datasetIndex] = meta;
             }
             return meta;
         }
