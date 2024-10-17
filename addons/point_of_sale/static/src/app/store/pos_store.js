@@ -236,6 +236,12 @@ export class PosStore extends Reactive {
             ]);
         }
 
+        for (const product of this.models["product.product"].filter(
+            (p) => !productIds.has(p.id) && p.product_template_variant_value_ids.length > 0
+        )) {
+            productByTmplId[product.raw.product_tmpl_id].push(product);
+        }
+
         for (const products of Object.values(productByTmplId)) {
             const nbrProduct = products.length;
 
