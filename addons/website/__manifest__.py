@@ -174,6 +174,7 @@
         'views/snippets/s_image_frame.xml',
         'views/snippets/s_cta_mobile.xml',
         'views/snippets/s_website_form_cover.xml',
+        'views/snippets/s_form_aside.xml',
         'views/new_page_template_templates.xml',
         'views/website_views.xml',
         'views/website_pages_views.xml',
