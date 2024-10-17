@@ -68,7 +68,13 @@ export class DiscussCoreCommon {
             if (thread) {
                 thread.is_pinned = false;
                 this.notificationService.add(
-                    _t("You unpinned your conversation with %s", thread.displayName),
+                    thread.parent_channel_id
+                        ? _t(`You unpinned %(conversation_name)s`, {
+                              conversation_name: thread.displayName,
+                          })
+                        : _t(`You unpinned your conversation with %(user_name)s`, {
+                              user_name: thread.displayName,
+                          }),
                     { type: "info" }
                 );
             }
