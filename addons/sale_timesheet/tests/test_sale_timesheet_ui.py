@@ -22,7 +22,6 @@ class TestSaleTimesheetUi(HttpCase):
             'list_price': 250.00,
             'standard_price': 190.00,
             'uom_id': uom_hour_id,
-            'uom_po_id': uom_hour_id,
             'service_policy': 'ordered_prepaid',
             'service_tracking': 'no',
         })

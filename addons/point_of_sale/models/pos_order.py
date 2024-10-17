@@ -1302,7 +1302,7 @@ class PosOrderLine(models.Model):
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
-    product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
+    product_uom_id = fields.Many2one('uom.uom', string='Product Unit', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
     customer_note = fields.Char('Customer Note')
@@ -1401,7 +1401,7 @@ class PosOrderLine(models.Model):
         ])
 
         if existing_lots_sudo and existing_lots_sudo[0].product_id.tracking == 'serial':
-            existing_lots_sudo = existing_lots_sudo.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) >= 0)
+            existing_lots_sudo = existing_lots_sudo.filtered(lambda l: float_compare(l.product_qty, 1, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) >= 0)
 
         return existing_lots_sudo.read(['id', 'name'])
 

@@ -22,7 +22,6 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'list_price': 280.0,
             'type': 'consu',
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
             'purchase_method': 'purchase',
             'default_code': 'PROD_ORDER',
             'taxes_id': False,
@@ -33,7 +32,6 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'list_price': 290.0,
             'type': 'consu',
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
             'purchase_method': 'purchase',
             'default_code': 'PROD_ORDER',
             'taxes_id': False,
@@ -44,7 +42,6 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'list_price': 280.0,
             'type': 'consu',
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
             'purchase_method': 'purchase',
             'default_code': 'PROD_ORDER_VAR_NAME',
             'taxes_id': False,
@@ -55,7 +52,6 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'list_price': 180.0,
             'type': 'service',
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
             'purchase_method': 'receive',
             'default_code': 'SERV_DEL',
             'taxes_id': False,
@@ -66,7 +62,6 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'list_price': 90.0,
             'type': 'service',
             'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
             'purchase_method': 'purchase',
             'default_code': 'PRE-PAID',
             'taxes_id': False,
@@ -77,7 +72,6 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'list_price': 70.0,
             'type': 'consu',
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
             'purchase_method': 'receive',
             'default_code': 'PROD_DEL',
             'taxes_id': False,
@@ -653,7 +647,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_supplier_discounted_price(self):
         """ Check the lower price (discount included) is used.
         """
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         supplierinfo_common_vals = {
             'partner_id': self.partner_a.id,
             'product_id': self.product_order.id,
@@ -696,7 +690,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         # Increase the PO line quantity: it should take another price if min. qty. is reached.
         po_form = Form(po)
         with po_form.order_line.edit(0) as po_line_form:
-            po_line_form.product_uom_id = uom_dozen
+            po_line_form.product_uom_id = uom_pack_of_6
             po_line_form.product_qty = 3
         po = po_form.save()
         po_line = po.order_line[0]
@@ -995,7 +989,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         bill_2 = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order_other_price], post=False)
         bill_2.invoice_line_ids.write({
             'discount': 2.0,
-            'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+            'product_uom_id': self.env.ref('uom.product_uom_pack_6').id,
         })
         bill_2.action_post()
         self.env['account.move.line'].flush_model()

@@ -38,9 +38,7 @@ class SaleOrderOption(models.Model):
         string="Unit of Measure",
         compute='_compute_uom_id',
         store=True, readonly=False,
-        required=True, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+        required=True, precompute=True)
 
     price_unit = fields.Float(
         string="Unit Price",

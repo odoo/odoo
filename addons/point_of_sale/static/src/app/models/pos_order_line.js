@@ -41,8 +41,8 @@ export class PosOrderline extends Base {
         if (options.code) {
             const code = options.code;
             const blockMerge = ["weight", "quantity", "discount"];
-            const product_packaging_by_barcode =
-                this.models["product.packaging"].getAllBy("barcode");
+            const product_packaging_by_barcode = this.models["product.uom"].getAllBy("name");
+            const uom_by_id = this.models["uom.uom"].getAllBy("id");
 
             if (blockMerge.includes(code.type)) {
                 this.setQuantity(code.value);
@@ -52,7 +52,9 @@ export class PosOrderline extends Base {
             }
 
             if (product_packaging_by_barcode[code.code]) {
-                this.setQuantity(product_packaging_by_barcode[code.code].qty);
+                this.setQuantity(
+                    uom_by_id[product_packaging_by_barcode[code.code].uom_id.id].factor
+                );
             }
         }
 
@@ -69,16 +71,12 @@ export class PosOrderline extends Base {
         const unit = this.product_id.uom_id;
 
         if (unit) {
-            if (unit.rounding) {
-                const decimals = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit of Measure"
-                ).digits;
-                qtyStr = formatFloat(this.qty, {
-                    digits: [69, decimals],
-                });
-            } else {
-                qtyStr = this.qty.toFixed(0);
-            }
+            const decimals = this.models["decimal.precision"].find(
+                (dp) => dp.name === "Product Unit of Measure"
+            ).digits;
+            qtyStr = formatFloat(this.qty, {
+                digits: [69, decimals],
+            });
         } else {
             qtyStr = "" + this.qty;
         }
@@ -234,15 +232,11 @@ export class PosOrderline extends Base {
         }
         const unit = this.product_id.uom_id;
         if (unit) {
-            if (unit.rounding) {
-                const decimals = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit of Measure"
-                ).digits;
-                const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
-                this.qty = roundPrecision(quant, rounding);
-            } else {
-                this.qty = roundPrecision(quant, 1);
-            }
+            const decimals = this.models["decimal.precision"].find(
+                (dp) => dp.name === "Product Unit of Measure"
+            ).digits;
+            const rounding = Math.pow(10, -decimals);
+            this.qty = roundPrecision(quant, rounding);
         } else {
             this.qty = quant;
         }

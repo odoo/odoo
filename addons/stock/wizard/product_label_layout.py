@@ -25,19 +25,20 @@ class ProductLabelLayout(models.TransientModel):
             xml_id = 'stock.label_product_product'
 
         quantities = defaultdict(int)
-        uom_unit = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
-        if self.move_quantity == 'move' and self.move_ids and all(float_is_zero(ml.quantity, precision_rounding=ml.product_uom_id.rounding) for ml in self.move_ids.move_line_ids):
+        uom_unit = self.env.ref('uom.product_uom_unit', raise_if_not_found=False)
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6', raise_if_not_found=False)
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        if self.move_quantity == 'move' and self.move_ids and all(float_is_zero(ml.quantity, precision_digits=precision_digits) for ml in self.move_ids.move_line_ids):
             for move in self.move_ids:
-                if move.product_uom.category_id == uom_unit:
-                    use_reserved = float_compare(move.quantity, 0, precision_rounding=move.product_uom.rounding) > 0
-                    useable_qty = move.quantity if use_reserved else move.product_uom_qty
-                    if not float_is_zero(useable_qty, precision_rounding=move.product_uom.rounding):
-                        quantities[move.product_id.id] += useable_qty
+                use_reserved = float_compare(move.quantity, 0, precision_digits=precision_digits) > 0
+                useable_qty = move.quantity if use_reserved else move.product_uom_qty
+                if not float_is_zero(useable_qty, precision_digits=precision_digits):
+                    quantities[move.product_id.id] += useable_qty
             data['quantity_by_product'] = {p: int(q) for p, q in quantities.items()}
         elif self.move_quantity == 'move' and self.move_ids.move_line_ids:
             custom_barcodes = defaultdict(list)
             for line in self.move_ids.move_line_ids:
-                if line.product_uom_id.category_id == uom_unit:
+                if line.product_uom_id in [uom_unit, uom_pack_of_6]:
                     if (line.lot_id or line.lot_name) and int(line.quantity):
                         custom_barcodes[line.product_id.id].append((line.lot_id.name or line.lot_name, int(line.quantity)))
                         continue

@@ -13,7 +13,7 @@ class TestRobustness(TransactionCase):
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
+        cls.uom_pack_of_6 = cls.env.ref('uom.product_uom_pack_6')
         cls.product1 = cls.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
@@ -31,14 +31,14 @@ class TestRobustness(TransactionCase):
             12,
         )
 
-        # reserve a dozen
+        # reserve a pack_of_6
         move1 = self.env['stock.move'].create({
             'name': 'test_uom_rounding',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_dozen.id,
-            'product_uom_qty': 1,
+            'product_uom': self.uom_pack_of_6.id,
+            'product_uom_qty': 2,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -58,9 +58,9 @@ class TestRobustness(TransactionCase):
                 move1.product_uom.factor = 0.05
 
         # assert the reservation
-        self.assertEqual(quant.reserved_quantity, 12)
+        self.assertEqual(quant.reserved_quantity, 6)
         self.assertEqual(move1.state, 'assigned')
-        self.assertEqual(move1.product_qty, 12)
+        self.assertEqual(move1.product_qty, 6)
 
         # unreserve
         move1._do_unreserve()
@@ -129,7 +129,7 @@ class TestRobustness(TransactionCase):
             package_id=package
         )
 
-        # reserve a dozen
+        # reserve a pack_of_6
         move1 = self.env['stock.move'].create({
             'name': 'test_uom_rounding',
             'location_id': self.stock_location.id,

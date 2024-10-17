@@ -89,9 +89,7 @@ class RepairOrder(models.Model):
         default=1.0, digits='Product Unit of Measure')
     product_uom = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        compute='compute_product_uom', store=True, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+        compute='compute_product_uom', store=True, precompute=True)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
         default=False,
@@ -228,12 +226,12 @@ class RepairOrder(models.Model):
                 domain = expression.AND([domain, [('id', 'in', repair.picking_id.move_ids.lot_ids.ids)]])
             repair.allowed_lot_ids = self.env['stock.lot'].search(domain)
 
-    @api.depends('product_id', 'product_id.uom_id.category_id', 'product_uom.category_id')
+    @api.depends('product_id', 'product_id.uom_id')
     def compute_product_uom(self):
         for repair in self:
             if not repair.product_id:
                 repair.product_uom = False
-            elif not repair.product_uom or repair.product_uom.category_id != repair.product_id.uom_id.category_id:
+            elif not repair.product_uom:
                 repair.product_uom = repair.product_id.uom_id
 
     @api.depends('product_id', 'lot_id', 'lot_id.product_id', 'picking_id')
@@ -285,7 +283,7 @@ class RepairOrder(models.Model):
         # Force to prefetch more than 1000 by 1000
         all_moves._fields['forecast_availability'].compute_value(all_moves)
         for repair in repairs:
-            if any(float_compare(move.forecast_availability, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) < 0 for move in repair.move_ids):
+            if any(float_compare(move.forecast_availability, move.product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) < 0 for move in repair.move_ids):
                 repair.parts_availability = _('Not Available')
                 repair.parts_availability_state = 'late'
                 continue
@@ -313,10 +311,16 @@ class RepairOrder(models.Model):
         returned = self.filtered(lambda r: r.picking_id and r.picking_id.state == 'done')
         returned.is_returned = True
 
-    @api.depends('move_ids.quantity', 'move_ids.product_uom_qty', 'move_ids.product_uom.rounding')
+    @api.depends('move_ids.quantity', 'move_ids.product_uom_qty')
     def _compute_has_uncomplete_moves(self):
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for repair in self:
-            repair.has_uncomplete_moves = any(float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in repair.move_ids)
+            repair.has_uncomplete_moves = any(
+                float_compare(
+                    move.quantity,
+                    move.product_uom_qty,
+                    precision_digits=precision_digits
+                ) < 0 for move in repair.move_ids)
 
     @api.depends('move_ids', 'state', 'move_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
@@ -343,8 +347,6 @@ class RepairOrder(models.Model):
         res = {}
         if not self.product_id or not self.product_uom:
             return res
-        if self.product_uom.category_id != self.product_id.uom_id.category_id:
-            res['warning'] = {'title': _('Warning'), 'message': _('The product unit of measure you chose has a different category than the product unit of measure.')}
         return res
 
     @api.onchange('location_id', 'picking_id')
@@ -451,7 +453,11 @@ class RepairOrder(models.Model):
     def action_repair_cancel_draft(self):
         if self.filtered(lambda repair: repair.state != 'cancel'):
             self.action_repair_cancel()
-        sale_line_to_update = self.move_ids.sale_line_id.filtered(lambda l: l.order_id.state != 'cancel' and float_is_zero(l.product_uom_qty, precision_rounding=l.product_uom_id.rounding))
+        sale_line_to_update = self.move_ids.sale_line_id.filtered(
+            lambda l:
+            l.order_id.state != 'cancel' and
+            float_is_zero(l.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'))
+        )
         sale_line_to_update.move_ids._update_repair_sale_order_line()
         self.move_ids.state = 'draft'
         self.state = 'draft'
@@ -468,7 +474,7 @@ class RepairOrder(models.Model):
         product_move_vals = []
 
         # Cancel moves with 0 quantity
-        self.move_ids.filtered(lambda m: float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding))._action_cancel()
+        self.move_ids.filtered(lambda m: float_is_zero(m.quantity, precision_digits=precision))._action_cancel()
 
         no_service_policy = 'service_policy' not in self.env['product.template']
         #SOL qty delivered = repair.move_ids.quantity
@@ -547,8 +553,9 @@ class RepairOrder(models.Model):
             raise UserError(_("Repair must be under repair in order to end reparation."))
         partial_moves = set()
         picked_moves = set()
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for move in self.move_ids:
-            if float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0:
+            if float_compare(move.quantity, move.product_uom_qty, precision_digits=precision_digits) < 0:
                 partial_moves.add(move.id)
             if move.picked:
                 picked_moves.add(move.id)
