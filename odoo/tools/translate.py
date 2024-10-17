@@ -1368,7 +1368,7 @@ class TranslationModuleReader(TranslationReader):
             return module, fabsolutepath, frelativepath, display_path
         return None, None, None, None
 
-    def _babel_extract_terms(self, fname, path, root, extract_method="python", trans_type='code',
+    def _babel_extract_terms(self, fname, path, root, extract_method="odoo.tools.babel:extract_python", trans_type='code',
                                extra_comments=None, extract_keywords={'_': None}):
 
         module, fabsolutepath, _, display_path = self._verified_module_filepaths(fname, path, root)
@@ -1377,7 +1377,7 @@ class TranslationModuleReader(TranslationReader):
         extra_comments = extra_comments or []
         src_file = file_open(fabsolutepath, 'rb')
         options = {}
-        if extract_method == 'python':
+        if extract_method == 'odoo.tools.babel:extract_python':
             options['encoding'] = 'UTF-8'
             translations = code_translations.get_python_translations(module, self._lang)
         else:
@@ -1418,7 +1418,7 @@ class TranslationModuleReader(TranslationReader):
             _logger.debug("Scanning files of modules at %s", path)
             for root, dummy, files in os.walk(path, followlinks=True):
                 for fname in fnmatch.filter(files, '*.py'):
-                    self._babel_extract_terms(fname, path, root, 'python',
+                    self._babel_extract_terms(fname, path, root, 'odoo.tools.babel:extract_python',
                                               extra_comments=[PYTHON_TRANSLATION_COMMENT],
                                               extract_keywords={'_': None, '_lt': None})
                 if fnmatch.fnmatch(root, '*/static/src*'):
