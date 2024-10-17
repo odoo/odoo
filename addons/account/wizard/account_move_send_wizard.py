@@ -127,7 +127,7 @@ class AccountMoveSendWizard(models.TransientModel):
         2. email,
         3. manual.
         """
-        methods = self.env['res.partner']._fields['invoice_sending_method'].selection
+        methods = self.env['ir.model.fields'].get_field_selection('res.partner', 'invoice_sending_method')
         for wizard in self:
             preferred_method = self._get_default_sending_method(wizard.move_id)
             need_fallback = not self._is_applicable_to_move(preferred_method, wizard.move_id)
