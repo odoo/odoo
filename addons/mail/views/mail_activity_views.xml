@@ -403,7 +403,7 @@
         <field name="model">mail.activity</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Activity" date_start="date_deadline" color="activity_type_id">
+            <calendar string="Activity" date_start="date_deadline" color="activity_type_id" js_class="activity_calendar" create="0" mode="month">
                 <field name="user_id" avatar_field="avatar_128"/>
                 <field name="res_name"/>
                 <field name="date_deadline"/>
@@ -416,7 +416,7 @@
     <record id="mail_activity_action_my" model="ir.actions.act_window">
         <field name="name">My Activities</field>
         <field name="res_model">mail.activity</field>
-        <field name="view_mode">list,kanban</field>
+        <field name="view_mode">list,kanban,calendar</field>
         <field name="search_view_id" ref="mail.mail_activity_view_search"/>
         <field name="context">{
             'search_default_filter_user_id_uid': 1,
@@ -437,6 +437,13 @@
         <field name="view_mode">kanban</field>
         <field name="act_window_id" ref="mail.mail_activity_action_my"/>
         <field name="view_id" ref="mail.mail_activity_view_kanban_open_target"/>
+    </record>
+
+    <record id="mail_activity_action_my_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="act_window_id" ref="mail.mail_activity_action_my"/>
+        <field name="view_id" ref="mail.mail_activity_view_calendar"/>
     </record>
 
 </odoo>
