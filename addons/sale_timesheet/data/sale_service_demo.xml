@@ -175,6 +175,7 @@
             <field name="list_price">500</field>
             <field name="standard_price">420.00</field>
             <field name="type">service</field>
+            <field name="invoice_policy">delivery</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="service_type" model="product.product" eval="'milestones' if obj().env.user.has_group('project.group_project_milestone') else 'manual'" />
