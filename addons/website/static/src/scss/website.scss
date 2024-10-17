@@ -2139,8 +2139,11 @@ input[value*="data-oe-translation-source-sha"] {
     visibility: visible;
 }
 .o_wanim_overflow_xy_hidden {
-    overflow-x: hidden !important;
-
+    // "overflow-x: hidden" is added to the "body" and not to "html" because if
+    // it's added to "html", when a popup opens, the page scrolls to the top.
+    > body {
+        overflow-x: hidden !important;
+    }
     &.o_rtl, .o_rtl {
         // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
         // left-overflowing animations on RTL web pages. Note: using overflow on
