@@ -3,19 +3,19 @@ import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 
 describe("models with backlinks", () => {
     describe("many2one and one2many field relations to other models", () => {
-        const getModels = () =>
-            createRelatedModels({
-                "product.product": {
-                    category_id: { type: "many2one", relation: "product.category" },
+        const schema = {
+            "product.product": {
+                category_id: { type: "many2one", relation: "product.category" },
+            },
+            "product.category": {
+                product_ids: {
+                    type: "one2many",
+                    relation: "product.product",
+                    inverse_name: "category_id",
                 },
-                "product.category": {
-                    product_ids: {
-                        type: "one2many",
-                        relation: "product.product",
-                        inverse_name: "category_id",
-                    },
-                },
-            }).models;
+            },
+        };
+        const getModels = () => createRelatedModels(schema).models;
 
         test("create operation", () => {
             const models = getModels();
@@ -23,6 +23,41 @@ describe("models with backlinks", () => {
             const product = models["product.product"].create({ category_id: category });
             expect(product.category_id).toBe(category);
             expect(category.product_ids.includes(product)).toBe(true);
+        });
+        test("create with required x2o field", () => {
+            const models = createRelatedModels({
+                ...schema,
+                "product.product": {
+                    category_id: {
+                        ...schema["product.product"].category_id,
+                        required: true,
+                    },
+                },
+            }).models;
+
+            const category = models["product.category"].create({
+                product_ids: [
+                    ["create", {}],
+                    ["create", {}],
+                ],
+            });
+            expect(category.product_ids.length).toBe(2);
+        });
+        test("create with required o2m field", () => {
+            const models = createRelatedModels({
+                ...schema,
+                "product.category": {
+                    product_ids: {
+                        ...schema["product.category"].product_ids,
+                        required: true,
+                    },
+                    name: {
+                        type: "char",
+                    },
+                },
+            }).models;
+            const product = models["product.product"].create({ category_id: { name: "test" } });
+            expect(product.category_id.name).toBe("test");
         });
         test("read operation", () => {
             const models = getModels();
@@ -287,25 +322,26 @@ describe("models with backlinks", () => {
         });
     });
     describe("many2many field relations to other models", () => {
-        const getModels = () =>
-            createRelatedModels({
-                "product.product": {
-                    name: { type: "char" },
-                    tag_ids: {
-                        type: "many2many",
-                        relation: "product.tag",
-                        relation_table: "product_tag_product_product_rel",
-                    },
+        const schema = {
+            "product.product": {
+                name: { type: "char" },
+                tag_ids: {
+                    type: "many2many",
+                    relation: "product.tag",
+                    relation_table: "product_tag_product_product_rel",
                 },
-                "product.tag": {
-                    name: { type: "char" },
-                    product_ids: {
-                        type: "many2many",
-                        relation: "product.product",
-                        relation_table: "product_tag_product_product_rel",
-                    },
+            },
+            "product.tag": {
+                name: { type: "char" },
+                product_ids: {
+                    type: "many2many",
+                    relation: "product.product",
+                    relation_table: "product_tag_product_product_rel",
                 },
-            }).models;
+            },
+        };
+        const getModels = () => createRelatedModels(schema).models;
+
         test("create operation, create", () => {
             const models = getModels();
             const tag1 = { name: "Electronics" };
@@ -315,6 +351,31 @@ describe("models with backlinks", () => {
                 tag_ids: [["create", tag1, tag2]],
             });
             expect(product.tag_ids[0].name).toBe(tag1.name);
+        });
+
+        test("create with required m2m field", () => {
+            const models = createRelatedModels({
+                ...schema,
+                "product.product": {
+                    ...schema["product.product"],
+                    tag_ids: {
+                        ...schema["product.product"].tag_ids,
+                        required: true,
+                    },
+                },
+            }).models;
+            const tag = models["product.tag"].create({
+                name: "Electronics",
+                product_ids: [
+                    ["create", { name: "Smartphone" }],
+                    ["create", { name: "Tablet" }],
+                ],
+            });
+            expect(tag.product_ids.length).toBe(2);
+            for (const product of tag.product_ids) {
+                expect(product.tag_ids.length).toBe(1);
+                expect(product.tag_ids[0].name).toBe("Electronics");
+            }
         });
 
         test("create operation, link", () => {

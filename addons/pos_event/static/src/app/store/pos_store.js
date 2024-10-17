@@ -41,15 +41,18 @@ patch(PosStore.prototype, {
                 (ticket) => ticket.product_id.pos_categ_ids
             );
             const taxeIds = eventTicketWithProduct.flatMap((ticket) => ticket.product_id.taxes_id);
-            this.models["product.template"].create({
-                id: `dummy_${event.id}`,
-                available_in_pos: true,
-                lst_price: lowestPrice.price,
-                display_name: event.name,
-                pos_categ_ids: categIds.map((categ) => ["link", categ]),
-                taxes_id: taxeIds.map((tax) => ["link", tax]),
-                _event_id: event.id,
-            });
+            this.models["product.template"].create(
+                {
+                    id: `dummy_${event.id}`,
+                    available_in_pos: true,
+                    lst_price: lowestPrice.price,
+                    display_name: event.name,
+                    pos_categ_ids: categIds.map((categ) => ["link", categ]),
+                    taxes_id: taxeIds.map((tax) => ["link", tax]),
+                    _event_id: event.id,
+                },
+                { ignoreRequired: true }
+            );
         }
     },
 });

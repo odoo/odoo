@@ -1,9 +1,9 @@
 import { reactive, toRaw } from "@odoo/owl";
-import { uuidv4 } from "@point_of_sale/utils";
+import { assignIfMissing, uuidv4 } from "@point_of_sale/utils";
 
 const ID_CONTAINER = {};
 
-function uuid(model) {
+function getLocalId(model) {
     if (!(model in ID_CONTAINER)) {
         ID_CONTAINER[model] = 1;
     }
@@ -148,11 +148,11 @@ export class Base {
     /**
      * Called during instantiation when the instance is fully-populated with field values.
      * Check @create inside `createRelatedModels` below.
-     * @param {*} _vals
+     * @param {*} vals
      */
-    setup(_vals) {
+    setup(vals) {
         // Allow custom fields
-        for (const [key, val] of Object.entries(_vals)) {
+        for (const [key, val] of Object.entries(vals)) {
             // Prevent extra fields that begin by _ to be overrided
             if (key in this.model.modelFields) {
                 continue;
@@ -162,6 +162,10 @@ export class Base {
                 this[key] = val;
             }
         }
+    }
+
+    getDefaultVals() {
+        return {};
     }
 
     setDirty() {
@@ -435,21 +439,30 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     function create(
         model,
         vals,
-        ignoreRelations = false,
-        fromSerialized = false,
-        delayedSetup = false
+        {
+            ignoreRelations = false,
+            fromSerialized = false,
+            delayedSetup = false,
+            ignoreRequired = false,
+        } = {}
     ) {
         if (!("id" in vals)) {
-            vals["id"] = uuid(model);
+            vals["id"] = getLocalId(model);
         }
 
         const Model = modelClasses[model] || Base;
         const record = reactive(new Model({ models, records, model: models[model] }));
+
+        assignIfMissing(vals, record.getDefaultVals());
+
         const id = vals["id"];
         record.id = id;
-        if (!vals.uuid && database[model]?.key === "uuid") {
-            record.uuid = uuidv4();
-            vals.uuid = record.uuid;
+
+        if (database[model]?.key === "uuid") {
+            if (!vals.uuid) {
+                vals.uuid = uuidv4();
+            }
+            record.uuid = vals.uuid;
         }
 
         if (!baseData[model][id]) {
@@ -466,8 +479,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             }
 
             const field = fields[name];
+            const inverse = inverseMap.get(field);
 
-            if (field.required && !(name in vals)) {
+            if (field.required && !(name in vals) && !ignoreRequired) {
                 throw new Error(`'${name}' field is required when creating '${model}' record.`);
             }
 
@@ -498,16 +512,18 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     } else {
                         for (const [command, ...items] of vals[name]) {
                             if (command === "create") {
-                                const newRecords = items.map((_vals) => {
-                                    const result = create(comodelName, _vals);
+                                for (const vals of items) {
+                                    assignIfMissing(vals, {
+                                        [inverse.name]:
+                                            inverse.type === "many2one"
+                                                ? record
+                                                : [["link", record]],
+                                    });
+                                    const result = create(comodelName, vals);
                                     makeRecordsAvailable(
                                         { [comodelName]: [result] },
-                                        { [comodelName]: [_vals] }
+                                        { [comodelName]: [vals] }
                                     );
-                                    return result;
-                                });
-                                for (const record2 of newRecords) {
-                                    connect(field, record, record2);
                                 }
                             } else if (command === "link") {
                                 const existingRecords = items.filter((record) =>
@@ -531,8 +547,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                                 connect(field, record, val);
                             }
                         } else if (models[field.relation]) {
-                            const newRecord = create(comodelName, val);
-                            connect(field, record, newRecord);
+                            create(
+                                comodelName,
+                                assignIfMissing(val, {
+                                    [inverse.name]: [["link", record]],
+                                })
+                            );
                         } else {
                             record[name] = val;
                         }
@@ -553,7 +573,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     }
 
     function deserialize(model, vals) {
-        return create(model, vals, false, true);
+        return create(model, vals, { ignoreRelations: false, fromSerialized: true });
     }
 
     function update(model, record, vals) {
@@ -685,8 +705,21 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             get modelFields() {
                 return getFields(this.modelName);
             },
-            create(vals, ignoreRelations = false, fromSerialized = false, delayedSetup = false) {
-                const record = create(model, vals, ignoreRelations, fromSerialized, delayedSetup);
+            create(
+                vals,
+                {
+                    ignoreRelations = false,
+                    fromSerialized = false,
+                    delayedSetup = false,
+                    ignoreRequired = false,
+                } = {}
+            ) {
+                const record = create(model, vals, {
+                    ignoreRelations,
+                    fromSerialized,
+                    delayedSetup,
+                    ignoreRequired,
+                });
                 makeRecordsAvailable({ [model]: [record] }, { [model]: [vals] });
                 return record;
             },
@@ -905,7 +938,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     oldStates[model][oldRecord[modelKey]] = oldRecord.serializeState();
                 }
 
-                const result = create(model, record, true, false, true);
+                const result = create(model, record, {
+                    ignoreRelations: true,
+                    fromSerialized: false,
+                    delayedSetup: true,
+                });
                 if (oldRecord && oldRecord.id !== result.id) {
                     oldRecord.delete();
                 }

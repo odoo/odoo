@@ -2,19 +2,20 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { roundDecimals } from "@web/core/utils/numbers";
-import { uuidv4 } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
 
 export class PosPayment extends Base {
     static pythonModel = "pos.payment";
 
-    setup(vals) {
-        super.setup(...arguments);
-        this.payment_date = serializeDateTime(DateTime.now());
-        this.uuid = vals.uuid ? vals.uuid : uuidv4();
-        this.amount = vals.amount || 0;
-        this.ticket = vals.ticket || "";
+    getDefaultVals() {
+        const result = super.getDefaultVals();
+        return {
+            amount: 0,
+            payment_date: serializeDateTime(DateTime.now()),
+            ticket: "",
+            ...result,
+        };
     }
 
     isSelected() {
