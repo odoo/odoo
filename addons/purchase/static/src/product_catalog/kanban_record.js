@@ -36,8 +36,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
         const price = await rpc("/product/catalog/update_order_line_info", {
             order_id: this.env.orderId,
             product_id: this.env.productId,
-            product_packaging_id: packaging.id,
-            product_packaging_qty: productPackagingQty,
+            packaging_uom_qty: productPackagingQty,
             res_model: this.env.orderResModel,
         });
         this.productCatalogData.price = parseFloat(price);

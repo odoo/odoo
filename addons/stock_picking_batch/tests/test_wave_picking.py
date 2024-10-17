@@ -286,29 +286,29 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(len(all_db_pickings) + 1, len(new_all_db_picking))
 
     def test_wave_split_move_uom(self):
-        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
+        self.uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         sns = self.env['stock.lot'].create([{
             'name': 'sn-' + str(i),
             'product_id': self.productB.id,
-        } for i in range(12)])
+        } for i in range(6)])
 
-        for i in range(12):
+        for i in range(6):
             self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1.0, lot_id=sns[i])
-        dozen_move = self.env['stock.move'].create({
+        pack_of_6_move = self.env['stock.move'].create({
             'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 1,
-            'product_uom': self.uom_dozen.id,
+            'product_uom': self.uom_pack_of_6.id,
             'picking_id': self.picking_client_1.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
         })
-        dozen_move._action_confirm()
-        dozen_move._action_assign()
-        self.assertEqual(len(dozen_move.move_line_ids), 12)
-        self.assertEqual(dozen_move.move_line_ids.product_uom_id, self.env.ref('uom.product_uom_unit'))
+        pack_of_6_move._action_confirm()
+        pack_of_6_move._action_assign()
+        self.assertEqual(len(pack_of_6_move.move_line_ids), 6)
+        self.assertEqual(pack_of_6_move.move_line_ids.product_uom_id, self.env.ref('uom.product_uom_unit'))
 
-        lines = dozen_move.move_line_ids[0:5]
+        lines = pack_of_6_move.move_line_ids[0:2]
         res_dict = lines.action_open_add_to_wave()
         res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
         self.assertEqual(res_dict.get('res_model'), 'stock.add.to.wave')
@@ -319,9 +319,9 @@ class TestBatchPicking(TransactionCase):
         wave = self.env['stock.picking.batch'].search([
             ('is_wave', '=', True)
         ])
-        self.assertFalse(lines.move_id == dozen_move)
+        self.assertFalse(lines.move_id == pack_of_6_move)
         self.assertEqual(lines.batch_id, wave)
-        self.assertEqual(dozen_move.product_uom_qty, 0.58)
+        self.assertEqual(pack_of_6_move.product_uom_qty, 0.67)
 
     def test_wave_mutliple_move_lines(self):
         self.productA = self.env['product.product'].create({

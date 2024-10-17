@@ -121,7 +121,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         # create an empty blanket order
         line1 = (0, 0, {
             'product_id': product2.id,
-            'product_uom_id': product2.uom_po_id.id,
+            'product_uom_id': product2.uom_id.id,
             'price_unit': 41,
             'product_qty': 10,
         })
@@ -155,7 +155,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             line.product_id = self.product_09
             line.product_qty = 5.0
             line.price_unit = unit_price
-            line.product_uom_id = self.env.ref('uom.product_uom_dozen')
+            line.product_uom_id = self.env.ref('uom.product_uom_pack_6')
         with po_form.order_line.new() as line:
             line.display_type = "line_section"
             line.name = "Products"
@@ -298,9 +298,9 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         with po_form.order_line.new() as line:
             line.product_id = self.product_09
             line.product_qty = 1
-            line.product_uom_id = self.env.ref('uom.product_uom_dozen')
+            line.product_uom_id = self.env.ref('uom.product_uom_pack_6')
         po_1 = po_form.save()
-        self.assertEqual(po_1.order_line[0].price_unit, 120)
+        self.assertEqual(po_1.order_line[0].price_unit, 60)
 
         # Creates an alternative PO.
         action = po_1.action_create_alternative()
@@ -312,7 +312,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
         po_2 = po_1.alternative_po_ids - po_1
         self.assertEqual(po_2.order_line[0].product_uom_id, po_1.order_line[0].product_uom_id)
-        self.assertEqual(po_2.order_line[0].price_unit, 120)
+        self.assertEqual(po_2.order_line[0].price_unit, 60)
 
     def test_11_alternative_po_from_po_with_requisition_id(self):
         """Create a purchase order from a blanket order, then check that the alternative purchase order
@@ -321,7 +321,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         # create an empty blanket order
         line1 = (0, 0, {
             'product_id': self.product_13.id,
-            'product_uom_id': self.product_13.uom_po_id.id,
+            'product_uom_id': self.product_13.uom_id.id,
             'price_unit': 41,
             'product_qty': 10,
         })

@@ -26,35 +26,19 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
         cls.Quant = cls.env['stock.quant']
         cls.ProductCategory = cls.env['product.category']
 
-        cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
-        cls.categ_kgm = cls.env.ref('uom.product_uom_categ_kgm')
-
-        cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm.id), ('uom_type', '=', 'reference')], limit=1)
-        cls.uom_kg.write({
-            'name': 'Test-KG',
-            'rounding': 0.000001})
-        cls.uom_gm = cls.UoM.create({
-            'name': 'Test-G',
-            'category_id': cls.categ_kgm.id,
-            'uom_type': 'smaller',
-            'factor': 1000.0,
-            'rounding': 0.001})
-        cls.uom_unit = cls.env['uom.uom'].search([('category_id', '=', cls.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
-        cls.uom_unit.write({
-            'name': 'Test-Unit',
-            'rounding': 0.01})
+        cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
+        cls.uom_gm = cls.env.ref('uom.product_uom_gram')
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.uom_pack_of_6 = cls.env.ref('uom.product_uom_pack_6')
         cls.uom_ten = cls.UoM.create({
             'name': 'Test-Ten',
-            'category_id': cls.categ_unit.id,
-            'factor_inv': 10,
-            'uom_type': 'bigger',
-            'rounding': 0.001})
+            'relative_factor': 10,
+            'relative_uom_id': cls.uom_unit.id,
+        })
         cls.uom_dozen = cls.UoM.create({
             'name': 'Test-DozenA',
-            'category_id': cls.categ_unit.id,
-            'factor_inv': 12,
-            'uom_type': 'bigger',
-            'rounding': 0.001})
+            'relative_factor': 12,
+        })
 
         # Creating all components
         cls.component_a = cls._cls_create_product('Comp A', cls.uom_unit)
@@ -165,7 +149,6 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
         p.name = name
         p.is_storable = True
         p.uom_id = uom_id
-        p.uom_po_id = uom_id
         p.route_ids.clear()
         for r in routes:
             p.route_ids.add(r)
@@ -324,7 +307,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         #
         #        product D  20 Unit.
         #                [
-        #                  For 2 dozen product A will consume 4 unit product D
+        #                  For 2 pack_of_6 product A will consume 4 unit product D
         #                  then for 10 Dozen product A will consume 20 unit of product D.
         #                ]
         # --------------------------------------------------------------------------------
@@ -574,10 +557,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.env.company.currency_id = self.env.ref('base.USD')
         self.uom_unit = self.UoM.create({
             'name': 'Test-Unit',
-            'category_id': self.categ_unit.id,
-            'factor': 1,
-            'uom_type': 'bigger',
-            'rounding': 1.0})
+            'relative_factor': 1,
+        })
         self.company = self.company_data['company']
         self.company.anglo_saxon_accounting = True
         self.partner = self.env['res.partner'].create({'name': 'My Test Partner'})
@@ -1060,7 +1041,11 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) == -1)
+        self.assertTrue(float_compare(
+            order_line.virtual_available_at_date - order_line.product_uom_qty,
+            0,
+            precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        ) == -1)
 
         # We receive enoug of each component in Warehouse 2 to make 3 kit_parent
         qty_to_process = {
@@ -1083,7 +1068,12 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) == -1)
+        self.assertTrue(
+            float_compare(
+                order_line.virtual_available_at_date - order_line.product_uom_qty,
+                0,
+                precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+            ) == -1)
 
         # We receive enough of each component in Warehouse 2 to make 7 kit_parent
         qty_to_process = {
@@ -1108,14 +1098,14 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         """
         # Create some components
         component_uom_unit = self._cls_create_product('Comp Unit', self.uom_unit)
-        component_uom_dozen = self._cls_create_product('Comp Dozen', self.uom_dozen)
+        component_uom_pack_of_6 = self._cls_create_product('Comp Dozen', self.uom_dozen)
         component_uom_kg = self._cls_create_product('Comp Kg', self.uom_kg)
 
         # Create a kit 'kit_uom_1' :
         # -----------------------
         #
         # kit_uom_1 --|- component_uom_unit    x2 Test-Dozen
-        #             |- component_uom_dozen   x1 Test-Dozen
+        #             |- component_uom_pack_of_6   x1 Test-Dozen
         #             |- component_uom_kg      x3 Test-G
 
         kit_uom_1 = self._cls_create_product('Kit 1', self.uom_unit)
@@ -1132,7 +1122,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'product_uom_id': self.uom_dozen.id,
             'bom_id': bom_kit_uom_1.id})
         BomLine.create({
-            'product_id': component_uom_dozen.id,
+            'product_id': component_uom_pack_of_6.id,
             'product_qty': 1.0,
             'product_uom_id': self.uom_dozen.id,
             'bom_id': bom_kit_uom_1.id})
@@ -1146,7 +1136,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # a 'Not enough inventory' warning message.
         stock_location = self.company_data['default_warehouse'].lot_stock_id
         self.env['stock.quant']._update_available_quantity(component_uom_unit, stock_location, 240)
-        self.env['stock.quant']._update_available_quantity(component_uom_dozen, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(component_uom_pack_of_6, stock_location, 10)
         self.env['stock.quant']._update_available_quantity(component_uom_kg, stock_location, 0.03)
 
         # Creation of a sale order for x10 kit_1
@@ -1174,7 +1164,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Then create a backorder for the missing components
         qty_to_process = {
             component_uom_unit: 48,
-            component_uom_dozen: 3,
+            component_uom_pack_of_6: 3,
             component_uom_kg: 0.006
         }
         self._process_quantities(move_ids, qty_to_process)
@@ -1191,7 +1181,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Adding missing components
         qty_to_process = {
             component_uom_unit: 192,
-            component_uom_dozen: 7,
+            component_uom_pack_of_6: 7,
             component_uom_kg: 0.024
         }
         self._process_quantities(backorder_1.move_ids, qty_to_process)
@@ -1211,16 +1201,16 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         # Create some components
         component_uom_unit = self._cls_create_product('Comp Unit', self.uom_unit)
-        component_uom_dozen = self._cls_create_product('Comp Dozen', self.uom_dozen)
+        component_uom_pack_of_6 = self._cls_create_product('Comp Dozen', self.uom_dozen)
         component_uom_kg = self._cls_create_product('Comp Kg', self.uom_kg)
         component_uom_gm = self._cls_create_product('Comp g', self.uom_gm)
-        components = [component_uom_unit, component_uom_dozen, component_uom_kg, component_uom_gm]
+        components = [component_uom_unit, component_uom_pack_of_6, component_uom_kg, component_uom_gm]
 
         # Create a kit 'kit_uom_in_kit' :
         # -----------------------
         # kit_uom_in_kit --|- component_uom_gm  x3 Test-KG
         #                  |- kit_uom_1         x2 Test-Dozen --|- component_uom_unit    x2 Test-Dozen
-        #                                                       |- component_uom_dozen   x1 Test-Dozen
+        #                                                       |- component_uom_pack_of_6   x1 Test-Dozen
         #                                                       |- component_uom_kg      x5 Test-G
 
         kit_uom_1 = self._cls_create_product('Sub Kit 1', self.uom_unit)
@@ -1238,7 +1228,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'product_uom_id': self.uom_dozen.id,
             'bom_id': bom_kit_uom_1.id})
         BomLine.create({
-            'product_id': component_uom_dozen.id,
+            'product_id': component_uom_pack_of_6.id,
             'product_qty': 1.0,
             'product_uom_id': self.uom_dozen.id,
             'bom_id': bom_kit_uom_1.id})
@@ -1272,7 +1262,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         # Set enough quantities to make 1 kit_uom_in_kit in WH1
         self.env['stock.quant']._update_available_quantity(component_uom_unit, warehouse_1.lot_stock_id, 576)
-        self.env['stock.quant']._update_available_quantity(component_uom_dozen, warehouse_1.lot_stock_id, 24)
+        self.env['stock.quant']._update_available_quantity(component_uom_pack_of_6, warehouse_1.lot_stock_id, 24)
         self.env['stock.quant']._update_available_quantity(component_uom_kg, warehouse_1.lot_stock_id, 0.12)
         self.env['stock.quant']._update_available_quantity(component_uom_gm, warehouse_1.lot_stock_id, 3000)
 
@@ -1295,20 +1285,28 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(virtual_available_wh_order, 1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) == -1)
+        self.assertTrue(float_compare(
+            order_line.virtual_available_at_date - order_line.product_uom_qty,
+            0,
+            precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+        ) == -1)
 
         # We receive enough of each component in Warehouse 1 to make 3 kit_uom_in_kit.
         # Moves are created instead of only updating the quant quantities in order to trigger every compute fields.
         qty_to_process = {
             component_uom_unit: (1152, self.uom_unit),
-            component_uom_dozen: (48, self.uom_dozen),
+            component_uom_pack_of_6: (48, self.uom_dozen),
             component_uom_kg: (0.24, self.uom_kg),
             component_uom_gm: (6000, self.uom_gm)
         }
         self._create_move_quantities(qty_to_process, components, warehouse_1)
 
         # Check there arn't enough quantities available for the sale order
-        self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) == -1)
+        self.assertTrue(float_compare(
+            order_line.virtual_available_at_date - order_line.product_uom_qty,
+            0,
+            precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+        ) == -1)
         kit_uom_in_kit.with_context(warehouse_id=warehouse_1.id)._compute_quantities()
         virtual_available_wh_order = kit_uom_in_kit.virtual_available
         self.assertEqual(virtual_available_wh_order, 3)
@@ -1465,7 +1463,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         move_component_unit = order.picking_ids[0].move_ids.filtered(lambda m: m.product_id == component_unit)
         move_component_kg = order.picking_ids[0].move_ids - move_component_unit
         self.assertEqual(move_component_unit.product_uom_qty, 0.5)
-        self.assertEqual(move_component_kg.product_uom_qty, 0.58)
+        self.assertEqual(move_component_kg.product_uom_qty, 0.59)
 
     def test_product_type_service_1(self):
         route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id.id

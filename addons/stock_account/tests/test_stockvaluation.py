@@ -4008,7 +4008,7 @@ class TestStockValuation(TestStockValuationBase):
         the one set on the product form and ensure that when the qty done is changed
         and the picking is already validated, an svl is created in the uom set in the product.
         """
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -4023,7 +4023,7 @@ class TestStockValuation(TestStockValuationBase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
-            'product_uom': uom_dozen.id,
+            'product_uom': uom_pack_of_6.id,
             'product_uom_qty': 1.0,
             'price_unit': 10,
         })
@@ -4033,9 +4033,9 @@ class TestStockValuation(TestStockValuationBase):
         receipt.button_validate()
 
         self.assertEqual(self.product1.uom_name, 'Units')
-        self.assertEqual(self.product1.quantity_svl, 12)
+        self.assertEqual(self.product1.quantity_svl, 6)
         move.quantity = 2
-        self.assertEqual(self.product1.quantity_svl, 24)
+        self.assertEqual(self.product1.quantity_svl, 12)
 
     def test_average_manual_price_change(self):
         """
@@ -4247,7 +4247,7 @@ class TestStockValuation(TestStockValuationBase):
         """Test that when the UoM of the stock.move.line is different from the stock.move,
         the quantity update after done (unlocked) use the correct UoM"""
         unit_uom = self.env.ref('uom.product_uom_unit')
-        dozen_uom = self.env.ref('uom.product_uom_dozen')
+        pack_of_6_uom = self.env.ref('uom.product_uom_pack_6')
         move = self.env['stock.move'].create({
             'name': '12 Units of Product1',
             'product_id': self.product1.id,
@@ -4261,11 +4261,11 @@ class TestStockValuation(TestStockValuationBase):
         move._action_confirm()
         move._action_assign()
 
-        # Change from 12 Units to 1 Dozen (aka: same quantity)
+        # Change from 12 Units to 2 Packs of 6 (aka: same quantity)
         move.move_line_ids = [
             Command.update(
                 move.move_line_ids[0].id,
-                {'quantity': 1, 'product_uom_id': dozen_uom.id}
+                {'quantity': 2, 'product_uom_id': pack_of_6_uom.id}
             )
         ]
         move.picked = True
@@ -4275,8 +4275,8 @@ class TestStockValuation(TestStockValuationBase):
         self.assertEqual(move.stock_valuation_layer_ids.quantity, 12)
 
         move.picking_id.action_toggle_is_locked()
-        # Change from 1 Dozen to 2 Dozens (12 -> 24)
-        move.move_line_ids = [Command.update(move.move_line_ids[0].id, {'quantity': 2})]
+        # Change from 2 Half Dozens to 2 Dozens (12 -> 24)
+        move.move_line_ids = [Command.update(move.move_line_ids[0].id, {'quantity': 4})]
 
         self.assertEqual(move.quantity, 24)
         self.assertRecordValues(move.stock_valuation_layer_ids, [{'quantity': 12}, {'quantity': 12}])

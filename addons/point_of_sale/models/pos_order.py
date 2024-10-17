@@ -1292,7 +1292,7 @@ class PosOrderLine(models.Model):
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
-    product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
+    product_uom_id = fields.Many2one('uom.uom', string='Product Unit', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
     customer_note = fields.Char('Customer Note')
@@ -1401,7 +1401,7 @@ class PosOrderLine(models.Model):
             ('location_id', '=', src_loc.id),
         ])
         available_lots = src_loc_quants.\
-            filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0).\
+            filtered(lambda q: float_compare(q.quantity, 0, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) > 0).\
             mapped('lot_id')
 
         return available_lots.read(['id', 'name'])

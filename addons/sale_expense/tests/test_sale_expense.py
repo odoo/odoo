@@ -63,8 +63,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'can_be_expensed': True,
             'invoice_policy': 'delivery',
             'list_price': 0.50,
-            'uom_id': self.env.ref('uom.product_uom_km').id,
-            'uom_po_id': self.env.ref('uom.product_uom_km').id,
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
             'standard_price': 0.15,
         })
         # Submit to Manager

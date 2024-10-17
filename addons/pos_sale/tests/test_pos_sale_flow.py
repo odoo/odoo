@@ -25,7 +25,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'is_storable': True,
             'available_in_pos': True,
             'uom_id': self.env.ref('uom.product_uom_gram').id,
-            'uom_po_id': self.env.ref('uom.product_uom_gram').id,
             'lst_price': 10.0,
         })
         self.location = self.env['stock.location'].create({
@@ -303,15 +302,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
     def test_pos_not_groupable_product(self):
         #Create a UoM Category that is not pos_groupable
-        uom_category = self.env['uom.category'].create({
-            'name': 'Test',
-            'is_pos_groupable': False,
-        })
         uom = self.env['uom.uom'].create({
             'name': 'Test',
-            'category_id': uom_category.id,
-            'uom_type': 'reference',
-            'rounding': 0.01
         })
         product_a = self.env['product.product'].create({
             'name': 'Product A',
@@ -319,7 +311,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'is_storable': True,
             'lst_price': 10.0,
             'uom_id': uom.id,
-            'uom_po_id': uom.id,
         })
         #create a sale order with product_a
         sale_order = self.env['sale.order'].create({

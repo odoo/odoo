@@ -25,12 +25,13 @@ class LotLabelLayout(models.TransientModel):
         if self.label_quantity == 'lots':
             docids = self.move_line_ids.lot_id.ids
         else:
-            uom_categ_unit = self.env.ref('uom.product_uom_categ_unit')
+            uom_categ_unit = self.env.ref('uom.product_uom_unit')
+            uom_categ_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
             quantity_by_lot = defaultdict(int)
             for move_line in self.move_line_ids:
                 if not move_line.lot_id:
                     continue
-                if move_line.product_uom_id.category_id == uom_categ_unit:
+                if move_line.product_uom_id in [uom_categ_unit, uom_categ_pack_of_6]:
                     quantity_by_lot[move_line.lot_id.id] += int(move_line.quantity)
                 else:
                     quantity_by_lot[move_line.lot_id.id] += 1

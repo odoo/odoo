@@ -6,11 +6,9 @@ from odoo import _, api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom')
+    group_uom = fields.Boolean("Units of Measure & Packagings", implied_group='uom.group_uom')
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
     module_loyalty = fields.Boolean("Promotions, Coupons, Gift Card & Loyalty Program")
-    group_stock_packaging = fields.Boolean('Product Packagings',
-        implied_group='product.group_stock_packaging')
     group_product_pricelist = fields.Boolean("Pricelists",
         implied_group='product.group_product_pricelist')
     product_weight_in_lbs = fields.Selection([
