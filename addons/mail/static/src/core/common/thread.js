@@ -21,7 +21,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 3;
@@ -74,6 +74,7 @@ export class Thread extends Component {
             isReplyingTo: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
+            scrollTop: null,
         });
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
@@ -96,6 +97,34 @@ export class Thread extends Component {
          * scrollable (in other cases).
          */
         this.scrollableRef = this.props.scrollRef ?? this.root;
+        useRefListener(
+            this.scrollableRef,
+            "scrollend",
+            () => (this.state.scrollTop = this.scrollableRef.el.scrollTop)
+        );
+        useEffect(
+            (loadNewer, mountedAndLoaded, unreadSynced) => {
+                if (
+                    loadNewer ||
+                    unreadSynced || // just marked as unread (local and server state are synced)
+                    !mountedAndLoaded ||
+                    !this.props.thread.selfMember ||
+                    !this.scrollableRef.el
+                ) {
+                    return;
+                }
+                const el = this.scrollableRef.el;
+                if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1) {
+                    this.props.thread.selfMember.hideUnreadBanner = true;
+                }
+            },
+            () => [
+                this.props.thread.loadNewer,
+                this.state.mountedAndLoaded,
+                this.props.thread.selfMember?.unreadSynced,
+                this.state.scrollTop,
+            ]
+        );
         this.loadOlderState = useVisible(
             "load-older",
             async () => {
