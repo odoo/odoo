@@ -51,6 +51,7 @@ class PosOrder(models.Model):
             return data
 
         order_ids = self.browse([o['id'] for o in data["pos.order"]])
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for order in order_ids:
             for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
@@ -99,7 +100,7 @@ class PosOrder(models.Model):
                     if not picking.state in ['waiting', 'confirmed', 'assigned']:
                         continue
                     new_qty = so_line.product_uom_qty - so_line.qty_delivered
-                    if float_compare(new_qty, 0, precision_rounding=stock_move.product_uom.rounding) <= 0:
+                    if float_compare(new_qty, 0, precision_digits=precision_digits) <= 0:
                         new_qty = 0
                     stock_move.product_uom_qty = so_line.compute_uom_qty(new_qty, stock_move, False)
                     # If the product is delivered with more than one step, we need to update the quantity of the other steps
@@ -109,7 +110,7 @@ class PosOrder(models.Model):
                     waiting_picking_ids.add(picking.id)
 
             def is_product_uom_qty_zero(move):
-                return float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
+                return float_is_zero(move.product_uom_qty, precision_digits=precision_digits)
 
             # cancel the waiting pickings if each product_uom_qty of move is zero
             for picking in self.env['stock.picking'].browse(waiting_picking_ids):

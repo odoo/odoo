@@ -42,7 +42,7 @@ class StockReturnPickingLine(models.TransientModel):
 
     def _process_line(self, new_picking):
         self.ensure_one()
-        if not float_is_zero(self.quantity, precision_rounding=self.uom_id.rounding):
+        if not float_is_zero(self.quantity, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
             vals = self._prepare_move_default_values(new_picking)
 
             if self.move_id:

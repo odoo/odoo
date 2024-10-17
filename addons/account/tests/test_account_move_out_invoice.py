@@ -290,24 +290,24 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 230.0,
         })
 
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         with Form(invoice) as move_form:
             with move_form.invoice_line_ids.edit(0) as line_form:
-                line_form.product_uom_id = uom_dozen
+                line_form.product_uom_id = uom_pack_of_6
 
         self.assertInvoiceValues(invoice, [
             {
                 'product_id': product.id,
-                'product_uom_id': uom_dozen.id,
-                'price_unit': 2400.0,
-                'price_subtotal': 2400.0,
-                'price_total': 2760.0,
+                'product_uom_id': uom_pack_of_6.id,
+                'price_unit': 1200.0,
+                'price_subtotal': 1200.0,
+                'price_total': 1380.0,
                 'tax_ids': tax_price_exclude.ids,
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': -2400.0,
+                'amount_currency': -1200.0,
                 'debit': 0.0,
-                'credit': 1200.0,
+                'credit': 600.0,
             },
             {
                 'product_id': False,
@@ -318,9 +318,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': tax_price_exclude.id,
                 'currency_id': self.other_currency.id,
-                'amount_currency': -360.0,
+                'amount_currency': -180.0,
                 'debit': 0.0,
-                'credit': 180.0,
+                'credit': 90.0,
             },
             {
                 'product_id': False,
@@ -331,16 +331,16 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 2760.0,
-                'debit': 1380.0,
+                'amount_currency': 1380.0,
+                'debit': 690.0,
                 'credit': 0.0,
             },
         ], {
             'currency_id': self.other_currency.id,
             'fiscal_position_id': fiscal_position.id,
-            'amount_untaxed': 2400.0,
-            'amount_tax': 360.0,
-            'amount_total': 2760.0,
+            'amount_untaxed': 1200.0,
+            'amount_tax': 180.0,
+            'amount_total': 1380.0,
         })
 
         # Check rounding.
@@ -462,24 +462,24 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 240.0,
         })
 
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         with Form(invoice) as move_form:
             with move_form.invoice_line_ids.edit(0) as line_form:
-                line_form.product_uom_id = uom_dozen
+                line_form.product_uom_id = uom_pack_of_6
 
         self.assertInvoiceValues(invoice, [
             {
                 'product_id': product.id,
-                'product_uom_id': uom_dozen.id,
-                'price_unit': 2880.0,
-                'price_subtotal': 2400.0,
-                'price_total': 2880.0,
+                'product_uom_id': uom_pack_of_6.id,
+                'price_unit': 1440.0,
+                'price_subtotal': 1200.0,
+                'price_total': 1440.0,
                 'tax_ids': tax_price_include_2.ids,
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': -2400.0,
+                'amount_currency': -1200.0,
                 'debit': 0.0,
-                'credit': 1200.0,
+                'credit': 600.0,
             },
             {
                 'product_id': False,
@@ -490,9 +490,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': tax_price_include_2.id,
                 'currency_id': self.other_currency.id,
-                'amount_currency': -480.0,
+                'amount_currency': -240.0,
                 'debit': 0.0,
-                'credit': 240.0,
+                'credit': 120.0,
             },
             {
                 'product_id': False,
@@ -503,16 +503,16 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 2880.0,
-                'debit': 1440.0,
+                'amount_currency': 1440.0,
+                'debit': 720.0,
                 'credit': 0.0,
             },
         ], {
             'currency_id': self.other_currency.id,
             'fiscal_position_id': fiscal_position.id,
-            'amount_untaxed': 2400.0,
-            'amount_tax': 480.0,
-            'amount_total': 2880.0,
+            'amount_untaxed': 1200.0,
+            'amount_tax': 240.0,
+            'amount_total': 1440.0,
         })
 
     def test_out_invoice_line_onchange_business_fields_1(self):

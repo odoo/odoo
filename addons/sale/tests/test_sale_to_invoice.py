@@ -534,6 +534,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
     def test_qty_invoiced(self):
         """Verify uom rounding is correctly considered during qty_invoiced compute"""
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 1
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
@@ -583,8 +584,6 @@ class TestSaleToInvoice(TestSaleCommon):
 
         # Rounding to 0.1, should be rounded with UP (ceil) rounding_method
         # Not floor or half up rounding.
-        sol_prod_deliver.product_uom_id.rounding *= 10
-        sol_prod_deliver.product_uom_id.flush_recordset(['rounding'])
         expected_qty = 5.2
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)

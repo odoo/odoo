@@ -254,8 +254,7 @@ class TestProductPricelist(ProductCommon):
         ProductPricelist = self.env['product.pricelist']
         spam = self.env['product.product'].create({
             'name': '1 tonne of spam',
-            'uom_id': self.uom_ton.id,
-            'uom_po_id': self.uom_ton.id,
+            'uom_id': self.env.ref('uom.product_uom_ton').id,
             'list_price': 100,
             'type': 'consu'
         })
@@ -266,7 +265,7 @@ class TestProductPricelist(ProductCommon):
         )
         self.assertEqual(
             ProductPricelist._get_product_price(self.monitor, quantity=1.0, currency=self.new_currency),
-            self.monitor.list_price*10,
+            self.monitor.list_price * 10,
             msg="without pricelist but with a currency different than the product one, the price "
                 "should be the same as the list price converted with the currency rate",
         )
@@ -300,7 +299,7 @@ class TestProductPricelist(ProductCommon):
     def test_40_pricelist_item_min_quantity_precision(self):
         """Test that the min_quantity has the precision of Product UoM."""
         # Arrange: Change precision digits
-        uom_precision = self.env.ref("product.decimal_product_uom")
+        uom_precision = self.env.ref("uom.decimal_product_uom")
         uom_precision.digits = 3
         pricelist_item = self.customer_pricelist.item_ids[0]
         precise_value = 1.234

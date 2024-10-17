@@ -192,18 +192,6 @@
             <field name="gs1_decimal_usage">True</field>
         </record>
 
-        <record id="barcode_rule_gs1_316y" model="barcode.rule">
-            <field name="name">Net volume, cubic metres (variable measure trade item)</field>
-            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
-            <field name="sequence">316</field>
-            <field name="encoding">gs1-128</field>
-            <field name="pattern">(316[0-5])(\d{6})</field>
-            <field name="associated_uom_id" ref="uom.product_uom_cubic_meter"/>
-            <field name="type">quantity</field>
-            <field name="gs1_content_type">measure</field>
-            <field name="gs1_decimal_usage">True</field>
-        </record>
-
         <record id="barcode_rule_gs1_320y" model="barcode.rule">
             <field name="name">Net weight, pounds (variable measure trade item)</field>
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
@@ -240,85 +228,13 @@
             <field name="gs1_decimal_usage">True</field>
         </record>
 
-        <record id="barcode_rule_gs1_323y" model="barcode.rule">
-            <field name="name">Length or first dimension, yards (variable measure trade item)</field>
-            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
-            <field name="sequence">323</field>
-            <field name="encoding">gs1-128</field>
-            <field name="pattern">(322[0-5])(\d{6})</field>
-            <field name="associated_uom_id" ref="uom.product_uom_yard"/>
-            <field name="type">quantity</field>
-            <field name="gs1_content_type">measure</field>
-            <field name="gs1_decimal_usage">True</field>
-        </record>
-
-        <record id="barcode_rule_gs1_351y" model="barcode.rule">
+         <record id="barcode_rule_gs1_351y" model="barcode.rule">
             <field name="name">Area, square feet (variable measure trade item)</field>
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">351</field>
             <field name="encoding">gs1-128</field>
             <field name="pattern">(351[0-5])(\d{6})</field>
-            <field name="associated_uom_id" ref="uom.uom_square_foot"/>
-            <field name="type">quantity</field>
-            <field name="gs1_content_type">measure</field>
-            <field name="gs1_decimal_usage">True</field>
-        </record>
-
-        <record id="barcode_rule_gs1_357y" model="barcode.rule">
-            <field name="name">Net weight (or volume), ounces (variable measure trade item)</field>
-            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
-            <field name="sequence">357</field>
-            <field name="encoding">gs1-128</field>
-            <field name="pattern">(357[0-5])(\d{6})</field>
-            <field name="associated_uom_id" ref="uom.product_uom_oz"/>
-            <field name="type">quantity</field>
-            <field name="gs1_content_type">measure</field>
-            <field name="gs1_decimal_usage">True</field>
-        </record>
-
-        <record id="barcode_rule_gs1_360y" model="barcode.rule">
-            <field name="name">Net volume, quarts (variable measure trade item)</field>
-            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
-            <field name="sequence">360</field>
-            <field name="encoding">gs1-128</field>
-            <field name="pattern">(360[0-5])(\d{6})</field>
-            <field name="associated_uom_id" ref="uom.product_uom_qt"/>
-            <field name="type">quantity</field>
-            <field name="gs1_content_type">measure</field>
-            <field name="gs1_decimal_usage">True</field>
-        </record>
-
-        <record id="barcode_rule_gs1_361y" model="barcode.rule">
-            <field name="name">Net volume, gallons U.S. (variable measure trade item)</field>
-            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
-            <field name="sequence">361</field>
-            <field name="encoding">gs1-128</field>
-            <field name="pattern">(361[0-5])(\d{6})</field>
-            <field name="associated_uom_id" ref="uom.product_uom_gal"/>
-            <field name="type">quantity</field>
-            <field name="gs1_content_type">measure</field>
-            <field name="gs1_decimal_usage">True</field>
-        </record>
-
-        <record id="barcode_rule_gs1_364y" model="barcode.rule">
-            <field name="name">Net volume, cubic inches (variable measure trade item)</field>
-            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
-            <field name="sequence">364</field>
-            <field name="encoding">gs1-128</field>
-            <field name="pattern">(364[0-5])(\d{6})</field>
-            <field name="associated_uom_id" ref="uom.product_uom_cubic_inch"/>
-            <field name="type">quantity</field>
-            <field name="gs1_content_type">measure</field>
-            <field name="gs1_decimal_usage">True</field>
-        </record>
-
-        <record id="barcode_rule_gs1_365y" model="barcode.rule">
-            <field name="name">Net volume, cubic feet (variable measure trade item)</field>
-            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
-            <field name="sequence">365</field>
-            <field name="encoding">gs1-128</field>
-            <field name="pattern">(365[0-5])(\d{6})</field>
-            <field name="associated_uom_id" ref="uom.product_uom_cubic_foot"/>
+            <field name="associated_uom_id" ref="uom.product_uom_square_foot"/>
             <field name="type">quantity</field>
             <field name="gs1_content_type">measure</field>
             <field name="gs1_decimal_usage">True</field>
