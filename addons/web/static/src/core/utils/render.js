@@ -2,8 +2,8 @@ import { App, blockDom, Component, markup } from "@odoo/owl";
 import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 
-export function renderToElement(template, context = {}) {
-    const el = render(template, context).firstElementChild;
+export function renderToElement(template, context = {}, options = {}) {
+    const el = render(template, context, options).firstElementChild;
     if (el?.nextElementSibling) {
         throw new Error(
             `The rendered template '${template}' contains multiple root ` +
@@ -15,9 +15,9 @@ export function renderToElement(template, context = {}) {
     return el;
 }
 
-export function renderToFragment(template, context = {}) {
+export function renderToFragment(template, context = {}, options = {}) {
     const frag = document.createDocumentFragment();
-    for (const el of [...render(template, context).children]) {
+    for (const el of [...render(template, context, options).children]) {
         frag.appendChild(el);
     }
     return frag;
@@ -48,11 +48,12 @@ Object.defineProperty(renderToString, "app", {
     },
 });
 
-function render(template, context = {}) {
+function render(template, context = {}, options = {}) {
     const app = renderToString.app;
-    const templateFn = app.getTemplate(template);
+    const templateFn = app.getTemplate(template); // getTemplate needs document
     const bdom = templateFn(context, {});
-    const div = document.createElement("div");
+    const ownerDocument = options.document || document;
+    const div = ownerDocument.createElement("div");
     blockDom.mount(bdom, div);
     return div;
 }

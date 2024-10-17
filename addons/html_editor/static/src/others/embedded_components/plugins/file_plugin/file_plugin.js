@@ -64,6 +64,7 @@ export class FilePlugin extends Plugin {
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
             noVideos: !!this.config.disableVideo,
             noImages: !!this.config.disableImage,
+            document: this.document,
             ...this.config.mediaModalParams,
             ...params,
         });
