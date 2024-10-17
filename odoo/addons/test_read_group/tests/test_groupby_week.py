@@ -1,6 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import babel
+from datetime import datetime, time
+from pytz import UTC, timezone
 
 from odoo.tests import common
 
@@ -62,73 +64,120 @@ class TestGroupbyWeek(common.TransactionCase):
             {'date': '2022-06-20'},       # W25, W25, W26
         ])
 
+    def set_context(self, lang, tz):
+        """Add `lang` & `tz` to context, and add localized `datetime` values."""
+        self.Model = self.Model.with_context(lang=lang, tz=tz)
+        tzinfo = timezone(tz)
+        for record in self.records:
+            local_dt = tzinfo.localize(datetime.combine(record.date, time.min))
+            record.datetime = local_dt.astimezone(UTC).replace(tzinfo=None)
+
     def test_belgium(self):
         """ fr_BE - first day of the week = Monday """
+        self.set_context(lang='fr_BE', tz='Europe/Brussels')
         self.assertEqual(
             babel.Locale.parse("fr_BE").first_week_day,
             0,
         )
         self.env['res.lang']._activate_lang('fr_BE')
-        groups = self.Model.with_context(lang='fr_BE').read_group(
+        groups = self.Model.read_group(
             [('id', 'in', self.records.ids)], fields=['date'], groupby=['date:week'])
         self.assertDictEqual(
-            {week['date:week']: week['date_count'] for week in groups if week['date:week']},
+            {week['date:week']: week['date_count'] for week in groups},
             self.per_locale["fr_BE"],
             "Week groups not matching when the first day of the week is Monday"
         )
 
         # same test as above with week_number as aggregate
-        groups = self.Model.with_context(lang='fr_BE').read_group(
+        groups = self.Model.read_group(
             [('id', 'in', self.records.ids)], fields=['date'], groupby=['date:iso_week_number'])
         self.assertDictEqual(
-            {week['date:iso_week_number']: week['date_count'] for week in groups if week['date:iso_week_number']},
+            {week['date:iso_week_number']: week['date_count'] for week in groups},
             self.iso_weeks,
             "Week groups not matching when the first day of the week is Monday"
         )
 
+        # verify grouping on datetime is identical to grouping on date
+        groups = self.Model.read_group(
+            [('id', 'in', self.records.ids)],
+            fields=['datetime'],
+            groupby=['datetime:week'],
+        )
+        self.assertDictEqual(
+            {week['datetime:week']: week['datetime_count'] for week in groups},
+            self.per_locale['fr_BE'],
+            "Grouping by datetime:week should be identical to date:week",
+        )
+
     def test_syria(self):
         """ ar_SY - first day of the week = Saturday """
+        self.set_context(lang='ar_SY', tz='Asia/Damascus')
         self.assertEqual(
             babel.Locale.parse("ar_SY").first_week_day,
             5,
         )
         self.env['res.lang']._activate_lang('ar_SY')
-        groups = self.Model.with_context(lang='ar_SY').read_group(
+        groups = self.Model.read_group(
             [('id', 'in', self.records.ids)], fields=['date'], groupby=['date:week'])
         self.assertDictEqual(
-            {week['date:week']: week['date_count'] for week in groups if week['date:week']},
+            {week['date:week']: week['date_count'] for week in groups},
             self.per_locale["ar_SY"],
             "Week groups not matching when the first day of the week is Saturday"
         )
 
         # same test as above with week_number as aggregate
-        groups = self.Model.with_context(lang='ar_SY').read_group(
+        groups = self.Model.read_group(
             [('id', 'in', self.records.ids)], fields=['date'], groupby=['date:iso_week_number'])
         self.assertDictEqual(
-            {week['date:iso_week_number']: week['date_count'] for week in groups if week['date:iso_week_number']},
+            {week['date:iso_week_number']: week['date_count'] for week in groups},
             self.iso_weeks,
             "Week groups not matching when the first day of the week is Saturday"
         )
 
+        # verify grouping on datetime is identical to grouping on date
+        groups = self.Model.read_group(
+            [('id', 'in', self.records.ids)],
+            fields=['datetime'],
+            groupby=['datetime:week'],
+        )
+        self.assertDictEqual(
+            {week['datetime:week']: week['datetime_count'] for week in groups},
+            self.per_locale['ar_SY'],
+            "Grouping by datetime:week should be identical to date:week",
+        )
+
     def test_united_states(self):
         """ en_US - first day of the week = Sunday """
+        self.set_context(lang='en_US', tz='America/New_York')
         self.assertEqual(
             babel.Locale.parse("en_US").first_week_day,
             6,
         )
-        groups = self.Model.with_context(lang='en_US').read_group(
+        groups = self.Model.read_group(
             [('id', 'in', self.records.ids)], fields=['date'], groupby=['date:week'])
         self.assertDictEqual(
-            {week['date:week']: week['date_count'] for week in groups if week['date:week']},
+            {week['date:week']: week['date_count'] for week in groups},
             self.per_locale["en_US"],
             "Week groups not matching when the first day of the week is Sunday"
         )
 
         # same test as above with week_number as aggregate
-        groups = self.Model.with_context(lang='en_US').read_group(
+        groups = self.Model.read_group(
             [('id', 'in', self.records.ids)], fields=['date'], groupby=['date:iso_week_number'])
         self.assertDictEqual(
-            {week['date:iso_week_number']: week['date_count'] for week in groups if week['date:iso_week_number']},
+            {week['date:iso_week_number']: week['date_count'] for week in groups},
             self.iso_weeks,
             "Week groups not matching when the first day of the week is Sunday"
+        )
+
+        # verify grouping on datetime is identical to grouping on date
+        groups = self.Model.read_group(
+            [('id', 'in', self.records.ids)],
+            fields=['datetime'],
+            groupby=['datetime:week'],
+        )
+        self.assertDictEqual(
+            {week['datetime:week']: week['datetime_count'] for week in groups},
+            self.per_locale['en_US'],
+            "Grouping by datetime:week should be identical to date:week",
         )
