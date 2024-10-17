@@ -38,6 +38,25 @@ export class DiscussSidebarSubchannel extends Component {
         return this.props.thread;
     }
 
+    get commands() {
+        const commands = [];
+        if (this.thread.canUnpin) {
+            commands.push({
+                onSelect: () => this.thread.unpin(),
+                label: _t("Unpin Thread"),
+                icon: "oi oi-close",
+                sequence: 20,
+            });
+        }
+        return commands;
+    }
+
+    get sortedCommands() {
+        const commands = [...this.commands];
+        commands.sort((c1, c2) => c1.sequence - c2.sequence);
+        return commands;
+    }
+
     /** @param {MouseEvent} ev */
     openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");
