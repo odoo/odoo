@@ -17,27 +17,24 @@
     </xpath>
   </template>
 
-  <template id="portal_my_home_purchase" name="Requests for Quotation / Purchase Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="25">
-    <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
-          <t t-set="portal_vendor_category_enable" t-value="True"/>
-      </xpath>
-      <div id="portal_vendor_category" position="inside">
-          <t t-call="portal.portal_docs_entry">
-              <t t-set="icon" t-value="'/web/static/img/rfq.svg'"/>
-              <t t-set="text">Follow your Requests for Quotation</t>
-              <t t-set="title">Requests for Quotation</t>
-              <t t-set="url" t-value="'/my/rfq'"/>
-              <t t-set="placeholder_count" t-value="'rfq_count'"/>
-          </t>
-          <t t-call="portal.portal_docs_entry">
-              <t t-set="icon" t-value="'/purchase/static/src/img/calculator.svg'"/>
-              <t t-set="text">Follow orders you have to fulfill</t>
-              <t t-set="title">Our Orders</t>
-              <t t-set="url" t-value="'/my/purchase'"/>
-              <t t-set="placeholder_count" t-value="'purchase_count'"/>
-          </t>
-      </div>
-  </template>
+    <data noupdate="1">
+        <record id="portal_rfq" model="portal.entry">
+            <field name="title">Requests for Quotation</field>
+            <field name="text">Follow your Requests for Quotation</field>
+            <field name="url">/my/rfq</field>
+            <field name="icon">/web/static/img/rfq.svg</field>
+            <field name="placeholder_count">rfq_count</field>
+            <field name="bg_color">bg-light</field>
+        </record>
+        <record id="portal_purchase_orders" model="portal.entry">
+            <field name="title">Our Orders</field>
+            <field name="text">Follow orders you have to fulfill</field>
+            <field name="url">/my/purchase</field>
+            <field name="icon">/purchase/static/src/img/calculator.svg</field>
+            <field name="placeholder_count">purchase_count</field>
+            <field name="bg_color">bg-light</field>
+        </record>
+    </data>
 
   <template id="portal_my_purchase_rfqs" name="My Requests For Quotation">
       <t t-call="portal.portal_layout">

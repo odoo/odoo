@@ -38,27 +38,22 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home" name="Projects / Tasks" customize_show="True" inherit_id="portal.portal_my_home" priority="40">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
-            <t t-set="portal_service_category_enable" t-value="True"/>
-        </xpath>
-        <div id="portal_service_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/web/static/img/folder.svg'"/>
-                <t t-set="title">Projects</t>
-                <t t-set="url" t-value="'/my/projects'"/>
-                <t t-set="text">Follow the evolution of your projects</t>
-                <t t-set="placeholder_count" t-value="'project_count'"/>
-            </t>
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/project/static/src/img/tasks.svg'"/>
-                <t t-set="title">Tasks</t>
-                <t t-set="url" t-value="'/my/tasks'"/>
-                <t t-set="text">Follow and comments tasks of your projects</t>
-                <t t-set="placeholder_count" t-value="'task_count'"/>
-            </t>
-        </div>
-    </template>
+    <data noupdate="1">
+        <record id="portal_projects" model="portal.entry">
+            <field name="title">Projects</field>
+            <field name="text">Follow the evolution of your projects</field>
+            <field name="url">/my/projects</field>
+            <field name="icon">/web/static/img/folder.svg</field>
+            <field name="placeholder_count">project_count</field>
+        </record>
+        <record id="portal_tasks" model="portal.entry">
+            <field name="title">Tasks</field>
+            <field name="text">Follow and comments tasks of your projects</field>
+            <field name="url">/my/tasks</field>
+            <field name="icon">/project/static/src/img/tasks.svg</field>
+            <field name="placeholder_count">task_count</field>
+        </record>
+    </data>
 
     <template id="portal_my_projects" name="My Projects">
         <t t-call="portal.portal_layout">
