@@ -217,6 +217,7 @@ class TestFrontend(TestFrontendCommon):
                 (4, self.env.ref('account.group_account_invoice').id),
             ]
         })
+
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('pos_restaurant_sync')
 
@@ -236,10 +237,13 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('TableMergeUnmergeTour', login="pos_admin")
 
     def test_02_others_bis(self):
+        # disable kitchen printer to avoid printing errors
+        self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('ControlButtonsTour', login="pos_admin")
 
     def test_04_ticket_screen(self):
+        self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosResTicketScreenTour')
 
@@ -263,6 +267,8 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('SplitBillScreenTour2')
 
     def test_07_split_bill_screen(self):
+        # disable kitchen printer to avoid printing errors
+        self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour3')
 
@@ -273,6 +279,8 @@ class TestFrontend(TestFrontendCommon):
     def test_09_combo_split_bill(self):
         setup_product_combo_items(self)
         self.office_combo.product_variant_id.write({'lst_price': 40})
+        # disable kitchen printer to avoid printing errors
+        self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour4ProductCombo')
 
