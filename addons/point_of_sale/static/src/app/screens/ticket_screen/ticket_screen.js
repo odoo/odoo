@@ -252,9 +252,7 @@ export class TicketScreen extends Component {
             const children = refundComboParent.refunded_orderline_id.combo_line_ids
                 .map((l) => l.refund_orderline_ids)
                 .flat();
-            refundComboParent.update({
-                combo_line_ids: [["link", ...children]],
-            });
+            refundComboParent.combo_line_ids = [["link", ...children]];
         }
 
         //Add a check too see if the fiscal position exist in the pos
@@ -269,7 +267,7 @@ export class TicketScreen extends Component {
         }
 
         if (order.fiscal_position_id) {
-            destinationOrder.update({ fiscal_position_id: order.fiscal_position_id });
+            destinationOrder.fiscal_position_id = order.fiscal_position_id;
         }
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);
