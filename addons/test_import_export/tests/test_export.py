@@ -108,6 +108,28 @@ class TestExport(XlsxCreatorCase):
             ],
         )
 
+    def test_export_template(self):
+        def get_namelist(export_id):
+            res = self.url_open(
+                "/web/export/namelist",
+                data=json.dumps({"params": {"model": 'res.users', 'export_id': export_id}}),
+                headers={"Content-Type": "application/json"}
+            )
+            return json.loads(res.content)['result']
+
+        export = self.env['ir.exports'].create([{
+            'name': 'Export of 3 fields',
+            'resource': 'res.users',
+            'export_fields': [(0, 0, {'name': 'partner_id'}),
+                              (0, 0, {'name': 'login'}),
+                              (0, 0, {'name': 'active'})]
+        }])
+
+        self.assertEqual(get_namelist(export.id),
+                         [{'field_type': 'many2one', 'id': 'partner_id', 'string': 'Related Partner'},
+                          {'field_type': 'char', 'id': 'login', 'string': 'Login'},
+                          {'field_type': 'boolean', 'id': 'active', 'string': 'Active'}])
+
 
 @tagged('-at_install', 'post_install')
 class TestGroupedExport(XlsxCreatorCase):
