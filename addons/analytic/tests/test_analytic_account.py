@@ -191,3 +191,21 @@ class TestAnalyticAccount(AnalyticCommon):
         })
         plan = self.env['account.analytic.plan'].with_user(analyst).create({'name': 'test plan'})
         self.assertEqual(plan.create_uid, analyst)
+
+    def test_analytic_account_branches(self):
+        """
+        Test that an analytic account defined in a parent company is accessible in its branches (children)
+        """
+        # timesheet adds a rule to forcer a project_id; account overrides it
+        timesheet_user = self.env.ref('hr_timesheet.group_hr_timesheet_user', raise_if_not_found=False)
+        account_user = self.env.ref('account.analytic.model_account_analytic_line', raise_if_not_found=False)
+        if timesheet_user and not account_user:
+            self.skipTest("`hr_timesheet` overrides analytic rights. Without `account` the test would crash")
+
+        self.analytic_account_1.company_id = self.company_data
+        self.env['account.analytic.line'].create({
+            'name': 'company specific account',
+            'account_id': self.analytic_account_1.id,
+            'amount': 100,
+            'company_id': self.company_b_branch.id,
+        })
