@@ -50,13 +50,17 @@ class AccountFiscalPosition(models.Model):
     zip_to = fields.Char(string='Zip Range To')
     # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
     states_count = fields.Integer(compute='_compute_states_count')
-    foreign_vat = fields.Char(string="Foreign Tax ID", help="The tax ID of your company in the region mapped by this fiscal position.")
+    foreign_vat = fields.Char(string="Foreign Tax ID", inverse="_inverse_foreign_vat", help="The tax ID of your company in the region mapped by this fiscal position.")
 
     # Technical field used to display a banner on top of foreign vat fiscal positions,
     # in order to ease the instantiation of foreign taxes when possible.
     foreign_vat_header_mode = fields.Selection(
         selection=[('templates_found', "Templates Found"), ('no_template', "No Template")],
         compute='_compute_foreign_vat_header_mode')
+
+    def _inverse_foreign_vat(self):
+        # Hook for extension
+        pass
 
     def _compute_states_count(self):
         for position in self:
