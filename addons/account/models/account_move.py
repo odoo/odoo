@@ -291,6 +291,15 @@ class AccountMove(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
     company_price_include = fields.Selection(related='company_id.account_price_include', readonly=True)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'account.move')], string='Attachments')
+    audit_trail_message_ids = fields.One2many(
+        'mail.message',
+        'res_id',
+        domain=[
+            ('model', '=', 'account.move'),
+            ('message_type', '=', 'notification'),
+        ],
+        string='Audit Trail Messages',
+    )
 
     # === Hash Fields === #
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
