@@ -66,6 +66,12 @@ patch(Thread.prototype, {
         this.loadSubChannelsDone = false;
         this.lastSubChannelLoaded = null;
     },
+    get canLeave() {
+        return !this.parent_channel_id && super.canLeave;
+    },
+    get canUnpin() {
+        return (this.parent_channel_id && this.importantCounter === 0) || super.canUnpin;
+    },
     get allowCalls() {
         return super.allowCalls && !this.parent_channel_id;
     },
