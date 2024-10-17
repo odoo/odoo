@@ -1,0 +1,82 @@
+Metadata-Version: 2.0
+Name: style
+Version: 1.1.0
+Summary: 🌈 Terminal string styling
+Home-page: https://github.com/lmittmann/style
+Author: lmittmann
+Author-email: UNKNOWN
+License: MIT
+Keywords: style,color,ansi,terminal styling,chalk
+Platform: UNKNOWN
+
+style
+=====
+
+|Build Status| |PyPI version|
+
+**style** is a simple terminal string styling library. Its API is a port of the popular
+`chalk <https://github.com/chalk/chalk>`__ module for javascript.
+
+
+Install
+-------
+
+::
+
+    $ pip install style
+
+
+Usage
+-----
+
+.. code:: py
+
+    import style
+
+    print(style.red('Hello', style.bold('world') + '!'))
+
+
+API
+---
+
+style.\ ``style*[.style](*objects, sep=' ')``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Chain `styles <#styles>`__ and call the last one as a method with an argument. Order doesn't matter, and later styles
+take precedence in case of a conflict, e.g. ``style.red.yellow.green`` is equivalent to ``style.green``. Styles can
+be nested.
+
+Multiple arguments will be separated by ``sep``, a space by default.
+
+style.\ ``enabled``
+~~~~~~~~~~~~~~~~~~~
+
+Color support is automatically detected, but can also be changed manually.
+
+- set ``style.enabled`` to ``True`` or ``False``
+- use the command line parameter ``--color`` or ``--no-color``
+
+
+Styles
+------
+
++---------------------+-------------------------------------+-------------------------------------------+
+| Modifiers           | Colors                              | Background colors                         |
++=====================+===============+=====================+==================+========================+
+| - ``bold``          | - ``black``   | - ``light_black``   | - ``on_black``   | - ``on_light_black``   |
+| - ``dim``           | - ``red``     | - ``light_red``     | - ``on_red``     | - ``on_light_red``     |
+| - ``italic``        | - ``green``   | - ``light_green``   | - ``on_green``   | - ``on_light_green``   |
+| - ``underline``     | - ``yellow``  | - ``light_yellow``  | - ``on_yellow``  | - ``on_light_yellow``  |
+| - ``inverse``       | - ``blue``    | - ``light_blue``    | - ``on_blue``    | - ``on_light_blue``    |
+| - ``hidden``        | - ``magenta`` | - ``light_magenta`` | - ``on_magenta`` | - ``on_light_magenta`` |
+| - ``strikethrough`` | - ``cyan``    | - ``light_cyan``    | - ``on_cyan``    | - ``on_light_cyan``    |
+|                     | - ``white``   | - ``light_white``   | - ``on_white``   | - ``on_light_white``   |
++---------------------+---------------+---------------------+------------------+------------------------+
+
+
+.. |Build Status| image:: https://travis-ci.org/lmittmann/style.svg?branch=master
+    :target: https://travis-ci.org/lmittmann/style
+.. |PyPI version| image:: https://img.shields.io/pypi/v/style.svg
+    :target: https://pypi.python.org/pypi/style
+
+

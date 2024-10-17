@@ -57,3 +57,17 @@ domain="[('author_ids','=',False)]"/>
 </search>
 </field>
 </record>
+
+<form>
+    <group>
+        <group>
+        <field name="name"/>
+        <field name="author_ids" widget="many2many_
+tags"/>
+        </group>
+        <group>
+            <field name="short_name"/>
+            <field name="date_release"/>
+        </group>
+    </group>
+</from>
