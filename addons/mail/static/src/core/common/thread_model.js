@@ -505,7 +505,7 @@ export class Thread extends Record {
     }
 
     get showUnreadBanner() {
-        return this.selfMember?.localMessageUnreadCounter > 0;
+        return !this.selfMember?.hideUnreadBanner && this.selfMember?.localMessageUnreadCounter > 0;
     }
 
     get rpcParams() {
