@@ -1138,7 +1138,7 @@ class Users(models.Model):
             if not user.id:
                 return False
 
-        if not (self.env.su or user == self.env.user or user._has_group('base.group_user')):
+        if not (self.env.su or user == self.env.user or self.env.user._has_group('base.group_user')):
             # this prevents RPC calls from non-internal users to retrieve
             # information about other users
             raise AccessError(_("You can ony call user.has_group() with your current user."))
