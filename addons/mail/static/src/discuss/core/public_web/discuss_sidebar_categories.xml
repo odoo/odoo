@@ -144,6 +144,7 @@
                     'text-muted': !(thread.selfMember?.message_unread_counter > 0 and !thread.isMuted),
                 }"/>
                 <span class="flex-grow-1"/>
+                <t t-if="!store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.commands"/>
                 <span t-if="thread.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge fw-bold top-0 {{thread.isMuted ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute top-0 o-compact': store.discuss.isSidebarCompact }" t-esc="thread.importantCounter"/>
             </button>
             <t t-if="thread.selfMember?.message_unread_counter > 0 and !thread.isMuted and thread.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>

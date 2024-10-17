@@ -41,6 +41,22 @@ test("navigate to sub channel", async () => {
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
 });
 
+test("can manually unpin a sub-thread", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    // Open thread so this is pinned
+    await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await click("button[title='Threads']");
+    await click("button[aria-label='Create Thread']");
+    await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
+    await click("button[title='Unpin Thread']", {
+        parent: [".o-mail-DiscussSidebar-item", { text: "New Thread" }],
+    });
+    await contains(".o-mail-DiscussSidebar-item", { text: "New Thread", count: 0 });
+});
+
 test("open sub channel menu from notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
