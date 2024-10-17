@@ -52,6 +52,7 @@ class PurchaseOrderLine(models.Model):
 
     # Replace by invoiced Qty
     qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits='Product Unit of Measure', store=True)
+    qty_invoiced_posted = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty (posted)", digits='Product Unit of Measure', store=True)
 
     qty_received_method = fields.Selection([('manual', 'Manual')], string="Received Qty Method", compute='_compute_qty_received_method', store=True,
         help="According to product configuration, the received quantity can be automatically computed by mechanism:\n"
@@ -129,15 +130,18 @@ class PurchaseOrderLine(models.Model):
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):
         for line in self:
-            # compute qty_invoiced
-            qty = 0.0
+            # compute qty_invoiced & qty_invoiced_posted
+            qty_invoiced = 0.0
+            qty_invoice_posted = 0.0
             for inv_line in line._get_invoice_lines():
+                sign = 1 if inv_line.move_id.move_type == 'in_invoice' else -1
+                qty = sign * inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
                 if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
-                    if inv_line.move_id.move_type == 'in_invoice':
-                        qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
-                    elif inv_line.move_id.move_type == 'in_refund':
-                        qty -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
-            line.qty_invoiced = qty
+                    qty_invoiced += qty
+                if inv_line.move_id.state == 'posted':
+                    qty_invoice_posted += qty
+            line.qty_invoiced = qty_invoiced
+            line.qty_invoiced_posted = qty_invoice_posted
 
             # compute qty_to_invoice
             if line.order_id.state in ['purchase', 'done']:
