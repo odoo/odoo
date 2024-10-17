@@ -1,6 +1,3 @@
-# The following comment should be removed at some point in the future.
-# mypy: strict-optional=False
-
 import os
 import sys
 from typing import Optional, Tuple
@@ -20,8 +17,11 @@ def glibc_version_string_confstr() -> Optional[str]:
     if sys.platform == "win32":
         return None
     try:
+        gnu_libc_version = os.confstr("CS_GNU_LIBC_VERSION")
+        if gnu_libc_version is None:
+            return None
         # os.confstr("CS_GNU_LIBC_VERSION") returns a string like "glibc 2.17":
-        _, version = os.confstr("CS_GNU_LIBC_VERSION").split()
+        _, version = gnu_libc_version.split()
     except (AttributeError, OSError, ValueError):
         # os.confstr() or CS_GNU_LIBC_VERSION not available (or a bad value)...
         return None
@@ -40,7 +40,20 @@ def glibc_version_string_ctypes() -> Optional[str]:
     # manpage says, "If filename is NULL, then the returned handle is for the
     # main program". This way we can let the linker do the work to figure out
     # which libc our process is actually using.
-    process_namespace = ctypes.CDLL(None)
+    #
+    # We must also handle the special case where the executable is not a
+    # dynamically linked executable. This can occur when using musl libc,
+    # for example. In this situation, dlopen() will error, leading to an
+    # OSError. Interestingly, at least in the case of musl, there is no
+    # errno set on the OSError. The single string argument used to construct
+    # OSError comes from libc itself and is therefore not portable to
+    # hard code here. In any case, failure to call dlopen() means we
+    # can't proceed, so we bail on our attempt.
+    try:
+        process_namespace = ctypes.CDLL(None)
+    except OSError:
+        return None
+
     try:
         gnu_get_libc_version = process_namespace.gnu_get_libc_version
     except AttributeError:
@@ -50,7 +63,7 @@ def glibc_version_string_ctypes() -> Optional[str]:
 
     # Call gnu_get_libc_version, which returns a string like "2.5"
     gnu_get_libc_version.restype = ctypes.c_char_p
-    version_str = gnu_get_libc_version()
+    version_str: str = gnu_get_libc_version()
     # py2 / py3 compatibility:
     if not isinstance(version_str, str):
         version_str = version_str.decode("ascii")

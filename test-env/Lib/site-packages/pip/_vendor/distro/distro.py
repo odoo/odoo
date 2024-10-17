@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2015,2016,2017 Nir Cohen
+# Copyright 2015-2021 Nir Cohen
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ except ImportError:
     # Python 3.7
     TypedDict = dict
 
-__version__ = "1.8.0"
+__version__ = "1.9.0"
 
 
 class VersionDict(TypedDict):
@@ -125,6 +125,7 @@ _DISTRO_RELEASE_BASENAME_PATTERN = re.compile(r"(\w+)[-_](release|version)$")
 # Base file names to be looked up for if _UNIXCONFDIR is not readable.
 _DISTRO_RELEASE_BASENAMES = [
     "SuSE-release",
+    "altlinux-release",
     "arch-release",
     "base-release",
     "centos-release",
@@ -151,6 +152,8 @@ _DISTRO_RELEASE_IGNORE_BASENAMES = (
     "system-release",
     "plesk-release",
     "iredmail-release",
+    "board-release",
+    "ec2_version",
 )
 
 
@@ -243,6 +246,7 @@ def id() -> str:
     "rocky"         Rocky Linux
     "aix"           AIX
     "guix"          Guix System
+    "altlinux"      ALT Linux
     ==============  =========================================
 
     If you have a need to get distros for reliable IDs added into this set,
@@ -991,10 +995,10 @@ class LinuxDistribution:
 
         For details, see :func:`distro.info`.
         """
-        return dict(
+        return InfoDict(
             id=self.id(),
             version=self.version(pretty, best),
-            version_parts=dict(
+            version_parts=VersionDict(
                 major=self.major_version(best),
                 minor=self.minor_version(best),
                 build_number=self.build_number(best),

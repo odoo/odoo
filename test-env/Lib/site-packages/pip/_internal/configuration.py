@@ -59,8 +59,8 @@ def _disassemble_key(name: str) -> List[str]:
     if "." not in name:
         error_message = (
             "Key does not contain dot separated section and key. "
-            "Perhaps you wanted to use 'global.{}' instead?"
-        ).format(name)
+            f"Perhaps you wanted to use 'global.{name}' instead?"
+        )
         raise ConfigurationError(error_message)
     return name.split(".", 1)
 
@@ -210,8 +210,15 @@ class Configuration:
             # Ensure directory exists.
             ensure_dir(os.path.dirname(fname))
 
-            with open(fname, "w") as f:
-                parser.write(f)
+            # Ensure directory's permission(need to be writeable)
+            try:
+                with open(fname, "w") as f:
+                    parser.write(f)
+            except OSError as error:
+                raise ConfigurationError(
+                    f"An error occurred while writing to the configuration file "
+                    f"{fname}: {error}"
+                )
 
     #
     # Private routines
@@ -320,32 +327,34 @@ class Configuration:
     def iter_config_files(self) -> Iterable[Tuple[Kind, List[str]]]:
         """Yields variant and configuration files associated with it.
 
-        This should be treated like items of a dictionary.
+        This should be treated like items of a dictionary. The order
+        here doesn't affect what gets overridden. That is controlled
+        by OVERRIDE_ORDER. However this does control the order they are
+        displayed to the user. It's probably most ergononmic to display
+        things in the same order as OVERRIDE_ORDER
         """
         # SMELL: Move the conditions out of this function
 
-        # environment variables have the lowest priority
-        config_file = os.environ.get("PIP_CONFIG_FILE", None)
-        if config_file is not None:
-            yield kinds.ENV, [config_file]
-        else:
-            yield kinds.ENV, []
-
+        env_config_file = os.environ.get("PIP_CONFIG_FILE", None)
         config_files = get_configuration_files()
 
-        # at the base we have any global configuration
         yield kinds.GLOBAL, config_files[kinds.GLOBAL]
 
-        # per-user configuration next
+        # per-user config is not loaded when env_config_file exists
         should_load_user_config = not self.isolated and not (
-            config_file and os.path.exists(config_file)
+            env_config_file and os.path.exists(env_config_file)
         )
         if should_load_user_config:
             # The legacy config file is overridden by the new config file
             yield kinds.USER, config_files[kinds.USER]
 
-        # finally virtualenv configuration first trumping others
+        # virtualenv config
         yield kinds.SITE, config_files[kinds.SITE]
+
+        if env_config_file is not None:
+            yield kinds.ENV, [env_config_file]
+        else:
+            yield kinds.ENV, []
 
     def get_values_in_config(self, variant: Kind) -> Dict[str, Any]:
         """Get values present in a config file"""

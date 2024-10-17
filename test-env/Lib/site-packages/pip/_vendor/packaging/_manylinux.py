@@ -1,122 +1,72 @@
+from __future__ import annotations
+
 import collections
+import contextlib
 import functools
 import os
 import re
-import struct
 import sys
 import warnings
-from typing import IO, Dict, Iterator, NamedTuple, Optional, Tuple
+from typing import Generator, Iterator, NamedTuple, Sequence
+
+from ._elffile import EIClass, EIData, ELFFile, EMachine
+
+EF_ARM_ABIMASK = 0xFF000000
+EF_ARM_ABI_VER5 = 0x05000000
+EF_ARM_ABI_FLOAT_HARD = 0x00000400
 
 
-# Python does not provide platform information at sufficient granularity to
-# identify the architecture of the running executable in some cases, so we
-# determine it dynamically by reading the information from the running
-# process. This only applies on Linux, which uses the ELF format.
-class _ELFFileHeader:
-    # https://en.wikipedia.org/wiki/Executable_and_Linkable_Format#File_header
-    class _InvalidELFFileHeader(ValueError):
-        """
-        An invalid ELF file header was found.
-        """
-
-    ELF_MAGIC_NUMBER = 0x7F454C46
-    ELFCLASS32 = 1
-    ELFCLASS64 = 2
-    ELFDATA2LSB = 1
-    ELFDATA2MSB = 2
-    EM_386 = 3
-    EM_S390 = 22
-    EM_ARM = 40
-    EM_X86_64 = 62
-    EF_ARM_ABIMASK = 0xFF000000
-    EF_ARM_ABI_VER5 = 0x05000000
-    EF_ARM_ABI_FLOAT_HARD = 0x00000400
-
-    def __init__(self, file: IO[bytes]) -> None:
-        def unpack(fmt: str) -> int:
-            try:
-                data = file.read(struct.calcsize(fmt))
-                result: Tuple[int, ...] = struct.unpack(fmt, data)
-            except struct.error:
-                raise _ELFFileHeader._InvalidELFFileHeader()
-            return result[0]
-
-        self.e_ident_magic = unpack(">I")
-        if self.e_ident_magic != self.ELF_MAGIC_NUMBER:
-            raise _ELFFileHeader._InvalidELFFileHeader()
-        self.e_ident_class = unpack("B")
-        if self.e_ident_class not in {self.ELFCLASS32, self.ELFCLASS64}:
-            raise _ELFFileHeader._InvalidELFFileHeader()
-        self.e_ident_data = unpack("B")
-        if self.e_ident_data not in {self.ELFDATA2LSB, self.ELFDATA2MSB}:
-            raise _ELFFileHeader._InvalidELFFileHeader()
-        self.e_ident_version = unpack("B")
-        self.e_ident_osabi = unpack("B")
-        self.e_ident_abiversion = unpack("B")
-        self.e_ident_pad = file.read(7)
-        format_h = "<H" if self.e_ident_data == self.ELFDATA2LSB else ">H"
-        format_i = "<I" if self.e_ident_data == self.ELFDATA2LSB else ">I"
-        format_q = "<Q" if self.e_ident_data == self.ELFDATA2LSB else ">Q"
-        format_p = format_i if self.e_ident_class == self.ELFCLASS32 else format_q
-        self.e_type = unpack(format_h)
-        self.e_machine = unpack(format_h)
-        self.e_version = unpack(format_i)
-        self.e_entry = unpack(format_p)
-        self.e_phoff = unpack(format_p)
-        self.e_shoff = unpack(format_p)
-        self.e_flags = unpack(format_i)
-        self.e_ehsize = unpack(format_h)
-        self.e_phentsize = unpack(format_h)
-        self.e_phnum = unpack(format_h)
-        self.e_shentsize = unpack(format_h)
-        self.e_shnum = unpack(format_h)
-        self.e_shstrndx = unpack(format_h)
-
-
-def _get_elf_header() -> Optional[_ELFFileHeader]:
+# `os.PathLike` not a generic type until Python 3.9, so sticking with `str`
+# as the type for `path` until then.
+@contextlib.contextmanager
+def _parse_elf(path: str) -> Generator[ELFFile | None, None, None]:
     try:
-        with open(sys.executable, "rb") as f:
-            elf_header = _ELFFileHeader(f)
-    except (OSError, TypeError, _ELFFileHeader._InvalidELFFileHeader):
-        return None
-    return elf_header
+        with open(path, "rb") as f:
+            yield ELFFile(f)
+    except (OSError, TypeError, ValueError):
+        yield None
 
 
-def _is_linux_armhf() -> bool:
+def _is_linux_armhf(executable: str) -> bool:
     # hard-float ABI can be detected from the ELF header of the running
     # process
     # https://static.docs.arm.com/ihi0044/g/aaelf32.pdf
-    elf_header = _get_elf_header()
-    if elf_header is None:
-        return False
-    result = elf_header.e_ident_class == elf_header.ELFCLASS32
-    result &= elf_header.e_ident_data == elf_header.ELFDATA2LSB
-    result &= elf_header.e_machine == elf_header.EM_ARM
-    result &= (
-        elf_header.e_flags & elf_header.EF_ARM_ABIMASK
-    ) == elf_header.EF_ARM_ABI_VER5
-    result &= (
-        elf_header.e_flags & elf_header.EF_ARM_ABI_FLOAT_HARD
-    ) == elf_header.EF_ARM_ABI_FLOAT_HARD
-    return result
+    with _parse_elf(executable) as f:
+        return (
+            f is not None
+            and f.capacity == EIClass.C32
+            and f.encoding == EIData.Lsb
+            and f.machine == EMachine.Arm
+            and f.flags & EF_ARM_ABIMASK == EF_ARM_ABI_VER5
+            and f.flags & EF_ARM_ABI_FLOAT_HARD == EF_ARM_ABI_FLOAT_HARD
+        )
 
 
-def _is_linux_i686() -> bool:
-    elf_header = _get_elf_header()
-    if elf_header is None:
-        return False
-    result = elf_header.e_ident_class == elf_header.ELFCLASS32
-    result &= elf_header.e_ident_data == elf_header.ELFDATA2LSB
-    result &= elf_header.e_machine == elf_header.EM_386
-    return result
+def _is_linux_i686(executable: str) -> bool:
+    with _parse_elf(executable) as f:
+        return (
+            f is not None
+            and f.capacity == EIClass.C32
+            and f.encoding == EIData.Lsb
+            and f.machine == EMachine.I386
+        )
 
 
-def _have_compatible_abi(arch: str) -> bool:
-    if arch == "armv7l":
-        return _is_linux_armhf()
-    if arch == "i686":
-        return _is_linux_i686()
-    return arch in {"x86_64", "aarch64", "ppc64", "ppc64le", "s390x"}
+def _have_compatible_abi(executable: str, archs: Sequence[str]) -> bool:
+    if "armv7l" in archs:
+        return _is_linux_armhf(executable)
+    if "i686" in archs:
+        return _is_linux_i686(executable)
+    allowed_archs = {
+        "x86_64",
+        "aarch64",
+        "ppc64",
+        "ppc64le",
+        "s390x",
+        "loongarch64",
+        "riscv64",
+    }
+    return any(arch in allowed_archs for arch in archs)
 
 
 # If glibc ever changes its major version, we need to know what the last
@@ -124,7 +74,7 @@ def _have_compatible_abi(arch: str) -> bool:
 # For now, guess what the highest minor version might be, assume it will
 # be 50 for testing. Once this actually happens, update the dictionary
 # with the actual value.
-_LAST_GLIBC_MINOR: Dict[int, int] = collections.defaultdict(lambda: 50)
+_LAST_GLIBC_MINOR: dict[int, int] = collections.defaultdict(lambda: 50)
 
 
 class _GLibCVersion(NamedTuple):
@@ -132,7 +82,7 @@ class _GLibCVersion(NamedTuple):
     minor: int
 
 
-def _glibc_version_string_confstr() -> Optional[str]:
+def _glibc_version_string_confstr() -> str | None:
     """
     Primary implementation of glibc_version_string using os.confstr.
     """
@@ -141,17 +91,17 @@ def _glibc_version_string_confstr() -> Optional[str]:
     # platform module.
     # https://github.com/python/cpython/blob/fcf1d003bf4f0100c/Lib/platform.py#L175-L183
     try:
-        # os.confstr("CS_GNU_LIBC_VERSION") returns a string like "glibc 2.17".
-        version_string = os.confstr("CS_GNU_LIBC_VERSION")
+        # Should be a string like "glibc 2.17".
+        version_string: str | None = os.confstr("CS_GNU_LIBC_VERSION")
         assert version_string is not None
-        _, version = version_string.split()
+        _, version = version_string.rsplit()
     except (AssertionError, AttributeError, OSError, ValueError):
         # os.confstr() or CS_GNU_LIBC_VERSION not available (or a bad value)...
         return None
     return version
 
 
-def _glibc_version_string_ctypes() -> Optional[str]:
+def _glibc_version_string_ctypes() -> str | None:
     """
     Fallback implementation of glibc_version_string using ctypes.
     """
@@ -195,12 +145,12 @@ def _glibc_version_string_ctypes() -> Optional[str]:
     return version_str
 
 
-def _glibc_version_string() -> Optional[str]:
+def _glibc_version_string() -> str | None:
     """Returns glibc version string, or None if not using glibc."""
     return _glibc_version_string_confstr() or _glibc_version_string_ctypes()
 
 
-def _parse_glibc_version(version_str: str) -> Tuple[int, int]:
+def _parse_glibc_version(version_str: str) -> tuple[int, int]:
     """Parse glibc version.
 
     We use a regexp instead of str.split because we want to discard any
@@ -211,16 +161,16 @@ def _parse_glibc_version(version_str: str) -> Tuple[int, int]:
     m = re.match(r"(?P<major>[0-9]+)\.(?P<minor>[0-9]+)", version_str)
     if not m:
         warnings.warn(
-            "Expected glibc version with 2 components major.minor,"
-            " got: %s" % version_str,
+            f"Expected glibc version with 2 components major.minor,"
+            f" got: {version_str}",
             RuntimeWarning,
         )
         return -1, -1
     return int(m.group("major")), int(m.group("minor"))
 
 
-@functools.lru_cache()
-def _get_glibc_version() -> Tuple[int, int]:
+@functools.lru_cache
+def _get_glibc_version() -> tuple[int, int]:
     version_str = _glibc_version_string()
     if version_str is None:
         return (-1, -1)
@@ -228,13 +178,13 @@ def _get_glibc_version() -> Tuple[int, int]:
 
 
 # From PEP 513, PEP 600
-def _is_compatible(name: str, arch: str, version: _GLibCVersion) -> bool:
+def _is_compatible(arch: str, version: _GLibCVersion) -> bool:
     sys_glibc = _get_glibc_version()
     if sys_glibc < version:
         return False
     # Check for presence of _manylinux module.
     try:
-        import _manylinux  # noqa
+        import _manylinux
     except ImportError:
         return True
     if hasattr(_manylinux, "manylinux_compatible"):
@@ -264,12 +214,22 @@ _LEGACY_MANYLINUX_MAP = {
 }
 
 
-def platform_tags(linux: str, arch: str) -> Iterator[str]:
-    if not _have_compatible_abi(arch):
+def platform_tags(archs: Sequence[str]) -> Iterator[str]:
+    """Generate manylinux tags compatible to the current platform.
+
+    :param archs: Sequence of compatible architectures.
+        The first one shall be the closest to the actual architecture and be the part of
+        platform tag after the ``linux_`` prefix, e.g. ``x86_64``.
+        The ``linux_`` prefix is assumed as a prerequisite for the current platform to
+        be manylinux-compatible.
+
+    :returns: An iterator of compatible manylinux tags.
+    """
+    if not _have_compatible_abi(sys.executable, archs):
         return
     # Oldest glibc to be supported regardless of architecture is (2, 17).
     too_old_glibc2 = _GLibCVersion(2, 16)
-    if arch in {"x86_64", "i686"}:
+    if set(archs) & {"x86_64", "i686"}:
         # On x86/i686 also oldest glibc to be supported is (2, 5).
         too_old_glibc2 = _GLibCVersion(2, 4)
     current_glibc = _GLibCVersion(*_get_glibc_version())
@@ -283,19 +243,20 @@ def platform_tags(linux: str, arch: str) -> Iterator[str]:
     for glibc_major in range(current_glibc.major - 1, 1, -1):
         glibc_minor = _LAST_GLIBC_MINOR[glibc_major]
         glibc_max_list.append(_GLibCVersion(glibc_major, glibc_minor))
-    for glibc_max in glibc_max_list:
-        if glibc_max.major == too_old_glibc2.major:
-            min_minor = too_old_glibc2.minor
-        else:
-            # For other glibc major versions oldest supported is (x, 0).
-            min_minor = -1
-        for glibc_minor in range(glibc_max.minor, min_minor, -1):
-            glibc_version = _GLibCVersion(glibc_max.major, glibc_minor)
-            tag = "manylinux_{}_{}".format(*glibc_version)
-            if _is_compatible(tag, arch, glibc_version):
-                yield linux.replace("linux", tag)
-            # Handle the legacy manylinux1, manylinux2010, manylinux2014 tags.
-            if glibc_version in _LEGACY_MANYLINUX_MAP:
-                legacy_tag = _LEGACY_MANYLINUX_MAP[glibc_version]
-                if _is_compatible(legacy_tag, arch, glibc_version):
-                    yield linux.replace("linux", legacy_tag)
+    for arch in archs:
+        for glibc_max in glibc_max_list:
+            if glibc_max.major == too_old_glibc2.major:
+                min_minor = too_old_glibc2.minor
+            else:
+                # For other glibc major versions oldest supported is (x, 0).
+                min_minor = -1
+            for glibc_minor in range(glibc_max.minor, min_minor, -1):
+                glibc_version = _GLibCVersion(glibc_max.major, glibc_minor)
+                tag = "manylinux_{}_{}".format(*glibc_version)
+                if _is_compatible(arch, glibc_version):
+                    yield f"{tag}_{arch}"
+                # Handle the legacy manylinux1, manylinux2010, manylinux2014 tags.
+                if glibc_version in _LEGACY_MANYLINUX_MAP:
+                    legacy_tag = _LEGACY_MANYLINUX_MAP[glibc_version]
+                    if _is_compatible(arch, glibc_version):
+                        yield f"{legacy_tag}_{arch}"

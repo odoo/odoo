@@ -4,7 +4,7 @@
 
     A simple modeline parser (based on pymodeline).
 
-    :copyright: Copyright 2006-2022 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2024 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
 
@@ -19,7 +19,7 @@ modeline_re = re.compile(r'''
 ''', re.VERBOSE)
 
 
-def get_filetype_from_line(l):
+def get_filetype_from_line(l): # noqa: E741
     m = modeline_re.search(l)
     if m:
         return m.group(1)
@@ -30,8 +30,8 @@ def get_filetype_from_buffer(buf, max_lines=5):
     Scan the buffer for modelines and return filetype if one is found.
     """
     lines = buf.splitlines()
-    for l in lines[-1:-max_lines-1:-1]:
-        ret = get_filetype_from_line(l)
+    for line in lines[-1:-max_lines-1:-1]:
+        ret = get_filetype_from_line(line)
         if ret:
             return ret
     for i in range(max_lines, -1, -1):

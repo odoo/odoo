@@ -3,6 +3,8 @@ from typing import Optional
 from pip._internal.models.format_control import FormatControl
 
 
+# TODO: This needs Python 3.10's improved slots support for dataclasses
+# to be converted into a dataclass.
 class SelectionPreferences:
     """
     Encapsulates the candidate selection preferences for downloading

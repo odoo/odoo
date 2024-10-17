@@ -336,17 +336,6 @@ def get_scheme(
         if skip_linux_system_special_case:
             continue
 
-        # On Python 3.7 and earlier, sysconfig does not include sys.abiflags in
-        # the "pythonX.Y" part of the path, but distutils does.
-        skip_sysconfig_abiflag_bug = (
-            sys.version_info < (3, 8)
-            and not WINDOWS
-            and k in ("headers", "platlib", "purelib")
-            and tuple(_fix_abiflags(old_v.parts)) == new_v.parts
-        )
-        if skip_sysconfig_abiflag_bug:
-            continue
-
         # MSYS2 MINGW's sysconfig patch does not include the "site-packages"
         # part of the path. This is incorrect and will be fixed in MSYS.
         skip_msys2_mingw_bug = (

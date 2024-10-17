@@ -34,7 +34,7 @@ def check_requires_python(
     return python_version in requires_python_specifier
 
 
-@functools.lru_cache(maxsize=512)
+@functools.lru_cache(maxsize=2048)
 def get_requirement(req_string: str) -> Requirement:
     """Construct a packaging.Requirement object with caching"""
     # Parsing requirement strings is expensive, and is also expected to happen

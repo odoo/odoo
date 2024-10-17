@@ -1,15 +1,11 @@
 import hashlib
-from typing import TYPE_CHECKING, BinaryIO, Dict, Iterable, List, Optional
+from typing import TYPE_CHECKING, BinaryIO, Dict, Iterable, List, NoReturn, Optional
 
 from pip._internal.exceptions import HashMismatch, HashMissing, InstallationError
 from pip._internal.utils.misc import read_chunks
 
 if TYPE_CHECKING:
     from hashlib import _Hash
-
-    # NoReturn introduced in 3.6.2; imported only for type checking to maintain
-    # pip compatibility with older patch versions of Python 3.6
-    from typing import NoReturn
 
 
 # The recommended hash algo of the moment. Change this whenever the state of
@@ -37,7 +33,7 @@ class Hashes:
         if hashes is not None:
             for alg, keys in hashes.items():
                 # Make sure values are always sorted (to ease equality checks)
-                allowed[alg] = sorted(keys)
+                allowed[alg] = [k.lower() for k in sorted(keys)]
         self._allowed = allowed
 
     def __and__(self, other: "Hashes") -> "Hashes":
@@ -104,6 +100,13 @@ class Hashes:
     def check_against_path(self, path: str) -> None:
         with open(path, "rb") as file:
             return self.check_against_file(file)
+
+    def has_one_of(self, hashes: Dict[str, str]) -> bool:
+        """Return whether any of the given hashes are allowed."""
+        for hash_name, hex_digest in hashes.items():
+            if self.is_hash_allowed(hash_name, hex_digest):
+                return True
+        return False
 
     def __bool__(self) -> bool:
         """Return whether I know any known-good hashes."""

@@ -12,8 +12,8 @@ def direct_url_as_pep440_direct_reference(direct_url: DirectUrl, name: str) -> s
     requirement = name + " @ "
     fragments = []
     if isinstance(direct_url.info, VcsInfo):
-        requirement += "{}+{}@{}".format(
-            direct_url.info.vcs, direct_url.url, direct_url.info.commit_id
+        requirement += (
+            f"{direct_url.info.vcs}+{direct_url.url}@{direct_url.info.commit_id}"
         )
     elif isinstance(direct_url.info, ArchiveInfo):
         requirement += direct_url.url

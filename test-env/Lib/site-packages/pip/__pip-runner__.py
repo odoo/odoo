@@ -8,8 +8,8 @@ an import statement.
 
 import sys
 
-# Copied from setup.py
-PYTHON_REQUIRES = (3, 7)
+# Copied from pyproject.toml
+PYTHON_REQUIRES = (3, 8)
 
 
 def version_str(version):  # type: ignore

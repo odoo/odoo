@@ -2,28 +2,44 @@
 """
 
 import logging
-from typing import Callable, Dict, List, NamedTuple, Optional, Set, Tuple
+from contextlib import suppress
+from email.parser import Parser
+from functools import reduce
+from typing import (
+    Callable,
+    Dict,
+    FrozenSet,
+    Generator,
+    Iterable,
+    List,
+    NamedTuple,
+    Optional,
+    Set,
+    Tuple,
+)
 
 from pip._vendor.packaging.requirements import Requirement
+from pip._vendor.packaging.tags import Tag, parse_tag
 from pip._vendor.packaging.utils import NormalizedName, canonicalize_name
+from pip._vendor.packaging.version import Version
 
 from pip._internal.distributions import make_distribution_for_install_requirement
 from pip._internal.metadata import get_default_environment
-from pip._internal.metadata.base import DistributionVersion
+from pip._internal.metadata.base import BaseDistribution
 from pip._internal.req.req_install import InstallRequirement
 
 logger = logging.getLogger(__name__)
 
 
 class PackageDetails(NamedTuple):
-    version: DistributionVersion
+    version: Version
     dependencies: List[Requirement]
 
 
 # Shorthands
 PackageSet = Dict[NormalizedName, PackageDetails]
 Missing = Tuple[NormalizedName, Requirement]
-Conflicting = Tuple[NormalizedName, DistributionVersion, Requirement]
+Conflicting = Tuple[NormalizedName, Version, Requirement]
 
 MissingDict = Dict[NormalizedName, List[Missing]]
 ConflictingDict = Dict[NormalizedName, List[Conflicting]]
@@ -43,7 +59,7 @@ def create_package_set_from_installed() -> Tuple[PackageSet, bool]:
             package_set[name] = PackageDetails(dist.version, dependencies)
         except (OSError, ValueError) as e:
             # Don't crash on unreadable or broken metadata.
-            logger.warning("Error parsing requirements for %s: %s", name, e)
+            logger.warning("Error parsing dependencies of %s: %s", name, e)
             problems = True
     return package_set, problems
 
@@ -111,6 +127,22 @@ def check_install_conflicts(to_install: List[InstallRequirement]) -> ConflictDet
             package_set, should_ignore=lambda name: name not in whitelist
         ),
     )
+
+
+def check_unsupported(
+    packages: Iterable[BaseDistribution],
+    supported_tags: Iterable[Tag],
+) -> Generator[BaseDistribution, None, None]:
+    for p in packages:
+        with suppress(FileNotFoundError):
+            wheel_file = p.read_text("WHEEL")
+            wheel_tags: FrozenSet[Tag] = reduce(
+                frozenset.union,
+                map(parse_tag, Parser().parsestr(wheel_file).get_all("Tag", [])),
+                frozenset(),
+            )
+            if wheel_tags.isdisjoint(supported_tags):
+                yield p
 
 
 def _simulate_installation_of(

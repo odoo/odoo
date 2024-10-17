@@ -7,7 +7,7 @@
 
     Inspired by chartypes_create.py from the MoinMoin project.
 
-    :copyright: Copyright 2006-2022 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2024 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
 
@@ -104,7 +104,7 @@ def _handle_runs(char_list):  # pragma: no cover
         if a == b:
             yield a
         else:
-            yield '%s-%s' % (a, b)
+            yield f'{a}-{b}'
 
 
 if __name__ == '__main__':  # pragma: no cover
@@ -112,7 +112,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     categories = {'xid_start': [], 'xid_continue': []}
 
-    with open(__file__) as fp:
+    with open(__file__, encoding='utf-8') as fp:
         content = fp.read()
 
     header = content[:content.find('Cc =')]
@@ -136,18 +136,18 @@ if __name__ == '__main__':  # pragma: no cover
         if ('a' + c).isidentifier():
             categories['xid_continue'].append(c)
 
-    with open(__file__, 'w') as fp:
+    with open(__file__, 'w', encoding='utf-8') as fp:
         fp.write(header)
 
         for cat in sorted(categories):
             val = ''.join(_handle_runs(categories[cat]))
-            fp.write('%s = %a\n\n' % (cat, val))
+            fp.write(f'{cat} = {val!a}\n\n')
 
         cats = sorted(categories)
         cats.remove('xid_start')
         cats.remove('xid_continue')
-        fp.write('cats = %r\n\n' % cats)
+        fp.write(f'cats = {cats!r}\n\n')
 
-        fp.write('# Generated from unidata %s\n\n' % (unicodedata.unidata_version,))
+        fp.write(f'# Generated from unidata {unicodedata.unidata_version}\n\n')
 
         fp.write(footer)

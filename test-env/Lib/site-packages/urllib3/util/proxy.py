@@ -1,9 +1,18 @@
-from .ssl_ import create_urllib3_context, resolve_cert_reqs, resolve_ssl_version
+from __future__ import annotations
+
+import typing
+
+from .url import Url
+
+if typing.TYPE_CHECKING:
+    from ..connection import ProxyConfig
 
 
 def connection_requires_http_tunnel(
-    proxy_url=None, proxy_config=None, destination_scheme=None
-):
+    proxy_url: Url | None = None,
+    proxy_config: ProxyConfig | None = None,
+    destination_scheme: str | None = None,
+) -> bool:
     """
     Returns True if the connection requires an HTTP CONNECT through the proxy.
 
@@ -32,25 +41,3 @@ def connection_requires_http_tunnel(
 
     # Otherwise always use a tunnel.
     return True
-
-
-def create_proxy_ssl_context(
-    ssl_version, cert_reqs, ca_certs=None, ca_cert_dir=None, ca_cert_data=None
-):
-    """
-    Generates a default proxy ssl context if one hasn't been provided by the
-    user.
-    """
-    ssl_context = create_urllib3_context(
-        ssl_version=resolve_ssl_version(ssl_version),
-        cert_reqs=resolve_cert_reqs(cert_reqs),
-    )
-    if (
-        not ca_certs
-        and not ca_cert_dir
-        and not ca_cert_data
-        and hasattr(ssl_context, "load_default_certs")
-    ):
-        ssl_context.load_default_certs()
-
-    return ssl_context

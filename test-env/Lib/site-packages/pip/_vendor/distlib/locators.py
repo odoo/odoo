@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2012-2015 Vinay Sajip.
+# Copyright (C) 2012-2023 Vinay Sajip.
 # Licensed to the Python Software Foundation under a contributor agreement.
 # See LICENSE.txt and CONTRIBUTORS.txt.
 #
@@ -38,6 +38,7 @@ CHARSET = re.compile(r';\s*charset\s*=\s*(.*)\s*$', re.I)
 HTML_CONTENT_TYPE = re.compile('text/html|application/x(ht)?ml')
 DEFAULT_INDEX = 'https://pypi.org/pypi'
 
+
 def get_all_distribution_names(url=None):
     """
     Return all distribution names known by an index.
@@ -51,6 +52,7 @@ def get_all_distribution_names(url=None):
         return client.list_packages()
     finally:
         client('close')()
+
 
 class RedirectHandler(BaseRedirectHandler):
     """
@@ -82,6 +84,7 @@ class RedirectHandler(BaseRedirectHandler):
                                                   headers)
 
     http_error_301 = http_error_303 = http_error_307 = http_error_302
+
 
 class Locator(object):
     """
@@ -272,7 +275,7 @@ class Locator(object):
                             'python-version': ', '.join(
                                 ['.'.join(list(v[2:])) for v in wheel.pyver]),
                         }
-            except Exception as e:  # pragma: no cover
+            except Exception:  # pragma: no cover
                 logger.warning('invalid path for wheel: %s', path)
         elif not path.endswith(self.downloadable_extensions):  # pragma: no cover
             logger.debug('Not downloadable: %s', path)
@@ -293,7 +296,6 @@ class Locator(object):
                                 'filename': filename,
                                 'url': urlunparse((scheme, netloc, origpath,
                                                    params, query, '')),
-                                #'packagetype': 'sdist',
                             }
                             if pyver:  # pragma: no cover
                                 result['python-version'] = pyver
@@ -382,12 +384,9 @@ class Locator(object):
                     else:
                         if prereleases or not vcls(k).is_prerelease:
                             slist.append(k)
-                        # else:
-                            # logger.debug('skipping pre-release '
-                                         # 'version %s of %s', k, matcher.name)
                 except Exception:  # pragma: no cover
                     logger.warning('error matching %s with %r', matcher, k)
-                    pass # slist.append(k)
+                    pass  # slist.append(k)
             if len(slist) > 1:
                 slist = sorted(slist, key=scheme.key)
             if slist:
@@ -456,6 +455,7 @@ class PyPIRPCLocator(Locator):
                     result['digests'][url] = digest
         return result
 
+
 class PyPIJSONLocator(Locator):
     """
     This locator uses PyPI's JSON interface. It's very limited in functionality
@@ -476,7 +476,7 @@ class PyPIJSONLocator(Locator):
         url = urljoin(self.base_url, '%s/json' % quote(name))
         try:
             resp = self.opener.open(url)
-            data = resp.read().decode() # for now
+            data = resp.read().decode()  # for now
             d = json.loads(data)
             md = Metadata(scheme=self.scheme)
             data = d['info']
@@ -487,7 +487,7 @@ class PyPIJSONLocator(Locator):
             md.summary = data.get('summary')
             dist = Distribution(md)
             dist.locator = self
-            urls = d['urls']
+            # urls = d['urls']
             result[md.version] = dist
             for info in d['urls']:
                 url = info['url']
@@ -745,7 +745,7 @@ class SimpleScrapingLocator(Locator):
                             try:
                                 self._seen.add(link)
                                 if (not self._process_download(link) and
-                                    self._should_queue(link, url, rel)):
+                                        self._should_queue(link, url, rel)):
                                     logger.debug('Queueing %s from %s', link, url)
                                     self._to_fetch.put(link)
                             except MetadataInvalidError:  # e.g. invalid versions
@@ -756,7 +756,7 @@ class SimpleScrapingLocator(Locator):
                 # always do this, to avoid hangs :-)
                 self._to_fetch.task_done()
             if not url:
-                #logger.debug('Sentinel seen, quitting.')
+                # logger.debug('Sentinel seen, quitting.')
                 break
 
     def get_page(self, url):
@@ -832,6 +832,7 @@ class SimpleScrapingLocator(Locator):
             result.add(match.group(1))
         return result
 
+
 class DirectoryLocator(Locator):
     """
     This class locates distributions in a directory tree.
@@ -897,6 +898,7 @@ class DirectoryLocator(Locator):
                 break
         return result
 
+
 class JSONLocator(Locator):
     """
     This locator uses special extended metadata (not available on PyPI) and is
@@ -934,6 +936,7 @@ class JSONLocator(Locator):
                 result[dist.version] = dist
                 result['urls'].setdefault(dist.version, set()).add(info['url'])
         return result
+
 
 class DistPathLocator(Locator):
     """
@@ -1245,7 +1248,7 @@ class DependencyFinder(object):
             if name not in self.dists_by_name:
                 self.add_distribution(dist)
             else:
-                #import pdb; pdb.set_trace()
+                # import pdb; pdb.set_trace()
                 other = self.dists_by_name[name]
                 if other != dist:
                     self.try_to_replace(dist, other, problems)

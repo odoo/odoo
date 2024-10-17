@@ -4,7 +4,7 @@
 
     Other formatters: NullFormatter, RawTokenFormatter.
 
-    :copyright: Copyright 2006-2022 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2024 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
 
@@ -74,8 +74,7 @@ class RawTokenFormatter(Formatter):
             try:
                 colorize(self.error_color, '')
             except KeyError:
-                raise ValueError("Invalid color %r specified" %
-                                 self.error_color)
+                raise ValueError(f"Invalid color {self.error_color!r} specified")
 
     def format(self, tokensource, outfile):
         try:
@@ -147,7 +146,7 @@ class TestcaseFormatter(Formatter):
         outbuf = []
         for ttype, value in tokensource:
             rawbuf.append(value)
-            outbuf.append('%s(%s, %r),\n' % (indentation, ttype, value))
+            outbuf.append(f'{indentation}({ttype}, {value!r}),\n')
 
         before = TESTCASE_BEFORE % (''.join(rawbuf),)
         during = ''.join(outbuf)

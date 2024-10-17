@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2012-2017 The Python Software Foundation.
+# Copyright (C) 2012-2023 The Python Software Foundation.
 # See LICENSE.txt and CONTRIBUTORS.txt.
 #
 """
@@ -176,9 +176,9 @@ class Matcher(object):
         return self._string
 
 
-PEP440_VERSION_RE = re.compile(r'^v?(\d+!)?(\d+(\.\d+)*)((a|b|c|rc)(\d+))?'
-                               r'(\.(post)(\d+))?(\.(dev)(\d+))?'
-                               r'(\+([a-zA-Z\d]+(\.[a-zA-Z\d]+)?))?$')
+PEP440_VERSION_RE = re.compile(r'^v?(\d+!)?(\d+(\.\d+)*)((a|alpha|b|beta|c|rc|pre|preview)(\d+)?)?'
+                               r'(\.(post|r|rev)(\d+)?)?([._-]?(dev)(\d+)?)?'
+                               r'(\+([a-zA-Z\d]+(\.[a-zA-Z\d]+)?))?$', re.I)
 
 
 def _pep_440_key(s):
@@ -202,15 +202,24 @@ def _pep_440_key(s):
     if pre == (None, None):
         pre = ()
     else:
-        pre = pre[0], int(pre[1])
+        if pre[1] is None:
+            pre = pre[0], 0
+        else:
+            pre = pre[0], int(pre[1])
     if post == (None, None):
         post = ()
     else:
-        post = post[0], int(post[1])
+        if post[1] is None:
+            post = post[0], 0
+        else:
+            post = post[0], int(post[1])
     if dev == (None, None):
         dev = ()
     else:
-        dev = dev[0], int(dev[1])
+        if dev[1] is None:
+            dev = dev[0], 0
+        else:
+            dev = dev[0], int(dev[1])
     if local is None:
         local = ()
     else:
@@ -238,7 +247,6 @@ def _pep_440_key(s):
     if not dev:
         dev = ('final',)
 
-    #print('%s -> %s' % (s, m.groups()))
     return epoch, nums, pre, post, dev, local
 
 
@@ -378,6 +386,7 @@ class NormalizedMatcher(Matcher):
         pfx = '.'.join([str(i) for i in release_clause])
         return _match_prefix(version, pfx)
 
+
 _REPLACEMENTS = (
     (re.compile('[.+-]$'), ''),                     # remove trailing puncts
     (re.compile(r'^[.](\d)'), r'0.\1'),             # .N -> 0.N at start
@@ -388,7 +397,7 @@ _REPLACEMENTS = (
     (re.compile('[.]{2,}'), '.'),                   # multiple runs of '.'
     (re.compile(r'\b(alfa|apha)\b'), 'alpha'),      # misspelt alpha
     (re.compile(r'\b(pre-alpha|prealpha)\b'),
-                'pre.alpha'),                       # standardise
+        'pre.alpha'),                               # standardise
     (re.compile(r'\(beta\)$'), 'beta'),             # remove parentheses
 )
 
@@ -416,7 +425,7 @@ def _suggest_semantic_version(s):
 
     # Now look for numeric prefix, and separate it out from
     # the rest.
-    #import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     m = _NUMERIC_PREFIX.match(result)
     if not m:
         prefix = '0.0.0'
@@ -434,7 +443,7 @@ def _suggest_semantic_version(s):
         prefix = '.'.join([str(i) for i in prefix])
         suffix = suffix.strip()
     if suffix:
-        #import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         # massage the suffix.
         for pat, repl in _SUFFIX_REPLACEMENTS:
             suffix = pat.sub(repl, suffix)
@@ -504,7 +513,7 @@ def _suggest_normalized_version(s):
         rs = rs[1:]
 
     # Clean leading '0's on numbers.
-    #TODO: unintended side-effect on, e.g., "2003.05.09"
+    # TODO: unintended side-effect on, e.g., "2003.05.09"
     # PyPI stats: 77 (~2%) better
     rs = re.sub(r"\b0+(\d+)(?!\d)", r"\1", rs)
 
@@ -563,6 +572,7 @@ def _suggest_normalized_version(s):
 #   Legacy version processing (distribute-compatible)
 #
 
+
 _VERSION_PART = re.compile(r'([a-z]+|\d+|[\.-])', re.I)
 _VERSION_REPLACE = {
     'pre': 'c',
@@ -610,7 +620,7 @@ class LegacyVersion(Version):
         result = False
         for x in self._parts:
             if (isinstance(x, string_types) and x.startswith('*') and
-                x < '*final'):
+                    x < '*final'):
                 result = True
                 break
         return result
@@ -640,6 +650,7 @@ class LegacyMatcher(Matcher):
 #
 #   Semantic versioning
 #
+
 
 _SEMVER_RE = re.compile(r'^(\d+)\.(\d+)\.(\d+)'
                         r'(-[a-z0-9]+(\.[a-z0-9-]+)*)?'
@@ -721,6 +732,7 @@ class VersionScheme(object):
         else:
             result = self.suggester(s)
         return result
+
 
 _SCHEMES = {
     'normalized': VersionScheme(_normalized_key, NormalizedMatcher,

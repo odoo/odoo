@@ -8,7 +8,6 @@ import re
 import zipfile
 from typing import (
     IO,
-    TYPE_CHECKING,
     Any,
     Collection,
     Container,
@@ -18,14 +17,15 @@ from typing import (
     List,
     NamedTuple,
     Optional,
+    Protocol,
     Tuple,
     Union,
 )
 
 from pip._vendor.packaging.requirements import Requirement
 from pip._vendor.packaging.specifiers import InvalidSpecifier, SpecifierSet
-from pip._vendor.packaging.utils import NormalizedName
-from pip._vendor.packaging.version import LegacyVersion, Version
+from pip._vendor.packaging.utils import NormalizedName, canonicalize_name
+from pip._vendor.packaging.version import Version
 
 from pip._internal.exceptions import NoneMetadataError
 from pip._internal.locations import site_packages, user_site
@@ -37,17 +37,9 @@ from pip._internal.models.direct_url import (
 from pip._internal.utils.compat import stdlib_pkgs  # TODO: Move definition here.
 from pip._internal.utils.egg_link import egg_link_path_from_sys_path
 from pip._internal.utils.misc import is_local, normalize_path
-from pip._internal.utils.packaging import safe_extra
 from pip._internal.utils.urls import url_to_path
 
 from ._json import msg_to_json
-
-if TYPE_CHECKING:
-    from typing import Protocol
-else:
-    Protocol = object
-
-DistributionVersion = Union[LegacyVersion, Version]
 
 InfoPath = Union[str, pathlib.PurePath]
 
@@ -146,10 +138,10 @@ class BaseDistribution(Protocol):
         raise NotImplementedError()
 
     def __repr__(self) -> str:
-        return f"{self.raw_name} {self.version} ({self.location})"
+        return f"{self.raw_name} {self.raw_version} ({self.location})"
 
     def __str__(self) -> str:
-        return f"{self.raw_name} {self.version}"
+        return f"{self.raw_name} {self.raw_version}"
 
     @property
     def location(self) -> Optional[str]:
@@ -280,7 +272,11 @@ class BaseDistribution(Protocol):
         raise NotImplementedError()
 
     @property
-    def version(self) -> DistributionVersion:
+    def version(self) -> Version:
+        raise NotImplementedError()
+
+    @property
+    def raw_version(self) -> str:
         raise NotImplementedError()
 
     @property
@@ -386,15 +382,7 @@ class BaseDistribution(Protocol):
     def _metadata_impl(self) -> email.message.Message:
         raise NotImplementedError()
 
-    @functools.lru_cache(maxsize=1)
-    def _metadata_cached(self) -> email.message.Message:
-        # When we drop python 3.7 support, move this to the metadata property and use
-        # functools.cached_property instead of lru_cache.
-        metadata = self._metadata_impl()
-        self._add_egg_info_requires(metadata)
-        return metadata
-
-    @property
+    @functools.cached_property
     def metadata(self) -> email.message.Message:
         """Metadata of distribution parsed from e.g. METADATA or PKG-INFO.
 
@@ -403,7 +391,9 @@ class BaseDistribution(Protocol):
         :raises NoneMetadataError: If the metadata file is available, but does
             not contain valid metadata.
         """
-        return self._metadata_cached()
+        metadata = self._metadata_impl()
+        self._add_egg_info_requires(metadata)
+        return metadata
 
     @property
     def metadata_dict(self) -> Dict[str, Any]:
@@ -455,11 +445,19 @@ class BaseDistribution(Protocol):
         """
         raise NotImplementedError()
 
-    def iter_provided_extras(self) -> Iterable[str]:
+    def iter_raw_dependencies(self) -> Iterable[str]:
+        """Raw Requires-Dist metadata."""
+        return self.metadata.get_all("Requires-Dist", [])
+
+    def iter_provided_extras(self) -> Iterable[NormalizedName]:
         """Extras provided by this distribution.
 
         For modern .dist-info distributions, this is the collection of
         "Provides-Extra:" entries in distribution metadata.
+
+        The return value of this function is expected to be normalised names,
+        per PEP 685, with the returned value being handled appropriately by
+        `iter_dependencies`.
         """
         raise NotImplementedError()
 
@@ -537,10 +535,11 @@ class BaseDistribution(Protocol):
         """Get extras from the egg-info directory."""
         known_extras = {""}
         for entry in self._iter_requires_txt_entries():
-            if entry.extra in known_extras:
+            extra = canonicalize_name(entry.extra)
+            if extra in known_extras:
                 continue
-            known_extras.add(entry.extra)
-            yield entry.extra
+            known_extras.add(extra)
+            yield extra
 
     def _iter_egg_info_dependencies(self) -> Iterable[str]:
         """Get distribution dependencies from the egg-info directory.
@@ -556,10 +555,11 @@ class BaseDistribution(Protocol):
         all currently available PEP 517 backends, although not standardized.
         """
         for entry in self._iter_requires_txt_entries():
-            if entry.extra and entry.marker:
-                marker = f'({entry.marker}) and extra == "{safe_extra(entry.extra)}"'
-            elif entry.extra:
-                marker = f'extra == "{safe_extra(entry.extra)}"'
+            extra = canonicalize_name(entry.extra)
+            if extra and entry.marker:
+                marker = f'({entry.marker}) and extra == "{extra}"'
+            elif extra:
+                marker = f'extra == "{extra}"'
             elif entry.marker:
                 marker = entry.marker
             else:

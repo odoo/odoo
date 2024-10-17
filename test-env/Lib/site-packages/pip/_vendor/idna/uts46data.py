@@ -7,7 +7,7 @@ from typing import List, Tuple, Union
 """IDNA Mapping Table from UTS46."""
 
 
-__version__ = '15.0.0'
+__version__ = '15.1.0'
 def _seg_0() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     return [
     (0x0, '3'),
@@ -1899,7 +1899,7 @@ def _seg_18() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1E9A, 'M', 'aʾ'),
     (0x1E9B, 'M', 'ṡ'),
     (0x1E9C, 'V'),
-    (0x1E9E, 'M', 'ss'),
+    (0x1E9E, 'M', 'ß'),
     (0x1E9F, 'V'),
     (0x1EA0, 'M', 'ạ'),
     (0x1EA1, 'V'),
@@ -2418,10 +2418,6 @@ def _seg_23() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x222F, 'M', '∮∮'),
     (0x2230, 'M', '∮∮∮'),
     (0x2231, 'V'),
-    (0x2260, '3'),
-    (0x2261, 'V'),
-    (0x226E, '3'),
-    (0x2270, 'V'),
     (0x2329, 'M', '〈'),
     (0x232A, 'M', '〉'),
     (0x232B, 'V'),
@@ -2502,14 +2498,14 @@ def _seg_23() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x24BA, 'M', 'e'),
     (0x24BB, 'M', 'f'),
     (0x24BC, 'M', 'g'),
-    ]
-
-def _seg_24() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x24BD, 'M', 'h'),
     (0x24BE, 'M', 'i'),
     (0x24BF, 'M', 'j'),
     (0x24C0, 'M', 'k'),
+    ]
+
+def _seg_24() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x24C1, 'M', 'l'),
     (0x24C2, 'M', 'm'),
     (0x24C3, 'M', 'n'),
@@ -2606,14 +2602,14 @@ def _seg_24() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2C26, 'M', 'ⱖ'),
     (0x2C27, 'M', 'ⱗ'),
     (0x2C28, 'M', 'ⱘ'),
-    ]
-
-def _seg_25() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x2C29, 'M', 'ⱙ'),
     (0x2C2A, 'M', 'ⱚ'),
     (0x2C2B, 'M', 'ⱛ'),
     (0x2C2C, 'M', 'ⱜ'),
+    ]
+
+def _seg_25() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x2C2D, 'M', 'ⱝ'),
     (0x2C2E, 'M', 'ⱞ'),
     (0x2C2F, 'M', 'ⱟ'),
@@ -2710,14 +2706,14 @@ def _seg_25() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2CC0, 'M', 'ⳁ'),
     (0x2CC1, 'V'),
     (0x2CC2, 'M', 'ⳃ'),
-    ]
-
-def _seg_26() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x2CC3, 'V'),
     (0x2CC4, 'M', 'ⳅ'),
     (0x2CC5, 'V'),
     (0x2CC6, 'M', 'ⳇ'),
+    ]
+
+def _seg_26() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x2CC7, 'V'),
     (0x2CC8, 'M', 'ⳉ'),
     (0x2CC9, 'V'),
@@ -2814,14 +2810,14 @@ def _seg_26() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2F13, 'M', '勹'),
     (0x2F14, 'M', '匕'),
     (0x2F15, 'M', '匚'),
-    ]
-
-def _seg_27() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x2F16, 'M', '匸'),
     (0x2F17, 'M', '十'),
     (0x2F18, 'M', '卜'),
     (0x2F19, 'M', '卩'),
+    ]
+
+def _seg_27() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x2F1A, 'M', '厂'),
     (0x2F1B, 'M', '厶'),
     (0x2F1C, 'M', '又'),
@@ -2918,14 +2914,14 @@ def _seg_27() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2F77, 'M', '糸'),
     (0x2F78, 'M', '缶'),
     (0x2F79, 'M', '网'),
-    ]
-
-def _seg_28() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x2F7A, 'M', '羊'),
     (0x2F7B, 'M', '羽'),
     (0x2F7C, 'M', '老'),
     (0x2F7D, 'M', '而'),
+    ]
+
+def _seg_28() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x2F7E, 'M', '耒'),
     (0x2F7F, 'M', '耳'),
     (0x2F80, 'M', '聿'),
@@ -3022,14 +3018,14 @@ def _seg_28() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x3036, 'M', '〒'),
     (0x3037, 'V'),
     (0x3038, 'M', '十'),
-    ]
-
-def _seg_29() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x3039, 'M', '卄'),
     (0x303A, 'M', '卅'),
     (0x303B, 'V'),
     (0x3040, 'X'),
+    ]
+
+def _seg_29() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x3041, 'V'),
     (0x3097, 'X'),
     (0x3099, 'V'),
@@ -3126,14 +3122,14 @@ def _seg_29() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x3182, 'M', 'ᇱ'),
     (0x3183, 'M', 'ᇲ'),
     (0x3184, 'M', 'ᅗ'),
-    ]
-
-def _seg_30() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x3185, 'M', 'ᅘ'),
     (0x3186, 'M', 'ᅙ'),
     (0x3187, 'M', 'ᆄ'),
     (0x3188, 'M', 'ᆅ'),
+    ]
+
+def _seg_30() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x3189, 'M', 'ᆈ'),
     (0x318A, 'M', 'ᆑ'),
     (0x318B, 'M', 'ᆒ'),
@@ -3230,14 +3226,14 @@ def _seg_30() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x3244, 'M', '問'),
     (0x3245, 'M', '幼'),
     (0x3246, 'M', '文'),
-    ]
-
-def _seg_31() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x3247, 'M', '箏'),
     (0x3248, 'V'),
     (0x3250, 'M', 'pte'),
     (0x3251, 'M', '21'),
+    ]
+
+def _seg_31() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x3252, 'M', '22'),
     (0x3253, 'M', '23'),
     (0x3254, 'M', '24'),
@@ -3334,14 +3330,14 @@ def _seg_31() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x32AF, 'M', '協'),
     (0x32B0, 'M', '夜'),
     (0x32B1, 'M', '36'),
-    ]
-
-def _seg_32() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x32B2, 'M', '37'),
     (0x32B3, 'M', '38'),
     (0x32B4, 'M', '39'),
     (0x32B5, 'M', '40'),
+    ]
+
+def _seg_32() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x32B6, 'M', '41'),
     (0x32B7, 'M', '42'),
     (0x32B8, 'M', '43'),
@@ -3438,14 +3434,14 @@ def _seg_32() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x3313, 'M', 'ギルダー'),
     (0x3314, 'M', 'キロ'),
     (0x3315, 'M', 'キログラム'),
-    ]
-
-def _seg_33() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x3316, 'M', 'キロメートル'),
     (0x3317, 'M', 'キロワット'),
     (0x3318, 'M', 'グラム'),
     (0x3319, 'M', 'グラムトン'),
+    ]
+
+def _seg_33() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x331A, 'M', 'クルゼイロ'),
     (0x331B, 'M', 'クローネ'),
     (0x331C, 'M', 'ケース'),
@@ -3542,14 +3538,14 @@ def _seg_33() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x3377, 'M', 'dm'),
     (0x3378, 'M', 'dm2'),
     (0x3379, 'M', 'dm3'),
-    ]
-
-def _seg_34() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x337A, 'M', 'iu'),
     (0x337B, 'M', '平成'),
     (0x337C, 'M', '昭和'),
     (0x337D, 'M', '大正'),
+    ]
+
+def _seg_34() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x337E, 'M', '明治'),
     (0x337F, 'M', '株式会社'),
     (0x3380, 'M', 'pa'),
@@ -3646,14 +3642,14 @@ def _seg_34() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x33DB, 'M', 'sr'),
     (0x33DC, 'M', 'sv'),
     (0x33DD, 'M', 'wb'),
-    ]
-
-def _seg_35() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x33DE, 'M', 'v∕m'),
     (0x33DF, 'M', 'a∕m'),
     (0x33E0, 'M', '1日'),
     (0x33E1, 'M', '2日'),
+    ]
+
+def _seg_35() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x33E2, 'M', '3日'),
     (0x33E3, 'M', '4日'),
     (0x33E4, 'M', '5日'),
@@ -3750,14 +3746,14 @@ def _seg_35() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xA68B, 'V'),
     (0xA68C, 'M', 'ꚍ'),
     (0xA68D, 'V'),
-    ]
-
-def _seg_36() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xA68E, 'M', 'ꚏ'),
     (0xA68F, 'V'),
     (0xA690, 'M', 'ꚑ'),
     (0xA691, 'V'),
+    ]
+
+def _seg_36() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xA692, 'M', 'ꚓ'),
     (0xA693, 'V'),
     (0xA694, 'M', 'ꚕ'),
@@ -3854,14 +3850,14 @@ def _seg_36() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xA779, 'M', 'ꝺ'),
     (0xA77A, 'V'),
     (0xA77B, 'M', 'ꝼ'),
-    ]
-
-def _seg_37() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xA77C, 'V'),
     (0xA77D, 'M', 'ᵹ'),
     (0xA77E, 'M', 'ꝿ'),
     (0xA77F, 'V'),
+    ]
+
+def _seg_37() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xA780, 'M', 'ꞁ'),
     (0xA781, 'V'),
     (0xA782, 'M', 'ꞃ'),
@@ -3958,14 +3954,14 @@ def _seg_37() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xA878, 'X'),
     (0xA880, 'V'),
     (0xA8C6, 'X'),
-    ]
-
-def _seg_38() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xA8CE, 'V'),
     (0xA8DA, 'X'),
     (0xA8E0, 'V'),
     (0xA954, 'X'),
+    ]
+
+def _seg_38() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xA95F, 'V'),
     (0xA97D, 'X'),
     (0xA980, 'V'),
@@ -4062,14 +4058,14 @@ def _seg_38() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xABA8, 'M', 'Ꮨ'),
     (0xABA9, 'M', 'Ꮩ'),
     (0xABAA, 'M', 'Ꮪ'),
-    ]
-
-def _seg_39() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xABAB, 'M', 'Ꮫ'),
     (0xABAC, 'M', 'Ꮬ'),
     (0xABAD, 'M', 'Ꮭ'),
     (0xABAE, 'M', 'Ꮮ'),
+    ]
+
+def _seg_39() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xABAF, 'M', 'Ꮯ'),
     (0xABB0, 'M', 'Ꮰ'),
     (0xABB1, 'M', 'Ꮱ'),
@@ -4166,14 +4162,14 @@ def _seg_39() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xF943, 'M', '弄'),
     (0xF944, 'M', '籠'),
     (0xF945, 'M', '聾'),
-    ]
-
-def _seg_40() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xF946, 'M', '牢'),
     (0xF947, 'M', '磊'),
     (0xF948, 'M', '賂'),
     (0xF949, 'M', '雷'),
+    ]
+
+def _seg_40() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xF94A, 'M', '壘'),
     (0xF94B, 'M', '屢'),
     (0xF94C, 'M', '樓'),
@@ -4270,14 +4266,14 @@ def _seg_40() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xF9A7, 'M', '獵'),
     (0xF9A8, 'M', '令'),
     (0xF9A9, 'M', '囹'),
-    ]
-
-def _seg_41() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xF9AA, 'M', '寧'),
     (0xF9AB, 'M', '嶺'),
     (0xF9AC, 'M', '怜'),
     (0xF9AD, 'M', '玲'),
+    ]
+
+def _seg_41() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xF9AE, 'M', '瑩'),
     (0xF9AF, 'M', '羚'),
     (0xF9B0, 'M', '聆'),
@@ -4374,14 +4370,14 @@ def _seg_41() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFA0B, 'M', '廓'),
     (0xFA0C, 'M', '兀'),
     (0xFA0D, 'M', '嗀'),
-    ]
-
-def _seg_42() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFA0E, 'V'),
     (0xFA10, 'M', '塚'),
     (0xFA11, 'V'),
     (0xFA12, 'M', '晴'),
+    ]
+
+def _seg_42() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFA13, 'V'),
     (0xFA15, 'M', '凞'),
     (0xFA16, 'M', '猪'),
@@ -4478,14 +4474,14 @@ def _seg_42() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFA76, 'M', '勇'),
     (0xFA77, 'M', '勺'),
     (0xFA78, 'M', '喝'),
-    ]
-
-def _seg_43() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFA79, 'M', '啕'),
     (0xFA7A, 'M', '喙'),
     (0xFA7B, 'M', '嗢'),
     (0xFA7C, 'M', '塚'),
+    ]
+
+def _seg_43() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFA7D, 'M', '墳'),
     (0xFA7E, 'M', '奄'),
     (0xFA7F, 'M', '奔'),
@@ -4582,14 +4578,14 @@ def _seg_43() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFADA, 'X'),
     (0xFB00, 'M', 'ff'),
     (0xFB01, 'M', 'fi'),
-    ]
-
-def _seg_44() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFB02, 'M', 'fl'),
     (0xFB03, 'M', 'ffi'),
     (0xFB04, 'M', 'ffl'),
     (0xFB05, 'M', 'st'),
+    ]
+
+def _seg_44() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFB07, 'X'),
     (0xFB13, 'M', 'մն'),
     (0xFB14, 'M', 'մե'),
@@ -4686,14 +4682,14 @@ def _seg_44() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFBDB, 'M', 'ۈ'),
     (0xFBDD, 'M', 'ۇٴ'),
     (0xFBDE, 'M', 'ۋ'),
-    ]
-
-def _seg_45() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFBE0, 'M', 'ۅ'),
     (0xFBE2, 'M', 'ۉ'),
     (0xFBE4, 'M', 'ې'),
     (0xFBE8, 'M', 'ى'),
+    ]
+
+def _seg_45() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFBEA, 'M', 'ئا'),
     (0xFBEC, 'M', 'ئە'),
     (0xFBEE, 'M', 'ئو'),
@@ -4790,14 +4786,14 @@ def _seg_45() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFC54, 'M', 'هي'),
     (0xFC55, 'M', 'يج'),
     (0xFC56, 'M', 'يح'),
-    ]
-
-def _seg_46() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFC57, 'M', 'يخ'),
     (0xFC58, 'M', 'يم'),
     (0xFC59, 'M', 'يى'),
     (0xFC5A, 'M', 'يي'),
+    ]
+
+def _seg_46() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFC5B, 'M', 'ذٰ'),
     (0xFC5C, 'M', 'رٰ'),
     (0xFC5D, 'M', 'ىٰ'),
@@ -4894,14 +4890,14 @@ def _seg_46() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFCB8, 'M', 'طح'),
     (0xFCB9, 'M', 'ظم'),
     (0xFCBA, 'M', 'عج'),
-    ]
-
-def _seg_47() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFCBB, 'M', 'عم'),
     (0xFCBC, 'M', 'غج'),
     (0xFCBD, 'M', 'غم'),
     (0xFCBE, 'M', 'فج'),
+    ]
+
+def _seg_47() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFCBF, 'M', 'فح'),
     (0xFCC0, 'M', 'فخ'),
     (0xFCC1, 'M', 'فم'),
@@ -4998,14 +4994,14 @@ def _seg_47() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFD1C, 'M', 'حي'),
     (0xFD1D, 'M', 'جى'),
     (0xFD1E, 'M', 'جي'),
-    ]
-
-def _seg_48() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFD1F, 'M', 'خى'),
     (0xFD20, 'M', 'خي'),
     (0xFD21, 'M', 'صى'),
     (0xFD22, 'M', 'صي'),
+    ]
+
+def _seg_48() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFD23, 'M', 'ضى'),
     (0xFD24, 'M', 'ضي'),
     (0xFD25, 'M', 'شج'),
@@ -5102,14 +5098,14 @@ def _seg_48() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFDA4, 'M', 'تمى'),
     (0xFDA5, 'M', 'جمي'),
     (0xFDA6, 'M', 'جحى'),
-    ]
-
-def _seg_49() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFDA7, 'M', 'جمى'),
     (0xFDA8, 'M', 'سخى'),
     (0xFDA9, 'M', 'صحي'),
     (0xFDAA, 'M', 'شحي'),
+    ]
+
+def _seg_49() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFDAB, 'M', 'ضحي'),
     (0xFDAC, 'M', 'لجي'),
     (0xFDAD, 'M', 'لمي'),
@@ -5206,14 +5202,14 @@ def _seg_49() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFE5B, '3', '{'),
     (0xFE5C, '3', '}'),
     (0xFE5D, 'M', '〔'),
-    ]
-
-def _seg_50() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFE5E, 'M', '〕'),
     (0xFE5F, '3', '#'),
     (0xFE60, '3', '&'),
     (0xFE61, '3', '*'),
+    ]
+
+def _seg_50() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFE62, '3', '+'),
     (0xFE63, 'M', '-'),
     (0xFE64, '3', '<'),
@@ -5310,14 +5306,14 @@ def _seg_50() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFF18, 'M', '8'),
     (0xFF19, 'M', '9'),
     (0xFF1A, '3', ':'),
-    ]
-
-def _seg_51() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFF1B, '3', ';'),
     (0xFF1C, '3', '<'),
     (0xFF1D, '3', '='),
     (0xFF1E, '3', '>'),
+    ]
+
+def _seg_51() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFF1F, '3', '?'),
     (0xFF20, '3', '@'),
     (0xFF21, 'M', 'a'),
@@ -5414,14 +5410,14 @@ def _seg_51() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFF7C, 'M', 'シ'),
     (0xFF7D, 'M', 'ス'),
     (0xFF7E, 'M', 'セ'),
-    ]
-
-def _seg_52() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFF7F, 'M', 'ソ'),
     (0xFF80, 'M', 'タ'),
     (0xFF81, 'M', 'チ'),
     (0xFF82, 'M', 'ツ'),
+    ]
+
+def _seg_52() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFF83, 'M', 'テ'),
     (0xFF84, 'M', 'ト'),
     (0xFF85, 'M', 'ナ'),
@@ -5518,14 +5514,14 @@ def _seg_52() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0xFFE7, 'X'),
     (0xFFE8, 'M', '│'),
     (0xFFE9, 'M', '←'),
-    ]
-
-def _seg_53() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0xFFEA, 'M', '↑'),
     (0xFFEB, 'M', '→'),
     (0xFFEC, 'M', '↓'),
     (0xFFED, 'M', '■'),
+    ]
+
+def _seg_53() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0xFFEE, 'M', '○'),
     (0xFFEF, 'X'),
     (0x10000, 'V'),
@@ -5622,14 +5618,14 @@ def _seg_53() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x104B3, 'M', '𐓛'),
     (0x104B4, 'M', '𐓜'),
     (0x104B5, 'M', '𐓝'),
-    ]
-
-def _seg_54() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x104B6, 'M', '𐓞'),
     (0x104B7, 'M', '𐓟'),
     (0x104B8, 'M', '𐓠'),
     (0x104B9, 'M', '𐓡'),
+    ]
+
+def _seg_54() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x104BA, 'M', '𐓢'),
     (0x104BB, 'M', '𐓣'),
     (0x104BC, 'M', '𐓤'),
@@ -5726,14 +5722,14 @@ def _seg_54() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x10786, 'X'),
     (0x10787, 'M', 'ʣ'),
     (0x10788, 'M', 'ꭦ'),
-    ]
-
-def _seg_55() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x10789, 'M', 'ʥ'),
     (0x1078A, 'M', 'ʤ'),
     (0x1078B, 'M', 'ɖ'),
     (0x1078C, 'M', 'ɗ'),
+    ]
+
+def _seg_55() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1078D, 'M', 'ᶑ'),
     (0x1078E, 'M', 'ɘ'),
     (0x1078F, 'M', 'ɞ'),
@@ -5830,14 +5826,14 @@ def _seg_55() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x10A60, 'V'),
     (0x10AA0, 'X'),
     (0x10AC0, 'V'),
-    ]
-
-def _seg_56() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x10AE7, 'X'),
     (0x10AEB, 'V'),
     (0x10AF7, 'X'),
     (0x10B00, 'V'),
+    ]
+
+def _seg_56() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x10B36, 'X'),
     (0x10B39, 'V'),
     (0x10B56, 'X'),
@@ -5934,14 +5930,14 @@ def _seg_56() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1107F, 'V'),
     (0x110BD, 'X'),
     (0x110BE, 'V'),
-    ]
-
-def _seg_57() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x110C3, 'X'),
     (0x110D0, 'V'),
     (0x110E9, 'X'),
     (0x110F0, 'V'),
+    ]
+
+def _seg_57() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x110FA, 'X'),
     (0x11100, 'V'),
     (0x11135, 'X'),
@@ -6038,14 +6034,14 @@ def _seg_57() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x118A4, 'M', '𑣄'),
     (0x118A5, 'M', '𑣅'),
     (0x118A6, 'M', '𑣆'),
-    ]
-
-def _seg_58() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x118A7, 'M', '𑣇'),
     (0x118A8, 'M', '𑣈'),
     (0x118A9, 'M', '𑣉'),
     (0x118AA, 'M', '𑣊'),
+    ]
+
+def _seg_58() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x118AB, 'M', '𑣋'),
     (0x118AC, 'M', '𑣌'),
     (0x118AD, 'M', '𑣍'),
@@ -6142,14 +6138,14 @@ def _seg_58() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x11EE0, 'V'),
     (0x11EF9, 'X'),
     (0x11F00, 'V'),
-    ]
-
-def _seg_59() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x11F11, 'X'),
     (0x11F12, 'V'),
     (0x11F3B, 'X'),
     (0x11F3E, 'V'),
+    ]
+
+def _seg_59() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x11F5A, 'X'),
     (0x11FB0, 'V'),
     (0x11FB1, 'X'),
@@ -6246,14 +6242,14 @@ def _seg_59() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x18D00, 'V'),
     (0x18D09, 'X'),
     (0x1AFF0, 'V'),
-    ]
-
-def _seg_60() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1AFF4, 'X'),
     (0x1AFF5, 'V'),
     (0x1AFFC, 'X'),
     (0x1AFFD, 'V'),
+    ]
+
+def _seg_60() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1AFFF, 'X'),
     (0x1B000, 'V'),
     (0x1B123, 'X'),
@@ -6350,14 +6346,14 @@ def _seg_60() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D41E, 'M', 'e'),
     (0x1D41F, 'M', 'f'),
     (0x1D420, 'M', 'g'),
-    ]
-
-def _seg_61() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D421, 'M', 'h'),
     (0x1D422, 'M', 'i'),
     (0x1D423, 'M', 'j'),
     (0x1D424, 'M', 'k'),
+    ]
+
+def _seg_61() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D425, 'M', 'l'),
     (0x1D426, 'M', 'm'),
     (0x1D427, 'M', 'n'),
@@ -6454,14 +6450,14 @@ def _seg_61() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D482, 'M', 'a'),
     (0x1D483, 'M', 'b'),
     (0x1D484, 'M', 'c'),
-    ]
-
-def _seg_62() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D485, 'M', 'd'),
     (0x1D486, 'M', 'e'),
     (0x1D487, 'M', 'f'),
     (0x1D488, 'M', 'g'),
+    ]
+
+def _seg_62() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D489, 'M', 'h'),
     (0x1D48A, 'M', 'i'),
     (0x1D48B, 'M', 'j'),
@@ -6558,14 +6554,14 @@ def _seg_62() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D4E9, 'M', 'z'),
     (0x1D4EA, 'M', 'a'),
     (0x1D4EB, 'M', 'b'),
-    ]
-
-def _seg_63() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D4EC, 'M', 'c'),
     (0x1D4ED, 'M', 'd'),
     (0x1D4EE, 'M', 'e'),
     (0x1D4EF, 'M', 'f'),
+    ]
+
+def _seg_63() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D4F0, 'M', 'g'),
     (0x1D4F1, 'M', 'h'),
     (0x1D4F2, 'M', 'i'),
@@ -6662,14 +6658,14 @@ def _seg_63() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D550, 'M', 'y'),
     (0x1D551, 'X'),
     (0x1D552, 'M', 'a'),
-    ]
-
-def _seg_64() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D553, 'M', 'b'),
     (0x1D554, 'M', 'c'),
     (0x1D555, 'M', 'd'),
     (0x1D556, 'M', 'e'),
+    ]
+
+def _seg_64() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D557, 'M', 'f'),
     (0x1D558, 'M', 'g'),
     (0x1D559, 'M', 'h'),
@@ -6766,14 +6762,14 @@ def _seg_64() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D5B4, 'M', 'u'),
     (0x1D5B5, 'M', 'v'),
     (0x1D5B6, 'M', 'w'),
-    ]
-
-def _seg_65() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D5B7, 'M', 'x'),
     (0x1D5B8, 'M', 'y'),
     (0x1D5B9, 'M', 'z'),
     (0x1D5BA, 'M', 'a'),
+    ]
+
+def _seg_65() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D5BB, 'M', 'b'),
     (0x1D5BC, 'M', 'c'),
     (0x1D5BD, 'M', 'd'),
@@ -6870,14 +6866,14 @@ def _seg_65() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D618, 'M', 'q'),
     (0x1D619, 'M', 'r'),
     (0x1D61A, 'M', 's'),
-    ]
-
-def _seg_66() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D61B, 'M', 't'),
     (0x1D61C, 'M', 'u'),
     (0x1D61D, 'M', 'v'),
     (0x1D61E, 'M', 'w'),
+    ]
+
+def _seg_66() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D61F, 'M', 'x'),
     (0x1D620, 'M', 'y'),
     (0x1D621, 'M', 'z'),
@@ -6974,14 +6970,14 @@ def _seg_66() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D67C, 'M', 'm'),
     (0x1D67D, 'M', 'n'),
     (0x1D67E, 'M', 'o'),
-    ]
-
-def _seg_67() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D67F, 'M', 'p'),
     (0x1D680, 'M', 'q'),
     (0x1D681, 'M', 'r'),
     (0x1D682, 'M', 's'),
+    ]
+
+def _seg_67() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D683, 'M', 't'),
     (0x1D684, 'M', 'u'),
     (0x1D685, 'M', 'v'),
@@ -7078,14 +7074,14 @@ def _seg_67() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D6E2, 'M', 'α'),
     (0x1D6E3, 'M', 'β'),
     (0x1D6E4, 'M', 'γ'),
-    ]
-
-def _seg_68() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D6E5, 'M', 'δ'),
     (0x1D6E6, 'M', 'ε'),
     (0x1D6E7, 'M', 'ζ'),
     (0x1D6E8, 'M', 'η'),
+    ]
+
+def _seg_68() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D6E9, 'M', 'θ'),
     (0x1D6EA, 'M', 'ι'),
     (0x1D6EB, 'M', 'κ'),
@@ -7182,14 +7178,14 @@ def _seg_68() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D747, 'M', 'σ'),
     (0x1D749, 'M', 'τ'),
     (0x1D74A, 'M', 'υ'),
-    ]
-
-def _seg_69() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D74B, 'M', 'φ'),
     (0x1D74C, 'M', 'χ'),
     (0x1D74D, 'M', 'ψ'),
     (0x1D74E, 'M', 'ω'),
+    ]
+
+def _seg_69() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D74F, 'M', '∂'),
     (0x1D750, 'M', 'ε'),
     (0x1D751, 'M', 'θ'),
@@ -7286,14 +7282,14 @@ def _seg_69() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1D7AD, 'M', 'δ'),
     (0x1D7AE, 'M', 'ε'),
     (0x1D7AF, 'M', 'ζ'),
-    ]
-
-def _seg_70() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1D7B0, 'M', 'η'),
     (0x1D7B1, 'M', 'θ'),
     (0x1D7B2, 'M', 'ι'),
     (0x1D7B3, 'M', 'κ'),
+    ]
+
+def _seg_70() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1D7B4, 'M', 'λ'),
     (0x1D7B5, 'M', 'μ'),
     (0x1D7B6, 'M', 'ν'),
@@ -7390,14 +7386,14 @@ def _seg_70() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1E030, 'M', 'а'),
     (0x1E031, 'M', 'б'),
     (0x1E032, 'M', 'в'),
-    ]
-
-def _seg_71() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1E033, 'M', 'г'),
     (0x1E034, 'M', 'д'),
     (0x1E035, 'M', 'е'),
     (0x1E036, 'M', 'ж'),
+    ]
+
+def _seg_71() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1E037, 'M', 'з'),
     (0x1E038, 'M', 'и'),
     (0x1E039, 'M', 'к'),
@@ -7494,14 +7490,14 @@ def _seg_71() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1E907, 'M', '𞤩'),
     (0x1E908, 'M', '𞤪'),
     (0x1E909, 'M', '𞤫'),
-    ]
-
-def _seg_72() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1E90A, 'M', '𞤬'),
     (0x1E90B, 'M', '𞤭'),
     (0x1E90C, 'M', '𞤮'),
     (0x1E90D, 'M', '𞤯'),
+    ]
+
+def _seg_72() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1E90E, 'M', '𞤰'),
     (0x1E90F, 'M', '𞤱'),
     (0x1E910, 'M', '𞤲'),
@@ -7598,14 +7594,14 @@ def _seg_72() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1EE48, 'X'),
     (0x1EE49, 'M', 'ي'),
     (0x1EE4A, 'X'),
-    ]
-
-def _seg_73() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1EE4B, 'M', 'ل'),
     (0x1EE4C, 'X'),
     (0x1EE4D, 'M', 'ن'),
     (0x1EE4E, 'M', 'س'),
+    ]
+
+def _seg_73() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1EE4F, 'M', 'ع'),
     (0x1EE50, 'X'),
     (0x1EE51, 'M', 'ص'),
@@ -7702,14 +7698,14 @@ def _seg_73() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1EEB2, 'M', 'ق'),
     (0x1EEB3, 'M', 'ر'),
     (0x1EEB4, 'M', 'ش'),
-    ]
-
-def _seg_74() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1EEB5, 'M', 'ت'),
     (0x1EEB6, 'M', 'ث'),
     (0x1EEB7, 'M', 'خ'),
     (0x1EEB8, 'M', 'ذ'),
+    ]
+
+def _seg_74() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1EEB9, 'M', 'ض'),
     (0x1EEBA, 'M', 'ظ'),
     (0x1EEBB, 'M', 'غ'),
@@ -7806,14 +7802,14 @@ def _seg_74() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1F150, 'V'),
     (0x1F16A, 'M', 'mc'),
     (0x1F16B, 'M', 'md'),
-    ]
-
-def _seg_75() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1F16C, 'M', 'mr'),
     (0x1F16D, 'V'),
     (0x1F190, 'M', 'dj'),
     (0x1F191, 'V'),
+    ]
+
+def _seg_75() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1F1AE, 'X'),
     (0x1F1E6, 'V'),
     (0x1F200, 'M', 'ほか'),
@@ -7910,14 +7906,14 @@ def _seg_75() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x1FA54, 'X'),
     (0x1FA60, 'V'),
     (0x1FA6E, 'X'),
-    ]
-
-def _seg_76() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
-    return [
     (0x1FA70, 'V'),
     (0x1FA7D, 'X'),
     (0x1FA80, 'V'),
     (0x1FA89, 'X'),
+    ]
+
+def _seg_76() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
+    return [
     (0x1FA90, 'V'),
     (0x1FABE, 'X'),
     (0x1FABF, 'V'),
@@ -7953,6 +7949,8 @@ def _seg_76() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2CEA2, 'X'),
     (0x2CEB0, 'V'),
     (0x2EBE1, 'X'),
+    (0x2EBF0, 'V'),
+    (0x2EE5E, 'X'),
     (0x2F800, 'M', '丽'),
     (0x2F801, 'M', '丸'),
     (0x2F802, 'M', '乁'),
@@ -8014,12 +8012,12 @@ def _seg_76() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2F83C, 'M', '咞'),
     (0x2F83D, 'M', '吸'),
     (0x2F83E, 'M', '呈'),
+    (0x2F83F, 'M', '周'),
+    (0x2F840, 'M', '咢'),
     ]
 
 def _seg_77() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     return [
-    (0x2F83F, 'M', '周'),
-    (0x2F840, 'M', '咢'),
     (0x2F841, 'M', '哶'),
     (0x2F842, 'M', '唐'),
     (0x2F843, 'M', '啓'),
@@ -8118,12 +8116,12 @@ def _seg_77() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2F8A4, 'M', '𢛔'),
     (0x2F8A5, 'M', '惇'),
     (0x2F8A6, 'M', '慈'),
+    (0x2F8A7, 'M', '慌'),
+    (0x2F8A8, 'M', '慎'),
     ]
 
 def _seg_78() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     return [
-    (0x2F8A7, 'M', '慌'),
-    (0x2F8A8, 'M', '慎'),
     (0x2F8A9, 'M', '慌'),
     (0x2F8AA, 'M', '慺'),
     (0x2F8AB, 'M', '憎'),
@@ -8222,12 +8220,12 @@ def _seg_78() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2F908, 'M', '港'),
     (0x2F909, 'M', '湮'),
     (0x2F90A, 'M', '㴳'),
+    (0x2F90B, 'M', '滋'),
+    (0x2F90C, 'M', '滇'),
     ]
 
 def _seg_79() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     return [
-    (0x2F90B, 'M', '滋'),
-    (0x2F90C, 'M', '滇'),
     (0x2F90D, 'M', '𣻑'),
     (0x2F90E, 'M', '淹'),
     (0x2F90F, 'M', '潮'),
@@ -8326,12 +8324,12 @@ def _seg_79() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2F96F, 'M', '縂'),
     (0x2F970, 'M', '繅'),
     (0x2F971, 'M', '䌴'),
+    (0x2F972, 'M', '𦈨'),
+    (0x2F973, 'M', '𦉇'),
     ]
 
 def _seg_80() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     return [
-    (0x2F972, 'M', '𦈨'),
-    (0x2F973, 'M', '𦉇'),
     (0x2F974, 'M', '䍙'),
     (0x2F975, 'M', '𦋙'),
     (0x2F976, 'M', '罺'),
@@ -8430,12 +8428,12 @@ def _seg_80() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     (0x2F9D3, 'M', '𧲨'),
     (0x2F9D4, 'M', '貫'),
     (0x2F9D5, 'M', '賁'),
+    (0x2F9D6, 'M', '贛'),
+    (0x2F9D7, 'M', '起'),
     ]
 
 def _seg_81() -> List[Union[Tuple[int, str], Tuple[int, str, str]]]:
     return [
-    (0x2F9D6, 'M', '贛'),
-    (0x2F9D7, 'M', '起'),
     (0x2F9D8, 'M', '𧼯'),
     (0x2F9D9, 'M', '𠠄'),
     (0x2F9DA, 'M', '跋'),

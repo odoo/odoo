@@ -5,7 +5,7 @@ import textwrap
 import xmlrpc.client
 from collections import OrderedDict
 from optparse import Values
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional, TypedDict
 
 from pip._vendor.packaging.version import parse as parse_version
 
@@ -20,7 +20,6 @@ from pip._internal.utils.logging import indent_log
 from pip._internal.utils.misc import write_output
 
 if TYPE_CHECKING:
-    from typing import TypedDict
 
     class TransformedHit(TypedDict):
         name: str
@@ -76,9 +75,8 @@ class SearchCommand(Command, SessionCommandMixin):
         try:
             hits = pypi.search({"name": query, "summary": query}, "or")
         except xmlrpc.client.Fault as fault:
-            message = "XMLRPC request failed [code: {code}]\n{string}".format(
-                code=fault.faultCode,
-                string=fault.faultString,
+            message = (
+                f"XMLRPC request failed [code: {fault.faultCode}]\n{fault.faultString}"
             )
             raise CommandError(message)
         assert isinstance(hits, list)

@@ -1,8 +1,8 @@
 import logging
 from optparse import Values
-from typing import Any, Iterable, List, Optional, Union
+from typing import Any, Iterable, List, Optional
 
-from pip._vendor.packaging.version import LegacyVersion, Version
+from pip._vendor.packaging.version import Version
 
 from pip._internal.cli import cmdoptions
 from pip._internal.cli.req_command import IndexGroupCommand
@@ -115,7 +115,7 @@ class IndexCommand(IndexGroupCommand):
                 ignore_requires_python=options.ignore_requires_python,
             )
 
-            versions: Iterable[Union[LegacyVersion, Version]] = (
+            versions: Iterable[Version] = (
                 candidate.version for candidate in finder.find_all_candidates(query)
             )
 
@@ -128,12 +128,12 @@ class IndexCommand(IndexGroupCommand):
 
             if not versions:
                 raise DistributionNotFound(
-                    "No matching distribution found for {}".format(query)
+                    f"No matching distribution found for {query}"
                 )
 
             formatted_versions = [str(ver) for ver in sorted(versions, reverse=True)]
             latest = formatted_versions[0]
 
-        write_output("{} ({})".format(query, latest))
+        write_output(f"{query} ({latest})")
         write_output("Available versions: {}".format(", ".join(formatted_versions)))
         print_dist_installation_info(query, latest)

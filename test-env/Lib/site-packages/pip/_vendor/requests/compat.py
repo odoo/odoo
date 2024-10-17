@@ -7,9 +7,20 @@ between Python 2 and Python 3. It remains for backwards
 compatibility until the next major version.
 """
 
-from pip._vendor import chardet
-
 import sys
+
+# -------------------
+# Character Detection
+# -------------------
+
+
+def _resolve_char_detection():
+    """Find supported character detection libraries."""
+    chardet = None
+    return chardet
+
+
+chardet = _resolve_char_detection()
 
 # -------
 # Pythons

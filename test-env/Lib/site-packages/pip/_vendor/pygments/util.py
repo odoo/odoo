@@ -4,7 +4,7 @@
 
     Utility functions.
 
-    :copyright: Copyright 2006-2022 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2024 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
 
@@ -32,63 +32,79 @@ class ClassNotFound(ValueError):
 
 
 class OptionError(Exception):
-    pass
-
+    """
+    This exception will be raised by all option processing functions if
+    the type or value of the argument is not correct.
+    """
 
 def get_choice_opt(options, optname, allowed, default=None, normcase=False):
+    """
+    If the key `optname` from the dictionary is not in the sequence
+    `allowed`, raise an error, otherwise return it.
+    """
     string = options.get(optname, default)
     if normcase:
         string = string.lower()
     if string not in allowed:
-        raise OptionError('Value for option %s must be one of %s' %
-                          (optname, ', '.join(map(str, allowed))))
+        raise OptionError('Value for option {} must be one of {}'.format(optname, ', '.join(map(str, allowed))))
     return string
 
 
 def get_bool_opt(options, optname, default=None):
+    """
+    Intuitively, this is `options.get(optname, default)`, but restricted to
+    Boolean value. The Booleans can be represented as string, in order to accept
+    Boolean value from the command line arguments. If the key `optname` is
+    present in the dictionary `options` and is not associated with a Boolean,
+    raise an `OptionError`. If it is absent, `default` is returned instead.
+
+    The valid string values for ``True`` are ``1``, ``yes``, ``true`` and
+    ``on``, the ones for ``False`` are ``0``, ``no``, ``false`` and ``off``
+    (matched case-insensitively).
+    """
     string = options.get(optname, default)
     if isinstance(string, bool):
         return string
     elif isinstance(string, int):
         return bool(string)
     elif not isinstance(string, str):
-        raise OptionError('Invalid type %r for option %s; use '
-                          '1/0, yes/no, true/false, on/off' % (
-                              string, optname))
+        raise OptionError(f'Invalid type {string!r} for option {optname}; use '
+                          '1/0, yes/no, true/false, on/off')
     elif string.lower() in ('1', 'yes', 'true', 'on'):
         return True
     elif string.lower() in ('0', 'no', 'false', 'off'):
         return False
     else:
-        raise OptionError('Invalid value %r for option %s; use '
-                          '1/0, yes/no, true/false, on/off' % (
-                              string, optname))
+        raise OptionError(f'Invalid value {string!r} for option {optname}; use '
+                          '1/0, yes/no, true/false, on/off')
 
 
 def get_int_opt(options, optname, default=None):
+    """As :func:`get_bool_opt`, but interpret the value as an integer."""
     string = options.get(optname, default)
     try:
         return int(string)
     except TypeError:
-        raise OptionError('Invalid type %r for option %s; you '
-                          'must give an integer value' % (
-                              string, optname))
+        raise OptionError(f'Invalid type {string!r} for option {optname}; you '
+                          'must give an integer value')
     except ValueError:
-        raise OptionError('Invalid value %r for option %s; you '
-                          'must give an integer value' % (
-                              string, optname))
-
+        raise OptionError(f'Invalid value {string!r} for option {optname}; you '
+                          'must give an integer value')
 
 def get_list_opt(options, optname, default=None):
+    """
+    If the key `optname` from the dictionary `options` is a string,
+    split it at whitespace and return it. If it is already a list
+    or a tuple, it is returned as a list.
+    """
     val = options.get(optname, default)
     if isinstance(val, str):
         return val.split()
     elif isinstance(val, (list, tuple)):
         return list(val)
     else:
-        raise OptionError('Invalid type %r for option %s; you '
-                          'must give a list value' % (
-                              val, optname))
+        raise OptionError(f'Invalid type {val!r} for option {optname}; you '
+                          'must give a list value')
 
 
 def docstring_headline(obj):
@@ -159,7 +175,7 @@ def shebang_matches(text, regex):
                      if x and not x.startswith('-')][-1]
         except IndexError:
             return False
-        regex = re.compile(r'^%s(\.(exe|cmd|bat|bin))?$' % regex, re.IGNORECASE)
+        regex = re.compile(rf'^{regex}(\.(exe|cmd|bat|bin))?$', re.IGNORECASE)
         if regex.search(found) is not None:
             return True
     return False

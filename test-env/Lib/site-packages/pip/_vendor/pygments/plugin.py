@@ -2,12 +2,7 @@
     pygments.plugin
     ~~~~~~~~~~~~~~~
 
-    Pygments plugin interface. By default, this tries to use
-    ``importlib.metadata``, which is in the Python standard
-    library since Python 3.8, or its ``importlib_metadata``
-    backport for earlier versions of Python. It falls back on
-    ``pkg_resources`` if not found. Finally, if ``pkg_resources``
-    is not found either, no plugins are loaded at all.
+    Pygments plugin interface.
 
     lexer plugins::
 
@@ -34,9 +29,10 @@
         yourfilter = yourfilter:YourFilter
 
 
-    :copyright: Copyright 2006-2022 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2024 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
+from importlib.metadata import entry_points
 
 LEXER_ENTRY_POINT = 'pygments.lexers'
 FORMATTER_ENTRY_POINT = 'pygments.formatters'
@@ -45,18 +41,6 @@ FILTER_ENTRY_POINT = 'pygments.filters'
 
 
 def iter_entry_points(group_name):
-    try:
-        from importlib.metadata import entry_points
-    except ImportError:
-        try:
-            from importlib_metadata import entry_points
-        except ImportError:
-            try:
-                from pip._vendor.pkg_resources import iter_entry_points
-            except (ImportError, OSError):
-                return []
-            else:
-                return iter_entry_points(group_name)
     groups = entry_points()
     if hasattr(groups, 'select'):
         # New interface in Python 3.10 and newer versions of the

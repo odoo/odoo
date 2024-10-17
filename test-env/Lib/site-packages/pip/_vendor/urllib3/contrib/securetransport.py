@@ -64,9 +64,8 @@ import struct
 import threading
 import weakref
 
-from pip._vendor import six
-
 from .. import util
+from ..packages import six
 from ..util.ssl_ import PROTOCOL_TLS_CLIENT
 from ._securetransport.bindings import CoreFoundation, Security, SecurityConst
 from ._securetransport.low_level import (

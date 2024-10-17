@@ -1,6 +1,5 @@
 from typing import List, Optional
 
-import pip._internal.utils.inject_securetransport  # noqa
 from pip._internal.utils import _log
 
 # init_logging() must be called before any call to logging.getLogger()
@@ -8,7 +7,7 @@ from pip._internal.utils import _log
 _log.init_logging()
 
 
-def main(args: (Optional[List[str]]) = None) -> int:
+def main(args: Optional[List[str]] = None) -> int:
     """This is preserved for old console scripts that may still be referencing
     it.
 

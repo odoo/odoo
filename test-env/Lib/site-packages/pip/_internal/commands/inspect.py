@@ -7,7 +7,7 @@ from pip._vendor.rich import print_json
 
 from pip import __version__
 from pip._internal.cli import cmdoptions
-from pip._internal.cli.req_command import Command
+from pip._internal.cli.base_command import Command
 from pip._internal.cli.status_codes import SUCCESS
 from pip._internal.metadata import BaseDistribution, get_environment
 from pip._internal.utils.compat import stdlib_pkgs

@@ -40,16 +40,16 @@ def get_legacy_build_wheel_path(
     # Sort for determinism.
     names = sorted(names)
     if not names:
-        msg = ("Legacy build of wheel for {!r} created no files.\n").format(name)
+        msg = f"Legacy build of wheel for {name!r} created no files.\n"
         msg += format_command_result(command_args, command_output)
         logger.warning(msg)
         return None
 
     if len(names) > 1:
         msg = (
-            "Legacy build of wheel for {!r} created more than one file.\n"
-            "Filenames (choosing first): {}\n"
-        ).format(name, names)
+            f"Legacy build of wheel for {name!r} created more than one file.\n"
+            f"Filenames (choosing first): {names}\n"
+        )
         msg += format_command_result(command_args, command_output)
         logger.warning(msg)
 

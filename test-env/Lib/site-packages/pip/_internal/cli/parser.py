@@ -6,7 +6,7 @@ import shutil
 import sys
 import textwrap
 from contextlib import suppress
-from typing import Any, Dict, Generator, List, Tuple
+from typing import Any, Dict, Generator, List, Optional, Tuple
 
 from pip._internal.cli.status_codes import UNKNOWN_ERROR
 from pip._internal.configuration import Configuration, ConfigurationError
@@ -67,7 +67,7 @@ class PrettyHelpFormatter(optparse.IndentedHelpFormatter):
         msg = "\nUsage: {}\n".format(self.indent_lines(textwrap.dedent(usage), "  "))
         return msg
 
-    def format_description(self, description: str) -> str:
+    def format_description(self, description: Optional[str]) -> str:
         # leave full control over description to us
         if description:
             if hasattr(self.parser, "main"):
@@ -85,7 +85,7 @@ class PrettyHelpFormatter(optparse.IndentedHelpFormatter):
         else:
             return ""
 
-    def format_epilog(self, epilog: str) -> str:
+    def format_epilog(self, epilog: Optional[str]) -> str:
         # leave full control over epilog to us
         if epilog:
             return epilog
@@ -229,9 +229,9 @@ class ConfigOptionParser(CustomOptionParser):
                     val = strtobool(val)
                 except ValueError:
                     self.error(
-                        "{} is not a valid value for {} option, "  # noqa
+                        f"{val} is not a valid value for {key} option, "
                         "please specify a boolean value like yes/no, "
-                        "true/false or 1/0 instead.".format(val, key)
+                        "true/false or 1/0 instead."
                     )
             elif option.action == "count":
                 with suppress(ValueError):
@@ -240,10 +240,10 @@ class ConfigOptionParser(CustomOptionParser):
                     val = int(val)
                 if not isinstance(val, int) or val < 0:
                     self.error(
-                        "{} is not a valid value for {} option, "  # noqa
+                        f"{val} is not a valid value for {key} option, "
                         "please instead specify either a non-negative integer "
                         "or a boolean value like yes/no or false/true "
-                        "which is equivalent to 1/0.".format(val, key)
+                        "which is equivalent to 1/0."
                     )
             elif option.action == "append":
                 val = val.split()

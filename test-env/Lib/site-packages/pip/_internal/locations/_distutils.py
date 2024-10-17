@@ -56,8 +56,7 @@ def distutils_scheme(
         try:
             d.parse_config_files()
         except UnicodeDecodeError:
-            # Typeshed does not include find_config_files() for some reason.
-            paths = d.find_config_files()  # type: ignore
+            paths = d.find_config_files()
             logger.warning(
                 "Ignore distutils configs in %s due to encoding errors.",
                 ", ".join(os.path.basename(p) for p in paths),
@@ -89,7 +88,7 @@ def distutils_scheme(
     # finalize_options(); we only want to override here if the user
     # has explicitly requested it hence going back to the config
     if "install_lib" in d.get_option_dict("install"):
-        scheme.update(dict(purelib=i.install_lib, platlib=i.install_lib))
+        scheme.update({"purelib": i.install_lib, "platlib": i.install_lib})
 
     if running_under_virtualenv():
         if home:

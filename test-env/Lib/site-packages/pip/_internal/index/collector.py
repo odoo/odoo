@@ -11,10 +11,10 @@ import logging
 import os
 import urllib.parse
 import urllib.request
+from dataclasses import dataclass
 from html.parser import HTMLParser
 from optparse import Values
 from typing import (
-    TYPE_CHECKING,
     Callable,
     Dict,
     Iterable,
@@ -22,6 +22,7 @@ from typing import (
     MutableMapping,
     NamedTuple,
     Optional,
+    Protocol,
     Sequence,
     Tuple,
     Union,
@@ -41,11 +42,6 @@ from pip._internal.utils.misc import redact_auth_from_url
 from pip._internal.vcs import vcs
 
 from .sources import CandidatesFromPage, LinkSource, build_source
-
-if TYPE_CHECKING:
-    from typing import Protocol
-else:
-    Protocol = object
 
 logger = logging.getLogger(__name__)
 
@@ -201,8 +197,7 @@ class CacheablePageContent:
 
 
 class ParseLinks(Protocol):
-    def __call__(self, page: "IndexContent") -> Iterable[Link]:
-        ...
+    def __call__(self, page: "IndexContent") -> Iterable[Link]: ...
 
 
 def with_cached_index_content(fn: ParseLinks) -> ParseLinks:
@@ -254,29 +249,22 @@ def parse_links(page: "IndexContent") -> Iterable[Link]:
         yield link
 
 
+@dataclass(frozen=True)
 class IndexContent:
-    """Represents one response (or page), along with its URL"""
+    """Represents one response (or page), along with its URL.
 
-    def __init__(
-        self,
-        content: bytes,
-        content_type: str,
-        encoding: Optional[str],
-        url: str,
-        cache_link_parsing: bool = True,
-    ) -> None:
-        """
-        :param encoding: the encoding to decode the given content.
-        :param url: the URL from which the HTML was downloaded.
-        :param cache_link_parsing: whether links parsed from this page's url
-                                   should be cached. PyPI index urls should
-                                   have this set to False, for example.
-        """
-        self.content = content
-        self.content_type = content_type
-        self.encoding = encoding
-        self.url = url
-        self.cache_link_parsing = cache_link_parsing
+    :param encoding: the encoding to decode the given content.
+    :param url: the URL from which the HTML was downloaded.
+    :param cache_link_parsing: whether links parsed from this page's url
+                               should be cached. PyPI index urls should
+                               have this set to False, for example.
+    """
+
+    content: bytes
+    content_type: str
+    encoding: Optional[str]
+    url: str
+    cache_link_parsing: bool = True
 
     def __str__(self) -> str:
         return redact_auth_from_url(self.url)
@@ -400,7 +388,6 @@ class CollectedSources(NamedTuple):
 
 
 class LinkCollector:
-
     """
     Responsible for collecting Link objects from all configured locations,
     making network requests as needed.
@@ -473,6 +460,7 @@ class LinkCollector:
                 page_validator=self.session.is_secure_origin,
                 expand_dir=False,
                 cache_link_parsing=False,
+                project_name=project_name,
             )
             for loc in self.search_scope.get_index_urls_locations(project_name)
         ).values()
@@ -483,6 +471,7 @@ class LinkCollector:
                 page_validator=self.session.is_secure_origin,
                 expand_dir=True,
                 cache_link_parsing=True,
+                project_name=project_name,
             )
             for loc in self.find_links
         ).values()

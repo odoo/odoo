@@ -2,21 +2,21 @@
 # 2.0, and the BSD License. See the LICENSE file in the root of this repository
 # for complete details.
 
+from __future__ import annotations
+
 import logging
 import platform
+import re
+import struct
+import subprocess
 import sys
 import sysconfig
 from importlib.machinery import EXTENSION_SUFFIXES
 from typing import (
-    Dict,
-    FrozenSet,
     Iterable,
     Iterator,
-    List,
-    Optional,
     Sequence,
     Tuple,
-    Union,
     cast,
 )
 
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 PythonVersion = Sequence[int]
 MacVersion = Tuple[int, int]
 
-INTERPRETER_SHORT_NAMES: Dict[str, str] = {
+INTERPRETER_SHORT_NAMES: dict[str, str] = {
     "python": "py",  # Generic.
     "cpython": "cp",
     "pypy": "pp",
@@ -36,7 +36,7 @@ INTERPRETER_SHORT_NAMES: Dict[str, str] = {
 }
 
 
-_32_BIT_INTERPRETER = sys.maxsize <= 2 ** 32
+_32_BIT_INTERPRETER = struct.calcsize("P") == 4
 
 
 class Tag:
@@ -93,7 +93,7 @@ class Tag:
         return f"<{self} @ {id(self)}>"
 
 
-def parse_tag(tag: str) -> FrozenSet[Tag]:
+def parse_tag(tag: str) -> frozenset[Tag]:
     """
     Parses the provided tag (e.g. `py3-none-any`) into a frozenset of Tag instances.
 
@@ -109,8 +109,8 @@ def parse_tag(tag: str) -> FrozenSet[Tag]:
     return frozenset(tags)
 
 
-def _get_config_var(name: str, warn: bool = False) -> Union[int, str, None]:
-    value = sysconfig.get_config_var(name)
+def _get_config_var(name: str, warn: bool = False) -> int | str | None:
+    value: int | str | None = sysconfig.get_config_var(name)
     if value is None and warn:
         logger.debug(
             "Config variable '%s' is unset, Python ABI tag may be incorrect", name
@@ -119,23 +119,40 @@ def _get_config_var(name: str, warn: bool = False) -> Union[int, str, None]:
 
 
 def _normalize_string(string: str) -> str:
-    return string.replace(".", "_").replace("-", "_")
+    return string.replace(".", "_").replace("-", "_").replace(" ", "_")
 
 
-def _abi3_applies(python_version: PythonVersion) -> bool:
+def _is_threaded_cpython(abis: list[str]) -> bool:
+    """
+    Determine if the ABI corresponds to a threaded (`--disable-gil`) build.
+
+    The threaded builds are indicated by a "t" in the abiflags.
+    """
+    if len(abis) == 0:
+        return False
+    # expect e.g., cp313
+    m = re.match(r"cp\d+(.*)", abis[0])
+    if not m:
+        return False
+    abiflags = m.group(1)
+    return "t" in abiflags
+
+
+def _abi3_applies(python_version: PythonVersion, threading: bool) -> bool:
     """
     Determine if the Python version supports abi3.
 
-    PEP 384 was first implemented in Python 3.2.
+    PEP 384 was first implemented in Python 3.2. The threaded (`--disable-gil`)
+    builds do not support abi3.
     """
-    return len(python_version) > 1 and tuple(python_version) >= (3, 2)
+    return len(python_version) > 1 and tuple(python_version) >= (3, 2) and not threading
 
 
-def _cpython_abis(py_version: PythonVersion, warn: bool = False) -> List[str]:
+def _cpython_abis(py_version: PythonVersion, warn: bool = False) -> list[str]:
     py_version = tuple(py_version)  # To allow for version comparison.
     abis = []
     version = _version_nodot(py_version[:2])
-    debug = pymalloc = ucs4 = ""
+    threading = debug = pymalloc = ucs4 = ""
     with_debug = _get_config_var("Py_DEBUG", warn)
     has_refcount = hasattr(sys, "gettotalrefcount")
     # Windows doesn't set Py_DEBUG, so checking for support of debug-compiled
@@ -144,6 +161,8 @@ def _cpython_abis(py_version: PythonVersion, warn: bool = False) -> List[str]:
     has_ext = "_d.pyd" in EXTENSION_SUFFIXES
     if with_debug or (with_debug is None and (has_refcount or has_ext)):
         debug = "d"
+    if py_version >= (3, 13) and _get_config_var("Py_GIL_DISABLED", warn):
+        threading = "t"
     if py_version < (3, 8):
         with_pymalloc = _get_config_var("WITH_PYMALLOC", warn)
         if with_pymalloc or with_pymalloc is None:
@@ -157,20 +176,15 @@ def _cpython_abis(py_version: PythonVersion, warn: bool = False) -> List[str]:
     elif debug:
         # Debug builds can also load "normal" extension modules.
         # We can also assume no UCS-4 or pymalloc requirement.
-        abis.append(f"cp{version}")
-    abis.insert(
-        0,
-        "cp{version}{debug}{pymalloc}{ucs4}".format(
-            version=version, debug=debug, pymalloc=pymalloc, ucs4=ucs4
-        ),
-    )
+        abis.append(f"cp{version}{threading}")
+    abis.insert(0, f"cp{version}{threading}{debug}{pymalloc}{ucs4}")
     return abis
 
 
 def cpython_tags(
-    python_version: Optional[PythonVersion] = None,
-    abis: Optional[Iterable[str]] = None,
-    platforms: Optional[Iterable[str]] = None,
+    python_version: PythonVersion | None = None,
+    abis: Iterable[str] | None = None,
+    platforms: Iterable[str] | None = None,
     *,
     warn: bool = False,
 ) -> Iterator[Tag]:
@@ -211,11 +225,14 @@ def cpython_tags(
     for abi in abis:
         for platform_ in platforms:
             yield Tag(interpreter, abi, platform_)
-    if _abi3_applies(python_version):
+
+    threading = _is_threaded_cpython(abis)
+    use_abi3 = _abi3_applies(python_version, threading)
+    if use_abi3:
         yield from (Tag(interpreter, "abi3", platform_) for platform_ in platforms)
     yield from (Tag(interpreter, "none", platform_) for platform_ in platforms)
 
-    if _abi3_applies(python_version):
+    if use_abi3:
         for minor_version in range(python_version[1] - 1, 1, -1):
             for platform_ in platforms:
                 interpreter = "cp{version}".format(
@@ -224,16 +241,51 @@ def cpython_tags(
                 yield Tag(interpreter, "abi3", platform_)
 
 
-def _generic_abi() -> Iterator[str]:
-    abi = sysconfig.get_config_var("SOABI")
-    if abi:
-        yield _normalize_string(abi)
+def _generic_abi() -> list[str]:
+    """
+    Return the ABI tag based on EXT_SUFFIX.
+    """
+    # The following are examples of `EXT_SUFFIX`.
+    # We want to keep the parts which are related to the ABI and remove the
+    # parts which are related to the platform:
+    # - linux:   '.cpython-310-x86_64-linux-gnu.so' => cp310
+    # - mac:     '.cpython-310-darwin.so'           => cp310
+    # - win:     '.cp310-win_amd64.pyd'             => cp310
+    # - win:     '.pyd'                             => cp37 (uses _cpython_abis())
+    # - pypy:    '.pypy38-pp73-x86_64-linux-gnu.so' => pypy38_pp73
+    # - graalpy: '.graalpy-38-native-x86_64-darwin.dylib'
+    #                                               => graalpy_38_native
+
+    ext_suffix = _get_config_var("EXT_SUFFIX", warn=True)
+    if not isinstance(ext_suffix, str) or ext_suffix[0] != ".":
+        raise SystemError("invalid sysconfig.get_config_var('EXT_SUFFIX')")
+    parts = ext_suffix.split(".")
+    if len(parts) < 3:
+        # CPython3.7 and earlier uses ".pyd" on Windows.
+        return _cpython_abis(sys.version_info[:2])
+    soabi = parts[1]
+    if soabi.startswith("cpython"):
+        # non-windows
+        abi = "cp" + soabi.split("-")[1]
+    elif soabi.startswith("cp"):
+        # windows
+        abi = soabi.split("-")[0]
+    elif soabi.startswith("pypy"):
+        abi = "-".join(soabi.split("-")[:2])
+    elif soabi.startswith("graalpy"):
+        abi = "-".join(soabi.split("-")[:3])
+    elif soabi:
+        # pyston, ironpython, others?
+        abi = soabi
+    else:
+        return []
+    return [_normalize_string(abi)]
 
 
 def generic_tags(
-    interpreter: Optional[str] = None,
-    abis: Optional[Iterable[str]] = None,
-    platforms: Optional[Iterable[str]] = None,
+    interpreter: str | None = None,
+    abis: Iterable[str] | None = None,
+    platforms: Iterable[str] | None = None,
     *,
     warn: bool = False,
 ) -> Iterator[Tag]:
@@ -251,8 +303,9 @@ def generic_tags(
         interpreter = "".join([interp_name, interp_version])
     if abis is None:
         abis = _generic_abi()
+    else:
+        abis = list(abis)
     platforms = list(platforms or platform_tags())
-    abis = list(abis)
     if "none" not in abis:
         abis.append("none")
     for abi in abis:
@@ -276,9 +329,9 @@ def _py_interpreter_range(py_version: PythonVersion) -> Iterator[str]:
 
 
 def compatible_tags(
-    python_version: Optional[PythonVersion] = None,
-    interpreter: Optional[str] = None,
-    platforms: Optional[Iterable[str]] = None,
+    python_version: PythonVersion | None = None,
+    interpreter: str | None = None,
+    platforms: Iterable[str] | None = None,
 ) -> Iterator[Tag]:
     """
     Yields the sequence of tags that are compatible with a specific version of Python.
@@ -310,7 +363,7 @@ def _mac_arch(arch: str, is_32bit: bool = _32_BIT_INTERPRETER) -> str:
     return "i386"
 
 
-def _mac_binary_formats(version: MacVersion, cpu_arch: str) -> List[str]:
+def _mac_binary_formats(version: MacVersion, cpu_arch: str) -> list[str]:
     formats = [cpu_arch]
     if cpu_arch == "x86_64":
         if version < (10, 4):
@@ -343,7 +396,7 @@ def _mac_binary_formats(version: MacVersion, cpu_arch: str) -> List[str]:
 
 
 def mac_platforms(
-    version: Optional[MacVersion] = None, arch: Optional[str] = None
+    version: MacVersion | None = None, arch: str | None = None
 ) -> Iterator[str]:
     """
     Yields the platform tags for a macOS system.
@@ -356,6 +409,22 @@ def mac_platforms(
     version_str, _, cpu_arch = platform.mac_ver()
     if version is None:
         version = cast("MacVersion", tuple(map(int, version_str.split(".")[:2])))
+        if version == (10, 16):
+            # When built against an older macOS SDK, Python will report macOS 10.16
+            # instead of the real version.
+            version_str = subprocess.run(
+                [
+                    sys.executable,
+                    "-sS",
+                    "-c",
+                    "import platform; print(platform.mac_ver()[0])",
+                ],
+                check=True,
+                env={"SYSTEM_VERSION_COMPAT": "0"},
+                stdout=subprocess.PIPE,
+                text=True,
+            ).stdout
+            version = cast("MacVersion", tuple(map(int, version_str.split(".")[:2])))
     else:
         version = version
     if arch is None:
@@ -416,15 +485,21 @@ def mac_platforms(
 
 def _linux_platforms(is_32bit: bool = _32_BIT_INTERPRETER) -> Iterator[str]:
     linux = _normalize_string(sysconfig.get_platform())
+    if not linux.startswith("linux_"):
+        # we should never be here, just yield the sysconfig one and return
+        yield linux
+        return
     if is_32bit:
         if linux == "linux_x86_64":
             linux = "linux_i686"
         elif linux == "linux_aarch64":
-            linux = "linux_armv7l"
+            linux = "linux_armv8l"
     _, arch = linux.split("_", 1)
-    yield from _manylinux.platform_tags(linux, arch)
-    yield from _musllinux.platform_tags(arch)
-    yield linux
+    archs = {"armv8l": ["armv8l", "armv7l"]}.get(arch, [arch])
+    yield from _manylinux.platform_tags(archs)
+    yield from _musllinux.platform_tags(archs)
+    for arch in archs:
+        yield f"linux_{arch}"
 
 
 def _generic_platforms() -> Iterator[str]:
@@ -446,6 +521,9 @@ def platform_tags() -> Iterator[str]:
 def interpreter_name() -> str:
     """
     Returns the name of the running interpreter.
+
+    Some implementations have a reserved, two-letter abbreviation which will
+    be returned when appropriate.
     """
     name = sys.implementation.name
     return INTERPRETER_SHORT_NAMES.get(name) or name
@@ -482,6 +560,9 @@ def sys_tags(*, warn: bool = False) -> Iterator[Tag]:
         yield from generic_tags()
 
     if interp_name == "pp":
-        yield from compatible_tags(interpreter="pp3")
+        interp = "pp3"
+    elif interp_name == "cp":
+        interp = "cp" + interpreter_version(warn=warn)
     else:
-        yield from compatible_tags()
+        interp = None
+    yield from compatible_tags(interpreter=interp)

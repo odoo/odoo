@@ -1,12 +1,14 @@
 import logging
-from typing import Iterable, Set, Tuple
+from typing import TYPE_CHECKING, Iterable, Optional, Set, Tuple
 
 from pip._internal.build_env import BuildEnvironment
 from pip._internal.distributions.base import AbstractDistribution
 from pip._internal.exceptions import InstallationError
-from pip._internal.index.package_finder import PackageFinder
 from pip._internal.metadata import BaseDistribution
 from pip._internal.utils.subprocess import runner_with_spinner_message
+
+if TYPE_CHECKING:
+    from pip._internal.index.package_finder import PackageFinder
 
 logger = logging.getLogger(__name__)
 
@@ -18,12 +20,18 @@ class SourceDistribution(AbstractDistribution):
     generated, either using PEP 517 or using the legacy `setup.py egg_info`.
     """
 
+    @property
+    def build_tracker_id(self) -> Optional[str]:
+        """Identify this requirement uniquely by its link."""
+        assert self.req.link
+        return self.req.link.url_without_fragment
+
     def get_metadata_distribution(self) -> BaseDistribution:
         return self.req.get_dist()
 
     def prepare_distribution_metadata(
         self,
-        finder: PackageFinder,
+        finder: "PackageFinder",
         build_isolation: bool,
         check_build_deps: bool,
     ) -> None:
@@ -60,7 +68,7 @@ class SourceDistribution(AbstractDistribution):
                 self._raise_missing_reqs(missing)
         self.req.prepare_metadata()
 
-    def _prepare_build_backend(self, finder: PackageFinder) -> None:
+    def _prepare_build_backend(self, finder: "PackageFinder") -> None:
         # Isolate in a BuildEnvironment and install the build-time
         # requirements.
         pyproject_requires = self.req.pyproject_requires
@@ -104,14 +112,14 @@ class SourceDistribution(AbstractDistribution):
             with backend.subprocess_runner(runner):
                 return backend.get_requires_for_build_editable()
 
-    def _install_build_reqs(self, finder: PackageFinder) -> None:
+    def _install_build_reqs(self, finder: "PackageFinder") -> None:
         # Install any extra build dependencies that the backend requests.
         # This must be done in a second pass, as the pyproject.toml
         # dependencies must be installed before we can call the backend.
         if (
             self.req.editable
             and self.req.permit_editable_wheels
-            and self.req.supports_pyproject_editable()
+            and self.req.supports_pyproject_editable
         ):
             build_reqs = self._get_build_requires_editable()
         else:

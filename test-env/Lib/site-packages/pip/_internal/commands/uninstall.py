@@ -6,7 +6,7 @@ from pip._vendor.packaging.utils import canonicalize_name
 
 from pip._internal.cli import cmdoptions
 from pip._internal.cli.base_command import Command
-from pip._internal.cli.req_command import SessionCommandMixin, warn_if_run_as_root
+from pip._internal.cli.index_command import SessionCommandMixin
 from pip._internal.cli.status_codes import SUCCESS
 from pip._internal.exceptions import InstallationError
 from pip._internal.req import parse_requirements
@@ -17,6 +17,7 @@ from pip._internal.req.constructors import (
 from pip._internal.utils.misc import (
     check_externally_managed,
     protect_pip_from_modification_on_windows,
+    warn_if_run_as_root,
 )
 
 logger = logging.getLogger(__name__)

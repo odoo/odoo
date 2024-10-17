@@ -154,9 +154,9 @@ class RichPipStreamHandler(RichHandler):
         style: Optional[Style] = None
 
         # If we are given a diagnostic error to present, present it with indentation.
-        assert isinstance(record.args, tuple)
-        if record.msg == "[present-rich] %s" and len(record.args) == 1:
-            rich_renderable = record.args[0]
+        if getattr(record, "rich", False):
+            assert isinstance(record.args, tuple)
+            (rich_renderable,) = record.args
             assert isinstance(
                 rich_renderable, (ConsoleRenderable, RichCast, str)
             ), f"{rich_renderable} is not rich-console-renderable"
@@ -212,7 +212,6 @@ class MaxLevelFilter(Filter):
 
 
 class ExcludeLoggerFilter(Filter):
-
     """
     A logging Filter that excludes records from a logger (or its children).
     """

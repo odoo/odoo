@@ -2,25 +2,19 @@
 # 2.0, and the BSD License. See the LICENSE file in the root of this repository
 # for complete details.
 
+from __future__ import annotations
+
 import operator
 import os
 import platform
 import sys
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, TypedDict, cast
 
-from pip._vendor.pyparsing import (  # noqa: N817
-    Forward,
-    Group,
-    Literal as L,
-    ParseException,
-    ParseResults,
-    QuotedString,
-    ZeroOrMore,
-    stringEnd,
-    stringStart,
-)
-
+from ._parser import MarkerAtom, MarkerList, Op, Value, Variable
+from ._parser import parse_marker as _parse_marker
+from ._tokenizer import ParserSyntaxError
 from .specifiers import InvalidSpecifier, Specifier
+from .utils import canonicalize_name
 
 __all__ = [
     "InvalidMarker",
@@ -52,103 +46,97 @@ class UndefinedEnvironmentName(ValueError):
     """
 
 
-class Node:
-    def __init__(self, value: Any) -> None:
-        self.value = value
+class Environment(TypedDict):
+    implementation_name: str
+    """The implementation's identifier, e.g. ``'cpython'``."""
 
-    def __str__(self) -> str:
-        return str(self.value)
+    implementation_version: str
+    """
+    The implementation's version, e.g. ``'3.13.0a2'`` for CPython 3.13.0a2, or
+    ``'7.3.13'`` for PyPy3.10 v7.3.13.
+    """
 
-    def __repr__(self) -> str:
-        return f"<{self.__class__.__name__}('{self}')>"
+    os_name: str
+    """
+    The value of :py:data:`os.name`. The name of the operating system dependent module
+    imported, e.g. ``'posix'``.
+    """
 
-    def serialize(self) -> str:
-        raise NotImplementedError
+    platform_machine: str
+    """
+    Returns the machine type, e.g. ``'i386'``.
 
+    An empty string if the value cannot be determined.
+    """
 
-class Variable(Node):
-    def serialize(self) -> str:
-        return str(self)
+    platform_release: str
+    """
+    The system's release, e.g. ``'2.2.0'`` or ``'NT'``.
 
+    An empty string if the value cannot be determined.
+    """
 
-class Value(Node):
-    def serialize(self) -> str:
-        return f'"{self}"'
+    platform_system: str
+    """
+    The system/OS name, e.g. ``'Linux'``, ``'Windows'`` or ``'Java'``.
 
+    An empty string if the value cannot be determined.
+    """
 
-class Op(Node):
-    def serialize(self) -> str:
-        return str(self)
+    platform_version: str
+    """
+    The system's release version, e.g. ``'#3 on degas'``.
 
+    An empty string if the value cannot be determined.
+    """
 
-VARIABLE = (
-    L("implementation_version")
-    | L("platform_python_implementation")
-    | L("implementation_name")
-    | L("python_full_version")
-    | L("platform_release")
-    | L("platform_version")
-    | L("platform_machine")
-    | L("platform_system")
-    | L("python_version")
-    | L("sys_platform")
-    | L("os_name")
-    | L("os.name")  # PEP-345
-    | L("sys.platform")  # PEP-345
-    | L("platform.version")  # PEP-345
-    | L("platform.machine")  # PEP-345
-    | L("platform.python_implementation")  # PEP-345
-    | L("python_implementation")  # undocumented setuptools legacy
-    | L("extra")  # PEP-508
-)
-ALIASES = {
-    "os.name": "os_name",
-    "sys.platform": "sys_platform",
-    "platform.version": "platform_version",
-    "platform.machine": "platform_machine",
-    "platform.python_implementation": "platform_python_implementation",
-    "python_implementation": "platform_python_implementation",
-}
-VARIABLE.setParseAction(lambda s, l, t: Variable(ALIASES.get(t[0], t[0])))
+    python_full_version: str
+    """
+    The Python version as string ``'major.minor.patchlevel'``.
 
-VERSION_CMP = (
-    L("===") | L("==") | L(">=") | L("<=") | L("!=") | L("~=") | L(">") | L("<")
-)
+    Note that unlike the Python :py:data:`sys.version`, this value will always include
+    the patchlevel (it defaults to 0).
+    """
 
-MARKER_OP = VERSION_CMP | L("not in") | L("in")
-MARKER_OP.setParseAction(lambda s, l, t: Op(t[0]))
+    platform_python_implementation: str
+    """
+    A string identifying the Python implementation, e.g. ``'CPython'``.
+    """
 
-MARKER_VALUE = QuotedString("'") | QuotedString('"')
-MARKER_VALUE.setParseAction(lambda s, l, t: Value(t[0]))
+    python_version: str
+    """The Python version as string ``'major.minor'``."""
 
-BOOLOP = L("and") | L("or")
+    sys_platform: str
+    """
+    This string contains a platform identifier that can be used to append
+    platform-specific components to :py:data:`sys.path`, for instance.
 
-MARKER_VAR = VARIABLE | MARKER_VALUE
-
-MARKER_ITEM = Group(MARKER_VAR + MARKER_OP + MARKER_VAR)
-MARKER_ITEM.setParseAction(lambda s, l, t: tuple(t[0]))
-
-LPAREN = L("(").suppress()
-RPAREN = L(")").suppress()
-
-MARKER_EXPR = Forward()
-MARKER_ATOM = MARKER_ITEM | Group(LPAREN + MARKER_EXPR + RPAREN)
-MARKER_EXPR << MARKER_ATOM + ZeroOrMore(BOOLOP + MARKER_EXPR)
-
-MARKER = stringStart + MARKER_EXPR + stringEnd
+    For Unix systems, except on Linux and AIX, this is the lowercased OS name as
+    returned by ``uname -s`` with the first part of the version as returned by
+    ``uname -r`` appended, e.g. ``'sunos5'`` or ``'freebsd8'``, at the time when Python
+    was built.
+    """
 
 
-def _coerce_parse_result(results: Union[ParseResults, List[Any]]) -> List[Any]:
-    if isinstance(results, ParseResults):
-        return [_coerce_parse_result(i) for i in results]
-    else:
-        return results
+def _normalize_extra_values(results: Any) -> Any:
+    """
+    Normalize extra values.
+    """
+    if isinstance(results[0], tuple):
+        lhs, op, rhs = results[0]
+        if isinstance(lhs, Variable) and lhs.value == "extra":
+            normalized_extra = canonicalize_name(rhs.value)
+            rhs = Value(normalized_extra)
+        elif isinstance(rhs, Variable) and rhs.value == "extra":
+            normalized_extra = canonicalize_name(lhs.value)
+            lhs = Value(normalized_extra)
+        results[0] = lhs, op, rhs
+    return results
 
 
 def _format_marker(
-    marker: Union[List[str], Tuple[Node, ...], str], first: Optional[bool] = True
+    marker: list[str] | MarkerAtom | str, first: bool | None = True
 ) -> str:
-
     assert isinstance(marker, (list, tuple, str))
 
     # Sometimes we have a structure like [[...]] which is a single item list
@@ -174,7 +162,7 @@ def _format_marker(
         return marker
 
 
-_operators: Dict[str, Operator] = {
+_operators: dict[str, Operator] = {
     "in": lambda lhs, rhs: lhs in rhs,
     "not in": lambda lhs, rhs: lhs not in rhs,
     "<": operator.lt,
@@ -192,35 +180,29 @@ def _eval_op(lhs: str, op: Op, rhs: str) -> bool:
     except InvalidSpecifier:
         pass
     else:
-        return spec.contains(lhs)
+        return spec.contains(lhs, prereleases=True)
 
-    oper: Optional[Operator] = _operators.get(op.serialize())
+    oper: Operator | None = _operators.get(op.serialize())
     if oper is None:
         raise UndefinedComparison(f"Undefined {op!r} on {lhs!r} and {rhs!r}.")
 
     return oper(lhs, rhs)
 
 
-class Undefined:
-    pass
+def _normalize(*values: str, key: str) -> tuple[str, ...]:
+    # PEP 685 – Comparison of extra names for optional distribution dependencies
+    # https://peps.python.org/pep-0685/
+    # > When comparing extra names, tools MUST normalize the names being
+    # > compared using the semantics outlined in PEP 503 for names
+    if key == "extra":
+        return tuple(canonicalize_name(v) for v in values)
+
+    # other environment markers don't have such standards
+    return values
 
 
-_undefined = Undefined()
-
-
-def _get_env(environment: Dict[str, str], name: str) -> str:
-    value: Union[str, Undefined] = environment.get(name, _undefined)
-
-    if isinstance(value, Undefined):
-        raise UndefinedEnvironmentName(
-            f"{name!r} does not exist in evaluation environment."
-        )
-
-    return value
-
-
-def _evaluate_markers(markers: List[Any], environment: Dict[str, str]) -> bool:
-    groups: List[List[bool]] = [[]]
+def _evaluate_markers(markers: MarkerList, environment: dict[str, str]) -> bool:
+    groups: list[list[bool]] = [[]]
 
     for marker in markers:
         assert isinstance(marker, (list, tuple, str))
@@ -231,12 +213,15 @@ def _evaluate_markers(markers: List[Any], environment: Dict[str, str]) -> bool:
             lhs, op, rhs = marker
 
             if isinstance(lhs, Variable):
-                lhs_value = _get_env(environment, lhs.value)
+                environment_key = lhs.value
+                lhs_value = environment[environment_key]
                 rhs_value = rhs.value
             else:
                 lhs_value = lhs.value
-                rhs_value = _get_env(environment, rhs.value)
+                environment_key = rhs.value
+                rhs_value = environment[environment_key]
 
+            lhs_value, rhs_value = _normalize(lhs_value, rhs_value, key=environment_key)
             groups[-1].append(_eval_op(lhs_value, op, rhs_value))
         else:
             assert marker in ["and", "or"]
@@ -246,7 +231,7 @@ def _evaluate_markers(markers: List[Any], environment: Dict[str, str]) -> bool:
     return any(all(item) for item in groups)
 
 
-def format_full_version(info: "sys._version_info") -> str:
+def format_full_version(info: sys._version_info) -> str:
     version = "{0.major}.{0.minor}.{0.micro}".format(info)
     kind = info.releaselevel
     if kind != "final":
@@ -254,7 +239,7 @@ def format_full_version(info: "sys._version_info") -> str:
     return version
 
 
-def default_environment() -> Dict[str, str]:
+def default_environment() -> Environment:
     iver = format_full_version(sys.implementation.version)
     implementation_name = sys.implementation.name
     return {
@@ -274,13 +259,29 @@ def default_environment() -> Dict[str, str]:
 
 class Marker:
     def __init__(self, marker: str) -> None:
+        # Note: We create a Marker object without calling this constructor in
+        #       packaging.requirements.Requirement. If any additional logic is
+        #       added here, make sure to mirror/adapt Requirement.
         try:
-            self._markers = _coerce_parse_result(MARKER.parseString(marker))
-        except ParseException as e:
-            raise InvalidMarker(
-                f"Invalid marker: {marker!r}, parse error at "
-                f"{marker[e.loc : e.loc + 8]!r}"
-            )
+            self._markers = _normalize_extra_values(_parse_marker(marker))
+            # The attribute `_markers` can be described in terms of a recursive type:
+            # MarkerList = List[Union[Tuple[Node, ...], str, MarkerList]]
+            #
+            # For example, the following expression:
+            # python_version > "3.6" or (python_version == "3.6" and os_name == "unix")
+            #
+            # is parsed into:
+            # [
+            #     (<Variable('python_version')>, <Op('>')>, <Value('3.6')>),
+            #     'and',
+            #     [
+            #         (<Variable('python_version')>, <Op('==')>, <Value('3.6')>),
+            #         'or',
+            #         (<Variable('os_name')>, <Op('==')>, <Value('unix')>)
+            #     ]
+            # ]
+        except ParserSyntaxError as e:
+            raise InvalidMarker(str(e)) from e
 
     def __str__(self) -> str:
         return _format_marker(self._markers)
@@ -288,7 +289,16 @@ class Marker:
     def __repr__(self) -> str:
         return f"<Marker('{self}')>"
 
-    def evaluate(self, environment: Optional[Dict[str, str]] = None) -> bool:
+    def __hash__(self) -> int:
+        return hash((self.__class__.__name__, str(self)))
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, Marker):
+            return NotImplemented
+
+        return str(self) == str(other)
+
+    def evaluate(self, environment: dict[str, str] | None = None) -> bool:
         """Evaluate a marker.
 
         Return the boolean from evaluating the given marker against the
@@ -297,8 +307,19 @@ class Marker:
 
         The environment is determined from the current Python process.
         """
-        current_environment = default_environment()
+        current_environment = cast("dict[str, str]", default_environment())
+        current_environment["extra"] = ""
+        # Work around platform.python_version() returning something that is not PEP 440
+        # compliant for non-tagged Python builds. We preserve default_environment()'s
+        # behavior of returning platform.python_version() verbatim, and leave it to the
+        # caller to provide a syntactically valid version if they want to override it.
+        if current_environment["python_full_version"].endswith("+"):
+            current_environment["python_full_version"] += "local"
         if environment is not None:
             current_environment.update(environment)
+            # The API used to allow setting extra to None. We need to handle this
+            # case for backwards compatibility.
+            if current_environment["extra"] is None:
+                current_environment["extra"] = ""
 
         return _evaluate_markers(self._markers, current_environment)

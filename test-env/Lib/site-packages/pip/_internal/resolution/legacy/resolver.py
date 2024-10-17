@@ -10,9 +10,6 @@ for sub-dependencies
     a. "first found, wins" (where the order is breadth first)
 """
 
-# The following comment should be removed at some point in the future.
-# mypy: strict-optional=False
-
 import logging
 import sys
 from collections import defaultdict
@@ -52,7 +49,7 @@ from pip._internal.utils.packaging import check_requires_python
 
 logger = logging.getLogger(__name__)
 
-DiscoveredDependencies = DefaultDict[str, List[InstallRequirement]]
+DiscoveredDependencies = DefaultDict[Optional[str], List[InstallRequirement]]
 
 
 def _check_dist_requires_python(
@@ -104,9 +101,8 @@ def _check_dist_requires_python(
         return
 
     raise UnsupportedPythonVersion(
-        "Package {!r} requires a different Python: {} not in {!r}".format(
-            dist.raw_name, version, requires_python
-        )
+        f"Package {dist.raw_name!r} requires a different Python: "
+        f"{version} not in {requires_python!r}"
     )
 
 
@@ -231,9 +227,7 @@ class Resolver(BaseResolver):
             tags = compatibility_tags.get_supported()
             if requirement_set.check_supported_wheels and not wheel.supported(tags):
                 raise InstallationError(
-                    "{} is not a supported wheel on this platform.".format(
-                        wheel.filename
-                    )
+                    f"{wheel.filename} is not a supported wheel on this platform."
                 )
 
         # This next bit is really a sanity check.
@@ -248,9 +242,9 @@ class Resolver(BaseResolver):
             return [install_req], None
 
         try:
-            existing_req: Optional[
-                InstallRequirement
-            ] = requirement_set.get_requirement(install_req.name)
+            existing_req: Optional[InstallRequirement] = (
+                requirement_set.get_requirement(install_req.name)
+            )
         except KeyError:
             existing_req = None
 
@@ -265,9 +259,8 @@ class Resolver(BaseResolver):
         )
         if has_conflicting_requirement:
             raise InstallationError(
-                "Double requirement given: {} (already in {}, name={!r})".format(
-                    install_req, existing_req, install_req.name
-                )
+                f"Double requirement given: {install_req} "
+                f"(already in {existing_req}, name={install_req.name!r})"
             )
 
         # When no existing requirement exists, add the requirement as a
@@ -287,9 +280,9 @@ class Resolver(BaseResolver):
         )
         if does_not_satisfy_constraint:
             raise InstallationError(
-                "Could not satisfy constraints for '{}': "
+                f"Could not satisfy constraints for '{install_req.name}': "
                 "installation from path or url cannot be "
-                "constrained to a version".format(install_req.name)
+                "constrained to a version"
             )
         # If we're now installing a constraint, mark the existing
         # object for real installation.
@@ -325,6 +318,7 @@ class Resolver(BaseResolver):
         """
         # Don't uninstall the conflict if doing a user install and the
         # conflict is not a user install.
+        assert req.satisfied_by is not None
         if not self.use_user_site or req.satisfied_by.in_usersite:
             req.should_reinstall = True
         req.satisfied_by = None
@@ -398,9 +392,9 @@ class Resolver(BaseResolver):
                 # "UnicodeEncodeError: 'ascii' codec can't encode character"
                 # in Python 2 when the reason contains non-ascii characters.
                 "The candidate selected for download or install is a "
-                "yanked version: {candidate}\n"
-                "Reason for being yanked: {reason}"
-            ).format(candidate=best_candidate, reason=reason)
+                f"yanked version: {best_candidate}\n"
+                f"Reason for being yanked: {reason}"
+            )
             logger.warning(msg)
 
         return link
@@ -423,6 +417,8 @@ class Resolver(BaseResolver):
 
         if self.wheel_cache is None or self.preparer.require_hashes:
             return
+
+        assert req.link is not None, "_find_requirement_link unexpectedly returned None"
         cache_entry = self.wheel_cache.get_cache_entry(
             link=req.link,
             package_name=req.name,
@@ -431,12 +427,12 @@ class Resolver(BaseResolver):
         if cache_entry is not None:
             logger.debug("Using cached wheel link: %s", cache_entry.link)
             if req.link is req.original_link and cache_entry.persistent:
-                req.original_link_is_in_wheel_cache = True
+                req.cached_wheel_source_link = req.link
             if cache_entry.origin is not None:
                 req.download_info = cache_entry.origin
             else:
                 # Legacy cache entry that does not have origin.json.
-                # download_info may miss the archive_info.hash field.
+                # download_info may miss the archive_info.hashes field.
                 req.download_info = direct_url_from_link(
                     req.link, link_is_in_wheel_cache=cache_entry.persistent
                 )
@@ -536,6 +532,7 @@ class Resolver(BaseResolver):
         with indent_log():
             # We add req_to_install before its dependencies, so that we
             # can refer to it when adding dependencies.
+            assert req_to_install.name is not None
             if not requirement_set.has_requirement(req_to_install.name):
                 # 'unnamed' requirements will get added here
                 # 'unnamed' requirements can only come from being directly

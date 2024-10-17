@@ -5,7 +5,7 @@ import logging
 import os.path
 import re
 import shutil
-from typing import Callable, Iterable, List, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 from pip._vendor.packaging.utils import canonicalize_name, canonicalize_version
 from pip._vendor.packaging.version import InvalidVersion, Version
@@ -19,12 +19,8 @@ from pip._internal.operations.build.wheel import build_wheel_pep517
 from pip._internal.operations.build.wheel_editable import build_wheel_editable
 from pip._internal.operations.build.wheel_legacy import build_wheel_legacy
 from pip._internal.req.req_install import InstallRequirement
-from pip._internal.utils.deprecation import (
-    LegacyInstallReasonMissingWheelPackage,
-    LegacyInstallReasonNoBinaryForcesSetuptoolsInstall,
-)
 from pip._internal.utils.logging import indent_log
-from pip._internal.utils.misc import ensure_dir, hash_file, is_wheel_installed
+from pip._internal.utils.misc import ensure_dir, hash_file
 from pip._internal.utils.setuptools_build import make_setuptools_clean_args
 from pip._internal.utils.subprocess import call_subprocess
 from pip._internal.utils.temp_dir import TempDirectory
@@ -35,7 +31,6 @@ logger = logging.getLogger(__name__)
 
 _egg_info_re = re.compile(r"([a-z0-9_.]+)-([a-z0-9_.!+-]+)", re.IGNORECASE)
 
-BdistWheelAllowedPredicate = Callable[[InstallRequirement], bool]
 BuildResult = Tuple[List[InstallRequirement], List[InstallRequirement]]
 
 
@@ -50,7 +45,6 @@ def _contains_egg_info(s: str) -> bool:
 def _should_build(
     req: InstallRequirement,
     need_wheel: bool,
-    check_bdist_wheel: Optional[BdistWheelAllowedPredicate] = None,
 ) -> bool:
     """Return whether an InstallRequirement should be built into a wheel."""
     if req.constraint:
@@ -76,25 +70,7 @@ def _should_build(
 
     if req.editable:
         # we only build PEP 660 editable requirements
-        return req.supports_pyproject_editable()
-
-    if req.use_pep517:
-        return True
-
-    assert check_bdist_wheel is not None
-    if not check_bdist_wheel(req):
-        # /!\ When we change this to unconditionally return True, we must also remove
-        # support for `--install-option`. Indeed, `--install-option` implies
-        # `--no-binary` so we can return False here and run `setup.py install`.
-        # `--global-option` and `--build-option` can remain until we drop support for
-        # building with `setup.py bdist_wheel`.
-        req.legacy_install_reason = LegacyInstallReasonNoBinaryForcesSetuptoolsInstall
-        return False
-
-    if not is_wheel_installed():
-        # we don't build legacy requirements if wheel is not installed
-        req.legacy_install_reason = LegacyInstallReasonMissingWheelPackage
-        return False
+        return req.supports_pyproject_editable
 
     return True
 
@@ -107,11 +83,8 @@ def should_build_for_wheel_command(
 
 def should_build_for_install_command(
     req: InstallRequirement,
-    check_bdist_wheel_allowed: BdistWheelAllowedPredicate,
 ) -> bool:
-    return _should_build(
-        req, need_wheel=False, check_bdist_wheel=check_bdist_wheel_allowed
-    )
+    return _should_build(req, need_wheel=False)
 
 
 def _should_cache(
@@ -167,15 +140,15 @@ def _verify_one(req: InstallRequirement, wheel_path: str) -> None:
     w = Wheel(os.path.basename(wheel_path))
     if canonicalize_name(w.name) != canonical_name:
         raise InvalidWheelFilename(
-            "Wheel has unexpected file name: expected {!r}, "
-            "got {!r}".format(canonical_name, w.name),
+            f"Wheel has unexpected file name: expected {canonical_name!r}, "
+            f"got {w.name!r}",
         )
     dist = get_wheel_distribution(FilesystemWheel(wheel_path), canonical_name)
     dist_verstr = str(dist.version)
     if canonicalize_version(dist_verstr) != canonicalize_version(w.version):
         raise InvalidWheelFilename(
-            "Wheel has unexpected file name: expected {!r}, "
-            "got {!r}".format(dist_verstr, w.version),
+            f"Wheel has unexpected file name: expected {dist_verstr!r}, "
+            f"got {w.version!r}",
         )
     metadata_version_value = dist.metadata_version
     if metadata_version_value is None:
@@ -187,8 +160,7 @@ def _verify_one(req: InstallRequirement, wheel_path: str) -> None:
         raise UnsupportedWheel(msg)
     if metadata_version >= Version("1.2") and not isinstance(dist.version, Version):
         raise UnsupportedWheel(
-            "Metadata 1.2 mandates PEP 440 version, "
-            "but {!r} is not".format(dist_verstr)
+            f"Metadata 1.2 mandates PEP 440 version, but {dist_verstr!r} is not"
         )
 
 

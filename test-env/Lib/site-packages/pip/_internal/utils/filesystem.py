@@ -7,10 +7,9 @@ from contextlib import contextmanager
 from tempfile import NamedTemporaryFile
 from typing import Any, BinaryIO, Generator, List, Union, cast
 
-from pip._vendor.tenacity import retry, stop_after_delay, wait_fixed
-
 from pip._internal.utils.compat import get_path_uid
 from pip._internal.utils.misc import format_size
+from pip._internal.utils.retry import retry
 
 
 def check_path_owner(path: str) -> bool:
@@ -65,10 +64,7 @@ def adjacent_tmp_file(path: str, **kwargs: Any) -> Generator[BinaryIO, None, Non
             os.fsync(result.fileno())
 
 
-# Tenacity raises RetryError by default, explicitly raise the original exception
-_replace_retry = retry(reraise=True, stop=stop_after_delay(1), wait=wait_fixed(0.25))
-
-replace = _replace_retry(os.replace)
+replace = retry(stop_after_delay=1, wait=0.25)(os.replace)
 
 
 # test_writable_dir and _test_writable_dir_win are copied from Flit,

@@ -33,9 +33,7 @@ class FormatControl:
         return all(getattr(self, k) == getattr(other, k) for k in self.__slots__)
 
     def __repr__(self) -> str:
-        return "{}({}, {})".format(
-            self.__class__.__name__, self.no_binary, self.only_binary
-        )
+        return f"{self.__class__.__name__}({self.no_binary}, {self.only_binary})"
 
     @staticmethod
     def handle_mutual_excludes(value: str, target: Set[str], other: Set[str]) -> None:

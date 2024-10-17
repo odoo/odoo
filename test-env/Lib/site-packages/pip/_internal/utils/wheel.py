@@ -28,7 +28,7 @@ def parse_wheel(wheel_zip: ZipFile, name: str) -> Tuple[str, Message]:
         metadata = wheel_metadata(wheel_zip, info_dir)
         version = wheel_version(metadata)
     except UnsupportedWheel as e:
-        raise UnsupportedWheel("{} has an invalid wheel, {}".format(name, str(e)))
+        raise UnsupportedWheel(f"{name} has an invalid wheel, {e}")
 
     check_compatibility(version, name)
 
@@ -60,9 +60,7 @@ def wheel_dist_info_dir(source: ZipFile, name: str) -> str:
     canonical_name = canonicalize_name(name)
     if not info_dir_name.startswith(canonical_name):
         raise UnsupportedWheel(
-            ".dist-info directory {!r} does not start with {!r}".format(
-                info_dir, canonical_name
-            )
+            f".dist-info directory {info_dir!r} does not start with {canonical_name!r}"
         )
 
     return info_dir

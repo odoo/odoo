@@ -2,7 +2,7 @@
 
 from email.header import Header, decode_header, make_header
 from email.message import Message
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, cast
 
 METADATA_FIELDS = [
     # Name, Multiple-Use
@@ -64,10 +64,10 @@ def msg_to_json(msg: Message) -> Dict[str, Any]:
         key = json_name(field)
         if multi:
             value: Union[str, List[str]] = [
-                sanitise_header(v) for v in msg.get_all(field)
+                sanitise_header(v) for v in msg.get_all(field)  # type: ignore
             ]
         else:
-            value = sanitise_header(msg.get(field))
+            value = sanitise_header(msg.get(field))  # type: ignore
             if key == "keywords":
                 # Accept both comma-separated and space-separated
                 # forms, for better compatibility with old data.
@@ -77,7 +77,7 @@ def msg_to_json(msg: Message) -> Dict[str, Any]:
                     value = value.split()
         result[key] = value
 
-    payload = msg.get_payload()
+    payload = cast(str, msg.get_payload())
     if payload:
         result["description"] = payload
 

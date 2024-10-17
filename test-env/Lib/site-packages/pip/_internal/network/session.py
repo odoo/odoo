@@ -3,6 +3,7 @@ network request configuration and behavior.
 """
 
 import email.utils
+import functools
 import io
 import ipaddress
 import json
@@ -106,6 +107,7 @@ def looks_like_ci() -> bool:
     return any(name in os.environ for name in CI_ENVIRONMENT_VARIABLES)
 
 
+@functools.lru_cache(maxsize=1)
 def user_agent() -> str:
     """
     Return a string representing the user agent.
@@ -230,7 +232,7 @@ class LocalFSAdapter(BaseAdapter):
             # to return a better error message:
             resp.status_code = 404
             resp.reason = type(exc).__name__
-            resp.raw = io.BytesIO(f"{resp.reason}: {exc}".encode("utf8"))
+            resp.raw = io.BytesIO(f"{resp.reason}: {exc}".encode())
         else:
             modified = email.utils.formatdate(stats.st_mtime, usegmt=True)
             content_type = mimetypes.guess_type(pathname)[0] or "text/plain"
@@ -316,7 +318,6 @@ class InsecureCacheControlAdapter(CacheControlAdapter):
 
 
 class PipSession(requests.Session):
-
     timeout: Optional[int] = None
 
     def __init__(
@@ -356,8 +357,9 @@ class PipSession(requests.Session):
             # is typically considered a transient error so we'll go ahead and
             # retry it.
             # A 500 may indicate transient error in Amazon S3
+            # A 502 may be a transient error from a CDN like CloudFlare or CloudFront
             # A 520 or 527 - may indicate transient error in CloudFlare
-            status_forcelist=[500, 503, 520, 527],
+            status_forcelist=[500, 502, 503, 520, 527],
             # Add a small amount of back off between failed requests in
             # order to prevent hammering the service.
             backoff_factor=0.25,
@@ -420,15 +422,17 @@ class PipSession(requests.Session):
                 msg += f" (from {source})"
             logger.info(msg)
 
-        host_port = parse_netloc(host)
-        if host_port not in self.pip_trusted_origins:
-            self.pip_trusted_origins.append(host_port)
+        parsed_host, parsed_port = parse_netloc(host)
+        if parsed_host is None:
+            raise ValueError(f"Trusted host URL must include a host part: {host!r}")
+        if (parsed_host, parsed_port) not in self.pip_trusted_origins:
+            self.pip_trusted_origins.append((parsed_host, parsed_port))
 
         self.mount(
             build_url_from_netloc(host, scheme="http") + "/", self._trusted_host_adapter
         )
         self.mount(build_url_from_netloc(host) + "/", self._trusted_host_adapter)
-        if not host_port[1]:
+        if not parsed_port:
             self.mount(
                 build_url_from_netloc(host, scheme="http") + ":",
                 self._trusted_host_adapter,

@@ -12,13 +12,14 @@ from types import TracebackType
 from typing import TYPE_CHECKING, Iterable, List, Optional, Set, Tuple, Type, Union
 
 from pip._vendor.certifi import where
-from pip._vendor.packaging.requirements import Requirement
 from pip._vendor.packaging.version import Version
 
 from pip import __file__ as pip_location
 from pip._internal.cli.spinners import open_spinner
 from pip._internal.locations import get_platlib, get_purelib, get_scheme
 from pip._internal.metadata import get_default_environment, get_environment
+from pip._internal.utils.logging import VERBOSE
+from pip._internal.utils.packaging import get_requirement
 from pip._internal.utils.subprocess import call_subprocess
 from pip._internal.utils.temp_dir import TempDirectory, tempdir_kinds
 
@@ -183,7 +184,7 @@ class BuildEnvironment:
                 else get_default_environment()
             )
             for req_str in reqs:
-                req = Requirement(req_str)
+                req = get_requirement(req_str)
                 # We're explicitly evaluating with an empty extra value, since build
                 # environments are not provided any mechanism to select specific extras.
                 if req.marker is not None and not req.marker.evaluate({"extra": ""}):
@@ -240,8 +241,11 @@ class BuildEnvironment:
             "--prefix",
             prefix.path,
             "--no-warn-script-location",
+            "--disable-pip-version-check",
         ]
         if logger.getEffectiveLevel() <= logging.DEBUG:
+            args.append("-vv")
+        elif logger.getEffectiveLevel() <= VERBOSE:
             args.append("-v")
         for format_control in ("no_binary", "only_binary"):
             formats = getattr(finder.format_control, format_control)

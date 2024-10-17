@@ -1,6 +1,6 @@
 from typing import Dict, Generator
 
-from pip._vendor.requests.models import CONTENT_CHUNK_SIZE, Response
+from pip._vendor.requests.models import Response
 
 from pip._internal.exceptions import NetworkConnectionError
 
@@ -24,6 +24,8 @@ from pip._internal.exceptions import NetworkConnectionError
 # before sending because if that's the case I don't think it'll ever be
 # possible to make this work.
 HEADERS: Dict[str, str] = {"Accept-Encoding": "identity"}
+
+DOWNLOAD_CHUNK_SIZE = 256 * 1024
 
 
 def raise_for_status(resp: Response) -> None:
@@ -55,7 +57,7 @@ def raise_for_status(resp: Response) -> None:
 
 
 def response_chunks(
-    response: Response, chunk_size: int = CONTENT_CHUNK_SIZE
+    response: Response, chunk_size: int = DOWNLOAD_CHUNK_SIZE
 ) -> Generator[bytes, None, None]:
     """Given a requests Response, provide the data chunks."""
     try:

@@ -9,12 +9,17 @@ something.
 """
 
 import functools
+import logging
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any, Callable, Iterator, Optional, Set, Tuple
 
 from pip._vendor.packaging.version import _BaseVersion
 
+from pip._internal.exceptions import MetadataInvalid
+
 from .base import Candidate
+
+logger = logging.getLogger(__name__)
 
 IndexCandidateInfo = Tuple[_BaseVersion, Callable[[], Optional[Candidate]]]
 
@@ -44,11 +49,25 @@ def _iter_built(infos: Iterator[IndexCandidateInfo]) -> Iterator[Candidate]:
     for version, func in infos:
         if version in versions_found:
             continue
-        candidate = func()
-        if candidate is None:
-            continue
-        yield candidate
-        versions_found.add(version)
+        try:
+            candidate = func()
+        except MetadataInvalid as e:
+            logger.warning(
+                "Ignoring version %s of %s since it has invalid metadata:\n"
+                "%s\n"
+                "Please use pip<24.1 if you need to use this version.",
+                version,
+                e.ireq.name,
+                e,
+            )
+            # Mark version as found to avoid trying other candidates with the same
+            # version, since they most likely have invalid metadata as well.
+            versions_found.add(version)
+        else:
+            if candidate is None:
+                continue
+            yield candidate
+            versions_found.add(version)
 
 
 def _iter_built_with_prepended(

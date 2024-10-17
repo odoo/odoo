@@ -4,7 +4,7 @@
 
     Module that implements the default filter.
 
-    :copyright: Copyright 2006-2022 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2024 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
 
@@ -62,8 +62,7 @@ class FunctionFilter(Filter):
 
     def __init__(self, **options):
         if not hasattr(self, 'function'):
-            raise TypeError('%r used without bound function' %
-                            self.__class__.__name__)
+            raise TypeError(f'{self.__class__.__name__!r} used without bound function')
         Filter.__init__(self, **options)
 
     def filter(self, lexer, stream):

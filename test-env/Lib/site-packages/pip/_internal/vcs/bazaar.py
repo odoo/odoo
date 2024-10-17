@@ -44,13 +44,13 @@ class Bazaar(VersionControl):
             display_path(dest),
         )
         if verbosity <= 0:
-            flag = "--quiet"
+            flags = ["--quiet"]
         elif verbosity == 1:
-            flag = ""
+            flags = []
         else:
-            flag = f"-{'v'*verbosity}"
+            flags = [f"-{'v'*verbosity}"]
         cmd_args = make_command(
-            "checkout", "--lightweight", flag, rev_options.to_args(), url, dest
+            "checkout", "--lightweight", *flags, rev_options.to_args(), url, dest
         )
         self.run_command(cmd_args)
 

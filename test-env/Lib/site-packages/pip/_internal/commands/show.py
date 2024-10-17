@@ -2,6 +2,7 @@ import logging
 from optparse import Values
 from typing import Generator, Iterable, Iterator, List, NamedTuple, Optional
 
+from pip._vendor.packaging.requirements import InvalidRequirement
 from pip._vendor.packaging.utils import canonicalize_name
 
 from pip._internal.cli.base_command import Command
@@ -100,8 +101,19 @@ def search_packages_info(query: List[str]) -> Generator[_PackageInfo, None, None
         except KeyError:
             continue
 
-        requires = sorted((req.name for req in dist.iter_dependencies()), key=str.lower)
-        required_by = sorted(_get_requiring_packages(dist), key=str.lower)
+        try:
+            requires = sorted(
+                # Avoid duplicates in requirements (e.g. due to environment markers).
+                {req.name for req in dist.iter_dependencies()},
+                key=str.lower,
+            )
+        except InvalidRequirement:
+            requires = sorted(dist.iter_raw_dependencies(), key=str.lower)
+
+        try:
+            required_by = sorted(_get_requiring_packages(dist), key=str.lower)
+        except InvalidRequirement:
+            required_by = ["#N/A"]
 
         try:
             entry_points_text = dist.read_text("entry_points.txt")
@@ -117,9 +129,25 @@ def search_packages_info(query: List[str]) -> Generator[_PackageInfo, None, None
 
         metadata = dist.metadata
 
+        project_urls = metadata.get_all("Project-URL", [])
+        homepage = metadata.get("Home-page", "")
+        if not homepage:
+            # It's common that there is a "homepage" Project-URL, but Home-page
+            # remains unset (especially as PEP 621 doesn't surface the field).
+            #
+            # This logic was taken from PyPI's codebase.
+            for url in project_urls:
+                url_label, url = url.split(",", maxsplit=1)
+                normalized_label = (
+                    url_label.casefold().replace("-", "").replace("_", "").strip()
+                )
+                if normalized_label == "homepage":
+                    homepage = url.strip()
+                    break
+
         yield _PackageInfo(
             name=dist.raw_name,
-            version=str(dist.version),
+            version=dist.raw_version,
             location=dist.location or "",
             editable_project_location=dist.editable_project_location,
             requires=requires,
@@ -128,8 +156,8 @@ def search_packages_info(query: List[str]) -> Generator[_PackageInfo, None, None
             metadata_version=dist.metadata_version or "",
             classifiers=metadata.get_all("Classifier", []),
             summary=metadata.get("Summary", ""),
-            homepage=metadata.get("Home-page", ""),
-            project_urls=metadata.get_all("Project-URL", []),
+            homepage=homepage,
+            project_urls=project_urls,
             author=metadata.get("Author", ""),
             author_email=metadata.get("Author-email", ""),
             license=metadata.get("License", ""),

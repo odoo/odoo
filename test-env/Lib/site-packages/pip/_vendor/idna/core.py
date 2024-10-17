@@ -150,8 +150,10 @@ def valid_contextj(label: str, pos: int) -> bool:
             joining_type = idnadata.joining_types.get(ord(label[i]))
             if joining_type == ord('T'):
                 continue
-            if joining_type in [ord('L'), ord('D')]:
+            elif joining_type in [ord('L'), ord('D')]:
                 ok = True
+                break
+            else:
                 break
 
         if not ok:
@@ -162,8 +164,10 @@ def valid_contextj(label: str, pos: int) -> bool:
             joining_type = idnadata.joining_types.get(ord(label[i]))
             if joining_type == ord('T'):
                 continue
-            if joining_type in [ord('R'), ord('D')]:
+            elif joining_type in [ord('R'), ord('D')]:
                 ok = True
+                break
+            else:
                 break
         return ok
 
@@ -236,12 +240,8 @@ def check_label(label: Union[str, bytes, bytearray]) -> None:
         if intranges_contain(cp_value, idnadata.codepoint_classes['PVALID']):
             continue
         elif intranges_contain(cp_value, idnadata.codepoint_classes['CONTEXTJ']):
-            try:
-                if not valid_contextj(label, pos):
-                    raise InvalidCodepointContext('Joiner {} not allowed at position {} in {}'.format(
-                        _unot(cp_value), pos+1, repr(label)))
-            except ValueError:
-                raise IDNAError('Unknown codepoint adjacent to joiner {} at position {} in {}'.format(
+            if not valid_contextj(label, pos):
+                raise InvalidCodepointContext('Joiner {} not allowed at position {} in {}'.format(
                     _unot(cp_value), pos+1, repr(label)))
         elif intranges_contain(cp_value, idnadata.codepoint_classes['CONTEXTO']):
             if not valid_contexto(label, pos):
@@ -262,13 +262,8 @@ def alabel(label: str) -> bytes:
     except UnicodeEncodeError:
         pass
 
-    if not label:
-        raise IDNAError('No Input')
-
-    label = str(label)
     check_label(label)
-    label_bytes = _punycode(label)
-    label_bytes = _alabel_prefix + label_bytes
+    label_bytes = _alabel_prefix + _punycode(label)
 
     if not valid_label_length(label_bytes):
         raise IDNAError('Label too long')
@@ -318,7 +313,7 @@ def uts46_remap(domain: str, std3_rules: bool = True, transitional: bool = False
             status = uts46row[1]
             replacement = None  # type: Optional[str]
             if len(uts46row) == 3:
-                replacement = uts46row[2]  # type: ignore
+                replacement = uts46row[2]
             if (status == 'V' or
                     (status == 'D' and not transitional) or
                     (status == '3' and not std3_rules and replacement is None)):
@@ -338,9 +333,9 @@ def uts46_remap(domain: str, std3_rules: bool = True, transitional: bool = False
 
 
 def encode(s: Union[str, bytes, bytearray], strict: bool = False, uts46: bool = False, std3_rules: bool = False, transitional: bool = False) -> bytes:
-    if isinstance(s, (bytes, bytearray)):
+    if not isinstance(s, str):
         try:
-            s = s.decode('ascii')
+            s = str(s, 'ascii')
         except UnicodeDecodeError:
             raise IDNAError('should pass a unicode string to the function rather than a byte string.')
     if uts46:
@@ -372,8 +367,8 @@ def encode(s: Union[str, bytes, bytearray], strict: bool = False, uts46: bool = 
 
 def decode(s: Union[str, bytes, bytearray], strict: bool = False, uts46: bool = False, std3_rules: bool = False) -> str:
     try:
-        if isinstance(s, (bytes, bytearray)):
-            s = s.decode('ascii')
+        if not isinstance(s, str):
+            s = str(s, 'ascii')
     except UnicodeDecodeError:
         raise IDNAError('Invalid ASCII in A-label')
     if uts46:

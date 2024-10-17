@@ -5,14 +5,15 @@ import sysconfig
 from importlib.util import cache_from_source
 from typing import Any, Callable, Dict, Generator, Iterable, List, Optional, Set, Tuple
 
-from pip._internal.exceptions import UninstallationError
+from pip._internal.exceptions import LegacyDistutilsInstall, UninstallMissingRecord
 from pip._internal.locations import get_bin_prefix, get_bin_user
 from pip._internal.metadata import BaseDistribution
 from pip._internal.utils.compat import WINDOWS
 from pip._internal.utils.egg_link import egg_link_path_from_location
 from pip._internal.utils.logging import getLogger, indent_log
-from pip._internal.utils.misc import ask, is_local, normalize_path, renames, rmtree
+from pip._internal.utils.misc import ask, normalize_path, renames, rmtree
 from pip._internal.utils.temp_dir import AdjacentTempDirectory, TempDirectory
+from pip._internal.utils.virtualenv import running_under_virtualenv
 
 logger = getLogger(__name__)
 
@@ -60,7 +61,7 @@ def uninstallation_paths(dist: BaseDistribution) -> Generator[str, None, None]:
 
     UninstallPathSet.add() takes care of the __pycache__ .py[co].
 
-    If RECORD is not found, raises UninstallationError,
+    If RECORD is not found, raises an error,
     with possible information from the INSTALLER file.
 
     https://packaging.python.org/specifications/recording-installed-packages/
@@ -70,17 +71,7 @@ def uninstallation_paths(dist: BaseDistribution) -> Generator[str, None, None]:
 
     entries = dist.iter_declared_entries()
     if entries is None:
-        msg = "Cannot uninstall {dist}, RECORD file not found.".format(dist=dist)
-        installer = dist.installer
-        if not installer or installer == "pip":
-            dep = "{}=={}".format(dist.raw_name, dist.version)
-            msg += (
-                " You might be able to recover from this via: "
-                "'pip install --force-reinstall --no-deps {}'.".format(dep)
-            )
-        else:
-            msg += " Hint: The package was installed by {}.".format(installer)
-        raise UninstallationError(msg)
+        raise UninstallMissingRecord(distribution=dist)
 
     for entry in entries:
         path = os.path.join(location, entry)
@@ -171,8 +162,7 @@ def compress_for_output_listing(paths: Iterable[str]) -> Tuple[Set[str], Set[str
             folders.add(os.path.dirname(path))
         files.add(path)
 
-    # probably this one https://github.com/python/mypy/issues/390
-    _normcased_files = set(map(os.path.normcase, files))  # type: ignore
+    _normcased_files = set(map(os.path.normcase, files))
 
     folders = compact(folders)
 
@@ -273,7 +263,7 @@ class StashedUninstallPathSet:
 
     def commit(self) -> None:
         """Commits the uninstall by removing stashed files."""
-        for _, save_dir in self._save_dirs.items():
+        for save_dir in self._save_dirs.values():
             save_dir.cleanup()
         self._moves = []
         self._save_dirs = {}
@@ -312,6 +302,10 @@ class UninstallPathSet:
         self._pth: Dict[str, UninstallPthEntries] = {}
         self._dist = dist
         self._moved_paths = StashedUninstallPathSet()
+        # Create local cache of normalize_path results. Creating an UninstallPathSet
+        # can result in hundreds/thousands of redundant calls to normalize_path with
+        # the same args, which hurts performance.
+        self._normalize_path_cached = functools.lru_cache(normalize_path)
 
     def _permitted(self, path: str) -> bool:
         """
@@ -319,14 +313,17 @@ class UninstallPathSet:
         remove/modify, False otherwise.
 
         """
-        return is_local(path)
+        # aka is_local, but caching normalized sys.prefix
+        if not running_under_virtualenv():
+            return True
+        return path.startswith(self._normalize_path_cached(sys.prefix))
 
     def add(self, path: str) -> None:
         head, tail = os.path.split(path)
 
         # we normalize the head to resolve parent directory symlinks, but not
         # the tail, since we only want to uninstall symlinks, not their targets
-        path = os.path.join(normalize_path(head), os.path.normcase(tail))
+        path = os.path.join(self._normalize_path_cached(head), os.path.normcase(tail))
 
         if not os.path.exists(path):
             return
@@ -341,7 +338,7 @@ class UninstallPathSet:
             self.add(cache_from_source(path))
 
     def add_pth(self, pth_file: str, entry: str) -> None:
-        pth_file = normalize_path(pth_file)
+        pth_file = self._normalize_path_cached(pth_file)
         if self._permitted(pth_file):
             if pth_file not in self._pth:
                 self._pth[pth_file] = UninstallPthEntries(pth_file)
@@ -360,7 +357,7 @@ class UninstallPathSet:
             )
             return
 
-        dist_name_version = f"{self._dist.raw_name}-{self._dist.version}"
+        dist_name_version = f"{self._dist.raw_name}-{self._dist.raw_version}"
         logger.info("Uninstalling %s:", dist_name_version)
 
         with indent_log():
@@ -502,13 +499,7 @@ class UninstallPathSet:
                     paths_to_remove.add(f"{path}.pyo")
 
         elif dist.installed_by_distutils:
-            raise UninstallationError(
-                "Cannot uninstall {!r}. It is a distutils installed project "
-                "and thus we cannot accurately determine which files belong "
-                "to it which would lead to only a partial uninstall.".format(
-                    dist.raw_name,
-                )
-            )
+            raise LegacyDistutilsInstall(distribution=dist)
 
         elif dist.installed_as_egg:
             # package installed by easy_install
@@ -531,12 +522,14 @@ class UninstallPathSet:
             # above, so this only covers the setuptools-style editable.
             with open(develop_egg_link) as fh:
                 link_pointer = os.path.normcase(fh.readline().strip())
-                normalized_link_pointer = normalize_path(link_pointer)
+                normalized_link_pointer = paths_to_remove._normalize_path_cached(
+                    link_pointer
+                )
             assert os.path.samefile(
                 normalized_link_pointer, normalized_dist_location
             ), (
-                f"Egg-link {link_pointer} does not match installed location of "
-                f"{dist.raw_name} (at {dist_location})"
+                f"Egg-link {develop_egg_link} (to {link_pointer}) does not match "
+                f"installed location of {dist.raw_name} (at {dist_location})"
             )
             paths_to_remove.add(develop_egg_link)
             easy_install_pth = os.path.join(

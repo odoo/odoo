@@ -4,7 +4,7 @@
 
     Formatter for Pango markup output.
 
-    :copyright: Copyright 2006-2022 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2024 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
 
@@ -45,7 +45,7 @@ class PangoMarkupFormatter(Formatter):
             start = ''
             end = ''
             if style['color']:
-                start += '<span fgcolor="#%s">' % style['color']
+                start += '<span fgcolor="#{}">'.format(style['color'])
                 end = '</span>' + end
             if style['bold']:
                 start += '<b>'

@@ -1,8 +1,17 @@
 import logging
 import mimetypes
 import os
-import pathlib
-from typing import Callable, Iterable, Optional, Tuple
+from collections import defaultdict
+from typing import Callable, Dict, Iterable, List, Optional, Tuple
+
+from pip._vendor.packaging.utils import (
+    InvalidSdistFilename,
+    InvalidVersion,
+    InvalidWheelFilename,
+    canonicalize_name,
+    parse_sdist_filename,
+    parse_wheel_filename,
+)
 
 from pip._internal.models.candidate import InstallationCandidate
 from pip._internal.models.link import Link
@@ -36,6 +45,53 @@ def _is_html_file(file_url: str) -> bool:
     return mimetypes.guess_type(file_url, strict=False)[0] == "text/html"
 
 
+class _FlatDirectoryToUrls:
+    """Scans directory and caches results"""
+
+    def __init__(self, path: str) -> None:
+        self._path = path
+        self._page_candidates: List[str] = []
+        self._project_name_to_urls: Dict[str, List[str]] = defaultdict(list)
+        self._scanned_directory = False
+
+    def _scan_directory(self) -> None:
+        """Scans directory once and populates both page_candidates
+        and project_name_to_urls at the same time
+        """
+        for entry in os.scandir(self._path):
+            url = path_to_url(entry.path)
+            if _is_html_file(url):
+                self._page_candidates.append(url)
+                continue
+
+            # File must have a valid wheel or sdist name,
+            # otherwise not worth considering as a package
+            try:
+                project_filename = parse_wheel_filename(entry.name)[0]
+            except (InvalidWheelFilename, InvalidVersion):
+                try:
+                    project_filename = parse_sdist_filename(entry.name)[0]
+                except (InvalidSdistFilename, InvalidVersion):
+                    continue
+
+            self._project_name_to_urls[project_filename].append(url)
+        self._scanned_directory = True
+
+    @property
+    def page_candidates(self) -> List[str]:
+        if not self._scanned_directory:
+            self._scan_directory()
+
+        return self._page_candidates
+
+    @property
+    def project_name_to_urls(self) -> Dict[str, List[str]]:
+        if not self._scanned_directory:
+            self._scan_directory()
+
+        return self._project_name_to_urls
+
+
 class _FlatDirectorySource(LinkSource):
     """Link source specified by ``--find-links=<path-to-dir>``.
 
@@ -45,30 +101,34 @@ class _FlatDirectorySource(LinkSource):
     * ``file_candidates``: Archives in the directory.
     """
 
+    _paths_to_urls: Dict[str, _FlatDirectoryToUrls] = {}
+
     def __init__(
         self,
         candidates_from_page: CandidatesFromPage,
         path: str,
+        project_name: str,
     ) -> None:
         self._candidates_from_page = candidates_from_page
-        self._path = pathlib.Path(os.path.realpath(path))
+        self._project_name = canonicalize_name(project_name)
+
+        # Get existing instance of _FlatDirectoryToUrls if it exists
+        if path in self._paths_to_urls:
+            self._path_to_urls = self._paths_to_urls[path]
+        else:
+            self._path_to_urls = _FlatDirectoryToUrls(path=path)
+            self._paths_to_urls[path] = self._path_to_urls
 
     @property
     def link(self) -> Optional[Link]:
         return None
 
     def page_candidates(self) -> FoundCandidates:
-        for path in self._path.iterdir():
-            url = path_to_url(str(path))
-            if not _is_html_file(url):
-                continue
+        for url in self._path_to_urls.page_candidates:
             yield from self._candidates_from_page(Link(url))
 
     def file_links(self) -> FoundLinks:
-        for path in self._path.iterdir():
-            url = path_to_url(str(path))
-            if _is_html_file(url):
-                continue
+        for url in self._path_to_urls.project_name_to_urls[self._project_name]:
             yield Link(url)
 
 
@@ -170,8 +230,8 @@ def build_source(
     page_validator: PageValidator,
     expand_dir: bool,
     cache_link_parsing: bool,
+    project_name: str,
 ) -> Tuple[Optional[str], Optional[LinkSource]]:
-
     path: Optional[str] = None
     url: Optional[str] = None
     if os.path.exists(location):  # Is a local path.
@@ -204,6 +264,7 @@ def build_source(
             source = _FlatDirectorySource(
                 candidates_from_page=candidates_from_page,
                 path=path,
+                project_name=project_name,
             )
         else:
             source = _IndexDirectorySource(

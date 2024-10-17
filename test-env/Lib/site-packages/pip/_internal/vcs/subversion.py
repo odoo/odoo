@@ -288,12 +288,12 @@ class Subversion(VersionControl):
             display_path(dest),
         )
         if verbosity <= 0:
-            flag = "--quiet"
+            flags = ["--quiet"]
         else:
-            flag = ""
+            flags = []
         cmd_args = make_command(
             "checkout",
-            flag,
+            *flags,
             self.get_remote_call_options(),
             rev_options.to_args(),
             url,

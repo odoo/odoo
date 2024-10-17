@@ -136,17 +136,9 @@ def _version2fieldlist(version):
 def _best_version(fields):
     """Detect the best version depending on the fields used."""
     def _has_marker(keys, markers):
-        for marker in markers:
-            if marker in keys:
-                return True
-        return False
+        return any(marker in keys for marker in markers)
 
-    keys = []
-    for key, value in fields.items():
-        if value in ([], 'UNKNOWN', None):
-            continue
-        keys.append(key)
-
+    keys = [key for key, value in fields.items() if value not in ([], 'UNKNOWN', None)]
     possible_versions = ['1.0', '1.1', '1.2', '1.3', '2.1', '2.2']  # 2.0 removed
 
     # first let's try to see if a field is not part of one of the version

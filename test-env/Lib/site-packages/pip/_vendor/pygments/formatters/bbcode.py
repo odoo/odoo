@@ -4,7 +4,7 @@
 
     BBcode formatter.
 
-    :copyright: Copyright 2006-2022 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2024 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
 
@@ -60,7 +60,7 @@ class BBCodeFormatter(Formatter):
         for ttype, ndef in self.style:
             start = end = ''
             if ndef['color']:
-                start += '[color=#%s]' % ndef['color']
+                start += '[color=#{}]'.format(ndef['color'])
                 end = '[/color]' + end
             if ndef['bold']:
                 start += '[b]'

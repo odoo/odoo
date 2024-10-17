@@ -4,12 +4,12 @@ import typing
 import warnings
 from abc import ABC, abstractmethod
 from collections import deque
-from collections.abc import Sized
 from dataclasses import dataclass, field
 from datetime import timedelta
 from io import RawIOBase, UnsupportedOperation
 from math import ceil
 from mmap import mmap
+from operator import length_hint
 from os import PathLike, stat
 from threading import Event, RLock, Thread
 from types import TracebackType
@@ -151,7 +151,7 @@ def track(
                 pulse_style=pulse_style,
             ),
             TaskProgressColumn(show_speed=show_speed),
-            TimeRemainingColumn(),
+            TimeRemainingColumn(elapsed_when_finished=True),
         )
     )
     progress = Progress(
@@ -677,11 +677,11 @@ class TimeElapsedColumn(ProgressColumn):
     """Renders time elapsed."""
 
     def render(self, task: "Task") -> Text:
-        """Show time remaining."""
+        """Show time elapsed."""
         elapsed = task.finished_time if task.finished else task.elapsed
         if elapsed is None:
             return Text("-:--:--", style="progress.elapsed")
-        delta = timedelta(seconds=int(elapsed))
+        delta = timedelta(seconds=max(0, int(elapsed)))
         return Text(str(delta), style="progress.elapsed")
 
 
@@ -710,7 +710,6 @@ class TaskProgressColumn(TextColumn):
         table_column: Optional[Column] = None,
         show_speed: bool = False,
     ) -> None:
-
         self.text_format_no_percentage = text_format_no_percentage
         self.show_speed = show_speed
         super().__init__(
@@ -1114,7 +1113,7 @@ class Progress(JupyterMixin):
 
             progress = Progress(
                 SpinnerColumn(),
-                *Progress.default_columns(),
+                *Progress.get_default_columns(),
                 "Elapsed:",
                 TimeElapsedColumn(),
             )
@@ -1197,18 +1196,13 @@ class Progress(JupyterMixin):
         Returns:
             Iterable[ProgressType]: An iterable of values taken from the provided sequence.
         """
-
-        task_total: Optional[float] = None
         if total is None:
-            if isinstance(sequence, Sized):
-                task_total = float(len(sequence))
-        else:
-            task_total = total
+            total = float(length_hint(sequence)) or None
 
         if task_id is None:
-            task_id = self.add_task(description, total=task_total)
+            task_id = self.add_task(description, total=total)
         else:
-            self.update(task_id, total=task_total)
+            self.update(task_id, total=total)
 
         if self.live.auto_refresh:
             with _TrackThread(self, task_id, update_period) as track_thread:
@@ -1342,7 +1336,7 @@ class Progress(JupyterMixin):
                 RuntimeWarning,
             )
             buffering = -1
-        elif _mode == "rt" or _mode == "r":
+        elif _mode in ("rt", "r"):
             if buffering == 0:
                 raise ValueError("can't have unbuffered text I/O")
             elif buffering == 1:
@@ -1363,7 +1357,7 @@ class Progress(JupyterMixin):
         reader = _Reader(handle, self, task_id, close_handle=True)
 
         # wrap the reader in a `TextIOWrapper` if text mode
-        if mode == "r" or mode == "rt":
+        if mode in ("r", "rt"):
             return io.TextIOWrapper(
                 reader,
                 encoding=encoding,
@@ -1641,7 +1635,6 @@ class Progress(JupyterMixin):
 
 
 if __name__ == "__main__":  # pragma: no coverage
-
     import random
     import time
 
@@ -1694,7 +1687,6 @@ if __name__ == "__main__":  # pragma: no coverage
         console=console,
         transient=False,
     ) as progress:
-
         task1 = progress.add_task("[red]Downloading", total=1000)
         task2 = progress.add_task("[green]Processing", total=1000)
         task3 = progress.add_task("[yellow]Thinking", total=None)

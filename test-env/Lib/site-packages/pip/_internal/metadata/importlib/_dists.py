@@ -1,6 +1,5 @@
 import email.message
 import importlib.metadata
-import os
 import pathlib
 import zipfile
 from typing import (
@@ -16,22 +15,26 @@ from typing import (
 
 from pip._vendor.packaging.requirements import Requirement
 from pip._vendor.packaging.utils import NormalizedName, canonicalize_name
+from pip._vendor.packaging.version import Version
 from pip._vendor.packaging.version import parse as parse_version
 
 from pip._internal.exceptions import InvalidWheel, UnsupportedWheel
 from pip._internal.metadata.base import (
     BaseDistribution,
     BaseEntryPoint,
-    DistributionVersion,
     InfoPath,
     Wheel,
 )
 from pip._internal.utils.misc import normalize_path
-from pip._internal.utils.packaging import safe_extra
+from pip._internal.utils.packaging import get_requirement
 from pip._internal.utils.temp_dir import TempDirectory
 from pip._internal.utils.wheel import parse_wheel, read_wheel_metadata_file
 
-from ._compat import BasePath, get_dist_name
+from ._compat import (
+    BasePath,
+    get_dist_canonical_name,
+    parse_name_and_version_from_info_directory,
+)
 
 
 class WheelDistribution(importlib.metadata.Distribution):
@@ -134,8 +137,6 @@ class Distribution(BaseDistribution):
                 dist = WheelDistribution.from_zipfile(zf, name, wheel.location)
         except zipfile.BadZipFile as e:
             raise InvalidWheel(wheel.location, name) from e
-        except UnsupportedWheel as e:
-            raise UnsupportedWheel(f"{name} has an invalid wheel, {e}")
         return cls(dist, dist.info_location, pathlib.PurePosixPath(wheel.location))
 
     @property
@@ -156,26 +157,19 @@ class Distribution(BaseDistribution):
             return None
         return normalize_path(str(self._installed_location))
 
-    def _get_dist_name_from_location(self) -> Optional[str]:
-        """Try to get the name from the metadata directory name.
-
-        This is much faster than reading metadata.
-        """
-        if self._info_location is None:
-            return None
-        stem, suffix = os.path.splitext(self._info_location.name)
-        if suffix not in (".dist-info", ".egg-info"):
-            return None
-        return stem.split("-", 1)[0]
-
     @property
     def canonical_name(self) -> NormalizedName:
-        name = self._get_dist_name_from_location() or get_dist_name(self._dist)
-        return canonicalize_name(name)
+        return get_dist_canonical_name(self._dist)
 
     @property
-    def version(self) -> DistributionVersion:
+    def version(self) -> Version:
+        if version := parse_name_and_version_from_info_directory(self._dist)[1]:
+            return parse_version(version)
         return parse_version(self._dist.version)
+
+    @property
+    def raw_version(self) -> str:
+        return self._dist.version
 
     def is_file(self, path: InfoPath) -> bool:
         return self._dist.read_text(str(path)) is not None
@@ -207,15 +201,18 @@ class Distribution(BaseDistribution):
         # until upstream can improve the protocol. (python/cpython#94952)
         return cast(email.message.Message, self._dist.metadata)
 
-    def iter_provided_extras(self) -> Iterable[str]:
-        return (
-            safe_extra(extra) for extra in self.metadata.get_all("Provides-Extra", [])
-        )
+    def iter_provided_extras(self) -> Iterable[NormalizedName]:
+        return [
+            canonicalize_name(extra)
+            for extra in self.metadata.get_all("Provides-Extra", [])
+        ]
 
     def iter_dependencies(self, extras: Collection[str] = ()) -> Iterable[Requirement]:
-        contexts: Sequence[Dict[str, str]] = [{"extra": safe_extra(e)} for e in extras]
+        contexts: Sequence[Dict[str, str]] = [{"extra": e} for e in extras]
         for req_string in self.metadata.get_all("Requires-Dist", []):
-            req = Requirement(req_string)
+            # strip() because email.message.Message.get_all() may return a leading \n
+            # in case a long header was wrapped.
+            req = get_requirement(req_string.strip())
             if not req.marker:
                 yield req
             elif not extras and req.marker.evaluate({"extra": ""}):

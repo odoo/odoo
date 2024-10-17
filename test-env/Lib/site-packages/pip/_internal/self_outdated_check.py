@@ -9,6 +9,7 @@ import sys
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, Optional
 
+from pip._vendor.packaging.version import Version
 from pip._vendor.packaging.version import parse as parse_version
 from pip._vendor.rich.console import Group
 from pip._vendor.rich.markup import escape
@@ -17,7 +18,6 @@ from pip._vendor.rich.text import Text
 from pip._internal.index.collector import LinkCollector
 from pip._internal.index.package_finder import PackageFinder
 from pip._internal.metadata import get_default_environment
-from pip._internal.metadata.base import DistributionVersion
 from pip._internal.models.selection_prefs import SelectionPreferences
 from pip._internal.network.session import PipSession
 from pip._internal.utils.compat import WINDOWS
@@ -28,8 +28,7 @@ from pip._internal.utils.entrypoints import (
 from pip._internal.utils.filesystem import adjacent_tmp_file, check_path_owner, replace
 from pip._internal.utils.misc import ensure_dir
 
-_DATE_FMT = "%Y-%m-%dT%H:%M:%SZ"
-
+_WEEK = datetime.timedelta(days=7)
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +37,15 @@ def _get_statefile_name(key: str) -> str:
     key_bytes = key.encode()
     name = hashlib.sha224(key_bytes).hexdigest()
     return name
+
+
+def _convert_date(isodate: str) -> datetime.datetime:
+    """Convert an ISO format string to a date.
+
+    Handles the format 2020-01-22T14:24:01Z (trailing Z)
+    which is not supported by older versions of fromisoformat.
+    """
+    return datetime.datetime.fromisoformat(isodate.replace("Z", "+00:00"))
 
 
 class SelfCheckState:
@@ -73,12 +81,10 @@ class SelfCheckState:
         if "pypi_version" not in self._state:
             return None
 
-        seven_days_in_seconds = 7 * 24 * 60 * 60
-
         # Determine if we need to refresh the state
-        last_check = datetime.datetime.strptime(self._state["last_check"], _DATE_FMT)
-        seconds_since_last_check = (current_time - last_check).total_seconds()
-        if seconds_since_last_check > seven_days_in_seconds:
+        last_check = _convert_date(self._state["last_check"])
+        time_since_last_check = current_time - last_check
+        if time_since_last_check > _WEEK:
             return None
 
         return self._state["pypi_version"]
@@ -100,7 +106,7 @@ class SelfCheckState:
             # Include the key so it's easy to tell which pip wrote the
             # file.
             "key": self.key,
-            "last_check": current_time.strftime(_DATE_FMT),
+            "last_check": current_time.isoformat(),
             "pypi_version": pypi_version,
         }
 
@@ -185,7 +191,7 @@ def _self_version_check_logic(
     *,
     state: SelfCheckState,
     current_time: datetime.datetime,
-    local_version: DistributionVersion,
+    local_version: Version,
     get_remote_version: Callable[[], Optional[str]],
 ) -> Optional[UpgradePrompt]:
     remote_version_str = state.get(current_time)
@@ -226,17 +232,13 @@ def pip_self_version_check(session: PipSession, options: optparse.Values) -> Non
     if not installed_dist:
         return
 
-    try:
-        upgrade_prompt = _self_version_check_logic(
-            state=SelfCheckState(cache_dir=options.cache_dir),
-            current_time=datetime.datetime.utcnow(),
-            local_version=installed_dist.version,
-            get_remote_version=functools.partial(
-                _get_current_remote_pip_version, session, options
-            ),
-        )
-        if upgrade_prompt is not None:
-            logger.warning("[present-rich] %s", upgrade_prompt)
-    except Exception:
-        logger.warning("There was an error checking the latest version of pip.")
-        logger.debug("See below for error", exc_info=True)
+    upgrade_prompt = _self_version_check_logic(
+        state=SelfCheckState(cache_dir=options.cache_dir),
+        current_time=datetime.datetime.now(datetime.timezone.utc),
+        local_version=installed_dist.version,
+        get_remote_version=functools.partial(
+            _get_current_remote_pip_version, session, options
+        ),
+    )
+    if upgrade_prompt is not None:
+        logger.warning("%s", upgrade_prompt, extra={"rich": True})

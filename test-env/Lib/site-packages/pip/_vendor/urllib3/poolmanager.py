@@ -4,7 +4,7 @@ import collections
 import functools
 import logging
 
-from ._collections import RecentlyUsedContainer
+from ._collections import HTTPHeaderDict, RecentlyUsedContainer
 from .connectionpool import HTTPConnectionPool, HTTPSConnectionPool, port_by_scheme
 from .exceptions import (
     LocationValueError,
@@ -171,7 +171,7 @@ class PoolManager(RequestMethods):
     def __init__(self, num_pools=10, headers=None, **connection_pool_kw):
         RequestMethods.__init__(self, headers)
         self.connection_pool_kw = connection_pool_kw
-        self.pools = RecentlyUsedContainer(num_pools, dispose_func=lambda p: p.close())
+        self.pools = RecentlyUsedContainer(num_pools)
 
         # Locally set the pool classes and keys so other PoolManagers can
         # override them.
@@ -382,9 +382,12 @@ class PoolManager(RequestMethods):
         # Support relative URLs for redirecting.
         redirect_location = urljoin(url, redirect_location)
 
-        # RFC 7231, Section 6.4.4
         if response.status == 303:
+            # Change the method according to RFC 9110, Section 15.4.4.
             method = "GET"
+            # And lose the body not to transfer anything sensitive.
+            kw["body"] = None
+            kw["headers"] = HTTPHeaderDict(kw["headers"])._prepare_for_method_change()
 
         retries = kw.get("retries")
         if not isinstance(retries, Retry):

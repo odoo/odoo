@@ -242,17 +242,15 @@ class ConfigurationCommand(Command):
                 e.filename = editor
             raise
         except subprocess.CalledProcessError as e:
-            raise PipError(
-                "Editor Subprocess exited with exit code {}".format(e.returncode)
-            )
+            raise PipError(f"Editor Subprocess exited with exit code {e.returncode}")
 
     def _get_n_args(self, args: List[str], example: str, n: int) -> Any:
         """Helper to make sure the command got the right number of arguments"""
         if len(args) != n:
             msg = (
-                "Got unexpected number of arguments, expected {}. "
-                '(example: "{} config {}")'
-            ).format(n, get_prog(), example)
+                f"Got unexpected number of arguments, expected {n}. "
+                f'(example: "{get_prog()} config {example}")'
+            )
             raise PipError(msg)
 
         if n == 1:
