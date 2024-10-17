@@ -72,10 +72,11 @@ class SaleOrderLine(models.Model):
             old_product_uom_qty = {line.id: line.product_uom_qty for line in self}
             res = super().write(vals)
             for line in self:
+                precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
                 if line.state in ('sale', 'done') and line.product_id:
-                    if float_compare(old_product_uom_qty[line.id], 0, precision_rounding=line.product_uom_id.rounding) <= 0 and float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) > 0:
+                    if float_compare(old_product_uom_qty[line.id], 0, precision_digits=precision_digits) <= 0 and float_compare(line.product_uom_qty, 0, precision_digits=precision_digits) > 0:
                         self._create_repair_order()
-                    if float_compare(old_product_uom_qty[line.id], 0, precision_rounding=line.product_uom_id.rounding) > 0 and float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) <= 0:
+                    if float_compare(old_product_uom_qty[line.id], 0, precision_digits=precision_digits) > 0 and float_compare(line.product_uom_qty, 0, precision_digits=precision_digits) <= 0:
                         self._cancel_repair_order()
             return res
         return super().write(vals)
@@ -89,12 +90,13 @@ class SaleOrderLine(models.Model):
         new_repair_vals = []
         for line in self:
             # One RO for each line with at least a quantity of 1, quantities > 1 don't create multiple ROs
-            if any(line.id == ro.sale_order_line_id.id for ro in line.order_id.sudo().repair_order_ids) and float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) > 0:
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if any(line.id == ro.sale_order_line_id.id for ro in line.order_id.sudo().repair_order_ids) and float_compare(line.product_uom_qty, 0, precision_digits=precision_digits) > 0:
                 binded_ro_ids = line.order_id.sudo().repair_order_ids.filtered(lambda ro: ro.sale_order_line_id.id == line.id and ro.state == 'cancel')
                 binded_ro_ids.action_repair_cancel_draft()
                 binded_ro_ids._action_repair_confirm()
                 continue
-            if not line.product_template_id.sudo().create_repair or line.move_ids.sudo().repair_id or float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) <= 0:
+            if not line.product_template_id.sudo().create_repair or line.move_ids.sudo().repair_id or float_compare(line.product_uom_qty, 0, precision_digits=precision_digits) <= 0:
                 continue
 
             order = line.order_id

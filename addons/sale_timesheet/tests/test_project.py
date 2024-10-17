@@ -187,11 +187,11 @@ class TestProject(TestCommonSaleTimesheet):
 
     def test_open_product_form_with_default_uom_id(self):
         """ Test default product uom fallback when product is not service type """
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         product_form = Form(self.env['product.product'].with_context(
-            default_uom_id=uom_dozen.id,
+            default_uom_id=uom_pack_of_6.id,
         ))
-        self.assertEqual(uom_dozen, product_form.uom_id, "Default uom should be Dozen")
+        self.assertEqual(uom_pack_of_6, product_form.uom_id, "Default uom should be Dozen")
         product_form.type = 'service'
         product_form.service_policy = 'delivered_timesheet'
         uom_hour = self.env.ref('uom.product_uom_hour')
@@ -202,7 +202,7 @@ class TestProject(TestCommonSaleTimesheet):
         )
         product_form.type = 'consu'
         self.assertEqual(
-            uom_dozen,
+            uom_pack_of_6,
             product_form.uom_id,
             "Uom should be updated to Dozen for `Goods` type product"
         )

@@ -271,10 +271,10 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.component_a = self.env['product.product'].create({
             'name': 'Comp A',
             'available_in_pos': True,
-            'standard_price': 12000.0,
+            'standard_price': 6000.0,
             'categ_id': category.id,
             'taxes_id': False,
-            'uom_id': self.env.ref('uom.product_uom_dozen').id,
+            'uom_id': self.env.ref('uom.product_uom_pack_6').id,
         })
 
         bom_product_form = Form(self.env['mrp.bom'])

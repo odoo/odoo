@@ -61,7 +61,7 @@ class StockMoveLine(models.Model):
             if lines == picking.move_line_ids and lines.move_id == picking.move_ids:
                 add_all_moves = True
                 for move, qty in qty_by_move.items():
-                    if float_is_zero(qty, precision_rounding=move.product_uom.rounding):
+                    if float_is_zero(qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                         add_all_moves = False
                         break
                 if add_all_moves:
@@ -97,7 +97,7 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         if not self.picking_id \
            or self.picking_id.state != 'assigned' \
-           or float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding) \
+           or float_is_zero(self.quantity, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) \
            or self.batch_id.is_wave \
            or not self.picking_type_id._is_auto_wave_grouped() \
            or (self.picking_type_id.wave_group_by_category and self.product_id.categ_id not in self.picking_type_id.wave_category_ids):  # noqa: SIM103

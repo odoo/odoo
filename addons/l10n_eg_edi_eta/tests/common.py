@@ -61,7 +61,7 @@ class TestEGEdiCommon(AccountEdiTestCommon):
         cls.product_a.write({'barcode': '1KGS1TEST', })
         cls.product_b.write({
             'barcode': 'EG-EGS-TEST',
-            'uom_id': cls.env.ref('uom.product_uom_cm').id,
+            'uom_id': cls.env.ref('uom.product_uom_millimeter').id,
         })
         cls.company_branch = cls.env['res.partner'].create({
             'name': 'branch partner',

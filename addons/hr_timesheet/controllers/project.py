@@ -35,7 +35,6 @@ class ProjectCustomerPortal(CustomerPortal):
                 {
                     'id': uom.id,
                     'name': uom.name,
-                    'rounding': uom.rounding,
                     'timesheet_widget': uom.timesheet_widget,
                 } for uom in [timesheet_encode_uom, project_time_mode_uom]
         }

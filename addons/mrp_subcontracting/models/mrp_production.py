@@ -61,7 +61,7 @@ class MrpProduction(models.Model):
         self.move_raw_ids.picked = True
         if not self._get_subcontract_move():
             raise UserError(_("This MO isn't related to a subcontracted move"))
-        if float_is_zero(self.qty_producing, precision_rounding=self.product_uom_id.rounding):
+        if float_is_zero(self.qty_producing, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
             return {'type': 'ir.actions.act_window_close'}
 
         if self.move_raw_ids and not any(self.move_raw_ids.mapped('quantity')):
@@ -107,15 +107,15 @@ class MrpProduction(models.Model):
             else:
                 move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and not ml.lot_id)
             # Update reservation and quantity done
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for ml in move_lines:
-                rounding = ml.product_uom_id.rounding
-                if float_compare(quantity, 0, precision_rounding=rounding) <= 0:
+                if float_compare(quantity, 0, precision_digits=rounding) <= 0:
                     break
                 quantity_to_process = min(quantity, ml.quantity)
                 quantity -= quantity_to_process
 
                 # on which lot of finished product
-                if float_compare(quantity_to_process, ml.quantity, precision_rounding=rounding) >= 0:
+                if float_compare(quantity_to_process, ml.quantity, precision_digits=rounding) >= 0:
                     ml.write({
                         'quantity': quantity_to_process,
                         'picked': True,
@@ -128,7 +128,7 @@ class MrpProduction(models.Model):
                         'lot_id': self.lot_producing_id and self.lot_producing_id.id,
                     })
 
-            if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) > 0:
+            if float_compare(quantity, 0, precision_digits=rounding) > 0:
                 self.env['stock.move.line'].create({
                     'move_id': subcontract_move_id.id,
                     'picking_id': subcontract_move_id.picking_id.id,

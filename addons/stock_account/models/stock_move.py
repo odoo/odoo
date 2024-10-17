@@ -46,13 +46,14 @@ class StockMove(models.Model):
         self.ensure_one()
         price_unit = self.price_unit
         precision = self.env['decimal.precision'].precision_get('Product Price')
+        uom_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # If the move is a return, use the original move's price unit.
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
             # dropshipping create additional positive svl to make sure there is no impact on the stock valuation
             # We need to remove them from the computation of the price unit.
             if self.origin_returned_move_id._is_dropshipped() or self.origin_returned_move_id._is_dropshipped_returned():
-                layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_rounding=l.product_id.uom_id.rounding) <= 0)
+                layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_digits=uom_precision) <= 0)
             layers |= layers.stock_valuation_layer_ids
             if self.product_id.lot_valuated:
                 layers_by_lot = layers.grouped('lot_id')
@@ -60,10 +61,10 @@ class StockMove(models.Model):
                 for lot, stock_layers in layers_by_lot.items():
                     qty = sum(stock_layers.mapped("quantity"))
                     val = sum(stock_layers.mapped("value"))
-                    prices[lot] = val / qty if not float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding) else 0
+                    prices[lot] = val / qty if not float_is_zero(qty, precision_digits=uom_precision) else 0
             else:
                 quantity = sum(layers.mapped("quantity"))
-                prices = {self.env['stock.lot']: sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0}
+                prices = {self.env['stock.lot']: sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_digits=uom_precision) else 0}
             return prices
 
         if not float_is_zero(price_unit, precision) or self._should_force_price_unit():
@@ -221,7 +222,7 @@ class StockMove(models.Model):
                     quantities[line.lot_id] += line.product_uom_id._compute_quantity(
                         line.quantity, move.product_id.uom_id
                     )
-            if float_is_zero(sum(quantities.values()), precision_rounding=move.product_id.uom_id.rounding):
+            if float_is_zero(sum(quantities.values()), precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 continue
 
             if move.product_id.lot_valuated:
@@ -317,7 +318,7 @@ class StockMove(models.Model):
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
         valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
         for move in self:
-            if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
+            if float_is_zero(move.quantity, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 continue
             if not any(move.move_line_ids.mapped('picked')):
                 continue
@@ -391,7 +392,7 @@ class StockMove(models.Model):
             if move.with_company(move.company_id).product_id.cost_method == 'standard':
                 continue
             product_tot_qty_available = move.product_id.sudo().with_company(move.company_id).quantity_svl + tmpl_dict[move.product_id.id]
-            rounding = move.product_id.uom_id.rounding
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
             valued_move_lines = move._get_in_move_lines()
             quantity_by_lot = defaultdict(float)
@@ -403,9 +404,9 @@ class StockMove(models.Model):
 
             qty = sum(quantity_by_lot.values())
             move_cost = move._get_price_unit()
-            if float_is_zero(product_tot_qty_available, precision_rounding=rounding) \
-                    or float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding) \
-                    or float_is_zero(product_tot_qty_available + qty, precision_rounding=rounding):
+            if float_is_zero(product_tot_qty_available, precision_digits=rounding) \
+                    or float_is_zero(product_tot_qty_available + move.product_qty, precision_digits=rounding) \
+                    or float_is_zero(product_tot_qty_available + qty, precision_digits=rounding):
                 new_std_price = next(iter(move_cost.values()))
             else:
                 # Get the standard price
@@ -422,8 +423,8 @@ class StockMove(models.Model):
                 continue
             for lot, qty in quantity_by_lot.items():
                 qty_avail = lot.sudo().with_company(move.company_id).quantity_svl + lot_tmpl_dict[lot.id]
-                if float_is_zero(qty_avail, precision_rounding=rounding) \
-                        or float_is_zero(qty_avail + qty, precision_rounding=rounding):
+                if float_is_zero(qty_avail, precision_digits=rounding) \
+                        or float_is_zero(qty_avail + qty, precision_digits=rounding):
                     new_std_price = move_cost[lot]
                 else:
                     # Get the standard price
@@ -443,9 +444,9 @@ class StockMove(models.Model):
                 continue
             product_qty = product.sudo().with_company(layers.company_id).quantity_svl
             product_value = product.sudo().with_company(layers.company_id).value_svl
-            rounding = product.uom_id.rounding
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
-            if float_is_zero(product_qty, precision_rounding=rounding):
+            if float_is_zero(product_qty, precision_digits=rounding):
                 return
 
             # get the standard price

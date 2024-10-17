@@ -60,17 +60,6 @@
             <field name="binding_type">report</field>
         </record>
 
-        <record id="report_product_packaging" model="ir.actions.report">
-            <field name="name">Product Packaging (PDF)</field>
-            <field name="model">product.packaging</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">product.report_packagingbarcode</field>
-            <field name="report_file">product.report_packagingbarcode</field>
-            <field name="print_report_name">'Products packaging - %s' % (object.name)</field>
-            <field name="binding_model_id" ref="product.model_product_packaging"/>
-            <field name="binding_type">report</field>
-        </record>
-
         <record id="action_report_pricelist" model="ir.actions.report">
             <field name="name">Pricelist</field>
             <field name="model">product.product</field>

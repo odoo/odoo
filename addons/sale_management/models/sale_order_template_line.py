@@ -45,9 +45,7 @@ class SaleOrderTemplateLine(models.Model):
         comodel_name='uom.uom',
         string="Unit of Measure",
         compute='_compute_product_uom_id',
-        store=True, readonly=False, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+        store=True, readonly=False, precompute=True)
     product_uom_qty = fields.Float(
         string='Quantity',
         required=True,

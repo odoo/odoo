@@ -199,11 +199,12 @@ class MrpUnbuild(models.Model):
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         qty_already_used = defaultdict(float)
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for move in produce_moves | consume_moves:
             original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
             original_move = original_move.filtered(lambda m: m.product_id == move.product_id)
             if not original_move:
-                move.quantity = float_round(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
+                move.quantity = float_round(move.product_uom_qty, precision_digits=precision_digits)
                 continue
             needed_quantity = move.product_uom_qty
             moves_lines = original_move.mapped('move_line_ids')
@@ -212,7 +213,7 @@ class MrpUnbuild(models.Model):
             for move_line in moves_lines:
                 # Iterate over all move_lines until we unbuilded the correct quantity.
                 taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
-                taken_quantity = float_round(taken_quantity, precision_rounding=move.product_uom.rounding)
+                taken_quantity = float_round(taken_quantity, precision_digits=precision_digits)
                 if taken_quantity:
                     move_line_vals = self._prepare_move_line_vals(move, move_line, taken_quantity)
                     self.env["stock.move.line"].create(move_line_vals)
