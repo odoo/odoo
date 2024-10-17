@@ -96,6 +96,21 @@ patch(PosStore.prototype, {
             (count, note) => count + (note in orderChanges ? 1 : 0),
             0
         );
+
+        const nbNoteChange = Object.keys(orderChanges.noteUpdated).length;
+        if (nbNoteChange) {
+            categories["noteUpdate"] = { count: nbNoteChange, name: _t("Note") };
+        }
+        // Only send modeUpdate if there's already an older mode in progress.
+        const currentOrder = this.getOrder();
+        if (
+            orderChanges.modeUpdate &&
+            Object.keys(currentOrder.last_order_preparation_change.lines).length
+        ) {
+            const displayName = _t(currentOrder.preset_id?.name);
+            categories["modeUpdate"] = { count: 1, name: displayName };
+        }
+
         return [
             ...Object.values(categories),
             ...(noteCount > 0 ? [{ count: noteCount, name: _t("Message") }] : []),
