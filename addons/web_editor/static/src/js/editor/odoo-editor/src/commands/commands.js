@@ -983,7 +983,7 @@ export const editorCommands = {
             const columns = [];
             for (let i = 0; i < numberOfColumns; i++) {
                 const column = document.createElement('div');
-                column.classList.add(`col-lg-${columnSize}`);
+                column.classList.add(`col-${columnSize}`);
                 row.append(column);
                 columns.push(column);
             }
@@ -1016,7 +1016,7 @@ export const editorCommands = {
                 let lastColumn = columns[columns.length - 1];
                 for (let i = 0; i < diff; i++) {
                     const column = document.createElement('div');
-                    column.classList.add(`col-lg-${columnSize}`);
+                    column.classList.add(`col-${columnSize}`);
                     const p = document.createElement('p');
                     p.append(document.createElement('br'));
                     p.classList.add('oe-hint');
@@ -1030,7 +1030,7 @@ export const editorCommands = {
                 // Remove superfluous columns.
                 const restore = preserveCursor(editor.document);
                 for (const column of columns) {
-                    column.className = column.className.replace(REGEX_BOOTSTRAP_COLUMN, `col$1-${columnSize}`);
+                    column.className = column.className.replace(REGEX_BOOTSTRAP_COLUMN, `col-${columnSize}`);
                 }
                 const contents = [];
                 for (let i = diff; i < 0; i++) {
