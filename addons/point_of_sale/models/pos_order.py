@@ -137,7 +137,7 @@ class PosOrder(models.Model):
             line = line[2]
 
             if line.get('combo_line_ids'):
-                filtered_lines = list(filter(lambda l: l[2].get('id') and l[2].get('id') in line.get('combo_line_ids'), order_vals['lines']))
+                filtered_lines = list(filter(lambda l: l[0] in [0, 1] and l[2].get('id') and l[2].get('id') in line.get('combo_line_ids'), order_vals['lines']))
                 acc[line['uuid']] = [l[2]['uuid'] for l in filtered_lines]
 
             line['combo_line_ids'] = False
