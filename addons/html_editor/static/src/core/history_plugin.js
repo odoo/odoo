@@ -115,6 +115,15 @@ export class HistoryPlugin extends Plugin {
         this._cleanups.push(() => this.observer.disconnect());
         this.clean();
         window.HistoryPlugin = this;
+
+        const undoButton = document.createElement("button");
+        undoButton.textContent = "Undo";
+        undoButton.onclick = () => this.undo();
+        const redoButton = document.createElement("button");
+        redoButton.textContent = "Redo";
+        redoButton.onclick = () => this.redo();
+        this.document.querySelector(".o_main_navbar").prepend(redoButton);
+        this.document.querySelector(".o_main_navbar").prepend(undoButton);
     }
     handleCommand(command, payload) {
         switch (command) {
