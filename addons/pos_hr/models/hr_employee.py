@@ -17,7 +17,7 @@ class HrEmployee(models.Model):
         if len(config_id.basic_employee_ids) > 0:
             return [
                 '&', ('company_id', '=', config_id.company_id.id),
-                '|', ('user_id', '=', self.env.uid), ('id', 'in', config_id.basic_employee_ids.ids + config_id.advanced_employee_ids.ids)]
+                '|', ('user_id', '=', self.env.uid), ('id', 'in', config_id.basic_employee_ids.ids + config_id.advanced_employee_ids.ids + config_id.minimal_employee_ids.ids)]
         else:
             return [('company_id', '=', config_id.company_id.id)]
 
@@ -39,6 +39,8 @@ class HrEmployee(models.Model):
         for employee in employees:
             if employee['user_id'] and employee['user_id'] in manager_ids or employee['id'] in data['pos.config'][0]['advanced_employee_ids']:
                 role = 'manager'
+            elif employee['id'] in data['pos.config'][0]['minimal_employee_ids']:
+                role = 'minimal'
             else:
                 role = 'cashier'
 
@@ -63,8 +65,8 @@ class HrEmployee(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
         configs_with_employees = self.env['pos.config'].sudo().search([('module_pos_hr', '=', True)]).filtered(lambda c: c.current_session_id)
-        configs_with_all_employees = configs_with_employees.filtered(lambda c: not c.basic_employee_ids and not c.advanced_employee_ids)
-        configs_with_specific_employees = configs_with_employees.filtered(lambda c: (c.basic_employee_ids or c.advanced_employee_ids) & self)
+        configs_with_all_employees = configs_with_employees.filtered(lambda c: not c.basic_employee_ids and not c.advanced_employee_ids and not c.minimal_employee_ids)
+        configs_with_specific_employees = configs_with_employees.filtered(lambda c: (c.basic_employee_ids or c.advanced_employee_ids or c.minimal_employee_ids) & self)
         if configs_with_all_employees or configs_with_specific_employees:
             error_msg = _("You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n")
             for employee in self:

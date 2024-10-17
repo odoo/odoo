@@ -77,7 +77,7 @@
                                     <div class="col wide p-2">
                                         <div><t t-esc="order.pos_reference"></t></div>
                                     </div>
-                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
+                                    <div t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
                                         <i class="fa fa-trash" aria-hidden="true"/>
                                     </div>
                                     <div t-else="" class="col very-narrow p-2"></div>
@@ -95,7 +95,7 @@
                                         <div class="orderStatus"><t t-esc="getStatus(order)"></t></div>
                                     </div>
                                     <div class="col p-2">
-                                        <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2 rounded-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
+                                        <div t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="col very-narrow delete-button p-2 rounded-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
                                             <i class="fa fa-trash" aria-hidden="true"/> Delete
                                         </div>
                                     </div>
@@ -165,11 +165,12 @@
                                 </div>
                                 <div class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
-                                    <ActionpadWidget
-                                        partner="getSelectedOrder()?.getPartner()"
-                                        actionName.translate="Refund"
-                                        actionToTrigger.bind="onDoRefund"
-                                    />
+                                        <ActionpadWidget
+                                            t-if="this.pos.cashier._role !== 'minimal'"
+                                            partner="getSelectedOrder()?.getPartner()"
+                                            actionName.translate="Refund"
+                                            actionToTrigger.bind="onDoRefund"
+                                        />
                                 </div>
                             </t>
                             <div t-else="" class="pads border-top d-flex gap-2" >
