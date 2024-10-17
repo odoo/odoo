@@ -67,8 +67,7 @@ class ResUsers(models.Model):
         current_website = self.env['website'].sudo().get_current_website()
         return current_website.auth_signup_uninvited or super(ResUsers, self)._get_signup_invitation_scope()
 
-    @classmethod
-    def authenticate(cls, db, credential, user_agent_env):
+    def authenticate(self, credential, user_agent_env):
         """ Override to link the logged in user's res.partner to website.visitor.
         If a visitor already exists for that user, assign it data from the
         current anonymous visitor (if exists).
@@ -77,9 +76,9 @@ class ResUsers(models.Model):
         visitor_pre_authenticate_sudo = None
         if request and request.env:
             visitor_pre_authenticate_sudo = request.env['website.visitor']._get_visitor_from_request()
-        auth_info = super().authenticate(db, credential, user_agent_env)
+        auth_info = super().authenticate(credential, user_agent_env)
         if auth_info.get('uid') and visitor_pre_authenticate_sudo:
-            env = api.Environment(request.env.cr, auth_info['uid'], {})
+            env = self.env(user=auth_info['uid'])
             user_partner = env.user.partner_id
             visitor_current_user_sudo = env['website.visitor'].sudo().search([
                 ('partner_id', '=', user_partner.id)
