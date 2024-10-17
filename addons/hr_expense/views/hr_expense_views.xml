@@ -276,7 +276,7 @@
                                    context="{'default_company_id': company_id}"/>
                             <field name="vendor_id" invisible="payment_mode != 'company_account'"/>
                             <field name="account_id" options="{'no_create': True}"
-                                   domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False)]"
+                                   domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False), ('company_ids', 'parent_of', company_id)]"
                                    groups="account.group_account_readonly" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
                             <field name="payment_method_line_id"
