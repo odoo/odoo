@@ -1,7 +1,7 @@
 import { Component, onMounted, onWillDestroy, useRef, useState, useSubEnv } from "@odoo/owl";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
-import { useChildRef } from "@web/core/utils/hooks";
+import { useChildRef, useSpellCheck } from "@web/core/utils/hooks";
 import { LocalOverlayContainer } from "./local_overlay_container";
 import { uniqueId } from "@web/core/utils/functions";
 
@@ -56,6 +56,9 @@ export class Wysiwyg extends Component {
         const config = this.getEditorConfig();
         this.editor = new Editor(config, this.env.services);
         this.props.onLoad(this.editor);
+        useSpellCheck({
+            refName: "content",
+        });
 
         onMounted(() => {
             // now that component is mounted, editor is attached to el, and
