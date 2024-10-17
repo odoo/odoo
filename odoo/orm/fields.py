@@ -574,11 +574,15 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             field = model.pool[model_name]._fields.get(name)
             if field is None:
                 raise KeyError(
-                    f"Field {name} referenced in related field definition {self} does not exist."
+                    f"Field {name!r} referenced in related field definition {self} does not exist."
                 )
             if not field._setup_done:
                 field.setup(model.env[model_name])
             model_name = field.comodel_name
+            if model_name == '_unknown':
+                raise KeyError(
+                    f"Targeted model from {name!r} in {self.related!r} in related field definition {self} does not exist."
+                )
 
         self.related_field = field
 

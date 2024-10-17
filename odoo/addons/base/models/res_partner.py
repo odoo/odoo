@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
+from .avatar_mixin import AvatarMixin
 
 import base64
 import collections
@@ -16,13 +16,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-
-import typing
-if typing.TYPE_CHECKING:
-    from .res_users import ResUsers
-    from .res_bank import ResPartnerBank
-    from .res_country import ResCountry, ResCountryState
-    from .res_company import ResCompany
+from odoo.addons import base  # noqa: F401
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock
@@ -145,11 +139,11 @@ class ResPartnerCategory(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer(string='Color', default=_get_default_color, aggregator=False)
-    parent_id: ResPartnerCategory = fields.Many2one('res.partner.category', string='Category', index=True, ondelete='cascade')
-    child_ids: ResPartnerCategory = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
+    parent_id = fields.Many2one['base.ResPartnerCategory'](string='Category', index=True, ondelete='cascade')
+    child_ids = fields.One2many['base.ResPartnerCategory'](inverse_name='parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
     parent_path = fields.Char(index=True)
-    partner_ids: ResPartner = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners', copy=False)
+    partner_ids = fields.Many2many['base.ResPartner'](column1='category_id', column2='partner_id', string='Partners', copy=False)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -217,10 +211,10 @@ class ResPartner(models.Model, FormatAddressMixin, FormatVatLabelMixin, AvatarMi
 
     name = fields.Char(index=True, default_export_compatible=True)
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
-    title: ResPartnerTitle = fields.Many2one('res.partner.title')
-    parent_id: ResPartner = fields.Many2one('res.partner', string='Related Company', index=True)
+    title = fields.Many2one['base.ResPartnerTitle']()
+    parent_id = fields.Many2one['base.ResPartner'](string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
-    child_ids: ResPartner = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
+    child_ids = fields.One2many['base.ResPartner'](inverse_name='parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
@@ -231,22 +225,22 @@ class ResPartner(models.Model, FormatAddressMixin, FormatVatLabelMixin, AvatarMi
                                "Anywhere else, time values are computed according to the time offset of your web client.")
 
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
-    user_id: ResUsers = fields.Many2one(
-        'res.users', string='Salesperson',
+    user_id = fields.Many2one['base.ResUsers'](
+        string='Salesperson',
         compute='_compute_user_id',
         precompute=True,  # avoid queries post-create
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
-    same_vat_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
-    same_company_registry_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
+    same_vat_partner_id = fields.Many2one['base.ResPartner'](string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
+    same_company_registry_partner_id = fields.Many2one['base.ResPartner'](string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
     company_registry = fields.Char(string="Company ID", compute='_compute_company_registry', store=True, readonly=False,
        help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country")
-    bank_ids: ResPartnerBank = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
+    bank_ids = fields.One2many['base.ResPartnerBank'](inverse_name='partner_id', string='Banks')
     website = fields.Char('Website Link')
     comment = fields.Html(string='Notes')
 
-    category_id: ResPartnerCategory = fields.Many2many('res.partner.category', column1='partner_id',
+    category_id = fields.Many2many['base.ResPartnerCategory'](column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
     active = fields.Boolean(default=True)
     employee = fields.Boolean(help="Check this box if this contact is an Employee.")
@@ -263,8 +257,8 @@ class ResPartner(models.Model, FormatAddressMixin, FormatVatLabelMixin, AvatarMi
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
     city = fields.Char()
-    state_id: ResCountryState = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
-    country_id: ResCountry = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    state_id = fields.Many2one['base.ResCountryState'](string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
+    country_id = fields.Many2one['base.ResCountry'](string='Country', ondelete='restrict')
     country_code = fields.Char(related='country_id.code', string="Country Code")
     partner_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float(string='Geo Longitude', digits=(10, 7))
@@ -277,14 +271,14 @@ class ResPartner(models.Model, FormatAddressMixin, FormatVatLabelMixin, AvatarMi
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
     is_public = fields.Boolean(compute='_compute_is_public')
-    industry_id: ResPartnerIndustry = fields.Many2one('res.partner.industry', 'Industry')
+    industry_id = fields.Many2one['base.ResPartnerIndustry'](string='Industry')
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
         selection=[('person', 'Individual'), ('company', 'Company')],
         compute='_compute_company_type', inverse='_write_company_type')
-    company_id: ResCompany = fields.Many2one('res.company', 'Company', index=True)
+    company_id = fields.Many2one['base.ResCompany'](string='Company', index=True)
     color = fields.Integer(string='Color Index', default=0)
-    user_ids: ResUsers = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
+    user_ids = fields.One2many['base.ResUsers'](inverse_name='partner_id', string='Users', auto_join=True)
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
         help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
@@ -292,8 +286,8 @@ class ResPartner(models.Model, FormatAddressMixin, FormatVatLabelMixin, AvatarMi
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
     # technical field used for managing commercial fields
-    commercial_partner_id: ResPartner = fields.Many2one(
-        'res.partner', string='Commercial Entity',
+    commercial_partner_id = fields.Many2one['base.ResPartner'](
+        string='Commercial Entity',
         compute='_compute_commercial_partner', store=True,
         recursive=True, index=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
@@ -302,7 +296,7 @@ class ResPartner(models.Model, FormatAddressMixin, FormatVatLabelMixin, AvatarMi
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
-    self: ResPartner = fields.Many2one(comodel_name='res.partner', compute='_compute_get_ids')
+    self = fields.Many2one['base.ResPartner'](compute='_compute_get_ids')
 
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
