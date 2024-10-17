@@ -145,7 +145,7 @@ patch(PaymentScreen.prototype, {
                         if (!coupon) {
                             await this.pos.data.read("loyalty.card", [couponUpdate.id]);
                         } else {
-                            coupon.update({ points: couponUpdate.points });
+                            coupon.points = couponUpdate.points;
                         }
                     } else {
                         // create a new coupon and delete the old one
@@ -162,7 +162,7 @@ patch(PaymentScreen.prototype, {
                         // Before deleting the old coupon, update the order lines that use it.
                         for (const line of order.lines) {
                             if (line.coupon_id?.id == couponUpdate.old_id) {
-                                line.update({ coupon_id: coupon });
+                                line.coupon_id = coupon;
                             }
                         }
 

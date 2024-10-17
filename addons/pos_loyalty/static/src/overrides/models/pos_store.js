@@ -237,7 +237,7 @@ patch(PosStore.prototype, {
                 return true;
             })
         );
-        order.update({ _code_activated_coupon_ids: [["unlink", ...toUnlink]] });
+        order._code_activated_coupon_ids = [["unlink", ...toUnlink]];
     },
     async activateCode(code) {
         const order = this.get_order();
@@ -307,7 +307,7 @@ patch(PosStore.prototype, {
                     // TODO JCB: make the expiration_date work.
                     // expiration_date: payload.expiration_date,
                 });
-                order.update({ _code_activated_coupon_ids: [["link", coupon]] });
+                order._code_activated_coupon_ids = [["link", coupon]];
                 await this.orderUpdateLoyaltyPrograms();
                 claimableRewards = order.getClaimableRewards(coupon.id);
             } else {
@@ -600,11 +600,9 @@ patch(PosStore.prototype, {
         const domain = new Domain(reward_product_domain);
 
         try {
-            reward.update({
-                all_discount_product_ids: [
-                    ["link", ...products.filter((p) => domain.contains(p.serialize()))],
-                ],
-            });
+            reward.all_discount_product_ids = [
+                ["link", ...products.filter((p) => domain.contains(p.serialize()))],
+            ];
         } catch (error) {
             if (!(error instanceof InvalidDomainError || error instanceof TypeError)) {
                 throw error;
@@ -720,20 +718,16 @@ patch(PosStore.prototype, {
         for (const order of orders) {
             for (const line of order.lines) {
                 if (line.uuid in this.couponByLineUuidCache) {
-                    line.update({
-                        coupon_id: this.models["loyalty.card"].get(
-                            this.couponByLineUuidCache[line.uuid]
-                        ),
-                    });
+                    line.coupon_id = this.models["loyalty.card"].get(
+                        this.couponByLineUuidCache[line.uuid]
+                    );
                 }
             }
             for (const line of order.lines) {
                 if (line.uuid in this.rewardProductByLineUuidCache) {
-                    line.update({
-                        _reward_product_id: this.models["product.product"].get(
-                            this.rewardProductByLineUuidCache[line.uuid]
-                        ),
-                    });
+                    line._reward_product_id = this.models["product.product"].get(
+                        this.rewardProductByLineUuidCache[line.uuid]
+                    );
                 }
             }
         }

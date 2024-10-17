@@ -140,10 +140,11 @@ function processModelDefs(modelDefs) {
 }
 
 export class Base {
-    constructor({ models, records, model }) {
+    constructor({ models, records, model, proxyTrap }) {
         this.models = models;
         this.records = records;
         this.model = model;
+        return new Proxy(this, proxyTrap);
     }
     /**
      * Called during instantiation when the instance is fully-populated with field values.
@@ -432,7 +433,57 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return records[model].has(id);
     }
 
-    function create(
+    // If value is more than 0, then the proxy trap is disabled.
+    let proxyTrapDisabled = 0;
+    function withoutProxyTrap(fn) {
+        return function (...args) {
+            try {
+                proxyTrapDisabled += 1;
+                return fn(...args);
+            } finally {
+                proxyTrapDisabled -= 1;
+            }
+        };
+    }
+
+    /**
+     * This check assumes that if the first element is a command, then the rest are commands.
+     */
+    function isX2ManyCommands(value) {
+        return (
+            Array.isArray(value) &&
+            Array.isArray(value[0]) &&
+            ["unlink", "clear", "create", "link"].includes(value[0][0])
+        );
+    }
+
+    const proxyTraps = {};
+    function getProxyTrap(model) {
+        if (model in proxyTraps) {
+            return proxyTraps[model];
+        }
+        const fields = getFields(model);
+        const proxyTrap = {
+            set(target, prop, value) {
+                if (proxyTrapDisabled || !(prop in fields)) {
+                    return Reflect.set(target, prop, value);
+                }
+                const field = fields[prop];
+                if (field && X2MANY_TYPES.has(field.type)) {
+                    if (!isX2ManyCommands(value)) {
+                        value = [["clear"], ["link", ...value]];
+                    }
+                }
+                target.update({ [prop]: value });
+                return true;
+            },
+        };
+        proxyTraps[model] = proxyTrap;
+        return proxyTrap;
+    }
+
+    const create = withoutProxyTrap(_create);
+    function _create(
         model,
         vals,
         ignoreRelations = false,
@@ -444,7 +495,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         const Model = modelClasses[model] || Base;
-        const record = reactive(new Model({ models, records, model: models[model] }));
+        const proxyTrap = getProxyTrap(model);
+        const record = reactive(new Model({ models, records, model: models[model], proxyTrap }));
+
         const id = vals["id"];
         record.id = id;
         if (!vals.uuid && database[model]?.key === "uuid") {
@@ -556,7 +609,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return create(model, vals, false, true);
     }
 
-    function update(model, record, vals) {
+    const update = withoutProxyTrap(_update);
+    function _update(model, record, vals) {
         const fields = getFields(model);
         Object.assign(baseData[model][record.id], vals);
 
@@ -619,7 +673,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
     }
 
-    function delete_(model, record, opts = {}) {
+    const delete_ = withoutProxyTrap(_delete);
+    function _delete(model, record, opts = {}) {
         const id = record.id;
         const fields = getFields(model);
         const handleCommand = (inverse, field, record, backend = false) => {
@@ -866,7 +921,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
      * Load the data without the relations then link the related records.
      * @param {*} rawData
      */
-    function loadData(rawData, load = [], fromSerialized = false) {
+    const loadData = withoutProxyTrap(_loadData);
+    function _loadData(rawData, load = [], fromSerialized = false) {
         const results = {};
         const oldStates = {};
 
@@ -1002,7 +1058,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return results;
     }
 
-    function makeRecordsAvailable(results, rawData) {
+    const makeRecordsAvailable = withoutProxyTrap(_makeRecordsAvailable);
+    function _makeRecordsAvailable(results, rawData) {
         const indexRecord = (model, records) => {
             for (const key of indexes[model] || []) {
                 for (const record of records) {

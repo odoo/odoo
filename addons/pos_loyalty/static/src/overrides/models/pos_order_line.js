@@ -51,13 +51,13 @@ patch(PosOrderline.prototype, {
     },
     setOptions(options) {
         if (options.eWalletGiftCardProgram) {
-            this.update({ _e_wallet_program_id: options.eWalletGiftCardProgram });
+            this._e_wallet_program_id = options.eWalletGiftCardProgram;
         }
         if (options.giftBarcode) {
-            this.update({ _gift_barcode: options.giftBarcode });
+            this._gift_barcode = options.giftBarcode;
         }
         if (options.giftCardId) {
-            this.update({ _gift_card_id: this.models["loyalty.card"].get(options.giftCardId) });
+            this._gift_card_id = options.giftCardId;
         }
         return super.setOptions(...arguments);
     },

@@ -1181,10 +1181,8 @@ export class PosStore extends Reactive {
     async loadServerOrders(domain) {
         const orders = await this.data.searchRead("pos.order", domain);
         for (const order of orders) {
-            order.update({
-                config_id: this.config,
-                session_id: this.session,
-            });
+            order.config_id = this.config;
+            order.session_id = this.session;
         }
         return orders;
     }

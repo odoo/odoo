@@ -53,7 +53,7 @@ patch(PosStore.prototype, {
         const order = super.createNewOrder(...arguments);
 
         if (this.config.module_pos_hr) {
-            order.update({ employee_id: this.get_cashier() });
+            order.employee_id = this.get_cashier();
         }
 
         return order;
@@ -73,7 +73,7 @@ patch(PosStore.prototype, {
             if (o && !o.get_orderlines().length) {
                 // Order without lines can be considered to be un-owned by any employee.
                 // We set the cashier on that order to the currently set employee.
-                o.update({ employee_id: employee });
+                o.employee_id = employee;
             }
             if (!this.cashierHasPriceControlRights() && this.numpadMode === "price") {
                 this.numpadMode = "quantity";
@@ -88,7 +88,7 @@ patch(PosStore.prototype, {
 
             if (cashier && cashier.model.modelName === "hr.employee") {
                 const order = this.get_order();
-                order.update({ employee_id: this.get_cashier() });
+                order.employee_id = this.get_cashier();
             }
         }
 
