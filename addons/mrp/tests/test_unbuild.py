@@ -579,7 +579,6 @@ class TestUnbuild(TestMrpCommon):
         - unbuild a product with a decimal quantity of component
         """
         self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 4
-        self.uom_unit.rounding = 0.001
 
         self.bom_1.product_qty = 3
         self.bom_1.bom_line_ids.product_qty = 5

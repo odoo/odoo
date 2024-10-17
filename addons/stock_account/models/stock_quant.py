@@ -52,11 +52,12 @@ class StockQuant(models.Model):
         self.fetch(['company_id', 'location_id', 'owner_id', 'product_id', 'quantity', 'lot_id'])
         self.value = 0
         for quant in self:
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             quant.currency_id = quant.company_id.currency_id
             if not quant.location_id or not quant.product_id or\
                     not quant.location_id._should_be_valued() or\
                     quant._should_exclude_for_valuation() or\
-                    float_is_zero(quant.quantity, precision_rounding=quant.product_id.uom_id.rounding):
+                    float_is_zero(quant.quantity, precision_digits=precision_digits):
                 continue
             if quant.product_id.lot_valuated:
                 quantity = quant.lot_id.with_company(quant.company_id).quantity_svl
@@ -64,7 +65,7 @@ class StockQuant(models.Model):
             else:
                 quantity = quant.product_id.with_company(quant.company_id).quantity_svl
                 value_svl = quant.product_id.with_company(quant.company_id).value_svl
-            if float_is_zero(quantity, precision_rounding=quant.product_id.uom_id.rounding):
+            if float_is_zero(quantity, precision_digits=precision_digits):
                 continue
             quant.value = quant.quantity * value_svl / quantity
 

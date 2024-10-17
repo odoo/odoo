@@ -304,23 +304,23 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 230.0,
         })
 
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         with Form(invoice) as move_form:
             with move_form.invoice_line_ids.edit(0) as line_form:
-                line_form.product_uom_id = uom_dozen
+                line_form.product_uom_id = uom_pack_of_6
 
         self.assertInvoiceValues(invoice, [
             {
                 'product_id': product.id,
-                'product_uom_id': uom_dozen.id,
-                'price_unit': 2400.0,
-                'price_subtotal': 2400.0,
-                'price_total': 2760.0,
+                'product_uom_id': uom_pack_of_6.id,
+                'price_unit': 1200.0,
+                'price_subtotal': 1200.0,
+                'price_total': 1380.0,
                 'tax_ids': tax_price_exclude.ids,
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 2400.0,
-                'debit': 1200.0,
+                'amount_currency': 1200.0,
+                'debit': 600.0,
                 'credit': 0.0,
             },
             {
@@ -332,8 +332,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': tax_price_exclude.id,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 360.0,
-                'debit': 180.0,
+                'amount_currency': 180.0,
+                'debit': 90.0,
                 'credit': 0.0,
             },
             {
@@ -345,16 +345,16 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': -2760.0,
+                'amount_currency': -1380.0,
                 'debit': 0.0,
-                'credit': 1380.0,
+                'credit': 690.0,
             },
         ], {
             'currency_id': self.other_currency.id,
             'fiscal_position_id': fiscal_position.id,
-            'amount_untaxed': 2400.0,
-            'amount_tax': 360.0,
-            'amount_total': 2760.0,
+            'amount_untaxed': 1200.0,
+            'amount_tax': 180.0,
+            'amount_total': 1380.0,
         })
 
     def test_in_invoice_line_onchange_product_2_with_fiscal_pos_2(self):
@@ -449,23 +449,23 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 240.0,
         })
 
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         with Form(invoice) as move_form:
             with move_form.invoice_line_ids.edit(0) as line_form:
-                line_form.product_uom_id = uom_dozen
+                line_form.product_uom_id = uom_pack_of_6
 
         self.assertInvoiceValues(invoice, [
             {
                 'product_id': product.id,
-                'product_uom_id': uom_dozen.id,
-                'price_unit': 2880.0,
-                'price_subtotal': 2400.0,
-                'price_total': 2880.0,
+                'product_uom_id': uom_pack_of_6.id,
+                'price_unit': 1440.0,
+                'price_subtotal': 1200.0,
+                'price_total': 1440.0,
                 'tax_ids': tax_price_include_2.ids,
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 2400.0,
-                'debit': 1200.0,
+                'amount_currency': 1200.0,
+                'debit': 600.0,
                 'credit': 0.0,
             },
             {
@@ -477,8 +477,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': tax_price_include_2.id,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 480.0,
-                'debit': 240.0,
+                'amount_currency': 240.0,
+                'debit': 120.0,
                 'credit': 0.0,
             },
             {
@@ -490,16 +490,16 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': -2880.0,
+                'amount_currency': -1440.0,
                 'debit': 0.0,
-                'credit': 1440.0,
+                'credit': 720.0,
             },
         ], {
             'currency_id': self.other_currency.id,
             'fiscal_position_id': fiscal_position.id,
-            'amount_untaxed': 2400.0,
-            'amount_tax': 480.0,
-            'amount_total': 2880.0,
+            'amount_untaxed': 1200.0,
+            'amount_tax': 240.0,
+            'amount_total': 1440.0,
         })
 
     def test_in_invoice_line_onchange_business_fields_1(self):
@@ -2696,14 +2696,17 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'uom_id': uom_gram.id,
-            'uom_po_id': uom_kgm.id,
             'standard_price': 110.0,
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'product_uom_id': uom_kgm.id,
+            })]
         })
         # customer invoice should have sale uom
         invoice = self.init_invoice(move_type='out_invoice', products=[product])
         invoice_uom = invoice.invoice_line_ids[0].product_uom_id
         self.assertEqual(invoice_uom, uom_gram)
-        # vendor bill should have purchase uom
+        # vendor bill should have seller uom
         bill = self.init_invoice(move_type='in_invoice', products=[product])
         bill_uom = bill.invoice_line_ids[0].product_uom_id
         self.assertEqual(bill_uom, uom_kgm)

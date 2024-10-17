@@ -32,7 +32,10 @@ class ProductTemplate(models.Model):
 
     def _compute_purchased_product_qty(self):
         for template in self:
-            template.purchased_product_qty = float_round(sum([p.purchased_product_qty for p in template.product_variant_ids]), precision_rounding=template.uom_id.rounding)
+            template.purchased_product_qty = float_round(
+                sum(p.purchased_product_qty for p in template.product_variant_ids),
+                precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+            )
 
     def _get_backend_root_menu_ids(self):
         return super()._get_backend_root_menu_ids() + [self.env.ref('purchase.menu_purchase_root').id]
@@ -78,7 +81,10 @@ class ProductProduct(models.Model):
             if not product.id:
                 product.purchased_product_qty = 0.0
                 continue
-            product.purchased_product_qty = float_round(purchased_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
+            product.purchased_product_qty = float_round(
+                purchased_data.get(product.id, 0),
+                precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+            )
 
     @api.depends_context('order_id')
     def _compute_is_in_purchase_order(self):
@@ -120,9 +126,3 @@ class ProductSupplierinfo(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
-
-
-class ProductPackaging(models.Model):
-    _inherit = 'product.packaging'
-
-    purchase = fields.Boolean("Purchase", default=True, help="If true, the packaging can be used for purchase orders")

@@ -24,7 +24,6 @@ class ProductProduct(models.Model):
                 record.uom_id = record._origin.uom_id
             else:
                 record.uom_id = self.product_tmpl_id.default_get(['uom_id']).get('uom_id')
-            record.uom_po_id = record.uom_id
 
     @api.onchange('service_policy')
     def _onchange_service_policy(self):

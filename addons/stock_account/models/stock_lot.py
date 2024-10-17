@@ -92,7 +92,7 @@ class StockLot(models.Model):
             if lot.product_id.cost_method not in ('standard', 'average'):
                 continue
             quantity_svl = lot.sudo().quantity_svl
-            if float_compare(quantity_svl, 0.0, precision_rounding=lot.product_id.uom_id.rounding) <= 0:
+            if float_compare(quantity_svl, 0.0, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) <= 0:
                 continue
             value_svl = lot.sudo().value_svl
             value = company_id.currency_id.round((rounded_new_price * quantity_svl) - value_svl)
