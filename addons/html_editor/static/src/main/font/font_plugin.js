@@ -177,6 +177,7 @@ export class FontPlugin extends Plugin {
                     onSelected: (item) =>
                         this.dependencies.format.formatSelection("setFontSizeClassName", {
                             formatProps: { className: item.className },
+                            applyStyle: true,
                         }),
                     isFontSize: true,
                     document: this.document,

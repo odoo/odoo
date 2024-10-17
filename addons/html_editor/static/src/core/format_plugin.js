@@ -81,6 +81,7 @@ export class FormatPlugin extends Plugin {
                 id: "formatFontSizeClassName",
                 run: ({ className }) => {
                     return this.formatSelection("setFontSizeClassName", {
+                        applyStyle: true,
                         formatProps: { className },
                     });
                 },
