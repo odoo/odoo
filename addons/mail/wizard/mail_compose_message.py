@@ -521,7 +521,7 @@ class MailComposeMessage(models.TransientModel):
             else:
                 composer.allow_email = False
 
-    @api.depends('composition_mode', 'model', 'res_domain', 'res_ids',
+    @api.depends('allow_email', 'composition_mode', 'model', 'res_domain', 'res_ids',
                  'template_id')
     def _compute_email_to(self):
         """ Computation is coming either from template, either reset. When
@@ -529,12 +529,12 @@ class MailComposeMessage(models.TransientModel):
         it (in monorecord comment mode) on the composer. When removing the
         template, reset it. """
         for composer in self:
-            if composer.template_id:
-                composer._set_value_from_template('email_to')
-            if not composer.template_id:
+            if not composer.template_id or not composer.allow_email:
                 composer.email_to = False
+            else:
+                composer._set_value_from_template('email_to')
 
-    @api.depends('composition_mode', 'model', 'res_domain', 'res_ids',
+    @api.depends('allow_email', 'composition_mode', 'model', 'res_domain', 'res_ids',
                  'template_id')
     def _compute_email_cc(self):
         """ Computation is coming either from template, either reset. When
@@ -542,10 +542,10 @@ class MailComposeMessage(models.TransientModel):
         it (in monorecord comment mode) on the composer. When removing the
         template, reset it. """
         for composer in self:
-            if composer.template_id:
-                composer._set_value_from_template('email_cc')
-            if not composer.template_id:
+            if not composer.template_id or not composer.allow_email:
                 composer.email_cc = False
+            else:
+                composer._set_value_from_template('email_cc')
 
     @api.depends('allow_email', 'composition_mode',
                  'model', 'parent_id', 'res_domain',
@@ -1505,6 +1505,7 @@ class MailComposeMessage(models.TransientModel):
                 self[composer_fname] = self.template_id._generate_template(
                     rendering_res_ids,
                     {template_fname},
+                    find_or_create_partners=not self.allow_email,
                 )[rendering_res_ids[0]][template_fname]
             else:
                 self[composer_fname] = self.template_id[template_fname]

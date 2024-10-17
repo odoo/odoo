@@ -270,6 +270,7 @@ class TestComposerForm(TestMailComposer):
         composer_form = Form(self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record, add_web=True, default_template_id=self.template.id)
         ))
+        self.assertFalse(composer_form.allow_email, 'Should take template value')
         self.assertTrue(composer_form.auto_delete, 'Should take template value')
         self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: keep_log makes no sense in comment mode, only auto_delete')
         self.assertEqual(composer_form.author_id, self.user_employee_2.partner_id,
@@ -277,8 +278,10 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.body, f'<p>TemplateBody {self.test_record.name}</p>')
         self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'comment')
+        self.assertFalse(composer_form.email_cc, 'Should not render cc')
         self.assertEqual(composer_form.email_from, self.user_employee_2.email_formatted)
         self.assertEqual(composer_form.email_layout_xmlid, 'mail.test_layout')
+        self.assertFalse(composer_form.email_to, 'Should not render to')
         self.assertTrue(composer_form.force_send, 'MailComposer: single record post send notifications right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
@@ -293,6 +296,11 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.subject, f'TemplateSubject {self.test_record.name}')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
         self.assertFalse(composer_form.subtype_is_log)
+
+        composer_form.allow_email = True
+        print(composer_form.email_cc, composer_form.email_to)
+        self.assertFalse(composer_form.email_cc)
+        self.assertFalse(composer_form.email_to)
 
     @users('employee')
     def test_mail_composer_comment_wtpl_batch(self):
