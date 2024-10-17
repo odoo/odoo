@@ -126,7 +126,12 @@ class Orderpoint(models.Model):
 
     def _compute_days_to_order(self):
         res = super()._compute_days_to_order()
-        for orderpoint in self:
+        # Avoid computing rule_ids if no stock.rules with the buy action
+        if not self.env['stock.rule'].search([('action', '=', 'buy')]):
+            return res
+        # Compute rule_ids only for orderpoint whose compnay_id.days_to_purchase != orderpoint.days_to_order
+        orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.days_to_order != orderpoint.company_id.days_to_purchase)
+        for orderpoint in orderpoints_to_compute:
             if 'buy' in orderpoint.rule_ids.mapped('action'):
                 orderpoint.days_to_order = orderpoint.company_id.days_to_purchase
         return res
