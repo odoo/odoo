@@ -47,15 +47,18 @@ class Users(models.Model):
             partner_ids += [self.env.user.partner_id.id]
         return partner_ids
 
+    @property
+    @api.model
+    def _default_calendar_default_privacy(self):
+        """ Get the calendar default privacy from the Default User Template, set public as default. """
+        if default_user := self.env.ref('base.default_user', raise_if_not_found=False):
+            return default_user.calendar_default_privacy or 'public'
+        return 'public'
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Set the calendar default privacy as the same as Default User Template when defined. """
-        # Get the calendar default privacy from the Default User Template, set public as default.
-        default_privacy = 'public'
-        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        if default_user and default_user.calendar_default_privacy:
-            default_privacy = default_user.calendar_default_privacy
-
+        default_privacy = self._default_calendar_default_privacy()
         # Update the dictionaries in vals_list with the calendar default privacy.
         for vals_dict in vals_list:
             if not vals_dict.get('calendar_default_privacy'):
@@ -76,22 +79,29 @@ class Users(models.Model):
     @api.depends("res_users_settings_id.calendar_default_privacy")
     def _compute_calendar_default_privacy(self):
         for user in self:
-            user.calendar_default_privacy = user.res_users_settings_id.calendar_default_privacy
+            user.calendar_default_privacy = user.res_users_settings_id.calendar_default_privacy or self._default_calendar_default_privacy()
 
     def _inverse_calendar_res_users_settings(self):
         """
         Updates the values of the calendar fields in 'res_users_settings_ids' to have the same values as their related
         fields in 'res.users'. If there is no 'res.users.settings' record for the user, then the record is created.
         """
+        default_privacy = self._default_calendar_default_privacy()
         for user in self:
+            configuration = {field: user[field] for field in self._get_user_calendar_configuration_extra_fields() if user[field]}
+            has_settings = user.sudo().res_users_settings_ids
+
+            if not configuration and not has_settings and user.calendar_default_privacy == default_privacy:
+                continue
+
             settings = self.env["res.users.settings"]._find_or_create_for_user(user)
-            configuration = {field: user[field] for field in self._get_user_calendar_configuration_fields()}
+            configuration['calendar_default_privacy'] = user.calendar_default_privacy
             settings.update(configuration)
 
     @api.model
-    def _get_user_calendar_configuration_fields(self) -> list[str]:
+    def _get_user_calendar_configuration_extra_fields(self) -> list[str]:
         """ Return the list of configurable fields for the user related to the res.users.settings table. """
-        return ['calendar_default_privacy']
+        return []
 
     def _systray_get_calendar_event_domain(self):
         # Determine the domain for which the users should be notified. This method sends notification to
