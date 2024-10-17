@@ -115,7 +115,8 @@ export class LinkPopover extends Component {
     }
 
     onKeydownEnter(ev) {
-        if (ev.key === "Enter") {
+        const isAutoCompleteDropdownOpen = document.querySelector(".o-autocomplete--dropdown-menu");
+        if (ev.key === "Enter" && !isAutoCompleteDropdownOpen) {
             ev.preventDefault();
             this.onClickApply();
         }
