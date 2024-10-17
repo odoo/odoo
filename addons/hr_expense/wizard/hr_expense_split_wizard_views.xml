@@ -22,7 +22,7 @@
                             <field name="name"/>
                             <field name="product_id"/>
                             <field name="employee_id" widget="many2one_avatar_user"/>
-                            <field name="tax_ids" widget="many2many_tags" readonly="not product_has_tax"/>
+                            <field name="tax_ids" widget="many2many_tax_tags" readonly="not product_has_tax"/>
                             <field name="tax_amount_currency"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
                                 optional="show"

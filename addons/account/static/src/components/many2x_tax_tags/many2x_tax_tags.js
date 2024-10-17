@@ -1,15 +1,17 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-
+import {
+    Many2OneField,
+    many2OneField,
+} from "@web/views/fields/many2one/many2one_field";
 import { TaxAutoComplete } from "@account/components/tax_autocomplete/tax_autocomplete";
 
-export class Many2ManyTaxTagsAutocomplete extends Many2XAutocomplete {
+export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     static components = {
         ...Many2XAutocomplete.components,
         AutoComplete: TaxAutoComplete,
@@ -56,7 +58,14 @@ export class Many2ManyTaxTagsAutocomplete extends Many2XAutocomplete {
 export class Many2ManyTaxTagsField extends Many2ManyTagsField {
     static components = {
         ...Many2ManyTagsField.components,
-        Many2XAutocomplete: Many2ManyTaxTagsAutocomplete,
+        Many2XAutocomplete: Many2XTaxTagsAutocomplete,
+    };
+}
+
+export class Many2OneTaxTagsField extends Many2OneField {
+    static components = {
+        ...Many2OneField.components,
+        Many2XAutocomplete: Many2XTaxTagsAutocomplete,
     };
 }
 
@@ -66,4 +75,11 @@ export const many2ManyTaxTagsField = {
     additionalClasses: ['o_field_many2many_tags']
 };
 
+export const many2OneTaxTagsField = {
+    ...many2OneField,
+    component: Many2OneTaxTagsField,
+    additionalClasses: ['o_field_many2one'],
+};
+
 registry.category("fields").add("many2many_tax_tags", many2ManyTaxTagsField);
+registry.category("fields").add("many2one_tax_tags", many2OneTaxTagsField);

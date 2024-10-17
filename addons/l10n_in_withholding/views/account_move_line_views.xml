@@ -7,7 +7,7 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='l10n_in_hsn_code']" position="after">
-                <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use', '=', 'sale')]"/>
+                <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'sale')]"/>
             </xpath>
         </field>
     </record>
