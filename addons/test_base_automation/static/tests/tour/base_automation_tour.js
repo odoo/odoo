@@ -142,7 +142,6 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
                 assertEqual(
                     JSON.stringify(options),
                     JSON.stringify({
-                        false: "",
                         on_stage_set: "Stage is set to",
                         on_user_set: "User is set",
                         on_tag_set: "Tag is added",
