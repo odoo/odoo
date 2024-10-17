@@ -221,8 +221,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
             msg_vals=notify_msg_vals,
         )
         # find back information for each recipients
-        partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-        emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+        partner_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_1.ids)
+        emp_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_employee.ids)
         # partner: no access button
         self.assertFalse(partner_info['has_button_access'])
         # employee: access button and link
@@ -249,8 +249,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                     msg_vals=notify_msg_vals,
                 )
                 # find back information for partner
-                partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-                emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+                partner_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_1.ids)
+                emp_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_employee.ids)
                 # check there is no access button
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
@@ -273,8 +273,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                     msg_vals=notify_msg_vals,
                 )
                 # find back information for partner
-                partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-                emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+                partner_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_1.ids)
+                emp_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_employee.ids)
                 # check there is no access button
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
