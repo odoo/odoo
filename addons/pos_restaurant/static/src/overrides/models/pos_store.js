@@ -88,7 +88,7 @@ patch(PosStore.prototype, {
         const order = super.createNewOrder(...arguments);
 
         if (this.config.module_pos_restaurant && this.selectedTable && !order.table_id) {
-            order.update({ table_id: this.selectedTable });
+            order.table_id = this.selectedTable;
         }
 
         return order;
@@ -256,7 +256,7 @@ patch(PosStore.prototype, {
 
                 if (potentialsOrders.length) {
                     currentOrder = potentialsOrders[0];
-                    currentOrder.update({ table_id: table });
+                    currentOrder.table_id = table;
                     this.selectedOrderUuid = currentOrder.uuid;
                 } else {
                     await this.add_new_order();
@@ -335,7 +335,7 @@ patch(PosStore.prototype, {
             return;
         }
         if (!this.tableHasOrders(destinationTable)) {
-            order.update({ table_id: destinationTable });
+            order.table_id = destinationTable;
             this.set_order(order);
             this.addPendingOrder([order.id]);
         } else {
@@ -352,7 +352,7 @@ patch(PosStore.prototype, {
                 }
             }
             linesToUpdate.forEach((orderline) => {
-                orderline.update({ order_id: destinationOrder.id });
+                orderline.order_id = destinationOrder;
             });
             this.set_order(destinationOrder);
             if (destinationOrder?.id) {

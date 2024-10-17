@@ -233,7 +233,7 @@ patch(PosOrder.prototype, {
         for (const rewardLine of this.lines.filter((line) => line.is_reward_line)) {
             rewardLine.delete();
         }
-        this.update({ _code_activated_coupon_ids: [["clear"]] });
+        this._code_activated_coupon_ids = [["clear"]];
     },
     /**
      * Refreshes the currently applied rewards, if they are not applicable anymore they are removed.

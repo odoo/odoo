@@ -55,9 +55,7 @@ patch(PosStore.prototype, {
                 (position) => position.id === sale_order.fiscal_position_id
             );
         if (orderFiscalPos) {
-            this.get_order().update({
-                fiscal_position_id: orderFiscalPos,
-            });
+            this.get_order().fiscal_position_id = orderFiscalPos;
         }
         if (sale_order.partner_id) {
             this.get_order().set_partner(sale_order.partner_id);

@@ -72,7 +72,7 @@ patch(ControlButtons.prototype, {
         const takeawayFp = this.pos.config.takeaway_fp_id;
 
         this.currentOrder.takeaway = isTakeAway;
-        this.currentOrder.update({ fiscal_position_id: isTakeAway ? takeawayFp : defaultFp });
+        this.currentOrder.fiscal_position_id = isTakeAway ? takeawayFp : defaultFp;
     },
     editFloatingOrderName(order) {
         this.dialog.add(TextInputPopup, {
