@@ -1797,6 +1797,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
 
+        if redirection := self._check_shipping_method(order_sudo):
+            return redirection
+
         render_values = self._get_shop_payment_values(order_sudo, **post)
         render_values['only_services'] = order_sudo and order_sudo.only_services
 
@@ -1979,6 +1982,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             partner_sudo.country_id
         )
         return all(partner_sudo.read(mandatory_billing_fields)[0].values())
+
+    def _check_shipping_method(self, order_sudo):
+        if not order_sudo._is_delivery_ready():
+            return request.redirect('/shop/checkout')
 
     def _get_mandatory_billing_address_fields(self, country_sudo):
         """ Return the set of mandatory billing field names.
