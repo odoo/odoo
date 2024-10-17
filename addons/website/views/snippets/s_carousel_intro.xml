@@ -108,36 +108,6 @@
     <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="after">
         <t t-call="website.snippet_options_carousel_intro"/>
     </xpath>
-
-    <xpath expr="//div[@data-js='GalleryElement']" position="after">
-        <div data-js="layout_column" data-selector=".s_carousel_intro_item" data-target="> .container, > .container-fluid, > .o_container_small">
-            <we-row>
-                <we-button-group string="Layout" data-no-preview="true">
-                    <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
-                    <we-button data-select-layout="normal" data-name="normal_mode">Cols</we-button>
-                </we-button-group>
-                <t t-call="website.column_count_option">
-                    <t t-set="with_grid" t-value="True"/>
-                </t>
-            </we-row>
-            <t t-call="website.grid_layout_options">
-                <t t-set="indent" t-value="True"/>
-            </t>
-        </div>
-        <div data-js="ContainerWidth" data-selector=".s_carousel_intro_item" data-target="> .container, > .container-fluid, > .o_container_small">
-            <we-button-group string="Content Width">
-                <we-button data-select-class="o_container_small"
-                        data-img="/website/static/src/img/snippets_options/content_width_small.svg"
-                        title="Small"/>
-                <we-button data-select-class="container"
-                        data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
-                        title="Regular"/>
-                <we-button data-select-class="container-fluid"
-                        data-img="/website/static/src/img/snippets_options/content_width_full.svg"
-                        title="Full"/>
-            </we-button-group>
-        </div>
-    </xpath>
 </template>
 
 <record id="website.s_carousel_intro_000_scss" model="ir.asset">
