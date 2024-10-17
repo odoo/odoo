@@ -3296,7 +3296,7 @@ class MailThread(models.AbstractModel):
                 msg_vals=msg_vals,
                 render_values=render_values,
             )
-            recipients_ids = recipients_group.pop('recipients')
+            recipients_ids = recipients_group.get('recipients_ids')
 
             # create email
             for recipients_ids_chunk in split_every(gen_batch_size, recipients_ids):
@@ -3396,8 +3396,12 @@ class MailThread(models.AbstractModel):
                                string};
               'has_button_access': display access document main button in email;
               'notification_group_name': name of the group, to ease usage;
-              'recipients': list of partner IDs, will be fillup when evaluating
-                            groups;
+              'recipients_data': list of recipients data, following format used
+                                 in '_notify_get_recipients'. It is fillup when
+                                 evaluating groups;
+              'recipients_ids': list of partner IDs, based on partner ID present in
+                                recipients_data (allows mainly to speedup some
+                                data computation);
            }
           );
         """
@@ -3881,8 +3885,12 @@ class MailThread(models.AbstractModel):
                              string};
             'has_button_access': display access document main button in email;
             'notification_group_name': name of the group, to ease usage;
-            'recipients': list of partner IDs, will be fillup when evaluating
-                          groups;
+            'recipients_data': list of recipients data, following format used
+                               in '_notify_get_recipients'. It is fillup when
+                               evaluating groups;
+            'recipients_ids': list of partner IDs, based on partner ID present in
+                              recipients_data (allows mainly to speedup some
+                              data computation);
            }
 
         Default groups:
@@ -3967,7 +3975,8 @@ class MailThread(models.AbstractModel):
             group_data.setdefault('actions', [])
             group_data.setdefault('has_button_access', is_thread_message)
             group_data.setdefault('notification_group_name', group_name)
-            group_data.setdefault('recipients', [])
+            group_data.setdefault('recipients_data', [])
+            group_data.setdefault('recipients_ids', [])
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
             group_button_access.setdefault('title', view_title)
@@ -4010,7 +4019,8 @@ class MailThread(models.AbstractModel):
                 'button_access': {},
                 'has_button_access': False,
                 'notification_group_name': 'user',
-                'recipients': [11],
+                'recipients_data': [{...}],
+                'recipients_ids': [11],
              }, {...}]
         """
         # keep a local copy of msg_vals as it may be modified to include more
@@ -4028,14 +4038,15 @@ class MailThread(models.AbstractModel):
         for recipient_data in recipients_data:
             for _group_name, group_func, group_data in groups:
                 if group_data['active'] and group_func(recipient_data):
-                    group_data['recipients'].append(recipient_data['id'])
+                    group_data['recipients_data'].append(recipient_data)
+                    group_data['recipients_ids'].append(recipient_data['id'])
                     break
 
         # filter out groups without recipients
         return [
             group_data
             for _group_name, _group_func, group_data in groups
-            if group_data['recipients']
+            if group_data['recipients_data']
         ]
 
     def _notify_get_action_link(self, link_type, **kwargs):
