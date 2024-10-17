@@ -31,11 +31,11 @@ export class BinaryField extends Component {
     }
 
     get fileName() {
-        return (
-            this.props.record.data[this.props.fileNameField] ||
-            this.props.record.data[this.props.name] ||
-            ""
-        ).slice(0, toBase64Length(MAX_FILENAME_SIZE_BYTES));
+        const fileName = this.props.record.data[this.props.fileNameField] || this.props.record.data[this.props.name] || "";
+        if (typeof fileName === "string") {
+            return fileName.slice(0, toBase64Length(MAX_FILENAME_SIZE_BYTES));
+        }
+        return "";
     }
 
     update({ data, name }) {
