@@ -145,6 +145,12 @@
                     action="product.product_tag_action"
                     sequence="30"/>
 
+                <menuitem id="menu_product_uom_form_action"
+                    name="Units &amp; Packagings"
+                    action="uom.product_uom_form_action"
+                    groups="uom.group_uom"
+                    sequence="35"/>
+
             </menuitem>
 
             <menuitem id="payment_menu"
@@ -170,22 +176,6 @@
                           groups="base.group_no_one"
                           sequence="40"
                 />
-            </menuitem>
-
-            <menuitem id="next_id_16"
-                name="Units of Measure"
-                groups="uom.group_uom"
-                sequence="50">
-
-                <menuitem id="menu_product_uom_form_action"
-                    action="uom.product_uom_form_action"
-                    groups="base.group_no_one"
-                    sequence="10"/>
-
-                <menuitem id="menu_product_uom_categ_form_action"
-                    action="uom.product_uom_categ_form_action"
-                    sequence="20"/>
-
             </menuitem>
 
             <menuitem

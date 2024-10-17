@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import Form
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.test_report import TestReportsCommon
@@ -201,28 +202,28 @@ class TestPurchaseStockReports(TestReportsCommon):
 
     def test_vendor_delay_report_with_uom(self):
         """
-        PO 12 units x P
-        Receive 1 dozen x P
+        PO 6 units x P
+        Receive 1 pack_of_6 x P
         -> 100% received
         """
-        uom_12 = self.env.ref('uom.product_uom_dozen')
+        uom_6 = self.env.ref('uom.product_uom_pack_6')
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
         with po_form.order_line.new() as line:
             line.product_id = self.product
-            line.product_qty = 12
+            line.product_qty = 6
         po = po_form.save()
         po.button_confirm()
 
         receipt = po.picking_ids
         receipt_move = receipt.move_ids
         receipt_move.move_line_ids.unlink()
-        receipt_move.move_line_ids = [(0, 0, {
+        receipt_move.move_line_ids = [Command.create({
             'location_id': receipt_move.location_id.id,
             'location_dest_id': receipt_move.location_dest_id.id,
             'product_id': self.product.id,
-            'product_uom_id': uom_12.id,
+            'product_uom_id': uom_6.id,
             'quantity': 1,
             'picking_id': receipt.id,
         })]
@@ -234,8 +235,8 @@ class TestPurchaseStockReports(TestReportsCommon):
             ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
             ['product_id'],
         )[0]
-        self.assertEqual(data['qty_on_time'], 12)
-        self.assertEqual(data['qty_total'], 12)
+        self.assertEqual(data['qty_on_time'], 6)
+        self.assertEqual(data['qty_total'], 6)
         self.assertEqual(data['on_time_rate'], 100)
 
     def test_vendor_delay_report_with_multi_location(self):

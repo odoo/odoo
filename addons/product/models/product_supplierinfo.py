@@ -31,14 +31,12 @@ class ProductSupplierinfo(models.Model):
     sequence = fields.Integer(
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
-        related='product_tmpl_id.uom_po_id')
+        'uom.uom', 'Unit', compute='_compute_product_uom_id', store=True, readonly=False)
     min_qty = fields.Float(
         'Quantity', default=0.0, required=True, digits="Product Unit of Measure",
         help="The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
     price = fields.Float(
-        'Price', default=0.0, digits='Product Price',
-        required=True, help="The price to purchase a product")
+        'Unit Price', digits='Product Price', default=0.0, help="The price to purchase a product")
     price_discounted = fields.Float('Discounted Price', compute='_compute_price_discounted')
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -65,6 +63,16 @@ class ProductSupplierinfo(models.Model):
         string="Discount (%)",
         digits='Discount',
         readonly=False)
+
+    @api.depends('product_id', 'product_tmpl_id')
+    def _compute_product_uom_id(self):
+        for rec in self:
+            rec.product_uom_id = rec.product_id.uom_id if rec.product_id else rec.product_tmpl_id.uom_id
+
+    @api.depends('product_id', 'product_tmpl_id')
+    def _compute_price(self):
+        for rec in self:
+            rec.price = rec.product_id.standard_price if rec.product_id else rec.product_tmpl_id.standard_price if rec.product_tmpl_id else 0.0
 
     @api.depends('discount', 'price')
     def _compute_price_discounted(self):

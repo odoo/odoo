@@ -115,7 +115,7 @@ class StockMoveLine(TestStockCommon):
 
     def test_pick_from_5(self):
         """ check small quantities get handled correctly """
-        precision = self.env.ref('product.decimal_product_uom')
+        precision = self.env.ref('uom.decimal_product_uom')
         precision.digits = 6
         self.product.uom_id = self.uom_kg
         move = self.env['stock.move'].create({
@@ -214,7 +214,7 @@ class StockMoveLine(TestStockCommon):
             update_date_2 = ml.date
             self.assertTrue(update_date_2 > update_date_1, "Increasing a ml's quantity should update its date")
             freeze.tick(delta=datetime.timedelta(seconds=2))
-            ml.product_uom_id = self.uom_dozen
+            ml.product_uom_id = self.uom_pack_of_6
             update_date_3 = ml.date
             self.assertTrue(update_date_3 > update_date_2, "Increasing a ml's quantity (via UoM type) should update its date")
             freeze.tick(delta=datetime.timedelta(seconds=2))
@@ -223,13 +223,13 @@ class StockMoveLine(TestStockCommon):
             freeze.tick(delta=datetime.timedelta(seconds=2))
             ml.write({
                 'product_uom_id': self.uom_unit.id,
-                'quantity': 24
+                'quantity': 12
             })
-            # 2 dozen = 24 units
+            # 2 pack_of_6 = 24 units
             self.assertEqual(update_date_3, ml.date, "Quantity change check for date should take into account UoM conversion")
             freeze.tick(delta=datetime.timedelta(seconds=2))
             ml.write({
-                'product_uom_id': self.uom_dozen.id,
+                'product_uom_id': self.uom_pack_of_6.id,
                 'quantity': 3
             })
             # 36 units > 24 units

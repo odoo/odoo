@@ -38,6 +38,7 @@ class MrpConsumptionWarning(models.TransientModel):
     def action_set_qty(self):
         missing_move_vals = []
         problem_tracked_products = self.env['product.product']
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for production in self.mrp_production_ids:
             for line in self.mrp_consumption_warning_line_ids:
                 if line.mrp_production_id != production:
@@ -46,7 +47,7 @@ class MrpConsumptionWarning(models.TransientModel):
                     if line.product_id != move.product_id:
                         continue
                     qty_expected = line.product_uom_id._compute_quantity(line.product_expected_qty_uom, move.product_uom)
-                    qty_compare_result = float_compare(qty_expected, move.quantity, precision_rounding=move.product_uom.rounding)
+                    qty_compare_result = float_compare(qty_expected, move.quantity, precision_digits=precision_digits)
                     if qty_compare_result != 0:
                         move.quantity = qty_expected
                     # move should be set to picked to correctly consume the product
@@ -54,7 +55,10 @@ class MrpConsumptionWarning(models.TransientModel):
                     # in case multiple lines with same product => set others to 0 since we have no way to know how to distribute the qty done
                     line.product_expected_qty_uom = 0
                 # move was deleted before confirming MO or force deleted somehow
-                if not float_is_zero(line.product_expected_qty_uom, precision_rounding=line.product_uom_id.rounding):
+                if not float_is_zero(
+                    line.product_expected_qty_uom,
+                    precision_digits=precision_digits,
+                ):
                     missing_move_vals.append({
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom_id.id,
