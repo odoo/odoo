@@ -227,6 +227,7 @@
                               t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
                               t-out="template_price_vals['price_reduce']"
                               t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span class="h6 mb-0" t-elif="any(ptav.price_extra for ptav in product.attribute_line_ids.product_template_value_ids)">&amp;nbsp;</span>
                         <span class="h6 mb-0" t-else="" t-field="website.prevent_zero_price_sale_text"/>
                         <t t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)">
                             <del t-attf-class="text-muted me-1 h6 mb-0" style="white-space: nowrap;">
