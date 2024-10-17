@@ -48,7 +48,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.containsN(target, "select option", 3);
+        assert.containsN(target, "select option", 2);
         assert.containsOnce(
             target,
             ".o_field_widget[name='program_type'] select option[value='\"coupon\"']",
@@ -71,7 +71,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.containsN(target, "select option", 3);
+        assert.containsN(target, "select option", 2);
         assert.containsOnce(
             target,
             ".o_field_widget[name='program_type'] select option[value='\"coupon\"']",
@@ -95,7 +95,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.containsN(target, "select option", 4);
+        assert.containsN(target, "select option", 3);
         assert.containsOnce(
             target,
             ".o_field_widget[name='program_type'] select option[value='\"gift_card\"']",
@@ -110,7 +110,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editSelect(target, ".o_field_widget[name='program_type'] select", '"coupon"');
-        assert.containsN(target, "select option", 3);
+        assert.containsN(target, "select option", 2);
         assert.containsOnce(
             target,
             ".o_field_widget[name='program_type'] select option[value='\"coupon\"']",
