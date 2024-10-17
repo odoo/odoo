@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="sale_project.ProjectProfitabilitySection">
-        <tr>
+        <tr t-att-id="revenue.id">
             <t t-set="revenue_label" t-value="props.labels[revenue.id] or revenue.id"/>
             <td class="align-middle">
                 <t t-if="this.props.revenue.isSectionFoldable">

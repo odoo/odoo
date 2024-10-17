@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillStart } from "@odoo/owl";
 import { formatFloat, formatFloatTime } from "@web/views/fields/formatters";
 
 export class ProjectProfitabilitySection extends Component {
@@ -12,6 +12,7 @@ export class ProjectProfitabilitySection extends Component {
         onClick: Function,
         projectId: Number,
         context: Object,
+        foldState: { type: Boolean, optional: true },
     };
     static template = "sale_project.ProjectProfitabilitySection";
 
@@ -24,6 +25,12 @@ export class ProjectProfitabilitySection extends Component {
             displayLoadMore: null,
         });
         this.sale_items = [];
+
+        onWillStart(async () => {
+            if (this.props.foldState && this.state.isFolded) {
+                await this.toggleSaleItems();
+            }
+        });
     }
 
     get revenue() {
@@ -33,7 +40,7 @@ export class ProjectProfitabilitySection extends Component {
     async toggleSaleItems() {
         if (this.state.displayLoadMore === null) {
             // first time the section is unfold, load the 5 first items.
-            await this.onLoadMoreClick()
+            await this.onLoadMoreClick();
         }
         // the state change is done at the end to ensure the loaded data are present when the component is rendered
         this.state.isFolded = !this.state.isFolded;
