@@ -62,7 +62,7 @@
                             <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
                                 <list name="tax_map_tree" string="Tax Mapping" editable="bottom" no_open="1" decoration-muted="tax_dest_id and not tax_dest_active">
                                     <field name="tax_dest_active" column_invisible="1"/>
-                                    <field name="tax_src_id"
+                                    <field name="tax_src_id" widget="many2one_tax_tags"
                                         domain="[
                                             ('type_tax_use', '!=', 'none'),
                                             ('country_id', '=', parent.company_country_id),
@@ -71,7 +71,7 @@
                                         context="{'append_type_to_tax_name': True}"
                                     />
 
-                                    <field name="tax_dest_id"
+                                    <field name="tax_dest_id" widget="many2one_tax_tags"
                                         domain="[
                                             ('type_tax_use', '!=', 'none'),
                                             ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),

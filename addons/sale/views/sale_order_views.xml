@@ -470,7 +470,7 @@
                                         <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging"/>
                                         <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'list_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                         <field name="price_unit"/>
-                                        <field name="tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
+                                        <field name="tax_ids" widget="many2many_tax_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                             readonly="qty_invoiced &gt; 0"/>
                                         <t groups="sale.group_discount_per_so_line">
                                             <label for="discount"/>
@@ -641,7 +641,7 @@
                                 <field name="technical_price_unit" column_invisible="1"/>
                                 <field
                                     name="tax_ids"
-                                    widget="many2many_tags"
+                                    widget="many2many_tax_tags"
                                     options="{'no_create': True}"
                                     domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                     context="{'active_test': True}"
