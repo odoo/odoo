@@ -142,7 +142,10 @@ class MailMessage(models.Model):
     is_current_user_or_guest_author = fields.Boolean(compute='_compute_is_current_user_or_guest_author')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
+    # email recipients: comma separated list of emails (not normalized)
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
+    email_to = fields.Text('Emails To')
+    email_cc = fields.Char('Emails Cc')
     # list of partner having a notification. Caution: list may change over time because of notif gc cron.
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(

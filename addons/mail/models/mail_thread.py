@@ -2071,7 +2071,8 @@ class MailThread(models.AbstractModel):
     def message_post(self, *,
                      body='', subject=None, message_type='notification',
                      email_from=None, author_id=None, parent_id=False,
-                     subtype_xmlid=None, subtype_id=False, partner_ids=None,
+                     subtype_xmlid=None, subtype_id=False,
+                     partner_ids=None, email_to=None, email_cc=None,
                      attachments=None, attachment_ids=None, body_is_html=False,
                      **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
@@ -2092,6 +2093,10 @@ class MailThread(models.AbstractModel):
             notification mechanism;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
             computed based on subtype / followers matching;
+        :param str email_to: comma-separated list of emails to notify in addition
+            to partners;
+        :param str email_cc: comma-separated list of emails to notify as carbon
+            copy in addition ot partners and email_to;
         :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
             tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
             is NOT base64 encoded;
@@ -2199,6 +2204,8 @@ class MailThread(models.AbstractModel):
             'subtype_id': subtype_id,
             # recipients
             'partner_ids': partner_ids,
+            'email_to': email_to,
+            'email_cc': email_cc,
         })
         # add default-like values afterwards, to avoid useless queries
         if 'record_alias_domain_id' not in msg_values:
@@ -2619,7 +2626,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'message_id', 'message_type', 'parent_id'}
+            forbidden_names={'email_cc', 'email_to', 'message_id', 'message_type', 'parent_id'}
         )
         if attachments:
             # attachments should be a list (or tuples) of 3-elements list (or tuple)
@@ -2915,8 +2922,10 @@ class MailThread(models.AbstractModel):
             'create_date',  # anyway limited to admins
             'date',
             'email_add_signature',
+            'email_cc',
             'email_from',
             'email_layout_xmlid',
+            'email_to',
             'is_internal',
             'mail_activity_type_id',
             'mail_server_id',
