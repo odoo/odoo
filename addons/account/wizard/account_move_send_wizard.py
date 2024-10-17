@@ -166,6 +166,7 @@ class AccountMoveSendWizard(models.TransientModel):
         for wizard in self:
             wizard.pdf_report_id = self._get_default_pdf_report_id(wizard.move_id)
 
+    @api.depends('move_id')
     def _compute_display_pdf_report_id(self):
         # show pdf template menu if there are more than 1 template available and there is at least one move that needs a pdf
         available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
