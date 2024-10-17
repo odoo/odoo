@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from contextlib import nullcontext
 from datetime import datetime
 import logging
@@ -128,8 +127,7 @@ class ResDeviceLog(models.Model):
         _logger.info("GC device logs delete %d entries", self.env.cr.rowcount)
 
 
-class ResDevice(models.Model):
-    _inherit = ["res.device.log"]
+class ResDevice(models.Model, ResDeviceLog):
     _description = "Devices"
     _auto = False
 

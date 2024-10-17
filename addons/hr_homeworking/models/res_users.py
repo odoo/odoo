@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields
+from odoo import fields
+from odoo.addons import base
 
 from .hr_homeworking import DAYS
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(base.ResUsers):
 
     monday_location_id = fields.Many2one("hr.work.location", related="employee_id.monday_location_id", readonly=False, string='Monday')
     tuesday_location_id = fields.Many2one("hr.work.location", related="employee_id.tuesday_location_id", readonly=False, string='Tuesday')

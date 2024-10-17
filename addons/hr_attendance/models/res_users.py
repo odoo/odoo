@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import fields, _
+from odoo.addons import base
 
 
-class ResUsers(models.Model):
-    _inherit = ['res.users']
+class ResUsers(base.ResUsers):
 
     hours_last_month = fields.Float(related='employee_id.hours_last_month')
     hours_last_month_display = fields.Char(related='employee_id.hours_last_month_display')

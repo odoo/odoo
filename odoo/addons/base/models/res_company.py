@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from .res_partner import FormatAddressMixin, FormatVatLabelMixin
 
 import base64
 import logging
@@ -14,10 +15,9 @@ from odoo.tools import html2plaintext, file_open, ormcache
 _logger = logging.getLogger(__name__)
 
 
-class ResCompany(models.Model):
+class ResCompany(models.Model, FormatAddressMixin, FormatVatLabelMixin):
     _description = 'Companies'
     _order = 'sequence, name'
-    _inherit = ['format.address.mixin', 'format.vat.label.mixin']
     _parent_store = True
 
     def copy(self, default=None):

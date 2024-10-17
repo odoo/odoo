@@ -10,25 +10,6 @@ from odoo.exceptions import AccessError, RedirectWarning, UserError
 _logger = logging.getLogger(__name__)
 
 
-class ResConfigModuleInstallationMixin(object):
-    __slots__ = ()
-
-    @api.model
-    def _install_modules(self, modules):
-        """ Install the requested modules.
-
-        :param modules: a recordset of ir.module.module records
-        :return: the next action to execute
-        """
-        result = None
-
-        to_install_modules = modules.filtered(lambda module: module.state == 'uninstalled')
-        if to_install_modules:
-            result = to_install_modules.button_immediate_install()
-
-        return result
-
-
 class ResConfig(models.TransientModel):
     ''' Base classes for new-style configuration items
 
@@ -114,7 +95,7 @@ class ResConfig(models.TransientModel):
         return self.cancel() or self.next()
 
 
-class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin):
+class ResConfigSettings(models.TransientModel):
     """ Base configuration wizard for application settings.  It provides support for setting
         default values, assigning groups to employee users, and installing modules.
         To make such a 'settings' wizard, define a model like::
@@ -165,6 +146,21 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         such methods can be defined to provide current values for other fields.
     """
     _description = 'Config Settings'
+
+    @api.model
+    def _install_modules(self, modules):
+        """ Install the requested modules.
+
+        :param modules: a recordset of ir.module.module records
+        :return: the next action to execute
+        """
+        result = None
+
+        to_install_modules = modules.filtered(lambda module: module.state == 'uninstalled')
+        if to_install_modules:
+            result = to_install_modules.button_immediate_install()
+
+        return result
 
     def _valid_field_parameter(self, field, name):
         return (

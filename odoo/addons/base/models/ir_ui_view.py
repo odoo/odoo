@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from . import ir_model
 
 import ast
 import collections
@@ -2356,9 +2357,7 @@ class ResetViewArchWizard(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
-class Base(models.AbstractModel):
-
-    _inherit = ['base']
+class Base(ir_model.Base):
 
     _date_name = 'date'         #: field to use for default calendar view
 
