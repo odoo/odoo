@@ -16,6 +16,7 @@ import { queryFirst } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import {
     getService,
+    onRpc,
     patchWithCleanup,
     serverState,
     withUser,
@@ -156,4 +157,77 @@ test("scroll to unread notification", async () => {
     });
     await assertSteps(["scrollend"]);
     expect(isInViewportOf(thread, message)).toBe(true);
+});
+
+test("remove banner when scrolling to bottom", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    for (let i = 0; i < 50; ++i) {
+        pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    onRpc("/discuss/channel/mark_as_read", () => step("mark_as_read"));
+    await start();
+    await openDiscuss(channelId);
+    await assertSteps(["mark_as_read"]);
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Thread-banner", { text: "50 new messages" });
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 0" });
+    await tick(); // wait for the scroll to first unread to complete
+    await scroll(".o-mail-Thread", "bottom");
+    await contains(".o-mail-Message", { count: 50 });
+    // Banner is still present as there are more messages to load so we did not
+    // reach the actual bottom.
+    await contains(".o-mail-Thread-banner", { text: "50 new messages" });
+    await scroll(".o-mail-Thread", "bottom");
+    await contains(".o-mail-Thread-banner", { text: "50 new messages", count: 0 });
+});
+
+test("remove banner when opening thread at the bottom", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: `Hello World`,
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const [selfMemberId] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMemberId], { new_message_separator: messageId + 1 });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Expand']", { parent: [".o-mail-Message", { text: "Hello World" }] });
+    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await contains(".o-mail-Thread-banner", { text: "1 new message" });
+    await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
+    await contains(".o-mail-Discuss-threadName[title='Inbox']");
+    await click(".o-mail-DiscussSidebarChannel", { text: "general" });
+    await contains(".o-mail-Discuss-threadName[title='general']");
+    await contains(".o-mail-Thread-banner", { text: "1 new message", count: 0 });
+});
+
+test("keep banner after mark as unread when scrolling to bottom", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    for (let i = 0; i < 30; ++i) {
+        pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Expand']", { parent: [".o-mail-Message", { text: "message 29" }] });
+    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await scroll(".o-mail-Thread", "bottom");
+    await contains(".o-mail-Thread-banner", { text: "30 new messages" });
 });
