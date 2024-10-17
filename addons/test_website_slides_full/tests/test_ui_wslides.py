@@ -60,6 +60,7 @@ class TestUi(AccountTestInvoicingCommon, TestUICommon):
             'name': 'DIY Furniture Course',
             'list_price': 100.0,
             'type': 'service',
+            'service_tracking': 'course',
             'is_published': True,
         })
 
@@ -74,7 +75,7 @@ class TestUi(AccountTestInvoicingCommon, TestUICommon):
             'certification': True,
             'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
             'is_attempts_limited': True,
-            'attempts_limit': 3,
+            'attempts_limit': 2,
             'description': "<p>Test your furniture knowledge!</p>",
             'question_and_page_ids': [
                 (0, 0, {
@@ -143,7 +144,7 @@ class TestUi(AccountTestInvoicingCommon, TestUICommon):
             ]
         })
 
-        slide_channel_demo_6_furn3 = self.env['slide.channel'].create({
+        self.env['slide.channel'].create({
             'name': 'DIY Furniture - TEST',
             'user_id': self.env.ref('base.user_admin').id,
             'enroll': 'payment',
@@ -168,4 +169,4 @@ class TestUi(AccountTestInvoicingCommon, TestUICommon):
             ]
         })
 
-        self.start_tour('/slides', 'certification_member', login=user_demo.login, timeout=90)
+        self.start_tour('/slides', 'certification_member', login=user_demo.login)
