@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="ir_config_inherit_view" model="ir.ui.view">
+            <field name="name">company config</field>
+            <field name="model">ir.config_parameter</field>
+            <field name="inherit_id" ref="base.view_ir_config_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='value']"
+                       position="after">
+                    <field name="company_id" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="send_mass_mailing_view" model="ir.ui.view">
+            <field name="name">SendGrid Mass MAil</field>
+            <field name="model">mailing.mailing</field>
+            <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header" position="inside">
+                    <button name="action_send_grid" type="object"
+                    		invisible="state in ('in_queue', 'done')" 
+                            class="oe_highlight"
+                            string="SendGrid"
+                            confirm="This will send the email to all recipients. Do you still want to proceed ?"/><!-- attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" -->
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page[@name='mail_body']"
+                       position="after">
+                    <page string="SendGrid Email" name="send_grid">
+                        <group>
+                            <field name="email_temp"/>
+                            <field name="temp_id"/>
+                        </group>
+                        <group>
+                            <field name="to_email_partner_check" invisible="1"/>
+                            <field name="to_email_lead_check" invisible="1"/>
+                            <field name="to_email_contact_check" invisible="1"/>
+                            <field name="to_email_partner" widget="many2many_tags"
+                            		invisible="not to_email_partner_check"/><!-- attrs="{'invisible': [('to_email_contact_check', '=',False)]}" -->
+                            <field name="to_email_lead" widget="many2many_tags"
+                            		invisible="not to_email_partner_check"/><!-- attrs="{'invisible': [('to_email_contact_check', '=',False)]}" -->
+                            <field name="to_email_contact" widget="many2many_tags"
+                            		invisible="not to_email_partner_check"/><!-- attrs="{'invisible': [('to_email_contact_check', '=',False)]}" -->
+                            <field name="from_email"/>
+                            <field name="email_finder" invisible="1"/>
+                            <field name="sent_count" invisible="1"/>
+                            <field name="send_grid_check" invisible="1"/>
+                            <field name="temp_check" invisible="1"/>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//button[@name='action_view_delivered']" position="replace">
+                    <button name="action_view_delivered" type="object"
+                            context="{'search_default_filter_delivered': True}"
+                            invisible="state in ('draft','test') or send_grid_check == True"
+                            class="oe_stat_button"><!-- attrs="{'invisible': ['|',('state', 'in', ('draft','test')),('send_grid_check','=',True)]}" -->
+                        <field name="received_ratio" string="Received" widget="percentpie"/>
+                    </button>
+                </xpath>
+                <xpath expr="//button[@name='action_redirect_to_leads_and_opportunities']" position="replace">
+                    <button name="action_redirect_to_leads_and_opportunities" type="object" icon="fa-star" class="oe_stat_button"
+                            groups="sales_team.group_sale_salesman">
+                        <field name="crm_lead_count" string="Leads" widget="statinfo"/>
+                    </button>
+                </xpath>
+<!--                <xpath expr="//button[@name='action_redirect_to_opportunities']" position="replace">-->
+<!--                    <button name="action_redirect_to_opportunities" type="object" icon="fa-star" class="oe_stat_button"-->
+<!--                            groups="sales_team.group_sale_salesman"-->
+<!--                            attrs="{'invisible': ['|','|',('state', '=', 'draft'), ('use_leads', '=', True), ('send_grid_check','=',True)]}">-->
+<!--                        <field name="crm_opportunities_count" string="Opportunities" widget="statinfo"/>-->
+<!--                    </button>-->
+<!--                </xpath>-->
+                <xpath expr="//button[@name='action_view_opened']" position="replace">
+                    <button name="action_view_opened" type="object" context="{'search_default_filter_opened': True}"
+                            invisible="state in ('draft','test') or send_grid_check == True"
+                            class="oe_stat_button"><!-- attrs="{'invisible': ['|',('state', 'in', ('draft','test')),('send_grid_check','=',True)]}" -->
+                        <field name="opened_ratio" string="Opened" widget="percentpie"/>
+                    </button>
+                </xpath>
+                <xpath expr="//button[@name='action_view_replied']" position="replace">
+                    <button name="action_view_replied" type="object" context="{'search_default_filter_replied': True}"
+                    		invisible="state in ('draft','test') or send_grid_check == True"
+                            class="oe_stat_button"><!-- attrs="{'invisible': ['|',('state', 'in', ('draft','test')),('send_grid_check','=',True)]}" -->
+                        <field name="replied_ratio" string="Replied" widget="percentpie"/>
+                    </button>
+                </xpath>
+                <xpath expr="//button[@name='action_view_bounced']" position="replace">
+                    <button name="action_view_bounced" type="object" context="{'search_default_filter_bounced': True}"
+                            invisible="state in ('draft','test') or send_grid_check == True"
+                            class="oe_stat_button"><!-- attrs="{'invisible': ['|',('state', 'in', ('draft','test')),('send_grid_check','=',True)]}" -->
+                        <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
+                    </button>
+                </xpath>
+                <xpath expr="//field[@name='body_arch']" position="replace">
+                    <field name="body_arch" class="o_mail_body oe_edit_only" widget="mass_mailing_html"
+                                    options="{
+                                        'snippets': 'mass_mailing.email_designer_snippets',
+                                        'cssEdit': 'mass_mailing.iframe_css_assets_edit',
+                                        'inline-field': 'body_html'
+                                }" readonly="state in ('sending', 'done') or temp_check == True"/><!-- attrs="{'readonly': ['|',('state', 'in', ('sending', 'done')),('temp_check','=', True)]}" -->
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

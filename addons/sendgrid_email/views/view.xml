@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="email_sending_action" model="ir.actions.act_window">
+            <field name="name">Send Emails</field>
+            <field name="res_model">email.api</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'group_by': 'name'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create contacts
+                </p>
+            </field>
+        </record>
+
+        <record id="send_emails_tree_view" model="ir.ui.view">
+            <field name="name">Send Emails tree</field>
+            <field name="model">email.api</field>
+            <field name="arch" type="xml">
+                <tree string="Send Emails" delete="0" create="0">
+                    <field name="name"/>
+                    <field name="to_email"/>
+                    <field name="send_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="send_emails_free_view" model="ir.ui.view">
+            <field name="name">Send Emails Form</field>
+            <field name="model">email.api</field>
+            <field name="arch" type="xml">
+                <form string="Email Details" delete="0" create="0" edit="0">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="send_date"/>
+                        </group>
+                        <group>
+                            <field name="temp_type"/>
+                            <field name="temp_id"/>
+                        </group>
+                        <group>
+                            <field name="to_email_partner_check" invisible="1"/>
+                            <field name="to_email_lead_check" invisible="1"/>
+                            <field name="to_email_contact_check" invisible="1"/>
+                            <field name="to_email_partner" invisible="not to_email_partner_check"/><!-- attrs="{'invisible': [('to_email_partner_check', '=', False)]}" -->
+                            <field name="to_email_lead" invisible="not to_email_partner_check"/><!-- attrs="{'invisible': [('to_email_lead_check', '=',False)]}" -->
+                            <field name="to_email_contact" invisible="not to_email_partner_check"/><!-- attrs="{'invisible': [('to_email_contact_check', '=',False)]}" -->
+                            <field name="to_email" invisible="1"/>
+                            <field name="company_name" invisible="1"/>
+                            <field name="recipient_name" invisible="1"/>
+                            <field name="email_finder" invisible="1"/>
+                            <field name="from_email"/>
+                        </group>
+                        <group>
+                            <field name="error_check" invisible="1"/>
+                        </group>
+                        <group>
+                            <button string="Bounce Check" name="bounce_check" type="object"
+                                    invisible="error_check == True" /><!-- attrs="{'invisible': [('error_check', '=',True)]}" -->
+                        </group>
+                    </sheet>
+                    <notebook>
+                        <page string="Messages">
+                            <field name="bounce_msg" widget="text" invisible="error_check == True" /><!-- attrs="{'invisible': [('error_check', '=',True)]}" -->
+                            <field name="error_msg" widget="text" invisible="error_check == False" /><!-- attrs="{'invisible': [('error_check', '=',False)]}" -->
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id='send_emails_search' model='ir.ui.view'>
+            <field name="name">send.emails.search</field>
+            <field name="model">email.api</field>
+            <field name="arch" type="xml">
+                <search string="Send Emails">
+                    <field name="name"/>
+                    <field name="to_email"/>
+                    <field name="send_date"/>
+                    <field name="state"/>
+                    <group expand="1" string="Group By">
+                        <filter name="groupby_name" context="{'group_by': 'name'}" string="Name"/>
+                        <filter name="groupby_state" context="{'group_by': 'state'}"
+                                string="Email State"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <menuitem id="email_sending_menu"
+                  parent="mass_mailing.menu_mass_mailing_report"
+                  name="SendGrid Send Emails"
+                  action="email_sending_action"/>
+
+        <record id="email_details_action" model="ir.actions.act_window">
+            <field name="name">Email Details</field>
+            <field name="res_model">email.sent</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create Email Details
+                </p>
+            </field>
+        </record>
+
+        <record id="email_details_tree_view" model="ir.ui.view">
+            <field name="name">Email Details tree</field>
+            <field name="model">email.sent</field>
+            <field name="arch" type="xml">
+                <tree string="Email Details">
+                    <field name="name"/>
+                    <field name="email_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="email_details_from_view" model="ir.ui.view">
+            <field name="name">Email Details Form</field>
+            <field name="model">email.sent</field>
+            <field name="arch" type="xml">
+                <form string="Email Details">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="email_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="email_details_menu"
+                  parent="mass_mailing.mass_mailing_configuration"
+                  name="SendGrid From Email"
+                  action="email_details_action"/>
+
+        <record id="email_template_action" model="ir.actions.act_window">
+            <field name="name">Email Template Details</field>
+            <field name="res_model">email.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create Email Template Details
+                </p>
+            </field>
+        </record>
+
+        <record id="email_template_details_tree_view" model="ir.ui.view">
+            <field name="name">Email Template Details tree</field>
+            <field name="model">email.template</field>
+            <field name="arch" type="xml">
+                <tree string="Email Template Details">
+                    <field name="temp_name"/>
+                    <field name="generation"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="email_template_details_from_view" model="ir.ui.view">
+            <field name="name">Email Template Details Form</field>
+            <field name="model">email.template</field>
+            <field name="arch" type="xml">
+                <form string="Email Template Details">
+                    <sheet>
+                        <group>
+                            <field name="temp_name"/>
+                            <field name="generation"/>
+                        </group>
+                        <group>
+                            <field name="ver_name"/>
+                            <field name="ver_editor"/>
+                        </group>
+                        <notebook>
+                            <page string="Email Content">
+                                <label for="ver_subject"/>
+                                <h2 style="display: inline-block;">
+                                    <field name="ver_subject" placeholder="Subject (placeholders may be used here)"/>
+                                </h2>
+                                <field name="temp_cont" widget="html" options="{'style-inline': true}"/>
+                                <button string="Create Template" name="create_temp" type="object"/>
+                                <group>
+                                    <field name="temp_id"/>
+                                </group>
+                                <button string="Create Version" name="create_ver" type="object"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_auto_sent_error_emails" model="ir.actions.server">
+            <field name="name">Resend Error Mails</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="model_email_api"/>
+            <field name="binding_model_id" ref="model_email_api"/>
+            <field name="binding_view_types">list</field>
+            <field name="code">
+                records.send_error_mails()
+            </field>
+        </record>
+
+        <menuitem id="email_template_details_menu"
+                  parent="mass_mailing.mass_mailing_configuration"
+                  name="SendGrid Template Details"
+                  action="email_template_action"/>
+
+    </data>
+</odoo>

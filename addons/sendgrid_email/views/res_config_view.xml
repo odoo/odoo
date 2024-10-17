@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_send_grid_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.send.grid</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="70"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form//app//block[@name='managa_mail_campaigns_setting_container']" position="inside">
+                    <setting name="mass_mailing_reports_setting_container" title="Use API key For SendGrid Service">
+                        <field name="send_grid_api_check"/>
+                        <div class="content-group" invisible="not send_grid_api_check">
+                             <div class="mt16">
+                                 <field name="send_grid_api_value"/>
+                             </div>
+                         </div>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
