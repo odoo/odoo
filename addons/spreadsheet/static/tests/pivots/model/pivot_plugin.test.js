@@ -1643,6 +1643,48 @@ test("changing measure aggregates", async () => {
     expect.verifySteps(["foo_sum_id:sum(foo)"]);
 });
 
+test("Manipulating a computed measure does not trigger a RPC", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        mockRPC: async function (route, args) {
+            if (args.method === "read_group") {
+                expect.step(args.kwargs.fields.join());
+            }
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    expect.verifySteps(["probability_avg_id:avg(probability)"]);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            measures: [
+                { id: "probability:avg", fieldName: "probability", aggregator: "avg" },
+                {
+                    id: "probability*2",
+                    fieldName: "probability*2",
+                    aggregator: "avg",
+                    computedBy: { sheetId, formula: "=probability*2" },
+                },
+            ],
+        },
+    });
+    await animationFrame();
+    expect.verifySteps([]);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            measures: [{ id: "probability:avg", fieldName: "probability", aggregator: "avg" }],
+        },
+    });
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
 test("many2one measures are aggregated with count_distinct by default", async () => {
     const { model, pivotId } = await createSpreadsheetWithPivot({
         arch: /* xml */ `

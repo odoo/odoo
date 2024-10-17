@@ -70,8 +70,10 @@ export class OdooPivotModel extends PivotModel {
     updateMeasures(measures) {
         for (const measure of this.definition.measures) {
             const updatedMeasure = measures.find((m) => m.id === measure.id);
+            if (!updatedMeasure || updatedMeasure.computedBy) {
+                continue;
+            }
             if (
-                !updatedMeasure ||
                 updatedMeasure.fieldName !== measure.fieldName ||
                 updatedMeasure.aggregator !== measure.aggregator
             ) {
