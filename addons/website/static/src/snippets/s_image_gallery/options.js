@@ -318,6 +318,13 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             }, 0.2 * _slideDuration);
         });
     },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        // Set Indicator to the first image on save
+        this._updateIndicator(0);
+    },
 });
 
 options.registry.gallery = options.registry.GalleryLayout.extend({
