@@ -23,12 +23,13 @@ def exp_login(db, login, password):
 def exp_authenticate(db, login, password, user_agent_env):
     if not user_agent_env:
         user_agent_env = {}
-    res_users = Registry(db)['res.users']
-    try:
-        credential = {'login': login, 'password': password, 'type': 'password'}
-        return res_users.authenticate(db, credential, {**user_agent_env, 'interactive': False})['uid']
-    except AccessDenied:
-        return False
+    with Registry(db).cursor() as cr:
+        env = odoo.api.Environment(cr, None, {})
+        try:
+            credential = {'login': login, 'password': password, 'type': 'password'}
+            return env['res.users'].authenticate(credential, {**user_agent_env, 'interactive': False})['uid']
+        except AccessDenied:
+            return False
 
 def exp_version():
     return RPC_VERSION_1

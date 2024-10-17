@@ -80,8 +80,11 @@ class Database(http.Controller):
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code, post['phone']])
             credential = {'login': post['login'], 'password': password, 'type': 'password'}
-            request.session.authenticate(name, credential)
-            request.session.db = name
+            with odoo.modules.registry.Registry(name).cursor() as cr:
+                env = odoo.api.Environment(cr, None, {})
+                request.session.authenticate(env, credential)
+                request._save_session()
+                request.session.db = name
             return request.redirect('/odoo')
         except Exception as e:
             _logger.exception("Database creation error.")

@@ -118,14 +118,12 @@ class ResUsers(models.Model):
                 raise SignupError(_('Signup is not allowed for uninvited users'))
         return self._create_user_from_template(values)
 
-    @classmethod
-    def authenticate(cls, db, credential, user_agent_env):
-        auth_info = super().authenticate(db, credential, user_agent_env)
+    def authenticate(self, credential, user_agent_env):
+        auth_info = super().authenticate(credential, user_agent_env)
         try:
-            with cls.pool.cursor() as cr:
-                env = api.Environment(cr, auth_info['uid'], {})
-                if env.user._should_alert_new_device():
-                    env.user._alert_new_device()
+            env = self.env(user=auth_info['uid'])
+            if env.user._should_alert_new_device():
+                env.user._alert_new_device()
         except MailDeliveryException:
             pass
         return auth_info
