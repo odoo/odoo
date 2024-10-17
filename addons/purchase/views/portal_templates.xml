@@ -89,26 +89,26 @@
           <t t-if="orders" t-call="portal.portal_table">
               <thead>
                   <tr class="active">
-                      <th>
+                      <th id="order_name_header">
                           <span class='d-none d-md-inline'>Purchase Order #</span>
                           <span class='d-block d-md-none'>Ref.</span>
                       </th>
-                      <th class="text-end">
+                      <th id="order_confirmation_header" class="text-end">
                           <span class='d-none d-md-inline'>Confirmation Date</span>
                           <span class='d-block d-md-none'>Confirmation</span>
                       </th>
-                      <th class="text-center"/>
-                      <th class="text-end">Total</th>
+                      <th id="order_badge_header" class="text-center"/>
+                      <th id="order_total_header" class="text-end">Total</th>
                   </tr>
               </thead>
               <t t-foreach="orders" t-as="order">
                   <tr>
-                      <td><a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a></td>
-                      <td class="text-end">
+                      <td id="order_name"><a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a></td>
+                      <td id="order_confirmation" class="text-end">
                           <span t-field="order.date_approve" t-options="{'widget': 'date'}"/>&amp;nbsp;
                           <span class='d-none d-md-inline' t-field="order.date_approve" t-options="{'time_only': True}"/>
                       </td>
-                      <td class="text-center">
+                      <td id="order_badge" class="text-center">
                           <span t-if="order.invoice_status == 'to invoice'" class="badge rounded-pill text-bg-info">
                               <i class="fa fa-fw fa-file-text" role="img" aria-label="Waiting for Bill" title="Waiting for Bill"></i><span class="d-none d-md-inline"> Waiting for Bill</span>
                           </span>
@@ -119,7 +119,7 @@
                               <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="d-none d-md-inline"> Done</span>
                           </span>
                       </td>
-                      <td class="text-end"><span t-field="order.amount_total"/></td>
+                      <td id="order_total" class="text-end"><span t-field="order.amount_total"/></td>
                   </tr>
               </t>
           </t>

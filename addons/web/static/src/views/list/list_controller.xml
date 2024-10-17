@@ -41,7 +41,7 @@
 
                 <t t-set-slot="control-panel-additional-actions">
                     <CogMenu t-if="!hasSelectedRecords"/>
-                    <CogMenu t-elif="env.isSmall and props.info.actionMenus" t-props="this.actionMenuProps" hasSelectedRecords="hasSelectedRecords">
+                    <CogMenu t-elif="env.isSmall and (props.info.actionMenus or archInfo.headerButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="hasSelectedRecords">
                         <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
                             <DropdownItem class="'o-dropdown-item-unstyled-button'">
                                 <MultiRecordViewButton
