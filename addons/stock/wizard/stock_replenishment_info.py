@@ -25,13 +25,19 @@ class StockReplenishmentInfo(models.TransientModel):
     json_replenishment_history = fields.Char(compute='_compute_json_replenishment_history')
 
     warehouseinfo_ids = fields.One2many(related='orderpoint_id.warehouse_id.resupply_route_ids')
-    wh_replenishment_option_ids = fields.One2many('stock.replenishment.option', 'replenishment_info_id', compute='_compute_wh_replenishment_options')
+    wh_replenishment_option_ids = fields.One2many('stock.replenishment.option', string='Warehouse Replenishment Options', compute='_compute_wh_replenishment_options')
 
     @api.depends('orderpoint_id')
     def _compute_wh_replenishment_options(self):
         for replenishment_info in self:
             replenishment_info.wh_replenishment_option_ids = self.env['stock.replenishment.option'].create([
-                {'product_id': replenishment_info.product_id.id, 'route_id': route_id.id, 'replenishment_info_id': replenishment_info.id}
+                {
+                    'product_id': replenishment_info.product_id.id,
+                    'route_id': route_id.id,
+                    'warehouse_id': route_id.supplier_wh_id.id,
+                    'location_id': route_id.supplier_wh_id.lot_stock_id.id,
+                    'replenishment_info_id': '%s,%s' % (replenishment_info._name, replenishment_info.id)
+                }
                 for route_id in replenishment_info.warehouseinfo_ids
             ]).sorted(lambda o: o.free_qty, reverse=True)
 
@@ -94,23 +100,39 @@ class StockReplenishmentInfo(models.TransientModel):
                 'replenishment_history': replenishment_history
             })
 
+    def order_avbl(self, route_id, free_qty):
+        self.orderpoint_id.route_id = route_id
+        self.orderpoint_id.qty_to_order = free_qty
+        return {'type': 'ir.actions.act_window_close'}
+
+    def order_all(self, route_id):
+        self.orderpoint_id.route_id = route_id
+        return {'type': 'ir.actions.act_window_close'}
+
 
 class StockReplenishmentOption(models.TransientModel):
     _description = 'Stock warehouse replenishment option'
 
     route_id = fields.Many2one('stock.route')
     product_id = fields.Many2one('product.product')
-    replenishment_info_id = fields.Many2one('stock.replenishment.info')
+    warehouse_id = fields.Many2one('stock.warehouse')
+    location_id = fields.Many2one('stock.location')
+    replenishment_info_id = fields.Reference(selection=[
+        ('stock.replenishment.info', 'stock.replenishment.info'),
+    ])
 
-    location_id = fields.Many2one('stock.location', related='warehouse_id.lot_stock_id')
-    warehouse_id = fields.Many2one('stock.warehouse', related='route_id.supplier_wh_id')
     uom = fields.Char(related='product_id.uom_name')
-    qty_to_order = fields.Float(related='replenishment_info_id.qty_to_order')
+    qty_to_order = fields.Float(compute='_compute_qty_to_order')
 
     free_qty = fields.Float(compute='_compute_free_qty')
     lead_time = fields.Char(compute='_compute_lead_time')
 
     warning_message = fields.Char(compute='_compute_warning_message')
+
+    @api.depends('replenishment_info_id')
+    def _compute_qty_to_order(self):
+        for record in self:
+            record.qty_to_order = record.replenishment_info_id.qty_to_order
 
     @api.depends('product_id', 'route_id')
     def _compute_free_qty(self):
@@ -139,6 +161,13 @@ class StockReplenishmentOption(models.TransientModel):
                     uom=record.uom,
                     qty_to_order=record.qty_to_order
                 )
+            else:
+                record.warning_message = _(
+                    '%(warehouse)s can provide %(free_qty)s %(uom)s.',
+                    warehouse=record.warehouse_id.name,
+                    free_qty=record.free_qty,
+                    uom=record.uom
+                )
 
     def select_route(self):
         if self.free_qty < self.qty_to_order:
@@ -153,10 +182,7 @@ class StockReplenishmentOption(models.TransientModel):
         return self.order_all()
 
     def order_avbl(self):
-        self.replenishment_info_id.orderpoint_id.route_id = self.route_id
-        self.replenishment_info_id.orderpoint_id.qty_to_order = self.free_qty
-        return {'type': 'ir.actions.act_window_close'}
+        return self.replenishment_info_id.order_avbl(self.route_id, self.free_qty)
 
     def order_all(self):
-        self.replenishment_info_id.orderpoint_id.route_id = self.route_id
-        return {'type': 'ir.actions.act_window_close'}
+        return self.replenishment_info_id.order_all(self.route_id)

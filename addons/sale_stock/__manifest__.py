@@ -26,6 +26,7 @@ Preferences
 
         'views/sale_order_views.xml',
         'views/stock_route_views.xml',
+        'views/replenishment_warehouse_select_views.xml',
         'views/res_config_settings_views.xml',
         'views/sale_stock_portal_template.xml',
         'views/stock_lot_views.xml',
