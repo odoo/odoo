@@ -27,7 +27,7 @@
 <td class="text-end" t-out="format_monetary(revenue['invoiced'])"/>
 </tr>
 <tfoot>
-<td class="fw-bolder text-end">Total</td>
+<td class="fw-bolder">Total Revenues</td>
 <td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['invoiced'] + profitability['revenues']['total']['to_invoice'])"/>
 <td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['to_invoice'])"/>
 <td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['invoiced'])"/>
@@ -52,7 +52,7 @@
 <td class="text-end" t-out="format_monetary(cost['billed'])"/>
 </tr>
 <tfoot>
-<td class="fw-bolder text-end">Total</td>
+<td class="fw-bolder">Total Costs</td>
 <td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'] + profitability['costs']['total']['to_bill'])"/>
 <td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['to_bill'])"/>
 <td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'])"/>
@@ -62,7 +62,7 @@
 
 <table class="table table-sm mt-4">
 <tr>
-<td class="fw-bolder">Margin</td>
+<td class="fw-bolder">Total</td>
 <td t-attf-class="#{'text-danger' if profitability['total']['margin'] &lt; 0 else 'text-success'}" style="text-align: right; font-weight: bolder">
 <t t-out="format_monetary(profitability['total']['margin'])"/><br/>
     <t t-if="profitability['expected_percentage']">
