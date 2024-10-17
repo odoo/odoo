@@ -70,7 +70,11 @@ patch(Thread.prototype, {
         if (pushState) {
             this.setActiveURL();
         }
-        if (this.store.env.services.ui.isSmall && this.model !== "mail.box") {
+        if (
+            this.store.env.services.ui.isSmall &&
+            this.model !== "mail.box" &&
+            !this.store.shouldDisplayWelcomeViewInitially
+        ) {
             this.open();
         }
     },
