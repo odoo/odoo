@@ -2376,17 +2376,8 @@ class AccountTax(models.Model):
             def get_tax_key(tax_data):
                 return frozendict({'tax': tax_data['tax'], 'is_reverse_charge': tax_data['is_reverse_charge']})
 
-            base_line_fields = (
-                'total_excluded_currency', 'raw_total_excluded_currency',
-                'total_excluded', 'raw_total_excluded',
-                'total_included_currency', 'raw_total_included_currency',
-                'total_included', 'raw_total_included',
-                'delta_base_amount_currency', 'delta_base_amount',
-            )
-            tax_data_fields = (
-                'base_amount_currency', 'base_amount', 'tax_amount_currency', 'tax_amount',
-                'raw_base_amount_currency', 'raw_base_amount', 'raw_tax_amount_currency', 'raw_tax_amount',
-            )
+            base_line_fields = ('total_excluded_currency', 'total_excluded', 'total_included_currency', 'total_included')
+            tax_data_fields = ('base_amount_currency', 'base_amount', 'tax_amount_currency', 'tax_amount')
 
             if is_zero:
                 for field in base_line_fields:
