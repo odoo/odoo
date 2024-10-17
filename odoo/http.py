@@ -984,9 +984,6 @@ class Session(collections.abc.MutableMapping):
         self.should_rotate = False
         self.sid = sid
 
-    #
-    # MutableMapping implementation with DocDict-like extension
-    #
     def __getitem__(self, item):
         return self.__data[item]
 
@@ -1006,18 +1003,60 @@ class Session(collections.abc.MutableMapping):
     def __iter__(self):
         return iter(self.__data)
 
-    def __getattr__(self, attr):
-        return self.get(attr, None)
-
-    def __setattr__(self, key, val):
-        if key in self.__slots__:
-            super().__setattr__(key, val)
-        else:
-            self[key] = val
-
     def clear(self):
         self.__data.clear()
         self.is_dirty = True
+
+    #
+    # Session properties
+    #
+    @property
+    def uid(self):
+        return self.get('uid')
+
+    @uid.setter
+    def uid(self, uid):
+        self['uid'] = uid
+
+    @property
+    def db(self):
+        return self.get('db')
+
+    @db.setter
+    def db(self, db):
+        self['db'] = db
+
+    @property
+    def login(self):
+        return self.get('login')
+
+    @login.setter
+    def login(self, login):
+        self['login'] = login
+
+    @property
+    def context(self):
+        return self.get('context')
+
+    @context.setter
+    def context(self, context):
+        self['context'] = context
+
+    @property
+    def debug(self):
+        return self.get('debug')
+
+    @debug.setter
+    def debug(self, debug):
+        self['debug'] = debug
+
+    @property
+    def session_token(self):
+        return self.get('session_token')
+
+    @session_token.setter
+    def session_token(self, session_token):
+        self['session_token'] = session_token
 
     #
     # Session methods
@@ -1048,8 +1087,8 @@ class Session(collections.abc.MutableMapping):
         pre_uid = auth_info['uid']
 
         self.uid = None
-        self.pre_login = credential['login']
-        self.pre_uid = pre_uid
+        self['pre_login'] = credential['login']
+        self['pre_uid'] = pre_uid
 
         with registry.cursor() as cr:
             env = odoo.api.Environment(cr, pre_uid, {})
@@ -1105,7 +1144,7 @@ class Session(collections.abc.MutableMapping):
         """
             :return: dict if a device log has to be inserted, ``None`` otherwise
         """
-        if self._trace_disable:
+        if self.get('_trace_disable'):
             # To avoid generating useless logs, e.g. for automated technical sessions,
             # a session can be flagged with `_trace_disable`. This should never be done
             # without a proper assessment of the consequences for auditability.
@@ -1120,7 +1159,7 @@ class Session(collections.abc.MutableMapping):
         browser = user_agent.browser
         ip_address = request.httprequest.remote_addr
         now = int(datetime.now().timestamp())
-        for trace in self._trace:
+        for trace in self['_trace']:
             if trace['platform'] == platform and trace['browser'] == browser and trace['ip_address'] == ip_address:
                 # If the device logs are not up to date (i.e. not updated for one hour or more)
                 if bool(now - trace['last_activity'] >= 3600):
@@ -1135,7 +1174,7 @@ class Session(collections.abc.MutableMapping):
             'first_activity': now,
             'last_activity': now
         }
-        self._trace.append(new_trace)
+        self['_trace'].append(new_trace)
         self.is_dirty = True
         return new_trace
 
@@ -1656,10 +1695,10 @@ class Request:
         URL is profile-safe. Otherwise, get a context-manager that does
         nothing.
         """
-        if self.session.profile_session and self.db:
-            if self.session.profile_expiration < str(datetime.now()):
+        if self.session.get('profile_session') and self.db:
+            if self.session['profile_expiration'] < str(datetime.now()):
                 # avoid having session profiling for too long if user forgets to disable profiling
-                self.session.profile_session = None
+                self.session['profile_session'] = None
                 _logger.warning("Profiling expiration reached, disabling profiling")
             elif 'set_profiling' in self.httprequest.path:
                 _logger.debug("Profiling disabled on set_profiling route")
@@ -1673,13 +1712,13 @@ class Request:
                     return profiler.Profiler(
                         db=self.db,
                         description=self.httprequest.full_path,
-                        profile_session=self.session.profile_session,
-                        collectors=self.session.profile_collectors,
-                        params=self.session.profile_params,
+                        profile_session=self.session['profile_session'],
+                        collectors=self.session['profile_collectors'],
+                        params=self.session['profile_params'],
                     )
                 except Exception:
                     _logger.exception("Failure during Profiler creation")
-                    self.session.profile_session = None
+                    self.session['profile_session'] = None
 
         return contextlib.nullcontext()
 

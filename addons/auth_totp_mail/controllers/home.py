@@ -16,8 +16,8 @@ class Home(odoo.addons.auth_totp.controllers.home.Home):
             # In case the response from the super is a redirection
             # or the user has another TOTP method, we return the response from the call to super.
             return response
-        assert request.session.pre_uid and not request.session.uid, \
-            "The user must still be in the pre-authentication phase"
+        if not request.session.get('pre_uid') or request.session.uid:
+            raise AccessDenied("The user must still be in the pre-authentication phase")
 
         # Send the email containing the code to the user inbox
         try:

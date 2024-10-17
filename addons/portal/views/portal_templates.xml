@@ -208,7 +208,7 @@
                 t-nocache-_item_class="_item_class"
                 t-nocache-_link_class="_link_class"
                 groups="base.group_public" t-attf-class="#{_item_class} o_no_autohide_item">
-                <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in<span t-if="request.session.profile_session" class="text-danger fa fa-circle"/></a>
+                <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in<span t-if="request.session.get('profile_session')" class="text-danger fa fa-circle"/></a>
             </li>
         </xpath>
     </template>

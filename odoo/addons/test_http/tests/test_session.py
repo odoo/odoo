@@ -151,7 +151,7 @@ class TestHttpSession(TestHttpBase):
             Test (non-)serializable values in the session in JSON format.
         """
         session = self.authenticate(None, None)
-        self.assertFalse(session.foo)
+        self.assertNotIn('foo', session)
 
         def check_session_attr(value):
             """
@@ -161,15 +161,15 @@ class TestHttpSession(TestHttpBase):
                     - None: not recommended (can be used, but the value is modified)
             """
             try:
-                session.foo = value
+                session['foo'] = value
                 try:
-                    self.assertEqual(session.foo, value)
+                    self.assertEqual(session['foo'], value)
                 except Exception:
                     return None
                 session.pop('foo')
-                self.assertFalse(session.foo)
+                self.assertNotIn('foo', session)
                 session['foo'] = value
-                self.assertEqual(session.foo, value)
+                self.assertEqual(session['foo'], value)
                 session.pop('foo')
                 return True
             except Exception:
@@ -241,6 +241,47 @@ class TestHttpSession(TestHttpBase):
             r"called ignoring args {('session_id', 'debug'|'debug', 'session_id')}$"
         )
         self.assertEqual(admin_session.debug, '1')
+
+    def test_session11_items_accessibility(self):
+        session = self.authenticate('admin', 'admin')
+        # Access default items
+        # These items are always accessible with properties
+        # even if it no longer exists in the data
+        login_value = 'other admin'
+        self.assertIn('login', session)
+        session.login = login_value
+        session['login'] = login_value
+        self.assertEqual(session.login, login_value)
+        self.assertEqual(session.get('login'), login_value)
+        self.assertEqual(session['login'], login_value)
+        self.assertEqual(session.pop('login'), login_value)
+        self.assertNotIn('login', session)
+        self.assertEqual(session.login, None)
+        self.assertEqual(session.get('login'), None)
+        with self.assertRaises(KeyError):
+            session['login']
+        # Access other items
+        # These items must be accessible as in a "classic" dictionary
+        foo_value = 'bar'
+        self.assertNotIn('foo', session)
+        with self.assertRaises(AttributeError):
+            session.foo = foo_value
+        session['foo'] = foo_value
+        self.assertIn('foo', session)
+        self.assertEqual(session.get('foo'), foo_value)
+        self.assertEqual(session['foo'], foo_value)
+        self.assertEqual(session.pop('foo'), foo_value)
+        with self.assertRaises(KeyError):
+            session['foo']
+        # Check that the session is dirty if items are modified
+        # Default items
+        session.is_dirty = False
+        session.context = {'foo': 'bar'}
+        self.assertTrue(session.is_dirty)
+        # Other items
+        session.is_dirty = False
+        session['foo_2'] = 'bar_2'
+        self.assertTrue(session.is_dirty)
 
 
 class TestSessionStore(HttpCaseWithUserDemo):
