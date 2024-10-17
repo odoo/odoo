@@ -77,7 +77,7 @@ class WebsiteSlides(WebsiteProfile):
                 # as this is possible to do a jump of multiple versions in one go,
                 # and carry the sessions with the upgrade.
                 # e.g. upgrade from Odoo 15.0 to 18.0.
-                request.session.viewed_slides = dict.fromkeys(request.session.get('viewed_slides', []), 1)
+                request.session['viewed_slides'] = dict.fromkeys(request.session.get('viewed_slides', []), 1)
             viewed_slides = request.session['viewed_slides']
             # Convert `slide.id` to string is necessary because of the JSON format of the session
             slide_id = str(slide.id)

@@ -22,12 +22,12 @@ class Home(web_home.Home):
         if request.session.uid:
             return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
 
-        if not request.session.pre_uid:
+        if not request.session.get('pre_uid'):
             return request.redirect('/web/login')
 
         error = None
 
-        user = request.env['res.users'].browse(request.session.pre_uid)
+        user = request.env['res.users'].browse(request.session['pre_uid'])
         if user and request.httprequest.method == 'GET':
             cookies = request.cookies
             key = cookies.get(TRUSTED_DEVICE_COOKIE)
