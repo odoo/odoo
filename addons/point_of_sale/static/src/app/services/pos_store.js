@@ -1587,13 +1587,13 @@ export class PosStore extends WithLazyGetterTrap {
     async editProduct(product) {
         this.action.doAction(
             product
-                ? "point_of_sale.product_product_action_edit_pos"
-                : "point_of_sale.product_product_action_add_pos",
+                ? "point_of_sale.product_template_action_edit_pos"
+                : "point_of_sale.product_template_action_add_pos",
             {
                 props: {
                     resId: product?.id,
                     onSave: (record) => {
-                        this.data.read("product.product", [record.evalContext.id]);
+                        this.data.read("product.template", [record.evalContext.id]);
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
