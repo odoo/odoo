@@ -110,7 +110,7 @@ export class PosOrder extends Base {
             name: this.pos_reference,
             generalNote: this.general_note || "",
             invoice_id: null, //TODO
-            cashier: this.employee_id?.name || this.user_id?.name,
+            cashier: this.getCashierName(),
             date: formatDateTime(parseUTCString(this.date_order)),
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
@@ -124,6 +124,9 @@ export class PosOrder extends Base {
             headerData: headerData,
             screenName: "ReceiptScreen",
         };
+    }
+    getCashierName() {
+        return this.user_id?.name;
     }
     canPay() {
         return this.lines.length;
