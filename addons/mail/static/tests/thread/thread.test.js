@@ -20,7 +20,6 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import { Command, makeKwArgs, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
@@ -143,9 +142,7 @@ test("auto-scroll to last read message on thread load", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 100" });
-    const thread = document.querySelector(".o-mail-Thread");
-    const message = queryFirst(".o-mail-Message:contains(message 100)");
-    expect(isInViewportOf(thread, message)).toBe(true);
+    await isInViewportOf(".o-mail-Message:contains(message 100)", ".o-mail-Thread");
 });
 
 test("display day separator before first message of the day", async () => {

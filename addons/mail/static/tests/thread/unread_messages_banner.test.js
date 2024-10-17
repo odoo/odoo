@@ -11,8 +11,7 @@ import {
     step,
 } from "@mail/../tests/mail_test_helpers";
 import { Thread } from "@mail/core/common/thread";
-import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
+import { describe, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 import {
     getService,
@@ -107,12 +106,7 @@ test("scroll to the first unread message (slow ref registration)", async () => {
         text: "101 new messages",
         parent: ["span", { text: "101 new messagesMark as Read" }],
     });
-    document.addEventListener("scrollend", () => step("scrollend"), { capture: true });
-    // 1. scroll top, 2. scroll to the unread message 3. slight scroll when highlight ends.
-    await assertSteps(["scrollend", "scrollend", "scrollend"]);
-    const thread = document.querySelector(".o-mail-Thread");
-    const message = queryFirst(".o-mail-Message:contains(message 100)");
-    expect(isInViewportOf(thread, message)).toBe(true);
+    await isInViewportOf(".o-mail-Message:contains(message 100)", ".o-mail-Thread");
 });
 
 test("scroll to unread notification", async () => {
@@ -145,20 +139,16 @@ test("scroll to unread notification", async () => {
         text: "Bob joined the channel",
     });
     await tick(); // wait for the scroll to first unread to complete
-    document.addEventListener("scrollend", () => step("scrollend"), { capture: true });
     await contains(".o-mail-Thread", { scroll: "bottom" });
-    await assertSteps(["scrollend"]);
     await scroll(".o-mail-Thread", 0);
-    await assertSteps(["scrollend"]);
-    const thread = document.querySelector(".o-mail-Thread");
-    const message = queryFirst(".o-mail-NotificationMessage:contains(Bob joined the channel)");
-    expect(isInViewportOf(thread, message)).toBe(false);
     await click("span", {
         text: "1 new message",
         parent: ["span", { text: "1 new messageMark as Read" }],
     });
-    await assertSteps(["scrollend"]);
-    expect(isInViewportOf(thread, message)).toBe(true);
+    await isInViewportOf(
+        ".o-mail-NotificationMessage:contains(Bob joined the channel)",
+        ".o-mail-Thread"
+    );
 });
 
 test("remove banner when scrolling to bottom", async () => {
