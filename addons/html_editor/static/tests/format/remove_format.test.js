@@ -600,6 +600,57 @@ test("undo remove format should return the element to it's original state", asyn
             '<p><strong><em><u><s><font style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);">[sdsdsdsds]</font></s></u></em></strong></p>',
     });
 });
+
+test("should remove font size class from selected text", async () => {
+    await testEditor({
+        contentBefore: '<p>a<span class="h1-fs">[bcd]</span>e</p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>a[bcd]e</p>",
+    });
+});
+
+test("should remove font size classes from multiple sized selected text", async () => {
+    await testEditor({
+        contentBefore:
+            '<p>a<span class="h1-fs">[hello </span><span class="h2-fs">world]</span>b</p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>a[hello world]b</p>",
+    });
+});
+
+test("should remove font size class from multiple formatted selected text", async () => {
+    await testEditor({
+        contentBefore: '<p>a<strong>bc<span class="h2-fs">[de]</span>fg</strong>h</p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>a<strong>bc</strong>[de]<strong>fg</strong>h</p>",
+    });
+});
+
+test("should remove font-size style from selected text", async () => {
+    await testEditor({
+        contentBefore: `<p>ab<span style="font-size: 10px;">[cde]</span>fg</p>`,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>ab[cde]fg</p>",
+    });
+});
+
+test("should remove font-size style from multiple formatted selected text", async () => {
+    await testEditor({
+        contentBefore: '<p>a<strong>bc<span style="font-size: 10px;">[de]</span>fg</strong>h</p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>a<strong>bc</strong>[de]<strong>fg</strong>h</p>",
+    });
+});
+
+test("should remove font-size style from multiple sized selected text", async () => {
+    await testEditor({
+        contentBefore:
+            '<p>a<span style="font-size: 10px;">[hello </span><span style="font-size: 10px;">world]</span>b</p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>a[hello world]b</p>",
+    });
+});
+
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await waitFor(".o-we-toolbar");
@@ -676,5 +727,12 @@ describe("Toolbar", () => {
         await waitFor(".o-we-toolbar");
         const formatButtons = queryAll(".o-we-toolbar .btn-group[name='decoration'] .btn");
         expect(formatButtons.at(-1)).toHaveAttribute("name", "remove_format");
+    });
+
+    test("Remove format button should be enabled when font-sized text is selected", async () => {
+        await setupEditor('<p><span class="h1-fs">[abc]</span></p>');
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format'].disabled").toHaveCount(0);
     });
 });
