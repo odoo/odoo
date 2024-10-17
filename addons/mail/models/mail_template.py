@@ -53,6 +53,8 @@ class MailTemplate(models.Model):
         help="Default recipients of the record:\n"
              "- partner (using id on a partner or the partner_id field) OR\n"
              "- email (using email_from or email field)")
+    # for 'find_or_create_partners' control
+    allow_email = fields.Boolean('Allow emails instead of partners')
     email_to = fields.Char('To (Emails)', help="Comma-separated recipient addresses (placeholders may be used here)")
     partner_to = fields.Char('To (Partners)',
                              help="Comma-separated ids of recipient partners (placeholders may be used here)")

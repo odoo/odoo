@@ -157,6 +157,15 @@ class MailComposeMessage(models.TransientModel):
         string='Replies', compute='_compute_reply_to_mode', inverse='_inverse_reply_to_mode',
         help="Original Discussion: Answers go in the original document discussion thread. \n Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n This has an impact on the generated message-id.")
     # recipients
+    allow_email = fields.Boolean(
+        string='Allows email instead of partners',
+        compute='_compute_allow_email', readonly=False, store=True)
+    email_to = fields.Char(
+        string='To',
+        compute='_compute_email_to', readonly=False, store=True)
+    email_cc = fields.Char(
+        string='Cc',
+        compute='_compute_email_cc', readonly=False, store=True)
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
@@ -502,7 +511,44 @@ class MailComposeMessage(models.TransientModel):
         for composer in self:
             composer.reply_to_force_new = composer.reply_to_mode == 'new'
 
-    @api.depends('composition_mode', 'model', 'parent_id', 'res_domain',
+    @api.depends('template_id')
+    def _compute_allow_email(self):
+        """ Computation is synchronized with template or reset to False when
+        template is removed, default behavior. """
+        for composer in self:
+            if composer.template_id:
+                composer.allow_email = composer.template_id.allow_email
+            else:
+                composer.allow_email = False
+
+    @api.depends('composition_mode', 'model', 'res_domain', 'res_ids',
+                 'template_id')
+    def _compute_email_to(self):
+        """ Computation is coming either from template, either reset. When
+        having a template with a value set, copy it (in batch mode) or render
+        it (in monorecord comment mode) on the composer. When removing the
+        template, reset it. """
+        for composer in self:
+            if composer.template_id:
+                composer._set_value_from_template('email_to')
+            if not composer.template_id:
+                composer.email_to = False
+
+    @api.depends('composition_mode', 'model', 'res_domain', 'res_ids',
+                 'template_id')
+    def _compute_email_cc(self):
+        """ Computation is coming either from template, either reset. When
+        having a template with a value set, copy it (in batch mode) or render
+        it (in monorecord comment mode) on the composer. When removing the
+        template, reset it. """
+        for composer in self:
+            if composer.template_id:
+                composer._set_value_from_template('email_cc')
+            if not composer.template_id:
+                composer.email_cc = False
+
+    @api.depends('allow_email', 'composition_mode',
+                 'model', 'parent_id', 'res_domain',
                  'res_ids', 'template_id')
     def _compute_partner_ids(self):
         """ Computation is coming either from template, either from context.
@@ -522,7 +568,7 @@ class MailComposeMessage(models.TransientModel):
                 rendered_values = composer._generate_template_for_composer(
                     res_ids,
                     {'email_cc', 'email_to', 'partner_ids'},
-                    find_or_create_partners=True,
+                    find_or_create_partners=not (composer.allow_email),
                 )[res_ids[0]]
                 if rendered_values.get('partner_ids'):
                     composer.partner_ids = rendered_values['partner_ids']
@@ -1036,7 +1082,7 @@ class MailComposeMessage(models.TransientModel):
                  'report_template_ids',
                  'scheduled_date',
                 ],
-                find_or_create_partners=self.env.context.get("mail_composer_force_partners", True),
+                find_or_create_partners=self.env.context.get("mail_composer_force_partners", not self.allow_email),
             )
             for res_id in res_ids:
                 # remove attachments from template values as they should not be rendered

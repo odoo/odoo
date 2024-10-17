@@ -201,6 +201,7 @@ class MailTestTicket(models.Model):
     _primary_email = 'email_from'
 
     name = fields.Char()
+    email_cc = fields.Char()
     email_from = fields.Char(tracking=True)
     mobile_number = fields.Char()
     phone_number = fields.Char()

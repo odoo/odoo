@@ -90,11 +90,13 @@ class TestMailComposer(MailCommon, TestRecipients):
         cls.test_from = '"John Doe" <john.doe@test.example.com>'
 
         cls.template = cls.env['mail.template'].create({
+            'allow_email': False,
             'auto_delete': True,
             'name': 'TestTemplate',
             'subject': 'TemplateSubject {{ object.name }}',
             'body_html': '<p>TemplateBody <t t-esc="object.name"></t></p>',
             'partner_to': '{{ object.customer_id.id if object.customer_id else "" }}',
+            'email_cc': ' {{ object.email_cc }}',
             'email_to': '{{ (object.email_from if not object.customer_id else "") }}',
             'email_from': '{{ (object.user_id.email_formatted or user.email_formatted) }}',
             'lang': '{{ object.customer_id.lang }}',
@@ -158,13 +160,16 @@ class TestComposerForm(TestMailComposer):
         composer_form = Form(self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record, add_web=True)
         ))
+        self.assertFalse(composer_form.allow_email)
         self.assertTrue(composer_form.auto_delete, 'MailComposer: comment mode should remove notification emails by default')
         self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: keep_log makes no sense in comment mode, only auto_delete')
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertFalse(composer_form.body)
         self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'comment')
+        self.assertFalse(composer_form.email_cc)
         self.assertEqual(composer_form.email_from, self.env.user.email_formatted)
+        self.assertFalse(composer_form.email_to)
         self.assertFalse(composer_form.email_layout_xmlid)
         self.assertTrue(composer_form.force_send, 'MailComposer: single record post send notifications right away')
         self.assertFalse(composer_form.mail_server_id)
