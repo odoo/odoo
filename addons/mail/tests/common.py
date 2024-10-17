@@ -8,7 +8,6 @@ import json
 import time
 
 from ast import literal_eval
-from collections import defaultdict
 from contextlib import contextmanager
 from freezegun import freeze_time
 from functools import partial
@@ -996,14 +995,14 @@ class MailCase(MockEmail):
             'email_values': values to check in outgoing emails, check 'assertMailMail'
               and 'assertSentEmail';
             'mail_mail_values': values to check in generated <mail.mail>, check
-              'assertMailMail'. 'fields_values' is supported for compabitility
-              with other asserts;
+              'assertMailMail';
+            'email_to_recipients': propagated to 'assertMailMail';
             'message_values': values to check in found <mail.message>, check
               'assertMessageFields';
             'notif': list of notified recipients: [
               {
                 'check_send': whether outgoing stuff has to be checked;
-                'email': NOT SUPPORTED YET,
+                'email': used when sending using email_cc / email_to;
                 'failure_reason': failure_reason on mail.notification;
                 'failure_type': 'failure_type' on mail.notification;
                 'is_read': 'is_read' on mail.notification;
@@ -1034,8 +1033,8 @@ class MailCase(MockEmail):
             # sanity check
             extra_keys = set(message_info.keys()) - {
                 'content',
+                'email_to_recipients',
                 'email_values',
-                'fields_values',
                 'mail_mail_values',
                 'message_type',
                 'message_values',
@@ -1068,51 +1067,65 @@ class MailCase(MockEmail):
                 self.assertMessageFields(message, message_values)
 
             # check notifications and prepare assert data
-            email_groups = defaultdict(list)
-            mail_groups = {'failure': [], 'outgoing': []}
+            email_groups = {}
+            mail_groups = {'exception': [], 'outgoing': []}
             for recipient in message_info['notif']:
-                partner, ntype, ngroup, nstatus = recipient['partner'], recipient['type'], recipient.get('group'), recipient.get('status', 'sent')
-                nis_read, ncheck_send = recipient.get('is_read', False if recipient['type'] == 'inbox' else True), recipient.get('check_send', True)
+                partner = recipient.get('partner', self.env['res.partner'])
+                email_to_lst, email_cc_lst = recipient.get('email_to', []), recipient.get('email_cc', [])
+                ntype, ngroup, nstatus = recipient['type'], recipient.get('group'), recipient.get('status', 'sent')
+                nis_read = recipient.get('is_read', recipient['type'] != 'inbox')
+                ncheck_send = recipient.get('check_send', True)
                 if not ngroup:
                     ngroup = 'user'
                     if partner and not partner.user_ids:
                         ngroup = 'customer'
                     elif partner and partner.partner_share:
                         ngroup = 'portal'
+                    elif not partner:
+                        ngroup = 'contact'
+                if ngroup not in email_groups:
+                    email_groups[ngroup] = {
+                        'email_cc_lst': [],
+                        'email_to_lst': [],
+                        'partners': self.env['res.partner'].sudo(),
+                    }
 
-                # find notification
-                partner_notif = notifications.filtered(
-                    lambda n: n.mail_message_id == message and
-                    n.res_partner_id == partner and
-                    n.notification_type == ntype
-                )
-                self.assertEqual(len(partner_notif), 1,
-                                 f'Mail: not found notification for {partner} (type: {ntype}, message: {message.id})')
-                self.assertEqual(partner_notif.author_id, partner_notif.mail_message_id.author_id)
-                self.assertEqual(partner_notif.is_read, nis_read)
-                if 'failure_reason' in recipient:
-                    self.assertEqual(partner_notif.failure_reason, recipient['failure_reason'])
-                if 'failure_type' in recipient:
-                    self.assertEqual(partner_notif.failure_type, recipient['failure_type'])
-                self.assertEqual(partner_notif.notification_status, nstatus)
+                # find notification (only if partner linked currently)
+                if partner:
+                    partner_notif = notifications.filtered(lambda n: (
+                        n.mail_message_id == message and
+                        n.res_partner_id == partner and
+                        n.notification_type == ntype
+                    ))
+                    self.assertEqual(len(partner_notif), 1,
+                                    f'Mail: not found notification for {partner} (type: {ntype}, message: {message.id})')
+                    self.assertEqual(partner_notif.author_id, partner_notif.mail_message_id.author_id)
+                    self.assertEqual(partner_notif.is_read, nis_read)
+                    if 'failure_reason' in recipient:
+                        self.assertEqual(partner_notif.failure_reason, recipient['failure_reason'])
+                    if 'failure_type' in recipient:
+                        self.assertEqual(partner_notif.failure_type, recipient['failure_type'])
+                    self.assertEqual(partner_notif.notification_status, nstatus)
+                elif not email_to_lst and not email_cc_lst:
+                    raise NotImplementedError()
 
                 # prepare further asserts
                 if ntype == 'email':
-                    if nstatus == 'sent':
-                        if ncheck_send:
-                            email_groups[ngroup].append(partner)
+                    if nstatus in ('sent', 'ready', 'exception') and ncheck_send:
+                        email_groups[ngroup]['partners'] += partner
+                        if email_cc_lst:
+                            email_groups[ngroup]['email_cc_lst'] += email_cc_lst
+                        if email_to_lst:
+                            email_groups[ngroup]['email_to_lst'] += email_to_lst
                     # when force_send is False notably, notifications are ready and emails outgoing
-                    elif nstatus == 'ready':
-                        mail_groups['outgoing'].append(partner)
-                        if ncheck_send:
-                            email_groups[ngroup].append(partner)
-                    # canceled: currently nothing checked
-                    elif nstatus == 'exception':
-                        mail_groups['failure'].append(partner)
-                        if ncheck_send:
-                            email_groups[ngroup].append(partner)
-                    # canceled: currently nothing checked
-                    elif nstatus == 'canceled':
+                    if nstatus in ('ready', 'exception'):
+                        state = 'outgoing' if nstatus == 'ready' else 'exception'
+                        if partner:
+                            mail_groups[state].append(partner)
+                        if email:
+                            mail_groups[state].append(email)
+                    # canceled: currently nothing checked - sent: already managed
+                    elif nstatus in ('sent', 'canceled'):
                         pass
                     else:
                         raise NotImplementedError()
@@ -1132,21 +1145,46 @@ class MailCase(MockEmail):
             }
             if message_info.get('email_values'):
                 email_values.update(message_info['email_values'])
-            for recipients in email_groups.values():
-                partners = self.env['res.partner'].sudo().concat(*recipients)
-                if all(p in mail_groups['failure'] for p in partners):
+            for group in email_groups.values():
+                partners = group['partners']
+                email_cc_lst = group['email_cc_lst']
+                email_to_lst = group['email_to_lst']
+                mail_status = 'sent'
+                if partners and all(p in mail_groups['exception'] for p in partners):
                     mail_status = 'exception'
-                elif all(p in mail_groups['outgoing'] for p in partners):
+                if email_to_lst and all(p in mail_groups['exception'] for p in email_to_lst):
+                    mail_status = 'exception'
+                if partners and all(p in mail_groups['outgoing'] for p in partners):
                     mail_status = 'outgoing'
-                else:
-                    mail_status = 'sent'
-                if not self.mail_unlink_sent:
+                if email_to_lst and all(p in mail_groups['outgoing'] for p in email_to_lst):
+                    mail_status = 'outgoing'
+                if not self.mail_unlink_sent and partners:
                     self.assertMailMail(
-                        partners, mail_status,
-                        author=message_info.get('fields_values', {}).get('author_id') or message.author_id or message.email_from,
-                        mail_message=message,
+                        partners,
+                        mail_status,
+                        author=message_info.get('mail_mail_values', {}).get('author_id') or message.author_id or message.email_from,
+                        content=None,
+                        email_to_recipients=message_info.get('email_to_recipients'),
                         email_values=email_values,
-                        fields_values=message_info.get('fields_values') or message_info.get('mail_mail_values'),
+                        fields_values=message_info.get('mail_mail_values'),
+                        mail_message=message,
+                    )
+                if not self.mail_unlink_sent and email_to_lst:
+                    fields_value = message_info.get('mail_mail_values', {})
+                    if email_cc_lst:
+                        fields_value['email_cc'] = ','.join(email_cc_lst)
+                    email_to_recipients = message_info.get('email_to_recipients')
+                    if email_to_recipients is None:
+                        email_to_recipients = [email_to_lst]
+                    self.assertMailMailWEmails(
+                        [','.join(email_to_lst)],  # single email_to
+                        mail_status,
+                        author=message_info.get('mail_mail_values', {}).get('author_id') or message.author_id or message.email_from,
+                        content=None,
+                        email_to_recipients=email_to_recipients,
+                        email_values=email_values,
+                        fields_values=fields_value,
+                        mail_message=message,
                     )
                 else:
                     for recipient in partners:
