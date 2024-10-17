@@ -823,6 +823,7 @@ export class OdooEditor extends EventTarget {
                 if (this.options.useResponsiveFontSizes) {
                     const fontSizeClassName = optionEl.dataset.applyClass;
                     this.execCommand("setFontSize", undefined);
+                    this.historyResetLatestComputedSelection(true);
                     this.execCommand("setFontSizeClassName", fontSizeClassName);
                 } else {
                     applyFontSizeREM(optionEl.dataset.value);
