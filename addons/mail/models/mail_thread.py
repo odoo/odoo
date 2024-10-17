@@ -3803,11 +3803,14 @@ class MailThread(models.AbstractModel):
             'active': partner.active;
             'id': id of the res.partner being recipient to notify;
             'is_follower': follows the message related document;
-            'lang': its lang;
+            'lang': partner.lang;
             'groups': res.group IDs if linked to a user;
-            'notif': 'inbox', 'email', 'sms' (SMS App);
+            'notif': notification type, one of 'inbox', 'email', 'sms' (SMS App),
+                'whatsapp (WhatsAapp);
             'share': is partner a customer (partner.partner_share);
             'type': partner usage ('customer', 'portal', 'user');
+            'uid': user ID (in case of multiple users, internal then first found
+                by ID);)
             'ushare': are users shared (if users, all users are shared);
           }, {...}]
         """
@@ -3910,7 +3913,7 @@ class MailThread(models.AbstractModel):
                 lambda pdata: pdata['type'] == 'user',
                 {
                     'active': True,
-                    'has_button_access': self._is_thread_message(msg_vals=msg_vals),
+                    'has_button_access': self.env['mail.message']._is_thread_message(vals=msg_vals, thread=self),
                 }
             ], [
                 'portal',
@@ -3956,7 +3959,7 @@ class MailThread(models.AbstractModel):
         else:
             view_title = _('View')
 
-        is_thread_message = self._is_thread_message(msg_vals=msg_vals)
+        is_thread_message = self.env['mail.message']._is_thread_message(vals=msg_vals, thread=self)
 
         # fill group_data with default_values if they are not complete
         for group_name, _group_func, group_data in groups:
@@ -4154,17 +4157,6 @@ class MailThread(models.AbstractModel):
         if not 'lang' in self.env.context:
             raise ValueError(_('At this point lang should be correctly set'))
         return self.env['ir.model']._get(model_name).display_name  # one query for display name
-
-    def _is_thread_message(self, msg_vals=None):
-        """ Tool method to compute thread validity in notification methods.
-        msg_vals is used as a replacement for self, allowing to force model
-        and res_id independently of current recordset. Void values in dict
-        are kept e.g. model=False is valid. """
-        if msg_vals is None:
-            msg_vals = {}
-        res_model = msg_vals['model'] if 'model' in msg_vals else self._name
-        res_id = msg_vals['res_id'] if 'res_id' in msg_vals else (self.ids[0] if self.ids else False)
-        return bool(res_id) if (res_model and res_model != 'mail.thread') else False
 
     def _truncate_payload(self, payload):
         """

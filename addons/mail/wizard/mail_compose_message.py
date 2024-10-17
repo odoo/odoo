@@ -1121,10 +1121,13 @@ class MailComposeMessage(models.TransientModel):
                     [{
                         'active': True,
                         'id': pid,
+                        'is_follower': False,
                         'lang': lang,
+                        'groups': [],
                         'notif': 'email',
                         'share': True,
                         'type': 'customer',
+                        'uid': False,
                         'ushare': False,
                     } for pid in recipient_ids],
                     msg_vals=msg_vals,

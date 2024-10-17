@@ -123,7 +123,7 @@ class MailResendPartner(models.TransientModel):
             if pid and pdata.get('notif', 'email') == 'email'
         ]
 
-        record = self.env[message.model].browse(message.res_id) if message.is_thread_message() else self.env['mail.thread']
+        record = self.env[message.model].browse(message.res_id) if message._is_thread_message() else self.env['mail.thread']
         record._notify_thread_by_email(
             message, email_partners_data,
             resend_existing=True,
