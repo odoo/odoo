@@ -31,10 +31,11 @@ class StockMove(models.Model):
     def _compute_show_subcontracting_details_visible(self):
         """ Compute if the action button in order to see moves raw is visible """
         self.show_subcontracting_details_visible = False
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for move in self:
             if not move.is_subcontract:
                 continue
-            if not move.picked or float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
+            if not move.picked or float_is_zero(move.quantity, precision_digits=precision_digits):
                 continue
             productions = move._get_subcontract_production()
             if not productions or (productions[:1].consumption == 'strict' and not productions[:1]._has_tracked_component()):
@@ -70,14 +71,15 @@ class StockMove(models.Model):
 
     def _set_quantity(self):
         to_set_moves = self
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for move in self:
             if move.is_subcontract and move._subcontracting_possible_record():
                 move_line_quantities = sum(move.move_line_ids.filtered(lambda ml: ml.picked).mapped('quantity'))
                 delta_qty = move.quantity - move_line_quantities
-                if float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
+                if float_compare(delta_qty, 0, precision_digits=precision_digits) > 0:
                     move._auto_record_components(delta_qty)
                     to_set_moves -= move
-                elif float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) < 0:
+                elif float_compare(delta_qty, 0, precision_digits=precision_digits) < 0:
                     move.with_context(transfer_qty=True)._reduce_subcontract_order_qty(abs(delta_qty))
         if to_set_moves:
             super(StockMove, to_set_moves)._set_quantity()
@@ -92,9 +94,10 @@ class StockMove(models.Model):
             production = production.sudo().with_context(allow_more=True)._split_productions({production: [production.qty_producing, qty]})[-1:]
         qty = self.product_uom._compute_quantity(qty, production.product_uom_id)
 
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if production.product_tracking == 'serial':
             qty = float_round(qty, precision_digits=0, rounding_method='UP')  # Makes no sense to have partial quantities for serial number
-            if float_compare(qty, production.product_qty, precision_rounding=production.product_uom_id.rounding) < 0:
+            if float_compare(qty, production.product_qty, precision_digits=precision_digits) < 0:
                 remaining_qty = production.product_qty - qty
                 productions = production.sudo()._split_productions({production: ([1] * int(qty)) + [remaining_qty]})[:-1]
             else:
@@ -107,7 +110,7 @@ class StockMove(models.Model):
                 production.with_context(cancel_backorder=False).subcontracting_record_component()
         else:
             production.qty_producing = qty
-            if float_compare(production.qty_producing, production.product_qty, precision_rounding=production.product_uom_id.rounding) > 0:
+            if float_compare(production.qty_producing, production.product_qty, precision_digits=precision_digits) > 0:
                 self.env['change.production.qty'].with_context(skip_activity=True).create({
                     'mo_id': production.id,
                     'product_qty': qty
@@ -134,7 +137,10 @@ class StockMove(models.Model):
         if 'product_uom_qty' in values and self.env.context.get('cancel_backorder') is not False and not self._context.get('extra_move_mode'):
             self.filtered(
                 lambda m: m.is_subcontract and m.state not in ['draft', 'cancel', 'done']
-                and float_compare(m.product_uom_qty, values['product_uom_qty'], precision_rounding=m.product_uom.rounding) != 0
+                and float_compare(
+                    m.product_uom_qty, values['product_uom_qty'],
+                    precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')
+                ) != 0
             )._update_subcontract_order_qty(values['product_uom_qty'])
         res = super().write(values)
         if 'date' in values:
@@ -298,9 +304,10 @@ class StockMove(models.Model):
         return should_bypass_reservation
 
     def _update_subcontract_order_qty(self, new_quantity):
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for move in self:
             quantity_to_remove = move.product_uom_qty - new_quantity
-            if not float_is_zero(quantity_to_remove, precision_rounding=move.product_uom.rounding):
+            if not float_is_zero(quantity_to_remove, precision_digits=precision_digits):
                 move._reduce_subcontract_order_qty(quantity_to_remove)
 
     def _reduce_subcontract_order_qty(self, quantity_to_remove):
@@ -321,7 +328,7 @@ class StockMove(models.Model):
                 quantity_to_remove -= production.product_qty
                 production.with_context(skip_activity=True).action_cancel()
             else:
-                if float_is_zero(quantity_to_remove, precision_rounding=production.product_uom_id.rounding):
+                if float_is_zero(quantity_to_remove, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                     # No need to do change_prod_qty for no change at all.
                     break
                 self.env['change.production.qty'].with_context(skip_activity=True).create({

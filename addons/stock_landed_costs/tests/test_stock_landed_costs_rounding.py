@@ -15,7 +15,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         product_uom_unit_round_1 = self.env.ref('uom.product_uom_unit')
         product_uom_unit_round_1.write({
             'name': 'Undivisible Units',
-            'rounding': 1.0,
         })
 
         # I create 2 products with different cost prices and configure them for real_time
@@ -66,7 +65,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
             'move_ids': [(0, 0, {
                 'product_id': product_landed_cost_4.id,
                 'product_uom_qty': 1,
-                'product_uom': self.ref('uom.product_uom_dozen'),
+                'product_uom': self.ref('uom.product_uom_pack_6'),
                 'location_id': self.ref('stock.stock_location_customers'),
                 'location_dest_id': self.warehouse.lot_stock_id.id,
                 'price_unit': 17.00 / 12.00,

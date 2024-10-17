@@ -61,6 +61,7 @@ class AccountMove(models.Model):
         qties_per_lot = defaultdict(float)
         previous_qties_delivered = defaultdict(float)
         stock_move_lines = current_invoice_amls.sale_line_ids.move_ids.move_line_ids.filtered(lambda sml: sml.state == 'done' and sml.lot_id).sorted(lambda sml: (sml.date, sml.id))
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for sml in stock_move_lines:
             if sml.product_id not in invoiced_products or not sml._should_show_lot_in_invoice():
                 continue
@@ -84,8 +85,8 @@ class AccountMove(models.Model):
             # If we return more than currently delivered (i.e., quantity < 0), we remove the surplus
             # from the previously delivered (and quantity becomes zero). If it's a delivery, we first
             # try to reach the previous_qty_invoiced
-            if float_compare(quantity, 0, precision_rounding=product_uom.rounding) < 0 or \
-                    float_compare(previous_qty_delivered, previous_qty_invoiced, precision_rounding=product_uom.rounding) < 0:
+            if float_compare(quantity, 0, precision_digits=precision_digits) < 0 or \
+                    float_compare(previous_qty_delivered, previous_qty_invoiced, precision_digits=precision_digits) < 0:
                 previously_done = quantity if is_stock_return else min(previous_qty_invoiced - previous_qty_delivered, quantity)
                 previous_qties_delivered[product] += previously_done
                 quantity -= previously_done
@@ -96,8 +97,9 @@ class AccountMove(models.Model):
             # access the lot as a superuser in order to avoid an error
             # when a user prints an invoice without having the stock access
             lot = lot.sudo()
-            if float_is_zero(invoiced_qties[lot.product_id], precision_rounding=lot.product_uom_id.rounding) \
-                    or float_compare(qty, 0, precision_rounding=lot.product_uom_id.rounding) <= 0:
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_is_zero(invoiced_qties[lot.product_id], precision_digits=precision_digits) \
+                    or float_compare(qty, 0, precision_digits=precision_digits) <= 0:
                 continue
             invoiced_lot_qty = min(qty, invoiced_qties[lot.product_id])
             invoiced_qties[lot.product_id] -= invoiced_lot_qty
@@ -175,8 +177,9 @@ class AccountMoveLine(models.Model):
             ])
             qty_invoiced = 0
             product_uom = self.product_id.uom_id
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for line in posted_cogs:
-                if float_compare(line.quantity, 0, precision_rounding=product_uom.rounding) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
+                if float_compare(line.quantity, 0, precision_digits=precision_digits) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
                     qty_invoiced += line.product_uom_id._compute_quantity(abs(line.quantity), line.product_id.uom_id)
                 else:
                     qty_invoiced += line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
@@ -189,7 +192,7 @@ class AccountMoveLine(models.Model):
                 ('balance', '>', 0)
             ])
             for line in reversal_cogs:
-                if float_compare(line.quantity, 0, precision_rounding=product_uom.rounding) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
+                if float_compare(line.quantity, 0, precision_digits=precision_digits) and line.move_id.move_type == 'out_refund' and any(line.move_id.invoice_line_ids.sale_line_ids.mapped('is_downpayment')):
                     qty_invoiced -= line.product_uom_id._compute_quantity(abs(line.quantity), line.product_id.uom_id)
                 else:
                     qty_invoiced -= line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)

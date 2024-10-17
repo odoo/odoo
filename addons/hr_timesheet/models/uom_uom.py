@@ -12,7 +12,7 @@ class UomUom(models.Model):
         # When timesheet App is installed, we also need to protect the hour UoM
         # from deletion (and warn in case of modification)
         return [
-            "product_uom_dozen",
+            "product_uom_pack_6",
         ]
 
     # widget used in the webclient when this unit is the one used to encode timesheets.

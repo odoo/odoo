@@ -14,7 +14,7 @@ class TestHSNsummary(TestTaxCommon):
         cls.test_hsn_code_2 = '4321'
 
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
+        cls.uom_pack_of_6 = cls.env.ref('uom.product_uom_pack_6')
 
         cls.product_a.l10n_in_hsn_code = cls.test_hsn_code_1
         cls.product_b.l10n_in_hsn_code = cls.test_hsn_code_2
@@ -150,7 +150,7 @@ class TestHSNsummary(TestTaxCommon):
         # Change the UOM of the second line.
         base_lines2 = [
             base_lines1[0],
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, 0.0, self.uom_dozen, self.gst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, 0.0, self.uom_pack_of_6, self.gst_5),
         ] + base_lines1[2:]
         self.assert_l10n_in_hsn_summary(
             base_lines2,
@@ -175,7 +175,7 @@ class TestHSNsummary(TestTaxCommon):
                     {
                         'l10n_in_hsn_code': self.test_hsn_code_1,
                         'quantity': 1.0,
-                        'uom_name': self.uom_dozen.name,
+                        'uom_name': self.uom_pack_of_6.name,
                         'rate': 5.0,
                         'amount_untaxed': 12000.0,
                         'tax_amount_igst': 0.0,
@@ -201,7 +201,7 @@ class TestHSNsummary(TestTaxCommon):
         # Change GST 5% taxes to IGST.
         base_lines3 = [
             self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, 0.0, self.uom_unit, self.igst_5),
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, 0.0, self.uom_dozen, self.igst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, 0.0, self.uom_pack_of_6, self.igst_5),
             self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, 0.0, self.uom_unit, self.igst_5),
         ] + base_lines1[3:]
         self.assert_l10n_in_hsn_summary(
@@ -227,7 +227,7 @@ class TestHSNsummary(TestTaxCommon):
                     {
                         'l10n_in_hsn_code': self.test_hsn_code_1,
                         'quantity': 1.0,
-                        'uom_name': self.uom_dozen.name,
+                        'uom_name': self.uom_pack_of_6.name,
                         'rate': 5.0,
                         'amount_untaxed': 12000.0,
                         'tax_amount_igst': 600.0,

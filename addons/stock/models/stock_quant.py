@@ -196,12 +196,24 @@ class StockQuant(models.Model):
     def _compute_is_outdated(self):
         self.is_outdated = False
         for quant in self:
-            if quant.product_id and float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding) and quant.inventory_quantity_set:
+            if quant.product_id and\
+                float_compare(
+                    quant.inventory_quantity - quant.inventory_diff_quantity,
+                    quant.quantity,
+                    precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+                ) and quant.inventory_quantity_set:
                 quant.is_outdated = True
 
     def _search_is_outdated(self, operator, value):
         quant_ids = self.search([('inventory_quantity_set', '=', True)])
-        quant_ids = quant_ids.filtered(lambda quant: float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding)).ids
+        quant_ids = quant_ids.filtered(
+            lambda quant:
+            float_compare(
+                quant.inventory_quantity - quant.inventory_diff_quantity,
+                quant.quantity,
+                precision_rounding=self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            )
+        ).ids
         return [('id', 'in', quant_ids)]
 
     @api.depends('quantity')
@@ -428,10 +440,10 @@ class StockQuant(models.Model):
     def action_apply_inventory(self):
         products_tracked_without_lot = []
         for quant in self:
-            rounding = quant.product_uom_id.rounding
-            if fields.Float.is_zero(quant.inventory_diff_quantity, precision_rounding=rounding)\
-                    and fields.Float.is_zero(quant.inventory_quantity, precision_rounding=rounding)\
-                    and fields.Float.is_zero(quant.quantity, precision_rounding=rounding):
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if fields.Float.is_zero(quant.inventory_diff_quantity, precision_digits=rounding)\
+                    and fields.Float.is_zero(quant.inventory_quantity, precision_digits=rounding)\
+                    and fields.Float.is_zero(quant.quantity, precision_digits=rounding):
                 continue
             if quant.product_id.tracking in ['lot', 'serial'] and\
                     not quant.lot_id and quant.inventory_quantity != quant.quantity and not quant.quantity:
@@ -609,7 +621,7 @@ class StockQuant(models.Model):
             ['quantity:sum'],
         )
         for product, _location, lot, qty in groups:
-            if float_compare(abs(qty), 1, precision_rounding=product.uom_id.rounding) > 0:
+            if float_compare(abs(qty), 1, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) > 0:
                 raise ValidationError(_('The serial number has already been assigned: \n Product: %(product)s, Serial Number: %(serial_number)s', product=product.display_name, serial_number=lot.name))
 
     @api.constrains('location_id')
@@ -817,13 +829,13 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
-        rounding = product_id.uom_id.rounding
+        rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if product_id.tracking == 'none':
             available_quantity = sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
             if allow_negative:
                 return available_quantity
             else:
-                return available_quantity if float_compare(available_quantity, 0.0, precision_rounding=rounding) >= 0.0 else 0.0
+                return available_quantity if float_compare(available_quantity, 0.0, precision_digits=rounding) >= 0.0 else 0.0
         else:
             availaible_quantities = {lot_id: 0.0 for lot_id in list(set(quants.mapped('lot_id'))) + ['untracked']}
             for quant in quants:
@@ -836,9 +848,9 @@ class StockQuant(models.Model):
             if allow_negative:
                 return sum(availaible_quantities.values())
             else:
-                return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
+                return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_digits=rounding) > 0])
 
-    def _get_reserve_quantity(self, product_id, location_id, quantity, product_packaging_id=None, uom_id=None, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _get_reserve_quantity(self, product_id, location_id, quantity, uom_id=None, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Get the quantity available to reserve for the set of quants
         sharing the combination of `product_id, location_id` if `strict` is set to False or sharing
         the *exact same characteristics* otherwise. If no quants are in self, `_gather` will do a search to fetch the quants
@@ -849,16 +861,12 @@ class StockQuant(models.Model):
             could be done and how much the system is able to reserve on it
         """
         self = self.sudo()
-        rounding = product_id.uom_id.rounding
+        rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, qty=quantity)
 
         # avoid quants with negative qty to not lower available_qty
         available_quantity = quants._get_available_quantity(product_id, location_id, lot_id, package_id, owner_id, strict)
-
-        # do full packaging reservation when it's needed
-        if product_packaging_id and product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
-            available_quantity = product_packaging_id._check_qty(available_quantity, product_id.uom_id, "DOWN")
 
         quantity = min(quantity, available_quantity)
 
@@ -875,37 +883,37 @@ class StockQuant(models.Model):
             quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
 
         if product_id.tracking == 'serial':
-            if float_compare(quantity, int(quantity), precision_rounding=rounding) != 0:
+            if float_compare(quantity, int(quantity), precision_digits=rounding) != 0:
                 quantity = 0
 
         reserved_quants = []
 
-        if float_compare(quantity, 0, precision_rounding=rounding) > 0:
+        if float_compare(quantity, 0, precision_digits=rounding) > 0:
             # if we want to reserve
-            available_quantity = sum(quants.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=rounding) > 0).mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
-        elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
+            available_quantity = sum(quants.filtered(lambda q: float_compare(q.quantity, 0, precision_digits=rounding) > 0).mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
+        elif float_compare(quantity, 0, precision_digits=rounding) < 0:
             # if we want to unreserve
             available_quantity = sum(quants.mapped('reserved_quantity'))
-            if float_compare(abs(quantity), available_quantity, precision_rounding=rounding) > 0:
+            if float_compare(abs(quantity), available_quantity, precision_digits=rounding) > 0:
                 raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.', product_id.display_name))
         else:
             return reserved_quants
 
         negative_reserved_quantity = defaultdict(float)
         for quant in quants:
-            if float_compare(quant.quantity - quant.reserved_quantity, 0, precision_rounding=rounding) < 0:
+            if float_compare(quant.quantity - quant.reserved_quantity, 0, precision_digits=rounding) < 0:
                 negative_reserved_quantity[(quant.location_id, quant.lot_id, quant.package_id, quant.owner_id)] += quant.quantity - quant.reserved_quantity
         for quant in quants:
-            if float_compare(quantity, 0, precision_rounding=rounding) > 0:
+            if float_compare(quantity, 0, precision_digits=rounding) > 0:
                 max_quantity_on_quant = quant.quantity - quant.reserved_quantity
-                if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
+                if float_compare(max_quantity_on_quant, 0, precision_digits=rounding) <= 0:
                     continue
                 negative_quantity = negative_reserved_quantity[(quant.location_id, quant.lot_id, quant.package_id, quant.owner_id)]
                 if negative_quantity:
                     negative_qty_to_remove = min(abs(negative_quantity), max_quantity_on_quant)
                     negative_reserved_quantity[(quant.location_id, quant.lot_id, quant.package_id, quant.owner_id)] += negative_qty_to_remove
                     max_quantity_on_quant -= negative_qty_to_remove
-                if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
+                if float_compare(max_quantity_on_quant, 0, precision_digits=rounding) <= 0:
                     continue
                 max_quantity_on_quant = min(max_quantity_on_quant, quantity)
                 reserved_quants.append((quant, max_quantity_on_quant))
@@ -917,7 +925,7 @@ class StockQuant(models.Model):
                 quantity += max_quantity_on_quant
                 available_quantity += max_quantity_on_quant
 
-            if float_is_zero(quantity, precision_rounding=rounding) or float_is_zero(available_quantity, precision_rounding=rounding):
+            if float_is_zero(quantity, precision_digits=rounding) or float_is_zero(available_quantity, precision_digits=rounding):
                 break
         return reserved_quants
 
@@ -1005,7 +1013,7 @@ class StockQuant(models.Model):
         move_vals = []
         for quant in self:
             # Create and validate a move so that the quant matches its `inventory_quantity`.
-            if float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0:
+            if float_compare(quant.inventory_diff_quantity, 0, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) > 0:
                 move_vals.append(
                     quant._get_inventory_move_values(quant.inventory_diff_quantity,
                                                      quant.product_id.with_company(quant.company_id).property_stock_inventory,
@@ -1052,7 +1060,7 @@ class StockQuant(models.Model):
             incoming_dates = []
         else:
             incoming_dates = [quant.in_date for quant in quants if quant.in_date and
-                              float_compare(quant.quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0]
+                              float_compare(quant.quantity, 0, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) > 0]
         if in_date:
             incoming_dates += [in_date]
         # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
@@ -1116,7 +1124,7 @@ class StockQuant(models.Model):
         this method is often called in batch and each unlink invalidate
         the cache. We defer the calls to unlink in this method.
         """
-        precision_digits = max(6, self.sudo().env.ref('product.decimal_product_uom').digits * 2)
+        precision_digits = max(6, self.sudo().env.ref('uom.decimal_product_uom').digits * 2)
         # Use a select instead of ORM search for UoM robustness.
         query = """SELECT id FROM stock_quant WHERE (round(quantity::numeric, %s) = 0 OR quantity IS NULL)
                                                      AND round(reserved_quantity::numeric, %s) = 0
@@ -1215,7 +1223,7 @@ class StockQuant(models.Model):
         self.ensure_one()
         if self.env.context.get('inventory_name'):
             name = self.env.context.get('inventory_name')
-        elif fields.Float.is_zero(qty, precision_rounding=self.product_uom_id.rounding):
+        elif fields.Float.is_zero(qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
             name = _('Product Quantity Confirmed')
         else:
             name = _('Product Quantity Updated')
@@ -1337,8 +1345,9 @@ class StockQuant(models.Model):
         # Quantity part.
         if self.tracking != 'serial' or self.quantity > 1:
             quantity_ai = gs1_quantity_rules_ai_by_uom.get(self.product_uom_id.id)
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             if quantity_ai:
-                qty_str = str(int(self.quantity / self.product_uom_id.rounding))
+                qty_str = str(int(self.quantity * 10 ** precision_digits))
                 if len(qty_str) <= 6:
                     barcode += quantity_ai + '0' * (6 - len(qty_str)) + qty_str
             else:
@@ -1386,7 +1395,8 @@ class StockQuant(models.Model):
         gs1_quantity_rules_ai_by_uom = {}
 
         for rule in gs1_quantity_rules:
-            decimal = str(len(f'{rule.associated_uom_id.rounding:.10f}'.rstrip('0').split('.')[1]))
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            decimal = str(precision_digits + 1)
             rule_ai = rule.pattern[1:4] + decimal
             gs1_quantity_rules_ai_by_uom[rule.associated_uom_id.id] = rule_ai
 

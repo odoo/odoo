@@ -33,7 +33,7 @@ class TestCreatePicking(common.TestProductCommon):
                     'name': cls.product_id_1.name,
                     'product_id': cls.product_id_1.id,
                     'product_qty': 5.0,
-                    'product_uom_id': cls.product_id_1.uom_po_id.id,
+                    'product_uom_id': cls.product_id_1.uom_id.id,
                     'price_unit': 500.0,
                 })],
         }
@@ -65,7 +65,7 @@ class TestCreatePicking(common.TestProductCommon):
                 'name': self.product_id_2.name,
                 'product_id': self.product_id_2.id,
                 'product_qty': 5.0,
-                'product_uom_id': self.product_id_2.uom_po_id.id,
+                'product_uom_id': self.product_id_2.uom_id.id,
                 'price_unit': 250.0,
                 })]})
         self.assertEqual(self.po.incoming_picking_count, 2, 'New picking should be created')
@@ -156,7 +156,7 @@ class TestCreatePicking(common.TestProductCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_qty': 100.0,
-                    'product_uom_id': product.uom_po_id.id,
+                    'product_uom_id': product.uom_id.id,
                     'price_unit': 11.0,
                 })],
         })
@@ -177,49 +177,54 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 0.0, 'Wrong quantity in stock.')
 
     def test_03_uom(self):
-        """ Buy a dozen of products stocked in units. Check that the quantities on the purchase order
-        lines as well as the received quantities are handled in dozen while the moves themselves
+        """ Buy a pack_of_6 of products stocked in units. Check that the quantities on the purchase order
+        lines as well as the received quantities are handled in pack_of_6 while the moves themselves
         are handled in units. Edit the ordered quantities, check that the quantities are correctly
         updated on the moves. Edit the ir.config_parameter to propagate the uom of the purchase order
         lines to the moves and edit a last time the ordered quantities. Receive, check the quantities.
         """
         uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
 
-        self.assertEqual(self.product_id_1.uom_po_id.id, uom_unit.id)
+        self.assertEqual(self.product_id_1.uom_id.id, uom_unit.id)
 
-        # buy a dozen
-        po = self.env['purchase.order'].create(self.po_vals)
-
-        po.order_line.product_qty = 1
-        po.order_line.product_uom_id = uom_dozen.id
+        # buy a pack_of_6
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_id_1
+            po_line.product_qty = 1
+            po_line.product_uom_id = uom_pack_of_6
+        po = po_form.save()
         po.button_confirm()
 
-        # the move should be 12 units
+        # the move should be 6 units
         # note: move.product_qty = computed field, always in the uom of the quant
         #       move.product_uom_qty = stored field representing the initial demand in move.product_uom
+        move1 = po.picking_ids.move_ids.sorted()[0]
+        self.assertEqual(move1.product_uom_qty, 6)
+        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.product_qty, 6)
+
+        # edit the po line, buy 2 pack_of_6, the move should now be 12 units
+        po.order_line.product_qty = 2
         move1 = po.picking_ids.move_ids.sorted()[0]
         self.assertEqual(move1.product_uom_qty, 12)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 12)
 
-        # edit the so line, sell 2 dozen, the move should now be 24 units
-        po.order_line.product_qty = 2
-        move1 = po.picking_ids.move_ids.sorted()[0]
-        self.assertEqual(move1.product_uom_qty, 24)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
-        self.assertEqual(move1.product_qty, 24)
-
-        # force the propagation of the uom, sell 3 dozen
+        # force the propagation of the uom, sell 3 pack_of_6
         self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
-        po.order_line.product_qty = 3
-        move2 = po.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_qty = 3
+        po_form.save()
+        move2 = po.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_pack_of_6.id)
         self.assertEqual(move2.product_uom_qty, 1)
-        self.assertEqual(move2.product_uom.id, uom_dozen.id)
-        self.assertEqual(move2.product_qty, 12)
+        self.assertEqual(move2.product_uom.id, uom_pack_of_6.id)
+        self.assertEqual(move2.product_qty, 6)
 
         # deliver everything
-        move1.quantity = 24
+        move1.quantity = 12
         move1.picked = True
         move2.quantity = 1
         move2.picked = True
@@ -323,10 +328,11 @@ class TestCreatePicking(common.TestProductCommon):
         """ We set the Unit(s) rounding to 1.0 and ensure buying 1.2 units in a PO is rounded to 1.0
             at reception.
         """
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 0
         uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_unit.rounding = 1.0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 0
 
-        # buy a dozen
+        # buy a pack_of_6
         po = self.env['purchase.order'].create(self.po_vals)
 
         po.order_line.product_qty = 1.2
@@ -338,8 +344,8 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 1.0)
 
-        # edit the so line, buy 2.4 units, the move should now be 2.0 units
-        po.order_line.product_qty = 2.0
+        # edit the po line, buy 2.4 units, the move should now be 2.0 units
+        po.order_line.product_qty = 2.4
         self.assertEqual(move1.product_uom_qty, 2.0)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 2.0)
@@ -353,34 +359,35 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(po.order_line.qty_received, 2.0)
 
     def test_05_uom_rounding(self):
-        """ We set the Unit(s) and Dozen(s) rounding to 1.0 and ensure buying 1.3 dozens in a PO is
+        """ We set the Unit(s) and Pack(s) of 6 rounding to 1.0 and ensure buying 1.3 pack_of_6 in a PO is
             rounded to 1.0 at reception.
         """
-        uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
-        uom_unit.rounding = 1.0
-        uom_dozen.rounding = 1.0
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 0
 
-        # buy 1.3 dozen
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 0
+
+        # buy 1.3 pack_of_6
         po = self.env['purchase.order'].create(self.po_vals)
 
+        po.order_line.product_uom_id = uom_pack_of_6
         po.order_line.product_qty = 1.3
-        po.order_line.product_uom_id = uom_dozen.id
         po.button_confirm()
 
-        # the move should be 16.0 units
+        # the move should be 6.0 units
         move1 = po.picking_ids.move_ids[0]
-        self.assertEqual(move1.product_uom_qty, 16.0)
+        self.assertEqual(move1.product_uom_qty, 6.0)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
-        self.assertEqual(move1.product_qty, 16.0)
+        self.assertEqual(move1.product_qty, 6.0)
 
-        # force the propagation of the uom, buy 2.6 dozens, the move 2 should have 2 dozens
+        # force the propagation of the uom, buy 2.6 pack_of_6, the move 2 should have 2 pack_of_6
         self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
         po.order_line.product_qty = 2.6
-        move2 = po.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
+        move2 = po.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_pack_of_6.id)
         self.assertEqual(move2.product_uom_qty, 2)
-        self.assertEqual(move2.product_uom.id, uom_dozen.id)
-        self.assertEqual(move2.product_qty, 24)
+        self.assertEqual(move2.product_uom.id, uom_pack_of_6.id)
+        self.assertEqual(move2.product_qty, 12)
 
     def create_delivery_order(self):
         stock_location = self.env.ref('stock.stock_location_stock')
@@ -401,7 +408,6 @@ class TestCreatePicking(common.TestProductCommon):
             'name': 'Usb Keyboard',
             'is_storable': True,
             'uom_id': unit,
-            'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
             'route_ids': [(6, 0, [route_buy.id, route_mto.id])]
         })

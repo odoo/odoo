@@ -86,6 +86,7 @@ class StockRule(models.Model):
         if errors:
             raise ProcurementException(errors)
 
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for domain, procurements_rules in procurements_by_po_domain.items():
             # Get the procurements for the current domain.
             # Get the rules for the current domain. Their only use is to create
@@ -98,7 +99,7 @@ class StockRule(models.Model):
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
             if not po:
-                positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]
+                positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_digits=precision_digits) >= 0]
                 if positive_values:
                     # We need a rule to generate the PO. However the rule generated
                     # the same domain for PO and the _prepare_purchase_order method
@@ -122,7 +123,7 @@ class StockRule(models.Model):
             procurements = self._merge_procurements(procurements_to_merge)
 
             po_lines_by_product = {}
-            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom_id == l.product_id.uom_po_id), key=lambda l: l.product_id.id)
+            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom_id == l.product_id.uom_id), key=lambda l: l.product_id.id)
             for product, po_lines in grouped_po_lines:
                 po_lines_by_product[product] = self.env['purchase.order.line'].concat(*po_lines)
             po_line_values = []
@@ -138,7 +139,7 @@ class StockRule(models.Model):
                         procurement.values, po_line)
                     po_line.sudo().write(vals)
                 else:
-                    if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+                    if float_compare(procurement.product_qty, 0, precision_digits=precision_digits) <= 0:
                         # If procurement contains negative quantity, don't create a new line that would contain negative qty
                         continue
                     # If it does not exist a PO line for current procurement.
@@ -242,12 +243,13 @@ class StockRule(models.Model):
 
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
         partner = values['supplier'].partner_id
-        procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id, rounding_method='HALF-UP')
+        uom = values['supplier'].product_uom_id or values['supplier'].product_id.uom_id
+        procurement_uom_po_qty = product_uom._compute_quantity(product_qty, uom, rounding_method='HALF-UP')
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
             quantity=line.product_qty + procurement_uom_po_qty,
             date=line.order_id.date_order and line.order_id.date_order.date(),
-            uom_id=product_id.uom_po_id)
+            uom_id=uom)
 
         price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().taxes_id, company_id) if seller else 0.0
         if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:

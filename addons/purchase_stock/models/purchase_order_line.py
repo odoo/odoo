@@ -100,10 +100,10 @@ class PurchaseOrderLine(models.Model):
         lines = self.filtered(lambda l: l.order_id.state == 'purchase'
                                         and not l.display_type)
 
-        if 'product_packaging_id' in values:
+        if 'product_uom_id' in values and values['product_uom_id'] != self.product_id.uom_id.id:
             self.move_ids.filtered(
                 lambda m: m.state not in ['cancel', 'done']
-            ).product_packaging_id = values['product_packaging_id']
+            ).product_uom = values['product_uom_id']
 
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         previous_product_qty = {line.id: line.product_qty for line in lines}
@@ -114,7 +114,13 @@ class PurchaseOrderLine(models.Model):
                 moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
                 moves.write({'price_unit': line._get_stock_move_price_unit()})
         if 'product_qty' in values:
-            lines = lines.filtered(lambda l: float_compare(previous_product_qty[l.id], l.product_qty, precision_rounding=l.product_uom_id.rounding) != 0)
+            lines = lines.filtered(
+                lambda l: float_compare(
+                    previous_product_qty[l.id],
+                    l.product_qty,
+                    precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')
+                ) != 0
+            )
             lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
         return result
 
@@ -165,13 +171,13 @@ class PurchaseOrderLine(models.Model):
     def _create_or_update_picking(self):
         for line in self:
             if line.product_id and line.product_id.type == 'consu':
-                rounding = line.product_uom_id.rounding
+                rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
                 # Prevent decreasing below received quantity
-                if float_compare(line.product_qty, line.qty_received, precision_rounding=rounding) < 0:
+                if float_compare(line.product_qty, line.qty_received, precision_digits=rounding) < 0:
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
                                       'Create a return first.'))
 
-                if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0 and line.invoice_lines:
+                if float_compare(line.product_qty, line.qty_invoiced, precision_digits=rounding) < 0 and line.invoice_lines:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
                     # inviting the user to create a refund.
                     line.invoice_lines[0].move_id.activity_schedule(
@@ -212,7 +218,8 @@ class PurchaseOrderLine(models.Model):
             )['total_void']
             price_unit = price_unit / qty
         if self.product_uom_id.id != self.product_id.uom_id.id:
-            price_unit *= self.product_uom_id.factor / self.product_id.uom_id.factor
+            price_unit /= self.product_uom_id.factor
+            price_unit *= self.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
@@ -246,10 +253,11 @@ class PurchaseOrderLine(models.Model):
             qty_to_attach = move_dests_initial_demand - qty
             qty_to_push = self.product_qty - move_dests_initial_demand
 
-        if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom_id.rounding) > 0:
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        if float_compare(qty_to_attach, 0.0, precision_digits=precision_digits) > 0:
             product_uom_qty, product_uom = self.product_uom_id._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
             res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
-        if not float_is_zero(qty_to_push, precision_rounding=self.product_uom_id.rounding):
+        if not float_is_zero(qty_to_push, precision_digits=precision_digits):
             product_uom_qty, product_uom = self.product_uom_id._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
             extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
             extra_move_vals['move_dest_ids'] = False  # don't attach
@@ -309,7 +317,6 @@ class PurchaseOrderLine(models.Model):
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
-            'product_packaging_id': self.product_packaging_id.id,
             'sequence': self.sequence,
         }
 

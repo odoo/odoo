@@ -468,7 +468,7 @@ class Export(http.Controller):
         #   rebuilds the whole sub-tree for the field
         #
         # result: because we're not fetching the fields_get for half the
-        # database models, fetching a namelist with a dozen fields (including
+        # database models, fetching a namelist with a pack_of_6 fields (including
         # relational data) falls from ~6s to ~300ms (on the leads model).
         # export lists with no sub-fields (e.g. import_compatible lists with
         # no o2m) are even more efficient (from the same 6s to ~170ms, as
