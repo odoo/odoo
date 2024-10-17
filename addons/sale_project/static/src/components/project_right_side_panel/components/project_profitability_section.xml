@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="sale_project.ProjectProfitabilitySection">
-        <tr class="opacity-trigger-hover" t-att-class="{ 'table-active': !state.isFolded }">
+        <tr t-att-id="revenue.id" class="opacity-trigger-hover" t-att-class="{ 'table-active': !state.isFolded }">
             <t t-set="revenue_label" t-value="props.labels[revenue.id] or revenue.id"/>
             <td>
                 <div class="position-relative d-flex gap-1">
@@ -30,7 +30,7 @@
         </tr>
         <t t-if="!state.isFolded and this.props.revenue.isSectionFoldable">
             <tr class="table-active">
-                <td colspan="4" class="p-0 m-0">
+                <td colspan="4" class="p-0 m-0" t-att-id="revenue.id + '-unfolded'">
                     <table class="o_rightpanel_subtable table table-sm table-borderless table-hover mb-0 border-bottom">
                         <thead>
                             <tr>
@@ -41,7 +41,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="sale_items" t-as="sale_item" t-key="sale_item.id">
+                            <tr t-foreach="sale_items" t-as="sale_item" t-key="sale_item.id" t-att-id="sale_item.id">
                                 <t t-set="uom_name" t-value="sale_item.product_uom_id and sale_item.product_uom_id[1]"/>
                                 <td class="ps-4">
                                     <a t-if="sale_item.action" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
