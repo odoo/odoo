@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo import Command
 
 
@@ -52,6 +52,19 @@ class TestHasGroup(TransactionCase):
             self.test_user.has_group(self.group1),
             "the test user shoudl not belong to group1"
         )
+
+    def test_other_user(self):
+        internal_user = self.test_user.copy({'groups_id': self.grp_internal})
+        internal_user = internal_user.with_user(internal_user)
+        test_user = self.env['res.users'].with_user(self.test_user).browse(self.test_user.id)
+
+        test_user.has_group(self.group0)
+        with self.assertRaises(AccessError):
+            test_user.browse(internal_user.id).has_group(self.group0)
+        test_user.sudo().browse(internal_user.id).has_group(self.group0)
+
+        internal_user.has_group(self.group0)
+        internal_user.browse(test_user.id).has_group(self.group0)
 
     def test_portal_creation(self):
         """Here we check that portal user creation fails if it tries to create a user
