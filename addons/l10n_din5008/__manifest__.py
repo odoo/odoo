@@ -9,6 +9,7 @@
     'depends': ['account'],
     'data': [
         'report/din5008_report.xml',
+        'report/din5008_account_move_report.xml',
         'data/report_layout.xml',
     ],
     'assets': {
