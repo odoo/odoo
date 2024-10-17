@@ -242,6 +242,18 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
         const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
+
+        // TODO remove in master: adds back the "Layout" and "Content Width"
+        // options on some carousels.
+        const layoutOptionEl = html.querySelector('[data-js="layout_column"][data-selector="section"]');
+        const containerWidthOptionEl = html.querySelector('[data-js="ContainerWidth"][data-selector="section"]');
+        if (layoutOptionEl) {
+            layoutOptionEl.dataset.selector += ", section.s_carousel_wrapper .carousel-item";
+        }
+        if (containerWidthOptionEl) {
+            containerWidthOptionEl.dataset.selector += ", .s_carousel .carousel-item";
+        }
+
         return super._computeSnippetTemplates(html);
     }
     /**
