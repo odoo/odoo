@@ -352,7 +352,7 @@
             <div class="o_footer_content border-top pt-2 text-center">
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="o.name">(document name)</div>
-                <div t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></div>
+                <div t-if="report_type == 'pdf'" class="text-muted text-nowrap">Page <span class="page"/> / <span class="topage"/></div>
             </div>
         </div>
     </template>
@@ -410,7 +410,7 @@
                 <div class="col-4 text-end">
                     <strong t-if="company.report_header" t-field="company.report_header" class="o_company_tagline">Company tagline</strong>
                     <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
-                    <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
+                    <span t-if="report_type == 'pdf'" class="text-muted text-nowrap">Page <span class="page"/> / <span class="topage"/></span>
                 </div>
             </div>
         </div>
@@ -467,7 +467,7 @@
                 <div class="col-4 text-end">
                     <strong t-if="company.report_header" t-field="company.report_header" class="o_company_tagline">Company tagline</strong>
                     <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
-                    <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
+                    <span t-if="report_type == 'pdf'" class="text-muted text-nowrap">Page <span class="page"/> / <span class="topage"/></span>
                 </div>
             </div>
         </div>
@@ -522,7 +522,7 @@
                 <div class="flex-grow-1 text-start me-2" t-field="company.report_footer"/>
                 <div class="text-end text-muted">
                     <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
-                    <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
+                    <div t-if="report_type == 'pdf'" class="text-nowrap">Page <span class="page"/> / <span class="topage"/></div>
                 </div>
             </div>
         </div>
@@ -600,7 +600,7 @@
                 <div class="flex-grow-1 me-2 text-start" t-field="company.report_footer"/>
                 <div class="text-end text-muted">
                     <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
-                    <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
+                    <div t-if="report_type == 'pdf'" class="text-nowrap">Page <span class="page"/> / <span class="topage"/></div>
                 </div>
             </div>
         </div>
@@ -667,7 +667,7 @@
             <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-5 text-center">
                 <div t-field="company.report_footer"/>
                 <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
-                <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
+                <span t-if="report_type == 'pdf'" class="text-muted text-nowrap">Page <span class="page"/> / <span class="topage"/></span>
             </div>
         </div>
     </template>
@@ -733,7 +733,7 @@
             <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center">
                 <div class="border-top pt-2" t-field="company.report_footer"/>
                 <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
-                <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
+                <span t-if="report_type == 'pdf'" class="text-muted text-nowrap">Page <span class="page"/> / <span class="topage"/></span>
             </div>
         </div>
     </template>
