@@ -1,8 +1,11 @@
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import { Many2ManyTagsField, many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import {
+    Many2ManyTaxTagsField,
+    many2ManyTaxTagsField
+} from "@account/components/many2x_tax_tags/many2x_tax_tags";
 
-export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
+export class AutosaveMany2ManyTaxTagsField extends Many2ManyTaxTagsField {
     setup() {
         super.setup();
 
@@ -42,9 +45,9 @@ export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
     }
 }
 
-export const autosaveMany2ManyTagsField = {
-    ...many2ManyTagsField,
-    component: AutosaveMany2ManyTagsField,
+export const autosaveMany2ManyTaxTagsField = {
+    ...many2ManyTaxTagsField,
+    component: AutosaveMany2ManyTaxTagsField,
 };
 
-registry.category("fields").add("autosave_many2many_tags", autosaveMany2ManyTagsField);
+registry.category("fields").add("autosave_many2many_tax_tags", autosaveMany2ManyTaxTagsField);

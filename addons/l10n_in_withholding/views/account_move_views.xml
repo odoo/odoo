@@ -26,7 +26,7 @@
                 <page name="withholding_tab" string="TDS Information" invisible="not l10n_in_withholding_line_ids">
                     <field name="l10n_in_withholding_line_ids" nolabel="1" colspan="4">
                         <list editable="bottom" string="TDS Information">
-                            <field name="tax_ids" string="Tax" widget="many2many_tags"/>
+                            <field name="tax_ids" string="Tax" widget="many2many_tax_tags"/>
                             <field name="price_subtotal" string="Base Amount" sum="Total"/>
                             <field name="l10n_in_withhold_tax_amount" string="TDS Amount" sum="Total"/>
                         </list>
@@ -45,7 +45,7 @@
                 <field name="name" widget="section_and_note_text"/>
                 <field name="account_id"/>
                 <field name="tax_ids"
-                       widget="many2many_tags"
+                       widget="many2many_tax_tags"
                        domain="[('type_tax_use', '=', context.get('default_tax_type_use'))]"
                        column_invisible="context.get('move_type')"/>
                 <field name="l10n_in_tds_tcs_section_id" string="Suggested Section"/>
