@@ -706,8 +706,30 @@ export const editorCommands = {
             return selectedNodes.flatMap(node => {
                 let font = closestElement(node, 'font') || closestElement(node, 'span');
                 const children = font && descendants(font);
-                if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
-                    // Partially selected <font>: split it.
+                const areAllChildrenSelected =
+                    children && children.every((child) => selectedNodes.includes(child));
+                const isGradient = font && isColorGradient(font.style["background-image"]);
+                const isTextGradient =
+                    isGradient && font.classList && font.classList.contains("text-gradient");
+                const shouldBreakGradient =
+                    (isTextGradient && mode === "color") ||
+                    (!isTextGradient && mode === "backgroundColor");
+
+                if (
+                    isGradient &&
+                    shouldBreakGradient &&
+                    !isColorGradient(color) &&
+                    areAllChildrenSelected
+                ) {
+                    font = [];
+                } else if (
+                    font &&
+                    (font.nodeName === "FONT" || (font.nodeName === "SPAN" && font.style[mode])) &&
+                    (isColorGradient(color) ||
+                        !(isGradient || isTextGradient) ||
+                        shouldBreakGradient)
+                ) {
+                    // Partially selected <font>: split it.1
                     const selectedChildren = children.filter(child => selectedNodes.includes(child));
                     if (selectedChildren.length) {
                         font = splitAroundUntil(selectedChildren, font);
