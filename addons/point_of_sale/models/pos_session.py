@@ -1834,6 +1834,7 @@ class PosSession(models.Model):
         product_fields = self.env['product.product']._load_pos_data_fields(config_id)
         product_template_fields = self.env['product.template']._load_pos_data_fields(config_id)
         product_packaging_fields = self.env['product.packaging']._load_pos_data_fields(config_id)
+        product_tmpl_attr_value_fields = self.env['product.template.attribute.value']._load_pos_data_fields(config_id)
         product = self.env['product.product'].search([
             ('barcode', '=', barcode),
             ('sale_ok', '=', True),
@@ -1843,7 +1844,8 @@ class PosSession(models.Model):
             product = product.with_context({'display_default_code': False})
             return {
                 'product.product': product.read(product_fields, load=False),
-                'product.template': product.product_tmpl_id.read(product_template_fields, load=False)
+                'product.template': product.product_tmpl_id.read(product_template_fields, load=False),
+                'product.template.attribute.value': product.product_template_attribute_value_ids.read(product_tmpl_attr_value_fields, load=False)
             }
 
         domain = [('barcode', 'not in', ['', False])]
@@ -1864,6 +1866,7 @@ class PosSession(models.Model):
         condition = packaging and packaging.product_id
         return {
             'product.product': product.read(product_fields, load=False) if condition else [],
+            'product.template.attribute.value': product.product_template_attribute_value_ids.read(product_tmpl_attr_value_fields, load=False) if condition else [],
             'product.template': product.product_tmpl_id.read(product_template_fields, load=False) if condition else [],
             'product.packaging': packaging.read(product_packaging_fields, load=False) if condition else [],
         }
