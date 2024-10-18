@@ -45,7 +45,6 @@ const GROUPED_STYLES = {
     border: [
         "border-top-width", "border-right-width", "border-bottom-width", "border-left-width",
         "border-top-style", "border-right-style", "border-bottom-style", "border-left-style",
-        "border-top-color", "border-right-color", "border-bottom-color", "border-left-color",
     ],
     padding: ["padding-top", "padding-bottom", "padding-left", "padding-right"],
     margin: ["margin-top", "margin-bottom", "margin-left", "margin-right"],
@@ -1639,13 +1638,6 @@ function _getMatchedCSSRules(node, cssRules, checkBlacklisted = false) {
         delete processedStyle['border-bottom-right-radius'];
         delete processedStyle['border-top-left-radius'];
         delete processedStyle['border-top-right-radius'];
-    }
-    if (processedStyle['border-left-color']) {
-        processedStyle['border-color'] = processedStyle['border-left-color'];
-        delete processedStyle['border-right-color'];
-        delete processedStyle['border-bottom-color'];
-        delete processedStyle['border-top-color'];
-        delete processedStyle['border-left-color'];
     }
     if (processedStyle['border-left-width']) {
         processedStyle['border-width'] = processedStyle['border-left-width'];

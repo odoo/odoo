@@ -635,9 +635,9 @@ QUnit.module('convert_inline', {}, function () {
         // Some positional properties (eg., padding-right, margin-left) are not
         // concatenated (eg., as padding, margin) because they were defined with
         // variables (var) or calculated (calc).
-        const containerStyle = `border-width: 0px; border-color: rgb(55, 65, 81); border-radius: 0px; border-style: none; margin: 0px auto; box-sizing: border-box; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
-        const rowStyle = `border-width: 0px; border-color: rgb(55, 65, 81); border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
-        const colStyle = `border-width: 0px; border-color: rgb(55, 65, 81); border-radius: 0px; border-style: none; box-sizing: border-box; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
+        const containerStyle = `border-width: 0px; border-radius: 0px; border-style: none; margin: 0px auto; box-sizing: border-box; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
+        const rowStyle = `border-width: 0px; border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
+        const colStyle = `border-width: 0px; border-radius: 0px; border-style: none; box-sizing: border-box; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
         assert.strictEqual($editable.html(),
             `<div class="container" style="${containerStyle}" width="100%">` +
             `<div class="row" style="${rowStyle}">` +
@@ -1001,7 +1001,7 @@ QUnit.module('convert_inline', {}, function () {
         $iframeEditable.append(`<div class="o_layout" style="padding: 50px;"></div>`);
         convertInline.classToStyle($iframeEditable, convertInline.getCSSRules($iframeEditable[0].ownerDocument));
         assert.strictEqual($iframeEditable.html(),
-            `<div class="o_layout" style="border-width:0px;border-color:rgb(255, 255, 255);border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
+            `<div class="o_layout" style="border-width:0px;border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
             "should have given all styles of body to .o_layout");
         styleSheet.deleteRule(0);
 
