@@ -18,7 +18,7 @@ export class MailGuest extends models.ServerModel {
         if (!fields) {
             fields = ["im_status", "name", "write_date"];
         }
-        store.add("mail.guest", this.read(ids, fields, false));
+        store.add("mail.guest", this._read_format(ids, fields, false));
     }
 
     _set_auth_cookie(guestId) {
