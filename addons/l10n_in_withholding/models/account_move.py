@@ -18,6 +18,13 @@ class AccountMove(models.Model):
         copy=False,
         help="Reference move for withholding entry",
     )
+    l10n_in_withholding_ref_payment_id = fields.Many2one(
+        comodel_name='account.payment',
+        string="Indian TDS Ref Payment",
+        readonly=True,
+        copy=False,
+        help="Reference Payment for withholding entry",
+    )
     l10n_in_withhold_move_ids = fields.One2many(
         'account.move', 'l10n_in_withholding_ref_move_id',
         string="Indian TDS Entries"
