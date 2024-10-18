@@ -494,7 +494,7 @@ class DiscussChannel(models.Model):
                     "invitedMembers": Store.many(
                         members,
                         "DELETE",
-                        fields={"channel": [], "persona": ["name", "im_status"]},
+                        fields={"channel": [], "persona": ["name", "im_status", "write_date"]},
                     ),
                 },
             )
@@ -936,7 +936,9 @@ class DiscussChannel(models.Model):
             # add RTC sessions info
             invited_members = invited_members_by_channel[channel]
             info["invitedMembers"] = Store.many(
-                invited_members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
+                invited_members,
+                "ADD",
+                fields={"channel": [], "persona": ["name", "im_status", "write_date"]},
             )
             # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
             info["rtcSessions"] = Store.many(channel.sudo().rtc_session_ids, "ADD", extra=True)

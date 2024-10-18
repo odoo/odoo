@@ -1603,6 +1603,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": user.partner_id.id,
                     "im_status": "offline",
                     "name": "test2",
+                    "write_date": fields.Datetime.to_string(user.partner_id.write_date),
                 }
             return {
                 "active": True,
