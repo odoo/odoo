@@ -511,27 +511,19 @@ GROUP BY fol.id%s%s""" % (
 
         return new, update
 
-    def _to_store(self, store: Store, fields=None):
-        if fields is None:
-            fields = {
-                "display_name": True,
-                "email": True,
-                "is_active": True,
-                "name": True,
-                "partner_id": True,
-                "partner": None,
-                "thread": [],
-            }
-        for follower in self:
-            data = follower._read_format(
-                [field for field in fields if field not in ["partner", "thread"]], load=False
-            )[0]
-            if "partner" in fields:
-                data["partner"] = Store.one(follower.partner_id, fields=fields["partner"])
-            if "thread" in fields:
-                data["thread"] = Store.one(
-                    self.env[follower.res_model].browse(follower.res_id),
-                    as_thread=True,
-                    only_id=True,
-                )
-            store.add(follower, data)
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + [
+            "display_name",
+            "email",
+            "is_active",
+            "name",
+            Store.One("partner"),
+            "partner_id",
+            Store.One("thread", as_thread=True, only_id=True),
+        ]
+
+    def _to_store_field_computes(self):
+        return super()._to_store_field_computes() | {
+            "partner": lambda follower: follower.partner_id,
+            "thread": lambda follower: self.env[follower.res_model].browse(follower.res_id),
+        }

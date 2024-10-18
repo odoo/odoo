@@ -254,50 +254,63 @@ class DiscussChannelMember(models.Model):
         members.write({"mute_until_dt": False})
         members._notify_mute()
 
-    def _to_store(self, store: Store, /, *, fields=None, extra_fields=None):
-        if fields is None:
-            fields = {
-                "channel": [],
-                "create_date": True,
-                "fetched_message_id": True,
-                "persona": None,
-                "seen_message_id": True,
-                "last_seen_dt": True,
-            }
-        if extra_fields:
-            fields.update(extra_fields)
-        bus_last_id = fields.pop("message_unread_counter_bus_id", None)
+    def _to_store(self, store: Store, /, *, fields, **kwargs):
+        bus_last_id = kwargs.get("message_unread_counter_bus_id", None)
         if "message_unread_counter" in fields and bus_last_id is None:
             # sudo: bus.bus: reading non-sensitive last id
             bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+        super()._to_store(
+            store,
+            fields=[
+                field
+                for field in fields
+                if not (isinstance(field, Store.One) and field.field_name == "persona")
+            ],
+            **kwargs,
+        )
         for member in self:
-            data = member._read_format(
-                [
-                    field
-                    for field in fields
-                    if field not in ["channel", "fetched_message_id", "seen_message_id", "persona"]
-                ],
-                load=False,
-            )[0]
-            if "channel" in fields:
-                data["thread"] = Store.one(member.channel_id, as_thread=True, only_id=True)
-            if "persona" in fields:
-                if member.partner_id:
-                    # sudo: res.partner - reading partner related to a member is considered acceptable
-                    data["persona"] = Store.one(
-                        member.partner_id.sudo(),
-                        fields=member._get_store_partner_fields(fields["persona"]),
-                    )
-                if member.guest_id:
-                    # sudo: mail.guest - reading guest related to a member is considered acceptable
-                    data["persona"] = Store.one(member.guest_id.sudo(), fields=fields["persona"])
-            if "fetched_message_id" in fields:
-                data["fetched_message_id"] = Store.one(member.fetched_message_id, only_id=True)
-            if "seen_message_id" in fields:
-                data["seen_message_id"] = Store.one(member.seen_message_id, only_id=True)
+            data = {}
+            for field in fields:
+                if isinstance(field, Store.One) and field.field_name == "persona":
+                    persona_fields = field.kwargs.pop("fields", None)
+                    if member.partner_id:
+                        data["persona"] = Store.One(
+                            # sudo: res.partner - reading partner related to a member is considered acceptable
+                            member.partner_id.sudo(),
+                            as_thread=field.as_thread,
+                            only_id=field.only_id,
+                            fields=member._get_store_partner_fields(persona_fields),
+                            **field.kwargs,
+                        )
+                    if member.guest_id:
+                        data["persona"] = Store.One(
+                            # sudo: mail.guest - reading guest related to a member is considered acceptable
+                            member.guest_id.sudo(),
+                            as_thread=field.as_thread,
+                            only_id=field.only_id,
+                            fields=persona_fields,
+                            **field.kwargs,
+                        )
             if "message_unread_counter" in fields:
                 data["message_unread_counter_bus_id"] = bus_last_id
             store.add(member, data)
+
+    def _to_store_fields(self):
+        return super()._to_store_fields() + [
+            Store.One("thread", as_thread=True, only_id=True),
+            Store.One("persona"),
+        ]
+
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + [
+            "create_date",
+            "fetched_message_id",
+            "seen_message_id",
+            "last_seen_dt",
+        ]
+
+    def _to_store_field_computes(self):
+        return super()._to_store_field_computes() | {"thread": lambda member: member.channel_id}
 
     def _get_store_partner_fields(self, fields):
         self.ensure_one()
@@ -336,16 +349,16 @@ class DiscussChannelMember(models.Model):
         ice_servers = self.env["mail.ice.server"]._get_ice_servers()
         self._join_sfu(ice_servers)
         if store:
-            store.add(self.channel_id, {"rtcSessions": Store.many(current_rtc_sessions, "ADD")})
+            store.add(self.channel_id, {"rtcSessions": Store.Many(current_rtc_sessions, "ADD")})
             store.add(
                 self.channel_id,
-                {"rtcSessions": Store.many(outdated_rtc_sessions, "DELETE", only_id=True)},
+                {"rtcSessions": Store.Many(outdated_rtc_sessions, "DELETE", only_id=True)},
             )
             store.add(
                 "Rtc",
                 {
                     "iceServers": ice_servers or False,
-                    "selfSession": Store.one(rtc_session),
+                    "selfSession": Store.One(rtc_session),
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
@@ -446,14 +459,19 @@ class DiscussChannelMember(models.Model):
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             member._bus_send_store(
-                self.channel_id, {"rtcInvitingSession": Store.one(member.rtc_inviting_session_id)}
+                self.channel_id, {"rtcInvitingSession": Store.One(member.rtc_inviting_session_id)}
             )
         if members:
             self.channel_id._bus_send_store(
                 self.channel_id,
                 {
-                    "invitedMembers": Store.many(
-                        members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
+                    "invitedMembers": Store.Many(
+                        members,
+                        "ADD",
+                        fields=[
+                            Store.One("thread", as_thread=True, only_id=True),
+                            Store.One("persona", fields=["name", "im_status", "write_date"]),
+                        ],
                     ),
                 },
             )
@@ -500,7 +518,12 @@ class DiscussChannelMember(models.Model):
         if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
             target = self.channel_id
         target._bus_send_store(
-            self, fields={"channel": [], "persona": ["name"], "seen_message_id": True}
+            self,
+            fields=[
+                Store.One("thread", as_thread=True, only_id=True),
+                Store.One("persona", fields=["name"]),
+                "seen_message_id",
+            ],
         )
 
     def _set_new_message_separator(self, message_id, sync=False):
@@ -518,12 +541,12 @@ class DiscussChannelMember(models.Model):
         self._bus_send_store(
             Store(
                 self,
-                fields={
-                    "channel": [],
-                    "message_unread_counter": True,
-                    "new_message_separator": True,
-                    "persona": ["name"],
-                },
+                fields=[
+                    Store.One("thread", as_thread=True, only_id=True),
+                    "message_unread_counter",
+                    "new_message_separator",
+                    Store.One("persona", fields=["name"]),
+                ],
             ).add(self, {"syncUnread": sync})
         )
 

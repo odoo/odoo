@@ -7,7 +7,9 @@ from lxml.builder import E
 from markupsafe import Markup
 
 from odoo import api, exceptions, models, tools, _
+from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools.alias_error import AliasError
+from odoo.addons.mail.tools.discuss import Store
 
 import logging
 
@@ -499,3 +501,59 @@ class Base(models.AbstractModel):
             if tz_field in self:
                 tz = self[tz_field] or tz
         return tz
+
+    def _to_store(self, store: Store, /, *, fields, **kwargs):
+        """Add the current records to the given store with the value of the
+        given fields. kwargs are provided for optional overrides."""
+        computes = self._to_store_field_computes()
+        conditions = self._to_store_field_conditions()
+        read_fields = [
+            field
+            for field in fields
+            if isinstance(field, str) and field not in computes and field not in conditions
+        ]
+        store.add(self._name, self._read_format(read_fields, load=False))
+        for record in self:
+            data = {}
+            for field in OrderedSet(fields) - OrderedSet(read_fields):
+                fname = field.field_name if isinstance(field, (Store.One, Store.Many)) else field
+                if fname in conditions and not conditions[fname](record):
+                    continue
+                value = computes[fname](record) if fname in computes else record[fname]
+                if isinstance(field, Store.One):
+                    value = Store.One(
+                        value, as_thread=field.as_thread, only_id=field.only_id, **field.kwargs
+                    )
+                elif isinstance(field, Store.Many):
+                    value = Store.Many(
+                        value,
+                        field.mode,
+                        as_thread=field.as_thread,
+                        only_id=field.only_id,
+                        **field.kwargs,
+                    )
+                data[fname] = value
+            store.add(record, data)
+
+    def _to_store_fields(self):
+        """Fields always added to store for the current records."""
+        return []
+
+    def _to_store_default_fields(self):
+        """Fields added to store for the current records when no specific fields
+        are given."""
+        return []
+
+    def _to_store_field_computes(self):
+        """Map of field name to function to compute the field value.
+
+        For custom behavior, this is the order of preference (best first):
+        - create a computed field on model (use standard _to_store, no override)
+        - override _to_store_field_computes (specific field value)
+        - override _to_store (batch compute or highly specific override)"""
+        return {}
+
+    def _to_store_field_conditions(self):
+        """Map of field name to function to determine if the field should be
+        added to the store or not."""
+        return {}

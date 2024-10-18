@@ -77,6 +77,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
                                 "name": channel_member.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -119,6 +122,9 @@ class TestChannelRTC(MailCommon):
                         "id": channel_member.partner_id.id,
                         "im_status": channel_member.partner_id.im_status,
                         "name": channel_member.partner_id.name,
+                        "write_date": fields.Datetime.to_string(
+                            channel_member.partner_id.write_date
+                        ),
                     },
                 ],
                 "Rtc": {
@@ -189,6 +195,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
                                 "name": channel_member.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -220,6 +229,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "name": channel_member_test_user.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_user.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -295,6 +307,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
                                 "name": channel_member.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -329,6 +344,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
                                 "name": channel_member.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -376,6 +394,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_guest.guest_id.id,
                                 "im_status": channel_member_test_guest.guest_id.im_status,
                                 "name": channel_member_test_guest.guest_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_guest.guest_id.write_date
+                                ),
                             },
                         ],
                         "res.partner": [
@@ -383,6 +404,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "name": channel_member_test_user.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_user.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -448,6 +472,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "name": channel_member_test_user.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_user.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -485,6 +512,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "name": channel_member_test_user.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_user.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -538,6 +568,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_guest.guest_id.id,
                                 "im_status": channel_member_test_guest.guest_id.im_status,
                                 "name": channel_member_test_guest.guest_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_guest.guest_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -575,6 +608,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_guest.guest_id.id,
                                 "im_status": channel_member_test_guest.guest_id.im_status,
                                 "name": channel_member_test_guest.guest_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_guest.guest_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -636,6 +672,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "name": channel_member_test_user.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_user.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -687,6 +726,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_guest.guest_id.id,
                                 "im_status": channel_member_test_guest.guest_id.im_status,
                                 "name": channel_member_test_guest.guest_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_guest.guest_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -781,6 +823,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_guest.guest_id.id,
                                 "im_status": channel_member_test_guest.guest_id.im_status,
                                 "name": channel_member_test_guest.guest_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_guest.guest_id.write_date
+                                ),
                             },
                         ],
                         "res.partner": [
@@ -788,6 +833,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "name": channel_member_test_user.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_user.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -885,6 +933,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
                                 "name": channel_member.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -919,6 +970,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member.partner_id.id,
                                 "im_status": channel_member.partner_id.im_status,
                                 "name": channel_member.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member.partner_id.write_date
+                                ),
                             },
                         ],
                     },
@@ -966,6 +1020,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_guest.guest_id.id,
                                 "im_status": channel_member_test_guest.guest_id.im_status,
                                 "name": channel_member_test_guest.guest_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_guest.guest_id.write_date
+                                ),
                             },
                         ],
                         "res.partner": [
@@ -973,6 +1030,9 @@ class TestChannelRTC(MailCommon):
                                 "id": channel_member_test_user.partner_id.id,
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "name": channel_member_test_user.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    channel_member_test_user.partner_id.write_date
+                                ),
                             },
                         ],
                     },

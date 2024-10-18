@@ -107,7 +107,7 @@ class PublicPageController(http.Controller):
             {
                 "companyName": request.env.company.name,
                 "inPublicPage": True,
-                "discuss_public_thread": Store.one(channel),
+                "discuss_public_thread": Store.One(channel),
             }
         )
         return request.render(

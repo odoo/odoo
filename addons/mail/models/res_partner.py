@@ -212,27 +212,20 @@ class ResPartner(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
-    def _to_store(self, store: Store, /, *, fields=None, main_user_by_partner=None):
-        if fields is None:
-            fields = ["active", "email", "im_status", "is_company", "name", "user", "write_date"]
+    def _to_store(self, store: Store, /, *, fields, **kwargs):
         if not self.env.user._is_internal() and "email" in fields:
             fields.remove("email")
+        super()._to_store(
+            store,
+            fields=[
+                field for field in fields if field not in ["isAdmin", "notification_type", "user"]
+            ],
+            **kwargs,
+        )
+        main_user_by_partner = kwargs.get("main_user_by_partner")
         for partner in self:
-            data = partner._read_format(
-                [
-                    field
-                    for field in fields
-                    if field
-                    not in ["country", "display_name", "isAdmin", "notification_type", "user"]
-                ],
-                load=False,
-            )[0]
-            if "country" in fields:
-                c = partner.country_id
-                data["country"] = {"code": c.code, "id": c.id, "name": c.name} if c else False
-            if "display_name" in fields:
-                data["displayName"] = partner.display_name
-            if 'user' in fields:
+            if "user" in fields:
+                data = {}
                 main_user = main_user_by_partner and main_user_by_partner.get(partner)
                 if not main_user:
                     users = partner.with_context(active_test=False).user_ids
@@ -240,15 +233,45 @@ class ResPartner(models.Model):
                     main_user = (
                         internal_users[0]
                         if len(internal_users) > 0
-                        else users[0] if len(users) > 0 else self.env["res.users"]
+                        else users[0]
+                        if len(users) > 0
+                        else self.env["res.users"]
                     )
-                data['userId'] = main_user.id
+                data["userId"] = main_user.id
                 data["isInternalUser"] = not main_user.share if main_user else False
                 if "isAdmin" in fields:
                     data["isAdmin"] = main_user._is_admin()
                 if "notification_type" in fields:
                     data["notification_preference"] = main_user.notification_type
-            store.add(partner, data)
+                store.add(partner, data)
+
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + [
+            "active",
+            "email",
+            "im_status",
+            "is_company",
+            "name",
+            "user",
+            "write_date",
+        ]
+
+    def _to_store_field_computes(self):
+        def country(partner):
+            return (
+                {
+                    "code": partner.country_id.code,
+                    "id": partner.country_id.id,
+                    "name": partner.country_id.name,
+                }
+                if partner.country_id
+                else False
+            )
+
+        return super()._to_store_field_computes() | {
+            "country": country,
+            "displayName": lambda partner: partner.display_name,
+        }
 
     @api.readonly
     @api.model

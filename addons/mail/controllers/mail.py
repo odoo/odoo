@@ -208,7 +208,7 @@ class MailController(http.Controller):
             thread = request.env[message.model].search([('id', '=', message.res_id)])
             if message.model == 'discuss.channel':
                 store = Store({'isChannelTokenSecret': True})
-                store.add(thread, {'highlightMessage': Store.one(message, only_id=True)})
+                store.add(thread, {'highlightMessage': Store.One(message, only_id=True)})
                 return PublicPageController()._response_discuss_channel_invitation(store, thread)
             elif hasattr(thread, '_get_share_url'):
                 return request.redirect(thread._get_share_url(share_token=False))

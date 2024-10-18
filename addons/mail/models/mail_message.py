@@ -868,7 +868,7 @@ class MailMessage(models.Model):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
         reactions = self.env["mail.message.reaction"].search(group_domain)
         reaction_group = (
-            Store.many(reactions, "ADD")
+            Store.Many(reactions, "ADD")
             if reactions
             else [("DELETE", {"message": self.id, "content": content})]
         )
@@ -912,6 +912,7 @@ class MailMessage(models.Model):
         for_current_user=False,
         add_followers=False,
         followers=None,
+        **kwargs,
     ):
         """Add the messages to the given store.
 
@@ -933,18 +934,7 @@ class MailMessage(models.Model):
             them. It lessen query count in some optimized use cases.
             Only applicable if ``add_followers`` is True.
         """
-        if fields is None:
-            fields = [
-                "body",
-                "create_date",
-                "date",
-                "message_type",
-                "model",  # keep for iOS app
-                "pinned_at",
-                "res_id",  # keep for iOS app
-                "subject",
-                "write_date",
-            ]
+        super()._to_store(store, fields=fields, **kwargs)
         com_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
         note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
         # fetch scheduled notifications once, only if msg_vals is not given to
@@ -962,7 +952,7 @@ class MailMessage(models.Model):
                 scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
         record_by_message = self._record_by_message()
         records = record_by_message.values()
-        non_channel_records = filter(lambda record: record._name != "discuss.channel", records)
+        non_channel_records = tuple(r for r in records if r._name != "discuss.channel")
         if for_current_user and add_followers and non_channel_records:
             if followers is None:
                 domain = expression.OR(
@@ -990,15 +980,15 @@ class MailMessage(models.Model):
                 thread_data["module_icon"] = modules.module.get_module_icon(
                     self.env[record._name]._original_module
                 )
-            if for_current_user and add_followers:
-                thread_data["selfFollower"] = Store.one(
+            if for_current_user and add_followers and record in non_channel_records:
+                thread_data["selfFollower"] = Store.One(
                     follower_by_record_and_partner.get((record, self.env.user.partner_id)),
-                    fields={"is_active": True, "partner": []},
+                    fields=("is_active", Store.One("partner", fields=[])),
                 )
             store.add(record, thread_data, as_thread=True)
         for message in self:
             # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
-            data = message._read_format(fields, load=False)[0]
+            data = {}
             record = record_by_message.get(message)
             if record:
                 # sudo: if mentionned in a non accessible thread, user should be able to see the name
@@ -1013,25 +1003,25 @@ class MailMessage(models.Model):
             data["default_subject"] = default_subject
             vals = {
                 # sudo: mail.message - reading attachments on accessible message is allowed
-                "attachment_ids": Store.many(message.sudo().attachment_ids.sorted("id")),
+                "attachment_ids": Store.Many(message.sudo().attachment_ids.sorted("id")),
                 # sudo: mail.message - reading link preview on accessible message is allowed
-                "linkPreviews": Store.many(
+                "link_preview_ids": Store.Many(
                     message.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden)
                 ),
                 # sudo: mail.message - reading reactions on accessible message is allowed
-                "reactions": Store.many(message.sudo().reaction_ids),
+                "reactions": Store.Many(message.sudo().reaction_ids),
                 "record_name": record_name,  # keep for iOS app
                 "is_note": message.subtype_id.id == note_id,
                 "is_discussion": message.subtype_id.id == com_id,
                 # sudo: mail.message.subtype - reading description on accessible message is allowed
                 "subtype_description": message.subtype_id.sudo().description,
                 # sudo: res.partner: reading limited data of recipients is acceptable
-                "recipients": Store.many(message.sudo().partner_ids, fields=["name", "write_date"]),
+                "recipients": Store.Many(message.sudo().partner_ids, fields=["name", "write_date"]),
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
-                "thread": Store.one(record, as_thread=True, only_id=True),
+                "thread": Store.One(record, as_thread=True, only_id=True),
             }
             if self.env.user._is_internal():
-                vals["notifications"] = Store.many(message.notification_ids._filtered_for_web_client())
+                vals["notifications"] = Store.Many(message.notification_ids._filtered_for_web_client())
             if for_current_user:
                 # sudo: mail.message - filtering allowed tracking values
                 displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(
@@ -1060,6 +1050,19 @@ class MailMessage(models.Model):
         # the one just posted for example, and not the message being replied to).
         self._extras_to_store(store, format_reply=format_reply)
 
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + [
+            "body",
+            "create_date",
+            "date",
+            "message_type",
+            "model",  # keep for iOS app
+            "pinned_at",
+            "res_id",  # keep for iOS app
+            "subject",
+            "write_date",
+        ]
+
     def _author_to_store(self, store: Store):
         for message in self:
             data = {
@@ -1068,10 +1071,10 @@ class MailMessage(models.Model):
             }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
-                data["author"] = Store.one(guest_author, fields=["name", "write_date"])
+                data["author"] = Store.One(guest_author, fields=["name", "write_date"])
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
-                data["author"] = Store.one(
+                data["author"] = Store.One(
                     author, fields=["name", "is_company", "user", "write_date"]
                 )
             store.add(message, data)
@@ -1116,13 +1119,13 @@ class MailMessage(models.Model):
         """
         for message in self:
             message_data = {
-                "author": Store.one(message.author_id, only_id=True),
+                "author": Store.One(message.author_id, only_id=True),
                 "date": message.date,
                 "message_type": message.message_type,
                 "body": message.body,
-                "notifications": Store.many(message.notification_ids._filtered_for_web_client()),
+                "notifications": Store.Many(message.notification_ids._filtered_for_web_client()),
                 "thread": (
-                    Store.one(
+                    Store.One(
                         self.env[message.model].browse(message.res_id) if message.model else False,
                         as_thread=True,
                         fields=["modelName"],
@@ -1188,7 +1191,7 @@ class MailMessage(models.Model):
                         "counter": star_count_by_partner_id.get(partner.id, 0),
                         "counter_bus_id": bus_last_id,
                         "id": "starred",
-                        "messages": Store.many(self, "DELETE", only_id=True),
+                        "messages": Store.Many(self, "DELETE", only_id=True),
                         "model": "mail.box",
                     },
                 )

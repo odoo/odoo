@@ -92,7 +92,7 @@ patch(MockServer.prototype, {
                     {
                         "mail.message": {
                             id: linkPreview.message_id[0],
-                            linkPreviews: [["DELETE", [{ id: linkPreview.id }]]],
+                            link_preview_ids: [["DELETE", [{ id: linkPreview.id }]]],
                         },
                     }
                 );

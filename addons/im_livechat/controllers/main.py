@@ -148,7 +148,7 @@ class LivechatController(http.Controller):
                 "id": -1,  # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
                 "name": channel_vals["name"],
-                "operator": Store.one(
+                "operator": Store.One(
                     request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"]),
                     fields=["user_livechat_username", "write_date"],
                 ),

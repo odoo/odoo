@@ -71,7 +71,5 @@ class MailCannedResponse(models.Model):
             (self.env.user | canned_response.create_uid)._bus_send_store(store)
             canned_response.group_ids._bus_send_store(store)
 
-    def _to_store(self, store: Store, /, *, fields=None):
-        if fields is None:
-            fields = ["source", "substitution"]
-        store.add(self._name, self._read_format(fields))
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + ["source", "substitution"]

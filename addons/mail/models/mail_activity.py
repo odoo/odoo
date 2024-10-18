@@ -588,16 +588,27 @@ class MailActivity(models.Model):
     def activity_format(self):
         return Store(self).get_result()
 
-    def _to_store(self, store: Store):
+    def _to_store(self, store: Store, /, *, fields, **kwargs):
+        # all fields for simplicity, but it would be better to list only useful fields
         for activity in self:
-            data = activity.read()[0]
-            data["mail_template_ids"] = [
+            store.add(activity, activity.read()[0])
+        super()._to_store(store, fields=fields, **kwargs)
+
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + [
+            Store.Many("attachment_ids", fields=["name"]),
+            "mail_template_ids",
+            Store.One("persona"),
+        ]
+
+    def _to_store_field_computes(self):
+        return super()._to_store_field_computes() | {
+            "mail_template_ids": lambda activity: [
                 {"id": mail_template.id, "name": mail_template.name}
                 for mail_template in activity.mail_template_ids
-            ]
-            data["attachment_ids"] = Store.many(activity.attachment_ids, fields=["name"])
-            data["persona"] = Store.one(activity.user_id.partner_id)
-            store.add(activity, data)
+            ],
+            "persona": lambda activity: activity.user_id.partner_id,
+        }
 
     @api.readonly
     @api.model

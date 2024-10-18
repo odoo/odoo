@@ -34,14 +34,19 @@ class MailMessage(models.Model):
         return [('id', 'in', ratings.mapped('message_id').ids)]
 
     def _to_store(self, store: Store, /, *, fields=None, **kwargs):
-        super()._to_store(store, fields=fields, **kwargs)
-        if fields is None:
-            fields = ["rating_id", "record_rating"]
-        if "rating_id" in fields:
-            for message in self:
-                # sudo: mail.message - guest and portal user can receive rating of accessible message
-                store.add(message, {"rating_id": Store.one(message.sudo().rating_id)})
+        super()._to_store(
+            store, fields=[field for field in fields if field != "record_rating"], **kwargs
+        )
         if "record_rating" in fields:
             for records in self._records_by_model_name().values():
                 if issubclass(self.pool[records._name], self.pool["rating.mixin"]):
                     store.add(records, fields=["rating_avg", "rating_count"], as_thread=True)
+
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + [Store.One("rating_id"), "record_rating"]
+
+    def _to_store_field_computes(self):
+        return super()._to_store_field_computes() | {
+            # sudo: mail.message - guest and portal user can receive rating of accessible message
+            "rating_id": lambda message: message.sudo().rating_id,
+        }
