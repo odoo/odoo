@@ -20,7 +20,7 @@
     <div>Inner content</div>
     <div class="container">
         <div class="row">
-            <div t-foreach="this.innerContentSnippets" t-as="snippet" t-key="snippet[0]" class="col-4 p-1">
+            <div t-foreach="this.innerContentSnippets" t-as="snippet" t-key="snippet[0]" class="col-4 p-1 o_draggable" t-att-data-template-content="snippet[1].templateContent">
                 <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet[1].install ? 'to_install' : '' ">
                     <div class="img-container">
                         <img t-att-src="snippet[1].image" class="w-100"/>
