@@ -31,7 +31,6 @@ patch(MockServer.prototype, {
                     : ["partner_id", "=", this.pyEnv.currentPartnerId],
                 "|",
                 ["fold_state", "in", ["open", "folded"]],
-                ["rtc_inviting_session_id", "!=", false],
             ]);
             const channelsDomain = [["id", "in", members.map((m) => m.channel_id)]];
             const { channelTypes } = args.init_messaging;

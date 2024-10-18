@@ -617,11 +617,6 @@ patch(MockServer.prototype, {
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
                     message_unread_counter_bus_id: bus_last_id,
                 });
-                if (memberOfCurrentUser.rtc_inviting_session_id) {
-                    res["rtcInvitingSession"] = {
-                        id: memberOfCurrentUser.rtc_inviting_session_id,
-                    };
-                }
                 res["channelMembers"] = [
                     [
                         "ADD",
@@ -654,17 +649,6 @@ patch(MockServer.prototype, {
                     break;
             }
             res.is_editable = is_editable;
-            res["rtcSessions"] = [
-                [
-                    "ADD",
-                    (channel.rtc_session_ids || []).map((rtcSessionId) =>
-                        this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(
-                            rtcSessionId,
-                            { extra: true }
-                        )
-                    ),
-                ],
-            ];
             res.model = "discuss.channel";
             return res;
         });
