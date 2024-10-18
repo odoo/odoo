@@ -9,6 +9,7 @@ import { reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
 import { loadBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
@@ -619,6 +620,13 @@ export class Rtc extends Record {
                     // `isRaisingHand` is turned into the Date `raisingHand`
                     this.setRemoteRaiseHand(session, info.isRaisingHand);
                     delete info.isRaisingHand;
+                    Object.assign(session, {
+                        is_muted: info.isSelfMuted,
+                        is_deaf: info.isDeaf,
+                        isTalking: info.isTalking,
+                        is_camera_on: info.isCameraOn,
+                        is_screen_sharing_on: info.isScreenSharingOn,
+                    });
                     Object.assign(session, info);
                 }
                 return;
@@ -709,7 +717,7 @@ export class Rtc extends Record {
     async handleRemoteTrack({ session, track, type, active = true }) {
         session.updateStreamState(type, active);
         await this.updateStream(session, track, {
-            mute: this.selfSession.isDeaf,
+            mute: this.selfSession.is_deaf,
             videoType: type,
         });
         this.updateActiveSession(session, type, { addVideo: true });
@@ -772,12 +780,13 @@ export class Rtc extends Record {
                     "/mail/rtc/session/update_and_broadcast",
                     {
                         session_id: this.selfSession.id,
-                        values: {
-                            is_camera_on: this.selfSession.isCameraOn,
-                            is_deaf: this.selfSession.isDeaf,
-                            is_muted: this.selfSession.isSelfMuted,
-                            is_screen_sharing_on: this.selfSession.isScreenSharingOn,
-                        },
+                        values: pick(
+                            this.selfSession,
+                            "is_camera_on",
+                            "is_deaf",
+                            "is_muted",
+                            "is_screen_sharing_on"
+                        ),
                     },
                     { silent: true }
                 );
@@ -888,24 +897,24 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {Boolean} isDeaf
+     * @param {Boolean} is_deaf
      */
-    async setDeaf(isDeaf) {
-        this.updateAndBroadcast({ isDeaf });
+    async setDeaf(is_deaf) {
+        this.updateAndBroadcast({ is_deaf });
         for (const session of this.state.channel.rtcSessions) {
             if (!session.audioElement) {
                 continue;
             }
-            session.audioElement.muted = isDeaf;
+            session.audioElement.muted = is_deaf;
         }
         await this.refreshAudioStatus();
     }
 
     /**
-     * @param {Boolean} isSelfMuted
+     * @param {Boolean} is_muted
      */
-    async setMute(isSelfMuted) {
-        this.updateAndBroadcast({ isSelfMuted });
+    async setMute(is_muted) {
+        this.updateAndBroadcast({ is_muted });
         await this.refreshAudioStatus();
     }
 
@@ -985,13 +994,13 @@ export class Rtc extends Record {
         switch (type) {
             case "camera": {
                 this.updateAndBroadcast({
-                    isCameraOn: !!this.state.sendCamera,
+                    is_camera_on: !!this.state.sendCamera,
                 });
                 break;
             }
             case "screen": {
                 this.updateAndBroadcast({
-                    isScreenSharingOn: !!this.state.sendScreen,
+                    is_screen_sharing_on: !!this.state.sendScreen,
                 });
                 break;
             }
@@ -1220,8 +1229,8 @@ export class Rtc extends Record {
     }
 
     formatInfo() {
-        this.selfSession.isCameraOn = Boolean(this.state.cameraTrack);
-        this.selfSession.isScreenSharingOn = Boolean(this.state.screenTrack);
+        this.selfSession.is_camera_on = Boolean(this.state.cameraTrack);
+        this.selfSession.is_screen_sharing_on = Boolean(this.state.screenTrack);
         return this.selfSession.info;
     }
 
@@ -1246,7 +1255,7 @@ export class Rtc extends Record {
             audioElement.autoplay = true;
             session.audioElement = audioElement;
             session.audioStream = stream;
-            session.isSelfMuted = false;
+            session.is_muted = false;
             session.isTalking = false;
             await session.playAudio();
         }

@@ -15,10 +15,10 @@ callActionsRegistry
         activeClass: "text-danger",
         select: (component) => {
             if (component.rtc.selfSession.isMute) {
-                if (component.rtc.selfSession.isSelfMuted) {
+                if (component.rtc.selfSession.is_muted) {
                     component.rtc.unmute();
                 }
-                if (component.rtc.selfSession.isDeaf) {
+                if (component.rtc.selfSession.is_deaf) {
                     component.rtc.undeafen();
                 }
             } else {
@@ -29,20 +29,20 @@ callActionsRegistry
     })
     .add("deafen", {
         condition: (component) => component.rtc,
-        name: (component) => (component.rtc.selfSession.isDeaf ? _t("Undeafen") : _t("Deafen")),
-        isActive: (component) => component.rtc.selfSession?.isDeaf,
+        name: (component) => (component.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
+        isActive: (component) => component.rtc.selfSession?.is_deaf,
         inactiveIcon: "fa-headphones",
         icon: "fa-deaf",
         activeClass: "text-danger",
         select: (component) =>
-            component.rtc.selfSession.isDeaf ? component.rtc.undeafen() : component.rtc.deafen(),
+            component.rtc.selfSession.is_deaf ? component.rtc.undeafen() : component.rtc.deafen(),
         sequence: 20,
     })
     .add("camera-on", {
         condition: (component) => component.rtc,
         name: (component) =>
-            component.rtc.selfSession.isCameraOn ? _t("Stop camera") : _t("Turn camera on"),
-        isActive: (component) => component.rtc.selfSession?.isCameraOn,
+            component.rtc.selfSession.is_camera_on ? _t("Stop camera") : _t("Turn camera on"),
+        isActive: (component) => component.rtc.selfSession?.is_camera_on,
         icon: "fa-video-camera",
         activeClass: "text-success",
         select: (component) => component.rtc.toggleVideo("camera"),
@@ -60,10 +60,10 @@ callActionsRegistry
     .add("share-screen", {
         condition: (component) => component.rtc && !isMobileOS(),
         name: (component) =>
-            component.rtc.selfSession.isScreenSharingOn
+            component.rtc.selfSession.is_screen_sharing_on
                 ? _t("Stop Sharing Screen")
                 : _t("Share Screen"),
-        isActive: (component) => component.rtc.selfSession?.isScreenSharingOn,
+        isActive: (component) => component.rtc.selfSession?.is_screen_sharing_on,
         icon: "fa-desktop",
         select: (component) => component.rtc.toggleVideo("screen"),
         sequence: 50,

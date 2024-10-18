@@ -181,7 +181,7 @@ test("should display invitations", async () => {
         partner,
         "mail.record/insert",
         new mailDataHelpers.Store(pyEnv["discuss.channel.rtc.session"].browse(sessionId), {
-            channelMember: { id: memberId },
+            channel_member_id: { id: memberId },
         })
             .add(pyEnv["discuss.channel.member"].browse(memberId), {
                 persona: { id: partnerId, type: "partner" },

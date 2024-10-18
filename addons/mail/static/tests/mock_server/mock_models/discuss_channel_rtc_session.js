@@ -55,17 +55,17 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
         for (const rtcSession of this.browse(ids)) {
-            const [data] = this.read(rtcSession.id, [], makeKwArgs({ load: false }));
-            data.channelMember = mailDataHelpers.Store.one(
+            const [data] = this._read_format(rtcSession.id, [], makeKwArgs({ load: false }));
+            data.channel_member_id = mailDataHelpers.Store.one(
                 DiscussChannelMember.browse(rtcSession.channel_member_id),
                 makeKwArgs({ fields: { channel: [], persona: ["name", "im_status"] } })
             );
             if (extra) {
                 Object.assign(data, {
-                    isCameraOn: rtcSession.is_camera_on,
-                    isDeaf: rtcSession.is_deaf,
-                    isSelfMuted: rtcSession.is_self_muted,
-                    isScreenSharingOn: rtcSession.is_screen_sharing_on,
+                    is_camera_on: rtcSession.is_camera_on,
+                    is_deaf: rtcSession.is_deaf,
+                    is_muted: rtcSession.is_muted,
+                    is_screen_sharing_on: rtcSession.is_screen_sharing_on,
                 });
             }
             store.add(this.browse(rtcSession.id), data);
