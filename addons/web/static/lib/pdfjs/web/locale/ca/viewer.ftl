@@ -45,12 +45,6 @@ pdfjs-save-button-label = Desa
 pdfjs-bookmark-button =
     .title = Pàgina actual (mostra l'URL de la pàgina actual)
 pdfjs-bookmark-button-label = Pàgina actual
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Obre en una aplicació
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Obre en una aplicació
 
 ##  Secondary toolbar and context menu
 
@@ -277,6 +271,12 @@ pdfjs-editor-free-text-button-label = Text
 pdfjs-editor-ink-button =
     .title = Dibuixa
 pdfjs-editor-ink-button-label = Dibuixa
+
+## Remove button for the various kind of editor.
+
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = Color
 pdfjs-editor-free-text-size-input = Mida
@@ -296,4 +296,18 @@ pdfjs-ink-canvas =
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
+
+
+## Color picker
+
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+
+## Image alt-text settings
 

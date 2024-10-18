@@ -49,12 +49,6 @@ pdfjs-download-button =
 # Length of the translation matters since we are in a mobile context, with limited screen estate.
 pdfjs-download-button-label = Pellgargañ
 pdfjs-bookmark-button-label = Pajenn a-vremañ
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Digeriñ en arload
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Digeriñ en arload
 
 ##  Secondary toolbar and context menu
 
@@ -214,6 +208,7 @@ pdfjs-find-next-button =
 pdfjs-find-next-button-label = War-lerc'h
 pdfjs-find-highlight-checkbox = Usskediñ pep tra
 pdfjs-find-match-case-checkbox-label = Teurel evezh ouzh ar pennlizherennoù
+pdfjs-find-match-diacritics-checkbox-label = Doujañ d’an tiredoù
 pdfjs-find-entire-word-checkbox-label = Gerioù a-bezh
 pdfjs-find-reached-top = Tizhet eo bet derou ar bajenn, kenderc'hel diouzh an diaz
 pdfjs-find-reached-bottom = Tizhet eo bet dibenn ar bajenn, kenderc'hel diouzh ar c'hrec'h
@@ -310,4 +305,8 @@ pdfjs-editor-alt-text-save-button = Enrollañ
 
 
 ## Color picker
+
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
 

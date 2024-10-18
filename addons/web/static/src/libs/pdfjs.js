@@ -6,6 +6,7 @@ import { loadJS } from "@web/core/assets";
 /**
  * Until we have our own implementation of the /web/static/lib/pdfjs/web/viewer.{html,js,css}
  * (currently based on Firefox), this method allows us to hide the buttons that we do not want:
+ * * All edit buttons
  * * "Open File"
  * * "View Bookmark"
  * * "Print" (Hidden on mobile device like Android, iOS, ...)
@@ -16,22 +17,26 @@ import { loadJS } from "@web/core/assets";
  * @param {Element} rootElement
  */
 export function hidePDFJSButtons(rootElement) {
+    const hiddenElements = [
+        "#editorModeButtons",
+        "button#openFile",
+        "button#secondaryOpenFile",
+        "a#viewBookmark",
+        "a#secondaryViewBookmark",
+    ];
+    if (isMobileOS()) {
+        hiddenElements.push([
+            "button#downloadButton",
+            "button#secondaryDownload",
+            "button#printButton",
+            "button#secondaryPrint",
+        ]);
+    }
     const cssStyle = document.createElement("style");
     cssStyle.rel = "stylesheet";
-    cssStyle.textContent = `button#secondaryOpenFile.secondaryToolbarButton, button#openFile.toolbarButton,
-    button#editorFreeText.toolbarButton, button#editorInk.toolbarButton, button#editorStamp.toolbarButton,
-    button#secondaryOpenFile.secondaryToolbarButton,
-a#secondaryViewBookmark.secondaryToolbarButton, a#viewBookmark.toolbarButton {
-display: none !important;
+    cssStyle.textContent = `${hiddenElements.join(", ")} {
+    display: none !important;
 }`;
-    if (isMobileOS()) {
-        cssStyle.textContent = `${cssStyle.innerHTML}
-button#secondaryDownload.secondaryToolbarButton, button#download.toolbarButton,
-button#editorFreeText.toolbarButton, button#editorInk.toolbarButton, button#editorStamp.toolbarButton,
-button#secondaryPrint.secondaryToolbarButton, button#print.toolbarButton{
-display: none !important;
-}`;
-    }
     const iframe =
         rootElement.tagName === "IFRAME" ? rootElement : rootElement.querySelector("iframe");
     if (iframe) {

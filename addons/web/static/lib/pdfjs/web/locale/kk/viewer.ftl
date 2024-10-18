@@ -51,12 +51,6 @@ pdfjs-download-button-label = Жүктеп алу
 pdfjs-bookmark-button =
     .title = Ағымдағы бет (Ағымдағы беттен URL адресін көру)
 pdfjs-bookmark-button-label = Ағымдағы бет
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Қолданбада ашу
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Қолданбада ашу
 
 ##  Secondary toolbar and context menu
 
@@ -111,6 +105,14 @@ pdfjs-document-properties-button-label = Құжат қасиеттері…
 pdfjs-document-properties-file-name = Файл аты:
 pdfjs-document-properties-file-size = Файл өлшемі:
 # Variables:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } КБ ({ $b } байт)
+# Variables:
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } МБ ({ $b } байт)
+# Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-kb = { $size_kb } КБ ({ $size_b } байт)
@@ -124,6 +126,9 @@ pdfjs-document-properties-subject = Тақырыбы:
 pdfjs-document-properties-keywords = Кілт сөздер:
 pdfjs-document-properties-creation-date = Жасалған күні:
 pdfjs-document-properties-modification-date = Түзету күні:
+# Variables:
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -281,6 +286,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } аңдатпасы]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -304,8 +312,6 @@ pdfjs-editor-stamp-button-label = Суреттерді қосу немесе т�
 pdfjs-editor-highlight-button =
     .title = Ерекшелеу
 pdfjs-editor-highlight-button-label = Ерекшелеу
-pdfjs-highlight-floating-button =
-    .title = Ерекшелеу
 pdfjs-highlight-floating-button1 =
     .title = Ерекшелеу
     .aria-label = Ерекшелеу
@@ -374,6 +380,22 @@ pdfjs-editor-resizer-label-bottom-right = Төменгі оң жақ бұрыш 
 pdfjs-editor-resizer-label-bottom-middle = Төменгі ортасы — өлшемін өзгерту
 pdfjs-editor-resizer-label-bottom-left = Төменгі сол жақ бұрыш — өлшемін өзгерту
 pdfjs-editor-resizer-label-middle-left = Ортаңғы сол жақ — өлшемін өзгерту
+pdfjs-editor-resizer-top-left =
+    .aria-label = Жоғарғы сол жақ бұрыш — өлшемін өзгерту
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Жоғарғы ортасы — өлшемін өзгерту
+pdfjs-editor-resizer-top-right =
+    .aria-label = Жоғарғы оң жақ бұрыш — өлшемін өзгерту
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Ортаңғы оң жақ — өлшемін өзгерту
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Төменгі оң жақ бұрыш — өлшемін өзгерту
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Төменгі ортасы — өлшемін өзгерту
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Төменгі сол жақ бұрыш — өлшемін өзгерту
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Ортаңғы сол жақ — өлшемін өзгерту
 
 ## Color picker
 
@@ -400,3 +422,60 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = Барлығын көрсету
 pdfjs-editor-highlight-show-all-button =
     .title = Барлығын көрсету
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Балама мәтінді өңдеу (сурет сипаттамасы)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Балама мәтінді қосу (сурет сипаттамасы)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Сипаттамаңызды осында жазыңыз…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = Суретті көре алмайтын адамдар үшін немесе сурет жүктелмеген кезіне арналған қысқаша сипаттама.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = Бұл балама мәтін автоматты түрде жасалды және дәлсіз болуы мүмкін.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Көбірек білу
+pdfjs-editor-new-alt-text-create-automatically-button-label = Балама мәтінді автоматты түрде жасау
+pdfjs-editor-new-alt-text-not-now-button = Қазір емес
+pdfjs-editor-new-alt-text-error-title = Балама мәтінді автоматты түрде жасау мүмкін болмады
+pdfjs-editor-new-alt-text-error-description = Өзіңіздің балама мәтініңізді жазыңыз немесе кейінірек қайталап көріңіз.
+pdfjs-editor-new-alt-text-error-close-button = Жабу
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+#   $percent (Number) - the percentage of the downloaded size.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Балама мәтін үшін ЖИ моделі жүктеп алынуда ({ $downloadedSize }/{ $totalSize } МБ)
+    .aria-valuetext = Балама мәтін үшін ЖИ моделі жүктеп алынуда ({ $downloadedSize }/{ $totalSize } МБ)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button-label = Балама мәтін қосылды
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = Балама мәтін жоқ
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = Балама мәтінге пікір қалдыру
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Автоматты түрде жасалды: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = Суреттің балама мәтінінің баптаулары
+pdfjs-image-alt-text-settings-button-label = Суреттің балама мәтінінің баптаулары
+pdfjs-editor-alt-text-settings-dialog-label = Суреттің балама мәтінінің баптаулары
+pdfjs-editor-alt-text-settings-automatic-title = Автоматты балама мәтін
+pdfjs-editor-alt-text-settings-create-model-button-label = Балама мәтінді автоматты түрде жасау
+pdfjs-editor-alt-text-settings-create-model-description = Суретті көре алмайтын адамдар үшін немесе сурет жүктелмеген кезіне арналған сипаттамаларды ұсынады.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = Баламалы мәтіннің ЖИ моделі ({ $totalSize } МБ)
+pdfjs-editor-alt-text-settings-ai-model-description = Деректеріңіз жеке болып қалуы үшін құрылғыңызда жергілікті түрде жұмыс істейді. Автоматты балама мәтін үшін қажет.
+pdfjs-editor-alt-text-settings-delete-model-button = Өшіру
+pdfjs-editor-alt-text-settings-download-model-button = Жүктеп алу
+pdfjs-editor-alt-text-settings-downloading-model-button = Жүктеліп алынуда…
+pdfjs-editor-alt-text-settings-editor-title = Баламалы мәтін редакторы
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Суретті қосқанда балама мәтін редакторын бірден көрсету
+pdfjs-editor-alt-text-settings-show-dialog-description = Барлық суреттерде балама мәтін бар екеніне көз жеткізуге көмектеседі.
+pdfjs-editor-alt-text-settings-close-button = Жабу
