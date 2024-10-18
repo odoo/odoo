@@ -44,7 +44,7 @@ class DisplayDriver(Driver):
         self.customer_display_data = {}
         if self.device_identifier != 'distant_display':
             # helpers.get_version returns a string formatted as: <L|W><version> (L: Linux, W: Windows)
-            self.browser = 'chromium-browser' if float(helpers.get_version()[1:]) >= 24.08 else 'firefox'
+            self.browser = 'chromium-browser' if float(helpers.get_version()[1:]) >= 24.10 else 'firefox'
             self.browser_process_name = 'chromium' if self.browser == 'chromium-browser' else self.browser
             self._x_screen = device.get('x_screen', '0')
             self.load_url()
@@ -89,7 +89,7 @@ class DisplayDriver(Driver):
         ]
         subprocess.Popen([self.browser, self.url, *browser_args], env=browser_env)
 
-        # To remove when everyone is on version >= 24.08: chromium has '--start-fullscreen' option
+        # To remove when everyone is on version >= 24.10: chromium has '--start-fullscreen' option
         if self.browser == 'firefox':
             self.call_xdotools('F11')
 
