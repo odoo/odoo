@@ -75,3 +75,19 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosProductWithDynamicAttributes", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Dynamic Product"),
+            ProductConfigurator.pickRadio("Test 1"),
+            Dialog.confirm(),
+            ProductScreen.selectedOrderlineHas("Dynamic Product (Test 1)", "1.0", "1.15"),
+            ProductScreen.clickDisplayedProduct("Dynamic Product"),
+            ProductConfigurator.pickRadio("Test 2"),
+            Dialog.confirm(),
+            ProductScreen.selectedOrderlineHas("Dynamic Product (Test 2)", "1.0", "12.65"),
+        ].flat(),
+});
