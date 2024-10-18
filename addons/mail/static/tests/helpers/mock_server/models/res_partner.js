@@ -239,6 +239,9 @@ patch(MockServer.prototype, {
             ).values(),
         ];
     },
+    _mockResPartnerComputeImStatus(partner) {
+        return partner.im_status;
+    },
     /**
      * Simulates `mail_partner_format` on `res.partner`.
      *
@@ -268,7 +271,7 @@ patch(MockServer.prototype, {
                         active: partner.active,
                         email: partner.email,
                         id: partner.id,
-                        im_status: partner.im_status,
+                        im_status: this._mockResPartnerComputeImStatus(partner),
                         is_company: partner.is_company,
                         name: partner.name,
                         type: "partner",
