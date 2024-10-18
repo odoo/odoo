@@ -25,7 +25,7 @@ QUnit.module("SectionOneToManyField", (hooks) => {
                     fields: {
                         display_type: { type: "char" },
                         title: { type: "char", string: "Title" },
-                        int: { type: "number", string: "integer" },
+                        int: { type: "integer", string: "number" },
                     },
                     records: [
                         {
