@@ -1015,7 +1015,7 @@ class MailMessage(models.Model):
                 # sudo: mail.message - reading attachments on accessible message is allowed
                 "attachment_ids": Store.many(message.sudo().attachment_ids.sorted("id")),
                 # sudo: mail.message - reading link preview on accessible message is allowed
-                "linkPreviews": Store.many(
+                "link_preview_ids": Store.many(
                     message.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden)
                 ),
                 # sudo: mail.message - reading reactions on accessible message is allowed

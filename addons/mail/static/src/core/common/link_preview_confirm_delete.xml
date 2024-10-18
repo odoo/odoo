@@ -6,7 +6,7 @@
             <t t-component="props.LinkPreview" linkPreview="props.linkPreview" deletable="false"/>
             <t t-set-slot="footer">
                 <button class="btn btn-danger me-2" t-on-click="onClickOk">Delete</button>
-                <button t-if="message.linkPreviews.length > 1" class="btn btn-outline-danger me-2" t-on-click="onClickDeleteAll">Delete all previews</button>
+                <button t-if="message.link_preview_ids.length > 1" class="btn btn-outline-danger me-2" t-on-click="onClickDeleteAll">Delete all previews</button>
                 <button class="btn btn-secondary me-2" t-on-click="onClickCancel">Cancel</button>
             </t>
         </Dialog>
