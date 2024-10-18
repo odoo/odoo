@@ -146,6 +146,13 @@
                                 <div id="no_limit_label" class="oe_read_only"
                                     invisible="not id or date_to or state != 'confirm'">No limit</div>
                             </div>
+                            <div colspan="2" class="oe_row alert alert-danger my-2" invisible="not date_from or not date_to or not (date_to &lt; date_from)">
+                                <span>The allocation start date is set after the finish date.</span>
+                            </div>
+                            <div colspan="2" class="oe_row alert alert-warning my-2"
+                                 invisible="id or not date_to or not (date_to &lt; context_today().strftime('%Y-%m-%d')) or (date_from and (date_to &lt; date_from))">
+                                <span>The allocated days cannot be used, because the allocation is set to finish in the past.</span>
+                            </div>
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
                                 <label for="number_of_days_display" string="Allocation"
