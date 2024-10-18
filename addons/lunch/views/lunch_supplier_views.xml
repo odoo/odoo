@@ -125,7 +125,7 @@
                             <div t-if="record.city.raw_value and record.country_id.raw_value">
                                 <field name="city"/>, <field name="country_id"/>
                             </div>
-                            <field t-if="record.email.raw_value" class="o_text_overflow" name="email"/>
+                            <field t-if="record.email.raw_value" class="text-truncate" name="email"/>
                         </main>
                     </t>
                 </templates>
