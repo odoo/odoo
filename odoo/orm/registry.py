@@ -564,17 +564,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
         try:
             func_data[0](*func_data[1:])
         except sql.TableError as e:
-            if self._is_install:
-                _schema.error(e.args[0])
-            else:
-                _schema.info(e.args[0])
-                # Try to apply the constraint once the registry is fully loaded. We keep multiple
-                # constraints under same key because we still want to attempt to add a constraint
-                # even if some override failed. Do not add duplicated entries, if an entry is double
-                # move it to the end instead. Below is a poor-man move-to-end implementation using a
-                # standard dict.
-                self._table_stacks[key].pop(func_data, None)
-                self._table_stacks[key][func_data] = None
+            _schema.info(e.args[0])
+            # Try to apply the constraint once the registry is fully loaded. We keep multiple
+            # constraints under same key because we still want to attempt to add a constraint
+            # even if some override failed. Do not add duplicated entries, if an entry is double
+            # move it to the end instead. Below is a poor-man move-to-end implementation using a
+            # standard dict.
+            self._table_stacks[key].pop(func_data, None)
+            self._table_stacks[key][func_data] = None
         else:
             # If a module successfully applies a constraint, we remove all queued constraints with
             # same name ignoring the definition. In effect, if module A defines a constraint that is
