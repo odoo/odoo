@@ -4,6 +4,7 @@ import {
     onWillStart,
     useRef,
     useState,
+    useSubEnv,
 } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -28,6 +29,9 @@ class WebsiteBuilder extends Component {
     setup() {
         this.orm = useService("orm");
         this.websiteContent = useRef("iframe");
+        useSubEnv({
+            builderRef: useRef("container"),
+        });
         this.state = useState({ isEditing: false });
 
         onWillStart(async () => {

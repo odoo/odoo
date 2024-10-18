@@ -74,6 +74,7 @@ export class Editor {
      * @param { EditorConfig } config
      */
     constructor(config, services) {
+        this.isReady = false;
         this.isDestroyed = false;
         this.config = config;
         this.services = services;
@@ -110,6 +111,7 @@ export class Editor {
             editable.style.height = this.config.height;
         }
         this.startPlugins();
+        this.isReady = true;
         this.config.onEditorReady?.();
     }
 
