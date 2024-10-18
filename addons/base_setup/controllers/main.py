@@ -7,7 +7,7 @@ from odoo.http import request
 
 
 class BaseSetup(http.Controller):
-    @http.route('/base_setup/data', type='json', auth='user')
+    @http.route('/base_setup/data', type='jsonrpc', auth='user')
     def base_setup_data(self, **kw):
         if not request.env.user.has_group('base.group_erp_manager'):
             raise AccessError(_("Access Denied"))
@@ -50,7 +50,7 @@ class BaseSetup(http.Controller):
             'action_pending_users': action_pending_users,
         }
 
-    @http.route('/base_setup/demo_active', type='json', auth='user')
+    @http.route('/base_setup/demo_active', type='jsonrpc', auth='user')
     def base_setup_is_demo(self, **kwargs):
         # We assume that if there's at least one module with demo data active, then the db was
         # initialized with demo=True or it has been force-activated by the `Load demo data` button

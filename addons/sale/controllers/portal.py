@@ -261,7 +261,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             **self._get_extra_payment_form_values(**kwargs),
         }
 
-    @http.route(['/my/orders/<int:order_id>/accept'], type='json', auth="public", website=True)
+    @http.route(['/my/orders/<int:order_id>/accept'], type='jsonrpc', auth="public", website=True)
     def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):
         # get from query string if not on json param
         access_token = access_token or request.httprequest.args.get('access_token')
@@ -363,7 +363,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
 class PaymentPortal(payment_portal.PaymentPortal):
 
-    @http.route('/my/orders/<int:order_id>/transaction', type='json', auth='public')
+    @http.route('/my/orders/<int:order_id>/transaction', type='jsonrpc', auth='public')
     def portal_order_transaction(self, order_id, access_token, **kwargs):
         """ Create a draft transaction and return its processing values.
 

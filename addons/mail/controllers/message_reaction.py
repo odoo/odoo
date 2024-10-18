@@ -9,7 +9,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class MessageReactionController(http.Controller):
-    @http.route("/mail/message/reaction", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/message/reaction", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def mail_message_reaction(self, message_id, content, action, **kwargs):
         message = request.env["mail.message"]._get_with_access(int(message_id), "create", **kwargs)

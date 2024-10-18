@@ -50,7 +50,7 @@ class WebsiteTest(Home):
 
     # Test Session
 
-    @http.route('/test_get_dbname', type='json', auth='public', website=True, sitemap=False)
+    @http.route('/test_get_dbname', type='jsonrpc', auth='public', website=True, sitemap=False)
     def test_get_dbname(self, **kwargs):
         return request.env.cr.dbname
 
@@ -64,7 +64,7 @@ class WebsiteTest(Home):
     def test_user_error_http(self, **kwargs):
         raise UserError("This is a user http test")
 
-    @http.route('/test_user_error_json', type='json', auth='public', website=True, sitemap=False)
+    @http.route('/test_user_error_json', type='jsonrpc', auth='public', website=True, sitemap=False)
     def test_user_error_json(self, **kwargs):
         raise UserError("This is a user rpc test")
 
@@ -72,11 +72,11 @@ class WebsiteTest(Home):
     def test_validation_error_http(self, **kwargs):
         raise ValidationError("This is a validation http test")
 
-    @http.route('/test_validation_error_json', type='json', auth='public', website=True, sitemap=False)
+    @http.route('/test_validation_error_json', type='jsonrpc', auth='public', website=True, sitemap=False)
     def test_validation_error_json(self, **kwargs):
         raise ValidationError("This is a validation rpc test")
 
-    @http.route('/test_access_error_json', type='json', auth='public', website=True, sitemap=False)
+    @http.route('/test_access_error_json', type='jsonrpc', auth='public', website=True, sitemap=False)
     def test_access_error_json(self, **kwargs):
         raise AccessError("This is an access rpc test")
 
@@ -84,7 +84,7 @@ class WebsiteTest(Home):
     def test_access_error_http(self, **kwargs):
         raise AccessError("This is an access http test")
 
-    @http.route('/test_missing_error_json', type='json', auth='public', website=True, sitemap=False)
+    @http.route('/test_missing_error_json', type='jsonrpc', auth='public', website=True, sitemap=False)
     def test_missing_error_json(self, **kwargs):
         raise MissingError("This is a missing rpc test")
 
@@ -92,7 +92,7 @@ class WebsiteTest(Home):
     def test_missing_error_http(self, **kwargs):
         raise MissingError("This is a missing http test")
 
-    @http.route('/test_internal_error_json', type='json', auth='public', website=True, sitemap=False)
+    @http.route('/test_internal_error_json', type='jsonrpc', auth='public', website=True, sitemap=False)
     def test_internal_error_json(self, **kwargs):
         raise werkzeug.exceptions.InternalServerError()
 
@@ -100,7 +100,7 @@ class WebsiteTest(Home):
     def test_internal_error_http(self, **kwargs):
         raise werkzeug.exceptions.InternalServerError()
 
-    @http.route('/test_access_denied_json', type='json', auth='public', website=True, sitemap=False)
+    @http.route('/test_access_denied_json', type='jsonrpc', auth='public', website=True, sitemap=False)
     def test_denied_error_json(self, **kwargs):
         raise AccessDenied("This is an access denied rpc test")
 

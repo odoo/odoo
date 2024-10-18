@@ -676,7 +676,7 @@ def route(route=None, **routing):
         route will be routed to this decorated method. See `werkzeug
         routing documentation <http://werkzeug.pocoo.org/docs/routing/>`_
         for the format of route expressions.
-    :param str type: The type of request, either ``'json'`` or
+    :param str type: The type of request, either ``'jsonrpc'`` or
         ``'http'``. It describes where to find the request parameters
         and how to serialize the response.
     :param str auth: The authentication method, one of the following:
@@ -701,7 +701,7 @@ def route(route=None, **routing):
     :param str cors: The Access-Control-Allow-Origin cors directive value.
     :param bool csrf: Whether CSRF protection should be enabled for the
         route. Enabled by default for ``'http'``-type requests, disabled
-        by default for ``'json'``-type requests.
+        by default for ``'jsonrpc'``-type requests.
     :param Union[bool, Callable[[registry, request], bool]] readonly:
         Whether this endpoint should open a cursor on a read-only
         replica instead of (by default) the primary read/write database.
@@ -1962,7 +1962,10 @@ class Request:
                 except Exception as exc:
                     if isinstance(exc, HTTPException) and exc.code is None:
                         raise  # bubble up to odoo.http.Application.__call__
-                    if 'werkzeug' in config['dev_mode'] and self.dispatcher.routing_type != 'json':
+                    if (
+                        'werkzeug' in config['dev_mode']
+                        and self.dispatcher.routing_type != JsonRPCDispatcher.routing_type
+                    ):
                         raise  # bubble up to werkzeug.debug.DebuggedApplication
                     exc.error_response = self.registry['ir.http']._handle_error(exc)
                     raise
@@ -2008,7 +2011,7 @@ class Dispatcher(ABC):
         if cors:
             set_header('Access-Control-Allow-Origin', cors)
             set_header('Access-Control-Allow-Methods', (
-                'POST' if routing['type'] == 'json'
+                'POST' if routing['type'] == JsonRPCDispatcher.routing_type
                 else ', '.join(routing['methods'] or ['GET', 'POST'])
             ))
 
@@ -2115,7 +2118,7 @@ class HttpDispatcher(Dispatcher):
 
 
 class JsonRPCDispatcher(Dispatcher):
-    routing_type = 'json'
+    routing_type = 'jsonrpc'
 
     def __init__(self, request):
         super().__init__(request)
@@ -2177,7 +2180,7 @@ class JsonRPCDispatcher(Dispatcher):
     def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Handle any exception that occurred while dispatching a request to
-        a `type='json'` route. Also handle exceptions that occurred when
+        a `type='jsonrpc'` route. Also handle exceptions that occurred when
         no route matched the request path, that no fallback page could
         be delivered and that the request ``Content-Type`` was json.
 

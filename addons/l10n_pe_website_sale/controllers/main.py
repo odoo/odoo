@@ -68,7 +68,7 @@ class L10nPEWebsiteSale(WebsiteSale):
 
     @route(
         '/shop/state_infos/<model("res.country.state"):state>',
-        type='json',
+        type='jsonrpc',
         auth='public',
         methods=['POST'],
         website=True,
@@ -79,7 +79,7 @@ class L10nPEWebsiteSale(WebsiteSale):
 
     @route(
         '/shop/city_infos/<model("res.city"):city>',
-        type='json',
+        type='jsonrpc',
         auth='public',
         methods=['POST'],
         website=True,

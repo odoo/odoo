@@ -20,7 +20,7 @@ class PaypalController(http.Controller):
     _complete_url = '/payment/paypal/complete_order'
     _webhook_url = '/payment/paypal/webhook/'
 
-    @http.route(_complete_url, type='json', auth='public', methods=['POST'])
+    @http.route(_complete_url, type='jsonrpc', auth='public', methods=['POST'])
     def paypal_complete_order(self, provider_id, order_id):
         """ Make a capture request and handle the notification data.
 

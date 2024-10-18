@@ -24,7 +24,7 @@ _logger = logging.getLogger(__name__)
 
 class WebClient(http.Controller):
 
-    @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
+    @http.route('/web/webclient/bootstrap_translations', type='jsonrpc', auth="none")
     def bootstrap_translations(self, mods=None):
         """ Load local translations from *.po files, as a temporary solution
             until we have established a valid session. This is meant only
@@ -84,7 +84,7 @@ class WebClient(http.Controller):
         ])
         return response
 
-    @http.route('/web/webclient/version_info', type='json', auth="none")
+    @http.route('/web/webclient/version_info', type='jsonrpc', auth="none")
     def version_info(self):
         return odoo.service.common.exp_version()
 

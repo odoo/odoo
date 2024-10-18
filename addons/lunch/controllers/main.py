@@ -9,7 +9,7 @@ from odoo.tools import float_round, float_repr
 
 
 class LunchController(http.Controller):
-    @http.route('/lunch/infos', type='json', auth='user')
+    @http.route('/lunch/infos', type='jsonrpc', auth='user')
     def infos(self, user_id=None, context=None):
         if context:
             request.update_context(**context)
@@ -49,7 +49,7 @@ class LunchController(http.Controller):
             })
         return infos
 
-    @http.route('/lunch/trash', type='json', auth='user')
+    @http.route('/lunch/trash', type='jsonrpc', auth='user')
     def trash(self, user_id=None, context=None):
         if context:
             request.update_context(**context)
@@ -61,7 +61,7 @@ class LunchController(http.Controller):
         lines.action_cancel()
         lines.unlink()
 
-    @http.route('/lunch/pay', type='json', auth='user')
+    @http.route('/lunch/pay', type='jsonrpc', auth='user')
     def pay(self, user_id=None, context=None):
         if context:
             request.update_context(**context)
@@ -76,11 +76,11 @@ class LunchController(http.Controller):
 
         return False
 
-    @http.route('/lunch/payment_message', type='json', auth='user')
+    @http.route('/lunch/payment_message', type='jsonrpc', auth='user')
     def payment_message(self):
         return {'message': request.env['ir.qweb']._render('lunch.lunch_payment_dialog', {})}
 
-    @http.route('/lunch/user_location_set', type='json', auth='user')
+    @http.route('/lunch/user_location_set', type='jsonrpc', auth='user')
     def set_user_location(self, location_id=None, user_id=None, context=None):
         if context:
             request.update_context(**context)
@@ -90,7 +90,7 @@ class LunchController(http.Controller):
         user.sudo().last_lunch_location_id = request.env['lunch.location'].browse(location_id)
         return True
 
-    @http.route('/lunch/user_location_get', type='json', auth='user')
+    @http.route('/lunch/user_location_get', type='jsonrpc', auth='user')
     def get_user_location(self, user_id=None, context=None):
         if context:
             request.update_context(**context)

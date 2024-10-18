@@ -161,7 +161,7 @@ class CustomerPortal(Controller):
         """
         return {}
 
-    @route(['/my/counters'], type='json', auth="user", website=True)
+    @route(['/my/counters'], type='jsonrpc', auth="user", website=True)
     def counters(self, counters, **kw):
         cache = (request.session.portal_counters or {}).copy()
         res = self._prepare_home_portal_values(counters)
@@ -296,7 +296,7 @@ class CustomerPortal(Controller):
             'Content-Security-Policy': "frame-ancestors 'self'",
         })
 
-    @http.route('/portal/attachment/remove', type='json', auth='public')
+    @http.route('/portal/attachment/remove', type='jsonrpc', auth='public')
     def attachment_remove(self, attachment_id, access_token=None):
         """Remove the given `attachment_id`, only if it is in a "pending" state.
 

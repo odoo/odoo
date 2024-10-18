@@ -33,7 +33,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         return self.payment_pay(**kwargs)
 
-    @http.route('/donation/transaction/<minimum_amount>', type='json', auth='public', website=True, sitemap=False)
+    @http.route('/donation/transaction/<minimum_amount>', type='jsonrpc', auth='public', website=True, sitemap=False)
     def donation_transaction(self, amount, currency_id, partner_id, access_token, minimum_amount=0, **kwargs):
         if float(amount) < float(minimum_amount):
             raise ValidationError(_('Donation amount must be at least %.2f.', float(minimum_amount)))

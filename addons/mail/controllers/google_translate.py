@@ -7,7 +7,7 @@ from odoo.http import request, route, Controller
 
 
 class GoogleTranslateController(Controller):
-    @route("/mail/message/translate", type="json", auth="user")
+    @route("/mail/message/translate", type="jsonrpc", auth="user")
     def translate(self, message_id):
         message = request.env["mail.message"].search([("id", "=", message_id)])
         if not message:

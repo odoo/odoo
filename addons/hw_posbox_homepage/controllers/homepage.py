@@ -252,7 +252,7 @@ class IotBoxOwlHomePage(Home):
     # POST methods                                               #
     # -> Never use json.dumps() it will be done automatically    #
     # ---------------------------------------------------------- #
-    @http.route('/hw_posbox_homepage/six_payment_terminal_add', auth="none", type="json", methods=['POST'], cors='*')
+    @http.route('/hw_posbox_homepage/six_payment_terminal_add', auth="none", type="jsonrpc", methods=['POST'], cors='*')
     def add_six_terminal(self, terminal_id):
         if terminal_id.isdigit():
             helpers.update_conf({'six_payment_terminal': terminal_id})
@@ -264,7 +264,7 @@ class IotBoxOwlHomePage(Home):
             'message': 'Successfully saved Six Payment Terminal',
         }
 
-    @http.route('/hw_posbox_homepage/save_credential', auth="none", type="json", methods=['POST'], cors='*')
+    @http.route('/hw_posbox_homepage/save_credential', auth="none", type="jsonrpc", methods=['POST'], cors='*')
     def save_credential(self, db_uuid, enterprise_code):
         helpers.update_conf({
             'db_uuid': db_uuid,
@@ -276,7 +276,7 @@ class IotBoxOwlHomePage(Home):
             'message': 'Successfully saved credentials',
         }
 
-    @http.route('/hw_posbox_homepage/update_wifi', auth="none", type="json", methods=['POST'], cors='*')
+    @http.route('/hw_posbox_homepage/update_wifi', auth="none", type="jsonrpc", methods=['POST'], cors='*')
     def update_wifi(self, essid, password, persistent=False):
         persistent = "1" if persistent else ""
         subprocess.check_call([file_path(
@@ -294,7 +294,7 @@ class IotBoxOwlHomePage(Home):
 
         return res_payload
 
-    @http.route('/hw_posbox_homepage/enable_ngrok', auth="none", type="json", methods=['POST'], cors='*')
+    @http.route('/hw_posbox_homepage/enable_ngrok', auth="none", type="jsonrpc", methods=['POST'], cors='*')
     def enable_remote_connection(self, auth_token):
         if subprocess.call(['pgrep', 'ngrok']) == 1:
             subprocess.Popen(['ngrok', 'tcp', '--authtoken', auth_token, '--log', '/tmp/ngrok.log', '22'])
@@ -305,7 +305,7 @@ class IotBoxOwlHomePage(Home):
             'message': 'Ngrok tunnel is now enabled',
         }
 
-    @http.route('/hw_posbox_homepage/connect_to_server', auth="none", type="json", methods=['POST'], cors='*')
+    @http.route('/hw_posbox_homepage/connect_to_server', auth="none", type="jsonrpc", methods=['POST'], cors='*')
     def connect_to_odoo_server(self, token=False, iotname=False):
         if token:
             try:
@@ -341,7 +341,7 @@ class IotBoxOwlHomePage(Home):
             'message': 'Successfully connected to db, IoT will restart to update the configuration.',
         }
 
-    @http.route('/hw_posbox_homepage/log_levels_update', auth="none", type="json", methods=['POST'], cors='*')
+    @http.route('/hw_posbox_homepage/log_levels_update', auth="none", type="jsonrpc", methods=['POST'], cors='*')
     def update_log_level(self, name, value):
         if not name.startswith(IOT_LOGGING_PREFIX) and name != 'log-to-server':
             return {

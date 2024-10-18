@@ -9,7 +9,7 @@ from odoo.tools.mail import email_re
 
 class WebsiteSaleStock(Controller):
 
-    @route('/shop/add/stock_notification', type='json', auth='public', website=True)
+    @route('/shop/add/stock_notification', type='jsonrpc', auth='public', website=True)
     def add_stock_email_notification(self, email, product_id):
         if not email_re.match(email):
             raise BadRequest(_("Invalid Email"))

@@ -484,7 +484,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Compatibility pre-v14
         return request.redirect(_build_url_w_params("/shop/%s" % request.env['ir.http']._slug(product), request.params), code=301)
 
-    @route(['/shop/product/extra-images'], type='json', auth='user', website=True)
+    @route(['/shop/product/extra-images'], type='jsonrpc', auth='user', website=True)
     def add_product_images(self, images, product_product_id, product_template_id, combination_ids=None):
         """
         Turns a list of image ids refering to ir.attachments to product.images,
@@ -521,7 +521,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 'product_template_image_ids': image_create_data
             })
 
-    @route(['/shop/product/clear-images'], type='json', auth='user', website=True)
+    @route(['/shop/product/clear-images'], type='jsonrpc', auth='user', website=True)
     def clear_product_images(self, product_product_id, product_template_id):
         """
         Unlinks all images from the product.
@@ -540,7 +540,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             product_template.product_template_image_ids.unlink()
 
-    @route(['/shop/product/resequence-image'], type='json', auth='user', website=True)
+    @route(['/shop/product/resequence-image'], type='jsonrpc', auth='user', website=True)
     def resequence_product_image(self, image_res_model, image_res_id, move):
         """
         Move the product image in the given direction and update all images' sequence.
@@ -623,7 +623,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if product_image._name == 'product.image':
                 product_image.sequence = idx
 
-    @route(['/shop/product/is_add_to_cart_allowed'], type='json', auth="public", website=True)
+    @route(['/shop/product/is_add_to_cart_allowed'], type='jsonrpc', auth="public", website=True)
     def is_add_to_cart_allowed(self, product_id, **kwargs):
         product = request.env['product.product'].browse(product_id)
         return product._is_add_to_cart_allowed()
@@ -817,7 +817,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return request.redirect("/shop/cart")
 
-    @route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
+    @route(['/shop/cart/update_json'], type='jsonrpc', auth="public", methods=['POST'], website=True)
     def cart_update_json(
         self, product_id, line_id=None, add_qty=None, set_qty=None, display=True,
         product_custom_attribute_values=None, no_variant_attribute_value_ids=None, **kwargs
@@ -900,18 +900,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
         return values
 
-    @route('/shop/save_shop_layout_mode', type='json', auth='public', website=True)
+    @route('/shop/save_shop_layout_mode', type='jsonrpc', auth='public', website=True)
     def save_shop_layout_mode(self, layout_mode):
         assert layout_mode in ('grid', 'list'), "Invalid shop layout mode"
         request.session['website_sale_shop_layout_mode'] = layout_mode
 
-    @route(['/shop/cart/quantity'], type='json', auth="public", methods=['POST'], website=True)
+    @route(['/shop/cart/quantity'], type='jsonrpc', auth="public", methods=['POST'], website=True)
     def cart_quantity(self):
         if 'website_sale_cart_quantity' not in request.session:
             return request.website.sale_get_order().cart_quantity
         return request.session['website_sale_cart_quantity']
 
-    @route(['/shop/cart/clear'], type='json', auth="public", website=True)
+    @route(['/shop/cart/clear'], type='jsonrpc', auth="public", website=True)
     def clear_cart(self):
         order = request.website.sale_get_order()
         for line in order.order_line:
@@ -1559,7 +1559,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         pass
 
     @route(
-        _express_checkout_route, type='json', methods=['POST'], auth="public", website=True,
+        _express_checkout_route, type='jsonrpc', methods=['POST'], auth="public", website=True,
         sitemap=False
     )
     def process_express_checkout(
@@ -1696,7 +1696,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ], limit=1)
         address.update(country_id=country.id, state_id=state.id)
 
-    @route('/shop/update_address', type='json', auth='public', website=True)
+    @route('/shop/update_address', type='jsonrpc', auth='public', website=True)
     def shop_update_address(self, partner_id, address_type='billing', **kw):
         partner_id = int(partner_id)
 
@@ -2084,7 +2084,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     # Edit
     # ------------------------------------------------------
 
-    @route(['/shop/config/product'], type='json', auth='user')
+    @route(['/shop/config/product'], type='jsonrpc', auth='user')
     def change_product_config(self, product_id, **options):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
@@ -2103,7 +2103,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if {"x", "y"} <= set(options):
             product.write({'website_size_x': options["x"], 'website_size_y': options["y"]})
 
-    @route(['/shop/config/attribute'], type='json', auth='user')
+    @route(['/shop/config/attribute'], type='jsonrpc', auth='user')
     def change_attribute_config(self, attribute_id, **options):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
@@ -2113,7 +2113,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             attribute.write({'display_type': options['display_type']})
             request.env.registry.clear_cache('templates')
 
-    @route(['/shop/config/website'], type='json', auth='user')
+    @route(['/shop/config/website'], type='jsonrpc', auth='user')
     def _change_website_config(self, **options):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
@@ -2164,7 +2164,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             tracking_cart_dict['shipping'] = delivery_line.price_unit
         return tracking_cart_dict
 
-    @route(['/shop/country_info/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
+    @route(['/shop/country_info/<model("res.country"):country>'], type='jsonrpc', auth="public", methods=['POST'], website=True)
     def shop_country_info(self, country, address_type, **kw):
         address_fields = country.get_address_fields()
         if address_type == 'billing':
@@ -2185,14 +2185,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
     # --------------------------------------------------------------------------
     # Products Recently Viewed
     # --------------------------------------------------------------------------
-    @route('/shop/products/recently_viewed_update', type='json', auth='public', website=True)
+    @route('/shop/products/recently_viewed_update', type='jsonrpc', auth='public', website=True)
     def products_recently_viewed_update(self, product_id, **kwargs):
         res = {}
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)
         visitor_sudo._add_viewed_product(product_id)
         return res
 
-    @route('/shop/products/recently_viewed_delete', type='json', auth='public', website=True)
+    @route('/shop/products/recently_viewed_delete', type='jsonrpc', auth='public', website=True)
     def products_recently_viewed_delete(self, product_id=None, product_template_id=None, **kwargs):
         if not (product_id or product_template_id):
             return

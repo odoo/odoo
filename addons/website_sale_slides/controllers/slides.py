@@ -8,7 +8,7 @@ from odoo.tools import format_amount
 
 class WebsiteSaleSlides(WebsiteSlides):
 
-    @route('/slides/get_course_products', type='json', auth='user')
+    @route('/slides/get_course_products', type='jsonrpc', auth='user')
     def get_course_products(self):
         """Return a list of the course products values with formatted price."""
         products = request.env['product.product'].search([('service_tracking', '=', 'course')])

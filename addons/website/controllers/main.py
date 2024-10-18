@@ -199,7 +199,7 @@ class Website(Home):
     # Business
     # ------------------------------------------------------
 
-    @http.route('/website/get_languages', type='json', auth="user", website=True)
+    @http.route('/website/get_languages', type='jsonrpc', auth="user", website=True)
     def website_languages(self, **kwargs):
         return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in request.website.language_ids]
 
@@ -217,7 +217,7 @@ class Website(Home):
         redirect.set_cookie('frontend_lang', lang_code)
         return redirect
 
-    @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
+    @http.route(['/website/country_infos/<model("res.country"):country>'], type='jsonrpc', auth="public", methods=['POST'], website=True)
     def country_infos(self, country, **kw):
         fields = country.get_address_fields()
         return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
@@ -356,7 +356,7 @@ class Website(Home):
             raise werkzeug.exceptions.NotFound()
         return request.redirect(url, local=False)
 
-    @http.route('/website/get_suggested_links', type='json', auth="user", website=True)
+    @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True)
     def get_suggested_link(self, needle, limit=10):
         current_website = request.website
 
@@ -396,19 +396,19 @@ class Website(Home):
             ]
         }
 
-    @http.route('/website/save_session_layout_mode', type='json', auth='public', website=True)
+    @http.route('/website/save_session_layout_mode', type='jsonrpc', auth='public', website=True)
     def save_session_layout_mode(self, layout_mode, view_id):
         assert layout_mode in ('grid', 'list'), "Invalid layout mode"
         request.session[f'website_{view_id}_layout_mode'] = layout_mode
 
-    @http.route('/website/snippet/filters', type='json', auth='public', website=True)
+    @http.route('/website/snippet/filters', type='jsonrpc', auth='public', website=True)
     def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False, **custom_template_data):
         dynamic_filter = request.env['website.snippet.filter'].sudo().search(
             [('id', '=', filter_id)] + request.website.website_domain()
         )
         return dynamic_filter and dynamic_filter._render(template_key, limit, search_domain, with_sample, **custom_template_data) or []
 
-    @http.route('/website/snippet/options_filters', type='json', auth='user', website=True)
+    @http.route('/website/snippet/options_filters', type='jsonrpc', auth='user', website=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
         domain = request.website.website_domain()
         if search_domain:
@@ -423,7 +423,7 @@ class Website(Home):
         )
         return dynamic_filter
 
-    @http.route('/website/snippet/filter_templates', type='json', auth='public', website=True)
+    @http.route('/website/snippet/filter_templates', type='jsonrpc', auth='public', website=True)
     def get_dynamic_snippet_templates(self, filter_name=False):
         domain = [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']]
         if filter_name:
@@ -443,7 +443,7 @@ class Website(Home):
             t['thumb'] = attribs.get('data-thumb')
         return templates
 
-    @http.route('/website/get_current_currency', type='json', auth="public", website=True)
+    @http.route('/website/get_current_currency', type='jsonrpc', auth="public", website=True)
     def get_current_currency(self, **kwargs):
         return {
             'id': request.website.company_id.currency_id.id,
@@ -461,7 +461,7 @@ class Website(Home):
         order = order or 'name ASC'
         return 'is_published desc, %s, id desc' % order
 
-    @http.route('/website/snippet/autocomplete', type='json', auth='public', website=True)
+    @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True)
     def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
         """
         Returns list of results according to the term and options
@@ -672,7 +672,7 @@ class Website(Home):
             return json.dumps({'view_id': page.get('view_id')})
         return json.dumps({'url': url})
 
-    @http.route('/website/get_new_page_templates', type='json', auth='user', website=True)
+    @http.route('/website/get_new_page_templates', type='jsonrpc', auth='user', website=True)
     def get_new_page_templates(self, **kw):
         View = request.env['ir.ui.view']
         result = []
@@ -729,13 +729,13 @@ class Website(Home):
                 result.append(group)
         return result
 
-    @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
+    @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.with_context(display_website=False).read(['name', 'id', 'key', 'xml_id', 'active', 'inherit_id'])
 
-    @http.route('/website/reset_template', type='json', auth='user', methods=['POST'])
+    @http.route('/website/reset_template', type='jsonrpc', auth='user', methods=['POST'])
     def reset_template(self, view_id, mode='soft', **kwargs):
         """ This method will try to reset a broken view.
         Given the mode, the view can either be:
@@ -748,7 +748,7 @@ class Website(Home):
         view.with_context(website_id=None).reset_arch(mode)
         return True
 
-    @http.route(['/website/seo_suggest'], type='json', auth="user", website=True)
+    @http.route(['/website/seo_suggest'], type='jsonrpc', auth="user", website=True)
     def seo_suggest(self, keywords=None, lang=None):
         """
         Suggests search keywords based on a given input using Google's
@@ -793,7 +793,7 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
-    @http.route(['/website/get_seo_data'], type='json', auth="user", website=True)
+    @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True)
     def get_seo_data(self, res_id, res_model):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
@@ -819,7 +819,7 @@ class Website(Home):
 
         return res
 
-    @http.route(['/website/check_can_modify_any'], type='json', auth="user", website=True)
+    @http.route(['/website/check_can_modify_any'], type='jsonrpc', auth="user", website=True)
     def check_can_modify_any(self, records):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
@@ -852,7 +852,7 @@ class Website(Home):
 
         return request.make_response("google-site-verification: %s" % request.website.google_search_console)
 
-    @http.route('/website/google_maps_api_key', type='json', auth='public', website=True)
+    @http.route('/website/google_maps_api_key', type='jsonrpc', auth='public', website=True)
     def google_maps_api_key(self):
         return json.dumps({
             'google_maps_api_key': request.website.google_maps_api_key or ''
@@ -862,7 +862,7 @@ class Website(Home):
     # Themes
     # ------------------------------------------------------
 
-    @http.route('/website/google_font_metadata', type='json', auth='user', website=True)
+    @http.route('/website/google_font_metadata', type='jsonrpc', auth='user', website=True)
     def google_font_metadata(self):
         """ Avoid CORS by caching google fonts metadata on server """
         Attachment = request.env['ir.attachment']
@@ -896,12 +896,12 @@ class Website(Home):
         domain = expression.AND([[("key", "in", keys)], request.website.website_domain()])
         return Model.search(domain).filter_duplicate()
 
-    @http.route(['/website/theme_customize_data_get'], type='json', auth='user', website=True)
+    @http.route(['/website/theme_customize_data_get'], type='jsonrpc', auth='user', website=True)
     def theme_customize_data_get(self, keys, is_view_data):
         records = self._get_customize_data(keys, is_view_data)
         return records.filtered('active').mapped('key')
 
-    @http.route(['/website/theme_customize_data'], type='json', auth='user', website=True)
+    @http.route(['/website/theme_customize_data'], type='jsonrpc', auth='user', website=True)
     def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
         """
         Enables and/or disables views/assets according to list of keys.
@@ -921,7 +921,7 @@ class Website(Home):
             records = self._get_customize_data(enable, is_view_data)
             records.filtered(lambda x: not x.active).write({'active': True})
 
-    @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True)
+    @http.route(['/website/theme_customize_bundle_reload'], type='jsonrpc', auth='user', website=True)
     def theme_customize_bundle_reload(self):
         """
         Reloads asset bundles and returns their unique URLs.
@@ -934,7 +934,7 @@ class Website(Home):
     # Server actions
     # ------------------------------------------------------
 
-    @http.route(['/website/theme_upload_font'], type='json', auth='user', website=True)
+    @http.route(['/website/theme_upload_font'], type='jsonrpc', auth='user', website=True)
     def theme_upload_font(self, name, data):
         """
         Uploads font binary data and returns metadata about accessing individual fonts.

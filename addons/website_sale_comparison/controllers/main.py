@@ -22,7 +22,7 @@ class WebsiteSaleProductComparison(Controller):
             }
         )
 
-    @route('/shop/get_product_data', type='json', auth='public', website=True)
+    @route('/shop/get_product_data', type='jsonrpc', auth='public', website=True)
     def get_product_data(self, product_ids, cookies=None):
         ret = {}
 

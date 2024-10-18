@@ -271,7 +271,7 @@ class WebsiteForum(WebsiteProfile):
     # Questions
     # --------------------------------------------------
 
-    @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
+    @http.route('/forum/get_url_title', type='jsonrpc', auth="user", methods=['POST'], website=True)
     def get_url_title(self, **kwargs):
         try:
             req = requests.get(kwargs.get('url'))
@@ -339,7 +339,7 @@ class WebsiteForum(WebsiteProfile):
 
         return request.render("website_forum.post_description_full", values)
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='jsonrpc', auth="user", methods=['POST'], website=True)
     def question_toggle_favorite(self, forum, question, **post):
         favourite = not question.user_favourite
         question.sudo().favourite_ids = [(favourite and 4 or 3, request.uid)]
@@ -449,7 +449,7 @@ class WebsiteForum(WebsiteProfile):
         slug = request.env['ir.http']._slug
         return request.redirect(f'/forum/{slug(forum)}/{slug(question)}')
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="user", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='jsonrpc', auth="user", website=True)
     def post_toggle_correct(self, forum, post, **kwargs):
         if post.parent_id is False:
             return request.redirect('/')
@@ -508,14 +508,14 @@ class WebsiteForum(WebsiteProfile):
     #  JSON utilities
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="user", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='jsonrpc', auth="user", website=True)
     def post_upvote(self, forum, post, **kwargs):
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
         upvote = True if not post.user_vote > 0 else False
         return post.vote(upvote=upvote)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="user", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='jsonrpc', auth="user", website=True)
     def post_downvote(self, forum, post, **kwargs):
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
@@ -618,11 +618,11 @@ class WebsiteForum(WebsiteProfile):
         post._refuse()
         return self.question_ask_for_close(forum, post)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/flag', type='json', auth="user", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/flag', type='jsonrpc', auth="user", website=True)
     def post_flag(self, forum, post, **kwargs):
         return post._flag()[0]
 
-    @http.route('/forum/<model("forum.post"):post>/ask_for_mark_as_offensive', type='json', auth="user", website=True)
+    @http.route('/forum/<model("forum.post"):post>/ask_for_mark_as_offensive', type='jsonrpc', auth="user", website=True)
     def post_json_ask_for_mark_as_offensive(self, post, **kwargs):
         if not post.can_moderate:
             raise AccessError(_('%d karma required to mark a post as offensive.', post.forum_id.karma_moderate))
@@ -795,6 +795,6 @@ class WebsiteForum(WebsiteProfile):
             return request.redirect("/forum/%s" % slug(forum))
         return request.redirect("/forum/%s/%s" % (slug(forum), request.env['ir.http']._slug(question)))
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='json', auth="user", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='jsonrpc', auth="user", website=True)
     def delete_comment(self, forum, post, comment, **kwarg):
         return post.unlink_comment(comment.id)[0]

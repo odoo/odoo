@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class SmsController(Controller):
 
-    @route('/sms/status', type='json', auth='public')
+    @route('/sms/status', type='jsonrpc', auth='public')
     def update_sms_status(self, message_statuses):
         """Receive a batch of delivery reports from IAP
 

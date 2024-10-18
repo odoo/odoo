@@ -150,6 +150,6 @@ class ReportController(http.Controller):
             res = request.make_response(html_escape(json.dumps(error)))
             raise werkzeug.exceptions.InternalServerError(response=res) from e
 
-    @http.route(['/report/check_wkhtmltopdf'], type='json', auth='user', readonly=True)
+    @http.route(['/report/check_wkhtmltopdf'], type='jsonrpc', auth='user', readonly=True)
     def check_wkhtmltopdf(self):
         return request.env['ir.actions.report'].get_wkhtmltopdf_state()

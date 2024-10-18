@@ -29,7 +29,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
             raise werkzeug.exceptions.NotFound()
         return request.redirect(certification_url)
 
-    @http.route(['/slides_survey/certification/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/slides_survey/certification/search_read'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def slides_certification_search_read(self, fields):
         can_create = request.env['survey.survey'].has_access('create')
         return {

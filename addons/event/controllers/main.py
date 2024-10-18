@@ -76,7 +76,7 @@ class EventController(Controller):
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
-    @http.route(['/event/init_barcode_interface'], type='json', auth="user")
+    @http.route(['/event/init_barcode_interface'], type='jsonrpc', auth="user")
     def init_barcode_interface(self, event_id):
         event = request.env['event.event'].browse(event_id).exists() if event_id else False
         if event:

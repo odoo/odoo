@@ -18,7 +18,7 @@ class XenditController(http.Controller):
 
     _webhook_url = '/payment/xendit/webhook'
 
-    @http.route('/payment/xendit/payment', type='json', auth='public')
+    @http.route('/payment/xendit/payment', type='jsonrpc', auth='public')
     def xendit_payment(self, reference, token_ref):
         """ Make a payment by token request and handle the response.
 

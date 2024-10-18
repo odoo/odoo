@@ -162,7 +162,7 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     # Update a checklist in the editor on check/uncheck
     #------------------------------------------------------
-    @http.route('/web_editor/checklist', type='json', auth='user')
+    @http.route('/web_editor/checklist', type='jsonrpc', auth='user')
     def update_checklist(self, res_model, res_id, filename, checklistId, checked, **kwargs):
         record = request.env[res_model].browse(res_id)
         value = filename in record._fields and record[filename]
@@ -192,7 +192,7 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     # Update a stars rating in the editor on check/uncheck
     #------------------------------------------------------
-    @http.route('/web_editor/stars', type='json', auth='user')
+    @http.route('/web_editor/stars', type='jsonrpc', auth='user')
     def update_stars(self, res_model, res_id, filename, starsId, rating):
         record = request.env[res_model].browse(res_id)
         value = filename in record._fields and record[filename]
@@ -226,7 +226,7 @@ class Web_Editor(http.Controller):
 
         return value
 
-    @http.route('/web_editor/attachment/remove', type='json', auth='user', website=True)
+    @http.route('/web_editor/attachment/remove', type='jsonrpc', auth='user', website=True)
     def remove(self, ids, **kwargs):
         """ Removes a web-based image attachment if it is used by no view (template)
 
@@ -265,7 +265,7 @@ class Web_Editor(http.Controller):
         context.pop('allowed_company_ids', None)
         request.update_env(context=context)
 
-    @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user", website=True)
+    @http.route("/web_editor/get_assets_editor_resources", type="jsonrpc", auth="user", website=True)
     def get_assets_editor_resources(self, key, get_views=True, get_scss=True, get_js=True, bundles=False, bundles_restriction=[], only_user_custom_files=True):
         """
         Transmit the resources the assets editor needs to work.
@@ -497,7 +497,7 @@ class Web_Editor(http.Controller):
             ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
         ])
 
-    @http.route(['/web_editor/media_library_search'], type='json', auth="user", website=True)
+    @http.route(['/web_editor/media_library_search'], type='jsonrpc', auth="user", website=True)
     def media_library_search(self, **params):
         ICP = request.env['ir.config_parameter'].sudo()
         endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)

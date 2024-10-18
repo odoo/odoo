@@ -7,7 +7,7 @@ from odoo.http import Controller, request, route
 
 class WebsiteSaleVariantController(Controller):
 
-    @route('/website_sale/get_combination_info', type='json', auth='public', methods=['POST'], website=True)
+    @route('/website_sale/get_combination_info', type='jsonrpc', auth='public', methods=['POST'], website=True)
     def get_combination_info_website(
         self, product_template_id, product_id, combination, add_qty, **kwargs
     ):
@@ -51,7 +51,7 @@ class WebsiteSaleVariantController(Controller):
             )
         return combination_info
 
-    @route('/sale/create_product_variant', type='json', auth='public', methods=['POST'])
+    @route('/sale/create_product_variant', type='jsonrpc', auth='public', methods=['POST'])
     def create_product_variant(self, product_template_id, product_template_attribute_value_ids, **kwargs):
         """Old product configurator logic, only used by frontend configurator, will be deprecated soon"""
         return request.env['product.template'].browse(

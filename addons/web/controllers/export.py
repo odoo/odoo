@@ -290,7 +290,7 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
 class Export(http.Controller):
 
-    @http.route('/web/export/formats', type='json', auth='user', readonly=True)
+    @http.route('/web/export/formats', type='jsonrpc', auth='user', readonly=True)
     def formats(self):
         """ Returns all valid export formats
 
@@ -356,7 +356,7 @@ class Export(http.Controller):
 
         return property_fields
 
-    @http.route('/web/export/get_fields', type='json', auth='user', readonly=True)
+    @http.route('/web/export/get_fields', type='jsonrpc', auth='user', readonly=True)
     def get_fields(self, model, domain, prefix='', parent_name='',
                    import_compat=True, parent_field_type=None,
                    parent_field=None, exclude=None):
@@ -429,7 +429,7 @@ class Export(http.Controller):
 
         return result
 
-    @http.route('/web/export/namelist', type='json', auth='user', readonly=True)
+    @http.route('/web/export/namelist', type='jsonrpc', auth='user', readonly=True)
     def namelist(self, model, export_id):
         export = request.env['ir.exports'].browse([export_id])
         return self.fields_info(model, export.export_fields.mapped('name'))

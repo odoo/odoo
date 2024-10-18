@@ -363,7 +363,7 @@ proxy_drivers['scanner'] = KeyboardUSBDriver
 
 
 class KeyboardUSBController(http.Controller):
-    @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
+    @http.route('/hw_proxy/scanner', type='jsonrpc', auth='none', cors='*')
     def get_barcode(self):
         scanners = [iot_devices[d] for d in iot_devices if iot_devices[d].device_type == "scanner"]
         if scanners:

@@ -36,7 +36,7 @@ class PaymentPostProcessing(http.Controller):
         values = {'tx': monitored_tx} if monitored_tx else {'payment_not_found': True}
         return request.render('payment.payment_status', values)
 
-    @http.route('/payment/status/poll', type='json', auth='public')
+    @http.route('/payment/status/poll', type='jsonrpc', auth='public')
     def poll_status(self, **_kwargs):
         """ Fetch the transaction and trigger its post-processing.
 

@@ -7,7 +7,7 @@ from odoo.http import Controller, request, route
 
 class SaleProductConfiguratorController(Controller):
 
-    @route(route='/sale/product_configurator/get_values', type='json', auth='user')
+    @route(route='/sale/product_configurator/get_values', type='jsonrpc', auth='user')
     def sale_product_configurator_get_values(
         self,
         product_template_id,
@@ -100,7 +100,7 @@ class SaleProductConfiguratorController(Controller):
 
     @route(
         route='/sale/product_configurator/create_product',
-        type='json',
+        type='jsonrpc',
         auth='user',
         methods=['POST'],
     )
@@ -121,7 +121,7 @@ class SaleProductConfiguratorController(Controller):
 
     @route(
         route='/sale/product_configurator/update_combination',
-        type='json',
+        type='jsonrpc',
         auth='user',
         methods=['POST'],
     )
@@ -174,7 +174,7 @@ class SaleProductConfiguratorController(Controller):
             **kwargs,
         )
 
-    @route(route='/sale/product_configurator/get_optional_products', type='json', auth='user')
+    @route(route='/sale/product_configurator/get_optional_products', type='jsonrpc', auth='user')
     def sale_product_configurator_get_optional_products(
         self,
         product_template_id,

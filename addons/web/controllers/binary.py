@@ -305,7 +305,7 @@ class Binary(http.Controller):
     @http.route([
         '/web/sign/get_fonts',
         '/web/sign/get_fonts/<string:fontname>',
-    ], type='json', auth='none')
+    ], type='jsonrpc', auth='none')
     def get_fonts(self, fontname=None):
         """This route will return a list of base64 encoded fonts.
 

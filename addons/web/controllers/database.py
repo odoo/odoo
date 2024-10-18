@@ -171,7 +171,7 @@ class Database(http.Controller):
             error = "Master password update error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
-    @http.route('/web/database/list', type='json', auth='none')
+    @http.route('/web/database/list', type='jsonrpc', auth='none')
     def list(self):
         """
         Used by Mobile application for listing database

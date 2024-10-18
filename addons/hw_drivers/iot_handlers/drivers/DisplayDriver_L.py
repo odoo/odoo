@@ -127,7 +127,7 @@ class DisplayDriver(Driver):
 
 
 class DisplayController(http.Controller):
-    @http.route('/hw_proxy/customer_facing_display', type='json', auth='none', cors='*')
+    @http.route('/hw_proxy/customer_facing_display', type='jsonrpc', auth='none', cors='*')
     def customer_facing_display(self, action, pos_id=None, access_token=None, data=None):
         display = self.ensure_display()
         if action in ['open', 'open_kiosk']:
@@ -192,7 +192,7 @@ class DisplayController(http.Controller):
             'pairing_code': connection_manager.pairing_code,
         })
 
-    @http.route('/point_of_sale/iot_devices', type='json', auth='none', methods=['POST'])
+    @http.route('/point_of_sale/iot_devices', type='jsonrpc', auth='none', methods=['POST'])
     def get_iot_devices(self):
         iot_device = [{
             'name': iot_devices[device].device_name,

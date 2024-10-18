@@ -102,7 +102,7 @@ class WebsiteEventMeetController(EventCommunityController):
 
         return request.redirect(f"/event/{request.env['ir.http']._slug(event)}/meeting_room/{request.env['ir.http']._slug(meeting_room)}")
 
-    @http.route(["/event/active_langs"], type="json", auth="public")
+    @http.route(["/event/active_langs"], type="jsonrpc", auth="public")
     def active_langs(self):
         return request.env["res.lang"].sudo().get_installed()
 

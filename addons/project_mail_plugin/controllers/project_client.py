@@ -4,7 +4,7 @@ from odoo.http import request
 
 
 class ProjectClient(http.Controller):
-    @http.route('/mail_plugin/project/search', type='json', auth='outlook', cors="*")
+    @http.route('/mail_plugin/project/search', type='jsonrpc', auth='outlook', cors="*")
     def projects_search(self, search_term, limit=5):
         """
         Used in the plugin side when searching for projects.
@@ -22,7 +22,7 @@ class ProjectClient(http.Controller):
             for project in projects.sudo()
         ]
 
-    @http.route('/mail_plugin/task/create', type='json', auth='outlook', cors="*")
+    @http.route('/mail_plugin/task/create', type='jsonrpc', auth='outlook', cors="*")
     def task_create(self, email_subject, email_body, project_id, partner_id):
         partner = request.env['res.partner'].browse(partner_id).exists()
         if not partner:
@@ -44,7 +44,7 @@ class ProjectClient(http.Controller):
 
         return {'task_id': record.id, 'name': record.name}
 
-    @http.route('/mail_plugin/project/create', type='json', auth='outlook', cors="*")
+    @http.route('/mail_plugin/project/create', type='jsonrpc', auth='outlook', cors="*")
     def project_create(self, name):
         record = request.env['project.project'].create({'name': name})
         return {"project_id": record.id, "name": record.name}

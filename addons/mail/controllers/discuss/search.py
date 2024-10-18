@@ -8,7 +8,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class SearchController(http.Controller):
-    @http.route("/discuss/search", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/search", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def search(self, term, category_id=None, limit=8):
         store = Store()

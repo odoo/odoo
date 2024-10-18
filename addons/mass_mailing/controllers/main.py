@@ -223,7 +223,7 @@ class MassMailController(http.Controller):
             'lists_public': lists_public,
         }
 
-    @http.route('/mailing/list/update', type='json', auth='public', csrf=True)
+    @http.route('/mailing/list/update', type='jsonrpc', auth='public', csrf=True)
     def mailing_update_list_subscription(self, mailing_id=None, document_id=None,
                                          email=None, hash_token=None,
                                          lists_optin_ids=None, **post):
@@ -254,7 +254,7 @@ class MassMailController(http.Controller):
 
         return len(lists_to_optout)
 
-    @http.route('/mailing/feedback', type='json', auth='public', csrf=True)
+    @http.route('/mailing/feedback', type='jsonrpc', auth='public', csrf=True)
     def mailing_send_feedback(self, mailing_id=None, document_id=None,
                               email=None, hash_token=None,
                               last_action=None,
@@ -431,7 +431,7 @@ class MassMailController(http.Controller):
     # BLACKLIST
     # ------------------------------------------------------------
 
-    @http.route('/mailing/blocklist/add', type='json', auth='public')
+    @http.route('/mailing/blocklist/add', type='jsonrpc', auth='public')
     def mail_blocklist_add(self, mailing_id=None, document_id=None,
                            email=None, hash_token=None):
         email_found, hash_token_found = self._fetch_user_information(email, hash_token)
@@ -458,7 +458,7 @@ class MassMailController(http.Controller):
         _blocklist_rec = request.env['mail.blacklist'].sudo()._add(email_found, message=message)
         return True
 
-    @http.route('/mailing/blocklist/remove', type='json', auth='public')
+    @http.route('/mailing/blocklist/remove', type='jsonrpc', auth='public')
     def mail_blocklist_remove(self, mailing_id=None, document_id=None,
                               email=None, hash_token=None):
         email_found, hash_token_found = self._fetch_user_information(email, hash_token)
