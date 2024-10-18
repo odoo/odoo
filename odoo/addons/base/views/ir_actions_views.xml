@@ -397,7 +397,7 @@
                                 </group>
                         </group>
                         <field name="child_ids" domain="[('model_id', '=', model_id)]" invisible="state != 'multi'"/>
-                        <p class="oe_grey" invisible="state != 'multi'">
+                        <p class="opacity-50" invisible="state != 'multi'">
                             If several child actions return an action, only the last one will be executed.
                             This may happen when having server actions executing code that returns an action, or server actions returning a client action.
                         </p>
