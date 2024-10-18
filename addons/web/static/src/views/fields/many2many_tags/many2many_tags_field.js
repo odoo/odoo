@@ -257,7 +257,7 @@ export const many2ManyTagsField = {
             help: _t("Set an integer field to use colors with the tags."),
         },
     ],
-    supportedTypes: ["many2many"],
+    supportedTypes: ["many2many", "one2many"],
     relatedFields: ({ options }) => {
         const relatedFields = [{ name: "display_name", type: "char" }];
         if (options.color_field) {
