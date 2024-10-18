@@ -48,6 +48,19 @@ test("doesn't have a scrollbar with long content", async () => {
     expect(textarea.clientHeight).toBe(textarea.scrollHeight);
 });
 
+test("basic rendering char field", async () => {
+    Product._fields.name = fields.Char();
+    Product._records = [{ id: 1, name: "Description\nas\ntext" }];
+    await mountView({
+        type: "form",
+        resModel: "product",
+        resId: 1,
+        arch: '<form><field name="name" widget="text"/></form>',
+    });
+    expect(".o_field_text textarea").toHaveCount(1);
+    expect(".o_field_text textarea").toHaveValue("Description\nas\ntext");
+});
+
 test("render following an onchange", async () => {
     Product._fields.name = fields.Char({
         onChange: (record) => {
