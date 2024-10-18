@@ -87,17 +87,15 @@
                 <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
                   column_invisible="parent and parent.state == 'draft'"
                   invisible="production_state == 'draft'"/>
-                <button name="button_start" type="object" string="Start" class="btn-success px-3"
-                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel') or is_user_working"/>
-                <button name="button_pending" type="object" string="Pause" class="btn-warning px-3"
+                <button name="button_start" type="object" title="Start" class="btn-success px-2"
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel') or is_user_working" icon="fa-play"/>
+                <button name="button_pending" type="object" title="Pause" class="btn-warning px-2" icon="fa-pause"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
-                <button name="button_finish" type="object" string="Done" class="btn-success px-3"
+                <button name="button_finish" type="object" title="Done" class="btn-success px-2" icon="fa-check"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
-                <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger px-3"
-                  invisible="production_state in ('draft', 'done', 'cancel') or working_state != 'blocked'"/>
                 <widget name="mo_view_list_dropdown"/>
                 <field name="show_json_popover" column_invisible="True"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" " invisible="not show_json_popover"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " invisible="not show_json_popover"  width="30px"/>
             </list>
         </field>
     </record>
