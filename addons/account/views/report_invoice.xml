@@ -398,10 +398,10 @@
                     </p>
                     <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                         <tr class="o_subtotal">
+                            <td>
+                                <span t-out="subtotal['name']">Untaxed amount</span>
+                            </td>
                             <td class="text-end">
-                                <td>
-                                    <span t-out="subtotal['name']">Untaxed amount</span>
-                                </td>
                                 <span t-out="subtotal['base_amount']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'
                                 >27.00</span>
