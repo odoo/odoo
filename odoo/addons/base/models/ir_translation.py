@@ -7,6 +7,7 @@ import logging
 import operator
 from collections import defaultdict
 from difflib import get_close_matches
+from lxml import etree
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -428,8 +429,7 @@ class IrTranslation(models.Model):
                     translations_to_match.append(translation)
 
             for translation in translations_to_match:
-                matches = get_close_matches(translation.src, terms, 1, 0.9)
-                src = matches[0] if matches else None
+                src = self._get_close_match(translation.src, terms)
                 if not src:
                     outdated += translation
                 elif (src, translation.lang) in done:
@@ -913,3 +913,35 @@ class IrTranslation(models.Model):
             'multi_lang': len(self.env['res.lang'].sudo().get_installed()) > 1,
         }
         return hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest()
+
+    def _get_close_match(self, src, terms):
+        """ Return the best term that matches a translation one (if it exists).
+        This should also take into consideration that in some situations, as in
+        `<select/>` elements, a change in the inner DOM structure should make
+        the compared terms 'totally different' (e.g. when an `<option/>` is
+        removed or added).
+        """
+        def selection_matches(src_sel, match_sel):
+            src_sel_options = [el.attrib.get('value', '') for el in src_sel.xpath('//option')]
+            match_sel_options = [el.attrib.get('value', '') for el in match_sel.xpath('//option')]
+            # We still consider two selections similar, if only the order
+            # of the options changed.
+            return sorted(src_sel_options) == sorted(match_sel_options)
+
+        matches = get_close_matches(src, terms, 1, 0.9)
+
+        if matches:
+            match = matches[0]
+            try:
+                src_el = etree.fromstring(src)
+                match_el = etree.fromstring(match)
+            except etree.LxmlError:
+                # A "simple string" term cannot be parsed.
+                return match
+            is_selection_translation = src_el.tag == match_el.tag == 'select'
+            if (
+                not is_selection_translation
+                or is_selection_translation and selection_matches(src_el, match_el)
+            ):
+                return match
+        return None
