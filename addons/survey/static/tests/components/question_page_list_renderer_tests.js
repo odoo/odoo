@@ -23,11 +23,11 @@ QUnit.module("QuestionPageListRenderer", (hooks) => {
                 },
                 lines_sections: {
                     fields: {
-                        sequence: { type: "number" },
+                        sequence: { type: "integer" },
                         is_page: { type: "boolean" },
                         title: { type: "char", string: "Title" },
                         question_type: { type: "string" },
-                        random_questions_count: { type: "number", string: "Question Count" },
+                        random_questions_count: { type: "integer", string: "Question Count" },
                     },
                     records: [
                         {
