@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 from datetime import datetime
 
@@ -29,6 +30,7 @@ from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.web_editor.tools import get_video_thumbnail
 
 
 class TableCompute:
@@ -494,6 +496,44 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def old_product(self, product, category='', search='', **kwargs):
         # Compatibility pre-v14
         return request.redirect(_build_url_w_params("/shop/%s" % request.env['ir.http']._slug(product), request.params), code=301)
+
+    @route(['/shop/product/video'], type='jsonrpc', auth='user', website=True)
+    def add_product_videos(self, video, product_product_id, product_template_id, combination_ids=None):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise NotFound()
+
+        if not video or not isinstance(video, list) or 'id' not in video[0]:
+            raise ValueError("Invalid video data")
+
+        video_data = video[0]
+        thumbnail = base64.b64encode(get_video_thumbnail(video_data['src']))
+
+        # Prepare the video creation data
+        video_create_data = [Command.create({
+            'name': video_data.get('name', 'Odoo Video'),
+            'video_url': video_data['src'],
+            'image_1920': thumbnail,
+        })]
+
+        product_product = request.env['product.product'].browse(int(product_product_id)) if product_product_id else False
+        product_template = request.env['product.template'].browse(int(product_template_id)) if product_template_id else False
+
+        if product_product and not product_template:
+            product_template = product_product.product_tmpl_id
+
+        if not product_product and product_template and product_template.has_dynamic_attributes():
+            combination = request.env['product.template.attribute.value'].browse(combination_ids)
+            product_product = product_template._get_variant_for_combination(combination)
+            if not product_product:
+                product_product = product_template._create_product_variant(combination)
+        if product_template.has_configurable_attributes and product_product:
+            product_product.write({
+                'product_variant_image_ids': video_create_data
+            })
+        else:
+            product_template.write({
+                'product_template_image_ids': video_create_data
+            })
 
     @route(['/shop/product/extra-images'], type='jsonrpc', auth='user', website=True)
     def add_product_images(self, images, product_product_id, product_template_id, combination_ids=None):
