@@ -46,6 +46,11 @@
         outline-offset: -4px;
     }
 
+    &.o-isTalking-collapsed {
+        outline: 2px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -1px;
+    }
+
     &.o-isInvitation:not(:hover) {
         animation: o-discuss-CallParticipantCard-avatarImag_borderPulse 3s linear infinite;
     }
@@ -70,6 +75,10 @@
 
 .o-discuss-CallParticipantCard-overlay {
     margin: Min(5%, map-get($spacers, 2));
+
+    &.o-isCollapsed {
+        font-size: 0.5rem !important;
+    }
 }
 
 .o-discuss-CallParticipantCard-overlayBottom {
