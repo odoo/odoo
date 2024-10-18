@@ -1683,12 +1683,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if channel == self.channel_channel_group_1 and user == self.users[2]:
             return {
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
-                "channelMember": member_2.id,
+                "channel_member_id": member_2.id,
                 "id": member_2.sudo().rtc_session_ids.id,
-                "isCameraOn": False,
-                "isDeaf": False,
-                "isScreenSharingOn": False,
-                "isSelfMuted": False,
+                "is_camera_on": False,
+                "is_deaf": False,
+                "is_screen_sharing_on": False,
+                "is_muted": False,
             }
         return {}
 

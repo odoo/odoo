@@ -46,16 +46,16 @@ patch(MockServer.prototype, {
         const [rtcSession] = this.getRecords("discuss.channel.rtc.session", [["id", "=", id]]);
         const vals = {
             id: rtcSession.id,
-            channelMember: this._mockDiscussChannelMember_DiscussChannelMemberFormat([
+            channel_member_id: this._mockDiscussChannelMember_DiscussChannelMemberFormat([
                 rtcSession.channel_member_id,
             ])[0],
         };
         if (extra) {
             Object.assign(vals, {
-                isCameraOn: rtcSession.is_camera_on,
-                isDeaf: rtcSession.is_deaf,
-                isSelfMuted: rtcSession.is_self_muted,
-                isScreenSharingOn: rtcSession.is_screen_sharing_on,
+                is_camera_on: rtcSession.is_camera_on,
+                is_deaf: rtcSession.is_deaf,
+                is_muted: rtcSession.is_muted,
+                is_screen_sharing_on: rtcSession.is_screen_sharing_on,
             });
         }
         return vals;
@@ -94,7 +94,7 @@ patch(MockServer.prototype, {
         this.pyEnv["discuss.channel.rtc.session"].write([id], values);
         const sessionData = this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(id);
         const [channel] = this.pyEnv["discuss.channel"].search_read([
-            ["id", "=", sessionData.channelMember.thread.id],
+            ["id", "=", sessionData.channel_member_id.thread.id],
         ]);
         this.pyEnv["bus.bus"]._sendone(
             channel,
