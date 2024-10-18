@@ -162,7 +162,7 @@ class RPC(Controller):
             response = xmlrpc_handle_exception_int(error)
         return Response(response=response, mimetype='text/xml')
 
-    @route('/jsonrpc', type='json', auth="none", save_session=False)
+    @route('/jsonrpc', type='jsonrpc', auth="none", save_session=False)
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
         _check_request()

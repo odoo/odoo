@@ -8,7 +8,7 @@ from odoo.http import request, route, Controller
 
 
 class DiscussSettingsController(Controller):
-    @route("/discuss/settings/mute", methods=["POST"], type="json", auth="user")
+    @route("/discuss/settings/mute", methods=["POST"], type="jsonrpc", auth="user")
     def discuss_mute(self, minutes, channel_id=None):
         """Mute notifications for the given number of minutes.
         :param minutes: (integer) number of minutes to mute notifications, -1 means mute until the user unmutes
@@ -31,7 +31,7 @@ class DiscussSettingsController(Controller):
             record.mute_until_dt = False
         record._notify_mute()
 
-    @route("/discuss/settings/custom_notifications", methods=["POST"], type="json", auth="user")
+    @route("/discuss/settings/custom_notifications", methods=["POST"], type="jsonrpc", auth="user")
     def discuss_custom_notifications(self, custom_notifications, channel_id=None):
         """Set custom notifications for the given channel or general user settings.
         :param custom_notifications: (false|all|mentions|no_notif) custom notifications to set

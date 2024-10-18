@@ -56,7 +56,7 @@ class Authenticate(http.Controller):
         return request.redirect(updated_redirect.to_url(), local=False)
 
     # In this case, an exception will be thrown in case of preflight request if only POST is allowed.
-    @http.route(['/mail_client_extension/auth/access_token', '/mail_plugin/auth/access_token'], type='json', auth="none", cors="*",
+    @http.route(['/mail_client_extension/auth/access_token', '/mail_plugin/auth/access_token'], type='jsonrpc', auth="none", cors="*",
                 methods=['POST', 'OPTIONS'])
     def auth_access_token(self, auth_code='', **kw):
         """

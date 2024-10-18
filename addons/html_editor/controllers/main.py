@@ -278,7 +278,7 @@ class HTML_Editor(http.Controller):
 
         return attachment
 
-    @http.route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='json', auth='user', website=True)
+    @http.route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='jsonrpc', auth='user', website=True)
     def get_image_info(self, src=''):
         """This route is used to determine the information of an attachment so that
         it can be used as a base to modify it again (crop/optimization/filters).
@@ -312,7 +312,7 @@ class HTML_Editor(http.Controller):
             'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
 
-    @http.route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='json', auth='user', website=True)
+    @http.route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='jsonrpc', auth='user', website=True)
     def video_url_data(self, video_url, autoplay=False, loop=False,
                        hide_controls=False, hide_fullscreen=False,
                        hide_dm_logo=False, hide_dm_share=False):
@@ -322,7 +322,7 @@ class HTML_Editor(http.Controller):
             hide_dm_logo=hide_dm_logo, hide_dm_share=hide_dm_share
         )
 
-    @http.route(['/web_editor/attachment/add_data', '/html_editor/attachment/add_data'], type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/web_editor/attachment/add_data', '/html_editor/attachment/add_data'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
         data = b64decode(data)
         if is_image:
@@ -349,13 +349,13 @@ class HTML_Editor(http.Controller):
         attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
-    @http.route(['/web_editor/attachment/add_url', '/html_editor/attachment/add_url'], type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/web_editor/attachment/add_url', '/html_editor/attachment/add_url'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
         self._clean_context()
         attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
-    @http.route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="json", auth="user", website=True)
+    @http.route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="jsonrpc", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, alt_data=None):
         """
         Creates a modified copy of an attachment and returns its image_src to be
@@ -421,7 +421,7 @@ class HTML_Editor(http.Controller):
         attachment.generate_access_token()
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
-    @http.route(['/web_editor/save_library_media', '/html_editor/save_library_media'], type='json', auth='user', methods=['POST'])
+    @http.route(['/web_editor/save_library_media', '/html_editor/save_library_media'], type='jsonrpc', auth='user', methods=['POST'])
     def save_library_media(self, media):
         """
         Saves images from the media library as new attachments, making them
@@ -518,7 +518,7 @@ class HTML_Editor(http.Controller):
             ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
         ])
 
-    @http.route(["/web_editor/generate_text", "/html_editor/generate_text"], type="json", auth="user")
+    @http.route(["/web_editor/generate_text", "/html_editor/generate_text"], type="jsonrpc", auth="user")
     def generate_text(self, prompt, conversation_history):
         try:
             IrConfigParameter = request.env['ir.config_parameter'].sudo()
@@ -540,11 +540,11 @@ class HTML_Editor(http.Controller):
         except AccessError:
             raise AccessError(_("Oops, it looks like our AI is unreachable!"))
 
-    @http.route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='json', auth="user")
+    @http.route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='jsonrpc', auth="user")
     def get_ice_servers(self):
         return request.env['mail.ice.server']._get_ice_servers()
 
-    @http.route(["/web_editor/bus_broadcast", "/html_editor/bus_broadcast"], type="json", auth="user")
+    @http.route(["/web_editor/bus_broadcast", "/html_editor/bus_broadcast"], type="jsonrpc", auth="user")
     def bus_broadcast(self, model_name, field_name, res_id, bus_data):
         document = request.env[model_name].browse([res_id])
 
@@ -557,11 +557,11 @@ class HTML_Editor(http.Controller):
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
 
-    @http.route('/html_editor/link_preview_external', type="json", auth="public", methods=['POST'])
+    @http.route('/html_editor/link_preview_external', type="jsonrpc", auth="public", methods=['POST'])
     def link_preview_metadata(self, preview_url):
         return link_preview.get_link_preview_from_url(preview_url)
 
-    @http.route('/html_editor/link_preview_internal', type="json", auth="user", methods=['POST'])
+    @http.route('/html_editor/link_preview_internal', type="jsonrpc", auth="user", methods=['POST'])
     def link_preview_metadata_internal(self, preview_url):
         try:
             Actions = request.env['ir.actions.actions']

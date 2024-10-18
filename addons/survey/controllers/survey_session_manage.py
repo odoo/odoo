@@ -65,7 +65,7 @@ class UserInputSession(http.Controller):
         # Note that at this stage survey.session_state can be False meaning that the survey has ended (session closed)
         return request.render('survey.user_input_session_manage', self._prepare_manage_session_values(survey))
 
-    @http.route('/survey/session/next_question/<string:survey_token>', type='json', auth='user', website=True)
+    @http.route('/survey/session/next_question/<string:survey_token>', type='jsonrpc', auth='user', website=True)
     def survey_session_next_question(self, survey_token, go_back=False, **kwargs):
         """ This route is called when the host goes to the next question of the session.
 
@@ -120,7 +120,7 @@ class UserInputSession(http.Controller):
         else:
             return {}
 
-    @http.route('/survey/session/results/<string:survey_token>', type='json', auth='user', website=True)
+    @http.route('/survey/session/results/<string:survey_token>', type='jsonrpc', auth='user', website=True)
     def survey_session_results(self, survey_token, **kwargs):
         """ This route is called when the host shows the current question's results.
 
@@ -141,7 +141,7 @@ class UserInputSession(http.Controller):
 
         return self._prepare_question_results_values(survey, user_input_lines)
 
-    @http.route('/survey/session/leaderboard/<string:survey_token>', type='json', auth='user', website=True)
+    @http.route('/survey/session/leaderboard/<string:survey_token>', type='jsonrpc', auth='user', website=True)
     def survey_session_leaderboard(self, survey_token, **kwargs):
         """ This route is called when the host shows the current question's attendees leaderboard.
 
@@ -182,7 +182,7 @@ class UserInputSession(http.Controller):
                                   dict(**survey_error, session_code=session_code))
         return request.redirect(survey.get_start_url())
 
-    @http.route('/survey/check_session_code/<string:session_code>', type='json', auth='public', website=True)
+    @http.route('/survey/check_session_code/<string:session_code>', type='jsonrpc', auth='public', website=True)
     def survey_check_session_code(self, session_code):
         """ Checks if the given code is matching a survey session_code.
         If yes, redirect to /s/code route.

@@ -6,7 +6,7 @@ from odoo.http import request
 
 
 class WebsiteUrl(http.Controller):
-    @http.route('/website_links/new', type='json', auth='user', methods=['POST'])
+    @http.route('/website_links/new', type='jsonrpc', auth='user', methods=['POST'])
     def create_shorten_url(self, **post):
         if 'url' not in post or post['url'] == '':
             return {'error': 'empty_url'}
@@ -20,7 +20,7 @@ class WebsiteUrl(http.Controller):
             **post,
         })
 
-    @http.route('/website_links/add_code', type='json', auth='user')
+    @http.route('/website_links/add_code', type='jsonrpc', auth='user')
     def add_code(self, **post):
         link_id = request.env['link.tracker.code'].search([('code', '=', post['init_code'])], limit=1).link_id.id
         new_code = request.env['link.tracker.code'].search_count([('code', '=', post['new_code']), ('link_id', '=', link_id)])
@@ -29,7 +29,7 @@ class WebsiteUrl(http.Controller):
         else:
             return request.env['link.tracker.code'].create({'code': post['new_code'], 'link_id': link_id})[0].read()
 
-    @http.route('/website_links/recent_links', type='json', auth='user')
+    @http.route('/website_links/recent_links', type='jsonrpc', auth='user')
     def recent_links(self, **post):
         return request.env['link.tracker'].recent_links(post['filter'], post['limit'])
 

@@ -11,7 +11,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class RtcController(http.Controller):
-    @http.route("/mail/rtc/session/notify_call_members", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/rtc/session/notify_call_members", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def session_call_notify(self, peer_notifications):
         """Sends content to other session of the same channel, only works if the user is the user of that session.
@@ -37,7 +37,7 @@ class RtcController(http.Controller):
         for session_sudo, notifications in notifications_by_session.items():
             session_sudo._notify_peers(notifications)
 
-    @http.route("/mail/rtc/session/update_and_broadcast", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/rtc/session/update_and_broadcast", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def session_update_and_broadcast(self, session_id, values):
         """Update a RTC session and broadcasts the changes to the members of its channel,
@@ -59,7 +59,7 @@ class RtcController(http.Controller):
         if session and session.partner_id == request.env.user.partner_id:
             session._update_and_broadcast(values)
 
-    @http.route("/mail/rtc/channel/join_call", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/rtc/channel/join_call", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def channel_call_join(self, channel_id, check_rtc_session_ids=None):
         """Joins the RTC call of a channel if the user is a member of that channel
@@ -76,7 +76,7 @@ class RtcController(http.Controller):
         member.sudo()._rtc_join_call(store, check_rtc_session_ids=check_rtc_session_ids)
         return store.get_result()
 
-    @http.route("/mail/rtc/channel/leave_call", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/rtc/channel/leave_call", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def channel_call_leave(self, channel_id):
         """Disconnects the current user from a rtc call and clears any invitation sent to that user on this channel
@@ -88,7 +88,7 @@ class RtcController(http.Controller):
         # sudo: discuss.channel.rtc.session - member of current user can leave call
         member.sudo()._rtc_leave_call()
 
-    @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def channel_call_cancel_invitation(self, channel_id, member_ids=None):
         """
@@ -115,7 +115,7 @@ class RtcController(http.Controller):
             ],
         )
 
-    @http.route("/discuss/channel/ping", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/ping", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def channel_ping(self, channel_id, rtc_session_id=None, check_rtc_session_ids=None):
         member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])

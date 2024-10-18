@@ -11,7 +11,7 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 class Delivery(WebsiteSale):
     _express_checkout_delivery_route = '/shop/express/shipping_address_change'
 
-    @route('/shop/delivery_methods', type='json', auth='public', website=True)
+    @route('/shop/delivery_methods', type='jsonrpc', auth='public', website=True)
     def shop_delivery_methods(self):
         """ Fetch available delivery methods and render them in the delivery form.
 
@@ -31,7 +31,7 @@ class Delivery(WebsiteSale):
         """ Hook to update values used for rendering the website_sale.delivery_form template. """
         return {}
 
-    @route('/shop/set_delivery_method', type='json', auth='public', website=True)
+    @route('/shop/set_delivery_method', type='jsonrpc', auth='public', website=True)
     def shop_set_delivery_method(self, dm_id=None, **kwargs):
         """ Set the delivery method on the current order and return the order summary values.
 
@@ -86,7 +86,7 @@ class Delivery(WebsiteSale):
             ),
         }
 
-    @route('/shop/get_delivery_rate', type='json', auth='public', methods=['POST'], website=True)
+    @route('/shop/get_delivery_rate', type='jsonrpc', auth='public', methods=['POST'], website=True)
     def shop_get_delivery_rate(self, dm_id):
         """ Return the delivery rate data for the given delivery method.
 
@@ -118,7 +118,7 @@ class Delivery(WebsiteSale):
             )
         return rate
 
-    @route('/website_sale/set_pickup_location', type='json', auth='public', website=True)
+    @route('/website_sale/set_pickup_location', type='jsonrpc', auth='public', website=True)
     def website_sale_set_pickup_location(self, pickup_location_data):
         """ Fetch the order from the request and set the pickup location on the current order.
 
@@ -128,7 +128,7 @@ class Delivery(WebsiteSale):
         order_sudo = request.website.sale_get_order()
         order_sudo._set_pickup_location(pickup_location_data)
 
-    @route('/website_sale/get_pickup_locations', type='json', auth='public', website=True)
+    @route('/website_sale/get_pickup_locations', type='jsonrpc', auth='public', website=True)
     def website_sale_get_pickup_locations(self, zip_code=None, **kwargs):
         """ Fetch the order from the request and return the pickup locations close to the zip code.
 
@@ -142,7 +142,7 @@ class Delivery(WebsiteSale):
         country = order_sudo.partner_shipping_id.country_id
         return order_sudo._get_pickup_locations(zip_code, country, **kwargs)
 
-    @route(_express_checkout_delivery_route, type='json', auth='public', website=True)
+    @route(_express_checkout_delivery_route, type='jsonrpc', auth='public', website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):
         """ Process the shipping address and return the available delivery methods.
 

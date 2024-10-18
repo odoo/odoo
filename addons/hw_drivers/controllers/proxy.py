@@ -10,11 +10,11 @@ class ProxyController(http.Controller):
     def hello(self):
         return "ping"
 
-    @http.route('/hw_proxy/handshake', type='json', auth='none', cors='*')
+    @http.route('/hw_proxy/handshake', type='jsonrpc', auth='none', cors='*')
     def handshake(self):
         return True
 
-    @http.route('/hw_proxy/status_json', type='json', auth='none', cors='*')
+    @http.route('/hw_proxy/status_json', type='jsonrpc', auth='none', cors='*')
     def status_json(self):
         statuses = {}
         for driver in proxy_drivers:

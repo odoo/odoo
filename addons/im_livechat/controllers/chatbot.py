@@ -7,7 +7,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class LivechatChatbotScriptController(http.Controller):
-    @http.route("/chatbot/restart", type="json", auth="public")
+    @http.route("/chatbot/restart", type="jsonrpc", auth="public")
     @add_guest_to_context
     def chatbot_restart(self, channel_id, chatbot_script_id):
         discuss_channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -18,7 +18,7 @@ class LivechatChatbotScriptController(http.Controller):
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
         return Store(message, for_current_user=True).get_result()
 
-    @http.route("/chatbot/answer/save", type="json", auth="public")
+    @http.route("/chatbot/answer/save", type="jsonrpc", auth="public")
     @add_guest_to_context
     def chatbot_save_answer(self, channel_id, message_id, selected_answer_id):
         discuss_channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -34,7 +34,7 @@ class LivechatChatbotScriptController(http.Controller):
         if selected_answer in chatbot_message.script_step_id.answer_ids:
             chatbot_message.write({'user_script_answer_id': selected_answer_id})
 
-    @http.route("/chatbot/step/trigger", type="json", auth="public")
+    @http.route("/chatbot/step/trigger", type="jsonrpc", auth="public")
     @add_guest_to_context
     def chatbot_trigger_step(self, channel_id, chatbot_script_id=None):
         chatbot_language = self._get_chatbot_language()
@@ -90,7 +90,7 @@ class LivechatChatbotScriptController(http.Controller):
         )
         return store.get_result()
 
-    @http.route("/chatbot/step/validate_email", type="json", auth="public")
+    @http.route("/chatbot/step/validate_email", type="jsonrpc", auth="public")
     @add_guest_to_context
     def chatbot_validate_email(self, channel_id):
         discuss_channel = request.env["discuss.channel"].search(

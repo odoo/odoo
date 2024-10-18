@@ -47,10 +47,10 @@ class TestImageUploadProgress(odoo.tests.HttpCase):
 
         # because not preprocessed by ControllerType metaclass
         fetch_unsplash_images.routing_type = 'json'
-        Web_Unsplash.fetch_unsplash_images = http.route("/web_unsplash/fetch_images", type='json', auth="user")(fetch_unsplash_images)
+        Web_Unsplash.fetch_unsplash_images = http.route("/web_unsplash/fetch_images", type='jsonrpc', auth="user")(fetch_unsplash_images)
 
         # disable undraw, no third party should be called in tests
         media_library_search.routing_type = 'json'
-        Web_Editor.media_library_search = http.route(['/web_editor/media_library_search'], type='json', auth="user", website=True)(media_library_search)
+        Web_Editor.media_library_search = http.route(['/web_editor/media_library_search'], type='jsonrpc', auth="user", website=True)(media_library_search)
 
         self.start_tour(self.env['website'].get_client_action_url('/test_image_progress'), 'test_image_upload_progress_unsplash', login="admin")

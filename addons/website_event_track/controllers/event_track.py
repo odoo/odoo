@@ -391,7 +391,7 @@ class EventTrackController(http.Controller):
             'user_event_manager': request.env.user.has_group('event.group_event_manager'),
         }
 
-    @http.route("/event/track/toggle_reminder", type="json", auth="public", website=True)
+    @http.route("/event/track/toggle_reminder", type="jsonrpc", auth="public", website=True)
     def track_reminder_toggle(self, track_id, set_reminder_on):
         """ Set a reminder a track for current visitor. Track visitor is created or updated
         if it already exists. Exception made if un-favoriting and no track_visitor
@@ -489,7 +489,7 @@ class EventTrackController(http.Controller):
         return json.dumps({'success': True})
 
     # ACL : This route is necessary since rpc search_read method in js is not accessible to all users (e.g. public user).
-    @http.route(['''/event/track_tag/search_read'''], type='json', auth="public", website=True)
+    @http.route(['''/event/track_tag/search_read'''], type='jsonrpc', auth="public", website=True)
     def website_event_track_fetch_tags(self, domain, fields):
         return request.env['event.track.tag'].search_read(domain, fields)
 

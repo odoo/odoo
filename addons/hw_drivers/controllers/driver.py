@@ -22,7 +22,7 @@ _logger = logging.getLogger(__name__)
 
 
 class DriverController(http.Controller):
-    @http.route('/hw_drivers/action', type='json', auth='none', cors='*', csrf=False, save_session=False)
+    @http.route('/hw_drivers/action', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
     def action(self, session_id, device_identifier, data):
         """
         This route is called when we want to make a action with device (take picture, printing,...)
@@ -54,7 +54,7 @@ class DriverController(http.Controller):
         """
         helpers.get_certificate_status()
 
-    @http.route('/hw_drivers/event', type='json', auth='none', cors='*', csrf=False, save_session=False)
+    @http.route('/hw_drivers/event', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
     def event(self, listener):
         """
         listener is a dict in witch there are a sessions_id and a dict of device_identifier to listen
