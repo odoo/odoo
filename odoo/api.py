@@ -55,6 +55,7 @@ ValuesType = dict[str, typing.Any]
 T = typing.TypeVar('T')
 
 _logger = logging.getLogger(__name__)
+MAX_INT = 9223372036854775807 # max bigint in SQL
 
 
 class NewId:
@@ -69,6 +70,22 @@ class NewId:
 
     def __bool__(self):
         return False
+
+    def __lt__(self, other: NewId | int) -> bool:
+        if isinstance(other, NewId):
+            other = other.origin or MAX_INT
+        if not isinstance(other, int):
+            return NotImplemented
+        this = self.origin or MAX_INT
+        return this < other
+
+    def __gt__(self, other: NewId | int) -> bool:
+        if isinstance(other, NewId):
+            other = other.origin or MAX_INT
+        if not isinstance(other, int):
+            return NotImplemented
+        this = self.origin or MAX_INT
+        return this > other
 
     def __eq__(self, other):
         return isinstance(other, NewId) and (

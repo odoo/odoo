@@ -227,6 +227,33 @@ def check_companies_domain_parent_of(self, companies):
     ])]
 
 
+class ReversibleComparator:
+    __slots__ = ('__item', '__nulls_first', '__reverse')
+
+    def __init__(self, item, reverse: bool, nulls_first: bool):
+        self.__item = item
+        self.__reverse = reverse
+        self.__nulls_first = nulls_first
+
+    def __lt__(self, other: ReversibleComparator) -> bool:
+        if (self.__item is False and not isinstance(other.__item, bool)) or (isinstance(self.__item, Model) and not self.__item):
+            return self.__nulls_first
+        if (other.__item is False and not isinstance(self.__item, bool)) or (isinstance(other.__item, Model) and not other.__item):
+            return not self.__nulls_first
+        if self.__reverse:
+            return other.__item < self.__item
+        return self.__item < other.__item
+
+    def __eq__(self, other: ReversibleComparator) -> bool:
+        return self.__item == other.__item
+
+    def __hash__(self):
+        return hash(self.__item)
+
+    def __repr__(self):
+        return f"<ReversibleComparator {self.__item!r}{self.__reverse and ' reverse' or ''}>"
+
+
 class MetaModel(api.Meta):
     """ The metaclass of all model classes.
         Its main purpose is to register the models per module.
@@ -6646,9 +6673,13 @@ class BaseModel(metaclass=MetaModel):
     def sorted(self, key=None, reverse=False) -> Self:
         """Return the recordset ``self`` ordered by ``key``.
 
-        :param key: either a function of one argument that returns a
-            comparison key for each record, or a field name, or ``None``, in
-            which case records are ordered according the default model's order
+        :param key:
+            It can be either of:
+
+            * a function of one argument that returns a comparison key for each record
+            * a string representing a comma-separated list of field names with optional
+              NULLS (FIRST|LAST), and (ASC|DESC) directions
+            * ``None``, in which case records are ordered according the default model's order
         :type key: callable or str or None
         :param bool reverse: if ``True``, return the result in reverse order
 
@@ -6656,18 +6687,59 @@ class BaseModel(metaclass=MetaModel):
 
             # sort records by name
             records.sorted(key=lambda r: r.name)
+            # sort records by name in descending order, then by id
+            records.sorted('name DESC, id')
+            # sort records using default order
+            records.sorted()
         """
-        if key is None:
-            if any(self._ids):
-                ids = self.search([('id', 'in', self.ids)])._ids
-            else:  # Don't support new ids because search() doesn't work on new records
-                ids = self._ids
-            ids = tuple(reversed(ids)) if reverse else ids
-        else:
-            if isinstance(key, str):
-                key = itemgetter(key)
-            ids = tuple(item.id for item in sorted(self, key=key, reverse=reverse))
+        if isinstance(key, str):
+            key = self._sorted_order_to_function(key)
+        elif key is None:
+            key = self._sorted_order_to_function(self._order)
+        ids = tuple(item.id for item in sorted(self, key=key, reverse=reverse))
         return self.__class__(self.env, ids, self._prefetch_ids)
+
+    @api.model
+    def _sorted_order_to_function(self, order: str) -> Callable[[BaseModel], tuple]:
+        item_makers = []
+        for order_part in order.split(','):
+            order_match = regex_order.match(order_part)
+            if not order_match:
+                raise ValueError(f"Invalid order {order!r} to sort")
+            field_name = order_match['field']
+            property_name = order_match['property']
+            reverse = (order_match['direction'] or '').upper() == 'DESC'
+            nulls = (order_match['nulls'] or '').upper()
+            if not nulls:
+                nulls = 'NULLS FIRST' if reverse else 'NULLS LAST'
+
+            field = self._fields[field_name]
+            if field.type == 'many2one':
+                seen = self.env.context.get('__m2o_order_seen', ())
+                if field in seen:
+                    continue
+                comodel = self.env[field.comodel_name].with_context(__m2o_order_seen=frozenset((field, *seen)))
+                func_comodel = comodel._sorted_order_to_function(comodel._order)
+
+                def getter(rec, field_name=field_name, func_comodel=func_comodel):  # bind the variables in a loop
+                    value = rec[field_name]
+                    if not value:
+                        return False
+                    return func_comodel(value)
+            elif field.type in ('one2many', 'many2many'):
+                raise ValueError(f"Invalid order on x2many {order!r} to sort")
+            else:
+                def getter(rec, field_name=field_name, property_name=property_name):  # bind the variables in a loop
+                    return rec[field_name] if not property_name else rec[field_name].get(property_name)
+
+            comparator = functools.partial(
+                ReversibleComparator,
+                reverse=reverse,
+                nulls_first=(nulls == 'NULLS FIRST'),
+            )
+            item_makers.append(lambda rec, comparator=comparator, getter=getter: comparator(getter(rec)))
+
+        return lambda rec: tuple(fn(rec) for fn in item_makers)
 
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """
