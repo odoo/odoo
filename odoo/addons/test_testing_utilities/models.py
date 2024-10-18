@@ -382,3 +382,35 @@ class Test_Testing_UtilitiesWide(models.Model):
     tax_ids = fields.Float()
     tax_line_id = fields.Float()
     tax_tag_invert = fields.Float()
+
+
+class AuditTest(models.Model):
+    _name = _description = 'test.audit'
+
+    _audit_fieldnames = True
+    _audit_no_val_fieldnames = {'field1'}
+    _no_audit_fieldnames = {'field2'}
+
+    def _filter_audit_records(self):
+        return self.filtered(lambda a: not a.bool1)
+
+    name = fields.Char()
+    field1 = fields.Char(string='Field1')
+    field2 = fields.Char(string='Field2')
+    bool1 = fields.Boolean(string="Filter Bool", default=False)
+    bool2 = fields.Boolean(string="Bool2", default=False)
+    auditb_id = fields.Many2one('test.auditb')
+    auditb_ids = fields.Many2many(comodel_name='test.auditb', string='m2mauditb')
+
+
+class AuditTestB(models.Model):
+    _name = _description = 'test.auditb'
+
+    _audit_fieldnames = {'name', 'field2', 'field1'}
+    _audit_no_val_fieldnames = {'field1'}
+    _no_audit_fieldnames = {'field2'}
+
+    name = fields.Char()
+    field1 = fields.Char(string='Field1')
+    field2 = fields.Char(string='Field2')
+    bool1 = fields.Boolean(string="Filter Bool")

@@ -8,6 +8,7 @@ from odoo import api, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger('audit.res.config')
 
 
 class ResConfigModuleInstallationMixin(object):
@@ -324,6 +325,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         self = self.with_context(active_test=False)
         classified = self._get_classified_fields()
         current_settings = self.default_get(list(self.fields_get()))
+        data_to_log = []
 
         # default values fields
         IrDefault = self.env['ir.default'].sudo()
@@ -337,6 +339,10 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 value = self[name]
             if name not in current_settings or value != current_settings[name]:
                 IrDefault.set(model, field, value)
+                previous_value = ""
+                if name in current_settings:
+                    previous_value = f"{current_settings[name]} ==> "
+                data_to_log.append(f"{previous_value}{model}.{field} = value")
 
         # group fields: modify group / implied groups
         for name, groups, implied_group in sorted(classified['group'], key=lambda k: self[k[0]]):
@@ -346,8 +352,10 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 continue
             if int(self[name]):
                 groups._apply_group(implied_group)
+                data_to_log.append(f"{implied_group} added")
             else:
                 groups._remove_group(implied_group)
+                data_to_log.append(f"{implied_group} removed")
 
         # config fields: store ir.config_parameters
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
@@ -368,7 +376,12 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
             if current_value == str(value) or current_value == value:
                 continue
+            data_to_log.append(f" {icp} : {current_value} ==>>{value}")
             IrConfigParameter.set_param(icp, value)
+        if data_to_log:
+            data = ", ".join(data_to_log)
+            _audit_logger.getChild("write").info("Settings modified for %r by user %r (#%d)", data,
+                self.env.user.login, self.env.user.id)
 
     def execute(self):
         """

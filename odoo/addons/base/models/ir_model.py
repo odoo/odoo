@@ -2011,6 +2011,8 @@ class IrModelAccess(models.Model):
     perm_create = fields.Boolean(string='Create Access')
     perm_unlink = fields.Boolean(string='Delete Access')
 
+    _audit_fieldnames = {"name", "active", "model_id", "group_id", "perm_read", "perm_write", "perm_create", "perm_unlink"}
+
     @api.model
     def group_names_with_access(self, model_name, access_mode):
         """ Return the names of visible groups which have been granted

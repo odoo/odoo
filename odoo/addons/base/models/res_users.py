@@ -199,6 +199,8 @@ class ResGroups(models.Model):
         ('check_api_key_duration', 'CHECK(api_key_duration >= 0)', 'The api key duration cannot be a negative value.'),
     ]
 
+    _audit_fieldnames = {'name', 'users', 'model_access', 'rule_groups', 'menu_access', 'view_access', 'category_id', 'share'}
+
     @api.constrains('users')
     def _check_one_user_type(self):
         self.users._check_one_user_type()
@@ -411,6 +413,9 @@ class ResUsers(models.Model):
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login!')
     ]
+
+    _audit_fieldnames = {'partner_id', 'login', 'active', 'name', 'email', 'groups_id', 'share', 'company_id', 'company_ids'}
+    _audit_no_val_fieldnames = {'password', 'new_password', 'signature'}
 
     def init(self):
         cr = self.env.cr

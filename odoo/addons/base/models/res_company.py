@@ -82,6 +82,10 @@ class ResCompany(models.Model):
         ('name_uniq', 'unique (name)', 'The company name must be unique!')
     ]
 
+    _audit_fieldnames = True
+    _audit_no_val_fieldnames = {'logo', 'logo_web', 'favicon', 'font', 'primary_color', 'secondary_color',
+                              'layout_background', 'layout_background_image'}
+
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):
             paperformat_euro = self.env.ref('base.paperformat_euro', False)

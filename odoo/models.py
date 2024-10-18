@@ -76,6 +76,7 @@ if typing.TYPE_CHECKING:
 _lt = LazyTranslate('base')
 _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
+_audit_logger = logging.getLogger("audit")
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_order = re.compile(r'''
@@ -660,6 +661,13 @@ class BaseModel(metaclass=MetaModel):
     _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
     "maximum idle lifetime (in hours), unlimited if ``0``"
 
+    _audit_fieldnames = set()
+    "Define which fields to log with value on write and create for the audit logging"
+    _no_audit_fieldnames = set(LOG_ACCESS_COLUMNS)  # Only useful when _audit_fieldnames is True
+    "Define which fields that should not be log with value on write and create for the audit logging"
+    _audit_no_val_fieldnames = set()
+    "Define which fields to log without value on write and create for the audit logging"
+
     def _valid_field_parameter(self, field, name):
         """ Return whether the given parameter name is valid for the field. """
         return name == 'related_sudo'
@@ -841,6 +849,12 @@ class BaseModel(metaclass=MetaModel):
             for cons in base._sql_constraints:
                 cls._sql_constraints[cons[0]] = cons
 
+            cls._no_audit_fieldnames = cls._no_audit_fieldnames | base._no_audit_fieldnames
+            cls._audit_no_val_fieldnames = cls._audit_no_val_fieldnames | base._audit_no_val_fieldnames
+            if not (isinstance(cls._audit_fieldnames, bool) or isinstance(base._audit_fieldnames, bool)):
+                cls._audit_fieldnames = cls._audit_fieldnames | base._audit_fieldnames
+            else:
+                cls._audit_fieldnames = cls._audit_fieldnames or base._audit_fieldnames
         cls._sql_constraints = list(cls._sql_constraints.values())
 
         # avoid assigning an empty dict to save memory
@@ -4657,6 +4671,8 @@ class BaseModel(metaclass=MetaModel):
             if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
+        _log_saved_data = self._save_values_for_log(vals)
+
         # set magic fields
         vals = {key: val for key, val in vals.items() if key not in bad_names}
         if self._log_access:
@@ -4786,6 +4802,7 @@ class BaseModel(metaclass=MetaModel):
 
         if check_company and self._check_company_auto:
             self._check_company()
+        self._log_audit_changes(vals, "write", _log_saved_data)
         return True
 
     def _write(self, vals):
@@ -5000,6 +5017,8 @@ class BaseModel(metaclass=MetaModel):
 
         if self._check_company_auto:
             records._check_company()
+
+        records._log_audit_changes(vals_list, "create")
 
         import_module = self.env.context.get('_import_current_module')
         if not import_module: # not an import -> bail
@@ -7309,6 +7328,106 @@ class BaseModel(metaclass=MetaModel):
             complete path to access it (eg: module/path/to/image.png).
         """
         return False
+
+    def _save_values_for_log(self, values):
+        """ Saves specific data before record modification. When logging modification of
+        data (write), it is better to know the changed value.
+
+        Didn't use read() as it doesn't return recordset but list of ids/display_name.
+        :param dict values: fields to update and the value to set on them (as on create/write)
+        :return: A dict {record_id:{fields:values}}
+        """
+        saved_data = {}
+        if self._audit_fieldnames:
+            for record in self._filter_audit_records():
+                _saved_data_by_id = {}
+                for key in values:
+                    if self._is_auditable_field_with_val(key):
+                        try:
+                            _saved_data_by_id[key] = record[key]
+                        except MissingError:
+                            continue
+                        except KeyError:  # raise ValueError to be consistent with write
+                            raise ValueError("Invalid field %r on model %r" % (key, self._name))
+                if _saved_data_by_id:
+                    saved_data[record.id] = _saved_data_by_id
+        return saved_data
+
+    def _format_log(self, key, saved_values=None):
+        """ Formats log based on their type.
+        In case of a recordset modification, only the added and removed records are logged.
+        :param string key: The key of the modified field
+        :param record saved_values: In case of a modification of data, the state of the record self before modification
+        :return: A formated string in order to display the new record state on a specific key
+        """
+        if saved_values and saved_values[key] == self[key]:
+            return ""
+        elif not saved_values or (saved_values and isinstance(saved_values[key], bool)):
+            # Don't log fields without value set
+            if not saved_values and (
+                (isinstance(self[key], bool) and self._fields[key].type != 'boolean') or
+                (isinstance(self[key], BaseModel) and not self[key])):
+                return ""
+            return f"{key}: {self[key]!r}"
+        elif isinstance(saved_values[key], BaseModel):
+            if len(self[key]) <= 1 >= len(saved_values[key]):
+                return f"{key}: {saved_values[key]} ==> {self[key]}"
+            else:  # Log only the changes for recordset
+                added_diff = self[key] - saved_values[key]
+                removed_diff = saved_values[key] - self[key]
+                crafted_string = ""
+                if removed_diff:
+                    crafted_string += f"Removed: {removed_diff} "
+                if added_diff:
+                    crafted_string += f"Added: {added_diff}"
+                return f"{key}: {crafted_string}" if crafted_string else ""
+        else:
+            return f"{key}: {saved_values[key]!r} ==> {self[key]!r}"
+
+    def _is_auditable_field_with_val(self, key):
+        """ Check if the fields should be audited with vals"""
+        if not self._audit_fieldnames or key in (self._no_audit_fieldnames | self._audit_no_val_fieldnames):
+            return False
+        if isinstance(self._audit_fieldnames, bool):
+            return True
+        else:
+            return key in self._audit_fieldnames
+
+    def _get_logging_strings(self, vals, before_modification=None):
+        """ For each record generate a string containing the change on required auditing fields.
+        :param dict vals: values for the model's fields, as a list of dictionaries (as used in create/write)
+        :param dict before_modification: In order to log previous to new data, a dict {record_id:{fields:values}}
+            usually returned by _save_values_for_log()
+        :returns: A generator of record, data_to_log where data_to_log is a string with all the data that should be
+            logged
+        """
+        for index, record in enumerate(self._filter_audit_records()):
+            data_to_log = []
+            vals = vals[index] if isinstance(vals, list) else vals
+            for key in vals:
+                if self._is_auditable_field_with_val(key):
+                    past_value = None
+                    if before_modification:
+                        past_value = before_modification[record.id]
+                    log_formated = record._format_log(key, past_value)
+                    if log_formated:
+                        data_to_log.append(log_formated)
+                elif self._audit_no_val_fieldnames and key in self._audit_no_val_fieldnames:
+                    data_to_log.append(f"{key!r} set")
+            if data_to_log:
+                yield record, ", ".join(data_to_log)
+
+    def _log_audit_changes(self, vals, logger_suffix, _log_saved_data=None):
+        if self._audit_fieldnames or self._audit_no_val_fieldnames:
+            _audit_logger_temp = _audit_logger.getChild(f"{self.__class__.__name__}.{logger_suffix}")
+            string_to_log = ', '.join(f"{record} with {data!r}" for record, data in
+                self._get_logging_strings(vals, _log_saved_data))
+            if string_to_log:
+                _audit_logger_temp.info("%s by %s", string_to_log, self.env.user)
+
+    def _filter_audit_records(self):
+        """This can be used to filter the audited records"""
+        return self
 
 
 collections.abc.Set.register(BaseModel)
