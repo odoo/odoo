@@ -582,7 +582,7 @@ async function mail_link_preview_hide(request) {
             MailMessage._bus_notification_target(linkPreview.message_id),
             "mail.record/insert",
             new mailDataHelpers.Store(MailMessage.browse(linkPreview.message_id), {
-                linkPreviews: mailDataHelpers.Store.many(
+                link_preview_ids: mailDataHelpers.Store.many(
                     MailLinkPreview.browse(linkPreview.id),
                     "DELETE",
                     makeKwArgs({ only_id: true })

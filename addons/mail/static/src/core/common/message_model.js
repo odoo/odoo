@@ -124,8 +124,8 @@ export class Message extends Record {
     is_note;
     /** @type {boolean} */
     is_transient;
-    linkPreviews = Record.many("mail.link.preview", {
-        inverse: "message",
+    link_preview_ids = Record.many("mail.link.preview", {
+        inverse: "message_id",
         onDelete: (r) => r.delete(),
     });
     /** @type {number[]} */
@@ -340,8 +340,8 @@ export class Message extends Record {
             this.body.startsWith("<a") &&
             this.body.endsWith("/a>") &&
             this.body.match(/<\/a>/im)?.length === 1 &&
-            this.linkPreviews.length === 1 &&
-            this.linkPreviews[0].isImage
+            this.link_preview_ids.length === 1 &&
+            this.link_preview_ids[0].isImage
         );
     }
 

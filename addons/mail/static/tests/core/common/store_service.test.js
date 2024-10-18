@@ -47,7 +47,7 @@ test("store.insert deletes record after relation created it", async () => {
     store.insert({
         "mail.message": [{ id: 1, _DELETE: true }],
         // they key coverage of the test is to have the relation listed after the delete
-        "mail.link.preview": [{ id: 1, message: { id: 1 } }],
+        "mail.link.preview": [{ id: 1, message_id: { id: 1 } }],
     });
     await assertSteps(["new-1"]);
     expect(store["mail.message"].get({ id: 1 })?.id).toBe(undefined);

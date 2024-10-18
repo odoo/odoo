@@ -289,7 +289,7 @@ patch(MockServer.prototype, {
                     this.mockMailThread_MessageComputeSubject(message.model, [message.res_id]).get(
                         message.res_id
                     ),
-                linkPreviews: linkPreviewsFormatted,
+                link_preview_ids: linkPreviewsFormatted,
                 reactions: reactionGroups,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,

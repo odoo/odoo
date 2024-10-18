@@ -17,6 +17,7 @@ class TestLinkPreview(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.maxDiff = None
         cls.test_partner = cls.env['res.partner'].create({'name': 'a partner'})
         cls.existing_message = cls.test_partner.message_post(body='Test')
         cls.title = 'Test title'
@@ -137,7 +138,7 @@ class TestLinkPreview(MailCommon):
                                     {
                                         "id": message.link_preview_ids.id,
                                         "image_mimetype": False,
-                                        "message": message.id,
+                                        "message_id": message.id,
                                         "og_description": self.og_description,
                                         "og_image": self.og_image,
                                         "og_mimetype": False,
@@ -150,7 +151,7 @@ class TestLinkPreview(MailCommon):
                                 "mail.message": self._filter_messages_fields(
                                     {
                                         "id": message.id,
-                                        "linkPreviews": [message.link_preview_ids.id],
+                                        "link_preview_ids": [message.link_preview_ids.id],
                                     },
                                 ),
                             },
