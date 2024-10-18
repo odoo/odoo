@@ -55,14 +55,14 @@
                                     <div class="d-flex align-items-baseline">
                                         <field name="company_currency" invisible="1"/>
                                         <field name="expected_revenue" class="o_input_13ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
-                                        <span class="oe_grey p-2" groups="crm.group_use_recurring_revenues"> + </span>
-                                        <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>
+                                        <span class="opacity-50 p-2" groups="crm.group_use_recurring_revenues"> + </span>
+                                        <span class="opacity-50 p-2" groups="!crm.group_use_recurring_revenues"> at </span>
                                         <div class="d-flex align-items-baseline gap-3" groups="crm.group_use_recurring_revenues">
                                             <field name="recurring_revenue" class="o_input_10ch" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                             <div class="d-flex align-items-baseline">
                                                 <field name="recurring_plan" class="oe_inline o_input_13ch" placeholder='e.g. "Monthly"'
                                                     required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
-                                                <span class="oe_grey p-2 text-nowrap"> at </span>
+                                                <span class="opacity-50 p-2 text-nowrap"> at </span>
                                             </div>
                                         </div>
                                     </div>
@@ -73,13 +73,13 @@
                                             invisible="is_automated_probability">
                                         <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
                                     </button>
-                                    <small class="d-inline-block oe_grey h6 mb-0" invisible="is_automated_probability">
+                                    <small class="d-inline-block opacity-50 h6 mb-0" invisible="is_automated_probability">
                                         <field class="mb-0" name="automated_probability" force_save="1"/> %
                                     </small>
                                     <div id="probability" class="d-flex align-items-baseline">
                                         <field name="is_automated_probability" invisible="1"/>
                                         <field name="probability" widget="float" class="oe_inline o_input_6ch"/>
-                                        <span class="oe_grey p-2"> %</span>
+                                        <span class="opacity-50 p-2"> %</span>
                                     </div>
                                 </div>
                             </h2>
