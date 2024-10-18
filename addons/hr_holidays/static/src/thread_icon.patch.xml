@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
         <xpath expr="//*[@name='chat_static']" position="replace">
-            <div t-if="correspondent.im_status === 'leave_online'" class="o-mail-ThreadIcon-online fa fa-fw fa-plane" title="Online"/>
+            <div t-if="correspondent.im_status === 'leave_online'" class="o-mail-ThreadIcon-online fa fa-fw fa-plane text-success" title="Online"/>
             <div t-elif="correspondent.im_status === 'leave_offline'" class="fa fa-fw fa-plane" title="Out of office"/>
             <div t-elif="correspondent.im_status === 'leave_away'" class="fa fa-fw fa-plane o-yellow" title="Away"/>
             <t t-else="">$0</t>
