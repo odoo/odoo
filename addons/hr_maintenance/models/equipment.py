@@ -120,7 +120,7 @@ class MaintenanceRequest(models.Model):
         if custom_values is None:
             custom_values = {}
         email = tools.email_split(msg.get('from')) and tools.email_split(msg.get('from'))[0] or False
-        user = self.env['res.users'].search([('login', '=', email)], limit=1)
+        user = self.env['res.users'].search([('login', '=', email)], limit=1) if email else self.env['res.users']
         if user:
             employee = self.env.user.employee_id
             if employee:
