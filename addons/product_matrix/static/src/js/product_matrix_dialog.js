@@ -53,7 +53,7 @@ export class ProductMatrixDialog extends Component {
         const inputs = document.getElementsByClassName('o_matrix_input');
         let matrixChanges = [];
         for (let matrixInput of inputs) {
-            if (matrixInput.value && matrixInput.value !== matrixInput.nodeValue) {
+            if (matrixInput.value && matrixInput.value !== matrixInput.attributes.value.nodeValue) {
                 matrixChanges.push({
                     qty: parseFloat(matrixInput.value),
                     ptav_ids: matrixInput.attributes.ptav_ids.nodeValue.split(",").map(
