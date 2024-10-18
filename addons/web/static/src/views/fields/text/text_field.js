@@ -104,7 +104,7 @@ export const textField = {
             default: true,
         },
     ],
-    supportedTypes: ["html", "text"],
+    supportedTypes: ["html", "text", "char"],
     extractProps: ({ attrs, options }) => ({
         placeholder: attrs.placeholder,
         dynamicPlaceholder: options?.dynamic_placeholder || false,
