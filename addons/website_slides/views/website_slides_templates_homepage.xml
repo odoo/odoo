@@ -212,6 +212,7 @@
                         <t t-set="display_detail" t-valuef="false"/>
                         <t t-set="placeholder">Search courses</t>
                         <t t-set="search" t-value="original_search or search_term"/>
+                        <t t-set="search_count" t-value="len(channels)"/>
                         <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
                         <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
                     </t>
@@ -257,6 +258,7 @@
                             <t t-set="display_detail" t-valuef="false"/>
                             <t t-set="placeholder">Search courses</t>
                             <t t-set="search" t-value="original_search or search_term"/>
+                            <t t-set="search_count" t-value="len(channels)"/>
                             <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
                             <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
                         </t>
