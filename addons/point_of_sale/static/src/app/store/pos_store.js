@@ -732,8 +732,8 @@ export class PosStore extends Reactive {
         // It will return an instance of pos.pack.operation.lot
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_tmpl_id.isTracked() && configure) {
-            const code = opts.code;
+        const code = opts.code;
+        if (values.product_tmpl_id.isTracked() && (configure || code)) {
             let pack_lot_ids = {};
             const packLotLinesToEdit =
                 (!values.product_tmpl_id.isAllowOnlyOneLot() &&
