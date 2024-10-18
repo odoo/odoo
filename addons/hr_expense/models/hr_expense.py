@@ -1103,6 +1103,8 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_employee_from_email(self, email_address):
+        if not email_address:
+            return self.env['hr.employee']
         employee = self.env['hr.employee'].search([
             ('user_id', '!=', False),
             '|',
