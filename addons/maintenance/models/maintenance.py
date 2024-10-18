@@ -130,7 +130,7 @@ class MaintenanceEquipment(models.Model):
     def _compute_display_name(self):
         for record in self:
             if record.serial_no:
-                record.display_name = record.name + '/' + record.serial_no
+                record.display_name = (record.name or '') + '/' + record.serial_no
             else:
                 record.display_name = record.name
 
