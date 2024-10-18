@@ -158,7 +158,7 @@ class ChannelController(http.Controller):
             raise NotFound()
         sub_channel = channel._create_sub_channel(from_message_id, name)
         return {
-            "data": Store(sub_channel).add(sub_channel).get_result(),
+            "data": Store(sub_channel).get_result(),
             "sub_channel": Store.one_id(sub_channel),
         }
 
