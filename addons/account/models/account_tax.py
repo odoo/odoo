@@ -350,7 +350,7 @@ class AccountTax(models.Model):
         if not self.is_used:
             return
 
-        old_line_values_dict = ast.literal_eval(old_values_str)
+        old_line_values_dict = ast.literal_eval(old_values_str or '{}')
         new_line_values_dict = ast.literal_eval(new_values_str)
 
         # Categorize the lines that were added/removed/modified
