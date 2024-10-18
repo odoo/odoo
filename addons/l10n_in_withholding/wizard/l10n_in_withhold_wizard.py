@@ -186,6 +186,7 @@ class L10n_InWithholdWizard(models.TransientModel):
             'ref': self.reference,
             'l10n_in_is_withholding': True,
             'l10n_in_withholding_ref_move_id': self.related_move_id.id or self.related_payment_id.move_id.id,
+            'l10n_in_withholding_ref_payment_id': self.related_payment_id.id
         }
         return vals
 
