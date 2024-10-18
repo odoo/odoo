@@ -117,12 +117,12 @@ class DiscussChannel(models.Model):
             lambda c: c.parent_channel_id
             and (
                 c.parent_channel_id.parent_channel_id
-                or c.parent_channel_id.channel_type != "channel"
+                or c.parent_channel_id.channel_type not in ["channel", "group"]
             )
         ):
             raise ValidationError(
                 _(
-                    "Cannot create %(channels)s: parent should not be a sub-channel and should be of type 'channel'.",
+                    "Cannot create %(channels)s: parent should not be a sub-channel and should be of type 'channel' or 'group'.",
                     channels=format_list(self.env, failing_channels.mapped("name")),
                 ),
             )
