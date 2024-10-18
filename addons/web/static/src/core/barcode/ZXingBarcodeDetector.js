@@ -22,40 +22,6 @@ export function buildZXingBarcodeDetector(ZXing) {
     const allSupportedFormats = Array.from(ZXingFormats.keys());
 
     /**
-     * Restore previous behavior of the lib because since https://github.com/zxing-js/library/commit/7644e279df9fd2e754e044c25f450576d2878e45
-     * the new behavior of the lib breaks it when the lib use the ZXing.DecodeHintType.TRY_HARDER at true
-     *
-     * @override
-     */
-    ZXing.HTMLCanvasElementLuminanceSource.toGrayscaleBuffer = function (
-        imageBuffer,
-        width,
-        height
-    ) {
-        const grayscaleBuffer = new Uint8ClampedArray(width * height);
-        for (let i = 0, j = 0, length = imageBuffer.length; i < length; i += 4, j++) {
-            let gray;
-            const alpha = imageBuffer[i + 3];
-            // The color of fully-transparent pixels is irrelevant. They are often, technically, fully-transparent
-            // black (0 alpha, and then 0 RGB). They are often used, of course as the "white" area in a
-            // barcode image. Force any such pixel to be white:
-            if (alpha === 0) {
-                gray = 0xff;
-            } else {
-                const pixelR = imageBuffer[i];
-                const pixelG = imageBuffer[i + 1];
-                const pixelB = imageBuffer[i + 2];
-                // .299R + 0.587G + 0.114B (YUV/YIQ for PAL and NTSC),
-                // (306*R) >> 10 is approximately equal to R*0.299, and so on.
-                // 0x200 >> 10 is 0.5, it implements rounding.
-                gray = (306 * pixelR + 601 * pixelG + 117 * pixelB + 0x200) >> 10;
-            }
-            grayscaleBuffer[j] = gray;
-        }
-        return grayscaleBuffer;
-    };
-
-    /**
      * ZXingBarcodeDetector class
      *
      * BarcodeDetector-like polyfill class using ZXing library.
