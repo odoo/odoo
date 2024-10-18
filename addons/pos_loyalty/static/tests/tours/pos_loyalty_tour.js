@@ -3,6 +3,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Notification from "@point_of_sale/../tests/tours/utils/generic_components/notification_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 
@@ -544,5 +545,22 @@ registry.category("web_tour.tours").add("PosLoyaltyPromocodePricelist", {
             ProductScreen.addOrderline("Test Product 1", "1"),
             PosLoyalty.enterCode("hellopromo"),
             PosLoyalty.orderTotalIs("25.87"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("RefundRulesProduct", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("product_a"),
+            PosLoyalty.finalizeOrder("Cash", "1000"),
+            ProductScreen.isShown(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.filterIs("Paid"),
+            TicketScreen.selectOrder("-0001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.confirmRefund(),
+            ProductScreen.isShown(),
         ].flat(),
 });
