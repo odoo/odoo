@@ -1783,6 +1783,15 @@ export class Model extends Array {
         ({ ids: idOrIds, fields = [], load = "_classic_read" } = kwargs);
 
         const fieldNames = fields.length ? unique(["id", ...fields]) : Object.keys(this._fields);
+        return this._read_format(idOrIds, fieldNames, load);
+    }
+
+    _read_format(idOrIds, fnames, load) {
+        const kwargs = getKwArgs(arguments, "ids", "fnames", "load");
+        ({ ids: idOrIds, fnames = [], load = "_classic_read" } = kwargs);
+
+        fnames = unique(["id", ...fnames]);
+
         /** @type {ModelRecord[]} */
         const records = [];
 
@@ -1793,7 +1802,7 @@ export class Model extends Array {
         for (const record of this) {
             modelMap[this._name][record.id] = record;
         }
-        for (const fieldName of fieldNames) {
+        for (const fieldName of fnames) {
             const field = this._fields[fieldName];
             if (!field) {
                 continue; // the field doesn't exist on the model, so skip it
@@ -1828,7 +1837,7 @@ export class Model extends Array {
                 continue;
             }
             const result = { id: record.id };
-            for (const fieldName of fieldNames) {
+            for (const fieldName of fnames) {
                 const field = this._fields[fieldName];
                 if (!field) {
                     continue; // the field doesn't exist on the model, so skip it

@@ -5,10 +5,10 @@
         <div class="o-discuss-CallInvitation d-flex flex-column m-2 p-5 border border-dark rounded-1 text-bg-900" t-attf-class="{{ className }}" t-ref="root">
             <div t-if="props.thread.rtcInvitingSession" class="o-discuss-CallInvitation-correspondent d-flex flex-column justify-content-around align-items-center text-nowrap">
                 <img class="mb-2 rounded-circle cursor-pointer o_object_fit_cover"
-                    t-att-src="props.thread.rtcInvitingSession.channelMember.persona.avatarUrl"
+                    t-att-src="props.thread.rtcInvitingSession.channel_member_id.persona.avatarUrl"
                     t-on-click="onClickAvatar"
                     alt="Avatar"/>
-                <span class="w-100 fw-bolder text-truncate text-center overflow-hidden" t-esc="props.thread.rtcInvitingSession.channelMember.persona.name"/>
+                <span class="w-100 fw-bolder text-truncate text-center overflow-hidden" t-esc="props.thread.rtcInvitingSession.channel_member_id.persona.name"/>
                 <span class="fst-italic opacity-75">Incoming Call...</span>
             </div>
             <div class="d-flex justify-content-around align-items-center w-100 mt-4">

@@ -22,7 +22,7 @@
                 direction="compact ? 'v' : 'h'"
                 avatarClass="(p) => this.avatarClass(p)"
                 max="compact ? 1 : 4"
-                personas="sessions.map((s) => s.channelMember.persona)"
+                personas="sessions.map((s) => s.channel_member_id.persona)"
             />
             <t t-else="" t-call="mail.DiscussSidebarCallParticipants.list"/>
         </div>
@@ -35,8 +35,8 @@
                 <img t-att-src="persona?.avatarUrl" class="rounded-circle" t-att-title="persona?.name" t-att-class="{'o-mail-DiscussSidebarCallParticipants-avatar o-isTalking': session.isActuallyTalking}" style="width:24px;height:24px"/>
                 <span class="mx-1 text-truncate fw-bolder smaller" t-esc="persona?.name"/>
                 <span t-if="session.isMute" class="px-1 fa" t-att-class="callActionsRegistry.get('mute').icon"/>
-                <span t-if="session.isDeaf" class="px-1 fa position-relative" t-att-class="callActionsRegistry.get('deafen').icon" style="top: -2px;"/>
-                <span t-if="session.isScreenSharingOn" class="badge bg-danger o-text-white" style="font-size: 0.6rem;">LIVE</span>
+                <span t-if="session.is_deaf" class="px-1 fa position-relative" t-att-class="callActionsRegistry.get('deafen').icon" style="top: -2px;"/>
+                <span t-if="session.is_screen_sharing_on" class="badge bg-danger o-text-white" style="font-size: 0.6rem;">LIVE</span>
             </div>
         </div>
     </t>

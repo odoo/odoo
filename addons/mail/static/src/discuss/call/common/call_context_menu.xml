@@ -41,13 +41,13 @@
                     <div><span class="fw-bolder">codec: </span><t t-out="state.producerStats.audio.codec"/></div>
                     <div><span class="fw-bolder">clock rate: </span><t t-out="state.producerStats.audio.clockRate"/></div>
                 </t>
-                <t t-if="state.producerStats.camera and props.rtcSession.isCameraOn">
+                <t t-if="state.producerStats.camera and props.rtcSession.is_camera_on">
                     <hr class="w-100 border-top"/>
                     <div><span class="fw-bolder">camera</span></div>
                     <div><span class="fw-bolder">codec: </span><t t-out="state.producerStats.camera.codec"/></div>
                     <div><span class="fw-bolder">clock rate: </span><t t-out="state.producerStats.camera.clockRate"/></div>
                 </t>
-                <t t-if="state.producerStats.screen and props.rtcSession.isScreenSharingOn">
+                <t t-if="state.producerStats.screen and props.rtcSession.is_screen_sharing_on">
                     <hr class="w-100 border-top"/>
                     <div><span class="fw-bolder">screen</span></div>
                     <div><span class="fw-bolder">codec: </span><t t-out="state.producerStats.screen.codec"/></div>
