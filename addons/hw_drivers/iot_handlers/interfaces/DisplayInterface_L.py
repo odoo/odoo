@@ -21,7 +21,7 @@ class DisplayInterface(Interface):
         display_devices = {}
 
         if screeninfo is None:
-            # On IoT image < 24.08 we don't have screeninfo installed, so we can't get the connected displays
+            # On IoT image < 24.10 we don't have screeninfo installed, so we can't get the connected displays
             # We return a single display with x_screen = 0, to open a browser anyway, in case one is connected
             display_identifier = 'hdmi_0'
             display_devices[display_identifier] = {
