@@ -227,7 +227,9 @@ export class ResPartner extends webModels.ResPartner {
         );
         return Object.values(this.mail_partner_format(resultPartners.map((partner) => partner.id)));
     }
-
+    compute_im_status(partner) {
+        return partner.im_status;
+    }
     /**
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
@@ -253,7 +255,7 @@ export class ResPartner extends webModels.ResPartner {
                         active: partner.active,
                         email: partner.email,
                         id: partner.id,
-                        im_status: partner.im_status,
+                        im_status: this.compute_im_status(partner),
                         is_company: partner.is_company,
                         name: partner.name,
                         type: "partner",

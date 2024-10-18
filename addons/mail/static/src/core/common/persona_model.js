@@ -28,7 +28,7 @@ export class Persona extends Record {
     static new() {
         const record = super.new(...arguments);
         record.debouncedSetImStatus = debounce(
-            (newStatus) => (record.im_status = newStatus),
+            (newStatus) => record.updateImStatus(newStatus),
             this.IM_STATUS_DEBOUNCE_DELAY
         );
         return record;
@@ -118,6 +118,10 @@ export class Persona extends Record {
             return imageUrl("res.users", this.userId, "avatar_128", { unique: this.write_date });
         }
         return DEFAULT_AVATAR;
+    }
+
+    updateImStatus(newStatus) {
+        this.im_status = newStatus;
     }
 }
 
