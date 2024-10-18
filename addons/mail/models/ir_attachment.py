@@ -77,49 +77,31 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
-    def _to_store(self, store: Store, /, *, fields=None, extra_fields=None):
-        if fields is None:
-            fields = [
-                "checksum",
-                "create_date",
-                "filename",
-                "mimetype",
-                "name",
-                "res_name",
-                "size",
-                "thread",
-            ]
-        if extra_fields:
-            fields.extend(extra_fields)
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + [
+            "checksum",
+            "create_date",
+            "filename",
+            "mimetype",
+            "name",
+            "res_name",
+            "size",
+            Store.One("thread", as_thread=True, only_id=True),
+        ]
+
+    def _to_store_field_computes(self):
         safari = (
             request
             and request.httprequest.user_agent
             and request.httprequest.user_agent.browser == "safari"
         )
-        for attachment in self:
-            data = attachment._read_format(
-                [field for field in fields if field not in ["filename", "size", "thread"]],
-                load=False,
-            )[0]
-            if "filename" in fields:
-                data["filename"] = attachment.name
-            if (
-                "mimetype" in fields
-                and safari
-                and attachment.mimetype
-                and "video" in attachment.mimetype
-            ):
-                data["mimetype"] = "application/octet-stream"
-            if "size" in fields:
-                data["size"] = attachment.file_size
-            if "thread" in fields:
-                data["thread"] = (
-                    Store.one(
-                        self.env[attachment.res_model].browse(attachment.res_id),
-                        as_thread=True,
-                        only_id=True,
-                    )
-                    if attachment.res_model != "mail.compose.message" and attachment.res_id
-                    else False
-                )
-            store.add(attachment, data)
+        return super()._to_store_field_computes() | {
+            "filename": lambda attachment: attachment.name,
+            "mimetype": lambda attachment: "application/octet-stream"
+            if safari and attachment.mimetype and "video" in attachment.mimetype
+            else attachment.mimetype,
+            "size": lambda attachment: attachment.file_size,
+            "thread": lambda attachment: self.env[attachment.res_model].browse(attachment.res_id)
+            if attachment.res_model != "mail.compose.message" and attachment.res_id
+            else False,
+        }

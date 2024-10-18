@@ -35,9 +35,9 @@ class DiscussChannel(models.Model):
             end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
 
-    def _to_store(self, store: Store):
+    def _to_store(self, store: Store, /, *, fields, **kwargs):
         """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""
-        super()._to_store(store)
+        super()._to_store(store, fields=fields, **kwargs)
         chatbot_lang = self.env["chatbot.script"]._get_chatbot_language()
         for channel in self:
             channel_info = {}
@@ -61,21 +61,36 @@ class DiscussChannel(models.Model):
                     'steps': [current_step],
                     'currentStep': current_step,
                 }
-            channel_info['anonymous_name'] = channel.anonymous_name
-            channel_info['anonymous_country'] = {
-                'code': channel.country_id.code,
-                'id': channel.country_id.id,
-                'name': channel.country_id.name,
-            } if channel.country_id else False
-            if channel.channel_type == "livechat":
-                channel_info["operator"] = Store.one(
-                    channel.livechat_operator_id, fields=["user_livechat_username", "write_date"]
-                )
-            if channel.channel_type == "livechat" and self.env.user._is_internal():
-                channel_info["livechatChannel"] = Store.one(
-                    channel.livechat_channel_id, fields=["name"]
-                )
             store.add(channel, channel_info)
+
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + [
+            "anonymous_name",
+            "anonymous_country",
+            Store.One("livechatChannel", fields=["name"]),
+            Store.One("operator", fields=["user_livechat_username", "write_date"]),
+        ]
+
+    def _to_store_field_computes(self):
+        return super()._to_store_field_computes() | {
+            "anonymous_country": lambda channel: {
+                "code": channel.country_id.code,
+                "id": channel.country_id.id,
+                "name": channel.country_id.name,
+            }
+            if channel.country_id
+            else False,
+            "livechatChannel": lambda channel: channel.livechat_channel_id,
+            # sudo: discuss.channel: operator of accessible channel can be read
+            "operator": lambda channel: channel.sudo().livechat_operator_id,
+        }
+
+    def _to_store_field_conditions(self):
+        return super()._to_store_field_conditions() | {
+            "livechatChannel": lambda channel: channel.channel_type == "livechat"
+            and self.env.user._is_internal(),
+            "operator": lambda channel: channel.channel_type == "livechat",
+        }
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):

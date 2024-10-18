@@ -269,14 +269,14 @@ class ResUsers(models.Model):
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),
                 # sudo: res.partner - exposing OdooBot data is considered acceptable
-                "odoobot": Store.one(self.env.ref("base.partner_root").sudo()),
+                "odoobot": Store.One(self.env.ref("base.partner_root").sudo()),
             }
         )
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
             store.add(
                 {
-                    "self": Store.one(
+                    "self": Store.One(
                         self.env.user.partner_id,
                         fields=[
                             "active",
@@ -292,7 +292,7 @@ class ResUsers(models.Model):
                 }
             )
         elif guest := self.env["mail.guest"]._get_guest_from_context():
-            store.add({"self": Store.one(guest, fields=["name", "write_date"])})
+            store.add({"self": Store.One(guest, fields=["name", "write_date"])})
 
     def _init_messaging(self, store):
         self.ensure_one()

@@ -3,7 +3,6 @@
 from datetime import datetime, timedelta
 
 from odoo import api, models, fields
-from odoo.addons.mail.tools.discuss import Store
 
 
 class DiscussChannelMember(models.Model):
@@ -23,17 +22,20 @@ class DiscussChannelMember(models.Model):
         for member in sessions_to_be_unpinned:
             member._bus_send("discuss.channel/unpin", {"id": member.channel_id.id})
 
-    def _to_store(self, store: Store, **kwargs):
-        super()._to_store(store, **kwargs)
-        for member in self.filtered(lambda m: m.channel_id.channel_type == "livechat"):
-            # sudo: discuss.channel - reading livechat channel to check whether current member is a bot is allowed
-            store.add(
-                member,
-                {
-                    "is_bot": member.partner_id
-                    in member.channel_id.sudo().livechat_channel_id.rule_ids.chatbot_script_id.operator_partner_id,
-                },
-            )
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + ["is_bot"]
+
+    def _to_store_field_computes(self):
+        # sudo: discuss.channel - reading livechat channel to check whether current member is a bot is allowed
+        return super()._to_store_field_computes() | {
+            "is_bot": lambda member: member.partner_id
+            in member.channel_id.sudo().livechat_channel_id.rule_ids.chatbot_script_id.operator_partner_id,
+        }
+
+    def _to_store_field_conditions(self):
+        return super()._to_store_field_conditions() | {
+            "is_bot": lambda member: member.channel_id.channel_type == "livechat",
+        }
 
     def _get_store_partner_fields(self, fields):
         self.ensure_one()

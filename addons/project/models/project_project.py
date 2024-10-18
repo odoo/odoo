@@ -1040,7 +1040,7 @@ class ProjectProject(models.Model):
         if request_list and "followers" in request_list:
             store.add(
                 self,
-                {"collaborator_ids": Store.many(self.collaborator_ids.partner_id, only_id=True)},
+                {"collaborator_ids": Store.Many(self.collaborator_ids.partner_id, only_id=True)},
                 as_thread=True,
             )
 

@@ -10,7 +10,6 @@ from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
 from odoo.addons.bus.websocket import wsrequest
 from odoo.addons.mail.tools.discuss import Store
 
@@ -112,10 +111,8 @@ class MailGuest(models.Model):
         """
         self.env.cr.execute(query, (timezone, self.id))
 
-    def _to_store(self, store: Store, /, *, fields=None):
-        if fields is None:
-            fields = ["im_status", "name", "write_date"]
-        store.add("mail.guest", self._read_format(fields, load=False))
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + ["im_status", "name", "write_date"]
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route

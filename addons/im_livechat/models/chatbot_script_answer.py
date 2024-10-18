@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
 from odoo.osv import expression
-from odoo.addons.mail.tools.discuss import Store
 
 import textwrap
 
@@ -54,7 +52,5 @@ class ChatbotScriptAnswer(models.Model):
 
         return domain
 
-    def _to_store(self, store: Store, /, *, fields=None):
-        if fields is None:
-            fields = ["name", "redirect_link"]
-        store.add("chatbot.script.answer", self._read_format(fields, load=False))
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + ["name", "redirect_link"]

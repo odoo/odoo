@@ -63,7 +63,7 @@ class MailLinkPreview(models.Model):
         if link_preview_values:
             link_previews += link_previews.create(link_preview_values)
         if link_previews := link_previews.sorted(key=lambda p: list(urls).index(p.source_url)):
-            message._bus_send_store(message, {"linkPreviews": Store.many(link_previews)})
+            message._bus_send_store(message, {"link_preview_ids": Store.Many(link_previews)})
 
     def _hide_and_notify(self):
         if not self:
@@ -71,7 +71,7 @@ class MailLinkPreview(models.Model):
         for link_preview in self:
             link_preview._bus_send_store(
                 link_preview.message_id,
-                {"linkPreviews": Store.many(link_preview, "DELETE", only_id=True)},
+                {"link_preview_ids": Store.Many(link_preview, "DELETE", only_id=True)},
             )
         self.is_hidden = True
 
@@ -81,7 +81,7 @@ class MailLinkPreview(models.Model):
         for link_preview in self:
             link_preview._bus_send_store(
                 link_preview.message_id,
-                {"linkPreviews": Store.many(link_preview, "DELETE", only_id=True)},
+                {"link_preview_ids": Store.Many(link_preview, "DELETE", only_id=True)},
             )
         self.unlink()
 
@@ -105,23 +105,20 @@ class MailLinkPreview(models.Model):
             preview = self.env['mail.link.preview'].create(preview_values)
         return preview
 
-    def _to_store(self, store: Store, /):
-        for preview in self:
-            data = preview._read_format(
-                [
-                    "image_mimetype",
-                    "og_description",
-                    "og_image",
-                    "og_mimetype",
-                    "og_site_name",
-                    "og_title",
-                    "og_type",
-                    "source_url",
-                ],
-                load=False,
-            )[0]
-            data["message"] = Store.one(preview.message_id, only_id=True)
-            store.add(preview, data)
+    def _to_store_fields(self):
+        return super()._to_store_fields() + [Store.One("message_id", only_id=True)]
+
+    def _to_store_default_fields(self):
+        return super()._to_store_default_fields() + [
+            "image_mimetype",
+            "og_description",
+            "og_image",
+            "og_mimetype",
+            "og_site_name",
+            "og_title",
+            "og_type",
+            "source_url",
+        ]
 
     @api.autovacuum
     def _gc_mail_link_preview(self):

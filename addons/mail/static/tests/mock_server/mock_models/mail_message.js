@@ -155,7 +155,7 @@ export class MailMessage extends models.ServerModel {
                         ? ResFake._message_compute_subject([message.res_id])
                         : MailThread._message_compute_subject([message.res_id])
                     ).get(message.res_id),
-                linkPreviews: mailDataHelpers.Store.many(
+                link_preview_ids: mailDataHelpers.Store.many(
                     MailLinkPreview.browse(message.link_preview_ids)
                 ),
                 notifications: mailDataHelpers.Store.many(

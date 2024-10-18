@@ -115,18 +115,22 @@ patch(Thread.prototype, {
         }
         const limit = 30;
         const data = await rpc("/discuss/channel/sub_channel/fetch", {
-            before: this.lastSubChannelLoaded,
+            before: this.lastSubChannelLoaded?.id,
             limit,
             parent_channel_id: this.id,
             search_term: searchTerm,
         });
-        const { Thread: subChannels = [] } = this.store.insert(data, { html: true });
+        const { Thread: threads = [] } = this.store.insert(data, { html: true });
         if (searchTerm) {
             // Ignore holes in the sub-channel list that may arise when
             // searching for a specific term.
             return;
         }
-        this.lastSubChannelLoaded = subChannels.at(-1)?.id;
+        const subChannels = threads.filter((thread) => this.eq(thread.parent_channel_id));
+        this.lastSubChannelLoaded = subChannels.reduce(
+            (min, channel) => (!min || channel.id < min.id ? channel : min),
+            this.lastSubChannelLoaded
+        );
         if (subChannels.length < limit) {
             this.loadSubChannelsDone = true;
         }

@@ -44,9 +44,6 @@ ids_by_model.update(
     }
 )
 
-ONE = {}
-MANY = {}
-
 
 class Store:
     """Helper to build a dict of data for sending to web client.
@@ -54,18 +51,49 @@ class Store:
     The keys of data are the name of models as defined in mail JS code, and the values are any
     format supported by store.insert() method (single dict or list of dict for each model name)."""
 
-    def __init__(self, data=None, values=None, /, *, as_thread=False, delete=False, **kwargs):
+    def __init__(
+        self,
+        data=None,
+        values=None,
+        /,
+        *,
+        fields=None,
+        extra_fields=None,
+        as_thread=False,
+        delete=False,
+        **kwargs,
+    ):
         self.data = {}
         if data:
-            self.add(data, values, as_thread=as_thread, delete=delete, **kwargs)
+            self.add(
+                data,
+                values,
+                fields=fields,
+                extra_fields=extra_fields,
+                as_thread=as_thread,
+                delete=delete,
+                **kwargs,
+            )
 
-    def add(self, data, values=None, /, *, as_thread=False, delete=False, **kwargs):
+    def add(
+        self,
+        data,
+        values=None,
+        /,
+        *,
+        fields=None,
+        extra_fields=None,
+        as_thread=False,
+        delete=False,
+        **kwargs,
+    ):
         """Adds data to the store.
-        - data can be a recordset, in which case the model must have a _to_store() method, with
-          optional kwargs passed to it.
+        - data can be a recordset, in which case the _to_store() method of the
+          model will be called, with optional kwargs passed to it.
         - data can be a model name, in which case values must be a dict or list of dict.
         - data can be a dict, in which case it is considered as values for the Store model.
         - as_thread: whether to call "_thread_to_store" or "_to_store"
+        - delete: whether to mark the record for deletion (client side)
         """
         if isinstance(data, models.Model):
             if values is not None:
@@ -81,14 +109,39 @@ class Store:
                 elif values is not None:
                     self.add("mail.thread", {"id": data.id, "model": data._name, **values})
                 else:
-                    data._thread_to_store(self, **kwargs)
+                    data._thread_to_store(self, fields=fields, **kwargs)
             else:
                 if delete:
                     self.add(data._name, {"id": data.id}, delete=True)
                 elif values is not None:
                     self.add(data._name, {"id": data.id, **values})
                 else:
-                    data._to_store(self, **kwargs)
+                    def add_fields(all_fields, new_fields):
+                        for new_field in new_fields:
+                            fname = (
+                                new_field.field_name
+                                if isinstance(new_field, (Store.One, Store.Many))
+                                else new_field
+                            )
+                            all_fields = [
+                                field
+                                for field in all_fields
+                                if (
+                                    field.field_name != fname
+                                    if isinstance(field, (Store.One, Store.Many))
+                                    else field != fname
+                                )
+                            ] + [new_field]
+                        return all_fields
+
+                    all_fields = data._to_store_fields()
+                    all_fields = add_fields(
+                        all_fields,
+                        fields if fields is not None else data._to_store_default_fields(),
+                    )
+                    if extra_fields:
+                        all_fields = add_fields(all_fields, extra_fields)
+                    data._to_store(self, fields=all_fields, **kwargs)
             return self
         if isinstance(data, dict):
             assert not values, f"expected empty values with dict {data}: {values}"
@@ -138,32 +191,27 @@ class Store:
         target = self.data[model_name][index] if index else self.data[model_name]
         for key, val in values.items():
             assert key != "_DELETE", f"invalid key {key} in {model_name}: {values}"
-            subrecord_kwargs = {}
-            if isinstance(val, tuple) and len(val) and val[0] is ONE:
-                subrecord, as_thread, only_id, subrecord_kwargs = val[1], val[2], val[3], val[4]
-                assert not subrecord or isinstance(
-                    subrecord, models.Model
-                ), f"expected recordset for one {key}: {subrecord}"
-                if subrecord and not only_id:
-                    self.add(subrecord, as_thread=as_thread, **subrecord_kwargs)
-                target[key] = self.one_id(subrecord, as_thread=as_thread)
-            elif isinstance(val, tuple) and len(val) and val[0] is MANY:
-                subrecords, mode, as_thread, only_id, subrecords_kwargs = (
-                    val[1],
-                    val[2],
-                    val[3],
-                    val[4],
-                    val[5],
-                )
-                assert not subrecords or isinstance(
-                    subrecords, models.Model
-                ), f"expected recordset for many {key}: {subrecords}"
-                assert mode in ["ADD", "DELETE", "REPLACE"], f"invalid mode for many {key}: {mode}"
-                if subrecords and not only_id:
-                    self.add(subrecords, as_thread=as_thread, **subrecords_kwargs)
-                rel_val = self.many_ids(subrecords, mode, as_thread=as_thread)
+            if isinstance(val, Store.One):
+                assert not val.record or isinstance(
+                    val.record, models.Model
+                ), f"expected recordset for one {key}: {val.record}"
+                if val.record and not val.only_id:
+                    self.add(val.record, as_thread=val.as_thread, **val.kwargs)
+                target[key] = self.one_id(val.record, as_thread=val.as_thread)
+            elif isinstance(val, Store.Many):
+                assert not val.records or isinstance(
+                    val.records, models.Model
+                ), f"expected recordset for many {key}: {val.records}"
+                assert val.mode in [
+                    "ADD",
+                    "DELETE",
+                    "REPLACE",
+                ], f"invalid mode for many {key}: {val.mode}"
+                if val.records and not val.only_id:
+                    self.add(val.records, as_thread=val.as_thread, **val.kwargs)
+                rel_val = self.many_ids(val.records, val.mode, as_thread=val.as_thread)
                 target[key] = (
-                    target[key] + rel_val if key in target and mode != "REPLACE" else rel_val
+                    target[key] + rel_val if key in target and val.mode != "REPLACE" else rel_val
                 )
             elif isinstance(val, datetime):
                 target[key] = fields.Datetime.to_string(val)
@@ -181,17 +229,6 @@ class Store:
             else:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
-
-    @staticmethod
-    def many(records, mode="REPLACE", /, *, as_thread=False, only_id=False, **kwargs):
-        """Flags records to be added to the store in a Many relation.
-        - mode: "REPLACE" (default), "ADD", or "DELETE"."""
-        return (MANY, records, mode, as_thread, only_id, kwargs)
-
-    @staticmethod
-    def one(record, /, *, as_thread=False, only_id=False, **kwargs):
-        """Flags a record to be added to the store in a One relation."""
-        return (ONE, record, as_thread, only_id, kwargs)
 
     @staticmethod
     def many_ids(records, mode="REPLACE", /, *, as_thread=False):
@@ -234,3 +271,27 @@ class Store:
         if record._name == "res.partner":
             return {"id": record.id, "type": "partner"}
         return record.id
+
+    class One:
+        """Flags a record (or field name) to be added to the store in a One relation."""
+
+        def __init__(self, record_or_field_name, /, as_thread=False, only_id=False, **kwargs):
+            self.record = record_or_field_name
+            self.field_name = record_or_field_name
+            self.as_thread = as_thread
+            self.only_id = only_id
+            self.kwargs = kwargs
+
+    class Many:
+        """Flags records (or field name) to be added to the store in a Many relation.
+        - mode: "REPLACE" (default), "ADD", or "DELETE"."""
+
+        def __init__(
+            self, records_or_field_name, mode="REPLACE", /, as_thread=False, only_id=False, **kwargs
+        ):
+            self.records = records_or_field_name
+            self.field_name = records_or_field_name
+            self.mode = mode
+            self.as_thread = as_thread
+            self.only_id = only_id
+            self.kwargs = kwargs

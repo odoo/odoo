@@ -101,13 +101,13 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         params = {"channels_as_member": True}
         init_messaging = self.make_jsonrpc_request(f"{self.livechat_base_url}/mail/data", params=params)
         livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
-        self.assertIn('visitor', livechat_info)
+        self.assertTrue(livechat_info["visitor"])
 
         # Remove access to visitors and try again, visitors info shouldn't be included
         self.operator.groups_id -= self.group_livechat_user
         init_messaging = self.make_jsonrpc_request(f"{self.livechat_base_url}/mail/data", params=params)
         livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
-        self.assertNotIn('visitor', livechat_info)
+        self.assertFalse(livechat_info["visitor"])
 
     def _common_basic_flow(self):
         # Open a new live chat
