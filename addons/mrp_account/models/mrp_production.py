@@ -3,7 +3,7 @@
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import fields, models, _
 from odoo.tools import float_round
 
 
@@ -97,7 +97,7 @@ class MrpProduction(models.Model):
                 'line_ids': [(0, 0, {
                     'name': desc,
                     'ref': desc,
-                    'balance': amt,
+                    'balance': -amt,
                     'account_id': acc.id,
                 }) for acc, amt in labour_amounts.items()]
             })
