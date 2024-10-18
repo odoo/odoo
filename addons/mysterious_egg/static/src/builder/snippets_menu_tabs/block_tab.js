@@ -2,8 +2,11 @@ import { Component, markup } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { RPCError } from "@web/core/network/rpc";
+import { PyDateTime } from "@web/core/py_js/py_date";
 import { registry } from "@web/core/registry";
+import { useDraggable } from "@web/core/utils/draggable";
 import { useService } from "@web/core/utils/hooks";
+import { renderToElement } from "@web/core/utils/render";
 import { escape } from "@web/core/utils/strings";
 
 function splitArrayBy3(arr) {
@@ -20,6 +23,25 @@ export class BlockTab extends Component {
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
+
+        useDraggable({
+            ref: this.env.builderRef,
+            elements: ".o-website-snippetsmenu .o_draggable",
+            enable: () => this.props.editor?.isReady,
+            onDragStart: () => {
+                this.props.editor.shared.displayDropZone("p, img");
+            },
+            onDrop: (params) => {
+                const { x, y } = params;
+
+                const elementToAdd = renderToElement(params.element.dataset.templateContent, {
+                    datetime: {
+                        datetime: PyDateTime,
+                    },
+                });
+                this.props.editor.shared.dropElement(elementToAdd, { x, y });
+            },
+        });
     }
 
     get snippetCategories() {

@@ -81,6 +81,7 @@ export class HistoryPlugin extends Plugin {
     static name = "history";
     static dependencies = ["dom", "selection", "sanitize"];
     static shared = [
+        "addStep",
         "reset",
         "canUndo",
         "canRedo",

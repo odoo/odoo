@@ -858,7 +858,7 @@ describe("Convert classes to inline styles", () => {
         document.head.removeChild(styleEl);
     });
 
-    test("convert Bootstrap classes to inline styles", async () => {
+    test.debug("convert Bootstrap classes to inline styles", async () => {
         editable.innerHTML = `
             <div class="container"><div class="row"><div class="col">Hello</div></div></div>`;
         getFixture().append(editable); // editable needs to be in the DOM to compute its dynamic styles.
@@ -870,6 +870,7 @@ describe("Convert classes to inline styles", () => {
         const containerStyle = `margin: 0px auto; box-sizing: border-box; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
         const rowStyle = `box-sizing: border-box; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
         const colStyle = `box-sizing: border-box; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
+        // debugger
         expect(editable).toHaveInnerHTML(
             `<div class="container" style="${containerStyle}" width="100%">` +
                 `<div class="row" style="${rowStyle}">` +
