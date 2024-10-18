@@ -120,7 +120,7 @@ export const floatField = {
             help: _t("Use it with the 'User-friendly format' option to customize the formatting."),
         },
     ],
-    supportedTypes: ["float"],
+    supportedTypes: ["float", "monetary"],
     isEmpty: () => false,
     extractProps: ({ attrs, options }) => {
         // Sadly, digits param was available as an option and an attr.
