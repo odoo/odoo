@@ -857,6 +857,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         payment_term_id_2 = self.env['account.payment.term'].search([])[1]
         incoterm_id_1 = self.env['account.incoterms'].search([])[0]
         incoterm_id_2 = self.env['account.incoterms'].search([])[1]
+        is_module_installed = self.env['ir.module.module']._get('purchase_stock').state == 'installed'
 
         po_1 = Form(PurchaseOrder)
         po_1.partner_id = self.partner_a
@@ -864,13 +865,15 @@ class TestPurchase(AccountTestInvoicingCommon):
         po_1.origin = "s0003"
         po_1.user_id = user_1
         po_1.payment_term_id = payment_term_id_1
-        po_1.incoterm_id = incoterm_id_1
-        po_1.incoterm_location = "my hub"
+        if is_module_installed:
+            po_1.incoterm_location = "my hub"
+
         with po_1.order_line.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
         po_1 = po_1.save()
+        po_1.write({'incoterm_id': incoterm_id_1.id})
 
         po_2 = Form(PurchaseOrder)
         po_2.partner_id = self.partner_a
@@ -878,8 +881,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         po_2.origin = "s0004"
         po_2.user_id = user_2
         po_2.payment_term_id = payment_term_id_2
-        po_2.incoterm_id = incoterm_id_2
-        po_2.incoterm_location = "my warehouse"
+        if is_module_installed:
+            po_2.incoterm_location = "my warehouse"
 
         with po_2.order_line.new() as po_line_1:
             po_line_1.product_id = self.product_a
@@ -890,6 +893,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line_2.product_qty = 5
             po_line_2.price_unit = 500
         po_2 = po_2.save()
+        po_2.write({'incoterm_id':  incoterm_id_2.id})
 
         with self.assertRaises(UserError) as context:
             PurchaseOrder.browse([po_1.id]).action_merge()
@@ -904,4 +908,5 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po_1.user_id, user_1)
         self.assertEqual(po_1.payment_term_id, payment_term_id_1)
         self.assertEqual(po_1.incoterm_id, incoterm_id_1)
-        self.assertEqual(po_1.incoterm_location, "my hub")
+        if is_module_installed:
+            self.assertEqual(po_1.incoterm_location, "my hub")
