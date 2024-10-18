@@ -83,7 +83,7 @@ patch(MessagingMenu.prototype, {
             onClick: () => {
                 this.pwa.show();
             },
-            iconSrc: this.store.odoobot.avatarUrl,
+            iconSrc: this.store.odoobot.avatarUrl(),
             partner: this.store.odoobot,
             isShown: this.store.discuss.activeTab === "main" && this.canPromptToInstall,
         };
@@ -92,7 +92,7 @@ patch(MessagingMenu.prototype, {
         return {
             body: _t("Enable desktop notifications to chat"),
             displayName: _t("%s has a request", this.store.odoobot.name),
-            iconSrc: this.store.odoobot.avatarUrl,
+            iconSrc: this.store.odoobot.avatarUrl(),
             partner: this.store.odoobot,
             isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
         };

@@ -243,7 +243,7 @@ export class Message extends Component {
         }
 
         if (this.message.author) {
-            return this.message.author.avatarUrl;
+            return this.message.author.avatarUrl(this.props.thread);
         }
 
         return this.store.DEFAULT_AVATAR;

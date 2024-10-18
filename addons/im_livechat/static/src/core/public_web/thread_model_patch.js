@@ -66,7 +66,7 @@ patch(Thread.prototype, {
 
     get avatarUrl() {
         if (this.channel_type === "livechat" && this.correspondent) {
-            return this.correspondent.persona.avatarUrl;
+            return this.correspondent.persona.avatarUrl();
         }
         return super.avatarUrl;
     },

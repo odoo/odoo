@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 import { url } from "@web/core/utils/urls";
 
 patch(Persona.prototype, {
-    get avatarUrl() {
+    avatarUrl() {
         const params = assignDefined(
             {},
             {
@@ -29,6 +29,6 @@ patch(Persona.prototype, {
                 ...params,
             });
         }
-        return super.avatarUrl;
+        return super.avatarUrl(...arguments);
     },
 });

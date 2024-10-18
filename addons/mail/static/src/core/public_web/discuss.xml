@@ -72,7 +72,7 @@
                             <span t-if="!group_last" class="text-muted align-self-stretch ms-2 me-1"/>
                         </t>
                         <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
-                            <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl"/>
+                            <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl(thread)"/>
                             <div class="lead fw-bold flex-shrink-1 text-dark">
                                 <t t-if="store.self.type === 'partner'" t-esc="store.self.name"/>
                                 <t t-else="">

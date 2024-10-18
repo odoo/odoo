@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.urls import url_parse, url_decode, url_encode, url_unparse
 
-import json
-
-from odoo import http
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
@@ -76,74 +72,81 @@ class TestPortalControllers(TestPortal):
             )
 
     def test_portal_avatar_with_access_token(self):
-        mail_record = self.env['mail.message'].create({
-            'author_id': self.record_portal.partner_id.id,
-            'model': self.record_portal._name,
-            'res_id': self.record_portal.id,
-        })
-        token = self.record_portal.access_token
-        formatted_record = mail_record.portal_message_format(options={"token": token})[0]
-        self.assertEqual(
-            formatted_record.get("author_avatar_url"),
-            f"/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50?access_token={token}",
-        )
-        response = self.url_open(
-            f"/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50?access_token={token}"
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.headers.get('Content-Type'), 'image/png')
-        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
-
-        placeholder_response = self.url_open(
-            f'/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50?access_token={token + "a"}'
-        )  # false token
-        self.assertEqual(placeholder_response.status_code, 200)
-        self.assertEqual(placeholder_response.headers.get('Content-Type'), 'image/png')
-        self.assertRegex(placeholder_response.headers.get('Content-Disposition', ''), r'placeholder\.png')
-
-        no_token_response = self.url_open(f'/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50')
-        self.assertEqual(no_token_response.status_code, 200)
-        self.assertEqual(no_token_response.headers.get('Content-Type'), 'image/png')
-        self.assertRegex(no_token_response.headers.get('Content-Disposition', ''), r'placeholder\.png')
-
-    def test_portal_avatar_with_hash_pid(self):
         self.authenticate(None, None)
-        post_url = f"{self.record_portal.get_base_url()}/mail/message/post"
-        pid = self.partner_2.id
-        _hash = self.record_portal._sign_token(pid)
-        res = self.opener.post(
-            url=post_url,
+        token = self.record_portal.access_token
+        self.opener.post(
+            url=f"{self.record_portal.get_base_url()}/mail/message/post",
             json={
-                'params': {
-                    'thread_model': self.record_portal._name,
-                    'thread_id': self.record_portal.id,
-                    'post_data': {'body': "Test"},
-                    'hash': _hash,
-                    'pid': pid,
+                "params": {
+                    "thread_model": self.record_portal._name,
+                    "thread_id": self.record_portal.id,
+                    "post_data": {"body": "Test"},
+                    "token": token,
                 },
             },
         )
-        res.raise_for_status()
-        self.assertNotIn("error", res.json())
-        message = self.record_portal.message_ids[0]
-        formatted_message = message.portal_message_format(options={"hash": _hash, "pid": pid})[0]
-        self.assertEqual(
-            formatted_message.get("author_avatar_url"),
-            f"/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={_hash}&pid={pid}",
-        )
         response = self.url_open(
-            f"/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={_hash}&pid={pid}"
+            f"/web/image/res.partner/{self.record_portal.partner_id.id}/avatar_128?thread_model={self.record_portal._name}&thread_id={self.record_portal.id}&token={token}"
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.headers.get('Content-Type'), 'image/png')
-        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
+        self.assertEqual(response.headers.get("Content-Type"), "image/png")
+        self.assertRegex(
+            response.headers.get("Content-Disposition", ""),
+            rf"{self.record_portal.partner_id.name}\.png",
+        )
 
         placeholder_response = self.url_open(
-            f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={_hash + "a"}&pid={pid}'
+            f'/web/image/res.partner/{self.record_portal.partner_id.id}/avatar_128?thread_model={self.record_portal._name}&thread_id={self.record_portal.id}&token={token + "a"}'
+        )  # false token
+        self.assertEqual(placeholder_response.status_code, 200)
+        self.assertEqual(placeholder_response.headers.get("Content-Type"), "image/png")
+        self.assertRegex(
+            placeholder_response.headers.get("Content-Disposition", ""), r"placeholder\.png"
+        )
+
+        no_token_response = self.url_open(
+            f"/web/image/res.partner/{self.record_portal.partner_id.id}/avatar_128"
+        )
+        self.assertEqual(no_token_response.status_code, 200)
+        self.assertEqual(no_token_response.headers.get("Content-Type"), "image/png")
+        self.assertRegex(
+            no_token_response.headers.get("Content-Disposition", ""), r"placeholder\.png"
+        )
+
+    def test_portal_avatar_with_hash_pid(self):
+        self.authenticate(None, None)
+        pid = self.partner_2.id
+        _hash = self.record_portal._sign_token(pid)
+        self.opener.post(
+            url=f"{self.record_portal.get_base_url()}/mail/message/post",
+            json={
+                "params": {
+                    "thread_model": self.record_portal._name,
+                    "thread_id": self.record_portal.id,
+                    "post_data": {"body": "Test"},
+                    "hash": _hash,
+                    "pid": pid,
+                },
+            },
+        )
+        response = self.url_open(
+            f"/web/image/res.partner/{self.partner_2.id}/avatar_128?thread_model={self.record_portal._name}&thread_id={self.record_portal.id}&hash={_hash}&pid={pid}"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers.get("Content-Type"), "image/png")
+        self.assertRegex(
+            response.headers.get("Content-Disposition", ""),
+            rf"{self.partner_2.name}\.png",
+        )
+
+        placeholder_response = self.url_open(
+            f'/web/image/res.partner/{self.partner_2.id}/avatar_128?thread_model={self.record_portal._name}&thread_id={self.record_portal.id}&hash={_hash + "a"}&pid={pid}'
         )  # false hash
         self.assertEqual(placeholder_response.status_code, 200)
-        self.assertEqual(placeholder_response.headers.get('Content-Type'), 'image/png')
-        self.assertRegex(placeholder_response.headers.get('Content-Disposition', ''), r'placeholder\.png')
+        self.assertEqual(placeholder_response.headers.get("Content-Type"), "image/png")
+        self.assertRegex(
+            placeholder_response.headers.get("Content-Disposition", ""), r"placeholder\.png"
+        )
 
     def test_portal_share_comment(self):
         """ Test posting through portal controller allowing to use a hash to
