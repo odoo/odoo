@@ -248,14 +248,14 @@ export class PosStore extends Reactive {
         this.config.iface_printers = !!this.unwatched.printers.length;
 
         // Monitor product pricelist
-        this.models["product.product"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
-        this.models["product.pricelist.item"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
+        ["product.product", "product.pricelist.item"].forEach((model) => {
+            ["create", "update"].forEach((event) => {
+                this.models[model].addEventListener(
+                    event,
+                    this.computeProductPricelistCache.bind(this)
+                );
+            });
+        });
         if (this.data.loadedIndexedDBProducts && this.data.loadedIndexedDBProducts.length > 0) {
             await this._loadMissingPricelistItems(this.data.loadedIndexedDBProducts);
             delete this.data.loadedIndexedDBProducts;
@@ -317,7 +317,7 @@ export class PosStore extends Reactive {
                 title: _t("Existing orderlines"),
                 body: _t(
                     "%s has a total amount of %s, are you sure you want to delete this order?",
-                    order.name,
+                    order.pos_reference,
                     this.env.utils.formatCurrency(order.get_total_with_tax())
                 ),
             });
@@ -330,6 +330,7 @@ export class PosStore extends Reactive {
             order.uiState.displayed = false;
             this.afterOrderDeletion();
         }
+        return orderIsDeleted;
     }
     afterOrderDeletion() {
         this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
@@ -341,7 +342,7 @@ export class PosStore extends Reactive {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change).length > 0
+                    Object.keys(order.last_order_preparation_change.lines).length > 0
                 ) {
                     await this.sendOrderInPreparation(order, true);
                 }

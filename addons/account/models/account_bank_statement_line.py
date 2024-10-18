@@ -719,7 +719,7 @@ class AccountBankStatementLine(models.Model):
             st_line_vals_to_write = {}
 
             if 'line_ids' in changed_fields:
-                liquidity_lines, suspense_lines, _other_lines = st_line._seek_for_lines()
+                liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
                 company_currency = st_line.journal_id.company_id.currency_id
                 journal_currency = st_line.journal_id.currency_id if st_line.journal_id.currency_id != company_currency\
                     else False
@@ -773,7 +773,7 @@ class AccountBankStatementLine(models.Model):
                             'foreign_currency_id': False,
                         })
 
-                    else:
+                    elif not other_lines:
 
                         # Update the statement line regarding the foreign currency of the suspense line.
 

@@ -1016,7 +1016,7 @@ class ResCompany(models.Model):
             placeholder = _("/ if not applicable")
             if company.country_id or company.account_fiscal_country_id:
                 expected_vat = _ref_vat.get(
-                    company.country_id.code.lower() or company.account_fiscal_country_id.code.lower()
+                    (company.country_id.code or company.account_fiscal_country_id.code).lower()
                 )
                 if expected_vat:
                     placeholder = _("%s, or / if not applicable", expected_vat)

@@ -1729,9 +1729,9 @@ class AccountMoveLine(models.Model):
         account_codes = self.env.execute_query(SQL(
             """
             SELECT %(account_code_alias)s AS code
-              FROM %(account_table)s,
-                   LATERAL (%(line_select)s) line
-             WHERE %(where_clause)s
+              FROM %(account_table)s
+             WHERE EXISTS(%(line_select)s)
+               AND %(where_clause)s
             """,
             account_code_alias=account_code_alias,
             account_table=query_account.from_clause,

@@ -129,6 +129,13 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
                 })
             ),
             ProductScreen.isShown(),
+
+            // Test Cancel Order from Actions
+            ProductScreen.clickReview(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.orderIsEmpty(),
         ].flat(),
 });
 
