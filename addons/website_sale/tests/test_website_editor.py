@@ -47,8 +47,9 @@ class TestProductPictureController(HttpCase):
 
     def _create_product_images(self):
         with MockRequest(self.product.env, website=self.website):
-            self.WebsiteSaleController.add_product_images(
+            self.WebsiteSaleController.add_product_media(
                 [{'id': attachment.id} for attachment in self.attachments],
+                'image',
                 self.product.id,
                 self.product.product_tmpl_id.id,
             )
@@ -116,8 +117,9 @@ class TestProductPictureController(HttpCase):
         })
         self.assertEqual(0, len(product_template.product_variant_ids))
         with MockRequest(product_template.env, website=self.website):
-            self.WebsiteSaleController.add_product_images(
+            self.WebsiteSaleController.add_product_media(
                 [{'id': self.attachments[0].id}],
+                'image',
                 False,
                 product_template.id,
                 [product_template_attribute_line.product_template_value_ids[0].id],
@@ -260,3 +262,56 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
             'website_published': True,
         })
         self.start_tour(self.env['website'].get_client_action_url('/shop'), 'website_sale_restricted_editor_ui', login="website_user")
+
+@tagged('post_install', '-at_install')
+class TestProductVideoUpload(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env['website'].browse(1)
+        cls.WebsiteSaleController = WebsiteSale()
+        cls.product = cls.env['product.product'].create({
+            'name': 'Test Video Product',
+            'standard_price': 100.0,
+            'list_price': 120.0,
+            'website_published': True,
+        })
+        cls.video_data = {
+            'src': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',  # A placeholder video URL
+            'name': 'Test Video',
+        }
+
+    def _upload_video(self):
+        with MockRequest(self.product.env, website=self.website):
+            self.WebsiteSaleController.add_product_media(
+                [{'src': self.video_data['src'], 'name': self.video_data['name']}],
+                'video',
+                self.product.id,
+                self.product.product_tmpl_id.id,
+            )
+
+    def test_video_upload(self):
+        # Upload a video to the product
+        self._upload_video()
+
+        # Retrieve the product's media data
+        video_url = self.product.product_template_image_ids[0].video_url
+        image_1920 = self.product.product_template_image_ids[0].image_1920
+
+        # Check that the video URL and thumbnail are correctly saved
+        self.assertEqual(video_url, self.video_data['src'])
+        self.assertIsNotNone(image_1920)  # Ensure a thumbnail was generated
+
+        # Verify that the video was added as part of the media
+        self.assertEqual(len(self.product.product_template_image_ids), 1)
+
+    def test_video_upload_invalid(self):
+        # Try to upload invalid video data (e.g., empty src)
+        with MockRequest(self.product.env, website=self.website):
+            with self.assertRaises(ValidationError):
+                self.WebsiteSaleController.add_product_media(
+                    [{'src': '', 'name': 'Invalid Video'}],
+                    'video',
+                    self.product.id,
+                    self.product.product_tmpl_id.id,
+                )

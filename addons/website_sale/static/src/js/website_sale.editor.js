@@ -447,8 +447,9 @@ class AttachmentMediaDialog extends MediaDialog {
     async save() {
         await super.save();
         const selectedMedia = this.selectedMedia[this.state.activeTab];
+        const type = this.state.activeTab === "IMAGES" ? "image" : "video";
         if (selectedMedia.length) {
-            await this.props.extraImageSave(selectedMedia);
+            await this.props.extraMediaSave(type, selectedMedia);
         }
         this.props.close();
     }
@@ -579,23 +580,27 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         let extraImageEls;
         this.call("dialog", "add", AttachmentMediaDialog, {
             multiImages: true,
-            onlyImages: true,
+            noDocuments: true,
+            noIcons: true,
             // Kinda hack-ish but the regular save does not get the information we need
             save: async (imgEls) => {
                 extraImageEls = imgEls;
             },
-            extraImageSave: async (attachments) => {
-                for (const index in attachments) {
-                    const attachment = attachments[index];
-                    if (attachment.mimetype.startsWith("image/")) {
-                        if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
-                            continue;
+            extraMediaSave: async (type, attachments) => {
+                if (type === 'image') {
+                    for (const index in attachments) {
+                        const attachment = attachments[index];
+                        if (attachment.mimetype.startsWith("image/")) {
+                            if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
+                                continue;
+                            }
+                            await this._convertAttachmentToWebp(attachment, extraImageEls[index]);
                         }
-                        await this._convertAttachmentToWebp(attachment, extraImageEls[index]);
                     }
                 }
-                rpc(`/shop/product/extra-images`, {
-                    images: attachments,
+                rpc('/shop/product/extra-media', {
+                    media: attachments,
+                    type: type,
                     product_product_id: this.productProductID,
                     product_template_id: this.productTemplateID,
                     combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
@@ -841,6 +846,23 @@ options.registry.ReplaceMedia.include({
             return this.isProductPageImage;
         }
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async replaceMedia() {
+        if (this.isProductPageImage && this.data.snippetName === 'Video') {
+            // Only allow video tab while replacing videos
+            await this.options.wysiwyg.openMediaDialog({
+                node: this.$target[0],
+                noImages: true,
+                noDocuments: true,
+                noIcons: true,
+            });
+        }
+        else {
+            await this._super(...arguments);
+        }
     }
 });
 
