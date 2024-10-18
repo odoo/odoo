@@ -39,7 +39,7 @@ let ICE_SERVERS = null;
 export class CollaborationOdooPlugin extends Plugin {
     static name = "collaboration_odoo";
     static dependencies = ["history", "collaboration", "selection"];
-    static shared = ["getPeerMetadata"];
+    static shared = ["getPeerMetadata", "resetCollaborativeSelection"];
     resources = {
         onSelectionChange: debounce(() => {
             this.ptp?.notifyAllPeers(
@@ -365,7 +365,7 @@ export class CollaborationOdooPlugin extends Plugin {
     }
 
     async requestPeer(peerId, requestName, requestPayload, params) {
-        return this.ptp.requestPeer(peerId, requestName, requestPayload, params).catch((e) => {
+        return this.ptp.requestPeer(peerId, requestName, requestPayload, params)?.catch((e) => {
             if (e instanceof RequestError) {
                 return REQUEST_ERROR;
             } else {
