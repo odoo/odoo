@@ -158,7 +158,7 @@ export class ImagePlugin extends Plugin {
                 },
                 title: _t("Transform the picture (click twice to reset transformation)"),
                 icon: "fa-object-ungroup",
-                isFormatApplied: () => this.isImageTransformationOpen(),
+                isFormatApplied: () => this.isImageTransformed(),
             },
             {
                 id: "image_delete",
@@ -276,7 +276,7 @@ export class ImagePlugin extends Plugin {
                 if (!selectedImg) {
                     return;
                 }
-                this.openImageTransformation(selectedImg);
+                this.handleImageTransformation(selectedImg);
                 break;
             }
             case "DELETE_IMAGE": {
@@ -345,8 +345,11 @@ export class ImagePlugin extends Plugin {
         }
     }
 
-    openImageTransformation(image) {
-        if (registry.category("main_components").contains("ImageTransformation")) {
+    handleImageTransformation(image) {
+        if (this.isImageTransformationOpen()) {
+            // It means we clicked twice here => reset transformation
+            this.resetImageTransformation(image);
+            this.closeImageTransformation();
             return;
         }
         registry.category("main_components").add("ImageTransformation", {
@@ -368,5 +371,17 @@ export class ImagePlugin extends Plugin {
         if (this.isImageTransformationOpen()) {
             registry.category("main_components").remove("ImageTransformation");
         }
+    }
+
+    resetImageTransformation(image) {
+        image.setAttribute(
+            "style",
+            (image.getAttribute("style") || "").replace(/[^;]*transform[\w:]*;?/g, "")
+        );
+        this.dispatch("ADD_STEP");
+    }
+
+    isImageTransformed() {
+        return /[^;]*transform[\w:]*;?/.test(this.getSelectedImage()?.getAttribute("style") || "");
     }
 }

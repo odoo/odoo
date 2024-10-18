@@ -3,7 +3,7 @@ import { click, queryOne, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { contains } from "@web/../tests/web_test_helpers";
-import { setContent } from "./_helpers/selection";
+import { setContent, setSelection } from "./_helpers/selection";
 import { undo } from "./_helpers/user_actions";
 
 const base64Img =
@@ -306,6 +306,42 @@ test("Image transformation dissapear when selection change", async () => {
     for (const transfoContainer of transfoContainers) {
         transfoContainer.remove();
     }
+});
+
+test("Image transformation active state", async () => {
+    const { el } = await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+        <p>text</p>
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    // Image transformation button state should be inactive
+    expect(".o-we-toolbar button.active[name='image_transform']").toHaveCount(0);
+    expect(".o-we-toolbar button[name='image_transform']").toHaveCount(1);
+    setSelection({ anchorNode: el.querySelector("p"), anchorOffset: 0 });
+    el.querySelector("img").style.setProperty(
+        "transform",
+        "rotate(25deg) translateX(-0.2%) translateY(0.4%)"
+    );
+    await click("img.test-image");
+    await animationFrame();
+    await waitFor(".o-we-toolbar");
+    // Image transformation button state should be active
+    expect(".o-we-toolbar button.active[name='image_transform']").toHaveCount(1);
+    await click(".o-we-toolbar button[name='image_transform']");
+    await animationFrame();
+    let transfoContainers = document.querySelectorAll(".transfo-container");
+    expect(transfoContainers).toHaveCount(1);
+    // Click again to reset transformation
+    await click(".o-we-toolbar button[name='image_transform']");
+    await animationFrame();
+    transfoContainers = document.querySelectorAll(".transfo-container");
+    // Image transformation component is removed
+    expect(transfoContainers).toHaveCount(0);
+    // Image transformation button state should be inactive
+    expect(".o-we-toolbar button.active[name='image_transform']").toHaveCount(0);
+    expect(".o-we-toolbar button[name='image_transform']").toHaveCount(1);
+    expect(el.querySelector("img").style.getPropertyValue("transform")).toBe("");
 });
 
 test("Can delete an image", async () => {
