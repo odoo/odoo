@@ -27,6 +27,7 @@ class HrEmployee(models.Model):
     _order = 'name'
     _inherit = ['hr.employee.base', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
+    _primary_email = 'work_email'
 
     @api.model
     def _lang_get(self):
@@ -692,4 +693,4 @@ class HrEmployee(models.Model):
         return ['mobile_phone']
 
     def _mail_get_partner_fields(self, introspect_fields=False):
-        return ['user_partner_id']
+        return ['work_contact_id', 'user_partner_id']
