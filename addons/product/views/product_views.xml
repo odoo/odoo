@@ -194,14 +194,14 @@
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" invisible="type != 'consu'">
                                     <label for="weight" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                                    <div class="o_row" name="weight" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                                        <field name="weight" class="oe_inline"/>
-                                        <field name="weight_uom_name"/>
+                                    <div class="row" name="weight" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                                        <div class="col-4"><field name="weight" /></div>
+                                        <div class="col-4"><field name="weight_uom_name"/></div>
                                     </div>
                                     <label for="volume" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                                    <div class="o_row" name="volume" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                                        <field name="volume" string="Volume" class="oe_inline"/>
-                                        <field name="volume_uom_name"/>
+                                    <div class="row" name="volume" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                                        <div class="col-4"><field name="volume" string="Volume" /></div>
+                                        <div class="col-4"><field name="volume_uom_name"/></div>
                                     </div>
                                 </group>
                             </group>

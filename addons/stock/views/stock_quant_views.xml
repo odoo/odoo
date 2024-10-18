@@ -282,7 +282,7 @@
                             <field name="package_type_id"/>
                             <field name='company_id' groups="base.group_multi_company"/>
                             <field name='owner_id' groups="stock.group_tracking_owner"/>
-                            <field name="location_id" options="{'no_create': True}"/>
+                            <field name="location_id" options="{'no_create': True}" class="w-auto"/>
                         </group>
                         <group>
                             <field name="pack_date"/>
@@ -448,7 +448,7 @@ in this location. That leads to a negative stock.
                 <field name="last_count_date" optional='hidden' readonly='1'/>
                 <field name="available_quantity" string="Available Quantity" decoration-danger="available_quantity &lt; 0" optional="hidden"/>
                 <field name="quantity" optional="show" decoration-warning="quantity &lt; 0" string="On Hand Quantity"/>
-                <field name="product_uom_id" groups="uom.group_uom" string="UoM"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name="inventory_quantity" widget="counted_quantity_widget"/>
                 <field name="inventory_diff_quantity" string="Difference"  invisible="not inventory_quantity_set" decoration-muted="inventory_diff_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
                 <field name="inventory_date" optional="show"/>

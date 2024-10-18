@@ -30,7 +30,7 @@ class ProductSupplierinfo(models.Model):
     sequence = fields.Integer(
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
     product_uom = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
+        'uom.uom', 'Unit',
         related='product_tmpl_id.uom_po_id')
     min_qty = fields.Float(
         'Quantity', default=0.0, required=True, digits="Product Unit of Measure",
