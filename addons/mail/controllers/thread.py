@@ -12,7 +12,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class ThreadController(http.Controller):
-    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/thread/data", methods=["POST"], type="jsonrpc", auth="public")
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
         thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
         if not thread:
@@ -23,7 +23,7 @@ class ThreadController(http.Controller):
             ).get_result()
         return Store(thread, as_thread=True, request_list=request_list).get_result()
 
-    @http.route("/mail/thread/messages", methods=["POST"], type="json", auth="user")
+    @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_messages(self, thread_model, thread_id, search_term=None, before=None, after=None, around=None, limit=30):
         domain = [
             ("res_id", "=", int(thread_id)),
@@ -40,7 +40,7 @@ class ThreadController(http.Controller):
             "messages": Store.many_ids(messages),
         }
 
-    @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
+    @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_partner_from_email(self, emails, additional_values=None):
         partners = [
             {"id": partner.id, "name": partner.name, "email": partner.email}
@@ -48,7 +48,7 @@ class ThreadController(http.Controller):
         ]
         return partners
 
-    @http.route("/mail/read_subscription_data", methods=["POST"], type="json", auth="user")
+    @http.route("/mail/read_subscription_data", methods=["POST"], type="jsonrpc", auth="user")
     def read_subscription_data(self, follower_id):
         """Computes:
         - message_subtype_data: data about document subtypes: which are
@@ -104,7 +104,7 @@ class ThreadController(http.Controller):
         # sudo: mail.followers - filtering partners that are followers is acceptable
         return request.env["mail.followers"].sudo().search(domain).partner_id
 
-    @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def mail_message_post(self, thread_model, thread_id, post_data, context=None, **kwargs):
         guest = request.env["mail.guest"]._get_guest_from_context()
@@ -145,7 +145,7 @@ class ThreadController(http.Controller):
         message = thread.sudo().message_post(**self._prepare_post_data(post_data, thread, **kwargs))
         return Store(message, for_current_user=True).get_result()
 
-    @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None, **kwargs):
         guest = request.env["mail.guest"]._get_guest_from_context()

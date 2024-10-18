@@ -213,7 +213,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             'count_per_employment_type': count_per_employment_type,
         })
 
-    @http.route('/jobs/add', type='json', auth="user", website=True)
+    @http.route('/jobs/add', type='jsonrpc', auth="user", website=True)
     def jobs_add(self, **kwargs):
         # avoid branding of website_description by setting rendering_bundle in context
         job = request.env['hr.job'].with_context(rendering_bundle=True).create({
@@ -246,7 +246,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             'default': default,
         })
 
-    @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public", website=True)
+    @http.route('/website_hr_recruitment/check_recent_application', type='jsonrpc', auth="public", website=True)
     def check_recent_application(self, field, value, job_id):
         def refused_applicants_condition(applicant):
             return not applicant.active \

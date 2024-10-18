@@ -845,7 +845,7 @@ class WebsiteSlides(WebsiteProfile):
                 return request.redirect(f'/web/login?redirect=/slides/{channel_id}&auth_login={partner_sudo.user_ids[0].login}')
         return self._redirect_to_slides_main('identify_fail')
 
-    @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
+    @http.route(['/slides/channel/join'], type='jsonrpc', auth='public', website=True)
     def slide_channel_join(self, channel_id):
         if request.website.is_public_user():
             return {
@@ -859,14 +859,14 @@ class WebsiteSlides(WebsiteProfile):
             success = channel._action_add_members(request.env.user.partner_id)
         return {'error': 'join_done'} if not success else success
 
-    @http.route(['/slides/channel/leave'], type='json', auth='user', website=True)
+    @http.route(['/slides/channel/leave'], type='jsonrpc', auth='user', website=True)
     def slide_channel_leave(self, channel_id):
         channel = request.env['slide.channel'].browse(channel_id)
         channel._remove_membership(request.env.user.partner_id.ids)
         self._channel_remove_session_answers(channel)
         return True
 
-    @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/slides/channel/tag/search_read'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def slide_channel_tag_search_read(self, fields, domain):
         can_create = request.env['slide.channel.tag'].has_access('create')
         return {
@@ -874,7 +874,7 @@ class WebsiteSlides(WebsiteProfile):
             'can_create': can_create,
         }
 
-    @http.route(['/slides/channel/tag/group/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/slides/channel/tag/group/search_read'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def slide_channel_tag_group_search_read(self, fields, domain):
         can_create = request.env['slide.channel.tag.group'].has_access('create')
         return {
@@ -882,7 +882,7 @@ class WebsiteSlides(WebsiteProfile):
             'can_create': can_create,
         }
 
-    @http.route('/slides/channel/tag/add', type='json', auth='user', methods=['POST'], website=True)
+    @http.route('/slides/channel/tag/add', type='jsonrpc', auth='user', methods=['POST'], website=True)
     def slide_channel_tag_add(self, channel_id, tag_id=None, group_id=None):
         """ Adds a slide channel tag to the specified slide channel.
 
@@ -917,7 +917,7 @@ class WebsiteSlides(WebsiteProfile):
 
         return {'url': "/slides/%s" % (request.env['ir.http']._slug(channel))}
 
-    @http.route(['/slides/channel/send_share_email'], type='json', auth='user', website=True)
+    @http.route(['/slides/channel/send_share_email'], type='jsonrpc', auth='user', website=True)
     def slide_channel_send_share_email(self, channel_id, emails):
         if not email_normalize_all(emails):
             return False
@@ -925,7 +925,7 @@ class WebsiteSlides(WebsiteProfile):
         channel._send_share_email(emails)
         return True
 
-    @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
+    @http.route(['/slides/channel/subscribe'], type='jsonrpc', auth='user', website=True)
     def slide_channel_subscribe(self, channel_id):
         # Presentation Published subtype
         subtype = request.env.ref("website_slides.mt_channel_slide_published", raise_if_not_found=False)
@@ -934,7 +934,7 @@ class WebsiteSlides(WebsiteProfile):
                 partner_ids=[request.env.user.partner_id.id], subtype_ids=subtype.ids)
         return True
 
-    @http.route(['/slides/channel/unsubscribe'], type='json', auth='user', website=True)
+    @http.route(['/slides/channel/unsubscribe'], type='jsonrpc', auth='user', website=True)
     def slide_channel_unsubscribe(self, channel_id):
         request.env['slide.channel'].browse(channel_id).message_unsubscribe(partner_ids=[request.env.user.partner_id.id])
         return True
@@ -1032,7 +1032,7 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.SLIDE UTILS
     # --------------------------------------------------
 
-    @http.route('/slides/slide/get_html_content', type="json", auth="public", website=True)
+    @http.route('/slides/slide/get_html_content', type="jsonrpc", auth="public", website=True)
     def get_html_content(self, slide_id):
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):
@@ -1050,7 +1050,7 @@ class WebsiteSlides(WebsiteProfile):
             next_slide = self._fetch_slide(next_slide_id).get('slide', None)
         return request.redirect("/slides/slide/%s" % (request.env['ir.http']._slug(next_slide) if next_slide else request.env['ir.http']._slug(slide)))
 
-    @http.route('/slides/slide/set_completed', website=True, type="json", auth="public")
+    @http.route('/slides/slide/set_completed', website=True, type="jsonrpc", auth="public")
     def slide_set_completed(self, slide_id):
         if request.website.is_public_user():
             return {'error': 'public_user'}
@@ -1070,7 +1070,7 @@ class WebsiteSlides(WebsiteProfile):
         self._slide_mark_uncompleted(slide)
         return request.redirect(f'/slides/slide/{request.env["ir.http"]._slug(slide)}')
 
-    @http.route('/slides/slide/set_uncompleted', website=True, type='json', auth='public')
+    @http.route('/slides/slide/set_uncompleted', website=True, type='jsonrpc', auth='public')
     def slide_set_uncompleted(self, slide_id):
         if request.website.is_public_user():
             return {'error': 'public_user'}
@@ -1083,7 +1083,7 @@ class WebsiteSlides(WebsiteProfile):
             'next_category_id': False,
         }
 
-    @http.route('/slides/slide/like', type='json', auth="public", website=True)
+    @http.route('/slides/slide/like', type='jsonrpc', auth="public", website=True)
     def slide_like(self, slide_id, upvote):
         if request.website.is_public_user():
             return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
@@ -1112,7 +1112,7 @@ class WebsiteSlides(WebsiteProfile):
             'dislikes': tools.misc.format_decimalized_number(slide.dislikes),
         }
 
-    @http.route('/slides/slide/archive', type='json', auth='user', website=True)
+    @http.route('/slides/slide/archive', type='jsonrpc', auth='user', website=True)
     def slide_archive(self, slide_id):
         """ This route allows channel publishers to archive slides.
         It has to be done in sudo mode since only restricted_editors can write on slides in ACLs """
@@ -1123,14 +1123,14 @@ class WebsiteSlides(WebsiteProfile):
 
         return False
 
-    @http.route('/slides/slide/toggle_is_preview', type='json', auth='user', website=True)
+    @http.route('/slides/slide/toggle_is_preview', type='jsonrpc', auth='user', website=True)
     def slide_preview(self, slide_id):
         slide = request.env['slide.slide'].browse(int(slide_id))
         if slide.channel_id.can_publish:
             slide.is_preview = not slide.is_preview
         return slide.is_preview
 
-    @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
+    @http.route(['/slides/slide/send_share_email'], type='jsonrpc', auth='user', website=True)
     def slide_send_share_email(self, slide_id, emails, fullscreen=False):
         if not email_normalize_all(emails):
             return False
@@ -1142,7 +1142,7 @@ class WebsiteSlides(WebsiteProfile):
     # TAGS SECTION
     # --------------------------------------------------
 
-    @http.route('/slide_channel_tag/add', type='json', auth='user', methods=['POST'], website=True)
+    @http.route('/slide_channel_tag/add', type='jsonrpc', auth='user', methods=['POST'], website=True)
     def slide_channel_tag_create_or_get(self, tag_id, group_id):
         tag = self._create_or_get_channel_tag(tag_id, group_id)
         return {'tag_id': tag.id}
@@ -1151,7 +1151,7 @@ class WebsiteSlides(WebsiteProfile):
     # QUIZ SECTION
     # --------------------------------------------------
 
-    @http.route('/slides/slide/quiz/question_add_or_update', type='json', methods=['POST'], auth='user', website=True)
+    @http.route('/slides/slide/quiz/question_add_or_update', type='jsonrpc', methods=['POST'], auth='user', website=True)
     def slide_quiz_question_add_or_update(self, slide_id, question, sequence, answer_ids, existing_question_id=None):
         """ Add a new question to an existing slide. Completed field of slide.partner
         link is set to False to make sure that the creator can take the quiz again.
@@ -1217,7 +1217,7 @@ class WebsiteSlides(WebsiteProfile):
             'question': slide_question,
         })
 
-    @http.route('/slides/slide/quiz/get', type="json", auth="public", website=True)
+    @http.route('/slides/slide/quiz/get', type="jsonrpc", auth="public", website=True)
     def slide_quiz_get(self, slide_id):
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):
@@ -1225,7 +1225,7 @@ class WebsiteSlides(WebsiteProfile):
         slide = fetch_res['slide']
         return self._get_slide_quiz_data(slide)
 
-    @http.route('/slides/slide/quiz/reset', type="json", auth="user", website=True)
+    @http.route('/slides/slide/quiz/reset', type="jsonrpc", auth="user", website=True)
     def slide_quiz_reset(self, slide_id):
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):
@@ -1235,7 +1235,7 @@ class WebsiteSlides(WebsiteProfile):
             ('partner_id', '=', request.env.user.partner_id.id)
         ]).write({'completed': False, 'quiz_attempts_count': 0})
 
-    @http.route('/slides/slide/quiz/submit', type="json", auth="public", website=True)
+    @http.route('/slides/slide/quiz/submit', type="jsonrpc", auth="public", website=True)
     def slide_quiz_submit(self, slide_id, answer_ids):
         if request.website.is_public_user():
             return {'error': 'public_user'}
@@ -1285,7 +1285,7 @@ class WebsiteSlides(WebsiteProfile):
             'rankProgress': rank_progress,
         }
 
-    @http.route(['/slides/slide/quiz/save_to_session'], type='json', auth='public', website=True)
+    @http.route(['/slides/slide/quiz/save_to_session'], type='jsonrpc', auth='public', website=True)
     def slide_quiz_save_to_session(self, quiz_answers):
         session_slide_answer_quiz = json.loads(request.session.get('slide_answer_quiz', '{}'))
         slide_id = quiz_answers['slide_id']
@@ -1310,7 +1310,7 @@ class WebsiteSlides(WebsiteProfile):
     # CATEGORY MANAGEMENT
     # --------------------------------------------------
 
-    @http.route(['/slides/category/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/slides/category/search_read'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def slide_category_search_read(self, fields, domain):
         category_slide_domain = domain if domain else []
         category_slide_domain = expression.AND([category_slide_domain, [('is_category', '=', True)]])
@@ -1336,7 +1336,7 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.UPLOAD
     # --------------------------------------------------
 
-    @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/slides/prepare_preview'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, channel_id, slide_category, url=None):
         """ Will attempt to fetch external metadata for this slide from the correct
         source (YouTube, Google Drive, ...).
@@ -1403,7 +1403,7 @@ class WebsiteSlides(WebsiteProfile):
 
         return slide_values
 
-    @http.route(['/slides/add_slide'], type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/slides/add_slide'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def create_slide(self, *args, **post):
         # check the size only when we upload a file.
         if post.get('binary_content'):
@@ -1475,7 +1475,7 @@ class WebsiteSlides(WebsiteProfile):
         return ['name', 'url', 'video_url', 'document_google_url', 'image_google_url', 'tag_ids', 'slide_category', 'channel_id',
             'is_preview', 'binary_content', 'description', 'image_1920', 'is_published', 'source_type']
 
-    @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/slides/tag/search_read'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
         can_create = request.env['slide.tag'].has_access('create')
         return {

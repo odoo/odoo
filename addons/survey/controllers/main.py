@@ -453,7 +453,7 @@ class Survey(http.Controller):
     # JSON ROUTES to begin / continue survey (ajax navigation) + Tools
     # ----------------------------------------------------------------
 
-    @http.route('/survey/begin/<string:survey_token>/<string:answer_token>', type='json', auth='public', website=True)
+    @http.route('/survey/begin/<string:survey_token>/<string:answer_token>', type='jsonrpc', auth='public', website=True)
     def survey_begin(self, survey_token, answer_token, **post):
         """ Route used to start the survey user input and display the first survey page.
         Returns an empty dict for the correct answers and the first page html. """
@@ -468,7 +468,7 @@ class Survey(http.Controller):
         answer_sudo._mark_in_progress()
         return {}, self._prepare_question_html(survey_sudo, answer_sudo, **post)
 
-    @http.route('/survey/next_question/<string:survey_token>/<string:answer_token>', type='json', auth='public', website=True)
+    @http.route('/survey/next_question/<string:survey_token>/<string:answer_token>', type='jsonrpc', auth='public', website=True)
     def survey_next_question(self, survey_token, answer_token, **post):
         """ Method used to display the next survey question in an ongoing session.
         Triggered on all attendees screens when the host goes to the next question. """
@@ -482,7 +482,7 @@ class Survey(http.Controller):
 
         return {}, self._prepare_question_html(survey_sudo, answer_sudo, **post)
 
-    @http.route('/survey/submit/<string:survey_token>/<string:answer_token>', type='json', auth='public', website=True)
+    @http.route('/survey/submit/<string:survey_token>/<string:answer_token>', type='jsonrpc', auth='public', website=True)
     def survey_submit(self, survey_token, answer_token, **post):
         """ Submit a page from the survey.
         This will take into account the validation errors and store the answers to the questions.

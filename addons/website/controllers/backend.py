@@ -8,7 +8,7 @@ from odoo.http import request
 
 class WebsiteBackend(http.Controller):
 
-    @http.route('/website/fetch_dashboard_data', type="json", auth='user')
+    @http.route('/website/fetch_dashboard_data', type="jsonrpc", auth='user')
     def fetch_dashboard_data(self, website_id):
         Website = request.env['website']
         has_group_system = request.env.user.has_group('base.group_system')
@@ -37,7 +37,7 @@ class WebsiteBackend(http.Controller):
     def get_iframe_fallback(self):
         return request.render('website.iframefallback')
 
-    @http.route('/website/check_new_content_access_rights', type="json", auth='user')
+    @http.route('/website/check_new_content_access_rights', type="jsonrpc", auth='user')
     def check_create_access_rights(self, models):
         """
         TODO: In master, remove this route and method and find a better way
@@ -54,7 +54,7 @@ class WebsiteBackend(http.Controller):
             for model in models
         }
 
-    @http.route('/website/track_installing_modules', type='json', auth='user')
+    @http.route('/website/track_installing_modules', type='jsonrpc', auth='user')
     def website_track_installing_modules(self, selected_features, total_features=None):
         """
         During the website configuration, this route allows to track the

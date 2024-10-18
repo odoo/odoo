@@ -9,7 +9,7 @@ class LivechatAttachmentController(AttachmentController):
         force_guest_env(guest_token)
         return self.mail_attachment_upload(ufile, thread_id, thread_model, is_pending, **kwargs)
 
-    @route("/im_livechat/cors/attachment/delete", methods=["POST"], type="json", auth="public", cors="*")
+    @route("/im_livechat/cors/attachment/delete", methods=["POST"], type="jsonrpc", auth="public", cors="*")
     def im_livechat_attachment_delete(self, guest_token, attachment_id, access_token=None):
         force_guest_env(guest_token)
         return self.mail_attachment_delete(attachment_id, access_token)

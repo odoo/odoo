@@ -5,7 +5,7 @@ from odoo.http import Controller, request, route
 
 class LocationSelectorController(Controller):
 
-    @route('/delivery/set_pickup_location', type='json', auth='user')
+    @route('/delivery/set_pickup_location', type='jsonrpc', auth='user')
     def delivery_set_pickup_location(self, order_id, pickup_location_data):
         """ Fetch the order and set the pickup location on the current order.
 
@@ -16,7 +16,7 @@ class LocationSelectorController(Controller):
         order = request.env['sale.order'].browse(order_id)
         order._set_pickup_location(pickup_location_data)
 
-    @route('/delivery/get_pickup_locations', type='json', auth='user')
+    @route('/delivery/get_pickup_locations', type='jsonrpc', auth='user')
     def delivery_get_pickup_locations(self, order_id, zip_code=None):
         """ Fetch the order and return the pickup locations close to a given zip code.
 

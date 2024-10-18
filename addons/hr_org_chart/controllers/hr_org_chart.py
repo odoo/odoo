@@ -38,13 +38,13 @@ class HrOrgChartController(http.Controller):
             indirect_sub_count=employee.child_all_count,
         )
 
-    @http.route('/hr/get_redirect_model', type='json', auth='user')
+    @http.route('/hr/get_redirect_model', type='jsonrpc', auth='user')
     def get_redirect_model(self):
         if request.env['hr.employee'].has_access('read'):
             return 'hr.employee'
         return 'hr.employee.public'
 
-    @http.route('/hr/get_org_chart', type='json', auth='user')
+    @http.route('/hr/get_org_chart', type='jsonrpc', auth='user')
     def get_org_chart(self, employee_id, **kw):
 
         employee = self._check_employee(employee_id, **kw)
@@ -73,7 +73,7 @@ class HrOrgChartController(http.Controller):
         values['managers'].reverse()
         return values
 
-    @http.route('/hr/get_subordinates', type='json', auth='user')
+    @http.route('/hr/get_subordinates', type='jsonrpc', auth='user')
     def get_subordinates(self, employee_id, subordinates_type=None, **kw):
         """
         Get employee subordinates.

@@ -255,7 +255,7 @@ class PaymentPortal(portal.CustomerPortal):
         """
         return {}
 
-    @http.route('/payment/transaction', type='json', auth='public')
+    @http.route('/payment/transaction', type='jsonrpc', auth='public')
     def payment_transaction(self, amount, currency_id, partner_id, access_token, **kwargs):
         """ Create a draft transaction and return its processing values.
 
@@ -422,7 +422,7 @@ class PaymentPortal(portal.CustomerPortal):
             # Display the portal homepage to the user
             return request.redirect('/my/home')
 
-    @http.route('/payment/archive_token', type='json', auth='user')
+    @http.route('/payment/archive_token', type='jsonrpc', auth='user')
     def archive_token(self, token_id):
         """ Check that a user has write access on a token and archive the token if so.
 

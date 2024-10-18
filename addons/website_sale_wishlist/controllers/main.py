@@ -7,7 +7,7 @@ from odoo.http import Controller, request, route
 
 class WebsiteSaleWishlist(Controller):
 
-    @route('/shop/wishlist/add', type='json', auth='public', website=True)
+    @route('/shop/wishlist/add', type='jsonrpc', auth='public', website=True)
     def add_to_wishlist(self, product_id, **kw):
         website = request.website
         pricelist = website.pricelist_id
@@ -52,7 +52,7 @@ class WebsiteSaleWishlist(Controller):
             }
         )
 
-    @route('/shop/wishlist/remove/<int:wish_id>', type='json', auth='public', website=True)
+    @route('/shop/wishlist/remove/<int:wish_id>', type='jsonrpc', auth='public', website=True)
     def remove_from_wishlist(self, wish_id, **kw):
         wish = request.env['product.wishlist'].browse(wish_id)
         if request.website.is_public_user():

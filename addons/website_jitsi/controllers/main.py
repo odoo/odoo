@@ -9,7 +9,7 @@ from odoo.http import request
 
 class WebsiteJitsiController(http.Controller):
 
-    @http.route(["/jitsi/update_status"], type="json", auth="public")
+    @http.route(["/jitsi/update_status"], type="jsonrpc", auth="public")
     def jitsi_update_status(self, room_name, participant_count, joined):
         """ Update room status: participant count, max reached
 
@@ -47,7 +47,7 @@ class WebsiteJitsiController(http.Controller):
             [room_name, participant_count, participant_count]
         )
 
-    @http.route(["/jitsi/is_full"], type="json", auth="public")
+    @http.route(["/jitsi/is_full"], type="jsonrpc", auth="public")
     def jitsi_is_full(self, room_name):
         return self._chat_room_exists(room_name).is_full
 

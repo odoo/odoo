@@ -71,7 +71,7 @@ class LivechatController(http.Controller):
         info = channel.get_livechat_info(username=username)
         return request.render('im_livechat.loader', {'info': info}, headers=[('Content-Type', 'application/javascript')])
 
-    @http.route('/im_livechat/init', type='json', auth="public")
+    @http.route('/im_livechat/init', type='jsonrpc', auth="public")
     @add_guest_to_context
     def livechat_init(self, channel_id):
         operator_available = len(request.env['im_livechat.channel'].sudo().browse(channel_id).available_operator_ids)
@@ -107,7 +107,7 @@ class LivechatController(http.Controller):
     def _get_guest_name(self):
         return _("Visitor")
 
-    @http.route('/im_livechat/get_session', methods=["POST"], type="json", auth='public')
+    @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     @add_guest_to_context
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
         store = Store()
@@ -212,7 +212,7 @@ class LivechatController(http.Controller):
             subtype_xmlid="mail.mt_comment",
         )
 
-    @http.route("/im_livechat/feedback", type="json", auth="public")
+    @http.route("/im_livechat/feedback", type="jsonrpc", auth="public")
     @add_guest_to_context
     def feedback(self, channel_id, rate, reason=None, **kwargs):
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
@@ -245,20 +245,20 @@ class LivechatController(http.Controller):
             return rating.id
         return False
 
-    @http.route("/im_livechat/history", type="json", auth="public")
+    @http.route("/im_livechat/history", type="jsonrpc", auth="public")
     @add_guest_to_context
     def history_pages(self, pid, channel_id, page_history=None):
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             if pid in channel.sudo().channel_member_ids.partner_id.ids:
                 request.env["res.partner"].browse(pid)._bus_send_history_message(channel, page_history)
 
-    @http.route("/im_livechat/email_livechat_transcript", type="json", auth="public")
+    @http.route("/im_livechat/email_livechat_transcript", type="jsonrpc", auth="public")
     @add_guest_to_context
     def email_livechat_transcript(self, channel_id, email):
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             channel._email_livechat_transcript(email)
 
-    @http.route("/im_livechat/visitor_leave_session", type="json", auth="public")
+    @http.route("/im_livechat/visitor_leave_session", type="jsonrpc", auth="public")
     @add_guest_to_context
     def visitor_leave_session(self, channel_id):
         """Called when the livechat visitor leaves the conversation.

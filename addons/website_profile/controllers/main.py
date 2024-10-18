@@ -291,7 +291,7 @@ class WebsiteProfile(http.Controller):
     # User and validation
     # --------------------------------------------------
 
-    @http.route('/profile/send_validation_email', type='json', auth='user', website=True)
+    @http.route('/profile/send_validation_email', type='jsonrpc', auth='user', website=True)
     def send_validation_email(self, **kwargs):
         if request.env.uid != request.website.user_id.id:
             request.env.user._send_profile_validation_email(**kwargs)
@@ -306,7 +306,7 @@ class WebsiteProfile(http.Controller):
         url = kwargs.get('redirect_url', '/')
         return request.redirect(url)
 
-    @http.route('/profile/validate_email/close', type='json', auth='public', website=True)
+    @http.route('/profile/validate_email/close', type='jsonrpc', auth='public', website=True)
     def validate_email_done(self, **kwargs):
         request.session['validation_email_done'] = False
         return True

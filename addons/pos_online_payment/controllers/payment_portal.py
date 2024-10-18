@@ -158,7 +158,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
     def _render_pay(self, rendering_context):
         return request.render('pos_online_payment.pay', rendering_context)
 
-    @http.route('/pos/pay/transaction/<int:pos_order_id>', type='json', auth='public', website=True, sitemap=False)
+    @http.route('/pos/pay/transaction/<int:pos_order_id>', type='jsonrpc', auth='public', website=True, sitemap=False)
     def pos_order_pay_transaction(self, pos_order_id, access_token=None, **kwargs):
         """ Behaves like payment.PaymentPortal.payment_transaction but for POS online payment.
 

@@ -41,7 +41,7 @@ class Web_Unsplash(http.Controller):
     # ------------------------------------------------------
     # add unsplash image url
     # ------------------------------------------------------
-    @http.route('/web_unsplash/attachment/add', type='json', auth='user', methods=['POST'])
+    @http.route('/web_unsplash/attachment/add', type='jsonrpc', auth='user', methods=['POST'])
     def save_unsplash_url(self, unsplashurls=None, **kwargs):
         """
             unsplashurls = {
@@ -124,7 +124,7 @@ class Web_Unsplash(http.Controller):
 
         return uploads
 
-    @http.route("/web_unsplash/fetch_images", type='json', auth="user")
+    @http.route("/web_unsplash/fetch_images", type='jsonrpc', auth="user")
     def fetch_unsplash_images(self, **post):
         access_key = self._get_access_key()
         app_id = self.get_unsplash_app_id()
@@ -141,11 +141,11 @@ class Web_Unsplash(http.Controller):
                 return {'error': 'no_access'}
             return {'error': response.status_code}
 
-    @http.route("/web_unsplash/get_app_id", type='json', auth="public")
+    @http.route("/web_unsplash/get_app_id", type='jsonrpc', auth="public")
     def get_unsplash_app_id(self, **post):
         return request.env['ir.config_parameter'].sudo().get_param('unsplash.app_id')
 
-    @http.route("/web_unsplash/save_unsplash", type='json', auth="user")
+    @http.route("/web_unsplash/save_unsplash", type='jsonrpc', auth="user")
     def save_unsplash(self, **post):
         if request.env.user._can_manage_unsplash_settings():
             request.env['ir.config_parameter'].sudo().set_param('unsplash.app_id', post.get('appId'))
