@@ -347,7 +347,7 @@ class AccountMove(models.Model):
         }
         tax_group_ids_to_exclude = self.env['account.tax.group'].browse(tax_group_ids).filtered('l10n_ar_vat_afip_code').ids
         if tax_group_ids_to_exclude:
-            return self.env['account.tax']._exclude_tax_group_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
+            return self.env['account.tax']._exclude_tax_groups_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
         return tax_totals
 
     def _l10n_ar_include_vat(self):
