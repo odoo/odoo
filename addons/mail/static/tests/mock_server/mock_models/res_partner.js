@@ -173,6 +173,9 @@ export class ResPartner extends webModels.ResPartner {
         return store.get_result();
     }
 
+    compute_im_status(partner) {
+        return partner.im_status;
+    }
     /**
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
@@ -216,6 +219,9 @@ export class ResPartner extends webModels.ResPartner {
             }
             if (fields.includes("display_name")) {
                 data.displayName = partner.display_name || partner.name;
+            }
+            if (fields.includes("im_status")) {
+                data.im_status = this.compute_im_status(partner);
             }
             if (fields.includes("user")) {
                 const users = ResUsers.browse(partner.user_ids);
