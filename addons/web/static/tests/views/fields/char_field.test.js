@@ -154,6 +154,20 @@ test("char field in form view", async () => {
     });
 });
 
+test("basic rendering text field", async () => {
+    Product._fields.description = fields.Text();
+    Product._records = [{ id: 1, description: "Description as text" }];
+    await mountView({
+        type: "form",
+        resModel: "product",
+        resId: 1,
+        arch: '<form><field name="description" widget="char"/></form>',
+    });
+
+    expect(".o_field_widget input[type='text']").toHaveCount(1);
+    expect(".o_field_widget input[type='text']").toHaveValue("Description as text");
+});
+
 test("setting a char field to empty string is saved as a false value", async () => {
     expect.assertions(1);
 
