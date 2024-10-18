@@ -1215,6 +1215,7 @@ export class DeletePlugin extends Plugin {
     // ======== ANDROID =============
 
     handleBeforeInputAndroid(argsForDelete) {
+        const savePointRestore = this.shared.makeSavePoint();
         this.fixSelectionPreDelete();
         this.delete(...argsForDelete);
 
@@ -1224,6 +1225,21 @@ export class DeletePlugin extends Plugin {
         if (isBrowserChrome()) {
             this.preventDefaultDeleteAndroidChrome();
         }
+
+        // In case we just broke a dictionary replacement:
+        const deleteOriginalSelection = (ev) => {
+            if (ev.inputType === "insertText") {
+                savePointRestore();
+                this.delete(...argsForDelete);
+                console.log("virtual keyboard's selection restored and deleted");
+                // TODO: rename this better
+                this.runOnceOnSelectionChange = null;
+            }
+        };
+        this.editable.addEventListener("beforeinput", deleteOriginalSelection);
+        setTimeout(() => {
+            this.editable.removeEventListener("beforeinput", deleteOriginalSelection);
+        });
     }
 
     // Revert selection changes that happened right before delete.
