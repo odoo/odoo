@@ -3479,7 +3479,7 @@ class BaseModel(metaclass=MetaModel):
             elif foreign_key_re.match(definition):
                 self.pool.post_init(sql.add_constraint, cr, self._table, conname, definition)
             else:
-                self.pool.post_constraint(sql.add_constraint, cr, self._table, conname, definition)
+                self.pool.post_constraint(f"constraint:{conname}", (sql.add_constraint, cr, self._table, conname, definition))
 
     #
     # Update objects that use this one to update their _inherits fields
