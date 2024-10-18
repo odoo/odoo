@@ -2,8 +2,8 @@ import { busService } from "@bus/services/bus_service";
 import { busModels } from "@bus/../tests/bus_test_helpers";
 
 import { mailGlobal } from "@mail/utils/common/misc";
-import { after, before, getFixture } from "@odoo/hoot";
-import { hover as hootHover, resize } from "@odoo/hoot-dom";
+import { after, before, expect, getFixture } from "@odoo/hoot";
+import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import {
     MockServer,
@@ -71,6 +71,7 @@ import { contains } from "./mail_test_helpers_contains";
 export { SIZES } from "@web/core/ui/ui_service";
 import { patch } from "@web/core/utils/patch";
 import { logger } from "@web/../lib/hoot/core/logger";
+import { Deferred } from "@odoo/hoot-mock";
 
 export * from "./mail_test_helpers_contains";
 
@@ -623,16 +624,41 @@ export function observeRenders() {
 /**
  * Determine if the child element is in the view port of the parent.
  *
- * @param {HTMLElement} parent
- * @param {HTMLElement} child
+ * @param {string} childSelector
+ * @param {string} parentSelector
  */
-export function isInViewportOf(parent, child) {
-    const childRect = child.getBoundingClientRect();
-    const parentRect = parent.getBoundingClientRect();
-
-    return childRect.top <= parentRect.top
-        ? parentRect.top - childRect.top <= childRect.height
-        : childRect.bottom - parentRect.bottom <= childRect.height;
+export async function isInViewportOf(childSelector, parentSelector) {
+    await contains(parentSelector);
+    const inViewportDeferred = new Deferred();
+    const failTimeout = setTimeout(() => check({ crashOnFail: true }), 3000);
+    const check = ({ crashOnFail = false } = {}) => {
+        const parent = queryFirst(parentSelector);
+        const child = queryFirst(childSelector);
+        let alreadyInViewport = false;
+        if (parent && child) {
+            const childRect = child.getBoundingClientRect();
+            const parentRect = parent.getBoundingClientRect();
+            alreadyInViewport =
+                childRect.top <= parentRect.top
+                    ? parentRect.top - childRect.top <= childRect.height
+                    : childRect.bottom - parentRect.bottom <= childRect.height;
+        }
+        if (alreadyInViewport) {
+            clearTimeout(failTimeout);
+            expect(true).toBe(true, {
+                message: `Element ${childSelector} found in viewport of ${parentSelector}`,
+            });
+            inViewportDeferred.resolve();
+        } else if (crashOnFail) {
+            const failMsg = `Element ${childSelector} not found in viewport of ${parentSelector}`;
+            expect(false).toBe(true, { message: failMsg });
+            inViewportDeferred.reject(new Error(failMsg));
+        } else {
+            parent.addEventListener("scrollend", check, { once: true });
+        }
+    };
+    check();
+    return inViewportDeferred;
 }
 
 export async function hover(selector) {
