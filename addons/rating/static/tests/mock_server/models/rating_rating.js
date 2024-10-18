@@ -15,6 +15,6 @@ export class RatingRating extends models.ServerModel {
         if (!fields) {
             fields = ["rating", "rating_image_url", "rating_text"];
         }
-        store.add(this._name, this.read(ids, fields, false));
+        store.add(this._name, this._read_format(ids, fields, false));
     }
 }

@@ -36,7 +36,7 @@ export class MailNotification extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         for (const notification of this.browse(ids)) {
-            const [data] = this.read(
+            const [data] = this._read_format(
                 notification.id,
                 ["failure_type", "notification_status", "notification_type"],
                 makeKwArgs({ load: false })

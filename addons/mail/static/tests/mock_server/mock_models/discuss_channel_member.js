@@ -130,7 +130,7 @@ export class DiscussChannelMember extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         for (const member of this.browse(ids)) {
-            const [data] = this.read(
+            const [data] = this._read_format(
                 member.id,
                 Object.keys(fields).filter(
                     (field) =>
