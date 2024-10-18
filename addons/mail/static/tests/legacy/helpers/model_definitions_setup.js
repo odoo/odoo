@@ -21,7 +21,6 @@ addModelNamesToFetch([
     "mail.activity.type",
     "discuss.channel",
     "discuss.channel.member",
-    "discuss.channel.rtc.session",
     "discuss.gif.favorite",
     "discuss.voice.metadata",
     "mail.followers",

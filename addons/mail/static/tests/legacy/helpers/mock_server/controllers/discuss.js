@@ -155,18 +155,6 @@ patch(MockServer.prototype, {
             const follower_id = args.follower_id;
             return this._mockRouteMailReadSubscriptionData(follower_id);
         }
-        if (route === "/mail/rtc/channel/join_call") {
-            return this._mockRouteMailRtcChannelJoinCall(
-                args.channel_id,
-                args.check_rtc_session_ids
-            );
-        }
-        if (route === "/mail/rtc/channel/leave_call") {
-            return this._mockRouteMailRtcChannelLeaveCall(args.channel_id);
-        }
-        if (route === "/mail/rtc/session/update_and_broadcast") {
-            return this._mockRouteMailRtcSessionUpdateAndBroadcast(args.session_id, args.values);
-        }
         if (route === "/mail/starred/messages") {
             const { search_term, after, before, limit } = args;
             return this._mockRouteMailMessageStarredMessages(search_term, after, before, limit);
@@ -462,110 +450,6 @@ patch(MockServer.prototype, {
         });
         // NOTE: server is also doing a sort here, not reproduced for simplicity
         return subtypes_list;
-    },
-    /**
-     * Simulates the `/mail/rtc/channel/join_call` route.
-     *
-     * @private
-     * @param {integer} channel_id
-     * @returns {integer[]} [check_rtc_session_ids]
-     */
-    async _mockRouteMailRtcChannelJoinCall(channel_id, check_rtc_session_ids = []) {
-        const memberOfCurrentUser =
-            this._mockDiscussChannelMember__getAsSudoFromContext(channel_id);
-        const sessionId = this.pyEnv["discuss.channel.rtc.session"].create({
-            channel_member_id: memberOfCurrentUser.id,
-            channel_id, // on the server, this is a related field from channel_member_id and not explicitly set
-            guest_id: memberOfCurrentUser.guest_id[0],
-            partner_id: memberOfCurrentUser.partner_id[0],
-        });
-        const channelMembers = this.getRecords("discuss.channel.member", [
-            ["channel_id", "=", channel_id],
-        ]);
-        const rtcSessions = this.getRecords("discuss.channel.rtc.session", [
-            ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
-        ]);
-        return {
-            iceServers: false,
-            rtcSessions: [
-                [
-                    "ADD",
-                    rtcSessions.map((rtcSession) =>
-                        this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(
-                            rtcSession.id
-                        )
-                    ),
-                ],
-            ],
-            sessionId: sessionId,
-        };
-    },
-    /**
-     * Simulates the `/mail/rtc/channel/leave_call` route.
-     *
-     * @private
-     * @param {integer} channelId
-     */
-    async _mockRouteMailRtcChannelLeaveCall(channel_id) {
-        const channelMembers = this.getRecords("discuss.channel.member", [
-            ["channel_id", "=", channel_id],
-        ]);
-        const rtcSessions = this.getRecords("discuss.channel.rtc.session", [
-            ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
-        ]);
-        const notifications = [];
-        const channelInfo =
-            this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormatByChannel(
-                rtcSessions.map((rtcSession) => rtcSession.id)
-            );
-        for (const [channelId, sessionsData] of Object.entries(channelInfo)) {
-            const channel = this.pyEnv["discuss.channel"].search_read([
-                ["id", "=", parseInt(channelId)],
-            ])[0];
-            const notificationRtcSessions = sessionsData.map((sessionsDataPoint) => {
-                return { id: sessionsDataPoint.id };
-            });
-            notifications.push([
-                channel,
-                "mail.record/insert",
-                {
-                    "discuss.channel": [
-                        {
-                            id: Number(channelId), // JS object keys are strings, but the type from the server is number
-                            rtcSessions: [["DELETE", notificationRtcSessions]],
-                        },
-                    ],
-                },
-            ]);
-        }
-        for (const rtcSession of rtcSessions) {
-            const target = rtcSession.guest_id
-                ? this.pyEnv["mail.guest"].search_read([["id", "=", rtcSession.guest_id]])[0]
-                : this.pyEnv["res.partner"].search_read([["id", "=", rtcSession.partner_id]])[0];
-            notifications.push([
-                target,
-                "discuss.channel.rtc.session/ended",
-                { sessionId: rtcSession.id },
-            ]);
-        }
-        this.pyEnv["bus.bus"]._sendmany(notifications);
-    },
-    /**
-     * Simulates the `/mail/rtc/session/update_and_broadcast` route.
-     *
-     * @param {number} session_id
-     * @param {object} values
-     */
-    async _mockRouteMailRtcSessionUpdateAndBroadcast(session_id, values) {
-        const [session] = this.pyEnv["discuss.channel.rtc.session"].search_read([
-            ["id", "=", session_id],
-        ]);
-        const [currentChannelMember] = this.pyEnv["discuss.channel.member"].search_read([
-            ["id", "=", session.channel_member_id[0]],
-        ]);
-        if (session && currentChannelMember.partner_id[0] === this.pyEnv.currentPartnerId) {
-            this._mockDiscussChannelRtcSession__updateAndBroadcast(session.id, values);
-        }
     },
     /**
      * Simulates the `/mail/thread/data` route.
