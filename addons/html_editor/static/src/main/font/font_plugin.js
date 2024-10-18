@@ -244,9 +244,14 @@ export class FontPlugin extends Plugin {
             !nodesAfterTarget.length ||
             (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR")
         ) {
+            const [, newElement] = this.shared.splitElementBlock({
+                targetNode,
+                targetOffset,
+                blockToSplit: closestPre,
+            });
             const p = this.document.createElement("p");
-            closestPre.after(p);
-            fillEmpty(p);
+            p.replaceChildren(...newElement.childNodes);
+            newElement.replaceWith(p);
             this.shared.setCursorStart(p);
         } else {
             const lineBreak = this.document.createElement("br");
@@ -276,8 +281,8 @@ export class FontPlugin extends Plugin {
                 !descendants(newElement).some(isVisibleTextNode)
             ) {
                 const p = this.document.createElement("P");
+                p.replaceChildren(...newElement.childNodes);
                 newElement.replaceWith(p);
-                p.replaceChildren(this.document.createElement("br"));
                 this.shared.setCursorStart(p);
             }
             return true;

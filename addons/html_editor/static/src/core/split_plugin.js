@@ -50,7 +50,7 @@ export class SplitPlugin extends Plugin {
     // commands
     // --------------------------------------------------------------------------
     splitBlock() {
-        let selection = this.shared.getEditableSelection();
+        let selection = this.shared.getSelectionData().deepEditableSelection;
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
             // this.shared.collapseIfZWS();
@@ -115,20 +115,23 @@ export class SplitPlugin extends Plugin {
             blockToSplit.parentElement
         );
         restore();
-        const removeEmptyAndFill = (node) => {
+        const fillEmptyElement = (node) => {
             if (isProtecting(node) || isProtected(node)) {
                 // TODO ABD: add test
                 return;
-            } else if (!isBlock(node) && !isVisible(node)) {
+            } else if (node.nodeType === Node.TEXT_NODE && !isVisible(node)) {
                 const parent = node.parentElement;
                 node.remove();
-                removeEmptyAndFill(parent);
-            } else {
+                fillEmptyElement(parent);
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node.hasAttribute("data-oe-zws-empty-inline")) {
+                    delete node.dataset.oeZwsEmptyInline;
+                }
                 fillEmpty(node);
             }
         };
-        removeEmptyAndFill(lastLeaf(beforeElement));
-        removeEmptyAndFill(firstLeaf(afterElement));
+        fillEmptyElement(lastLeaf(beforeElement));
+        fillEmptyElement(firstLeaf(afterElement));
 
         this.shared.setCursorStart(afterElement);
 
