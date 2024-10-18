@@ -4,6 +4,20 @@ import { fields } from "@web/../tests/web_test_helpers";
 export class ResPartner extends mailModels.ResPartner {
     out_of_office_date_end = fields.Date();
 
+    compute_im_status(partner) {
+        if (partner.out_of_office_date_end) {
+            if (partner.im_status === "online") {
+                return "leave_online";
+            } else if (partner.im_status === "away") {
+                return "leave_away";
+            } else {
+                return "leave_offline";
+            }
+        } else {
+            return super.compute_im_status(partner);
+        }
+    }
+
     /**
      * Overrides to add out of office to employees.
      * @override
