@@ -1580,10 +1580,10 @@ var VideoWidget = MediaWidget.extend({
             // but not in mobile (so no behavior change was done in stable,
             // this should not be migrated).
             const enablejsapi = options.autoplay ? '&enablejsapi=1' : '';
-            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${encodeURIComponent(matches.youtube[2])}${autoplay}${enablejsapi}&rel=0${ytLoop}${controls}${fullscreen}`;
+            embedURL = `https://www.youtube${matches.youtube[1] || ''}.com/embed/${encodeURIComponent(matches.youtube[2])}${autoplay}${enablejsapi}&rel=0${ytLoop}${controls}${fullscreen}`;
             type = 'youtube';
         } else if (matches.instagram && matches.instagram[2].length) {
-            embedURL = `//www.instagram.com/p/${encodeURIComponent(matches.instagram[2])}/embed/`;
+            embedURL = `https://www.instagram.com/p/${encodeURIComponent(matches.instagram[2])}/embed/`;
             type = 'instagram';
         } else if (matches.vine && matches.vine[0].length) {
             embedURL = `${matches.vine[0]}/embed/simple`;
@@ -1591,17 +1591,17 @@ var VideoWidget = MediaWidget.extend({
         } else if (matches.vimeo && matches.vimeo[3].length) {
             const vimeoAutoplay = autoplay.replace('mute', 'muted')
                 .replace('autoplay=1', 'autoplay=1&autopause=0');
-            embedURL = `//player.vimeo.com/video/${encodeURIComponent(matches.vimeo[3])}${vimeoAutoplay}${loop}${controls}`;
+            embedURL = `https://player.vimeo.com/video/${encodeURIComponent(matches.vimeo[3])}${vimeoAutoplay}${loop}${controls}`;
             type = 'vimeo';
         } else if (matches.dailymotion && matches.dailymotion[2].length) {
             const videoId = matches.dailymotion[2].replace('video/', '');
             const logo = options.hide_dm_logo ? '&ui-logo=0' : '';
             const share = options.hide_dm_share ? '&sharing-enable=0' : '';
-            embedURL = `//www.dailymotion.com/embed/video/${encodeURIComponent(videoId)}${autoplay}${controls}${logo}${share}`;
+            embedURL = `https://www.dailymotion.com/embed/video/${encodeURIComponent(videoId)}${autoplay}${controls}${logo}${share}`;
             type = 'dailymotion';
         } else if (matches.youku && matches.youku[3].length) {
             const videoId = matches.youku[3].indexOf('.html?') >= 0 ? matches.youku[3].substring(0, matches.youku[3].indexOf('.html?')) : matches.youku[3];
-            embedURL = `//player.youku.com/embed/${videoId}`;
+            embedURL = `https://player.youku.com/embed/${videoId}`;
             type = 'youku';
         }
 
