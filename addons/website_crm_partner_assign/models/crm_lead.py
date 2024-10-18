@@ -72,7 +72,7 @@ class CrmLead(models.Model):
             if not partner_id:
                 partner_id = partner_dict.get(lead.id, False)
             if not partner_id:
-                tag_to_add = self.env.ref('website_crm_partner_assign.tag_portal_lead_partner_unavailable', False)
+                tag_to_add = self.env.ref('website_crm_partner_assign.tag_portal_lead_partner_unavailable', raise_if_not_found=False)
                 if tag_to_add:
                     lead.write({'tag_ids': [(4, tag_to_add.id, False)]})
                 continue
@@ -211,7 +211,7 @@ class CrmLead(models.Model):
         }
 
         if spam:
-            tag_spam = self.env.ref('website_crm_partner_assign.tag_portal_lead_is_spam', False)
+            tag_spam = self.env.ref('website_crm_partner_assign.tag_portal_lead_is_spam', raise_if_not_found=False)
             if tag_spam and tag_spam not in self.tag_ids:
                 values['tag_ids'] = [(4, tag_spam.id, False)]
         if partner_ids:
@@ -268,7 +268,7 @@ class CrmLead(models.Model):
             return {
                 'errors': _('All fields are required!')
             }
-        tag_own = self.env.ref('website_crm_partner_assign.tag_portal_lead_own_opp', False)
+        tag_own = self.env.ref('website_crm_partner_assign.tag_portal_lead_own_opp', raise_if_not_found=False)
         values = {
             'contact_name': values['contact_name'],
             'name': values['title'],

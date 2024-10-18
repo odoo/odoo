@@ -829,7 +829,7 @@ class PurchaseOrder(models.Model):
         if len(invoices) > 1:
             result['domain'] = [('id', 'in', invoices.ids)]
         elif len(invoices) == 1:
-            res = self.env.ref('account.view_move_form', False)
+            res = self.env.ref('account.view_move_form', raise_if_not_found=False)
             form_view = [(res and res.id or False, 'form')]
             if 'views' in result:
                 result['views'] = form_view + [(state, view) for state, view in result['views'] if view != 'form']

@@ -632,25 +632,79 @@ class Environment(Mapping):
         su = (user is None and self.su) if su is None else su
         return Environment(cr, uid, context, su, self.uid_origin)
 
-    def ref(self, xml_id, raise_if_not_found=True):
-        """ Return the record corresponding to the given ``xml_id``.
+    def ref(self, *xml_ids: str, raise_if_not_found: bool = True) -> BaseModel | None:
+        """ Return the records corresponding to the given ``xml_ids``.
 
-        :param str xml_id: record xml_id, under the format ``<module.id>``
-        :param bool raise_if_not_found: whether the method should raise if record is not found
-        :returns: Found record or None
-        :raise ValueError: if record wasn't found and ``raise_if_not_found`` is True
+        :param str xml_ids: record xml_ids, under the format ``<module>.<record_id>``
+        :param bool raise_if_not_found: whether the method should raise if any ``xml_id`` isn't found.
+        :returns: Found records or None
+        :raise ValueError: if any record wasn't and ``raise_if_not_found`` is True,
+            or if the user mixed ``xml_ids`` that belong to different models.
+
+        .. note::
+            If ``raise_if_not_found`` is ``False`` and there are multiple
+            ``xml_ids`` as input, then it won't be possible to determine which
+            specific records weren't found by only looking at the recordset.
+
+        .. warning::
+            | ``raise_if_not_found`` is now a keyword-only argument.
+            | Its use as a non-keyword argument is **deprecated** but it's still working.
+
+            For example::
+
+                self.env.ref('base.us', 'base.x', False)
+                DeprecationWarning: Since 19.0, raise_if_not_found is a keyword-only argument
+                res.country(233)
+
+                self.env.ref('base.us', 'base.x', raise_if_not_found=False)
+                res.country(233)
+
+                self.env.ref('base.us', 'base.x')
+                ValueError: External ID not found in the system: base.x
+
+                self.env.ref('base.us', 'base.x', True)
+                DeprecationWarning: Since 19.0, raise_if_not_found is a keyword-only argument
+                ValueError: External ID not found in the system: base.x
+
+                self.env.ref('base.us', 'base.x', raise_if_not_found=True)
+                ValueError: External ID not found in the system: base.x
+
         """
-        res_model, res_id = self['ir.model.data']._xmlid_to_res_model_res_id(
-            xml_id, raise_if_not_found=raise_if_not_found
-        )
 
-        if res_model and res_id:
-            record = self[res_model].browse(res_id)
-            if record.exists():
-                return record
-            if raise_if_not_found:
-                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xml_id))
-        return None
+        # Avoid breaking the API when raise_if_not_found was given as a pure boolean non-keyword arg
+        if len(xml_ids) > 1 and raise_if_not_found is True and isinstance(xml_ids[-1], bool):
+            warnings.warn("Since 19.0, raise_if_not_found is a keyword-only argument", DeprecationWarning)
+            raise_if_not_found = xml_ids[-1]
+            xml_ids = xml_ids[:-1]
+
+        id_xmlid = {}
+        res_ids = []
+        first_model_name, first_xml_id = None, None
+        for xml_id in xml_ids:
+            res_model, res_id = self['ir.model.data']._xmlid_to_res_model_res_id(
+                xml_id, raise_if_not_found=raise_if_not_found
+            )
+            if res_model and res_id:
+                if not first_model_name:
+                    first_model_name = res_model
+                    first_xml_id = xml_id
+                elif first_model_name != res_model:
+                    raise ValueError(
+                        f"'{first_xml_id}' and '{xml_id}' xmlids belong to different models."
+                    )
+                id_xmlid[res_id] = xml_id
+                res_ids.append(res_id)
+        if not id_xmlid:
+            return None
+
+        records = self[first_model_name].browse(res_ids)
+        existing = records.exists()
+        if raise_if_not_found and (missing := records - existing):
+            missing_ids = ", ".join(id_xmlid[record.id] for record in missing)
+            raise ValueError(
+                f"No records found for unique ID(s) {missing_ids}. They may have been deleted."
+            )
+        return existing or None
 
     def is_superuser(self):
         """ Return whether the environment is in superuser mode. """
