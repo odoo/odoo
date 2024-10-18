@@ -593,18 +593,11 @@ class PosConfig(models.Model):
              'tag': 'reload',
          }
 
-    def _force_http(self):
-        enforce_https = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.enforce_https')
-        if not enforce_https and (self.other_devices or self.printer_ids.filtered(lambda pt: pt.printer_type == 'epson_epos')):
-            return True
-        return False
-
     # Methods to open the POS
     def _action_to_open_ui(self):
         if not self.current_session_id:
             self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
-        path = '/pos/web' if self._force_http() else '/pos/ui'
-        pos_url = path + '?config_id=%d&from_backend=True' % self.id
+        pos_url = '/pos/ui?config_id=%d&from_backend=True' % self.id
         debug = request and request.session.debug
         if debug:
             pos_url += '&debug=%s' % debug
