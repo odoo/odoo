@@ -7,10 +7,16 @@
         <field name="inherit_id" ref="product.product_attribute_view_form"/>
         <field name="arch" type="xml">
             <group name="main_fields" position="inside">
-                <group name="ecommerce_main_fields">
+                <group name="ecommerce_main_fields" string="eCommerce">
                     <field
                         name="visibility"
-                        string="eCommerce Filter"
+                        string="Filter"
+                        widget="radio"
+                        options="{'horizontal': True}"
+                    />
+                    <field
+                        name="show_variants"
+                        string="On Product Cards"
                         widget="radio"
                         options="{'horizontal': True}"
                     />

@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import io
 import logging
 
-from odoo.tests import HttpCase, tagged
+from PIL import Image
 
+from odoo.tests import Command, HttpCase, tagged
 from odoo.addons.website.tools import MockRequest
 
 
@@ -60,3 +63,80 @@ class TestSnippets(HttpCase):
 
         self.start_tour('/', 'website_sale.products_snippet_recently_viewed', login='admin')
         self.assertEqual(before_tour_product_ids, website_visitor.product_ids.ids, "There shouldn't be any new product in recently viewed after this tour")
+
+    def test_03_shop_product_hover(self):
+        product_attr_color = self.env['product.attribute'].create({
+            'name': 'Color',
+            'display_type': 'color',
+            'show_variants': 'visible',
+        })
+        color_gray = self.env['product.attribute.value'].create({
+            'name': 'Old Fashioned Gray',
+            'attribute_id': product_attr_color.id,
+            'html_color': '#808080',
+        })
+        color_blue = self.env['product.attribute.value'].create({
+            'name': 'Electric Blue',
+            'attribute_id': product_attr_color.id,
+            'html_color': '#0000FF',
+        })
+        product_attr_legs = self.env['product.attribute'].create({
+            'name': 'Legs',
+            'display_type': 'radio',
+            'show_variants': 'visible',
+        })
+        legs_steel = self.env['product.attribute.value'].create({
+            'name': 'Steel',
+            'attribute_id': product_attr_legs.id,
+        })
+        legs_aluminum = self.env['product.attribute.value'].create({
+            'name': 'Aluminum',
+            'attribute_id': product_attr_legs.id,
+        })
+
+        image_gray = self._create_image('#808080')
+        image_blue = self._create_image('#0000FF')
+        image_steel = self._create_image('#C0C0C0')
+        image_aluminum = self._create_image('#D3D3D3')
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test',
+            'type': 'consu',
+            'website_published': True,
+            'product_template_image_ids': [
+                Command.create({'name': 'Gray Image', 'image_1920': image_gray}),
+                Command.create({'name': 'Blue Image', 'image_1920': image_blue}),
+                Command.create({'name': 'Steel Image', 'image_1920': image_steel}),
+                Command.create({'name': 'Aluminum Image', 'image_1920': image_aluminum}),
+            ],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': product_attr_color.id,
+                    'value_ids': [(6, 0, [color_gray.id, color_blue.id])]
+                }),
+                Command.create({
+                    'attribute_id': product_attr_legs.id,
+                    'value_ids': [(6, 0, [legs_steel.id, legs_aluminum.id])],
+                }),
+            ],
+        })
+
+        product_template._create_variant_ids()
+
+        for variant in product_template.product_variant_ids:
+            if 'Old Fashioned Gray' in variant.product_template_attribute_value_ids.mapped('name'):
+                variant.image_1920 = image_gray
+            elif 'Electric Blue' in variant.product_template_attribute_value_ids.mapped('name'):
+                variant.image_1920 = image_blue
+            elif 'Steel' in variant.product_template_attribute_value_ids.mapped('name'):
+                variant.image_1920 = image_steel
+            elif 'Aluminum' in variant.product_template_attribute_value_ids.mapped('name'):
+                variant.image_1920 = image_aluminum
+
+        self.start_tour("/", 'website_sale_shop_products', login='admin')
+
+    def _create_image(self, color):
+        f = io.BytesIO()
+        Image.new('RGB', (1920, 1080), color).save(f, 'JPEG')
+        f.seek(0)
+        return base64.b64encode(f.read())

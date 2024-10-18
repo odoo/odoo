@@ -804,10 +804,98 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
     },
 });
 
+publicWidget.registry.webisteProductImageChanger = publicWidget.Widget.extend({
+        selector: ".o_wsale_product_grid_wrapper",
+        events: {
+            'mouseover .o_wsale_product_attribute div, .o_variant_pills div': '_onMouseOver',
+            'mouseout .o_wsale_product_attribute div, .o_variant_pills div': '_onMouseOut',
+            'change select.o_wsale_product_attribute': '_onOptionChange',
+        },
+
+        /**
+         * @constructor
+         */
+        init: function () {
+            this._super.apply(this, arguments);
+            this.orm = this.bindService("orm");
+        },
+
+        /**
+         * @override
+         */
+        async start() {
+            await this._super(...arguments);
+            this.defaultImageSrc = this.el.querySelector("img").src;
+        },
+
+        extractProductIds(element) {
+            return JSON.parse(element.getAttribute("data-attribute_product_ids"));
+        },
+
+        /**
+         * @private
+         * @param {Event} ev
+         */
+        _onMouseOver(ev) {
+            const button = ev.currentTarget;
+            button.classList.replace('btn-light', 'btn-primary'); // Replace in one operation for efficiency
+
+            const productIds = this.extractProductIds(button);
+            productIds ? this._onImageChange(productIds[0]) : this._onImageRestore();
+        },
+
+        /**
+         * @private
+         * @param {Event} ev
+         */
+        _onMouseOut(ev) {
+            const button = ev.currentTarget;
+            button.classList.replace('btn-primary', 'btn-light'); // Replace in one operation
+            this._onImageRestore(); // Direct call to restore the image
+        },
+
+        /**
+         * @private
+         * @param {Event} ev
+         */
+        _onOptionChange(ev) {
+            const mainImage = this.el.querySelector("a.oe_product_image_link");
+            const selectedOption = ev.target.selectedOptions[0];
+            const attributeValueId = parseInt(selectedOption.getAttribute("data-attribute-value-id"));
+            mainImage.href+=`#attribute_values=${attributeValueId}`;
+            const productIds = this.extractProductIds(ev.currentTarget.selectedOptions[0]);
+                if (productIds) {
+                    const recordId = productIds[0];
+                    this._onImageChange(recordId);
+                }
+        },
+
+        /**
+         * @param {Number} recordId -  The product record ID to use for fetching the image.
+         */
+        _onImageChange(recordId) {
+            var model = 'product.product';
+            var modelId = recordId;
+            var imageUrl = '/web/image/{0}/{1}/image_512';
+            var imageSrc = imageUrl
+                .replace("{0}", model)
+                .replace("{1}", modelId);
+            this.el.querySelector("img").src = imageSrc + "/" + new Date().getTime();
+        },
+
+        /**
+         * Restores the product image to the default source.
+         */
+        _onImageRestore() {
+            this.el.querySelector("img").src = this.defaultImageSrc;
+        },
+    });
+
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,
     WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
     WebsiteSaleProductPage: publicWidget.registry.WebsiteSaleAccordionProduct,
     WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
     WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
+    webisteProductImageChanger: publicWidget.registry.webisteProductImageChanger,
 };
