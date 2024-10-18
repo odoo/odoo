@@ -30,6 +30,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             ReceiptScreen.receiptIsThere(),
             //receipt had expected delivery printed
             ReceiptScreen.shippingDateExists(),
+            ReceiptScreen.shippingDateIsToday(),
             // letter tray has 10% tax (search SRC)
             ReceiptScreen.totalAmountContains("55.0"),
             ReceiptScreen.clickNextOrder(),

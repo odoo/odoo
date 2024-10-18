@@ -115,3 +115,19 @@ export function checkTaxDetails(tax, amount, base, total) {
         },
     ];
 }
+
+export function shippingDateIsToday() {
+    // format the date in US, the language used by the tests
+    const expectedDelivery = new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    });
+
+    return [
+        {
+            content: "Shipping date must be today",
+            trigger: `.pos-receipt-order-data:contains('Expected delivery:') > div:contains('${expectedDelivery}')`,
+        },
+    ];
+}
