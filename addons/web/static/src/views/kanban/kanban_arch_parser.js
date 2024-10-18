@@ -128,7 +128,21 @@ export class KanbanArchParser {
         }
 
         // Concrete kanban box elements in the template
+<<<<<<< master
         const cardDoc = templateDocs[KANBAN_CARD_ATTRIBUTE];
+||||||| 65811ebaf309c462bf918b01d4401695d87b44d6
+        let cardDoc = templateDocs[KANBAN_CARD_ATTRIBUTE];
+        const isLegacyArch = !cardDoc;
+        if (isLegacyArch) {
+            console.warn("'kanban-box' is deprecated, use 'kanban-card' API instead");
+        }
+=======
+        let cardDoc = templateDocs[KANBAN_CARD_ATTRIBUTE];
+        const isLegacyArch = !cardDoc;
+        if (isLegacyArch) {
+            console.warn("'kanban-box' is deprecated, define a 'card' template instead");
+        }
+>>>>>>> 1d4638daf50d7621cc2a4787c46475442f257a76
         if (!cardDoc) {
             throw new Error(`Missing '${KANBAN_CARD_ATTRIBUTE}' template.`);
         }
