@@ -106,7 +106,7 @@ export class CharField extends Component {
 export const charField = {
     component: CharField,
     displayName: _t("Text"),
-    supportedTypes: ["char"],
+    supportedTypes: ["char", "text"],
     supportedOptions: [
         {
             label: _t("Dynamic placeholder"),
