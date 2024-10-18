@@ -13,7 +13,7 @@ import { getSyncValue, setSyncValue } from "./sync_values";
 
 const {
     Blob,
-    ClipboardItem,
+    ClipboardItem = class NonSecureClipboardItem {},
     EventTarget,
     navigator,
     Object: { assign: $assign },
