@@ -5,6 +5,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
@@ -24,6 +25,7 @@ export class MOListViewDropdown extends Component {
         });
         this.colorIcons = {
             "done": "o_status_success",
+            "blocked": "o_status_danger",
         };
     }
 
@@ -33,11 +35,25 @@ export class MOListViewDropdown extends Component {
     }
 
     get statusColor() {
+        if (this.isBlocked) {
+            return this.colorIcons[this.props.record.data.working_state];
+        }
         return this.colorIcons[this.state.state] || "";
     }
 
-    async block() {
-        if (this.props.record.data.working_state == "blocked") {
+    get isBlocked() {
+        return this.props.record.data.working_state == "blocked"
+    }
+
+    get blockTitle(){
+        if (this.isBlocked) {
+            return _t("Unblock");
+        }
+        return _t("Block");
+    }
+    async toggleBlock() {
+        if (this.isBlocked) {
+            await this.callOrm("button_unblock");
             return;
         }
         const options = {
@@ -50,14 +66,7 @@ export class MOListViewDropdown extends Component {
     }
 
     async markAsDone() {
-        let ids = this.props.record.model.root.selection?.map((element) => element.evalContext.id);
-        // if no records selected, take the current clicked one
-        if (!ids || (ids && ids.length == 0)) {
-            ids = [this.props.record.resId];
-        }
-
-        await this.orm.call("mrp.workorder", "action_mark_as_done", [ids]);
-        await this.reload();
+        await this.callOrm("action_mark_as_done");
     }
 
     async printWO() {
@@ -71,9 +80,20 @@ export class MOListViewDropdown extends Component {
             user.context
         );
     }
+
+    async callOrm(functionName){
+        let ids = this.props.record.model.root.selection?.map((element) => element.evalContext.id);
+        // if no records selected, take the current clicked one
+        if (!ids || (ids && ids.length == 0)) {
+            ids = [this.props.record.resId];
+        }
+        await this.orm.call("mrp.workorder", functionName, [ids]);
+        await this.reload();
+    }
 }
 
 export const moListViewDropdown = {
+    listViewWidth: [20,20],
     component: MOListViewDropdown,
 };
 
