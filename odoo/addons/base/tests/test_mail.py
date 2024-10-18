@@ -8,7 +8,7 @@ import email.message
 import re
 import threading
 
-from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
+from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses, extract_rfc2822_addresses_unique
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tests import tagged
 from odoo.tools import (
@@ -640,17 +640,39 @@ class TestEmailTools(BaseCase):
             ('admin@example.com', ['admin@example.com']),
             ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
             ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
-            # formatted input containing email
-            ('"admin@éxample.com" <admin@éxample.com>', ['admin@xn--xample-9ua.com', 'admin@xn--xample-9ua.com']),
-            ('"Robert Le Grand" <robert@notgmail.com>', ['robert@notgmail.com']),
-            ('"robert@notgmail.com" <robert@notgmail.com>', ['robert@notgmail.com', 'robert@notgmail.com']),
             # accents
             ('DéBoulonneur@examplé.com', ['DéBoulonneur@xn--exampl-gva.com']),
         ]
-
         for source, expected in cases:
             with self.subTest(source=source):
                 self.assertEqual(extract_rfc2822_addresses(source), expected)
+                self.assertEqual(extract_rfc2822_addresses_unique(source), expected)
+
+        # 15.0+: specific cases for input recognized as holding 2 times same email
+        dupe_cases = [
+            # formatted input containing email
+            (
+                '"admin@éxample.com" <admin@éxample.com>',
+                ['admin@xn--xample-9ua.com', 'admin@xn--xample-9ua.com'],
+                ['admin@xn--xample-9ua.com'],
+            ), (
+                '"Robert Le Grand" <robert@notgmail.com>', ['robert@notgmail.com'], ['robert@notgmail.com'],
+            ), (
+                '"robert@notgmail.com" <robert@notgmail.com>',
+                ['robert@notgmail.com', 'robert@notgmail.com'],
+                ['robert@notgmail.com'],
+            ),
+            # complex case, just in case
+            (
+                '"Not an Email" <robert@notgmail.com>, "robert@notgmail.com" <robert@notgmail.com>',
+                ['robert@notgmail.com', 'robert@notgmail.com', 'robert@notgmail.com'],
+                ['robert@notgmail.com'],
+            ),
+        ]
+        for source, expected, expected_unique in dupe_cases:
+            with self.subTest(source=source):
+                self.assertEqual(extract_rfc2822_addresses(source), expected)
+                self.assertEqual(extract_rfc2822_addresses_unique(source), expected_unique)
 
 
 class EmailConfigCase(TransactionCase):
