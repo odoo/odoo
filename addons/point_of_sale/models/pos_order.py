@@ -1158,13 +1158,17 @@ class PosOrder(models.Model):
         }
 
     def action_send_mail(self):
-        template_id = self.env['ir.model.data']._xmlid_to_res_id('point_of_sale.pos_email_marketing_template', raise_if_not_found=False)
+        template = self.env['mail.template'].search([('model', '=', self._name)], limit=1)
         return {
             'name': _('Send Email'),
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'type': 'ir.actions.act_window',
-            'context': {'default_composition_mode': 'mass_mail', 'default_template_id': template_id},
+            'context': {
+                'default_composition_mode': 'mass_mail',
+                'default_res_ids': self.ids,
+                'default_template_id': template.id,
+            },
             'target': 'new'
         }
 
@@ -1262,8 +1266,8 @@ class PosOrder(models.Model):
         # This function is made to be overriden by pos_self_order_preparation_display
         pass
 
-    def _post_chatter_message(self, body):
-        self.message_post(body=body)
+    def _prepare_pos_log(self, body):
+        return body
 
 
 class PosOrderLine(models.Model):
@@ -1387,7 +1391,7 @@ class PosOrderLine(models.Model):
             body = _("%(product_name)s: Ordered quantity: %(old_qty)s", product_name=self.full_product_name, old_qty=self.qty)
             body += Markup("&rarr;") + str(values.get('qty'))
             for line in self:
-                line.order_id._post_chatter_message(body)
+                line.order_id.message_post(body=line.order_id._prepare_pos_log(body))
         return super().write(values)
 
     @api.model
@@ -1623,7 +1627,7 @@ class PosOrderLine(models.Model):
             if line.order_id.config_id.order_edit_tracking:
                 line.order_id.has_deleted_line = True
                 body = _("%s: Deleted line", line.full_product_name)
-                line.order_id._post_chatter_message(body)
+                line.order_id.message_post(body=line.order_id._prepare_pos_log(body))
         res = super().unlink()
         return res
 
