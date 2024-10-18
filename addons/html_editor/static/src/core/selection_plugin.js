@@ -1,10 +1,13 @@
 import { closestBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestPosition,
+    isIconElement,
     isMediaElement,
     isProtected,
     isProtecting,
+    isTextNode,
     isUnprotecting,
+    isVisibleTextNode,
     paragraphRelatedElements,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
@@ -137,7 +140,14 @@ export class SelectionPlugin extends Plugin {
         });
         this.addDomListener(this.editable, "keydown", (ev) => {
             this.currentKeyDown = ev.key;
-            const handled = ["arrowright", "shift+arrowright", "arrowleft", "shift+arrowleft"];
+            const handled = [
+                "arrowright",
+                "shift+arrowright",
+                "arrowleft",
+                "shift+arrowleft",
+                "arrowup",
+                "arrowdown",
+            ];
             if (handled.includes(getActiveHotkey(ev))) {
                 this.onKeyDownArrows(ev);
             }
@@ -846,33 +856,57 @@ export class SelectionPlugin extends Plugin {
         if (!selection || !this.isSelectionInEditable(selection)) {
             return;
         }
+        if (ev.key === "ArrowLeft" || ev.key === "ArrowRight") {
+            // Whether moving a collapsed cursor or extending a selection.
+            const mode = ev.shiftKey ? "extend" : "move";
 
-        // Whether moving a collapsed cursor or extending a selection.
-        const mode = ev.shiftKey ? "extend" : "move";
+            // Direction of the movement (take rtl writing into account)
+            const screenDirection = ev.key === "ArrowLeft" ? "left" : "right";
+            const isRtl = closestElement(selection.focusNode, "[dir]")?.dir === "rtl";
+            const domDirection = (screenDirection === "left") ^ isRtl ? "previous" : "next";
 
-        // Direction of the movement (take rtl writing into account)
-        const screenDirection = ev.key === "ArrowLeft" ? "left" : "right";
-        const isRtl = closestElement(selection.focusNode, "[dir]")?.dir === "rtl";
-        const domDirection = (screenDirection === "left") ^ isRtl ? "previous" : "next";
+            // Whether the character next to the cursor should be skipped.
+            const shouldSkipCallbacks = this.getResource("arrows_should_skip");
+            let adjacentCharacter = getAdjacentCharacter(
+                this.getSelectionData().deepEditableSelection,
+                domDirection,
+                this.editable
+            );
+            let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 
-        // Whether the character next to the cursor should be skipped.
-        const shouldSkipCallbacks = this.getResource("arrows_should_skip");
-        let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
-        let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
+            while (shouldSkip) {
+                const { focusNode: nodeBefore, focusOffset: offsetBefore } = selection;
 
-        while (shouldSkip) {
-            const { focusNode: nodeBefore, focusOffset: offsetBefore } = selection;
+                selection.modify(mode, screenDirection, "character");
 
-            selection.modify(mode, screenDirection, "character");
+                const hasSelectionChanged =
+                    nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
+                const lastSkippedChar = adjacentCharacter;
+                adjacentCharacter = getAdjacentCharacter(
+                    this.getSelectionData().deepEditableSelection,
+                    domDirection,
+                    this.editable
+                );
 
-            const hasSelectionChanged =
-                nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
-            const lastSkippedChar = adjacentCharacter;
-            adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
-
-            shouldSkip =
-                hasSelectionChanged &&
-                shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
+                shouldSkip =
+                    hasSelectionChanged &&
+                    shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
+            }
+        } else if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
+            const closestBlockElement = closestBlock(selection.anchorNode);
+            const sibling =
+                ev.key === "ArrowUp"
+                    ? closestBlockElement.previousSibling
+                    : closestBlockElement.nextSibling;
+            const areAllNodesIcons = (element) =>
+                element.childNodes?.length &&
+                [...element.childNodes].every(
+                    (node) => isIconElement(node) || (isTextNode(node) && !isVisibleTextNode(node))
+                );
+            if (sibling?.nodeType === Node.ELEMENT_NODE && areAllNodesIcons(sibling)) {
+                ev.preventDefault();
+                this.setCursorEnd(sibling);
+            }
         }
     }
 

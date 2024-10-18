@@ -3,6 +3,8 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { tick } from "@odoo/hoot-mock";
 import { simulateArrowKeyPress } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
+import { press } from "@odoo/hoot-dom";
+import { unformat } from "../_helpers/format";
 
 const keyPress = (keys) => async (editor) => {
     await simulateArrowKeyPress(editor, keys);
@@ -367,6 +369,74 @@ describe("Around icons", () => {
             stepFunction: keyPress("ArrowLeft"),
             contentAfterEdit: `<p>abc[]<span class="fa fa-music" contenteditable="false">\u200b</span>def</p>`,
             contentAfter: `<p>abc[]<span class="fa fa-music"></span>def</p>`,
+        });
+    });
+    test("should not skip icons (ArrowRight)", async () => {
+        await testEditor({
+            contentBefore: `<p>[]<span class="fa fa-music"></span><span class="fa fa-music"></span></p>`,
+            contentBeforeEdit: `<p>[]<span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span></p>`,
+            stepFunction: keyPress("ArrowRight"),
+            contentAfterEdit: `<p><span class="fa fa-music" contenteditable="false">\u200b</span>[]<span class="fa fa-music" contenteditable="false">\u200b</span></p>`,
+            contentAfter: `<p><span class="fa fa-music"></span>[]<span class="fa fa-music"></span></p>`,
+        });
+    });
+    test("should not skip icons (ArrowLeft)", async () => {
+        await testEditor({
+            contentBefore: `<p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]</p>`,
+            contentBeforeEdit: `<p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]</p>`,
+            stepFunction: keyPress("ArrowLeft"),
+            contentAfterEdit: `<p><span class="fa fa-music" contenteditable="false">\u200b</span>[]<span class="fa fa-music" contenteditable="false">\u200b</span></p>`,
+            contentAfter: `<p><span class="fa fa-music"></span>[]<span class="fa fa-music"></span></p>`,
+        });
+    });
+    test("should not skip icons (ArrowUp)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span></p>
+                <p>[]<br></p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span></p>
+                <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+            `),
+            stepFunction: async () => await press("ArrowUp"),
+            contentAfterEdit: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]</p>
+                <p placeholder='Type "/" for commands' class="o-we-hint"><br></p>
+            `),
+            contentAfter: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]</p>
+                <p><br></p>
+            `),
+        });
+    });
+    test("should not skip icons (ArrowDown)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p>[]<br></p>
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span></p>
+                <p><br></p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span></p>
+                <p><br></p>
+            `),
+            stepFunction: async () => await press("ArrowDown"),
+            contentAfterEdit: unformat(`
+                <p placeholder='Type "/" for commands' class="o-we-hint"><br></p>
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]</p>
+                <p><br></p>
+            `),
+            contentAfter: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]</p>
+                <p><br></p>
+            `),
         });
     });
 });
