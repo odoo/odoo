@@ -39,6 +39,7 @@ import {
 } from "../utils/position";
 import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
+import { selectionsAreEqual } from "@html_editor/utils/selection";
 import { isAndroid, isBrowserChrome } from "@web/core/browser/feature_detection";
 
 /**
@@ -55,15 +56,13 @@ export class DeletePlugin extends Plugin {
     static dependencies = ["selection", "history"];
     static name = "delete";
     static shared = ["deleteRange", "isUnmergeable"];
-
-    isAndroidChrome = isAndroid() && isBrowserChrome();
-
     resources = {
         onBeforeInput: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
-
+        onInput: this.onInput.bind(this),
+        onSelectionChange: withSequence(5, this.onSelectionChange.bind(this)),
         shortcuts: [
             { hotkey: "backspace", command: "DELETE_BACKWARD" },
             { hotkey: "delete", command: "DELETE_FORWARD" },
@@ -87,13 +86,6 @@ export class DeletePlugin extends Plugin {
             // Monetary field
             (element) => element.matches("[data-oe-type='monetary'] > span"),
         ],
-
-        ...(this.isAndroidChrome
-            ? {
-                  onInput: this.onInput.bind(this),
-                  onSelectionChange: withSequence(5, this.onSelectionChange.bind(this)),
-              }
-            : {}),
     };
 
     setup() {
@@ -1190,8 +1182,6 @@ export class DeletePlugin extends Plugin {
     // --------------------------------------------------------------------------
 
     onBeforeInputDelete(ev) {
-        console.log("beforeInput", ev);
-        // return;
         const handledInputTypes = {
             deleteContentBackward: ["backward", "character"],
             deleteContentForward: ["forward", "character"],
@@ -1203,10 +1193,11 @@ export class DeletePlugin extends Plugin {
         const argsForDelete = handledInputTypes[ev.inputType];
         if (argsForDelete) {
             this.log(`onBeforeInputDelete: ${serializeCurrentSelection()}`);
-            this.delete(...argsForDelete);
             ev.preventDefault();
-            if (this.isAndroidChrome) {
-                this.preventDefaultDeleteAndroidChrome(ev);
+            if (isAndroid()) {
+                this.handleBeforeInputAndroid(argsForDelete);
+            } else {
+                this.delete(...argsForDelete);
             }
         }
     }
@@ -1221,43 +1212,86 @@ export class DeletePlugin extends Plugin {
         }
     }
 
-    // ======== ANDROID CHROME =============
+    // ======== ANDROID =============
+
+    handleBeforeInputAndroid(argsForDelete) {
+        this.fixSelectionPreDelete();
+        this.delete(...argsForDelete);
+
+        // Record the resulting selection as trusted: it matters for fast sequential deletes.
+        this.recordSelection(this.shared.getEditableSelection(), { trusted: true });
+
+        if (isBrowserChrome()) {
+            this.preventDefaultDeleteAndroidChrome();
+        }
+    }
+
+    // Revert selection changes that happened right before delete.
+    fixSelectionPreDelete() {
+        // Restore selection to the last legit one.
+        const currentSelection = this.shared.getEditableSelection();
+        const lastRecodedSelection = this.getLastRecordedSelection();
+        if (lastRecodedSelection && !selectionsAreEqual(lastRecodedSelection, currentSelection)) {
+            this.shared.setSelection(lastRecodedSelection, { normalize: false });
+            console.log("selection fixed pre-delete");
+            this.dispatch("HISTORY_STAGE_SELECTION");
+        }
+    }
 
     // Beforeinput event of type deleteContentBackward cannot be default
     // prevented in Android Chrome. So we need to revert eventual mutations and
     // selection change.
-    preventDefaultDeleteAndroidChrome(ev) {
+    preventDefaultDeleteAndroidChrome() {
         const revertDomChanges = this.shared.makeSavePoint();
-        this.runOnceOnInput ??= {};
-        this.runOnceOnInput[ev.inputType] = () => {
+        this.runOnceOnInput = () => {
             revertDomChanges();
             // Chrome might change the selection *after* the input event.
             const { restore: revertSelectionChange } = this.shared.preserveSelection();
             this.runOnceOnSelectionChange = revertSelectionChange;
-            // But we don't want to interfere with it if it's followed by text
-            // input (eg. using dictionary)
-            this.runOnceOnInput["insertText"] = () => {
-                delete this.runOnceOnSelectionChange;
-            };
         };
     }
 
-    onInput(ev) {
-        console.log("input", ev);
-
-        if (this.runOnceOnInput?.[ev.inputType]) {
-            this.runOnceOnInput[ev.inputType]();
-            delete this.runOnceOnInput[ev.inputType];
+    onInput() {
+        if (this.runOnceOnInput) {
+            this.runOnceOnInput();
+            delete this.runOnceOnInput;
         }
     }
 
-    onSelectionChange() {
+    onSelectionChange({ editableSelection }) {
         this.log(`onSelectionChange: ${serializeCurrentSelection()}`);
+        this.recordSelection(editableSelection);
 
         if (this.runOnceOnSelectionChange) {
             this.runOnceOnSelectionChange();
             delete this.runOnceOnSelectionChange;
         }
+    }
+
+    recordSelection(editableSelection, { trusted = false } = {}) {
+        const SELECTION_HISTORY_SIZE = 10;
+        this.selectionHistory ??= [];
+
+        this.selectionHistory.push({ editableSelection, timestamp: Date.now(), trusted });
+
+        if (this.selectionHistory.length > SELECTION_HISTORY_SIZE) {
+            this.selectionHistory.shift();
+        }
+    }
+
+    // Get last **legit** selection. TODO: find a better way, not time-based?
+    getLastRecordedSelection() {
+        const DELTA = 100; // ms
+        const now = Date.now();
+
+        let lastSelection = this.selectionHistory?.at(-1);
+        while (lastSelection && !lastSelection.trusted && lastSelection.timestamp > now - DELTA) {
+            // Discard non-legit selection.
+            console.log("non-legit recorded selection discarded");
+            this.selectionHistory.pop();
+            lastSelection = this.selectionHistory.at(-1);
+        }
+        return lastSelection?.editableSelection;
     }
 
     // ======== AD-HOC STUFF ========
