@@ -214,7 +214,9 @@ export class ResPartner extends webModels.ResPartner {
         matchingPartnersIds.length = Math.min(matchingPartnersIds.length, limit);
         return new mailDataHelpers.Store(this.browse(matchingPartnersIds)).get_result();
     }
-
+    compute_im_status(partner) {
+        return partner.im_status;
+    }
     /**
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
@@ -237,7 +239,7 @@ export class ResPartner extends webModels.ResPartner {
                 active: partner.active,
                 email: partner.email,
                 id: partner.id,
-                im_status: partner.im_status,
+                im_status: this.compute_im_status(partner),
                 is_company: partner.is_company,
                 name: partner.name,
                 type: "partner",
