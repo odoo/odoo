@@ -129,13 +129,13 @@ export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
 }
 
 export function getPropertyFieldInfo(propertyField) {
-    const { name, relatedPropertyField, string, type } = propertyField;
+    const { name, relatedPropertyField, string, type, widget } = propertyField;
 
     const fieldInfo = {
         name,
         string,
         type,
-        widget: type,
+        widget: widget || type,
         options: {},
         column_invisible: "False",
         invisible: "False",
