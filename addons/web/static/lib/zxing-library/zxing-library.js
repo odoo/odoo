@@ -1,14 +1,8 @@
-/*!
- * ZXing.js v0.20.0
- * https://github.com/zxing-js/library
- * (c) 2018 ZXing for JS Contributors
- * Released under the MIT License
- */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ZXing = {}));
-}(this, (function (exports) { 'use strict';
+})(this, (function (exports) { 'use strict';
 
   function fixProto(target, prototype) {
     var setPrototypeOf = Object.setPrototypeOf;
@@ -23,7 +17,7 @@
     captureStackTrace && captureStackTrace(target, fn);
   }
 
-  var __extends =  function () {
+  var __extends = function () {
     var _extendStatics = function extendStatics(d, b) {
       _extendStatics = Object.setPrototypeOf || {
         __proto__: []
@@ -984,22 +978,27 @@
        */
       DecodeHintType[DecodeHintType["ASSUME_CODE_39_CHECK_DIGIT"] = 6] = "ASSUME_CODE_39_CHECK_DIGIT"; /*(Void.class)*/
       /**
+       * Enable extended mode for Code 39 codes. Doesn't matter what it maps to;
+       * use {@link Boolean#TRUE}.
+       */
+      DecodeHintType[DecodeHintType["ENABLE_CODE_39_EXTENDED_MODE"] = 7] = "ENABLE_CODE_39_EXTENDED_MODE"; /*(Void.class)*/
+      /**
        * Assume the barcode is being processed as a GS1 barcode, and modify behavior as needed.
        * For example this affects FNC1 handling for Code 128 (aka GS1-128). Doesn't matter what it maps to;
        * use {@link Boolean#TRUE}.
        */
-      DecodeHintType[DecodeHintType["ASSUME_GS1"] = 7] = "ASSUME_GS1"; /*(Void.class)*/
+      DecodeHintType[DecodeHintType["ASSUME_GS1"] = 8] = "ASSUME_GS1"; /*(Void.class)*/
       /**
        * If true, return the start and end digits in a Codabar barcode instead of stripping them. They
        * are alpha, whereas the rest are numeric. By default, they are stripped, but this causes them
        * to not be. Doesn't matter what it maps to; use {@link Boolean#TRUE}.
        */
-      DecodeHintType[DecodeHintType["RETURN_CODABAR_START_END"] = 8] = "RETURN_CODABAR_START_END"; /*(Void.class)*/
+      DecodeHintType[DecodeHintType["RETURN_CODABAR_START_END"] = 9] = "RETURN_CODABAR_START_END"; /*(Void.class)*/
       /**
        * The caller needs to be notified via callback when a possible {@link ResultPoint}
        * is found. Maps to a {@link ResultPointCallback}.
        */
-      DecodeHintType[DecodeHintType["NEED_RESULT_POINT_CALLBACK"] = 9] = "NEED_RESULT_POINT_CALLBACK"; /*(ResultPointCallback.class)*/
+      DecodeHintType[DecodeHintType["NEED_RESULT_POINT_CALLBACK"] = 10] = "NEED_RESULT_POINT_CALLBACK"; /*(ResultPointCallback.class)*/
       /**
        * Allowed extension lengths for EAN or UPC barcodes. Other formats will ignore this.
        * Maps to an {@code Int32Array} of the allowed extension lengths, for example [2], [5], or [2, 5].
@@ -1007,7 +1006,7 @@
        * and a UPC or EAN barcode is found but an extension is not, then no result will be returned
        * at all.
        */
-      DecodeHintType[DecodeHintType["ALLOWED_EAN_EXTENSIONS"] = 10] = "ALLOWED_EAN_EXTENSIONS"; /*(Int32Array.class)*/
+      DecodeHintType[DecodeHintType["ALLOWED_EAN_EXTENSIONS"] = 11] = "ALLOWED_EAN_EXTENSIONS"; /*(Int32Array.class)*/
       // End of enumeration values.
       /**
        * Data type the hint is expecting.
@@ -2707,20 +2706,20 @@
    * @deprecated Moving to @zxing/browser
    */
   class HTMLCanvasElementLuminanceSource extends LuminanceSource {
-      constructor(canvas) {
+      constructor(canvas, doAutoInvert = false) {
           super(canvas.width, canvas.height);
           this.canvas = canvas;
           this.tempCanvasElement = null;
-          this.buffer = HTMLCanvasElementLuminanceSource.makeBufferFromCanvasImageData(canvas);
+          this.buffer = HTMLCanvasElementLuminanceSource.makeBufferFromCanvasImageData(canvas, doAutoInvert);
       }
-      static makeBufferFromCanvasImageData(canvas) {
+      static makeBufferFromCanvasImageData(canvas, doAutoInvert = false) {
           const imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-          return HTMLCanvasElementLuminanceSource.toGrayscaleBuffer(imageData.data, canvas.width, canvas.height);
+          return HTMLCanvasElementLuminanceSource.toGrayscaleBuffer(imageData.data, canvas.width, canvas.height, doAutoInvert);
       }
-      static toGrayscaleBuffer(imageBuffer, width, height) {
+      static toGrayscaleBuffer(imageBuffer, width, height, doAutoInvert = false) {
           const grayscaleBuffer = new Uint8ClampedArray(width * height);
           HTMLCanvasElementLuminanceSource.FRAME_INDEX = !HTMLCanvasElementLuminanceSource.FRAME_INDEX;
-          if (HTMLCanvasElementLuminanceSource.FRAME_INDEX) {
+          if (HTMLCanvasElementLuminanceSource.FRAME_INDEX || !doAutoInvert) {
               for (let i = 0, j = 0, length = imageBuffer.length; i < length; i += 4, j++) {
                   let gray;
                   const alpha = imageBuffer[i + 3];
@@ -3540,15 +3539,18 @@
        * @param mediaElement HTML element containing drawable image source.
        */
       createBinaryBitmap(mediaElement) {
-          const ctx = this.getCaptureCanvasContext(mediaElement);
+          this.getCaptureCanvasContext(mediaElement);
+          // doing a scan with inverted colors on the second scan should only happen for video elements
+          let doAutoInvert = false;
           if (mediaElement instanceof HTMLVideoElement) {
               this.drawFrameOnCanvas(mediaElement);
+              doAutoInvert = true;
           }
           else {
               this.drawImageOnCanvas(mediaElement);
           }
           const canvas = this.getCaptureCanvas(mediaElement);
-          const luminanceSource = new HTMLCanvasElementLuminanceSource(canvas);
+          const luminanceSource = new HTMLCanvasElementLuminanceSource(canvas, doAutoInvert);
           const hybridBinarizer = new HybridBinarizer(luminanceSource);
           return new BinaryBitmap(hybridBinarizer);
       }
@@ -3763,7 +3765,7 @@
    *
    * @author Sean Owen
    */
-  class Result {
+  class Result$1 {
       // public constructor(private text: string,
       //               Uint8Array rawBytes,
       //               ResultPoconst resultPoints: Int32Array,
@@ -4798,14 +4800,14 @@
    *
    * @author David Olivier
    */
-  class Decoder {
+  class Decoder$2 {
       decode(detectorResult) {
           this.ddata = detectorResult;
           let matrix = detectorResult.getBits();
           let rawbits = this.extractBits(matrix);
           let correctedBits = this.correctBits(rawbits);
-          let rawBytes = Decoder.convertBoolArrayToByteArray(correctedBits);
-          let result = Decoder.getEncodedData(correctedBits);
+          let rawBytes = Decoder$2.convertBoolArrayToByteArray(correctedBits);
+          let result = Decoder$2.getEncodedData(correctedBits);
           let decoderResult = new DecoderResult(rawBytes, result, null, null);
           decoderResult.setNumBits(correctedBits.length);
           return decoderResult;
@@ -4830,13 +4832,13 @@
                   if (endIndex - index < 5) {
                       break;
                   }
-                  let length = Decoder.readCode(correctedBits, index, 5);
+                  let length = Decoder$2.readCode(correctedBits, index, 5);
                   index += 5;
                   if (length === 0) {
                       if (endIndex - index < 11) {
                           break;
                       }
-                      length = Decoder.readCode(correctedBits, index, 11) + 31;
+                      length = Decoder$2.readCode(correctedBits, index, 11) + 31;
                       index += 11;
                   }
                   for (let charCount = 0; charCount < length; charCount++) {
@@ -4844,7 +4846,7 @@
                           index = endIndex; // Force outer loop to exit
                           break;
                       }
-                      const code = Decoder.readCode(correctedBits, index, 8);
+                      const code = Decoder$2.readCode(correctedBits, index, 8);
                       result += /*(char)*/ StringUtils.castAsNonUtf8Char(code);
                       index += 8;
                   }
@@ -4856,16 +4858,16 @@
                   if (endIndex - index < size) {
                       break;
                   }
-                  let code = Decoder.readCode(correctedBits, index, size);
+                  let code = Decoder$2.readCode(correctedBits, index, size);
                   index += size;
-                  let str = Decoder.getCharacter(shiftTable, code);
+                  let str = Decoder$2.getCharacter(shiftTable, code);
                   if (str.startsWith('CTRL_')) {
                       // Table changes
                       // ISO/IEC 24778:2008 prescribes ending a shift sequence in the mode from which it was invoked.
                       // That's including when that mode is a shift.
                       // Our test case dlusbs.png for issue #642 exercises that.
                       latchTable = shiftTable; // Latch the current mode, so as to return to Upper after U/S B/S
-                      shiftTable = Decoder.getTable(str.charAt(5));
+                      shiftTable = Decoder$2.getTable(str.charAt(5));
                       if (str.charAt(6) === 'L') {
                           latchTable = shiftTable;
                       }
@@ -4908,15 +4910,15 @@
       static getCharacter(table, code) {
           switch (table) {
               case Table.UPPER:
-                  return Decoder.UPPER_TABLE[code];
+                  return Decoder$2.UPPER_TABLE[code];
               case Table.LOWER:
-                  return Decoder.LOWER_TABLE[code];
+                  return Decoder$2.LOWER_TABLE[code];
               case Table.MIXED:
-                  return Decoder.MIXED_TABLE[code];
+                  return Decoder$2.MIXED_TABLE[code];
               case Table.PUNCT:
-                  return Decoder.PUNCT_TABLE[code];
+                  return Decoder$2.PUNCT_TABLE[code];
               case Table.DIGIT:
-                  return Decoder.DIGIT_TABLE[code];
+                  return Decoder$2.DIGIT_TABLE[code];
               default:
                   // Should not reach here.
                   throw new IllegalStateException('Bad table');
@@ -4955,7 +4957,7 @@
           let offset = rawbits.length % codewordSize;
           let dataWords = new Int32Array(numCodewords);
           for (let i = 0; i < numCodewords; i++, offset += codewordSize) {
-              dataWords[i] = Decoder.readCode(rawbits, offset, codewordSize);
+              dataWords[i] = Decoder$2.readCode(rawbits, offset, codewordSize);
           }
           try {
               let rsDecoder = new ReedSolomonDecoder(gf);
@@ -5069,9 +5071,9 @@
       static readByte(rawbits, startIndex) {
           let n = rawbits.length - startIndex;
           if (n >= 8) {
-              return Decoder.readCode(rawbits, startIndex, 8);
+              return Decoder$2.readCode(rawbits, startIndex, 8);
           }
-          return Decoder.readCode(rawbits, startIndex, n) << (8 - n);
+          return Decoder$2.readCode(rawbits, startIndex, n) << (8 - n);
       }
       /**
        * Packs a bit array into bytes, most significant bit first
@@ -5079,7 +5081,7 @@
       static convertBoolArrayToByteArray(boolArr) {
           let byteArr = new Uint8Array((boolArr.length + 7) / 8);
           for (let i = 0; i < byteArr.length; i++) {
-              byteArr[i] = Decoder.readByte(boolArr, 8 * i);
+              byteArr[i] = Decoder$2.readByte(boolArr, 8 * i);
           }
           return byteArr;
       }
@@ -5087,26 +5089,24 @@
           return ((compact ? 88 : 112) + 16 * layers) * layers;
       }
   }
-  Decoder.UPPER_TABLE = [
+  Decoder$2.UPPER_TABLE = [
       'CTRL_PS', ' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
       'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'CTRL_LL', 'CTRL_ML', 'CTRL_DL', 'CTRL_BS'
   ];
-  Decoder.LOWER_TABLE = [
+  Decoder$2.LOWER_TABLE = [
       'CTRL_PS', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
       'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'CTRL_US', 'CTRL_ML', 'CTRL_DL', 'CTRL_BS'
   ];
-  Decoder.MIXED_TABLE = [
-      // Module parse failed: Octal literal in strict mode (50:29)
-      // so number string were scaped
-      'CTRL_PS', ' ', '\\1', '\\2', '\\3', '\\4', '\\5', '\\6', '\\7', '\b', '\t', '\n',
-      '\\13', '\f', '\r', '\\33', '\\34', '\\35', '\\36', '\\37', '@', '\\', '^', '_',
-      '`', '|', '~', '\\177', 'CTRL_LL', 'CTRL_UL', 'CTRL_PL', 'CTRL_BS'
+  Decoder$2.MIXED_TABLE = [
+      'CTRL_PS', ' ', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07', '\b', '\t', '\n',
+      '\x0b', '\f', '\r', '\x1b', '\x1c', '\x1d', '\x1e', '\x1f', '@', '\\', '^', '_',
+      '`', '|', '~', '\x7f', 'CTRL_LL', 'CTRL_UL', 'CTRL_PL', 'CTRL_BS'
   ];
-  Decoder.PUNCT_TABLE = [
+  Decoder$2.PUNCT_TABLE = [
       '', '\r', '\r\n', '. ', ', ', ': ', '!', '"', '#', '$', '%', '&', '\'', '(', ')',
       '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '[', ']', '{', '}', 'CTRL_UL'
   ];
-  Decoder.DIGIT_TABLE = [
+  Decoder$2.DIGIT_TABLE = [
       'CTRL_PS', ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '.', 'CTRL_UL', 'CTRL_US'
   ];
 
@@ -6021,7 +6021,7 @@
    * @author David Olivier
    * @author Frank Yellin
    */
-  class Detector {
+  class Detector$3 {
       constructor(image) {
           this.EXPECTED_CORNER_BITS = new Int32Array([
               0xee0,
@@ -6493,14 +6493,14 @@
        */
       decode(image, hints = null) {
           let exception = null;
-          let detector = new Detector(image.getBlackMatrix());
+          let detector = new Detector$3(image.getBlackMatrix());
           let points = null;
           let decoderResult = null;
           try {
               let detectorResult = detector.detectMirror(false);
               points = detectorResult.getPoints();
               this.reportFoundResultPoints(hints, points);
-              decoderResult = new Decoder().decode(detectorResult);
+              decoderResult = new Decoder$2().decode(detectorResult);
           }
           catch (e) {
               exception = e;
@@ -6510,7 +6510,7 @@
                   let detectorResult = detector.detectMirror(true);
                   points = detectorResult.getPoints();
                   this.reportFoundResultPoints(hints, points);
-                  decoderResult = new Decoder().decode(detectorResult);
+                  decoderResult = new Decoder$2().decode(detectorResult);
               }
               catch (e) {
                   if (exception != null) {
@@ -6519,7 +6519,7 @@
                   throw e;
               }
           }
-          let result = new Result(decoderResult.getText(), decoderResult.getRawBytes(), decoderResult.getNumBits(), points, BarcodeFormat$1.AZTEC, System.currentTimeMillis());
+          let result = new Result$1(decoderResult.getText(), decoderResult.getRawBytes(), decoderResult.getNumBits(), points, BarcodeFormat$1.AZTEC, System.currentTimeMillis());
           let byteSegments = decoderResult.getByteSegments();
           if (byteSegments != null) {
               result.putMetadata(ResultMetadataType$1.BYTE_SEGMENTS, byteSegments);
@@ -6863,7 +6863,7 @@
                           return Int32Array.from([patternStart, i, bestMatch]);
                       }
                       patternStart += counters[0] + counters[1];
-                      counters = counters.slice(2, counters.length - 1);
+                      counters = counters.slice(2, counters.length);
                       counters[counterPosition - 1] = 0;
                       counters[counterPosition] = 0;
                       counterPosition--;
@@ -7173,7 +7173,7 @@
               rawBytes[i] = rawCodes[i];
           }
           const points = [new ResultPoint(left, rowNumber), new ResultPoint(right, rowNumber)];
-          return new Result(result, rawBytes, 0, points, BarcodeFormat$1.CODE_128, new Date().getTime());
+          return new Result$1(result, rawBytes, 0, points, BarcodeFormat$1.CODE_128, new Date().getTime());
       }
   }
   Code128Reader.CODE_PATTERNS = [
@@ -7418,7 +7418,7 @@
           }
           let left = (start[1] + start[0]) / 2.0;
           let right = lastStart + lastPatternSize / 2.0;
-          return new Result(resultString, null, 0, [new ResultPoint(left, rowNumber), new ResultPoint(right, rowNumber)], BarcodeFormat$1.CODE_39, new Date().getTime());
+          return new Result$1(resultString, null, 0, [new ResultPoint(left, rowNumber), new ResultPoint(right, rowNumber)], BarcodeFormat$1.CODE_39, new Date().getTime());
       }
       static findAsteriskPattern(row, counters) {
           let width = row.getSize();
@@ -7679,7 +7679,7 @@
           let resultString = this.decodeExtended(this.decodeRowResult);
           let left = (start[1] + start[0]) / 2.0;
           let right = lastStart + lastPatternSize / 2.0;
-          return new Result(resultString, null, 0, [new ResultPoint(left, rowNumber), new ResultPoint(right, rowNumber)], BarcodeFormat$1.CODE_93, new Date().getTime());
+          return new Result$1(resultString, null, 0, [new ResultPoint(left, rowNumber), new ResultPoint(right, rowNumber)], BarcodeFormat$1.CODE_93, new Date().getTime());
       }
       findAsteriskPattern(row) {
           let width = row.getSize();
@@ -7941,7 +7941,7 @@
               throw new FormatException();
           }
           const points = [new ResultPoint(startRange[1], rowNumber), new ResultPoint(endRange[0], rowNumber)];
-          let resultReturn = new Result(resultString, null, // no natural byte representation for these barcodes
+          let resultReturn = new Result$1(resultString, null, // no natural byte representation for these barcodes
           0, points, BarcodeFormat$1.ITF, new Date().getTime());
           return resultReturn;
       }
@@ -8421,7 +8421,7 @@
               new ResultPoint((extensionStartRange[0] + extensionStartRange[1]) / 2.0, rowNumber),
               new ResultPoint(end, rowNumber)
           ];
-          let extensionResult = new Result(resultString, null, 0, resultPoints, BarcodeFormat$1.UPC_EAN_EXTENSION, new Date().getTime());
+          let extensionResult = new Result$1(resultString, null, 0, resultPoints, BarcodeFormat$1.UPC_EAN_EXTENSION, new Date().getTime());
           if (extensionData != null) {
               extensionResult.putAllMetadata(extensionData);
           }
@@ -8559,7 +8559,7 @@
               new ResultPoint((extensionStartRange[0] + extensionStartRange[1]) / 2.0, rowNumber),
               new ResultPoint(end, rowNumber)
           ];
-          let extensionResult = new Result(resultString, null, 0, resultPoints, BarcodeFormat$1.UPC_EAN_EXTENSION, new Date().getTime());
+          let extensionResult = new Result$1(resultString, null, 0, resultPoints, BarcodeFormat$1.UPC_EAN_EXTENSION, new Date().getTime());
           if (extensionData != null) {
               extensionResult.putAllMetadata(extensionData);
           }
@@ -8712,7 +8712,7 @@
           let right = (endRange[1] + endRange[0]) / 2.0;
           let format = this.getBarcodeFormat();
           let resultPoint = [new ResultPoint(left, rowNumber), new ResultPoint(right, rowNumber)];
-          let decodeResult = new Result(resultString, null, 0, resultPoint, format, new Date().getTime());
+          let decodeResult = new Result$1(resultString, null, 0, resultPoint, format, new Date().getTime());
           let extensionLength = 0;
           try {
               let extensionResult = UPCEANExtensionSupport.decodeRow(rowNumber, row, endRange[1]);
@@ -8955,7 +8955,7 @@
       maybeReturnResult(result) {
           let text = result.getText();
           if (text.charAt(0) === '0') {
-              let upcaResult = new Result(text.substring(1), null, null, result.getResultPoints(), BarcodeFormat$1.UPC_A);
+              let upcaResult = new Result$1(text.substring(1), null, null, result.getResultPoints(), BarcodeFormat$1.UPC_A);
               if (result.getResultMetadata() != null) {
                   upcaResult.putAllMetadata(result.getResultMetadata());
               }
@@ -9221,7 +9221,7 @@
                   if (ean13MayBeUPCA && canReturnUPCA) {
                       const rawBytes = result.getRawBytes();
                       // Transfer the metadata across
-                      const resultUPCA = new Result(result.getText().substring(1), rawBytes, (rawBytes ? rawBytes.length : null), result.getResultPoints(), BarcodeFormat$1.UPC_A);
+                      const resultUPCA = new Result$1(result.getText().substring(1), rawBytes, (rawBytes ? rawBytes.length : null), result.getResultPoints(), BarcodeFormat$1.UPC_A);
                       resultUPCA.putAllMetadata(result.getResultMetadata());
                       return resultUPCA;
                   }
@@ -9294,7 +9294,7 @@
           let retStr = this.codaBarDecodeRow(validRowData.row);
           if (!retStr)
               throw new NotFoundException();
-          return new Result(retStr, null, 0, [new ResultPoint(validRowData.left, rowNumber), new ResultPoint(validRowData.right, rowNumber)], BarcodeFormat$1.CODABAR, new Date().getTime());
+          return new Result$1(retStr, null, 0, [new ResultPoint(validRowData.left, rowNumber), new ResultPoint(validRowData.right, rowNumber)], BarcodeFormat$1.CODABAR, new Date().getTime());
       }
       /**
        * converts bit array to valid data array(lengths of black bits and white bits)
@@ -9478,7 +9478,7 @@
       }
   }
 
-  class FinderPattern {
+  class FinderPattern$1 {
       constructor(value, startEnd, start, end, rowNumber) {
           this.value = value;
           this.startEnd = startEnd;
@@ -9498,7 +9498,7 @@
           return this.resultPoints;
       }
       equals(o) {
-          if (!(o instanceof FinderPattern)) {
+          if (!(o instanceof FinderPattern$1)) {
               return false;
           }
           const that = o;
@@ -10966,7 +10966,7 @@
               .getFinderPattern()
               .getResultPoints();
           let points = [firstPoints[0], firstPoints[1], lastPoints[0], lastPoints[1]];
-          return new Result(resultingString, null, null, points, BarcodeFormat$1.RSS_EXPANDED, null);
+          return new Result$1(resultingString, null, null, points, BarcodeFormat$1.RSS_EXPANDED, null);
       }
       checkChecksum() {
           let firstPair = this.pairs.get(0);
@@ -11153,7 +11153,7 @@
               return null;
           }
           // return new FinderPattern(value, new int[] { start, end }, start, end, rowNumber});
-          return new FinderPattern(value, [start, end], start, end, rowNumber);
+          return new FinderPattern$1(value, [start, end], start, end, rowNumber);
       }
       decodeDataCharacter(row, pattern, isOddPattern, leftChar) {
           let counters = this.getDataCharacterCounters();
@@ -11551,7 +11551,7 @@
           buffer.append(checkDigit.toString());
           let leftPoints = leftPair.getFinderPattern().getResultPoints();
           let rightPoints = rightPair.getFinderPattern().getResultPoints();
-          return new Result(buffer.toString(), null, 0, [leftPoints[0], leftPoints[1], rightPoints[0], rightPoints[1]], BarcodeFormat$1.RSS_14, new Date().getTime());
+          return new Result$1(buffer.toString(), null, 0, [leftPoints[0], leftPoints[1], rightPoints[0], rightPoints[1]], BarcodeFormat$1.RSS_14, new Date().getTime());
       }
       static checkChecksum(leftPair, rightPair) {
           let checkValue = (leftPair.getChecksumPortion() + 16 * rightPair.getChecksumPortion()) % 79;
@@ -11737,7 +11737,7 @@
               start = row.getSize() - 1 - start;
               end = row.getSize() - 1 - end;
           }
-          return new FinderPattern(value, [firstElementStart, startEnd[1]], start, end, rowNumber);
+          return new FinderPattern$1(value, [firstElementStart, startEnd[1]], start, end, rowNumber);
       }
       adjustOddEvenCounts(outsideChar, numModules) {
           let oddSum = MathUtils.sum(new Int32Array(this.getOddCounts()));
@@ -11893,6 +11893,7 @@
           this.readers = [];
           const possibleFormats = !hints ? null : hints.get(DecodeHintType$1.POSSIBLE_FORMATS);
           const useCode39CheckDigit = hints && hints.get(DecodeHintType$1.ASSUME_CODE_39_CHECK_DIGIT) !== undefined;
+          const useCode39ExtendedMode = hints && hints.get(DecodeHintType$1.ENABLE_CODE_39_EXTENDED_MODE) !== undefined;
           if (possibleFormats) {
               if (possibleFormats.includes(BarcodeFormat$1.EAN_13) ||
                   possibleFormats.includes(BarcodeFormat$1.UPC_A) ||
@@ -11901,7 +11902,7 @@
                   this.readers.push(new MultiFormatUPCEANReader(hints));
               }
               if (possibleFormats.includes(BarcodeFormat$1.CODE_39)) {
-                  this.readers.push(new Code39Reader(useCode39CheckDigit));
+                  this.readers.push(new Code39Reader(useCode39CheckDigit, useCode39ExtendedMode));
               }
               if (possibleFormats.includes(BarcodeFormat$1.CODE_93)) {
                   this.readers.push(new Code93Reader());
@@ -11990,7 +11991,7 @@
    * each set of blocks. It also holds the number of error-correction codewords per block since it
    * will be the same across all blocks within one version.</p>
    */
-  class ECBlocks {
+  class ECBlocks$1 {
       constructor(ecCodewords, ecBlocks1, ecBlocks2) {
           this.ecCodewords = ecCodewords;
           this.ecBlocks = [ecBlocks1];
@@ -12008,7 +12009,7 @@
    * This includes the number of data codewords, and the number of times a block with these
    * parameters is used consecutively in the Data Matrix code version's format.</p>
    */
-  class ECB {
+  class ECB$1 {
       constructor(count, dataCodewords) {
           this.count = count;
           this.dataCodewords = dataCodewords;
@@ -12026,7 +12027,7 @@
    *
    * @author bbrown@google.com (Brian Brown)
    */
-  class Version {
+  class Version$1 {
       constructor(versionNumber, symbolSizeRows, symbolSizeColumns, dataRegionSizeRows, dataRegionSizeColumns, ecBlocks) {
           this.versionNumber = versionNumber;
           this.symbolSizeRows = symbolSizeRows;
@@ -12076,7 +12077,7 @@
           if ((numRows & 0x01) !== 0 || (numColumns & 0x01) !== 0) {
               throw new FormatException();
           }
-          for (let version of Version.VERSIONS) {
+          for (let version of Version$1.VERSIONS) {
               if (version.symbolSizeRows === numRows && version.symbolSizeColumns === numColumns) {
                   return version;
               }
@@ -12092,40 +12093,40 @@
        */
       static buildVersions() {
           return [
-              new Version(1, 10, 10, 8, 8, new ECBlocks(5, new ECB(1, 3))),
-              new Version(2, 12, 12, 10, 10, new ECBlocks(7, new ECB(1, 5))),
-              new Version(3, 14, 14, 12, 12, new ECBlocks(10, new ECB(1, 8))),
-              new Version(4, 16, 16, 14, 14, new ECBlocks(12, new ECB(1, 12))),
-              new Version(5, 18, 18, 16, 16, new ECBlocks(14, new ECB(1, 18))),
-              new Version(6, 20, 20, 18, 18, new ECBlocks(18, new ECB(1, 22))),
-              new Version(7, 22, 22, 20, 20, new ECBlocks(20, new ECB(1, 30))),
-              new Version(8, 24, 24, 22, 22, new ECBlocks(24, new ECB(1, 36))),
-              new Version(9, 26, 26, 24, 24, new ECBlocks(28, new ECB(1, 44))),
-              new Version(10, 32, 32, 14, 14, new ECBlocks(36, new ECB(1, 62))),
-              new Version(11, 36, 36, 16, 16, new ECBlocks(42, new ECB(1, 86))),
-              new Version(12, 40, 40, 18, 18, new ECBlocks(48, new ECB(1, 114))),
-              new Version(13, 44, 44, 20, 20, new ECBlocks(56, new ECB(1, 144))),
-              new Version(14, 48, 48, 22, 22, new ECBlocks(68, new ECB(1, 174))),
-              new Version(15, 52, 52, 24, 24, new ECBlocks(42, new ECB(2, 102))),
-              new Version(16, 64, 64, 14, 14, new ECBlocks(56, new ECB(2, 140))),
-              new Version(17, 72, 72, 16, 16, new ECBlocks(36, new ECB(4, 92))),
-              new Version(18, 80, 80, 18, 18, new ECBlocks(48, new ECB(4, 114))),
-              new Version(19, 88, 88, 20, 20, new ECBlocks(56, new ECB(4, 144))),
-              new Version(20, 96, 96, 22, 22, new ECBlocks(68, new ECB(4, 174))),
-              new Version(21, 104, 104, 24, 24, new ECBlocks(56, new ECB(6, 136))),
-              new Version(22, 120, 120, 18, 18, new ECBlocks(68, new ECB(6, 175))),
-              new Version(23, 132, 132, 20, 20, new ECBlocks(62, new ECB(8, 163))),
-              new Version(24, 144, 144, 22, 22, new ECBlocks(62, new ECB(8, 156), new ECB(2, 155))),
-              new Version(25, 8, 18, 6, 16, new ECBlocks(7, new ECB(1, 5))),
-              new Version(26, 8, 32, 6, 14, new ECBlocks(11, new ECB(1, 10))),
-              new Version(27, 12, 26, 10, 24, new ECBlocks(14, new ECB(1, 16))),
-              new Version(28, 12, 36, 10, 16, new ECBlocks(18, new ECB(1, 22))),
-              new Version(29, 16, 36, 14, 16, new ECBlocks(24, new ECB(1, 32))),
-              new Version(30, 16, 48, 14, 22, new ECBlocks(28, new ECB(1, 49)))
+              new Version$1(1, 10, 10, 8, 8, new ECBlocks$1(5, new ECB$1(1, 3))),
+              new Version$1(2, 12, 12, 10, 10, new ECBlocks$1(7, new ECB$1(1, 5))),
+              new Version$1(3, 14, 14, 12, 12, new ECBlocks$1(10, new ECB$1(1, 8))),
+              new Version$1(4, 16, 16, 14, 14, new ECBlocks$1(12, new ECB$1(1, 12))),
+              new Version$1(5, 18, 18, 16, 16, new ECBlocks$1(14, new ECB$1(1, 18))),
+              new Version$1(6, 20, 20, 18, 18, new ECBlocks$1(18, new ECB$1(1, 22))),
+              new Version$1(7, 22, 22, 20, 20, new ECBlocks$1(20, new ECB$1(1, 30))),
+              new Version$1(8, 24, 24, 22, 22, new ECBlocks$1(24, new ECB$1(1, 36))),
+              new Version$1(9, 26, 26, 24, 24, new ECBlocks$1(28, new ECB$1(1, 44))),
+              new Version$1(10, 32, 32, 14, 14, new ECBlocks$1(36, new ECB$1(1, 62))),
+              new Version$1(11, 36, 36, 16, 16, new ECBlocks$1(42, new ECB$1(1, 86))),
+              new Version$1(12, 40, 40, 18, 18, new ECBlocks$1(48, new ECB$1(1, 114))),
+              new Version$1(13, 44, 44, 20, 20, new ECBlocks$1(56, new ECB$1(1, 144))),
+              new Version$1(14, 48, 48, 22, 22, new ECBlocks$1(68, new ECB$1(1, 174))),
+              new Version$1(15, 52, 52, 24, 24, new ECBlocks$1(42, new ECB$1(2, 102))),
+              new Version$1(16, 64, 64, 14, 14, new ECBlocks$1(56, new ECB$1(2, 140))),
+              new Version$1(17, 72, 72, 16, 16, new ECBlocks$1(36, new ECB$1(4, 92))),
+              new Version$1(18, 80, 80, 18, 18, new ECBlocks$1(48, new ECB$1(4, 114))),
+              new Version$1(19, 88, 88, 20, 20, new ECBlocks$1(56, new ECB$1(4, 144))),
+              new Version$1(20, 96, 96, 22, 22, new ECBlocks$1(68, new ECB$1(4, 174))),
+              new Version$1(21, 104, 104, 24, 24, new ECBlocks$1(56, new ECB$1(6, 136))),
+              new Version$1(22, 120, 120, 18, 18, new ECBlocks$1(68, new ECB$1(6, 175))),
+              new Version$1(23, 132, 132, 20, 20, new ECBlocks$1(62, new ECB$1(8, 163))),
+              new Version$1(24, 144, 144, 22, 22, new ECBlocks$1(62, new ECB$1(8, 156), new ECB$1(2, 155))),
+              new Version$1(25, 8, 18, 6, 16, new ECBlocks$1(7, new ECB$1(1, 5))),
+              new Version$1(26, 8, 32, 6, 14, new ECBlocks$1(11, new ECB$1(1, 10))),
+              new Version$1(27, 12, 26, 10, 24, new ECBlocks$1(14, new ECB$1(1, 16))),
+              new Version$1(28, 12, 36, 10, 16, new ECBlocks$1(18, new ECB$1(1, 22))),
+              new Version$1(29, 16, 36, 14, 16, new ECBlocks$1(24, new ECB$1(1, 32))),
+              new Version$1(30, 16, 48, 14, 22, new ECBlocks$1(28, new ECB$1(1, 49)))
           ];
       }
   }
-  Version.VERSIONS = Version.buildVersions();
+  Version$1.VERSIONS = Version$1.buildVersions();
 
   /*
    * Copyright 2007 ZXing authors
@@ -12145,7 +12146,7 @@
   /**
    * @author bbrown@google.com (Brian Brown)
    */
-  class BitMatrixParser {
+  class BitMatrixParser$1 {
       /**
        * @param bitMatrix {@link BitMatrix} to parse
        * @throws FormatException if dimension is < 8 or > 144 or not 0 mod 2
@@ -12155,7 +12156,7 @@
           if (dimension < 8 || dimension > 144 || (dimension & 0x01) !== 0) {
               throw new FormatException();
           }
-          this.version = BitMatrixParser.readVersion(bitMatrix);
+          this.version = BitMatrixParser$1.readVersion(bitMatrix);
           this.mappingBitMatrix = this.extractDataRegion(bitMatrix);
           this.readMappingMatrix = new BitMatrix(this.mappingBitMatrix.getWidth(), this.mappingBitMatrix.getHeight());
       }
@@ -12176,7 +12177,7 @@
       static readVersion(bitMatrix) {
           const numRows = bitMatrix.getHeight();
           const numColumns = bitMatrix.getWidth();
-          return Version.getVersionForDimensions(numRows, numColumns);
+          return Version$1.getVersionForDimensions(numRows, numColumns);
       }
       /**
        * <p>Reads the bits in the {@link BitMatrix} representing the mapping matrix (No alignment patterns)
@@ -12559,7 +12560,7 @@
    *
    * @author bbrown@google.com (Brian Brown)
    */
-  class DataBlock {
+  class DataBlock$1 {
       constructor(numDataCodewords, codewords) {
           this.numDataCodewords = numDataCodewords;
           this.codewords = codewords;
@@ -12590,7 +12591,7 @@
               for (let i = 0; i < ecBlock.getCount(); i++) {
                   const numDataCodewords = ecBlock.getDataCodewords();
                   const numBlockCodewords = ecBlocks.getECCodewords() + numDataCodewords;
-                  result[numResultBlocks++] = new DataBlock(numDataCodewords, new Uint8Array(numBlockCodewords));
+                  result[numResultBlocks++] = new DataBlock$1(numDataCodewords, new Uint8Array(numBlockCodewords));
               }
           }
           // All blocks have the same amount of data, except that the last n
@@ -12752,7 +12753,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
-  var Mode;
+  var Mode$3;
   (function (Mode) {
       Mode[Mode["PAD_ENCODE"] = 0] = "PAD_ENCODE";
       Mode[Mode["ASCII_ENCODE"] = 1] = "ASCII_ENCODE";
@@ -12761,7 +12762,7 @@
       Mode[Mode["ANSIX12_ENCODE"] = 4] = "ANSIX12_ENCODE";
       Mode[Mode["EDIFACT_ENCODE"] = 5] = "EDIFACT_ENCODE";
       Mode[Mode["BASE256_ENCODE"] = 6] = "BASE256_ENCODE";
-  })(Mode || (Mode = {}));
+  })(Mode$3 || (Mode$3 = {}));
   /**
    * <p>Data Matrix Codes can encode text as bits in one of several modes, and can use multiple modes
    * in one Data Matrix Code. This class decodes the bits back into text.</p>
@@ -12771,40 +12772,40 @@
    * @author bbrown@google.com (Brian Brown)
    * @author Sean Owen
    */
-  class DecodedBitStreamParser {
+  class DecodedBitStreamParser$2 {
       static decode(bytes) {
           const bits = new BitSource(bytes);
           const result = new StringBuilder();
           const resultTrailer = new StringBuilder();
           const byteSegments = new Array();
-          let mode = Mode.ASCII_ENCODE;
+          let mode = Mode$3.ASCII_ENCODE;
           do {
-              if (mode === Mode.ASCII_ENCODE) {
+              if (mode === Mode$3.ASCII_ENCODE) {
                   mode = this.decodeAsciiSegment(bits, result, resultTrailer);
               }
               else {
                   switch (mode) {
-                      case Mode.C40_ENCODE:
+                      case Mode$3.C40_ENCODE:
                           this.decodeC40Segment(bits, result);
                           break;
-                      case Mode.TEXT_ENCODE:
+                      case Mode$3.TEXT_ENCODE:
                           this.decodeTextSegment(bits, result);
                           break;
-                      case Mode.ANSIX12_ENCODE:
+                      case Mode$3.ANSIX12_ENCODE:
                           this.decodeAnsiX12Segment(bits, result);
                           break;
-                      case Mode.EDIFACT_ENCODE:
+                      case Mode$3.EDIFACT_ENCODE:
                           this.decodeEdifactSegment(bits, result);
                           break;
-                      case Mode.BASE256_ENCODE:
+                      case Mode$3.BASE256_ENCODE:
                           this.decodeBase256Segment(bits, result, byteSegments);
                           break;
                       default:
                           throw new FormatException();
                   }
-                  mode = Mode.ASCII_ENCODE;
+                  mode = Mode$3.ASCII_ENCODE;
               }
-          } while (mode !== Mode.PAD_ENCODE && bits.available() > 0);
+          } while (mode !== Mode$3.PAD_ENCODE && bits.available() > 0);
           if (resultTrailer.length() > 0) {
               result.append(resultTrailer.toString());
           }
@@ -12826,10 +12827,10 @@
                       // upperShift = false;
                   }
                   result.append(String.fromCharCode(oneByte - 1));
-                  return Mode.ASCII_ENCODE;
+                  return Mode$3.ASCII_ENCODE;
               }
               else if (oneByte === 129) { // Pad
-                  return Mode.PAD_ENCODE;
+                  return Mode$3.PAD_ENCODE;
               }
               else if (oneByte <= 229) { // 2-digit data 00-99 (Numeric Value + 130)
                   const value = oneByte - 130;
@@ -12841,9 +12842,9 @@
               else {
                   switch (oneByte) {
                       case 230: // Latch to C40 encodation
-                          return Mode.C40_ENCODE;
+                          return Mode$3.C40_ENCODE;
                       case 231: // Latch to Base 256 encodation
-                          return Mode.BASE256_ENCODE;
+                          return Mode$3.BASE256_ENCODE;
                       case 232: // FNC1
                           result.append(String.fromCharCode(29)); // translate as ASCII 29
                           break;
@@ -12864,11 +12865,11 @@
                           resultTrailer.insert(0, '\u001E\u0004');
                           break;
                       case 238: // Latch to ANSI X12 encodation
-                          return Mode.ANSIX12_ENCODE;
+                          return Mode$3.ANSIX12_ENCODE;
                       case 239: // Latch to Text encodation
-                          return Mode.TEXT_ENCODE;
+                          return Mode$3.TEXT_ENCODE;
                       case 240: // Latch to EDIFACT encodation
-                          return Mode.EDIFACT_ENCODE;
+                          return Mode$3.EDIFACT_ENCODE;
                       case 241: // ECI Character
                           // TODO(bbrown): I think we need to support ECI
                           // throw ReaderException.getInstance();
@@ -12884,7 +12885,7 @@
                   }
               }
           } while (bits.available() > 0);
-          return Mode.ASCII_ENCODE;
+          return Mode$3.ASCII_ENCODE;
       }
       /**
        * See ISO 16022:2006, 5.2.5 and Annex C, Table C.1
@@ -13211,12 +13212,12 @@
    * See ISO 16022:2006, Annex C Table C.1
    * The C40 Basic Character Set (*'s used for placeholders for the shift values)
    */
-  DecodedBitStreamParser.C40_BASIC_SET_CHARS = [
+  DecodedBitStreamParser$2.C40_BASIC_SET_CHARS = [
       '*', '*', '*', ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
       'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
       'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
   ];
-  DecodedBitStreamParser.C40_SHIFT2_SET_CHARS = [
+  DecodedBitStreamParser$2.C40_SHIFT2_SET_CHARS = [
       '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.',
       '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_'
   ];
@@ -13224,14 +13225,14 @@
    * See ISO 16022:2006, Annex C Table C.2
    * The Text Basic Character Set (*'s used for placeholders for the shift values)
    */
-  DecodedBitStreamParser.TEXT_BASIC_SET_CHARS = [
+  DecodedBitStreamParser$2.TEXT_BASIC_SET_CHARS = [
       '*', '*', '*', ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
       'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
       'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
   ];
   // Shift 2 for Text is the same encoding as C40
-  DecodedBitStreamParser.TEXT_SHIFT2_SET_CHARS = DecodedBitStreamParser.C40_SHIFT2_SET_CHARS;
-  DecodedBitStreamParser.TEXT_SHIFT3_SET_CHARS = [
+  DecodedBitStreamParser$2.TEXT_SHIFT2_SET_CHARS = DecodedBitStreamParser$2.C40_SHIFT2_SET_CHARS;
+  DecodedBitStreamParser$2.TEXT_SHIFT3_SET_CHARS = [
       '`', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
       'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '~', String.fromCharCode(127)
   ];
@@ -13272,12 +13273,12 @@
        */
       decode(bits) {
           // Construct a parser and read version, error-correction level
-          const parser = new BitMatrixParser(bits);
+          const parser = new BitMatrixParser$1(bits);
           const version = parser.getVersion();
           // Read codewords
           const codewords = parser.readCodewords();
           // Separate into data blocks
-          const dataBlocks = DataBlock.getDataBlocks(codewords, version);
+          const dataBlocks = DataBlock$1.getDataBlocks(codewords, version);
           // Count total number of data bytes
           let totalBytes = 0;
           for (let db of dataBlocks) {
@@ -13297,7 +13298,7 @@
               }
           }
           // Decode the contents of that stream of bytes
-          return DecodedBitStreamParser.decode(resultBytes);
+          return DecodedBitStreamParser$2.decode(resultBytes);
       }
       /**
        * <p>Given data and error-correction codewords received, possibly corrupted by errors, attempts to
@@ -13349,7 +13350,7 @@
    *
    * @author Sean Owen
    */
-  class Detector$1 {
+  class Detector$2 {
       constructor(image) {
           this.image = image;
           this.rectangleDetector = new WhiteRectangleDetector(this.image);
@@ -13385,7 +13386,7 @@
               // The matrix is square
               dimensionTop = dimensionRight = Math.max(dimensionTop, dimensionRight);
           }
-          let bits = Detector$1.sampleGrid(this.image, topLeft, bottomLeft, bottomRight, topRight, dimensionTop, dimensionRight);
+          let bits = Detector$2.sampleGrid(this.image, topLeft, bottomLeft, bottomRight, topRight, dimensionTop, dimensionRight);
           return new DetectorResult(bits, [topLeft, bottomLeft, bottomRight, topRight]);
       }
       static shiftPoint(point, to, div) {
@@ -13465,8 +13466,8 @@
           // Transition detection on the edge is not stable.
           // To safely detect, shift the points to the module center.
           let tr = this.transitionsBetween(pointA, pointD);
-          let pointBs = Detector$1.shiftPoint(pointB, pointC, (tr + 1) * 4);
-          let pointCs = Detector$1.shiftPoint(pointC, pointB, (tr + 1) * 4);
+          let pointBs = Detector$2.shiftPoint(pointB, pointC, (tr + 1) * 4);
+          let pointCs = Detector$2.shiftPoint(pointC, pointB, (tr + 1) * 4);
           let trBA = this.transitionsBetween(pointBs, pointA);
           let trCD = this.transitionsBetween(pointCs, pointD);
           // 0..3
@@ -13502,8 +13503,8 @@
           // shift points for safe transition detection.
           let trTop = this.transitionsBetween(pointA, pointD);
           let trRight = this.transitionsBetween(pointB, pointD);
-          let pointAs = Detector$1.shiftPoint(pointA, pointB, (trRight + 1) * 4);
-          let pointCs = Detector$1.shiftPoint(pointC, pointB, (trTop + 1) * 4);
+          let pointAs = Detector$2.shiftPoint(pointA, pointB, (trRight + 1) * 4);
+          let pointCs = Detector$2.shiftPoint(pointC, pointB, (trTop + 1) * 4);
           trTop = this.transitionsBetween(pointAs, pointD);
           trRight = this.transitionsBetween(pointCs, pointD);
           let candidate1 = new ResultPoint(pointD.getX() + (pointC.getX() - pointB.getX()) / (trTop + 1), pointD.getY() + (pointC.getY() - pointB.getY()) / (trTop + 1));
@@ -13541,8 +13542,8 @@
           let dimH = this.transitionsBetween(pointA, pointD) + 1;
           let dimV = this.transitionsBetween(pointC, pointD) + 1;
           // shift points for safe dimension detection
-          let pointAs = Detector$1.shiftPoint(pointA, pointB, dimV * 4);
-          let pointCs = Detector$1.shiftPoint(pointC, pointB, dimH * 4);
+          let pointAs = Detector$2.shiftPoint(pointA, pointB, dimV * 4);
+          let pointCs = Detector$2.shiftPoint(pointC, pointB, dimH * 4);
           //  calculate more precise dimensions
           dimH = this.transitionsBetween(pointAs, pointD) + 1;
           dimV = this.transitionsBetween(pointCs, pointD) + 1;
@@ -13556,21 +13557,21 @@
           // I want points on the edges.
           let centerX = (pointA.getX() + pointB.getX() + pointC.getX() + pointD.getX()) / 4;
           let centerY = (pointA.getY() + pointB.getY() + pointC.getY() + pointD.getY()) / 4;
-          pointA = Detector$1.moveAway(pointA, centerX, centerY);
-          pointB = Detector$1.moveAway(pointB, centerX, centerY);
-          pointC = Detector$1.moveAway(pointC, centerX, centerY);
-          pointD = Detector$1.moveAway(pointD, centerX, centerY);
+          pointA = Detector$2.moveAway(pointA, centerX, centerY);
+          pointB = Detector$2.moveAway(pointB, centerX, centerY);
+          pointC = Detector$2.moveAway(pointC, centerX, centerY);
+          pointD = Detector$2.moveAway(pointD, centerX, centerY);
           let pointBs;
           let pointDs;
           // shift points to the center of each modules
-          pointAs = Detector$1.shiftPoint(pointA, pointB, dimV * 4);
-          pointAs = Detector$1.shiftPoint(pointAs, pointD, dimH * 4);
-          pointBs = Detector$1.shiftPoint(pointB, pointA, dimV * 4);
-          pointBs = Detector$1.shiftPoint(pointBs, pointC, dimH * 4);
-          pointCs = Detector$1.shiftPoint(pointC, pointD, dimV * 4);
-          pointCs = Detector$1.shiftPoint(pointCs, pointB, dimH * 4);
-          pointDs = Detector$1.shiftPoint(pointD, pointC, dimV * 4);
-          pointDs = Detector$1.shiftPoint(pointDs, pointA, dimH * 4);
+          pointAs = Detector$2.shiftPoint(pointA, pointB, dimV * 4);
+          pointAs = Detector$2.shiftPoint(pointAs, pointD, dimH * 4);
+          pointBs = Detector$2.shiftPoint(pointB, pointA, dimV * 4);
+          pointBs = Detector$2.shiftPoint(pointBs, pointC, dimH * 4);
+          pointCs = Detector$2.shiftPoint(pointC, pointD, dimV * 4);
+          pointCs = Detector$2.shiftPoint(pointCs, pointB, dimH * 4);
+          pointDs = Detector$2.shiftPoint(pointD, pointC, dimV * 4);
+          pointDs = Detector$2.shiftPoint(pointDs, pointA, dimH * 4);
           return [pointAs, pointBs, pointCs, pointDs];
       }
       isValid(p) {
@@ -13670,12 +13671,12 @@
               points = DataMatrixReader.NO_POINTS;
           }
           else {
-              const detectorResult = new Detector$1(image.getBlackMatrix()).detect();
+              const detectorResult = new Detector$2(image.getBlackMatrix()).detect();
               decoderResult = this.decoder.decode(detectorResult.getBits());
               points = detectorResult.getPoints();
           }
           const rawBytes = decoderResult.getRawBytes();
-          const result = new Result(decoderResult.getText(), rawBytes, 8 * rawBytes.length, points, BarcodeFormat$1.DATA_MATRIX, System.currentTimeMillis());
+          const result = new Result$1(decoderResult.getText(), rawBytes, 8 * rawBytes.length, points, BarcodeFormat$1.DATA_MATRIX, System.currentTimeMillis());
           const byteSegments = decoderResult.getByteSegments();
           if (byteSegments != null) {
               result.putMetadata(ResultMetadataType$1.BYTE_SEGMENTS, byteSegments);
@@ -13995,7 +13996,7 @@
    * each set of blocks. It also holds the number of error-correction codewords per block since it
    * will be the same across all blocks within one version.</p>
    */
-  class ECBlocks$1 {
+  class ECBlocks {
       constructor(ecCodewordsPerBlock /*int*/, ...ecBlocks) {
           this.ecCodewordsPerBlock = ecCodewordsPerBlock;
           this.ecBlocks = ecBlocks;
@@ -14024,7 +14025,7 @@
    * This includes the number of data codewords, and the number of times a block with these
    * parameters is used consecutively in the QR code version's format.</p>
    */
-  class ECB$1 {
+  class ECB {
       constructor(count /*int*/, dataCodewords /*int*/) {
           this.count = count;
           this.dataCodewords = dataCodewords;
@@ -14057,7 +14058,7 @@
    *
    * @author Sean Owen
    */
-  class Version$1 {
+  class Version {
       constructor(versionNumber /*int*/, alignmentPatternCenters, ...ecBlocks) {
           this.versionNumber = versionNumber;
           this.alignmentPatternCenters = alignmentPatternCenters;
@@ -14109,16 +14110,16 @@
           if (versionNumber < 1 || versionNumber > 40) {
               throw new IllegalArgumentException();
           }
-          return Version$1.VERSIONS[versionNumber - 1];
+          return Version.VERSIONS[versionNumber - 1];
       }
       static decodeVersionInformation(versionBits /*int*/) {
           let bestDifference = Number.MAX_SAFE_INTEGER;
           let bestVersion = 0;
-          for (let i = 0; i < Version$1.VERSION_DECODE_INFO.length; i++) {
-              const targetVersion = Version$1.VERSION_DECODE_INFO[i];
+          for (let i = 0; i < Version.VERSION_DECODE_INFO.length; i++) {
+              const targetVersion = Version.VERSION_DECODE_INFO[i];
               // Do the version info bits match exactly? done.
               if (targetVersion === versionBits) {
-                  return Version$1.getVersionForNumber(i + 7);
+                  return Version.getVersionForNumber(i + 7);
               }
               // Otherwise see if this is the closest to a real version info bit string
               // we have seen so far
@@ -14131,7 +14132,7 @@
           // We can tolerate up to 3 bits of error since no two version info codewords will
           // differ in less than 8 bits.
           if (bestDifference <= 3) {
-              return Version$1.getVersionForNumber(bestVersion);
+              return Version.getVersionForNumber(bestVersion);
           }
           // If we didn't find a close enough match, fail
           return null;
@@ -14181,7 +14182,7 @@
      * See ISO 18004:2006 Annex D.
      * Element i represents the raw version bits that specify version i + 7
      */
-  Version$1.VERSION_DECODE_INFO = Int32Array.from([
+  Version.VERSION_DECODE_INFO = Int32Array.from([
       0x07C94, 0x085BC, 0x09A99, 0x0A4D3, 0x0BBF6,
       0x0C762, 0x0D847, 0x0E60D, 0x0F928, 0x10B78,
       0x1145D, 0x12A17, 0x13532, 0x149A6, 0x15683,
@@ -14193,47 +14194,47 @@
   /**
      * See ISO 18004:2006 6.5.1 Table 9
      */
-  Version$1.VERSIONS = [
-      new Version$1(1, new Int32Array(0), new ECBlocks$1(7, new ECB$1(1, 19)), new ECBlocks$1(10, new ECB$1(1, 16)), new ECBlocks$1(13, new ECB$1(1, 13)), new ECBlocks$1(17, new ECB$1(1, 9))),
-      new Version$1(2, Int32Array.from([6, 18]), new ECBlocks$1(10, new ECB$1(1, 34)), new ECBlocks$1(16, new ECB$1(1, 28)), new ECBlocks$1(22, new ECB$1(1, 22)), new ECBlocks$1(28, new ECB$1(1, 16))),
-      new Version$1(3, Int32Array.from([6, 22]), new ECBlocks$1(15, new ECB$1(1, 55)), new ECBlocks$1(26, new ECB$1(1, 44)), new ECBlocks$1(18, new ECB$1(2, 17)), new ECBlocks$1(22, new ECB$1(2, 13))),
-      new Version$1(4, Int32Array.from([6, 26]), new ECBlocks$1(20, new ECB$1(1, 80)), new ECBlocks$1(18, new ECB$1(2, 32)), new ECBlocks$1(26, new ECB$1(2, 24)), new ECBlocks$1(16, new ECB$1(4, 9))),
-      new Version$1(5, Int32Array.from([6, 30]), new ECBlocks$1(26, new ECB$1(1, 108)), new ECBlocks$1(24, new ECB$1(2, 43)), new ECBlocks$1(18, new ECB$1(2, 15), new ECB$1(2, 16)), new ECBlocks$1(22, new ECB$1(2, 11), new ECB$1(2, 12))),
-      new Version$1(6, Int32Array.from([6, 34]), new ECBlocks$1(18, new ECB$1(2, 68)), new ECBlocks$1(16, new ECB$1(4, 27)), new ECBlocks$1(24, new ECB$1(4, 19)), new ECBlocks$1(28, new ECB$1(4, 15))),
-      new Version$1(7, Int32Array.from([6, 22, 38]), new ECBlocks$1(20, new ECB$1(2, 78)), new ECBlocks$1(18, new ECB$1(4, 31)), new ECBlocks$1(18, new ECB$1(2, 14), new ECB$1(4, 15)), new ECBlocks$1(26, new ECB$1(4, 13), new ECB$1(1, 14))),
-      new Version$1(8, Int32Array.from([6, 24, 42]), new ECBlocks$1(24, new ECB$1(2, 97)), new ECBlocks$1(22, new ECB$1(2, 38), new ECB$1(2, 39)), new ECBlocks$1(22, new ECB$1(4, 18), new ECB$1(2, 19)), new ECBlocks$1(26, new ECB$1(4, 14), new ECB$1(2, 15))),
-      new Version$1(9, Int32Array.from([6, 26, 46]), new ECBlocks$1(30, new ECB$1(2, 116)), new ECBlocks$1(22, new ECB$1(3, 36), new ECB$1(2, 37)), new ECBlocks$1(20, new ECB$1(4, 16), new ECB$1(4, 17)), new ECBlocks$1(24, new ECB$1(4, 12), new ECB$1(4, 13))),
-      new Version$1(10, Int32Array.from([6, 28, 50]), new ECBlocks$1(18, new ECB$1(2, 68), new ECB$1(2, 69)), new ECBlocks$1(26, new ECB$1(4, 43), new ECB$1(1, 44)), new ECBlocks$1(24, new ECB$1(6, 19), new ECB$1(2, 20)), new ECBlocks$1(28, new ECB$1(6, 15), new ECB$1(2, 16))),
-      new Version$1(11, Int32Array.from([6, 30, 54]), new ECBlocks$1(20, new ECB$1(4, 81)), new ECBlocks$1(30, new ECB$1(1, 50), new ECB$1(4, 51)), new ECBlocks$1(28, new ECB$1(4, 22), new ECB$1(4, 23)), new ECBlocks$1(24, new ECB$1(3, 12), new ECB$1(8, 13))),
-      new Version$1(12, Int32Array.from([6, 32, 58]), new ECBlocks$1(24, new ECB$1(2, 92), new ECB$1(2, 93)), new ECBlocks$1(22, new ECB$1(6, 36), new ECB$1(2, 37)), new ECBlocks$1(26, new ECB$1(4, 20), new ECB$1(6, 21)), new ECBlocks$1(28, new ECB$1(7, 14), new ECB$1(4, 15))),
-      new Version$1(13, Int32Array.from([6, 34, 62]), new ECBlocks$1(26, new ECB$1(4, 107)), new ECBlocks$1(22, new ECB$1(8, 37), new ECB$1(1, 38)), new ECBlocks$1(24, new ECB$1(8, 20), new ECB$1(4, 21)), new ECBlocks$1(22, new ECB$1(12, 11), new ECB$1(4, 12))),
-      new Version$1(14, Int32Array.from([6, 26, 46, 66]), new ECBlocks$1(30, new ECB$1(3, 115), new ECB$1(1, 116)), new ECBlocks$1(24, new ECB$1(4, 40), new ECB$1(5, 41)), new ECBlocks$1(20, new ECB$1(11, 16), new ECB$1(5, 17)), new ECBlocks$1(24, new ECB$1(11, 12), new ECB$1(5, 13))),
-      new Version$1(15, Int32Array.from([6, 26, 48, 70]), new ECBlocks$1(22, new ECB$1(5, 87), new ECB$1(1, 88)), new ECBlocks$1(24, new ECB$1(5, 41), new ECB$1(5, 42)), new ECBlocks$1(30, new ECB$1(5, 24), new ECB$1(7, 25)), new ECBlocks$1(24, new ECB$1(11, 12), new ECB$1(7, 13))),
-      new Version$1(16, Int32Array.from([6, 26, 50, 74]), new ECBlocks$1(24, new ECB$1(5, 98), new ECB$1(1, 99)), new ECBlocks$1(28, new ECB$1(7, 45), new ECB$1(3, 46)), new ECBlocks$1(24, new ECB$1(15, 19), new ECB$1(2, 20)), new ECBlocks$1(30, new ECB$1(3, 15), new ECB$1(13, 16))),
-      new Version$1(17, Int32Array.from([6, 30, 54, 78]), new ECBlocks$1(28, new ECB$1(1, 107), new ECB$1(5, 108)), new ECBlocks$1(28, new ECB$1(10, 46), new ECB$1(1, 47)), new ECBlocks$1(28, new ECB$1(1, 22), new ECB$1(15, 23)), new ECBlocks$1(28, new ECB$1(2, 14), new ECB$1(17, 15))),
-      new Version$1(18, Int32Array.from([6, 30, 56, 82]), new ECBlocks$1(30, new ECB$1(5, 120), new ECB$1(1, 121)), new ECBlocks$1(26, new ECB$1(9, 43), new ECB$1(4, 44)), new ECBlocks$1(28, new ECB$1(17, 22), new ECB$1(1, 23)), new ECBlocks$1(28, new ECB$1(2, 14), new ECB$1(19, 15))),
-      new Version$1(19, Int32Array.from([6, 30, 58, 86]), new ECBlocks$1(28, new ECB$1(3, 113), new ECB$1(4, 114)), new ECBlocks$1(26, new ECB$1(3, 44), new ECB$1(11, 45)), new ECBlocks$1(26, new ECB$1(17, 21), new ECB$1(4, 22)), new ECBlocks$1(26, new ECB$1(9, 13), new ECB$1(16, 14))),
-      new Version$1(20, Int32Array.from([6, 34, 62, 90]), new ECBlocks$1(28, new ECB$1(3, 107), new ECB$1(5, 108)), new ECBlocks$1(26, new ECB$1(3, 41), new ECB$1(13, 42)), new ECBlocks$1(30, new ECB$1(15, 24), new ECB$1(5, 25)), new ECBlocks$1(28, new ECB$1(15, 15), new ECB$1(10, 16))),
-      new Version$1(21, Int32Array.from([6, 28, 50, 72, 94]), new ECBlocks$1(28, new ECB$1(4, 116), new ECB$1(4, 117)), new ECBlocks$1(26, new ECB$1(17, 42)), new ECBlocks$1(28, new ECB$1(17, 22), new ECB$1(6, 23)), new ECBlocks$1(30, new ECB$1(19, 16), new ECB$1(6, 17))),
-      new Version$1(22, Int32Array.from([6, 26, 50, 74, 98]), new ECBlocks$1(28, new ECB$1(2, 111), new ECB$1(7, 112)), new ECBlocks$1(28, new ECB$1(17, 46)), new ECBlocks$1(30, new ECB$1(7, 24), new ECB$1(16, 25)), new ECBlocks$1(24, new ECB$1(34, 13))),
-      new Version$1(23, Int32Array.from([6, 30, 54, 78, 102]), new ECBlocks$1(30, new ECB$1(4, 121), new ECB$1(5, 122)), new ECBlocks$1(28, new ECB$1(4, 47), new ECB$1(14, 48)), new ECBlocks$1(30, new ECB$1(11, 24), new ECB$1(14, 25)), new ECBlocks$1(30, new ECB$1(16, 15), new ECB$1(14, 16))),
-      new Version$1(24, Int32Array.from([6, 28, 54, 80, 106]), new ECBlocks$1(30, new ECB$1(6, 117), new ECB$1(4, 118)), new ECBlocks$1(28, new ECB$1(6, 45), new ECB$1(14, 46)), new ECBlocks$1(30, new ECB$1(11, 24), new ECB$1(16, 25)), new ECBlocks$1(30, new ECB$1(30, 16), new ECB$1(2, 17))),
-      new Version$1(25, Int32Array.from([6, 32, 58, 84, 110]), new ECBlocks$1(26, new ECB$1(8, 106), new ECB$1(4, 107)), new ECBlocks$1(28, new ECB$1(8, 47), new ECB$1(13, 48)), new ECBlocks$1(30, new ECB$1(7, 24), new ECB$1(22, 25)), new ECBlocks$1(30, new ECB$1(22, 15), new ECB$1(13, 16))),
-      new Version$1(26, Int32Array.from([6, 30, 58, 86, 114]), new ECBlocks$1(28, new ECB$1(10, 114), new ECB$1(2, 115)), new ECBlocks$1(28, new ECB$1(19, 46), new ECB$1(4, 47)), new ECBlocks$1(28, new ECB$1(28, 22), new ECB$1(6, 23)), new ECBlocks$1(30, new ECB$1(33, 16), new ECB$1(4, 17))),
-      new Version$1(27, Int32Array.from([6, 34, 62, 90, 118]), new ECBlocks$1(30, new ECB$1(8, 122), new ECB$1(4, 123)), new ECBlocks$1(28, new ECB$1(22, 45), new ECB$1(3, 46)), new ECBlocks$1(30, new ECB$1(8, 23), new ECB$1(26, 24)), new ECBlocks$1(30, new ECB$1(12, 15), new ECB$1(28, 16))),
-      new Version$1(28, Int32Array.from([6, 26, 50, 74, 98, 122]), new ECBlocks$1(30, new ECB$1(3, 117), new ECB$1(10, 118)), new ECBlocks$1(28, new ECB$1(3, 45), new ECB$1(23, 46)), new ECBlocks$1(30, new ECB$1(4, 24), new ECB$1(31, 25)), new ECBlocks$1(30, new ECB$1(11, 15), new ECB$1(31, 16))),
-      new Version$1(29, Int32Array.from([6, 30, 54, 78, 102, 126]), new ECBlocks$1(30, new ECB$1(7, 116), new ECB$1(7, 117)), new ECBlocks$1(28, new ECB$1(21, 45), new ECB$1(7, 46)), new ECBlocks$1(30, new ECB$1(1, 23), new ECB$1(37, 24)), new ECBlocks$1(30, new ECB$1(19, 15), new ECB$1(26, 16))),
-      new Version$1(30, Int32Array.from([6, 26, 52, 78, 104, 130]), new ECBlocks$1(30, new ECB$1(5, 115), new ECB$1(10, 116)), new ECBlocks$1(28, new ECB$1(19, 47), new ECB$1(10, 48)), new ECBlocks$1(30, new ECB$1(15, 24), new ECB$1(25, 25)), new ECBlocks$1(30, new ECB$1(23, 15), new ECB$1(25, 16))),
-      new Version$1(31, Int32Array.from([6, 30, 56, 82, 108, 134]), new ECBlocks$1(30, new ECB$1(13, 115), new ECB$1(3, 116)), new ECBlocks$1(28, new ECB$1(2, 46), new ECB$1(29, 47)), new ECBlocks$1(30, new ECB$1(42, 24), new ECB$1(1, 25)), new ECBlocks$1(30, new ECB$1(23, 15), new ECB$1(28, 16))),
-      new Version$1(32, Int32Array.from([6, 34, 60, 86, 112, 138]), new ECBlocks$1(30, new ECB$1(17, 115)), new ECBlocks$1(28, new ECB$1(10, 46), new ECB$1(23, 47)), new ECBlocks$1(30, new ECB$1(10, 24), new ECB$1(35, 25)), new ECBlocks$1(30, new ECB$1(19, 15), new ECB$1(35, 16))),
-      new Version$1(33, Int32Array.from([6, 30, 58, 86, 114, 142]), new ECBlocks$1(30, new ECB$1(17, 115), new ECB$1(1, 116)), new ECBlocks$1(28, new ECB$1(14, 46), new ECB$1(21, 47)), new ECBlocks$1(30, new ECB$1(29, 24), new ECB$1(19, 25)), new ECBlocks$1(30, new ECB$1(11, 15), new ECB$1(46, 16))),
-      new Version$1(34, Int32Array.from([6, 34, 62, 90, 118, 146]), new ECBlocks$1(30, new ECB$1(13, 115), new ECB$1(6, 116)), new ECBlocks$1(28, new ECB$1(14, 46), new ECB$1(23, 47)), new ECBlocks$1(30, new ECB$1(44, 24), new ECB$1(7, 25)), new ECBlocks$1(30, new ECB$1(59, 16), new ECB$1(1, 17))),
-      new Version$1(35, Int32Array.from([6, 30, 54, 78, 102, 126, 150]), new ECBlocks$1(30, new ECB$1(12, 121), new ECB$1(7, 122)), new ECBlocks$1(28, new ECB$1(12, 47), new ECB$1(26, 48)), new ECBlocks$1(30, new ECB$1(39, 24), new ECB$1(14, 25)), new ECBlocks$1(30, new ECB$1(22, 15), new ECB$1(41, 16))),
-      new Version$1(36, Int32Array.from([6, 24, 50, 76, 102, 128, 154]), new ECBlocks$1(30, new ECB$1(6, 121), new ECB$1(14, 122)), new ECBlocks$1(28, new ECB$1(6, 47), new ECB$1(34, 48)), new ECBlocks$1(30, new ECB$1(46, 24), new ECB$1(10, 25)), new ECBlocks$1(30, new ECB$1(2, 15), new ECB$1(64, 16))),
-      new Version$1(37, Int32Array.from([6, 28, 54, 80, 106, 132, 158]), new ECBlocks$1(30, new ECB$1(17, 122), new ECB$1(4, 123)), new ECBlocks$1(28, new ECB$1(29, 46), new ECB$1(14, 47)), new ECBlocks$1(30, new ECB$1(49, 24), new ECB$1(10, 25)), new ECBlocks$1(30, new ECB$1(24, 15), new ECB$1(46, 16))),
-      new Version$1(38, Int32Array.from([6, 32, 58, 84, 110, 136, 162]), new ECBlocks$1(30, new ECB$1(4, 122), new ECB$1(18, 123)), new ECBlocks$1(28, new ECB$1(13, 46), new ECB$1(32, 47)), new ECBlocks$1(30, new ECB$1(48, 24), new ECB$1(14, 25)), new ECBlocks$1(30, new ECB$1(42, 15), new ECB$1(32, 16))),
-      new Version$1(39, Int32Array.from([6, 26, 54, 82, 110, 138, 166]), new ECBlocks$1(30, new ECB$1(20, 117), new ECB$1(4, 118)), new ECBlocks$1(28, new ECB$1(40, 47), new ECB$1(7, 48)), new ECBlocks$1(30, new ECB$1(43, 24), new ECB$1(22, 25)), new ECBlocks$1(30, new ECB$1(10, 15), new ECB$1(67, 16))),
-      new Version$1(40, Int32Array.from([6, 30, 58, 86, 114, 142, 170]), new ECBlocks$1(30, new ECB$1(19, 118), new ECB$1(6, 119)), new ECBlocks$1(28, new ECB$1(18, 47), new ECB$1(31, 48)), new ECBlocks$1(30, new ECB$1(34, 24), new ECB$1(34, 25)), new ECBlocks$1(30, new ECB$1(20, 15), new ECB$1(61, 16)))
+  Version.VERSIONS = [
+      new Version(1, new Int32Array(0), new ECBlocks(7, new ECB(1, 19)), new ECBlocks(10, new ECB(1, 16)), new ECBlocks(13, new ECB(1, 13)), new ECBlocks(17, new ECB(1, 9))),
+      new Version(2, Int32Array.from([6, 18]), new ECBlocks(10, new ECB(1, 34)), new ECBlocks(16, new ECB(1, 28)), new ECBlocks(22, new ECB(1, 22)), new ECBlocks(28, new ECB(1, 16))),
+      new Version(3, Int32Array.from([6, 22]), new ECBlocks(15, new ECB(1, 55)), new ECBlocks(26, new ECB(1, 44)), new ECBlocks(18, new ECB(2, 17)), new ECBlocks(22, new ECB(2, 13))),
+      new Version(4, Int32Array.from([6, 26]), new ECBlocks(20, new ECB(1, 80)), new ECBlocks(18, new ECB(2, 32)), new ECBlocks(26, new ECB(2, 24)), new ECBlocks(16, new ECB(4, 9))),
+      new Version(5, Int32Array.from([6, 30]), new ECBlocks(26, new ECB(1, 108)), new ECBlocks(24, new ECB(2, 43)), new ECBlocks(18, new ECB(2, 15), new ECB(2, 16)), new ECBlocks(22, new ECB(2, 11), new ECB(2, 12))),
+      new Version(6, Int32Array.from([6, 34]), new ECBlocks(18, new ECB(2, 68)), new ECBlocks(16, new ECB(4, 27)), new ECBlocks(24, new ECB(4, 19)), new ECBlocks(28, new ECB(4, 15))),
+      new Version(7, Int32Array.from([6, 22, 38]), new ECBlocks(20, new ECB(2, 78)), new ECBlocks(18, new ECB(4, 31)), new ECBlocks(18, new ECB(2, 14), new ECB(4, 15)), new ECBlocks(26, new ECB(4, 13), new ECB(1, 14))),
+      new Version(8, Int32Array.from([6, 24, 42]), new ECBlocks(24, new ECB(2, 97)), new ECBlocks(22, new ECB(2, 38), new ECB(2, 39)), new ECBlocks(22, new ECB(4, 18), new ECB(2, 19)), new ECBlocks(26, new ECB(4, 14), new ECB(2, 15))),
+      new Version(9, Int32Array.from([6, 26, 46]), new ECBlocks(30, new ECB(2, 116)), new ECBlocks(22, new ECB(3, 36), new ECB(2, 37)), new ECBlocks(20, new ECB(4, 16), new ECB(4, 17)), new ECBlocks(24, new ECB(4, 12), new ECB(4, 13))),
+      new Version(10, Int32Array.from([6, 28, 50]), new ECBlocks(18, new ECB(2, 68), new ECB(2, 69)), new ECBlocks(26, new ECB(4, 43), new ECB(1, 44)), new ECBlocks(24, new ECB(6, 19), new ECB(2, 20)), new ECBlocks(28, new ECB(6, 15), new ECB(2, 16))),
+      new Version(11, Int32Array.from([6, 30, 54]), new ECBlocks(20, new ECB(4, 81)), new ECBlocks(30, new ECB(1, 50), new ECB(4, 51)), new ECBlocks(28, new ECB(4, 22), new ECB(4, 23)), new ECBlocks(24, new ECB(3, 12), new ECB(8, 13))),
+      new Version(12, Int32Array.from([6, 32, 58]), new ECBlocks(24, new ECB(2, 92), new ECB(2, 93)), new ECBlocks(22, new ECB(6, 36), new ECB(2, 37)), new ECBlocks(26, new ECB(4, 20), new ECB(6, 21)), new ECBlocks(28, new ECB(7, 14), new ECB(4, 15))),
+      new Version(13, Int32Array.from([6, 34, 62]), new ECBlocks(26, new ECB(4, 107)), new ECBlocks(22, new ECB(8, 37), new ECB(1, 38)), new ECBlocks(24, new ECB(8, 20), new ECB(4, 21)), new ECBlocks(22, new ECB(12, 11), new ECB(4, 12))),
+      new Version(14, Int32Array.from([6, 26, 46, 66]), new ECBlocks(30, new ECB(3, 115), new ECB(1, 116)), new ECBlocks(24, new ECB(4, 40), new ECB(5, 41)), new ECBlocks(20, new ECB(11, 16), new ECB(5, 17)), new ECBlocks(24, new ECB(11, 12), new ECB(5, 13))),
+      new Version(15, Int32Array.from([6, 26, 48, 70]), new ECBlocks(22, new ECB(5, 87), new ECB(1, 88)), new ECBlocks(24, new ECB(5, 41), new ECB(5, 42)), new ECBlocks(30, new ECB(5, 24), new ECB(7, 25)), new ECBlocks(24, new ECB(11, 12), new ECB(7, 13))),
+      new Version(16, Int32Array.from([6, 26, 50, 74]), new ECBlocks(24, new ECB(5, 98), new ECB(1, 99)), new ECBlocks(28, new ECB(7, 45), new ECB(3, 46)), new ECBlocks(24, new ECB(15, 19), new ECB(2, 20)), new ECBlocks(30, new ECB(3, 15), new ECB(13, 16))),
+      new Version(17, Int32Array.from([6, 30, 54, 78]), new ECBlocks(28, new ECB(1, 107), new ECB(5, 108)), new ECBlocks(28, new ECB(10, 46), new ECB(1, 47)), new ECBlocks(28, new ECB(1, 22), new ECB(15, 23)), new ECBlocks(28, new ECB(2, 14), new ECB(17, 15))),
+      new Version(18, Int32Array.from([6, 30, 56, 82]), new ECBlocks(30, new ECB(5, 120), new ECB(1, 121)), new ECBlocks(26, new ECB(9, 43), new ECB(4, 44)), new ECBlocks(28, new ECB(17, 22), new ECB(1, 23)), new ECBlocks(28, new ECB(2, 14), new ECB(19, 15))),
+      new Version(19, Int32Array.from([6, 30, 58, 86]), new ECBlocks(28, new ECB(3, 113), new ECB(4, 114)), new ECBlocks(26, new ECB(3, 44), new ECB(11, 45)), new ECBlocks(26, new ECB(17, 21), new ECB(4, 22)), new ECBlocks(26, new ECB(9, 13), new ECB(16, 14))),
+      new Version(20, Int32Array.from([6, 34, 62, 90]), new ECBlocks(28, new ECB(3, 107), new ECB(5, 108)), new ECBlocks(26, new ECB(3, 41), new ECB(13, 42)), new ECBlocks(30, new ECB(15, 24), new ECB(5, 25)), new ECBlocks(28, new ECB(15, 15), new ECB(10, 16))),
+      new Version(21, Int32Array.from([6, 28, 50, 72, 94]), new ECBlocks(28, new ECB(4, 116), new ECB(4, 117)), new ECBlocks(26, new ECB(17, 42)), new ECBlocks(28, new ECB(17, 22), new ECB(6, 23)), new ECBlocks(30, new ECB(19, 16), new ECB(6, 17))),
+      new Version(22, Int32Array.from([6, 26, 50, 74, 98]), new ECBlocks(28, new ECB(2, 111), new ECB(7, 112)), new ECBlocks(28, new ECB(17, 46)), new ECBlocks(30, new ECB(7, 24), new ECB(16, 25)), new ECBlocks(24, new ECB(34, 13))),
+      new Version(23, Int32Array.from([6, 30, 54, 78, 102]), new ECBlocks(30, new ECB(4, 121), new ECB(5, 122)), new ECBlocks(28, new ECB(4, 47), new ECB(14, 48)), new ECBlocks(30, new ECB(11, 24), new ECB(14, 25)), new ECBlocks(30, new ECB(16, 15), new ECB(14, 16))),
+      new Version(24, Int32Array.from([6, 28, 54, 80, 106]), new ECBlocks(30, new ECB(6, 117), new ECB(4, 118)), new ECBlocks(28, new ECB(6, 45), new ECB(14, 46)), new ECBlocks(30, new ECB(11, 24), new ECB(16, 25)), new ECBlocks(30, new ECB(30, 16), new ECB(2, 17))),
+      new Version(25, Int32Array.from([6, 32, 58, 84, 110]), new ECBlocks(26, new ECB(8, 106), new ECB(4, 107)), new ECBlocks(28, new ECB(8, 47), new ECB(13, 48)), new ECBlocks(30, new ECB(7, 24), new ECB(22, 25)), new ECBlocks(30, new ECB(22, 15), new ECB(13, 16))),
+      new Version(26, Int32Array.from([6, 30, 58, 86, 114]), new ECBlocks(28, new ECB(10, 114), new ECB(2, 115)), new ECBlocks(28, new ECB(19, 46), new ECB(4, 47)), new ECBlocks(28, new ECB(28, 22), new ECB(6, 23)), new ECBlocks(30, new ECB(33, 16), new ECB(4, 17))),
+      new Version(27, Int32Array.from([6, 34, 62, 90, 118]), new ECBlocks(30, new ECB(8, 122), new ECB(4, 123)), new ECBlocks(28, new ECB(22, 45), new ECB(3, 46)), new ECBlocks(30, new ECB(8, 23), new ECB(26, 24)), new ECBlocks(30, new ECB(12, 15), new ECB(28, 16))),
+      new Version(28, Int32Array.from([6, 26, 50, 74, 98, 122]), new ECBlocks(30, new ECB(3, 117), new ECB(10, 118)), new ECBlocks(28, new ECB(3, 45), new ECB(23, 46)), new ECBlocks(30, new ECB(4, 24), new ECB(31, 25)), new ECBlocks(30, new ECB(11, 15), new ECB(31, 16))),
+      new Version(29, Int32Array.from([6, 30, 54, 78, 102, 126]), new ECBlocks(30, new ECB(7, 116), new ECB(7, 117)), new ECBlocks(28, new ECB(21, 45), new ECB(7, 46)), new ECBlocks(30, new ECB(1, 23), new ECB(37, 24)), new ECBlocks(30, new ECB(19, 15), new ECB(26, 16))),
+      new Version(30, Int32Array.from([6, 26, 52, 78, 104, 130]), new ECBlocks(30, new ECB(5, 115), new ECB(10, 116)), new ECBlocks(28, new ECB(19, 47), new ECB(10, 48)), new ECBlocks(30, new ECB(15, 24), new ECB(25, 25)), new ECBlocks(30, new ECB(23, 15), new ECB(25, 16))),
+      new Version(31, Int32Array.from([6, 30, 56, 82, 108, 134]), new ECBlocks(30, new ECB(13, 115), new ECB(3, 116)), new ECBlocks(28, new ECB(2, 46), new ECB(29, 47)), new ECBlocks(30, new ECB(42, 24), new ECB(1, 25)), new ECBlocks(30, new ECB(23, 15), new ECB(28, 16))),
+      new Version(32, Int32Array.from([6, 34, 60, 86, 112, 138]), new ECBlocks(30, new ECB(17, 115)), new ECBlocks(28, new ECB(10, 46), new ECB(23, 47)), new ECBlocks(30, new ECB(10, 24), new ECB(35, 25)), new ECBlocks(30, new ECB(19, 15), new ECB(35, 16))),
+      new Version(33, Int32Array.from([6, 30, 58, 86, 114, 142]), new ECBlocks(30, new ECB(17, 115), new ECB(1, 116)), new ECBlocks(28, new ECB(14, 46), new ECB(21, 47)), new ECBlocks(30, new ECB(29, 24), new ECB(19, 25)), new ECBlocks(30, new ECB(11, 15), new ECB(46, 16))),
+      new Version(34, Int32Array.from([6, 34, 62, 90, 118, 146]), new ECBlocks(30, new ECB(13, 115), new ECB(6, 116)), new ECBlocks(28, new ECB(14, 46), new ECB(23, 47)), new ECBlocks(30, new ECB(44, 24), new ECB(7, 25)), new ECBlocks(30, new ECB(59, 16), new ECB(1, 17))),
+      new Version(35, Int32Array.from([6, 30, 54, 78, 102, 126, 150]), new ECBlocks(30, new ECB(12, 121), new ECB(7, 122)), new ECBlocks(28, new ECB(12, 47), new ECB(26, 48)), new ECBlocks(30, new ECB(39, 24), new ECB(14, 25)), new ECBlocks(30, new ECB(22, 15), new ECB(41, 16))),
+      new Version(36, Int32Array.from([6, 24, 50, 76, 102, 128, 154]), new ECBlocks(30, new ECB(6, 121), new ECB(14, 122)), new ECBlocks(28, new ECB(6, 47), new ECB(34, 48)), new ECBlocks(30, new ECB(46, 24), new ECB(10, 25)), new ECBlocks(30, new ECB(2, 15), new ECB(64, 16))),
+      new Version(37, Int32Array.from([6, 28, 54, 80, 106, 132, 158]), new ECBlocks(30, new ECB(17, 122), new ECB(4, 123)), new ECBlocks(28, new ECB(29, 46), new ECB(14, 47)), new ECBlocks(30, new ECB(49, 24), new ECB(10, 25)), new ECBlocks(30, new ECB(24, 15), new ECB(46, 16))),
+      new Version(38, Int32Array.from([6, 32, 58, 84, 110, 136, 162]), new ECBlocks(30, new ECB(4, 122), new ECB(18, 123)), new ECBlocks(28, new ECB(13, 46), new ECB(32, 47)), new ECBlocks(30, new ECB(48, 24), new ECB(14, 25)), new ECBlocks(30, new ECB(42, 15), new ECB(32, 16))),
+      new Version(39, Int32Array.from([6, 26, 54, 82, 110, 138, 166]), new ECBlocks(30, new ECB(20, 117), new ECB(4, 118)), new ECBlocks(28, new ECB(40, 47), new ECB(7, 48)), new ECBlocks(30, new ECB(43, 24), new ECB(22, 25)), new ECBlocks(30, new ECB(10, 15), new ECB(67, 16))),
+      new Version(40, Int32Array.from([6, 30, 58, 86, 114, 142, 170]), new ECBlocks(30, new ECB(19, 118), new ECB(6, 119)), new ECBlocks(28, new ECB(18, 47), new ECB(31, 48)), new ECBlocks(30, new ECB(34, 24), new ECB(34, 25)), new ECBlocks(30, new ECB(20, 15), new ECB(61, 16)))
   ];
 
   /*
@@ -14353,7 +14354,7 @@
   /**
    * @author Sean Owen
    */
-  class BitMatrixParser$1 {
+  class BitMatrixParser {
       /**
        * @param bitMatrix {@link BitMatrix} to parse
        * @throws FormatException if dimension is not >= 21 and 1 mod 4
@@ -14419,7 +14420,7 @@
           const dimension = this.bitMatrix.getHeight();
           const provisionalVersion = Math.floor((dimension - 17) / 4);
           if (provisionalVersion <= 6) {
-              return Version$1.getVersionForNumber(provisionalVersion);
+              return Version.getVersionForNumber(provisionalVersion);
           }
           // Read top-right version info: 3 wide by 6 tall
           let versionBits = 0;
@@ -14429,7 +14430,7 @@
                   versionBits = this.copyBit(i, j, versionBits);
               }
           }
-          let theParsedVersion = Version$1.decodeVersionInformation(versionBits);
+          let theParsedVersion = Version.decodeVersionInformation(versionBits);
           if (theParsedVersion !== null && theParsedVersion.getDimensionForVersion() === dimension) {
               this.parsedVersion = theParsedVersion;
               return theParsedVersion;
@@ -14441,7 +14442,7 @@
                   versionBits = this.copyBit(i, j, versionBits);
               }
           }
-          theParsedVersion = Version$1.decodeVersionInformation(versionBits);
+          theParsedVersion = Version.decodeVersionInformation(versionBits);
           if (theParsedVersion !== null && theParsedVersion.getDimensionForVersion() === dimension) {
               this.parsedVersion = theParsedVersion;
               return theParsedVersion;
@@ -14516,7 +14517,7 @@
           if (this.parsedFormatInfo === null) {
               return; // We have no format information, and have no data mask
           }
-          const dataMask = DataMask.values[this.parsedFormatInfo.getDataMask()];
+          const dataMask = DataMask.values.get(this.parsedFormatInfo.getDataMask());
           const dimension = this.bitMatrix.getHeight();
           dataMask.unmaskBitMatrix(this.bitMatrix, dimension);
       }
@@ -14569,7 +14570,7 @@
    *
    * @author Sean Owen
    */
-  class DataBlock$1 {
+  class DataBlock {
       constructor(numDataCodewords /*int*/, codewords) {
           this.numDataCodewords = numDataCodewords;
           this.codewords = codewords;
@@ -14605,7 +14606,7 @@
               for (let i = 0; i < ecBlock.getCount(); i++) {
                   const numDataCodewords = ecBlock.getDataCodewords();
                   const numBlockCodewords = ecBlocks.getECCodewordsPerBlock() + numDataCodewords;
-                  result[numResultBlocks++] = new DataBlock$1(numDataCodewords, new Uint8Array(numBlockCodewords));
+                  result[numResultBlocks++] = new DataBlock(numDataCodewords, new Uint8Array(numBlockCodewords));
               }
           }
           // All blocks have the same amount of data, except that the last n
@@ -14687,14 +14688,14 @@
    *
    * @author Sean Owen
    */
-  class Mode$1 {
+  class Mode$2 {
       constructor(value, stringValue, characterCountBitsForVersions, bits /*int*/) {
           this.value = value;
           this.stringValue = stringValue;
           this.characterCountBitsForVersions = characterCountBitsForVersions;
           this.bits = bits;
-          Mode$1.FOR_BITS.set(bits, this);
-          Mode$1.FOR_VALUE.set(value, this);
+          Mode$2.FOR_BITS.set(bits, this);
+          Mode$2.FOR_VALUE.set(value, this);
       }
       /**
        * @param bits four bits encoding a QR Code data mode
@@ -14702,7 +14703,7 @@
        * @throws IllegalArgumentException if bits do not correspond to a known mode
        */
       static forBits(bits /*int*/) {
-          const mode = Mode$1.FOR_BITS.get(bits);
+          const mode = Mode$2.FOR_BITS.get(bits);
           if (undefined === mode) {
               throw new IllegalArgumentException();
           }
@@ -14734,7 +14735,7 @@
           return this.bits;
       }
       equals(o) {
-          if (!(o instanceof Mode$1)) {
+          if (!(o instanceof Mode$2)) {
               return false;
           }
           const other = o;
@@ -14744,19 +14745,19 @@
           return this.stringValue;
       }
   }
-  Mode$1.FOR_BITS = new Map();
-  Mode$1.FOR_VALUE = new Map();
-  Mode$1.TERMINATOR = new Mode$1(ModeValues.TERMINATOR, 'TERMINATOR', Int32Array.from([0, 0, 0]), 0x00); // Not really a mode...
-  Mode$1.NUMERIC = new Mode$1(ModeValues.NUMERIC, 'NUMERIC', Int32Array.from([10, 12, 14]), 0x01);
-  Mode$1.ALPHANUMERIC = new Mode$1(ModeValues.ALPHANUMERIC, 'ALPHANUMERIC', Int32Array.from([9, 11, 13]), 0x02);
-  Mode$1.STRUCTURED_APPEND = new Mode$1(ModeValues.STRUCTURED_APPEND, 'STRUCTURED_APPEND', Int32Array.from([0, 0, 0]), 0x03); // Not supported
-  Mode$1.BYTE = new Mode$1(ModeValues.BYTE, 'BYTE', Int32Array.from([8, 16, 16]), 0x04);
-  Mode$1.ECI = new Mode$1(ModeValues.ECI, 'ECI', Int32Array.from([0, 0, 0]), 0x07); // character counts don't apply
-  Mode$1.KANJI = new Mode$1(ModeValues.KANJI, 'KANJI', Int32Array.from([8, 10, 12]), 0x08);
-  Mode$1.FNC1_FIRST_POSITION = new Mode$1(ModeValues.FNC1_FIRST_POSITION, 'FNC1_FIRST_POSITION', Int32Array.from([0, 0, 0]), 0x05);
-  Mode$1.FNC1_SECOND_POSITION = new Mode$1(ModeValues.FNC1_SECOND_POSITION, 'FNC1_SECOND_POSITION', Int32Array.from([0, 0, 0]), 0x09);
+  Mode$2.FOR_BITS = new Map();
+  Mode$2.FOR_VALUE = new Map();
+  Mode$2.TERMINATOR = new Mode$2(ModeValues.TERMINATOR, 'TERMINATOR', Int32Array.from([0, 0, 0]), 0x00); // Not really a mode...
+  Mode$2.NUMERIC = new Mode$2(ModeValues.NUMERIC, 'NUMERIC', Int32Array.from([10, 12, 14]), 0x01);
+  Mode$2.ALPHANUMERIC = new Mode$2(ModeValues.ALPHANUMERIC, 'ALPHANUMERIC', Int32Array.from([9, 11, 13]), 0x02);
+  Mode$2.STRUCTURED_APPEND = new Mode$2(ModeValues.STRUCTURED_APPEND, 'STRUCTURED_APPEND', Int32Array.from([0, 0, 0]), 0x03); // Not supported
+  Mode$2.BYTE = new Mode$2(ModeValues.BYTE, 'BYTE', Int32Array.from([8, 16, 16]), 0x04);
+  Mode$2.ECI = new Mode$2(ModeValues.ECI, 'ECI', Int32Array.from([0, 0, 0]), 0x07); // character counts don't apply
+  Mode$2.KANJI = new Mode$2(ModeValues.KANJI, 'KANJI', Int32Array.from([8, 10, 12]), 0x08);
+  Mode$2.FNC1_FIRST_POSITION = new Mode$2(ModeValues.FNC1_FIRST_POSITION, 'FNC1_FIRST_POSITION', Int32Array.from([0, 0, 0]), 0x05);
+  Mode$2.FNC1_SECOND_POSITION = new Mode$2(ModeValues.FNC1_SECOND_POSITION, 'FNC1_SECOND_POSITION', Int32Array.from([0, 0, 0]), 0x09);
   /** See GBT 18284-2000; "Hanzi" is a transliteration of this mode name. */
-  Mode$1.HANZI = new Mode$1(ModeValues.HANZI, 'HANZI', Int32Array.from([8, 10, 12]), 0x0D);
+  Mode$2.HANZI = new Mode$2(ModeValues.HANZI, 'HANZI', Int32Array.from([8, 10, 12]), 0x0D);
 
   /*
    * Copyright 2007 ZXing authors
@@ -14802,21 +14803,21 @@
                   // While still another segment to read...
                   if (bits.available() < 4) {
                       // OK, assume we're done. Really, a TERMINATOR mode should have been recorded here
-                      mode = Mode$1.TERMINATOR;
+                      mode = Mode$2.TERMINATOR;
                   }
                   else {
                       const modeBits = bits.readBits(4);
-                      mode = Mode$1.forBits(modeBits); // mode is encoded by 4 bits
+                      mode = Mode$2.forBits(modeBits); // mode is encoded by 4 bits
                   }
                   switch (mode) {
-                      case Mode$1.TERMINATOR:
+                      case Mode$2.TERMINATOR:
                           break;
-                      case Mode$1.FNC1_FIRST_POSITION:
-                      case Mode$1.FNC1_SECOND_POSITION:
+                      case Mode$2.FNC1_FIRST_POSITION:
+                      case Mode$2.FNC1_SECOND_POSITION:
                           // We do little with FNC1 except alter the parsed result a bit according to the spec
                           fc1InEffect = true;
                           break;
-                      case Mode$1.STRUCTURED_APPEND:
+                      case Mode$2.STRUCTURED_APPEND:
                           if (bits.available() < 16) {
                               throw new FormatException();
                           }
@@ -14825,7 +14826,7 @@
                           symbolSequence = bits.readBits(8);
                           parityData = bits.readBits(8);
                           break;
-                      case Mode$1.ECI:
+                      case Mode$2.ECI:
                           // Count doesn't apply to ECI
                           const value = DecodedBitStreamParser$1.parseECIValue(bits);
                           currentCharacterSetECI = CharacterSetECI.getCharacterSetECIByValue(value);
@@ -14833,7 +14834,7 @@
                               throw new FormatException();
                           }
                           break;
-                      case Mode$1.HANZI:
+                      case Mode$2.HANZI:
                           // First handle Hanzi mode which does not start with character count
                           // Chinese mode contains a sub set indicator right after mode indicator
                           const subset = bits.readBits(4);
@@ -14847,16 +14848,16 @@
                           // How many characters will follow, encoded in this mode?
                           const count = bits.readBits(mode.getCharacterCountBits(version));
                           switch (mode) {
-                              case Mode$1.NUMERIC:
+                              case Mode$2.NUMERIC:
                                   DecodedBitStreamParser$1.decodeNumericSegment(bits, result, count);
                                   break;
-                              case Mode$1.ALPHANUMERIC:
+                              case Mode$2.ALPHANUMERIC:
                                   DecodedBitStreamParser$1.decodeAlphanumericSegment(bits, result, count, fc1InEffect);
                                   break;
-                              case Mode$1.BYTE:
+                              case Mode$2.BYTE:
                                   DecodedBitStreamParser$1.decodeByteSegment(bits, result, count, currentCharacterSetECI, byteSegments, hints);
                                   break;
-                              case Mode$1.KANJI:
+                              case Mode$2.KANJI:
                                   DecodedBitStreamParser$1.decodeKanjiSegment(bits, result, count);
                                   break;
                               default:
@@ -14864,7 +14865,7 @@
                           }
                           break;
                   }
-              } while (mode !== Mode$1.TERMINATOR);
+              } while (mode !== Mode$2.TERMINATOR);
           }
           catch (iae /*: IllegalArgumentException*/) {
               // from readBits() calls
@@ -15157,7 +15158,7 @@
    *
    * @author Sean Owen
    */
-  class Decoder$2 {
+  class Decoder {
       constructor() {
           this.rsDecoder = new ReedSolomonDecoder(GenericGF.QR_CODE_FIELD_256);
       }
@@ -15191,7 +15192,7 @@
        */
       decodeBitMatrix(bits, hints) {
           // Construct a parser and read version, error-correction level
-          const parser = new BitMatrixParser$1(bits);
+          const parser = new BitMatrixParser(bits);
           let ex = null;
           try {
               return this.decodeBitMatrixParser(parser, hints);
@@ -15235,7 +15236,7 @@
           // Read codewords
           const codewords = parser.readCodewords();
           // Separate into data blocks
-          const dataBlocks = DataBlock$1.getDataBlocks(codewords, version, ecLevel);
+          const dataBlocks = DataBlock.getDataBlocks(codewords, version, ecLevel);
           // Count total number of data bytes
           let totalBytes = 0;
           for (const dataBlock of dataBlocks) {
@@ -15601,7 +15602,7 @@
    *
    * @author Sean Owen
    */
-  class FinderPattern$1 extends ResultPoint {
+  class FinderPattern extends ResultPoint {
       // FinderPattern(posX: number/*float*/, posY: number/*float*/, estimatedModuleSize: number/*float*/) {
       //   this(posX, posY, estimatedModuleSize, 1)
       // }
@@ -15645,7 +15646,7 @@
           const combinedX = (this.count * this.getX() + j) / combinedCount;
           const combinedY = (this.count * this.getY() + i) / combinedCount;
           const combinedModuleSize = (this.count * this.estimatedModuleSize + newModuleSize) / combinedCount;
-          return new FinderPattern$1(combinedX, combinedY, combinedModuleSize, combinedCount);
+          return new FinderPattern(combinedX, combinedY, combinedModuleSize, combinedCount);
       }
   }
 
@@ -16142,7 +16143,7 @@
                       }
                   }
                   if (!found) {
-                      const point = new FinderPattern$1(centerJ, centerI, estimatedModuleSize);
+                      const point = new FinderPattern(centerJ, centerI, estimatedModuleSize);
                       possibleCenters.push(point);
                       if (this.resultPointCallback !== null && this.resultPointCallback !== undefined) {
                           this.resultPointCallback.foundPossibleResultPoint(point);
@@ -16315,7 +16316,7 @@
    *
    * @author Sean Owen
    */
-  class Detector$2 {
+  class Detector$1 {
       constructor(image) {
           this.image = image;
       }
@@ -16358,8 +16359,8 @@
           if (moduleSize < 1.0) {
               throw new NotFoundException('No pattern found in proccess finder.');
           }
-          const dimension = Detector$2.computeDimension(topLeft, topRight, bottomLeft, moduleSize);
-          const provisionalVersion = Version$1.getProvisionalVersionForDimension(dimension);
+          const dimension = Detector$1.computeDimension(topLeft, topRight, bottomLeft, moduleSize);
+          const provisionalVersion = Version.getProvisionalVersionForDimension(dimension);
           const modulesBetweenFPCenters = provisionalVersion.getDimensionForVersion() - 7;
           let alignmentPattern = null;
           // Anything above version 1 has an alignment pattern
@@ -16387,8 +16388,8 @@
               }
               // If we didn't find alignment pattern... well try anyway without it
           }
-          const transform = Detector$2.createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
-          const bits = Detector$2.sampleGrid(this.image, transform, dimension);
+          const transform = Detector$1.createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
+          const bits = Detector$1.sampleGrid(this.image, transform, dimension);
           let points;
           if (alignmentPattern === null) {
               points = [bottomLeft, topLeft, topRight];
@@ -16628,7 +16629,7 @@
    */
   class QRCodeReader {
       constructor() {
-          this.decoder = new Decoder$2();
+          this.decoder = new Decoder();
       }
       getDecoder() {
           return this.decoder;
@@ -16655,7 +16656,7 @@
               points = QRCodeReader.NO_POINTS;
           }
           else {
-              const detectorResult = new Detector$2(image.getBlackMatrix()).detect(hints);
+              const detectorResult = new Detector$1(image.getBlackMatrix()).detect(hints);
               decoderResult = this.decoder.decodeBitMatrix(detectorResult.getBits(), hints);
               points = detectorResult.getPoints();
           }
@@ -16663,7 +16664,7 @@
           if (decoderResult.getOther() instanceof QRCodeDecoderMetaData) {
               decoderResult.getOther().applyMirroredCorrection(points);
           }
-          const result = new Result(decoderResult.getText(), decoderResult.getRawBytes(), undefined, points, BarcodeFormat$1.QR_CODE, undefined);
+          const result = new Result$1(decoderResult.getText(), decoderResult.getRawBytes(), undefined, points, BarcodeFormat$1.QR_CODE, undefined);
           const byteSegments = decoderResult.getByteSegments();
           if (byteSegments !== null) {
               result.putMetadata(ResultMetadataType$1.BYTE_SEGMENTS, byteSegments);
@@ -17296,7 +17297,7 @@
    * @author dswitkin@google.com (Daniel Switkin)
    * @author Guenther Grau
    */
-  /*public*/ /*final*/ class Detector$3 {
+  /*public*/ /*final*/ class Detector {
       /**
        * <p>Detects a PDF417 Code in an image. Only checks 0 and 180 degree rotations.</p>
        *
@@ -17312,11 +17313,11 @@
           // different binarizers
           // boolean tryHarder = hints != null && hints.containsKey(DecodeHintType.TRY_HARDER);
           let bitMatrix = image.getBlackMatrix();
-          let barcodeCoordinates = Detector$3.detect(multiple, bitMatrix);
+          let barcodeCoordinates = Detector.detect(multiple, bitMatrix);
           if (!barcodeCoordinates.length) {
               bitMatrix = bitMatrix.clone();
               bitMatrix.rotate180();
-              barcodeCoordinates = Detector$3.detect(multiple, bitMatrix);
+              barcodeCoordinates = Detector.detect(multiple, bitMatrix);
           }
           return new PDF417DetectorResult(bitMatrix, barcodeCoordinates);
       }
@@ -17333,7 +17334,7 @@
           let column = 0;
           let foundBarcodeInRow = false;
           while (row < bitMatrix.getHeight()) {
-              const vertices = Detector$3.findVertices(bitMatrix, row, column);
+              const vertices = Detector.findVertices(bitMatrix, row, column);
               if (vertices[0] == null && vertices[3] == null) {
                   if (!foundBarcodeInRow) {
                       // we didn't find any barcode so that's the end of searching
@@ -17351,7 +17352,7 @@
                           row = Math.max(row, Math.trunc(barcodeCoordinate[3].getY()));
                       }
                   }
-                  row += Detector$3.ROW_STEP;
+                  row += Detector.ROW_STEP;
                   continue;
               }
               foundBarcodeInRow = true;
@@ -17392,12 +17393,12 @@
           const width = matrix.getWidth();
           // const result = new ResultPoint[8];
           const result = new Array(8);
-          Detector$3.copyToResult(result, Detector$3.findRowsWithPattern(matrix, height, width, startRow, startColumn, Detector$3.START_PATTERN), Detector$3.INDEXES_START_PATTERN);
+          Detector.copyToResult(result, Detector.findRowsWithPattern(matrix, height, width, startRow, startColumn, Detector.START_PATTERN), Detector.INDEXES_START_PATTERN);
           if (result[4] != null) {
               startColumn = Math.trunc(result[4].getX());
               startRow = Math.trunc(result[4].getY());
           }
-          Detector$3.copyToResult(result, Detector$3.findRowsWithPattern(matrix, height, width, startRow, startColumn, Detector$3.STOP_PATTERN), Detector$3.INDEXES_STOP_PATTERN);
+          Detector.copyToResult(result, Detector.findRowsWithPattern(matrix, height, width, startRow, startColumn, Detector.STOP_PATTERN), Detector.INDEXES_STOP_PATTERN);
           return result;
       }
       static copyToResult(result, tmpResult, destinationIndexes) {
@@ -17410,11 +17411,11 @@
           const result = new Array(4);
           let found = false;
           const counters = new Int32Array(pattern.length);
-          for (; startRow < height; startRow += Detector$3.ROW_STEP) {
-              let loc = Detector$3.findGuardPattern(matrix, startColumn, startRow, width, false, pattern, counters);
+          for (; startRow < height; startRow += Detector.ROW_STEP) {
+              let loc = Detector.findGuardPattern(matrix, startColumn, startRow, width, false, pattern, counters);
               if (loc != null) {
                   while (startRow > 0) {
-                      const previousRowLoc = Detector$3.findGuardPattern(matrix, startColumn, --startRow, width, false, pattern, counters);
+                      const previousRowLoc = Detector.findGuardPattern(matrix, startColumn, --startRow, width, false, pattern, counters);
                       if (previousRowLoc != null) {
                           loc = previousRowLoc;
                       }
@@ -17435,19 +17436,19 @@
               let skippedRowCount = 0;
               let previousRowLoc = Int32Array.from([Math.trunc(result[0].getX()), Math.trunc(result[1].getX())]);
               for (; stopRow < height; stopRow++) {
-                  const loc = Detector$3.findGuardPattern(matrix, previousRowLoc[0], stopRow, width, false, pattern, counters);
+                  const loc = Detector.findGuardPattern(matrix, previousRowLoc[0], stopRow, width, false, pattern, counters);
                   // a found pattern is only considered to belong to the same barcode if the start and end positions
                   // don't differ too much. Pattern drift should be not bigger than two for consecutive rows. With
                   // a higher number of skipped rows drift could be larger. To keep it simple for now, we allow a slightly
                   // larger drift and don't check for skipped rows.
                   if (loc != null &&
-                      Math.abs(previousRowLoc[0] - loc[0]) < Detector$3.MAX_PATTERN_DRIFT &&
-                      Math.abs(previousRowLoc[1] - loc[1]) < Detector$3.MAX_PATTERN_DRIFT) {
+                      Math.abs(previousRowLoc[0] - loc[0]) < Detector.MAX_PATTERN_DRIFT &&
+                      Math.abs(previousRowLoc[1] - loc[1]) < Detector.MAX_PATTERN_DRIFT) {
                       previousRowLoc = loc;
                       skippedRowCount = 0;
                   }
                   else {
-                      if (skippedRowCount > Detector$3.SKIPPED_ROW_COUNT_MAX) {
+                      if (skippedRowCount > Detector.SKIPPED_ROW_COUNT_MAX) {
                           break;
                       }
                       else {
@@ -17459,7 +17460,7 @@
               result[2] = new ResultPoint(previousRowLoc[0], stopRow);
               result[3] = new ResultPoint(previousRowLoc[1], stopRow);
           }
-          if (stopRow - startRow < Detector$3.BARCODE_MIN_HEIGHT) {
+          if (stopRow - startRow < Detector.BARCODE_MIN_HEIGHT) {
               Arrays.fill(result, null);
           }
           return result;
@@ -17479,7 +17480,7 @@
           let patternStart = column;
           let pixelDrift = 0;
           // if there are black pixels left of the current pixel shift to the left, but only for MAX_PIXEL_DRIFT pixels
-          while (matrix.get(patternStart, row) && patternStart > 0 && pixelDrift++ < Detector$3.MAX_PIXEL_DRIFT) {
+          while (matrix.get(patternStart, row) && patternStart > 0 && pixelDrift++ < Detector.MAX_PIXEL_DRIFT) {
               patternStart--;
           }
           let x = patternStart;
@@ -17492,7 +17493,7 @@
               }
               else {
                   if (counterPosition === patternLength - 1) {
-                      if (Detector$3.patternMatchVariance(counters, pattern, Detector$3.MAX_INDIVIDUAL_VARIANCE) < Detector$3.MAX_AVG_VARIANCE) {
+                      if (Detector.patternMatchVariance(counters, pattern, Detector.MAX_INDIVIDUAL_VARIANCE) < Detector.MAX_AVG_VARIANCE) {
                           return new Int32Array([patternStart, x]);
                       }
                       patternStart += counters[0] + counters[1];
@@ -17509,7 +17510,7 @@
               }
           }
           if (counterPosition === patternLength - 1 &&
-              Detector$3.patternMatchVariance(counters, pattern, Detector$3.MAX_INDIVIDUAL_VARIANCE) < Detector$3.MAX_AVG_VARIANCE) {
+              Detector.patternMatchVariance(counters, pattern, Detector.MAX_INDIVIDUAL_VARIANCE) < Detector.MAX_AVG_VARIANCE) {
               return new Int32Array([patternStart, x - 1]);
           }
           return null;
@@ -17556,24 +17557,24 @@
           return totalVariance / total;
       }
   }
-  Detector$3.INDEXES_START_PATTERN = Int32Array.from([0, 4, 1, 5]);
-  Detector$3.INDEXES_STOP_PATTERN = Int32Array.from([6, 2, 7, 3]);
-  Detector$3.MAX_AVG_VARIANCE = 0.42;
-  Detector$3.MAX_INDIVIDUAL_VARIANCE = 0.8;
+  Detector.INDEXES_START_PATTERN = Int32Array.from([0, 4, 1, 5]);
+  Detector.INDEXES_STOP_PATTERN = Int32Array.from([6, 2, 7, 3]);
+  Detector.MAX_AVG_VARIANCE = 0.42;
+  Detector.MAX_INDIVIDUAL_VARIANCE = 0.8;
   // B S B S B S B S Bar/Space pattern
   // 11111111 0 1 0 1 0 1 000
-  Detector$3.START_PATTERN = Int32Array.from([8, 1, 1, 1, 1, 1, 1, 3]);
+  Detector.START_PATTERN = Int32Array.from([8, 1, 1, 1, 1, 1, 1, 3]);
   // 1111111 0 1 000 1 0 1 00 1
-  Detector$3.STOP_PATTERN = Int32Array.from([7, 1, 1, 3, 1, 1, 1, 2, 1]);
-  Detector$3.MAX_PIXEL_DRIFT = 3;
-  Detector$3.MAX_PATTERN_DRIFT = 5;
+  Detector.STOP_PATTERN = Int32Array.from([7, 1, 1, 3, 1, 1, 1, 2, 1]);
+  Detector.MAX_PIXEL_DRIFT = 3;
+  Detector.MAX_PATTERN_DRIFT = 5;
   // if we set the value too low, then we don't detect the correct height of the bar if the start patterns are damaged.
   // if we set the value too high, then we might detect the start pattern from a neighbor barcode.
-  Detector$3.SKIPPED_ROW_COUNT_MAX = 25;
+  Detector.SKIPPED_ROW_COUNT_MAX = 25;
   // A PDF471 barcode should have at least 3 rows, with each row being >= 3 times the module width. Therefore it should be at least
   // 9 pixels tall. To be conservative, we use about half the size to ensure we don't miss it.
-  Detector$3.ROW_STEP = 5;
-  Detector$3.BARCODE_MIN_HEIGHT = 10;
+  Detector.ROW_STEP = 5;
+  Detector.BARCODE_MIN_HEIGHT = 10;
 
   /*
   * Copyright 2012 ZXing authors
@@ -17941,7 +17942,7 @@
    * @author Sean Owen
    * @see com.google.zxing.common.reedsolomon.ReedSolomonDecoder
    */
-  /*public final*/ class ErrorCorrection {
+  /*public final*/ class ErrorCorrection$1 {
       constructor() {
           this.field = ModulusGF.PDF417_GF;
       }
@@ -19186,7 +19187,7 @@
   }
   // flag that the table is ready for use
   PDF417CodewordDecoder.bSymbolTableReady = false;
-  PDF417CodewordDecoder.RATIOS_TABLE = new Array(PDF417Common.SYMBOL_TABLE.length).map(x => x = new Array(PDF417Common.BARS_IN_MODULE));
+  PDF417CodewordDecoder.RATIOS_TABLE = new Array(PDF417Common.SYMBOL_TABLE.length).map(x => new Array(PDF417Common.BARS_IN_MODULE));
 
   /*
    * Copyright 2013 ZXing authors
@@ -19760,7 +19761,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
-  /*private*/ var Mode$2;
+  /*private*/ var Mode$1;
   (function (Mode) {
       Mode[Mode["ALPHA"] = 0] = "ALPHA";
       Mode[Mode["LOWER"] = 1] = "LOWER";
@@ -19768,7 +19769,7 @@
       Mode[Mode["PUNCT"] = 3] = "PUNCT";
       Mode[Mode["ALPHA_SHIFT"] = 4] = "ALPHA_SHIFT";
       Mode[Mode["PUNCT_SHIFT"] = 5] = "PUNCT_SHIFT";
-  })(Mode$2 || (Mode$2 = {}));
+  })(Mode$1 || (Mode$1 = {}));
   /**
    * Indirectly access the global BigInt constructor, it
    * allows browsers that doesn't support BigInt to run
@@ -19823,7 +19824,7 @@
    * @author SITA Lab (kevin.osullivan@sita.aero)
    * @author Guenther Grau
    */
-  /*final*/ class DecodedBitStreamParser$2 {
+  /*final*/ class DecodedBitStreamParser {
       //   private DecodedBitStreamParser() {
       // }
       /**
@@ -19852,36 +19853,36 @@
           let resultMetadata = new PDF417ResultMetadata();
           while (codeIndex < codewords[0]) {
               switch (code) {
-                  case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                      codeIndex = DecodedBitStreamParser$2.textCompaction(codewords, codeIndex, result);
+                  case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                      codeIndex = DecodedBitStreamParser.textCompaction(codewords, codeIndex, result);
                       break;
-                  case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH:
-                  case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH_6:
-                      codeIndex = DecodedBitStreamParser$2.byteCompaction(code, codewords, encoding, codeIndex, result);
+                  case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH:
+                  case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH_6:
+                      codeIndex = DecodedBitStreamParser.byteCompaction(code, codewords, encoding, codeIndex, result);
                       break;
-                  case DecodedBitStreamParser$2.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
+                  case DecodedBitStreamParser.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
                       result.append(/*(char)*/ codewords[codeIndex++]);
                       break;
-                  case DecodedBitStreamParser$2.NUMERIC_COMPACTION_MODE_LATCH:
-                      codeIndex = DecodedBitStreamParser$2.numericCompaction(codewords, codeIndex, result);
+                  case DecodedBitStreamParser.NUMERIC_COMPACTION_MODE_LATCH:
+                      codeIndex = DecodedBitStreamParser.numericCompaction(codewords, codeIndex, result);
                       break;
-                  case DecodedBitStreamParser$2.ECI_CHARSET:
-                      let charsetECI = CharacterSetECI.getCharacterSetECIByValue(codewords[codeIndex++]);
+                  case DecodedBitStreamParser.ECI_CHARSET:
+                      CharacterSetECI.getCharacterSetECIByValue(codewords[codeIndex++]);
                       // encoding = Charset.forName(charsetECI.getName());
                       break;
-                  case DecodedBitStreamParser$2.ECI_GENERAL_PURPOSE:
+                  case DecodedBitStreamParser.ECI_GENERAL_PURPOSE:
                       // Can't do anything with generic ECI; skip its 2 characters
                       codeIndex += 2;
                       break;
-                  case DecodedBitStreamParser$2.ECI_USER_DEFINED:
+                  case DecodedBitStreamParser.ECI_USER_DEFINED:
                       // Can't do anything with user ECI; skip its 1 character
                       codeIndex++;
                       break;
-                  case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
-                      codeIndex = DecodedBitStreamParser$2.decodeMacroBlock(codewords, codeIndex, resultMetadata);
+                  case DecodedBitStreamParser.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
+                      codeIndex = DecodedBitStreamParser.decodeMacroBlock(codewords, codeIndex, resultMetadata);
                       break;
-                  case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
-                  case DecodedBitStreamParser$2.MACRO_PDF417_TERMINATOR:
+                  case DecodedBitStreamParser.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
+                  case DecodedBitStreamParser.MACRO_PDF417_TERMINATOR:
                       // Should not see these outside a macro block
                       throw new FormatException();
                   default:
@@ -19889,7 +19890,7 @@
                       // appeared to be missing the starting mode. In these cases defaulting
                       // to text compaction seems to work.
                       codeIndex--;
-                      codeIndex = DecodedBitStreamParser$2.textCompaction(codewords, codeIndex, result);
+                      codeIndex = DecodedBitStreamParser.textCompaction(codewords, codeIndex, result);
                       break;
               }
               if (codeIndex < codewords.length) {
@@ -19920,67 +19921,67 @@
        */
       // @SuppressWarnings("deprecation")
       static decodeMacroBlock(codewords, codeIndex, resultMetadata) {
-          if (codeIndex + DecodedBitStreamParser$2.NUMBER_OF_SEQUENCE_CODEWORDS > codewords[0]) {
+          if (codeIndex + DecodedBitStreamParser.NUMBER_OF_SEQUENCE_CODEWORDS > codewords[0]) {
               // we must have at least two bytes left for the segment index
               throw FormatException.getFormatInstance();
           }
-          let segmentIndexArray = new Int32Array(DecodedBitStreamParser$2.NUMBER_OF_SEQUENCE_CODEWORDS);
-          for (let i /*int*/ = 0; i < DecodedBitStreamParser$2.NUMBER_OF_SEQUENCE_CODEWORDS; i++, codeIndex++) {
+          let segmentIndexArray = new Int32Array(DecodedBitStreamParser.NUMBER_OF_SEQUENCE_CODEWORDS);
+          for (let i /*int*/ = 0; i < DecodedBitStreamParser.NUMBER_OF_SEQUENCE_CODEWORDS; i++, codeIndex++) {
               segmentIndexArray[i] = codewords[codeIndex];
           }
-          resultMetadata.setSegmentIndex(Integer.parseInt(DecodedBitStreamParser$2.decodeBase900toBase10(segmentIndexArray, DecodedBitStreamParser$2.NUMBER_OF_SEQUENCE_CODEWORDS)));
+          resultMetadata.setSegmentIndex(Integer.parseInt(DecodedBitStreamParser.decodeBase900toBase10(segmentIndexArray, DecodedBitStreamParser.NUMBER_OF_SEQUENCE_CODEWORDS)));
           let fileId = new StringBuilder();
-          codeIndex = DecodedBitStreamParser$2.textCompaction(codewords, codeIndex, fileId);
+          codeIndex = DecodedBitStreamParser.textCompaction(codewords, codeIndex, fileId);
           resultMetadata.setFileId(fileId.toString());
           let optionalFieldsStart = -1;
-          if (codewords[codeIndex] === DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_OPTIONAL_FIELD) {
+          if (codewords[codeIndex] === DecodedBitStreamParser.BEGIN_MACRO_PDF417_OPTIONAL_FIELD) {
               optionalFieldsStart = codeIndex + 1;
           }
           while (codeIndex < codewords[0]) {
               switch (codewords[codeIndex]) {
-                  case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
+                  case DecodedBitStreamParser.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
                       codeIndex++;
                       switch (codewords[codeIndex]) {
-                          case DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_FILE_NAME:
+                          case DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_FILE_NAME:
                               let fileName = new StringBuilder();
-                              codeIndex = DecodedBitStreamParser$2.textCompaction(codewords, codeIndex + 1, fileName);
+                              codeIndex = DecodedBitStreamParser.textCompaction(codewords, codeIndex + 1, fileName);
                               resultMetadata.setFileName(fileName.toString());
                               break;
-                          case DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_SENDER:
+                          case DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_SENDER:
                               let sender = new StringBuilder();
-                              codeIndex = DecodedBitStreamParser$2.textCompaction(codewords, codeIndex + 1, sender);
+                              codeIndex = DecodedBitStreamParser.textCompaction(codewords, codeIndex + 1, sender);
                               resultMetadata.setSender(sender.toString());
                               break;
-                          case DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_ADDRESSEE:
+                          case DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_ADDRESSEE:
                               let addressee = new StringBuilder();
-                              codeIndex = DecodedBitStreamParser$2.textCompaction(codewords, codeIndex + 1, addressee);
+                              codeIndex = DecodedBitStreamParser.textCompaction(codewords, codeIndex + 1, addressee);
                               resultMetadata.setAddressee(addressee.toString());
                               break;
-                          case DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_SEGMENT_COUNT:
+                          case DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_SEGMENT_COUNT:
                               let segmentCount = new StringBuilder();
-                              codeIndex = DecodedBitStreamParser$2.numericCompaction(codewords, codeIndex + 1, segmentCount);
+                              codeIndex = DecodedBitStreamParser.numericCompaction(codewords, codeIndex + 1, segmentCount);
                               resultMetadata.setSegmentCount(Integer.parseInt(segmentCount.toString()));
                               break;
-                          case DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_TIME_STAMP:
+                          case DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_TIME_STAMP:
                               let timestamp = new StringBuilder();
-                              codeIndex = DecodedBitStreamParser$2.numericCompaction(codewords, codeIndex + 1, timestamp);
+                              codeIndex = DecodedBitStreamParser.numericCompaction(codewords, codeIndex + 1, timestamp);
                               resultMetadata.setTimestamp(Long.parseLong(timestamp.toString()));
                               break;
-                          case DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_CHECKSUM:
+                          case DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_CHECKSUM:
                               let checksum = new StringBuilder();
-                              codeIndex = DecodedBitStreamParser$2.numericCompaction(codewords, codeIndex + 1, checksum);
+                              codeIndex = DecodedBitStreamParser.numericCompaction(codewords, codeIndex + 1, checksum);
                               resultMetadata.setChecksum(Integer.parseInt(checksum.toString()));
                               break;
-                          case DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_FILE_SIZE:
+                          case DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_FILE_SIZE:
                               let fileSize = new StringBuilder();
-                              codeIndex = DecodedBitStreamParser$2.numericCompaction(codewords, codeIndex + 1, fileSize);
+                              codeIndex = DecodedBitStreamParser.numericCompaction(codewords, codeIndex + 1, fileSize);
                               resultMetadata.setFileSize(Long.parseLong(fileSize.toString()));
                               break;
                           default:
                               throw FormatException.getFormatInstance();
                       }
                       break;
-                  case DecodedBitStreamParser$2.MACRO_PDF417_TERMINATOR:
+                  case DecodedBitStreamParser.MACRO_PDF417_TERMINATOR:
                       codeIndex++;
                       resultMetadata.setLastSegment(true);
                       break;
@@ -20018,34 +20019,34 @@
           let end = false;
           while ((codeIndex < codewords[0]) && !end) {
               let code = codewords[codeIndex++];
-              if (code < DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH) {
+              if (code < DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH) {
                   textCompactionData[index] = code / 30;
                   textCompactionData[index + 1] = code % 30;
                   index += 2;
               }
               else {
                   switch (code) {
-                      case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
+                      case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
                           // reinitialize text compaction mode to alpha sub mode
-                          textCompactionData[index++] = DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH;
+                          textCompactionData[index++] = DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH;
                           break;
-                      case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH:
-                      case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH_6:
-                      case DecodedBitStreamParser$2.NUMERIC_COMPACTION_MODE_LATCH:
-                      case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
-                      case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
-                      case DecodedBitStreamParser$2.MACRO_PDF417_TERMINATOR:
+                      case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH:
+                      case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH_6:
+                      case DecodedBitStreamParser.NUMERIC_COMPACTION_MODE_LATCH:
+                      case DecodedBitStreamParser.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
+                      case DecodedBitStreamParser.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
+                      case DecodedBitStreamParser.MACRO_PDF417_TERMINATOR:
                           codeIndex--;
                           end = true;
                           break;
-                      case DecodedBitStreamParser$2.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
+                      case DecodedBitStreamParser.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
                           // The Mode Shift codeword 913 shall cause a temporary
                           // switch from Text Compaction mode to Byte Compaction mode.
                           // This switch shall be in effect for only the next codeword,
                           // after which the mode shall revert to the prevailing sub-mode
                           // of the Text Compaction mode. Codeword 913 is only available
                           // in Text Compaction mode; its use is described in 5.4.2.4.
-                          textCompactionData[index] = DecodedBitStreamParser$2.MODE_SHIFT_TO_BYTE_COMPACTION_MODE;
+                          textCompactionData[index] = DecodedBitStreamParser.MODE_SHIFT_TO_BYTE_COMPACTION_MODE;
                           code = codewords[codeIndex++];
                           byteCompactionData[index] = code;
                           index++;
@@ -20053,7 +20054,7 @@
                   }
               }
           }
-          DecodedBitStreamParser$2.decodeTextCompaction(textCompactionData, byteCompactionData, index, result);
+          DecodedBitStreamParser.decodeTextCompaction(textCompactionData, byteCompactionData, index, result);
           return codeIndex;
       }
       /**
@@ -20077,14 +20078,14 @@
           // The default compaction mode for PDF417 in effect at the start of each symbol shall always be Text
           // Compaction mode Alpha sub-mode (alphabetic: uppercase). A latch codeword from another mode to the Text
           // Compaction mode shall always switch to the Text Compaction Alpha sub-mode.
-          let subMode = Mode$2.ALPHA;
-          let priorToShiftMode = Mode$2.ALPHA;
+          let subMode = Mode$1.ALPHA;
+          let priorToShiftMode = Mode$1.ALPHA;
           let i = 0;
           while (i < length) {
               let subModeCh = textCompactionData[i];
               let ch = /*char*/ '';
               switch (subMode) {
-                  case Mode$2.ALPHA:
+                  case Mode$1.ALPHA:
                       // Alpha (alphabetic: uppercase)
                       if (subModeCh < 26) {
                           // Upper case Alpha Character
@@ -20096,27 +20097,27 @@
                               case 26:
                                   ch = ' ';
                                   break;
-                              case DecodedBitStreamParser$2.LL:
-                                  subMode = Mode$2.LOWER;
+                              case DecodedBitStreamParser.LL:
+                                  subMode = Mode$1.LOWER;
                                   break;
-                              case DecodedBitStreamParser$2.ML:
-                                  subMode = Mode$2.MIXED;
+                              case DecodedBitStreamParser.ML:
+                                  subMode = Mode$1.MIXED;
                                   break;
-                              case DecodedBitStreamParser$2.PS:
+                              case DecodedBitStreamParser.PS:
                                   // Shift to punctuation
                                   priorToShiftMode = subMode;
-                                  subMode = Mode$2.PUNCT_SHIFT;
+                                  subMode = Mode$1.PUNCT_SHIFT;
                                   break;
-                              case DecodedBitStreamParser$2.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
+                              case DecodedBitStreamParser.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
                                   result.append(/*(char)*/ byteCompactionData[i]);
                                   break;
-                              case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                                  subMode = Mode$2.ALPHA;
+                              case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                                  subMode = Mode$1.ALPHA;
                                   break;
                           }
                       }
                       break;
-                  case Mode$2.LOWER:
+                  case Mode$1.LOWER:
                       // Lower (alphabetic: lowercase)
                       if (subModeCh < 26) {
                           ch = /*(char)('a' + subModeCh)*/ String.fromCharCode(97 + subModeCh);
@@ -20126,82 +20127,82 @@
                               case 26:
                                   ch = ' ';
                                   break;
-                              case DecodedBitStreamParser$2.AS:
+                              case DecodedBitStreamParser.AS:
                                   // Shift to alpha
                                   priorToShiftMode = subMode;
-                                  subMode = Mode$2.ALPHA_SHIFT;
+                                  subMode = Mode$1.ALPHA_SHIFT;
                                   break;
-                              case DecodedBitStreamParser$2.ML:
-                                  subMode = Mode$2.MIXED;
+                              case DecodedBitStreamParser.ML:
+                                  subMode = Mode$1.MIXED;
                                   break;
-                              case DecodedBitStreamParser$2.PS:
+                              case DecodedBitStreamParser.PS:
                                   // Shift to punctuation
                                   priorToShiftMode = subMode;
-                                  subMode = Mode$2.PUNCT_SHIFT;
+                                  subMode = Mode$1.PUNCT_SHIFT;
                                   break;
-                              case DecodedBitStreamParser$2.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
+                              case DecodedBitStreamParser.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
                                   // TODO Does this need to use the current character encoding? See other occurrences below
                                   result.append(/*(char)*/ byteCompactionData[i]);
                                   break;
-                              case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                                  subMode = Mode$2.ALPHA;
+                              case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                                  subMode = Mode$1.ALPHA;
                                   break;
                           }
                       }
                       break;
-                  case Mode$2.MIXED:
+                  case Mode$1.MIXED:
                       // Mixed (punctuation: e)
-                      if (subModeCh < DecodedBitStreamParser$2.PL) {
-                          ch = DecodedBitStreamParser$2.MIXED_CHARS[subModeCh];
+                      if (subModeCh < DecodedBitStreamParser.PL) {
+                          ch = DecodedBitStreamParser.MIXED_CHARS[subModeCh];
                       }
                       else {
                           switch (subModeCh) {
-                              case DecodedBitStreamParser$2.PL:
-                                  subMode = Mode$2.PUNCT;
+                              case DecodedBitStreamParser.PL:
+                                  subMode = Mode$1.PUNCT;
                                   break;
                               case 26:
                                   ch = ' ';
                                   break;
-                              case DecodedBitStreamParser$2.LL:
-                                  subMode = Mode$2.LOWER;
+                              case DecodedBitStreamParser.LL:
+                                  subMode = Mode$1.LOWER;
                                   break;
-                              case DecodedBitStreamParser$2.AL:
-                                  subMode = Mode$2.ALPHA;
+                              case DecodedBitStreamParser.AL:
+                                  subMode = Mode$1.ALPHA;
                                   break;
-                              case DecodedBitStreamParser$2.PS:
+                              case DecodedBitStreamParser.PS:
                                   // Shift to punctuation
                                   priorToShiftMode = subMode;
-                                  subMode = Mode$2.PUNCT_SHIFT;
+                                  subMode = Mode$1.PUNCT_SHIFT;
                                   break;
-                              case DecodedBitStreamParser$2.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
+                              case DecodedBitStreamParser.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
                                   result.append(/*(char)*/ byteCompactionData[i]);
                                   break;
-                              case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                                  subMode = Mode$2.ALPHA;
+                              case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                                  subMode = Mode$1.ALPHA;
                                   break;
                           }
                       }
                       break;
-                  case Mode$2.PUNCT:
+                  case Mode$1.PUNCT:
                       // Punctuation
-                      if (subModeCh < DecodedBitStreamParser$2.PAL) {
-                          ch = DecodedBitStreamParser$2.PUNCT_CHARS[subModeCh];
+                      if (subModeCh < DecodedBitStreamParser.PAL) {
+                          ch = DecodedBitStreamParser.PUNCT_CHARS[subModeCh];
                       }
                       else {
                           switch (subModeCh) {
-                              case DecodedBitStreamParser$2.PAL:
-                                  subMode = Mode$2.ALPHA;
+                              case DecodedBitStreamParser.PAL:
+                                  subMode = Mode$1.ALPHA;
                                   break;
-                              case DecodedBitStreamParser$2.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
+                              case DecodedBitStreamParser.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
                                   result.append(/*(char)*/ byteCompactionData[i]);
                                   break;
-                              case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                                  subMode = Mode$2.ALPHA;
+                              case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                                  subMode = Mode$1.ALPHA;
                                   break;
                           }
                       }
                       break;
-                  case Mode$2.ALPHA_SHIFT:
+                  case Mode$1.ALPHA_SHIFT:
                       // Restore sub-mode
                       subMode = priorToShiftMode;
                       if (subModeCh < 26) {
@@ -20212,30 +20213,30 @@
                               case 26:
                                   ch = ' ';
                                   break;
-                              case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                                  subMode = Mode$2.ALPHA;
+                              case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                                  subMode = Mode$1.ALPHA;
                                   break;
                           }
                       }
                       break;
-                  case Mode$2.PUNCT_SHIFT:
+                  case Mode$1.PUNCT_SHIFT:
                       // Restore sub-mode
                       subMode = priorToShiftMode;
-                      if (subModeCh < DecodedBitStreamParser$2.PAL) {
-                          ch = DecodedBitStreamParser$2.PUNCT_CHARS[subModeCh];
+                      if (subModeCh < DecodedBitStreamParser.PAL) {
+                          ch = DecodedBitStreamParser.PUNCT_CHARS[subModeCh];
                       }
                       else {
                           switch (subModeCh) {
-                              case DecodedBitStreamParser$2.PAL:
-                                  subMode = Mode$2.ALPHA;
+                              case DecodedBitStreamParser.PAL:
+                                  subMode = Mode$1.ALPHA;
                                   break;
-                              case DecodedBitStreamParser$2.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
+                              case DecodedBitStreamParser.MODE_SHIFT_TO_BYTE_COMPACTION_MODE:
                                   // PS before Shift-to-Byte is used as a padding character,
                                   // see 5.4.2.4 of the specification
                                   result.append(/*(char)*/ byteCompactionData[i]);
                                   break;
-                              case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                                  subMode = Mode$2.ALPHA;
+                              case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                                  subMode = Mode$1.ALPHA;
                                   break;
                           }
                       }
@@ -20267,7 +20268,7 @@
           let value = /*long*/ 0;
           let end = false;
           switch (mode) {
-              case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH:
+              case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH:
                   // Total number of Byte Compaction characters to be encoded
                   // is not a multiple of 6
                   let byteCompactedCodewords = new Int32Array(6);
@@ -20279,13 +20280,13 @@
                       nextCode = codewords[codeIndex++];
                       // perhaps it should be ok to check only nextCode >= TEXT_COMPACTION_MODE_LATCH
                       switch (nextCode) {
-                          case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                          case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH:
-                          case DecodedBitStreamParser$2.NUMERIC_COMPACTION_MODE_LATCH:
-                          case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH_6:
-                          case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
-                          case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
-                          case DecodedBitStreamParser$2.MACRO_PDF417_TERMINATOR:
+                          case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                          case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH:
+                          case DecodedBitStreamParser.NUMERIC_COMPACTION_MODE_LATCH:
+                          case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH_6:
+                          case DecodedBitStreamParser.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
+                          case DecodedBitStreamParser.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
+                          case DecodedBitStreamParser.MACRO_PDF417_TERMINATOR:
                               codeIndex--;
                               end = true;
                               break;
@@ -20307,7 +20308,7 @@
                       }
                   }
                   // if the end of all codewords is reached the last codeword needs to be added
-                  if (codeIndex === codewords[0] && nextCode < DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH) {
+                  if (codeIndex === codewords[0] && nextCode < DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH) {
                       byteCompactedCodewords[count++] = nextCode;
                   }
                   // If Byte Compaction mode is invoked with codeword 901,
@@ -20317,25 +20318,25 @@
                       decodedBytes.write(/*(byte)*/ byteCompactedCodewords[i]);
                   }
                   break;
-              case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH_6:
+              case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH_6:
                   // Total number of Byte Compaction characters to be encoded
                   // is an integer multiple of 6
                   while (codeIndex < codewords[0] && !end) {
                       let code = codewords[codeIndex++];
-                      if (code < DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH) {
+                      if (code < DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH) {
                           count++;
                           // Base 900
                           value = 900 * value + code;
                       }
                       else {
                           switch (code) {
-                              case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                              case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH:
-                              case DecodedBitStreamParser$2.NUMERIC_COMPACTION_MODE_LATCH:
-                              case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH_6:
-                              case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
-                              case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
-                              case DecodedBitStreamParser$2.MACRO_PDF417_TERMINATOR:
+                              case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                              case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH:
+                              case DecodedBitStreamParser.NUMERIC_COMPACTION_MODE_LATCH:
+                              case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH_6:
+                              case DecodedBitStreamParser.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
+                              case DecodedBitStreamParser.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
+                              case DecodedBitStreamParser.MACRO_PDF417_TERMINATOR:
                                   codeIndex--;
                                   end = true;
                                   break;
@@ -20373,35 +20374,35 @@
       static numericCompaction(codewords, codeIndex /*int*/, result) {
           let count = 0;
           let end = false;
-          let numericCodewords = new Int32Array(DecodedBitStreamParser$2.MAX_NUMERIC_CODEWORDS);
+          let numericCodewords = new Int32Array(DecodedBitStreamParser.MAX_NUMERIC_CODEWORDS);
           while (codeIndex < codewords[0] && !end) {
               let code = codewords[codeIndex++];
               if (codeIndex === codewords[0]) {
                   end = true;
               }
-              if (code < DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH) {
+              if (code < DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH) {
                   numericCodewords[count] = code;
                   count++;
               }
               else {
                   switch (code) {
-                      case DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH:
-                      case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH:
-                      case DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH_6:
-                      case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
-                      case DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
-                      case DecodedBitStreamParser$2.MACRO_PDF417_TERMINATOR:
+                      case DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH:
+                      case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH:
+                      case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH_6:
+                      case DecodedBitStreamParser.BEGIN_MACRO_PDF417_CONTROL_BLOCK:
+                      case DecodedBitStreamParser.BEGIN_MACRO_PDF417_OPTIONAL_FIELD:
+                      case DecodedBitStreamParser.MACRO_PDF417_TERMINATOR:
                           codeIndex--;
                           end = true;
                           break;
                   }
               }
-              if ((count % DecodedBitStreamParser$2.MAX_NUMERIC_CODEWORDS === 0 || code === DecodedBitStreamParser$2.NUMERIC_COMPACTION_MODE_LATCH || end) && count > 0) {
+              if ((count % DecodedBitStreamParser.MAX_NUMERIC_CODEWORDS === 0 || code === DecodedBitStreamParser.NUMERIC_COMPACTION_MODE_LATCH || end) && count > 0) {
                   // Re-invoking Numeric Compaction mode (by using codeword 902
                   // while in Numeric Compaction mode) serves  to terminate the
                   // current Numeric Compaction mode grouping as described in 5.4.4.2,
                   // and then to start a new one grouping.
-                  result.append(DecodedBitStreamParser$2.decodeBase900toBase10(numericCodewords, count));
+                  result.append(DecodedBitStreamParser.decodeBase900toBase10(numericCodewords, count));
                   count = 0;
               }
           }
@@ -20454,7 +20455,7 @@
       static decodeBase900toBase10(codewords, count) {
           let result = createBigInt(0);
           for (let i /*int*/ = 0; i < count; i++) {
-              result += DecodedBitStreamParser$2.EXP900[count - i - 1] * createBigInt(codewords[i]);
+              result += DecodedBitStreamParser.EXP900[count - i - 1] * createBigInt(codewords[i]);
           }
           let resultString = result.toString();
           if (resultString.charAt(0) !== '1') {
@@ -20463,40 +20464,40 @@
           return resultString.substring(1);
       }
   }
-  DecodedBitStreamParser$2.TEXT_COMPACTION_MODE_LATCH = 900;
-  DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH = 901;
-  DecodedBitStreamParser$2.NUMERIC_COMPACTION_MODE_LATCH = 902;
-  DecodedBitStreamParser$2.BYTE_COMPACTION_MODE_LATCH_6 = 924;
-  DecodedBitStreamParser$2.ECI_USER_DEFINED = 925;
-  DecodedBitStreamParser$2.ECI_GENERAL_PURPOSE = 926;
-  DecodedBitStreamParser$2.ECI_CHARSET = 927;
-  DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_CONTROL_BLOCK = 928;
-  DecodedBitStreamParser$2.BEGIN_MACRO_PDF417_OPTIONAL_FIELD = 923;
-  DecodedBitStreamParser$2.MACRO_PDF417_TERMINATOR = 922;
-  DecodedBitStreamParser$2.MODE_SHIFT_TO_BYTE_COMPACTION_MODE = 913;
-  DecodedBitStreamParser$2.MAX_NUMERIC_CODEWORDS = 15;
-  DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_FILE_NAME = 0;
-  DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_SEGMENT_COUNT = 1;
-  DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_TIME_STAMP = 2;
-  DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_SENDER = 3;
-  DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_ADDRESSEE = 4;
-  DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_FILE_SIZE = 5;
-  DecodedBitStreamParser$2.MACRO_PDF417_OPTIONAL_FIELD_CHECKSUM = 6;
-  DecodedBitStreamParser$2.PL = 25;
-  DecodedBitStreamParser$2.LL = 27;
-  DecodedBitStreamParser$2.AS = 27;
-  DecodedBitStreamParser$2.ML = 28;
-  DecodedBitStreamParser$2.AL = 28;
-  DecodedBitStreamParser$2.PS = 29;
-  DecodedBitStreamParser$2.PAL = 29;
-  DecodedBitStreamParser$2.PUNCT_CHARS = ';<>@[\\]_`~!\r\t,:\n-.$/"|*()?{}\'';
-  DecodedBitStreamParser$2.MIXED_CHARS = '0123456789&\r\t,:#-.$/+%*=^';
+  DecodedBitStreamParser.TEXT_COMPACTION_MODE_LATCH = 900;
+  DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH = 901;
+  DecodedBitStreamParser.NUMERIC_COMPACTION_MODE_LATCH = 902;
+  DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH_6 = 924;
+  DecodedBitStreamParser.ECI_USER_DEFINED = 925;
+  DecodedBitStreamParser.ECI_GENERAL_PURPOSE = 926;
+  DecodedBitStreamParser.ECI_CHARSET = 927;
+  DecodedBitStreamParser.BEGIN_MACRO_PDF417_CONTROL_BLOCK = 928;
+  DecodedBitStreamParser.BEGIN_MACRO_PDF417_OPTIONAL_FIELD = 923;
+  DecodedBitStreamParser.MACRO_PDF417_TERMINATOR = 922;
+  DecodedBitStreamParser.MODE_SHIFT_TO_BYTE_COMPACTION_MODE = 913;
+  DecodedBitStreamParser.MAX_NUMERIC_CODEWORDS = 15;
+  DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_FILE_NAME = 0;
+  DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_SEGMENT_COUNT = 1;
+  DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_TIME_STAMP = 2;
+  DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_SENDER = 3;
+  DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_ADDRESSEE = 4;
+  DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_FILE_SIZE = 5;
+  DecodedBitStreamParser.MACRO_PDF417_OPTIONAL_FIELD_CHECKSUM = 6;
+  DecodedBitStreamParser.PL = 25;
+  DecodedBitStreamParser.LL = 27;
+  DecodedBitStreamParser.AS = 27;
+  DecodedBitStreamParser.ML = 28;
+  DecodedBitStreamParser.AL = 28;
+  DecodedBitStreamParser.PS = 29;
+  DecodedBitStreamParser.PAL = 29;
+  DecodedBitStreamParser.PUNCT_CHARS = ';<>@[\\]_`~!\r\t,:\n-.$/"|*()?{}\'';
+  DecodedBitStreamParser.MIXED_CHARS = '0123456789&\r\t,:#-.$/+%*=^';
   /**
    * Table containing values for the exponent of 900.
    * This is used in the numeric compaction decode algorithm.
    */
-  DecodedBitStreamParser$2.EXP900 = getBigIntConstructor() ? getEXP900() : [];
-  DecodedBitStreamParser$2.NUMBER_OF_SEQUENCE_CODEWORDS = 2;
+  DecodedBitStreamParser.EXP900 = getBigIntConstructor() ? getEXP900() : [];
+  DecodedBitStreamParser.NUMBER_OF_SEQUENCE_CODEWORDS = 2;
 
   /*
   * Copyright 2013 ZXing authors
@@ -21005,7 +21006,7 @@
           let correctedErrorsCount = PDF417ScanningDecoder.correctErrors(codewords, erasures, numECCodewords);
           PDF417ScanningDecoder.verifyCodewordCount(codewords, numECCodewords);
           // Decode the codewords
-          let decoderResult = DecodedBitStreamParser$2.decode(codewords, '' + ecLevel);
+          let decoderResult = DecodedBitStreamParser.decode(codewords, '' + ecLevel);
           decoderResult.setErrorsCorrected(correctedErrorsCount);
           decoderResult.setErasures(erasures.length);
           return decoderResult;
@@ -21108,7 +21109,7 @@
   /*final*/ PDF417ScanningDecoder.CODEWORD_SKEW_SIZE = 2;
   /*final*/ PDF417ScanningDecoder.MAX_ERRORS = 3;
   /*final*/ PDF417ScanningDecoder.MAX_EC_CODEWORDS = 512;
-  /*final*/ PDF417ScanningDecoder.errorCorrection = new ErrorCorrection();
+  /*final*/ PDF417ScanningDecoder.errorCorrection = new ErrorCorrection$1();
 
   /*
    * Copyright 2009 ZXing authors
@@ -21181,10 +21182,10 @@
        */
       static decode(image, hints, multiple) {
           const results = new Array();
-          const detectorResult = Detector$3.detectMultiple(image, hints, multiple);
+          const detectorResult = Detector.detectMultiple(image, hints, multiple);
           for (const points of detectorResult.getPoints()) {
               const decoderResult = PDF417ScanningDecoder.decode(detectorResult.getBits(), points[4], points[5], points[6], points[7], PDF417Reader.getMinCodewordWidth(points), PDF417Reader.getMaxCodewordWidth(points));
-              const result = new Result(decoderResult.getText(), decoderResult.getRawBytes(), undefined, points, BarcodeFormat$1.PDF_417);
+              const result = new Result$1(decoderResult.getText(), decoderResult.getRawBytes(), undefined, points, BarcodeFormat$1.PDF_417);
               result.putMetadata(ResultMetadataType$1.ERROR_CORRECTION_LEVEL, decoderResult.getECLevel());
               const pdf417ResultMetadata = decoderResult.getOther();
               if (pdf417ResultMetadata != null) {
@@ -22529,7 +22530,7 @@
    * @author satorux@google.com (Satoru Takabayashi) - creator
    * @author dswitkin@google.com (Daniel Switkin) - ported from C++
    */
-  class Encoder {
+  class Encoder$1 {
       // TYPESCRIPTPORT: changed to UTF8, the default for js
       constructor() { }
       // The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
@@ -22552,7 +22553,7 @@
       // }
       static encode(content, ecLevel, hints = null) {
           // Determine what character encoding has been specified by the caller, if any
-          let encoding = Encoder.DEFAULT_BYTE_MODE_ENCODING;
+          let encoding = Encoder$1.DEFAULT_BYTE_MODE_ENCODING;
           const hasEncodingHint = hints !== null && undefined !== hints.get(EncodeHintType$1.CHARACTER_SET);
           if (hasEncodingHint) {
               encoding = hints.get(EncodeHintType$1.CHARACTER_SET).toString();
@@ -22564,7 +22565,7 @@
           // length, as well as "header" segments like an ECI segment.
           const headerBits = new BitArray();
           // Append ECI segment if applicable
-          if (mode === Mode$1.BYTE && (hasEncodingHint || Encoder.DEFAULT_BYTE_MODE_ENCODING !== encoding)) {
+          if (mode === Mode$2.BYTE && (hasEncodingHint || Encoder$1.DEFAULT_BYTE_MODE_ENCODING !== encoding)) {
               const eci = CharacterSetECI.getCharacterSetECIByName(encoding);
               if (eci !== undefined) {
                   this.appendECI(eci, headerBits);
@@ -22579,7 +22580,7 @@
           let version;
           if (hints !== null && undefined !== hints.get(EncodeHintType$1.QR_VERSION)) {
               const versionNumber = Number.parseInt(hints.get(EncodeHintType$1.QR_VERSION).toString(), 10);
-              version = Version$1.getVersionForNumber(versionNumber);
+              version = Version.getVersionForNumber(versionNumber);
               const bitsNeeded = this.calculateBitsNeeded(mode, headerBits, dataBits, version);
               if (!this.willFit(bitsNeeded, version, ecLevel)) {
                   throw new WriterException('Data too big for requested version');
@@ -22591,7 +22592,7 @@
           const headerAndDataBits = new BitArray();
           headerAndDataBits.appendBitArray(headerBits);
           // Find "length" of main segment and write it
-          const numLetters = mode === Mode$1.BYTE ? dataBits.getSizeInBytes() : content.length;
+          const numLetters = mode === Mode$2.BYTE ? dataBits.getSizeInBytes() : content.length;
           this.appendLengthInfo(numLetters, version, mode, headerAndDataBits);
           // Put data together into the overall payload
           headerAndDataBits.appendBitArray(dataBits);
@@ -22624,7 +22625,7 @@
           // Hard part: need to know version to know how many bits length takes. But need to know how many
           // bits it takes to know version. First we take a guess at version by assuming version will be
           // the minimum, 1:
-          const provisionalBitsNeeded = this.calculateBitsNeeded(mode, headerBits, dataBits, Version$1.getVersionForNumber(1));
+          const provisionalBitsNeeded = this.calculateBitsNeeded(mode, headerBits, dataBits, Version.getVersionForNumber(1));
           const provisionalVersion = this.chooseVersion(provisionalBitsNeeded, ecLevel);
           // Use that guess to calculate the right version. I am still not sure this works in 100% of cases.
           const bitsNeeded = this.calculateBitsNeeded(mode, headerBits, dataBits, provisionalVersion);
@@ -22638,8 +22639,8 @@
        *  -1 if there is no corresponding code in the table.
        */
       static getAlphanumericCode(code /*int*/) {
-          if (code < Encoder.ALPHANUMERIC_TABLE.length) {
-              return Encoder.ALPHANUMERIC_TABLE[code];
+          if (code < Encoder$1.ALPHANUMERIC_TABLE.length) {
+              return Encoder$1.ALPHANUMERIC_TABLE[code];
           }
           return -1;
       }
@@ -22653,29 +22654,29 @@
       static chooseMode(content, encoding = null) {
           if (CharacterSetECI.SJIS.getName() === encoding && this.isOnlyDoubleByteKanji(content)) {
               // Choose Kanji mode if all input are double-byte characters
-              return Mode$1.KANJI;
+              return Mode$2.KANJI;
           }
           let hasNumeric = false;
           let hasAlphanumeric = false;
           for (let i = 0, length = content.length; i < length; ++i) {
               const c = content.charAt(i);
-              if (Encoder.isDigit(c)) {
+              if (Encoder$1.isDigit(c)) {
                   hasNumeric = true;
               }
               else if (this.getAlphanumericCode(c.charCodeAt(0)) !== -1) {
                   hasAlphanumeric = true;
               }
               else {
-                  return Mode$1.BYTE;
+                  return Mode$2.BYTE;
               }
           }
           if (hasAlphanumeric) {
-              return Mode$1.ALPHANUMERIC;
+              return Mode$2.ALPHANUMERIC;
           }
           if (hasNumeric) {
-              return Mode$1.NUMERIC;
+              return Mode$2.NUMERIC;
           }
-          return Mode$1.BYTE;
+          return Mode$2.BYTE;
       }
       static isOnlyDoubleByteKanji(content) {
           let bytes;
@@ -22713,8 +22714,8 @@
       }
       static chooseVersion(numInputBits /*int*/, ecLevel) {
           for (let versionNum = 1; versionNum <= 40; versionNum++) {
-              const version = Version$1.getVersionForNumber(versionNum);
-              if (Encoder.willFit(numInputBits, version, ecLevel)) {
+              const version = Version.getVersionForNumber(versionNum);
+              if (Encoder$1.willFit(numInputBits, version, ecLevel)) {
                   return version;
               }
           }
@@ -22835,11 +22836,11 @@
           for (let i = 0; i < numRSBlocks; ++i) {
               const numDataBytesInBlock = new Int32Array(1);
               const numEcBytesInBlock = new Int32Array(1);
-              Encoder.getNumDataBytesAndNumECBytesForBlockID(numTotalBytes, numDataBytes, numRSBlocks, i, numDataBytesInBlock, numEcBytesInBlock);
+              Encoder$1.getNumDataBytesAndNumECBytesForBlockID(numTotalBytes, numDataBytes, numRSBlocks, i, numDataBytesInBlock, numEcBytesInBlock);
               const size = numDataBytesInBlock[0];
               const dataBytes = new Uint8Array(size);
               bits.toBytes(8 * dataBytesOffset, dataBytes, 0, size);
-              const ecBytes = Encoder.generateECBytes(dataBytes, numEcBytesInBlock[0]);
+              const ecBytes = Encoder$1.generateECBytes(dataBytes, numEcBytesInBlock[0]);
               blocks.push(new BlockPair(dataBytes, ecBytes));
               maxNumDataBytes = Math.max(maxNumDataBytes, size);
               maxNumEcBytes = Math.max(maxNumEcBytes, ecBytes.length);
@@ -22907,17 +22908,17 @@
        */
       static appendBytes(content, mode, bits, encoding) {
           switch (mode) {
-              case Mode$1.NUMERIC:
-                  Encoder.appendNumericBytes(content, bits);
+              case Mode$2.NUMERIC:
+                  Encoder$1.appendNumericBytes(content, bits);
                   break;
-              case Mode$1.ALPHANUMERIC:
-                  Encoder.appendAlphanumericBytes(content, bits);
+              case Mode$2.ALPHANUMERIC:
+                  Encoder$1.appendAlphanumericBytes(content, bits);
                   break;
-              case Mode$1.BYTE:
-                  Encoder.append8BitBytes(content, bits, encoding);
+              case Mode$2.BYTE:
+                  Encoder$1.append8BitBytes(content, bits, encoding);
                   break;
-              case Mode$1.KANJI:
-                  Encoder.appendKanjiBytes(content, bits);
+              case Mode$2.KANJI:
+                  Encoder$1.appendKanjiBytes(content, bits);
                   break;
               default:
                   throw new WriterException('Invalid mode: ' + mode);
@@ -22927,24 +22928,24 @@
           return singleCharacter.charCodeAt(0) - 48;
       }
       static isDigit(singleCharacter) {
-          const cn = Encoder.getDigit(singleCharacter);
+          const cn = Encoder$1.getDigit(singleCharacter);
           return cn >= 0 && cn <= 9;
       }
       static appendNumericBytes(content, bits) {
           const length = content.length;
           let i = 0;
           while (i < length) {
-              const num1 = Encoder.getDigit(content.charAt(i));
+              const num1 = Encoder$1.getDigit(content.charAt(i));
               if (i + 2 < length) {
                   // Encode three numeric letters in ten bits.
-                  const num2 = Encoder.getDigit(content.charAt(i + 1));
-                  const num3 = Encoder.getDigit(content.charAt(i + 2));
+                  const num2 = Encoder$1.getDigit(content.charAt(i + 1));
+                  const num3 = Encoder$1.getDigit(content.charAt(i + 2));
                   bits.appendBits(num1 * 100 + num2 * 10 + num3, 10);
                   i += 3;
               }
               else if (i + 1 < length) {
                   // Encode two numeric letters in seven bits.
-                  const num2 = Encoder.getDigit(content.charAt(i + 1));
+                  const num2 = Encoder$1.getDigit(content.charAt(i + 1));
                   bits.appendBits(num1 * 10 + num2, 7);
                   i += 2;
               }
@@ -22959,12 +22960,12 @@
           const length = content.length;
           let i = 0;
           while (i < length) {
-              const code1 = Encoder.getAlphanumericCode(content.charCodeAt(i));
+              const code1 = Encoder$1.getAlphanumericCode(content.charCodeAt(i));
               if (code1 === -1) {
                   throw new WriterException();
               }
               if (i + 1 < length) {
-                  const code2 = Encoder.getAlphanumericCode(content.charCodeAt(i + 1));
+                  const code2 = Encoder$1.getAlphanumericCode(content.charCodeAt(i + 1));
                   if (code2 === -1) {
                       throw new WriterException();
                   }
@@ -23023,13 +23024,13 @@
           }
       }
       static appendECI(eci, bits) {
-          bits.appendBits(Mode$1.ECI.getBits(), 4);
+          bits.appendBits(Mode$2.ECI.getBits(), 4);
           // This is correct for values up to 127, which is all we need now.
           bits.appendBits(eci.getValue(), 8);
       }
   }
   // The original table is defined in the table 5 of JISX0510:2004 (p.19).
-  Encoder.ALPHANUMERIC_TABLE = Int32Array.from([
+  Encoder$1.ALPHANUMERIC_TABLE = Int32Array.from([
       -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
       -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
       36, -1, -1, -1, 37, 38, -1, -1, -1, -1, 39, 40, -1, 41, 42, 43,
@@ -23037,7 +23038,7 @@
       -1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
       25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1, -1, -1, -1, -1,
   ]);
-  Encoder.DEFAULT_BYTE_MODE_ENCODING = CharacterSetECI.UTF8.getName(); // "ISO-8859-1"
+  Encoder$1.DEFAULT_BYTE_MODE_ENCODING = CharacterSetECI.UTF8.getName(); // "ISO-8859-1"
 
   /**
    * @deprecated Moving to @zxing/browser
@@ -23071,7 +23072,7 @@
                   quietZone = Number.parseInt(hints.get(EncodeHintType$1.MARGIN).toString(), 10);
               }
           }
-          const code = Encoder.encode(contents, errorCorrectionLevel, hints);
+          const code = Encoder$1.encode(contents, errorCorrectionLevel, hints);
           return this.renderResult(code, width, height, quietZone);
       }
       /**
@@ -23203,7 +23204,7 @@
                   quietZone = Number.parseInt(hints.get(EncodeHintType$1.MARGIN).toString(), 10);
               }
           }
-          const code = Encoder.encode(contents, errorCorrectionLevel, hints);
+          const code = Encoder$1.encode(contents, errorCorrectionLevel, hints);
           return QRCodeWriter.renderResult(code, width, height, quietZone);
       }
       // Note that the input matrix uses 0 == white, 1 == black, while the output matrix uses
@@ -23819,6 +23820,7 @@
       };
   };
   const { LOG, ALOG } = static_LOG([], []);
+  exports.DataMatrixSymbolShapeHint = void 0;
   (function (SymbolShapeHint) {
       SymbolShapeHint[SymbolShapeHint["FORCE_NONE"] = 0] = "FORCE_NONE";
       SymbolShapeHint[SymbolShapeHint["FORCE_SQUARE"] = 1] = "FORCE_SQUARE";
@@ -23906,7 +23908,7 @@
   /**
    * Error Correction Code for ECC200.
    */
-  class ErrorCorrection$1 {
+  class ErrorCorrection {
       /**
        * Creates the ECC200 error correction for an encoded message.
        *
@@ -23926,11 +23928,9 @@
               sb.append(ecc);
           }
           else {
-              // sb.setLength(sb.capacity());
-              const dataSizes = [];
               const errorSizes = [];
               for (let i = 0; i < blockCount; i++) {
-                  dataSizes[i] = symbolInfo.getDataLengthForInterleavedBlock(i + 1);
+                  symbolInfo.getDataLengthForInterleavedBlock(i + 1);
                   errorSizes[i] = symbolInfo.getErrorLengthForInterleavedBlock(i + 1);
               }
               for (let block = 0; block < blockCount; block++) {
@@ -23994,14 +23994,14 @@
       }
       encode(context) {
           // step B
-          const n = HighLevelEncoder.determineConsecutiveDigitCount(context.getMessage(), context.pos);
+          const n = HighLevelEncoder$1.determineConsecutiveDigitCount(context.getMessage(), context.pos);
           if (n >= 2) {
               context.writeCodeword(this.encodeASCIIDigits(context.getMessage().charCodeAt(context.pos), context.getMessage().charCodeAt(context.pos + 1)));
               context.pos += 2;
           }
           else {
               const c = context.getCurrentChar();
-              const newMode = HighLevelEncoder.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
+              const newMode = HighLevelEncoder$1.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
               if (newMode !== this.getEncodingMode()) {
                   switch (newMode) {
                       case BASE256_ENCODATION:
@@ -24028,7 +24028,7 @@
                           throw new Error('Illegal mode: ' + newMode);
                   }
               }
-              else if (HighLevelEncoder.isExtendedASCII(c)) {
+              else if (HighLevelEncoder$1.isExtendedASCII(c)) {
                   context.writeCodeword(UPPER_SHIFT);
                   context.writeCodeword(c - 128 + 1);
                   context.pos++;
@@ -24040,7 +24040,7 @@
           }
       }
       encodeASCIIDigits(digit1, digit2) {
-          if (HighLevelEncoder.isDigit(digit1) && HighLevelEncoder.isDigit(digit2)) {
+          if (HighLevelEncoder$1.isDigit(digit1) && HighLevelEncoder$1.isDigit(digit2)) {
               const num = (digit1 - 48) * 10 + (digit2 - 48);
               return num + 130;
           }
@@ -24059,7 +24059,7 @@
               const c = context.getCurrentChar();
               buffer.append(c);
               context.pos++;
-              const newMode = HighLevelEncoder.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
+              const newMode = HighLevelEncoder$1.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
               if (newMode !== this.getEncodingMode()) {
                   // Return to ASCII encodation, which will actually handle latch to new mode
                   context.signalEncoderChange(ASCII_ENCODATION);
@@ -24159,7 +24159,7 @@
               }
               const count = buffer.length();
               if (count % 3 === 0) {
-                  const newMode = HighLevelEncoder.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
+                  const newMode = HighLevelEncoder$1.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
                   if (newMode !== this.getEncodingMode()) {
                       // Return to ASCII encodation, which will actually handle latch to new mode
                       context.signalEncoderChange(ASCII_ENCODATION);
@@ -24313,7 +24313,7 @@
                   // for (let i = 0; i < 4; i++) {
                   //  buffer.deleteCharAt(i);
                   // }
-                  const newMode = HighLevelEncoder.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
+                  const newMode = HighLevelEncoder$1.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
                   if (newMode !== this.getEncodingMode()) {
                       // Return to ASCII encodation, which will actually handle latch to new mode
                       context.signalEncoderChange(ASCII_ENCODATION);
@@ -24390,7 +24390,7 @@
               sb.append(StringUtils.getCharAt(c - 64));
           }
           else {
-              HighLevelEncoder.illegalCharacter(StringUtils.getCharAt(c));
+              HighLevelEncoder$1.illegalCharacter(StringUtils.getCharAt(c));
           }
       }
       encodeToCodewords(sb) {
@@ -24663,7 +24663,7 @@
               const count = buffer.length();
               if (count % 3 === 0) {
                   this.writeNextTriplet(context, buffer);
-                  const newMode = HighLevelEncoder.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
+                  const newMode = HighLevelEncoder$1.lookAheadTest(context.getMessage(), context.pos, this.getEncodingMode());
                   if (newMode !== this.getEncodingMode()) {
                       // Return to ASCII encodation, which will actually handle latch to new mode
                       context.signalEncoderChange(ASCII_ENCODATION);
@@ -24695,7 +24695,7 @@
                       sb.append(c - 65 + 14);
                   }
                   else {
-                      HighLevelEncoder.illegalCharacter(StringUtils.getCharAt(c));
+                      HighLevelEncoder$1.illegalCharacter(StringUtils.getCharAt(c));
                   }
                   break;
           }
@@ -24781,7 +24781,7 @@
    * DataMatrix ECC 200 data encoder following the algorithm described in ISO/IEC 16022:200(E) in
    * annex S.
    */
-  class HighLevelEncoder {
+  class HighLevelEncoder$1 {
       static randomize253State(codewordPosition) {
           const pseudoRandom = ((149 * codewordPosition) % 253) + 1;
           const tempVariable = PAD + pseudoRandom;
@@ -25545,7 +25545,7 @@
       }
   }
 
-  var Mode$3;
+  var Mode;
   (function (Mode) {
       Mode[Mode["ASCII"] = 0] = "ASCII";
       Mode[Mode["C40"] = 1] = "C40";
@@ -25553,7 +25553,7 @@
       Mode[Mode["X12"] = 3] = "X12";
       Mode[Mode["EDF"] = 4] = "EDF";
       Mode[Mode["B256"] = 5] = "B256";
-  })(Mode$3 || (Mode$3 = {}));
+  })(Mode || (Mode = {}));
   const C40_SHIFT2_CHARS = [
       '!',
       '"',
@@ -25669,8 +25669,8 @@
                   return 0;
               }
               const ci = input.charAt(i);
-              if ((c40 && HighLevelEncoder.isNativeC40(ci)) ||
-                  (!c40 && HighLevelEncoder.isNativeText(ci))) {
+              if ((c40 && HighLevelEncoder$1.isNativeC40(ci)) ||
+                  (!c40 && HighLevelEncoder$1.isNativeText(ci))) {
                   thirdsCount++; // native
               }
               else if (!MinimalEncoder.isExtendedASCII(ci, input.getFNC1Character())) {
@@ -25679,8 +25679,8 @@
               else {
                   const asciiValue = ci & 0xff;
                   if (asciiValue >= 128 &&
-                      ((c40 && HighLevelEncoder.isNativeC40(asciiValue - 128)) ||
-                          (!c40 && HighLevelEncoder.isNativeText(asciiValue - 128)))) {
+                      ((c40 && HighLevelEncoder$1.isNativeC40(asciiValue - 128)) ||
+                          (!c40 && HighLevelEncoder$1.isNativeText(asciiValue - 128)))) {
                       thirdsCount += 3; // shift, Upper shift
                   }
                   else {
@@ -25698,37 +25698,37 @@
       }
       static addEdges(input, edges, from, previous) {
           if (input.isECI(from)) {
-              this.addEdge(edges, new Edge(input, Mode$3.ASCII, from, 1, previous));
+              this.addEdge(edges, new Edge(input, Mode.ASCII, from, 1, previous));
               return;
           }
           const ch = input.charAt(from);
-          if (previous === null || previous.getEndMode() !== Mode$3.EDF) {
+          if (previous === null || previous.getEndMode() !== Mode.EDF) {
               // not possible to unlatch a full EDF edge to something
               // else
-              if (HighLevelEncoder.isDigit(ch) &&
+              if (HighLevelEncoder$1.isDigit(ch) &&
                   input.haveNCharacters(from, 2) &&
-                  HighLevelEncoder.isDigit(input.charAt(from + 1))) {
+                  HighLevelEncoder$1.isDigit(input.charAt(from + 1))) {
                   // two digits ASCII encoded
-                  this.addEdge(edges, new Edge(input, Mode$3.ASCII, from, 2, previous));
+                  this.addEdge(edges, new Edge(input, Mode.ASCII, from, 2, previous));
               }
               else {
                   // one ASCII encoded character or an extended character via Upper Shift
-                  this.addEdge(edges, new Edge(input, Mode$3.ASCII, from, 1, previous));
+                  this.addEdge(edges, new Edge(input, Mode.ASCII, from, 1, previous));
               }
-              const modes = [Mode$3.C40, Mode$3.TEXT];
+              const modes = [Mode.C40, Mode.TEXT];
               for (const mode of modes) {
                   const characterLength = [];
-                  if (MinimalEncoder.getNumberOfC40Words(input, from, mode === Mode$3.C40, characterLength) > 0) {
+                  if (MinimalEncoder.getNumberOfC40Words(input, from, mode === Mode.C40, characterLength) > 0) {
                       this.addEdge(edges, new Edge(input, mode, from, characterLength[0], previous));
                   }
               }
               if (input.haveNCharacters(from, 3) &&
-                  HighLevelEncoder.isNativeX12(input.charAt(from)) &&
-                  HighLevelEncoder.isNativeX12(input.charAt(from + 1)) &&
-                  HighLevelEncoder.isNativeX12(input.charAt(from + 2))) {
-                  this.addEdge(edges, new Edge(input, Mode$3.X12, from, 3, previous));
+                  HighLevelEncoder$1.isNativeX12(input.charAt(from)) &&
+                  HighLevelEncoder$1.isNativeX12(input.charAt(from + 1)) &&
+                  HighLevelEncoder$1.isNativeX12(input.charAt(from + 2))) {
+                  this.addEdge(edges, new Edge(input, Mode.X12, from, 3, previous));
               }
-              this.addEdge(edges, new Edge(input, Mode$3.B256, from, 1, previous));
+              this.addEdge(edges, new Edge(input, Mode.B256, from, 1, previous));
           }
           // We create 4 EDF edges,  with 1, 2 3 or 4 characters length. The fourth normally doesn't have a latch to ASCII
           // unless it is 2 characters away from the end of the input.
@@ -25736,8 +25736,8 @@
           for (i = 0; i < 3; i++) {
               const pos = from + i;
               if (input.haveNCharacters(pos, 1) &&
-                  HighLevelEncoder.isNativeEDIFACT(input.charAt(pos))) {
-                  this.addEdge(edges, new Edge(input, Mode$3.EDF, from, i + 1, previous));
+                  HighLevelEncoder$1.isNativeEDIFACT(input.charAt(pos))) {
+                  this.addEdge(edges, new Edge(input, Mode.EDF, from, i + 1, previous));
               }
               else {
                   break;
@@ -25745,8 +25745,8 @@
           }
           if (i === 3 &&
               input.haveNCharacters(from, 4) &&
-              HighLevelEncoder.isNativeEDIFACT(input.charAt(from + 3))) {
-              this.addEdge(edges, new Edge(input, Mode$3.EDF, from, 4, previous));
+              HighLevelEncoder$1.isNativeEDIFACT(input.charAt(from + 3))) {
+              this.addEdge(edges, new Edge(input, Mode.EDF, from, 4, previous));
           }
       }
       static encodeMinimally(input) {
@@ -25967,20 +25967,20 @@
           if (minimalJ < 0) {
               throw new Error('Failed to encode "' + input + '"');
           }
-          return new Result$1(edges[inputLength][minimalJ]);
+          return new Result(edges[inputLength][minimalJ]);
       }
   }
-  class Result$1 {
+  class Result {
       constructor(solution) {
           const input = solution.input;
           let size = 0;
           let bytesAL = [];
           const randomizePostfixLength = [];
           const randomizeLengths = [];
-          if ((solution.mode === Mode$3.C40 ||
-              solution.mode === Mode$3.TEXT ||
-              solution.mode === Mode$3.X12) &&
-              solution.getEndMode() !== Mode$3.ASCII) {
+          if ((solution.mode === Mode.C40 ||
+              solution.mode === Mode.TEXT ||
+              solution.mode === Mode.X12) &&
+              solution.getEndMode() !== Mode.ASCII) {
               size += this.prepend(Edge.getBytes(254), bytesAL);
           }
           let current = solution;
@@ -25988,7 +25988,7 @@
               size += this.prepend(current.getDataBytes(), bytesAL);
               if (current.previous === null ||
                   current.getPreviousStartMode() !== current.getMode()) {
-                  if (current.getMode() === Mode$3.B256) {
+                  if (current.getMode() === Mode.B256) {
                       if (size <= 249) {
                           bytesAL.unshift(size);
                           size++;
@@ -26093,64 +26093,64 @@
            * B256 -> ASCII: without latch after n bytes
            */
           switch (mode) {
-              case Mode$3.ASCII:
+              case Mode.ASCII:
                   size++;
                   if (input.isECI(fromPosition) ||
                       MinimalEncoder.isExtendedASCII(input.charAt(fromPosition), input.getFNC1Character())) {
                       size++;
                   }
-                  if (previousMode === Mode$3.C40 ||
-                      previousMode === Mode$3.TEXT ||
-                      previousMode === Mode$3.X12) {
+                  if (previousMode === Mode.C40 ||
+                      previousMode === Mode.TEXT ||
+                      previousMode === Mode.X12) {
                       size++; // unlatch 254 to ASCII
                   }
                   break;
-              case Mode$3.B256:
+              case Mode.B256:
                   size++;
-                  if (previousMode !== Mode$3.B256) {
+                  if (previousMode !== Mode.B256) {
                       size++; // byte count
                   }
                   else if (this.getB256Size() === 250) {
                       size++; // extra byte count
                   }
-                  if (previousMode === Mode$3.ASCII) {
+                  if (previousMode === Mode.ASCII) {
                       size++; // latch to B256
                   }
-                  else if (previousMode === Mode$3.C40 ||
-                      previousMode === Mode$3.TEXT ||
-                      previousMode === Mode$3.X12) {
+                  else if (previousMode === Mode.C40 ||
+                      previousMode === Mode.TEXT ||
+                      previousMode === Mode.X12) {
                       size += 2; // unlatch to ASCII, latch to B256
                   }
                   break;
-              case Mode$3.C40:
-              case Mode$3.TEXT:
-              case Mode$3.X12:
-                  if (mode === Mode$3.X12) {
+              case Mode.C40:
+              case Mode.TEXT:
+              case Mode.X12:
+                  if (mode === Mode.X12) {
                       size += 2;
                   }
                   else {
                       let charLen = [];
                       size +=
-                          MinimalEncoder.getNumberOfC40Words(input, fromPosition, mode === Mode$3.C40, charLen) * 2;
+                          MinimalEncoder.getNumberOfC40Words(input, fromPosition, mode === Mode.C40, charLen) * 2;
                   }
-                  if (previousMode === Mode$3.ASCII || previousMode === Mode$3.B256) {
+                  if (previousMode === Mode.ASCII || previousMode === Mode.B256) {
                       size++; // additional byte for latch from ASCII to this mode
                   }
                   else if (previousMode !== mode &&
-                      (previousMode === Mode$3.C40 ||
-                          previousMode === Mode$3.TEXT ||
-                          previousMode === Mode$3.X12)) {
+                      (previousMode === Mode.C40 ||
+                          previousMode === Mode.TEXT ||
+                          previousMode === Mode.X12)) {
                       size += 2; // unlatch 254 to ASCII followed by latch to this mode
                   }
                   break;
-              case Mode$3.EDF:
+              case Mode.EDF:
                   size += 3;
-                  if (previousMode === Mode$3.ASCII || previousMode === Mode$3.B256) {
+                  if (previousMode === Mode.ASCII || previousMode === Mode.B256) {
                       size++; // additional byte for latch from ASCII to this mode
                   }
-                  else if (previousMode === Mode$3.C40 ||
-                      previousMode === Mode$3.TEXT ||
-                      previousMode === Mode$3.X12) {
+                  else if (previousMode === Mode.C40 ||
+                      previousMode === Mode.TEXT ||
+                      previousMode === Mode.X12) {
                       size += 2; // unlatch 254 to ASCII followed by latch to this mode
                   }
                   break;
@@ -26161,17 +26161,17 @@
       getB256Size() {
           let cnt = 0;
           let current = this;
-          while (current !== null && current.mode === Mode$3.B256 && cnt <= 250) {
+          while (current !== null && current.mode === Mode.B256 && cnt <= 250) {
               cnt++;
               current = current.previous;
           }
           return cnt;
       }
       getPreviousStartMode() {
-          return this.previous === null ? Mode$3.ASCII : this.previous.mode;
+          return this.previous === null ? Mode.ASCII : this.previous.mode;
       }
       getPreviousMode() {
-          return this.previous === null ? Mode$3.ASCII : this.previous.getEndMode();
+          return this.previous === null ? Mode.ASCII : this.previous.getEndMode();
       }
       /** Returns Mode.ASCII in case that:
        *  - Mode is EDIFACT and characterLength is less than 4 or the remaining characters can be encoded in at most 2
@@ -26180,29 +26180,29 @@
        *  Returns mode in all other cases.
        * */
       getEndMode() {
-          if (this.mode === Mode$3.EDF) {
+          if (this.mode === Mode.EDF) {
               if (this.characterLength < 4) {
-                  return Mode$3.ASCII;
+                  return Mode.ASCII;
               }
               const lastASCII = this.getLastASCII(); // see 5.2.8.2 EDIFACT encodation Rules
               if (lastASCII > 0 &&
                   this.getCodewordsRemaining(this.cachedTotalSize + lastASCII) <=
                       2 - lastASCII) {
-                  return Mode$3.ASCII;
+                  return Mode.ASCII;
               }
           }
-          if (this.mode === Mode$3.C40 ||
-              this.mode === Mode$3.TEXT ||
-              this.mode === Mode$3.X12) {
+          if (this.mode === Mode.C40 ||
+              this.mode === Mode.TEXT ||
+              this.mode === Mode.X12) {
               // see 5.2.5.2 C40 encodation rules and 5.2.7.2 ANSI X12 encodation rules
               if (this.fromPosition + this.characterLength >= this.input.length() &&
                   this.getCodewordsRemaining(this.cachedTotalSize) === 0) {
-                  return Mode$3.ASCII;
+                  return Mode.ASCII;
               }
               const lastASCII = this.getLastASCII();
               if (lastASCII === 1 &&
                   this.getCodewordsRemaining(this.cachedTotalSize + 1) === 0) {
-                  return Mode$3.ASCII;
+                  return Mode.ASCII;
               }
           }
           return this.mode;
@@ -26231,29 +26231,29 @@
                   MinimalEncoder.isExtendedASCII(this.input.charAt(from + 1), this.input.getFNC1Character())) {
                   return 0;
               }
-              if (HighLevelEncoder.isDigit(this.input.charAt(from)) &&
-                  HighLevelEncoder.isDigit(this.input.charAt(from + 1))) {
+              if (HighLevelEncoder$1.isDigit(this.input.charAt(from)) &&
+                  HighLevelEncoder$1.isDigit(this.input.charAt(from + 1))) {
                   return 1;
               }
               return 2;
           }
           if (length - from === 3) {
-              if (HighLevelEncoder.isDigit(this.input.charAt(from)) &&
-                  HighLevelEncoder.isDigit(this.input.charAt(from + 1)) &&
+              if (HighLevelEncoder$1.isDigit(this.input.charAt(from)) &&
+                  HighLevelEncoder$1.isDigit(this.input.charAt(from + 1)) &&
                   !MinimalEncoder.isExtendedASCII(this.input.charAt(from + 2), this.input.getFNC1Character())) {
                   return 2;
               }
-              if (HighLevelEncoder.isDigit(this.input.charAt(from + 1)) &&
-                  HighLevelEncoder.isDigit(this.input.charAt(from + 2)) &&
+              if (HighLevelEncoder$1.isDigit(this.input.charAt(from + 1)) &&
+                  HighLevelEncoder$1.isDigit(this.input.charAt(from + 2)) &&
                   !MinimalEncoder.isExtendedASCII(this.input.charAt(from), this.input.getFNC1Character())) {
                   return 2;
               }
               return 0;
           }
-          if (HighLevelEncoder.isDigit(this.input.charAt(from)) &&
-              HighLevelEncoder.isDigit(this.input.charAt(from + 1)) &&
-              HighLevelEncoder.isDigit(this.input.charAt(from + 2)) &&
-              HighLevelEncoder.isDigit(this.input.charAt(from + 3))) {
+          if (HighLevelEncoder$1.isDigit(this.input.charAt(from)) &&
+              HighLevelEncoder$1.isDigit(this.input.charAt(from + 1)) &&
+              HighLevelEncoder$1.isDigit(this.input.charAt(from + 2)) &&
+              HighLevelEncoder$1.isDigit(this.input.charAt(from + 3))) {
               return 2;
           }
           return 0;
@@ -26396,8 +26396,8 @@
           const c40Values = [];
           for (let i = 0; i < this.characterLength; i++) {
               const ci = this.input.charAt(this.fromPosition + i);
-              if ((c40 && HighLevelEncoder.isNativeC40(ci)) ||
-                  (!c40 && HighLevelEncoder.isNativeText(ci))) {
+              if ((c40 && HighLevelEncoder$1.isNativeC40(ci)) ||
+                  (!c40 && HighLevelEncoder$1.isNativeText(ci))) {
                   c40Values.push(this.getC40Value(c40, 0, ci, fnc1));
               }
               else if (!MinimalEncoder.isExtendedASCII(ci, fnc1)) {
@@ -26407,8 +26407,8 @@
               }
               else {
                   const asciiValue = (ci & 0xff) - 128;
-                  if ((c40 && HighLevelEncoder.isNativeC40(asciiValue)) ||
-                      (!c40 && HighLevelEncoder.isNativeText(asciiValue))) {
+                  if ((c40 && HighLevelEncoder$1.isNativeC40(asciiValue)) ||
+                      (!c40 && HighLevelEncoder$1.isNativeText(asciiValue))) {
                       c40Values.push(1); // Shift 2
                       c40Values.push(30); // Upper Shift
                       c40Values.push(this.getC40Value(c40, 0, asciiValue, fnc1));
@@ -26464,44 +26464,44 @@
       }
       getLatchBytes() {
           switch (this.getPreviousMode()) {
-              case Mode$3.ASCII:
-              case Mode$3.B256: // after B256 ends (via length) we are back to ASCII
+              case Mode.ASCII:
+              case Mode.B256: // after B256 ends (via length) we are back to ASCII
                   switch (this.mode) {
-                      case Mode$3.B256:
+                      case Mode.B256:
                           return Edge.getBytes(231);
-                      case Mode$3.C40:
+                      case Mode.C40:
                           return Edge.getBytes(230);
-                      case Mode$3.TEXT:
+                      case Mode.TEXT:
                           return Edge.getBytes(239);
-                      case Mode$3.X12:
+                      case Mode.X12:
                           return Edge.getBytes(238);
-                      case Mode$3.EDF:
+                      case Mode.EDF:
                           return Edge.getBytes(240);
                   }
                   break;
-              case Mode$3.C40:
-              case Mode$3.TEXT:
-              case Mode$3.X12:
+              case Mode.C40:
+              case Mode.TEXT:
+              case Mode.X12:
                   if (this.mode !== this.getPreviousMode()) {
                       switch (this.mode) {
-                          case Mode$3.ASCII:
+                          case Mode.ASCII:
                               return Edge.getBytes(254);
-                          case Mode$3.B256:
+                          case Mode.B256:
                               return Edge.getBytes(254, 231);
-                          case Mode$3.C40:
+                          case Mode.C40:
                               return Edge.getBytes(254, 230);
-                          case Mode$3.TEXT:
+                          case Mode.TEXT:
                               return Edge.getBytes(254, 239);
-                          case Mode$3.X12:
+                          case Mode.X12:
                               return Edge.getBytes(254, 238);
-                          case Mode$3.EDF:
+                          case Mode.EDF:
                               return Edge.getBytes(254, 240);
                       }
                   }
                   break;
-              case Mode$3.EDF:
+              case Mode.EDF:
                   // The rightmost EDIFACT edge always contains an unlatch character
-                  if (this.mode !== Mode$3.EDF) {
+                  if (this.mode !== Mode.EDF) {
                       throw new Error('Cannot switch from EDF to ' + this.mode);
                   }
                   break;
@@ -26511,7 +26511,7 @@
       // Important: The function does not return the length bytes (one or two) in case of B256 encoding
       getDataBytes() {
           switch (this.mode) {
-              case Mode$3.ASCII:
+              case Mode.ASCII:
                   if (this.input.isECI(this.fromPosition)) {
                       return Edge.getBytes(241, this.input.getECIValue(this.fromPosition) + 1);
                   }
@@ -26529,15 +26529,15 @@
                   else {
                       return Edge.getBytes(this.input.charAt(this.fromPosition) + 1);
                   }
-              case Mode$3.B256:
+              case Mode.B256:
                   return Edge.getBytes(this.input.charAt(this.fromPosition));
-              case Mode$3.C40:
+              case Mode.C40:
                   return this.getC40Words(true, this.input.getFNC1Character());
-              case Mode$3.TEXT:
+              case Mode.TEXT:
                   return this.getC40Words(false, this.input.getFNC1Character());
-              case Mode$3.X12:
+              case Mode.X12:
                   return this.getX12Words();
-              case Mode$3.EDF:
+              case Mode.EDF:
                   return this.getEDFBytes();
           }
       }
@@ -26604,11 +26604,11 @@
               const hasForceC40Hint = hints != null &&
                   hints.has(EncodeHintType$1.FORCE_C40) &&
                   Boolean(hints.get(EncodeHintType$1.FORCE_C40).toString());
-              encoded = HighLevelEncoder.encodeHighLevel(contents, shape, minSize, maxSize, hasForceC40Hint);
+              encoded = HighLevelEncoder$1.encodeHighLevel(contents, shape, minSize, maxSize, hasForceC40Hint);
           }
           const symbolInfo = SymbolInfo.lookup(encoded.length, shape, minSize, maxSize, true);
           // 2. step: ECC generation
-          const codewords = ErrorCorrection$1.encodeECC200(encoded, symbolInfo);
+          const codewords = ErrorCorrection.encodeECC200(encoded, symbolInfo);
           // 3. step: Module placement in Matrix
           const placement = new DefaultPlacement(codewords, symbolInfo.getSymbolDataWidth(), symbolInfo.getSymbolDataHeight());
           placement.place();
@@ -27279,7 +27279,7 @@
    * @author Frank Yellin
    * @author Rustam Abdullaev
    */
-  /*public final*/ class HighLevelEncoder$1 {
+  /*public final*/ class HighLevelEncoder {
       constructor(text) {
           this.text = text;
       }
@@ -27312,7 +27312,7 @@
               if (pairCode > 0) {
                   // We have one of the four special PUNCT pairs.  Treat them specially.
                   // Get a new set of states for the two new characters.
-                  states = HighLevelEncoder$1.updateStateListForPair(states, index, pairCode);
+                  states = HighLevelEncoder.updateStateListForPair(states, index, pairCode);
                   index++;
               }
               else {
@@ -27335,7 +27335,7 @@
           for (let state /*State*/ of states) {
               this.updateStateForChar(state, index, result);
           }
-          return HighLevelEncoder$1.simplifyStates(result);
+          return HighLevelEncoder.simplifyStates(result);
       }
       // Return a set of states that represent the possible ways of updating this
       // state for the next character.  The resulting set of states are added to
@@ -27460,7 +27460,7 @@
    *
    * @author Rustam Abdullaev
    */
-  /*public final*/ class Encoder$1 {
+  /*public final*/ class Encoder {
       constructor() {
       }
       /**
@@ -27470,7 +27470,7 @@
        * @return Aztec symbol matrix with metadata
        */
       static encodeBytes(data) {
-          return Encoder$1.encode(data, Encoder$1.DEFAULT_EC_PERCENT, Encoder$1.DEFAULT_AZTEC_LAYERS);
+          return Encoder.encode(data, Encoder.DEFAULT_EC_PERCENT, Encoder.DEFAULT_AZTEC_LAYERS);
       }
       /**
        * Encodes the given binary content as an Aztec symbol
@@ -27483,7 +27483,7 @@
        */
       static encode(data, minECCPercent, userSpecifiedLayers) {
           // High-level encode
-          let bits = new HighLevelEncoder$1(data).encode();
+          let bits = new HighLevelEncoder(data).encode();
           // stuff bits and choose symbol size
           let eccBits = Integer.truncDivision((bits.getSize() * minECCPercent), 100) + 11;
           let totalSizeBits = bits.getSize() + eccBits;
@@ -27492,16 +27492,16 @@
           let totalBitsInLayer;
           let wordSize;
           let stuffedBits;
-          if (userSpecifiedLayers !== Encoder$1.DEFAULT_AZTEC_LAYERS) {
+          if (userSpecifiedLayers !== Encoder.DEFAULT_AZTEC_LAYERS) {
               compact = userSpecifiedLayers < 0;
               layers = Math.abs(userSpecifiedLayers);
-              if (layers > (compact ? Encoder$1.MAX_NB_BITS_COMPACT : Encoder$1.MAX_NB_BITS)) {
+              if (layers > (compact ? Encoder.MAX_NB_BITS_COMPACT : Encoder.MAX_NB_BITS)) {
                   throw new IllegalArgumentException(StringUtils.format('Illegal value %s for layers', userSpecifiedLayers));
               }
-              totalBitsInLayer = Encoder$1.totalBitsInLayer(layers, compact);
-              wordSize = Encoder$1.WORD_SIZE[layers];
+              totalBitsInLayer = Encoder.totalBitsInLayer(layers, compact);
+              wordSize = Encoder.WORD_SIZE[layers];
               let usableBitsInLayers = totalBitsInLayer - (totalBitsInLayer % wordSize);
-              stuffedBits = Encoder$1.stuffBits(bits, wordSize);
+              stuffedBits = Encoder.stuffBits(bits, wordSize);
               if (stuffedBits.getSize() + eccBits > usableBitsInLayers) {
                   throw new IllegalArgumentException('Data to large for user specified layer');
               }
@@ -27517,20 +27517,20 @@
               // Compact4, Normal4,...  Normal(i) for i < 4 isn't typically used since Compact(i+1)
               // is the same size, but has more data.
               for (let i /*int*/ = 0;; i++) {
-                  if (i > Encoder$1.MAX_NB_BITS) {
+                  if (i > Encoder.MAX_NB_BITS) {
                       throw new IllegalArgumentException('Data too large for an Aztec code');
                   }
                   compact = i <= 3;
                   layers = compact ? i + 1 : i;
-                  totalBitsInLayer = Encoder$1.totalBitsInLayer(layers, compact);
+                  totalBitsInLayer = Encoder.totalBitsInLayer(layers, compact);
                   if (totalSizeBits > totalBitsInLayer) {
                       continue;
                   }
                   // [Re]stuff the bits if this is the first opportunity, or if the
                   // wordSize has changed
-                  if (stuffedBits == null || wordSize !== Encoder$1.WORD_SIZE[layers]) {
-                      wordSize = Encoder$1.WORD_SIZE[layers];
-                      stuffedBits = Encoder$1.stuffBits(bits, wordSize);
+                  if (stuffedBits == null || wordSize !== Encoder.WORD_SIZE[layers]) {
+                      wordSize = Encoder.WORD_SIZE[layers];
+                      stuffedBits = Encoder.stuffBits(bits, wordSize);
                   }
                   let usableBitsInLayers = totalBitsInLayer - (totalBitsInLayer % wordSize);
                   if (compact && stuffedBits.getSize() > wordSize * 64) {
@@ -27542,10 +27542,10 @@
                   }
               }
           }
-          let messageBits = Encoder$1.generateCheckWords(stuffedBits, totalBitsInLayer, wordSize);
+          let messageBits = Encoder.generateCheckWords(stuffedBits, totalBitsInLayer, wordSize);
           // generate mode message
           let messageSizeInWords = stuffedBits.getSize() / wordSize;
-          let modeMessage = Encoder$1.generateModeMessage(compact, layers, messageSizeInWords);
+          let modeMessage = Encoder.generateModeMessage(compact, layers, messageSizeInWords);
           // allocate symbol
           let baseMatrixSize = (compact ? 11 : 14) + layers * 4; // not including alignment lines
           let alignmentMap = new Int32Array(baseMatrixSize);
@@ -27591,13 +27591,13 @@
               rowOffset += rowSize * 8;
           }
           // draw mode message
-          Encoder$1.drawModeMessage(matrix, compact, matrixSize, modeMessage);
+          Encoder.drawModeMessage(matrix, compact, matrixSize, modeMessage);
           // draw alignment marks
           if (compact) {
-              Encoder$1.drawBullsEye(matrix, Integer.truncDivision(matrixSize, 2), 5);
+              Encoder.drawBullsEye(matrix, Integer.truncDivision(matrixSize, 2), 5);
           }
           else {
-              Encoder$1.drawBullsEye(matrix, Integer.truncDivision(matrixSize, 2), 7);
+              Encoder.drawBullsEye(matrix, Integer.truncDivision(matrixSize, 2), 7);
               for (let i /*int*/ = 0, j = 0; i < Integer.truncDivision(baseMatrixSize, 2) - 1; i += 15, j += 16) {
                   for (let k /*int*/ = Integer.truncDivision(matrixSize, 2) & 1; k < matrixSize; k += 2) {
                       matrix.set(Integer.truncDivision(matrixSize, 2) - j, k);
@@ -27636,12 +27636,12 @@
           if (compact) {
               modeMessage.appendBits(layers - 1, 2);
               modeMessage.appendBits(messageSizeInWords - 1, 6);
-              modeMessage = Encoder$1.generateCheckWords(modeMessage, 28, 4);
+              modeMessage = Encoder.generateCheckWords(modeMessage, 28, 4);
           }
           else {
               modeMessage.appendBits(layers - 1, 5);
               modeMessage.appendBits(messageSizeInWords - 1, 11);
-              modeMessage = Encoder$1.generateCheckWords(modeMessage, 40, 4);
+              modeMessage = Encoder.generateCheckWords(modeMessage, 40, 4);
           }
           return modeMessage;
       }
@@ -27685,9 +27685,9 @@
       static generateCheckWords(bitArray, totalBits, wordSize) {
           // bitArray is guaranteed to be a multiple of the wordSize, so no padding needed
           let messageSizeInWords = bitArray.getSize() / wordSize;
-          let rs = new ReedSolomonEncoder(Encoder$1.getGF(wordSize));
+          let rs = new ReedSolomonEncoder(Encoder.getGF(wordSize));
           let totalWords = Integer.truncDivision(totalBits, wordSize);
-          let messageWords = Encoder$1.bitsToWords(bitArray, wordSize, totalWords);
+          let messageWords = Encoder.bitsToWords(bitArray, wordSize, totalWords);
           rs.encode(messageWords, totalWords - messageSizeInWords);
           let startPad = totalBits % wordSize;
           let messageBits = new BitArray();
@@ -27755,11 +27755,11 @@
           return ((compact ? 88 : 112) + 16 * layers) * layers;
       }
   }
-  Encoder$1.DEFAULT_EC_PERCENT = 33; // default minimal percentage of error check words
-  Encoder$1.DEFAULT_AZTEC_LAYERS = 0;
-  Encoder$1.MAX_NB_BITS = 32;
-  Encoder$1.MAX_NB_BITS_COMPACT = 4;
-  Encoder$1.WORD_SIZE = Int32Array.from([
+  Encoder.DEFAULT_EC_PERCENT = 33; // default minimal percentage of error check words
+  Encoder.DEFAULT_AZTEC_LAYERS = 0;
+  Encoder.MAX_NB_BITS = 32;
+  Encoder.MAX_NB_BITS_COMPACT = 4;
+  Encoder.WORD_SIZE = Int32Array.from([
       4, 6, 6, 8, 8, 8, 8, 8, 8, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
       12, 12, 12, 12, 12, 12, 12, 12, 12, 12
   ]);
@@ -27790,8 +27790,8 @@
       // @Override
       encodeWithHints(contents, format, width, height, hints) {
           let charset = StandardCharsets.ISO_8859_1;
-          let eccPercent = Encoder$1.DEFAULT_EC_PERCENT;
-          let layers = Encoder$1.DEFAULT_AZTEC_LAYERS;
+          let eccPercent = Encoder.DEFAULT_EC_PERCENT;
+          let layers = Encoder.DEFAULT_AZTEC_LAYERS;
           if (hints != null) {
               if (hints.has(EncodeHintType$1.CHARACTER_SET)) {
                   charset = Charset.forName(hints.get(EncodeHintType$1.CHARACTER_SET).toString());
@@ -27809,7 +27809,7 @@
           if (format !== BarcodeFormat$1.AZTEC) {
               throw new IllegalArgumentException('Can only encode AZTEC, but got ' + format);
           }
-          let aztec = Encoder$1.encode(StringUtils.getBytes(contents, charset), eccPercent, layers);
+          let aztec = Encoder.encode(StringUtils.getBytes(contents, charset), eccPercent, layers);
           return AztecWriter.renderResult(aztec, width, height);
       }
       static renderResult(code, width, height) {
@@ -27843,11 +27843,11 @@
   exports.AztecCode = AztecCode;
   exports.AztecCodeReader = AztecReader;
   exports.AztecCodeWriter = AztecWriter;
-  exports.AztecDecoder = Decoder;
-  exports.AztecDetector = Detector;
+  exports.AztecDecoder = Decoder$2;
+  exports.AztecDetector = Detector$3;
   exports.AztecDetectorResult = AztecDetectorResult;
-  exports.AztecEncoder = Encoder$1;
-  exports.AztecHighLevelEncoder = HighLevelEncoder$1;
+  exports.AztecEncoder = Encoder;
+  exports.AztecHighLevelEncoder = HighLevelEncoder;
   exports.AztecPoint = Point;
   exports.BarcodeFormat = BarcodeFormat$1;
   exports.Binarizer = Binarizer;
@@ -27869,10 +27869,10 @@
   exports.Code128Reader = Code128Reader;
   exports.Code39Reader = Code39Reader;
   exports.Code93Reader = Code93Reader;
-  exports.DataMatrixDecodedBitStreamParser = DecodedBitStreamParser;
+  exports.DataMatrixDecodedBitStreamParser = DecodedBitStreamParser$2;
   exports.DataMatrixDefaultPlacement = DefaultPlacement;
-  exports.DataMatrixErrorCorrection = ErrorCorrection$1;
-  exports.DataMatrixHighLevelEncoder = HighLevelEncoder;
+  exports.DataMatrixErrorCorrection = ErrorCorrection;
+  exports.DataMatrixHighLevelEncoder = HighLevelEncoder$1;
   exports.DataMatrixReader = DataMatrixReader;
   exports.DataMatrixSymbolInfo = SymbolInfo;
   exports.DataMatrixWriter = DataMatrixWriter;
@@ -27902,8 +27902,8 @@
   exports.MultiFormatWriter = MultiFormatWriter;
   exports.NotFoundException = NotFoundException;
   exports.OneDReader = OneDReader;
-  exports.PDF417DecodedBitStreamParser = DecodedBitStreamParser$2;
-  exports.PDF417DecoderErrorCorrection = ErrorCorrection;
+  exports.PDF417DecodedBitStreamParser = DecodedBitStreamParser;
+  exports.PDF417DecoderErrorCorrection = ErrorCorrection$1;
   exports.PDF417Reader = PDF417Reader;
   exports.PDF417ResultMetadata = PDF417ResultMetadata;
   exports.PerspectiveTransform = PerspectiveTransform;
@@ -27913,13 +27913,13 @@
   exports.QRCodeDecodedBitStreamParser = DecodedBitStreamParser$1;
   exports.QRCodeDecoderErrorCorrectionLevel = ErrorCorrectionLevel;
   exports.QRCodeDecoderFormatInformation = FormatInformation;
-  exports.QRCodeEncoder = Encoder;
+  exports.QRCodeEncoder = Encoder$1;
   exports.QRCodeEncoderQRCode = QRCode;
   exports.QRCodeMaskUtil = MaskUtil;
   exports.QRCodeMatrixUtil = MatrixUtil;
-  exports.QRCodeMode = Mode$1;
+  exports.QRCodeMode = Mode$2;
   exports.QRCodeReader = QRCodeReader;
-  exports.QRCodeVersion = Version$1;
+  exports.QRCodeVersion = Version;
   exports.QRCodeWriter = QRCodeWriter;
   exports.RGBLuminanceSource = RGBLuminanceSource;
   exports.RSS14Reader = RSS14Reader;
@@ -27928,7 +27928,7 @@
   exports.ReedSolomonDecoder = ReedSolomonDecoder;
   exports.ReedSolomonEncoder = ReedSolomonEncoder;
   exports.ReedSolomonException = ReedSolomonException;
-  exports.Result = Result;
+  exports.Result = Result$1;
   exports.ResultMetadataType = ResultMetadataType$1;
   exports.ResultPoint = ResultPoint;
   exports.StringUtils = StringUtils;
@@ -27947,5 +27947,5 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=index.js.map
