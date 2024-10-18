@@ -45,7 +45,11 @@ export class SubtaskKanbanList extends Component {
     get fieldInfo() {
         return {
             state: {
-                ...getPropertyFieldInfo({ name: "state", type: "project_task_state_selection" }),
+                ...getPropertyFieldInfo({
+                    name: "state",
+                    type: "selection",
+                    widget: "project_task_state_selection",
+                }),
                 viewType: "kanban",
             },
         };
