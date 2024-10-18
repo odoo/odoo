@@ -12,6 +12,7 @@ __all__ = [
     'Meta',
     'model',
     'constrains', 'depends', 'onchange', 'returns',
+    'ondelete', 'onwrite',
     'call_kw',
 ]
 
@@ -137,6 +138,7 @@ class Meta(type):
 #  - method._onchange: set by @onchange, specifies onchange fields
 #  - method.clear_cache: set by @ormcache, used to clear the cache
 #  - method._ondelete: set by @ondelete, used to raise errors for unlink operations
+#  - method._onwrite: set by @onwrite, call the function after write/create/compute
 #
 # On wrapping method only:
 #  - method._api: decorator function, used for re-applying decorator
@@ -253,6 +255,38 @@ def ondelete(*, at_uninstall):
         should be set to ``True``.
     """
     return attrsetter('_ondelete', at_uninstall)
+
+
+def onwrite(*args, with_old_values=False):
+    """
+    Mark a method to be executed after updating values on a record.
+
+    Instead of overwriting :meth:`~odoo.models.BaseModel.write`,
+    :meth:`~odoo.models.BaseModel.create`
+    or :meth:`~odoo.models.BaseModel._compute_field_value`,
+    you can register functions to be run after these methods.
+
+    If a field is written with at least one of the field names.
+
+    .. code-block:: python
+
+        @api.onwrite('active', with_old_values=True)
+        def _onwrite_active(self):
+            if self.context.get('old_values'):
+                # we are changing the value, we are not creating a record
+                self.filtered('active').message_post(body="Activated!")
+
+        @api.onwrite('name')
+        def _onwrite_name(self):
+            logging.info("The name is written on records: %s", self)
+
+    :param bool with_old_values: When set, the context will contain a dict
+        with `old_values` of the fields in format {record_id: {field_name: value}}.
+        The function will be called only for records that have changed.
+        Note that during creation, the method will always be called without
+        `old_values`.
+    """
+    return attrsetter('_onwrite', (frozenset(args), with_old_values))
 
 
 def onchange(*args):

@@ -867,6 +867,7 @@ class BaseModel(metaclass=MetaModel):
         # reset properties memoized on cls
         cls._constraint_methods = BaseModel._constraint_methods
         cls._ondelete_methods = BaseModel._ondelete_methods
+        cls._onwrite_methods = BaseModel._onwrite_methods
         cls._onchange_methods = BaseModel._onchange_methods
 
     @property
@@ -939,6 +940,18 @@ class BaseModel(metaclass=MetaModel):
         methods = [func for _, func in getmembers(cls, is_ondelete)]
         # optimization: memoize results on cls, it will not be recomputed
         cls._ondelete_methods = methods
+        return methods
+
+    @property
+    def _onwrite_methods(self):
+        """ Return a list of methods implementing on write(). """
+        def is_onwrite(func):
+            return callable(func) and hasattr(func, '_onwrite')
+
+        cls = self.env.registry[self._name]
+        methods = [func for _, func in getmembers(cls, is_onwrite)]
+        # optimization: memoize results on cls, it will not be recomputed
+        cls._onwrite_methods = methods
         return methods
 
     @property
@@ -4700,6 +4713,16 @@ class BaseModel(metaclass=MetaModel):
             if fname == 'company_id' or (field.relational and field.check_company):
                 check_company = True
 
+        # gather onwrite methods
+        onwrite = [
+            (func, {
+                rec.id: {key: rec[key] for key in intersection}
+                for rec in self
+            } if func._onwrite[1] else None)
+            for func in self._onwrite_methods
+            if (intersection := func._onwrite[0].intersection(vals))
+        ]
+
         # force the computation of fields that are computed with some assigned
         # fields, but are not assigned themselves
         to_compute = [field.name
@@ -4783,6 +4806,15 @@ class BaseModel(metaclass=MetaModel):
 
             # validate inversed fields
             real_recs._validate_fields(inverse_fields)
+
+        # trigger checks and onwrite methods
+        for func, old_values in onwrite:
+            changed_records = self
+            if old_values is not None:
+                changed_records = changed_records.with_context(old_values=old_values).filtered(
+                    lambda rec: not all(rec[key] == old_value for key, old_value in old_values[rec.id].items())
+                )
+            func(changed_records)
 
         if check_company and self._check_company_auto:
             self._check_company()
@@ -4993,6 +5025,11 @@ class BaseModel(metaclass=MetaModel):
                         record._update_cache(vals)
                     batch_recs = self.concat(*(record for record, vals in batch))
                     next(iter(fields)).determine_inverse(batch_recs)
+
+        # trigger onwrite methods
+        # trigger them all because this is a new record
+        for func in self._onwrite_methods:
+            func(records)
 
         # check Python constraints for non-stored inversed fields
         for data in data_list:
@@ -5224,7 +5261,25 @@ class BaseModel(metaclass=MetaModel):
         return records
 
     def _compute_field_value(self, field):
+        field_name = field.name
+        onwrite = [
+            (func, {
+                rec.id: {field_name: field.__get__(rec)}
+                for rec in self
+            } if func._onwrite[1] else None)
+            for func in self._onwrite_methods
+            if field_name in func._onwrite[0]
+        ]
+
         fields.determine(field.compute, self)
+
+        for func, old_values in onwrite:
+            changed_records = self
+            if old_values is not None:
+                changed_records = changed_records.with_context(old_values=old_values).filtered(
+                    lambda rec: field.__get__(rec) != old_values[rec.id][field_name]
+                )
+            func(changed_records)
 
         if field.store and any(self._ids):
             # check constraints of the fields that have been computed
