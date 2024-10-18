@@ -124,7 +124,7 @@ class MrpProduction(models.Model):
                 'line_ids': [(0, 0, {
                     'name': desc,
                     'ref': desc,
-                    'balance': amt,
+                    'balance': -amt,
                     'account_id': acc.id,
                 }) for acc, amt in labour_amounts.items()]
             })
