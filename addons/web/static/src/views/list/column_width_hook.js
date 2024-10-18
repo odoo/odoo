@@ -300,8 +300,13 @@ export function useMagicColumnWidths(tableRef, getState) {
         // When a vertical scrollbar appears/disappears, it may (depending on the browser/os) change
         // the available width. When it does, we want to keep the current widths, but tweak them a
         // little bit s.t. the table fits in the new available space.
-        if (!columnWidths || allowedWidthDiff > 0) {
-            columnWidths = computeWidths(table, state, allowedWidth, columnWidths);
+        if (!columnWidths || allowedWidthDiff > 0 || !renderer.constructor.useMagicColumnWidths) {
+            columnWidths = computeWidths(
+                table,
+                state,
+                allowedWidth,
+                renderer.constructor.useMagicColumnWidths ? columnWidths : false
+            );
         }
 
         // Set the computed widths in the DOM.
@@ -410,15 +415,12 @@ export function useMagicColumnWidths(tableRef, getState) {
         }
     }
 
-    // Side effects
-    if (renderer.constructor.useMagicColumnWidths) {
-        useEffect(forceColumnWidths);
-        const debouncedResizeCallback = useDebounced(() => {
-            resetWidths();
-            forceColumnWidths();
-        }, 200);
-        useExternalListener(window, "resize", debouncedResizeCallback);
-    }
+    useEffect(forceColumnWidths);
+    const debouncedResizeCallback = useDebounced(() => {
+        resetWidths();
+        forceColumnWidths();
+    }, 200);
+    useExternalListener(window, "resize", debouncedResizeCallback);
 
     // API
     return {
