@@ -2,11 +2,10 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
-import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import "@website/js/editor/snippets.options";
-import { useChildSubEnv } from "@odoo/owl";
 import weUtils from '@web_editor/js/common/utils';
+import { CustomMediaDialog } from "@html_editor/others/custom_media_dialog";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
@@ -435,25 +434,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     }
 });
 
-// Small override of the MediaDialog to retrieve the attachment ids instead of img elements
-class AttachmentMediaDialog extends MediaDialog {
-    setup() {
-        super.setup();
-        useChildSubEnv({ addFieldImage: true });
-    }
-    /**
-     * @override
-     */
-    async save() {
-        await super.save();
-        const selectedMedia = this.selectedMedia[this.state.activeTab];
-        if (selectedMedia.length) {
-            await this.props.extraImageSave(selectedMedia);
-        }
-        this.props.close();
-    }
-}
-
 options.registry.WebsiteSaleProductPage = options.Class.extend({
     init() {
         this._super(...arguments);
@@ -577,32 +557,47 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             );
         }
         let extraImageEls;
-        this.call("dialog", "add", AttachmentMediaDialog, {
+        this.call("dialog", "add", CustomMediaDialog, {
             multiImages: true,
-            onlyImages: true,
+            noDocuments: true,
+            noIcons: true,
+            imageSave: this.onImageSave.bind(this),
+            videoSave: this.onVideoSave.bind(this),
             // Kinda hack-ish but the regular save does not get the information we need
             save: async (imgEls) => {
                 extraImageEls = imgEls;
             },
-            extraImageSave: async (attachments) => {
-                for (const index in attachments) {
-                    const attachment = attachments[index];
-                    if (attachment.mimetype.startsWith("image/")) {
-                        if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
-                            continue;
-                        }
-                        await this._convertAttachmentToWebp(attachment, extraImageEls[index]);
-                    }
+        });
+    },
+
+    async onImageSave(attachments){
+        for (const index in attachments) {
+            const attachment = attachments[index];
+            if (attachment.mimetype.startsWith("image/")) {
+                if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
+                    continue;
                 }
-                rpc(`/shop/product/extra-images`, {
-                    images: attachments,
-                    product_product_id: this.productProductID,
-                    product_template_id: this.productTemplateID,
-                    combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
-                }).then(() => {
-                    this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector});
-                });
+                // await this._convertAttachmentToWebp(attachment, extraImageEls[index]);
             }
+        }
+        rpc('/shop/product/extra-images', {
+            images: attachments,
+            product_product_id: this.productProductID,
+            product_template_id: this.productTemplateID,
+            combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
+        }).then(() => {
+            this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector});
+        });
+    },
+
+    async onVideoSave(attachments) {
+        await rpc('/shop/product/video', {
+            video: attachments,
+            product_product_id: this.productProductID,
+            product_template_id: this.productTemplateID,
+            combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
+        }).then(() => {
+            this.trigger_up('request_save', { reload: true });
         });
     },
 
