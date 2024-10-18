@@ -81,6 +81,9 @@ var SignatureForm = publicWidget.Widget.extend({
      * @see NameAndSignature.resetSignature();
      */
     resetSignature: function () {
+        if (this.isDestroyed()) {
+            return;
+        }
         return this.nameAndSignature.resetSignature();
     },
 
