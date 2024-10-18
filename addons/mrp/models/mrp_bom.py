@@ -71,7 +71,7 @@ class MrpBom(models.Model):
         help="Defines if you can consume more or less components than the quantity defined on the BoM:\n"
              "  * Allowed: allowed for all manufacturing users.\n"
              "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-             "  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
+             "  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
              "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected.",
         default='warning',
         string='Flexible Consumption',
@@ -397,7 +397,7 @@ class MrpBom(models.Model):
                 continue
 
             line_quantity = current_qty * current_line.product_qty
-            if not current_line.product_id in product_boms:
+            if current_line.product_id not in product_boms:
                 update_product_boms()
                 product_ids.clear()
             bom = product_boms.get(current_line.product_id)
@@ -405,7 +405,7 @@ class MrpBom(models.Model):
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
                 bom_lines += [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids]
                 for bom_line in bom.bom_line_ids:
-                    if not bom_line.product_id in product_boms:
+                    if bom_line.product_id not in product_boms:
                         product_ids.add(bom_line.product_id.id)
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
             else:
@@ -563,7 +563,7 @@ class MrpBomLine(models.Model):
     attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
     tracking = fields.Selection(related='product_id.tracking')
     manual_consumption = fields.Boolean(
-        'Manual Consumption', default=False,
+        'Highlight Consumption', default=False,
         readonly=False, store=True, copy=True,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
