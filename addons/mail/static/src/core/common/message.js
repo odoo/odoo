@@ -168,9 +168,6 @@ export class Message extends Component {
         });
         useEffect(
             () => {
-                if (this.messageBody.el) {
-                    this.prepareMessageBody(this.messageBody.el);
-                }
                 if (this.shadowBody.el) {
                     const bodyEl = document.createElement("span");
                     bodyEl.innerHTML = this.state.showTranslation
@@ -190,6 +187,14 @@ export class Message extends Component {
                 this.props.messageSearch?.searchTerm,
                 this.message.body,
             ]
+        );
+        useEffect(
+            () => {
+                if (!this.state.isEditing) {
+                    this.prepareMessageBody(this.messageBody.el);
+                }
+            },
+            () => [this.state.isEditing, this.message.body]
         );
     }
 
