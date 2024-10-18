@@ -9,11 +9,13 @@ class HrDepartureWizard(models.TransientModel):
     _inherit = ['hr.departure.wizard']
 
     def action_register_departure(self):
+        employees = self.employee_ids
         super(HrDepartureWizard, self).action_register_departure()
         employee_leaves = self.env['hr.leave'].search([
-            ('employee_id', '=', self.employee_id.id),
+            ('employee_id', 'in', employees.ids),
             ('date_to', '>', self.departure_date),
         ])
+
         if employee_leaves:
             leaves_with_departure = employee_leaves.filtered(
                 lambda leave: leave.date_from.date() <= self.departure_date)
@@ -42,7 +44,7 @@ class HrDepartureWizard(models.TransientModel):
             leaves_to_delete.with_context(leave_skip_state_check=True).unlink()
 
         employee_allocations = self.env['hr.leave.allocation'].search([
-            ('employee_id', '=', self.employee_id.id),
+            ('employee_id', 'in', employees.ids),
             '|',
                 ('date_to', '=', False),
                 ('date_to', '>', self.departure_date),

@@ -338,3 +338,23 @@ class TestHrEmployee(TestHrCommon):
         employee_norbert = self.env['hr.employee'].create({'name': 'Norbert Employee', 'user_id': user_norbert.id})
         self.assertEqual(employee_norbert.image_1920, user_norbert.image_1920)
         self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)
+
+    def test_departure_wizard(self):
+        """ Test the archiving wizard in the case of multiple employees """
+        employee_A, employee_B, employee_C = self.env['hr.employee'].create([
+            {
+                'name': f'Employee {code}',
+                'user_id': False,
+                'work_email': f'employee_{code}@example.com',
+            } for code in ['A', 'B', 'C']
+        ])
+        archiving_employees = [employee.id for employee in (employee_A, employee_C)]
+
+        wizard = self.env['hr.departure.wizard'].with_context(
+            toggle_active=True,
+            active_ids=archiving_employees,
+        ).create({})
+        wizard.action_register_departure()
+
+        all_employees = employee_A | employee_B | employee_C
+        self.assertEqual(all_employees.filtered(lambda e: e.active), employee_B, "Employees should have been archived")
