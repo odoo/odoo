@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -156,4 +156,46 @@ test("'Thread' menu available in threads", async () => {
     await insertText(".o-mail-ActionPanel input[placeholder='Search by name']", "ThreadTwo");
     await click(".o-mail-ActionPanel button", { text: "Create" });
     await click(".o-mail-DiscussSidebar-item", { text: "ThreadTwo" });
+});
+
+test("sub thread is available for channel and group, not for chat", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "Group",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Threads']");
+    await insertText(
+        ".o-mail-ActionPanel input[placeholder='Search by name']",
+        "Sub thread for channel"
+    );
+    await click(".o-mail-ActionPanel button", { text: "Create" });
+    await click(".o-mail-DiscussSidebar-item", { text: "Sub thread for channel" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Group" });
+    await click("button[title='Threads']");
+    await insertText(
+        ".o-mail-ActionPanel input[placeholder='Search by name']",
+        "Sub thread for group"
+    );
+    await click(".o-mail-ActionPanel button", { text: "Create" });
+    await click(".o-mail-DiscussSidebar-item", { text: "Sub thread for group" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    await contains("button[title='Threads']", { count: 0 });
 });
