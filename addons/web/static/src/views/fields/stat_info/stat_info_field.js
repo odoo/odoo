@@ -19,7 +19,7 @@ export class StatInfoField extends Component {
     get formattedValue() {
         const field = this.props.record.fields[this.props.name];
         const formatter = formatters.get(field.type);
-        return formatter(this.props.record.data[this.props.name] || 0, {
+        return formatter(this.props.record.data[this.props.name], {
             digits: this.props.digits,
             field,
         });
@@ -42,7 +42,7 @@ export const statInfoField = {
             availableTypes: ["char"],
         },
     ],
-    supportedTypes: ["float", "integer", "monetary"],
+    supportedTypes: ["float", "integer", "monetary", "char", "one2many", "many2one"],
     isEmpty: () => false,
     extractProps: ({ attrs, options, string }) => {
         // Sadly, digits param was available as an option and an attr.
