@@ -453,7 +453,9 @@ class DiscussChannelMember(models.Model):
                 self.channel_id,
                 {
                     "invitedMembers": Store.many(
-                        members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
+                        members,
+                        "ADD",
+                        fields={"channel": [], "persona": ["name", "im_status", "write_date"]},
                     ),
                 },
             )

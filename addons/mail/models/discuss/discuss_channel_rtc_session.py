@@ -143,7 +143,7 @@ class DiscussChannelRtcSession(models.Model):
             data = rtc_session._read_format(fields, load=False)[0]
             data["channel_member_id"] = Store.one(
                 rtc_session.channel_member_id,
-                fields={"channel": [], "persona": ["name", "im_status"]},
+                fields={"channel": [], "persona": ["name", "im_status", "write_date"]},
             )
             store.add(rtc_session, data)
 
