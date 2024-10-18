@@ -18,7 +18,7 @@
                             <h2 colspan="2">There are no more contacts to merge for this request</h2>
                             <button name="%(action_partner_deduplicate)d" string="Deduplicate the other Contacts" class="oe_highlight" type="action" colspan="2"/>
                         </group>
-                        <p class="oe_grey" invisible="state != 'option'">
+                        <p class="opacity-50" invisible="state != 'option'">
                             Select the list of fields used to search for
                             duplicated records. If you select several fields,
                             Odoo will propose you to merge only those having
@@ -47,7 +47,7 @@
                         <separator string="Merge the following contacts"
                             invisible="state in ('option', 'finished')"/>
                         <group invisible="state in ('option', 'finished')" col="1">
-                            <p class="oe_grey">
+                            <p class="opacity-50">
                                 Selected contacts will be merged together.
                                 All documents linked to one of these contacts
                                 will be redirected to the destination contact.

@@ -109,7 +109,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     run: "click",
 }, {
     isActive: ["mobile"],
-    trigger: '.o_kanban_renderer .oe_kanban_card',
+    trigger: '.o_kanban_renderer .o_kanban_record',
     content: _t('Managers can inspect all expenses from here.'),
     tooltipPosition: 'bottom',
     run: "click",
