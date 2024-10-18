@@ -108,7 +108,7 @@ export class ProductTemplate extends Base {
         }
 
         const product = variant;
-        const productTmpl = this;
+        const productTmpl = variant.product_tmpl_id || this;
         const standardPrice = variant ? variant.standard_price : this.standard_price;
         const basePrice = variant ? variant.lst_price : this.list_price;
         const productTmplRules = productTmpl["<-product.pricelist.item.product_tmpl_id"] || [];
@@ -126,14 +126,26 @@ export class ProductTemplate extends Base {
             ) || [];
 
         // We take in first assigned product rules instead of common one.
-        const rule =
-            rules.find((rule) => !rule.product_id || rule.product_id.id === product?.id) ||
-            rules[0];
+        let commonRule = "";
+        let productVariantRule = "";
+        let productTemplateRule = "";
+        for (const rule of rules) {
+            if (!rule.product_id && !rule.product_tmpl_id) {
+                commonRule = rule;
+            }
+            if (rule.product_id?.id === product?.id) {
+                productVariantRule = rule;
+                break;
+            }
+            if (rule.product_tmpl_id?.id === productTmpl.id) {
+                productTemplateRule = rule;
+            }
+        }
 
+        const rule = productVariantRule || productTemplateRule || commonRule;
         if (!rule) {
             return price;
         }
-
         if (rule.base === "pricelist") {
             if (rule.base_pricelist_id) {
                 price = this.get_price(rule.base_pricelist_id, quantity, 0, true, variant);

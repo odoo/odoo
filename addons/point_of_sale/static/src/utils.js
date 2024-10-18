@@ -52,7 +52,7 @@ export function constructFullProductName(line) {
         attributeString = ` (${attributeString})`;
     }
 
-    return `${line?.product_id?.display_name}${attributeString}`;
+    return `${line?.product_id?.name}${attributeString}`;
 }
 /**
  * Returns a random 5 digits alphanumeric code
