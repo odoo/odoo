@@ -370,20 +370,20 @@
             <snippets id="snippet_content" string="Inner content">
                 <t t-snippet="website.s_button" string="Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.svg"/>
                 <t t-snippet="website.s_image" string="Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image.svg"/>
-                <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg"/>
+                <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg" t-height-in-grid="9"/>
                 <t t-snippet="website.s_hr" string="Separator" t-thumbnail="/website/static/src/img/snippets_thumbs/s_hr.svg"/>
                 <t t-snippet="website.s_accordion" string="Accordion" t-thumbnail="/website/static/src/img/snippets_thumbs/s_accordion.svg"/>
                 <t t-snippet="website.s_alert" string="Alert" t-thumbnail="/website/static/src/img/snippets_thumbs/s_alert.svg"/>
-                <t t-snippet="website.s_rating" string="Rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.svg"/>
+                <t t-snippet="website.s_rating" string="Rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.svg" t-width-in-grid="2"/>
                 <t t-snippet="website.s_card" string="Card" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.svg"/>
-                <t t-snippet="website.s_share" string="Share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg"/>
+                <t t-snippet="website.s_share" string="Share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg" t-width-in-grid="4"/>
                 <t t-snippet="website.s_social_media" string="Social Media" t-thumbnail="/website/static/src/img/snippets_thumbs/s_social_media.svg"/>
                 <t t-snippet="website.s_facebook_page" string="Facebook" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg"/>
                 <t t-snippet="website.s_searchbar_input" string="Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg" t-forbid-sanitize="form"/>
                 <t id="mass_mailing_newsletter_hook"/>
                 <t id="mail_group_hook"/>
                 <t t-snippet="website.s_text_highlight" string="Text Highlight" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
-                <t t-snippet="website.s_chart" string="Chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg"/>
+                <t t-snippet="website.s_chart" string="Chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg" t-height-in-grid="9" t-width-in-grid="7"/>
                 <t t-snippet="website.s_progress_bar" string="Progress Bar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_progress_bar.svg"/>
                 <t t-snippet="website.s_badge" string="Badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_badge.svg"/>
                 <t t-snippet="website.s_cta_badge" string="CTA Badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_cta_badge.svg"/>
@@ -997,7 +997,7 @@
         t-attf-data-selector="#{so_content_addition_selector}, .s_card"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, .btn, #{so_content_addition_selector}, .s_card:not(#{special_cards_selector})"
         t-attf-data-exclude="#{special_cards_selector}"
-        data-drop-in="nav"/>
+        data-drop-in="nav, .row.o_grid_mode"/>
 
     <div data-js="SnippetSave"
         data-selector="[data-snippet], a.btn"

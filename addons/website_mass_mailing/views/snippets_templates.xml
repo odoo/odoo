@@ -220,6 +220,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
             <t t-set="_exclude">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list</t>
         </t>
         <div data-selector=".js_subscribe" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
+        <div data-selector=".s_newsletter_subscribe_form" data-drop-in=".row.o_grid_mode"/>
     </xpath>
 </template>
 
