@@ -336,7 +336,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                     break
             else:  # last try
                 super().run(result)
-                if not result.wasSuccessful() and BaseCase._tests_run_count != 1:
+                if hasattr(result, "wasSuccessful") and not result.wasSuccessful() and BaseCase._tests_run_count != 1:
                     _logger.runbot('Disabling auto-retry after a failed test')
                     BaseCase._tests_run_count = 1
 
