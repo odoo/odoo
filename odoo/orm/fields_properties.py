@@ -6,10 +6,11 @@ import uuid
 from collections import defaultdict
 from operator import attrgetter
 
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.osv import expression
 from odoo.tools import OrderedSet, is_list_of
 from odoo.tools.misc import has_list_types
+from odoo.tools.translate import _
 
 from .fields import Field, _logger
 from .models import BaseModel
@@ -170,7 +171,7 @@ class Properties(Field):
                 assert isinstance(value, dict), f"Wrong type {value!r}"
                 result.append(self._dict_to_list(value, definition))
 
-        res_ids_per_model = self._get_res_ids_per_model(records, result)
+        res_ids_per_model = self._get_res_ids_per_model(records.env, result)
 
         # value is in record format
         for value in result:
@@ -190,7 +191,7 @@ class Properties(Field):
 
         return super().convert_to_write(value, record)
 
-    def _get_res_ids_per_model(self, records, values_list):
+    def _get_res_ids_per_model(self, env, values_list):
         """Read everything needed in batch for the given records.
 
         To retrieve relational properties names, or to check their existence,
@@ -211,7 +212,7 @@ class Properties(Field):
                 property_value = property_definition.get('value') or []
                 default = property_definition.get('default') or []
 
-                if type_ not in ('many2one', 'many2many') or comodel not in records.env:
+                if type_ not in ('many2one', 'many2many') or comodel not in env:
                     continue
 
                 if type_ == 'many2one':
@@ -224,7 +225,7 @@ class Properties(Field):
         # check existence and pre-fetch in batch
         res_ids_per_model = {}
         for model, ids in ids_per_model.items():
-            recs = records.env[model].browse(ids).exists()
+            recs = env[model].browse(ids).exists()
             res_ids_per_model[model] = set(recs.ids)
 
             for record in recs:
@@ -470,14 +471,14 @@ class Properties(Field):
                 all_tags = {tag[0] for tag in property_definition.get('tags') or ()}
                 property_value = [tag for tag in property_value if tag in all_tags]
 
-            elif property_type == 'many2one' and property_value and res_model in env:
+            elif property_type == 'many2one' and property_value:
                 if not isinstance(property_value, int):
                     raise ValueError(f'Wrong many2one value: {property_value!r}.')
 
-                if property_value not in res_ids_per_model[res_model]:
+                if res_model not in env or property_value not in res_ids_per_model[res_model]:
                     property_value = False
 
-            elif property_type == 'many2many' and property_value and res_model in env:
+            elif property_type == 'many2many' and property_value:
                 if not is_list_of(property_value, int):
                     raise ValueError(f'Wrong many2many value: {property_value!r}.')
 
@@ -488,7 +489,7 @@ class Properties(Field):
                 property_value = [
                     id_ for id_ in property_value
                     if id_ in res_ids_per_model[res_model]
-                ]
+                ] if res_model in env else []
 
             property_definition['value'] = property_value
 
@@ -626,9 +627,10 @@ class PropertiesDefinition(Field):
         if not isinstance(value, list):
             raise ValueError(f'Wrong properties definition type {type(value)!r}')
 
-        Properties._remove_display_name(value, value_key='default')
+        if validate:
+            Properties._remove_display_name(value, value_key='default')
 
-        self._validate_properties_definition(value, record.env)
+            self._validate_properties_definition(value, record.env)
 
         return json.dumps(value)
 
@@ -648,9 +650,10 @@ class PropertiesDefinition(Field):
         if not isinstance(value, list):
             raise ValueError(f'Wrong properties definition type {type(value)!r}')
 
-        Properties._remove_display_name(value, value_key='default')
+        if validate:
+            Properties._remove_display_name(value, value_key='default')
 
-        self._validate_properties_definition(value, record.env)
+            self._validate_properties_definition(value, record.env)
 
         return value
 

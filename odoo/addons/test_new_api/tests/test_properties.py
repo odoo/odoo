@@ -112,6 +112,12 @@ class TestPropertiesMixin(TransactionCase):
         self.assertTrue(value and value[0])
         return value[0]
 
+    def get_read_dict(self, record, field_name):
+        read_value = record.read([field_name])[0][field_name]
+        field = record._fields[field_name]
+        field._remove_display_name(read_value)
+        return field._list_to_dict(read_value)
+
 
 class PropertiesCase(TestPropertiesMixin):
 
@@ -848,7 +854,7 @@ class PropertiesCase(TestPropertiesMixin):
         )
 
         # read the many2one on the child, should return False as well
-        self.assertFalse(self.message_1.attributes.get('message'))
+        self.assertFalse(self.get_read_dict(self.message_1, 'attributes').get('message'))
 
         values = self.message_1.read(['attributes'])[0]['attributes']
         self.assertEqual(values[0]['type'], 'many2one', msg='Property type should be preserved')
@@ -945,7 +951,7 @@ class PropertiesCase(TestPropertiesMixin):
 
         self.env.invalidate_all()
 
-        self.assertEqual(self.message_1.attributes, {
+        self.assertEqual(self.get_read_dict(self.message_1, 'attributes'), {
             'int_value': 55555555555,
             'float_value': 1.337,
             'boolean_value': True,
@@ -1011,7 +1017,7 @@ class PropertiesCase(TestPropertiesMixin):
         # the option might have been removed on the definition, write False
         self.message_3.attributes = [{'name': 'state', 'value': 'unknown_selection'}]
         self.env.invalidate_all()
-        self.assertEqual(self.message_3.attributes, {'state': False})
+        self.assertEqual(self.get_read_dict(self.message_3, 'attributes'), {'state': False})
 
         with self.assertRaises(ValueError):
             # check that 2 options can not have the same id
@@ -1356,7 +1362,7 @@ class PropertiesCase(TestPropertiesMixin):
             }
         ]
         self.env.invalidate_all()
-        self.assertEqual(self.message_1.attributes, {
+        self.assertEqual(self.get_read_dict(self.message_1, 'attributes'), {
             'discussion_color_code': False,
             'moderator_partner_id': False,
         })
@@ -1368,20 +1374,18 @@ class PropertiesCase(TestPropertiesMixin):
 
         self.env.invalidate_all()
 
-        self.assertEqual(self.message_1.attributes, {
+        self.assertEqual(self.get_read_dict(self.message_1, 'attributes'), {
             'discussion_color_code': False,
             'moderator_partner_id': False,
             'state': 'ready',
         })
 
         # remove a property from the definition
-        # the properties on the child should remain, until we write on it
+        # the properties on the child can be remained, until we write on it
         # when reading, the removed property must be filtered
         self.discussion_1.attributes_definition = attributes_definition[:-1]  # remove the state field
 
         self.assertEqual(self.message_1.attributes, {
-            'discussion_color_code': False,
-            'moderator_partner_id': False,
             'state': 'ready',
         })
 
@@ -2682,7 +2686,8 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [unexisting_record_id, self.message_3.id],
         )
 
-        with self.assertQueryCount(3):
+        self.env.invalidate_all()
+        with self.assertQueryCount(4):
             result = Model.read_group(
                 domain=[],
                 fields=['name', 'attributes', 'discussion'],
