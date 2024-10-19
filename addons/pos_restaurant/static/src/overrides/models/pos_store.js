@@ -36,13 +36,15 @@ patch(PosStore.prototype, {
         return screen === "LoginScreen" ? "LoginScreen" : "FloorScreen";
     },
     async onDeleteOrder(order) {
+        const orderIsDeleted = await super.onDeleteOrder(...arguments);
         if (
             this.config.module_pos_restaurant &&
+            orderIsDeleted &&
             this.mainScreen.component.name !== "TicketScreen"
         ) {
             this.showScreen("FloorScreen");
         }
-        return super.onDeleteOrder(...arguments);
+        return orderIsDeleted;
     },
     // using the same floorplan.
     async ws_syncTableCount(data) {

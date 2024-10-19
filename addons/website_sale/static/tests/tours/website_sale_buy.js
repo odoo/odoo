@@ -19,6 +19,7 @@ registry.category("web_tour.tours").add('shop_buy_product', {
         },
         tourUtils.goToCart(),
         tourUtils.goToCheckout(),
+        tourUtils.confirmOrder(),
         ...tourUtils.payWithTransfer(true),
     ]
 });

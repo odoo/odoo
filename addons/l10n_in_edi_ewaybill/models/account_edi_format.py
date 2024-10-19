@@ -373,7 +373,7 @@ class AccountEdiFormat(models.Model):
         return res
 
     def _l10n_in_edi_ewaybill_get_error_message(self, code):
-        error_message = self.env._(ERROR_CODES.get(code), '')  # pylint: disable=gettext-variable
+        error_message = self.env._(ERROR_CODES.get(code, ''))  # pylint: disable=gettext-variable
         return error_message or _("We don't know the error message for this error code. Please contact support.")
 
     def _get_l10n_in_edi_saler_buyer_party(self, move):

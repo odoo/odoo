@@ -181,3 +181,13 @@ class TestAnalyticAccount(AnalyticCommon):
             with self.subTest(plan=plan.name, expected_count=expected_value):
                 with Form(plan) as plan_form:
                     self.assertEqual(plan_form.record.all_account_count, expected_value)
+
+    def test_create_analytic_with_minimal_access(self):
+        analyst_partner = self.env['res.partner'].create({'name': 'analyst'})
+        analyst = self.env['res.users'].create({
+            'login': 'analyst',
+            'groups_id': [Command.set(self.env.ref('analytic.group_analytic_accounting').ids)],
+            'partner_id': analyst_partner.id
+        })
+        plan = self.env['account.analytic.plan'].with_user(analyst).create({'name': 'test plan'})
+        self.assertEqual(plan.create_uid, analyst)

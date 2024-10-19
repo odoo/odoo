@@ -9,5 +9,6 @@ export class QuotationDocumentKanbanController extends KanbanController {
     setup() {
         super.setup();
         this.uploadRoute = '/sale_pdf_quote_builder/quotation_document/upload';
+        this.allowedMIMETypes='application/pdf';
     }
 }

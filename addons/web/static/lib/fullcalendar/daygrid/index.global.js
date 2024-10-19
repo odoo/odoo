@@ -1,5 +1,5 @@
 /*!
-FullCalendar Day Grid Plugin v6.1.10
+FullCalendar Day Grid Plugin v6.1.11
 Docs & License: https://fullcalendar.io/docs/month-view
 (c) 2023 Adam Shaw
 */
@@ -275,7 +275,8 @@ FullCalendar.DayGrid = (function (exports, core, internal$1, preact) {
             let segUid = segs[segEntry.index].eventRange.instance.instanceId +
                 ':' + segEntry.span.start +
                 ':' + (segEntry.span.end - 1);
-            return segHeights[segUid];
+            // if no thickness known, assume 1 (if 0, so small it always fits)
+            return segHeights[segUid] || 1;
         });
         hierarchy.allowReslicing = true;
         hierarchy.strictOrder = strictOrder;
@@ -477,16 +478,20 @@ FullCalendar.DayGrid = (function (exports, core, internal$1, preact) {
         handleInvalidInsertion(insertion, entry, hiddenEntries) {
             const { entriesByLevel, forceHidden } = this;
             const { touchingEntry, touchingLevel, touchingLateral } = insertion;
+            // the entry that the new insertion is touching must be hidden
             if (this.hiddenConsumes && touchingEntry) {
                 const touchingEntryId = internal$1.buildEntryKey(touchingEntry);
-                // if not already hidden
                 if (!forceHidden[touchingEntryId]) {
                     if (this.allowReslicing) {
-                        const placeholderEntry = Object.assign(Object.assign({}, touchingEntry), { span: internal$1.intersectSpans(touchingEntry.span, entry.span) });
-                        const placeholderEntryId = internal$1.buildEntryKey(placeholderEntry);
-                        forceHidden[placeholderEntryId] = true;
-                        entriesByLevel[touchingLevel][touchingLateral] = placeholderEntry; // replace touchingEntry with our placeholder
-                        this.splitEntry(touchingEntry, entry, hiddenEntries); // split up the touchingEntry, reinsert it
+                        // split up the touchingEntry, reinsert it
+                        const hiddenEntry = Object.assign(Object.assign({}, touchingEntry), { span: internal$1.intersectSpans(touchingEntry.span, entry.span) });
+                        // reinsert the area that turned into a "more" link (so no other entries try to
+                        // occupy the space) but mark it forced-hidden
+                        const hiddenEntryId = internal$1.buildEntryKey(hiddenEntry);
+                        forceHidden[hiddenEntryId] = true;
+                        entriesByLevel[touchingLevel][touchingLateral] = hiddenEntry;
+                        hiddenEntries.push(hiddenEntry);
+                        this.splitEntry(touchingEntry, entry, hiddenEntries);
                     }
                     else {
                         forceHidden[touchingEntryId] = true;
@@ -494,7 +499,8 @@ FullCalendar.DayGrid = (function (exports, core, internal$1, preact) {
                     }
                 }
             }
-            return super.handleInvalidInsertion(insertion, entry, hiddenEntries);
+            // will try to reslice...
+            super.handleInvalidInsertion(insertion, entry, hiddenEntries);
         }
     }
 

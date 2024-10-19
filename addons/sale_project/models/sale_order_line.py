@@ -416,3 +416,9 @@ class SaleOrderLine(models.Model):
             :returns: Dict containing id of SOL as key and the action as value
         """
         return {}
+
+    def _prepare_procurement_values(self, group_id=False):
+        values = super()._prepare_procurement_values(group_id=group_id)
+        if self.project_id:
+            values['project_id'] = self.order_id.project_id.id
+        return values

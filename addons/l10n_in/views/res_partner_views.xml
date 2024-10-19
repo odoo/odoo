@@ -21,6 +21,14 @@
                         invisible="not display_pan_warning">
                         PAN number is not same as the 3rd to 12th characters of the GST number.
                 </div>
+                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_gst_state_warning or country_code != 'IN'">
+                    <field name="l10n_in_gst_state_warning"/>
+                    <button name="action_update_state_as_per_gstin"
+                            string="Update it"
+                            class="oe_link"
+                            invisible="country_code != 'IN'"
+                            type="object"/>
+                </div>
             </xpath>
         </field>
     </record>

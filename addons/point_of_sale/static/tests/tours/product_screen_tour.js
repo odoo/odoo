@@ -129,6 +129,13 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
                 })
             ),
             ProductScreen.isShown(),
+
+            // Test Cancel Order from Actions
+            ProductScreen.clickReview(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.orderIsEmpty(),
         ].flat(),
 });
 
@@ -363,6 +370,7 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
                 trigger: '.category-button:eq(1) > span:contains("AAB")',
                 run: "click",
             },
+            ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
             {
                 trigger: '.category-button:eq(2) > span:contains("AAX")',
             },

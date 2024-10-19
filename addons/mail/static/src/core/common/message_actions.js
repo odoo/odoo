@@ -202,7 +202,7 @@ messageActionsRegistry
             component.message.message_type &&
             component.message.message_type !== "user_notification",
         icon: "fa-link",
-        title: _t("Copy Message Link"),
+        title: _t("Copy Link"),
         onClick: (component) => component.message.copyLink(),
         sequence: 110,
     });

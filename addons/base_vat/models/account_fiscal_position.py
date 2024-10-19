@@ -60,7 +60,9 @@ class AccountFiscalPosition(models.Model):
         raise ValidationError(error_message)
 
     def _get_vat_valid(self, delivery, company=None):
-        eu_countries = self.env.ref('base.europe').country_ids
+        res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id('base.europe')
+        eu_country_group = self.env[res_model].browse(res_id)
+        eu_countries = eu_country_group.country_ids
 
         # If VIES validation does not apply to this partner (e.g. they
         # are in the same country as the partner), then skip.
