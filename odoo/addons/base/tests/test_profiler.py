@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import sys
 import time
 
 from odoo.exceptions import AccessError
@@ -416,6 +417,9 @@ class TestProfiling(TransactionCase):
         self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'a'}),))
 
     def test_sync_recorder(self):
+        if sys.gettrace() is not None:
+            self.skipTest(f'Cannot start SyncCollector, settrace already set: {sys.gettrace()}')
+
         def a():
             b()
             c()

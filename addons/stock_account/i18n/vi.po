@@ -218,7 +218,7 @@ msgid ""
 " the product category, or on the location, before processing this operation."
 msgstr ""
 "Không tìm thấy tài khoản nhập tồn kho cho sản phẩm %s. Bạn phải xác định một"
-" tài khoản ở danh mục sản phẩm hoặc ở vị trí lưu kho trước khi xử lý hoạt "
+" tài khoản ở danh mục sản phẩm hoặc ở địa điểm lưu kho trước khi xử lý hoạt "
 "động này."
 
 #. module: stock_account
@@ -231,7 +231,7 @@ msgid ""
 "operation."
 msgstr ""
 "Không tìm thấy tài khoản xuất tồn kho cho sản phẩm %s. Bạn phải xác định một"
-" tài khoản ở danh mục sản phẩm hoặc ở vị trí lưu kho trước khi xử lý hoạt "
+" tài khoản ở danh mục sản phẩm hoặc ở địa điểm lưu kho trước khi xử lý hoạt "
 "động này."
 
 #. module: stock_account
@@ -306,7 +306,7 @@ msgid ""
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
 "Các bút toán đối ứng cho tất cả dịch chuyển nhập hàng sẽ được ghi vào tài khoản này, trừ khi có một tài khoản định giá cụ thể\n"
-"                được thiết lập trong vị trí nguồn. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này. Nó cũng có thể được thiết lập trực tiếp trên từng sản phẩm."
+"                được thiết lập trong địa điểm nguồn. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này. Nó cũng có thể được thiết lập trực tiếp trên từng sản phẩm."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -431,7 +431,7 @@ msgstr "Tuổi kho"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Vị trí kiểm kho"
+msgstr "Địa điểm kiểm kho"
 
 #. module: stock_account
 #. odoo-python
@@ -844,7 +844,7 @@ msgid ""
 "transit location."
 msgstr ""
 "Chi tiết di chuyển không nhất quán: chúng đang thực hiện một tác vụ liên "
-"công ty trong một bước duy nhất trong khi chúng phải đi qua vị trí trung "
+"công ty trong một bước duy nhất trong khi chúng phải đi qua địa điểm trung "
 "chuyển liên công ty."
 
 #. module: stock_account
@@ -867,7 +867,7 @@ msgid ""
 "be use to correct a specific transfer."
 msgstr ""
 "Giá trị của lớp định giá tồn kho không thể là số âm. Chi phí nhập kho có thể"
-" được sử dụng để điều chỉnh một điều chuyển cụ thể."
+" được sử dụng để điều chỉnh một lệnh chuyển hàng cụ thể."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.inventory_aging_action
@@ -909,7 +909,7 @@ msgstr "Tổng giá trị"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -952,9 +952,9 @@ msgid ""
 msgstr ""
 "Được sử dụng cho định giá tồn kho theo thời gian thực. Khi được thiết lập "
 "trên một địa điểm ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng"
-" để giữ giá trị của những sản phẩm được dịch chuyển từ một vị trí nội bộ "
-"sang vị trí này, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm. "
-"Việc này không ảnh hưởng tới vị trí nội bộ."
+" để giữ giá trị của những sản phẩm được dịch chuyển từ một địa điểm nội bộ "
+"sang địa điểm này, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm."
+" Việc này không ảnh hưởng tới địa điểm nội bộ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -967,9 +967,9 @@ msgid ""
 msgstr ""
 "Được sử dụng cho định giá tồn kho theo thời gian thực. Khi được thiết lập "
 "trên một địa điểm ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng"
-" để giữ giá trị của những sản phẩm được dịch chuyển ra khỏi vị trí này và "
-"vào một vị trí nội bộ, thay cho Tài khoản xuất kho được thiết lập trên sản "
-"phẩm. Việc này không ảnh hưởng tới vị trí nội bộ."
+" để giữ giá trị của những sản phẩm được dịch chuyển ra khỏi địa điểm này và "
+"vào một địa điểm nội bộ, thay cho Tài khoản xuất kho được thiết lập trên sản"
+" phẩm. Việc này không ảnh hưởng tới địa điểm nội bộ."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -1044,7 +1044,7 @@ msgid ""
 "                It can also directly be set on each product."
 msgstr ""
 "Khi thực hiện định giá tồn kho tự động, các hạng mục bút toán đối ứng cho tất cả dịch chuyển tồn kho xuất đi sẽ được ghi sổ trong tài khoản này,\n"
-"                trừ khi có một tài khoản định giá cụ thể được thiết lập trên vị trí đích. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này.\n"
+"                trừ khi có một tài khoản định giá cụ thể được thiết lập trên địa điểm đích. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này.\n"
 "                Tài khoản này cũng có thể được thiết lập trực tiếp trên mỗi sản phẩm."
 
 #. module: stock_account
@@ -1166,7 +1166,7 @@ msgstr "cho"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr "các vị trí cụ thể"
+msgstr "các địa điểm cụ thể"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document

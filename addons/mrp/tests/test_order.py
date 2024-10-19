@@ -3976,6 +3976,7 @@ class TestMrpOrder(TestMrpCommon):
         will be set too. As if the finish date is not set the planned workorder will not
         be shown in planning gantt view
         """
+        self.env.company.resource_calendar_id.tz = 'Europe/Brussels'
         mo = self.env['mrp.production'].create({
             'product_id': self.product.id,
             'product_uom_id': self.bom_1.product_uom_id.id,
@@ -4256,6 +4257,33 @@ class TestMrpOrder(TestMrpCommon):
         self.assertFalse(op_1.blocked_by_workorder_ids)
         self.assertEqual(op_2.blocked_by_workorder_ids, op_1)
         self.assertEqual(op_3.blocked_by_workorder_ids, op_2)
+
+    def test_update_mo_from_bom_with_kit(self):
+        """
+        Test that an MO can be updated from BoM when the finished product has a kit as a component.
+        """
+        # Test that the finished product has a kit as a component
+        kit_bom_line = self.bom_3.bom_line_ids.filtered(lambda line: line.product_id.is_kits)
+        self.assertEqual(len(kit_bom_line), 1)
+        kit_bom = kit_bom_line.product_id.bom_ids
+        self.assertEqual(len(kit_bom.bom_line_ids), 2)
+        # Check that other components are present in the BoM
+        self.assertEqual(len(self.bom_3.bom_line_ids), 3)
+        # Create a MO
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_3.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(len(mo.move_raw_ids), 4)
+        # keep only the kit as component
+        (self.bom_3.bom_line_ids - kit_bom_line).unlink()
+        self.assertEqual(self.bom_3.bom_line_ids, kit_bom_line)
+        mo.action_update_bom()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 2, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 3, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
 
 
 @tagged('post_install', '-at_install')

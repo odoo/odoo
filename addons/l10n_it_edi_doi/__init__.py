@@ -4,7 +4,7 @@ from . import models
 
 
 def _l10n_it_edi_doi_post_init(env):
-    for company in env['res.company'].search([('chart_template', '=', 'it')]):
+    for company in env['res.company'].search([('chart_template', '=', 'it')], order="parent_path"):
         template = env['account.chart.template'].with_company(company)
         template._load_data({
             'account.tax': template._get_it_edi_doi_account_tax(),

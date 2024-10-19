@@ -5,6 +5,7 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     l10n_in_upi_id = fields.Char(string="UPI Id")
+    l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
 
     def create(self, vals):
         res = super().create(vals)
@@ -25,3 +26,7 @@ class ResCompany(models.Model):
             ChartTemplate = self.env['account.chart.template'].with_company(company)
             fiscal_position_data = ChartTemplate._get_in_account_fiscal_position()
             ChartTemplate._load_data({'account.fiscal.position': fiscal_position_data})
+
+    def action_update_state_as_per_gstin(self):
+        self.ensure_one()
+        self.partner_id.action_update_state_as_per_gstin()

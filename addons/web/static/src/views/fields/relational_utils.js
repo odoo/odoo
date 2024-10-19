@@ -802,9 +802,7 @@ export function useX2ManyCrud(getList, isMany2Many) {
                 return list.addAndRemove({ add: object });
             } else {
                 // object instanceof Record
-                if (!object.resId || object.isDirty) {
-                    await object.save();
-                }
+                await object.save({ reload: false });
                 return list.linkTo(object.resId);
             }
         };

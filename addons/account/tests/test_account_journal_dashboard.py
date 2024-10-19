@@ -2,25 +2,12 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.tests.test_account_journal_dashboard_common import TestAccountJournalDashboardCommon
 from odoo.tests import tagged
 from odoo.tools.misc import format_amount
 
 @tagged('post_install', '-at_install')
-class TestAccountJournalDashboard(AccountTestInvoicingCommon):
-
-    def assertDashboardPurchaseSaleData(self, journal, number_draft, sum_draft, number_waiting, sum_waiting, number_late, sum_late, currency, **kwargs):
-        expected_values = {
-            'number_draft': number_draft,
-            'sum_draft': format_amount(self.env, sum_draft, currency),
-            'number_waiting': number_waiting,
-            'sum_waiting': format_amount(self.env, sum_waiting, currency),
-            'number_late': number_late,
-            'sum_late': format_amount(self.env, sum_late, currency),
-            **kwargs
-        }
-        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
-        self.assertDictEqual({**dashboard_data, **expected_values}, dashboard_data)
+class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
 
     @freeze_time("2019-01-22")
     def test_customer_invoice_dashboard(self):

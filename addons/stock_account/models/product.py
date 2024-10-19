@@ -332,6 +332,9 @@ class ProductProduct(models.Model):
         candidates_domain = self._get_fifo_candidates_domain(company)
         return self.env["stock.valuation.layer"].sudo().search(candidates_domain)
 
+    def _get_qty_taken_on_candidate(self, qty_to_take_on_candidates, candidate):
+        return min(qty_to_take_on_candidates, candidate.remaining_qty)
+
     def _run_fifo(self, quantity, company):
         self.ensure_one()
 
@@ -341,7 +344,7 @@ class ProductProduct(models.Model):
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
-            qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate.remaining_qty)
+            qty_taken_on_candidate = self._get_qty_taken_on_candidate(qty_to_take_on_candidates, candidate)
 
             candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
             new_standard_price = candidate_unit_cost
@@ -676,9 +679,20 @@ class ProductProduct(models.Model):
                 raise UserError(_('You don\'t have any stock input account defined on your product category. You must define one before processing this operation.'))
             if not product_accounts[product.id].get('stock_valuation'):
                 raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
+            if not product_accounts[product.id].get('stock_output'):
+                raise UserError(
+                    _('You don\'t have any output valuation account defined on your product '
+                      'category. You must define one before processing this operation.')
+                )
 
-            debit_account_id = stock_input_account.id
-            credit_account_id = product_accounts[product.id]['stock_valuation'].id
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            orig_qtys = self.env.context.get('products_orig_quantity_svl')
+            if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) == 1:
+                debit_account_id = stock_input_account.id
+                credit_account_id = product_accounts[product.id]['stock_valuation'].id
+            else:
+                debit_account_id = product_accounts[product.id]['stock_valuation'].id
+                credit_account_id = product_accounts[product.id]['stock_output'].id
             value = out_stock_valuation_layer.value
             move_vals = {
                 'journal_id': product_accounts[product.id]['stock_journal'].id,
@@ -960,7 +974,7 @@ class ProductCategory(models.Model):
                     ._svl_empty_stock(description, product_category=product_category)
                 out_stock_valuation_layers = SVL.sudo().create(out_svl_vals_list)
                 if product_category.property_valuation == 'real_time':
-                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                    move_vals_list += Product.with_context(product_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_categories[product_category] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductCategory, self).write(vals)

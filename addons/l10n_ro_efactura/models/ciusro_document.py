@@ -53,19 +53,22 @@ class L10nRoEdiDocument(models.Model):
     invoice_id = fields.Many2one(comodel_name='account.move', required=True)
     state = fields.Selection(
         selection=[
-            ('invoice_sending', 'Sending'),
+            ('invoice_sending', 'Sent'),
             ('invoice_sending_failed', 'Error'),
-            ('invoice_sent', 'Sent'),
+            ('invoice_sent', 'Validated'),
         ],
         string='E-Factura Status',
         required=True,
+        help="""Sent -> Successfully sent to the SPV, waiting for validation.
+                Validated -> Sent & validated by the SPV.
+                Error -> Sending error or validation error from the SPV.""",
     )
     datetime = fields.Datetime(default=fields.Datetime.now, required=True)
     attachment_id = fields.Many2one(comodel_name='ir.attachment')
     message = fields.Char()
-    key_loading = fields.Char()         # To be used to fetch the status of previously sent XML
-    key_signature = fields.Char()       # Received from a successful response: to be saved for government purposes
-    key_certificate = fields.Char()     # Received from a successful response: to be saved for government purposes
+    key_loading = fields.Char(string="E-Factura Index")  # To be used to fetch the status of previously sent XML
+    key_signature = fields.Char()    # Received from a successful response: to be saved for government purposes
+    key_certificate = fields.Char()  # Received from a successful response: to be saved for government purposes
 
     @api.model
     def _request_ciusro_send_invoice(self, company, xml_data, move_type='out_invoice'):

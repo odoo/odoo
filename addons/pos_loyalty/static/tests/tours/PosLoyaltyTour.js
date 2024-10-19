@@ -54,13 +54,13 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
             //   - on cheapest product
             ProductScreen.addOrderline("Letter Tray", "4"),
             ProductScreen.addOrderline("Desk Organizer", "9"),
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-4.75"),
-            PosLoyalty.orderTotalIs("62.27"),
+            PosLoyalty.hasRewardLine("90% on the cheapest product", "-4.59"),
+            PosLoyalty.orderTotalIs("62.43"),
             PosLoyalty.enterCode("5678"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-15.30"),
-            PosLoyalty.orderTotalIs("46.97"),
+            PosLoyalty.orderTotalIs("47.13"),
             PosLoyalty.removeRewardLine("Free Product"),
-            PosLoyalty.orderTotalIs("62.27"),
+            PosLoyalty.orderTotalIs("62.43"),
             PosLoyalty.finalizeOrder("Cash", "90"),
 
             // specific product discount
@@ -96,11 +96,11 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             ProductScreen.addOrderline("Desk Organizer", "10"), // 5.1
             PosLoyalty.hasRewardLine("on the cheapest product", "-4.59"),
             ProductScreen.addOrderline("Letter Tray", "4"), // 4.8 tax 10%
-            PosLoyalty.hasRewardLine("on the cheapest product", "-4.75"),
+            PosLoyalty.hasRewardLine("on the cheapest product", "-4.59"),
             PosLoyalty.enterCode("123456"),
-            PosLoyalty.hasRewardLine("10% on your order", "-5.10"),
-            PosLoyalty.hasRewardLine("10% on your order", "-1.64"),
-            PosLoyalty.orderTotalIs("60.63"), //SUBTOTAL
+            PosLoyalty.hasRewardLine("10% on your order", "-4.64"),
+            PosLoyalty.hasRewardLine("10% on your order", "-2.11"),
+            PosLoyalty.orderTotalIs("60.78"), //SUBTOTAL
             PosLoyalty.finalizeOrder("Cash", "70"),
 
             // Scanning coupon twice.

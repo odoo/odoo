@@ -817,3 +817,24 @@ class TestSaleProject(TestSaleProjectCommon):
             'sale_line_id': sale_order.order_line.id,
         })
         self.assertEqual(task3.sale_order_id, sale_order, "Task matches SO's partner_id")
+
+    def test_action_view_project_ids(self):
+        order = self.env['sale.order'].create({
+            'name': 'Project Order',
+            'partner_id': self.partner.id
+        })
+
+        sol = self.env['sale.order.line'].create({
+            'product_id': self.product_order_service4.id,
+            'order_id': order.id,
+        })
+
+        order.action_confirm()
+        action = order.action_view_project_ids()
+        self.assertEqual(action['type'], 'ir.actions.act_window', 'Should return a window action')
+        self.assertEqual(action['context']['default_sale_line_id'], sol.id, 'The SOL linked to the SO should be chosen as default value')
+
+        self.product_order_service4.type = 'consu'
+        action = order.action_view_project_ids()
+        self.assertEqual(action['type'], 'ir.actions.act_window', 'Should return a window action')
+        self.assertFalse(action['context']['default_sale_line_id'], 'No SOL should be set by default since the product changed')

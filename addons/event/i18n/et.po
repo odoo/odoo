@@ -21,8 +21,8 @@
 # Martin Trigaux, 2023
 # Mihkel avalah, 2023
 # Siim Raasuke, 2024
-# Tairi Tiimann, 2024
 # Anna, 2024
+# Tairi Tiimann, 2024
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Tairi Tiimann, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,11 +114,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
+"'Märk - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
+"(object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'Märk - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -249,6 +251,8 @@ msgid ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Jaga oma lugusid veebis läbi Youtube'i integratsiooni</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -256,6 +260,8 @@ msgid ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Kui lugu saab läbi, jaga viktoriin osalejatele</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -381,7 +387,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
-msgstr ""
+msgstr "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2715,17 +2721,17 @@ msgstr "Google Maps"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_key
 msgid "Google Maps API key"
-msgstr ""
+msgstr "Google Maps API key"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_secret
 msgid "Google Maps API secret"
-msgstr ""
+msgstr "Google Maps API secret"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_google_maps_static_api
 msgid "Google Maps static API"
-msgstr ""
+msgstr "Google Maps static API"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -2777,7 +2783,7 @@ msgstr "Pärast sellel konverentsil osalemist peaksid osalejad suutma:"
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival!"
-msgstr ""
+msgstr "Siin see on, meie Live Musical Festivali 12. väljaanne!"
 
 #. module: event
 #: model:event.event,name:event.event_5
@@ -2857,6 +2863,9 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over!"
 msgstr ""
+"Kui sa ei tea hokist midagi, siis on see suurepärane sissejuhatus sellesse "
+"imelisse sporti, kuna sul on võimalus näha osa treeningprotsessist ning "
+"pärast turniiri ka kogenud mängijate ja treeneritega vestelda!"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -2885,7 +2894,7 @@ msgstr "Töös"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr ""
+msgstr "Sisesta dünaamiline Google Maps oma e-posti mallidesse"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -2956,7 +2965,7 @@ msgstr "John DOE"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times!"
-msgstr ""
+msgstr "Liitu meiega aegade suurima õhupallivõistlusega!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -3126,7 +3135,7 @@ msgstr "Kiri saadetud"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr ""
+msgstr "Halda ja avalda ajakava koos lugudega"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
@@ -3781,6 +3790,7 @@ msgstr "Planeeritud aeg"
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you!"
 msgstr ""
+"Kogenud hoki fännid ja uudishimulikud inimesed, see turniir on teie jaoks!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3940,13 +3950,13 @@ msgstr "Müügi alguskuupäev"
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url
 msgid "Static Map Url"
-msgstr ""
+msgstr "Staatilise kaardi URL"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url_is_valid
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url_is_valid
 msgid "Static Map Url Is Valid"
-msgstr ""
+msgstr "Staatilise kaardi URL on kehtiv"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -4106,7 +4116,7 @@ msgstr "Registreerimine peab olema tasutud"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first!"
-msgstr ""
+msgstr "Meie osalejate ja aeronautide ohutus on esmatähtis!"
 
 #. module: event
 #. odoo-python
@@ -4174,6 +4184,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories!"
 msgstr ""
+"See on ideaalne koht meeldiva päeva veetmiseks koos perega; me garanteerime,"
+" et lahkute kaunite ja unustamatute mälestustega!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -4349,6 +4361,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Kinnitamata:  registreerimised, mis on ootel, kuni tehakse mingi tegevus (eriti müügistaatuse puhul).\n"
+"Registreeritud: registreerimised, mida loetakse kliendi poolt tehtuks.\n"
+"Osales: registreerimised, mille puhul osaleja osales üritusel.\n"
+"Tühistatud: käsitsi tühistatud registreerimised."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail

@@ -13,6 +13,14 @@ export class ProductCatalogOrderLine extends Component {
         warning: { type: String, optional: true},
     };
 
+    /**
+     * Focus input text when clicked
+     * @param {Event} ev 
+     */
+    _onFocus(ev) {
+        ev.target.select();
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

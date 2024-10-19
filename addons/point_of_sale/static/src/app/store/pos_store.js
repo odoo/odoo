@@ -173,6 +173,8 @@ export class PosStore extends Reactive {
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
+
+        this.syncingOrders = new Set();
         await this.load_server_data();
         if (this.config.use_proxy) {
             await this.connectToProxy();
@@ -1239,15 +1241,26 @@ export class PosStore extends Reactive {
         if (!orders || !orders.length) {
             return Promise.resolve([]);
         }
-        this.set_synch("connecting", orders.length);
+
+        // Filter out orders that are already being synced
+        const ordersToSync = orders.filter(order => !this.syncingOrders.has(order.id));
+
+        if (!ordersToSync.length) {
+            return Promise.resolve([]);
+        }
+
+        // Add these order IDs to the syncing set
+        ordersToSync.forEach(order => this.syncingOrders.add(order.id));
+
+        this.set_synch("connecting", ordersToSync.length);
         options = options || {};
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
         // new orders may have been added to it.
-        var order_ids_to_sync = orders.map((o) => o.id);
+        const order_ids_to_sync = ordersToSync.map((o) => o.id);
 
-        for (const order of orders) {
+        for (const order of ordersToSync) {
             order.to_invoice = options.to_invoice || false;
         }
         // we try to send the order. silent prevents a spinner if it takes too long. (unless we are sending an invoice,
@@ -1260,9 +1273,9 @@ export class PosStore extends Reactive {
             const serverIds = await orm.call(
                 "pos.order",
                 "create_from_ui",
-                [orders, options.draft || false],
+                [ordersToSync, options.draft || false],
                 {
-                    context: this._getCreateOrderContext(orders, options),
+                    context: this._getCreateOrderContext(ordersToSync, options),
                 }
             );
 
@@ -1284,7 +1297,7 @@ export class PosStore extends Reactive {
             this.set_synch("connected");
             return serverIds;
         } catch (error) {
-            console.warn("Failed to send orders:", orders);
+            console.warn("Failed to send orders:", ordersToSync);
             if (error.code === 200) {
                 // Business Logic Error, not a connection problem
                 // Hide error if already shown before ...
@@ -1296,6 +1309,8 @@ export class PosStore extends Reactive {
             }
             this.set_synch("disconnected");
             throw error;
+        } finally {
+            order_ids_to_sync.forEach(order_id => this.syncingOrders.delete(order_id));
         }
     }
 

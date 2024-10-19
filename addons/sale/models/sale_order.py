@@ -347,7 +347,9 @@ class SaleOrder(models.Model):
                 order.note = _('Terms & Conditions: %s', baseurl)
                 del context
             elif not is_html_empty(self.env.company.invoice_terms):
-                order.note = order.with_context(lang=order.partner_id.lang).env.company.invoice_terms
+                if order.partner_id.lang:
+                    order = order.with_context(lang=order.partner_id.lang)
+                order.note = order.env.company.invoice_terms
 
     @api.model
     def _get_note_url(self):
@@ -1281,7 +1283,9 @@ class SaleOrder(models.Model):
         invoice_vals_list = []
         invoice_item_sequence = 0 # Incremental sequencing to keep the lines order on the invoice.
         for order in self:
-            order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
+            if order.partner_invoice_id.lang:
+                order = order.with_context(lang=order.partner_invoice_id.lang)
+            order = order.with_company(order.company_id)
 
             invoice_vals = order._prepare_invoice()
             invoiceable_lines = order._get_invoiceable_lines(final)

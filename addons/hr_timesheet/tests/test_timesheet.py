@@ -705,6 +705,11 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(self.task1.progress, 100, 'The percentage of allocated hours should be 100%.')
 
     def test_analytic_plan_setting(self):
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'Departments 2',
+            'complete_name': 'Departments 2',
+            'default_applicability': 'optional',
+        })
         self.env['ir.config_parameter'].set_param('analytic.analytic_plan_projects', 1)
         project_1 = self.env['project.project'].create({
             'name': "Project with plan setting 1",
@@ -713,13 +718,13 @@ class TestTimesheet(TestCommonTimesheet):
         })
         self.assertEqual(project_1.analytic_account_id.plan_id.id, 1)
 
-        self.env['ir.config_parameter'].set_param('analytic.analytic_plan_projects', 2)
+        self.env['ir.config_parameter'].set_param('analytic.analytic_plan_projects', analytic_plan.id)
         project_2 = self.env['project.project'].create({
             'name': "Project with plan setting 2",
             'allow_timesheets': True,
             'partner_id': self.partner.id,
         })
-        self.assertEqual(project_2.analytic_account_id.plan_id.id, 2)
+        self.assertEqual(project_2.analytic_account_id.plan_id.id, analytic_plan.id)
 
     def test_timesheet_update_user_on_employee(self):
         timesheet = self.env['account.analytic.line'].create({

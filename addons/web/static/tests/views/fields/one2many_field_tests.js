@@ -289,6 +289,81 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("resequence with NULL value", async function (assert) {
+        const mockedActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        if (params.name === "reload") {
+                            params.onClose();
+                        } else {
+                            throw makeServerError();
+                        }
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", mockedActionService, { force: true });
+
+        serverData.models.partner.records.push(
+            { id: 10, int_field: 1 },
+            { id: 11, int_field: 2 },
+            { id: 12, int_field: 3 },
+            { id: 13 }
+        );
+        serverData.models.partner.records[0].p = [10, 11, 12, 13];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <form>
+                        <sheet><div name="button_box">
+                            <button name="reload" class="reload" type="object" string="Confirm"/>
+                        </div></sheet>
+                        <field name="foo"/>
+                        <field name="p">
+                            <tree editable="bottom" default_order="int_field">
+                                <field name="int_field" widget="handle"/>
+                                <field name="id"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read") {
+                    const res = await performRPC(route, args);
+                    const serverRecords = Object.fromEntries(
+                        Object.values(serverData.models.partner.records).map((e) => [e.id, e])
+                    );
+                    // when sorted, NULL values are last
+                    const getServerValue = (record) =>
+                        serverRecords[record.id].int_field === false
+                            ? Number.MAX_SAFE_INTEGER
+                            : serverRecords[record.id].int_field;
+                    res[0].p.sort((a, b) => getServerValue(a) - getServerValue(b));
+                    return res;
+                }
+            },
+            resId: 1,
+        });
+        assert.deepEqual(
+            Array.from(target.querySelectorAll(".o_field_cell[name=id]")).map((e) => e.textContent),
+            ["10", "11", "12", "13"]
+        );
+
+        await dragAndDrop("tbody tr:nth-child(4) .o_handle_cell", "tbody tr:nth-child(3)");
+        assert.deepEqual(
+            Array.from(target.querySelectorAll(".o_field_cell[name=id]")).map((e) => e.textContent),
+            ["10", "11", "13", "12"]
+        );
+        await click(target.querySelector("button.reload"));
+        assert.deepEqual(
+            Array.from(target.querySelectorAll(".o_field_cell[name=id]")).map((e) => e.textContent),
+            ["10", "11", "13", "12"]
+        );
+    });
+
     QUnit.test("one2many in a list x2many editable use the right context", async function (assert) {
         await makeView({
             type: "form",

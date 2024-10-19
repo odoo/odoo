@@ -8,6 +8,7 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Martin Trigaux, 2024
+# Elena Varbanova, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Elena Varbanova, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,8 @@ msgid ""
 "<i class=\"fa fa-ban me-2\"/>\n"
 "                                            Unpublished"
 msgstr ""
+"<i class=\"fa fa-ban me-2\"/>\n"
+"                                            Непубликувано"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
@@ -36,6 +39,8 @@ msgid ""
 "<i class=\"fa fa-check me-2\"/>\n"
 "                                            Registered"
 msgstr ""
+"<i class=\"fa fa-check me-2\"/>\n"
+"                                            Регистриран"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
@@ -43,6 +48,8 @@ msgid ""
 "<span>Sign In</span>\n"
 "                <span class=\"fa fa-sign-in\"/>"
 msgstr ""
+"<span>Вписване</span>\n"
+"                <span class=\"fa fa-sign-in\"/>"
 
 #. module: website_event_sale
 #. odoo-python
@@ -52,6 +59,8 @@ msgid ""
 "A pricelist item with a positive min. quantity cannot be applied to this "
 "event tickets product."
 msgstr ""
+"Артикул от ценова листа с положителен мин. количеството не може да бъде "
+"приложено към билети за събитие."
 
 #. module: website_event_sale
 #. odoo-python
@@ -61,6 +70,8 @@ msgid ""
 "A pricelist item with a positive min. quantity will not be applied to the "
 "event tickets products."
 msgstr ""
+"Артикул от ценова листа с положителен мин. количеството няма да бъде "
+"приложено към билети за събитието."
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
@@ -70,12 +81,12 @@ msgstr "Потвърдете регистрация"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr ""
+msgstr "Изтегли билети <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_event_sale_report
 msgid "Event Sales Report"
-msgstr ""
+msgstr "Отчет за продажби на събития"
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
@@ -95,17 +106,17 @@ msgstr "От"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "Go to Event"
-msgstr ""
+msgstr "Отиди на събитие"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Go to Payment"
-msgstr ""
+msgstr "Отиди на Плащане"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Правило за ценова листа"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_template
@@ -121,7 +132,7 @@ msgstr "Продуктов вариант"
 #: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__is_published
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_sale_report_view_search
 msgid "Published Events"
-msgstr ""
+msgstr "Публикувани събития"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
@@ -157,7 +168,7 @@ msgstr ""
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The provided ticket doesn't exist"
-msgstr ""
+msgstr "Предоставеният билет не съществува в базата"
 
 #. module: website_event_sale
 #. odoo-python
@@ -176,7 +187,7 @@ msgstr "Внимание"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "We are looking forward to meeting you at the following"
-msgstr ""
+msgstr "Очакваме с нетърпение да се срещнем на предстоящото"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
@@ -189,16 +200,18 @@ msgstr "Уебсайт"
 #, python-format
 msgid "You cannot raise manually the event ticket quantity in your cart"
 msgstr ""
+"Не можете да увеличите ръчно количеството билети за събитието във вашата "
+"количка"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "event"
-msgstr ""
+msgstr "събитие"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "events"
-msgstr ""
+msgstr "събития"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration

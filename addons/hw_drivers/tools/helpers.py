@@ -19,12 +19,13 @@ import requests
 import secrets
 import socket
 import subprocess
+from urllib.parse import parse_qs
 import urllib3
 from threading import Thread, Lock
 import time
 import zipfile
 
-from odoo import _, http, release, service
+from odoo import http, release, service
 from odoo.tools.func import lazy_property
 from odoo.tools.misc import file_path
 
@@ -122,11 +123,11 @@ def check_certificate():
         if key[0] == b'CN':
             cn = key[1].decode('utf-8')
     if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
-        message = _('Your certificate %s must be updated', cn)
+        message = 'Your certificate %s must be updated' % cn
         _logger.info(message)
         return {"status": CertificateStatus.NEED_REFRESH}
     else:
-        message = _('Your certificate %s is valid until %s', cn, cert_end_date)
+        message = 'Your certificate %s is valid until %s' % (cn, cert_end_date)
         _logger.info(message)
         return {"status": CertificateStatus.OK, "message": message}
 
@@ -171,7 +172,7 @@ def check_git_branch():
                     subprocess.run(
                         ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
                     )
-                    odoo_restart()
+                odoo_restart()
     except Exception:
         _logger.exception('An error occurred while connecting to server')
 
@@ -636,3 +637,38 @@ def migrate_old_config_files_to_new_config_file():
         unlink_file('odoo-remote-server.conf')
         unlink_file('token')
         unlink_file('odoo-subject.conf')
+
+
+def url_is_valid(url):
+    """
+    Checks whether the provided url is a valid one or not
+    :param url: the URL to check
+    :return: boolean indicating if the URL is valid.
+    """
+    try:
+        result = urllib3.util.parse_url(url.strip())
+        return all([result.scheme in ["http", "https"], result.netloc, result.host != 'localhost'])
+    except urllib3.exceptions.LocationParseError:
+        return False
+
+
+def parse_url(url):
+    """
+    Parses URL params and returns them as a dictionary starting by the url.
+
+    Does not allow multiple params with the same name (e.g. <url>?a=1&a=2 will return the same as <url>?a=1)
+    :param url: the URL to parse
+    :return: the dictionary containing the URL and params
+    """
+    if not url_is_valid(url):
+        raise ValueError("Invalid URL provided.")
+
+    url = urllib3.util.parse_url(url.strip())
+    search_params = {
+        key: value[0]
+        for key, value in parse_qs(url.query, keep_blank_values=True).items()
+    }
+    return {
+        "url": f"{url.scheme}://{url.netloc}",
+        **search_params,
+    }

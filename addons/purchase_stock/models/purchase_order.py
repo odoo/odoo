@@ -106,7 +106,7 @@ class PurchaseOrder(models.Model):
         # Replaces the product's kanban view by the purchase specific one.
         action = super().action_add_from_catalog()
         kanban_view_id = self.env.ref('purchase_stock.product_view_kanban_catalog_purchase_only').id
-        action['views'][0] = (kanban_view_id, 'kanban')
+        action['views'] = [(kanban_view_id, view_type) if view_type == 'kanban' else (view_id, view_type) for (view_id, view_type) in action['views']]
         return action
 
     def button_approve(self, force=False):

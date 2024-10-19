@@ -21,6 +21,7 @@ class TestUBLAU(TestUBLCommon):
             'country_id': cls.env.ref('base.au').id,
             'bank_ids': [(0, 0, {'acc_number': '000099998B57'})],
             'ref': 'ref_partner_1',
+            'ubl_cii_format': 'ubl_a_nz',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -32,6 +33,7 @@ class TestUBLAU(TestUBLCommon):
             'country_id': cls.env.ref('base.au').id,
             'bank_ids': [(0, 0, {'acc_number': '93999574162167'})],
             'ref': 'ref_partner_2',
+            'ubl_cii_format': 'ubl_a_nz',
         })
 
         cls.tax_10 = cls.env['account.tax'].create({

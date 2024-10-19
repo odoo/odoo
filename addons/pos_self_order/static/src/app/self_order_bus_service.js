@@ -76,7 +76,7 @@ export class SelfOrderBus {
         const payload = message.payload;
 
         if (payload.status === "closed") {
-            this.selfOrder.pos_session = [];
+            this.selfOrder.pos_session = null;
             this.selfOrder.ordering = false;
         } else {
             // reload to get potential new settings

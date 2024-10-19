@@ -1928,15 +1928,6 @@ class MrpProduction(models.Model):
                         move = moves and moves.pop(0)
                         move_qty_to_reserve = move and move.product_qty or 0
 
-                # Unreserve the quantity removed from initial `stock.move.line` and
-                # not assigned to a move anymore. In case of a split smaller than initial
-                # quantity and fully reserved
-                if quantity and not move_line.move_id._should_bypass_reservation():
-                    self.env['stock.quant']._update_reserved_quantity(
-                        move_line.product_id, move_line.location_id, -quantity,
-                        lot_id=move_line.lot_id, package_id=move_line.package_id,
-                        owner_id=move_line.owner_id, strict=True)
-
             if move and move_qty_to_reserve != move.product_qty:
                 partially_assigned_moves.add(move.id)
 
@@ -2420,7 +2411,8 @@ class MrpProduction(models.Model):
                    any(att_val.id in product_attribute_ids for att_val in record.bom_product_template_attribute_value_ids)
 
         ratio = self._get_ratio_between_mo_and_bom_quantities(bom)
-        bom_lines_by_id = {(bom_line.id, bom_line.product_id.id): bom_line for bom_line in bom.bom_line_ids.filtered(filter_by_attributes)}
+        _dummy, bom_lines = bom.explode(self.product_id, bom.product_qty)
+        bom_lines_by_id = {(line.id, line.product_id.id): line for line, _dummy in bom_lines if filter_by_attributes(line)}
         bom_byproducts_by_id = {byproduct.id: byproduct for byproduct in bom.byproduct_ids.filtered(filter_by_attributes)}
         operations_by_id = {operation.id: operation for operation in bom.operation_ids.filtered(filter_by_attributes)}
 

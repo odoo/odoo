@@ -201,7 +201,7 @@ class SaleOrder(models.Model):
             return {'type': 'ir.actions.act_window_close'}
 
         sorted_line = self.order_line.sorted('sequence')
-        default_sale_line = next(sol for sol in sorted_line if sol.product_id.detailed_type == 'service')
+        default_sale_line = next((sol for sol in sorted_line if sol.product_id.detailed_type == 'service'), None)
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Projects'),
@@ -212,7 +212,7 @@ class SaleOrder(models.Model):
             'context': {
                 **self._context,
                 'default_partner_id': self.partner_id.id,
-                'default_sale_line_id': default_sale_line.id,
+                'default_sale_line_id': default_sale_line.id if default_sale_line else False,
                 'default_allow_billable': 1,
             }
         }

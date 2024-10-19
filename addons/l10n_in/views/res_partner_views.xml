@@ -17,6 +17,14 @@
                 <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" invisible="'IN' not in fiscal_country_codes" readonly="parent_id"/>
             </xpath>
             <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_gst_state_warning or country_code != 'IN'">
+                    <field name="l10n_in_gst_state_warning"/>
+                    <button name="action_update_state_as_per_gstin"
+                            string="Update it"
+                            class="oe_link"
+                            invisible="country_code != 'IN'"
+                            type="object"/>
+                </div>
                 <field name="display_pan_warning" invisible="1"/>
                 <div class="alert alert-warning" role="alert"
                         invisible="not display_pan_warning">

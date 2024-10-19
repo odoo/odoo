@@ -163,7 +163,7 @@ registry.category("web_tour.tours").add("PosLoyaltyChangeRewardQty", {
             ProductScreen.pressNumpad("1"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
         ].flat(),
-    });
+});
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
     test: true,
@@ -209,23 +209,36 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
     url: "/pos/web",
     steps: () =>
         [
-          ProductScreen.confirmOpeningPopup(),
-          ProductScreen.clickHomeCategory(),
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
 
-          ProductScreen.clickPartnerButton(),
-          ProductScreen.clickCustomer('Test Partner'),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
 
-          ProductScreen.addOrderline('Desk Organizer', '1'),
-          ProductScreen.addOrderline('Whiteboard Pen', '1'),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1"),
 
-          PosLoyalty.isRewardButtonHighlighted(true),
-          PosLoyalty.claimReward("100% on the cheapest product"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("100% on the cheapest product"),
 
-          PosLoyalty.orderTotalIs('5.10'),
-          PosLoyalty.finalizeOrder('Cash', '5.10'),
-        ].flat()
+            PosLoyalty.orderTotalIs("5.10"),
+            PosLoyalty.finalizeOrder("Cash", "5.10"),
+        ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosLoyaltyNextOrderCouponExpirationDate", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+
+            PosLoyalty.finalizeOrder("Cash", "15.3"),
+        ].flat(),
+});
 
 registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
     test: true,
@@ -234,6 +247,7 @@ registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
         [
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Expensive product"),
             ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.isPopupShown(),
             combo.select("Combo Product 1"),
@@ -241,6 +255,17 @@ registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
             combo.select("Combo Product 6"),
             combo.confirm(),
             Order.hasLine({ productName: "10% on the cheapest product" }),
-            PosLoyalty.orderTotalIs("59.09"),
+            PosLoyalty.orderTotalIs("1,204.25"),
+            PosLoyalty.finalizeOrder("Cash", "1204.25"),
+            ProductScreen.clickDisplayedProduct("Cheap product"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.isPopupShown(),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            combo.confirm(),
+            Order.hasLine({ productName: "10% on the cheapest product" }),
+            PosLoyalty.orderTotalIs("61.03"),
+            PosLoyalty.finalizeOrder("Cash", "61.03"),
         ].flat(),
 });

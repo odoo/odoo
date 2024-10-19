@@ -78,7 +78,6 @@
         <field name="state">code</field>
         <field name="code">
             if records:
-                records = records.filtered(lambda r: r.l10n_vn_edi_invoice_state == 'payment_state_to_update')
                 action = records.action_l10n_vn_edi_update_payment_status()
         </field>
     </record>

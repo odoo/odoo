@@ -285,6 +285,10 @@ export class MassMailingHtmlField extends HtmlField {
             this._themeParams = Array.from(displayableThemes).map((theme) => {
                 const $theme = $(theme);
                 const name = $theme.data("name");
+                // TODO remove in master and apply the update in xml directly
+                if (name === "training") {
+                    $theme.get(0).querySelector("div.oe_img_bg").classList.add("col-lg-12");
+                }
                 const classname = "o_" + name + "_theme";
                 this._themeClassNames += " " + classname;
                 const imagesInfo = Object.assign({
