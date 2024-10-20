@@ -24,7 +24,7 @@ class RestaurantFloor(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('pos_config_ids', '=', data['pos.config']['data'][0]['id'])]
+        return [('pos_config_ids', '=', data['pos.config'][0]['id'])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -116,7 +116,8 @@ class RestaurantTable(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('active', '=', True), ('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']['data']])]
+        floor_ids = self.env['pos.config'].browse(data['pos.config'][0]['id']).floor_ids.ids
+        return [('active', '=', True), ('floor_id', 'in', floor_ids)]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

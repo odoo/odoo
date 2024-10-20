@@ -44,7 +44,7 @@ class PosPayment(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('pos_order_id', 'in', [order['id'] for order in data['pos.order']['data']])]
+        return [('pos_order_id', 'in', [order['id'] for order in data['pos.order']])]
 
     @api.depends('amount', 'currency_id')
     def _compute_display_name(self):

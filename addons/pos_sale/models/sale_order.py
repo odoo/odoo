@@ -68,7 +68,7 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('order_id', 'in', [order['id'] for order in data['sale.order']['data']])]
+        return [('order_id', 'in', [order['id'] for order in data['sale.order']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

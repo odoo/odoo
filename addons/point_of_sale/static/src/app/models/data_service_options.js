@@ -17,21 +17,6 @@ export class DataServiceOptions {
                 condition: (record) =>
                     record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
             },
-            "pos.pack.operation.lot": {
-                key: "id",
-                condition: (record) =>
-                    record.pos_order_line_id?.order_id?.finalized &&
-                    typeof record.pos_order_line_id.order_id.id === "number",
-            },
-            "product.attribute.custom.value": {
-                key: "id",
-                condition: (record) => {
-                    return record.models["pos.order.line"].find((l) => {
-                        const customAttrIds = l.custom_attribute_value_ids.map((v) => v.id);
-                        return customAttrIds.includes(record.id);
-                    });
-                },
-            },
         };
     }
 
@@ -81,5 +66,9 @@ export class DataServiceOptions {
             "product.attribute.custom.value",
             "pos.pack.operation.lot",
         ];
+    }
+
+    get uniqueModels() {
+        return ["pos.session", "res.users", "res.company"];
     }
 }

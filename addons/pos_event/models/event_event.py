@@ -9,7 +9,7 @@ class EventEvent(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('event_ticket_ids', 'in', [ticket['id'] for ticket in data['event.event.ticket']['data']])]
+        return [('event_ticket_ids', 'in', [ticket['id'] for ticket in data['event.event.ticket']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

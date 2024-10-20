@@ -9,11 +9,11 @@ from odoo.tools import format_list
 
 
 class HrEmployee(models.Model):
-    _inherit = 'hr.employee'
+    _inherit = ['hr.employee', 'pos.load.mixin']
 
     @api.model
     def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         if len(config_id.basic_employee_ids) > 0:
             return [
                 '&', ('company_id', '=', config_id.company_id.id),
@@ -27,17 +27,17 @@ class HrEmployee(models.Model):
 
     def _load_pos_data(self, data):
         domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
+        fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
 
         employees = self.search(domain)
-        manager_ids = employees.filtered(lambda emp: data['pos.config']['data'][0]['group_pos_manager_id'] in emp.user_id.groups_id.ids).mapped('id')
+        manager_ids = employees.filtered(lambda emp: data['pos.config'][0]['group_pos_manager_id'] in emp.user_id.groups_id.ids).mapped('id')
 
         employees_barcode_pin = employees.get_barcodes_and_pin_hashed()
         bp_per_employee_id = {bp_e['id']: bp_e for bp_e in employees_barcode_pin}
 
         employees = employees.read(fields, load=False)
         for employee in employees:
-            if employee['user_id'] and employee['user_id'] in manager_ids or employee['id'] in data['pos.config']['data'][0]['advanced_employee_ids']:
+            if employee['user_id'] and employee['user_id'] in manager_ids or employee['id'] in data['pos.config'][0]['advanced_employee_ids']:
                 role = 'manager'
             else:
                 role = 'cashier'
@@ -46,10 +46,7 @@ class HrEmployee(models.Model):
             employee['_barcode'] = bp_per_employee_id[employee['id']]['barcode']
             employee['_pin'] = bp_per_employee_id[employee['id']]['pin']
 
-        return {
-            'data': employees,
-            'fields': fields,
-        }
+        return employees
 
     def get_barcodes_and_pin_hashed(self):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):

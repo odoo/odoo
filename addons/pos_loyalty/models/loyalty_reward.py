@@ -18,7 +18,7 @@ class LoyaltyReward(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         return [('program_id', 'in', config_id._get_program_ids().ids)]
 
     @api.model
@@ -30,14 +30,11 @@ class LoyaltyReward(models.Model):
 
     def _load_pos_data(self, data):
         domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
+        fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
         rewards = self.search_read(domain, fields, load=False)
         for reward in rewards:
             reward['reward_product_domain'] = self._replace_ilike_with_in(reward['reward_product_domain'])
-        return {
-            'data': rewards,
-            'fields': fields,
-        }
+        return rewards
 
     def _get_reward_product_domain_fields(self, config_id):
         fields = set()

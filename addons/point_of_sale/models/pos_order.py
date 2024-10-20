@@ -73,7 +73,7 @@ class PosOrder(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('state', '=', 'draft'), ('session_id', '=', data['pos.session']['data'][0]['id'])]
+        return [('state', '=', 'draft'), ('session_id', '=', data['pos.session'][0]['id'])]
 
     @api.model
     def _process_order(self, order, existing_order):
@@ -1058,7 +1058,7 @@ class PosOrder(models.Model):
         is_rescue_session = any(order.get('session_id') not in session_ids for order in orders)
         return {
             'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.session': pos_order_ids.session_id._load_pos_data({})['data'] if config_id and is_rescue_session else [],
+            'pos.session': pos_order_ids.session_id._load_pos_data({}) if config_id and is_rescue_session else [],
             'pos.payment': pos_order_ids.payment_ids.read(pos_order_ids.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.order.line': pos_order_ids.lines.read(pos_order_ids.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
@@ -1334,7 +1334,7 @@ class PosOrderLine(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('order_id', 'in', [order['id'] for order in data['pos.order']['data']])]
+        return [('order_id', 'in', [order['id'] for order in data['pos.order']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -1664,7 +1664,7 @@ class PosPackOperationLot(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']['data']])]
+        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -1684,7 +1684,7 @@ class AccountCashRounding(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', '=', data['pos.config']['data'][0]['rounding_method'])]
+        return [('id', '=', data['pos.config'][0]['rounding_method'])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

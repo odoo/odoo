@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from datetime import timedelta
@@ -6,8 +5,8 @@ from itertools import groupby, starmap
 from markupsafe import Markup
 
 from odoo import api, fields, models, _, Command
-from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, convert, plaintext2html
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools import float_is_zero, float_compare, plaintext2html
 from odoo.service.common import exp_version
 from odoo.osv.expression import AND
 
@@ -99,18 +98,16 @@ class PosSession(models.Model):
     )
 
     @api.model
-    def _load_pos_data_relations(self, model, response):
+    def _load_pos_data_relations(self, model, fields):
         model_fields = self.env[model]._fields
-
-        if not response[model].get('relations'):
-            response[model]['relations'] = {}
+        relations = {}
 
         for name, params in model_fields.items():
-            if name not in response[model]['fields'] and len(response[model]['fields']) != 0:
+            if name not in fields and len(fields) != 0:
                 continue
 
             if params.comodel_name:
-                response[model]['relations'][name] = {
+                relations[name] = {
                     'name': name,
                     'model': params.model_name,
                     'compute': bool(params.compute),
@@ -119,16 +116,18 @@ class PosSession(models.Model):
                     'type': params.type,
                 }
                 if params.type == 'one2many' and params.inverse_name:
-                    response[model]['relations'][name]['inverse_name'] = params.inverse_name
+                    relations[name]['inverse_name'] = params.inverse_name
                 if params.type == 'many2many':
-                    response[model]['relations'][name]['relation_table'] = self.env[model]._fields[name].relation
+                    relations[name]['relation_table'] = self.env[model]._fields[name].relation
             else:
-                response[model]['relations'][name] = {
+                relations[name] = {
                     'name': name,
                     'type': params.type,
                     'compute': bool(params.compute),
                     'related': bool(params.related),
                 }
+
+        return relations
 
     @api.model
     def _load_pos_data_models(self, config_id):
@@ -153,21 +152,19 @@ class PosSession(models.Model):
         domain = self._load_pos_data_domain(data)
         fields = self._load_pos_data_fields(self.config_id.id)
         data = self.search_read(domain, fields, load=False, limit=1)
+        server_date = self.env.context.get('pos_last_server_date')
         data[0]['_partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
         data[0]['_server_version'] = exp_version()
         data[0]['_base_url'] = self.get_base_url()
+        data[0]['_data_server_date'] = server_date or self.env.cr.now()
         data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
         data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
-        return {
-            'data': data,
-            'fields': fields
-        }
+        return data
 
-    def load_data(self, models_to_load, only_data=False):
+    def load_data(self, models_to_load):
         response = {}
         response['pos.session'] = self._load_pos_data(response)
-        self._load_pos_data_relations('pos.session', response)
 
         for model in self._load_pos_data_models(self.config_id.id):
             if models_to_load and model not in models_to_load:
@@ -175,15 +172,25 @@ class PosSession(models.Model):
 
             try:
                 response[model] = self.env[model]._load_pos_data(response)
-            except AccessError as e:
-                response[model] = {
-                    'data': [],
-                    'fields': self.env[model]._load_pos_data_fields(response['pos.config']['data'][0]['id']),
-                    'error': e.args[0]
-                }
+            except AccessError:
+                response[model] = []
 
-            if not only_data:
-                self._load_pos_data_relations(model, response)
+        return response
+
+    def load_data_params(self):
+        response = {}
+        fields = self._load_pos_data_fields(self.config_id.id)
+        response['pos.session'] = {
+            'fields': fields,
+            'relations': self._load_pos_data_relations('pos.session', fields)
+        }
+
+        for model in self._load_pos_data_models(self.config_id.id):
+            fields = self.env[model]._load_pos_data_fields(self.config_id.id)
+            response[model] = {
+                'fields': fields,
+                'relations': self._load_pos_data_relations(model, fields)
+            }
 
         return response
 
