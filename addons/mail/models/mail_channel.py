@@ -293,7 +293,7 @@ class Channel(models.Model):
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
         return dict(
-            (channel.id, (channel.group_ids.users.partner_id - channel.channel_partner_ids).ids)
+            (channel.id, (channel.group_ids.users.partner_id - channel.with_context(active_test=False).channel_partner_ids).ids)
             for channel in self
         )
 
