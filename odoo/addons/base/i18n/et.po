@@ -29,8 +29,8 @@
 # Piia Paurson <piia@avalah.ee>, 2024
 # Birgit Vijar, 2024
 # Anna, 2024
-# Siim Raasuke, 2024
 # Stevin Lilla, 2024
+# Siim Raasuke, 2024
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
+"Last-Translator: Siim Raasuke, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6244,6 +6244,20 @@ msgid ""
 "safety stock, min/max to supply and to manually override the amount you will\n"
 "procure.\n"
 msgstr ""
+"\n"
+"Master Production Schedule\n"
+"==========================\n"
+"\n"
+"Mõnikord peate looma ostutellimusi tootmistellimuste komponentide\n"
+"jaoks, mis luuakse alles hiljem. Või tootmisorderite jaoks,\n"
+"kus teil on hiljem alles müügitellimused. Lahendus on ennustada oma\n"
+"müügiprognoose ja selle põhjal luua juba mõningaid\n"
+"tootmis- või ostutellimusi.\n"
+"\n"
+"Peate valima tooted, mida soovite aruandesse lisada. Saate valida\n"
+"aruande perioodi: päev, nädal, kuu jne. Samuti on võimalik määrata\n"
+"ohutagavarad, minimaalne/maximaalne varustamine ja käsitsi muuta\n"
+"ostetava koguse.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -9787,7 +9801,7 @@ msgstr "%(company_currency_name)s iga %(rate_currency_name)s kohta"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(method)s on %(model)s is private and cannot be called from a button"
-msgstr ""
+msgstr "%(method)s  %(model)s on privaatne ning ei saa kasutada nupust"
 
 #. module: base
 #. odoo-python
@@ -10827,6 +10841,12 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
+"Grupp on funktsionaalsete valdkondade kogum, mis määratakse kasutajale, et "
+"anda neile juurdepääs ja õigused konkreetsetele rakendustele ja ülesannetele"
+" süsteemis. Saate luua kohandatud gruppe või redigeerida vaikimisi "
+"olemasolevaid gruppe, et kohandada menüü vaadet, mida kasutajad saavad näha."
+" Siit saab hallata, kas neil on lugemis-, kirjutamis-, loomise- ja "
+"kustutamisõigused."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
@@ -10972,6 +10992,9 @@ msgid ""
 "A user without any rights on Appraisals will be able to see the application,"
 " create and manage appraisals for himself and the people he's manager of."
 msgstr ""
+"Kasutaja, kellel pole mingeid õigusi Hindamiste moodulis, saab näha "
+"rakendust ning luua ja hallata hindamisi enda ja nende inimeste jaoks, kelle"
+" juht ta on."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_time_off
@@ -13342,7 +13365,7 @@ msgstr "Põhifunktsioonid Kvaliteedikontrolliks"
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
 msgid "Basic models and helpers to support In-App purchases."
-msgstr ""
+msgstr "Põhimudelid ja abivahendid rakendusesiseste ostude toetamiseks."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iot
@@ -20088,6 +20111,8 @@ msgid ""
 "If enabled, then the second time the user prints with same attachment name, "
 "it returns the previous report."
 msgstr ""
+"Kui see on lubatud, siis teisel korral, kui kasutaja printib sama manuse "
+"nimega, tagastatakse eelmine aruanne."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule__global
@@ -20977,7 +21002,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_ui_view_qweb_required_key
 msgid "Invalid key: QWeb view should have a key"
-msgstr ""
+msgstr "Kehtetu võti: QWeb vaates peaks olema võti"
 
 #. module: base
 #. odoo-python
@@ -20999,7 +21024,7 @@ msgstr "Tegevuse definitsioonis on vale mudeli nimi %r."
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid position attribute: '%s'"
-msgstr ""
+msgstr "Atribuudi jaoks sobimatu positsioon '%s'"
 
 #. module: base
 #. odoo-python
@@ -21954,7 +21979,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_hr_referral
 #: model:ir.module.module,summary:base.module_hr_referral
 msgid "Let your employees share job positions and refer their friends"
-msgstr ""
+msgstr "Luba oma töötajatel jagada töökohti ja soovitada oma sõpru"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
@@ -24138,12 +24163,12 @@ msgstr "Ettevõtete arv"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__accesses_count
 msgid "Number of access rights that apply to the current user"
-msgstr ""
+msgstr "Kasutajale kehtivate juurdepääsuõiguste arv"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__groups_count
 msgid "Number of groups that apply to the current user"
-msgstr ""
+msgstr "Kasutajale kehtivate gruppide arv"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__added

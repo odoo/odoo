@@ -1566,6 +1566,24 @@ msgstr ""
 "pouvoir lettrer des écritures."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+"Le compte %s est de type créditeur, mais est utilisé dans une opération de "
+"vente."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+"Le compte %s est de type débiteur, mais est utilisé dans une opération "
+"d'achat."
+
+#. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
 msgstr "Arrondi des paiements en espèces du compte"
@@ -7190,7 +7208,7 @@ msgstr "Comparaison de croissance"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "HALF-UP"
-msgstr "ARRONDIR À L'ENTIER SUPÉRIEUR"
+msgstr "ARRONDIR AU DEMI LE PLUS PROCHE"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries

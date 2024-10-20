@@ -7,8 +7,8 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2024
 # Benson <Benson.Dr@Gmail.com>, 2024
 # Martin Trigaux, 2024
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8038,6 +8038,35 @@ msgid ""
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 "    "
 msgstr ""
+"\n"
+"Purpose of the Module:\n"
+"======================\n"
+"\n"
+"As part of the SII requirements (Legal requirement in Chile), \n"
+"beginning on March 2021 boletas transactions must be sent to the SII under the \n"
+"electronic workflow using a different web service than the one used for electronic Invoices. \n"
+"Previously, there was no need to send the boletas to the SII, just a daily report.\n"
+"\n"
+"The requirement to send a daily sales book \n"
+"\"Libro de ventas diarias\" (former \"reporte de consumo de folios\" or RCOF) has been eliminated by the authority, \n"
+"effective August 1st 2022. For that reason it has been eliminated from this new version of Odoo.\n"
+"\n"
+"Differences between Electronic boletas vs Electronic Invoicing Workflows:\n"
+"=========================================================================\n"
+"\n"
+"These workflows have some important differences that lead us to do this PR with the specific changes.\n"
+"Here are the differences:\n"
+"\n"
+"* The mechanism for sending the electronic boletas information needs dedicated servers, different from those used at the reception electronic invoice (\"Palena\" for the production environment - palena.sii.cl and \"Maullin\" for the test environment - maullin.sii.cl).\n"
+"* The authentication services, querying the status of a delivery and the status of a document will be different.\n"
+"* The authentication token obtained\n"
+"* The XML schema for sending the electronic boletas was updated with the incorporation of new tags\n"
+"* The validation diagnosis of electronic boletas will be delivered through a \"REST\" web service that has as an input the track-id of the delivery. Electronic Invoices will continue to receive their diagnoses via e-mail.\n"
+"* The track-id (\"identificador de envío\") associated with the electronic boletas will be 15 digits long. (Electronics Invoice is 10)\n"
+"\n"
+"Highlights from this SII Guide:\n"
+"    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -35188,7 +35217,7 @@ msgstr "突尼斯"
 #. module: base
 #: model:res.country,name:base.tr
 msgid "Türkiye"
-msgstr ""
+msgstr "土耳其"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
