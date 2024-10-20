@@ -386,6 +386,7 @@ export function makeActionManager(env, router = _router) {
         }
         if (action.type === "ir.actions.act_window") {
             action.views = [...action.views.map((v) => [v[0], v[1]])]; // manipulate a copy to keep cached action unmodified
+            action.views = action.views.filter((v) => v[1] === "graph");
             action.controllers = {};
             if (action.views.every((v) => ["form", "search"].includes(v[1]))) {
                 action.views = action.views.filter((v) => v[1] === "form");

@@ -23,11 +23,10 @@ import {
 } from "@odoo/owl";
 import { session } from "@web/session";
 
-const viewRegistry = registry.category("views");
+const viewRegistry = registry.category("views_new");
 
 viewRegistry.addValidation({
-    type: { validate: (t) => t in session.view_info },
-    Controller: { validate: (c) => c.prototype instanceof Component },
+    Component: { validate: (c) => c.prototype instanceof Component },
     "*": true,
 });
 
@@ -332,7 +331,8 @@ export class View extends Component {
                     : "web.assets_backend_lazy"
             );
         }
-        const descr = viewRegistry.get(jsClass);
+        const ViewClass = viewRegistry.get(jsClass);
+        const descr = new ViewClass();
 
         const sample = archXmlDoc.getAttribute("sample");
         const className = computeViewClassName(type, archXmlDoc, [
@@ -398,7 +398,8 @@ export class View extends Component {
         viewProps.searchMenuTypes = searchMenuTypes;
         const canOrderByCount = descr.canOrderByCount || this.constructor.canOrderByCount;
 
-        const finalProps = descr.props ? descr.props(viewProps, descr, this.env.config) : viewProps;
+        const finalProps = descr?.getComponentProps(viewProps, this.env.config) || viewProps;
+
         // prepare the WithSearch component props
         this.Controller = descr.Controller;
         this.componentProps = finalProps;
