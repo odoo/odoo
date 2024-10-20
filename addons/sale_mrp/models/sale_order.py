@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
         production_order_by_sale_line = self.env['mrp.production']._read_group([('sale_line_id', 'in', self.order_line.ids)], ['sale_line_id'], ['id:recordset'])
         mrp_productions = defaultdict(self.env['mrp.production'].browse)
         for sale, procurement_groups in data:
-            mrp_productions[sale.id] |= procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids
+            mrp_productions[sale.id] |= procurement_groups.mrp_production_ids
         for sale_line, production_id in production_order_by_sale_line:
             mrp_productions[sale_line.order_id.id] |= production_id
         for sale in self:
