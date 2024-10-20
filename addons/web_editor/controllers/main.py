@@ -521,3 +521,7 @@ class Web_Editor(http.Controller):
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
 
+    @http.route("/web_editor/field/translation/update", type="json", auth="user", website=True)
+    def update_field_translation(self, model, record_id, field_name, translations):
+        record = request.env[model].browse(record_id)
+        return record.web_update_field_translations(field_name, translations)
