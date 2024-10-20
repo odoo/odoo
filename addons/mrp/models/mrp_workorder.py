@@ -576,7 +576,7 @@ class MrpWorkorder(models.Model):
         total = 0
         for wo in self:
             if date:
-                duration = sum(wo.time_ids.filtered(lambda t: t.date_end <= date).mapped('duration'))
+                duration = sum(wo.time_ids.filtered(lambda t: t.date_end and t.date_end <= date).mapped('duration'))
             else:
                 duration = sum(wo.time_ids.mapped('duration'))
             total += (duration / 60.0) * wo.workcenter_id.costs_hour
