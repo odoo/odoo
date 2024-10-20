@@ -7919,12 +7919,12 @@ msgstr "Comparaison de croissance"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "HALF-UP"
-msgstr "ARRONDIR À L'ENTIER SUPÉRIEUR"
+msgstr "ARRONDIR AU DEMI LE PLUS PROCHE"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Half-up (away from 0)"
-msgstr "Arrondi à l'entier supérieur (en s'éloignant de 0)"
+msgstr "Arrondir au demi le plus proche (en s'éloignant de 0)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__hard_lock_date
@@ -15656,6 +15656,14 @@ msgstr "Le journal dans lequel charger la facture n'est pas précisé."
 #: code:addons/account/models/account_analytic_line.py:0
 msgid "The journal item is not linked to the correct financial account"
 msgstr "L'écriture comptable n'est pas liée au bon compte financier"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_analytic_line.py:0
+msgid ""
+"This analytic item was created by a journal item. Please edit the analytic "
+"distribution on the journal item instead."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day

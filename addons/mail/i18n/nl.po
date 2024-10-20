@@ -3,8 +3,11 @@
 # 	* mail
 # 
 # Translators:
+# Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2024
+# Martin Trigaux, 2024
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-27 08:15+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -423,6 +426,56 @@ msgstr "<i class=\"fa fa-times\"/> Annuleren"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Chat with coworkers</b> in real-time using direct "
+"messages.</p><p><i>You might need to invite users from the Settings app "
+"first.</i></p>"
+msgstr ""
+"<p><b>Chat met collega's</b> in real-time door gebruik te maken van directe "
+"berichten.</p><p><i>Je dient wellicht eerst gebruikers uit te nodigen vanuit"
+" de instellingen</i></p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
+" notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
+"Start your message with <i>'/'</i> to get the list of possible commands.</p>"
+msgstr ""
+"<p><b>Schrijf een bericht</b> aan de leden van het kanaal hier.</p> <p>Je "
+"kunt iemand berichten met <i>'@'</i> of een ander kanaal linken met "
+"<i>'#'</i>. Begin je bericht met <i>'/'</i> om een lijst met mogelijke "
+"commando's te ontvangen.</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p>Channels make it easy to organize information across different topics and"
+" groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+"marketing, product XYZ, after work party, etc).</p>"
+msgstr ""
+"<p>Kanalen maken het gemakkelijk om informatie over verschillende "
+"onderwerpen en groepen te organiseren.</p> <p>Probeer <b>je eerste kanaal "
+"</b> aan te maken (bijvoorbeeld verkoop, marketing, product XYZ, after work "
+"feestje, enz). </p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a channel here.</p>"
+msgstr "<p>Maak hier een kanaal aan.</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a public or private channel.</p>"
+msgstr "<p>Maak een openbaar of privé kanaal aan.</p>"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
 msgstr "<samp>%(send_keybind)s</samp><i> om te verzenden</i>"
@@ -483,6 +536,13 @@ msgstr ""
 "invisible=\"mail_post_method != 'comment'\">Het bericht wordt als een "
 "bericht op de plaat geplaatst, waarbij alle volgers op de hoogte worden "
 "gesteld. Het verschijnt in de berichtengeschiedenis.</span>"
+
+#. module: mail
+#: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr ""
+"<span><b>Goed gedaan!</b> Je hebt alle stappen van deze tour "
+"doorlopen.</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -2125,6 +2185,12 @@ msgstr "Klik hier om opnieuw te proberen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Click on your message"
+msgstr "Klik op je bericht"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
 msgid "Click to see the attachments"
 msgstr "Klik om de bijlagen te zien"
@@ -2477,8 +2543,8 @@ msgstr "Gesprek gevouwen"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Copy Message Link"
-msgstr "Link bericht kopiëren"
+msgid "Copy Link"
+msgstr "Link kopiëren"
 
 #. module: mail
 #. odoo-python
@@ -3720,6 +3786,12 @@ msgstr "Volledig scherm verlaten"
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Expand"
 msgstr "Uitvouwen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Expand options"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6125,6 +6197,14 @@ msgid "Messages Search"
 msgstr "Berichten zoeken"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Messages can be <b>starred</b> to remind you to check back later."
+msgstr ""
+"Bij berichten kun je een <b>ster</b> toevoegen om aan te geven dat je deze "
+"later nog wilt bekijken."
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
 msgid "Messages can only be linked to one sub-channel"
 msgstr "Berichten kunnen maar aan één subkanaal worden gekoppeld"
@@ -6898,6 +6978,16 @@ msgstr "Oude waardes"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"Once a message has been starred, you can come back and review it at any time"
+" here."
+msgstr ""
+"Zodra een bericht met een ster gemarkeerd is, kun je terugkomen en het hier "
+"bekijken op elk gewenst moment."
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_indicator.xml:0
 msgid "Ongoing call"
 msgstr "Lopend gesprek"
@@ -7497,6 +7587,12 @@ msgstr "Portaaltoegang ingetrokken"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
 msgid "Post on a document"
 msgstr "Posten op een document"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Post your message on the thread"
+msgstr "Post je bericht op de thread"
 
 #. module: mail
 #. odoo-python
@@ -10152,6 +10248,12 @@ msgid "Unpin Message"
 msgstr "Bericht losmaken"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Unpin Thread"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
 msgstr "Datum losmaken"
@@ -10983,8 +11085,14 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %s"
-msgstr "Je hebt je gesprek met %s losgemaakt"
+msgid "You unpinned %(conversation_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You unpinned your conversation with %(user_name)s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11393,7 +11501,7 @@ msgstr "is gewijzigd vanuit:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "has just assigned you the following activity:"
-msgstr "heb je zojuist de volgende activiteit toegewezen:"
+msgstr "heeft je zojuist de volgende activiteit toegewezen:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter

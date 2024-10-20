@@ -1,30 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* gamification
-#
+# 
 # Translators:
-# Bayarkhuu Bataa, 2022
-# Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2022
-# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2022
-# tumenjargal hadbaatar <tumenjargal7903@gmail.com>, 2022
-# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2022
-# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
-# hish, 2022
-# Martin Trigaux, 2022
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
-#
+# Гэрэлтцог Цогтбаатар, 2024
+# Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2024
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2024
+# tumenjargal hadbaatar <tumenjargal7903@gmail.com>, 2024
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2024
+# Bayarkhuu Bataa, 2024
+# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
+# hish, 2024
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
-"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: gamification
@@ -48,7 +49,7 @@ msgstr "%s сорилтоос татгалзав"
 #. module: gamification
 #: model:mail.template,body_html:gamification.mail_template_data_new_rank_reached
 msgid ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "<table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "    <tbody>\n"
 "        <tr>\n"
@@ -78,9 +79,12 @@ msgid ""
 "                </p>\n"
 "            </td>\n"
 "        </tr>\n"
-"        <tr t-if=\"user.signature\">\n"
-"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"        <tr>\n"
+"            <td t-if=\"not user.share and user.active\" style=\"padding:15px 20px 10px 20px;\">\n"
 "                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            </td>\n"
+"            <td t-else=\"\" style=\"padding:15px 20px 10px 20px;\">\n"
+"                <t t-out=\"user.company_id.name or ''\"></t>\n"
 "            </td>\n"
 "        </tr>\n"
 "    </tbody>\n"
@@ -105,17 +109,23 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" aria-label=\"Goal in Progress\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-700 fa fa-clock-o fa-3x\" title=\"Goal in "
+"Progress\" aria-label=\"Goal in Progress\"/>"
 msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal Failed\" aria-label=\"Goal Failed\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal "
+"Failed\" aria-label=\"Goal Failed\"/>"
 msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal Reached\" aria-label=\"Goal Reached\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal "
+"Reached\" aria-label=\"Goal Reached\"/>"
 msgstr ""
 
 #. module: gamification
@@ -440,8 +450,12 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal__definition_condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__condition
-msgid "A goal is considered as completed when the current value is compared to the value to reach"
-msgstr "Зорилго биелсэн гэж хэдийд үзэх вэ гэхээр одоогийн утга нь хүрэх утгад хүрснээр дүгнэгдэнэ."
+msgid ""
+"A goal is considered as completed when the current value is compared to the "
+"value to reach"
+msgstr ""
+"Зорилго биелсэн гэж хэдийд үзэх вэ гэхээр одоогийн утга нь хүрэх утгад "
+"хүрснээр дүгнэгдэнэ."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
@@ -473,7 +487,7 @@ msgstr "Үйлдэл"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr "Үйлдэл шаардсан"
+msgstr "Үйлдэл шаардлагатай"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
@@ -593,8 +607,15 @@ msgstr "Медаль"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid "Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed."
-msgstr "Сорилт дуусахад медаль батламжлагдана. Энэ нь хэрэгжиж буй мөчлөг дуусахад (ж: сар тутамын сорилтын хувьд сарын төгсгөлд), сорилтын төгсгөлд (мөчлөг тохируулагдаагүй бол) эсвэл сорилтыг гараар хаахад шалгагдана."
+msgid ""
+"Badges are granted when a challenge is finished. This is either at the end "
+"of a running period (eg: end of the month for a monthly challenge), at the "
+"end date of a challenge (if no periodicity is set) or when the challenge is "
+"manually closed."
+msgstr ""
+"Сорилт дуусахад медаль батламжлагдана. Энэ нь хэрэгжиж буй мөчлөг дуусахад "
+"(ж: сар тутамын сорилтын хувьд сарын төгсгөлд), сорилтын төгсгөлд (мөчлөг "
+"тохируулагдаагүй бол) эсвэл сорилтыг гараар хаахад шалгагдана."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
@@ -635,7 +656,7 @@ msgstr "Цуцлах"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__canceled
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Цуцлагдсан"
 
 #. module: gamification
@@ -668,8 +689,12 @@ msgstr "Сорилтын нэр"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__challenge_id
-msgid "Challenge that generated the goal, assign challenge to users to generate goals with a value in this field."
-msgstr "Зорилгыг үүсгэсэн сорилт, хэрэглэгчдэд сорилтыг оноож зорилгыг энэ талбарт утгатайгаар үүсгэнэ."
+msgid ""
+"Challenge that generated the goal, assign challenge to users to generate "
+"goals with a value in this field."
+msgstr ""
+"Зорилгыг үүсгэсэн сорилт, хэрэглэгчдэд сорилтыг оноож зорилгыг энэ талбарт "
+"утгатайгаар үүсгэнэ."
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -693,6 +718,11 @@ msgstr "Дарж болох зорилгууд"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__closed
 msgid "Closed goal"
 msgstr "Хаагдсан зорилго"
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__color
+msgid "Color Index"
+msgstr "Өнгөний индекс"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__comment
@@ -731,7 +761,7 @@ msgstr ""
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
-msgid "Consolidation from %s to %s"
+msgid "Consolidation from %(from_date)s to %(end_date)s"
 msgstr ""
 
 #. module: gamification
@@ -766,8 +796,16 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
-msgid "Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system."
-msgstr "Систем рүү холбогдох хэрэглэгчдийг үүсгэж, менеж хийнэ. Систем рүү тодорхой хугацаагаар холбогдохгүй хэрэглэгчдийг идэвхгүй болгох ажлыг мөн хийх боломжтой. Системийг хэрхэн хэрэглээнээс хамаарсан группыг хэрэглэгчдэд оноож өгөх ажлыг мөн хийх боломжтой."
+msgid ""
+"Create and manage users that will connect to the system. Users can be "
+"deactivated should there be a period of time during which they will/should "
+"not connect to the system. You can assign them groups in order to give them "
+"specific access to the applications they need to use in the system."
+msgstr ""
+"Систем рүү холбогдох хэрэглэгчдийг үүсгэж, менеж хийнэ. Систем рүү тодорхой "
+"хугацаагаар холбогдохгүй хэрэглэгчдийг идэвхгүй болгох ажлыг мөн хийх "
+"боломжтой. Системийг хэрхэн хэрэглээнээс хамаарсан группыг хэрэглэгчдэд "
+"оноож өгөх ажлыг мөн хийх боломжтой."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_uid
@@ -821,7 +859,7 @@ msgstr "Өгөгдөл"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Date"
-msgstr ""
+msgstr "Огноо"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
@@ -831,7 +869,9 @@ msgstr "Огноо талбар"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__computation_mode
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__computation_mode
-msgid "Define how the goals will be computed. The result of the operation will be stored in the field 'Current'."
+msgid ""
+"Define how the goals will be computed. The result of the operation will be "
+"stored in the field 'Current'."
 msgstr ""
 
 #. module: gamification
@@ -856,13 +896,17 @@ msgstr "Харуулах горимоос хамаарч тайлан нь ху�
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr "Сорилтыг тайлбарла: юу хийх, зорилт юу болох, яагаад хэрэгтэй болох..."
+msgid ""
+"Describe the challenge: what is does, who it targets, why it matters..."
+msgstr ""
+"Сорилтыг тайлбарла: юу хийх, зорилт юу болох, яагаад хэрэгтэй болох..."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "Тэд юу хийсэн болон яагаад хэрэгтэй болох талаар тайлбарла (нийтэд ил байх болно)"
+msgstr ""
+"Тэд юу хийсэн болон яагаад хэрэгтэй болох талаар тайлбарла (нийтэд ил байх "
+"болно)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__description
@@ -910,8 +954,14 @@ msgstr "Доктор"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__domain
-msgid "Domain for filtering records. General rule, not user depending, e.g. [('state', '=', 'done')]. The expression can contain reference to 'user' which is a browse record of the current user if not in batch mode."
-msgstr "Бичлэгийг шүүх дөмэйн. Ерөнхий дүрэм, хэрэглэгчээс хамаарахгүй, ж: [('state', '=', 'done')]. Илэрхийлэл нь 'user'-рүү сурвалжийг агуулж болох бөгөөд энэ нь бөөн горим биш бол одоогийн хэрэглэгчийн browser record байна."
+msgid ""
+"Domain for filtering records. General rule, not user depending, e.g. "
+"[('state', '=', 'done')]. The expression can contain reference to 'user' "
+"which is a browse record of the current user if not in batch mode."
+msgstr ""
+"Бичлэгийг шүүх дөмэйн. Ерөнхий дүрэм, хэрэглэгчээс хамаарахгүй, ж: "
+"[('state', '=', 'done')]. Илэрхийлэл нь 'user'-рүү сурвалжийг агуулж болох "
+"бөгөөд энэ нь бөөн горим биш бол одоогийн хэрэглэгчийн browser record байна."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
@@ -941,7 +991,8 @@ msgstr "Дуусах огноо"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_mode
 msgid "Evaluate the expression in batch instead of once for each user"
-msgstr "Илэрхийллийг бөөн горимоор тооцоолох. Хэрэглэгч тус бүр дээр нэг нэгээр биш."
+msgstr ""
+"Илэрхийллийг бөөн горимоор тооцоолох. Хэрэглэгч тус бүр дээр нэг нэгээр биш."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_user_expression
@@ -1028,7 +1079,7 @@ msgstr "Бүтэн дагавар"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__gain
 msgid "Gain"
-msgstr ""
+msgstr "Олз"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
@@ -1328,18 +1379,30 @@ msgstr "Явагдаж буй"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
-msgid "In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain."
-msgstr "Бөөн горимд, дөмэйн нь глобаль тооцоологдоно. Хэрэв зөвшөөрөгдсөн бол дээрх дөмэйнийн шүүлтүүрт 'user' түлхүүр үгийг битгий хэрэглэ."
+msgid ""
+"In batch mode, the domain is evaluated globally. If enabled, do not use "
+"keyword 'user' in above filter domain."
+msgstr ""
+"Бөөн горимд, дөмэйн нь глобаль тооцоологдоно. Хэрэв зөвшөөрөгдсөн бол дээрх "
+"дөмэйнийн шүүлтүүрт 'user' түлхүүр үгийг битгий хэрэглэ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
-msgid "In batch mode, this indicates which field distinguishes one user from the other, e.g. user_id, partner_id..."
+msgid ""
+"In batch mode, this indicates which field distinguishes one user from the "
+"other, e.g. user_id, partner_id..."
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
-msgid "In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in challenge). Ignored in case of non-manual goal or goal not linked to a challenge."
-msgstr "Гараарх зорилгын тохиолдолд зорилго шинэчлэгдэлгүй удвал (сорилтонд тодорхойлогдсоноор) сануулга илгээгдэнэ. Гараарх биш зорилгын хувьд хамаагүй, мөн зорилго сорилттой холбогдоогүй бол хамаагүй."
+msgid ""
+"In case of manual goal, reminders are sent if the goal as not been updated "
+"for a while (defined in challenge). Ignored in case of non-manual goal or "
+"goal not linked to a challenge."
+msgstr ""
+"Гараарх зорилгын тохиолдолд зорилго шинэчлэгдэлгүй удвал (сорилтонд "
+"тодорхойлогдсоноор) сануулга илгээгдэнэ. Гараарх биш зорилгын хувьд "
+"хамаагүй, мөн зорилго сорилттой холбогдоогүй бол хамаагүй."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__inprogress
@@ -1463,7 +1526,7 @@ msgstr "Тохируулагдах зорилгын жагсаалт"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Manual"
-msgstr ""
+msgstr "Гараар"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_master
@@ -1623,7 +1686,9 @@ msgstr "Сорилтоор нэг ч хүн оноогдоогүй"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-msgid "Nobody has succeeded to reach every goal, no badge is rewarded for this challenge."
+msgid ""
+"Nobody has succeeded to reach every goal, no badge is rewarded for this "
+"challenge."
 msgstr ""
 
 #. module: gamification
@@ -1662,8 +1727,8 @@ msgstr "Алдааны тоо"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Үйлдэл шаардсан зурвасын тоо"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
@@ -1702,11 +1767,6 @@ msgid "Optimisation"
 msgstr "Оновчлол"
 
 #. module: gamification
-#: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
-msgid "Owner"
-msgstr "Эзэмшигч"
-
-#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__owner_ids
 msgid "Owners"
 msgstr "Эзэмшигчид"
@@ -1730,7 +1790,9 @@ msgstr "Үргэлжлэх хугацаа"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__period
-msgid "Period of automatic goal assignment. If none is selected, should be launched manually."
+msgid ""
+"Period of automatic goal assignment. If none is selected, should be launched"
+" manually."
 msgstr ""
 
 #. module: gamification
@@ -1760,8 +1822,12 @@ msgstr "Python код"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__compute_code
-msgid "Python code to be executed for each user. 'result' should contains the new current value. Evaluated user can be access through object.user_id."
-msgstr "Хэрэглэгч бүрт ажиллах Python код. 'result' нь шинэ одоогийн утгыг агуулах ёстой. Тооцоологдсон хэрэглэгч нь  object.user_id-р дамжиж хандах боломжтой."
+msgid ""
+"Python code to be executed for each user. 'result' should contains the new "
+"current value. Evaluated user can be access through object.user_id."
+msgstr ""
+"Хэрэглэгч бүрт ажиллах Python код. 'result' нь шинэ одоогийн утгыг агуулах "
+"ёстой. Тооцоологдсон хэрэглэгч нь  object.user_id-р дамжиж хандах боломжтой."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
@@ -1791,6 +1857,16 @@ msgid "Ranks List"
 msgstr ""
 
 #. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
+msgid "Reach the next rank and become a Master!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
+msgid "Reach the next rank and become a powerful user!"
+msgstr ""
+
+#. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank and gain a very magic wand!"
 msgstr ""
@@ -1808,6 +1884,16 @@ msgstr ""
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and gain a very nice unicorn!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
+msgid "Reach the next rank to improve your status!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
+msgid "Reach the next rank to show the rest of the world you exist."
 msgstr ""
 
 #. module: gamification
@@ -1839,11 +1925,6 @@ msgstr "Сорилтыг дахин шинэчлэх"
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
 msgid "Related Goals"
 msgstr "Холбогдсон зорилго"
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
-msgid "Related user name for the resource to manage its access."
-msgstr "Нөөцөд хандах эрх бүхий холбогдох хэрэглэгчийн нэр"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
@@ -1904,7 +1985,9 @@ msgstr "Шагнах"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-msgid "Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s."
+msgid ""
+"Reward (badge %(badge_name)s) for every succeeding user was sent to "
+"%(users)s."
 msgstr ""
 
 #. module: gamification
@@ -1935,7 +2018,7 @@ msgstr "Сорилтуудад зориулсан шагналууд"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Running"
-msgstr "Ажиллаж байгаа"
+msgstr "Ашиглаж буй"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1979,8 +2062,12 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
-msgid "Security rules to define who is allowed to manually grant badges. Not enforced for administrator."
-msgstr "Хэн гараар медалийг батламжилж болохыг зөвшөөрөх нууцлалын дүрэм. Администраторуудыг албадахгүй"
+msgid ""
+"Security rules to define who is allowed to manually grant badges. Not "
+"enforced for administrator."
+msgstr ""
+"Хэн гараар медалийг батламжилж болохыг зөвшөөрөх нууцлалын дүрэм. "
+"Администраторуудыг албадахгүй"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2065,7 +2152,7 @@ msgstr "Мөнгөн тэмдэгтийн тоо"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref
 msgid "Source"
-msgstr ""
+msgstr "Эх үүсвэр"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref_model_name
@@ -2076,7 +2163,9 @@ msgstr ""
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-msgid "Special rewards were sent to the top competing users. The ranking for this challenge is:"
+msgid ""
+"Special rewards were sent to the top competing users. The ranking for this "
+"challenge is:"
 msgstr ""
 
 #. module: gamification
@@ -2177,30 +2266,39 @@ msgstr "Тооцоологдсон хугацааны мөчлөгт хэрэг�
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__end_date
-msgid "The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."
-msgstr "Шинэ сорилт автоматаар хаагдах өдөр. Хэрэв мөчлөг тохируулагдаагүй бол зорилгын дуусах огноог энэ огноо нь хэрэглэнэ."
+msgid ""
+"The day a new challenge will be automatically closed. If no periodicity is "
+"set, will use this date as the goal end date."
+msgstr ""
+"Шинэ сорилт автоматаар хаагдах өдөр. Хэрэв мөчлөг тохируулагдаагүй бол "
+"зорилгын дуусах огноог энэ огноо нь хэрэглэнэ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
-msgid "The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."
-msgstr "Шинэ сорилт автоматаар эхлэх өдөр. Хэрэв мөчлөг тохируулагдаагүй бол зорилгын эхлэх огноог энэ огноо хэрэглэнэ."
+msgid ""
+"The day a new challenge will be automatically started. If no periodicity is "
+"set, will use this date as the goal start date."
+msgstr ""
+"Шинэ сорилт автоматаар эхлэх өдөр. Хэрэв мөчлөг тохируулагдаагүй бол "
+"зорилгын эхлэх огноог энэ огноо хэрэглэнэ."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_goal_definition.py:0
 msgid ""
-"The domain for the definition %s seems incorrect, please check it.\n"
+"The domain for the definition %(definition)s seems incorrect, please check it.\n"
 "\n"
-"%s"
+"%(error_message)s"
 msgstr ""
-"%s тодорхойлолтонд зориулагдсан дөмэйн нь буруу байх шиг байна, шалгана уу.\n"
-"\n"
-"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
-msgid "The field name on the user profile (res.users) containing the value for res_id for action."
-msgstr "Хэрэглэгчийн профайл дээрх талбарын нэр (res.users) нь үйлдэлд зориулагдсан res_id утгыг агуулдаг."
+msgid ""
+"The field name on the user profile (res.users) containing the value for "
+"res_id for action."
+msgstr ""
+"Хэрэглэгчийн профайл дээрх талбарын нэр (res.users) нь үйлдэлд зориулагдсан "
+"res_id утгыг агуулдаг."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
@@ -2229,7 +2327,8 @@ msgstr "Илүү нам нь илүү сайн"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
-msgid "The maximum number of time this badge can be sent per month per person."
+msgid ""
+"The maximum number of time this badge can be sent per month per person."
 msgstr "Нэг хүнд нэг сард энэ медаль хамгийн ихдээ илгээгдэх тоо."
 
 #. module: gamification
@@ -2252,12 +2351,17 @@ msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__remind_update_delay
-msgid "The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."
-msgstr "Гараарх зорилго нь хэрэглэгчид оноосноос хойш хэд хоногийн дараа сануулах өдрийн тоо. Хэрэв утга тохируулаагүй бол сануулахгүй."
+msgid ""
+"The number of days after which the user assigned to a manual goal will be "
+"reminded. Never reminded if no value is specified."
+msgstr ""
+"Гараарх зорилго нь хэрэглэгчид оноосноос хойш хэд хоногийн дараа сануулах "
+"өдрийн тоо. Хэрэв утга тохируулаагүй бол сануулахгүй."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
-msgid "The number of time the current user has received this badge this month."
+msgid ""
+"The number of time the current user has received this badge this month."
 msgstr "Энэ медалийг энэ сарт одоогийн хэрэглэгч хэдэн удаа хүлээн авса тоо."
 
 #. module: gamification
@@ -2273,7 +2377,8 @@ msgstr "Энэ сард энэ медалийг одоогийн хэрэглэ�
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
 msgid "The number of time this badge has been received by unique users."
-msgstr "Энэ медаль давхардаагүй хэрэглэгчдийн хувьд хэдэн удаа хүлээн авагдсан тоо."
+msgstr ""
+"Энэ медаль давхардаагүй хэрэглэгчдийн хувьд хэдэн удаа хүлээн авагдсан тоо."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_this_month
@@ -2304,13 +2409,21 @@ msgstr "Зорилтот болон одоогийн утгын нэгж."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
-msgid "The users that have succeeded these goals will receive automatically the badge."
+msgid ""
+"The users that have succeeded these goals will receive automatically the "
+"badge."
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
-msgid "The value to compare with the distinctive field. The expression can contain reference to 'user' which is a browse record of the current user, e.g. user.id, user.partner_id.id..."
-msgstr "Ялгаатай талбарыг харьцуулах утга. Илэрхийлэл нь 'user'-рүү сурвалжийг агуулж болох бөгөөд энэ нь одоогийн хэрэглэгчийн browser record байна. Ж: user.id, user.partner_id.id..."
+msgid ""
+"The value to compare with the distinctive field. The expression can contain "
+"reference to 'user' which is a browse record of the current user, e.g. "
+"user.id, user.partner_id.id..."
+msgstr ""
+"Ялгаатай талбарыг харьцуулах утга. Илэрхийлэл нь 'user'-рүү сурвалжийг "
+"агуулж болох бөгөөд энэ нь одоогийн хэрэглэгчийн browser record байна. Ж: "
+"user.id, user.partner_id.id..."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -2439,8 +2552,12 @@ msgstr "Хэнийг та шагнамаар байна?"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime
-msgid "With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge."
-msgstr "Энэ сонголтыг зөвшөөрснөөр хэрэглэгч энэ медалийг зөвхөн нэг удаа хүлээн авч чадна. Дээд 3 медаль нь сорилтын төгсгөлд шагнагдана."
+msgid ""
+"With this option enabled, a user can receive a badge only once. The top 3 "
+"badges are still rewarded only at the end of the challenge."
+msgstr ""
+"Энэ сонголтыг зөвшөөрснөөр хэрэглэгч энэ медалийг зөвхөн нэг удаа хүлээн авч"
+" чадна. Дээд 3 медаль нь сорилтын төгсгөлд шагнагдана."
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_idea
@@ -2536,7 +2653,9 @@ msgstr "өдөр"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
-msgid "e.g. A Master Chief knows quite everything on the forum! You cannot beat him!"
+msgid ""
+"e.g. A Master Chief knows quite everything on the forum! You cannot beat "
+"him!"
 msgstr ""
 
 #. module: gamification

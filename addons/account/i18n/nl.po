@@ -5,10 +5,10 @@
 # Translators:
 # Jolien De Paepe, 2024
 # Martin Trigaux, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
 # Jordy Blankestijn <jblankestijn@erpopen.nl>, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -892,6 +892,9 @@ msgid ""
 "                    You can choose how you want us to send your invoices, and with which electronic format.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                   Je kunt zelf kiezen hoe en in welk elektronisch formaat je de facturen wilt versturen.\n"
+"                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1347,7 +1350,7 @@ msgstr "<span>Dit is een voorbeeld van je algemene voorwaarden.</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<span>This payment has the same partner, amount and date as </span>"
 msgstr ""
-"<span>Het bedrag, de partner en de datum van deze betaling zijn identiek aan"
+"<span>Het bedrag, de relatie en de datum van deze betaling zijn identiek aan"
 " die van </span>"
 
 #. module: account
@@ -1700,7 +1703,7 @@ msgstr "Waarschuwing abnormaal bedrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_date_partner_ids
 msgid "Abnormal Date Partner"
-msgstr "Abnormale datum partner"
+msgstr "Abnormale datum relatie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_date_warning
@@ -3241,7 +3244,7 @@ msgstr "Automatisch boeken"
 #: model:ir.model.fields,field_description:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_users__autopost_bills
 msgid "Auto-post bills"
-msgstr "Rekeningen automatisch posten"
+msgstr "Facturen automatisch boeken"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
@@ -3287,7 +3290,7 @@ msgstr "Automatische reeks"
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,help:account.field_res_users__autopost_bills
 msgid "Automatically post bills for this trusted partner"
-msgstr "Automatisch rekeningen posten voor deze vertrouwde partner"
+msgstr "Automatisch rekeningen posten voor deze vertrouwde relatie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -3299,12 +3302,12 @@ msgstr "Automatisering"
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Autopost Bills"
-msgstr "Autopost Rekeningen"
+msgstr "Facturen automatisch boeken"
 
 #. module: account
 #: model:ir.model,name:account.model_account_autopost_bills_wizard
 msgid "Autopost Bills Wizard"
-msgstr "Autopost Rekeningen Wizard"
+msgstr "Wizard facturen automatisch boeken"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -6814,7 +6817,7 @@ msgstr "Electronic Data Interchange"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Electronic format"
-msgstr ""
+msgstr "Elektronisch formaat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -10413,7 +10416,7 @@ msgstr "Diversen"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.1_general
 msgid "Miscellaneous Operations"
-msgstr "Memoriaal"
+msgstr "Diverse operaties"
 
 #. module: account
 #. odoo-python
@@ -11001,7 +11004,7 @@ msgstr "Aantal acties"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_autopost_bills_wizard__nb_unmodified_bills
 msgid "Number of bills previously unmodified from this partner"
-msgstr "Aantal ongewijzigde rekeningen van deze partner"
+msgstr "Aantal ongewijzigde rekeningen van deze relatie"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
@@ -11745,7 +11748,7 @@ msgstr "Relatiesoort"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_vat_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_vat_placeholder
 msgid "Partner Vat Placeholder"
-msgstr "Partner BTW Plaatshouder"
+msgstr "Relatie BTW Plaatshouder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
@@ -12742,7 +12745,7 @@ msgstr "Ontvangen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Receive invoices"
-msgstr ""
+msgstr "Ontvang facturen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -12819,7 +12822,7 @@ msgstr "Aflettermodel"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_model
 #: model:ir.ui.menu,name:account.action_account_reconcile_model_menu
 msgid "Reconciliation Models"
-msgstr "Afletterregels"
+msgstr "Aflettermodellen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
@@ -13627,6 +13630,8 @@ msgstr "Beveiligd"
 msgid ""
 "Securing these entries will also secure entries after the selected date."
 msgstr ""
+"Als je deze items vastlegt, worden ook de items na de geselecteerde datum "
+"vastgelegd."
 
 #. module: account
 #. odoo-python
@@ -15617,6 +15622,14 @@ msgstr ""
 #: code:addons/account/models/account_analytic_line.py:0
 msgid "The journal item is not linked to the correct financial account"
 msgstr "De boekingsregel is niet gekoppeld aan de juiste grootboekrekening"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_analytic_line.py:0
+msgid ""
+"This analytic item was created by a journal item. Please edit the analytic "
+"distribution on the journal item instead."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day

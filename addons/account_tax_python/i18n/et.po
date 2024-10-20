@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Stevin Lilla, 2024
+# Birgit Vijar, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
+"Last-Translator: Birgit Vijar, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Maksude grupp: Maks koosneb alammaksudest.\n"
+"    - Fikseeritud: Maks jääb samaks, olenemata hinnast.\n"
+"    - Protsent: Maks on teatud % hinnast:\n"
+"        nt 100 * (1 + 10%) = 110 (hind ei sisalda maksu)\n"
+"        nt 110 / (1 + 10%) = 100 (hind sisaldab maksu)\n"
+"    - Sisaldab protsendilist maksu: Maksusumma sõltub hinnast:\n"
+"        nt 180 / (1 - 10%) = 200 (hind ei sisalda maksu)\n"
+"       nt 200 * (1 - 10%) = 180 hind sisaldab maksu)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula

@@ -144,7 +144,7 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\">\n"
-"                                支持所有货币。\n"
+"                                支持所有币别。\n"
 "                            </span>"
 
 #. module: payment
@@ -161,17 +161,17 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Methods</strong>"
-msgstr ""
+msgstr "<strong><i class=\"oi oi-arrow-right\"/> 付款方式</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Providers</strong>"
-msgstr ""
+msgstr "<strong><i class=\"oi oi-arrow-right\"/> 支付提供商</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment method available</strong>"
-msgstr ""
+msgstr "<strong>无可用付款方式</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -212,7 +212,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
-msgstr "<strong>警告</strong>货币缺失或者不正确。"
+msgstr "<strong>警告</strong>币别缺失或者不正确。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -331,7 +331,7 @@ msgstr "支付宝"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alipay_plus
 msgid "Alipay+"
-msgstr ""
+msgstr "支付宝"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
@@ -1082,7 +1082,7 @@ msgstr "错误：%s"
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout"
-msgstr ""
+msgstr "快速结账"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
@@ -1126,7 +1126,7 @@ msgstr "Frafinance"
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
 msgid "Full & Partial"
-msgstr ""
+msgstr "全额 & 部分"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__full_only
@@ -1643,7 +1643,7 @@ msgstr "未找到适合您的付款提供商的付款方式。"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "No payment providers are configured."
-msgstr ""
+msgstr "未配置支付提供商。"
 
 #. module: payment
 #. odoo-python
@@ -1981,7 +1981,7 @@ msgstr "支付令牌"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "支付交易"
+msgstr "付款交易"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -1989,12 +1989,12 @@ msgstr "支付交易"
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
 msgid "Payment Transactions"
-msgstr "支付交易"
+msgstr "付款交易"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
 msgid "Payment Transactions Linked To Token"
-msgstr "与令牌相关的支付交易"
+msgstr "与令牌相关的付款交易"
 
 #. module: payment
 #. odoo-python
@@ -2542,7 +2542,7 @@ msgid ""
 "The list of currencies for that are supported by this payment method (if the"
 " provider allows it). When paying with another currency, this payment method"
 " is not available to customers."
-msgstr "该付款方式支持的货币列表（如果提供商允许）。使用其他货币付款时，客户无法使用此付款方式。"
+msgstr "该付款方式支持的币别列表（如果提供商允许）。使用其他币别付款时，客户无法使用此付款方式。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
@@ -2552,7 +2552,7 @@ msgstr "支持该付款方式的供应商列表。"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
 msgid "The main currency of the company, used to display monetary fields."
-msgstr "公司的主要货币，用于显示货币字段。"
+msgstr "公司的主要币别，用于显示币别字段。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__maximum_amount
@@ -2798,7 +2798,7 @@ msgstr "令牌内嵌式表单模板"
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_tokenization
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
 msgid "Tokenization"
-msgstr "符号化"
+msgstr "令牌化"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_tokenization
@@ -3205,7 +3205,7 @@ msgstr "国家/地区不相容"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "incompatible currency"
-msgstr "货币不相容"
+msgstr "币别不相容"
 
 #. module: payment
 #. odoo-python
