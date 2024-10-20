@@ -885,6 +885,9 @@ msgid ""
 "                    You can choose how you want us to send your invoices, and with which electronic format.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Bạn có thể chọn cách chúng tôi gửi hóa đơn của bạn và định dạng điện tử mà chúng tôi sử dụng.\n"
+"                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -6803,7 +6806,7 @@ msgstr "Trao đổi dữ liệu điện tử"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Electronic format"
-msgstr ""
+msgstr "Định dạng điện tử"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -12687,7 +12690,7 @@ msgstr "Nhận tiền"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Receive invoices"
-msgstr ""
+msgstr "Nhận hoá đơn"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -13566,6 +13569,7 @@ msgstr "Được bảo mật"
 msgid ""
 "Securing these entries will also secure entries after the selected date."
 msgstr ""
+"Việc bảo mật các bút toán này cũng sẽ bảo mật các bút toán sau ngày đã chọn."
 
 #. module: account
 #. odoo-python
@@ -14588,7 +14592,7 @@ msgstr "Mã khoá thuế"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr "Thông báo ngày chốt thuế"
+msgstr "Thông báo ngày khoá sổ thuế"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_map
@@ -14651,7 +14655,7 @@ msgstr "Dòng phân bổ thuế"
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__tax_lock_date
 msgid "Tax Return Lock Date"
-msgstr "Ngày chốt tờ khai thuế"
+msgstr "Ngày khoá tờ khai thuế"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -15531,6 +15535,14 @@ msgstr "Sổ để tải hóa đơn lên chưađược chỉ định. "
 msgid "The journal item is not linked to the correct financial account"
 msgstr ""
 "Hạng mục bút toán này không được liên kết với tài khoản tài chính chính xác"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_analytic_line.py:0
+msgid ""
+"This analytic item was created by a journal item. Please edit the analytic "
+"distribution on the journal item instead."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -16835,12 +16847,12 @@ msgstr "Giao dịch"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer"
-msgstr "Lệnh chuyển hàng"
+msgstr "Luân chuyển"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Transfer Date"
-msgstr "Ngày lệnh chuyển hàng"
+msgstr "Ngày luân chuyển"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action

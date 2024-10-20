@@ -5,6 +5,7 @@
 # Translators:
 # Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-27 08:15+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -420,6 +421,56 @@ msgstr "<i class=\"fa fa-times\"/> Huỷ"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Chat with coworkers</b> in real-time using direct "
+"messages.</p><p><i>You might need to invite users from the Settings app "
+"first.</i></p>"
+msgstr ""
+"<p><b>Chat với đồng nghiệp</b> theo thời gian thực sử dụng thông điệp trực "
+"tiếp.</p><p><i>Bạn có thể cần phải mời người dùng từ ứng dụng Thiết lập "
+"trước để họ có tài khoản người dùng trong Hệ thống.</i></p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
+" notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
+"Start your message with <i>'/'</i> to get the list of possible commands.</p>"
+msgstr ""
+"<p><b>Viết một thông điệp</b> đến thành viên của kênh ở đây.</p> <p>Bạn có "
+"thể \"chộp\" ai đó vào thảo luận bằng cách gõ <i>'@'</i> hoặc liên kết một "
+"kênh khác vào bằng cách gõ <i>'#'</i>. Bắt đầu thông điệp của bạn bằng "
+"<i>'/'</i> để nhận danh sách các lệnh khả dụng.</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p>Channels make it easy to organize information across different topics and"
+" groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+"marketing, product XYZ, after work party, etc).</p>"
+msgstr ""
+"<p>Các kênh cho phép bạn đơn giản hoá việc tổ chức thông tin trải qua các "
+"chủ để và các nhóm khác nhau.</p> <p>Hãy thử <b>tạo kênh đầu tiên của "
+"bạn</b> (vd: bán hàng, marketing, sản phẩm XYZ, liên hoan, ăn chơi nhảy múa,"
+" etc).</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a channel here.</p>"
+msgstr "<p>Tạo kênh mới.</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a public or private channel.</p>"
+msgstr "<p>Tạo kênh công cộng hoặc riêng tư.</p>"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
 msgstr "<samp>%(send_keybind)s</samp><i> để gửi</i>"
@@ -484,6 +535,13 @@ msgstr ""
 "                                Tin nhắn sẽ được đăng dưới dạng tin nhắn trong bản ghi để thông báo\n"
 "                                cho tất cả người theo dõi. Nó sẽ xuất hiện trong lịch sử nhắn tin.\n"
 "                            </span>"
+
+#. module: mail
+#: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr ""
+"<span><b>Tốt lắm!</b> Bạn đã xem qua tất cả các bước của tour hướng dẫn "
+"này.</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -2110,6 +2168,12 @@ msgstr "Bấm vào đây để thử lại"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Click on your message"
+msgstr "Bấm vào tin nhắn của bạn"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
 msgid "Click to see the attachments"
 msgstr "Bấm để xem tệp đính kèm"
@@ -2456,8 +2520,8 @@ msgstr "Trạng thái Gom/Đóng hội thoại"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Copy Message Link"
-msgstr ""
+msgid "Copy Link"
+msgstr "Copy Link"
 
 #. module: mail
 #. odoo-python
@@ -3693,6 +3757,12 @@ msgstr "Thoát chế độ toàn màn hình"
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Expand"
 msgstr "Mở rộng"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Expand options"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6090,6 +6160,13 @@ msgid "Messages Search"
 msgstr "Tìm kiếm thông điệp"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Messages can be <b>starred</b> to remind you to check back later."
+msgstr ""
+"Thông điệp có thể được <b>gắn sao</b> để nhắc nhở bạn kiểm tra lại sau."
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
 msgid "Messages can only be linked to one sub-channel"
 msgstr ""
@@ -6863,6 +6940,16 @@ msgstr "Giá trị cũ"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"Once a message has been starred, you can come back and review it at any time"
+" here."
+msgstr ""
+"Một khi một thông điệp được gắn sao, bạn có thể quay lại và xem lại nó bất "
+"kỳ lúc nào."
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_indicator.xml:0
 msgid "Ongoing call"
 msgstr ""
@@ -7457,6 +7544,12 @@ msgstr "Truy cập cổng bị thu hồi"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
 msgid "Post on a document"
 msgstr "Đưa vào tài liệu"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Post your message on the thread"
+msgstr "Gửi tin nhắn của bạn lên kênh"
 
 #. module: mail
 #. odoo-python
@@ -10090,6 +10183,12 @@ msgid "Unpin Message"
 msgstr "Bỏ ghim tin nhắn"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Unpin Thread"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
 msgstr "Ngày bỏ ghim"
@@ -10917,8 +11016,14 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %s"
-msgstr "Bạn đã bỏ ghim cuộc trò chuyện với %s"
+msgid "You unpinned %(conversation_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You unpinned your conversation with %(user_name)s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript

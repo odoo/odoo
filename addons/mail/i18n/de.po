@@ -5,6 +5,7 @@
 # Translators:
 # Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-27 08:15+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -428,6 +429,57 @@ msgstr "<i class=\"fa fa-times\"/> Abbrechen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Chat with coworkers</b> in real-time using direct "
+"messages.</p><p><i>You might need to invite users from the Settings app "
+"first.</i></p>"
+msgstr ""
+"<p><b>Tauschen Sie sich</b> mithilfe von Direktnachrichten in Echtzeit <b> "
+"mit Kollegen aus</b>.</p><p><i>Möglicherweise müssen Sie dafür zunächst die "
+"Benutzer in den Einstellungen einladen.</i></p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
+" notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
+"Start your message with <i>'/'</i> to get the list of possible commands.</p>"
+msgstr ""
+"<p><b>Schreiben Sie hier eine Mitteilung</b> an die Mitglieder dieses "
+"Kanals.</p> <p>Benachrichtigen Sie eine Person mit <i>„@“</i> oder "
+"verknüpfen Sie einen anderen Kanal mit <i>„#“</i>. Beginnen Sie Ihre "
+"Mitteilung mit <i>„/“</i>, um die Liste mit möglichen Befehlen "
+"anzuzeigen.</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p>Channels make it easy to organize information across different topics and"
+" groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+"marketing, product XYZ, after work party, etc).</p>"
+msgstr ""
+"<p>Mit Kanälen können Informationen mühelos für verschiedene Themen und "
+"Gruppen organisiert werden.</p> <p>Sie können <b>Ihren ersten Kanal "
+"erstellen</b> (z. B. Verkauf, Marketing, Produkt XYZ, After-Work-Party und "
+"mehr).</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a channel here.</p>"
+msgstr "<p>Erstellen Sie hier einen Kanal.</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a public or private channel.</p>"
+msgstr "<p>Erstellen Sie einen öffentlichen oder privaten Kanal.</p>"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
 msgstr "<samp>%(send_keybind)s</samp><i> zum Senden</i>"
@@ -492,6 +544,13 @@ msgstr ""
 "                                Die Nachricht wird als Nachricht im Datensatz hinterlassen\n"
 "                                und alle Follower werden benachrichtigt. Sie erscheint im Nachrichtenverlauf.\n"
 "                            </span>"
+
+#. module: mail
+#: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr ""
+"<span><b>Gut gemacht!</b> Sie haben alle Schritte dieser Tour "
+"absolviert.</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -1174,7 +1233,7 @@ msgstr "Alle Nachrichten"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "All conversations have been muted"
-msgstr ""
+msgstr "Alle Unterhaltungen wurden stummgeschaltet"
 
 #. module: mail
 #. odoo-python
@@ -2152,6 +2211,12 @@ msgstr "Hier klicken, um es erneut zu versuchen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Click on your message"
+msgstr "Klicken Sie auf Ihre Nachricht"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
 msgid "Click to see the attachments"
 msgstr "Klicken, um die Anhänge zu sehen"
@@ -2224,7 +2289,7 @@ msgstr "Geschlossen"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_sidebar.xml:0
 msgid "Collapse panel"
-msgstr ""
+msgstr "Panel einklappen"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
@@ -2506,8 +2571,8 @@ msgstr "Unterhaltung in eingeklapptem Status"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Copy Message Link"
-msgstr "Nachrichtenlink kopieren"
+msgid "Copy Link"
+msgstr "Link kopieren"
 
 #. module: mail
 #. odoo-python
@@ -3755,9 +3820,15 @@ msgstr "Aufklappen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Expand options"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_sidebar.xml:0
 msgid "Expand panel"
-msgstr ""
+msgstr "Panel aufklappen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__expiration_time
@@ -5988,13 +6059,13 @@ msgstr "Nachricht"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message \"%(subChannelName)s\""
-msgstr ""
+msgstr "Nachricht „%(subChannelName)s“"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message #%(threadName)s…"
-msgstr ""
+msgstr "Nachricht #%(threadName)s…"
 
 #. module: mail
 #. odoo-javascript
@@ -6169,6 +6240,14 @@ msgid "Messages Search"
 msgstr "Nachrichtensuche"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Messages can be <b>starred</b> to remind you to check back later."
+msgstr ""
+"Nachrichten können mit einem <b>Sternchen</b> versehen werden, um Sie daran "
+"zu erinnern, später noch einmal nachzusehen."
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
 msgid "Messages can only be linked to one sub-channel"
 msgstr "Nachrichten können nur mit einem Unterkanal verknüpft werden"
@@ -6293,19 +6372,19 @@ msgstr "Stumm"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Mute Conversation"
-msgstr ""
+msgstr "Unterhaltung stummschalten"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Mute all conversations"
-msgstr ""
+msgstr "Alle Unterhaltungen stummschalten"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Mute duration"
-msgstr ""
+msgstr "Dauer der Stummschaltung"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
@@ -6318,6 +6397,8 @@ msgstr "Benachrichtigungen stummschalten bis"
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Muting prevents unread indicators and notifications from appearing."
 msgstr ""
+"Die Stummschaltung verhindert, dass ungelesene Hinweise und "
+"Benachrichtigungen angezeigt werden."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
@@ -6945,6 +7026,16 @@ msgstr "Alte Werte"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"Once a message has been starred, you can come back and review it at any time"
+" here."
+msgstr ""
+"Wenn Sie eine Nachricht mit einem Sternchen versehen haben, können Sie "
+"jederzeit hierher zurückkehren und sie ansehen."
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_indicator.xml:0
 msgid "Ongoing call"
 msgstr "Laufender Anruf"
@@ -7548,6 +7639,12 @@ msgstr "Portalzugriff verweigert"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
 msgid "Post on a document"
 msgstr "In einem Dokument hinterlassen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Post your message on the thread"
+msgstr "Posten Sie Ihre Nachricht in dem Thread"
 
 #. module: mail
 #. odoo-python
@@ -9756,6 +9853,8 @@ msgid ""
 "This setting will be applied to all channels using the default notification "
 "settings."
 msgstr ""
+"Diese Einstellung wird auf alle Kanäle, die die "
+"Standardbenachrichtigungseinstellen verwenden, angezeigt."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__channel_notifications
@@ -10191,7 +10290,7 @@ msgstr "Stummschaltung aufheben"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Unmute Conversation"
-msgstr ""
+msgstr "Stummschaltung der Unterhaltung aufheben"
 
 #. module: mail
 #. odoo-javascript
@@ -10211,6 +10310,12 @@ msgstr "Unterhaltung loslösen"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "Unpin Message"
 msgstr "Nachricht losheften"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Unpin Thread"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
@@ -11048,8 +11153,14 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %s"
-msgstr "Ihre Unterhaltung mit %s ist nicht länger angeheftet"
+msgid "You unpinned %(conversation_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You unpinned your conversation with %(user_name)s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript

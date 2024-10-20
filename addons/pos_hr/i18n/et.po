@@ -12,9 +12,9 @@
 # Siim Raasuke, 2024
 # Rivo Zängov <eraser@eraser.ee>, 2024
 # Maidu Targama <m.targama@gmail.com>, 2024
-# Stevin Lilla, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,11 +34,12 @@ msgstr ""
 #: model:ir.model,name:pos_hr.model_report_pos_hr_multi_employee_sales_report
 msgid "A collection of single session reports. One for each employee"
 msgstr ""
+"Kollektsioon ühekordsetest sessiooni aruannetest. Üks igale töötajale."
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
-msgstr ""
+msgstr "Abigal Peterson"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -49,7 +50,7 @@ msgstr "Juurdepääs keelatud"
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
 msgid "Add a report per each employee"
-msgstr ""
+msgstr "Lisa aruanne igale töötajale"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -60,7 +61,7 @@ msgstr "Täpsemad õigused"
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "All Employees"
-msgstr ""
+msgstr "Kõik töötajad"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
@@ -84,12 +85,14 @@ msgid ""
 "Can't generate a report per employee! as selected session has no orders "
 "associated with any employee."
 msgstr ""
+"Ei saa luua aruannet igale töötajale! Valitud sessioonil pole töötajatega "
+"seotud tellimusi."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
 msgid "Cash in/out"
-msgstr ""
+msgstr "Raha sisse/välja"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
@@ -103,12 +106,12 @@ msgstr "Kassiir"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_order.py:0
 msgid "Cashier %s"
-msgstr ""
+msgstr "Kassiir %s"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
 msgid "Cashier name"
-msgstr ""
+msgstr "Kassiiri nimi"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -157,7 +160,7 @@ msgstr "Töötaja"
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Employee Sales Report"
-msgstr ""
+msgstr "Töötaja müügi aruanne"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -168,7 +171,7 @@ msgstr "Töötaja:"
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
-msgstr ""
+msgstr "Töötaja: %(employee)s - PoS seadistus: %(config_list)s\n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
@@ -186,19 +189,22 @@ msgstr "Töötajad juhi juurdepääsuga"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
-msgstr ""
+msgstr "Sisesta oma PIN"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "If left empty, all employees can log in to PoS"
 msgstr ""
+"Kui tühjaks jäetud, siis kõik töötajad saavad sisse logida kassa seanssi"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
 msgid "If left empty, only Odoo users have extended rights in PoS"
 msgstr ""
+"Kui tühjaks jäetud, siis ainult Odoo kasutajatel on täiendavad õigused kassa"
+" moodulis"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -227,7 +233,7 @@ msgstr "Ava kassa"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Opened register"
-msgstr ""
+msgstr "Avatud kassa"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -239,7 +245,7 @@ msgstr "Avamine"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "PIN not found"
-msgstr ""
+msgstr "PIN ei leitud"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -257,7 +263,7 @@ msgstr "Maksed"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.js:0
 msgid "Payments in %(paymentMethod)s"
-msgstr ""
+msgstr "Maksed %(paymentMethod)s"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
@@ -308,17 +314,17 @@ msgstr "Müügi detailid"
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "Select Employee(s)"
-msgstr ""
+msgstr "Vali töötaja(d)"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_hr_single_employee_sales_report
 msgid "Session sales details for a single employee"
-msgstr ""
+msgstr "Sessiooni müügiandmed ühel töötajal"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
 msgid "The employee who currently uses the cash register"
-msgstr ""
+msgstr "Töötaja kes kasutab praegu sularahakassat"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_account_bank_statement_line__employee_id
@@ -329,19 +335,19 @@ msgstr ""
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,help:pos_hr.field_pos_payment__employee_id
 msgid "The employee who uses the cash register."
-msgstr ""
+msgstr "Töötaja kes kasutab sularaharassat,"
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "There is no cashier available."
-msgstr ""
+msgstr "Kassiiri pole saadaval."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Unlock Register"
-msgstr ""
+msgstr "Ava kassa"
 
 #. module: pos_hr
 #. odoo-javascript
