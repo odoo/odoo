@@ -30,8 +30,8 @@
 # JanaAvalah, 2024
 # Tairi Tiimann, 2024
 # Anna, 2024
-# Siim Raasuke, 2024
 # Stevin Lilla, 2024
+# Siim Raasuke, 2024
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-26 12:42+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
+"Last-Translator: Siim Raasuke, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3258,6 +3258,9 @@ msgid ""
 "Cash Basis for Accounting Reports\n"
 "=================================\n"
 msgstr ""
+"\n"
+"Kassapõhine raamatupidamisaruandlus\n"
+"=================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_survey
@@ -3507,6 +3510,8 @@ msgid ""
 "\n"
 "Contains the enterprise views for Stock management\n"
 msgstr ""
+"\n"
+"Sisaldab lao halduse ettevõtte vaateid\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_presence
@@ -4172,6 +4177,14 @@ msgid ""
 "the transmission of said documents to various parties involved in the exchange (other company,\n"
 "governements, etc.)\n"
 msgstr ""
+"\n"
+"Elektrooniline andmevahetus\n"
+"=======================================\n"
+"EDI on äriliste andmete elektrooniline vahetus, kasutades standardiseeritud formaati.\n"
+"\n"
+"See on põhimoodul arvete importimiseks ja eksportimiseks erinevates EDI formaatides ning\n"
+"nende dokumentide edastamiseks vahetuses osalevatele pooltele (teised ettevõtted,\n"
+"valitsused jne).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_reports
@@ -4327,6 +4340,11 @@ msgid ""
 "We should also consider that there may be users without the inventory application installed and keep a less\n"
 "complex logic.\n"
 msgstr ""
+"\n"
+"Isegi kui pakendite kogus on näiliselt ainult lao rakendusega seotud, vajame selle jaoks välja\n"
+"arvel, kuna see teave võib sõltuda ka DUS deklaratsioonist.\n"
+"Samuti peaksime arvestama, et võivad olla kasutajad, kellel lao rakendus ei ole paigaldatud, ja hoidma loogika\n"
+"vähem keerulisena.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_expense
@@ -4410,6 +4428,8 @@ msgid ""
 "\n"
 "Filters the stock lines out of the reconciliation widget\n"
 msgstr ""
+"\n"
+"Filtreerub lao read sobitamise mudelist välja.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -5831,6 +5851,20 @@ msgid ""
 "safety stock, min/max to supply and to manually override the amount you will\n"
 "procure.\n"
 msgstr ""
+"\n"
+"Master Production Schedule\n"
+"==========================\n"
+"\n"
+"Mõnikord peate looma ostutellimusi tootmistellimuste komponentide\n"
+"jaoks, mis luuakse alles hiljem. Või tootmisorderite jaoks,\n"
+"kus teil on hiljem alles müügitellimused. Lahendus on ennustada oma\n"
+"müügiprognoose ja selle põhjal luua juba mõningaid\n"
+"tootmis- või ostutellimusi.\n"
+"\n"
+"Peate valima tooted, mida soovite aruandesse lisada. Saate valida\n"
+"aruande perioodi: päev, nädal, kuu jne. Samuti on võimalik määrata\n"
+"ohutagavarad, minimaalne/maximaalne varustamine ja käsitsi muuta\n"
+"ostetava koguse.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll
@@ -5895,6 +5929,13 @@ msgid ""
 "work center on manufacturing orders). This module manages a resource calendar\n"
 "associated to every resource. It also manages the leaves of every resource.\n"
 msgstr ""
+"\n"
+"Ressursside haldamise moodul\n"
+"===============================\n"
+"\n"
+"Ressurss esindab midagi, mida saab ajastada (näiteks arendaja ülesandel või\n"
+"töö keskus tootmisorderitel). See moodul haldab iga ressursiga seotud ressursside kalendrit.\n"
+"Samuti haldab see iga ressursi puhkusi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec_import
@@ -8905,6 +8946,8 @@ msgid ""
 "\n"
 "This module installs when we want to share coupon from helpdesk.\n"
 msgstr ""
+"\n"
+"See moodul installitakse, kui soovime jagada kupongi klienditoe kaudu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
@@ -8978,6 +9021,8 @@ msgid ""
 "\n"
 "This module makes it possible to manage employee skills during an appraisal process.\n"
 msgstr ""
+"\n"
+"See moodul võimaldab hallata töötajate oskusi hinadmisprotsessi käigus.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_l10n_se
@@ -9009,6 +9054,16 @@ msgid ""
 "According to the approval type configuration, a request\n"
 "creates next activities for the related approvers.\n"
 msgstr ""
+"\n"
+"See moodul haldab kinnituste töövoogu\n"
+"======================================\n"
+"\n"
+"See moodul haldab kinnitustaotlusi, nagu ärireisid,\n"
+"eemalolekud, ületunnid, laenatud esemed, üldised kinnitused,\n"
+"hangetega seotud tegevused, lepingute kinnitamine jne.\n"
+"\n"
+"Kinnituse tüübi konfiguratsiooni kohaselt loob taotlus\n"
+"järgmised tegevused seotud kinnitajatele.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -9043,6 +9098,12 @@ msgid ""
 "It is basically used when we want to keep track of production orders generated\n"
 "from purchase order.\n"
 msgstr ""
+"\n"
+"See moodul pakub kasutajale võimalust installida MRP ja ostumoodulid korraga.\n"
+"========================================================================================\n"
+"\n"
+"Seda kasutatakse põhimõtteliselt siis, kui soovime jälgida ostutellimusest genereeritud\n"
+"tootmistellimuste jälgimist.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp
@@ -9275,6 +9336,19 @@ msgid ""
 "where it is enabled. In order to be able to execute RPC scripts, the user\n"
 "can setup API keys to replace their main password.\n"
 msgstr ""
+"\n"
+"Kahe-etapiline tuvastamine (TOTP)\n"
+"================================\n"
+"Võimaldab kasutajatel enda kasutaja kontol konfigureerida turvalisuse lisamiseks\n"
+"kahe-etapilist tuvastamist, kasutades ajapõhiseid ühekordseid paroole (TOTP).\n"
+"\n"
+"Kord aktiveeritud, peab kasutaja sisestama 6-numbrilise koodi, mis tuleb\n"
+"nende autentimisäpist, enne kui neile lubatakse süsteemi ligipääs.\n"
+"Kõik populaarsed autentimisäpid on toetatud.\n"
+"\n"
+"Märkus: loogiliselt võttes takistab kahe-etapilisus salasõna põhist RPC ligipääsu kasutajatele,\n"
+"kus see on aktiveeritud. Selleks, et RPC skripte saaks täita, saab kasutaja\n"
+"seada üles API võtmeid nende peamise salasõna asendamiseks.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -9374,6 +9448,9 @@ msgid ""
 "Using this application you can manage Sales Teams with CRM and/or Sales\n"
 "=======================================================================\n"
 msgstr ""
+"\n"
+"Selle rakenduse abil saate hallata müügimeeskondi koos CRMi ja /või müügiga.\n"
+"=======================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
@@ -9502,6 +9579,9 @@ msgid ""
 "When invoicing timesheets, allows invoicing either all timesheets\n"
 "linked to an SO, or only the validated timesheets\n"
 msgstr ""
+"\n"
+"Arve esitamisel ajaarvestuse järgi lubatakse kõik\n"
+"ajaarvestuslehed, mis on seotud \"SO\"-ga või ainult kinnitatud ajaarvestuslehed.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_documents
@@ -9585,7 +9665,7 @@ msgstr "%(company_currency_name)s iga %(rate_currency_name)s kohta"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(method)s on %(model)s is private and cannot be called from a button"
-msgstr ""
+msgstr "%(method)s  %(model)s on privaatne ning ei saa kasutada nupust"
 
 #. module: base
 #. odoo-python
@@ -10386,6 +10466,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or not update_field_type == "
 "'many2many'\">by</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or not update_field_type == "
+"'many2many'\">by</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -10393,6 +10475,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type == "
 "'many2many'\">to</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type == "
+"'many2many'\">to</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -10401,6 +10485,9 @@ msgid ""
 "                        <span invisible=\"reset_mode != 'hard'\">This view is not coming from a file.</span>\n"
 "                        <span invisible=\"reset_mode != 'other_view'\">You need two views to compare.</span>"
 msgstr ""
+"<span invisible=\"reset_mode != 'soft'\">Sellel vaatel pole eemist versiooni.</span>\n"
+"                        <span invisible=\"reset_mode != 'hard'\">See vaade ei tule failist.</span>\n"
+"                        <span invisible=\"reset_mode != 'other_view'\">Võrdlemiseks on vaja kahte vaadet.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -10907,6 +10994,9 @@ msgid ""
 "effortlessly check in and out while ensuring seamless notifications for "
 "hosts."
 msgstr ""
+"Kohandatud vastuvõtuteenuse haldamise süsteem, mis võimaldab külalistel "
+"probleemideta sisse ja välja registreeruda, tagades samal ajal sujuvad "
+"teated peremeestele."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_groups
@@ -10918,6 +11008,12 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
+"Grupp on funktsionaalsete valdkondade kogum, mis määratakse kasutajale, et "
+"anda neile juurdepääs ja õigused konkreetsetele rakendustele ja ülesannetele"
+" süsteemis. Saate luua kohandatud gruppe või redigeerida vaikimisi "
+"olemasolevaid gruppe, et kohandada menüü vaadet, mida kasutajad saavad näha."
+" Siit saab hallata, kas neil on lugemis-, kirjutamis-, loomise- ja "
+"kustutamisõigused."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
@@ -11027,6 +11123,9 @@ msgid ""
 "three departments (aeronautics and aerospace, environmental and applied "
 "fluid dynamics, and turbomachinery and propulsion)."
 msgstr ""
+"Rahvusvaheline mittetulunduslik haridus- ja teadusorganisatsioon, kus "
+"tegutseb kolm osakonda: aeronautika ja kosmosetehnika, keskkonna ja "
+"rakenduslik vedelikudünaamika ning turbomootorite ja propellerite valdkond."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -11089,6 +11188,9 @@ msgid ""
 "A user without any rights on Appraisals will be able to see the application,"
 " create and manage appraisals for himself and the people he's manager of."
 msgstr ""
+"Kasutaja, kellel pole mingeid õigusi Hindamiste moodulis, saab näha "
+"rakendust ning luua ja hallata hindamisi enda ja nende inimeste jaoks, kelle"
+" juht ta on."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_time_off
@@ -12741,11 +12843,14 @@ msgstr "Arhiveeritud"
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts?"
 msgstr ""
+"Kas olete kindel, et soovite oma kontaktide automaatset ühendamist teostada?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the list of automatic merges of your contacts?"
 msgstr ""
+"Kas olete kindel, et soovite teostada oma kontaktide automaatsete "
+"ühendamiste nimekirja?"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -13508,7 +13613,7 @@ msgstr "Põhifunktsioonid Kvaliteedikontrolliks"
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
 msgid "Basic models and helpers to support In-App purchases."
-msgstr ""
+msgstr "Põhimudelid ja abivahendid rakendusesiseste ostude toetamiseks."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iot
@@ -14721,7 +14826,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_documents
 msgid "Choose the website on which documents/folder are shared"
-msgstr ""
+msgstr "Valige veebisait, millel dokumendid/kataloogid on jagatud."
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -20441,6 +20546,8 @@ msgid ""
 "configuration: the model of the record on which the action is triggered is "
 "not the same as the model of the action."
 msgstr ""
+"Mul pole aimugi, kuidas te seda *tegite*, kuid proovite kasutada arusaamatut"
+" konfiguratsiooni: toimingu aktiveerimise mudel ei ühti toimingu mudeliga."
 
 #. module: base
 #. odoo-python
@@ -20450,6 +20557,8 @@ msgid ""
 "I'll be happy to send a webhook for you, but you really need to give me a "
 "URL to reach out to..."
 msgstr ""
+"Olen hea meelega valmis teile veebipunkti saatma, kuid teil on tõesti vaja "
+"anda mulle URL, kuhu suunata..."
 
 #. module: base
 #. odoo-python
@@ -20676,6 +20785,8 @@ msgid ""
 "If enabled, then the second time the user prints with same attachment name, "
 "it returns the previous report."
 msgstr ""
+"Kui see on lubatud, siis teisel korral, kui kasutaja printib sama manuse "
+"nimega, tagastatakse eelmine aruanne."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule__global
@@ -21644,7 +21755,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_ui_view_qweb_required_key
 msgid "Invalid key: QWeb view should have a key"
-msgstr ""
+msgstr "Kehtetu võti: QWeb vaates peaks olema võti"
 
 #. module: base
 #. odoo-python
@@ -21666,7 +21777,7 @@ msgstr "Tegevuse definitsioonis on vale mudeli nimi %r."
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid position attribute: '%s'"
-msgstr ""
+msgstr "Atribuudi jaoks sobimatu positsioon '%s'"
 
 #. module: base
 #. odoo-python
@@ -22619,7 +22730,7 @@ msgstr "Lesotho"
 #: model:ir.module.module,description:base.module_hr_referral
 #: model:ir.module.module,summary:base.module_hr_referral
 msgid "Let your employees share job positions and refer their friends"
-msgstr ""
+msgstr "Luba oma töötajatel jagada töökohti ja soovitada oma sõpru"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_mondialrelay
@@ -25026,12 +25137,12 @@ msgstr "Ettevõtete arv"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__accesses_count
 msgid "Number of access rights that apply to the current user"
-msgstr ""
+msgstr "Kasutajale kehtivate juurdepääsuõiguste arv"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__groups_count
 msgid "Number of groups that apply to the current user"
-msgstr ""
+msgstr "Kasutajale kehtivate gruppide arv"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__added
