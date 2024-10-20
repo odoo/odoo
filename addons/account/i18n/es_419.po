@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -893,6 +894,9 @@ msgid ""
 "                    You can choose how you want us to send your invoices, and with which electronic format.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Usted elige cómo quiere que enviemos las facturas y en qué formato electrónico.\n"
+"                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -6836,7 +6840,7 @@ msgstr "Intercambio de datos electrónicos"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Electronic format"
-msgstr ""
+msgstr "Formato electrónico"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -8317,7 +8321,7 @@ msgstr ""
 "Si está seleccionada, al registrar un asiento se genera un hash retroactivo "
 "en todos los movimientos de la secuencia desde el primer hasta el último "
 "asiento con hash. También es posible generar un hash con el asistente para "
-"asegurar asientos."
+"proteger asientos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12753,7 +12757,7 @@ msgstr "Recibir dinero"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Receive invoices"
-msgstr ""
+msgstr "Reciba facturas"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -13613,21 +13617,21 @@ msgstr "Secciones"
 #: model:ir.ui.menu,name:account.menu_action_secure_entries
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Entries"
-msgstr "Asegurar asientos"
+msgstr "Proteger asientos"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_secure_entries_wizard
 #: model:ir.model,name:account.model_account_secure_entries_wizard
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Journal Entries"
-msgstr "Asegurar asientos contables"
+msgstr "Proteger asientos contables"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 msgid "Secure Posted Entries with Hash"
-msgstr "Asegurar asientos publicados con hash"
+msgstr "Proteger asientos publicados con hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secured
@@ -13641,12 +13645,14 @@ msgstr "Asegurado"
 msgid ""
 "Securing these entries will also secure entries after the selected date."
 msgstr ""
+"Proteger estos asientos también protegerá los asientos después de la fecha "
+"seleccionada."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "Securing these entries will create at least one gap in the sequence."
-msgstr "Asegurar estos asientos creará al menos un espacio en la secuencia."
+msgstr "Proteger estos asientos creará al menos un espacio en la secuencia."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_token
@@ -13961,8 +13967,8 @@ msgstr "Configurar periodos"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "Set a date. The moves will be secured up to including this date."
 msgstr ""
-"Establezca una fecha. Los movimientos se asegurarán hasta e incluida esta "
-"fecha."
+"Establezca una fecha. Los movimientos estarán protegidos hasta e incluida "
+"esta fecha."
 
 #. module: account
 #. odoo-javascript
@@ -15642,6 +15648,14 @@ msgid "The journal item is not linked to the correct financial account"
 msgstr "El apunte contable no está vinculado a la cuenta financiera correcta"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_analytic_line.py:0
+msgid ""
+"This analytic item was created by a journal item. Please edit the analytic "
+"distribution on the journal item instead."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
 msgid ""
@@ -16191,7 +16205,7 @@ msgid ""
 msgstr ""
 "Todavía hay líneas de estado de cuenta bancario sin conciliar antes de la "
 "fecha seleccionada. Los asientos de los prefijos de diarios que las "
-"contienen no se asegurarán: %(prefix_info)s"
+"contienen no estarán protegidos: %(prefix_info)s"
 
 #. module: account
 #. odoo-python

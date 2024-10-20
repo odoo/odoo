@@ -891,6 +891,9 @@ msgid ""
 "                    You can choose how you want us to send your invoices, and with which electronic format.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Anda dapat memilih cara kami mengirimkan Anda faktur, dan dengan format elektronik apa.\n"
+"                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1746,6 +1749,8 @@ msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
+"Akun %(account)s akan dipisah menjadi %(num_accounts)s, satu untuk setiap "
+"perusahaan.\n"
 
 #. module: account
 #. odoo-python
@@ -3090,7 +3095,7 @@ msgstr "Diarsipkan"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Are you sure? This will perform the following operations:\n"
-msgstr ""
+msgstr "Apakah Anda yakin? Ini akan melakukan operasi berikut:\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3412,7 +3417,7 @@ msgstr "Bank & Cash"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank & Cash accounts cannot be shared between companies."
-msgstr ""
+msgstr "Akun-akun Bank & Kas tidak dapat dibagi di antara perusahaan."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -6800,7 +6805,7 @@ msgstr "Electronic Data Interchange (EDI)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Electronic format"
-msgstr ""
+msgstr "Format elektronik"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -12704,7 +12709,7 @@ msgstr "Terima Uang"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Receive invoices"
-msgstr ""
+msgstr "Terima faktur"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -13586,6 +13591,8 @@ msgstr "Secured"
 msgid ""
 "Securing these entries will also secure entries after the selected date."
 msgstr ""
+"Mengamankan entri-entri ini juga akan mengamankan entri-entri setelah "
+"tanggal terpilih."
 
 #. module: account
 #. odoo-python
@@ -15556,6 +15563,14 @@ msgstr "Jurnal untuk mengunggah faktur tidak ditentukan."
 #: code:addons/account/models/account_analytic_line.py:0
 msgid "The journal item is not linked to the correct financial account"
 msgstr "Item jurnal tidak di-link ke akun keuangan yang tepat"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_analytic_line.py:0
+msgid ""
+"This analytic item was created by a journal item. Please edit the analytic "
+"distribution on the journal item instead."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -18219,6 +18234,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
+"Anda tidak dapat menghapus item jurnal yang berasal ke entri jurnal "
+"terkunci."
 
 #. module: account
 #. odoo-python

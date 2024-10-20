@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "<strong>Error:</strong> The currency is missing or invalid."
-msgstr "<strong>错误：</strong> 货币遗失或无效。"
+msgstr "<strong>错误：</strong> 币别遗失或无效。"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -62,7 +63,7 @@ msgid ""
 "All payment providers configured for an online payment method must use the "
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
-msgstr "所有配置为在线支付方式的支付提供商必须使用与销售日志相同的货币，如果未设置公司货币，则使用 POS 配置中的货币。"
+msgstr "所有配置为在线支付方式的支付提供商必须使用与销售日志相同的币别，如果未设置公司币别，则使用 POS 配置中的币别。"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
@@ -221,7 +222,7 @@ msgstr "支付提供商"
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "支付交易"
+msgstr "付款交易"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
@@ -328,7 +329,7 @@ msgstr "支付金额已更改。请刷新页面。"
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The currency is invalid."
-msgstr "货币无效。"
+msgstr "币别无效。"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -456,7 +457,7 @@ msgstr "待付款"
 msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
-msgstr "要在 POS 配置中使用在线支付方法，必须至少有一个已发布的支付提供商支持该 POS 配置的货币。"
+msgstr "要在 POS 配置中使用在线支付方法，必须至少有一个已发布的支付提供商支持该 POS 配置的币别。"
 
 #. module: pos_online_payment
 #. odoo-python

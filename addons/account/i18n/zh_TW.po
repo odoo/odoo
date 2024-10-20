@@ -83,7 +83,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " for '%s'"
-msgstr ""
+msgstr " 對於 %s"
 
 #. module: account
 #. odoo-python
@@ -849,6 +849,9 @@ msgid ""
 "                        Don't worry, you can always change this setting later on the vendor's form.\n"
 "                        You also have the option to disable the feature for all vendors in the accounting settings."
 msgstr ""
+"<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
+"                        不用擔心，你稍後可隨時在供應商表單上，更改此設定。\n"
+"                        你也可在會計設定中，為所有供應商停用這項功能。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -877,6 +880,9 @@ msgid ""
 "                    You can choose how you want us to send your invoices, and with which electronic format.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    你可選擇希望我們發送發票的方式，以及使用的電子格式。\n"
+"                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1370,7 +1376,7 @@ msgstr "<strong>期末結餘</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm</strong>"
-msgstr ""
+msgstr "<strong>國際貿易術語</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1687,6 +1693,8 @@ msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The"
 " unmerge operation only splits an account based on its companies."
 msgstr ""
+"賬戶 %s 未能取消合併，因為它已屬於單一間公司。\n"
+"取消合併操作只會根據不同公司去分拆賬戶。"
 
 #. module: account
 #. odoo-python
@@ -1930,7 +1938,7 @@ msgstr "賬戶代碼首兩位數"
 msgid ""
 "Account codes must be unique. You can't create accounts with these duplicate"
 " codes: %s"
-msgstr ""
+msgstr "賬戶代碼必須獨一無二。不可使用以下重複代碼建立賬戶：%s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -6598,7 +6606,7 @@ msgstr "電子數據交換"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Electronic format"
-msgstr ""
+msgstr "電子格式"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_email
@@ -10487,7 +10495,7 @@ msgstr "非流動資產"
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Non-trade %s"
-msgstr ""
+msgstr "非貿易 %s"
 
 #. module: account
 #. odoo-python
@@ -12313,7 +12321,7 @@ msgstr "收到金額"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid "Receive invoices"
-msgstr ""
+msgstr "收取發票"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -15033,6 +15041,14 @@ msgid "The journal item is not linked to the correct financial account"
 msgstr "此日記帳項目未連結到正確的財務科目"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_analytic_line.py:0
+msgid ""
+"This analytic item was created by a journal item. Please edit the analytic "
+"distribution on the journal item instead."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
 msgid ""
@@ -16184,7 +16200,7 @@ msgstr "按專案項目、部門等追蹤成本及收入"
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Trade %s"
-msgstr ""
+msgstr "貿易 %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_details
@@ -17771,7 +17787,7 @@ msgstr "您不能驗證總金額為負的發票. 您應該改建一個退款單.
 msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
-msgstr ""
+msgstr "你沒有權限執行此操作，因為你沒有以下公司的存取權限：%s。"
 
 #. module: account
 #. odoo-python

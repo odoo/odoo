@@ -3,10 +3,12 @@
 # 	* mail
 # 
 # Translators:
-# Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
 # Chill Liao <chill421@qq.com>, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
+# Chloe Wang, 2024
 # Wil Odoo, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-27 08:15+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +69,7 @@ msgstr "\"%(hostname)s\"需要访问您的麦克风"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "\"%(hostname)s\" requires microphone access"
-msgstr "\"%(hostname)s\" 需要接入麦克风"
+msgstr "\"%(hostname)s\" 需要麦克风权限"
 
 #. module: mail
 #. odoo-python
@@ -297,7 +299,7 @@ msgstr "%s发起了实时会议"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "%s\" requires \"camera\" access"
-msgstr "%s\" 需要使用 \"摄像头\""
+msgstr "%s 需要摄像头权限"
 
 #. module: mail
 #. odoo-javascript
@@ -384,7 +386,7 @@ msgstr "<b invisible=\"not no_record\" class=\"text-warning\">此型号无记录
 msgid ""
 "<button>Change your preferences</button> to receive new notifications in "
 "your inbox."
-msgstr "<button>更改您的首选项</button>，以便在收件箱中接收新通知。"
+msgstr "<button>更改您的设置</button>，以便在收件箱中接收新通知。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -409,6 +411,48 @@ msgstr "<i class=\"fa fa-globe\" aria-label=\"文件 url\"/>"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
 msgid "<i class=\"fa fa-times\"/> Cancel"
 msgstr "<i class=\"fa fa-times\"/>取消"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Chat with coworkers</b> in real-time using direct "
+"messages.</p><p><i>You might need to invite users from the Settings app "
+"first.</i></p>"
+msgstr "<p>使用私信实时<b>与同事聊天</b>。</p><p><i>您可能需要在“设置”应用中邀请用户。</i></p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
+" notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
+"Start your message with <i>'/'</i> to get the list of possible commands.</p>"
+msgstr ""
+"<p>向频道中的其他用户<b>发信息</b>。</p><p>您可以使用 <i>'@' </i>通知相关人员或用 <i>'#' </i>链接另一频道。以 "
+"<i>'/'</i> 开头编辑消息获得可以使用的命令列表。</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p>Channels make it easy to organize information across different topics and"
+" groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+"marketing, product XYZ, after work party, etc).</p>"
+msgstr ""
+"<p>通过频道可以轻松跨越不同主题和组织信息。</p><p>尝试<b>创建您的第一个频道</b>（例如，销售、营销、产品矩阵、工作之余的聚会等）。</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a channel here.</p>"
+msgstr "<p>创建新频道。</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a public or private channel.</p>"
+msgstr "<p>创建一个公共或私人频道。</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -478,6 +522,11 @@ msgstr ""
 "                            </span>"
 
 #. module: mail
+#: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr "<span><b>干得好！</b> 您完成了所有步骤！</span>"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>If this was done by you:</span><br/>"
 msgstr "<span>如果由您执行此操作：</span><br/>"
@@ -502,7 +551,7 @@ msgstr "<span>我们建议您首先</span>"
 msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
-msgstr "<strong>内部沟通</strong>: 回复将发布内部注释。 关注者将不会收到任何电子邮件通知。"
+msgstr "<strong>内部沟通</strong>: 回复将发布内部备注。 关注者将不会收到任何电子邮件通知。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1124,7 +1173,7 @@ msgstr "所有消息"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "All conversations have been muted"
-msgstr ""
+msgstr "所有对话均已静音"
 
 #. module: mail
 #. odoo-python
@@ -1833,7 +1882,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
-msgstr ""
+msgstr "无法更改初始消息或父频道：%(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -1846,7 +1895,7 @@ msgstr "不能更改频道类型：%(channel_names)s"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel."
-msgstr ""
+msgstr "无法创建 %(channels)s: 初始消息应属于父级频道。"
 
 #. module: mail
 #. odoo-python
@@ -1854,7 +1903,7 @@ msgstr ""
 msgid ""
 "Cannot create %(channels)s: parent should not be a sub-channel and should be"
 " of type 'channel'."
-msgstr ""
+msgstr "无法创建 %(channels)s: 父级不应为子频道，应为 'channel' 类型。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2058,6 +2107,12 @@ msgstr "单击此处重试"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Click on your message"
+msgstr "点击您的留言"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
 msgid "Click to see the attachments"
 msgstr "点击查看附件"
@@ -2076,7 +2131,7 @@ msgstr "关闭"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_bubble.xml:0
 msgid "Close Chat Bubble"
-msgstr ""
+msgstr "关闭聊天泡泡"
 
 #. module: mail
 #. odoo-javascript
@@ -2130,7 +2185,7 @@ msgstr "已关闭"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_sidebar.xml:0
 msgid "Collapse panel"
-msgstr ""
+msgstr "折叠面板"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
@@ -2394,8 +2449,8 @@ msgstr "对话收拢状态"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Copy Message Link"
-msgstr "复制消息链接"
+msgid "Copy Link"
+msgstr "复制链接"
 
 #. module: mail
 #. odoo-python
@@ -2448,7 +2503,7 @@ msgstr "创建群聊"
 #: code:addons/mail/static/src/discuss/core/public_web/message_actions.js:0
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Create Thread"
-msgstr ""
+msgstr "创建线程"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
@@ -2469,7 +2524,7 @@ msgstr "创建新记录"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid "Create a new canned response"
-msgstr "创建罐装响应"
+msgstr "创建一个新的常用回复"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
@@ -2938,7 +2993,7 @@ msgstr "确定预设回复当前是否与其他用户共享"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_app_model.js:0
 msgid "Direct messages"
-msgstr "直接消息"
+msgstr "私聊消息"
 
 #. module: mail
 #. odoo-javascript
@@ -3132,7 +3187,7 @@ msgstr "完成和启动下一页"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Done & Schedule Next"
-msgstr "完成&安排下一次"
+msgstr "完成并安排下一个"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_done
@@ -3251,13 +3306,13 @@ msgstr "编辑伙伴"
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "Edit Scheduled Message"
-msgstr ""
+msgstr "编辑预定消息"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "Edit Scheduled Note"
-msgstr ""
+msgstr "编辑预定说明"
 
 #. module: mail
 #. odoo-javascript
@@ -3605,9 +3660,15 @@ msgstr "展开"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Expand options"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_sidebar.xml:0
 msgid "Expand panel"
-msgstr ""
+msgstr "展开面板"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__expiration_time
@@ -3622,7 +3683,7 @@ msgstr "扩展筛选..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Extra Comments ..."
-msgstr ""
+msgstr "额外评论 ..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -3827,7 +3888,7 @@ msgstr "收拢"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__fold_state__folded
 msgid "Folded"
-msgstr "收起"
+msgstr "已折叠"
 
 #. module: mail
 #. odoo-javascript
@@ -3975,7 +4036,7 @@ msgstr "来自同行："
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Full composer"
-msgstr "完全创建者"
+msgstr "展开详情编辑"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__default_display_mode__video_full_screen
@@ -4083,7 +4144,7 @@ msgstr "分组…"
 msgid ""
 "Group public id should not be set on sub-channels as access is based on "
 "parent channel"
-msgstr ""
+msgstr "基于父频道的访问时，群组公共ID不应设置在子频道上"
 
 #. module: mail
 #. odoo-javascript
@@ -4498,7 +4559,7 @@ msgstr "存在于黑名单的EMail表示收件者不会再收到任何列表的�
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_scheduled_message__is_note
 msgid "If the message will be posted as a Note."
-msgstr ""
+msgstr "该消息是否作为备注发布。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
@@ -4819,7 +4880,7 @@ msgstr "邀请"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Invite People"
-msgstr "邀请人"
+msgstr "邀请人员"
 
 #. module: mail
 #. odoo-javascript
@@ -5073,7 +5134,7 @@ msgstr "语言"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Large windows"
-msgstr ""
+msgstr "大窗口"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__date
@@ -5263,7 +5324,7 @@ msgstr "链接已复制！"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
 msgid "List Activity"
-msgstr ""
+msgstr "列出活动"
 
 #. module: mail
 #. odoo-javascript
@@ -5329,12 +5390,12 @@ msgstr "记录"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/mail_composer_send_dropdown.xml:0
 msgid "Log Later"
-msgstr ""
+msgstr "稍后记录"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Log Now"
-msgstr ""
+msgstr "现在记录"
 
 #. module: mail
 #. odoo-javascript
@@ -5548,7 +5609,7 @@ msgstr "邮件：Fetchmail 服务"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_post_scheduled_message_ir_actions_server
 msgid "Mail: Post scheduled messages"
-msgstr ""
+msgstr "邮件：发送计划的消息"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_web_push_notification_ir_actions_server
@@ -5590,13 +5651,13 @@ msgstr "主要附件"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.js:0
 msgid "Make chats bigger"
-msgstr ""
+msgstr "让聊天窗口更大"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.js:0
 msgid "Make chats smaller"
-msgstr ""
+msgstr "让聊天窗口更小"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_force_new
@@ -5653,7 +5714,7 @@ msgstr "标记为未读"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
-msgstr "完成"
+msgstr "标记为完成"
 
 #. module: mail
 #. odoo-javascript
@@ -5777,13 +5838,13 @@ msgstr "消息ID"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copied!"
-msgstr ""
+msgstr "已复制消息链接"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copy Failed (Permission denied?)!"
-msgstr ""
+msgstr "消息链接复制失败（可能是权限问题？）"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -5918,9 +5979,15 @@ msgid "Messages Search"
 msgstr "消息搜索"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Messages can be <b>starred</b> to remind you to check back later."
+msgstr "消息允许 <b>星号</b> 标出来以便提醒您过后查看."
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
 msgid "Messages can only be linked to one sub-channel"
-msgstr ""
+msgstr "消息只允许链接到一个子频道"
 
 #. module: mail
 #. odoo-javascript
@@ -6034,19 +6101,19 @@ msgstr "静音"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Mute Conversation"
-msgstr ""
+msgstr "静音对话"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Mute all conversations"
-msgstr ""
+msgstr "静音所有人的对话"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Mute duration"
-msgstr ""
+msgstr "静音时长"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
@@ -6058,7 +6125,7 @@ msgstr "静音通知，直到"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Muting prevents unread indicators and notifications from appearing."
-msgstr ""
+msgstr "静音可以防止未读指示器和通知出现。"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
@@ -6420,7 +6487,7 @@ msgstr "对此不感兴趣？"
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__mail_post_method__note
 #: model:mail.message.subtype,name:mail.mt_note
 msgid "Note"
-msgstr "注释"
+msgstr "备注"
 
 #. module: mail
 #. odoo-javascript
@@ -6668,6 +6735,14 @@ msgstr "旧文本值"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Old values"
 msgstr "旧值"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"Once a message has been starred, you can come back and review it at any time"
+" here."
+msgstr "如果消息已生效，您可以返回并随时在此对它进行检查。"
 
 #. module: mail
 #. odoo-javascript
@@ -7255,6 +7330,12 @@ msgid "Post on a document"
 msgstr "提交在文件上"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Post your message on the thread"
+msgstr "在帖子上发布您的消息"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
@@ -7332,7 +7413,7 @@ msgstr "预览"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
 msgid "Previous Activity Type"
-msgstr "前一活动类型"
+msgstr "上一个活动类型"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
@@ -7984,7 +8065,7 @@ msgstr "安排"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Schedule & Mark as Done"
-msgstr "计划和标记为已完成"
+msgstr "安排并标记为已完成"
 
 #. module: mail
 #. odoo-javascript
@@ -8507,7 +8588,7 @@ msgstr "快捷"
 #: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
 msgid ""
 "Shortened language code used as the target for the translation request."
-msgstr "作为翻译请求目标语言代码的缩写。"
+msgstr "作为翻译请求目标语言代码的简称。"
 
 #. module: mail
 #. odoo-javascript
@@ -8821,7 +8902,7 @@ msgstr "建议下一个活动"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest these activities once the current one is marked as done."
-msgstr "一旦当前活动被标记为完成，建议这些活动。"
+msgstr "建议在当前活动标记为完成后再进行这些活动。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
@@ -9380,7 +9461,7 @@ msgstr "此记录有异常活动。"
 msgid ""
 "This setting will be applied to all channels using the default notification "
 "settings."
-msgstr ""
+msgstr "此设置将应用于使用默认通知设置的所有频道。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__channel_notifications
@@ -9606,7 +9687,7 @@ msgstr "翻译失败"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_from
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
 msgid "Trigger"
-msgstr "触发器"
+msgstr "触发方式"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__trigger
@@ -9802,7 +9883,7 @@ msgstr "打开麦克风"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Unmute Conversation"
-msgstr ""
+msgstr "取消静音对话"
 
 #. module: mail
 #. odoo-javascript
@@ -9822,6 +9903,12 @@ msgstr "取消固定通话"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "Unpin Message"
 msgstr "取消置顶消息"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Unpin Thread"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
@@ -10045,7 +10132,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_value__currency_id
 msgid "Used to display the currency when tracking monetary values"
-msgstr "用于在追踪货币价值时显示货币"
+msgstr "用于在追踪币别价值时显示币别"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
@@ -10261,7 +10348,7 @@ msgstr "语音检测"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.xml:0
 msgid "Voice Message"
-msgstr "語音訊息"
+msgstr "语音消息"
 
 #. module: mail
 #. odoo-javascript
@@ -10614,8 +10701,14 @@ msgstr "您确定要把这条信息永久置顶在%(conversation)s上？"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %s"
-msgstr "您取消了与%s的对话"
+msgid "You unpinned %(conversation_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You unpinned your conversation with %(user_name)s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10824,7 +10917,7 @@ msgstr "自定义"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_unit__days
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
 msgid "days"
-msgstr "天数"
+msgstr "天"
 
 #. module: mail
 #. odoo-javascript
@@ -10999,7 +11092,7 @@ msgstr "例如：“info@mycompany.odoo.com”"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 msgid "e.g: Send order confirmation"
-msgstr ""
+msgstr "例如：发送订单确认"
 
 #. module: mail
 #. odoo-javascript
@@ -11181,7 +11274,7 @@ msgstr "其他成员."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_button.xml:0
 msgid "props.action.title"
-msgstr ""
+msgstr "props.action.title"
 
 #. module: mail
 #. odoo-javascript

@@ -19,7 +19,6 @@
 # Svante <svante@svante.fi>, 2024
 # Tommi Rintala <tommi.rintala@gmail.com>, 2024
 # Kari Lindgren <karisatu@gmail.com>, 2024
-# Antti Oksman <antti.oksman@web-veistamo.fi>, 2024
 # Jussi Lehto <jussi@gulfeo.com>, 2024
 # Jukka Paulin <jukka.paulin@gmail.com>, 2024
 # Johanna Valkonen <miujohanna@gmail.com>, 2024
@@ -33,12 +32,13 @@
 # santeri valjakka <santeri.valjakka@avoin.systems>, 2024
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2024
 # Mikko Salmela <salmemik@gmail.com>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Martin Trigaux, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Antti Oksman <antti.oksman@web-veistamo.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -46,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-27 08:15+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Svante Suominen <svante.suominen@web-veistamo.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -450,6 +450,55 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Chat with coworkers</b> in real-time using direct "
+"messages.</p><p><i>You might need to invite users from the Settings app "
+"first.</i></p>"
+msgstr ""
+"<p><b>Keskustele kollegoiden kanssa</b> reaaliajassa käyttäen "
+"viestejä.</p><p><i>Käyttäjä pitää mahdollisesti kutusa ensin "
+"'Asetukset'-sovelluksen kautta.</i></p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
+" notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
+"Start your message with <i>'/'</i> to get the list of possible commands.</p>"
+msgstr ""
+"<p><b>Kirjoita viesti</b> kanavan jäsenille täällä.</p> <p>Voit ilmoittaa "
+"jollekulle tunnuksella <i>'@'</i> tai linkittää toisen kanavan tunnuksella "
+"<i >'#'</i>. Aloita viestisi kirjaimella <i>'/'</i> saadaksesi luettelon "
+"valittavissa olevista komennoista.</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"<p>Channels make it easy to organize information across different topics and"
+" groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+"marketing, product XYZ, after work party, etc).</p>"
+msgstr ""
+"<p>Kanavien avulla eri toimintojen, ryhmien ja asiayhteyksien tieto jäsentyy"
+" näppärästi.</p> <p>Kokeile <b>luoda kanava</b> (esim. myynti, markkinointi,"
+" tuote XYZ, after work -bileet, jne.).</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a channel here.</p>"
+msgstr "<p>Luo kanava tähän.</p>"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "<p>Create a public or private channel.</p>"
+msgstr "<p>Luo julkinen tai yksityinen kanava.</p>"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
 msgstr "<samp>%(send_keybind)s</samp><i> lähetä</i>"
@@ -514,6 +563,11 @@ msgstr ""
 "                                Viesti lähetetään viestinä tietueeseen,\n"
 "                                jossa ilmoitetaan kaikille seuraajille. Se näkyy viestihistoriassa.\n"
 "                            </span>"
+
+#. module: mail
+#: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -2138,6 +2192,12 @@ msgstr "Klikkaa tästä yrittääksesi uudelleen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Click on your message"
+msgstr "Klikkaa viestiäsi"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
 msgid "Click to see the attachments"
 msgstr "Klikkaa nähdäksesi liitteet"
@@ -2483,8 +2543,8 @@ msgstr "Keskustelun laskostuksen tila"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Copy Message Link"
-msgstr ""
+msgid "Copy Link"
+msgstr "Kopioi linkki"
 
 #. module: mail
 #. odoo-python
@@ -3719,6 +3779,12 @@ msgstr "Poistu kokoruututilasta"
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Expand"
 msgstr "Laajenna"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Expand options"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6117,6 +6183,13 @@ msgid "Messages Search"
 msgstr "Viestien haku"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Messages can be <b>starred</b> to remind you to check back later."
+msgstr ""
+"Viestille voi antaa <b>tähden</b> muistutukseksi palata siihen myöhemmin."
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
 msgid "Messages can only be linked to one sub-channel"
 msgstr ""
@@ -6888,6 +6961,16 @@ msgstr "Vanhat arvot"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid ""
+"Once a message has been starred, you can come back and review it at any time"
+" here."
+msgstr ""
+"Kun viesti on merkitty tähdellä, voit palata tarkistamaan sen milloin "
+"tahansa täällä."
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_indicator.xml:0
 msgid "Ongoing call"
 msgstr ""
@@ -7484,6 +7567,12 @@ msgstr "Portaalin käyttöoikeus peruutettu"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
 msgid "Post on a document"
 msgstr "Lähetä asiakirjaan"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Post your message on the thread"
+msgstr "Lähetä viesti tähän viestiketjuun"
 
 #. module: mail
 #. odoo-python
@@ -10104,6 +10193,12 @@ msgid "Unpin Message"
 msgstr "Poista viestin kiinnitys"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Unpin Thread"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
 msgstr ""
@@ -10927,8 +11022,14 @@ msgstr "Haluatko kiinnittää tämän viestin %(conversation)s pysyvästi?"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
-msgid "You unpinned your conversation with %s"
-msgstr "Olet poistanut keskustelun kiinnityksesi %s"
+msgid "You unpinned %(conversation_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+msgid "You unpinned your conversation with %(user_name)s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
