@@ -63,9 +63,9 @@ export class PageDependencies extends Component {
     showDependencies() {
         const popover = window.Popover.getOrCreateInstance(this.action.el, {
             title: _t("Dependencies"),
-            boundary: 'viewport',
-            placement: 'right',
-            trigger: 'focus',
+            boundary: "viewport",
+            placement: "right",
+            trigger: "focus",
             content: () => {
                 return renderToFragment("website.PageDependencies.Tooltip", {
                     dependencies: this.state.dependencies,

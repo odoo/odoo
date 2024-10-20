@@ -125,7 +125,7 @@ const PopupWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off('mouseleave.open_popup');
-        this.$el.find('.modal').modal('hide');
+        Modal.getOrCreateInstance(this.el.querySelector(".modal")).hide();
         clearTimeout(this.timeout);
         if (this.modalShownOnClickEl) {
             window.removeEventListener('hashchange', this.__onHashChange);
@@ -168,7 +168,7 @@ const PopupWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
      * @private
      */
     _hidePopup: function () {
-        this.$el.find('.modal').modal('hide');
+        Modal.getOrCreateInstance(this.el.querySelector(".modal")).hide();
     },
     /**
      * @private
@@ -177,7 +177,7 @@ const PopupWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
         if (this._popupAlreadyShown || !this._canShowPopup()) {
             return;
         }
-        this.$el.find('.modal').modal('show');
+        Modal.getOrCreateInstance(this.el.querySelector(".modal")).show();
     },
     /**
      * @private
@@ -309,13 +309,13 @@ const noBackdropPopupWidget = publicWidget.Widget.extend({
             // If the "no-backdrop" modal has a scrollbar, the page's scrollbar
             // must be hidden. This is because if the two scrollbars overlap, it
             // is no longer possible to scroll using the modal's scrollbar.
-            modalInstance._adjustDialog();
+            modalInstance?._adjustDialog();
         } else {
             // If the "no-backdrop" modal does not have a scrollbar, the page
             // scrollbar must be displayed because we must be able to scroll the
             // page (e.g. a "cookies bar" popup at the bottom of the page must
             // not prevent scrolling the page).
-            modalInstance._resetAdjustments();
+            modalInstance?._resetAdjustments();
         }
     },
     /**
@@ -413,7 +413,8 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      */
     _toggleCookiesBar() {
         const popupEl = this.el.querySelector(".modal");
-        $(popupEl).modal("toggle");
+        const modal = Modal.getOrCreateInstance(popupEl);
+        modal.toggle();
         // As we're using Bootstrap's events, the PopupWidget prevents the modal
         // from being shown after hiding it: override that behavior.
         this._popupAlreadyShown = false;
@@ -492,7 +493,8 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         if (currCookie && JSON.parse(currCookie).optional || !this._popupAlreadyShown) {
             return;
         }
-        $(modalEl).modal("show");
+        const modal = Modal.getOrCreateInstance(modalEl);
+        modal.show();
 
         // The cookies bar remains hidden, most probably because of the browser
         // or an extension: notify the user because "nothing happens when I

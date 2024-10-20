@@ -463,7 +463,11 @@ registry.slider = publicWidget.Widget.extend({
         this.$('img').on('load.slider', () => this._computeHeights());
         this._computeHeights();
         // Initialize carousel and pause if in edit mode.
-        this.$el.carousel(this.editableMode ? 'pause' : undefined);
+        if (this.editableMode) {
+            // TODO: visp test it properly
+            const carousel = window.Carousel.getOrCreateInstance(this.el);
+            carousel.pause();
+        }
         $(window).on('resize.slider', debounce(() => this._computeHeights(), 250));
         if (this.editableMode) {
             // Prevent carousel slide to be an history step.
@@ -482,7 +486,9 @@ registry.slider = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         this.$('img').off('.slider');
-        this.$el.carousel('pause');
+        // TODO: visp test it properly
+        const carousel = window.Carousel.getOrCreateInstance(this.el);
+        carousel.pause();
         this.$el.removeData('bs.carousel');
         this.$(".carousel-item")
             .toArray()

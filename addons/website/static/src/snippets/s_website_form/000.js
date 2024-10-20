@@ -558,11 +558,16 @@ import wUtils from '@website/js/utils';
                     $field.addClass('o_has_error');
                     $controls.addClass('is-invalid');
                     if (typeof error_fields[field_name] === "string") {
-                        $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
+                        Popover.getOrCreateInstance(field, {
+                            content: error_fields[field_name],
+                            placement: "top",
+                            trigger: "hover",
+                            container: "body",
+                        });
                         // update error message and show it.
                         const popover = Popover.getInstance($field);
                         popover._config.content = error_fields[field_name];
-                        $field.popover('show');
+                        Popover.getOrCreateInstance(field).show();
                     }
                     form_valid = false;
                 }

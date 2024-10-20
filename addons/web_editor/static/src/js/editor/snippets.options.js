@@ -9000,7 +9000,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 
             $(document).off('click.bgposition');
             if (this.$bgDragger) {
-                this.$bgDragger.tooltip('dispose');
+                this.tooltip.dispose();
             }
             return;
         }
@@ -9023,17 +9023,18 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         // css into $bgDragger will not work since it will change overlay content style too).
         this.$bgDragger.css('background-attachment', this.$target.css('background-attachment'));
         this.$bgDragger.on('mousedown', this._onDragBackgroundStart.bind(this));
-        this.$bgDragger.tooltip({
-            title: 'Click and drag the background to adjust its position!',
-            trigger: 'manual',
-            container: this.$backgroundOverlay
-        });
+
+        this.tooltip = Tooltip.getOrCreateInstance(this.$bgDragger[0], {
+            title: "Click and drag the background to adjust its position!",
+            trigger: "manual",
+            container: this.$backgroundOverlay[0],
+        })
 
         // Replace content of overlayBackground, activate the overlay and give it the right dimensions.
         this.$overlayBackground.empty().append(this.$bgDragger);
         this.$backgroundOverlay.addClass('oe_active');
         this._dimensionOverlay();
-        this.$bgDragger.tooltip('show');
+        this.tooltip.show();
 
         // Needs to be deferred or the click event that activated the overlay deactivates it as well.
         // This is caused by the click event which we are currently handling bubbling up to the document.
@@ -9876,7 +9877,10 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
         const carouselEl = this.$target[0].classList.contains("carousel") ? this.$target[0]
             : this.$target[0].querySelector(".carousel");
         carouselEl.classList.remove("slide");
-        $(carouselEl).carousel(position);
+        // TODO:visp; test it properly
+        const carousel = window.Carousel.getOrCreateInstance(carouselEl);
+        // Move the carousel to the specific position (0-based index)
+        carousel.to(position);
         for (const indicatorEl of this.$target[0].querySelectorAll(".carousel-indicators button")) {
             indicatorEl.classList.remove("active");
         }

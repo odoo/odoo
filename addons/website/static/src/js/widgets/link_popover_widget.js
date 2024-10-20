@@ -14,12 +14,13 @@ patch(LinkPopoverWidget.prototype, {
      */
     start() {
         // hide popover while typing on mega menu
+        const popover = Popover.getOrCreateInstance(this.$target[0]);
         if (this.target.closest('.o_mega_menu')) {
             let timeoutID = undefined;
             this.$target.on('keydown.link_popover', () => {
-                this.$target.popover('hide');
+                popover.hide();
                 clearTimeout(timeoutID);
-                timeoutID = setTimeout(() => this.$target.popover('show'), 1500);
+                timeoutID = setTimeout(() => popover.show(), 1500);
             });
         }
         this.$el.on('click', '.o_we_full_url, .o_we_url_link', this._onPreviewLinkClick.bind(this));

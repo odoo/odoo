@@ -41,21 +41,24 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             self._updateContent('hide');
         });
         self._updateComparelistView();
-
-        $('#comparelist .o_product_panel_header').popover({
-            trigger: 'manual',
-            animation: true,
-            html: true,
-            title: function () {
-                return _t("Compare Products");
-            },
-            container: '.o_product_feature_panel',
-            placement: 'top',
-            template: renderToString('popover'),
-            content: function () {
-                return $('#comparelist .o_product_panel_content').html();
-            }
-        });
+        this.popover;
+        const productPanelHeaderEl = document.querySelector("#comparelist .o_product_panel_header");
+        if (productPanelHeaderEl) {
+            this.popover = Popover.getOrCreateInstance(productPanelHeaderEl, {
+                trigger: "manual",
+                animation: true,
+                html: true,
+                title: function () {
+                    return _t("Compare Products");
+                },
+                container: ".o_product_feature_panel",
+                placement: "top",
+                template: renderToString("popover"),
+                content: function () {
+                    return document.querySelector("#comparelist .o_product_panel_content").innerHTML;
+                },
+            });
+        }
         // We trigger a resize to launch the event that checks if this element hides
         // a button when the page is loaded.
         $(window).trigger('resize');
@@ -122,7 +125,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             });
         } else {
             this.$('.o_comparelist_limit_warning').show();
-            $('#comparelist .o_product_panel_header').popover('show');
+            this.popover.show();
         }
     },
 
@@ -161,7 +164,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _togglePanel: function () {
-        $('#comparelist .o_product_panel_header').popover('toggle');
+        this.popover.toggle();
     },
     /**
      * @private
@@ -200,10 +203,10 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             }
         });
         if (force !== 'hide' && (this.comparelist_product_ids.length > 1 || force === 'show')) {
-            $('#comparelist .o_product_panel_header').popover('show');
+            this.popover.show();
         }
         else {
-            $('#comparelist .o_product_panel_header').popover('hide');
+            this.popover.hide();
         }
     },
     /**

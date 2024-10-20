@@ -31,7 +31,10 @@ WebsiteSaleCheckout.include({
      */
     async start() {
         await this._super(...arguments);
-        this.$('#use_delivery_as_billing_label')?.tooltip();
+        const deliveryAsBillingEl = document.querySelector("#use_delivery_as_billing_label");
+        if (deliveryAsBillingEl) {
+           Tooltip.getOrCreateInstance(deliveryAsBillingEl);
+        }
         this._adaptUseDeliveryAsBillingToggle();
     },
 
@@ -58,7 +61,7 @@ WebsiteSaleCheckout.include({
                 this.$modal_mondialrelay.find('#btn_confirm_relay').toggleClass(
                     'disabled', !result.mondial_relay.current
                 );
-                this.$modal_mondialrelay.modal('show');
+                this.modalMondialRelayBS.show();
             }
         }
         this._adaptUseDeliveryAsBillingToggle();
@@ -96,9 +99,16 @@ WebsiteSaleCheckout.include({
                 || selectedDeliveryAddress?.dataset.isMondialrelay
             );
             this.use_delivery_as_billing_toggle.disabled = requireSeparateBillingAddress;
-            this.$('#use_delivery_as_billing_label').tooltip(
-                requireSeparateBillingAddress ? 'enable' : 'disable'
-            );
+            let tooltip;
+            const deliveryAsBillingEl = document.querySelector("#use_delivery_as_billing_label");
+            if (deliveryAsBillingEl) {
+                tooltip = Tooltip.getOrCreateInstance(deliveryAsBillingEl);
+            }
+            if (requireSeparateBillingAddress) {
+                tooltip?.enable();
+            } else {
+                tooltip?.disable();
+            }
         }
     },
 
@@ -148,7 +158,8 @@ WebsiteSaleCheckout.include({
                 },
             };
             this.$modal_mondialrelay.find('#o_zone_widget').MR_ParcelShopPicker(params);
-            this.$modal_mondialrelay.modal('show');
+            this.modalMondialRelayBS = Modal.getOrCreateInstance(this.modalMondialRelayEl);
+            this.modalMondialRelayBS.show();
             this.$modal_mondialrelay.find('#o_zone_widget').trigger("MR_RebindMap");
         };
         document.body.appendChild(script);

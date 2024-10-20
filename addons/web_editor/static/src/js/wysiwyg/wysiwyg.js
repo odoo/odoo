@@ -210,8 +210,11 @@ export class Wysiwyg extends Component {
                 this.odooEditor._computeHistorySelection();
             },
             onInputEnter: (ev) => {
-                const pickergroup = ev.target.closest('.colorpicker-group');
-                $(pickergroup.querySelector('.dropdown-toggle')).dropdown('hide');
+                const pickergroup = ev.target.closest(".colorpicker-group");
+                const dropdown = Dropdown.getOrCreateInstance(
+                    pickergroup.querySelector(".dropdown-toggle")
+                );
+                dropdown.hide();
             },
 
             getTemplate: this.getColorpickerTemplate.bind(this),
@@ -2774,14 +2777,14 @@ export class Wysiwyg extends Component {
                         // new rejection with all relevant info
                         var id = uniqueId("carlos_danger_");
                         $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
-                        $('.o_editable.' + id)
-                            .removeClass(id)
-                            .popover({
-                                trigger: 'hover',
-                                content: error.data?.message || '',
-                                placement: 'auto',
-                            })
-                            .popover('show');
+                        const editableEl = document.querySelector(`.o_editable.${id}`);
+                        editableEl.classList.remove(id);
+                        const popover = Popover.getOrCreateInstance(editableEl, {
+                            trigger: "hover",
+                            content: error.data?.message || "",
+                            placement: "auto",
+                        });
+                        popover.show();
                         reject();
                     });
                 });
@@ -2793,19 +2796,19 @@ export class Wysiwyg extends Component {
     }
     // TODO unused => remove or reuse as it should be
     _attachTooltips() {
-        $(document.body)
-            .tooltip({
-                selector: '[data-oe-readonly]',
-                container: 'body',
-                trigger: 'hover',
-                delay: {'show': 1000, 'hide': 100},
-                placement: 'bottom',
-                title: _t("Readonly field")
-            })
-            .on('click', function () {
-                $(this).tooltip('hide');
-            });
-    }
+        const tooltip = Tooltip.getOrCreateInstance(document.body, {
+            selector: '[data-oe-readonly]',
+            container: 'body',
+            trigger: 'hover',
+            delay: {'show': 1000, 'hide': 100},
+            placement: 'bottom',
+            title: _t("Readonly field")
+        })
+
+        document.body.addEventListener('click', () => {
+            tooltip.hide();
+        });
+}
     /**
      * Gets jQuery cloned element with internal text nodes escaped for XML
      * storage.

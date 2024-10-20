@@ -2025,7 +2025,8 @@ options.registry.menu_data = options.Class.extend({
       * @override
       */
     onBlur: function () {
-        this.$target.popover('hide');
+        const popover = Popover.getOrCreateInstance(this.$target[0]);
+        popover.hide();
     },
 });
 
@@ -2034,7 +2035,8 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
      * @override
      */
     start: function () {
-        this.$bsTarget.carousel('pause');
+        const carousel = window.Carousel.getOrCreateInstance(this.$bsTarget[0]);
+        carousel.pause(); 
         this.$indicators = this.$target.find('.carousel-indicators');
         this.$controls = this.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
 
@@ -2155,7 +2157,8 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         $active.clone(false)
             .removeClass('active')
             .insertAfter($active);
-        this.$bsTarget.carousel('next');
+        const carousel = window.Carousel.getOrCreateInstance(this.$bsTarget[0]);
+        carousel.next();
     },
     /**
      * @override
@@ -2262,7 +2265,8 @@ options.registry.CarouselItem = options.Class.extend({
                 this.removing = false;
             });
             this.removing = true;
-            this.$carousel.carousel('prev');
+            const carousel = window.Carousel.getOrCreateInstance(this.$carousel[0]);
+            carousel.prev();
         }
     },
     /**

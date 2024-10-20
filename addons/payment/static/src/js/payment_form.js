@@ -46,7 +46,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it.
         }
 
-        this.$('[data-bs-toggle="tooltip"]').tooltip();
+        Tooltip.getOrCreateInstance(document.querySelector('[data-bs-toggle="tooltip"]'));
     },
 
     // #=== EVENT HANDLERS ===#

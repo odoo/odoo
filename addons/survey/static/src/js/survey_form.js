@@ -1013,17 +1013,19 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     * @private
     */
     _checkisOnMainTab: function () {
+        // TODO: visp test it properly
         var isOnMainTab = this.call('multi_tab', 'isOnMainTab');
-        var $errorModal = this.$('#MasterTabErrorModal');
+        var errorModalEl = document.querySelector("#MasterTabErrorModal");
         if (isOnMainTab) {
             // Force reload the page when survey is ready to be followed, to force restart long polling
             if (this.shouldReloadMasterTab) {
                 window.location.reload();
             }
            return true;
-        } else if (!$errorModal.modal._isShown) {
-            $errorModal.find('.text-danger').text(window.location.hostname);
-            $errorModal.modal('show');
+        } else if (!errorModalEl.modal?._isShown) {
+            errorModalEl.querySelector(".text-danger").textContent = window.location.hostname;
+            const modal = Modal.getOrCreateInstance(errorModalEl);
+            modal.show();
         }
         return false;
     },
