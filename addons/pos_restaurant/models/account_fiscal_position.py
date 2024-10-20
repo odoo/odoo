@@ -8,5 +8,5 @@ class AccountFiscalPosition(models.Model):
     @api.model
     def _load_pos_data_domain(self, data):
         params = super()._load_pos_data_domain(data)
-        params = OR([params, [('id', '=', data['pos.config']['data'][0]['takeaway_fp_id'])]])
+        params = OR([params, [('id', '=', data['pos.config'][0]['takeaway_fp_id'])]])
         return params

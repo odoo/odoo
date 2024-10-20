@@ -17,12 +17,12 @@ class ProductTemplate(models.Model):
         domain = self._load_pos_data_domain(data)
 
         # Add custom fields for 'formula' taxes.
-        fields = set(self._load_pos_data_fields(data['pos.config']['data'][0]['id']))
+        fields = set(self._load_pos_data_fields(data['pos.config'][0]['id']))
         taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
         fields = list(fields.union(product_fields))
 
-        config = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        config = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         products = self.search_read(
             domain,
             fields,
@@ -31,13 +31,10 @@ class ProductTemplate(models.Model):
             load=False
         )
 
-        data['pos.config']['data'][0]['_product_default_values'] = \
+        data['pos.config'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
 
-        return {
-            'data': products,
-            'fields': fields,
-        }
+        return products
 
     @api.model
     def _load_pos_self_data_fields(self, config_id):

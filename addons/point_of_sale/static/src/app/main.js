@@ -8,6 +8,7 @@ import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { mountComponent } from "@web/env";
 import { Chrome } from "@point_of_sale/app/pos_app";
+import { jsToPyLocale } from "@web/core/l10n/utils";
 
 const loader = reactive({ isShown: true });
 whenReady(() => {
@@ -52,4 +53,21 @@ whenReady(() => {
         classList.add("o_mobile_overscroll");
         document.documentElement.classList.add("o_mobile_overscroll");
     }
+
+    registerServiceWorker();
 })();
+
+function registerServiceWorker() {
+    // Register the service worker for the POS
+    const urlsToCache = JSON.parse(odoo.urls_to_cache);
+    const translationsHash = session.cache_hashes?.translations;
+    const lang = jsToPyLocale(user.lang || document.documentElement.getAttribute("lang"));
+    const translationURL = session.translationURL || "/web/webclient/translations";
+    const url = `${translationURL}/${translationsHash}?lang=${lang}`;
+    urlsToCache.push(...[url, "/web/static/lib/zxing-library/zxing-library.js"]);
+
+    navigator.serviceWorker?.register("/pos/service-worker.js").then((registration) => {
+        const worker = registration.installing || registration.waiting || registration.active;
+        worker.postMessage({ urlsToCache });
+    });
+}

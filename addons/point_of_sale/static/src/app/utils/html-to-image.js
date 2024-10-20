@@ -389,7 +389,7 @@ async function resourceToDataURL(resourceUrl, contentType, options) {
             msg = typeof error === "string" ? error : error.message;
         }
         if (msg) {
-            console.warn(msg);
+            console.info(msg);
         }
     }
     cache[cacheKey] = dataURL;

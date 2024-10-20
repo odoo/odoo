@@ -18,6 +18,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deduceUrl } from "@point_of_sale/utils";
 import { user } from "@web/core/user";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
+import { _t } from "@web/core/l10n/translation";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -73,6 +74,13 @@ export class Navbar extends Component {
         )}&path=${encodeURIComponent(`pos/ui?config_id=${this.pos.config.id}`)}`;
     }
 
+    async reloadProducts() {
+        this.dialog.add(SyncPopup, {
+            title: _t("Reload Products"),
+            confirm: (fullReload) => this.pos.reloadData(fullReload),
+        });
+    }
+
     toggleProductView() {
         const newView = this.pos.productListView === "grid" ? "list" : "grid";
         window.localStorage.setItem("productListView", newView);
@@ -126,17 +134,5 @@ export class Navbar extends Component {
 
     async showSaleDetails() {
         await handleSaleDetails(this.pos, this.hardwareProxy, this.dialog);
-    }
-
-    onSyncNotificationClick() {
-        if (this.pos.data.network.offline) {
-            this.pos.data.network.warningTriggered = false;
-        }
-
-        if (this.pos.data.network.unsyncData.length > 0) {
-            this.dialog.add(SyncPopup, {
-                confirm: () => this.pos.data.syncData(),
-            });
-        }
     }
 }

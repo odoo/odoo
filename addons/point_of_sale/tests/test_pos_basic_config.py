@@ -1089,7 +1089,7 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         # Make the service products that are available in the pos inactive.
         # We don't need them to test the loading of 'consu' products.
-        self.env['product.template'].search([('available_in_pos', '=', True), ('type', '=', 'service')]).write({'active': False})
+        self.env['product.template'].search([('available_in_pos', '=', True), ('type', '=', 'service')]).write({'available_in_pos': False})
 
         session = self.open_new_session(0)
         self.product1.write({'company_id': False})
@@ -1099,7 +1099,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         def get_top_product_ids(count):
             data = session.load_data([])
             special_product = session.config_id._get_special_products().ids
-            available_top_product = [product for product in data['product.template']['data'] if product['product_variant_ids'][0] not in special_product]
+            available_top_product = [product for product in data['product.template'] if product['product_variant_ids'][0] not in special_product]
             return [p['product_variant_ids'][0] for p in available_top_product[:count]]
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=1))

@@ -10,8 +10,5 @@ class IrUiView(models.Model):
         return ['id', 'name']
 
     def _load_pos_data(self, data):
-        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
-        return {
-            'data': self.env.ref('base.view_partner_form').sudo().read(fields),
-            'fields': fields
-        }
+        fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
+        return self.env.ref('base.view_partner_form').sudo().read(fields)

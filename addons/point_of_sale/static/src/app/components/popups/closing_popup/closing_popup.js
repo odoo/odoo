@@ -235,6 +235,7 @@ export class ClosePosPopup extends Component {
             if (!response.successful) {
                 return this.handleClosingError(response);
             }
+            this.pos.session.state = "closed";
             location.reload();
         } catch (error) {
             if (error instanceof ConnectionLostError) {

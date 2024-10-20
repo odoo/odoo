@@ -23,8 +23,8 @@
                     <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen'" t-on-click="onClickScan">
                         <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
                     </button>
-                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none" t-on-click="onSyncNotificationClick">
-                        <span t-if="this.pos.data.network.unsyncData.length > 0" t-esc="this.pos.data.network.unsyncData.length" /> 
+                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none">
+                        <span t-if="this.pos.data.network.unsyncData.length > 0" t-esc="this.pos.data.network.unsyncData.length" />
                         <div t-if="this.pos.data.network.offline" class="fa fa-fw fa-chain-broken text-danger"/>
                         <div t-else="" class="fa fa-fw fa-spin fa-circle-o-notch text-warning"/>
                     </div>
@@ -69,10 +69,13 @@
                                 <DropdownItem t-if="this.env.debug" onSelected="() => debug.toggleWidget()">
                                     Debug Window
                                 </DropdownItem>
+                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()">
+                                    Reload products
+                                </DropdownItem>
                             </div>
                         </t>
                     </Dropdown>
-                </div> 
+                </div>
             </div>
         </div>
     </t>

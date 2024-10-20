@@ -7,7 +7,7 @@ class AccountTaxGroup(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        tax_group_ids = [tax_data['tax_group_id'] for tax_data in data['account.tax']['data']]
+        tax_group_ids = [tax_data['tax_group_id'] for tax_data in data['account.tax']]
         return [('id', 'in', tax_group_ids)]
 
     @api.model

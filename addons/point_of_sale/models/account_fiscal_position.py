@@ -7,7 +7,7 @@ class AccountFiscalPosition(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', 'in', data['pos.config']['data'][0]['fiscal_position_ids'])]
+        return [('id', 'in', data['pos.config'][0]['fiscal_position_ids'])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
