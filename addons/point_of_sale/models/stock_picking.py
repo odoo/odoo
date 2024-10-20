@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare
+from odoo.tools import float_is_zero
 
 from itertools import groupby
 from collections import defaultdict
@@ -182,7 +182,7 @@ class StockPickingType(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', '=', data['pos.config']['data'][0]['picking_type_id'])]
+        return [('id', '=', data['pos.config'][0]['picking_type_id'])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

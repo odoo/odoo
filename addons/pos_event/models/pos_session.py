@@ -12,10 +12,11 @@ class PosSession(models.Model):
         return models
 
     @api.model
-    def _load_pos_data_relations(self, model, response):
-        super()._load_pos_data_relations(model, response)
+    def _load_pos_data_relations(self, model, fields):
+        relations = super()._load_pos_data_relations(model, fields)
         if model == 'event.registration':
             # Force compute to False otherwise the frontend will not send the data
-            response['event.registration']['relations']['email']['compute'] = False
-            response['event.registration']['relations']['phone']['compute'] = False
-            response['event.registration']['relations']['name']['compute'] = False
+            relations['email']['compute'] = False
+            relations['phone']['compute'] = False
+            relations['name']['compute'] = False
+        return relations

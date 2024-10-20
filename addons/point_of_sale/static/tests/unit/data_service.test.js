@@ -4,7 +4,7 @@ import { RPCError } from "@web/core/network/rpc";
 
 class PosSession extends models.ServerModel {
     _name = "pos.session";
-    load_data() {
+    load_data_params() {
         return {
             "res.partner": {
                 relations: {
@@ -22,21 +22,11 @@ class PosSession extends models.ServerModel {
                     },
                 },
                 fields: ["vat", "name"],
-                data: [],
             },
-            "product.product": { relations: {}, fields: {}, data: [] },
-            "product.template": { relations: {}, fields: {}, data: [] },
-            "product.pricelist": { relations: {}, fields: {}, data: [] },
-            "pos.session": {
-                relations: {},
-                fields: {},
-                data: [
-                    {
-                        name: "PoS Session",
-                        id: 1,
-                    },
-                ],
-            },
+            "product.product": { relations: {}, fields: {} },
+            "product.template": { relations: {}, fields: {} },
+            "product.pricelist": { relations: {}, fields: {} },
+            "pos.session": { relations: {}, fields: {} },
             "res.company": {
                 relations: {},
                 fields: {
@@ -45,13 +35,8 @@ class PosSession extends models.ServerModel {
                         type: "string",
                     },
                 },
-                data: [
-                    {
-                        tax_calculation_rounding_method: "round_globally",
-                    },
-                ],
             },
-            "stock.picking.type": { relations: {}, fields: {}, data: [] },
+            "stock.picking.type": { relations: {}, fields: {} },
             "pos.config": {
                 relations: {},
                 fields: {
@@ -64,23 +49,9 @@ class PosSession extends models.ServerModel {
                         type: "many2many",
                     },
                 },
-                data: [
-                    {
-                        id: 1,
-                        name: "PoS Config",
-                        iface_printer: false,
-                        trusted_config_ids: [2],
-                    },
-                    {
-                        id: 2,
-                        name: "PoS Config 2",
-                        iface_printer: true,
-                        trusted_config_ids: [1],
-                    },
-                ],
             },
-            "pos.printer": { relations: {}, fields: {}, data: [] },
-            "pos.payment.method": { relations: {}, fields: {}, data: [] },
+            "pos.printer": { relations: {}, fields: {} },
+            "pos.payment.method": { relations: {}, fields: {} },
             "res.currency": {
                 relations: {},
                 fields: {
@@ -89,30 +60,53 @@ class PosSession extends models.ServerModel {
                         type: "float",
                     },
                 },
-                data: [
-                    {
-                        rounding: 0.01,
-                    },
-                ],
             },
-            "res.users": {
-                relations: {},
-                fields: {},
-                data: [
-                    {
-                        id: 1,
-                        name: "Administrator",
-                    },
-                ],
-            },
-            "account.fiscal.position": { relations: {}, fields: {}, data: [] },
-            "pos.category": { relations: {}, fields: {}, data: [] },
-            "pos.order": { relations: {}, fields: {}, data: [] },
-            "pos.order.line": { relations: {}, fields: {}, data: [] },
-            "pos.payment": { relations: {}, fields: {}, data: [] },
-            "pos.pack.operation.lot": { relations: {}, fields: {}, data: [] },
-            "product.pricelist.item": { relations: {}, fields: {}, data: [] },
-            "product.attribute.custom.value": { relations: {}, fields: {}, data: [] },
+            "res.users": { relations: {}, fields: {} },
+            "account.fiscal.position": { relations: {}, fields: {} },
+            "pos.category": { relations: {}, fields: {} },
+            "pos.order": { relations: {}, fields: {} },
+            "pos.order.line": { relations: {}, fields: {} },
+            "pos.payment": { relations: {}, fields: {} },
+            "pos.pack.operation.lot": { relations: {}, fields: {} },
+            "product.pricelist.item": { relations: {}, fields: {} },
+            "product.attribute.custom.value": { relations: {}, fields: {} },
+        };
+    }
+    load_data() {
+        return {
+            "res.partner": [],
+            "product.product": [],
+            "product.template": [],
+            "product.pricelist": [],
+            "pos.session": [{ name: "PoS Session", id: 1 }],
+            "res.company": [{ tax_calculation_rounding_method: "round_globally" }],
+            "stock.picking.type": [],
+            "pos.config": [
+                {
+                    id: 1,
+                    name: "PoS Config",
+                    iface_printer: false,
+                    trusted_config_ids: [2],
+                },
+                {
+                    id: 2,
+                    name: "PoS Config 2",
+                    iface_printer: true,
+                    trusted_config_ids: [1],
+                },
+            ],
+            "pos.printer": [],
+            "pos.payment.method": [],
+            "res.currency": [{ rounding: 0.01 }],
+            "res.users": [{ id: 1, name: "Administrator" }],
+            "account.fiscal.position": [],
+            "pos.category": [],
+            "pos.order": [],
+            "pos.order.line": [],
+            "pos.payment": [],
+            "pos.pack.operation.lot": [],
+            "product.pricelist.item": [],
+            "product.attribute.custom.value": [],
         };
     }
 }

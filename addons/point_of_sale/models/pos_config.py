@@ -200,23 +200,21 @@ class PosConfig(models.Model):
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
     orderlines_sequence_in_cart_by_category = fields.Boolean(string="Order cart by category's sequence", default=False,
         help="When active, orderlines will be sorted based on product category and sequence in the product screen's order cart.")
+    last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', '=', data['pos.session']['data'][0]['config_id'])]
+        return [('id', '=', data['pos.session'][0]['config_id'])]
 
     def _load_pos_data(self, data):
         domain = self._load_pos_data_domain(data)
         fields = self._load_pos_data_fields(self.id)
-        data = self.search_read(domain, fields, load=False)
+        config_ids = self.search_read(domain, fields, load=False)
 
-        if not data[0]['use_pricelist']:
-            data[0]['pricelist_id'] = False
+        if not config_ids[0]['use_pricelist']:
+            config_ids[0]['pricelist_id'] = False
 
-        return {
-            'data': data,
-            'fields': fields,
-        }
+        return config_ids
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
@@ -423,6 +421,11 @@ class PosConfig(models.Model):
         if prepa_printers_menuitem:
             prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
 
+    @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
+        'iface_available_categ_ids')
+    def _compute_local_data_integrity(self):
+        self.last_data_change = self.env.cr.now()
+
     def write(self, vals):
         self._check_header_footer(vals)
         self._reset_default_on_vals(vals)
@@ -609,6 +612,20 @@ class PosConfig(models.Model):
             'target': 'self',
         }
 
+    def _get_url_to_cache(self, debug):
+        url_to_cache = []
+        base_urls = [
+            f"/pos/ui?config_id={self.id}&from_backend=True",
+            f"/pos/ui?config_id={self.id}",
+        ]
+
+        if not debug:
+            url_to_cache.extend(base_urls)
+        else:
+            url_to_cache.extend([f"{url}&debug={debug}" for url in base_urls])
+
+        return self.env["ir.qweb"]._get_asset_links("point_of_sale.assets_prod", debug=debug) + url_to_cache
+
     def _check_before_creating_new_session(self):
         self._check_company_has_template()
         self._check_pricelists()
@@ -709,7 +726,7 @@ class PosConfig(models.Model):
         }).id
 
     def get_limited_product_count(self):
-        default_limit = 20000
+        default_limit = 5000
         config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', default_limit)
         try:
             return int(config_param)

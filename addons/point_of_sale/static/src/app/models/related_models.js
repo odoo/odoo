@@ -307,7 +307,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     const indexes = opts.databaseIndex || {};
     const database = opts.databaseTable || {};
     const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
-    const records = mapObj(processedModelDefs, () => reactive(new Map()));
+    const records = mapObj(processedModelDefs, () => new Map());
     const callbacks = mapObj(processedModelDefs, () => []);
     const commands = mapObj(processedModelDefs, () => ({
         delete: new Map(),
@@ -329,7 +329,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         for (const key of indexes[model] || []) {
-            container[key] = reactive({});
+            container[key] = {};
         }
 
         baseData[model] = {};
@@ -475,6 +475,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     }
                 }
                 target.update({ [prop]: value });
+                target.model.triggerEvents("update", { field: prop, value, id: target.id });
                 return true;
             },
         };
@@ -496,7 +497,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
         const Model = modelClasses[model] || Base;
         const proxyTrap = getProxyTrap(model);
-        const record = reactive(new Model({ models, records, model: models[model], proxyTrap }));
+        let record = new Model({ models, records, model: models[model], proxyTrap });
 
         const id = vals["id"];
         record.id = id;
@@ -598,6 +599,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
         // Delayed setup is usefull when using loadData method.
         // Some records must be linked to other records before it can configure itself.
+        record = reactive(record);
         if (!delayedSetup) {
             record.setup(vals);
         }
@@ -701,8 +703,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             }
         }
 
+        const key = database[model]?.key || "id";
+        models[model].triggerEvents("delete", { key: record[key] });
         records[model].delete(id);
-
         for (const key of indexes[model] || []) {
             const keyVal = record.raw[key];
             if (Array.isArray(keyVal)) {
@@ -763,9 +766,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             },
             deleteMany(records) {
                 const result = [];
-                records.forEach((record) => {
-                    result.push(delete_(model, record));
-                });
+                let mustBreak = 0;
+                while (records.length) {
+                    result.push(delete_(model, records[records.length - 1]));
+                    mustBreak += 1;
+
+                    if (mustBreak > 1000) {
+                        console.warn("Too many records to delete. Breaking the loop.");
+                        break;
+                    }
+                }
                 return result;
             },
             read(value) {
@@ -1108,5 +1118,5 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     models.loadData = loadData;
     models.commands = commands;
 
-    return { models, records, indexedRecords };
+    return { models, records, indexedRecords, baseData };
 }

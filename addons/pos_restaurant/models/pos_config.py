@@ -2,8 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-import json
-from collections import defaultdict
 from odoo.tools import convert
 
 
@@ -26,6 +24,10 @@ class PosConfig(models.Model):
         forbidden_keys = super(PosConfig, self)._get_forbidden_change_fields()
         forbidden_keys.append('floor_ids')
         return forbidden_keys
+
+    @api.depends('takeaway_fp_id', 'takeaway')
+    def _compute_local_data_integrity(self):
+        super()._compute_local_data_integrity()
 
     @api.model_create_multi
     def create(self, vals_list):

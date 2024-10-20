@@ -1,18 +1,16 @@
 import { _t } from "@web/core/l10n/translation";
 
-const { DateTime } = luxon;
-
 export default class IndexedDB {
-    constructor(dbName, dbVersion, dbStores) {
+    constructor(dbName, dbVersion, dbStores, whenReady) {
         this.db = null;
         this.dbName = dbName;
         this.dbVersion = dbVersion;
         this.dbStores = dbStores;
         this.dbInstance = null;
-        this.databaseEventListener();
+        this.databaseEventListener(whenReady);
     }
 
-    databaseEventListener() {
+    databaseEventListener(whenReady) {
         const indexedDB =
             window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
@@ -32,6 +30,7 @@ export default class IndexedDB {
         dbInstance.onsuccess = (event) => {
             this.db = event.target.result;
             console.info(`IndexedDB ${this.dbVersion} Ready`);
+            whenReady();
         };
         dbInstance.onupgradeneeded = (event) => {
             for (const [id, storeName] of this.dbStores) {
@@ -43,33 +42,6 @@ export default class IndexedDB {
     }
 
     async promises(storeName, arrData, method) {
-        if (method !== "delete") {
-            const data = await this.readAll([storeName]);
-            const storeData = data[storeName];
-            if (storeData?.length > 0) {
-                for (const idx in arrData) {
-                    const data = { ...arrData[idx] };
-                    delete data.JSONuiState;
-                    delete data.date_order;
-                    delete data.write_date;
-
-                    let alreadyExists = storeData.find((item) => item.uuid === data.uuid);
-                    if (alreadyExists) {
-                        alreadyExists = { ...alreadyExists };
-                        delete alreadyExists.JSONuiState;
-                        delete alreadyExists.date_order;
-                        delete alreadyExists.write_date;
-                    }
-
-                    if (!alreadyExists || JSON.stringify(alreadyExists) !== JSON.stringify(data)) {
-                        arrData[idx].write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
-                    } else {
-                        delete arrData[idx];
-                    }
-                }
-            }
-        }
-
         const transaction = this.getNewTransaction([storeName], "readwrite");
         if (!transaction) {
             return false;
@@ -103,9 +75,10 @@ export default class IndexedDB {
 
     reset() {
         if (!this.dbInstance) {
-            return;
+            return false;
         }
         this.dbInstance.deleteDatabase(this.dbName);
+        return true;
     }
 
     create(storeName, arrData) {

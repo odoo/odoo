@@ -34,13 +34,13 @@ class ProductTemplate(models.Model):
     @api.model
     def _load_pos_data_domain(self, data):
         domain = [
-            *self.env['product.template']._check_company_domain(data['pos.config']['data'][0]['company_id']),
+            *self.env['product.template']._check_company_domain(data['pos.config'][0]['company_id']),
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ]
-        limited_categories = data['pos.config']['data'][0]['limit_categories']
+        limited_categories = data['pos.config'][0]['limit_categories']
         if limited_categories:
-            available_category_ids = data['pos.config']['data'][0]['iface_available_categ_ids']
+            available_category_ids = data['pos.config'][0]['iface_available_categ_ids']
             category_ids = self.env['pos.category'].browse(available_category_ids)._get_descendants().ids
             domain += [('pos_categ_ids', 'in', category_ids)]
         return domain
@@ -55,14 +55,15 @@ class ProductTemplate(models.Model):
 
     def _load_pos_data(self, data):
         # Add custom fields for 'formula' taxes.
-        fields = set(self._load_pos_data_fields(data['pos.config']['data'][0]['id']))
+        fields = set(self._load_pos_data_fields(data['pos.config'][0]['id']))
         taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
         fields = list(fields.union(product_fields))
 
-        config = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        config = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         limit_count = config.get_limited_product_count()
-        if limit_count:
+        pos_limited_loading = self.env.context.get('pos_limited_loading', True)
+        if limit_count and pos_limited_loading:
             query = self._where_calc(self._load_pos_data_domain(data))
             sql = SQL(
                 """
@@ -85,7 +86,7 @@ class ProductTemplate(models.Model):
                 """,
                 query.from_clause,
                 query.where_clause or SQL("TRUE"),
-                self.get_limited_product_count(),
+                limit_count,
             )
             product_tmpl_ids = [r[0] for r in self.env.execute_query(sql)]
             products = self._load_product_with_domain([('id', 'in', product_tmpl_ids)])
@@ -95,7 +96,7 @@ class ProductTemplate(models.Model):
             domain = self._load_pos_data_domain(data)
             products = self._load_product_with_domain(domain)
 
-        data['pos.config']['data'][0]['_product_default_values'] = \
+        data['pos.config'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
 
         products += config._get_special_products().product_tmpl_id
@@ -105,24 +106,14 @@ class ProductTemplate(models.Model):
         fields = self._load_pos_data_fields(config.id)
         available_products = products.read(fields, load=False)
         self._process_pos_ui_product_product(available_products, config)
-        return {
-            'data': available_products,
-            'fields': fields,
-        }
+        return available_products
 
     def _load_product_with_domain(self, domain, load_archived=False):
         context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
+        domain = self._server_date_to_domain(domain)
         return self.with_context(context).search(
             domain,
             order='sequence,default_code,name')
-
-    def get_limited_product_count(self):
-        default_limit = 20000
-        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', default_limit)
-        try:
-            return int(config_param)
-        except (TypeError, ValueError, OverflowError):
-            return default_limit
 
     def _process_pos_ui_product_product(self, products, config_id):
 

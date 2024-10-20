@@ -31,7 +31,7 @@ class ResCompany(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', '=', data['pos.config']['data'][0]['company_id'])]
+        return [('id', '=', data['pos.config'][0]['company_id'])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

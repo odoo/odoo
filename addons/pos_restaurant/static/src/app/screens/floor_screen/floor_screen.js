@@ -560,7 +560,7 @@ export class FloorScreen extends Component {
             : null;
     }
     get activeTables() {
-        return this.activeFloor?.table_ids;
+        return this.activeFloor?.table_ids?.filter((table) => table.active) || [];
     }
     get selectedTables() {
         return this.state.selectedTableIds.map((id) => this.pos.models["restaurant.table"].get(id));
@@ -674,14 +674,14 @@ export class FloorScreen extends Component {
             },
         ]);
 
-        this.selectFloor(copyFloor[0]);
         this.pos.isEditMode = true;
-
         for (const table of tables) {
             const tableSerialized = table.serialize({ orm: true });
             tableSerialized.floor_id = copyFloor[0].id;
             await this.createTableFromRaw(tableSerialized);
         }
+
+        this.selectFloor(copyFloor[0]);
     }
     async duplicateTable() {
         const selectedTables = this.selectedTables;
@@ -854,10 +854,7 @@ export class FloorScreen extends Component {
             }
         }
 
-        for (const table_id of activeFloor.table_ids) {
-            table_id.delete();
-        }
-
+        this.pos.models["restaurant.table"].deleteMany(activeFloor.table_ids);
         activeFloor.delete();
 
         if (this.pos.models["restaurant.floor"].length > 0) {

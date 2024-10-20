@@ -267,13 +267,10 @@ class PosConfig(models.Model):
         # Init our first record, in case of self_order is pos_config
         config_fields = self._load_pos_self_data_fields(self.id)
         response = {
-            'pos.config': {
-                'data': self.env['pos.config'].search_read([('id', '=', self.id)], config_fields, load=False),
-                'fields': config_fields,
-            }
+            'pos.config': self.env['pos.config'].search_read([('id', '=', self.id)], config_fields, load=False),
         }
-        response['pos.config']['data'][0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
-        response['pos.config']['data'][0]['_pos_special_products_ids'] = self._get_special_products().ids
+        response['pos.config'][0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
+        response['pos.config'][0]['_pos_special_products_ids'] = self._get_special_products().ids
         self.env['pos.session']._load_pos_data_relations('pos.config', response)
 
         # Classic data loading
@@ -281,14 +278,27 @@ class PosConfig(models.Model):
             try:
                 response[model] = self.env[model]._load_pos_self_data(response)
                 self.env['pos.session']._load_pos_data_relations(model, response)
-            except AccessError as e:
-                response[model] = {
-                    'data': [],
-                    'fields': self.env[model]._load_pos_self_data_fields(self.id),
-                    'error': e.args[0]
-                }
+            except AccessError:
+                response[model] = self.env[model]._load_pos_self_data_fields(self.id)
 
                 self.env['pos.session']._load_pos_data_relations(model, response)
+
+        return response
+
+    def load_data_params(self):
+        response = {}
+        fields = self._load_pos_self_data_fields(self.id)
+        response['pos.config'] = {
+            'fields': fields,
+            'relations': self.env['pos.session']._load_pos_data_relations('pos.config', fields)
+        }
+
+        for model in self._load_self_data_models():
+            fields = self.env[model]._load_pos_self_data_fields(self.id)
+            response[model] = {
+                'fields': fields,
+                'relations': self.env['pos.session']._load_pos_data_relations(model, fields)
+            }
 
         return response
 

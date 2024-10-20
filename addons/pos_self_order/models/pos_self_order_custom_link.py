@@ -40,7 +40,7 @@ class Pos_Self_OrderCustom_Link(models.Model):
 
     @api.model
     def _load_pos_self_data_domain(self, data):
-        return [('pos_config_ids', 'in', data['pos.config']['data'][0]['id'])]
+        return [('pos_config_ids', 'in', data['pos.config'][0]['id'])]
 
     @api.model
     def _load_pos_self_data_fields(self, config_id):

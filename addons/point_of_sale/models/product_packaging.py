@@ -8,7 +8,7 @@ class ProductPackaging(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return AND([[('barcode', 'not in', ['', False])], [('product_id', 'in', [x['id'] for x in data['product.product']['data']])] if data else []])
+        return AND([[('barcode', 'not in', ['', False])], [('product_id', 'in', [x['id'] for x in data['product.product']])] if data else []])
 
     @api.model
     def _load_pos_data_fields(self, config_id):

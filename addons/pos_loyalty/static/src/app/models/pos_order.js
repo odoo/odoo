@@ -103,7 +103,9 @@ patch(PosOrder.prototype, {
     },
     serializeState() {
         const state = super.serializeState(...arguments);
-        state.disabledRewards = [...this.uiState.disabledRewards];
+        if (this.uiState?.disabledRewards) {
+            state.disabledRewards = [...this.uiState.disabledRewards];
+        }
         return state;
     },
     /** @override */

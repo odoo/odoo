@@ -163,6 +163,17 @@ export class PosStore extends Reactive {
         return !this.cashier ? "LoginScreen" : "ProductScreen";
     }
 
+    async reloadData(fullReload = false) {
+        await this.data.resetIndexedDB();
+        const url = new URL(window.location.href);
+
+        if (fullReload) {
+            url.searchParams.set("limited_loading", "0");
+        }
+
+        window.location.href = url.href;
+    }
+
     showLoginScreen() {
         this.resetCashier();
         this.showScreen("LoginScreen");
@@ -274,10 +285,6 @@ export class PosStore extends Reactive {
             order.setPricelist(this.models["product.pricelist"].get(currentPricelistId));
         });
 
-        if (this.data.loadedIndexedDBProducts && this.data.loadedIndexedDBProducts.length > 0) {
-            await this._loadMissingPricelistItems(this.data.loadedIndexedDBProducts);
-            delete this.data.loadedIndexedDBProducts;
-        }
         await this.processProductAttributes();
     }
     cashMove() {
@@ -286,7 +293,6 @@ export class PosStore extends Reactive {
     }
     async closeSession() {
         const info = await this.getClosePosInfo();
-        await this.data.resetIndexedDB();
 
         if (info) {
             this.dialog.add(ClosePosPopup, info);
@@ -311,11 +317,15 @@ export class PosStore extends Reactive {
         }
 
         if (productIds.size > 0) {
-            await this.data.searchRead("product.product", [
-                "&",
-                ["id", "not in", [...productIds]],
-                ["product_tmpl_id", "in", [...productTmplIds]],
-            ]);
+            try {
+                await this.data.searchRead("product.product", [
+                    "&",
+                    ["id", "not in", [...productIds]],
+                    ["product_tmpl_id", "in", [...productTmplIds]],
+                ]);
+            } catch (error) {
+                console.warn("Error while fetching product variants", error);
+            }
         }
 
         for (const product of this.models["product.product"].filter(
@@ -995,7 +1005,7 @@ export class PosStore extends Reactive {
                 throw error;
             }
         } finally {
-            this.data.syncDataWithIndexedDB(this.data.records);
+            this.data.synchronizeLocalDataInIndexedDB();
         }
     }
     /**
@@ -1616,7 +1626,6 @@ export class PosStore extends Reactive {
             ]);
 
             if (data.status === "success") {
-                await this.data.resetIndexedDB();
                 this.redirectToBackend();
             }
         }

@@ -10,7 +10,7 @@ class UomCategory(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', 'in', [uom['category_id'] for uom in data['uom.uom']['data']])]
+        return [('id', 'in', [uom['category_id'] for uom in data['uom.uom']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -29,8 +29,5 @@ class UomUom(models.Model):
 
     def _load_pos_data(self, data):
         domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
-        return {
-            'data': self.with_context({**self.env.context}).search_read(domain, fields, load=False),
-            'fields': fields,
-        }
+        fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
+        return self.with_context({**self.env.context}).search_read(domain, fields, load=False)
