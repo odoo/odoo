@@ -217,6 +217,7 @@
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'incoming'" readonly="state == 'done'"/>
                             <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'outgoing'" readonly="state == 'done'"/>
                             <field name="backorder_id" invisible="not backorder_id"/>
+                            <field name="use_create_lots" invisible="1"/> <!-- used by embedded stock.move list view below -->
                         </group>
                         <group>
                             <label for="scheduled_date"/>
