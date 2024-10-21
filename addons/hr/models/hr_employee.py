@@ -405,7 +405,7 @@ class HrEmployee(models.Model):
         # Hardcode the form view for public employee
         return self.env.ref('hr.hr_employee_public_view_form').id
 
-    def get_formview_action(self, access_uid=None):
+    def get_formview_action(self, access_uid=None, **kwargs):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
         res = super().get_formview_action(access_uid=access_uid)
         user = self.env.user
@@ -414,6 +414,9 @@ class HrEmployee(models.Model):
 
         if not user.has_group('hr.group_hr_user'):
             res['res_model'] = 'hr.employee.public'
+
+        if kwargs:
+            res['context'] = dict(res.get('context', {}), **kwargs)
 
         return res
 

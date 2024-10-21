@@ -1026,7 +1026,7 @@ class MailMessage(models.Model):
                 # sudo: mail.message.subtype - reading description on accessible message is allowed
                 "subtype_description": message.subtype_id.sudo().description,
                 # sudo: res.partner: reading limited data of recipients is acceptable
-                "recipients": Store.many(message.sudo().partner_ids, fields=["name", "write_date"]),
+                "recipients": Store.many(message.sudo().partner_ids, fields=["name", "write_date", "user"]),
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
                 "thread": Store.one(record, as_thread=True, only_id=True),
             }

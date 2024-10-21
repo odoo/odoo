@@ -29,7 +29,11 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     }
 
     async onWillStart() {
-        [this.record] = await this.orm.read(this.props.recordModel, [this.props.id], this.fieldNames);
+        [this.record] = await this.orm.read(
+            this.props.recordModel,
+            [this.props.id],
+            this.fieldNames
+        );
         await Promise.all(this.loadAdditionalData());
     }
 
@@ -40,7 +44,8 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
 
     get fieldNames() {
         const excludedFields = new Set(["partner_id"]);
-        return super.fieldNames
+        const fields = super.fieldNames;
+        return fields["users"]
             .concat(["user_id", "resource_type"])
             .filter((field) => !excludedFields.has(field));
     }
