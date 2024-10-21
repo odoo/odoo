@@ -8,10 +8,10 @@ import {
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 
 patch(PosOrder.prototype, {
-    export_for_printing(baseUrl, headerData) {
-        const result = super.export_for_printing(...arguments);
-        if (this.get_partner()) {
-            result.partner = this.get_partner();
+    exportForPrinting(baseUrl, headerData) {
+        const result = super.exportForPrinting(...arguments);
+        if (this.getPartner()) {
+            result.partner = this.getPartner();
         }
         if (this.company.country_id?.code === "IN") {
             result.l10n_in_hsn_summary = this._prepareL10nInHsnSummary();
@@ -22,7 +22,7 @@ patch(PosOrder.prototype, {
         const fiscalPosition = this.fiscal_position_id;
         const baseLines = [];
         this.lines.forEach((line) => {
-            const hsnCode = line.get_product()?.l10n_in_hsn_code;
+            const hsnCode = line.getProduct()?.l10n_in_hsn_code;
             if (!hsnCode) {
                 return;
             }
@@ -32,12 +32,12 @@ patch(PosOrder.prototype, {
                 taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
             }
 
-            const priceUnit = line.get_unit_price();
+            const priceUnit = line.getUnitPrice();
             baseLines.push({
                 l10n_in_hsn_code: hsnCode,
                 price_unit: priceUnit,
-                quantity: line.get_quantity(),
-                discount: line.get_discount(),
+                quantity: line.getQuantity(),
+                discount: line.getDiscount(),
                 uom: null,
                 ...getTaxesValues(
                     taxes,

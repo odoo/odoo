@@ -31,9 +31,9 @@ export class PaymentInterface {
     /**
      * Call this function to enable UI elements that allow a user to
      * reverse a payment. This requires that you implement
-     * send_payment_reversal.
+     * sendPaymentReversal.
      */
-    enable_reversals() {
+    enableReversals() {
         this.supports_reversals = true;
     }
 
@@ -41,9 +41,9 @@ export class PaymentInterface {
      * Called when a user clicks the "Send" button in the
      * interface. This should initiate a payment request and return a
      * Promise that resolves when the final status of the payment line
-     * is set with set_payment_status.
+     * is set with setPaymentStatus.
      *
-     * For successful transactions set_receipt_info() should be used
+     * For successful transactions setReceiptInfo() should be used
      * to set info that should to be printed on the receipt. You
      * should also set card_type and transaction_id on the line for
      * successful transactions.
@@ -53,7 +53,7 @@ export class PaymentInterface {
      * the payment should be retried. Rejected when the status of the
      * paymentline will be manually updated.
      */
-    send_payment_request(uuid) {}
+    sendPaymentRequest(uuid) {}
 
     /**
      * Called when a user removes a payment line that's still waiting
@@ -67,7 +67,7 @@ export class PaymentInterface {
      * @param {string} uuid - The id of the paymentline
      * @returns {Promise}
      */
-    send_payment_cancel(order, uuid) {}
+    sendPaymentCancel(order, uuid) {}
 
     /**
      * This is an optional method. When implementing this make sure to
@@ -79,7 +79,7 @@ export class PaymentInterface {
      * @param {string} uuid - The id of the paymentline
      * @returns {Promise} returns true if the reversal was successful.
      */
-    send_payment_reversal(uuid) {}
+    sendPaymentReversal(uuid) {}
 
     /**
      * Called when the payment screen in the POS is closed (by

@@ -15,7 +15,7 @@ patch(ActionpadWidget.prototype, {
         );
     },
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     },
     get hasChangesToPrint() {
         let hasChange = this.pos.getOrderChanges();
@@ -39,7 +39,7 @@ patch(ActionpadWidget.prototype, {
         if (!order) {
             return false;
         } else {
-            return order.lines.reduce((totalQty, line) => totalQty + line.get_quantity(), 0) > 0;
+            return order.lines.reduce((totalQty, line) => totalQty + line.getQuantity(), 0) > 0;
         }
     },
     get highlightPay() {

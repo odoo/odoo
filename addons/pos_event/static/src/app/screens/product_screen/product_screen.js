@@ -132,7 +132,7 @@ patch(ProductScreen.prototype, {
                     event_id: event,
                     event_ticket_id: ticket,
                     pos_order_line_id: line,
-                    partner_id: this.pos.get_order().partner_id,
+                    partner_id: this.pos.getOrder().partner_id,
                     registration_answer_ids: Object.entries({
                         ...textAnswer,
                         ...globalTextAnswer,

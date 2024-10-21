@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.NoteButton">
         <button
             t-attf-class="{{this.props.class}} flex-shrink-0"
-            t-att-disabled="pos.get_order()?.is_empty()" t-on-click="onClick">
+            t-att-disabled="pos.getOrder()?.isEmpty()" t-on-click="onClick">
             <t t-if="this.props.icon">
                 <i t-attf-class="{{this.props.icon}} me-1"/>
             </t>

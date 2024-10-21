@@ -7,11 +7,11 @@ export class PaymentScreenStatus extends Component {
     };
 
     get changeText() {
-        return this.env.utils.formatCurrency(this.props.order.get_change());
+        return this.env.utils.formatCurrency(this.props.order.getChange());
     }
     get remainingText() {
         return this.env.utils.formatCurrency(
-            this.props.order.get_due() > 0 ? this.props.order.get_due() : 0
+            this.props.order.getDue() > 0 ? this.props.order.getDue() : 0
         );
     }
 }

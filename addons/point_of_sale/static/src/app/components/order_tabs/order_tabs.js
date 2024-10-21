@@ -21,14 +21,14 @@ export class OrderTabs extends Component {
         this.dialog = useService("dialog");
     }
     async newFloatingOrder() {
-        const order = this.pos.add_new_order();
+        const order = this.pos.addNewOrder();
         this.pos.showScreen("ProductScreen");
         this.dialog.closeAll();
         return order;
     }
     selectFloatingOrder(order) {
-        this.pos.set_order(order);
-        const previousOrderScreen = order.get_screen_data();
+        this.pos.setOrder(order);
+        const previousOrderScreen = order.getScreenData();
 
         const props = {};
         if (previousOrderScreen?.name === "PaymentScreen") {

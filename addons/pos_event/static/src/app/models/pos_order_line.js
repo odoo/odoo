@@ -4,13 +4,13 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosOrderline.prototype, {
-    can_be_merged_with(orderline) {
+    canBeMergedWith(orderline) {
         return (
             this.event_ticket_id?.id === orderline.event_ticket_id?.id &&
-            super.can_be_merged_with(...arguments)
+            super.canBeMergedWith(...arguments)
         );
     },
-    set_quantity(quantity, keep_price) {
+    setQuantity(quantity, keep_price) {
         if (this.event_ticket_id && quantity !== "") {
             return {
                 title: _t("Ticket error"),
@@ -22,6 +22,6 @@ patch(PosOrderline.prototype, {
             }
         }
 
-        return super.set_quantity(quantity, keep_price);
+        return super.setQuantity(quantity, keep_price);
     },
 });

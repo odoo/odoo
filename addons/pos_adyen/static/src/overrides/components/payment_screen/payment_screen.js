@@ -9,13 +9,13 @@ patch(PaymentScreen.prototype, {
             const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_method_id.use_payment_terminal === "adyen" &&
-                    !paymentLine.is_done() &&
-                    paymentLine.get_payment_status() !== "pending"
+                    !paymentLine.isDone() &&
+                    paymentLine.getPaymentStatus() !== "pending"
             );
             if (!pendingPaymentLine) {
                 return;
             }
-            pendingPaymentLine.payment_method_id.payment_terminal.set_most_recent_service_id(
+            pendingPaymentLine.payment_method_id.payment_terminal.setMostRecentServiceId(
                 pendingPaymentLine.terminalServiceId
             );
         });

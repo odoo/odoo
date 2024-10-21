@@ -63,12 +63,12 @@ patch(TicketScreen.prototype, {
 
             order.state = "draft";
             this.pos.selectedOrderUuid = order.uuid;
-            this.pos.set_tip(amount);
+            this.pos.setTip(amount);
             order.state = "paid";
             order.uiState.screen_data.value = { name: "", props: {} };
 
-            const serializedTipLine = order.get_selected_orderline().serialize({ orm: true });
-            order.get_selected_orderline().delete();
+            const serializedTipLine = order.getSelectedOrderline().serialize({ orm: true });
+            order.getSelectedOrderline().delete();
 
             promises.push(
                 new Promise((resolve) => {

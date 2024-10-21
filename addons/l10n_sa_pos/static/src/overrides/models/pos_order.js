@@ -2,8 +2,8 @@ import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosOrder.prototype, {
-    export_for_printing(baseUrl, headerData) {
-        const result = super.export_for_printing(...arguments);
+    exportForPrinting(baseUrl, headerData) {
+        const result = super.exportForPrinting(...arguments);
         if (this.company.country_id?.code === "SA") {
             result.is_settlement = this.is_settlement();
             if (!result.is_settlement) {
@@ -13,8 +13,8 @@ patch(PosOrder.prototype, {
                     company.name,
                     company.vat,
                     this.date_order,
-                    this.get_total_with_tax(),
-                    this.get_total_tax()
+                    this.getTotalWithTax(),
+                    this.getTotalTax()
                 );
                 const qr_code_svg = new XMLSerializer().serializeToString(
                     codeWriter.write(qr_values, 200, 200)
@@ -34,7 +34,7 @@ patch(PosOrder.prototype, {
      */
     is_settlement() {
         return (
-            this.is_empty() &&
+            this.isEmpty() &&
             !!this.payment_ids.filter(
                 (paymentline) =>
                     paymentline.payment_method_id.type === "pay_later" && paymentline.amount < 0

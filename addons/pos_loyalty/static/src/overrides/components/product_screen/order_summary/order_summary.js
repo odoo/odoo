@@ -12,7 +12,7 @@ patch(OrderSummary.prototype, {
         this.notification = useService("notification");
     },
     async updateSelectedOrderline({ buffer, key }) {
-        const selectedLine = this.currentOrder.get_selected_orderline();
+        const selectedLine = this.currentOrder.getSelectedOrderline();
         if (key === "-") {
             if (selectedLine && selectedLine._e_wallet_program_id) {
                 // Do not allow negative quantity or price in a gift card or ewallet orderline.
@@ -61,7 +61,7 @@ patch(OrderSummary.prototype, {
      * @override
      */
     _setValue(val) {
-        const selectedLine = this.currentOrder.get_selected_orderline();
+        const selectedLine = this.currentOrder.getSelectedOrderline();
         if (!selectedLine) {
             return;
         }
@@ -101,11 +101,11 @@ patch(OrderSummary.prototype, {
      * 2. Add a new order line with updated gift card code and points, removing any existing related couponPointChanges.
      */
     async _updateGiftCardOrderline(code, points) {
-        let selectedLine = this.currentOrder.get_selected_orderline();
+        let selectedLine = this.currentOrder.getSelectedOrderline();
         const product = selectedLine.product_id;
 
-        if (selectedLine.get_quantity() > 1) {
-            selectedLine.set_quantity(selectedLine.get_quantity() - 1);
+        if (selectedLine.getQuantity() > 1) {
+            selectedLine.setQuantity(selectedLine.getQuantity() - 1);
         } else {
             this.currentOrder.removeOrderline(selectedLine);
         }
@@ -133,7 +133,7 @@ patch(OrderSummary.prototype, {
             { product_id: product, product_tmpl_id: product.product_tmpl_id },
             { price_unit: points }
         );
-        selectedLine = this.currentOrder.get_selected_orderline();
+        selectedLine = this.currentOrder.getSelectedOrderline();
         selectedLine.gift_code = code;
     },
 

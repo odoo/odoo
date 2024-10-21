@@ -8,7 +8,7 @@ import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dial
 import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
-import { compute_price_force_price_include } from "@point_of_sale/app/models/utils/tax_utils";
+import { computePriceForcePriceInclude } from "@point_of_sale/app/models/utils/tax_utils";
 
 patch(PosStore.prototype, {
     async onClickSaleOrder(clickedOrderId) {
@@ -33,8 +33,8 @@ patch(PosStore.prototype, {
         }
         const sale_order = await this._getSaleOrder(clickedOrderId);
 
-        const currentSaleOrigin = this.get_order()
-            .get_orderlines()
+        const currentSaleOrigin = this.getOrder()
+            .getOrderlines()
             .find((line) => line.sale_order_origin_id)?.sale_order_origin_id;
         if (currentSaleOrigin?.id) {
             const linkedSO = await this._getSaleOrder(currentSaleOrigin.id);
@@ -43,7 +43,7 @@ patch(PosStore.prototype, {
                 linkedSO.partner_invoice_id?.id !== sale_order.partner_invoice_id?.id ||
                 linkedSO.partner_shipping_id?.id !== sale_order.partner_shipping_id?.id
             ) {
-                this.add_new_order({
+                this.addNewOrder({
                     partner_id: sale_order.partner_id,
                 });
                 this.notification.add(_t("A new order has been created."));
@@ -55,15 +55,15 @@ patch(PosStore.prototype, {
                 (position) => position.id === sale_order.fiscal_position_id
             );
         if (orderFiscalPos) {
-            this.get_order().fiscal_position_id = orderFiscalPos;
+            this.getOrder().fiscal_position_id = orderFiscalPos;
         }
         if (sale_order.partner_id) {
-            this.get_order().set_partner(sale_order.partner_id);
+            this.getOrder().setPartner(sale_order.partner_id);
         }
         selectedOption == "settle"
             ? await this.settleSO(sale_order, orderFiscalPos)
             : await this.downPaymentSO(sale_order, selectedOption == "dpPercentage");
-        this.selectOrderLine(this.get_order(), this.get_order().lines.at(-1));
+        this.selectOrderLine(this.getOrder(), this.getOrder().lines.at(-1));
     },
     async _getSaleOrder(id) {
         const sale_order = (await this.data.read("sale.order", [id]))[0];
@@ -71,7 +71,7 @@ patch(PosStore.prototype, {
     },
     async settleSO(sale_order, orderFiscalPos) {
         if (sale_order.pricelist_id) {
-            this.get_order().set_pricelist(sale_order.pricelist_id);
+            this.getOrder().setPricelist(sale_order.pricelist_id);
         }
         let useLoadedLots = false;
         let userWasAskedAboutLoadedLots = false;
@@ -105,7 +105,7 @@ patch(PosStore.prototype, {
                 sale_order_line_id: line,
                 customer_note: line.customer_note,
                 description: line.name,
-                order_id: this.get_order(),
+                order_id: this.getOrder(),
             };
             if (line.display_type === "line_section") {
                 continue;
@@ -113,7 +113,7 @@ patch(PosStore.prototype, {
             const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
             previousProductLine = newLine;
             if (
-                newLine.get_product().tracking !== "none" &&
+                newLine.getProduct().tracking !== "none" &&
                 (this.pickingType.use_create_lots || this.pickingType.use_existing_lots) &&
                 line.pack_lot_ids?.length > 0
             ) {
@@ -134,8 +134,8 @@ patch(PosStore.prototype, {
                 }
             }
             newLine.setQuantityFromSOL(line);
-            newLine.set_unit_price(line.price_unit);
-            newLine.set_discount(line.discount);
+            newLine.setUnitPrice(line.price_unit);
+            newLine.setDiscount(line.discount);
 
             const product_unit = line.product_id.uom_id;
             if (product_unit && !product_unit.is_pos_groupable) {
@@ -146,8 +146,8 @@ patch(PosStore.prototype, {
                     const splitted_line = this.models["pos.order.line"].create({
                         ...newLineValues,
                     });
-                    splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
-                    splitted_line.set_discount(line.discount);
+                    splitted_line.setQuantity(Math.min(remaining_quantity, 1.0), true);
+                    splitted_line.setDiscount(line.discount);
                     remaining_quantity -= splitted_line.qty;
                 }
             }
@@ -223,7 +223,7 @@ patch(PosStore.prototype, {
             const ratio = total_price / sale_order.amount_total;
             const down_payment_line_price = total_down_payment * ratio;
             // We apply the taxes and keep the same price
-            const new_price = compute_price_force_price_include(
+            const new_price = computePriceForcePriceInclude(
                 group[0].tax_ids,
                 down_payment_line_price,
                 this.config.down_payment_product_id,
@@ -233,7 +233,7 @@ patch(PosStore.prototype, {
                 this.models
             );
             const new_line = await this.addLineToCurrentOrder({
-                order_id: this.get_order(),
+                order_id: this.getOrder(),
                 product_tmpl_id: this.config.down_payment_product_id.product_tmpl_id,
                 price_unit: new_price,
                 sale_order_origin_id: sale_order,
@@ -252,7 +252,7 @@ patch(PosStore.prototype, {
                     })),
             });
             new_line.price_type = "automatic";
-            new_line.set_unit_price(new_price);
+            new_line.setUnitPrice(new_price);
         });
     },
     selectOrderLine(order, line) {

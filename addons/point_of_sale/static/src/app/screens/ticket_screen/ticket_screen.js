@@ -71,7 +71,7 @@ export class TicketScreen extends Component {
             nbrPage: 1,
             filter: null,
             search: this.pos.getDefaultSearchDetails(),
-            selectedOrder: this.pos.get_order() || null,
+            selectedOrder: this.pos.getOrder() || null,
             selectedOrderlineIds: {},
         });
         Object.assign(this.state, this.props.stateOverride || {});
@@ -111,7 +111,7 @@ export class TicketScreen extends Component {
         this.numberBuffer.reset();
         if ((!clickedOrder || clickedOrder.uiState.locked) && !this.getSelectedOrderlineId()) {
             // Automatically select the first orderline of the selected order.
-            const firstLine = this.state.selectedOrder.get_orderlines()[0];
+            const firstLine = this.state.selectedOrder.getOrderlines()[0];
             if (firstLine) {
                 this.state.selectedOrderlineIds[clickedOrder.id] = firstLine.id;
             }
@@ -213,7 +213,7 @@ export class TicketScreen extends Component {
             return;
         }
 
-        const partner = order.get_partner();
+        const partner = order.getPartner();
         // The order that will contain the refund orderlines.
         // Use the destinationOrder from props if the order to refund has the same
         // partner as the destinationOrder.
@@ -223,7 +223,7 @@ export class TicketScreen extends Component {
                 (l) =>
                     l.quantity >= 0 || order.lines.some((ol) => ol.id === l.refunded_orderline_id)
             ) &&
-            partner === this.props.destinationOrder.get_partner() &&
+            partner === this.props.destinationOrder.getPartner() &&
             !this.pos.doNotAllowRefundAndSales()
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
@@ -275,8 +275,8 @@ export class TicketScreen extends Component {
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);
 
-        if (this.pos.get_order().uuid !== destinationOrder.uuid) {
-            this.pos.set_order(destinationOrder);
+        if (this.pos.getOrder().uuid !== destinationOrder.uuid) {
+            this.pos.setOrder(destinationOrder);
         }
         await this.addAdditionalRefundInfo(order, destinationOrder);
 
@@ -288,8 +288,8 @@ export class TicketScreen extends Component {
     postRefund(destinationOrder) {}
 
     setPartnerToRefundOrder(partner, destinationOrder) {
-        if (partner && !destinationOrder.get_partner()) {
-            destinationOrder.set_partner(partner);
+        if (partner && !destinationOrder.getPartner()) {
+            destinationOrder.setPartner(partner);
         }
     }
     getSelectedOrder() {
@@ -303,13 +303,12 @@ export class TicketScreen extends Component {
     get isOrderSynced() {
         return (
             this.state.selectedOrder?.uiState.locked &&
-            (this.state.selectedOrder.get_screen_data().name === "" ||
-                this.state.filter === "SYNCED")
+            (this.state.selectedOrder.getScreenData().name === "" || this.state.filter === "SYNCED")
         );
     }
     activeOrderFilter(o) {
         const screen = ["PaymentScreen", "ProductScreen", "ReceiptScreen", "TipScreen"];
-        const oScreen = o.get_screen_data();
+        const oScreen = o.getScreenData();
         return (!o.finalized || screen.includes(oScreen.name)) && o.uiState.displayed;
     }
     getFilteredOrderList() {
@@ -321,7 +320,7 @@ export class TicketScreen extends Component {
 
         if (this.state.filter && !["ACTIVE_ORDERS", "SYNCED"].includes(this.state.filter)) {
             orders = orders.filter((order) => {
-                const screen = order.get_screen_data();
+                const screen = order.getScreenData();
                 return this._getScreenToStatusMap()[screen.name] === this.state.filter;
             });
         }
@@ -359,13 +358,13 @@ export class TicketScreen extends Component {
         return formatDateTime(parseUTCString(order.date_order));
     }
     getTotal(order) {
-        return this.env.utils.formatCurrency(order.get_total_with_tax());
+        return this.env.utils.formatCurrency(order.getTotalWithTax());
     }
     getPartner(order) {
-        return order.get_partner_name();
+        return order.getPartnerName();
     }
     getCardholderName(order) {
-        return order.get_cardholder_name();
+        return order.getCardHolderName();
     }
     getCashier(order) {
         return order.employee_id ? order.employee_id.name : "";
@@ -373,11 +372,11 @@ export class TicketScreen extends Component {
     getStatus(order) {
         if (
             order.uiState?.locked &&
-            (order.get_screen_data().name === "" || this.state.filter === "SYNCED")
+            (order.getScreenData().name === "" || this.state.filter === "SYNCED")
         ) {
             return _t("Paid");
         } else {
-            const screen = order.get_screen_data();
+            const screen = order.getScreenData();
             return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name])?.text;
         }
     }
@@ -385,11 +384,11 @@ export class TicketScreen extends Component {
      * If the order is the only order and is empty
      */
     isDefaultOrderEmpty(order) {
-        const status = this._getScreenToStatusMap()[order.get_screen_data().name];
+        const status = this._getScreenToStatusMap()[order.getScreenData().name];
         const productScreenStatus = this._getScreenToStatusMap().ProductScreen;
         return (
-            order.get_orderlines().length === 0 &&
-            this.pos.get_open_orders().length === 1 &&
+            order.getOrderlines().length === 0 &&
+            this.pos.getOpenOrders().length === 1 &&
             status === productScreenStatus &&
             order.payment_ids.length === 0
         );
@@ -404,7 +403,7 @@ export class TicketScreen extends Component {
             (this.ui.isSmall && order != this.state.selectedOrder) ||
             this.isDefaultOrderEmpty(order) ||
             order.payment_ids.some(
-                (payment) => payment.is_electronic() && payment.get_payment_status() === "done"
+                (payment) => payment.isElectronic() && payment.getPaymentStatus() === "done"
             ) ||
             order.finalized
         );
@@ -470,25 +469,25 @@ export class TicketScreen extends Component {
         let emptyOrderForPartner = null;
         let emptyOrder = null;
         for (const order of this.pos.models["pos.order"].filter((order) => !order.finalized)) {
-            if (order.get_orderlines().length === 0 && order.payment_ids.length === 0) {
-                if (order.get_partner() === partner) {
+            if (order.getOrderlines().length === 0 && order.payment_ids.length === 0) {
+                if (order.getPartner() === partner) {
                     emptyOrderForPartner = order;
                     break;
-                } else if (!order.get_partner() && emptyOrder === null) {
+                } else if (!order.getPartner() && emptyOrder === null) {
                     // If emptyOrderForPartner is not found, we will use the first empty order.
                     emptyOrder = order;
                 }
             }
         }
-        return emptyOrderForPartner || emptyOrder || this.pos.add_new_order();
+        return emptyOrderForPartner || emptyOrder || this.pos.addNewOrder();
     }
     _doesOrderHaveSoleItem(order) {
-        const orderlines = order.get_orderlines();
+        const orderlines = order.getOrderlines();
         if (orderlines.length !== 1) {
             return false;
         }
         const theOrderline = orderlines[0];
-        const refundableQty = theOrderline.get_quantity() - theOrderline.refunded_qty;
+        const refundableQty = theOrderline.getQuantity() - theOrderline.refunded_qty;
         return this.pos.isProductQtyZero(refundableQty - 1);
     }
     _prepareAutoRefundOnOrder(order) {
@@ -554,7 +553,7 @@ export class TicketScreen extends Component {
         if (this.pos.isOpenOrderShareable()) {
             await this.pos.syncAllOrders();
         }
-        this.pos.set_order(order);
+        this.pos.setOrder(order);
         this.closeTicketScreen();
     }
     _getOrderList() {
@@ -600,7 +599,7 @@ export class TicketScreen extends Component {
                 },
             },
             PARTNER: {
-                repr: (order) => order.get_partner_name(),
+                repr: (order) => order.getPartnerName(),
                 displayName: _t("Customer"),
                 modelField: "partner_id.complete_name",
             },
@@ -608,7 +607,7 @@ export class TicketScreen extends Component {
 
         if (this.showCardholderName()) {
             fields.CARDHOLDER_NAME = {
-                repr: (order) => order.get_cardholder_name(),
+                repr: (order) => order.getCardHolderName(),
                 displayName: _t("Cardholder Name"),
                 modelField: "payment_ids.cardholder_name",
             };

@@ -6,11 +6,11 @@ patch(TicketScreen.prototype, {
         if (this.pos.isArgentineanCompany()) {
             if (
                 partner &&
-                (!destinationOrder.get_partner() ||
-                    destinationOrder.get_partner().id ===
+                (!destinationOrder.getPartner() ||
+                    destinationOrder.getPartner().id ===
                         this.pos.session._consumidor_final_anonimo_id)
             ) {
-                destinationOrder.set_partner(partner);
+                destinationOrder.setPartner(partner);
             }
         } else {
             super.setPartnerToRefundOrder(...arguments);

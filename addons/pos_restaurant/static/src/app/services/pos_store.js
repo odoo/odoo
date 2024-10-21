@@ -46,7 +46,7 @@ patch(PosStore.prototype, {
         }
     },
     // using the same floorplan.
-    async ws_syncTableCount(data) {
+    async wsSyncTableCount(data) {
         if (data["login_number"] === odoo.login_number) {
             return;
         }
@@ -89,7 +89,7 @@ patch(PosStore.prototype, {
         ];
     },
     get selectedTable() {
-        return this.get_order()?.table_id;
+        return this.getOrder()?.table_id;
     },
     setActivityListeners() {
         IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);
@@ -106,8 +106,8 @@ patch(PosStore.prototype, {
     async actionAfterIdle() {
         if (!document.querySelector(".modal-open")) {
             const table = this.selectedTable;
-            const order = this.get_order();
-            if (order && order.get_screen_data().name === "ReceiptScreen") {
+            const order = this.getOrder();
+            if (order && order.getScreenData().name === "ReceiptScreen") {
                 // When the order is finalized, we can safely remove it from the memory
                 // We check that it's in ReceiptScreen because we want to keep the order if it's in a tipping state
                 this.removeOrder(order);
@@ -127,7 +127,7 @@ patch(PosStore.prototype, {
     },
     shouldResetIdleTimer() {
         const stayPaymentScreen =
-            this.mainScreen.component === PaymentScreen && this.get_order().payment_ids.length > 0;
+            this.mainScreen.component === PaymentScreen && this.getOrder().payment_ids.length > 0;
         return (
             this.config.module_pos_restaurant &&
             !stayPaymentScreen &&
@@ -139,7 +139,7 @@ patch(PosStore.prototype, {
         this.setIdleTimer();
     },
     closeScreen() {
-        if (this.config.module_pos_restaurant && !this.get_order()) {
+        if (this.config.module_pos_restaurant && !this.getOrder()) {
             return this.showScreen("FloorScreen");
         }
         return super.closeScreen(...arguments);
@@ -169,14 +169,14 @@ patch(PosStore.prototype, {
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
-            this.bus.subscribe("SYNC_ORDERS", this.ws_syncTableCount.bind(this));
+            this.bus.subscribe("SYNC_ORDERS", this.wsSyncTableCount.bind(this));
         }
 
         return await super.afterProcessServerData(...arguments);
     },
     //@override
-    add_new_order() {
-        const order = super.add_new_order(...arguments);
+    addNewOrder() {
+        const order = super.addNewOrder(...arguments);
         this.addPendingOrder([order.id]);
         return order;
     },
@@ -190,8 +190,8 @@ patch(PosStore.prototype, {
         return context;
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        if (this.config.module_pos_restaurant && !this.get_order().uiState.booked) {
-            this.get_order().setBooked(true);
+        if (this.config.module_pos_restaurant && !this.getOrder().uiState.booked) {
+            this.getOrder().setBooked(true);
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
     },
@@ -226,7 +226,7 @@ patch(PosStore.prototype, {
         );
 
         if (currentOrder) {
-            this.set_order(currentOrder);
+            this.setOrder(currentOrder);
         } else {
             const potentialsOrders = this.models["pos.order"].filter(
                 (o) => !o.table_id && !o.finalized && o.lines.length === 0
@@ -237,7 +237,7 @@ patch(PosStore.prototype, {
                 currentOrder.update({ table_id: table });
                 this.selectedOrderUuid = currentOrder.uuid;
             } else {
-                this.add_new_order({ table_id: table });
+                this.addNewOrder({ table_id: table });
             }
         }
         try {
@@ -274,20 +274,20 @@ patch(PosStore.prototype, {
             this.tableSyncing = false;
             const orders = this.getTableOrders(table.id);
             if (orders.length > 0) {
-                this.set_order(orders[0]);
+                this.setOrder(orders[0]);
                 const props = {};
-                if (orders[0].get_screen_data().name === "PaymentScreen") {
+                if (orders[0].getScreenData().name === "PaymentScreen") {
                     props.orderUuid = orders[0].uuid;
                 }
-                this.showScreen(orders[0].get_screen_data().name, props);
+                this.showScreen(orders[0].getScreenData().name, props);
             } else {
-                this.add_new_order({ table_id: table });
+                this.addNewOrder({ table_id: table });
                 this.showScreen("ProductScreen");
             }
         }
     },
     getTableOrders(tableId) {
-        return this.get_open_orders().filter((order) => order.table_id?.id === tableId);
+        return this.getOpenOrders().filter((order) => order.table_id?.id === tableId);
     },
     async unsetTable() {
         try {
@@ -298,7 +298,7 @@ patch(PosStore.prototype, {
             }
             Promise.reject(e);
         }
-        const order = this.get_order();
+        const order = this.getOrder();
         if (order && !order.isBooked) {
             this.removeOrder(order);
         }
@@ -322,20 +322,20 @@ patch(PosStore.prototype, {
         this.loadingOrderState = false;
         this.alert.dismiss();
         if (destinationTable.id === originalTable?.id) {
-            this.set_order(order);
+            this.setOrder(order);
             this.setTable(destinationTable);
             return;
         }
         if (!this.tableHasOrders(destinationTable)) {
             order.table_id = destinationTable;
-            this.set_order(order);
+            this.setOrder(order);
             this.addPendingOrder([order.id]);
         } else {
             const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
             const linesToUpdate = [];
             for (const orphanLine of order.lines) {
                 const adoptingLine = destinationOrder.lines.find((l) =>
-                    l.can_be_merged_with(orphanLine)
+                    l.canBeMergedWith(orphanLine)
                 );
                 if (adoptingLine) {
                     adoptingLine.merge(orphanLine);
@@ -346,7 +346,7 @@ patch(PosStore.prototype, {
             linesToUpdate.forEach((orderline) => {
                 orderline.order_id = destinationOrder;
             });
-            this.set_order(destinationOrder);
+            this.setOrder(destinationOrder);
             if (destinationOrder?.id) {
                 this.addPendingOrder([destinationOrder.id]);
             }

@@ -38,7 +38,7 @@
                     <t t-if="currentOrder?.fiscal_position_id" t-esc="currentOrder.fiscal_position_id.display_name" />
                     <t t-else="">Tax</t>
                 </button>
-                <button class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.onDeleteOrder(this.pos.get_order())">
+                <button class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.onDeleteOrder(this.pos.getOrder())">
                     <i class="fa fa-trash me-1" role="img" /> Cancel Order 
                 </button>
             </div>

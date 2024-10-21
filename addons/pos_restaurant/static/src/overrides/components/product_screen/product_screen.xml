@@ -16,7 +16,7 @@
                 <t t-else="">
                     <button
                         class="btn-switchpane pay-button btn btn-lg w-50 lh-sm"
-                        t-attf-class="{{ currentOrder.is_empty() ? 'btn-light disabled' : 'btn-primary' }}"
+                        t-attf-class="{{ currentOrder.isEmpty() ? 'btn-light disabled' : 'btn-primary' }}"
                         t-on-click="() => this.pos.pay()">
                         <span class="d-block">Pay</span>
                         <small><t t-esc="total" /></small>

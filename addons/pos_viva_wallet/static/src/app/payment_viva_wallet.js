@@ -15,12 +15,12 @@ export class PaymentVivaWallet extends PaymentInterface {
         super.setup(...arguments);
         this.paymentLineResolvers = {};
     }
-    send_payment_request(uuid) {
-        super.send_payment_request(uuid);
+    sendPaymentRequest(uuid) {
+        super.sendPaymentRequest(uuid);
         return this._viva_wallet_pay(uuid);
     }
-    send_payment_cancel(order, uuid) {
-        super.send_payment_cancel(order, uuid);
+    sendPaymentCancel(order, uuid) {
+        super.sendPaymentCancel(order, uuid);
         return this._viva_wallet_cancel();
     }
     pending_viva_wallet_line() {
@@ -30,14 +30,14 @@ export class PaymentVivaWallet extends PaymentInterface {
     _call_viva_wallet(data, action) {
         return this.env.services.orm.silent
             .call("pos.payment.method", action, [[this.payment_method_id.id], data])
-            .catch(this._handle_odoo_connection_failure.bind(this));
+            .catch(this._handleOdooConnectionFailure.bind(this));
     }
 
-    _handle_odoo_connection_failure(data = {}) {
+    _handleOdooConnectionFailure(data = {}) {
         // handle timeout
         var line = this.pending_viva_wallet_line();
         if (line) {
-            line.set_payment_status("retry");
+            line.setPaymentStatus("retry");
         }
         this._show_error(
             _t(
@@ -50,7 +50,7 @@ export class PaymentVivaWallet extends PaymentInterface {
 
     _viva_wallet_handle_response(response) {
         var line = this.pending_viva_wallet_line();
-        line.set_payment_status("waitingCard");
+        line.setPaymentStatus("waitingCard");
         if (response.error) {
             this._show_error(response.error);
         }
@@ -61,11 +61,11 @@ export class PaymentVivaWallet extends PaymentInterface {
         /**
          * Override
          */
-        super.send_payment_request(...arguments);
-        var order = this.pos.get_order();
-        var line = order.get_selected_paymentline();
+        super.sendPaymentRequest(...arguments);
+        var order = this.pos.getOrder();
+        var line = order.getSelectedPaymentline();
         let customerTrns = " ";
-        line.set_payment_status("waitingCard");
+        line.setPaymentStatus("waitingCard");
 
         if (line.amount < 0) {
             this._show_error(_t("Cannot process transactions with negative amount."));
@@ -80,7 +80,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         var data = {
             sessionId: line.sessionId,
             terminalId: line.payment_method_id.viva_wallet_terminal_id,
-            cashRegisterId: this.pos.get_cashier().name,
+            cashRegisterId: this.pos.getCashier().name,
             amount: roundPrecision(line.amount * 100),
             currencyCode: this.pos.currency.iso_numeric.toString(),
             merchantReference: line.sessionId + "/" + this.pos.session.id,
@@ -98,12 +98,12 @@ export class PaymentVivaWallet extends PaymentInterface {
         /**
          * Override
          */
-        super.send_payment_cancel(...arguments);
-        const line = this.pos.get_order().get_selected_paymentline();
+        super.sendPaymentCancel(...arguments);
+        const line = this.pos.getOrder().getSelectedPaymentline();
 
         var data = {
             sessionId: line.sessionId,
-            cashRegisterId: this.pos.get_cashier().name,
+            cashRegisterId: this.pos.getCashier().name,
         };
         return this._call_viva_wallet(data, "viva_wallet_send_payment_cancel").then((data) => {
             this._viva_wallet_handle_response(data);
@@ -124,7 +124,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         );
 
         if (!notification) {
-            this._handle_odoo_connection_failure();
+            this._handleOdooConnectionFailure();
             return;
         }
 
@@ -138,12 +138,12 @@ export class PaymentVivaWallet extends PaymentInterface {
         // when starting to wait for the payment response we create a promise
         // that will be resolved when the payment response is received.
         // In case this resolver is lost ( for example on a refresh ) we
-        // we use the handle_payment_response method on the payment line
+        // we use the handlePaymentResponse method on the payment line
         const resolver = this.paymentLineResolvers?.[line.uuid];
         if (resolver) {
             resolver(isPaymentSuccessful);
         } else {
-            line.handle_payment_response(isPaymentSuccessful);
+            line.handlePaymentResponse(isPaymentSuccessful);
         }
     }
 

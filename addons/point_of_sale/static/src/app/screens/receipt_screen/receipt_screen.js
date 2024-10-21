@@ -20,8 +20,8 @@ export class ReceiptScreen extends Component {
         this.renderer = useService("renderer");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
-        this.currentOrder = this.pos.get_order();
-        const partner = this.currentOrder.get_partner();
+        this.currentOrder = this.pos.getOrder();
+        const partner = this.currentOrder.getPartner();
         this.state = useState({
             email: partner?.email || "",
             phone: partner?.mobile || "",
@@ -30,7 +30,7 @@ export class ReceiptScreen extends Component {
         this.doFullPrint = useTrackedAsync(() => this.pos.printReceipt());
         this.doBasicPrint = useTrackedAsync(() => this.pos.printReceipt({ basic: true }));
         onMounted(() => {
-            const order = this.pos.get_order();
+            const order = this.pos.getOrder();
             this.currentOrder.uiState.locked = true;
             this.pos.sendOrderInPreparation(order);
         });
@@ -44,12 +44,12 @@ export class ReceiptScreen extends Component {
     }
     get orderAmountPlusTip() {
         const order = this.currentOrder;
-        const orderTotalAmount = order.get_total_with_tax();
+        const orderTotalAmount = order.getTotalWithTax();
         const tip_product_id = this.pos.config.tip_product_id?.id;
         const tipLine = order
-            .get_orderlines()
+            .getOrderlines()
             .find((line) => tip_product_id && line.product_id.id === tip_product_id);
-        const tipAmount = tipLine ? tipLine.get_all_prices().priceWithTax : 0;
+        const tipAmount = tipLine ? tipLine.getAllPrices().priceWithTax : 0;
         const orderAmountStr = this.env.utils.formatCurrency(orderTotalAmount - tipAmount);
         if (!tipAmount) {
             return orderAmountStr;
@@ -76,7 +76,7 @@ export class ReceiptScreen extends Component {
         this.currentOrder.uiState.screen_data.value = "";
         this.currentOrder.uiState.locked = true;
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.add_new_order();
+            this.pos.addNewOrder();
         }
         this.pos.searchProductWord = "";
         const { name, props } = this.nextScreen;
@@ -87,7 +87,7 @@ export class ReceiptScreen extends Component {
         await this.renderer.toJpeg(
             OrderReceipt,
             {
-                data: this.pos.orderExportForPrinting(this.pos.get_order()),
+                data: this.pos.orderExportForPrinting(this.pos.getOrder()),
                 formatCurrency: this.env.utils.formatCurrency,
                 basic_receipt: isBasicReceipt,
             },

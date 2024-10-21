@@ -59,7 +59,7 @@ export class PaymentStripe extends PaymentInterface {
             this._showError(error);
             return false;
         }
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().getSelectedPaymentline();
         // Because the reader can only connect to one instance of the SDK at a time.
         // We need the disconnect this reader if we want to use another one
         if (
@@ -69,7 +69,7 @@ export class PaymentStripe extends PaymentInterface {
             const disconnectResult = await this.terminal.disconnectReader();
             if (disconnectResult.error) {
                 this._showError(disconnectResult.error.message, disconnectResult.error.code);
-                line.set_payment_status("retry");
+                line.setPaymentStatus("retry");
                 return false;
             } else {
                 return await this.connectReader();
@@ -82,7 +82,7 @@ export class PaymentStripe extends PaymentInterface {
     }
 
     async connectReader() {
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().getSelectedPaymentline();
         const discoveredReaders = JSON.parse(this.pos.discoveredReaders);
         for (const selectedReader of discoveredReaders) {
             if (selectedReader.serial_number == this.payment_method_id.stripe_serial_number) {
@@ -101,7 +101,7 @@ export class PaymentStripe extends PaymentInterface {
                     } else {
                         this._showError(error);
                     }
-                    line.set_payment_status("retry");
+                    line.setPaymentStatus("retry");
                     return false;
                 }
             }
@@ -139,33 +139,33 @@ export class PaymentStripe extends PaymentInterface {
     }
 
     async collectPayment(amount) {
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().getSelectedPaymentline();
         const clientSecret = await this.fetchPaymentIntentClientSecret(
             line.payment_method_id,
             amount
         );
         if (!clientSecret) {
-            line.set_payment_status("retry");
+            line.setPaymentStatus("retry");
             return false;
         }
-        line.set_payment_status("waitingCard");
+        line.setPaymentStatus("waitingCard");
         const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
         if (collectPaymentMethod.error) {
             this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
-            line.set_payment_status("retry");
+            line.setPaymentStatus("retry");
             return false;
         } else {
-            line.set_payment_status("waitingCapture");
+            line.setPaymentStatus("waitingCapture");
             const processPayment = await this.terminal.processPayment(
                 collectPaymentMethod.paymentIntent
             );
             line.transaction_id = collectPaymentMethod.paymentIntent.id;
             if (processPayment.error) {
                 this._showError(processPayment.error.message, processPayment.error.code);
-                line.set_payment_status("retry");
+                line.setPaymentStatus("retry");
                 return false;
             } else if (processPayment.paymentIntent) {
-                line.set_payment_status("waitingCapture");
+                line.setPaymentStatus("waitingCapture");
 
                 const [captured_card_type, captured_transaction_id] =
                     this._getCapturedCardAndTransactionId(processPayment);
@@ -176,7 +176,7 @@ export class PaymentStripe extends PaymentInterface {
                     await this.captureAfterPayment(processPayment, line);
                 }
 
-                line.set_payment_status("done");
+                line.setPaymentStatus("done");
                 return true;
             }
         }
@@ -255,13 +255,13 @@ export class PaymentStripe extends PaymentInterface {
         }
     }
 
-    async send_payment_request(uuid) {
+    async sendPaymentRequest(uuid) {
         /**
          * Override
          */
-        await super.send_payment_request(...arguments);
-        const line = this.pos.get_order().get_selected_paymentline();
-        line.set_payment_status("waiting");
+        await super.sendPaymentRequest(...arguments);
+        const line = this.pos.getOrder().getSelectedPaymentline();
+        line.setPaymentStatus("waiting");
         try {
             if (await this.checkReader()) {
                 return await this.collectPayment(line.amount);
@@ -272,15 +272,15 @@ export class PaymentStripe extends PaymentInterface {
         }
     }
 
-    async send_payment_cancel(order, uuid) {
+    async sendPaymentCancel(order, uuid) {
         /**
          * Override
          */
-        super.send_payment_cancel(...arguments);
-        const line = this.pos.get_order().get_selected_paymentline();
+        super.sendPaymentCancel(...arguments);
+        const line = this.pos.getOrder().getSelectedPaymentline();
         const stripeCancel = await this.stripeCancel();
         if (stripeCancel) {
-            line.set_payment_status("retry");
+            line.setPaymentStatus("retry");
             return true;
         }
     }

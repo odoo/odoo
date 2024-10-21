@@ -3,7 +3,7 @@ import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_su
 
 patch(OrderSummary.prototype, {
     bookTable() {
-        this.pos.get_order().setBooked(true);
+        this.pos.getOrder().setBooked(true);
         this.pos.showScreen("FloorScreen");
     },
     showBookButton() {
@@ -21,7 +21,7 @@ patch(OrderSummary.prototype, {
         );
     },
     unbookTable() {
-        this.pos.removeOrder(this.pos.get_order(), true);
+        this.pos.removeOrder(this.pos.getOrder(), true);
         this.pos.showScreen("FloorScreen");
     },
     showUnbookButton() {
@@ -34,10 +34,10 @@ patch(OrderSummary.prototype, {
                         o.finalized === false &&
                         !o.isBooked
                 ) &&
-                this.pos.get_order().lines.length === 0
+                this.pos.getOrder().lines.length === 0
             );
         }
-        const currentOrder = this.pos.get_order();
+        const currentOrder = this.pos.getOrder();
         return (
             this.pos.config.module_pos_restaurant &&
             !currentOrder.finalized &&

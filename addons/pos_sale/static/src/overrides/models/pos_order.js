@@ -3,8 +3,8 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosOrder.prototype, {
     //@override
-    _get_ignored_product_ids_total_discount() {
-        const productIds = super._get_ignored_product_ids_total_discount(...arguments);
+    _getIgnoredProductIdsTotalDiscount() {
+        const productIds = super._getIgnoredProductIdsTotalDiscount(...arguments);
         if (this.config.down_payment_product_id) {
             productIds.push(this.config.down_payment_product_id.id);
         }

@@ -71,7 +71,7 @@
                             <div class="spacer" />
                             <div class="pos-spaced-line-container">
                                 <div class="spacer" />
-                                <span class="pos-total_amount amount" t-esc="pos.env.utils.formatCurrency(order and order.get_total_with_tax() || 0)" />
+                                <span class="pos-total_amount amount" t-esc="pos.env.utils.formatCurrency(order and order.getTotalWithTax() || 0)" />
                             </div>
                         </div>
                     </div>
@@ -111,12 +111,12 @@
     </t>
 
     <t t-name="point_of_sale.CustomerFacingDisplayMainContainer">
-        <t t-if="order.get_current_screen_data().name === 'PaymentScreen' and order.uiState.PaymentScreen?.qrPaymentData">
+        <t t-if="order.getCurrentScreenData().name === 'PaymentScreen' and order.uiState.PaymentScreen?.qrPaymentData">
             <t t-call="point_of_sale.CustomerFacingQR"/>
         </t>
         <div class="pos_orderlines">
             <t t-if="order">
-                <t t-if="order.get_current_screen_data().name != 'ReceiptScreen'">
+                <t t-if="order.getCurrentScreenData().name != 'ReceiptScreen'">
                     <t t-call="point_of_sale.CustomerFacingDisplayOrderLines"/>
                 </t>
                 <t t-else="">
@@ -129,11 +129,11 @@
     </t>
 
     <t t-name="point_of_sale.CustomerFacingDisplayOrderLines">
-        <t t-if="order.get_orderlines().length > 0">
+        <t t-if="order.getOrderlines().length > 0">
             <div class="pos-order_top_bar">
                 <span>Your Order</span>
             </div>
-            <div class="pos_orderlines_list" t-att-class="{ 'backend_product_screen': order.get_current_screen_data().name === 'ProductScreen' }">
+            <div class="pos_orderlines_list" t-att-class="{ 'backend_product_screen': order.getCurrentScreenData().name === 'ProductScreen' }">
                 <table>
                     <thead>
                         <tr>
@@ -145,30 +145,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="order.get_orderlines()" t-key="orderline.id" t-as="orderline" class="pos_orderlines_item" t-att-class="{ 'selected_orderline': orderline.id === order.get_selected_orderline().id }">
+                        <tr t-foreach="order.getOrderlines()" t-key="orderline.id" t-as="orderline" class="pos_orderlines_item" t-att-class="{ 'selected_orderline': orderline.id === order.getSelectedOrderline().id }">
                             <td class="product_img">
                                 <img t-attf-src="#{productImages[orderline.product_id.id]}" />
                             </td>
                             <td class="product_text_info">
                                 <ul>
-                                    <li t-esc="orderline.get_full_product_name()" />
-                                    <t t-if="orderline.get_discount_str()">
+                                    <li t-esc="orderline.getFullProductName()" />
+                                    <t t-if="orderline.getDiscountStr()">
                                         <li class="product_details">
                                             <i class="fa fa-tag" role="img" aria-label="Discount" title="Discount" />
-                                        <t t-esc="orderline.get_discount_str()" />% <span class="gray">discount</span>
+                                        <t t-esc="orderline.getDiscountStr()" />% <span class="gray">discount</span>
                                         </li>
                                     </t>
-                                    <t t-if="orderline.get_customer_note()">
+                                    <t t-if="orderline.getCustomerNote()">
                                         <li class="product_details">
                                             <i class="fa fa-sticky-note" role="img" aria-label="Customer Note" title="Customer Note" />
-                                            <span class="gray" t-esc="orderline.get_customer_note()" />
+                                            <span class="gray" t-esc="orderline.getCustomerNote()" />
                                         </li>
                                     </t>
                                 </ul>
                             </td>
                             <td class="product_quantity gray">
-                                <span t-esc="orderline.get_quantity_str()" />
-                                <span t-esc="orderline.get_unit().name" />
+                                <span t-esc="orderline.getQuantityStr()" />
+                                <span t-esc="orderline.getUnit().name" />
                             </td>
                             <td>
                                 <div t-esc="pos.env.utils.formatCurrency(orderline.get_display_price())" />
@@ -201,7 +201,7 @@
                         <div class="spacer" />
                         <div class="pos-spaced-line-container">
                             <div class="spacer" />
-                            <span class="amount" t-esc="pos.env.utils.formatCurrency(paymentline.get_amount())" />
+                            <span class="amount" t-esc="pos.env.utils.formatCurrency(paymentline.getAmount())" />
                         </div>
                     </div>
                 </t>
@@ -212,7 +212,7 @@
                 <div class="spacer" />
                 <div class="pos-spaced-line-container">
                     <div class="spacer" />
-                    <span class="amount" t-esc="pos.env.utils.formatCurrency(order and order.get_change() || 0)" />
+                    <span class="amount" t-esc="pos.env.utils.formatCurrency(order and order.getChange() || 0)" />
                 </div>
             </div>
         </div>

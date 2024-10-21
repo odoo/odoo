@@ -26,7 +26,7 @@ patch(PaymentScreen.prototype, {
                     return false;
                 }
                 if (!order.partner_id) {
-                    order.set_partner(this.pos.config.simplified_partner_id);
+                    order.setPartner(this.pos.config.simplified_partner_id);
                 }
             }
         }

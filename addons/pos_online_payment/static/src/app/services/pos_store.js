@@ -10,12 +10,12 @@ patch(PosStore.prototype, {
             // Therefore, no sensitive information is sent through it, only a
             // notification to invite the local browser to do a safe RPC to
             // the server to check the new state of the order.
-            if (this.get_order()?.id === id) {
-                this.update_online_payments_data_with_server(this.get_order(), false);
+            if (this.getOrder()?.id === id) {
+                this.updateOnlinePaymentsDataWithServer(this.getOrder(), false);
             }
         });
     },
-    async update_online_payments_data_with_server(order, next_online_payment_amount) {
+    async updateOnlinePaymentsDataWithServer(order, next_online_payment_amount) {
         if (!order.id) {
             return false;
         }
@@ -24,26 +24,26 @@ patch(PosStore.prototype, {
                 order.id,
                 next_online_payment_amount,
             ]);
-            return this.process_online_payments_data_from_server(order, opData);
+            return this.processOnlinePaymentsDataFromServer(order, opData);
         } catch (ex) {
-            console.error("update_online_payments_data_with_server failed: ", ex);
+            console.error("updateOnlinePaymentsDataWithServer failed: ", ex);
             return null;
         }
     },
-    process_online_payments_data_from_server(order, opData) {
+    processOnlinePaymentsDataFromServer(order, opData) {
         if (!opData) {
             return false;
         }
         if (opData.id !== order.id) {
-            console.error("Called process_online_payments_data_from_server on the wrong order.");
+            console.error("Called processOnlinePaymentsDataFromServer on the wrong order.");
         }
         if ("paid_order" in opData) {
-            opData.is_paid = true;
+            opData.isPaid = true;
             // only one line will have the `online_payment_resolver` method
             order.payment_ids.forEach((line) => line.onlinePaymentResolver?.(true));
             return opData;
         } else {
-            opData.is_paid = false;
+            opData.isPaid = false;
         }
 
         if (opData["deleted"] === true) {
@@ -63,7 +63,7 @@ patch(PosStore.prototype, {
         const opLinesToUpdate = order.payment_ids.filter(
             (line) =>
                 line.payment_method_id.is_online_payment &&
-                ["waiting", "done"].includes(line.get_payment_status())
+                ["waiting", "done"].includes(line.getPaymentStatus())
         );
         for (const op of opData.online_payments) {
             const matchingLineIndex = opLinesToUpdate.findIndex(
@@ -85,15 +85,15 @@ patch(PosStore.prototype, {
                 });
                 opData["modified_payment_lines"] = true;
             }
-            opLine.set_amount(op.amount);
+            opLine.setAmount(op.amount);
             opLine.can_be_reversed = false;
-            if (opLine.get_payment_status() !== "done") {
+            if (opLine.getPaymentStatus() !== "done") {
                 newDoneOnlinePayment = true;
             }
-            opLine.set_payment_status("done");
+            opLine.setPaymentStatus("done");
         }
         for (const missingInServerLine of opLinesToUpdate) {
-            if (missingInServerLine.get_payment_status() === "done") {
+            if (missingInServerLine.getPaymentStatus() === "done") {
                 this.paymentlines = order.payment_ids.filter(
                     (l) => l.uuid !== missingInServerLine.uuid
                 );

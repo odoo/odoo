@@ -16,7 +16,7 @@ export class TipScreen extends Component {
         this.dialog = useService("dialog");
         this.printer = useService("printer");
         this.state = this.currentOrder.uiState.TipScreen;
-        this._totalAmount = this.currentOrder.get_total_with_tax();
+        this._totalAmount = this.currentOrder.getTotalWithTax();
 
         onMounted(async () => {
             await this.printTipReceipt();
@@ -33,7 +33,7 @@ export class TipScreen extends Component {
         return this._totalAmount;
     }
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     }
     get percentageTips() {
         return [
@@ -44,7 +44,7 @@ export class TipScreen extends Component {
     }
     async validateTip() {
         const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         const serverId = typeof order.id === "number" && order.id;
 
         if (!serverId) {
@@ -76,19 +76,19 @@ export class TipScreen extends Component {
         }
 
         order.state = "draft";
-        await this.pos.set_tip(amount);
+        await this.pos.setTip(amount);
         order.state = "paid";
 
-        const paymentline = this.pos.get_order().payment_ids[0];
+        const paymentline = this.pos.getOrder().payment_ids[0];
         if (paymentline.payment_method_id.payment_terminal) {
             paymentline.amount += amount;
-            await paymentline.payment_method_id.payment_terminal.send_payment_adjust(
+            await paymentline.payment_method_id.payment_terminal.sendPaymentAdjust(
                 paymentline.uuid
             );
         }
 
-        const serializedTipLine = order.get_selected_orderline().serialize({ orm: true });
-        order.get_selected_orderline().delete();
+        const serializedTipLine = order.getSelectedOrderline().serialize({ orm: true });
+        order.getSelectedOrderline().delete();
         const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
         await this.pos.data.write("pos.order", [serverId], {
             is_tipped: true,
@@ -98,7 +98,7 @@ export class TipScreen extends Component {
     }
     goNextScreen() {
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.add_new_order();
+            this.pos.addNewOrder();
         }
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
@@ -109,8 +109,8 @@ export class TipScreen extends Component {
     async printTipReceipt() {
         const order = this.currentOrder;
         const receipts = [
-            order.get_selected_paymentline().ticket,
-            order.get_selected_paymentline().cashier_receipt,
+            order.getSelectedPaymentline().ticket,
+            order.getSelectedPaymentline().cashier_receipt,
         ];
         for (let i = 0; i < receipts.length; i++) {
             await this.printer.print(

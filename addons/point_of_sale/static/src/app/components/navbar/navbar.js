@@ -60,11 +60,11 @@ export class Navbar extends Component {
         return Boolean(this.pos.config.cash_control && this.pos.session._has_cash_move_perm);
     }
     getOrderTabs() {
-        return this.pos.get_open_orders().filter((order) => !order.table_id);
+        return this.pos.getOpenOrders().filter((order) => !order.table_id);
     }
 
     get orderCount() {
-        return this.pos.get_open_orders().length;
+        return this.pos.getOpenOrders().length;
     }
 
     get appUrl() {

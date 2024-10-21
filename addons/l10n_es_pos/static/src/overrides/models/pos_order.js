@@ -6,11 +6,11 @@ patch(PosOrder.prototype, {
     canBeSimplifiedInvoiced() {
         return (
             this.config.is_spanish &&
-            roundCurrency(this.get_total_with_tax(), this.currency) <
+            roundCurrency(this.getTotalWithTax(), this.currency) <
                 this.company.l10n_es_simplified_invoice_limit
         );
     },
-    wait_for_push_order() {
-        return this.config.is_spanish ? true : super.wait_for_push_order(...arguments);
+    waitForPushOrder() {
+        return this.config.is_spanish ? true : super.waitForPushOrder(...arguments);
     },
 });

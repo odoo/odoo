@@ -26,7 +26,7 @@ export class PaymentScreenPaymentLines extends Component {
     }
 
     selectedLineClass(line) {
-        return { "payment-terminal": line.get_payment_status() };
+        return { "payment-terminal": line.getPaymentStatus() };
     }
     unselectedLineClass(line) {
         return {};
@@ -37,7 +37,7 @@ export class PaymentScreenPaymentLines extends Component {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
                 buttons: enhancedButtons(),
-                startingValue: this.env.utils.formatCurrency(paymentline.get_amount(), false),
+                startingValue: this.env.utils.formatCurrency(paymentline.getAmount(), false),
                 getPayload: (num) => {
                     this.props.updateSelectedPaymentline(parseFloat(num));
                 },

@@ -14,14 +14,14 @@ patch(ControlButtons.prototype, {
                     0,
                     Math.min(100, this.env.utils.parseValidFloat(num.toString()))
                 );
-                this.apply_discount(val);
+                this.applyDiscount(val);
             },
         });
     },
     // FIXME business method in a compoenent, maybe to move in pos_store
-    async apply_discount(pc) {
-        const order = this.pos.get_order();
-        const lines = order.get_orderlines();
+    async applyDiscount(pc) {
+        const order = this.pos.getOrder();
+        const lines = order.getOrderlines();
         const product = this.pos.config.discount_product_id;
 
         if (product === undefined) {
@@ -34,10 +34,10 @@ patch(ControlButtons.prototype, {
             return;
         }
         // Remove existing discounts
-        lines.filter((line) => line.get_product() === product).forEach((line) => line.delete());
+        lines.filter((line) => line.getProduct() === product).forEach((line) => line.delete());
 
         // Add one discount line per tax group
-        const linesByTax = order.get_orderlines_grouped_by_tax_ids();
+        const linesByTax = order.getOrderlinesGroupedByTaxIds();
         for (const [tax_ids, lines] of Object.entries(linesByTax)) {
             // Note that tax_ids_array is an Array of tax_ids that apply to these lines
             // That is, the use case of products with more than one tax is supported.
@@ -46,7 +46,7 @@ patch(ControlButtons.prototype, {
                 .filter((id) => id !== "")
                 .map((id) => Number(id));
 
-            const baseToDiscount = order.calculate_base_amount(
+            const baseToDiscount = order.calculateBaseAmount(
                 lines.filter((ll) => ll.isGlobalDiscountApplicable())
             );
 

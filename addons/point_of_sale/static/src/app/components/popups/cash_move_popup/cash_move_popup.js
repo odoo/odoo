@@ -46,7 +46,7 @@ export class CashMovePopup extends Component {
         await this.pos.data.call(
             "pos.session",
             "try_cash_in_out",
-            this._prepare_try_cash_in_out_payload(type, amount, reason, extras),
+            this._prepareTryCashInOutPayload(type, amount, reason, extras),
             {},
             true
         );
@@ -84,7 +84,7 @@ export class CashMovePopup extends Component {
             ? this.env.utils.formatCurrency(parseFloat(value))
             : "";
     }
-    _prepare_try_cash_in_out_payload(type, amount, reason, extras) {
+    _prepareTryCashInOutPayload(type, amount, reason, extras) {
         return [[this.pos.session.id], type, amount, reason, extras];
     }
 }

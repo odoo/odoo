@@ -33,7 +33,7 @@
                         </t>
                     </div>
                 </button>
-                <button t-if="!currentOrder.is_empty()"
+                <button t-if="!currentOrder.isEmpty()"
                     t-on-click="() => pos.pay()" 
                     class="button pay-order-button btn btn-lg w-50"
                     t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-light' }}" 
