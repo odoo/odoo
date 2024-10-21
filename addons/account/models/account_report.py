@@ -91,8 +91,8 @@ class AccountReport(models.Model):
 
     filter_multi_company = fields.Selection(
         string="Multi-Company",
-        selection=[('disabled', "Disabled"), ('selector', "Use Company Selector"), ('tax_units', "Use Tax Units")],
-        compute=lambda x: x._compute_report_option_filter('filter_multi_company', 'disabled'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        selection=[('selector', "Use Company Selector"), ('tax_units', "Use Tax Units")],
+        compute=lambda x: x._compute_report_option_filter('filter_multi_company', 'selector'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_date_range = fields.Boolean(
         string="Date Range",
