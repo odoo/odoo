@@ -231,7 +231,7 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").ResGroups} */
         const ResGroups = this.env["res.groups"];
 
-        const [data] = this.read(
+        const [data] = this._read_format(
             ids,
             [
                 "allow_public_upload",
