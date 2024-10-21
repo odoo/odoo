@@ -1,0 +1,131 @@
+<html>
+<head>
+  <style>
+    table {
+      width: 100%;
+    }
+    thead {
+      background-color: #f0f0f0;
+      color: #333;
+      position: sticky;
+      top: 0;
+      z-index: 1; /* Ensure the header stays above the table rows */
+    }
+    thead th {
+      border-bottom: 2px solid #a3a3a3;
+    }
+    tbody th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    tbody tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+    tbody tr:hover {
+      background-color: #d8d8d8;
+    }
+    .log-level-debug {
+      color: blue;
+    }
+    .log-level-info {
+      color: green;
+    }
+    .log-level-warning {
+      color: orange;
+    }
+    .log-level-error {
+      color: red;
+    }
+    .log-level-critical {
+      color: darkred;
+    }
+    select {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+  <script>
+    function loggingSelectChange(element, loggerName) {
+      element.name = loggerName;
+      element.form.submit();
+    }
+  </script>
+</head>
+<body>
+{% macro render_log_level_row(log_node, tree_level) -%}
+  {% set log_level_color = {
+    'debug': 'log-level-debug',
+      'info': 'log-level-info',
+      'warning': 'log-level-warning',
+      'error': 'log-level-error',
+      'critical': 'log-level-critical',
+  } %}
+  <tr>
+    <td style="opacity: {{ '0.6' if not log_node.exists else '1' }}; padding-left: {{ 8 + tree_level * 5 }}px;" 
+    {% if not log_node.exists %}
+      colspan="3"
+      title="Logger uninitialised for the python module: {{ log_node.logger_name }}"
+    {% else %}
+      title="Full name: {{ log_node.logger_name }}"
+    {% endif %}
+    >
+      {{ log_node.logger__name__ }}</td>
+    {% if log_node.exists %}
+      <td class="{{ log_level_color[log_node.level_efficient_str] }}"
+      {% if log_node.is_level_inherited %}
+        title="Inherited from parent logger: {{ log_node.parent.logger__name__ }}"
+      {% endif %}
+      >
+      {% if log_node.is_level_inherited %}
+        <i>
+      {% endif %}
+      {{ log_node.level_efficient_str }}
+      {% if log_node.is_level_inherited %}
+        </i>
+      {% endif %}
+      </td>
+      <td>
+      <select class="logging-selection" onchange="loggingSelectChange(this, '{{ log_node.logger_name }}')" >
+        {% for level in log_node.available_levels %}
+          <option value="{{ level }}" 
+          {% if log_node.is_level_inherited and level == 'parent' or not log_node.is_level_inherited and level == log_node.level_efficient_str %}
+            selected
+          {% endif %}
+          >
+            {{ level }}
+          </option>
+        {% endfor %}
+      </select>
+      </td>
+    {% endif %}
+  </tr>
+  
+  {% for child in log_node.children %}
+      {{ render_log_level_row(child, tree_level + 1) }}
+  {% endfor %}
+{%- endmacro %}
+
+<form method="POST">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th><th>Level</th><th>Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ render_log_level_row(log_tree, 0) }}
+    </tbody>
+  </table>
+</form>
+
+
+</body>
+</html>
