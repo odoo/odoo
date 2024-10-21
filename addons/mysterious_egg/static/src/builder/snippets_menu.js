@@ -27,8 +27,8 @@ export class SnippetsMenu extends Component {
         // const actionService = useService("action");
         this.pages = [blockTab, customizeTab];
         this.state = useState({
-            canUndo: true,
-            canRedo: true,
+            canUndo: false,
+            canRedo: false,
             activeTab: "blocks",
             selectedSnippet: undefined,
         });
@@ -36,6 +36,10 @@ export class SnippetsMenu extends Component {
             {
                 disableFloatingToolbar: true,
                 Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN],
+                onChange: () => {
+                    this.state.canUndo = this.editor.shared.canUndo();
+                    this.state.canRedo = this.editor.shared.canRedo();
+                },
                 resources: {
                     onSnippetChange: (element) => {
                         this.state.selectedSnippet = element;
@@ -67,6 +71,14 @@ export class SnippetsMenu extends Component {
 
     setTab(tab) {
         this.state.activeTab = tab;
+    }
+
+    undo() {
+        this.editor.dispatch("HISTORY_UNDO");
+    }
+
+    redo() {
+        this.editor.dispatch("HISTORY_REDO");
     }
 }
 
