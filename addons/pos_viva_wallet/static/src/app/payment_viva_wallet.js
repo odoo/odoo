@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { sprintf } from "@web/core/utils/strings";
+import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
 
 export class PaymentVivaWallet extends PaymentInterface {
@@ -86,7 +87,7 @@ export class PaymentVivaWallet extends PaymentInterface {
             "sessionId": line.sessionId,
             "terminalId": line.payment_method.viva_wallet_terminal_id,
             "cashRegisterId": this.pos.get_cashier().name,
-            "amount": line.amount * 100,
+            "amount": roundPrecision(line.amount * 100, 1),
             "currencyCode": '978', // Viva wallet only uses EUR 978 need add a new field numeric_code in res.currency
             "merchantReference": line.sessionId + '/' + this.pos.pos_session.id,
             "customerTrns": customerTrns,

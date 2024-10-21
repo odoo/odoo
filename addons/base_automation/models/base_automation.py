@@ -743,7 +743,7 @@ class BaseAutomation(models.Model):
                 pre = {a: a._filter_pre(records) for a in automations}
                 # read old values before the update
                 old_values = {
-                    record.id: {field_name: record[field_name] for field_name in vals if field_name in record._fields}
+                    record.id: {field_name: record[field_name] for field_name in vals if field_name in record._fields and record._fields[field_name].store}
                     for record in records
                 }
                 # call original method

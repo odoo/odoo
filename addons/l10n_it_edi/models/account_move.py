@@ -349,10 +349,13 @@ class AccountMove(models.Model):
     def _get_l10n_it_amount_split_payment(self):
         self.ensure_one()
         amount = 0.0
-        if self.is_invoice(True):
-            for line in [line for line in self.line_ids if line.tax_line_id]:
-                if line.tax_line_id._l10n_it_is_split_payment() and line.credit > 0.0:
-                    amount += line.credit
+        if self.is_sale_document(False):
+            for line in self.line_ids:
+                if line.tax_line_id and line.tax_line_id._l10n_it_is_split_payment():
+                    if self.move_type  == 'out_invoice':
+                        amount += line.credit
+                    else:
+                        amount += line.debit
         return amount
 
     def _l10n_it_edi_get_values(self, pdf_values=None):
@@ -1236,9 +1239,6 @@ class AccountMove(models.Model):
             if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type and move.l10n_it_cig and move.l10n_it_cup):
                 message = _("CIG/CUP fields of partner(s) are present, please fill out Origin Document Type field in the Electronic Invoicing tab.")
                 errors['move_missing_origin_document_field'] = build_error(message=message, records=moves)
-        if moves := self.filtered(lambda move: not move.l10n_it_document_type):
-            message = _("Please fill out the Document Type field in the Electronic Invoicing tab.")
-            errors['move_missing_document_type'] = build_error(message=message, records=moves)
         return errors
 
     def _l10n_it_edi_export_taxes_check(self):
