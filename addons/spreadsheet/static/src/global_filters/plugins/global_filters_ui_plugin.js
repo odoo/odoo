@@ -283,7 +283,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 }
                 const year = String(DateTime.local().year + value.yearOffset);
                 const period = QUARTER_OPTIONS[value.period];
-                let periodStr = period && period.description;
+                let periodStr = period && "Q" + period.setParam.quarter; // we do not want the translated value (like T1 in French)
                 // Named months aren't in QUARTER_OPTIONS
                 if (!period) {
                     periodStr =
