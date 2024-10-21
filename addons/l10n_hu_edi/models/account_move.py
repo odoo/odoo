@@ -315,8 +315,8 @@ class AccountMove(models.Model):
     # === EDI: Flow === #
 
     def _l10n_hu_edi_check_invoices(self):
-        errors = []
         hu_vat_regex = re.compile(r'\d{8}-[1-5]-\d{2}')
+        hu_bank_account_regex = re.compile(r'\d{8}-\d{8}-\d{8}|\d{8}-\d{8}|[A-Z]{2}\d{2}[0-9A-Za-z]{11,30}')
 
         # This contains all the advance invoices that correspond to final invoices in `self`.
         advance_invoices = self.filtered(lambda m: not m._is_downpayment()).invoice_line_ids._get_downpayment_lines().mapped('move_id')
@@ -346,6 +346,11 @@ class AccountMove(models.Model):
                 'records': self.company_id.filtered(lambda c: c.currency_id.name != 'HUF'),
                 'message': _('Please use HUF as company currency!'),
                 'action_text': _('View Company/ies'),
+            },
+            'partner_bank_account_invalid': {
+                'records': self.partner_bank_id.filtered(lambda p: not hu_bank_account_regex.fullmatch(p.acc_number)),
+                'message': _('Please set a valid recipient bank account number!'),
+                'action_text': _('View partner(s)'),
             },
             'partner_vat_missing': {
                 'records': self.partner_id.commercial_partner_id.filtered(
