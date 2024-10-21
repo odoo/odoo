@@ -172,6 +172,8 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
             // If the next sibling is a whitespace, remove it.
             nextSibling.remove();
             nextSibling = this.nextSibling;
+        } else {
+            break;
         }
     }
 
