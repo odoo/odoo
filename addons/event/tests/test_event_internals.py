@@ -105,81 +105,6 @@ class TestEventData(TestEventInternalsCommon):
             "Translated answer names should be copied.")
 
     @users('user_eventmanager')
-    def test_event_date_computation(self):
-        event = self.event_0.with_user(self.env.user)
-        with freeze_time(self.reference_now):
-            event.write({
-                'registration_ids': [(0, 0, {'partner_id': self.event_customer.id, 'name': 'test_reg'})],
-                'date_begin': datetime(2020, 1, 31, 15, 0, 0),
-                'date_end': datetime(2020, 4, 5, 18, 0, 0),
-            })
-            registration = event.registration_ids[0]
-            self.assertEqual(registration.event_date_range, 'today')
-
-            event.date_begin = datetime(2020, 2, 1, 15, 0, 0)
-            registration.invalidate_recordset(['event_date_range'])
-            self.assertEqual(registration.event_date_range, 'tomorrow')
-
-            event.date_begin = datetime(2020, 2, 2, 6, 0, 0)
-            registration.invalidate_recordset(['event_date_range'])
-            self.assertEqual(registration.event_date_range, 'in 2 days')
-
-            event.date_begin = datetime(2020, 2, 20, 17, 0, 0)
-            registration.invalidate_recordset(['event_date_range'])
-            self.assertEqual(registration.event_date_range, 'next month')
-
-            event.date_begin = datetime(2020, 3, 1, 10, 0, 0)
-            registration.invalidate_recordset(['event_date_range'])
-            self.assertEqual(registration.event_date_range, 'on Mar 1, 2020')
-
-            # Is actually 8:30 to 20:00 in Mexico
-            event.write({
-                'date_begin': datetime(2020, 1, 31, 14, 30, 0),
-                'date_end': datetime(2020, 2, 1, 2, 0, 0),
-                'date_tz': 'America/Mexico_City'
-            })
-            self.assertTrue(event.is_one_day)
-
-        # Checks case when mocked today changes date before event, when event.date_tz considered
-        with freeze_time(datetime(2020, 6, 20, 20, 0, 0)):
-            event.write({
-                'date_begin': datetime(2020, 6, 27, 1, 0, 0),
-                'date_end': datetime(2020, 7, 8, 2, 0, 0),
-                'date_tz': 'America/Los_Angeles'
-            })
-            # event_date_tz = 2020-06-26 18:00
-            # today_tz = 2020-06-20 13:00
-            # event_date_tz.date() - today_tz.date() = 6 days
-            registration.invalidate_recordset(['event_date_range'])
-            self.assertEqual(registration.event_date_range, 'in 6 days')
-
-        # Checks case when event changes date before mocked today, when event.date_tz considered
-        with freeze_time(datetime(2020, 6, 20, 13, 0, 0)):
-            event.write({
-                'date_begin': datetime(2020, 6, 25, 20, 0, 0),
-                'date_end': datetime(2020, 7, 8, 2, 0, 0),
-                'date_tz': 'Australia/Sydney'
-            })
-            # event_date_tz = 2020-06-26 06:00
-            # today_tz = 2020-06-20 23:00
-            # event_date_tz.date() - today_tz.date() = 6 days
-            registration.invalidate_recordset(['event_date_range'])
-            self.assertEqual(registration.event_date_range, 'in 6 days')
-
-    @freeze_time('2020-1-31 10:00:00')
-    @users('user_eventmanager')
-    def test_event_date_timezone(self):
-        event = self.event_0.with_user(self.env.user)
-        # Is actually 8:30 to 20:00 in Mexico
-        event.write({
-            'date_begin': datetime(2020, 1, 31, 14, 30, 0),
-            'date_end': datetime(2020, 2, 1, 2, 0, 0),
-            'date_tz': 'America/Mexico_City'
-        })
-        self.assertTrue(event.is_one_day)
-        self.assertFalse(event.is_ongoing)
-
-    @users('user_eventmanager')
     @mute_logger('odoo.models.unlink')
     def test_event_configuration_from_type(self):
         """ Test data computation of event coming from its event.type template. """
@@ -406,6 +331,90 @@ class TestEventData(TestEventInternalsCommon):
             set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
             set(['Registration Ticket'])
         )
+
+    @users('user_eventmanager')
+    def test_event_date_computation(self):
+        event = self.event_0.with_user(self.env.user)
+        with freeze_time(self.reference_now):
+            event.write({
+                'registration_ids': [(0, 0, {'partner_id': self.event_customer.id, 'name': 'test_reg'})],
+                'date_begin': datetime(2020, 1, 31, 15, 0, 0),
+                'date_end': datetime(2020, 4, 5, 18, 0, 0),
+            })
+            registration = event.registration_ids[0]
+            self.assertEqual(registration.event_date_range, 'today')
+
+            event.date_begin = datetime(2020, 2, 1, 15, 0, 0)
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'tomorrow')
+
+            event.date_begin = datetime(2020, 2, 2, 6, 0, 0)
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'in 2 days')
+
+            event.date_begin = datetime(2020, 2, 20, 17, 0, 0)
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'next month')
+
+            event.date_begin = datetime(2020, 3, 1, 10, 0, 0)
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'on Mar 1, 2020')
+
+            # Is actually 8:30 to 20:00 in Mexico
+            event.write({
+                'date_begin': datetime(2020, 1, 31, 14, 30, 0),
+                'date_end': datetime(2020, 2, 1, 2, 0, 0),
+                'date_tz': 'America/Mexico_City'
+            })
+            self.assertTrue(event.is_one_day)
+
+        # Checks case when mocked today changes date before event, when event.date_tz considered
+        with freeze_time(datetime(2020, 6, 20, 20, 0, 0)):
+            event.write({
+                'date_begin': datetime(2020, 6, 27, 1, 0, 0),
+                'date_end': datetime(2020, 7, 8, 2, 0, 0),
+                'date_tz': 'America/Los_Angeles'
+            })
+            # event_date_tz = 2020-06-26 18:00
+            # today_tz = 2020-06-20 13:00
+            # event_date_tz.date() - today_tz.date() = 6 days
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'in 6 days')
+
+        # Checks case when event changes date before mocked today, when event.date_tz considered
+        with freeze_time(datetime(2020, 6, 20, 13, 0, 0)):
+            event.write({
+                'date_begin': datetime(2020, 6, 25, 20, 0, 0),
+                'date_end': datetime(2020, 7, 8, 2, 0, 0),
+                'date_tz': 'Australia/Sydney'
+            })
+            # event_date_tz = 2020-06-26 06:00
+            # today_tz = 2020-06-20 23:00
+            # event_date_tz.date() - today_tz.date() = 6 days
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'in 6 days')
+
+    @freeze_time('2020-1-31 10:00:00')
+    @users('user_eventmanager')
+    def test_event_date_timezone(self):
+        event = self.event_0.with_user(self.env.user)
+        # Is actually 8:30 to 20:00 in Mexico
+        event.write({
+            'date_begin': datetime(2020, 1, 31, 14, 30, 0),
+            'date_end': datetime(2020, 2, 1, 2, 0, 0),
+            'date_tz': 'America/Mexico_City'
+        })
+        self.assertTrue(event.is_one_day)
+        self.assertFalse(event.is_ongoing)
+
+        # Should apply default datetimes
+        with freeze_time(self.reference_now):
+            default_event = self.env['event.event'].create({
+                'name': 'Test Default Event',
+            })
+        self.assertEqual(default_event.date_begin, self.reference_now)
+        self.assertEqual(default_event.date_end, self.reference_now + timedelta(days=1))
+        self.assertEqual(default_event.date_tz, self.user_eventmanager.tz)
 
     @users('user_eventmanager')
     def test_event_mail_default_config(self):
