@@ -29,16 +29,16 @@ class ApplicantGetRefuseReason(models.TransientModel):
     def _compute_send_mail(self):
         for wizard in self:
             template = wizard.refuse_reason_id.template_id
-            wizard.send_mail = bool(template)
+            wizard.send_mail = template and not wizard.applicant_without_email
             wizard.template_id = template
 
-    @api.depends('applicant_ids', 'send_mail', 'single_applicant_email')
+    @api.depends('applicant_ids', 'single_applicant_email')
     def _compute_applicant_without_email(self):
         for wizard in self:
             applicants = wizard.applicant_ids.filtered(lambda x: not x.email_from and not x.partner_id.email)
-            if applicants and wizard.send_mail and not wizard.single_applicant_email:
+            if applicants and not wizard.single_applicant_email:
                 wizard.applicant_without_email = "%s\n%s" % (
-                    _("The email will not be sent to the following applicant(s) as they don't have an email address:"),
+                    _("You can't select Send email option.\nThe email will not be sent to the following applicant(s) as they don't have an email address:"),
                     ",\n".join([i.partner_name or i.display_name for i in applicants])
                 )
             else:
@@ -67,40 +67,36 @@ class ApplicantGetRefuseReason(models.TransientModel):
         if self.send_mail:
             if not self.template_id:
                 raise UserError(_("Email template must be selected to send a mail"))
-            if not self.applicant_ids.filtered(lambda x: x.email_from or x.partner_id.email):
-                raise UserError(_("Email of the applicant is not set, email won't be sent."))
+            if any(not (applicant.email_from or applicant.partner_id.email) for applicant in self.applicant_ids):
+                raise UserError(_("At least one applicant doesn't have a email; you can't use send email option."))
 
         refused_applications = self.applicant_ids
+        # duplicates_count can be true only if only one application is selected
         if self.duplicates_count and self.duplicates:
-            duplicate_domain = self.applicant_ids._get_similar_applicants_domain()
-            duplicate_domain = expression.AND([duplicate_domain, [('application_status', '!=', 'refused')]])
-            duplicates_ids = self.env['hr.applicant'].search(duplicate_domain)
-            refused_applications |= duplicates_ids
-            refuse_bodies = {}
-            for duplicate in duplicates_ids:
-                url = '/odoo/hr.applicant/%s' % (self.applicant_ids[0].id)
-                message = _(
-                    "Refused automatically because this application has been identified as a duplicate of %(link)s",
-                    link=Markup("<a href=%s>%s</a>") % (url, self.applicant_ids[0].partner_name))
-                refuse_bodies[duplicate.id] = message
-
-            duplicates_ids._message_log_batch(refuse_bodies)
+            applicant_id = self.applicant_ids[0]
+            duplicate_domain = applicant_id.candidate_id._get_similar_candidates_domain()
+            duplicates = self.env['hr.candidate'].search(duplicate_domain).applicant_ids
+            refused_applications |= duplicates
+            url = applicant_id._get_html_link()
+            message = _(
+                "Refused automatically because this application has been identified as a duplicate of %(link)s",
+                link=url)
+            duplicates._message_log_batch(bodies={duplicate.id: message for duplicate in duplicates})
         refused_applications.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False, 'refuse_date': datetime.now()})
 
         if self.send_mail:
-            applicants = self.applicant_ids.filtered(lambda x: x.email_from or x.partner_id.email)
             # TDE note: keeping 16.0 behavior, clean me please
             message_values = {
                 'email_layout_xmlid' : 'hr_recruitment.mail_notification_light_without_background',
             }
-            if len(applicants) > 1:
-                applicants.with_context(active_test=True).message_mail_with_source(
+            if len(self.applicant_ids) > 1:
+                self.applicant_ids.with_context(active_test=True).message_mail_with_source(
                     self.template_id,
                     auto_delete_keep_log=True,
                     **message_values
                 )
             else:
-                applicants.with_context(active_test=True).message_post_with_source(
+                self.applicant_ids.with_context(active_test=True).message_post_with_source(
                     self.template_id,
                     subtype_xmlid='mail.mt_note',
                     **message_values
