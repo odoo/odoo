@@ -305,10 +305,23 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'due_date': None,
         })
 
+        vals['vals']['accounting_supplier_party_vals']['party_vals'].update(
+            self._l10n_sa_get_supplier_party_vals(invoice))
         vals['vals']['legal_monetary_total_vals'].update(self._l10n_sa_get_monetary_vals(invoice, vals))
         self._l10n_sa_postprocess_line_vals(vals)
 
         return vals
+
+    def _l10n_sa_get_supplier_party_vals(self, invoice):
+        if invoice.journal_id.l10n_sa_branch_id:
+            supplier = invoice.company_id.partner_id.commercial_partner_id
+            return {
+                'party_identification_vals': [{
+                    'id_attrs': {'schemeID': supplier.l10n_sa_additional_identification_scheme},
+                    'id': invoice.journal_id.l10n_sa_branch_id,
+                }]
+            }
+        return {}
 
     def _l10n_sa_postprocess_line_vals(self, vals):
         """
