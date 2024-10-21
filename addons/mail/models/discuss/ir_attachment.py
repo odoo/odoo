@@ -25,6 +25,6 @@ class IrAttachment(models.Model):
         return attachment_format
 
     def _post_add_create(self, **kwargs):
-        super()._post_add_create()
+        super()._post_add_create(**kwargs)
         if kwargs.get('voice'):
             self.env["discuss.voice.metadata"].create([{"attachment_id": attachment.id} for attachment in self])
