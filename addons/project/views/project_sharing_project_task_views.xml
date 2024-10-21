@@ -332,6 +332,7 @@
     <record id="project_sharing_project_task_action" model="ir.actions.act_window">
         <field name="name">Project Sharing</field>
         <field name="res_model">project.task</field>
+        <field name="path">project_sharing</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
         <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>

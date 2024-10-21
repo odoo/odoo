@@ -16,8 +16,8 @@ class ProjectCustomerPortal(CustomerPortal):
             company = timesheet.company_id or request.env.user.company_id
         return company
 
-    def _prepare_project_sharing_session_info(self, project, task=None):
-        session_info = super()._prepare_project_sharing_session_info(project, task)
+    def _prepare_project_sharing_session_info(self, project):
+        session_info = super()._prepare_project_sharing_session_info(project)
         company = request.env['res.company'].sudo().browse(session_info['user_companies']['current_company'])
         timesheet_encode_uom = company.timesheet_encode_uom_id
         project_time_mode_uom = company.project_time_mode_id
