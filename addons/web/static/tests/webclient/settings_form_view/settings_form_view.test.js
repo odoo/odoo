@@ -1,7 +1,8 @@
-import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
+import { after, beforeEach, expect, getFixture, test } from "@odoo/hoot";
 import { click, edit, queryAllProperties, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockSendBeacon, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import {
+    clickModalButton,
     clickSave,
     defineActions,
     defineModels,
@@ -19,6 +20,8 @@ import {
     patchWithCleanup,
     serverState,
     stepAllNetworkCalls,
+    swipeLeft,
+    swipeRight,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -30,8 +33,6 @@ import { redirect } from "@web/core/utils/urls";
 
 const MOCK_IMAGE =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
-
-describe.current.tags("desktop");
 
 class ResConfigSettings extends models.Model {
     _name = "res.config.settings";
@@ -69,7 +70,12 @@ class Task extends models.Model {
     _records = [{ id: 100, file: "coucou==\n", file_name: "coucou.txt" }];
 }
 
-defineModels([ResConfigSettings, Task]);
+class Project extends models.Model {
+    foo = fields.Boolean({ string: "Foo" });
+    bar = fields.Boolean({ string: "Bar" });
+}
+
+defineModels([ResConfigSettings, Task, Project]);
 
 beforeEach(() => {
     patchWithCleanup(SettingsFormCompiler.prototype, {
@@ -80,7 +86,7 @@ beforeEach(() => {
     });
 });
 
-test("change setting on nav bar click in base settings", async () => {
+test.tags("desktop")("change setting on nav bar click in base settings on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "res.config.settings",
@@ -143,6 +149,153 @@ test("change setting on nav bar click in base settings", async () => {
     ]);
     expect(".o_form_editable").not.toHaveClass("o_form_nosheet");
     expect(".o_searchview input").toBeFocused({ message: "searchview input should be focused" });
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
+    expect(".o_setting_box a").toHaveCount(2);
+    expect(".o_setting_box a:eq(0)").toHaveAttribute(
+        "href",
+        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
+    );
+    expect(".o_setting_box a:eq(1)").toHaveAttribute(
+        "href",
+        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html"
+    );
+
+    await editSearch("Hello there");
+    expect(".o_searchview input").toHaveValue("Hello there", {
+        message: "input value should be updated",
+    });
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
+
+    await editSearch("b");
+    expect(queryFirst(".highlighter")).toHaveText("B", { message: "b word highlighted" });
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
+        ["Bar", "Big BAZ"],
+        { message: "Foo is not shown" }
+    );
+
+    expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual(["Title of group Bar"], {
+        message: "The title of group Bar is also selected",
+    });
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
+
+    await editSearch("Big");
+    expect(queryAllTexts(".o_settings_container  .o_setting_box .o_form_label")).toEqual(
+        ["Big BAZ"],
+        { message: "Only 'Big Baz' is shown" }
+    );
+    expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual(["Title of group Bar"], {
+        message: "The title of group Bar is also selected",
+    });
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
+
+    await editSearch("Manage Us");
+    expect(queryFirst(".highlighter")).toHaveText("Manage Us", {
+        message: "Manage Us word highlighted",
+    });
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(["Bar"], {
+        message: "Foo is not shown",
+    });
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
+
+    await editSearch("group Bar");
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
+        ["Bar", "Big BAZ"],
+        { message: "When searching a title, all group is shown" }
+    );
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
+
+    await editSearch("different");
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
+        ["Personalize setting"],
+        { message: "When searching a title, all group is shown" }
+    );
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
+
+    await editSearch("bx");
+    await animationFrame();
+    expect(".o_nocontent_help").toBeDisplayed({ message: "record not found message shown" });
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
+
+    await editSearch("Fo");
+    expect(queryFirst(".highlighter")).toHaveText("Fo", { message: "Fo word highlighted" });
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
+        ["Foo", "Personalize setting"],
+        { message: "only settings in group Foo is shown" }
+    );
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
+
+    await editSearch("Hide");
+    expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual([], {
+        message: "Hide settings should not be shown",
+    });
+    expect(queryAllTexts(".o_settings_container  .o_setting_box .o_form_label")).toEqual([], {
+        message: "Hide settings should not be shown",
+    });
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
+});
+
+test.tags("mobile")("change setting on nav bar click in base settings on mobile", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <setting type="header" string="Foo">
+                        <field name="foo" title="Foo?."/>
+                        <button name="nameAction" type="object" string="Button" class="btn btn-link"/>
+                    </setting>
+                    <block title="Title of group Bar">
+                        <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
+                            <field name="bar"/>
+                            <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
+                        </setting>
+                        <setting>
+                            <label string="Big BAZ" for="baz"/>
+                            <div class="text-muted">this is a baz</div>
+                            <field name="baz"/>
+                            <label>label with content</label>
+                        </setting>
+                    </block>
+                    <block title="Title of group Foo">
+                        <setting help="this is foo" documentation="https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html">
+                            <field name="foo"/>
+                        </setting>
+                        <setting string="Personalize setting" help="this is full personalize setting">
+                            <div>This is a different setting</div>
+                        </setting>
+                    </block>
+                    <block title="Hide group Foo" invisible="not bar">
+                        <setting string="Hide Foo" help="this is hide foo">
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+
+    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
+    expect(".settings .app_settings_block").toBeDisplayed({
+        message: "res.config.settings settings show",
+    });
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual([
+        "Bar",
+        "Big BAZ",
+        "Foo",
+        "Personalize setting",
+    ]);
+    expect(queryAllTexts(".settings .text-muted")).toEqual([
+        "this is bar",
+        "this is a baz",
+        "this is foo",
+        "this is full personalize setting",
+    ]);
+    expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual([
+        "Title of group Bar",
+        "Title of group Foo",
+    ]);
+    expect(".o_form_editable").not.toHaveClass("o_form_nosheet");
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
     expect(".o_setting_box a").toHaveCount(2);
     expect(".o_setting_box a:eq(0)").toHaveAttribute(
@@ -413,27 +566,29 @@ test("hide / show setting tips properly", async () => {
     });
 });
 
-test("settings views does not read existing id when coming back in breadcrumbs", async () => {
-    expect.assertions(4);
-    onRpc("has_group", () => true);
-    defineActions([
-        {
-            id: 1,
-            name: "Settings view",
-            res_model: "res.config.settings",
-            type: "ir.actions.act_window",
-            views: [[1, "form"]],
-        },
-        {
-            id: 4,
-            name: "Other action",
-            res_model: "task",
-            type: "ir.actions.act_window",
-            views: [[2, "list"]],
-        },
-    ]);
+test.tags("desktop")(
+    "settings views does not read existing id when coming back in breadcrumbs",
+    async () => {
+        expect.assertions(4);
+        onRpc("has_group", () => true);
+        defineActions([
+            {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+            {
+                id: 4,
+                name: "Other action",
+                res_model: "task",
+                type: "ir.actions.act_window",
+                views: [[2, "list"]],
+            },
+        ]);
 
-    ResConfigSettings._views.form = /* xml */ `
+        ResConfigSettings._views.form = /* xml */ `
         <form string="Settings" js_class="base_settings">
             <app string="CRM" name="crm">
                 <block>
@@ -445,37 +600,38 @@ test("settings views does not read existing id when coming back in breadcrumbs",
             </app>
         </form>
     `;
-    Task._views.list = /* xml */ `
+        Task._views.list = /* xml */ `
         <list>
             <field name="display_name"/>
         </list>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
-    onRpc(({ method }) => {
-        if (method && method !== "has_group") {
-            expect.step(method);
-        }
-    });
+        ResConfigSettings._views.search = /* xml */ `<search/>`;
+        Task._views.search = /* xml */ `<search/>`;
+        onRpc(({ method }) => {
+            if (method && method !== "has_group") {
+                expect.step(method);
+            }
+        });
 
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(1);
-    expect(".o_field_boolean input").toHaveProperty("disabled", false);
-    await click("button[name='4']");
-    await animationFrame();
-    expect(".breadcrumb").toHaveText("Settings");
-    await click(".o_control_panel .breadcrumb-item a");
-    await animationFrame();
-    expect(".o_field_boolean input").toHaveProperty("disabled", false);
-    expect.verifySteps([
-        "get_views", // initial setting action
-        "onchange", // this is a setting view => new record transient record
-        "web_save", // create the record before doing the action
-        "get_views", // for other action in breadcrumb,
-        "web_search_read", // with a searchread
-        "onchange", // when we come back, we want to restart from scratch
-    ]);
-});
+        await mountWithCleanup(WebClient);
+        await getService("action").doAction(1);
+        expect(".o_field_boolean input").toHaveProperty("disabled", false);
+        await click("button[name='4']");
+        await animationFrame();
+        expect(".breadcrumb").toHaveText("Settings");
+        await click(".o_control_panel .breadcrumb-item a");
+        await animationFrame();
+        expect(".o_field_boolean input").toHaveProperty("disabled", false);
+        expect.verifySteps([
+            "get_views", // initial setting action
+            "onchange", // this is a setting view => new record transient record
+            "web_save", // create the record before doing the action
+            "get_views", // for other action in breadcrumb,
+            "web_search_read", // with a searchread
+            "onchange", // when we come back, we want to restart from scratch
+        ]);
+    }
+);
 
 test("resIds should contains only 1 id", async () => {
     expect.assertions(1);
@@ -798,7 +954,7 @@ test("settings views does not write the id on the url", async () => {
     expect(browser.location.pathname).toBe("/odoo/settings");
 });
 
-test("settings views can search when coming back in breadcrumbs", async () => {
+test.tags("desktop")("settings views can search when coming back in breadcrumbs", async () => {
     onRpc("has_group", () => true);
     defineActions([
         {
@@ -959,11 +1115,11 @@ test("clicking on any button in setting should show discard warning if setting f
     await animationFrame();
     expect(".modal").toHaveCount(1, { message: "should open a warning dialog" });
 
-    await click(".modal-footer .btn:eq(2)"); // Discard
+    await clickModalButton({ text: "Discard" });
     await animationFrame();
 
     expect(".o_list_view").toHaveCount(1, { message: "should be open list view" });
-    await click(".o_control_panel .breadcrumb-item a");
+    await click(".o_control_panel .breadcrumb-item a, .o_back_button");
     await animationFrame();
     expect(".o_field_boolean input:checked").toHaveCount(0, {
         message: "checkbox should not be checked",
@@ -975,7 +1131,7 @@ test("clicking on any button in setting should show discard warning if setting f
     await animationFrame();
     expect(".modal").toHaveCount(1, { message: "should open a warning dialog" });
 
-    await click(".modal-footer .btn:eq(1)"); // Stay Here
+    await clickModalButton({ text: "Stay Here" });
     expect(".o_form_view").toHaveCount(1, { message: "should be remain on form view" });
 
     await clickSave();
@@ -1112,7 +1268,7 @@ test("click on save button which throws an error", async () => {
     await animationFrame();
     expect(".o_error_dialog").toHaveCount(1);
 
-    await click(".o_error_dialog .btn-close");
+    await clickModalButton({ text: "Close" });
     await animationFrame();
     expect(".o_form_button_save").toHaveCount(1);
     expect(".o_form_button_save").toHaveProperty("disabled", false);
@@ -1375,37 +1531,39 @@ test("settings view shows a message if there are changes even if the save failed
     });
 });
 
-test("execute action from settings view with several actions in the breadcrumb", async () => {
-    onRpc("has_group", () => true);
-    // This commit fixes a race condition, that's why we artificially slow down a read rpc
-    expect.assertions(4);
+test.tags("desktop")(
+    "execute action from settings view with several actions in the breadcrumb",
+    async () => {
+        onRpc("has_group", () => true);
+        // This commit fixes a race condition, that's why we artificially slow down a read rpc
+        expect.assertions(4);
 
-    defineActions([
-        {
-            id: 1,
-            name: "First action",
-            res_model: "task",
-            type: "ir.actions.act_window",
-            views: [[1, "list"]],
-        },
-        {
-            id: 2,
-            name: "Settings view",
-            res_model: "res.config.settings",
-            type: "ir.actions.act_window",
-            views: [[2, "form"]],
-        },
-        {
-            id: 3,
-            name: "Other action",
-            res_model: "task",
-            type: "ir.actions.act_window",
-            views: [[3, "list"]],
-        },
-    ]);
+        defineActions([
+            {
+                id: 1,
+                name: "First action",
+                res_model: "task",
+                type: "ir.actions.act_window",
+                views: [[1, "list"]],
+            },
+            {
+                id: 2,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[2, "form"]],
+            },
+            {
+                id: 3,
+                name: "Other action",
+                res_model: "task",
+                type: "ir.actions.act_window",
+                views: [[3, "list"]],
+            },
+        ]);
 
-    Task._views[["list", 1]] = /* xml */ `<list><field name="display_name"/></list>`;
-    ResConfigSettings._views[["form", 2]] = /* xml */ `
+        Task._views[["list", 1]] = /* xml */ `<list><field name="display_name"/></list>`;
+        ResConfigSettings._views[["form", 2]] = /* xml */ `
         <form string="Settings" js_class="base_settings">
             <app string="CRM" name="crm">
                 <block title="Title of group">
@@ -1416,32 +1574,33 @@ test("execute action from settings view with several actions in the breadcrumb",
             </app>
         </form>
     `;
-    Task._views[["list", 3]] = /* xml */ `<list><field name="display_name"/></list>`;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
+        Task._views[["list", 3]] = /* xml */ `<list><field name="display_name"/></list>`;
+        ResConfigSettings._views.search = /* xml */ `<search/>`;
+        Task._views.search = /* xml */ `<search/>`;
 
-    let def;
-    onRpc("web_save", async () => {
-        await def; // slow down reload of settings view
-    });
+        let def;
+        onRpc("web_save", async () => {
+            await def; // slow down reload of settings view
+        });
 
-    await mountWithCleanup(WebClient);
+        await mountWithCleanup(WebClient);
 
-    await getService("action").doAction(1);
-    expect(".o_breadcrumb").toHaveText("First action");
+        await getService("action").doAction(1);
+        expect(".o_breadcrumb").toHaveText("First action");
 
-    await getService("action").doAction(2);
-    expect(".o_breadcrumb").toHaveText("First action\nSettings");
+        await getService("action").doAction(2);
+        expect(".o_breadcrumb").toHaveText("First action\nSettings");
 
-    def = new Deferred();
-    await click('button[name="3"]');
-    await animationFrame();
-    expect(".o_breadcrumb").toHaveText("First action\nSettings");
+        def = new Deferred();
+        await click('button[name="3"]');
+        await animationFrame();
+        expect(".o_breadcrumb").toHaveText("First action\nSettings");
 
-    def.resolve();
-    await animationFrame();
-    expect(".o_breadcrumb").toHaveText("First action\nSettings\nOther action");
-});
+        def.resolve();
+        await animationFrame();
+        expect(".o_breadcrumb").toHaveText("First action\nSettings\nOther action");
+    }
+);
 
 test("settings can contain one2many fields", async () => {
     await mountView({
@@ -1767,7 +1926,7 @@ test("highlight Element with inner html/fields", async () => {
     );
 });
 
-test("settings form doesn't autofocus", async () => {
+test.tags("desktop")("settings form doesn't autofocus", async () => {
     ResConfigSettings._fields.textField = fields.Char();
 
     const onFocusIn = (ev) => {
@@ -1800,7 +1959,7 @@ test("settings form doesn't autofocus", async () => {
     ]);
 });
 
-test("settings form keeps scrolling by app", async () => {
+test.tags("desktop")("settings form keeps scrolling by app", async () => {
     const target = getFixture();
     const oldHeight = target.style.getPropertyValue("height");
     target.style.setProperty("height", "200px");
@@ -2060,4 +2219,75 @@ test("Open settings from url, with setting id anchor", async () => {
     expect(queryAllTexts(".settings .o_setting_highlight .o_form_label")).toEqual(["Foo"]);
     await runAllTimers();
     expect(".o_setting_highlight").toHaveCount(0);
+});
+
+test.tags("mobile")("swipe settings in mobile", async () => {
+    mockTouch(true);
+    await mountView({
+        type: "form",
+        resModel: "project",
+        arch: `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block>
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+                <app string="Project" name="project">
+                    <block>
+                        <setting help="this is foo">
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>`,
+    });
+
+    await swipeLeft(".settings");
+    await runAllTimers();
+    await animationFrame();
+    expect(".selected").toHaveAttribute("data-key", "project", {
+        message: "current setting should be project",
+    });
+
+    await swipeRight(".settings");
+    await runAllTimers();
+    await animationFrame();
+    expect(".selected").toHaveAttribute("data-key", "crm", {
+        message: "current setting should be crm",
+    });
+});
+
+test.tags("desktop")("swipe settings on larger screen sizes has no effect", async () => {
+    mockTouch(true);
+    await mountView({
+        type: "form",
+        resModel: "project",
+        arch: `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block>
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+                <app string="Project" name="project">
+                    <block>
+                        <setting help="this is foo">
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>`,
+    });
+
+    await swipeLeft(".settings");
+    await runAllTimers();
+    await animationFrame();
+    expect(".selected").toHaveAttribute("data-key", "crm", {
+        message: "current setting should be crm",
+    });
 });
