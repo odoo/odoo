@@ -251,6 +251,18 @@ class IrActions(models.Model):
             "path",
         }
 
+    def _get_actions_by_type(self):
+        """
+        Returns:
+            A dict of {type: [action]} of actions in this recordset
+            mapped to their type. The actions lists are recordsets of the proper type.
+        """
+        types = self.mapped('type')
+        res = dict.fromkeys(types)
+        for action_type in types:
+            ids = self.filtered(lambda a: a.type == action_type).ids
+            res[action_type] = self.env[action_type].browse(ids)
+        return res
 
 class IrActionsActWindow(models.Model):
     _name = 'ir.actions.act_window'
