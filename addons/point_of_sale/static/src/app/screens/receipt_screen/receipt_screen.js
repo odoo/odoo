@@ -112,7 +112,7 @@ export class ReceiptScreen extends Component {
             [order.id],
             destination,
             fullTicketImage,
-            this.pos.basic_receipt ? basicTicketImage : null,
+            this.pos.config.basic_receipt ? basicTicketImage : null,
         ]);
     }
 }
