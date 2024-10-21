@@ -4,7 +4,6 @@ import { Link } from "./link";
 import { ColorPalette } from '@web_editor/js/wysiwyg/widgets/color_palette';
 import weUtils from "@web_editor/js/common/utils";
 import {
-    onWillUpdateProps,
     onMounted,
     onWillUnmount,
     onWillDestroy,
@@ -55,13 +54,6 @@ export class LinkTools extends Link {
 
     setup() {
         super.setup(...arguments);
-        onWillUpdateProps(async (newProps) => {
-            await this.mountedPromise;
-            this.$link = newProps.link ? $(newProps.link) : this.link;
-            this._setSelectOptionFromLink();
-            this._updateOptionsUI();
-            this._updateLabelInput();
-        });
         onMounted(() => {
             this._observer = new MutationObserver(records => {
                 if (records.some(record => record.type === 'attributes')) {
@@ -90,6 +82,18 @@ export class LinkTools extends Link {
             this.props.onDestroy();
         });
     }
+    /**
+     * @override
+     */
+    async willUpdateProps(newProps) {
+        await super.willUpdateProps(newProps);
+        this.$link = newProps.link ? $(newProps.link) : this.link;
+        this._setSelectOptionFromLink();
+        this._updateOptionsUI();
+        this._updateLabelInput();
+        this._checkDocumentState();
+    }
+
     /**
      * @override
      */
@@ -153,8 +157,14 @@ export class LinkTools extends Link {
             noImages: true,
             noIcons: true,
             noVideos: true,
-            save: (link) => {
-                const relativeUrl = link.href.substr(window.location.origin.length);
+            save: async (link) => {
+                delete link.target;
+                this.initialNewWindow = this.initialIsNewWindowFromProps;
+                let relativeUrl = link.href.substr(window.location.origin.length);
+                await this._determineAttachmentType(relativeUrl.split("?")[0]);
+                if (this.isLastAttachmentUrl) {
+                    relativeUrl = relativeUrl.replace("&download=true", "");
+                }
                 this.$el[0].querySelector("#o_link_dialog_url_input").value = relativeUrl;
                 this.__onURLInput();
             },
@@ -517,9 +527,9 @@ export class LinkTools extends Link {
         this.state.directDownload = true;
         const url = this.state.url;
         if (url && url.startsWith("/web/content/")) {
-            this.state.isDocument = true;
+            this.state.isDocument = !this.isLastAttachmentUrl;
             this.state.directDownload = url.includes("&download=true");
-        } 
+        }
     }
     /**
      * @override
