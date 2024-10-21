@@ -35,3 +35,7 @@ class User(models.Model):
             im_status = user.im_status
             if im_status == "online" or im_status == "away" or im_status == "offline":
                 user.im_status = "presence_" + location_type + "_" + im_status
+
+    def _is_user_available(self):
+        location_types = self.env['hr.work.location']._fields['location_type'].get_values(self.env)
+        return self.im_status in ['online'] + [f'presence_{location_type}_online' for location_type in location_types]
