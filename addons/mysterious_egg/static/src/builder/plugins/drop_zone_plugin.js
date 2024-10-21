@@ -48,5 +48,6 @@ export class DropZonePlugin extends Plugin {
         }
         this.clearDropZone();
         addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
+        this.dispatch("ADD_STEP");
     }
 }
