@@ -191,7 +191,7 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda m: m.is_invoice(include_receipts=True)):
             sale_orders = move.line_ids.sale_line_ids.order_id
             amount_total_currency = move.currency_id._convert(
-                move.tax_totals['amount_total'],
+                move.tax_totals['total_amount'],
                 move.company_currency_id,
                 move.company_id,
                 move.date
