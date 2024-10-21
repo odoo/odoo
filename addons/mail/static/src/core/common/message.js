@@ -41,6 +41,7 @@ import { rpc } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
+import { useMessageActionsPosition } from "@mail/utils/common/hooks";
 
 /**
  * @typedef {Object} Props
@@ -123,6 +124,11 @@ export class Message extends Component {
         this.hasTouch = hasTouch;
         this.messageBody = useRef("body");
         this.messageActions = useMessageActions();
+        this.frequentEmojiService = useState(useService("mail.frequent.emoji"));
+        this.actionsPosition = useMessageActionsPosition({
+            root: this.root,
+            isAlignedRight: this.isAlignedRight,
+        });
         this.store = useState(useService("mail.store"));
         this.shadowBody = useRef("shadowBody");
         this.dialog = useService("dialog");
