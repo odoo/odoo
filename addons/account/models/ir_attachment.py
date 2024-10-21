@@ -166,4 +166,4 @@ class IrAttachment(models.Model):
         moves_per_id = self.env['account.move'].browse([attachment.res_id for attachment in move_attachments]).grouped('id')
         for attachment in move_attachments:
             moves_per_id[attachment.res_id]._check_and_decode_attachment(attachment)
-        super()._post_add_create()
+        super()._post_add_create(**kwargs)

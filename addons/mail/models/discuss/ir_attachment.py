@@ -25,6 +25,6 @@ class IrAttachment(models.Model):
             store.add(attachment, {"voice": bool(attachment.sudo().voice_ids)})
 
     def _post_add_create(self, **kwargs):
-        super()._post_add_create()
+        super()._post_add_create(**kwargs)
         if kwargs.get('voice'):
             self.env["discuss.voice.metadata"].create([{"attachment_id": attachment.id} for attachment in self])
