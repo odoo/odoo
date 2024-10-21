@@ -14,11 +14,14 @@
             <div t-if="props.imageUrl" class="product-img rounded-top rounded-3">
                 <img class="w-100 bg-100" t-att-src="props.imageUrl" t-att-alt="props.name" />
             </div>
-            <div class="product-content d-flex flex-column justify-content-between p-2 rounded-bottom rounded-3 flex-shrink-1">
+            <div class="product-content d-flex flex-row justify-content-between p-2 rounded-bottom rounded-3 flex-shrink-1" t-att-class="{'h-100' : !props.imageUrl}">
                 <div class="overflow-hidden lh-sm product-name"
                     t-att-class="{'no-image d-flex justify-content-center align-items-center text-center fs-4': !props.imageUrl}"
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
+                <h1 t-if="props.productCartQty"
+                    t-out="props.productCartQty"
+                    t-attf-class="text-muted display-6 fw-bolder m-0 mt-auto" />
             </div>
         </article>
     </t>
