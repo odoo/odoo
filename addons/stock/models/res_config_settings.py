@@ -40,6 +40,7 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
     module_delivery_shiprocket = fields.Boolean("Shiprocket Connector")
     module_delivery_starshipit = fields.Boolean("Starshipit Connector")
+    module_delivery_envia = fields.Boolean("Envia Connector")
     module_quality_control = fields.Boolean("Quality")
     module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
