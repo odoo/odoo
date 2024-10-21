@@ -43,5 +43,8 @@
                 </t>
             </div>
         </xpath>
+        <xpath expr="//t[@t-elif]//span[hasclass('o_current_week')]" position="attributes">
+            <attribute name="t-if" add="!env.isSmall" separator="and"/>
+        </xpath>
     </t>
 </templates>
