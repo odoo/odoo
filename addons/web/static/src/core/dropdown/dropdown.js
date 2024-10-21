@@ -139,7 +139,7 @@ export class Dropdown extends Component {
         );
 
         this.popover = usePopover(DropdownPopover, {
-            animation: false,
+            animation: true,
             arrow: this.props.arrow,
             closeOnClickAway: (target) => {
                 return this.popoverCloseOnClickAway(target, activeEl);

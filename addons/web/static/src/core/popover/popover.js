@@ -103,7 +103,7 @@ export class Popover extends Component {
         slots: { optional: true, type: Object },
     };
 
-    static animationTime = 200;
+    static animationTime = 300;
     setup() {
         if (this.props.setActiveElement) {
             useActiveElement("ref");
@@ -132,7 +132,10 @@ export class Popover extends Component {
                     this.position.lock();
                     const animation = el.animate(
                         { opacity: [0, 1], transform },
-                        this.constructor.animationTime
+                        {
+                            duration: this.constructor.animationTime,
+                            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+                        }
                     );
                     animation.finished.then(this.position.unlock);
                 }
