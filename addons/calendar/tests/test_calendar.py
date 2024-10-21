@@ -155,6 +155,36 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(test_event.res_id, test_record.id)
         self.assertEqual(len(test_record.activity_ids), 1)
 
+    def test_event_activity_creation(self):
+        """ Test that when create_calendar_activity flag is set to False, no activity is created for the event. """
+        test_model = self.env['res.partner'].create({
+            'name': 'Test',
+        })
+        now = datetime.now()
+        self.env['calendar.event'].with_user(self.user_demo).with_context(
+            default_res_model='res.partner',
+            default_res_id=test_model.id,
+        ).create({
+            'name': 'Meeting with an Activity',
+            'start': now + timedelta(hours=1),
+            'stop': now + timedelta(hours=2),
+            'user_id': self.env.user.id,
+        })
+        self.assertEqual(len(test_model.activity_ids), 1)
+        test_model.activity_ids.unlink()
+        self.env['calendar.event'].with_user(self.user_demo).with_context(
+            default_res_model='res.partner',
+            default_res_id=test_model.id,
+            create_calendar_activity=False,
+        ).create({
+            'name': 'Meeting without an Activity',
+            'start': now + timedelta(hours=3),
+            'stop': now + timedelta(hours=4),
+            'user_id': self.env.user.id,
+        })
+        # check that no activity was created if flag create_calendar_activity is False
+        self.assertEqual(len(test_model.activity_ids), 0)
+
     def test_event_activity_user_sync(self):
         # ensure phonecall activity type exists
         activty_type = self.env['mail.activity.type'].create({
