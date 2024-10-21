@@ -5,6 +5,7 @@ from collections import namedtuple
 
 from ast import literal_eval
 from collections import defaultdict
+from itertools import chain
 from psycopg2 import Error
 
 from odoo import _, api, fields, models, SUPERUSER_ID
@@ -260,11 +261,8 @@ class StockQuant(models.Model):
 
         quants = self.env['stock.quant']
         is_inventory_mode = self._is_inventory_mode()
-        allowed_fields = self._get_inventory_fields_create()
         for vals in vals_list:
             if is_inventory_mode and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
-                if any(field for field in vals.keys() if field not in allowed_fields):
-                    raise UserError(_("Quant's creation is restricted, you can't do this operation."))
                 auto_apply = 'inventory_quantity_auto_apply' in vals
                 inventory_quantity = vals.pop('inventory_quantity_auto_apply', False) or vals.pop(
                     'inventory_quantity', False) or 0
@@ -340,20 +338,71 @@ class StockQuant(models.Model):
         }]
 
     @api.model
-    def _get_forbidden_fields_write(self):
-        """ Returns a list of fields user can't edit when he want to edit a quant in `inventory_mode`."""
-        return ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id']
+    def _get_specific_fields_write(self):
+        """ Model method.
+        Return a list of field for which a balanced pair of move are created on edition.
+        :return: List of String
+        """
+        return ['location_id', 'lot_id', 'package_id', 'owner_id']
+
+    def get_generic_location(self):
+        return self.product_id.with_company(self.company_id).property_stock_inventory
+
+    def _update_quant_by_moves(self, vals):
+        """ Handle update of more specific fields"""
+        # if any key of vals in specific fields => Move+ & Move- with all values
+
+        move_vals = list(chain.from_iterable([
+            # 'Undo' actual quant
+            quant._get_inventory_move_values(
+                quant.quantity,
+                quant.location_id,
+                quant.get_generic_location(),
+                package_id=quant.package_id,
+                product_id=quant.product_id,
+                lot_id=quant.lot_id,
+                owner_id=quant.owner_id,
+            ),
+            # 'Do' new quant
+            quant._get_inventory_move_values(
+                vals.get('quantity', quant.quantity),
+                quant.get_generic_location(),
+                self.env['stock.location'].browse(vals['location_id']) if 'location_id' in vals else quant.location_id,  # Fait peter un test
+                package_dest_id=self.env['stock.quant.package'].browse(vals['package_id']) if 'package_id' in vals else quant.package_id,
+                product_id=self.env['product.product'].browse(vals['product_id']) if 'product_id' in vals else quant.product_id,
+                lot_id=self.env['stock.lot'].browse(vals['lot_id']) if 'lot_id' in vals else quant.lot_id,
+                owner_id=self.env['res.partner'].browse(vals['owner_id']) if 'owner_id' in vals else quant.owner_id,
+            )
+        ] for quant in self))
+        moves = self.env['stock.move'].create(move_vals)
+        moves._action_done()
+
+    def _free_reservation(self):
+        self.ensure_one()
+        move_lines = self.env['stock.move.line'].search([
+            ('state', '!=', 'done'),
+            ('product_id', '=', self.product_id.id),
+            ('lot_id', '=', self.lot_id.id),
+            ('package_id', '=', self.package_id.id),
+            ('location_id', '=', self.location_id.id),
+            ('owner_id', '=', self.owner_id.id),
+        ])
+        # TODO : What if 'not done' reserved quantity is < to quant quantity
+        for ml in move_lines:
+            ml._free_reservation()
 
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
-        forbidden_fields = self._get_forbidden_fields_write()
-        if self._is_inventory_mode() and any(field for field in forbidden_fields if field in vals.keys()):
+        if self._is_inventory_mode():
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
+            if any(field in vals for field in self._get_specific_fields_write()):
+                self._update_quant_by_moves(vals)
+                vals.pop('inventory_quantity_auto_apply', None)  # Avoid falsy 'Serial duplicated' error
             self = self.sudo()
-            raise UserError(_("Quant's editing is restricted, you can't do this operation."))
-        return super(StockQuant, self).write(vals)
+        res = super().write(vals)
+        return res
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_wrong_permission(self):
@@ -1186,22 +1235,7 @@ class StockQuant(models.Model):
         """
         return self.env.context.get('inventory_mode') and self.env.user.has_group('stock.group_stock_user')
 
-    @api.model
-    def _get_inventory_fields_create(self):
-        """ Returns a list of fields user can edit when he want to create a quant in `inventory_mode`.
-        """
-        return ['product_id', 'owner_id'] + self._get_inventory_fields_write()
-
-    @api.model
-    def _get_inventory_fields_write(self):
-        """ Returns a list of fields user can edit when he want to edit a quant in `inventory_mode`.
-        """
-        fields = ['inventory_quantity', 'inventory_quantity_auto_apply', 'inventory_diff_quantity',
-                  'inventory_date', 'user_id', 'inventory_quantity_set', 'is_outdated', 'lot_id',
-                  'location_id', 'package_id']
-        return fields
-
-    def _get_inventory_move_values(self, qty, location_id, location_dest_id, package_id=False, package_dest_id=False):
+    def _get_inventory_move_values(self, qty, location_id, location_dest_id, package_id=False, package_dest_id=False, product_id=False, lot_id=False, owner_id=False):
         """ Called when user manually set a new quantity (via `inventory_quantity`)
         just before creating the corresponding stock move.
 
@@ -1209,6 +1243,8 @@ class StockQuant(models.Model):
         :param location_dest_id: `stock.location`
         :param package_id: `stock.quant.package`
         :param package_dest_id: `stock.quant.package`
+        :param lot_id: `stock.lot`
+        :param owner_id: `res.partner`
         :return: dict with all values needed to create a new `stock.move` with its move line.
         """
         self.ensure_one()
@@ -1223,27 +1259,27 @@ class StockQuant(models.Model):
 
         return {
             'name': name,
-            'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
+            'product_id': product_id.id if product_id else self.product_id.id,
+            'product_uom': product_id.uom_id.id if product_id else self.product_uom_id.id,
             'product_uom_qty': qty,
             'company_id': self.company_id.id or self.env.company.id,
             'state': 'confirmed',
             'location_id': location_id.id,
             'location_dest_id': location_dest_id.id,
-            'restrict_partner_id':  self.owner_id.id,
+            'restrict_partner_id': owner_id.id if owner_id else self.owner_id.id,
             'is_inventory': True,
             'picked': True,
             'move_line_ids': [(0, 0, {
-                'product_id': self.product_id.id,
-                'product_uom_id': self.product_uom_id.id,
+                'product_id': product_id.id if product_id else self.product_id.id,
+                'product_uom_id': product_id.uom_id.id if product_id else self.product_uom_id.id,
                 'quantity': qty,
                 'location_id': location_id.id,
                 'location_dest_id': location_dest_id.id,
                 'company_id': self.company_id.id or self.env.company.id,
-                'lot_id': self.lot_id.id,
+                'lot_id': lot_id.id if lot_id else self.lot_id.id,
                 'package_id': package_id.id if package_id else False,
                 'result_package_id': package_dest_id.id if package_dest_id else False,
-                'owner_id': self.owner_id.id,
+                'owner_id': owner_id.id if owner_id else self.owner_id.id,
             })]
         }
 

@@ -154,15 +154,15 @@ class TestEditableQuant(TransactionCase):
             'inventory_quantity': 20,
         })
         inventoried_quant.action_apply_inventory()
-        with self.assertRaises(UserError):
-            invalid_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
-                'product_id': self.product.id,
-                'location_id': self.room2.id,
-                'quantity': 10,
-                'inventory_quantity': 20,
-            })
+        specific_fields_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'location_id': self.room2.id,
+            'quantity': 10,
+            'inventory_quantity': 20,
+        })
         self.assertEqual(valid_quant.quantity, 10)
         self.assertEqual(inventoried_quant.quantity, 20)
+        self.assertEqual(specific_fields_quant.quantity, 10)
 
     def test_edit_quant_1(self):
         """ Increases manually quantity of a quant.
