@@ -185,7 +185,8 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
     _onFullscreenBtnClick(ev) {
         $("body").toggleClass("o_field_widgetTextHtml_fullscreen");
         const full = $("body").hasClass("o_field_widgetTextHtml_fullscreen");
-        this.options.wysiwyg.$iframe.parents().toggleClass("o_form_fullscreen_ancestor", full);
+        const parent = this.options.wysiwyg.$iframe[0].parentElement;
+        parent.classList.toggle("o_mass_mailing_iframe_ancestor_fullscreen", full);
         $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
         if (this.env.onToggleFullscreen) {
             this.env.onToggleFullscreen();

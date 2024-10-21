@@ -12,9 +12,11 @@ import { useService } from "@web/core/utils/hooks";
 import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
-import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { batched, useThrottleForAnimation } from "@web/core/utils/timing";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { onWillUnmount, onWillStart, reactive, status, useSubEnv } from "@odoo/owl";
+import { effect } from "@web/core/utils/reactive";
+import { uuid } from "@web/views/utils";
 
 export class MassMailingHtmlField extends HtmlField {
     static props = {
@@ -194,6 +196,27 @@ export class MassMailingHtmlField extends HtmlField {
         }
 
         await this._resetIframe();
+
+        this.wysiwygEffectId = uuid();
+        const wysiwygEffectId = this.wysiwygEffectId;
+        effect(
+            batched(async (state) => {
+                // Wait for the iframe to load before the first execution
+                const loadDef = this.wysiwyg.$iframe.data("loadDef");
+                await loadDef;
+                if (wysiwygEffectId !== this.wysiwygEffectId || status(this) === "destroyed") {
+                    // Kill the effect if destroyed or if the wysiwyg changed
+                    return;
+                }
+                // Subscribe to state changes (effect lifeline)
+                const isSnippetsFolded = state.snippetsMenuFolded;
+                // Inform the iframe content of the snippets menu visibility
+                this.wysiwyg?.$iframeBody
+                    ?.closest("body")
+                    ?.toggleClass("has_snippets_sidebar", !isSnippetsFolded);
+            }),
+            [this.wysiwyg.state]
+        );
     }
 
     //--------------------------------------------------------------------------
@@ -271,7 +294,7 @@ export class MassMailingHtmlField extends HtmlField {
      */
     _repositionMailingEditorSidebar() {
         const sidebar = document.querySelector("#oe_snippets");
-        if (!sidebar) {
+        if (!sidebar || this.env.inDialog) {
             return;
         } else if (!this._isFullScreen()) {
             const scrollableY = closestScrollableY(sidebar);
@@ -442,8 +465,6 @@ export class MassMailingHtmlField extends HtmlField {
 
             const isSnippetsFolded = uiUtils.isSmall() || themeName === 'basic';
             this.wysiwyg.setSnippetsMenuFolded(isSnippetsFolded);
-            // Inform the iframe content of the snippets menu visibility
-            this.wysiwyg.$iframeBody.closest('body').toggleClass("has_snippets_sidebar", !isSnippetsFolded);
 
             const $editable = this.wysiwyg.$editable.find('.o_editable');
             this.$editorMessageElements = $editable
