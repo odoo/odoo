@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_warranty_view_list" model="ir.ui.view">
+        <field name="name">product.warranty.view.list</field>
+        <field name="model">product.warranty</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="duration"/>
+                <field name="duration_unit"/>
+            </list>
+        </field>
+    </record>
+    <record id="product_warranty_view_form" model="ir.ui.view">
+        <field name="name">product.warranty.view.form</field>
+        <field name="model">product.warranty</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. 1-Year Warranty"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="duration"/>
+                        <field name="duration_unit"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_warranty_action_list" model="ir.actions.act_window">
+        <field name="name">Warranties</field>
+        <field name="res_model">product.warranty</field>
+        <field name="view_id" ref="product_warranty_view_list"/>
+    </record>
+
+    <menuitem
+        action="product_warranty_action_list" id="menu_warranty_action"
+        parent="stock.menu_product_in_config_stock" sequence="8"/>
+</odoo>
