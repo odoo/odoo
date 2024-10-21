@@ -59,7 +59,7 @@ class SlideChannelPartner(models.Model):
 
     @api.depends('channel_id', 'partner_id')
     def _compute_invitation_link(self):
-        ''' This sets the url used as hyperlink in the channel invitation email in template mail_notification_channel_invite.
+        ''' This sets the url used as hyperlink in the channel invitation email in template mail_template_slide_channel_enroll.
         The partner_id is given in the url, as well as a hash based on the partner and channel id. '''
         for record in self:
             invitation_hash = record._get_invitation_hash()
@@ -883,7 +883,7 @@ class SlideChannel(models.Model):
         local_context = dict(
             self.env.context,
             default_channel_id=self.id if len(self) == 1 else False,
-            default_email_layout_xmlid='website_slides.mail_notification_channel_invite',
+            default_email_layout_xmlid='mail.mail_notification_layout',
             default_enroll_mode=enroll_mode,
             default_template_id=mail_template and mail_template.id or False,
             default_use_template=bool(mail_template),

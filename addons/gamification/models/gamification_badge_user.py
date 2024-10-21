@@ -38,6 +38,9 @@ class GamificationBadgeUser(models.Model):
         for badge_user in self:
             template.send_mail(
                 badge_user.id,
+                email_layout_xmlid='mail.mail_notification_layout',
+                subtitles=['Your Badge', badge_user.badge_id.name or ''],
+                subtitles_highlight_2nd=True,
             )
 
         return True

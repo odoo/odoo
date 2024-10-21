@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, html2plaintext, plaintext2html
 
@@ -141,8 +141,17 @@ class DiscussChannel(models.Model):
             'email_from': company.catchall_formatted or company.email_formatted,
             'author_id': self.env.user.partner_id.id,
             'email_to': email,
+            'body': mail_body,
             'body_html': mail_body,
         })
+        mail.body_html = self.env['mail.render.mixin']._render_encapsulate(
+            'mail.mail_notification_layout', mail_body, context_record=self,
+            add_context={
+                'subtitles': [_('Livechat Conversation'), company.name],
+                'subtitles_highlight_2nd': True,
+                'message': mail.mail_message_id,
+                'is_html_empty': tools.is_html_empty,
+            })
         mail.send()
 
     def _get_channel_history(self):

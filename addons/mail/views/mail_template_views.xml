@@ -84,6 +84,9 @@
                                             help="If set, will restrict the template to this specific user.
                                                   If not set, shared with all users."/>
                                         <field name="description"/>
+                                        <field name="email_layout_type" invisible="email_layout_type == 'custom'"
+                                               widget="filterable_selection"
+                                               options="{'blacklisted_values': ['custom']}"/>
                                     </group>
                                 </group>
                             </page>

@@ -72,6 +72,13 @@ class MailTemplate(models.Model):
         column2='ir_actions_report_id',
         string='Dynamic Reports',
         domain="[('model', '=', model)]")
+    email_layout_type = fields.Selection([
+        ('default', 'Default'),
+        ('no_header', 'Without header'),
+        ('custom', 'Custom'),
+    ],
+        string='Email Layout',
+        compute='_compute_email_layout_type', inverse='_inverse_email_layout_type')
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
     # options
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
@@ -96,6 +103,24 @@ class MailTemplate(models.Model):
     def _compute_render_model(self):
         for template in self:
             template.render_model = template.model
+
+    @api.depends('email_layout_xmlid')
+    def _compute_email_layout_type(self):
+        tpl_no_header = str(self.env.ref('mail.mail_notification_no_header').id)
+        for template in self:
+            if not template.email_layout_xmlid:
+                template.email_layout_type = 'default'
+            elif template.email_layout_xmlid == tpl_no_header:
+                template.email_layout_type = 'no_header'
+            else:
+                template.email_layout_type = 'custom'
+
+    def _inverse_email_layout_type(self):
+        for template in self:
+            if not template.email_layout_type or template.email_layout_type == 'default':
+                template.email_layout_xmlid = False
+            elif template.email_layout_type == 'no_header':
+                template.email_layout_xmlid = str(self.env.ref('mail.mail_notification_no_header').id)
 
     @api.depends_context('uid')
     def _compute_can_write(self):
@@ -551,7 +576,7 @@ class MailTemplate(models.Model):
         records.check_access('read')
 
     def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None,
-                  email_layout_xmlid=False):
+                  email_layout_xmlid=False, subtitles=False, subtitles_highlight_2nd=False):
         """ Generates a new mail.mail. Template is rendered on record given by
         res_id and model coming from template.
 
@@ -562,6 +587,9 @@ class MailTemplate(models.Model):
             customize the mail;
         :param str email_layout_xmlid: optional notification layout to encapsulate the
             generated email;
+        :param list[str] subtitles: titles to display in the header (maximum 2)
+        :param str subtitles_highlight_2nd: if set, highlight the second subtitle instead
+            the first one.
         :returns: id of the mail.mail that was created """
 
         # Grant access to send_mail only if access to related document
@@ -571,12 +599,14 @@ class MailTemplate(models.Model):
             force_send=force_send,
             raise_exception=raise_exception,
             email_values=email_values,
-            email_layout_xmlid=email_layout_xmlid
+            email_layout_xmlid=email_layout_xmlid,
+            subtitles=subtitles,
+            subtitles_highlight_2nd=subtitles_highlight_2nd,
         )[0].id  # TDE CLEANME: return mail + api.returns ?
 
     @api.returns('self', lambda value: value.ids)
     def send_mail_batch(self, res_ids, force_send=False, raise_exception=False, email_values=None,
-                  email_layout_xmlid=False):
+                  email_layout_xmlid=False, subtitles=False, subtitles_highlight_2nd=False):
         """ Generates new mail.mails. Batch version of 'send_mail'.'
 
         :param list res_ids: IDs of modelrecords on which template will be rendered
@@ -657,7 +687,8 @@ class MailTemplate(models.Model):
                     'model_description': model_lang.display_name,
                     'record': record,
                     'record_name': False,
-                    'subtitles': False,
+                    'subtitles': subtitles,
+                    'subtitles_highlight_2nd': subtitles_highlight_2nd,
                     # user / environment
                     'company': company,
                     'email_add_signature': False,

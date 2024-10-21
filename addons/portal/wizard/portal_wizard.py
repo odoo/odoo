@@ -230,7 +230,11 @@ class PortalWizardUser(models.TransientModel):
         portal_url = partner.with_context(signup_force_type_in_url='', lang=lang)._get_signup_url_for_action()[partner.id]
         partner.signup_prepare()
 
-        template.with_context(dbname=self._cr.dbname, portal_url=portal_url, lang=lang).send_mail(self.id, force_send=True)
+        template.with_context(dbname=self._cr.dbname, portal_url=portal_url, lang=lang).send_mail(
+            self.id, force_send=True,
+            email_layout_xmlid='mail.mail_notification_layout',
+            subtitles=[_("Your Account"), self.sudo().user_id.name or ''],
+        )
 
         return True
 

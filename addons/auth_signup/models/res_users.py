@@ -7,7 +7,7 @@ from ast import literal_eval
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.http import request
@@ -218,7 +218,9 @@ class ResUsers(models.Model):
                 if account_created_template:
                     account_created_template.send_mail(
                         user.id, force_send=True,
-                        raise_exception=True, email_values=email_values)
+                        raise_exception=True, email_values=email_values,
+                        email_layout_xmlid='mail.mail_notification_layout',
+                        subtitles=[_("Welcome to Odoo"), user.name or ''])
                 else:
                     body = self.env['mail.render.mixin']._render_template(
                         self.env.ref('auth_signup.reset_password_email'),
@@ -227,9 +229,19 @@ class ResUsers(models.Model):
                     mail = self.env['mail.mail'].sudo().create({
                         'subject': _('Password reset'),
                         'email_from': user.company_id.email_formatted or user.email_formatted,
+                        'body': body,
                         'body_html': body,
                         **email_values,
                     })
+                    mail.body_html = self.env['mail.render.mixin']._render_encapsulate(
+                        'mail.mail_notification_layout', body, context_record=self,
+                        add_context={
+                            'email_add_signature': True,
+                            'message': mail.mail_message_id,
+                            'is_html_empty': tools.is_html_empty,
+                            'signature': self.env.user.signature,
+                            'subtitles': ['Your Account', user.display_name],
+                        })
                     mail.send()
             if signup_type == 'reset':
                 _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
@@ -271,7 +283,7 @@ class ResUsers(models.Model):
         # For sending mail to all the invitors about their invited users
         for user in invited_users:
             template = email_template.with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
-            template.send_mail(user, email_layout_xmlid='mail.mail_notification_light', force_send=False)
+            template.send_mail(user, email_layout_xmlid='mail.mail_notification_layout', force_send=False)
 
         done = len(res_users_with_details)
         self.env['ir.cron']._notify_progress(
@@ -293,16 +305,24 @@ class ResUsers(models.Model):
             }
 
             body = self.env['mail.render.mixin']._render_template(
-                    'auth_signup.alert_login_new_device',
-                    model='res.users', res_ids=self.ids,
-                    engine='qweb_view', options={'post_process': True},
-                    add_context=self._prepare_new_device_notice_values())[self.id]
+                'auth_signup.alert_login_new_device',
+                model='res.users', res_ids=self.ids,
+                engine='qweb_view', options={'post_process': True},
+                add_context=self._prepare_new_device_notice_values())[self.id]
             mail = self.env['mail.mail'].sudo().create({
                 'subject': _('New Connection to your Account'),
                 'email_from': self.company_id.email_formatted or self.email_formatted,
+                'body': body,
                 'body_html': body,
                 **email_values,
             })
+            mail.body_html = self.env['mail.render.mixin']._render_encapsulate(
+                'mail.mail_notification_layout', body, context_record=self,
+                add_context={
+                    'message': mail.mail_message_id,
+                    'is_html_empty': tools.is_html_empty,
+                    'subtitles': ['Your Account', self.display_name],
+                })
             mail.send()
             _logger.info("New device alert email sent for user <%s> to <%s>", self.login, self.email)
 

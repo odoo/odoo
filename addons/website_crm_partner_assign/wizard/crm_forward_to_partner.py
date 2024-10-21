@@ -93,7 +93,8 @@ class CrmLeadForwardToPartner(models.TransientModel):
             local_context['partner_id'] = partner_leads['partner']
             local_context['partner_leads'] = partner_leads['leads']
             local_context['partner_in_portal'] = in_portal
-            template.with_context(local_context).send_mail(self.id)
+            template.with_context(local_context).send_mail(
+                self.id, email_layout_xmlid='mail.mail_notification_layout', subtitles=[_("Your leads")])
             leads = self.env['crm.lead']
             for lead_data in partner_leads['leads']:
                 leads |= lead_data['lead_id']
