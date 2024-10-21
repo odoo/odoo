@@ -259,6 +259,14 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
             name='Eglantine Employee',
             notification_type='email',
         )
+        mail_new_test_user(
+            self.env,
+            email='public@example.com',
+            groups='base.group_public',
+            login='user_public',
+            name='Pauline Public',
+            notification_type='email',
+        )
         self.channel = self.env['slide.channel'].with_user(self.user_admin).create({
             'name': 'All about attendee status - Attendees only',
             'channel_type': 'training',
@@ -266,6 +274,13 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
             'visibility': 'public',
             'is_published': True,
         })
+        self.channel_connect, self.channel_members, self.channel_link = self.env['slide.channel'].with_user(self.user_admin).create([{
+            'name': f'Channel {visibility}',
+            'visibility': visibility,
+            'is_published': True,
+            'enroll': 'invite' if visibility == 'members' else 'public',
+        } for visibility in ['connected', 'members', 'link']])
+        self.available_channels = self.channel_connect | self.channel_members | self.channel_link | self.channel
         self.slide = self.env['slide.slide'].with_user(self.user_admin).create({
             'name': 'How to understand membership',
             'channel_id': self.channel.id,
@@ -589,3 +604,38 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
             'Bonjour',
             "Mail subject should have been translated into recipient's language"
         )
+
+    @users('demo', 'portal')
+    def test_channel_visibility_on_website(self):
+        """ Check visibility of channels for Internal/Portal users. """
+        visible_channel = self.env['slide.channel'].search([
+            ('id', 'in', self.available_channels.ids),
+            ('is_visible_on_website', '=', True),
+        ])
+        self.assertIn(self.channel, visible_channel)
+        self.assertIn(self.channel_connect, visible_channel)
+        self.assertNotIn(self.channel_members, visible_channel)
+        self.assertNotIn(self.channel_link, visible_channel)
+
+        # Add attendee to channel
+        self.channel_link._action_add_members(self.env.user.partner_id)
+        self.channel_members._action_add_members(self.env.user.partner_id)
+
+        visible_channel = self.env['slide.channel'].search([
+            ('id', 'in', self.available_channels.ids),
+            ('is_visible_on_website', '=', True),
+        ])
+        self.assertIn(self.channel_members, visible_channel)
+        self.assertIn(self.channel_link, visible_channel)
+
+    @users('user_public')
+    def test_channel_visibility_public_user(self):
+        """ Check visibility of channels for Public users. """
+        visible_channel = self.env['slide.channel'].search([
+            ('id', 'in', self.available_channels.ids),
+            ('is_visible_on_website', '=', True),
+        ])
+        self.assertIn(self.channel, visible_channel)
+        self.assertNotIn(self.channel_connect, visible_channel)
+        self.assertNotIn(self.channel_members, visible_channel)
+        self.assertNotIn(self.channel_link, visible_channel)
