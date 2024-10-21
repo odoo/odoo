@@ -483,6 +483,31 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
         self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')
 
+    def test_partner_with_conflicting_event(self):
+        partner1, partner2 = self.env['res.partner'].create([{
+            'name': 'Test partner 1',
+            'email': 'test1@example.com',
+        }, {
+            'name': 'Test partner 2',
+            'email': 'test2@example.com',
+        }])
+        event1 = self.CalendarEvent.create({
+            'name': 'Meeting 1',
+            'start': datetime(2020, 12, 13, 17),
+            'stop': datetime(2020, 12, 13, 22),
+            'partner_ids': [(6, False, [p.id for p in (partner1, partner2)])]
+        })
+        self.assertFalse(event1.unavailable_partner_ids)
+        event2 = self.CalendarEvent.create({
+            'name': 'Meeting 2',
+            'start': datetime(2020, 12, 13, 17),
+            'stop': datetime(2020, 12, 13, 22),
+            'partner_ids': [(4, partner1.id)],
+        })
+        event1.invalidate_recordset()
+        self.assertEqual(event1.unavailable_partner_ids, partner1)
+        self.assertEqual(event2.unavailable_partner_ids, partner1)
+
 @tagged('post_install', '-at_install')
 class TestCalendarTours(HttpCaseWithUserDemo):
     def test_calendar_month_view_start_hour_displayed(self):
