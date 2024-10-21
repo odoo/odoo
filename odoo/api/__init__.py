@@ -1,6 +1,8 @@
 # ruff: noqa: F401
 # Exports features of the ORM to developers.
 # This is a `__init__.py` file to avoid merge conflicts on `odoo/api.py`.
+import typing
+
 from odoo.orm.identifiers import NewId
 from odoo.orm.decorators import (
     autovacuum,
@@ -17,4 +19,5 @@ from odoo.orm.decorators import (
 )
 from odoo.orm.environments import Environment
 
-from odoo.orm.types import ContextType, DomainType, IdType, Self, ValuesType
+if typing.TYPE_CHECKING:
+    from odoo.orm.types import ContextType, DomainType, IdType, ValuesType

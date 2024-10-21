@@ -78,7 +78,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Reversible
     from .environments import Environment
     from .registry import Registry
-    from .types import Self, ValuesType, IdType
+    from .types import ValuesType, IdType
 
 
 _lt = LazyTranslate('base')
@@ -1611,7 +1611,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     @api.readonly
     @api.returns('self')
-    def search(self, domain, offset=0, limit=None, order=None) -> Self:
+    def search(self, domain, offset=0, limit=None, order=None):
         """ search(domain[, offset=0][, limit=None][, order=None])
 
         Search for the records that satisfy the given ``domain``
@@ -4781,7 +4781,7 @@ class BaseModel(metaclass=MetaModel):
             parent_records._parent_store_update()
 
     @api.model_create_multi
-    def create(self, vals_list: list[ValuesType]) -> Self:
+    def create(self, vals_list: list[ValuesType]):
         """Creates new records for the model.
 
         The new records are initialized using the values from the list of dicts
@@ -5786,7 +5786,7 @@ class BaseModel(metaclass=MetaModel):
                     new.update_field_translations(name, translations)
 
     @api.returns('self')
-    def copy(self, default: ValuesType | None = None) -> Self:
+    def copy(self, default: ValuesType | None = None):
         """ copy(default=None)
 
         Duplicate record ``self`` updating it with default values
@@ -5803,7 +5803,7 @@ class BaseModel(metaclass=MetaModel):
         return new_records
 
     @api.returns('self')
-    def exists(self) -> Self:
+    def exists(self):
         """  exists() -> records
 
         Returns the subset of records in ``self`` that exist.
@@ -6048,7 +6048,7 @@ class BaseModel(metaclass=MetaModel):
         self._ids = ids
         self._prefetch_ids = prefetch_ids
 
-    def browse(self, ids: int | typing.Iterable[IdType] = ()) -> Self:
+    def browse(self, ids: int | typing.Iterable[IdType] = ()):
         """ browse([ids]) -> records
 
         Returns a recordset for the ids provided as parameter in the current
@@ -6089,7 +6089,7 @@ class BaseModel(metaclass=MetaModel):
     # Conversion methods
     #
 
-    def ensure_one(self) -> Self:
+    def ensure_one(self):
         """Verify that the current recordset holds a single record.
 
         :raise odoo.exceptions.ValueError: ``len(self) != 1``
@@ -6102,7 +6102,7 @@ class BaseModel(metaclass=MetaModel):
         except ValueError:
             raise ValueError("Expected singleton: %s" % self)
 
-    def with_env(self, env: api.Environment) -> Self:
+    def with_env(self, env: api.Environment):
         """Return a new version of this recordset attached to the provided environment.
 
         :param env:
@@ -6113,7 +6113,7 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.__class__(env, self._ids, self._prefetch_ids)
 
-    def sudo(self, flag=True) -> Self:
+    def sudo(self, flag=True):
         """ sudo([flag=True])
 
         Returns a new version of this recordset with superuser mode enabled or
@@ -6141,7 +6141,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(su=flag))
 
-    def with_user(self, user) -> Self:
+    def with_user(self, user):
         """ with_user(user)
 
         Return a new version of this recordset attached to the given user, in
@@ -6152,7 +6152,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(user=user, su=False))
 
-    def with_company(self, company) -> Self:
+    def with_company(self, company):
         """ with_company(company)
 
         Return a new version of this recordset with a modified context, such that::
@@ -6186,7 +6186,7 @@ class BaseModel(metaclass=MetaModel):
 
         return self.with_context(allowed_company_ids=allowed_company_ids)
 
-    def with_context(self, *args, **kwargs) -> Self:
+    def with_context(self, *args, **kwargs):
         """ with_context([context][, **overrides]) -> Model
 
         Returns a new version of this recordset attached to an extended
@@ -6225,7 +6225,7 @@ class BaseModel(metaclass=MetaModel):
             context['allowed_company_ids'] = self._context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
-    def with_prefetch(self, prefetch_ids=None) -> Self:
+    def with_prefetch(self, prefetch_ids=None):
         """ with_prefetch([prefetch_ids]) -> records
 
         Return a new version of this recordset that uses the given prefetch ids,
@@ -6340,7 +6340,7 @@ class BaseModel(metaclass=MetaModel):
         else:
             return self._mapped_func(func)
 
-    def filtered(self, func) -> Self:
+    def filtered(self, func):
         """Return the records in ``self`` satisfying ``func``.
 
         :param func: a function or a dot-separated sequence of field names
@@ -6389,7 +6389,7 @@ class BaseModel(metaclass=MetaModel):
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}
 
-    def filtered_domain(self, domain) -> Self:
+    def filtered_domain(self, domain):
         """Return the records in ``self`` satisfying the domain and keeping the same order.
 
         :param domain: :ref:`A search domain <reference/orm/domains>`.
@@ -6545,7 +6545,7 @@ class BaseModel(metaclass=MetaModel):
         [result_ids] = stack
         return self.browse(id_ for id_ in self._ids if id_ in result_ids)
 
-    def sorted(self, key=None, reverse=False) -> Self:
+    def sorted(self, key=None, reverse=False):
         """Return the recordset ``self`` ordered by ``key``.
 
         :param key: either a function of one argument that returns a
@@ -6670,7 +6670,7 @@ class BaseModel(metaclass=MetaModel):
     #
 
     @api.model
-    def new(self, values=None, origin=None, ref=None) -> Self:
+    def new(self, values=None, origin=None, ref=None):
         """ new([values], [origin], [ref]) -> record
 
         Return a new record instance attached to the current environment and
@@ -6694,7 +6694,7 @@ class BaseModel(metaclass=MetaModel):
         return record
 
     @property
-    def _origin(self) -> Self:
+    def _origin(self):
         """ Return the actual records corresponding to ``self``. """
         ids = tuple(origin_ids(self._ids))
         prefetch_ids = OriginIds(self._prefetch_ids)
@@ -6748,11 +6748,11 @@ class BaseModel(metaclass=MetaModel):
                 return item in self._fields
             raise TypeError(f"unsupported operand types in: {item!r} in {self}")
 
-    def __add__(self, other) -> Self:
+    def __add__(self, other):
         """ Return the concatenation of two recordsets. """
         return self.concat(other)
 
-    def concat(self, *args) -> Self:
+    def concat(self, *args):
         """ Return the concatenation of ``self`` with all the arguments (in
             linear time complexity).
         """
@@ -6766,7 +6766,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
         return self.browse(ids)
 
-    def __sub__(self, other) -> Self:
+    def __sub__(self, other):
         """ Return the recordset of all the records in ``self`` that are not in
             ``other``. Note that recordset order is preserved.
         """
@@ -6778,7 +6778,7 @@ class BaseModel(metaclass=MetaModel):
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} - {other!r}")
 
-    def __and__(self, other) -> Self:
+    def __and__(self, other):
         """ Return the intersection of two recordsets.
             Note that first occurrence order is preserved.
         """
@@ -6790,13 +6790,13 @@ class BaseModel(metaclass=MetaModel):
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} & {other!r}")
 
-    def __or__(self, other) -> Self:
+    def __or__(self, other):
         """ Return the union of two recordsets.
             Note that first occurrence order is preserved.
         """
         return self.union(other)
 
-    def union(self, *args) -> Self:
+    def union(self, *args):
         """ Return the union of ``self`` with all the arguments (in linear time
             complexity, with first occurrence order preserved).
         """
@@ -6868,7 +6868,7 @@ class BaseModel(metaclass=MetaModel):
         return hash((self._name, frozenset(self._ids)))
 
     @typing.overload
-    def __getitem__(self, key: int | slice) -> Self: ...
+    def __getitem__(self, key: int | slice): ...
 
     @typing.overload
     def __getitem__(self, key: str) -> typing.Any: ...

@@ -396,7 +396,7 @@ class MailMessage(models.Model):
                 result = (forbidden, lambda: forbidden._make_access_error(operation))
         return result
 
-    def _get_forbidden_access(self, operation: str) -> api.Self:
+    def _get_forbidden_access(self, operation: str):
         """ Return the subset of ``self`` that does not satisfy the specific
         conditions for messages.
         """
