@@ -13,6 +13,7 @@ class AccountMove(models.Model):
     reversed_pos_order_id = fields.Many2one('pos.order', string="Reversed POS Order",
         help="The pos order that was reverted after closing the session to create an invoice for it.")
     pos_session_ids = fields.One2many("pos.session", "move_id", "POS Sessions")
+    pos_order_count = fields.Integer(compute="_compute_origin_pos_count", string='POS Order Count')
 
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
@@ -67,6 +68,26 @@ class AccountMove(models.Model):
         for move in self:
             if move.move_type == 'entry' and move.reversed_pos_order_id:
                 move.amount_total_signed = move.amount_total_signed * -1
+
+    @api.depends('pos_order_ids')
+    def _compute_origin_pos_count(self):
+        for move in self:
+            move.pos_order_count = len(move.sudo().pos_order_ids)
+
+    def action_view_source_pos_orders(self):
+        self.ensure_one()
+        result = self.env['ir.actions.act_window']._for_xml_id('point_of_sale.action_pos_pos_form')
+
+        if len(self.pos_order_ids) > 1:
+            result['domain'] = [('id', 'in', self.pos_order_ids.ids)]
+        elif len(self.pos_order_ids) == 1:
+            result['views'] = [(self.env.ref('point_of_sale.view_pos_pos_form', False).id, 'form')]
+            result['res_id'] = self.pos_order_ids.id
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+
+        return result
+
 
 
 class AccountMoveLine(models.Model):
