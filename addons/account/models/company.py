@@ -408,7 +408,7 @@ class ResCompany(models.Model):
         companies = super().create(vals_list)
         for company in companies:
             if root_template := company.parent_ids[0].chart_template:
-                def try_loading(company=company):
+                def try_loading(company=company, root_template=root_template):
                     self.env['account.chart.template']._load(
                         root_template,
                         company,
