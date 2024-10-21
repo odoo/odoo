@@ -28,6 +28,7 @@ class SaleOrder(models.Model):
     reward_amount = fields.Float(compute='_compute_reward_total')
 
     loyalty_data = fields.Json(compute='_compute_loyalty_data')
+    gift_card_count = fields.Integer(compute='_compute_gift_card_count')
 
     @api.depends('order_line')
     def _compute_reward_total(self):
@@ -74,6 +75,13 @@ class SaleOrder(models.Model):
                 'issued': loyalty_history_data_per_order[order.id]['total_issued'],
                 'cost': loyalty_history_data_per_order[order.id]['total_cost'],
             }
+
+    def _compute_gift_card_count(self):
+        for order in self:
+            order.gift_card_count = self.env['loyalty.card'].search_count([
+                ('order_id', '=', order.id),
+                ('program_type', '=', 'gift_card'),
+            ])
 
     def _add_loyalty_history_lines(self):
         self.ensure_one()
@@ -174,6 +182,21 @@ class SaleOrder(models.Model):
         elif not claimable_rewards:
             return True
         return self.env['ir.actions.actions']._for_xml_id('sale_loyalty.sale_loyalty_reward_wizard_action')
+
+    def action_view_gift_cards(self):
+        self.ensure_one()
+        return {
+            'name': 'Gift Cards',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list',
+            'res_model': 'loyalty.card',
+            'domain': [
+                ('order_id', '=', self.id),
+                ('program_type', '=', 'gift_card')
+            ],
+            'context': "{'create': False}",
+            'target': 'current',
+        }
 
     def _send_reward_coupon_mail(self):
         coupons = self.env['loyalty.card']
