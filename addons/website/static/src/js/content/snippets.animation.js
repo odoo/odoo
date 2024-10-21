@@ -581,6 +581,8 @@ publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
         "[data-snippet='s_image_gallery'] .carousel",
         "[data-snippet='s_carousel'] .carousel",
         "[data-snippet='s_quotes_carousel'] .carousel",
+        "[data-snippet='s_quotes_carousel_minimal'] .carousel",
+        "[data-snippet='s_carousel_intro'] .carousel",
     ].join(", "),
     disabledInEditableMode: false,
     events: {
