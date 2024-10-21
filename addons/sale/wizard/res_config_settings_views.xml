@@ -164,6 +164,10 @@
                             <field name="module_sale_amazon" widget="upgrade_boolean"/>
                             <div class="content-group" name="amazon_connector" invisible="not module_sale_amazon"/>
                         </setting>
+                        <setting id="shopee_connector" help="Import Shopee orders and sync deliveries">
+                            <field name="module_sale_shopee" widget="upgrade_boolean"/>
+                            <div class="content-group" name="shopee_connector" invisible="not module_sale_shopee"/>
+                        </setting>
                     </block>
                 </app>
             </xpath>

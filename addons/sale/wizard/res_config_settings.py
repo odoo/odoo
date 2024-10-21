@@ -72,6 +72,7 @@ class ResConfigSettings(models.TransientModel):
 
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_amazon = fields.Boolean("Amazon Sync")
+    module_sale_shopee = fields.Boolean("Shopee Sync")
     module_sale_loyalty = fields.Boolean("Coupons & Loyalty")
     module_sale_margin = fields.Boolean("Margins")
     module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
