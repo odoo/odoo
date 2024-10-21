@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { bold, resetSize, setColor } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
-import { queryAll } from "@odoo/hoot-dom";
+import { press, queryAll } from "@odoo/hoot-dom";
 
 describe("custom selection", () => {
     test("should indicate selected cells with blue background", async () => {
@@ -1095,6 +1095,404 @@ describe("select columns on cross over", () => {
                             </td>
                         </tr></tbody>
                     </table>`),
+            });
+        });
+    });
+});
+
+describe("move cursor with arrow keys", () => {
+    describe("arrowup", () => {
+        test("should move cursor to the cell above", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowUp"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the end in the cell above", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>abc</td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowUp"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>abc[]</td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p>abc</p>
+                                    <p>def</p>
+                                </td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>abc[]</td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowUp"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p>abc</p>
+                                    <p>def[]</p>
+                                </td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>abc</td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the previous sibling of table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <p>abcd</p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowUp"),
+                contentAfter: unformat(`
+                    <p>abcd[]</p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the end cell of sibling table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowUp"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td>[]<br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
+    describe("arrowdown", () => {
+        test("should move cursor to the cell below", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowDown"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the start of the cell below", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>abc</td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowDown"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]abc</td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>abc[]</td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>abc</p>
+                                    <p>def</p>
+                                </td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowDown"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>abc</td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>[]abc</p>
+                                    <p>def</p>
+                                </td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the next sibling of table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>abcd</p>
+                `),
+                stepFunction: async () => press("ArrowDown"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>[]abcd</p>
+                `),
+            });
+        });
+        test("should move cursor to the first cell of sibling table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowDown"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
             });
         });
     });

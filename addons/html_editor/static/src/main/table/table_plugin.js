@@ -7,13 +7,21 @@ import {
     isProtecting,
     isEmptyBlock,
 } from "@html_editor/utils/dom_info";
-import { ancestors, closestElement, descendants, lastLeaf } from "@html_editor/utils/dom_traversal";
+import {
+    ancestors,
+    closestElement,
+    createDOMPathGenerator,
+    descendants,
+    firstLeaf,
+    lastLeaf,
+} from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 export const BORDER_SENSITIVITY = 5;
 
@@ -52,6 +60,12 @@ export class TablePlugin extends Plugin {
     setup() {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
+        this.addDomListener(this.editable, "keydown", (ev) => {
+            const handled = ["arrowup", "control+arrowup", "arrowdown", "control+arrowdown"];
+            if (handled.includes(getActiveHotkey(ev))) {
+                this.navigateCell(ev);
+            }
+        });
         this.onMousemove = this.onMousemove.bind(this);
     }
 
@@ -616,6 +630,59 @@ export class TablePlugin extends Plugin {
             ) {
                 // Handle selecting an empty cell.
                 this.selectTableCells(selection);
+            }
+        }
+    }
+
+    navigateCell(ev) {
+        const selection = this.shared.getSelectionData().deepEditableSelection;
+        const anchorNode = selection.anchorNode;
+        const currentCell = closestElement(anchorNode, "td");
+        const currentTable = closestElement(anchorNode, "table");
+        if (!selection.isCollapsed || !currentCell) {
+            return;
+        }
+        const isArrowUp = ev.key === "ArrowUp";
+        const cellPosition = {
+            row: getRowIndex(currentCell),
+            col: getColumnIndex(currentCell),
+        };
+        const tableRows = [...currentTable.rows].map((row) => [...row.cells]);
+        const shouldNavigateCell = (currentNode) => {
+            const siblingDirection = isArrowUp ? "previousElementSibling" : "nextElementSibling";
+            const direction = isArrowUp ? DIRECTIONS.LEFT : DIRECTIONS.RIGHT;
+            const domPath = createDOMPathGenerator(direction, {
+                stopTraverseFunction: (node) => node === currentCell,
+                stopFunction: (node) => node === currentCell,
+            });
+            const domPathNode = domPath(currentNode);
+            let node = domPathNode.next().value;
+            while (node) {
+                if ((isBlock(node) && node[siblingDirection]) || node.nodeName === "BR") {
+                    return false;
+                }
+                node = domPathNode.next().value;
+            }
+            return true;
+        };
+        const rowOffset = isArrowUp ? -1 : 1;
+        let targetNode = tableRows[cellPosition.row + rowOffset]?.[cellPosition.col];
+        const siblingElement = isArrowUp
+            ? currentTable.previousElementSibling
+            : currentTable.nextElementSibling;
+        if (!targetNode && siblingElement) {
+            // If no target cell is available, navigate to sibling element
+            targetNode = siblingElement;
+        }
+        if (shouldNavigateCell(anchorNode)) {
+            ev.preventDefault();
+            if (targetNode) {
+                targetNode = isArrowUp ? lastLeaf(targetNode) : firstLeaf(targetNode);
+                const targetOffset = isArrowUp ? nodeSize(targetNode) : 0;
+                this.shared.setSelection({
+                    anchorNode: targetNode,
+                    anchorOffset: targetOffset,
+                });
             }
         }
     }
