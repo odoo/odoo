@@ -92,6 +92,14 @@ class TestPhonenumbersPatch(BaseCase):
         formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
         self.assertEqual(formatted, '+55 11 2345-6789')
 
+    def test_region_BW_monkey_patch(self):
+        """Makes sure that patch for Botswana phone numbers work"""
+        parse_test_lines_BW = (
+            self.PhoneInputOutputLine("78234111", "BW"),
+            self.PhoneInputOutputLine("+267 79 225 123"),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_BW)
+
     def test_region_CI_monkey_patch(self):
         """Makes sure that patch for Ivory Coast phone numbers work"""
         parse_test_lines_CI = (
