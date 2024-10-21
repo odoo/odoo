@@ -142,3 +142,37 @@ class TestRecruitment(TransactionCase):
 
         applicant.stage_id = stage_new
         self.assertEqual(job.no_of_recruitment, 1)
+
+    def test_applicant_refuse_reason(self):
+
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create([{'name': 'Fired'}])
+
+        dup1, dup2, no_dup = self.env['hr.applicant'].create([
+            {
+                'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Application 1'}).id,
+                'partner_name': 'Laurie Poiret',
+                'email_from': 'laurie.poiret@aol.ru',
+            },
+            {
+                'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Application 2'}).id,
+                'partner_name': 'Laurie Poiret (lap)',
+                'email_from': 'laurie.POIRET@aol.ru',
+            },
+            {
+                'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Application 3'}).id,
+                'partner_name': 'Mitchell Admin',
+                'email_from': 'mitchell_admin@example.com',
+            },
+        ])
+
+        applicant_get_refuse_reason = self.env['applicant.get.refuse.reason'].create([{
+            'refuse_reason_id': refuse_reason.id,
+            'applicant_ids': [dup1.id],
+            'duplicates': True
+        }])
+        applicant_get_refuse_reason.action_refuse_reason_apply()
+        self.assertFalse(self.env['hr.applicant'].search([('email_from', 'ilike', 'laurie.poiret@aol.ru')]))
+        self.assertEqual(
+            self.env['hr.applicant'].search([('email_from', 'ilike', 'mitchell_admin@example.com')]),
+            no_dup
+        )
