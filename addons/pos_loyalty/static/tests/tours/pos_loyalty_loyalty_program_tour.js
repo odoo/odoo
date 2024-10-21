@@ -162,7 +162,7 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
 
             // At this point, the free_product program is triggered.
             // The reward button should be highlighted.
-            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.isRewardButtonHighlighted(true, true),
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-1.00", "1.00"),
 
@@ -194,7 +194,7 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
 
             ProductScreen.addOrderline("Desk Organizer", "1"),
             ProductScreen.addOrderline("Whiteboard Pen", "1"),
-            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.isRewardButtonHighlighted(true, true),
             PosLoyalty.claimReward("100% on the cheapest product"),
 
             PosLoyalty.orderTotalIs("5.10"),
