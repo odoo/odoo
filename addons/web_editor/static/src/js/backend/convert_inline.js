@@ -45,7 +45,6 @@ const GROUPED_STYLES = {
     border: [
         "border-top-width", "border-right-width", "border-bottom-width", "border-left-width",
         "border-top-style", "border-right-style", "border-bottom-style", "border-left-style",
-        "border-top-color", "border-right-color", "border-bottom-color", "border-left-color",
     ],
     padding: ["padding-top", "padding-bottom", "padding-left", "padding-right"],
     margin: ["margin-top", "margin-bottom", "margin-left", "margin-right"],
@@ -1450,8 +1449,15 @@ function _createColumnGrid() {
  * @param {string} content
  * @returns {Comment}
  */
-function _createMso(content='') {
-    return document.createComment(`[if mso]>${content}<![endif]`)
+function _createMso(content = "") {
+    // We remove commets having opposite condition fron the one we will insert
+    // We remove comment tags having the same condition
+    const showRegex = /<!--\[if\s+mso\]>([\s\S]*?)<!\[endif\]-->/g;
+    const hideRegex = /<!--\[if\s+!mso\]>([\s\S]*?)<!\[endif\]-->/g;
+    let contentToInsert = content;
+    contentToInsert = contentToInsert.replace(showRegex, (matchedContent, group) => group);
+    contentToInsert = contentToInsert.replace(hideRegex, "");
+    return document.createComment(`[if mso]>${contentToInsert}<![endif]`);
 }
 /**
  * Return a table element, with its default styles and attributes, as well as
@@ -1640,13 +1646,6 @@ function _getMatchedCSSRules(node, cssRules, checkBlacklisted = false) {
         delete processedStyle['border-top-left-radius'];
         delete processedStyle['border-top-right-radius'];
     }
-    if (processedStyle['border-left-color']) {
-        processedStyle['border-color'] = processedStyle['border-left-color'];
-        delete processedStyle['border-right-color'];
-        delete processedStyle['border-bottom-color'];
-        delete processedStyle['border-top-color'];
-        delete processedStyle['border-left-color'];
-    }
     if (processedStyle['border-left-width']) {
         processedStyle['border-width'] = processedStyle['border-left-width'];
         delete processedStyle['border-right-width'];
@@ -1808,4 +1807,5 @@ export default {
     normalizeColors: normalizeColors,
     normalizeRem: normalizeRem,
     toInline: toInline,
+    createMso: _createMso,
 };

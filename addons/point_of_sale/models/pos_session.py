@@ -133,7 +133,7 @@ class PosSession(models.Model):
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'product.packaging', 'res.users', 'res.partner',
             'decimal.precision', 'uom.uom', 'uom.category', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
-            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view']
+            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view', 'ir.module.module']
 
     @api.model
     def _load_pos_data_domain(self, data):

@@ -889,7 +889,7 @@ class Channel(models.Model):
                ORDER BY discuss_channel_member.id ASC
         """, {'channel_ids': tuple(self.ids), 'current_partner_id': current_partner.id or None, 'current_guest_id': current_guest.id or None})
         all_needed_members = self.env['discuss.channel.member'].browse([m['id'] for m in self.env.cr.dictfetchall()])
-        all_needed_members._to_store(Store())  # prefetch in batch
+        Store(all_needed_members)  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
         invited_members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
         member_of_current_user_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])

@@ -2205,16 +2205,3 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'currency_id': website.currency_id.id,
             'pricelist_id': website.pricelist_id.id,
         })
-
-    @staticmethod
-    def _apply_taxes_to_price(price, product_or_template, currency):
-        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
-            request.env.company
-        )
-        if product_taxes:
-            fiscal_position = request.website.fiscal_position_id.sudo()
-            taxes = fiscal_position.map_tax(product_taxes)
-            return request.env['product.template']._apply_taxes_to_price(
-                price, currency, product_taxes, taxes, product_or_template
-            )
-        return price
