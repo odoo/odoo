@@ -5,4 +5,5 @@
     'category': 'Hidden/Tests',
     'sequence': 10,
     'license': 'LGPL-3',
+    'depends': ['test_data_module']
 }
