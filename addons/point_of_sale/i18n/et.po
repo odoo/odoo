@@ -24,11 +24,11 @@
 # JanaAvalah, 2024
 # Martin Trigaux, 2024
 # Siim Raasuke, 2024
-# Stevin Lilla, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Leaanika Randmets, 2024
 # Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +52,8 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Tekib probleem koguse nulliks ümardamisel ühiku teisendamisel. Probleemi vältimiseks, muutke ümardamise või teisendamise reegleid nii, et ka kõige väiksem algühik ei ümarduks nulliks lõppühiku puhul."
 
 #. module: point_of_sale
 #. odoo-python
@@ -329,6 +331,8 @@ msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
 "                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Triipkoodid</span>\n"
+"                                    <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -397,17 +401,17 @@ msgstr "<strong>Seadistuse nimed</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "<strong>End of session note:</strong>"
-msgstr ""
+msgstr "<strong>Sessiooni lõpu märge:</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "<strong>Number of discounts</strong>:"
-msgstr ""
+msgstr "<strong>Allahindluste arv</strong>:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "<strong>Opening of session note:</strong>"
-msgstr ""
+msgstr "<strong>Sessiooni alustamise märge:</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
@@ -1256,7 +1260,7 @@ msgstr "Tühistatud"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Cannot modify a tip"
-msgstr ""
+msgstr "Tippi ei saa muuta."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1359,14 +1363,14 @@ msgstr "Sularaha ümardamised"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 #, python-format
 msgid "Cash control - closing"
-msgstr ""
+msgstr "Sularaha kontroll - sulgemisel"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/cash_opening_popup/cash_opening_popup.js:0
 #, python-format
 msgid "Cash control - opening"
-msgstr ""
+msgstr "Sularaha kontroll - avamisel"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1387,7 +1391,7 @@ msgstr "Loendamise ajal täheldatud rahaerinevus (Kasum)"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.js:0
 #, python-format
 msgid "Cash in / out"
-msgstr ""
+msgstr "Raha sisse/välja"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1864,6 +1868,7 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Viga teisendamisel: Järgnevate ühikute puhul on kogused 0 peale ümardamist:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -2146,7 +2151,7 @@ msgstr "Klient on vajalik %s makseviisi jaoks."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Customer tips, cannot be modified directly"
-msgstr ""
+msgstr "Kliendi tipid, ei ole muudetavad"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -2605,6 +2610,10 @@ msgid ""
 "            An Order Printer will only print updates for products belonging to one of\n"
 "            its categories."
 msgstr ""
+"Igal Tellimuse Printeril on IP Aadress, mis defineerib IoT Box/Riistvara\n"
+"Puhverserveri, kus on printerid ning list toote kategooriatest.\n"
+"Tellimuse Printer prindib uuendusi ainult toodetele, mis kuuluvad\n"
+"ühte nendest kategooriatest."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2813,7 +2822,7 @@ msgstr "Finantspositsioon"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #, python-format
 msgid "Fiscal Position not found"
-msgstr ""
+msgstr "Finantspositsiooni ei leitud"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -2917,7 +2926,7 @@ msgstr "Toote täielik nimi"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_ticket_unique_code
 msgid "Generate a code on ticket"
-msgstr ""
+msgstr "Genereeri piletile kood"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3399,7 +3408,7 @@ msgstr "Tagastuste ja müükide segamine ei ole lubatud."
 #: code:addons/point_of_sale/static/src/app/printer/pos_printer_service.js:0
 #, python-format
 msgid "It is possible to print your tickets by making use of an IoT Box."
-msgstr ""
+msgstr "Pileteid on võimalik printida kasutades IoT box"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3609,7 +3618,7 @@ msgstr "Laadimise järjekord"
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_product_menu
 msgid "Load Product Menu"
-msgstr ""
+msgstr "Lae toote menüü"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4019,6 +4028,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu,"
 " and install one from the Invoicing tab."
 msgstr ""
+"Kontoplaan pole seadistatud. Minge \"seaded / seaded\" menüüsse ja "
+"paigaldage kontoplaan."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -4248,6 +4259,7 @@ msgstr "Kasuta ümmardamist ainult sularaha puhul"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
+"Ainult kassa või pank tüüpi andmikke on võimalik kasutada maksemeetoditega."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4732,7 +4744,7 @@ msgstr "Maksmise meetodid"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Payment Name Demo"
-msgstr ""
+msgstr "Makse demo nimi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
@@ -4934,6 +4946,8 @@ msgid ""
 "Please check if the printer is still connected. \n"
 "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
 msgstr ""
+"Please check if the printer is still connected. \n"
+"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6216,17 +6230,17 @@ msgstr "Müügiandmik"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Sample Closing Note"
-msgstr ""
+msgstr "Sulgemise teate näidis"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Sample Config Name"
-msgstr ""
+msgstr "Näidis konfiguratsiooni nimi"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Sample Opening Note"
-msgstr ""
+msgstr "Avamisteate näidis"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6658,7 +6672,7 @@ msgstr "Kuva marginaalid ja kulud toote teabe juures"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_preparation_display
 msgid "Show orders on the preparation display screen."
-msgstr ""
+msgstr "Kuva tellimused ettevalmistuse ekraanil"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -6913,7 +6927,7 @@ msgstr "Kokkuvõte"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #, python-format
 msgid "Switch Product View"
-msgstr ""
+msgstr "Muuda toote vaadet"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7227,6 +7241,8 @@ msgid ""
 "The maximum difference allowed is %s.\n"
 "Please contact your manager to accept the closing difference."
 msgstr ""
+"Maksimaalne lubatud erinevus on %s.\n"
+"Sulgemisel erineva summa korral võtke ühendust oma halduriga."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8412,6 +8428,7 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Teil pole õigust avada müügipunkti sessiooni. Proovige teise kasutajaga."
 
 #. module: point_of_sale
 #. odoo-python
