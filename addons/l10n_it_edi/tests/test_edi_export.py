@@ -230,7 +230,7 @@ class TestItEdiExport(TestItEdi):
                 }),
             ],
         })
-        self.assertEqual(['l10n_it_edi_partner_address_missing', 'move_missing_document_type'], list(invoice._l10n_it_edi_export_data_check().keys()))
+        self.assertEqual(['l10n_it_edi_partner_address_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
 
     def test_invoice_non_domestic_simplified(self):
         invoice = self.env['account.move'].with_company(self.company).create({
@@ -246,7 +246,7 @@ class TestItEdiExport(TestItEdi):
                 }),
             ],
         })
-        self.assertEqual(['l10n_it_edi_partner_address_missing', 'move_missing_document_type'], list(invoice._l10n_it_edi_export_data_check().keys()))
+        self.assertEqual(['l10n_it_edi_partner_address_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
 
     def test_invoice_zero_percent_taxes(self):
         tax_zero_percent_hundred_percent_repartition = self.env['account.tax'].with_company(self.company).create({
