@@ -49,7 +49,7 @@
                             style="height:40px;"
                             t-on-keydown="onKeydown"
                             t-on-focusin="onFocusin"
-                            t-on-focusout="() => this.props.composer.isFocused = false"
+                            t-on-focusout="onFocusout"
                             t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
                             t-on-paste="onPaste"
                             t-model="props.composer.text"
