@@ -16,7 +16,7 @@ class ResPartner(models.Model):
                     partner.im_status = 'leave_online'
                 elif partner.im_status == 'away':
                     partner.im_status = 'leave_away'
-                else:
+                elif partner.im_status == 'offline':
                     partner.im_status = 'leave_offline'
 
     @api.model
