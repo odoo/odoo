@@ -12,10 +12,13 @@ by sending an email to the target user. This email redirects them to:
     'category': 'Extra Tools',
     'auto_install': True,
     'data': [
+        'security/ir.model.access.csv',
         'data/ir_action_data.xml',
         'data/mail_template_data.xml',
         'data/security_notifications_template.xml',
+        'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
+        'views/templates.xml',
     ],
     'assets': {
         'web.assets_tests': [
