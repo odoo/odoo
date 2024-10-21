@@ -637,7 +637,7 @@ export class AnalyticDistribution extends Component {
 
 export const analyticDistribution = {
     component: AnalyticDistribution,
-    supportedTypes: ["char", "text"],
+    supportedTypes: ["json"],
     fieldDependencies: [{ name:"analytic_precision", type: "integer" }],
     supportedOptions: [
         {
