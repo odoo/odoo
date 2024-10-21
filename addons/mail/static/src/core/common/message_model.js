@@ -450,6 +450,18 @@ export class Message extends Record {
         );
     }
 
+    toggleReaction(emoji) {
+        const reaction = this.reactions.find(
+            ({ content, personas }) =>
+                content === emoji && personas.find((persona) => persona.eq(this.store.self))
+        );
+        if (reaction) {
+            reaction.remove();
+        } else {
+            this.react(emoji);
+        }
+    }
+
     async remove() {
         await rpc("/mail/message/update_content", {
             attachment_ids: [],

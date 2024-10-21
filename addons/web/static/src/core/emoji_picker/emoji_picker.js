@@ -4,7 +4,6 @@ import {
     Component,
     onMounted,
     onPatched,
-    onWillDestroy,
     onWillPatch,
     onWillStart,
     onWillUnmount,
@@ -14,12 +13,11 @@ import {
 } from "@odoo/owl";
 
 import { loadBundle } from "@web/core/assets";
-import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { fuzzyLookup } from "@web/core/utils/search";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { fuzzyLookup } from "@web/core/utils/search";
 
 /**
  *
@@ -171,20 +169,9 @@ export class EmojiPicker extends Component {
         this.state = useState({
             activeEmojiIndex: 0,
             categoryId: null,
-            recent: JSON.parse(browser.localStorage.getItem("web.emoji.frequent") || "{}"),
             searchTerm: "",
         });
-        const onStorage = (ev) => {
-            if (ev.key === "web.emoji.frequent") {
-                this.state.recent = ev.newValue ? JSON.parse(ev.newValue) : {};
-            } else if (ev.key === null) {
-                this.state.recent = {};
-            }
-        };
-        browser.addEventListener("storage", onStorage);
-        onWillDestroy(() => {
-            browser.removeEventListener("storage", onStorage);
-        });
+        this.frequentEmojiService = useState(useService("mail.frequent.emoji"));
         useAutofocus();
         onWillStart(async () => {
             const { categories, emojis } = await loadEmoji();
@@ -270,7 +257,7 @@ export class EmojiPicker extends Component {
     }
 
     get recentEmojis() {
-        const recent = Object.entries(this.state.recent)
+        const recent = Object.entries(this.frequentEmojiService.all)
             .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
             .map(([codepoints]) => this.emojiByCodepoints[codepoints]);
         if (this.searchTerm && recent.length > 0) {
@@ -357,9 +344,7 @@ export class EmojiPicker extends Component {
         const codepoints = ev.currentTarget.dataset.codepoints;
         const resetOnSelect = !ev.shiftKey && !this.ui.isSmall;
         this.props.onSelect(codepoints, resetOnSelect);
-        this.state.recent[codepoints] ??= 0;
-        this.state.recent[codepoints]++;
-        browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(this.state.recent));
+        this.frequentEmojiService.incrementEmojiUsage(codepoints);
         if (resetOnSelect) {
             this.gridRef.el.scrollTop = 0;
             this.props.close?.();

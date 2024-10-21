@@ -4,6 +4,7 @@ import {
     onWillUnmount,
     useComponent,
     useEffect,
+    useEnv,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -490,3 +491,101 @@ export const useMovable = makeDraggableHook({
         return { top, left };
     },
 });
+
+/**
+ * This hook positions message actions based on several factors:
+ * - Actions are ideally placed at the edge of the message bubble based on the
+ *   message's alignment (`isAlignedRight`).
+ * - If the header is hidden, actions are placed next to the closest element
+ *   (header or content).
+ * - If the message is too small for actions (accessibility/readability issues),
+ *   actions follow the previous rule.
+ * - If none of these positions are possible (overflow), actions are placed in
+ *   the corner of the message or in the initial position if the header is
+ *   visible.
+ *
+ * @param {*} param0
+ * @param {boolean} param0.isAlignedRight
+ * @param {import("@web/core/utils/hooks").Ref} param0.root
+ * @returns {{style: Readonly<string>}}
+ */
+export function useMessageActionsPosition({ root, isAlignedRight }) {
+    const content = useRef("content");
+    const header = useRef("header");
+    const actions = useRef("actions");
+    const env = useEnv();
+    const gap = 4;
+    const state = useState({
+        _actionsWidth: null,
+        _contentWidth: null,
+        _headerWidth: null,
+        get style() {
+            if (!state._contentWidth || !state._actionsWidth) {
+                return "";
+            }
+            // At the edge of the message bubble initially.
+            let offset = 0;
+            let transform = "translateY(-80%)";
+            let position = isAlignedRight ? "left" : "right";
+            let maxTranslateX = env.inChatWindow ? 100 : 15;
+            const willHideHeader = state._headerWidth > state._contentWidth - state._actionsWidth;
+            const isContentTooSmall = state._contentWidth / 2 < state._actionsWidth;
+            const parentRect = root.el.parentNode.getBoundingClientRect();
+            const contentRect = content.el.getBoundingClientRect();
+            const headerRect = header.el?.getBoundingClientRect();
+            if (willHideHeader || isContentTooSmall) {
+                // Next to the header or the bubble to keep the menu as close as possible.
+                const initialStyles = { offset, position, maxTranslateX, transform };
+                position = isAlignedRight ? "right" : "left";
+                maxTranslateX = 0;
+                const anchorRect =
+                    (isAlignedRight && headerRect?.left > contentRect.left) ||
+                    (!isAlignedRight && headerRect?.right < contentRect.right)
+                        ? headerRect
+                        : contentRect;
+                offset = Math.abs(
+                    isAlignedRight
+                        ? anchorRect.left - contentRect.right - gap
+                        : anchorRect.right - contentRect.left + gap
+                );
+                if (anchorRect === contentRect) {
+                    transform = "translateY(0)";
+                }
+                const start =
+                    position === "left"
+                        ? contentRect.left - parentRect.left
+                        : contentRect.right - parentRect.left;
+                const willOverflow =
+                    position === "left"
+                        ? start + state._actionsWidth + offset > parentRect.width
+                        : start - state._actionsWidth - offset < 0;
+                if (willOverflow) {
+                    // Best effort: do not hide header, prevent overflow.
+                    transform = willHideHeader ? "translateY(0)" : initialStyles.transform;
+                    offset = initialStyles.offset;
+                    position = initialStyles.position;
+                    maxTranslateX = willHideHeader ? 0 : initialStyles.maxTranslateX;
+                }
+            }
+            // Take as much space as possible to keep the message readable.
+            const availableSpaceLeft = contentRect.left - parentRect.left - gap;
+            const availableSpaceRight = parentRect.right - contentRect.right - gap;
+            const availableSpace = isAlignedRight ? availableSpaceLeft : availableSpaceRight;
+            const translateX = Math.max(
+                0,
+                Math.min(maxTranslateX, ((availableSpace - gap) / state._actionsWidth) * 100)
+            );
+            transform += ` translateX(${isAlignedRight ? -translateX : translateX}%)`;
+            return `${position}: ${offset}px; transform: ${transform};`;
+        },
+    });
+    useEffect(
+        (contentWidth, headerWidth, actionsWidth) => {
+            state._contentWidth = contentWidth ?? state._contentWidth;
+            state._headerWidth = headerWidth ?? state._headerWidth;
+            state._actionsWidth = actionsWidth ?? state._actionsWidth;
+        },
+        () => [content.el?.offsetWidth, header.el?.offsetWidth, actions.el?.offsetWidth]
+    );
+    return state;
+}
