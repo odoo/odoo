@@ -3,7 +3,7 @@
 
 import { parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
 import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle, loadJS } from "@web/core/assets";
 import { OdooSpreadsheetModel } from "@spreadsheet/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
@@ -116,13 +116,20 @@ export async function freezeOdooData(model) {
                     for (let row = top; row <= bottom; row++) {
                         for (let col = left; col <= right; col++) {
                             const xc = toXC(col, row);
-                            const evaluatedCell = model.getters.getEvaluatedCell({ sheetId, col, row });
+                            const evaluatedCell = model.getters.getEvaluatedCell({
+                                sheetId,
+                                col,
+                                row,
+                            });
                             sheet.cells[xc] = {
                                 ...sheet.cells[xc],
                                 content: evaluatedCell.value.toString(),
                             };
                             if (evaluatedCell.format) {
-                                sheet.cells[xc].format = getItemId(evaluatedCell.format, data.formats);
+                                sheet.cells[xc].format = getItemId(
+                                    evaluatedCell.format,
+                                    data.formats
+                                );
                             }
                         }
                     }
@@ -133,8 +140,12 @@ export async function freezeOdooData(model) {
             }
         }
         for (const figure of sheet.figures) {
-            if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
+            if (
+                figure.tag === "chart" &&
+                (figure.data.type.startsWith("odoo_") || figure.data.type === "geo")
+            ) {
                 await loadBundle("web.chartjs_lib");
+                await loadJS("/web/static/lib/chartjs-chart-geo/chartjs-chart-geo.js");
                 const img = odooChartToImage(model, figure);
                 figure.tag = "image";
                 figure.data = {

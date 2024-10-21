@@ -16,6 +16,7 @@ import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
+import { useSpreadsheetGeoService } from "@spreadsheet/helpers/geo_json_service";
 
 export const dashboardActionRegistry = new Registry();
 
@@ -36,12 +37,15 @@ export class SpreadsheetDashboardAction extends Component {
         this.controlPanelDisplay = {};
         this.orm = useService("orm");
         this.actionService = useService("action");
+        const geoJsonService = useSpreadsheetGeoService();
         // Use the non-protected orm service (`this.env.services.orm` instead of `useService("orm")`)
         // because spreadsheets models are preserved across multiple components when navigating
         // with the breadcrumb
         // TODO write a test
         /** @type {DashboardLoader}*/
-        this.loader = useState(new DashboardLoader(this.env, this.env.services.orm));
+        this.loader = useState(
+            new DashboardLoader(this.env, this.env.services.orm, geoJsonService)
+        );
         onWillStart(async () => {
             if (this.props.state && this.props.state.dashboardLoader) {
                 const { groups, dashboards } = this.props.state.dashboardLoader;

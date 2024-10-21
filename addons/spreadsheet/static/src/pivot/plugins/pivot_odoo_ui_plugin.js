@@ -14,6 +14,7 @@ export class PivotOdooUIPlugin extends OdooUIPlugin {
      * @param {Object} cmd Command
      */
     handle(cmd) {
+        console.log("PivotOdooUIPlugin handle", cmd.type);
         switch (cmd.type) {
             case "REFRESH_ALL_DATA_SOURCES":
                 this.refreshAllPivots();

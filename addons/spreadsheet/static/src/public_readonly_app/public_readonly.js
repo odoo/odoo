@@ -10,6 +10,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Spreadsheet, Model, registries } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { useSpreadsheetPrint } from "../hooks";
+import { useSpreadsheetGeoService } from "@spreadsheet/helpers/geo_json_service";
 
 registries.topbarMenuRegistry.addChild("download_public_excel", ["file"], {
     name: _t("Download"),
@@ -42,6 +43,7 @@ export class PublicReadonlySpreadsheet extends Component {
         });
         useSpreadsheetPrint(() => this.model);
         onWillStart(this.createModel.bind(this));
+        this.geoJsonService = useSpreadsheetGeoService();
     }
 
     get showFilterButton() {
@@ -63,7 +65,10 @@ export class PublicReadonlySpreadsheet extends Component {
         this.data = await this.http.get(this.props.dataUrl);
         this.model = new Model(
             this.data,
-            { mode: this.props.mode === "dashboard" ? "dashboard" : "readonly" },
+            {
+                mode: this.props.mode === "dashboard" ? "dashboard" : "readonly",
+                external: { geoJsonService: this.geoJsonService },
+            },
             this.data.revisions || []
         );
         if (this.env.debug) {
