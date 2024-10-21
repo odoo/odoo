@@ -22,9 +22,11 @@
                 </tr>
                 <tr t-if="!this.props.areProductsOptional">
                     <td colspan="4" class="border-bottom-0 text-end">
-                        <span name="sale_product_configurator_list_total" class="h4">
-                            Total: <span t-out="getFormattedTotal()"/>
-                        </span>
+                        <span
+                            name="sale_product_configurator_list_total"
+                            class="h4"
+                            t-out="totalMessage"
+                        />
                     </td>
                 </tr>
             </tbody>
