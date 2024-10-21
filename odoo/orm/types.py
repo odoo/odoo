@@ -10,7 +10,10 @@ from .registry import Registry
 try:
     from typing_extensions import Self
 except ImportError:
-    from typing import Self
+    try:
+        from typing import Self
+    except ImportError:
+        Self = typing.TypeVar("Self")
 
 DomainType = list[str | tuple[str, str, typing.Any]]
 ContextType = Mapping[str, typing.Any]
