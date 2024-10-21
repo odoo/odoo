@@ -21,6 +21,8 @@ class ProductTemplate(models.Model):
         ):
             res['show_click_and_collect_availability'] = True
             order_sudo = website.sale_get_order()
+            res['show_location_selector'] = len(order_sudo.carrier_id.warehouse_ids) > 1
+
             if (
                 order_sudo
                 and order_sudo.carrier_id.delivery_type == 'in_store'

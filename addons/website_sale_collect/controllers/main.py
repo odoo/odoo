@@ -27,8 +27,20 @@ class WebsiteSaleCollect(WebsiteSale):
 
     def _prepare_checkout_page_values(self, order_sudo, **query_params):
         """ Override of `website_sale` to include the unavailable products for the selected pickup
-        location. """
+        location and set the pickup location when there is only one warehouse available. """
         res = super()._prepare_checkout_page_values(order_sudo, **query_params)
+        in_store_method = next(
+            (dm for dm in order_sudo._get_delivery_methods() if dm.delivery_type == 'in_store'),
+            None
+        )
+
+        if in_store_method and len(in_store_method.warehouse_ids) == 1:
+            order_sudo.carrier_id = in_store_method.id
+            order_sudo.pickup_location_data = order_sudo._get_pickup_locations(
+                order_sudo.partner_shipping_id.zip,
+                order_sudo.partner_shipping_id.country_id
+            )['pickup_locations'][0]
+
         if order_sudo.carrier_id.delivery_type == 'in_store' and order_sudo.pickup_location_data:
             res['unavailable_order_lines'] = order_sudo._get_unavailable_order_lines(
                 order_sudo.pickup_location_data.get('id')
