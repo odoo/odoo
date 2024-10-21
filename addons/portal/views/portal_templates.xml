@@ -430,7 +430,7 @@
     <template id="portal_my_contact">
         <div t-attf-class="o_portal_contact_details d-flex flex-column gap-2 #{_spacingClass}">
             <div class="d-flex gap-2">
-                <img class="o_avatar o_portal_contact_img rounded" t-att-src="_contactAvatar" alt="Contact"/>
+                <img class="o_avatar rounded" t-att-src="_contactAvatar" alt="Contact"/>
                 <div>
                     <span t-attf-class="d-block lh-1 mb-1 {{ 'pt-1' if not _contactLink else '' }}" t-out="_contactName"/>
                     <a t-if="_contactLink" href="#discussion" class="d-flex align-items-center gap-2 small lh-1">Send message</a>
@@ -824,7 +824,7 @@
         </div>
         <div t-attf-class="{{'offcanvas-body' if isOffcanvas else 'mt-3 mw-100'}}">
             <div class="d-flex justify-content-start align-items-start gap-3 mb-4">
-                <img class="o_portal_contact_img rounded o_object_fit_cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50"/>
+                <img class="rounded o_object_fit_cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50"/>
                 <div class="d-flex flex-column justify-content-center">
                     <h5 class="mb-0" t-out="user_id.name"/>
                     <p class="mb-0 text-muted" t-out="user_id.company_name"/>

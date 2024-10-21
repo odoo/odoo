@@ -679,7 +679,7 @@
                         <strong class="col-12 col-sm-3">Customer</strong>
                         <div class="col">
                             <div class="d-flex justify-content-start align-items-center gap-2 mb-2" t-if="opportunity.partner_name or opportunity.contact_name">
-                                <img t-if="opportunity.partner_id.sudo().avatar_1024" class="o_avatar o_portal_contact_img rounded"
+                                <img t-if="opportunity.partner_id.sudo().avatar_1024" class="o_avatar rounded"
                                         t-att-src="image_data_uri(opportunity.partner_id.sudo().avatar_512)"
                                 alt="Contact" width="50"/>
                                 <div class="d-flex flex-column justify-content-center">
