@@ -466,11 +466,7 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.$iframeBody.closest('body').removeClass("o_force_mail_theme_choice");
 
             $themeSelectorNew.remove();
-
-            const isSnippetsFolded = uiUtils.isSmall() || themeName === 'basic';
-            this.wysiwyg.setSnippetsMenuFolded(isSnippetsFolded);
-            // Inform the iframe content of the snippets menu visibility
-            this.wysiwyg.$iframeBody.closest('body').toggleClass("has_snippets_sidebar", !isSnippetsFolded);
+            this._has_snippets_sidebar(themeName);
 
             this._switchImages(themeParams, $snippets);
 
@@ -521,6 +517,7 @@ export class MassMailingHtmlField extends HtmlField {
         // Clear any previous theme class before adding new one.
         this.wysiwyg.$iframeBody.closest('body').removeClass(this._themeClassNames);
         let selectedTheme = this._getSelectedTheme(themesParams);
+        this._has_snippets_sidebar(selectedTheme || false);
         if (selectedTheme) {
             this.wysiwyg.$iframeBody.closest('body').addClass(selectedTheme.className);
             this._switchImages(selectedTheme, $snippets);
@@ -637,6 +634,19 @@ export class MassMailingHtmlField extends HtmlField {
             });
         }
         return selectedTheme;
+    }
+    /**
+     * Toggles the snippets sidebar based on screen size or theme.
+     * If the screen is small or theme is 'basic', the sidebar is folded.
+     * Updates the iframe body with the 'has_snippets_sidebar' class accordingly.
+     *
+     * @param {string} themeName - Current theme name (e.g., 'basic').
+     */
+    _has_snippets_sidebar(themeName) {
+        const isSnippetsFolded = uiUtils.isSmall() || themeName === 'basic';
+        this.wysiwyg.setSnippetsMenuFolded(isSnippetsFolded);
+        // Inform the iframe content of the snippets menu visibility
+        this.wysiwyg.$iframeBody.closest('body').toggleClass("has_snippets_sidebar", !isSnippetsFolded);
     }
     /**
      * Swap the previous theme's default images with the new ones.
