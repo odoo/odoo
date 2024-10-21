@@ -17,7 +17,7 @@ const DEFAULT_VIEWS_WITH_SEARCH_PANEL = ["kanban", "list"];
  * @param {string} context
  * @returns {string[]}
  */
-function getContextGroubBy(context) {
+function getContextGroupBy(context) {
     try {
         return makeContext([context]).group_by?.split(":") || [];
     } catch {
@@ -192,7 +192,7 @@ export class SearchArchParser {
         const preSearchItem = { type: "filter" };
         if (node.hasAttribute("context")) {
             const context = node.getAttribute("context");
-            const [fieldName, defaultInterval] = getContextGroubBy(context);
+            const [fieldName, defaultInterval] = getContextGroupBy(context);
             const groupByField = this.fields[fieldName];
             if (groupByField) {
                 preSearchItem.type = "groupBy";
