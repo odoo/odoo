@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # core models (required for mixins)
@@ -52,6 +51,7 @@ from . import bus_presence
 from . import ir_action_act_window
 from . import ir_actions_server
 from . import ir_attachment
+from . import ir_binary
 from . import ir_config_parameter
 from . import ir_http
 from . import ir_mail_server
