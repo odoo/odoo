@@ -535,8 +535,11 @@ export class MassMailingHtmlField extends HtmlField {
             });
             selectedTheme = this._getSelectedTheme(themesParams);
         }
+        const isSnippetsFolded = uiUtils.isSmall() || (selectedTheme && selectedTheme.name === 'basic');
+        this.wysiwyg.setSnippetsMenuFolded(isSnippetsFolded);
+        // Inform the iframe content of the snippets menu visibility
+        this.wysiwyg.$iframeBody.closest('body').toggleClass("has_snippets_sidebar", !isSnippetsFolded);
 
-        this.wysiwyg.setSnippetsMenuFolded(uiUtils.isSmall() || (selectedTheme && selectedTheme.name === 'basic'));
         const editableAreaIsEmpty = value === "" || value === blankEditable;
 
         if (editableAreaIsEmpty) {
