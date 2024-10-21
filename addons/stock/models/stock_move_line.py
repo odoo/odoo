@@ -343,7 +343,7 @@ class StockMoveLine(models.Model):
             else:
                 create_move(move_line)
 
-        move_to_recompute_state = self.env['stock.move']
+        move_to_recompute_state = set()
         for move_line in mls:
             if move_line.state == 'done':
                 continue
@@ -359,8 +359,8 @@ class StockMoveLine(models.Model):
                     product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
 
                 if move:
-                    move_to_recompute_state |= move
-        move_to_recompute_state._recompute_state()
+                    move_to_recompute_state.add(move.id)
+        self.env['stock.move'].browse(move_to_recompute_state)._recompute_state()
 
         for ml, vals in zip(mls, vals_list):
             if ml.state == 'done':
@@ -380,6 +380,9 @@ class StockMoveLine(models.Model):
                 next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
+        move_done = mls.filtered(lambda m: m.state == "done").move_id
+        if move_done:
+            move_done._check_quantity()
         return mls
 
     def write(self, vals):
@@ -469,6 +472,9 @@ class StockMoveLine(models.Model):
                 # Log a note
                 if ml.picking_id:
                     ml._log_message(ml.picking_id, ml, 'stock.track_move_template', vals)
+            move_done = mls.move_id
+            if move_done:
+                move_done._check_quantity()
 
         # update the date when it seems like (additional) quantities are "done" and the date hasn't been manually updated
         if 'date' not in vals and ('product_uom_id' in vals or 'quantity' in vals or vals.get('picked', False)):
@@ -703,17 +709,6 @@ class StockMoveLine(models.Model):
         for key, mls in key_to_mls.items():
             lot = lots[key_to_index[key]].with_prefetch(lots._ids)   # With prefetch to reconstruct the ones broke by accessing by index
             mls.write({'lot_id': lot.id})
-
-    def _reservation_is_updatable(self, quantity, reserved_quant):
-        self.ensure_one()
-        if (self.product_id.tracking != 'serial' and
-                self.location_id.id == reserved_quant.location_id.id and
-                self.lot_id.id == reserved_quant.lot_id.id and
-                self.package_id.id == reserved_quant.package_id.id and
-                self.owner_id.id == reserved_quant.owner_id.id and
-                not self.result_package_id):
-            return True
-        return False
 
     def _log_message(self, record, move, template, vals):
         data = vals.copy()
