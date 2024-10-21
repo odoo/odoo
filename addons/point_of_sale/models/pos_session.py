@@ -329,18 +329,6 @@ class PosSession(models.Model):
             sessions = super().create(vals_list)
         sessions.action_pos_session_open()
 
-        date_string = fields.Date.today().isoformat()
-        ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
-        if not ir_sequence:
-            self.env['ir.sequence'].sudo().create({
-                'name': _("PoS Order"),
-                'padding': 0,
-                'code': f'pos.order_{date_string}',
-                'number_next': 1,
-                'number_increment': 1,
-                'company_id': self.env.company.id,
-            })
-
         return sessions
 
     def unlink(self):
