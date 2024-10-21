@@ -4133,24 +4133,20 @@ var SnippetsMenu = Widget.extend({
         $textInput.select();
         $snippet.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging'); // prevent drag
         const confirmButtonClickHandler = async () => {
-            const name = $textInput[0].value.trim();
-            if (name && name !== snippetName) {
-                await this._execWithLoadingEffect(async () => {
-                    await this._rpc({
-                        model: 'ir.ui.view',
-                        method: 'rename_snippet',
-                        kwargs: {
-                            'name': name,
-                            'view_id': parseInt(ev.target.dataset.snippetId),
-                            'template_key': this.options.snippets,
-                        },
-                    });
-                }, true);
-            }
-            setTimeout(async () => {
-                await this._loadSnippetsTemplates(name && name !== snippetName);
-            }, 100);
-        };
+            const name = $textInput[0].value.trim() || "";
+            await this._execWithLoadingEffect(async () => {
+                await this._rpc({
+                    model: 'ir.ui.view',
+                    method: 'rename_snippet',
+                    kwargs: {
+                        'name': name,
+                        'view_id': parseInt(ev.target.dataset.snippetId),
+                        'template_key': this.options.snippets,
+                    },
+                });
+            }, true);
+            await this._loadSnippetsTemplates(name !== snippetName);
+        }
 
         $textInput[0].addEventListener("focusout", confirmButtonClickHandler);
         $input[0].querySelector(".o_we_cancel_btn").addEventListener("mousedown", async () => {
