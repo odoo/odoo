@@ -31,7 +31,7 @@ class HrEmployeeBase(models.AbstractModel):
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False)
-    related_contact_ids = fields.Many2many('res.partner', 'Related Contacts', compute='_compute_related_contacts')
+    related_contact_ids = fields.Many2many('res.partner', string='Related Contacts', compute='_compute_related_contacts')
     related_contacts_count = fields.Integer('Number of related contacts', compute='_compute_related_contacts_count')
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute="_compute_work_location_id", store=True, readonly=False,
     domain="[('address_id', '=', address_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
