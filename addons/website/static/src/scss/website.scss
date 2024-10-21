@@ -1339,10 +1339,10 @@ $-transition-duration: 200ms;
 .navbar .o_extra_menu_items > .show {
     > li {
         + li {
-            border-top: 1px solid map-get($grays, '200');
+            border-top: $border-width solid $border-color;
         }
         > a.dropdown-toggle {
-            background-color: map-get($grays, '200');
+            background-color: $body-tertiary-bg;
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
         }
@@ -1956,6 +1956,21 @@ $ribbon-padding: 100px;
     inset-inline-end: 1rem;
     inset-block-end: var(--cookies-bar-toggle-inset-block-end, 1rem);
     z-index: $zindex-modal + 1; // Over the modal backdrop.
+}
+
+// Search
+.o_searchbar_form {
+    input::-webkit-search-cancel-button  {
+        -webkit-appearance: none;
+        content: escape-svg($btn-close-bg);
+        height: $input-font-size;
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        --dropdown-link-active-bg: #{mix($component-active-bg, $light, 30%)};
+        --dropdown-link-active-color: --dropdown-color;
+    }
 }
 
 // Search results
