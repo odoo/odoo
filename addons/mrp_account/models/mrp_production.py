@@ -12,10 +12,17 @@ class MrpProduction(models.Model):
 
     extra_cost = fields.Float(copy=False, string='Extra Unit Cost')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
+    wip_move_ids = fields.Many2many('account.move', 'wip_move_production_rel', 'production_id', 'move_id')
+    wip_move_count = fields.Integer("WIP Journal Entry Count", compute='_compute_wip_move_count')
 
     def _compute_show_valuation(self):
         for order in self:
             order.show_valuation = any(m.state == 'done' for m in order.move_finished_ids)
+
+    @api.depends('wip_move_ids')
+    def _compute_wip_move_count(self):
+        for account in self:
+            account.wip_move_count = len(account.wip_move_ids)
 
     def write(self, vals):
         res = super().write(vals)
@@ -36,6 +43,26 @@ class MrpProduction(models.Model):
         context['no_at_date'] = True
         context['search_default_group_by_product_id'] = False
         return dict(action, domain=domain, context=context)
+
+    def action_view_move_wip(self):
+        self.ensure_one()
+        action = {
+            'res_model': 'account.move',
+            'type': 'ir.actions.act_window',
+        }
+        if len(self.wip_move_ids) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': self.wip_move_ids.id,
+            })
+        else:
+            action.update({
+                'name': _("WIP Entries of %s", self.name),
+                'domain': [('id', 'in', self.wip_move_ids.ids)],
+                'view_mode': 'list,form',
+                'views': [(self.env.ref('account.view_move_tree').id, 'list')],
+            })
+        return action
 
     def _cal_price(self, consumed_moves):
         """Set a price unit on the finished move according to `consumed_moves`.
