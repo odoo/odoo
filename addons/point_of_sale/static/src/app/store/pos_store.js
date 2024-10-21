@@ -401,6 +401,7 @@ export class PosStore extends Reactive {
 
     async afterProcessServerData() {
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
+        this.syncAllOrders();
 
         if (!this.config.module_pos_restaurant) {
             this.selectedOrderUuid = openOrders.length
