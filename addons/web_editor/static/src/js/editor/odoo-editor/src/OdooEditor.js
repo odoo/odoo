@@ -1947,7 +1947,7 @@ export class OdooEditor extends EventTarget {
         // 2. selection spans multiple TDs
         // 3. selection starts at beginning of startBlock and ends at end of
         //    endBlock
-        const doJoin =
+        let doJoin =
             !(startBlock === closestBlock(range.commonAncestorContainer) &&
                 endBlock === closestBlock(range.commonAncestorContainer))
             && (startBlock.tagName !== 'TD' && endBlock.tagName !== 'TD')
@@ -1971,8 +1971,21 @@ export class OdooEditor extends EventTarget {
         // Let the DOM split and delete the range.
         const contents = range.extractContents();
 
-        setSelection(start, nodeSize(start));
         const startLi = closestElement(start, 'li');
+        const endLi = closestElement(end, 'li');
+        let keepEndLi =
+            endLi &&
+            startLi &&
+            isZWS(startLi) &&
+            getListMode(startLi.parentElement) !== getListMode(endLi.parentElement);
+        if (keepEndLi) {
+            // Do not join blocks when start and end are different types of
+            // lists and the start list item only contains a zero-width space.
+            doJoin = false;
+            setCursorStart(endLi);
+        } else {
+            setSelection(start, nodeSize(start));
+        }
         // Uncheck a list item with empty text in multi-list selection.
         if (startLi && startLi.classList.contains('o_checked') &&
             ['\u200B', ''].includes(startLi.textContent) && closestElement(end, 'li') !== startLi) {
@@ -1989,20 +2002,30 @@ export class OdooEditor extends EventTarget {
         const isRemovableInvisible = (node, noBlocks = true) =>
             !isVisible(node, noBlocks) && !isUnremovable(node);
         const endIsStart = end === start;
-        while (end && isRemovableInvisible(end, false) && !end.contains(range.endContainer)) {
+        while (end && isRemovableInvisible(end, false) && !end.contains(range.endContainer) && !keepEndLi) {
             const parent = end.parentNode;
             end.remove();
             end = parent;
         }
+        if (keepEndLi) {
+            fillEmpty(closestElement(end, 'li'));
+        }
         // Same with the start container
         while (
             start &&
-            isRemovableInvisible(start) &&
+            (isRemovableInvisible(start) || keepEndLi) &&
             !(endIsStart && start.contains(range.startContainer))
         ) {
             const parent = start.parentNode;
             start.remove();
             start = parent;
+            if (
+                keepEndLi &&
+                (!['UL', 'OL', 'LI'].includes(start.nodeName) ||
+                (start.hasChildNodes() && !isZWS(start)))
+            ) {
+                keepEndLi = false;
+            }
         }
         // Ensure empty blocks be given a <br> child.
         if (start) {
