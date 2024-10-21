@@ -527,9 +527,9 @@ GROUP BY fol.id%s%s""" % (
                 [field for field in fields if field not in ["partner", "thread"]], load=False
             )[0]
             if "partner" in fields:
-                data["partner"] = Store.one(follower.partner_id, fields=fields["partner"])
+                data["partner"] = Store.One(follower.partner_id, fields=fields["partner"])
             if "thread" in fields:
-                data["thread"] = Store.one(
+                data["thread"] = Store.One(
                     self.env[follower.res_model].browse(follower.res_id),
                     as_thread=True,
                     only_id=True,

@@ -51,7 +51,7 @@ class PortalChatter(http.Controller):
                 thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
             ):
                 partner = portal_partner
-        store.add({"self": Store.one(partner, fields=["active", "name", "user", "write_date"])})
+        store.add({"self": Store.One(partner, fields=["active", "name", "user", "write_date"])})
         if request.env.user.has_group("website.group_website_restricted_editor"):
             store.add(partner, {"is_user_publisher": True})
         return store.get_result()
@@ -88,7 +88,7 @@ class PortalChatter(http.Controller):
         return {
             **res,
             "data": {"mail.message": messages.portal_message_format(options=kw)},
-            "messages": Store.many_ids(messages),
+            "messages": messages.ids,
         }
 
     def _setup_portal_message_fetch_extra_domain(self, data):

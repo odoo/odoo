@@ -44,9 +44,6 @@ ids_by_model.update(
     }
 )
 
-ONE = {}
-MANY = {}
-
 
 class Store:
     """Helper to build a dict of data for sending to web client.
@@ -138,33 +135,8 @@ class Store:
         target = self.data[model_name][index] if index else self.data[model_name]
         for key, val in values.items():
             assert key != "_DELETE", f"invalid key {key} in {model_name}: {values}"
-            subrecord_kwargs = {}
-            if isinstance(val, tuple) and len(val) and val[0] is ONE:
-                subrecord, as_thread, only_id, subrecord_kwargs = val[1], val[2], val[3], val[4]
-                assert not subrecord or isinstance(
-                    subrecord, models.Model
-                ), f"expected recordset for one {key}: {subrecord}"
-                if subrecord and not only_id:
-                    self.add(subrecord, as_thread=as_thread, **subrecord_kwargs)
-                target[key] = self.one_id(subrecord, as_thread=as_thread)
-            elif isinstance(val, tuple) and len(val) and val[0] is MANY:
-                subrecords, mode, as_thread, only_id, subrecords_kwargs = (
-                    val[1],
-                    val[2],
-                    val[3],
-                    val[4],
-                    val[5],
-                )
-                assert not subrecords or isinstance(
-                    subrecords, models.Model
-                ), f"expected recordset for many {key}: {subrecords}"
-                assert mode in ["ADD", "DELETE", "REPLACE"], f"invalid mode for many {key}: {mode}"
-                if subrecords and not only_id:
-                    self.add(subrecords, as_thread=as_thread, **subrecords_kwargs)
-                rel_val = self.many_ids(subrecords, mode, as_thread=as_thread)
-                target[key] = (
-                    target[key] + rel_val if key in target and mode != "REPLACE" else rel_val
-                )
+            if isinstance(val, (Store.One, Store.Many)):
+                val._add_to_store(self, target, key)
             elif isinstance(val, datetime):
                 target[key] = fields.Datetime.to_string(val)
             elif isinstance(val, date):
@@ -182,55 +154,85 @@ class Store:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
 
-    @staticmethod
-    def many(records, mode="REPLACE", /, *, as_thread=False, only_id=False, **kwargs):
+    class One:
+        """Flags a record to be added to the store in a One relation."""
+
+        def __init__(self, record, /, as_thread=False, only_id=False, **kwargs):
+            self.record = record
+            self.as_thread = as_thread
+            self.only_id = only_id
+            self.kwargs = kwargs
+            assert not self.record or isinstance(
+                self.record, models.Model
+            ), f"expected recordset or empty value for One, record: {self.record}"
+
+        def _add_to_store(self, store, target, key):
+            """Add the current relation to the given store at target[key].
+            Calling this method manually should be avoided. Letting Store.add()
+            handling relations is preferable."""
+            if self.record and not self.only_id:
+                store.add(self.record, as_thread=self.as_thread, **self.kwargs)
+            target[key] = self._get_id()
+
+        def _get_id(self):
+            """Return the id that can be used to insert the current relation in the store.
+            This method does not add the result to the Store. Calling it manually should be avoided.
+            Letting Store.add() handling ids internally is preferable."""
+            if not self.record:
+                return False
+            if self.as_thread:
+                return {"id": self.record.id, "model": self.record._name}
+            if self.record._name == "discuss.channel":
+                return {"id": self.record.id, "model": "discuss.channel"}
+            if self.record._name == "mail.guest":
+                return {"id": self.record.id, "type": "guest"}
+            if self.record._name == "res.partner":
+                return {"id": self.record.id, "type": "partner"}
+            return self.record.id
+
+    class Many:
         """Flags records to be added to the store in a Many relation.
         - mode: "REPLACE" (default), "ADD", or "DELETE"."""
-        return (MANY, records, mode, as_thread, only_id, kwargs)
 
-    @staticmethod
-    def one(record, /, *, as_thread=False, only_id=False, **kwargs):
-        """Flags a record to be added to the store in a One relation."""
-        return (ONE, record, as_thread, only_id, kwargs)
+        def __init__(self, records, mode="REPLACE", /, as_thread=False, only_id=False, **kwargs):
+            self.records = records
+            self.mode = mode
+            self.as_thread = as_thread
+            self.only_id = only_id
+            self.kwargs = kwargs
+            assert not self.records or isinstance(
+                self.records, models.Model
+            ), f"expected recordset or empty value for Many, records: {self.records}"
+            assert self.mode in ["ADD", "DELETE", "REPLACE"], f"invalid mode for Many: {self.mode}"
 
-    @staticmethod
-    def many_ids(records, mode="REPLACE", /, *, as_thread=False):
-        """Converts records to a value suitable for a relation in the store.
-        - mode: "REPLACE" (default), "ADD", or "DELETE".
+        def _add_to_store(self, store, target, key):
+            """Add the current relation to the given store at target[key].
+            Calling this method manually should be avoided. Letting Store.add()
+            handling relations is preferable."""
+            if self.records and not self.only_id:
+                store.add(self.records, as_thread=self.as_thread, **self.kwargs)
+            rel_val = self._get_id()
+            target[key] = (
+                target[key] + rel_val if key in target and self.mode != "REPLACE" else rel_val
+            )
 
-        This method does not add the result to the Store. Calling it manually
-        should be avoided. It is kept as a public method until all remaining
-        occurences can be removed.
-        Using the method ``many(..., only_id=True)`` is preferable."""
-        if records._name == "mail.message.reaction":
-            res = [
-                {"message": message.id, "content": content}
-                for (message, content), _ in groupby(records, lambda r: (r.message_id, r.content))
-            ]
-        else:
-            res = [Store.one_id(record, as_thread=as_thread) for record in records]
-        if mode == "ADD":
-            res = [("ADD", res)]
-        elif mode == "DELETE":
-            res = [("DELETE", res)]
-        return res
-
-    @staticmethod
-    def one_id(record, /, *, as_thread=False):
-        """Converts a record to a value suitable for a relation in the store.
-
-        This method does not add the result to the Store. Calling it manually
-        should be avoided. It is kept as a public method until all remaining
-        occurences can be removed.
-        Using the method ``many(..., only_id=True)`` is preferable."""
-        if not record:
-            return False
-        if as_thread:
-            return {"id": record.id, "model": record._name}
-        if record._name == "discuss.channel":
-            return {"id": record.id, "model": "discuss.channel"}
-        if record._name == "mail.guest":
-            return {"id": record.id, "type": "guest"}
-        if record._name == "res.partner":
-            return {"id": record.id, "type": "partner"}
-        return record.id
+        def _get_id(self):
+            """Return the ids that can be used to insert the current relation in the store.
+            This method does not add the result to the Store. Calling it manually should be avoided.
+            Letting Store.add() handling ids internally is preferable."""
+            if self.records._name == "mail.message.reaction":
+                res = [
+                    {"message": message.id, "content": content}
+                    for (message, content), _ in groupby(
+                        self.records, lambda r: (r.message_id, r.content)
+                    )
+                ]
+            else:
+                res = [
+                    Store.One(record, as_thread=self.as_thread)._get_id() for record in self.records
+                ]
+            if self.mode == "ADD":
+                res = [("ADD", res)]
+            elif self.mode == "DELETE":
+                res = [("DELETE", res)]
+            return res

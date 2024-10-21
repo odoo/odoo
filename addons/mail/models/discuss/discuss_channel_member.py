@@ -280,21 +280,21 @@ class DiscussChannelMember(models.Model):
                 load=False,
             )[0]
             if "channel" in fields:
-                data["thread"] = Store.one(member.channel_id, as_thread=True, only_id=True)
+                data["thread"] = Store.One(member.channel_id, as_thread=True, only_id=True)
             if "persona" in fields:
                 if member.partner_id:
                     # sudo: res.partner - reading partner related to a member is considered acceptable
-                    data["persona"] = Store.one(
+                    data["persona"] = Store.One(
                         member.partner_id.sudo(),
                         fields=member._get_store_partner_fields(fields["persona"]),
                     )
                 if member.guest_id:
                     # sudo: mail.guest - reading guest related to a member is considered acceptable
-                    data["persona"] = Store.one(member.guest_id.sudo(), fields=fields["persona"])
+                    data["persona"] = Store.One(member.guest_id.sudo(), fields=fields["persona"])
             if "fetched_message_id" in fields:
-                data["fetched_message_id"] = Store.one(member.fetched_message_id, only_id=True)
+                data["fetched_message_id"] = Store.One(member.fetched_message_id, only_id=True)
             if "seen_message_id" in fields:
-                data["seen_message_id"] = Store.one(member.seen_message_id, only_id=True)
+                data["seen_message_id"] = Store.One(member.seen_message_id, only_id=True)
             if "message_unread_counter" in fields:
                 data["message_unread_counter_bus_id"] = bus_last_id
             store.add(member, data)
@@ -336,16 +336,16 @@ class DiscussChannelMember(models.Model):
         ice_servers = self.env["mail.ice.server"]._get_ice_servers()
         self._join_sfu(ice_servers)
         if store:
-            store.add(self.channel_id, {"rtcSessions": Store.many(current_rtc_sessions, "ADD")})
+            store.add(self.channel_id, {"rtcSessions": Store.Many(current_rtc_sessions, "ADD")})
             store.add(
                 self.channel_id,
-                {"rtcSessions": Store.many(outdated_rtc_sessions, "DELETE", only_id=True)},
+                {"rtcSessions": Store.Many(outdated_rtc_sessions, "DELETE", only_id=True)},
             )
             store.add(
                 "Rtc",
                 {
                     "iceServers": ice_servers or False,
-                    "selfSession": Store.one(rtc_session),
+                    "selfSession": Store.One(rtc_session),
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
@@ -446,13 +446,13 @@ class DiscussChannelMember(models.Model):
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             member._bus_send_store(
-                self.channel_id, {"rtcInvitingSession": Store.one(member.rtc_inviting_session_id)}
+                self.channel_id, {"rtcInvitingSession": Store.One(member.rtc_inviting_session_id)}
             )
         if members:
             self.channel_id._bus_send_store(
                 self.channel_id,
                 {
-                    "invitedMembers": Store.many(
+                    "invitedMembers": Store.Many(
                         members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
                     ),
                 },

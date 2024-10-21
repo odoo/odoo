@@ -42,7 +42,7 @@ class DiscussChannelRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            channel._bus_send_store(channel, {"rtcSessions": Store.many(rtc_sessions, "ADD")})
+            channel._bus_send_store(channel, {"rtcSessions": Store.Many(rtc_sessions, "ADD")})
         return rtc_sessions
 
     def unlink(self):
@@ -63,7 +63,7 @@ class DiscussChannelRtcSession(models.Model):
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
             channel._bus_send_store(
-                channel, {"rtcSessions": Store.many(rtc_sessions, "DELETE", only_id=True)}
+                channel, {"rtcSessions": Store.Many(rtc_sessions, "DELETE", only_id=True)}
             )
         for rtc_session in self:
             rtc_session._bus_send(
@@ -141,7 +141,7 @@ class DiscussChannelRtcSession(models.Model):
             fields += ["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]
         for rtc_session in self:
             data = rtc_session._read_format(fields, load=False)[0]
-            data["channel_member_id"] = Store.one(
+            data["channel_member_id"] = Store.One(
                 rtc_session.channel_member_id,
                 fields={"channel": [], "persona": ["name", "im_status"]},
             )

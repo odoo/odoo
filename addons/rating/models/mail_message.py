@@ -40,7 +40,7 @@ class MailMessage(models.Model):
         if "rating_id" in fields:
             for message in self:
                 # sudo: mail.message - guest and portal user can receive rating of accessible message
-                store.add(message, {"rating_id": Store.one(message.sudo().rating_id)})
+                store.add(message, {"rating_id": Store.One(message.sudo().rating_id)})
         if "record_rating" in fields:
             for records in self._records_by_model_name().values():
                 if issubclass(self.pool[records._name], self.pool["rating.mixin"]):

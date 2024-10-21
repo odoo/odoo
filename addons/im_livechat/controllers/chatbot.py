@@ -69,10 +69,10 @@ class LivechatChatbotScriptController(http.Controller):
             {
                 "id": (next_step.id, discuss_channel.id),
                 "isLast": next_step._is_last_step(discuss_channel),
-                "message": Store.one(posted_message, only_id=True),
+                "message": Store.One(posted_message, only_id=True),
                 "operatorFound": next_step.step_type == "forward_operator"
                 and len(discuss_channel.channel_member_ids) > 2,
-                "scriptStep": Store.one(next_step, only_id=True),
+                "scriptStep": Store.One(next_step, only_id=True),
             },
         )
         store.add(
@@ -84,8 +84,8 @@ class LivechatChatbotScriptController(http.Controller):
                     "message": posted_message.id,
                 },
                 "id": (chatbot.id, discuss_channel.id),
-                "script": Store.one(chatbot, only_id=True),
-                "thread": Store.one(discuss_channel, only_id=True),
+                "script": Store.One(chatbot, only_id=True),
+                "thread": Store.One(discuss_channel, only_id=True),
             },
         )
         return store.get_result()

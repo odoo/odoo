@@ -137,6 +137,6 @@ class MailNotification(models.Model):
             data = notif._read_format(
                 ["failure_type", "notification_status", "notification_type"], load=False
             )[0]
-            data["message"] = Store.one(notif.mail_message_id, only_id=True)
-            data["persona"] = Store.one(notif.res_partner_id, fields=["name"])
+            data["message"] = Store.One(notif.mail_message_id, only_id=True)
+            data["persona"] = Store.One(notif.res_partner_id, fields=["name"])
             store.add(notif, data)

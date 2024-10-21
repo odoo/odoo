@@ -394,7 +394,7 @@ class DiscussChannel(models.Model):
         self._bus_send_store(
             self,
             {
-                "channelMembers": Store.many(member, "DELETE", only_id=True),
+                "channelMembers": Store.Many(member, "DELETE", only_id=True),
                 "memberCount": self.member_count,
             },
         )
@@ -491,7 +491,7 @@ class DiscussChannel(models.Model):
             self._bus_send_store(
                 self,
                 {
-                    "invitedMembers": Store.many(
+                    "invitedMembers": Store.Many(
                         members,
                         "DELETE",
                         fields={"channel": [], "persona": ["name", "im_status"]},
@@ -903,8 +903,8 @@ class DiscussChannel(models.Model):
             info = channel._channel_basic_info()
             info["is_editable"] = channel.is_editable
             info["fetchChannelInfoState"] = "fetched"
-            info["parent_channel_id"] = Store.one(channel.parent_channel_id)
-            info["from_message_id"] = Store.one(channel.from_message_id)
+            info["parent_channel_id"] = Store.One(channel.parent_channel_id)
+            info["from_message_id"] = Store.One(channel.from_message_id)
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
@@ -926,7 +926,7 @@ class DiscussChannel(models.Model):
                     info['is_pinned'] = member.is_pinned
                     if member.rtc_inviting_session_id:
                         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-                        info["rtcInvitingSession"] = Store.one(member.rtc_inviting_session_id.sudo())
+                        info["rtcInvitingSession"] = Store.One(member.rtc_inviting_session_id.sudo())
             # add members info
             if channel.channel_type != 'channel':
                 # avoid sending potentially a lot of members for big channels
@@ -935,11 +935,11 @@ class DiscussChannel(models.Model):
                 store.add(members_by_channel[channel] - member)
             # add RTC sessions info
             invited_members = invited_members_by_channel[channel]
-            info["invitedMembers"] = Store.many(
+            info["invitedMembers"] = Store.Many(
                 invited_members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
             )
             # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-            info["rtcSessions"] = Store.many(channel.sudo().rtc_session_ids, "ADD", extra=True)
+            info["rtcSessions"] = Store.Many(channel.sudo().rtc_session_ids, "ADD", extra=True)
             store.add(channel, info)
 
     # User methods

@@ -595,8 +595,8 @@ class MailActivity(models.Model):
                 {"id": mail_template.id, "name": mail_template.name}
                 for mail_template in activity.mail_template_ids
             ]
-            data["attachment_ids"] = Store.many(activity.attachment_ids, fields=["name"])
-            data["persona"] = Store.one(activity.user_id.partner_id)
+            data["attachment_ids"] = Store.Many(activity.attachment_ids, fields=["name"])
+            data["persona"] = Store.One(activity.user_id.partner_id)
             store.add(activity, data)
 
     @api.readonly

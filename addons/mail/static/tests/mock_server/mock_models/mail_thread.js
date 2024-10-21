@@ -679,8 +679,8 @@ export class MailThread extends models.ServerModel {
         if (request_list && request_list.includes("scheduledMessages")) {
             res["scheduledMessages"] = mailDataHelpers.Store.many(
                 MailScheduledMessage.filter(
-                    (message) => message.model === this._name && message.res_id === id,
-                ),
+                    (message) => message.model === this._name && message.res_id === id
+                )
             );
         }
         store.add(this.env[this._name].browse(id), res, makeKwArgs({ as_thread: true }));

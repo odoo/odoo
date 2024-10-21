@@ -44,13 +44,13 @@ class MailMessage(models.Model):
                 if step := chatbot_message.script_step_id:
                     step_data = {
                         "id": (step.id, channel.id),
-                        "message": Store.one(message, only_id=True),
-                        "scriptStep": Store.one(step, only_id=True),
+                        "message": Store.One(message, only_id=True),
+                        "scriptStep": Store.One(step, only_id=True),
                         "operatorFound": step.step_type == "forward_operator"
                         and len(channel.channel_member_ids) > 2,
                     }
                     if answer := chatbot_message.user_script_answer_id:
-                        step_data["selectedAnswer"] = Store.one(answer, only_id=True)
+                        step_data["selectedAnswer"] = Store.One(answer, only_id=True)
                     store.add("ChatbotStep", step_data)
                     store.add(
                         message,
@@ -72,7 +72,7 @@ class MailMessage(models.Model):
             store.add(
                 message,
                 {
-                    "author": Store.one(
+                    "author": Store.One(
                         message.author_id,
                         fields=["is_company", "user_livechat_username", "user", "write_date"],
                     ),

@@ -37,7 +37,7 @@ class ThreadController(http.Controller):
         return {
             **res,
             "data": Store(messages, for_current_user=True).get_result(),
-            "messages": Store.many_ids(messages),
+            "messages": messages.ids,
         }
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")

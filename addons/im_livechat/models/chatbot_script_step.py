@@ -375,7 +375,7 @@ class ChatbotScriptStep(models.Model):
                 [f for f in fields if f not in {"answer_ids", "message", "type"}], load=False
             )[0]
             if "answer_ids" in fields:
-                data["answers"] = Store.many(step.answer_ids)
+                data["answers"] = Store.Many(step.answer_ids)
             if "message" in fields:
                 data["message"] = plaintext2html(step.message) if step.message else False
             if "type" in fields:

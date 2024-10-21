@@ -66,7 +66,7 @@ class ChannelController(http.Controller):
         return {
             **res,
             "data": Store(messages, for_current_user=True).get_result(),
-            "messages": Store.many_ids(messages),
+            "messages": messages.ids,
         }
 
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public", readonly=True)
@@ -159,7 +159,7 @@ class ChannelController(http.Controller):
         sub_channel = channel._create_sub_channel(from_message_id, name)
         return {
             "data": Store(sub_channel).add(sub_channel).get_result(),
-            "sub_channel": Store.one_id(sub_channel),
+            "sub_channel": sub_channel.id,
         }
 
     @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="json", auth="public")

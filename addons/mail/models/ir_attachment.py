@@ -114,7 +114,7 @@ class IrAttachment(models.Model):
                 data["size"] = attachment.file_size
             if "thread" in fields:
                 data["thread"] = (
-                    Store.one(
+                    Store.One(
                         self.env[attachment.res_model].browse(attachment.res_id),
                         as_thread=True,
                         only_id=True,

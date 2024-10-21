@@ -254,6 +254,6 @@ class MailScheduledMessage(models.Model):
     def _to_store(self, store: Store):
         for scheduled_message in self:
             data = scheduled_message._read_format(['body', 'is_note', 'scheduled_date', 'subject'])[0]
-            data['attachment_ids'] = Store.many(scheduled_message.attachment_ids)
-            data['author'] = Store.one(scheduled_message.author_id)
+            data['attachment_ids'] = Store.Many(scheduled_message.attachment_ids)
+            data['author'] = Store.One(scheduled_message.author_id)
             store.add(scheduled_message, data)

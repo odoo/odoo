@@ -14,7 +14,7 @@ class MailboxController(http.Controller):
         return {
             **res,
             "data": Store(messages, for_current_user=True, add_followers=True).get_result(),
-            "messages": Store.many_ids(messages),
+            "messages": messages.ids,
         }
 
     @http.route("/mail/history/messages", methods=["POST"], type="json", auth="user")
@@ -25,7 +25,7 @@ class MailboxController(http.Controller):
         return {
             **res,
             "data": Store(messages, for_current_user=True).get_result(),
-            "messages": Store.many_ids(messages),
+            "messages": messages.ids,
         }
 
     @http.route("/mail/starred/messages", methods=["POST"], type="json", auth="user")
@@ -36,5 +36,5 @@ class MailboxController(http.Controller):
         return {
             **res,
             "data": Store(messages, for_current_user=True).get_result(),
-            "messages": Store.many_ids(messages),
+            "messages": messages.ids,
         }

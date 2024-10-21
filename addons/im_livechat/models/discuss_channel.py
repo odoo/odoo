@@ -50,10 +50,10 @@ class DiscussChannel(models.Model):
                     m.mail_message_id for m in channel.sudo().chatbot_message_ids
                     if m.script_step_id == current_step_sudo
                     and m.mail_message_id.author_id == chatbot_script.operator_partner_id
-                ), None) if channel.chatbot_current_step_id.sudo().step_type != 'forward_operator' else None
+                ), False) if channel.chatbot_current_step_id.sudo().step_type != 'forward_operator' else False
                 current_step = {
                     'scriptStep': current_step_sudo._format_for_frontend(),
-                    "message": Store.one_id(step_message),
+                    "message": step_message and step_message.id,
                     'operatorFound': current_step_sudo.step_type == 'forward_operator' and len(channel.channel_member_ids) > 2,
                 }
                 channel_info["chatbot"] = {
@@ -68,11 +68,11 @@ class DiscussChannel(models.Model):
                 'name': channel.country_id.name,
             } if channel.country_id else False
             if channel.channel_type == "livechat":
-                channel_info["operator"] = Store.one(
+                channel_info["operator"] = Store.One(
                     channel.livechat_operator_id, fields=["user_livechat_username", "write_date"]
                 )
             if channel.channel_type == "livechat" and self.env.user._is_internal():
-                channel_info["livechatChannel"] = Store.one(
+                channel_info["livechatChannel"] = Store.One(
                     channel.livechat_channel_id, fields=["name"]
                 )
             store.add(channel, channel_info)
