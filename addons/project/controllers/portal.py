@@ -107,21 +107,6 @@ class ProjectCustomerPortal(CustomerPortal):
         })
         return request.render("project.portal_my_projects", values)
 
-    @http.route(['/my/project/<int:project_id>',
-                 '/my/project/<int:project_id>/page/<int:page>',
-                 '/my/project/<int:project_id>/task/<int:task_id>',
-                 '/my/project/<int:project_id>/project_sharing'], type='http', auth="public")
-    def portal_project_routes_outdated(self, **kwargs):
-        """ Redirect the outdated routes to the new routes. """
-        return request.redirect(request.httprequest.full_path.replace('/my/project/', '/my/projects/'))
-
-    @http.route(['/my/task',
-                 '/my/task/page/<int:page>',
-                 '/my/task/<int:task_id>'], type='http', auth='public')
-    def portal_my_task_routes_outdated(self, **kwargs):
-        """ Redirect the outdated routes to the new routes. """
-        return request.redirect(request.httprequest.full_path.replace('/my/task', '/my/tasks'))
-
     @http.route(['/my/projects/<int:project_id>', '/my/projects/<int:project_id>/page/<int:page>'], type='http', auth="public", website=True)
     def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, task_id=None, **kw):
         try:
