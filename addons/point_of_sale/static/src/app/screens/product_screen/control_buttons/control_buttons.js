@@ -2,7 +2,11 @@ import { Component, useState, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
-import { OrderlineNoteButton } from "@point_of_sale/app/screens/product_screen/control_buttons/customer_note_button/customer_note_button";
+import {
+    OrderlineNoteButton,
+    InternalNoteButton,
+} from "@point_of_sale/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button";
+import { GeneralNoteButton } from "@point_of_sale/app/screens/product_screen/control_buttons/orderline_note_button/general_note_button";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
@@ -10,7 +14,12 @@ import { SelectPartnerButton } from "@point_of_sale/app/screens/product_screen/c
 
 export class ControlButtons extends Component {
     static template = "point_of_sale.ControlButtons";
-    static components = { OrderlineNoteButton, SelectPartnerButton };
+    static components = {
+        OrderlineNoteButton,
+        SelectPartnerButton,
+        GeneralNoteButton,
+        InternalNoteButton,
+    };
     static props = {
         showRemainingButtons: { type: Boolean, optional: true },
         onClickMore: { type: Function, optional: true },

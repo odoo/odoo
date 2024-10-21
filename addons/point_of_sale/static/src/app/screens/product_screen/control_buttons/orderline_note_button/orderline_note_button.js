@@ -18,22 +18,23 @@ export class OrderlineNoteButton extends Component {
         label: _t("Customer Note"),
         getter: (orderline) => orderline.get_customer_note(),
         setter: (orderline, note) => orderline.set_customer_note(note),
-        class: "",
     };
 
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
     }
-    onClick() {
-        return this.props.label == _t("General Note") ? this.addGeneralNote() : this.addLineNotes();
-    }
-    async addLineNotes() {
+
+    async onClick() {
         const selectedOrderline = this.pos.get_order().get_selected_orderline();
         const selectedNote = this.props.getter(selectedOrderline);
-        const oldNote = selectedOrderline.getNote();
-        const payload = await this.openTextInput(selectedNote);
+        const payload = await this.openTextInput(selectedNote, false);
+        this.setChanges(selectedOrderline, payload);
+        return { confirmed: typeof payload === "string", inputNote: payload };
+    }
 
+    // Update line changes and set them
+    async setChanges(selectedOrderline, payload) {
         var quantity_with_note = 0;
         const changes = this.pos.getOrderChanges();
         for (const key in changes.orderlines) {
@@ -54,22 +55,31 @@ export class OrderlineNoteButton extends Component {
         } else {
             this.props.setter(selectedOrderline, payload);
         }
+        return { quantity_with_note, saved_quantity };
+    }
 
-        return { confirmed: typeof payload === "string", inputNote: payload, oldNote };
+    // Useful to handle name and color together for internal notes
+    reframeNotes(payload) {
+        const allnotes = [];
+        for (const noteName of payload.split("\n")) {
+            const defaultNote = this.pos.models["pos.note"].find((note) => note.name === noteName);
+            if (defaultNote && noteName.trim()) {
+                allnotes.push({ text: noteName, colorIndex: defaultNote.color });
+            } else if (noteName.trim()) {
+                const newColor = Math.floor(Math.random() * 11);
+                allnotes.push({ text: noteName, colorIndex: newColor });
+            }
+        }
+        return JSON.stringify(allnotes);
     }
-    async addGeneralNote() {
-        const selectedOrder = this.pos.get_order();
-        const selectedNote = selectedOrder.general_note || "";
-        const payload = await this.openTextInput(selectedNote);
-        selectedOrder.general_note = payload;
-        return { confirmed: typeof payload === "string", inputNote: payload };
-    }
-    async openTextInput(selectedNote) {
+
+    async openTextInput(selectedNote, displayNotes) {
         let buttons = [];
-        if (this._isInternalNote() || this.props.label == _t("General Note")) {
+        if (displayNotes) {
             buttons = this.pos.models["pos.note"].getAll().map((note) => ({
                 label: note.name,
-                isSelected: selectedNote.split("\n").includes(note.name), // Check if the note is already selected
+                isSelected: selectedNote.includes(note.name), // Check if the note is already selected
+                class: note.color ? `o_colorlist_item_color_${note.color}` : "",
             }));
         }
         return await makeAwaitable(this.dialog, TextInputPopup, {
@@ -79,10 +89,23 @@ export class OrderlineNoteButton extends Component {
             startingValue: selectedNote,
         });
     }
-    _isInternalNote() {
-        if (this.pos.config.module_pos_restaurant) {
-            return this.props.label == _t("Kitchen Note");
-        }
-        return this.props.label == _t("Internal Note");
+}
+
+export class InternalNoteButton extends OrderlineNoteButton {
+    static template = "point_of_sale.OrderlineNoteButton";
+    static props = {
+        ...OrderlineNoteButton.props,
+    };
+    async onClick() {
+        const selectedOrderline = this.pos.get_order().get_selected_orderline();
+        const selectedNote = JSON.parse(this.props.getter(selectedOrderline) || "[]");
+        const payload = await this.openTextInput(selectedNote.map((n) => n.text).join("\n"), true);
+        const coloredNotes = this.reframeNotes(payload);
+        this.setChanges(selectedOrderline, coloredNotes);
+        return {
+            confirmed: typeof payload === "string",
+            inputNote: coloredNotes,
+            oldNote: JSON.stringify(selectedNote),
+        };
     }
 }

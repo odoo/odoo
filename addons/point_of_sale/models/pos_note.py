@@ -9,6 +9,7 @@ class PosNote(models.Model):
 
     name = fields.Char(required=True)
     sequence = fields.Integer('Sequence', default=1)
+    color = fields.Integer(string='Color')
 
     _sql_constraints = [('name_unique', 'unique (name)', "A note with this name already exists")]
 
@@ -18,4 +19,4 @@ class PosNote(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['name']
+        return ['name', 'color']
