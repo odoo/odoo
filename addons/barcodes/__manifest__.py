@@ -15,9 +15,12 @@
         'web.assets_backend': [
             'barcodes/static/src/**/*',
         ],
-        'web.tests_assets': ['barcodes/static/tests/helpers.js'],
-        'web.qunit_suite_tests': ['barcodes/static/tests/basic/**/*.js'],
-        'web.qunit_mobile_suite_tests': ['barcodes/static/tests/mobile/*.js'],
+        'web.tests_assets': ['barcodes/static/tests/legacy/helpers.js'],
+        'web.qunit_suite_tests': ['barcodes/static/tests/legacy/basic/**/*.js'],
+        'web.assets_unit_tests': [
+            'barcodes/static/tests/**/*.js',
+            ('remove', 'barcodes/static/tests/legacy/**/*'),  # to remove when all legacy tests are ported
+        ],
     },
     'license': 'LGPL-3',
 }

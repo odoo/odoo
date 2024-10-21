@@ -1,4 +1,4 @@
-import { simulateBarCode } from "@barcodes/../tests/helpers";
+import { simulateBarCode } from "@barcodes/../tests/legacy/helpers";
 
 export function back() {
     return {
