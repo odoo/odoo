@@ -52,7 +52,7 @@
                 <t t-out="hiddenCounter"/>
             </div>
             <button class="o-mail-ChatHub-bubbleBtn btn outline-0">
-                <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fs-2" t-att-class="{ 'o-active': more.isOpen }">+<t t-esc="chatHub.folded.slice(chatHub.maxFolded).length"/></i>
+                <span class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fs-2" t-att-class="{ 'o-active': more.isOpen }">+<t t-esc="chatHub.folded.slice(chatHub.maxFolded).length"/></span>
             </button>
         </div>
         <t t-set-slot="content">
