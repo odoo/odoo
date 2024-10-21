@@ -1,4 +1,7 @@
 import { localization } from "@web/core/l10n/localization";
+import { omit } from "../utils/objects";
+
+const { abs, ceil, floor } = Math;
 
 /**
  * @typedef {"top" | "left" | "bottom" | "right"} Direction
@@ -30,9 +33,12 @@ const DIRECTIONS = { t: "top", r: "right", b: "bottom", l: "left" };
 /** @type {{[v: string]: Variant}} */
 const VARIANTS = { s: "start", m: "middle", e: "end", f: "fit" };
 /** @type DirectionFlipOrder */
-const DIRECTION_FLIP_ORDER = { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" };
+// const DIRECTION_FLIP_ORDER = { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" };
+const DIRECTION_FLIP_ORDER = { top: "tb", right: "rl", bottom: "bt", left: "lr" };
 /** @type VariantFlipOrder */
-const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems", fit: "f" };
+// const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems", fit: "f" };
+// const VARIANT_FLIP_ORDER = { start: "se", middle: "m", end: "es", fit: "f" };
+const VARIANT_FLIP_ORDER = { start: "s", middle: "m", end: "e", fit: "f" };
 /** @type DirectionFlipOrder */
 const FIT_FLIP_ORDER = { top: "tb", right: "rl", bottom: "bt", left: "lr" };
 
@@ -129,10 +135,11 @@ function computePosition(popper, target, { container, margin, position }) {
     };
 
     function getPositioningData(d = directions[0], v = variants[0], containerRestricted = false) {
+        const result = { direction: DIRECTIONS[d], variant: VARIANTS[v] };
         const vertical = ["t", "b"].includes(d);
         const variantPrefix = vertical ? "v" : "h";
         const directionValue = directionsData[d];
-        const variantValue = variantsData[variantPrefix + v];
+        let variantValue = variantsData[variantPrefix + v];
 
         if (containerRestricted) {
             const [directionSize, variantSize] = vertical
@@ -155,47 +162,79 @@ function computePosition(popper, target, { container, margin, position }) {
                 }
             }
 
-            // Abort if outside container boundaries
+            // Compute overflow
             const directionOverflow =
-                Math.ceil(directionValue) < Math.floor(directionMin) ||
-                Math.floor(directionValue + directionSize) > Math.ceil(directionMax);
+                ceil(directionValue) < floor(directionMin) // negative overflow
+                    ? ceil(directionValue) - floor(directionMin)
+                    : floor(directionValue + directionSize) > ceil(directionMax) // positive overflow
+                    ? floor(directionValue + directionSize) - ceil(directionMax)
+                    : 0;
             const variantOverflow =
-                Math.ceil(variantValue) < Math.floor(variantMin) ||
-                Math.floor(variantValue + variantSize) > Math.ceil(variantMax);
-            if (directionOverflow || variantOverflow) {
-                return null;
+                ceil(variantValue) < floor(variantMin) // negative overflow
+                    ? ceil(variantValue) - floor(variantMin)
+                    : floor(variantValue + variantSize) > ceil(variantMax) // positive overflow
+                    ? floor(variantValue + variantSize) - ceil(variantMax)
+                    : 0;
+            // All non zero values of variantOverflow lead to the same loss value since it can be
+            // corrected by shifting
+            result.loss = abs(directionOverflow) + (abs(variantOverflow) && 1);
+            if (directionOverflow) {
+                result.loss += 1_000_000;
             }
+            // Shift the variant with overflow amount
+            variantValue -= variantOverflow;
         }
-
         const positioning = vertical
             ? { top: directionValue, left: variantValue }
             : { top: variantValue, left: directionValue };
-        return {
-            // Subtract the offsets of the containing block (relative to the
-            // viewport). It can be done like that because the style top and
-            // left were reset to 0px in `reposition`
-            // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
-            top: positioning.top - popBox.top,
-            left: positioning.left - popBox.left,
-            direction: DIRECTIONS[d],
-            variant: VARIANTS[v],
-        };
+        // Subtract the offsets of the containing block (relative to the
+        // viewport). It can be done like that because the style top and
+        // left were reset to 0px in `reposition`
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
+        result.top = positioning.top - popBox.top;
+        result.left = positioning.left - popBox.left;
+        return result;
     }
 
     // Find best solution
+    const matches = [];
     for (const d of directions) {
         for (const v of variants) {
             const match = getPositioningData(d, v, true);
-            if (match) {
-                // Position match have been found.
+            if (!match.loss) {
+                // A perfect position match has been found.
                 return match;
             }
+            matches.push(match);
         }
     }
-
-    // Fallback to default position if no best solution found
-    return getPositioningData();
+    // Settle for the first match with the least loss
+    const bestMatch = matches.sort((a, b) => a.loss - b.loss)[0];
+    return omit(bestMatch, "loss");
 }
+
+/**
+ * avoir deux sets de solutions: une avec les el visibles et une avec les el qui débordent
+ *
+ * choix:
+ * - dans les visibles, prendre celui dont la diff entre les deux bords (target et popper) est la plus petite
+ * - dans les partiellement visibles, prendre celui dont la diff entre les deux bords (target et popper) est la plus petite également
+ *
+ * optimisation:
+ * - on peut parfois détecter que l'une des directions est 1a éliminer
+ */
+
+/**
+ * Ce qu'on devrait plutôt faire:
+ * - calculer les shifts nécessaires dans les 4 directions (en ignorant les variants?)
+ * - prendre le match où la différence entre le bord du popper et celui du target est minimale
+ *
+ * Peut-être aussi optimiser pour:
+ * - ne pas prendre en compte les 3 variants, car ça revient probablement au même de check le shift
+ *   sur un seul des variants ?
+ * - s'arrêter si le shift rentre dans l'écran, car de toute façon on respecte le choix de la
+ *   position souhaitée dans ce cas ?
+ */
 
 /**
  * Repositions the popper element relatively to the target element (according to options).

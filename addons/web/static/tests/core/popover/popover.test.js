@@ -44,13 +44,17 @@ test("popover is rendered nearby target (default)", async () => {
             expect(variant).toBe("middle");
         }
     }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
     await mountWithCleanup(TestPopover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             class: "custom-popover popover-custom",
             component: Content,
         },
+        noMainContainer: true,
     });
 });
 
@@ -62,13 +66,17 @@ test("popover is rendered nearby target (bottom)", async () => {
             expect(variant).toBe("middle");
         }
     }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
     await mountWithCleanup(TestPopover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom",
             component: Content,
         },
+        noMainContainer: true,
     });
 });
 
@@ -80,13 +88,17 @@ test("popover is rendered nearby target (top)", async () => {
             expect(variant).toBe("middle");
         }
     }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
     await mountWithCleanup(TestPopover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "top",
             component: Content,
         },
+        noMainContainer: true,
     });
 });
 
@@ -98,13 +110,17 @@ test("popover is rendered nearby target (left)", async () => {
             expect(variant).toBe("middle");
         }
     }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
     await mountWithCleanup(TestPopover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "left",
             component: Content,
         },
+        noMainContainer: true,
     });
 });
 
@@ -116,13 +132,17 @@ test("popover is rendered nearby target (right)", async () => {
             expect(variant).toBe("middle");
         }
     }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
     await mountWithCleanup(TestPopover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "right",
             component: Content,
         },
+        noMainContainer: true,
     });
 });
 
@@ -134,13 +154,17 @@ test("popover is rendered nearby target (bottom-start)", async () => {
             expect(variant).toBe("start");
         }
     }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
     await mountWithCleanup(TestPopover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom-start",
             component: Content,
         },
+        noMainContainer: true,
     });
 });
 
@@ -152,13 +176,17 @@ test("popover is rendered nearby target (bottom-middle)", async () => {
             expect(variant).toBe("middle");
         }
     }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
     await mountWithCleanup(TestPopover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom-middle",
             component: Content,
         },
+        noMainContainer: true,
     });
 });
 
@@ -170,13 +198,17 @@ test("popover is rendered nearby target (bottom-end)", async () => {
             expect(variant).toBe("end");
         }
     }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
     await mountWithCleanup(TestPopover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom-end",
             component: Content,
         },
+        noMainContainer: true,
     });
 });
 
@@ -188,13 +220,17 @@ test("popover is rendered nearby target (bottom-fit)", async () => {
             expect(variant).toBe("fit");
         }
     }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
     await mountWithCleanup(TestPopover, {
         props: {
-            target: getFixture(),
+            target: queryOne("#target"),
             position: "bottom-fit",
             component: Content,
         },
+        noMainContainer: true,
     });
 });
 
