@@ -13,17 +13,35 @@
             </record>
         </field>
         <field name="line_ids">
+            <record id="l10n_ca_tr_gsthst_90" model="account.report.line">
+                <field name="name">90 - Taxable sales including zero-rated supplies (other than zero‑rated exports) made in Canada</field>
+                <field name="code">Ca90</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="l10n_ca_tr_gsthst_90_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Ca90</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ca_tr_gsthst_91" model="account.report.line">
+                <field name="name">91 - Exempt supplies and zero-rated exports</field>
+                <field name="code">Ca91</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="l10n_ca_tr_gsthst_91_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Ca91</field>
+                    </record>
+                </field>
+            </record>
             <record id="l10n_ca_tr_gsthst_101" model="account.report.line">
                 <field name="name">101 - Sales and other revenues</field>
                 <field name="code">Ca101</field>
-                <field name="hierarchy_level">3</field>
-                <field name="expression_ids">
-                    <record id="l10n_ca_tr_gsthst_101_tag" model="account.report.expression">
-                        <field name="label">balance</field>
-                        <field name="engine">tax_tags</field>
-                        <field name="formula">Ca101</field>
-                    </record>
-                </field>
+                <field name="hierarchy_level">1</field>
+                <field name="aggregation_formula">Ca90.balance + Ca91.balance</field>
             </record>
             <record id="l10n_ca_tr_gsthst_103" model="account.report.line">
                 <field name="name">103 - GST and HST amounts collected or that became collectible</field>
