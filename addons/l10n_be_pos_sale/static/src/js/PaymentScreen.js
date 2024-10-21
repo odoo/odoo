@@ -9,7 +9,7 @@ patch(PaymentScreen.prototype, {
         super.setup(...arguments);
         onMounted(() => {
             if (this.checkIsToInvoice()) {
-                this.currentOrder.set_to_invoice(true);
+                this.currentOrder.setToInvoice(true);
             }
         });
     },
@@ -27,7 +27,7 @@ patch(PaymentScreen.prototype, {
     },
     checkIsToInvoice() {
         const has_origin_order = this.currentOrder
-            .get_orderlines()
+            .getOrderlines()
             .some((line) => line.sale_order_origin_id);
         if (
             this.pos.company.country_id &&

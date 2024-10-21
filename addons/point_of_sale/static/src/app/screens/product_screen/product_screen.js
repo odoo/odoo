@@ -65,7 +65,7 @@ export class ProductScreen extends Component {
         onWillRender(() => {
             // If its a shared order it can be paid from another POS
             if (this.currentOrder?.state !== "draft") {
-                this.pos.add_new_order();
+                this.pos.addNewOrder();
             }
         });
 
@@ -127,10 +127,10 @@ export class ProductScreen extends Component {
         this.numberBuffer.sendKey(buttonValue);
     }
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     }
     get total() {
-        return this.env.utils.formatCurrency(this.currentOrder?.get_total_with_tax() ?? 0);
+        return this.env.utils.formatCurrency(this.currentOrder?.getTotalWithTax() ?? 0);
     }
     get items() {
         return this.currentOrder.lines?.reduce((items, line) => items + line.qty, 0) ?? 0;
@@ -191,17 +191,17 @@ export class ProductScreen extends Component {
     async _barcodePartnerAction(code) {
         const partner = await this._getPartnerByBarcode(code);
         if (partner) {
-            if (this.currentOrder.get_partner() !== partner) {
-                this.currentOrder.set_partner(partner);
+            if (this.currentOrder.getPartner() !== partner) {
+                this.currentOrder.setPartner(partner);
             }
             return;
         }
         this.barcodeReader.showNotFoundNotification(code);
     }
     _barcodeDiscountAction(code) {
-        var last_orderline = this.currentOrder.get_last_orderline();
+        var last_orderline = this.currentOrder.getLastOrderline();
         if (last_orderline) {
-            last_orderline.set_discount(code.value);
+            last_orderline.setDiscount(code.value);
         }
     }
     /**
@@ -231,14 +231,14 @@ export class ProductScreen extends Component {
         this.dialog.add(ControlButtonsPopup);
     }
     get selectedOrderlineQuantity() {
-        return this.currentOrder.get_selected_orderline()?.get_quantity_str();
+        return this.currentOrder.getSelectedOrderline()?.getQuantityStr();
     }
     get selectedOrderlineDisplayName() {
-        return this.currentOrder.get_selected_orderline()?.get_full_product_name();
+        return this.currentOrder.getSelectedOrderline()?.getFullProductName();
     }
     get selectedOrderlineTotal() {
         return this.env.utils.formatCurrency(
-            this.currentOrder.get_selected_orderline()?.get_display_price()
+            this.currentOrder.getSelectedOrderline()?.getDisplayPrice()
         );
     }
     /**
@@ -250,7 +250,7 @@ export class ProductScreen extends Component {
      */
     get animationKey() {
         return [
-            this.currentOrder.get_selected_orderline()?.uuid,
+            this.currentOrder.getSelectedOrderline()?.uuid,
             this.selectedOrderlineQuantity,
             this.selectedOrderlineDisplayName,
             this.selectedOrderlineTotal,

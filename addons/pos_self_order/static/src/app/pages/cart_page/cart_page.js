@@ -84,11 +84,11 @@ export class CartPage extends Component {
     getPrice(line) {
         const childLines = line.combo_line_ids;
         if (childLines.length == 0) {
-            return line.get_display_price();
+            return line.getDisplayPrice();
         } else {
             let price = 0;
             for (const child of childLines) {
-                price += child.get_display_price();
+                price += child.getDisplayPrice();
             }
             return price;
         }

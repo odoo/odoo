@@ -58,13 +58,13 @@ patch(PosStore.prototype, {
         await this.updateRewards();
     },
     async resetPrograms() {
-        const order = this.get_order();
+        const order = this.getOrder();
         order._resetPrograms();
         await this.orderUpdateLoyaltyPrograms();
         await this.updateRewards();
     },
     async orderUpdateLoyaltyPrograms() {
-        if (!this.get_order()) {
+        if (!this.getOrder()) {
             return;
         }
 
@@ -77,7 +77,7 @@ patch(PosStore.prototype, {
             return;
         }
 
-        const order = this.get_order();
+        const order = this.getOrder();
         if (order.finalized) {
             return;
         }
@@ -106,9 +106,9 @@ patch(PosStore.prototype, {
         });
     },
     async couponForProgram(program) {
-        const order = this.get_order();
+        const order = this.getOrder();
         if (program.is_nominative) {
-            return await this.fetchLoyaltyCard(program.id, order.get_partner().id);
+            return await this.fetchLoyaltyCard(program.id, order.getPartner().id);
         }
         // This type of coupons don't need to really exist up until validating the order, so no need to cache
         return this.models["loyalty.card"].create({
@@ -123,7 +123,7 @@ patch(PosStore.prototype, {
      * Update our couponPointChanges, meaning the points/coupons each program give etc.
      */
     async updatePrograms() {
-        const order = this.get_order();
+        const order = this.getOrder();
         if (!order) {
             return;
         }
@@ -156,7 +156,7 @@ patch(PosStore.prototype, {
                 : [];
             // For programs that apply to both (loyalty) we always add a change of 0 points, if there is none, since it makes it easier to
             //  track for claimable rewards, and makes sure to load the partner's loyalty card.
-            if (program.is_nominative && !pointsAdded.length && order.get_partner()) {
+            if (program.is_nominative && !pointsAdded.length && order.getPartner()) {
                 pointsAdded.push({ points: 0 });
             }
             const oldChanges = changesPerProgram[program.id] || [];
@@ -211,8 +211,7 @@ patch(PosStore.prototype, {
                         appliedRules: pointsForProgramsCountedRules[program.id],
                     };
                     if (program && program.program_type === "gift_card") {
-                        couponPointChange.product_id =
-                            order.get_selected_orderline()?.product_id.id;
+                        couponPointChange.product_id = order.getSelectedOrderline()?.product_id.id;
                         couponPointChange.expiration_date = serializeDate(
                             luxon.DateTime.now().plus({ year: 1 })
                         );
@@ -239,7 +238,7 @@ patch(PosStore.prototype, {
         order._code_activated_coupon_ids = [["unlink", ...toUnlink]];
     },
     async activateCode(code) {
-        const order = this.get_order();
+        const order = this.getOrder();
         const rule = this.models["loyalty.rule"].find((rule) => {
             return rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code);
         });
@@ -274,7 +273,7 @@ patch(PosStore.prototype, {
             if (order._code_activated_coupon_ids.find((coupon) => coupon.code === code)) {
                 return _t("That coupon code has already been scanned and activated.");
             }
-            const customerId = order.get_partner() ? order.get_partner().id : false;
+            const customerId = order.getPartner() ? order.getPartner().id : false;
             const { successful, payload } = await this.data.call("pos.config", "use_coupon_code", [
                 [this.config.id],
                 code,
@@ -334,7 +333,7 @@ patch(PosStore.prototype, {
     },
     async checkMissingCoupons() {
         // This function must stay sequential to avoid potential concurrency errors.
-        const order = this.get_order();
+        const order = this.getOrder();
         await mutex.exec(async () => {
             if (!order.invalidCoupons) {
                 return;
@@ -354,7 +353,7 @@ patch(PosStore.prototype, {
 
         const productTmpl = vals.product_tmpl_id;
         const productIds = productTmpl.product_variant_ids.map((v) => v.id);
-        const order = this.get_order();
+        const order = this.getOrder();
         const linkedPrograms = productIds.flatMap(
             (id) => this.models["loyalty.program"].getBy("trigger_product_ids", id) || []
         );
@@ -376,7 +375,7 @@ patch(PosStore.prototype, {
             selectedProgram = linkedPrograms[0];
         }
 
-        const orderTotal = this.get_order().get_total_with_tax();
+        const orderTotal = this.getOrder().getTotalWithTax();
         if (
             selectedProgram &&
             ["gift_card", "ewallet"].includes(selectedProgram.program_type) &&
@@ -450,12 +449,12 @@ patch(PosStore.prototype, {
      * it comes with the corresponding reward product line.
      */
     async pay() {
-        const currentOrder = this.get_order();
+        const currentOrder = this.getOrder();
         const eWalletLine = currentOrder
-            .get_orderlines()
+            .getOrderlines()
             .find((line) => line.getEWalletGiftCardProgramType() === "ewallet");
 
-        if (eWalletLine && !currentOrder.get_partner()) {
+        if (eWalletLine && !currentOrder.getPartner()) {
             const confirmed = await ask(this.dialog, {
                 title: _t("Customer needed"),
                 body: _t("eWallet requires a customer to be selected"),
@@ -468,7 +467,7 @@ patch(PosStore.prototype, {
         }
     },
     getPotentialFreeProductRewards() {
-        const order = this.get_order();
+        const order = this.getOrder();
         const allCouponPrograms = Object.values(order.uiState.couponPointChanges)
             .map((pe) => {
                 return {
@@ -572,7 +571,7 @@ patch(PosStore.prototype, {
     computeDiscountProductIdsForAllRewards(data) {
         const products = this.models[data.model].readMany(data.ids);
         for (const reward of this.models["loyalty.reward"].getAll()) {
-            this.compute_discount_product_ids(reward, products);
+            this.computeDiscountProductIds(reward, products);
         }
     },
 
@@ -591,7 +590,7 @@ patch(PosStore.prototype, {
         }
     },
 
-    compute_discount_product_ids(reward, products) {
+    computeDiscountProductIds(reward, products) {
         const reward_product_domain = JSON.parse(reward.reward_product_domain);
         if (!reward_product_domain) {
             return;

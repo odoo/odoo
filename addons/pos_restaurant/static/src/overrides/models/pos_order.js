@@ -23,9 +23,9 @@ patch(PosOrder.prototype, {
         }
         return this.getTotalDue() / numCustomers;
     },
-    export_for_printing(baseUrl, headerData) {
+    exportForPrinting(baseUrl, headerData) {
         return {
-            ...super.export_for_printing(...arguments),
+            ...super.exportForPrinting(...arguments),
             set_tip_after_payment: this.config.set_tip_after_payment,
             isRestaurant: this.config.module_pos_restaurant,
             headerData: {

@@ -56,7 +56,7 @@ export class HardwareProxy extends EventBus {
             if (await this.message("handshake")) {
                 this.setConnectionInfo({ status: "connected" });
                 localStorage.hw_proxy_url = this.host;
-                this.keepalive();
+                this.keepAlive();
             } else {
                 this.setConnectionInfo({ status: "disconnected" });
                 console.error("Connection refused by the Proxy");
@@ -79,7 +79,7 @@ export class HardwareProxy extends EventBus {
      * @param {string} [options.port]
      * @returns {Promise}
      */
-    async autoconnect(options) {
+    async autoConnect(options) {
         this.setConnectionInfo({ status: "connecting", drivers: {} });
         let url = options.force_ip || localStorage.hw_proxy_url;
         // Return a pending promise if there is no url to connect to
@@ -97,7 +97,7 @@ export class HardwareProxy extends EventBus {
     }
 
     // starts a loop that updates the connection status
-    keepalive() {
+    keepAlive() {
         const status = () => {
             const always = () => setTimeout(status, 5000);
             const xhr = new browser.XMLHttpRequest();

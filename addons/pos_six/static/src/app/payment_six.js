@@ -23,7 +23,7 @@ export class PaymentSix extends PaymentInterface {
      */
     setup() {
         super.setup(...arguments);
-        this.enable_reversals();
+        this.enableReversals();
 
         var terminal_ip = this.payment_method_id.six_terminal_ip;
         var instanced_payment_method = this.pos.models["pos.payment.method"].find(function (
@@ -81,8 +81,8 @@ export class PaymentSix extends PaymentInterface {
     /**
      * @override
      */
-    send_payment_cancel() {
-        super.send_payment_cancel(...arguments);
+    sendPaymentCancel() {
+        super.sendPaymentCancel(...arguments);
         this.terminal.cancel();
         return Promise.resolve();
     }
@@ -90,22 +90,22 @@ export class PaymentSix extends PaymentInterface {
     /**
      * @override
      */
-    send_payment_request() {
-        super.send_payment_request(...arguments);
-        this.pos.get_order().get_selected_paymentline().set_payment_status("waitingCard");
+    sendPaymentRequest() {
+        super.sendPaymentRequest(...arguments);
+        this.pos.getOrder().getSelectedPaymentline().setPaymentStatus("waitingCard");
         return this._sendTransaction(timapi.constants.TransactionType.purchase);
     }
 
     /**
      * @override
      */
-    send_payment_reversal() {
-        super.send_payment_reversal(...arguments);
-        this.pos.get_order().get_selected_paymentline().set_payment_status("reversing");
+    sendPaymentReversal() {
+        super.sendPaymentReversal(...arguments);
+        this.pos.getOrder().getSelectedPaymentline().setPaymentStatus("reversing");
         return this._sendTransaction(timapi.constants.TransactionType.reversal);
     }
 
-    send_balance() {
+    sendBalance() {
         this.terminal.balanceAsync();
     }
 
@@ -162,7 +162,7 @@ export class PaymentSix extends PaymentInterface {
                         "</div></div>"
                 );
             } else if (receipt.recipient === timapi.constants.Recipient.cardholder) {
-                this.pos.get_order().get_selected_paymentline().set_receipt_info(receipt.value);
+                this.pos.getOrder().getSelectedPaymentline().setReceiptInfo(receipt.value);
             }
         });
     }
@@ -170,7 +170,7 @@ export class PaymentSix extends PaymentInterface {
     _sendTransaction(transactionType) {
         var amount = new timapi.Amount(
             Math.round(
-                this.pos.get_order().get_selected_paymentline().amount / this.pos.currency.rounding
+                this.pos.getOrder().getSelectedPaymentline().amount / this.pos.currency.rounding
             ),
             timapi.constants.Currency[this.pos.currency.name],
             this.pos.currency.decimal_places

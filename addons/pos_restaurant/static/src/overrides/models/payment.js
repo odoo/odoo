@@ -17,5 +17,5 @@ patch(PaymentInterface.prototype, {
      * canBeAdjusted returns True
      * @param {string} uuid - The id of the paymentline
      */
-    send_payment_adjust(uuid) {},
+    sendPaymentAdjust(uuid) {},
 });

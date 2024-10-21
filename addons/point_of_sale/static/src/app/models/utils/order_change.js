@@ -44,8 +44,8 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
 
     // Compares the orderlines of the order with the last ones sent.
     // When one of them has changed, we add the change.
-    for (const orderline of order.get_orderlines()) {
-        const product = orderline.get_product();
+    for (const orderline of order.getOrderlines()) {
+        const product = orderline.getProduct();
         const note = orderline.getNote();
         const lineKey = `${orderline.uuid} - ${note}`;
         const productCategoryIds = product.parentPosCategIds.filter((id) =>
@@ -53,7 +53,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
         );
 
         if (prepaCategoryIds.size === 0 || productCategoryIds.length > 0) {
-            const quantity = orderline.get_quantity();
+            const quantity = orderline.getQuantity();
             const quantityDiff = oldChanges[lineKey]
                 ? quantity - oldChanges[lineKey].quantity
                 : quantity;
@@ -61,7 +61,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
             if (quantityDiff && orderline.skip_change === skipped) {
                 changes[lineKey] = {
                     uuid: orderline.uuid,
-                    name: orderline.get_full_product_name(),
+                    name: orderline.getFullProductName(),
                     product_id: product.id,
                     attribute_value_ids: orderline.attribute_value_ids.map((a) => a.id),
                     quantity: quantityDiff,

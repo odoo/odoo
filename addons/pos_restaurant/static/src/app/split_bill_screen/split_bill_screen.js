@@ -18,11 +18,11 @@ export class SplitBillScreen extends Component {
     }
 
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.getOrder();
     }
 
     get orderlines() {
-        return this.currentOrder.get_orderlines();
+        return this.currentOrder.getOrderlines();
     }
 
     get newOrderPrice() {
@@ -33,22 +33,22 @@ export class SplitBillScreen extends Component {
         const lines = line.getAllLinesInCombo();
 
         for (const line of lines) {
-            if (!line.is_pos_groupable()) {
-                if (this.qtyTracker[line.uuid] === line.get_quantity()) {
+            if (!line.isPosGroupable()) {
+                if (this.qtyTracker[line.uuid] === line.getQuantity()) {
                     this.qtyTracker[line.uuid] = 0;
                 } else {
-                    this.qtyTracker[line.uuid] = line.get_quantity();
+                    this.qtyTracker[line.uuid] = line.getQuantity();
                 }
             } else if (!this.qtyTracker[line.uuid]) {
                 this.qtyTracker[line.uuid] = 1;
-            } else if (this.qtyTracker[line.uuid] === line.get_quantity()) {
+            } else if (this.qtyTracker[line.uuid] === line.getQuantity()) {
                 this.qtyTracker[line.uuid] = 0;
             } else {
                 this.qtyTracker[line.uuid] += 1;
             }
 
             this.priceTracker[line.uuid] =
-                (line.get_price_with_tax() / line.qty) * this.qtyTracker[line.uuid];
+                (line.getPriceWithTax() / line.qty) * this.qtyTracker[line.uuid];
         }
     }
 
@@ -59,7 +59,7 @@ export class SplitBillScreen extends Component {
     _getLatestOrderNameStartingWith(name) {
         return (
             this.pos
-                .get_open_orders()
+                .getOpenOrders()
                 .map((order) => this._getOrderName(order))
                 .filter((orderName) => orderName.slice(0, -1) === name)
                 .sort((a, b) => a.slice(-1).localeCompare(b.slice(-1)))
@@ -108,10 +108,10 @@ export class SplitBillScreen extends Component {
                     true
                 );
 
-                if (line.get_quantity() === this.qtyTracker[line.uuid]) {
+                if (line.getQuantity() === this.qtyTracker[line.uuid]) {
                     lineToDel.push(line);
                 } else {
-                    line.qty = line.get_quantity() - this.qtyTracker[line.uuid];
+                    line.qty = line.getQuantity() - this.qtyTracker[line.uuid];
                 }
             }
         }
@@ -132,9 +132,9 @@ export class SplitBillScreen extends Component {
         }
 
         originalOrder.customer_count -= 1;
-        originalOrder.set_screen_data({ name: "ProductScreen" });
+        originalOrder.setScreenData({ name: "ProductScreen" });
         this.pos.selectedOrderUuid = null;
-        this.pos.set_order(newOrder);
+        this.pos.setOrder(newOrder);
         this.back();
     }
 
@@ -145,7 +145,7 @@ export class SplitBillScreen extends Component {
             return line.getDisplayData();
         }
 
-        return { ...line.getDisplayData(), qty: `${splitQty} / ${line.get_quantity_str()}` };
+        return { ...line.getDisplayData(), qty: `${splitQty} / ${line.getQuantityStr()}` };
     }
 
     back() {

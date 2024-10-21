@@ -3,9 +3,9 @@ import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_inter
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class PaymentMercadoPago extends PaymentInterface {
-    async create_payment_intent() {
-        const order = this.pos.get_order();
-        const line = order.get_selected_paymentline();
+    async createPaymentIntent() {
+        const order = this.pos.getOrder();
+        const line = order.getSelectedPaymentline();
         // Build informations for creating a payment intend on Mercado Pago.
         // Data in "external_reference" are send back with the webhook notification
         const infos = {
@@ -22,8 +22,8 @@ export class PaymentMercadoPago extends PaymentInterface {
             [[line.payment_method_id.id], infos]
         );
     }
-    async get_last_status_payment_intent() {
-        const line = this.pos.get_order().get_selected_paymentline();
+    async getLastStatusPaymentIntent() {
+        const line = this.pos.getOrder().getSelectedPaymentline();
         // mp_payment_intent_get will call the Mercado Pago api
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
@@ -32,8 +32,8 @@ export class PaymentMercadoPago extends PaymentInterface {
         );
     }
 
-    async cancel_payment_intent() {
-        const line = this.pos.get_order().get_selected_paymentline();
+    async cancelPaymentIntent() {
+        const line = this.pos.getOrder().getSelectedPaymentline();
         // mp_payment_intent_cancel will call the Mercado Pago api
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
@@ -42,8 +42,8 @@ export class PaymentMercadoPago extends PaymentInterface {
         );
     }
 
-    async get_payment(payment_id) {
-        const line = this.pos.get_order().selected_paymentline;
+    async getPayment(payment_id) {
+        const line = this.pos.getOrder().selected_paymentline;
         // mp_get_payment_status will call the Mercado Pago api
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
@@ -58,14 +58,14 @@ export class PaymentMercadoPago extends PaymentInterface {
         this.payment_intent = {};
     }
 
-    async send_payment_request(cid) {
-        await super.send_payment_request(...arguments);
-        const line = this.pos.get_order().get_selected_paymentline();
+    async sendPaymentRequest(cid) {
+        await super.sendPaymentRequest(...arguments);
+        const line = this.pos.getOrder().getSelectedPaymentline();
         try {
             // During payment creation, user can't cancel the payment intent
-            line.set_payment_status("waitingCapture");
+            line.setPaymentStatus("waitingCapture");
             // Call Mercado Pago to create a payment intent
-            const payment_intent = await this.create_payment_intent();
+            const payment_intent = await this.createPaymentIntent();
             if (!("id" in payment_intent)) {
                 this._showMsg(payment_intent.message, "error");
                 return false;
@@ -73,7 +73,7 @@ export class PaymentMercadoPago extends PaymentInterface {
             // Payment intent creation successfull, save it
             this.payment_intent = payment_intent;
             // After payment creation, make the payment intent canceling possible
-            line.set_payment_status("waitingCard");
+            line.setPaymentStatus("waitingCard");
             // Wait for payment intent status change and return status result
             return await new Promise((resolve) => {
                 this.webhook_resolver = resolve;
@@ -84,12 +84,12 @@ export class PaymentMercadoPago extends PaymentInterface {
         }
     }
 
-    async send_payment_cancel(order, cid) {
-        await super.send_payment_cancel(order, cid);
+    async sendPaymentCancel(order, cid) {
+        await super.sendPaymentCancel(order, cid);
         if (!("id" in this.payment_intent)) {
             return true;
         }
-        const canceling_status = await this.cancel_payment_intent();
+        const canceling_status = await this.cancelPaymentIntent();
         if ("error" in canceling_status) {
             const message =
                 canceling_status.status === 409
@@ -102,7 +102,7 @@ export class PaymentMercadoPago extends PaymentInterface {
     }
 
     async handleMercadoPagoWebhook() {
-        const line = this.pos.get_order().get_selected_paymentline();
+        const line = this.pos.getOrder().getSelectedPaymentline();
         const MAX_RETRY = 5; // Maximum number of retries for the "ON_TERMINAL" BUG
         const RETRY_DELAY = 1000; // Delay between retries in milliseconds for the "ON_TERMINAL" BUG
 
@@ -110,7 +110,7 @@ export class PaymentMercadoPago extends PaymentInterface {
             if (!resolverValue) {
                 this._showMsg(messageKey, status);
             }
-            line.set_payment_status("done");
+            line.setPaymentStatus("done");
             this.webhook_resolver?.(resolverValue);
             return resolverValue;
         };
@@ -120,7 +120,7 @@ export class PaymentMercadoPago extends PaymentInterface {
                 return showMessageAndResolve(_t("Payment has been canceled"), "info", false);
             }
             if (["FINISHED", "PROCESSED"].includes(paymentIntent.state)) {
-                const payment = await this.get_payment(paymentIntent.payment.id);
+                const payment = await this.getPayment(paymentIntent.payment.id);
                 if (payment.status === "approved") {
                     return showMessageAndResolve(_t("Payment has been processed"), "info", true);
                 }
@@ -132,7 +132,7 @@ export class PaymentMercadoPago extends PaymentInterface {
         // it is an old webhook -> trash
         if ("id" in this.payment_intent) {
             // Call Mercado Pago to get the payment intent status
-            let last_status_payment_intent = await this.get_last_status_payment_intent();
+            let last_status_payment_intent = await this.getLastStatusPaymentIntent();
             // Bad payment intent id, then it's an old webhook not related with the
             // current payment intent -> trash
             if (this.payment_intent.id == last_status_payment_intent.id) {
@@ -150,8 +150,7 @@ export class PaymentMercadoPago extends PaymentInterface {
                     return await new Promise((resolve) => {
                         let retry_cnt = 0;
                         const s = setInterval(async () => {
-                            last_status_payment_intent =
-                                await this.get_last_status_payment_intent();
+                            last_status_payment_intent = await this.getLastStatusPaymentIntent();
                             if (
                                 ["FINISHED", "PROCESSED", "CANCELED"].includes(
                                     last_status_payment_intent.state

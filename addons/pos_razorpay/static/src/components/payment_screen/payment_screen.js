@@ -9,16 +9,16 @@ patch(PaymentScreen.prototype, {
             const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_method_id.use_payment_terminal === "razorpay" &&
-                    !paymentLine.is_done() &&
-                    paymentLine.get_payment_status() !== "pending"
+                    !paymentLine.isDone() &&
+                    paymentLine.getPaymentStatus() !== "pending"
             );
             if (pendingPaymentLine) {
                 const payment_status =
                     await pendingPaymentLine.payment_method_id.payment_terminal._waitForPaymentConfirmation();
                 if (payment_status?.status === "AUTHORIZED") {
-                    pendingPaymentLine.set_payment_status("done");
+                    pendingPaymentLine.setPaymentStatus("done");
                 } else {
-                    pendingPaymentLine.set_payment_status("force_done");
+                    pendingPaymentLine.setPaymentStatus("force_done");
                 }
             }
         });

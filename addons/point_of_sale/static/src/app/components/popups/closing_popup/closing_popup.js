@@ -189,7 +189,7 @@ export class ClosePosPopup extends Component {
             });
         }
         // If there are orders in the db left unsynced, we try to sync.
-        const syncSuccess = await this.pos.push_orders_with_closing_popup();
+        const syncSuccess = await this.pos.pushOrdersWithClosingPopup();
         if (!syncSuccess) {
             return;
         }

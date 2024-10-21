@@ -2,8 +2,8 @@ import { PaymentAdyen } from "@pos_adyen/app/payment_adyen";
 import { patch } from "@web/core/utils/patch";
 
 patch(PaymentAdyen.prototype, {
-    _adyen_pay_data() {
-        var data = super._adyen_pay_data(...arguments);
+    _adyenPayData() {
+        var data = super._adyenPayData(...arguments);
 
         if (data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData) {
             data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData +=
@@ -16,9 +16,9 @@ patch(PaymentAdyen.prototype, {
         return data;
     },
 
-    send_payment_adjust(uuid) {
-        var order = this.pos.get_order();
-        var line = order.get_paymentline_by_uuid(uuid);
+    sendPaymentAdjust(uuid) {
+        var order = this.pos.getOrder();
+        var line = order.getPaymentlineByUuid(uuid);
         var data = {
             originalReference: line.transaction_id,
             modificationAmount: {
@@ -31,12 +31,12 @@ patch(PaymentAdyen.prototype, {
             },
         };
 
-        return this._call_adyen(data, "adjust");
+        return this._callAdyen(data, "adjust");
     },
 
     canBeAdjusted(uuid) {
-        var order = this.pos.get_order();
-        var line = order.get_paymentline_by_uuid(uuid);
+        var order = this.pos.getOrder();
+        var line = order.getPaymentlineByUuid(uuid);
         return ["mc", "visa", "amex", "discover"].includes(line.card_type);
     },
 });
