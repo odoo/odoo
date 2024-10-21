@@ -382,9 +382,25 @@ class PosSession(models.Model):
         else:
             sessions = super().create(vals_list)
 
+<<<<<<< master
         sessions._create_sequences()
         sessions.action_pos_session_open()
 
+||||||| 64f686a542f35233b0399b94ff4a0ecd7589e6b3
+        date_string = fields.Date.today().isoformat()
+        ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
+        if not ir_sequence:
+            self.env['ir.sequence'].sudo().create({
+                'name': _("PoS Order"),
+                'padding': 0,
+                'code': f'pos.order_{date_string}',
+                'number_next': 1,
+                'number_increment': 1,
+                'company_id': self.env.company.id,
+            })
+
+=======
+>>>>>>> f6562b2a995cd132b98d5ec6a8b86ac739bd2a45
         return sessions
 
     def unlink(self):
