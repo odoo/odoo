@@ -23,4 +23,5 @@ import { makeEnv, startServices } from "@web/env";
         dev: env.debug,
     });
     odoo.__WOWL_DEBUG__ = { root };
+    window.electronAPI?.loaded();
 })();
