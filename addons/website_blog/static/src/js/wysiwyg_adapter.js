@@ -11,13 +11,6 @@ patch(WysiwygAdapterComponent.prototype, {
         super.init(...arguments);
         this.blogTagsPerBlogPost = {};
     },
-    /**
-     * @override
-     */
-    async startEdition() {
-        await super.startEdition(...arguments);
-        this.options.document.defaultView.$('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
-    },
 
     //--------------------------------------------------------------------------
     // Public
