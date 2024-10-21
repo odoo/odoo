@@ -92,9 +92,7 @@ class Manager(Thread):
             _logger.info('Ignoring sending the devices to the database: no associated database')
 
     def run(self):
-        """
-        Thread that will load interfaces and drivers and contact the odoo server with the updates
-        """
+        """Thread that will load interfaces and drivers and contact the odoo server with the updates"""
         self.server_url = helpers.get_odoo_server_url()
         helpers.start_nginx_server()
 
@@ -125,6 +123,7 @@ class Manager(Thread):
 
         # Set scheduled actions
         schedule and schedule.every().day.at("00:00").do(helpers.get_certificate_status)
+        schedule and schedule.every().day.at("00:00").do(helpers.reset_log_level)
 
         # Set up the websocket connection
         if self.server_url and iot_client.iot_channel:
