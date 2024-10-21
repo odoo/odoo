@@ -5,8 +5,8 @@
     <div class="h-100 o-snippets-menu">
         <div class="o-snippets-top-actions d-flex justify-content-between">
             <div class="d-flex">
-                <button type="button" t-on-click="() => {}" class="btn btn-secondary fa fa-undo" t-att-disabled="!state.canUndo"/>
-                <button type="button"  t-on-click="() => {}" class="btn btn-secondary fa fa-repeat" t-att-disabled="!state.canRedo"/>
+                <button type="button" t-on-click="() => this.undo()" class="btn btn-secondary fa fa-undo" t-att-disabled="!state.canUndo"/>
+                <button type="button"  t-on-click="() => this.redo()" class="btn btn-secondary fa fa-repeat" t-att-disabled="!state.canRedo"/>
             </div>
             <div class="d-flex">
                 <button type="button"  t-on-click="discard" class="btn btn-secondary" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
