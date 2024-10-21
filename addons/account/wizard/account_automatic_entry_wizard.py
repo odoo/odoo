@@ -331,6 +331,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             'ref': self._format_strings(ref_format, self.move_line_ids[0].move_id),
             'date': fields.Date.to_string(self.date),
             'journal_id': self.journal_id.id,
+            'adjusting_entry_origin_move_ids': self.move_line_ids.move_id.ids,
         }}
         # complete the account.move data
         for date, grouped_lines in groupby(self.move_line_ids, get_lock_safe_date):
@@ -343,6 +344,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                 'ref': self._format_strings(ref_format, grouped_lines[0].move_id, amount),
                 'date': fields.Date.to_string(date),
                 'journal_id': self.journal_id.id,
+                'adjusting_entry_origin_move_ids': self.move_line_ids.move_id.ids,
             }
 
         # compute the account.move.lines and the total amount per move

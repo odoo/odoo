@@ -879,6 +879,56 @@
                                         <span class="o_stat_text">Cash Basis Entries</span>
                                     </div>
                             </button>
+                            <button name="open_adjusting_entries"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    invisible="not adjusting_entries_move_ids">
+                                    <field name="adjusting_entries_count" string="Adjusting Entries" widget="statinfo"/>
+                            </button>
+                            <button name="open_adjusting_entry_origin_moves"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    invisible="not adjusting_entry_origin_move_ids or adjusting_entry_origin_moves_type != 'out_invoice'">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Invoice</span>
+                                    </div>
+                            </button>
+                            <button name="open_adjusting_entry_origin_moves"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    invisible="not adjusting_entry_origin_move_ids or adjusting_entry_origin_moves_type != 'in_invoice'">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Bill</span>
+                                    </div>
+                            </button>
+                            <button name="open_adjusting_entry_origin_moves"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    invisible="not adjusting_entry_origin_move_ids or adjusting_entry_origin_moves_type != 'out_refund'">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Credit Note</span>
+                                    </div>
+                            </button>
+                            <button name="open_adjusting_entry_origin_moves"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    invisible="not adjusting_entry_origin_move_ids or adjusting_entry_origin_moves_type != 'in_refund'">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Refund</span>
+                                    </div>
+                            </button>
+                            <button name="open_adjusting_entry_origin_moves"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    invisible="not adjusting_entry_origin_move_ids or adjusting_entry_origin_moves_type != 'many_invoices'">
+                                    <field name="adjusting_entry_origin_moves_count" string="Invoices" widget="statinfo"/>
+                            </button>
                         </div>
 
                         <!-- Payment status for invoices / receipts -->
