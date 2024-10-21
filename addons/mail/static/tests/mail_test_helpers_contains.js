@@ -241,7 +241,15 @@ function _click(
     return _triggerEvents(
         el,
         selector,
-        ["pointerdown", "mousedown", "focus", "pointerup", "mouseup", ["click", mouseEventInit]],
+        [
+            "pointerdown",
+            "mousedown",
+            "focus",
+            "focusin",
+            "pointerup",
+            "mouseup",
+            ["click", mouseEventInit],
+        ],
         { skipVisibilityCheck }
     );
 }

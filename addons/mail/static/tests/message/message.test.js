@@ -42,7 +42,9 @@ test("Start edition on click edit", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Hello world" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "Hello world" });
+    await click("a[role='button']", { text: "cancel" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { count: 0 });
 });
 
 test("Edit message (mobile)", async () => {

@@ -540,7 +540,9 @@ export class Composer extends Component {
                     this.notifySendFromMailbox();
                 }
                 if (accidentalDiscard) {
-                    const editor = document.querySelector(".o_mail_composer_form_view .note-editable");
+                    const editor = document.querySelector(
+                        ".o_mail_composer_form_view .note-editable"
+                    );
                     const editorIsEmpty = !editor || !editor.innerText.replace(/^\s*$/gm, "");
                     if (!editorIsEmpty) {
                         this.saveContent();
@@ -688,6 +690,16 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         composer.isFocused = true;
         composer.thread?.markAsRead();
+    }
+
+    onFocusout(ev) {
+        if (
+            [EDIT_CLICK_TYPE.CANCEL, EDIT_CLICK_TYPE.SAVE].includes(ev.relatedTarget?.dataset?.type)
+        ) {
+            // Edit or Save most likely clicked: early return as to not re-render (which prevents click)
+            return;
+        }
+        this.props.composer.isFocused = false;
     }
 
     saveContent() {
