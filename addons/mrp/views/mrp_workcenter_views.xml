@@ -239,7 +239,7 @@
                                         </a>
                                         <div class="col-6">
                                             <span t-att-class="record.oee_target.raw_value and (record.oee.raw_value &lt; record.oee_target.raw_value) and 'text-danger d-flex float-end fw-bolder' or (record.oee.raw_value &gt; record.oee_target.raw_value) and 'text-success d-flex float-end fw-bolder' or 'text-warning d-flex float-end fw-bolder'">
-                                                <field name="oee" widget="integer"/>%
+                                                <field name="oee" digits="[42, 0]"/>%
                                             </span>
                                         </div>
                                     </div>

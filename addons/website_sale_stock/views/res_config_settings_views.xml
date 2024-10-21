@@ -35,7 +35,7 @@
                                     <label for="show_availability" string="Show Available Qty" class="p-0 col-4 o_light_label mb-3 mt-2"/>
                                     <field name="show_availability" class="w-auto"/>
                                     <label for="available_threshold" string="only if below" class="o_light_label" invisible="not show_availability"/>
-                                    <field name="available_threshold" class="oe_inline col-1" widget="integer" invisible="not show_availability"/>
+                                    <field name="available_threshold" class="oe_inline col-1" digits="[42, 0]" invisible="not show_availability"/>
                                     <span invisible="not show_availability">Units</span>
                                 </div>
                             </div>
