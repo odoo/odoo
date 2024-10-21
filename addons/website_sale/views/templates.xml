@@ -1505,7 +1505,7 @@
         <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
         <div t-if="description_lines" t-attf-class="text-muted {{div_class}} small">
             <t t-foreach="description_lines" t-as="name_line">
-                <span t-if="name_line" class="d-block" t-out="name_line"/>
+                <span t-if="name_line" class="d-block" t-out="name_line" name="order_line_description"/>
             </t>
         </div>
     </template>
