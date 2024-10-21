@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
@@ -219,3 +221,21 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         # The partner should be retrieved based on the peppol fields
         imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])
         self.assertEqual(imported_invoice.partner_id, partner)
+
+    def test_export_pdf_contains_facturx(self):
+        """ Check that we generate a Factur-x xml when we render the invoice action report. """
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
+        })
+        invoice.action_post()
+
+        with patch(
+            'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_cii_facturx.AccountEdiXmlCII._export_invoice',
+            side_effect=lambda m: (b'<xml>Tmp</xml>', {}),
+        ) as patched:
+            self.env['ir.actions.report']\
+                .with_context(force_report_rendering=True)\
+                ._render('account.account_invoices', invoice.ids)
+            patched.assert_called_once()
