@@ -1820,6 +1820,7 @@ class JsonRpcException(Exception):
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
     registry_test_mode = True
+    readonly_enabled = True
     browser = None
     browser_size = '1366x768'
     touch_enabled = False
@@ -1831,7 +1832,7 @@ class HttpCase(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         if cls.registry_test_mode:
-            cls.registry.enter_test_mode(cls.cr, not hasattr(cls, 'readonly_enabled') or cls.readonly_enabled)
+            cls.registry.enter_test_mode(cls.cr, cls.readonly_enabled)
             cls.addClassCleanup(cls.registry.leave_test_mode)
 
         ICP = cls.env['ir.config_parameter']
