@@ -19,7 +19,7 @@ class EventEvent(models.Model):
                  'sale_order_lines_ids.price_subtotal', 'sale_order_lines_ids.currency_id',
                  'sale_order_lines_ids.company_id', 'sale_order_lines_ids.order_id.date_order')
     def _compute_sale_price_subtotal(self):
-        """ Takes all the sale.order.lines related to this event and converts amounts
+        """ Takes only confirmed sale.order.lines related to this event and converts amounts
         from the currency of the sale order to the currency of the event company.
 
         To avoid extra overhead, we use conversion rates as of 'today'.
@@ -29,7 +29,7 @@ class EventEvent(models.Model):
         we sell a single event ticket). """
         date_now = fields.Datetime.now()
         event_subtotals = self.env['sale.order.line']._read_group(
-            [('event_id', 'in', self.ids), ('price_subtotal', '!=', 0), ('state', '!=', 'cancel')],
+            [('event_id', 'in', self.ids), ('price_subtotal', '!=', 0), ('state', '=', 'sale')],
             ['event_id', 'currency_id'],
             ['price_subtotal:sum'],
         )
@@ -50,6 +50,7 @@ class EventEvent(models.Model):
         sale_order_action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         sale_order_action.update({
             'domain': [('state', '!=', 'cancel'), ('order_line.event_id', 'in', self.ids)],
-            'context': {'create': 0},
+            'context': {'create': 0, 'search_default_filter_confirmed_orders': 1},
+            'search_view_id': [self.env.ref('event_sale.sale_order_view_search_inherit_event_sale').id],
         })
         return sale_order_action
