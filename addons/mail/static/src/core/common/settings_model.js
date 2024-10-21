@@ -32,6 +32,9 @@ export class Settings extends Record {
     });
     mute_until_dt = Record.attr(false, { type: "datetime" });
 
+    link_preview_html = false;
+    link_preview_image = true;
+
     // Voice settings
     // DeviceId of the audio input selected by the user
     audioInputDeviceId = "";
@@ -148,6 +151,14 @@ export class Settings extends Record {
             minutes,
             channel_id: thread?.id,
         });
+    }
+
+    async setLinkPreviewHtml(link_preview_html) {
+        return rpc("/mail/settings/link_preview_html", { link_preview_html });
+    }
+
+    async setLinkPreviewImage(link_preview_image) {
+        return rpc("/mail/settings/link_preview_image", { link_preview_image });
     }
 
     /**

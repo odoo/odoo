@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.linkPreviewSettings">
+        <div class="o-discuss-linkPreviewSettings">
+            <div class="d-flex flex-column my-1">
+                <label class="cursor-pointer d-flex align-items-center">
+                    <h5>Link preview html</h5>
+                    <div class="flex-grow-1"/>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" t-att-checked="store.settings.link_preview_html" t-on-change="onChangeLinkPreviewHtml"/>
+                    </div>
+                </label>
+                <label class="cursor-pointer d-flex align-items-center">
+                    <h5>Link preview image</h5>
+                    <div class="flex-grow-1"/>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" t-att-checked="store.settings.link_preview_image" t-on-change="onChangeLinkPreviewImage"/>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </t>
+
+</templates>
