@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- ir.webhook -->
+        <record id="ir_webhook_view_list" model="ir.ui.view">
+            <field name="model">ir.webhook</field>
+            <field name="arch" type="xml">
+                <list string="Webhook Execution" create="0" edit="0">
+                    <field name="create_date"/>
+                    <field name="url"/>
+                    <field name="state"/>
+                    <field name="data" optional="hide"/>
+                    <field name="executed_at"/>
+                    <field name="retry_attempt"/>
+                    <field name="msg"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="ir_webhook_view_search" model="ir.ui.view">
+            <field name="model">ir.webhook</field>
+            <field name="arch" type="xml">
+                <search string="Webhook Execution">
+                    <field name="url" string="Scheduled Action"/>
+                    <field name="create_date"/>
+                    <field name="executed_at"/>
+                    <separator/>
+                    <filter string="Error" name="error_state" domain="[('state', '=', 'error')]" />
+                    <group expand="0" string="Group By">
+                        <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="ir_webhook_act" model="ir.actions.act_window">
+            <field name="name">Webhooks</field>
+            <field name="res_model">ir.webhook</field>
+            <field name="path">webhooks</field>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="ir_webhook_view_list"/>
+        </record>
+
+        <menuitem id="menu_ir_webhook_act"
+            parent="base.next_id_9"
+            action="ir_webhook_act"
+            sequence="200"/>
+
+</odoo>
