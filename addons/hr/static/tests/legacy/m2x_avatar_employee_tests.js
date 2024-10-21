@@ -302,7 +302,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                         fields: {
                             employee_id: {
                                 string: "employee",
-                                type: "one2many",
+                                type: "many2one",
                                 relation: "hr.employee",
                             },
                         },
