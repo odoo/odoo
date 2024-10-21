@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="estate_estate_action" model="ir.actions.act_window">
+        <field name="name">Estate</field>
+        <field name="res_model">estate.estate</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="estate_estate_list" model="ir.ui.view">
+        <field name="name">estate.estate.list</field>
+        <field name="model">estate.estate</field>
+        <field name="arch" type="xml">
+            <list string="Estate">
+                <field name="status"/>
+                <field name="price"/>
+                <field name="city"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+</odoo>
