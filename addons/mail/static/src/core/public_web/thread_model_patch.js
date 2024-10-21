@@ -30,9 +30,11 @@ const ThreadPatch = {
                         (channel_notifications === "mentions" &&
                             message.recipients?.includes(this.store.self)))))
         ) {
-            const chatWindow = this.store.ChatWindow.get({ thread: this });
-            if (!chatWindow) {
-                this.store.ChatWindow.insert({ thread: this }).fold();
+            if (this.model === "discuss.channel") {
+                const chatWindow = this.store.ChatWindow.get({ thread: this });
+                if (!chatWindow) {
+                    this.store.ChatWindow.insert({ thread: this }).fold();
+                }
             }
             this.store.env.services["mail.out_of_focus"].notify(message, this);
         }
