@@ -59,7 +59,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         )
         self.assertEqual(
             data["res.partner"],
-            self._filter_partners_fields(
+            self._filter_store_partners_fields(
                 {
                     "active": True,
                     "country": False,
@@ -105,7 +105,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         visitor_member = self.env['discuss.channel.member'].search(visitor_member_domain)
         self.assertEqual(
             data["res.partner"],
-            self._filter_partners_fields(
+            self._filter_store_partners_fields(
                 {
                     "active": True,
                     "country": {
@@ -198,7 +198,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(channel_info['anonymous_country'], False)
         self.assertEqual(
             data["res.partner"],
-            self._filter_partners_fields(
+            self._filter_store_partners_fields(
                 {
                     "active": True,
                     "country": False,

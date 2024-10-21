@@ -362,7 +362,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         """
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         return {
-            "res.partner": self._filter_partners_fields(
+            "res.partner": self._filter_store_partners_fields(
                 {
                     "active": False,
                     "email": "odoobot@example.com",
@@ -434,7 +434,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "discuss.channel.rtc.session": [
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
             ],
-            "res.partner": self._filter_partners_fields(
+            "res.partner": self._filter_store_partners_fields(
                 self._expected_result_for_persona(self.users[0]),
                 self._expected_result_for_persona(self.users[2], only_inviting=True),
                 self._expected_result_for_persona(self.users[14]),
@@ -508,7 +508,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "mail.guest": [
                 self._expected_result_for_persona(guest=True),
             ],
-            "mail.message": self._filter_messages_fields(
+            "mail.message": self._filter_store_messages_fields(
                 self._expected_result_for_message(self.channel_general),
                 self._expected_result_for_message(self.channel_channel_public_1),
                 self._expected_result_for_message(self.channel_channel_public_2),
@@ -520,7 +520,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "mail.notification": [
                 self._expected_result_for_notification(self.channel_channel_public_1),
             ],
-            "mail.thread": self._filter_threads_fields(
+            "mail.thread": self._filter_store_threads_fields(
                 self._expected_result_for_thread(self.channel_general),
                 self._expected_result_for_thread(self.channel_channel_public_1),
                 self._expected_result_for_thread(self.channel_channel_public_2),
@@ -533,7 +533,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 *self._expected_result_for_message_reactions(self.channel_general),
                 *self._expected_result_for_message_reactions(self.channel_channel_public_1),
             ],
-            "res.partner": self._filter_partners_fields(
+            "res.partner": self._filter_store_partners_fields(
                 self._expected_result_for_persona(
                     self.users[0],
                     also_livechat=True,
