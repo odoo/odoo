@@ -86,7 +86,7 @@ PLS_UPDATE_BATCH_STEP = 5000
 
 
 class CrmLead(models.Model):
-    _description = "Lead/Opportunity"
+    _description = "Lead"
     _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc',
                 'mail.thread.blacklist',
