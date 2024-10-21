@@ -874,7 +874,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
             ),
             'only_services': order_sudo.only_services,
-            'json_pickup_location_data': json.dumps(order_sudo.pickup_location_data or {}),
             **self._prepare_address_data(partner_sudo, **kwargs),
             'address_url': '/shop/address',
         }

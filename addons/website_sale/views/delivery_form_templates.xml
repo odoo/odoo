@@ -75,7 +75,7 @@
             />
             <div
                 name="o_pickup_location_details"
-                t-attf-class="ms-4 {{'' if is_selected and pickup_location_data else 'd-none'}}"
+                t-attf-class="ms-4 {{'' if pickup_location_data else 'd-none'}}"
             >
                 <span>
                     <b name="o_pickup_location_name" t-out="pickup_location_data.get('name', '')"/>
@@ -96,11 +96,11 @@
                     aria-label="Change location"
                     t-att-data-location-id="pickup_location_data.get('id')"
                     t-att-data-zip-code="pickup_location_data.get('zip_code')"
-                    t-att-data-pickup-location-data="is_selected and json_pickup_location_data"
+                    t-att-data-pickup-location-data="json.dumps(pickup_location_data)"
                 />
             </div>
             <button
-                t-if="not (is_selected and pickup_location_data)"
+                t-if="not pickup_location_data"
                 name="o_pickup_location_selector"
                 type="button"
                 class="btn btn-primary ms-4"
