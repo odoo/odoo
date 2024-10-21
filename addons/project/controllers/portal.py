@@ -114,10 +114,7 @@ class ProjectCustomerPortal(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
         if project_sudo.collaborator_count and project_sudo.with_user(request.env.user)._check_project_sharing_access():
-            values = {'project_id': project_id}
-            if task_id:
-                values['task_id'] = task_id
-            return request.render("project.project_sharing_portal", values)
+            return request.redirect(f'/my/projects/{project_id}/project_sharing')
         project_sudo = project_sudo if access_token else project_sudo.with_user(request.env.user)
         if not groupby:
             groupby = 'stage_id'
@@ -127,7 +124,7 @@ class ProjectCustomerPortal(CustomerPortal):
     def _get_project_sharing_company(self, project):
         return project.company_id or request.env.user.company_id
 
-    def _prepare_project_sharing_session_info(self, project, task=None):
+    def _prepare_project_sharing_session_info(self, project):
         session_info = request.env['ir.http'].session_info()
         user_context = dict(request.env.context) if request.session.uid else {}
         mods = config['server_wide_modules']
@@ -164,19 +161,19 @@ class ProjectCustomerPortal(CustomerPortal):
             # FIXME: See if we prefer to give only the currency that the portal user just need to see the correct information in project sharing
             currencies=request.env['ir.http'].get_currencies(),
         )
-        if task:
-            session_info['open_task_action'] = task.action_project_sharing_open_task()
         return session_info
 
-    @http.route("/my/projects/<int:project_id>/project_sharing", type="http", auth="user", methods=['GET'])
-    def render_project_backend_view(self, project_id, task_id=None):
+    @http.route(['/my/projects/<int:project_id>/project_sharing', '/my/projects/<int:project_id>/project_sharing/<path:subpath>'], type='http', auth='user', methods=['GET'])
+    def render_project_backend_view(self, project_id, subpath=None):
         project = request.env['project.project'].sudo().browse(project_id)
-        if not project.exists() or not project.with_user(request.env.user)._check_project_sharing_access():
+        if not (
+            project.exists()
+            and project.with_user(request.env.user)._check_project_sharing_access()
+        ):
             return request.not_found()
-        task = task_id and request.env['project.task'].browse(int(task_id))
         return request.render(
-            'project.project_sharing_embed',
-            {'session_info': self._prepare_project_sharing_session_info(project, task)},
+            'project.project_sharing_portal',
+            {'session_info': self._prepare_project_sharing_session_info(project)},
         )
 
     @http.route('/my/projects/<int:project_id>/task/<int:task_id>', type='http', auth='public', website=True)
