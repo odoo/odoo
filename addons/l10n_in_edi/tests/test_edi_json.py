@@ -24,7 +24,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             'property_account_income_id': cls.company_data['default_account_revenue'].id,
             'property_account_expense_id': cls.company_data['default_account_expense'].id,
             'taxes_id': [Command.set(cls.sgst_sale_5.ids)],
-            'supplier_taxes_id': [Command.set(cls.sgst_purchase_5.ids)],
+            'supplier_taxes_id': [Command.set(cls.sgst_purchase_consu_5.ids)],
             "l10n_in_hsn_code": "111111",
         })
         gst_with_cess = cls.env.ref("account.%s_sgst_sale_12" % (cls.company_data["company"].id)
@@ -37,7 +37,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             "property_account_income_id": cls.company_data["default_account_revenue"].id,
             "property_account_expense_id": cls.company_data["default_account_expense"].id,
             "taxes_id": [Command.set(gst_with_cess.ids)],
-            "supplier_taxes_id": [Command.set(cls.sgst_purchase_5.ids)],
+            "supplier_taxes_id": [Command.set(cls.sgst_purchase_consu_5.ids)],
             "l10n_in_hsn_code": "333333",
         })
         rounding = cls.env["account.cash.rounding"].create({

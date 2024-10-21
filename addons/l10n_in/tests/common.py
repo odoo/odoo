@@ -72,7 +72,7 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
 
         # === Taxes === #
         cls.sgst_sale_5 = cls.env["account.chart.template"].ref('sgst_sale_5')
-        cls.sgst_purchase_5 = cls.env["account.chart.template"].ref('sgst_purchase_5')
+        cls.sgst_purchase_consu_5 = cls.env["account.chart.template"].ref('sgst_purchase_consu_5')
         cls.igst_sale_5 = cls.env["account.chart.template"].ref('igst_sale_5')
         cls.igst_sale_18 = cls.env["account.chart.template"].ref('igst_sale_18')
         cls.sgst_sale_18 = cls.env["account.chart.template"].ref('sgst_sale_18')
@@ -81,7 +81,7 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
         cls.product_a.write({
             "l10n_in_hsn_code": "111111",
             'taxes_id': cls.sgst_sale_5,
-            'supplier_taxes_id': cls.sgst_purchase_5,
+            'supplier_taxes_id': cls.sgst_purchase_consu_5,
         })
 
         cls.product_b.write({
@@ -90,7 +90,7 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             'lst_price': 1000.0,
             'standard_price': 1000.0,
             'taxes_id': cls.sgst_sale_5.ids,
-            'supplier_taxes_id': cls.sgst_purchase_5.ids,
+            'supplier_taxes_id': cls.sgst_purchase_consu_5.ids,
         })
 
         # === Fiscal Positions === #
