@@ -973,6 +973,7 @@ function makeActionManager(env) {
      */
     async function _triggerDownload(action, options, type) {
         const url = _getReportUrl(action, type);
+        env.services.user.updateContext({action_context:action.context})
         env.services.ui.block();
         try {
             await download({
@@ -984,6 +985,7 @@ function makeActionManager(env) {
             });
         } finally {
             env.services.ui.unblock();
+            env.services.user.removeFromContext("action_context")
         }
         const onClose = options.onClose;
         if (action.close_on_report_download) {
