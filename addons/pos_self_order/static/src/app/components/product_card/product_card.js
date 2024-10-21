@@ -7,8 +7,7 @@ export class ProductCard extends Component {
     static template = "pos_self_order.ProductCard";
     static props = ["product", "currentProductCard?"];
 
-    selfRef = useRef("selfProductCard");
-    currentProductCardRef = useRef("currentProductCard");
+    selfRef = useRef("currentProductCard");
 
     setup() {
         this.selfOrder = useSelfOrder();
