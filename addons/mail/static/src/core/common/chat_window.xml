@@ -128,8 +128,8 @@
 <t t-name="mail.ChatWindow.headerContent">
     <div class="o-mail-ChatWindow-threadAvatar my-0 me-1 py-1" t-att-class="{
         'py-2': thread and threadActions.actions.length lte 3,
-        'ms-1': thread and threadActions.actions.length > 4,
-        'ms-3': threadActions.actions.length lte 4 or !thread,
+        'ms-1': thread,
+        'ms-3': !thread,
     }">
         <img t-if="thread" class="rounded o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
         <i t-else="" class="fa fa-pencil fa-lg fa-fw py-1"/>
