@@ -654,7 +654,7 @@ class IrAttachment(models.Model):
             Attachments.check('create', values={'res_model':res_model, 'res_id':res_id})
         return super().create(vals_list)
 
-    def _post_add_create(self):
+    def _post_add_create(self, **kwargs):
         pass
 
     def generate_access_token(self):
