@@ -655,39 +655,6 @@
         margin-bottom: 1px;
     }
 
-    // Translate icon
-    button.o_field_translate {
-            padding: 0 $o-form-spacing-unit 0 0 !important;
-            vertical-align: top;
-            position: relative;
-            margin-left: -35px;
-            width: 35px !important; // important is usefull for textarea
-            display: inline-block;
-            text-align: right;
-            border: none;  // usefull for textarea
-            visibility: hidden;
-    }
-
-    div {
-        div:focus-within > div.o_field_char_buttons > button.o_field_translate,
-        div:hover > div.o_field_char_buttons > button.o_field_translate {
-            visibility: visible !important;
-        }
-    }
-
-    div {
-        div:focus-within > button.o_field_translate,
-        div:hover > button.o_field_translate {
-            visibility: visible !important;
-        }
-    }
-
-    input, textarea {
-        &.o_field_translate {
-            padding-right: 25px;
-        }
-    }
-
     .oe_no_translation_content {
         // hide content but show the translate button
         height: 0px;
@@ -712,7 +679,7 @@
     }
 
     iframe.wysiwyg_iframe + .o_field_translate {
-        right: 30px !important;
+        right: $o-field-translate-padding !important;
         top: 7px !important;
     }
 
