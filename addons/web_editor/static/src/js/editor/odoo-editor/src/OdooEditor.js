@@ -4557,6 +4557,14 @@ export class OdooEditor extends EventTarget {
             ancestors(block, this.editable).includes(this.editable)
         ) {
             this.observerUnactive();
+            if (block.nodeName === "DIV" && content === '') {
+                const p = this.document.createElement("p");
+                const br = this.document.createElement("br");
+                p.appendChild(br);
+                block.appendChild(p);
+                block  = p;
+                setSelection(p, 0);
+            }
             block.setAttribute('placeholder', text);
             block.classList.add('oe-hint');
             if (temporary) {
