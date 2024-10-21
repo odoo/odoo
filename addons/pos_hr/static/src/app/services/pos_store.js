@@ -22,16 +22,16 @@ patch(PosStore.prototype, {
         });
     },
     get employeeIsAdmin() {
-        const cashier = this.get_cashier();
+        const cashier = this.getCashier();
         return cashier._role === "manager" || cashier.user_id?.id === this.user.id;
     },
     checkPreviousLoggedCashier() {
         if (this.config.module_pos_hr) {
             const savedCashier = this._getConnectedCashier();
             if (savedCashier) {
-                this.set_cashier(savedCashier);
+                this.setCashier(savedCashier);
             } else {
-                this.reset_cashier();
+                this.resetCashier();
             }
         } else {
             super.checkPreviousLoggedCashier(...arguments);
@@ -53,13 +53,13 @@ patch(PosStore.prototype, {
         const order = super.createNewOrder(...arguments);
 
         if (this.config.module_pos_hr) {
-            order.employee_id = this.get_cashier();
+            order.employee_id = this.getCashier();
         }
 
         return order;
     },
-    set_cashier(employee) {
-        super.set_cashier(employee);
+    setCashier(employee) {
+        super.setCashier(employee);
 
         if (this.config.module_pos_hr) {
             if (navigator.onLine) {
@@ -69,8 +69,8 @@ patch(PosStore.prototype, {
             } else {
                 this.employeeBuffer.push(employee);
             }
-            const o = this.get_order();
-            if (o && !o.get_orderlines().length) {
+            const o = this.getOrder();
+            if (o && !o.getOrderlines().length) {
                 // Order without lines can be considered to be un-owned by any employee.
                 // We set the cashier on that order to the currently set employee.
                 o.employee_id = employee;
@@ -84,11 +84,11 @@ patch(PosStore.prototype, {
         vals.employee_id = false;
 
         if (this.config.module_pos_hr) {
-            const cashier = this.get_cashier();
+            const cashier = this.getCashier();
 
             if (cashier && cashier.model.modelName === "hr.employee") {
-                const order = this.get_order();
-                order.employee_id = this.get_cashier();
+                const order = this.getOrder();
+                order.employee_id = this.getCashier();
             }
         }
 
@@ -98,17 +98,17 @@ patch(PosStore.prototype, {
      * If pos_hr is activated, return {name: string, id: int, barcode: string, pin: string, user_id: int}
      * @returns {null|*}
      */
-    get_cashier() {
+    getCashier() {
         if (this.config.module_pos_hr) {
             return this.cashier;
         }
-        return super.get_cashier(...arguments);
+        return super.getCashier(...arguments);
     },
-    get_cashier_user_id() {
+    getCashierUserId() {
         if (this.config.module_pos_hr) {
             return this.cashier.user_id ? this.cashier.user_id : null;
         }
-        return super.get_cashier_user_id(...arguments);
+        return super.getCashierUserId(...arguments);
     },
     async logEmployeeMessage(action, message) {
         if (!this.config.module_pos_hr) {

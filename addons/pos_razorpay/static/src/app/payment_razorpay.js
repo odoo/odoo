@@ -15,31 +15,31 @@ export class PaymentRazorpay extends PaymentInterface {
         this.payment_stopped = false;
     }
 
-    send_payment_request(cid) {
-        super.send_payment_request(cid);
-        return this._process_razorpay(cid);
+    sendPaymentRequest(cid) {
+        super.sendPaymentRequest(cid);
+        return this._processRazorpay(cid);
     }
 
-    pending_razorpay_line() {
+    pendingRazorpayline() {
         return this.pos.getPendingPaymentLine("razorpay");
     }
 
-    send_payment_cancel(order, cid) {
-        super.send_payment_cancel(order, cid);
-        return this._razorpay_cancel();
+    sendPaymentCancel(order, cid) {
+        super.sendPaymentCancel(order, cid);
+        return this._razorpayCancel();
     }
 
-    _call_razorpay(data, action) {
+    _callRazorpay(data, action) {
         return this.env.services.orm.silent
             .call("pos.payment.method", action, [[this.payment_method_id.id], data])
-            .catch(this._handle_odoo_connection_failure.bind(this));
+            .catch(this._handleOdooConnectionFailure.bind(this));
     }
 
-    _handle_odoo_connection_failure(data = {}) {
+    _handleOdooConnectionFailure(data = {}) {
         // handle timeout
-        const line = this.pending_razorpay_line();
+        const line = this.pendingRazorpayline();
         if (line) {
-            line.set_payment_status("retry");
+            line.setPaymentStatus("retry");
         }
         this._showError(
             _t(
@@ -54,40 +54,40 @@ export class PaymentRazorpay extends PaymentInterface {
      * This method handles the response that comes from Razorpay
      * when we make a request for payment/cancel.
      */
-    _razorpay_handle_response(response) {
-        const line = this.pending_razorpay_line();
+    _razorpayHandleResponse(response) {
+        const line = this.pendingRazorpayline();
         if (response.error) {
-            line.set_payment_status("force_done");
+            line.setPaymentStatus("force_done");
             this.payment_stopped
                 ? this._showError(_t("Transaction failed due to inactivity"))
                 : this._showError(response.error);
             if (response.payment_messageCode === "P2P_DEVICE_CANCELED") {
-                line.set_payment_status("retry");
+                line.setPaymentStatus("retry");
             }
             this._removePaymentHandler(["p2pRequestId", "referenceId"]);
             return Promise.resolve(false);
         }
-        line.set_payment_status("waitingCard");
+        line.setPaymentStatus("waitingCard");
         localStorage.setItem("p2pRequestId", response.p2pRequestId);
         return this._waitForPaymentConfirmation();
     }
 
-    _razorpay_cancel() {
+    _razorpayCancel() {
         const data = { p2pRequestId: localStorage.getItem("p2pRequestId") };
-        return this._call_razorpay(data, "razorpay_cancel_payment_request").then((data) => {
+        return this._callRazorpay(data, "razorpay_cancel_payment_request").then((data) => {
             // This proficiently tackles scenarios where payment initiation is in progress and close to the completion phase
             if (data.errorMessage) {
                 this._showError(data.errorMessage);
                 return Promise.resolve(false);
             }
-            this._razorpay_handle_response(data);
+            this._razorpayHandleResponse(data);
             return Promise.resolve(true);
         });
     }
 
-    _process_razorpay(cid) {
-        const order = this.pos.get_order();
-        const line = order.get_selected_paymentline();
+    _processRazorpay(cid) {
+        const order = this.pos.getOrder();
+        const line = order.getSelectedPaymentline();
 
         if (line.amount < 0) {
             this._showError(_t("Cannot process transactions with negative amount."));
@@ -104,8 +104,8 @@ export class PaymentRazorpay extends PaymentInterface {
             amount: line.amount,
             referenceId: localStorage.getItem("referenceId"),
         };
-        return this._call_razorpay(data, "razorpay_make_payment_request").then((data) => {
-            return this._razorpay_handle_response(data);
+        return this._callRazorpay(data, "razorpay_make_payment_request").then((data) => {
+            return this._razorpayHandleResponse(data);
         });
     }
 
@@ -116,28 +116,28 @@ export class PaymentRazorpay extends PaymentInterface {
      */
 
     async _waitForPaymentConfirmation() {
-        const paymentLine = this.pos.get_order().get_selected_paymentline();
+        const paymentLine = this.pos.getOrder().getSelectedPaymentline();
         if (!paymentLine || paymentLine.payment_status == "retry") {
             return false;
         }
         const data = { p2pRequestId: localStorage.getItem("p2pRequestId") };
-        this._stop_pending_payment().then(() => (this.payment_stopped = true));
+        this._stopPendingPayment().then(() => (this.payment_stopped = true));
         const razorpayFetchPaymentStatus = async (resolve, reject) => {
             //Clear previous timeout before setting a new one
             clearTimeout(this.pollingTimeout);
 
             //Within 90 seconds, inactivity will result in transaction cancellation and payment termination.
             if (this.payment_stopped) {
-                this._razorpay_cancel().then(() => {
-                    paymentLine.set_payment_status("retry");
+                this._razorpayCancel().then(() => {
+                    paymentLine.setPaymentStatus("retry");
                     this.payment_stopped = false;
                 });
                 return resolve(false);
             }
 
-            const response = await this._call_razorpay(data, "razorpay_fetch_payment_status");
+            const response = await this._callRazorpay(data, "razorpay_fetch_payment_status");
             if (response.error) {
-                return this._razorpay_handle_response(response);
+                return this._razorpayHandleResponse(response);
             }
 
             const resultCode = response?.status;
@@ -154,7 +154,7 @@ export class PaymentRazorpay extends PaymentInterface {
                 resultCode === "AUTHORIZED" &&
                 response?.externalRefNumber !== localStorage.getItem("referenceId")
             ) {
-                return this._razorpay_handle_response({ error: _t("Reference number mismatched") });
+                return this._razorpayHandleResponse({ error: _t("Reference number mismatched") });
             } else if (resultCode === "AUTHORIZED") {
                 paymentLine.payment_method_authcode = response?.authCode;
                 paymentLine.card_no = response?.cardLastFourDigit || "";
@@ -190,7 +190,7 @@ export class PaymentRazorpay extends PaymentInterface {
         return serializeDateTime(utcDate);
     }
 
-    _stop_pending_payment() {
+    _stopPendingPayment() {
         return new Promise((resolve) => (this.inactivityTimeout = setTimeout(resolve, 90000)));
     }
 

@@ -11,28 +11,28 @@ export class PaymentAdyen extends PaymentInterface {
         this.paymentLineResolvers = {};
     }
 
-    send_payment_request(uuid) {
-        super.send_payment_request(uuid);
-        return this._adyen_pay(uuid);
+    sendPaymentRequest(uuid) {
+        super.sendPaymentRequest(uuid);
+        return this._adyenPay(uuid);
     }
-    send_payment_cancel(order, uuid) {
-        super.send_payment_cancel(order, uuid);
-        return this._adyen_cancel();
+    sendPaymentCancel(order, uuid) {
+        super.sendPaymentCancel(order, uuid);
+        return this._adyenCancel();
     }
 
-    set_most_recent_service_id(id) {
+    setMostRecentServiceId(id) {
         this.most_recent_service_id = id;
     }
 
-    pending_adyen_line() {
+    pendingAdyenline() {
         return this.pos.getPendingPaymentLine("adyen");
     }
 
-    _handle_odoo_connection_failure(data = {}) {
+    _handleOdooConnectionFailure(data = {}) {
         // handle timeout
-        var line = this.pending_adyen_line();
+        var line = this.pendingAdyenline();
         if (line) {
-            line.set_payment_status("retry");
+            line.setPaymentStatus("retry");
         }
         this._show_error(
             _t(
@@ -43,22 +43,22 @@ export class PaymentAdyen extends PaymentInterface {
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
     }
 
-    _call_adyen(data, operation = false) {
+    _callAdyen(data, operation = false) {
         return this.pos.data
             .silentCall("pos.payment.method", "proxy_adyen_request", [
                 [this.payment_method_id.id],
                 data,
                 operation,
             ])
-            .catch(this._handle_odoo_connection_failure.bind(this));
+            .catch(this._handleOdooConnectionFailure.bind(this));
     }
 
-    _adyen_get_sale_id() {
+    _adyenGetSaleId() {
         var config = this.pos.config;
         return sprintf("%s (ID: %s)", config.display_name, config.id);
     }
 
-    _adyen_common_message_header() {
+    _adyenCommonMessageHeader() {
         var config = this.pos.config;
         this.most_recent_service_id = Math.floor(Math.random() * Math.pow(2, 64)).toString(); // random ID to identify request/response pairs
         this.most_recent_service_id = this.most_recent_service_id.substring(0, 10); // max length is 10
@@ -67,19 +67,19 @@ export class PaymentAdyen extends PaymentInterface {
             ProtocolVersion: "3.0",
             MessageClass: "Service",
             MessageType: "Request",
-            SaleID: this._adyen_get_sale_id(config),
+            SaleID: this._adyenGetSaleId(config),
             ServiceID: this.most_recent_service_id,
             POIID: this.payment_method_id.adyen_terminal_identifier,
         };
     }
 
-    _adyen_pay_data() {
-        var order = this.pos.get_order();
+    _adyenPayData() {
+        var order = this.pos.getOrder();
         var config = this.pos.config;
-        var line = order.get_selected_paymentline();
+        var line = order.getSelectedPaymentline();
         var data = {
             SaleToPOIRequest: {
-                MessageHeader: Object.assign(this._adyen_common_message_header(), {
+                MessageHeader: Object.assign(this._adyenCommonMessageHeader(), {
                     MessageCategory: "Payment",
                 }),
                 PaymentRequest: {
@@ -107,26 +107,26 @@ export class PaymentAdyen extends PaymentInterface {
         return data;
     }
 
-    _adyen_pay(uuid) {
-        var order = this.pos.get_order();
+    _adyenPay(uuid) {
+        var order = this.pos.getOrder();
 
-        if (order.get_selected_paymentline().amount < 0) {
+        if (order.getSelectedPaymentline().amount < 0) {
             this._show_error(_t("Cannot process transactions with negative amount."));
             return Promise.resolve();
         }
 
-        var data = this._adyen_pay_data();
+        var data = this._adyenPayData();
         var line = order.payment_ids.find((paymentLine) => paymentLine.uuid === uuid);
         line.setTerminalServiceId(this.most_recent_service_id);
-        return this._call_adyen(data).then((data) => {
-            return this._adyen_handle_response(data);
+        return this._callAdyen(data).then((data) => {
+            return this._adyenHandleResponse(data);
         });
     }
 
-    _adyen_cancel(ignore_error) {
+    _adyenCancel(ignore_error) {
         var config = this.pos.config;
         var previous_service_id = this.most_recent_service_id;
-        var header = Object.assign(this._adyen_common_message_header(), {
+        var header = Object.assign(this._adyenCommonMessageHeader(), {
             MessageCategory: "Abort",
         });
 
@@ -137,14 +137,14 @@ export class PaymentAdyen extends PaymentInterface {
                     AbortReason: "MerchantAbort",
                     MessageReference: {
                         MessageCategory: "Payment",
-                        SaleID: this._adyen_get_sale_id(config),
+                        SaleID: this._adyenGetSaleId(config),
                         ServiceID: previous_service_id,
                     },
                 },
             },
         };
 
-        return this._call_adyen(data).then((data) => {
+        return this._callAdyen(data).then((data) => {
             // Only valid response is a 200 OK HTTP response which is
             // represented by true.
             if (!ignore_error && data !== true) {
@@ -157,7 +157,7 @@ export class PaymentAdyen extends PaymentInterface {
         });
     }
 
-    _convert_receipt_info(output_text) {
+    _convertReceiptInfo(output_text) {
         return output_text.reduce((acc, entry) => {
             var params = new URLSearchParams(entry.Text);
             if (params.get("name") && !params.get("value")) {
@@ -174,12 +174,12 @@ export class PaymentAdyen extends PaymentInterface {
      * This method handles the response that comes from Adyen
      * when we first make a request to pay.
      */
-    _adyen_handle_response(response) {
-        var line = this.pending_adyen_line();
+    _adyenHandleResponse(response) {
+        var line = this.pendingAdyenline();
 
         if (response.error && response.error.status_code == 401) {
             this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
-            line.set_payment_status("force_done");
+            line.setPaymentStatus("force_done");
             return false;
         }
 
@@ -195,18 +195,18 @@ export class PaymentAdyen extends PaymentInterface {
 
             this._show_error(_t("An unexpected error occurred. Message from Adyen: %s", msg));
             if (line) {
-                line.set_payment_status("force_done");
+                line.setPaymentStatus("force_done");
             }
             return false;
         } else {
-            line.set_payment_status("waitingCard");
+            line.setPaymentStatus("waitingCard");
             return this.waitForPaymentConfirmation();
         }
     }
 
     waitForPaymentConfirmation() {
         return new Promise((resolve) => {
-            this.paymentLineResolvers[this.pending_adyen_line().uuid] = resolve;
+            this.paymentLineResolvers[this.pendingAdyenline().uuid] = resolve;
         });
     }
 
@@ -222,10 +222,10 @@ export class PaymentAdyen extends PaymentInterface {
         );
 
         if (!notification) {
-            this._handle_odoo_connection_failure();
+            this._handleOdooConnectionFailure();
             return;
         }
-        const line = this.pending_adyen_line();
+        const line = this.pendingAdyenline();
         const response = notification.SaleToPOIResponse.PaymentResponse.Response;
         const additional_response = new URLSearchParams(response.AdditionalResponse);
         const isPaymentSuccessful = this.isPaymentSuccessful(notification, response);
@@ -239,19 +239,19 @@ export class PaymentAdyen extends PaymentInterface {
         // when starting to wait for the payment response we create a promise
         // that will be resolved when the payment response is received.
         // In case this resolver is lost ( for example on a refresh ) we
-        // we use the handle_payment_response method on the payment line
+        // we use the handlePaymentResponse method on the payment line
         const resolver = this.paymentLineResolvers?.[line.uuid];
         if (resolver) {
             resolver(isPaymentSuccessful);
         } else {
-            line.handle_payment_response(isPaymentSuccessful);
+            line.handlePaymentResponse(isPaymentSuccessful);
         }
     }
     isPaymentSuccessful(notification, response) {
         return (
             notification &&
             notification.SaleToPOIResponse.MessageHeader.ServiceID ==
-                this.pending_adyen_line().terminalServiceId &&
+                this.pendingAdyenline().terminalServiceId &&
             response.Result === "Success"
         );
     }
@@ -265,8 +265,8 @@ export class PaymentAdyen extends PaymentInterface {
         });
 
         if (cashier_receipt) {
-            line.set_cashier_receipt(
-                this._convert_receipt_info(cashier_receipt.OutputContent.OutputText)
+            line.setCashierReceipt(
+                this._convertReceiptInfo(cashier_receipt.OutputContent.OutputText)
             );
         }
 
@@ -275,15 +275,15 @@ export class PaymentAdyen extends PaymentInterface {
         });
 
         if (customer_receipt) {
-            line.set_receipt_info(
-                this._convert_receipt_info(customer_receipt.OutputContent.OutputText)
+            line.setReceiptInfo(
+                this._convertReceiptInfo(customer_receipt.OutputContent.OutputText)
             );
         }
 
         const tip_amount = payment_result.AmountsResp.TipAmount;
         if (config.adyen_ask_customer_for_tip && tip_amount > 0) {
-            this.pos.set_tip(tip_amount);
-            line.set_amount(payment_result.AmountsResp.AuthorizedAmount);
+            this.pos.setTip(tip_amount);
+            line.setAmount(payment_result.AmountsResp.AuthorizedAmount);
         }
 
         line.transaction_id = additional_response.get("pspReference");

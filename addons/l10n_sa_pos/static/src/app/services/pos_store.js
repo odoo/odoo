@@ -6,15 +6,15 @@ patch(PosStore.prototype, {
         const result = super.getReceiptHeaderData(...arguments);
         const company = this.company;
         if (order && company?.country_id?.code === "SA") {
-            result.is_settlement = this.get_order().is_settlement();
+            result.is_settlement = this.getOrder().is_settlement();
             if (!result.is_settlement) {
                 const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
                 const qr_values = order.compute_sa_qr_code(
                     company.name,
                     company.vat,
                     order.date_order,
-                    order.get_total_with_tax(),
-                    order.get_total_tax()
+                    order.getTotalWithTax(),
+                    order.getTotalTax()
                 );
                 const qr_code_svg = new XMLSerializer().serializeToString(
                     codeWriter.write(qr_values, 150, 150)

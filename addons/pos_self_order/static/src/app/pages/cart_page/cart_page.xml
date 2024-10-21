@@ -78,8 +78,8 @@
         </div>
         <div class="order-price d-flex-column flex-grow-0">
             <div class="absolute-content-price d-flex flex-column flex-grow-0 justify-content-center py-2 py-lg-3 px-3 border-bottom border-top bg-view text-end lh-sm">
-                <p class="o-so-tabular-nums mb-0 fw-bolder">Total: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.get_total_with_tax())" /></p>
-                <p class="o-so-tabular-nums mb-0 text-muted">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.get_total_tax())" /></p>
+                <p class="o-so-tabular-nums mb-0 fw-bolder">Total: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalWithTax())" /></p>
+                <p class="o-so-tabular-nums mb-0 text-muted">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalTax())" /></p>
             </div>
             <OrderWidget t-if="this.selfOrder.ordering" action.bind="pay" removeTopClasses="true"/>
         </div>

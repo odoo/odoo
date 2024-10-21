@@ -69,14 +69,14 @@
     <t t-name="point_of_sale.PaymentScreenValidate">
         <t t-if="ui.isSmall">
             <button class="btn-switchpane validation-button btn btn-primary btn-lg flex-fill py-3 lh-lg"
-                t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) }"
+                t-att-class="{ secondary: !(currentOrder.isPaid() and currentOrder._isValidEmptyOrder()) }"
                 t-on-click="() => this.validateOrder()">
                 <span>Validate</span>
             </button>
         </t>
         <t t-else="">
             <button class="button next validation btn btn-primary btn-lg w-50 py-3 lh-lg"
-                t-attf-class="{{currentOrder.is_paid() and currentOrder._isValidEmptyOrder() ? 'highlight' : 'disabled'}}"
+                t-attf-class="{{currentOrder.isPaid() and currentOrder._isValidEmptyOrder() ? 'highlight' : 'disabled'}}"
                 t-on-click="() => this.validateOrder()">
                 <span class="next_text">Validate</span>
             </button>
@@ -103,26 +103,26 @@
             <div class="d-flex flex-column flex-sm-row gap-2 w-100">
                 <t t-set="hasOptionalButtons" t-value="pos.config.iface_tipproduct and pos.config.tip_product_id or pos.config.iface_cashdrawer or pos.config.ship_later" />
                 <button class="button partner-button btn btn-light btn-lg w-100 w-md-50 lh-lg text-truncate"
-                    t-att-class="{ 'highlight text-action': currentOrder.get_partner() }"
+                    t-att-class="{ 'highlight text-action': currentOrder.getPartner() }"
                     t-on-click="() => this.pos.selectPartner()">
                     <i class="fa fa-user me-2" role="img" title="Customer" />
                     <span class="partner-name">
-                        <t t-if="currentOrder.get_partner()" t-esc="currentOrder.get_partner().name"/>
+                        <t t-if="currentOrder.getPartner()" t-esc="currentOrder.getPartner().name"/>
                         <t t-else="">Customer</t>
                     </span>
                 </button>
-                <button class="button js_invoice btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 w-md-50 lh-lg" t-att-class="{ 'highlight active': currentOrder.is_to_invoice() }"
-                    t-on-click="toggleIsToInvoice" t-att-disabled="currentOrder.lines[0]?.refunded_orderline_id?.order_id?.is_to_invoice()">
+                <button class="button js_invoice btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 w-md-50 lh-lg" t-att-class="{ 'highlight active': currentOrder.isToInvoice() }"
+                    t-on-click="toggleIsToInvoice" t-att-disabled="currentOrder.lines[0]?.refunded_orderline_id?.order_id?.isToInvoice()">
                     <span><i class="fa fa-file-text-o me-2" />Invoice</span>
-                    <i class="fa me-2" t-attf-class="{{ currentOrder.is_to_invoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" /> 
+                    <i class="fa me-2" t-attf-class="{{ currentOrder.isToInvoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" /> 
                 </button>
             </div>
             <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer or pos.config.ship_later" class="d-flex flex-column gap-2 w-100">
-                <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.get_tip() }"
+                <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getTip() }"
                     t-on-click="addTip">
-                    <span t-attf-class="{{currentOrder.get_tip() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-heart me-2" />Tip</span>
-                    <t t-if="currentOrder.get_tip() != 0">
-                        <t t-esc="env.utils.formatCurrency(currentOrder.get_tip())" />
+                    <span t-attf-class="{{currentOrder.getTip() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-heart me-2" />Tip</span>
+                    <t t-if="currentOrder.getTip() != 0">
+                        <t t-esc="env.utils.formatCurrency(currentOrder.getTip())" />
                     </t>
                 </button>
                 <button t-if="pos.config.iface_cashdrawer" class="button col js_cashdrawer btn btn-light py-3 text-start rounded-0 border-top border-start border-end"

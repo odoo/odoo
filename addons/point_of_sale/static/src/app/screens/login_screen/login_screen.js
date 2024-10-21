@@ -32,7 +32,7 @@ export class LoginScreen extends Component {
         this.pos.hasLoggedIn = true;
     }
     selectOneCashier(cashier) {
-        this.pos.set_cashier(cashier);
+        this.pos.setCashier(cashier);
         this.cashierLogIn();
     }
     get backBtnName() {

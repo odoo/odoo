@@ -12,11 +12,11 @@ export class CashierName extends Component {
         this.ui = useState(useService("ui"));
     }
     get username() {
-        const cashier = this.pos.get_cashier();
+        const cashier = this.pos.getCashier();
         return cashier ? cashier.name : "";
     }
     get avatar() {
-        const user_id = this.pos.get_cashier_user_id();
+        const user_id = this.pos.getCashierUserId();
         const id = user_id ? user_id : -1;
         return `/web/image/res.users/${id}/avatar_128`;
     }

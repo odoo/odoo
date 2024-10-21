@@ -11,8 +11,8 @@ patch(PaymentStripe.prototype, {
     },
 
     canBeAdjusted(uuid) {
-        var order = this.pos.get_order();
-        var line = order.get_paymentline_by_uuid(uuid);
+        var order = this.pos.getOrder();
+        var line = order.getPaymentlineByUuid(uuid);
         return (
             this.pos.config.set_tip_after_payment &&
             line.payment_method_id.use_payment_terminal === "stripe" &&

@@ -5,7 +5,7 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
  * For example if the original price is 50. It will compute a new price so that if you apply the tax_ids
  * the price would still be 50.
  */
-export const compute_price_force_price_include = (
+export const computePriceForcePriceInclude = (
     tax_ids,
     price,
     product,

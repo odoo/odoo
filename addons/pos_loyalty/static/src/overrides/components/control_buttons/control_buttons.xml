@@ -5,9 +5,9 @@
             expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
             position="before">
             <t t-if="pos.models['loyalty.program'].some((p) => p.program_type == 'ewallet')">
-                <t t-set="_orderTotal" t-value="pos.get_order().get_total_with_tax()" />
+                <t t-set="_orderTotal" t-value="pos.getOrder().getTotalWithTax()" />
                 <t t-set="_eWalletPrograms" t-value="_getEWalletPrograms()" />
-                <t t-set="_eWalletRewards" t-value="_getEWalletRewards(pos.get_order())" />
+                <t t-set="_eWalletRewards" t-value="_getEWalletRewards(pos.getOrder())" />
                 <button t-att-class="buttonClass"
                     t-on-click="onClickWallet"
                     t-attf-class="{{(_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? 'highlight text-action': ''}}">
@@ -34,7 +34,7 @@
         </xpath>
         <xpath expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]" position="before">
             <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type))">
-                <button class="btn btn-secondary btn-lg py-5" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
+                <button class="btn btn-secondary btn-lg py-5" t-att-class="{'disabled': !pos.getOrder().isProgramsResettable()}"
                     t-on-click="() => this.pos.resetPrograms()">
                     <i class="fa fa-star me-1"/>Reset Programs
                 </button>

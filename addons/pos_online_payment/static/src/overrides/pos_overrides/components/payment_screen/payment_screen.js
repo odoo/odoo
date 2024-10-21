@@ -17,8 +17,7 @@ patch(PaymentScreen.prototype, {
     },
     getRemainingOnlinePaymentLines() {
         return this.paymentLines.filter(
-            (line) =>
-                line.payment_method_id.is_online_payment && line.get_payment_status() !== "done"
+            (line) => line.payment_method_id.is_online_payment && line.getPaymentStatus() !== "done"
         );
     },
     checkRemainingOnlinePaymentLines(unpaidAmount) {
@@ -26,7 +25,7 @@ patch(PaymentScreen.prototype, {
         let remainingAmount = 0;
         let amount = 0;
         for (const line of remainingLines) {
-            amount = line.get_amount();
+            amount = line.getAmount();
             if (amount <= 0) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Invalid online payment"),
@@ -81,9 +80,9 @@ patch(PaymentScreen.prototype, {
             let prevOnlinePaymentLine = null;
             let lastOrderServerOPData = null;
             for (const onlinePaymentLine of onlinePaymentLines) {
-                const onlinePaymentLineAmount = onlinePaymentLine.get_amount();
+                const onlinePaymentLineAmount = onlinePaymentLine.getAmount();
                 // The local state is not aware if the online payment has already been done.
-                lastOrderServerOPData = await this.pos.update_online_payments_data_with_server(
+                lastOrderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(
                     this.currentOrder,
                     onlinePaymentLineAmount
                 );
@@ -96,7 +95,7 @@ patch(PaymentScreen.prototype, {
                     });
                     return false;
                 }
-                if (!lastOrderServerOPData.is_paid) {
+                if (!lastOrderServerOPData.isPaid) {
                     if (lastOrderServerOPData.modified_payment_lines) {
                         this.cancelOnlinePayment(this.currentOrder);
                         this.dialog.add(AlertDialog, {
@@ -107,15 +106,15 @@ patch(PaymentScreen.prototype, {
                     }
                     if (
                         (prevOnlinePaymentLine &&
-                            prevOnlinePaymentLine?.get_payment_status() !== "done") ||
+                            prevOnlinePaymentLine?.getPaymentStatus() !== "done") ||
                         !this.checkRemainingOnlinePaymentLines(lastOrderServerOPData.amount_unpaid)
                     ) {
                         this.cancelOnlinePayment(this.currentOrder);
                         return false;
                     }
 
-                    onlinePaymentLine.set_payment_status("waiting");
-                    this.currentOrder.select_paymentline(onlinePaymentLine);
+                    onlinePaymentLine.setPaymentStatus("waiting");
+                    this.currentOrder.selectPaymentline(onlinePaymentLine);
                     const onlinePaymentData = {
                         formattedAmount: this.env.utils.formatCurrency(onlinePaymentLineAmount),
                         qrCode: qrCodeSrc(
@@ -138,31 +137,31 @@ patch(PaymentScreen.prototype, {
                     );
                     if (!paymentResult) {
                         this.cancelOnlinePayment(this.currentOrder);
-                        onlinePaymentLine.set_payment_status(undefined);
+                        onlinePaymentLine.setPaymentStatus(undefined);
                         return false;
                     }
                     qrCodePopupCloser();
-                    if (onlinePaymentLine.get_payment_status() === "waiting") {
-                        onlinePaymentLine.set_payment_status(undefined);
+                    if (onlinePaymentLine.getPaymentStatus() === "waiting") {
+                        onlinePaymentLine.setPaymentStatus(undefined);
                     }
                     prevOnlinePaymentLine = onlinePaymentLine;
                 }
             }
 
-            if (!lastOrderServerOPData || !lastOrderServerOPData.is_paid) {
-                lastOrderServerOPData = await this.pos.update_online_payments_data_with_server(
+            if (!lastOrderServerOPData || !lastOrderServerOPData.isPaid) {
+                lastOrderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(
                     this.currentOrder,
                     0
                 );
             }
-            if (!lastOrderServerOPData || !lastOrderServerOPData.is_paid) {
+            if (!lastOrderServerOPData || !lastOrderServerOPData.isPaid) {
                 return false;
             }
 
             await this.afterPaidOrderSavedOnServer(lastOrderServerOPData.paid_order);
             return false; // Cancel normal flow because the current order is already saved on the server.
         } else if (typeof this.currentOrder.id === "number") {
-            const orderServerOPData = await this.pos.update_online_payments_data_with_server(
+            const orderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(
                 this.currentOrder,
                 0
             );
@@ -175,7 +174,7 @@ patch(PaymentScreen.prototype, {
                     confirmLabel: _t("Yes"),
                 });
             }
-            if (orderServerOPData.is_paid) {
+            if (orderServerOPData.isPaid) {
                 await this.afterPaidOrderSavedOnServer(orderServerOPData.paid_order);
                 return false; // Cancel normal flow because the current order is already saved on the server.
             }
@@ -192,7 +191,7 @@ patch(PaymentScreen.prototype, {
     },
     cancelOnlinePayment(order) {
         // Remove the draft order from the server if there is no done online payment
-        this.pos.update_online_payments_data_with_server(order, 0);
+        this.pos.updateOnlinePaymentsDataWithServer(order, 0);
     },
     async afterPaidOrderSavedOnServer(orderJSON) {
         if (!orderJSON) {
@@ -210,7 +209,7 @@ patch(PaymentScreen.prototype, {
         // order is paid with an online payment and the server saves the order as paid.
         // Without that update, the payment lines printed on the receipt ticket would
         // be invalid.
-        const isInvoiceRequested = this.currentOrder.is_to_invoice();
+        const isInvoiceRequested = this.currentOrder.isToInvoice();
         if (!orderJSON[0] || this.currentOrder.id !== orderJSON[0].id) {
             this.dialog.add(AlertDialog, {
                 title: _t("Order saving issue"),
@@ -223,7 +222,7 @@ patch(PaymentScreen.prototype, {
 
         // Now, do practically the normal flow
         if (
-            (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) &&
+            (this.currentOrder.isPaidWithCash() || this.currentOrder.getChange()) &&
             this.pos.config.iface_cashdrawer
         ) {
             this.hardwareProxy.printer.openCashbox();

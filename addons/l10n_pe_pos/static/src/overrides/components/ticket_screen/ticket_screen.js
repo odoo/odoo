@@ -8,10 +8,10 @@ patch(TicketScreen.prototype, {
         }
         if (
             partner &&
-            (!destinationOrder.get_partner() ||
-                destinationOrder.get_partner().id === this.pos.consumidorFinalAnonimoId)
+            (!destinationOrder.getPartner() ||
+                destinationOrder.getPartner().id === this.pos.consumidorFinalAnonimoId)
         ) {
-            return destinationOrder.set_partner(partner);
+            return destinationOrder.setPartner(partner);
         }
     },
 });

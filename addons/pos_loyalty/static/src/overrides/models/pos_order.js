@@ -4,7 +4,7 @@ import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
 import {
-    compute_price_force_price_include,
+    computePriceForcePriceInclude,
     getTaxesAfterFiscalPosition,
 } from "@point_of_sale/app/models/utils/tax_utils";
 const { DateTime } = luxon;
@@ -119,10 +119,10 @@ patch(PosOrder.prototype, {
      *
      * @override
      */
-    set_partner(partner) {
-        const oldPartner = this.get_partner();
-        super.set_partner(partner);
-        if (this.uiState.couponPointChanges && oldPartner !== this.get_partner()) {
+    setPartner(partner) {
+        const oldPartner = this.getPartner();
+        super.setPartner(partner);
+        if (this.uiState.couponPointChanges && oldPartner !== this.getPartner()) {
             // Remove couponPointChanges for cards in is_nominative programs.
             // This makes sure that counting of points on loyalty and ewallet programs is updated after partner changes.
             const loyaltyProgramIds = new Set(
@@ -137,11 +137,11 @@ patch(PosOrder.prototype, {
             }
         }
     },
-    wait_for_push_order() {
+    waitForPushOrder() {
         return (
             Object.keys(this.uiState.couponPointChanges || {}).length > 0 ||
             this._get_reward_lines().length ||
-            super.wait_for_push_order(...arguments)
+            super.waitForPushOrder(...arguments)
         );
     },
     /**
@@ -149,18 +149,18 @@ patch(PosOrder.prototype, {
      *
      * @override
      */
-    export_for_printing(baseUrl, headerData) {
-        const result = super.export_for_printing(...arguments);
-        if (this.get_partner()) {
+    exportForPrinting(baseUrl, headerData) {
+        const result = super.exportForPrinting(...arguments);
+        if (this.getPartner()) {
             result.loyaltyStats = this.getLoyaltyPoints();
-            result.partner = this.get_partner();
+            result.partner = this.getPartner();
         }
         result.new_coupon_info = this.new_coupon_info;
         return result;
     },
     //@override
-    _get_ignored_product_ids_total_discount() {
-        const productIds = super._get_ignored_product_ids_total_discount(...arguments);
+    _getIgnoredProductIdsTotalDiscount() {
+        const productIds = super._getIgnoredProductIdsTotalDiscount(...arguments);
         const giftCardPrograms = this.models["loyalty.program"].filter(
             (p) => p.program_type === "gift_card"
         );
@@ -172,8 +172,8 @@ patch(PosOrder.prototype, {
         }
         return productIds;
     },
-    get_orderlines() {
-        const orderlines = super.get_orderlines(this, arguments);
+    getOrderlines() {
+        const orderlines = super.getOrderlines(this, arguments);
         const rewardLines = [];
         const nonRewardLines = [];
 
@@ -199,13 +199,13 @@ patch(PosOrder.prototype, {
         }
         return this.lines;
     },
-    get_last_orderline() {
+    getLastOrderline() {
         const orderLines = this.lines.filter((line) => !line.is_reward_line);
         return orderLines[orderLines.length - 1];
     },
-    set_pricelist(pricelist) {
+    setPricelist(pricelist) {
         const oldPricelist = this.pricelist_id;
-        super.set_pricelist(...arguments);
+        super.setPricelist(...arguments);
         if (this.uiState.couponPointChanges && oldPricelist !== pricelist) {
             // Remove couponPointChanges for cards in no longer available programs.
             // This makes sure that counting of points on loyalty and ewallet programs is updated after pricelist changes.
@@ -376,11 +376,11 @@ patch(PosOrder.prototype, {
                 if (this._validForPointsCorrection(reward, line, rule)) {
                     if (rule.reward_point_mode === "money") {
                         res -= roundPrecision(
-                            rule.reward_point_amount * line.get_price_with_tax(),
+                            rule.reward_point_amount * line.getPriceWithTax(),
                             0.01
                         );
                     } else if (rule.reward_point_mode === "unit") {
-                        res += rule.reward_point_amount * line.get_quantity();
+                        res += rule.reward_point_amount * line.getQuantity();
                     }
                 }
             }
@@ -437,7 +437,7 @@ patch(PosOrder.prototype, {
             }
             return false;
         });
-        for (const line of this.get_orderlines()) {
+        for (const line of this.getOrderlines()) {
             if (line.is_reward_line && line.coupon_id.id === coupon_id) {
                 points -= line.points_cost;
             }
@@ -462,7 +462,7 @@ patch(PosOrder.prototype, {
         ) {
             return false;
         }
-        if (program.is_nominative && !this.get_partner()) {
+        if (program.is_nominative && !this.getPartner()) {
             return false;
         }
         if (program.date_from && program.date_from.startOf("day") > DateTime.now()) {
@@ -491,7 +491,7 @@ patch(PosOrder.prototype, {
      */
     pointsForPrograms(programs) {
         pointsForProgramsCountedRules = {};
-        const orderLines = this.get_orderlines();
+        const orderLines = this.getOrderlines();
         const linesPerRule = {};
         for (const line of orderLines) {
             const reward = line.reward_id;
@@ -530,11 +530,11 @@ patch(PosOrder.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_with_tax(),
+                    (sum, line) => sum + line.getPriceWithTax(),
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
+                    (sum, line) => sum + line.getPriceWithoutTax(),
                     0
                 );
                 const amountCheck =
@@ -566,16 +566,16 @@ patch(PosOrder.prototype, {
                             }
                         }
                         const lineQty = line._reward_product_id
-                            ? -line.get_quantity()
-                            : line.get_quantity();
-                        if (qtyPerProduct[line._reward_product_id || line.get_product().id]) {
-                            qtyPerProduct[line._reward_product_id || line.get_product().id] +=
+                            ? -line.getQuantity()
+                            : line.getQuantity();
+                        if (qtyPerProduct[line._reward_product_id || line.getProduct().id]) {
+                            qtyPerProduct[line._reward_product_id || line.getProduct().id] +=
                                 lineQty;
                         } else {
-                            qtyPerProduct[line._reward_product_id?.id || line.get_product().id] =
+                            qtyPerProduct[line._reward_product_id?.id || line.getProduct().id] =
                                 lineQty;
                         }
-                        orderedProductPaid += line.get_price_with_tax();
+                        orderedProductPaid += line.getPriceWithTax();
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }
@@ -607,20 +607,20 @@ patch(PosOrder.prototype, {
                             if (
                                 line.is_reward_line ||
                                 !rule.validProductIds.has(line.product_id.id) ||
-                                line.get_quantity() <= 0 ||
+                                line.getQuantity() <= 0 ||
                                 line.ignoreLoyaltyPoints({ program })
                             ) {
                                 continue;
                             }
                             const pointsPerUnit = roundPrecision(
-                                (rule.reward_point_amount * line.get_price_with_tax()) /
-                                    line.get_quantity(),
+                                (rule.reward_point_amount * line.getPriceWithTax()) /
+                                    line.getQuantity(),
                                 0.01
                             );
                             if (pointsPerUnit > 0) {
                                 splitPoints.push(
-                                    ...Array.apply(null, Array(line.get_quantity())).map(() => {
-                                        if (line._gift_barcode && line.get_quantity() == 1) {
+                                    ...Array.apply(null, Array(line.getQuantity())).map(() => {
+                                        if (line._gift_barcode && line.getQuantity() == 1) {
                                             return {
                                                 points: pointsPerUnit,
                                                 barcode: line._gift_barcode,
@@ -660,7 +660,7 @@ patch(PosOrder.prototype, {
      * @returns {Array} List of lines composing the global discount
      */
     _getGlobalDiscountLines() {
-        return this.get_orderlines().filter(
+        return this.getOrderlines().filter(
             (line) => line.reward_id && line.reward_id.is_global_discount
         );
     },
@@ -672,7 +672,7 @@ patch(PosOrder.prototype, {
         return this._get_regular_order_lines().reduce((nItems, line) => {
             let increment = 0;
             if (rule.any_product || rule.validProductIds.has(line.product_id.id)) {
-                increment = line.get_quantity();
+                increment = line.getQuantity();
             }
             return nItems + increment;
         }, 0);
@@ -724,8 +724,8 @@ patch(PosOrder.prototype, {
                 })
             );
         const result = [];
-        const totalWithTax = this.get_total_with_tax();
-        const totalWithoutTax = this.get_total_without_tax();
+        const totalWithTax = this.getTotalWithTax();
+        const totalWithoutTax = this.getTotalWithoutTax();
         const totalIsZero = totalWithTax === 0;
         const globalDiscountLines = this._getGlobalDiscountLines();
         const globalDiscountPercent = globalDiscountLines.length
@@ -871,7 +871,7 @@ patch(PosOrder.prototype, {
      */
     processGiftCard(newGiftCardCode, points, expirationDate) {
         const partner_id = this.partner_id?.id || false;
-        const product_id = this.get_selected_orderline().product_id.id;
+        const product_id = this.getSelectedOrderline().product_id.id;
         const program = this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
 
         let couponId;
@@ -910,16 +910,16 @@ patch(PosOrder.prototype, {
     _getDiscountableOnOrder(reward) {
         let discountable = 0;
         const discountablePerTax = {};
-        for (const line of this.get_orderlines()) {
-            if (!line.get_quantity()) {
+        for (const line of this.getOrderlines()) {
+            if (!line.getQuantity()) {
                 continue;
             }
             const taxKey = line.tax_ids.map((t) => t.id);
-            discountable += line.get_price_with_tax();
+            discountable += line.getPriceWithTax();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
             }
-            discountablePerTax[taxKey] += line.get_base_price();
+            discountablePerTax[taxKey] += line.getBasePrice();
         }
         return { discountable, discountablePerTax };
     },
@@ -927,8 +927,8 @@ patch(PosOrder.prototype, {
      * @returns the order's cheapest line
      */
     _getCheapestLine() {
-        const filtered_lines = this.get_orderlines().filter(
-            (line) => !line.comboParent && !line.reward_id && line.get_quantity
+        const filtered_lines = this.getOrderlines().filter(
+            (line) => !line.comboParent && !line.reward_id && line.getQuantity
         );
         return filtered_lines.toSorted(
             (lineA, lineB) => lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
@@ -957,12 +957,12 @@ patch(PosOrder.prototype, {
     _getSpecificDiscountableLines(reward) {
         const discountableLines = [];
         const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
-        for (const line of this.get_orderlines()) {
-            if (!line.get_quantity()) {
+        for (const line of this.getOrderlines()) {
+            if (!line.getQuantity()) {
                 continue;
             }
             if (
-                applicableProductIds.has(line.get_product().id) ||
+                applicableProductIds.has(line.getProduct().id) ||
                 applicableProductIds.has(line._reward_product_id?.id)
             ) {
                 discountableLines.push(line);
@@ -980,15 +980,15 @@ patch(PosOrder.prototype, {
         const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
         const linesToDiscount = [];
         const discountLinesPerReward = {};
-        const orderLines = this.get_orderlines();
+        const orderLines = this.getOrderlines();
         const orderProducts = orderLines.map((line) => line.product_id.id);
         const remainingAmountPerLine = {};
         for (const line of orderLines) {
-            if (!line.get_quantity() || !line.price_unit) {
+            if (!line.getQuantity() || !line.price_unit) {
                 continue;
             }
-            remainingAmountPerLine[line.uuid] = line.get_price_with_tax();
-            const product_id = line.combo_parent_id?.product_id.id || line.get_product().id;
+            remainingAmountPerLine[line.uuid] = line.getPriceWithTax();
+            const product_id = line.combo_parent_id?.product_id.id || line.getProduct().id;
             if (
                 applicableProductIds.has(product_id) ||
                 (line._reward_product_id && applicableProductIds.has(line._reward_product_id.id))
@@ -1064,8 +1064,7 @@ patch(PosOrder.prototype, {
                 discountablePerTax[taxKey] = 0;
             }
             discountablePerTax[taxKey] +=
-                line.get_base_price() *
-                (remainingAmountPerLine[line.uuid] / line.get_price_with_tax());
+                line.getBasePrice() * (remainingAmountPerLine[line.uuid] / line.getPriceWithTax());
         }
         return { discountable, discountablePerTax };
     },
@@ -1104,7 +1103,7 @@ patch(PosOrder.prototype, {
             return _t("Unknown discount type");
         }
         let { discountable, discountablePerTax } = getDiscountable(reward);
-        discountable = Math.min(this.get_total_with_tax(), discountable);
+        discountable = Math.min(this.getTotalWithTax(), discountable);
         if (!discountable) {
             return [];
         }
@@ -1131,7 +1130,7 @@ patch(PosOrder.prototype, {
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
         if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
-            const new_price = compute_price_force_price_include(
+            const new_price = computePriceForcePriceInclude(
                 discountProduct.taxes_id,
                 -Math.min(maxDiscount, discountable),
                 discountProduct,
@@ -1185,7 +1184,7 @@ patch(PosOrder.prototype, {
                 }
 
                 // Check for any order line where its taxes exactly match rewardTaxes
-                const matchingLines = this.get_orderlines().filter(
+                const matchingLines = this.getOrderlines().filter(
                     (line) =>
                         !line.is_delivery &&
                         line.tax_ids.length === rewardTaxes.length &&
@@ -1197,7 +1196,7 @@ patch(PosOrder.prototype, {
                 }
 
                 const untaxedAmount = matchingLines.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
+                    (sum, line) => sum + line.getPriceWithoutTax(),
                     0
                 );
                 // Discount amount should not exceed total untaxed amount of the matching lines
@@ -1265,17 +1264,17 @@ patch(PosOrder.prototype, {
         let claimed = 0;
         let available = 0;
         let shouldCorrectRemainingPoints = false;
-        for (const line of this.get_orderlines()) {
+        for (const line of this.getOrderlines()) {
             if (
                 reward.reward_product_ids.map((reward) => reward.id).includes(product.id) &&
-                reward.reward_product_ids.map((reward) => reward.id).includes(line.get_product().id)
+                reward.reward_product_ids.map((reward) => reward.id).includes(line.getProduct().id)
             ) {
                 if (this._get_reward_lines() == 0) {
-                    if (line.get_product() === product) {
-                        available += line.get_quantity();
+                    if (line.getProduct() === product) {
+                        available += line.getQuantity();
                     }
                 } else {
-                    available += line.get_quantity();
+                    available += line.getQuantity();
                 }
             } else if (
                 reward.reward_product_ids
@@ -1284,7 +1283,7 @@ patch(PosOrder.prototype, {
             ) {
                 if (line.reward_id.id == reward.id) {
                     remainingPoints += line.points_cost;
-                    claimed += line.get_quantity();
+                    claimed += line.getQuantity();
                 } else {
                     shouldCorrectRemainingPoints = true;
                 }
@@ -1356,7 +1355,7 @@ patch(PosOrder.prototype, {
                 this._isRewardProductPartOfRules(reward, product) &&
                 reward.program_id.applies_on !== "future"
             ) {
-                const line = this.get_orderlines().find(
+                const line = this.getOrderlines().find(
                     (line) => line._reward_product_id?.id === product.id
                 );
                 // Compute the correction points once even if there are multiple reward lines.
@@ -1415,7 +1414,7 @@ patch(PosOrder.prototype, {
             {
                 product_id: reward.discount_line_product_id,
                 price_unit: -roundDecimals(
-                    product.get_price(this.pricelist_id, freeQuantity, 0, false, product),
+                    product.getPrice(this.pricelist_id, freeQuantity, 0, false, product),
                     this.currency.decimal_places
                 ),
                 tax_ids: product.taxes_id,
@@ -1441,7 +1440,7 @@ patch(PosOrder.prototype, {
     removeOrderline(lineToRemove) {
         if (lineToRemove.is_reward_line) {
             // Remove any line that is part of that same reward aswell.
-            const linesToRemove = this.get_orderlines().filter((line) => {
+            const linesToRemove = this.getOrderlines().filter((line) => {
                 return (
                     line.reward_id === lineToRemove.reward_id &&
                     line.coupon_id === lineToRemove.coupon_id &&

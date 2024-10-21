@@ -57,13 +57,13 @@ function log(obj, depth = 0, maxDepth = 2) {
  * @returns {Object} An object representing the differences between `obj1` and `obj2`. If objects are identical, an empty object is returned. If a circular reference or maximum depth limit is reached, an error message is included in the return object.
  *
  * @example
- * // Assume `this.pos.get_order()` returns an order object with its current state.
+ * // Assume `this.pos.getOrder()` returns an order object with its current state.
  * // Capture the state of the order before a certain operation.
- * const beforeBooking = buildRepresentativeObject(this.pos.get_order());
+ * const beforeBooking = buildRepresentativeObject(this.pos.getOrder());
  * // Perform an operation that modifies the order.
- * this.pos.get_order().setBooked(true);
+ * this.pos.getOrder().setBooked(true);
  * // Capture the state of the order after the operation.
- * const afterBooking = buildRepresentativeObject(this.pos.get_order());
+ * const afterBooking = buildRepresentativeObject(this.pos.getOrder());
  * // Compare the before and after states to see what has changed.
  * console.log("Differences: ", compareObjects(beforeBooking, afterBooking));
  */

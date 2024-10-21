@@ -20,13 +20,13 @@ export class NoteButton extends Component {
     }
 
     onClick() {
-        return this.pos.get_order()?.get_selected_orderline()
+        return this.pos.getOrder()?.getSelectedOrderline()
             ? this.addLineNote()
             : this.addOrderNote();
     }
 
     async addLineNote() {
-        const selectedOrderline = this.pos.get_order().get_selected_orderline();
+        const selectedOrderline = this.pos.getOrder().getSelectedOrderline();
         const selectedNote = this.currentNote || "";
         const oldNote = selectedOrderline.getNote();
         const payload = await this.openTextInput(selectedNote);
@@ -63,7 +63,7 @@ export class NoteButton extends Component {
         let buttons = [];
         if (
             this.props.type === "internal" ||
-            this.pos.get_order()?.get_selected_orderline() === undefined
+            this.pos.getOrder()?.getSelectedOrderline() === undefined
         ) {
             buttons = this.pos.models["pos.note"].getAll().map((note) => ({
                 label: note.name,
@@ -79,37 +79,37 @@ export class NoteButton extends Component {
     }
 
     get orderNote() {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         return this.props.type === "internal"
             ? order.internal_note || ""
             : order.general_customer_note || "";
     }
 
     get orderlineNote() {
-        const orderline = this.pos.get_order().get_selected_orderline();
-        return this.props.type === "internal" ? orderline.getNote() : orderline.get_customer_note();
+        const orderline = this.pos.getOrder().getSelectedOrderline();
+        return this.props.type === "internal" ? orderline.getNote() : orderline.getCustomerNote();
     }
 
     get currentNote() {
-        return this.pos.get_order().get_selected_orderline() ? this.orderlineNote : this.orderNote;
+        return this.pos.getOrder().getSelectedOrderline() ? this.orderlineNote : this.orderNote;
     }
 
     setOrderNote(value) {
-        const order = this.pos.get_order();
+        const order = this.pos.getOrder();
         return this.props.type === "internal"
             ? order.setInternalNote(value)
             : order.setGeneralCustomerNote(value);
     }
 
     setOrderlineNote(value) {
-        const orderline = this.pos.get_order().get_selected_orderline();
+        const orderline = this.pos.getOrder().getSelectedOrderline();
         return this.props.type === "internal"
             ? orderline.setNote(value)
-            : orderline.set_customer_note(value);
+            : orderline.setCustomerNote(value);
     }
 
     setNote(note) {
-        return this.pos.get_order().get_selected_orderline()
+        return this.pos.getOrder().getSelectedOrderline()
             ? this.setOrderlineNote(note)
             : this.setOrderNote(note);
     }

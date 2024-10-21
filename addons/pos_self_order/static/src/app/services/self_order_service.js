@@ -284,7 +284,7 @@ export class SelfOrder extends Reactive {
         }
 
         if (values.price_extra > 0) {
-            const price = values.product_id.get_price(
+            const price = values.product_id.getPrice(
                 this.currentOrder.pricelist_id,
                 values.qty,
                 values.price_extra
@@ -301,7 +301,7 @@ export class SelfOrder extends Reactive {
         );
 
         const lineToMerge = this.currentOrder.lines.find(
-            (l) => l.can_be_merged_with(newLine) && l.id !== newLine.id
+            (l) => l.canBeMergedWith(newLine) && l.id !== newLine.id
         );
 
         if (lineToMerge) {
@@ -455,7 +455,7 @@ export class SelfOrder extends Reactive {
         cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
 
         for (const printerConfig of this.models["pos.printer"].getAll()) {
-            const printer = this.create_printer(printerConfig);
+            const printer = this.createPrinter(printerConfig);
             if (printer) {
                 printer.config = printerConfig;
                 this.kitchenPrinters.push(printer);
@@ -463,7 +463,7 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    create_printer(printer) {
+    createPrinter(printer) {
         const url = deduceUrl(printer.proxy_ip || "");
         return new HWPrinter({ url });
     }
@@ -806,7 +806,7 @@ export class SelfOrder extends Reactive {
 
     getProductDisplayPrice(productTemplate, product) {
         const pricelist = this.config.pricelist_id;
-        const price = productTemplate.get_price(pricelist, 1, 0, false, product);
+        const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
 
         let taxes = productTemplate.taxes_id;
 
@@ -872,7 +872,7 @@ export class SelfOrder extends Reactive {
     orderExportForPrinting(order) {
         const headerData = this.getReceiptHeaderData(order);
         const baseUrl = this.session._base_url;
-        return order.export_for_printing(baseUrl, headerData);
+        return order.exportForPrinting(baseUrl, headerData);
     }
     async downloadReceipt(order) {
         const link = document.createElement("a");

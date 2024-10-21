@@ -13,7 +13,7 @@ patch(PosOrderline.prototype, {
             this.order_id.setShippingDate(this.sale_order_origin_id.shipping_date);
         }
     },
-    get_sale_order() {
+    getSaleOrder() {
         if (this.sale_order_origin_id) {
             const value = {
                 name: this.sale_order_origin_id.name,
@@ -52,9 +52,9 @@ patch(PosOrderline.prototype, {
             this.product_id.type === "service" &&
             !["sent", "draft"].includes(this.sale_order_origin_id.state)
         ) {
-            this.set_quantity(saleOrderLine.qty_to_invoice);
+            this.setQuantity(saleOrderLine.qty_to_invoice);
         } else {
-            this.set_quantity(
+            this.setQuantity(
                 saleOrderLine.product_uom_qty -
                     Math.max(saleOrderLine.qty_delivered, saleOrderLine.qty_invoiced)
             );
