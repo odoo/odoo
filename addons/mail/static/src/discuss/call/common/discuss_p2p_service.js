@@ -8,7 +8,10 @@ export const discussP2P = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        const p2p = new PeerToPeer({ notificationRoute: "/mail/rtc/session/notify_call_members" });
+        const p2p = new PeerToPeer({
+            logLevel: env.debug ? "warn" : undefined,
+            notificationRoute: "/mail/rtc/session/notify_call_members",
+        });
         services["bus_service"].subscribe(
             "discuss.channel.rtc.session/peer_notification",
             ({ sender, notifications }) => {
