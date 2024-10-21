@@ -259,7 +259,6 @@ class L10n_InWithholdWizardLine(models.TransientModel):
         string="TDS Amount",
         compute='_compute_amount',
         store=True,
-        readonly=False
     )
 
     #  ===== Constraints =====
