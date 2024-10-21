@@ -67,8 +67,8 @@ export function hasRewardLine(rewardName, amount, qty) {
 export function orderTotalIs(total_str) {
     return [...Order.hasTotal(total_str)];
 }
-export function isRewardButtonHighlighted(isHighlighted) {
-    return [
+export function isRewardButtonHighlighted(isHighlighted, closeModal) {
+    const steps = [
         ...ProductScreen.clickControlButtonMore(),
         {
             trigger: isHighlighted
@@ -76,6 +76,14 @@ export function isRewardButtonHighlighted(isHighlighted) {
                 : '.control-buttons button:contains("Reward"):not(:has(.highlight))',
         },
     ];
+    if (closeModal) {
+        steps.push({
+            content: "Close modal after checked if reward button is highlighted",
+            trigger: ".modal header .btn-close",
+            run: "click",
+        });
+    }
+    return steps;
 }
 export function eWalletButtonState({ highlighted, text = "eWallet" }) {
     return [
