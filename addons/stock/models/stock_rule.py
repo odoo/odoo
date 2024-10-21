@@ -10,6 +10,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, html_escape
+from odoo.sql_db import BaseCursor
 from odoo.tools.misc import split_every
 
 _logger = logging.getLogger(__name__)
@@ -582,6 +583,7 @@ class ProcurementGroup(models.Model):
         we run functions as SUPERUSER to avoid intercompanies and access rights issues. """
         try:
             if use_new_cursor:
+                assert isinstance(self._cr, BaseCursor)
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))  # TDE FIXME
 
