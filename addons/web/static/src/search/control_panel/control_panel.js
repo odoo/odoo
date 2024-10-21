@@ -118,6 +118,10 @@ export class ControlPanel extends Component {
         });
     }
 
+    getBreadcrumbTooltip({ name }) {
+        return _t("Back to “%s”", name);
+    }
+
     getScrollingElement() {
         return this.root.el.parentElement;
     }
