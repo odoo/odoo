@@ -720,6 +720,16 @@ export class Composer extends Component {
         composer.thread?.markAsRead();
     }
 
+    onFocusout(ev) {
+        if (
+            [EDIT_CLICK_TYPE.CANCEL, EDIT_CLICK_TYPE.SAVE].includes(ev.relatedTarget?.dataset?.type)
+        ) {
+            // Edit or Save most likely clicked: early return as to not re-render (which prevents click)
+            return;
+        }
+        this.props.composer.isFocused = false;
+    }
+
     saveContent() {
         const composer = toRaw(this.props.composer);
         const fullComposerContent =
