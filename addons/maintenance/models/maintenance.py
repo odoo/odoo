@@ -134,7 +134,7 @@ class MaintenanceEquipment(models.Model):
     def _compute_display_name(self):
         for record in self:
             if record.serial_no:
-                record.display_name = record.name + '/' + record.serial_no
+                record.display_name = (record.name or '') + '/' + record.serial_no
             else:
                 record.display_name = record.name
 
@@ -160,6 +160,9 @@ class MaintenanceEquipment(models.Model):
 
     @api.depends('serial_no')
     def _compute_match_serial(self):
+        if 'stock.lot' not in self.env:
+            self.match_serial = False
+            return
         matched_serial_data = self.env['stock.lot']._read_group(
             [('name', 'in', self.mapped('serial_no'))],
             ['name'],
@@ -202,9 +205,12 @@ class MaintenanceEquipment(models.Model):
 
     def action_open_matched_serial(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
-        action['context'] = {'search_default_name': self.serial_no}
-        return action
+        action = self.env.ref('stock.action_production_lot_form', raise_if_not_found=False)
+        if not action:
+            return True
+        action_dict = action._get_action_dict()
+        action_dict['context'] = {'search_default_name': self.serial_no}
+        return action_dict
 
 
 class MaintenanceRequest(models.Model):

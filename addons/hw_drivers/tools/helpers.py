@@ -25,7 +25,7 @@ from threading import Thread, Lock
 import time
 import zipfile
 
-from odoo import _, http, release, service
+from odoo import http, release, service
 from odoo.tools.func import lazy_property
 from odoo.tools.misc import file_path
 
@@ -127,11 +127,11 @@ def check_certificate():
         if key[0] == b'CN':
             cn = key[1].decode('utf-8')
     if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
-        message = _('Your certificate %s must be updated', cn)
+        message = 'Your certificate %s must be updated' % cn
         _logger.info(message)
         return {"status": CertificateStatus.NEED_REFRESH}
     else:
-        message = _('Your certificate %(certificate)s is valid until %(end_date)s', certificate=cn, end_date=cert_end_date)
+        message = 'Your certificate %(certificate)s is valid until %(end_date)s' % {"certificate": cn, "end_date": cert_end_date}
         _logger.info(message)
         return {"status": CertificateStatus.OK, "message": message}
 
@@ -176,7 +176,7 @@ def check_git_branch():
                     subprocess.run(
                         ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
                     )
-                    odoo_restart()
+                odoo_restart()
     except Exception:
         _logger.exception('An error occurred while connecting to server')
 

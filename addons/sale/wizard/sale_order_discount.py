@@ -126,7 +126,7 @@ class SaleOrderDiscount(models.TransientModel):
                         amount=subtotal * self.discount_percentage,
                         taxes=taxes,
                         description=_(
-                            "Discount: %(percent)s%%",
+                            "Discount %(percent)s%%",
                             percent=self.discount_percentage*100
                         ),
                     ),
@@ -138,7 +138,7 @@ class SaleOrderDiscount(models.TransientModel):
                         amount=subtotal * self.discount_percentage,
                         taxes=taxes,
                         description=_(
-                            "Discount: %(percent)s%%"
+                            "Discount %(percent)s%%"
                             "- On products with the following taxes %(taxes)s",
                             percent=self.discount_percentage*100,
                             taxes=", ".join(taxes.mapped('name'))

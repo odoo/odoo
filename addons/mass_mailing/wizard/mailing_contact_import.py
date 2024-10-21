@@ -127,6 +127,6 @@ class MailingContactImport(models.TransientModel):
             'name': _('Import Mailing Contacts'),
             'params': {
                 'context': self.env.context,
-                'model': 'mailing.contact',
+                'active_model': 'mailing.contact',
             }
         }

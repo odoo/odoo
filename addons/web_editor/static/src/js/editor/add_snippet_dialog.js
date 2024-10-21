@@ -270,7 +270,8 @@ export class AddSnippetDialog extends Component {
             }));
 
             snippetPreviewWrapEl.classList.remove("d-none");
-        };
+        }
+        this._updateSnippetContent(this.iframeDocument);
     }
     /**
      * Inserts the style into the iframe's <head>.
@@ -315,6 +316,8 @@ export class AddSnippetDialog extends Component {
                 snippetDialogPreview.remove();
             }
             this.props.addSnippet(selectedSnippetEl);
+            // Adapt the snippet content right after adding it to the DOM.
+            this._updateSnippetContent(selectedSnippetEl);
             this.props.close();
         }
     }
@@ -336,4 +339,11 @@ export class AddSnippetDialog extends Component {
             .querySelector("[data-snippet-key]").dataset.snippetKey;
         this.props.deleteCustomSnippet(parseInt(snippetKey));
     }
+
+    /**
+     * Allows to update the snippets to build & adapt dynamic content.
+     *
+     * @private
+     */
+    _updateSnippetContent(snippetEl) {}
 }

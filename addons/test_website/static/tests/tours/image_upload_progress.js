@@ -17,7 +17,7 @@ const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, {
             }
             return new File([arr], fileData[1], {type: fileData[0]});
         };
-        
+
         let files = [
             getFileFromB64(['image/vnd.microsoft.icon', 'icon.ico', "AAABAAEAAQEAAAEAIAAwAAAAFgAAACgAAAABAAAAAgAAAAEAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=="]),
             getFileFromB64(['image/webp', 'image.webp', "UklGRhwAAABXRUJQVlA4TBAAAAAvE8AEAAfQhuh//wMR0f8A"]),
@@ -64,7 +64,6 @@ const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .j
 
 registerWebsitePreviewTour('test_image_upload_progress', {
     url: '/test_image_progress',
-    test: true,
     edition: true,
 }, () => [
     ...setupSteps(),
@@ -195,7 +194,6 @@ registerWebsitePreviewTour('test_image_upload_progress', {
 
 registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     url: '/test_image_progress',
-    test: true,
     edition: true,
 }, () => [
     ...setupSteps(),
@@ -216,7 +214,7 @@ registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         content: "click on unsplash result", // note that unsplash is mocked
         trigger: "img[alt~=fox]",
         run: "click",
-    }, 
+    },
     {
         trigger: ".o_notification_close",
     },

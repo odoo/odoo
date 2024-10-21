@@ -3,8 +3,12 @@
 # 	* hr_recruitment_skills
 # 
 # Translators:
+# Simo Suurla <simo@suurla.fi>, 2024
+# Martin Trigaux, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +27,7 @@ msgstr ""
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_applicant
 msgid "Applicant"
-msgstr ""
+msgstr "Hakija"
 
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_candidate
@@ -39,7 +43,7 @@ msgstr ""
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Luonut"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__create_date
@@ -49,7 +53,7 @@ msgstr "Luotu"
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näyttönimi"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__skill_ids
@@ -59,7 +63,7 @@ msgstr ""
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_job
@@ -69,12 +73,12 @@ msgstr "Tehtävänimike"
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimeksi päivittänyt"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #. module: hr_recruitment_skills
 #. odoo-python
@@ -106,12 +110,12 @@ msgstr ""
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__level_progress
 msgid "Progress"
-msgstr ""
+msgstr "Edistyminen"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_candidate_skill__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
-msgstr ""
+msgstr "Edistyminen nollatiedosta (0 %) täysin hallittuun (100 %)."
 
 #. module: hr_recruitment_skills
 #. odoo-javascript
@@ -125,22 +129,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__skill_ids
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__skill_id
 msgid "Skill"
-msgstr ""
+msgstr "Taito"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__skill_level_id
 msgid "Skill Level"
-msgstr ""
+msgstr "Taidon taso"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__skill_type_id
 msgid "Skill Type"
-msgstr ""
+msgstr "Taitotyyppi"
 
 #. module: hr_recruitment_skills
 #: model:ir.ui.menu,name:hr_recruitment_skills.hr_recruitment_skill_type_menu
 msgid "Skill Types"
-msgstr ""
+msgstr "Taitotyypit"
 
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_candidate_skill
@@ -156,24 +160,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_candidate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_candidate_view_search
 msgid "Skills"
-msgstr ""
+msgstr "Taidot"
 
 #. module: hr_recruitment_skills
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_candidate_skill.py:0
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
-msgstr ""
+msgstr "Taito %(name)s ja taitotyyppi %(type)s eivät täsmää"
 
 #. module: hr_recruitment_skills
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_candidate_skill.py:0
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
-msgstr ""
+msgstr "Taitotaso %(level)s ei ole voimassa taitotyypille: %(type)s"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_candidate_skill__unique_skill
 msgid "Two levels for the same skill is not allowed"
-msgstr ""
+msgstr "Saman taidon kaksi tasoa ei ole sallittua"
 
 #. module: hr_recruitment_skills
 #. odoo-python

@@ -103,15 +103,29 @@ import {
 //-----------------------------------------------------------------------------
 
 const {
+    AnimationEvent,
+    ClipboardEvent,
+    CompositionEvent,
     console: { dir: $dir, groupCollapsed: $groupCollapsed, groupEnd: $groupEnd, log: $log },
     DataTransfer,
     document,
+    DragEvent,
+    ErrorEvent,
+    Event,
+    FocusEvent,
+    KeyboardEvent,
     Math: { ceil: $ceil, max: $max, min: $min },
+    MouseEvent,
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
     Object: { assign: $assign, values: $values },
+    PointerEvent,
+    PromiseRejectionEvent,
     String,
+    SubmitEvent,
     Touch,
+    TouchEvent,
     TypeError,
+    WheelEvent,
 } = globalThis;
 /** @type {Document["createRange"]} */
 const $createRange = document.createRange.bind(document);
@@ -186,19 +200,6 @@ const dispatchRelatedEvents = async (events, eventType, eventInit) => {
         }
         await dispatch(event.target, eventType, eventInit);
     }
-};
-
-/**
- * All touch events target the same element (the initial "touchstart" target).
- *
- * @param {EventType} eventType
- * @param {TouchEventInit} eventInit
- */
-const dispatchTouchEvent = async (eventType, eventInit) => {
-    if (!hasTouch() || !runTime.pointerDownTarget) {
-        return;
-    }
-    return dispatch(runTime.pointerDownTarget, eventType, eventInit);
 };
 
 /**

@@ -874,7 +874,7 @@ test(`list view: action button in controlPanel with display='always'`, async () 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
-    ).toEqual(["New", "display", "default-selection"]);
+    ).toEqual(["New", "display", "" /* unselect all btn */, "default-selection"]);
 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(
@@ -971,12 +971,12 @@ test(`list view: buttons handler is called once on double click`, async () => {
             </list>
         `,
     });
-    await contains(`tbody .o_list_button > button:eq(0)`).click();
-    expect(`tbody .o_list_button > button:eq(0)`).toHaveProperty("disabled", true);
+    await contains(`tbody .o_list_button button:eq(0)`).click();
+    expect(`tbody .o_list_button button:eq(0)`).toHaveProperty("disabled", true);
 
     executeActionDef.resolve();
     await animationFrame();
-    expect(`tbody .o_list_button > button:eq(0)`).not.toHaveProperty("disabled");
+    expect(`tbody .o_list_button button:eq(0)`).toHaveProperty("disabled", false);
     expect.verifySteps(["execute_action"]);
 });
 
@@ -7190,7 +7190,7 @@ test(`click on a button in a list view`, async () => {
     });
     expect(`.o_data_row .o_list_button .o_button_icon.fa.fa-car`).toHaveCount(4);
 
-    await contains(`.o_data_row .o_list_button > button`).click();
+    await contains(`.o_data_row .o_list_button button`).click();
     // should have reloaded the view (after the action is complete)
     expect.verifySteps(["doActionButton", "web_search_read"]);
 });
@@ -7209,12 +7209,16 @@ test(`invisible attrs in readonly and editable list`, async () => {
         `,
     });
     expect(`.o_field_cell:eq(2)`).toHaveInnerHTML("");
-    expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML("");
+    expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML(
+        `<div class="d-flex flex-wrap gap-1"></div>`
+    );
 
     // edit first row
     await contains(`.o_field_cell`).click();
     expect(`.o_field_cell:eq(2)`).toHaveInnerHTML("");
-    expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML("");
+    expect(`.o_data_cell.o_list_button:eq(0)`).toHaveInnerHTML(
+        `<div class="d-flex flex-wrap gap-1"></div>`
+    );
 
     await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
     // click on the invisible field's cell to edit first row
@@ -8884,6 +8888,124 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "4", "2", "3"], {
         message: "the int_field (sequence) should have been correctly updated",
     });
+});
+
+test("resequence with NULL values", async () => {
+    mockService("action", {
+        doActionButton(params) {
+            params.onClose();
+        },
+    });
+    // we want the data to be minimal to have a minimal test
+    class MyFoo extends models.Model {
+        int_field = fields.Integer();
+
+        _records = [
+            { id: 1, int_field: 1 },
+            { id: 2 },
+            { id: 3, int_field: 3 },
+            { id: 4, int_field: 2 },
+        ];
+    }
+    defineModels([MyFoo]);
+
+    const serverValues = {
+        1: 1,
+        2: false,
+        3: 3,
+        4: 2,
+    };
+
+    onRpc("web_search_read", function ({ parent }) {
+        const res = parent();
+        const getServerValue = (record) =>
+            serverValues[record.id] === false ? Number.MAX_SAFE_INTEGER : serverValues[record.id];
+
+        // when sorted, NULL values are last
+        res.records.sort((a, b) => getServerValue(a) - getServerValue(b));
+        return res;
+    });
+
+    onRpc("/web/dataset/resequence", async (request) => {
+        const { params } = await request.json();
+        for (let i = 0; i < params.ids.length; i++) {
+            serverValues[params.ids[i]] = i;
+        }
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "my.foo",
+        arch: `<list default_order="int_field">
+                <field name="int_field" widget="handle"/>
+                <field name="id"/>
+                <button name="reload" class="reload" string="Confirm" type="object"/>
+            </list>`,
+    });
+
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "4", "3", "2"]);
+
+    await contains("tbody tr:nth-child(4) .o_handle_cell").dragAndDrop("tbody tr:nth-child(3)");
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "4", "2", "3"]);
+
+    await contains("button.reload").click();
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "4", "2", "3"]);
+});
+
+test("resequence with only NULL values", async () => {
+    mockService("action", {
+        doActionButton(params) {
+            params.onClose();
+        },
+    });
+    // we want the data to be minimal to have a minimal test
+    class MyFoo extends models.Model {
+        int_field = fields.Integer();
+
+        _records = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    }
+    defineModels([MyFoo]);
+
+    const serverValues = {
+        1: false,
+        2: false,
+        3: false,
+    };
+
+    onRpc("web_search_read", function ({ parent }) {
+        const res = parent();
+        const getServerValue = (record) =>
+            serverValues[record.id] === false ? Number.MAX_SAFE_INTEGER : serverValues[record.id];
+
+        // when sorted, NULL values are last
+        res.records.sort((a, b) => getServerValue(a) - getServerValue(b));
+        return res;
+    });
+
+    onRpc("/web/dataset/resequence", async (request) => {
+        const { params } = await request.json();
+        for (let i = 0; i < params.ids.length; i++) {
+            serverValues[params.ids[i]] = i;
+        }
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "my.foo",
+        arch: `<list default_order="int_field">
+                <field name="int_field" widget="handle"/>
+                <field name="id"/>
+                <button name="reload" class="reload" string="Confirm" type="object"/>
+            </list>`,
+    });
+
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "2", "3"]);
+
+    await contains("tbody tr:nth-child(3) .o_handle_cell").dragAndDrop("tbody tr:nth-child(2)");
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "3", "2"]);
+
+    await contains("button.reload").click();
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "3", "2"]);
 });
 
 test(`editable list with handle widget`, async () => {

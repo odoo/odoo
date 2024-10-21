@@ -213,7 +213,7 @@ test("can execute act_window actions from db ID", async () => {
     ]);
 });
 
-test("can open default form view with selectRecord when there is none in the action", async () => {
+test("click on a list row when there is no form in the action", async () => {
     stepAllNetworkCalls();
     await mountWithCleanup(WebClient);
     await getService("action").doAction(9);
@@ -226,11 +226,30 @@ test("can open default form view with selectRecord when there is none in the act
         "has_group",
     ]);
     await contains(".o_data_row:eq(0) .o_data_cell").click();
+    expect.verifySteps([]);
+});
+
+test("click on open form view button when there is no form in the action", async () => {
+    Pony._views[
+        "list,false"
+    ] = `<list editable="top" open_form_view="1"><field name="name"/></list>`;
+    stepAllNetworkCalls();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(9);
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load",
+        "get_views",
+        "web_search_read",
+        "has_group",
+    ]);
+    await contains(".o_data_row:eq(0) .o_list_record_open_form_view").click();
     expect(".o_form_view").toHaveCount(1, { message: "should display the form view" });
     expect.verifySteps(["get_views", "web_read"]);
 });
 
-test("can open default form view with createRecord when there is none in the action", async () => {
+test("click on new record button in list when there is no form in the action", async () => {
     stepAllNetworkCalls();
     await mountWithCleanup(WebClient);
     await getService("action").doAction(9);
@@ -1007,7 +1026,7 @@ test("execute_action of type object raises error: re-enables buttons", async () 
     await click('.o_form_view button[name="object"]');
     expect(".o_form_button_create").toHaveProperty("disabled", true);
     await animationFrame();
-    expect(".o_form_button_create").not.toHaveProperty("disabled");
+    expect(".o_form_button_create").toHaveProperty("disabled", false);
 });
 
 test("execute_action of type object raises error in modal: re-enables buttons", async () => {
@@ -2321,9 +2340,9 @@ test.tags("mobile")("do not restore after action button clicked on mobile", asyn
     await contains("div[name='display_name'] input").edit("Edited value");
     expect(".o_form_button_save").toBeVisible();
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    expect(".o_statusbar_button_dropdown_item button[name=do_something]").toBeVisible();
+    expect(".o-dropdown-item-unstyled-button button[name=do_something]").toBeVisible();
 
-    await contains(".o_statusbar_button_dropdown_item button[name=do_something]").click();
+    await contains(".o-dropdown-item-unstyled-button button[name=do_something]").click();
     expect(".o_form_buttons_view .o_form_button_save").not.toBeVisible();
 });
 
@@ -2441,7 +2460,7 @@ test.tags("mobile")("window action in target new fails (onchange) on mobile", as
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    await contains(".o_statusbar_button_dropdown_item button[name='5']").click();
+    await contains(".o-dropdown-item-unstyled-button button[name='5']").click();
     await waitFor(".modal"); // errors are async
     expect(".modal").toHaveCount(1);
     expect(".modal .o_error_dialog").toHaveCount(1);
@@ -2512,7 +2531,7 @@ test.tags("mobile")("Uncaught error in target new is catch only once on mobile",
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    await contains(".o_statusbar_button_dropdown_item button[name='26']").click();
+    await contains(".o-dropdown-item-unstyled-button button[name='26']").click();
     await waitFor(".modal"); // errors are async
     expect(".modal").toHaveCount(1);
     expect(".modal .o_error_dialog").toHaveCount(1);

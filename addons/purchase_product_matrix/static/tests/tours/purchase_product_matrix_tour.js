@@ -5,11 +5,10 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('purchase_matrix_tour', {
     url: "/odoo",
-    test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     run: "click",
-}, 
+},
 {
     trigger: ".o_purchase_order",
 },
@@ -66,7 +65,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 }, {
     trigger: ".modal button:contains(Confirm)",
     run: 'click' // apply the matrix
-}, 
+},
 {
     trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
 },

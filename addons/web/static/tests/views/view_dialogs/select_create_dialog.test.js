@@ -415,7 +415,7 @@ test("SelectCreateDialog calls on_selected with every record matching without se
 
     await contains("thead .o_list_record_selector input").click();
     await contains(".o_list_selection_box").click();
-    await clickModalButton({ text: "Select" });
+    await clickModalButton({ text: "Select", index: 1 });
 });
 
 test("SelectCreateDialog: multiple clicks on record", async () => {

@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 
 registry.category("web_tour.tours").add('test_json_auth', {
-    test: true,
     steps: () => [{
     trigger: 'body',
     run: async function () {

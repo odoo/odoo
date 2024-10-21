@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="lunch.ListRenderer">
-        <div class="o_lunch_content">
+        <div class="o_lunch_content d-flex flex-column h-100">
             <LunchDashboard openOrderLine.bind="openOrderLine"/>
 
-            <div class="overflow-auto">
-                <t t-call="web.ListRenderer"/>
+            <div class="overflow-auto flex-grow-1">
+                <t t-call="lunch.WebListRenderer"/>
             </div>
         </div>
+    </t>
+
+    <t t-name="lunch.WebListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
+        <t t-call="web.ActionHelper" position="after">
+            <t t-call="lunch.NoContentHelper"/>
+        </t>
     </t>
 </templates>

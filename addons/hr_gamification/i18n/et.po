@@ -6,6 +6,8 @@
 # Siim Raasuke, 2024
 # JanaAvalah, 2024
 # Stevin Lilla, 2024
+# Aveli Kannel <aveli@avalah.ee>, 2024
+# Eneli Õigus <enelioigus@gmail.com>, 2024
 # Anna, 2024
 # 
 msgid ""
@@ -28,6 +30,8 @@ msgid ""
 "A goal is defined by a user and a goal type.\n"
 "                    Goals can be created automatically by using challenges."
 msgstr ""
+"Kasutaja poolt on seatud eesmärk ja eesmärgi tüüp.\n"
+"                    Eesmärke saab luua automaatselt, kasutades väljakutseid."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
@@ -37,6 +41,8 @@ msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
 msgstr ""
+"Kõik töötaja tunnustusmärgid, mis on seotud töötajaga otseselt või läbi "
+"kasutajakonto"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -45,6 +51,9 @@ msgid ""
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
+"Määrake valitud kasutajate hindamiseks eesmärkide nimekiri.\n"
+"                    Väljakutseid saab kasutada automaatseks eesmärkide loomiseks periooditi (iga nädal, iga kuu ... ).\n"
+"                    Eesmärgid on loodud määratud kasutajatele või grupi liikmele."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
@@ -58,13 +67,15 @@ msgstr "Tunnustusmärgid"
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
 msgstr ""
+"Märgid on tunnustused hea töö eest. Anna neid inimestele, kes teie meelest "
+"väärivad seda."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__direct_badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr ""
+msgstr "Töötajaga otseselt seotud tunnustusmärgid"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee_base
@@ -86,24 +97,24 @@ msgstr "Väljakutsed"
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid "Create a new challenge"
-msgstr ""
+msgstr "Loo uus väljakutse"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
 msgid "Create a new goal"
-msgstr ""
+msgstr "Loo uus eesmärk"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr ""
+msgstr "Kirjelda, mille eest premeerid töötajat tunnustusmärgiga"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__direct_badge_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Direct Badge"
-msgstr ""
+msgstr "Otsene tunnustusmärk"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
@@ -116,29 +127,29 @@ msgstr "Töötaja"
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__badge_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__badge_ids
 msgid "Employee Badges"
-msgstr ""
+msgstr "Töötaja tunnustusmärgid"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__goal_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__goal_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__goal_ids
 msgid "Employee HR Goals"
-msgstr ""
+msgstr "Töötaja personali eesmärgid"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "Tunnustusmärk"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "Kasutaja tunnustusmärgid"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr ""
+msgstr "Juhend \"Kasutaja tunnustusmärgid\""
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__goal_ids
@@ -149,59 +160,59 @@ msgstr "Eesmärk"
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
 #: model:ir.ui.menu,name:hr_gamification.gamification_goal_menu_hr
 msgid "Goals History"
-msgstr ""
+msgstr "Eesmärkide ajalugu"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant a Badge"
-msgstr ""
+msgstr "Andke tunnustusmärk"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant this employee his first badge"
-msgstr ""
+msgstr "Andke sellele töötajale esimene tunnustusmärk"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
-msgstr ""
+msgstr "Tunnustatud"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__granted_employees_count
 msgid "Granted Employees Count"
-msgstr ""
+msgstr "Tunnustatud töötajate arv"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__has_badges
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__has_badges
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__has_badges
 msgid "Has Badges"
-msgstr ""
+msgstr "Olemasolevad tunnustusmärgid"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
-msgstr ""
+msgstr "Saadud tunnustusmärgid"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
-msgstr ""
+msgstr "Tunnusta töötajat"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee with"
-msgstr ""
+msgstr "Tunnusta töötajat koos"
 
 #. module: hr_gamification
 #. odoo-python
 #: code:addons/hr_gamification/models/gamification.py:0
 msgid "The selected employee does not correspond to the selected user."
-msgstr ""
+msgstr "Valitud töötaja ei vasta valitud kasutajale."
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
@@ -212,16 +223,16 @@ msgstr "Kasutaja"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
-msgstr ""
+msgstr "Mille üle olete tänulik?"
 
 #. module: hr_gamification
 #. odoo-python
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 msgid "You can not send a badge to yourself."
-msgstr ""
+msgstr "Märki ei saa saata iseendale."
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
-msgstr ""
+msgstr "tunnustada selle töötaja head tegevust"

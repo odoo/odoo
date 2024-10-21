@@ -2,7 +2,6 @@ import { contains, scroll } from "@web/../tests/utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
-    test: true,
     steps: () => [
         {
             trigger: "button[title='Threads']",

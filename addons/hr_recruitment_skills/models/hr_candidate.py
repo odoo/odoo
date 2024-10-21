@@ -34,20 +34,6 @@ class HrCandidate(models.Model):
         for candidate in self:
             candidate.skill_ids = candidate.candidate_skill_ids.skill_id
 
-    def _update_employee_from_candidate(self):
-        vals_list = []
-        for candidate in self:
-            existing_skills = candidate.employee_id.employee_skill_ids.skill_id
-            skills_to_create = candidate.candidate_skill_ids.skill_id - existing_skills
-            vals_list.extend([{
-                'employee_id': candidate.employee_id.id,
-                'skill_id': skill.id,
-                'skill_level_id': candidate.candidate_skill_ids.filtered(lambda s: s.skill_id == skill).skill_level_id.id,
-                'skill_type_id': skill.skill_type_id.id,
-            } for skill in skills_to_create])
-        self.env['hr.employee.skill'].create(vals_list)
-        return super()._update_employee_from_candidate()
-
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()
         vals['employee_skill_ids'] = [(0, 0, {

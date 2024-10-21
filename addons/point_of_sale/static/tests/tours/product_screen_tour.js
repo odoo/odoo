@@ -7,11 +7,15 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import { back, inLeftSide, selectButton } from "@point_of_sale/../tests/tours/utils/common";
+import {
+    back,
+    inLeftSide,
+    selectButton,
+    scan_barcode,
+} from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -125,11 +129,17 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
                 })
             ),
             ProductScreen.isShown(),
+
+            // Test Cancel Order from Actions
+            ProductScreen.clickReview(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.orderIsEmpty(),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("FiscalPositionNoTax", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -148,7 +158,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionIncl", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -170,7 +179,6 @@ registry.category("web_tour.tours").add("FiscalPositionIncl", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionExcl", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -189,7 +197,6 @@ registry.category("web_tour.tours").add("FiscalPositionExcl", {
 });
 
 registry.category("web_tour.tours").add("CashClosingDetails", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -213,7 +220,6 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
 });
 
 registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -227,30 +233,28 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
 });
 
 registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
-            ProductScreen.scan_barcode("0100100"),
+            scan_barcode("0100100"),
             ProductScreen.selectedOrderlineHas("Test Product 1", "1.0", "80.0"),
 
-            ProductScreen.scan_barcode("0100201"),
+            scan_barcode("0100201"),
             ProductScreen.selectedOrderlineHas("Test Product 2 (White)", "1.0", "100.0"),
 
-            ProductScreen.scan_barcode("0100202"),
+            scan_barcode("0100202"),
             ProductScreen.selectedOrderlineHas("Test Product 2 (Red)", "1.0", "120.0"),
 
-            ProductScreen.scan_barcode("0100300"),
+            scan_barcode("0100300"),
             ProductScreen.selectedOrderlineHas("Test Product 3", "1.0", "50.0"),
             Chrome.endTour(),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("MultiProductOptionsTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -267,7 +271,6 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
 });
 
 registry.category("web_tour.tours").add("TranslateProductNameTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -279,7 +282,6 @@ registry.category("web_tour.tours").add("TranslateProductNameTour", {
 });
 
 registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -293,7 +295,6 @@ registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
 });
 
 registry.category("web_tour.tours").add("CheckProductInformation", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -319,7 +320,6 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
 });
 
 registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -349,5 +349,37 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             ProductScreenPartnerList.searchCustomerValueAndClear("0987654321"),
             ProductScreen.clickPartnerButton(),
             PartnerList.searchCustomerValue("john@doe.com"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosCategoriesOrder", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                trigger: '.category-button:eq(0) > span:contains("AAA")',
+            },
+            {
+                trigger: '.category-button:eq(1) > span:contains("AAB")',
+            },
+            {
+                trigger: '.category-button:eq(2) > span:contains("AAC")',
+            },
+            {
+                trigger: '.category-button:eq(1) > span:contains("AAB")',
+                run: "click",
+            },
+            ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
+            {
+                trigger: '.category-button:eq(2) > span:contains("AAX")',
+            },
+            {
+                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                run: "click",
+            },
+            {
+                trigger: '.category-button:eq(3) > span:contains("AAY")',
+            },
         ].flat(),
 });

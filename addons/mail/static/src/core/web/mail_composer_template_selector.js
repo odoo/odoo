@@ -87,7 +87,9 @@ export class MailComposerTemplateSelector extends Component {
     }
 
     async onSaveTemplate() {
-        await this.props.record.save();
+        if (!(await this.props.record.save())) {
+            return;
+        }
         await this.action.doActionButton({
             type: "object",
             name: "open_template_creation_wizard",

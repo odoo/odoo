@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Callbacks, HootError, createReporting } from "../hoot_utils";
+import { Callbacks, HootError, createReporting, stringify } from "../hoot_utils";
 import { Job } from "./job";
 
 /**
@@ -15,9 +15,9 @@ import { Job } from "./job";
  * @returns {HootError}
  */
 export function suiteError({ name, parent }, ...message) {
-    const parentString = parent ? ` (in parent suite "${parent.name}")` : "";
+    const parentString = parent ? ` (in parent suite ${stringify(parent.name)})` : "";
     return new HootError(
-        `error while registering suite "${name}"${parentString}: ${message.join("\n")}`
+        `error while registering suite ${stringify(name)}${parentString}: ${message.join("\n")}`
     );
 }
 

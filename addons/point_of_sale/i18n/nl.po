@@ -53,7 +53,7 @@ msgstr "% Kort"
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
-msgstr "%(name)s POS kiezen"
+msgstr "%(name)s Picking voor kassa"
 
 #. module: point_of_sale
 #. odoo-python
@@ -315,7 +315,7 @@ msgstr ""
 "        Beste <t t-out=\"object.partner_id.name or 'Valuable Customer'\">Azure Interior</t>,\n"
 "    </h4>\n"
 "    <p style=\"font-size: 13px;\">\n"
-"We hebben een beperkte aanbieding speciaal voor jou, geniet van een korting van 20% op je volgende aankoop.\n"
+"We hebben een beperkte aanbieding speciaal voor jou, geniet van een korting van 20% op je volgende bestelling.\n"
 "We kijken uit naar je volgende bezoek.\n"
 "    </p>\n"
 "</div>\n"
@@ -352,7 +352,7 @@ msgid ""
 "             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
 "</p>"
 msgstr ""
-"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs %(is_invoiced)svor"
+"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs %(is_invoiced)svoor"
 "             %(pos_name)s voor een bedrag van %(amount)s bij "
 "%(company_name)s. </p>"
 
@@ -1030,8 +1030,8 @@ msgid ""
 "At the session closing: A picking is created for the entire session when it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
-"Bij het sluiten van de sessie: Er wordt een picking gemaakt voor de hele sessie wanneer deze wordt gesloten\n"
-"  In realtime: Elke order die naar de server wordt verzonden, maakt zijn eigen picking"
+"Bij het sluiten van de sessie: Er wordt een levering gemaakt voor de hele sessie wanneer deze wordt gesloten\n"
+"  In realtime: Elke order die naar de server wordt verzonden, maakt zijn eigen levering"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
@@ -2978,7 +2978,7 @@ msgstr "Extra info"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__failed_pickings
 msgid "Failed Pickings"
-msgstr "Mislukte pickings"
+msgstr "Mislukte leveringen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4151,7 +4151,7 @@ msgstr "Naam"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Need an invoice for your purchase ?"
-msgstr "Heb je een factuur nodig voor je aankoop?"
+msgstr "Heb je een factuur nodig voor je bestelling?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4622,7 +4622,7 @@ msgstr "Openingsnotitie"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_picking_type_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Operation Type"
-msgstr "Bewerkingstype"
+msgstr "Bewerkingssoort"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5119,18 +5119,18 @@ msgstr "Kies welke Kassa-productcategorieën beschikbaar zijn"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_ids
 msgid "Picking"
-msgstr "Verplaatsing"
+msgstr "Levering"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_count
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr "Pick aantallen"
+msgstr "Aantallen leveringen"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Picking type"
+msgstr "Verzamelsoort"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6687,7 +6687,7 @@ msgstr "Geselecteerde kenmerken"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Self-ordering interfaces are not impacted."
-msgstr "Geen impact op zelfbestellende interfaces."
+msgstr "Geen impact op zelfbediening interface."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -7393,7 +7393,7 @@ msgstr "Tel:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
 msgid "Thank you for your purchase!"
-msgstr "Bedankt voor je aankoop!"
+msgstr "Bedankt voor je bestelling!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8899,6 +8899,14 @@ msgstr ""
 msgid "You cannot use the same journal on multiples cash payment methods."
 msgstr ""
 "Je kan hetzelfde dagboek niet op meerdere contante betaalmethodes gebruiken."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"You do not have permission to open a POS session. Please try opening a "
+"session with a different user"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

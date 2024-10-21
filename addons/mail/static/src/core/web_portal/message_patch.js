@@ -18,6 +18,7 @@ patch(Message.prototype, {
      * @param {HTMLElement} bodyEl
      */
     prepareMessageBody(bodyEl) {
+        super.prepareMessageBody(...arguments);
         Array.from(bodyEl.querySelectorAll(".o-mail-read-more-less")).forEach((el) => el.remove());
         this.insertReadMoreLess(bodyEl);
     },

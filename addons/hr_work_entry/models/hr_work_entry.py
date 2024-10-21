@@ -254,12 +254,13 @@ class HrWorkEntryType(models.Model):
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.")
     country_id = fields.Many2one('res.country', string="Country")
+    country_code = fields.Char(related='country_id.code')
 
     @api.constrains('country_id')
     def _check_work_entry_type_country(self):
         if self.env.ref('hr_work_entry.work_entry_type_attendance') in self:
             raise UserError(_("You can't change the country of this specific work entry type."))
-        elif self.env['hr.work.entry'].sudo().search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
+        elif not self.env.context.get('install_mode') and self.env['hr.work.entry'].sudo().search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
             raise UserError(_("You can't change the Country of this work entry type cause it's currently used by the system. You need to delete related working entries first."))
 
     @api.constrains('code', 'country_id')

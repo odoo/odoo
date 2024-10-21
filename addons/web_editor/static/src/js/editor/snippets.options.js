@@ -6655,7 +6655,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         restoreCursor();
         this.trigger_up("enable_loading_effect");
         if (!widgetValue) {
-            this._onImageCropped();
+            await this._onImageCropped();
         }
         this.options.wysiwyg.odooEditor.historyUnpauseSteps();
     },
@@ -6818,7 +6818,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         // Re-rendering the options after selecting a "cropping" shape.
         if (this.isImageCropped && previewMode === "reset") {
             delete this.isImageCropped;
-            this._onImageCropped();
+            await this._onImageCropped();
         }
 
         const saveData = previewMode === false;
@@ -8277,7 +8277,10 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             return src.searchParams.has(params.colorName);
         } else if (widgetName === 'main_color_opt') {
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
-            return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
+            return src.origin === window.location.origin && (
+                src.pathname.startsWith('/html_editor/shape/') ||
+                src.pathname.startsWith('/web_editor/shape/')
+            );
         }
         return this._super(...arguments);
     },
@@ -9447,7 +9450,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                     this.trigger_up('context_get', {
                         callback: ctx => context = ctx,
                     });
-                    if (this.$target[0].matches("[data-snippet=s_popup]")) {
+                    if (this.$target[0].matches(".s_popup")) {
                         // Do not "cleanForSave" the popup before copying the
                         // HTML, otherwise the popup will be saved invisible and
                         // therefore not visible in the "add snippet" dialog.
@@ -9580,7 +9583,7 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
      * @override
      */
     _computeVisibility(methodName, params) {
-        return this.$target.is("img[src^='/web_editor/shape/']");
+        return this.$target.is("img[src^='/html_editor/shape/'], img[src^='/web_editor/shape/']");
     },
 
     //--------------------------------------------------------------------------

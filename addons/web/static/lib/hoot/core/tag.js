@@ -17,13 +17,6 @@ const { Set } = globalThis;
 // Internal
 //-----------------------------------------------------------------------------
 
-const SPECIAL_TAGS = {
-    debug: "debug",
-    only: "only",
-    skip: "skip",
-    todo: "todo",
-};
-
 const TAG_COLORS = [
     ["#f97316", "#ffedd5"], // orange
     ["#eab308", "#fef9c3"], // yellow
@@ -49,10 +42,10 @@ let canCreateTag = false;
  * @see {@link Tag.get}
  */
 export class Tag {
-    static DEBUG = SPECIAL_TAGS.debug;
-    static ONLY = SPECIAL_TAGS.only;
-    static SKIP = SPECIAL_TAGS.skip;
-    static TODO = SPECIAL_TAGS.todo;
+    static DEBUG = "debug";
+    static ONLY = "only";
+    static SKIP = "skip";
+    static TODO = "todo";
 
     weight = 0;
 

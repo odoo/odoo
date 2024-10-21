@@ -3,7 +3,6 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
-    test: true,
     steps: () => [
     {
         trigger:  "form[data-model_name='mail.mail']" +
@@ -176,7 +175,6 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
 ]});
 
 registry.category("web_tour.tours").add("website_form_editor_tour_results", {
-    test: true,
     steps: () => [
     {
         content: "Check mail.mail records have been created",
@@ -210,7 +208,6 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
     }
 ]});
 registry.category("web_tour.tours").add('website_form_contactus_submit', {
-    test: true,
     url: '/contactus',
     steps: () => [
     // As the demo portal user, only two inputs needs to be filled to send
@@ -236,7 +233,6 @@ registry.category("web_tour.tours").add('website_form_contactus_submit', {
     },
 ]});
 registry.category("web_tour.tours").add('website_form_contactus_check_changed_email', {
-    test: true,
     url: '/contactus',
     steps: () => [
         {

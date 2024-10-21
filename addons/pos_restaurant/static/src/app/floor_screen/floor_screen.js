@@ -32,6 +32,7 @@ import { pick } from "@web/core/utils/objects";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 
 function constrain(num, min, max) {
     return Math.min(Math.max(num, min), max);
@@ -96,6 +97,10 @@ export class FloorScreen extends Component {
             floorWidth: "100%",
             selectedTableIds: [],
             potentialLink: null,
+        });
+
+        this.doCreateTable = useTrackedAsync(async () => {
+            await this.createTable();
         });
         this.floorMapRef = useRef("floor-map-ref");
         this.floorScrollBox = useRef("floor-map-scroll");
@@ -357,10 +362,7 @@ export class FloorScreen extends Component {
     }
     async onWillStart() {
         this.pos.searchProductWord = "";
-        const table = this.pos.selectedTable;
-        if (table) {
-            await this.pos.unsetTable();
-        }
+        await this.pos.unsetTable();
     }
     get floorBackround() {
         return this.activeFloor.floor_background_image
@@ -647,6 +649,7 @@ export class FloorScreen extends Component {
             },
         });
     }
+
     async createTable() {
         const newTable = await this._createTableHelper();
         if (newTable) {

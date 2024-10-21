@@ -89,23 +89,27 @@
                     </div>
                 </div>
             <t t-set-slot="footer">
-                <div class="w-100 d-flex justify-content-between flex-wrap gap-2">
-                    <button class="button highlight btn btn-primary" t-att-disabled="!canConfirm()" t-on-click="confirm" t-att-class="{'btn-lg': !this.ui.isSmall}">Close Register</button>
-                    <button class="button btn btn-secondary" t-att-disabled="!canCancel()" t-on-click="cancel" t-att-class="{'btn-lg': !this.ui.isSmall}">Discard</button>
-                    <button class="button btn btn-lg btn-secondary" t-on-click="() => this.cashMove()">Cash In/Out</button>
+                <div class="w-100 d-flex flex-wrap justify-content-between gap-2" t-att-class="{'container-fluid row p-0': this.ui.isSmall}">
+                    <!-- First line of buttons -->
+                    <div t-att-class="{'col-12 col-md-6 p-0': this.ui.isSmall}" class="d-flex gap-2">
+                        <button class="button highlight btn btn-primary" t-att-disabled="!canConfirm()" t-on-click="confirm" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'">Close Register</button>
+                        <button class="button btn btn-secondary" t-att-disabled="!canCancel()" t-on-click="cancel" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'">Discard</button>
+                    </div>
 
-                    <!-- Download Sale Details -->
-                    <button class="button icon btn btn-secondary ms-auto"
-                        t-on-click="downloadSalesReport"
-                        t-att-class="{'btn-lg': !this.ui.isSmall}"
-                        title="Download a report with all the sales of the current PoS Session">
-                            Daily Sale
-                            <i t-if="!this.ui.isSmall" class="fa fa-download" role="img"/>
-                    </button>
-                    <!-- Print Sale Details -->
-                    <button t-if="hardwareProxy.printer" class="button icon btn btn-secondary" t-att-class="{'btn-lg': !this.ui.isSmall}">
-                        <SaleDetailsButton/>
-                    </button>
+                    <!-- Second line of buttons -->
+                    <div t-att-class="{'col-12 col-md-6 p-0': this.ui.isSmall}" class=" d-flex gap-2">
+                        <button class="button btn btn-secondary" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'" t-on-click="() => this.cashMove()">Cash In/Out</button>
+                        <button class="button icon btn btn-secondary"
+                            t-on-click="downloadSalesReport"
+                            t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg ms-auto'"
+                            title="Download a report with all the sales of the current PoS Session">
+                                Daily Sale
+                                <i t-if="!this.ui.isSmall" class="fa fa-download" role="img"/>
+                        </button>
+                        <button t-if="hardwareProxy.printer" class="button icon btn btn-secondary" t-att-class="{'btn-lg': !this.ui.isSmall}">
+                            <SaleDetailsButton/>
+                        </button>
+                    </div>
                 </div>
             </t>
         </Dialog>

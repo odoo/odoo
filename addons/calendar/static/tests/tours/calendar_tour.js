@@ -15,7 +15,6 @@ const todayDate = function () {
 
 registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
     url: "/odoo",
-    test: true,
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -95,7 +94,6 @@ const clickOnTheEvent = {
 };
 
 registry.category("web_tour.tours").add("test_calendar_delete_tour", {
-    test: true,
     steps: () => [
         {
             content: "Select filter (everybody)",
@@ -120,7 +118,6 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
 });
 
 registry.category("web_tour.tours").add("test_calendar_decline_tour", {
-    test: true,
     steps: () => [
         clickOnTheEvent,
         {
@@ -136,7 +133,6 @@ registry.category("web_tour.tours").add("test_calendar_decline_tour", {
 });
 
 registry.category("web_tour.tours").add("test_calendar_decline_with_everybody_filter_tour", {
-    test: true,
     steps: () => [
         {
             content: "Select filter (everybody)",

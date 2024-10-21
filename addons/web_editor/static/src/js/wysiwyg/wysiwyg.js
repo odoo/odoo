@@ -1319,6 +1319,15 @@ export class Wysiwyg extends Component {
                             .filter('[data-oe-field="name"]'));
                     }
 
+                    // TODO adapt in master: remove this and only use the
+                    //  `_pauseOdooFieldObservers(field)` call.
+                    this.__odooFieldObserversToPause = this.odooFieldObservers.filter(
+                        // Exclude inner translation fields observers. They
+                        // still handle translation synchronization inside the
+                        // targeted field.
+                        observerData => !observerData.field.dataset.oeTranslationSourceSha ||
+                            !field.contains(observerData.field)
+                    );
                     this._pauseOdooFieldObservers();
                     // Tag the date fields to only replace the value
                     // with the original date value once (see mouseDown event)
@@ -1360,7 +1369,11 @@ export class Wysiwyg extends Component {
      * Stop the field changes mutation observers.
      */
     _pauseOdooFieldObservers() {
-        for (let observerData of this.odooFieldObservers) {
+        // TODO adapt in master: remove this and directly exclude observers with
+        // targets inside the current field (we use `this.odooFieldObservers`
+        // as fallback for compatibility here).
+        const fieldObserversData = this.__odooFieldObserversToPause || this.odooFieldObservers;
+        for (let observerData of fieldObserversData) {
             observerData.observer.disconnect();
         }
     }
@@ -1976,8 +1989,6 @@ export class Wysiwyg extends Component {
         });
         $toolbar.find('#image-crop').click(() => this._showImageCrop());
         $toolbar.find('#image-transform').click(e => {
-            const sel = document.getSelection();
-            sel.removeAllRanges();
             if (!this.lastMediaClicked) {
                 return;
             }
@@ -2205,6 +2216,9 @@ export class Wysiwyg extends Component {
         if (isProtected(anchorNode)) {
             return;
         }
+        if (this.odooEditor.document.querySelector(".transfo-container")) {
+            return;
+        }
 
         this.odooEditor.automaticStepSkipStack();
         // We need to use the editor's window so the tooltip displays in its
@@ -2255,6 +2269,7 @@ export class Wysiwyg extends Component {
             '#colorInputButtonGroup',
             '#media-insert', // "Insert media" should be replaced with "Replace media".
             '#chatgpt', // Chatgpt should be removed when media is in selection.
+            '#translate' // Translate button should be removed when media is in selection.
         ].join(','))){
             el.classList.toggle('d-none', isInMedia);
         }

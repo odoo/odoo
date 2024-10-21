@@ -747,15 +747,18 @@ var SnippetEditor = publicWidget.Widget.extend({
         this.selectorLockWithin = new Set();
         const selectorExcludeAncestor = new Set();
 
-        var $element = this.$target.parent();
-        while ($element.length) {
-            var parentEditor = $element.data('snippet-editor');
-            if (parentEditor) {
-                this._customize$Elements = this._customize$Elements
-                    .concat(parentEditor._customize$Elements);
-                break;
+        if (this.options.allowParentsEditors) {
+            // TODO Should not rely on .data('snippet-editor') but ask parents
+            var $element = this.$target.parent();
+            while ($element.length) {
+                var parentEditor = $element.data('snippet-editor');
+                if (parentEditor) {
+                    this._customize$Elements = this._customize$Elements
+                        .concat(parentEditor._customize$Elements);
+                    break;
+                }
+                $element = $element.parent();
             }
-            $element = $element.parent();
         }
 
         var $optionsSection = $(renderToElement('web_editor.customize_block_options_section', {
@@ -2208,7 +2211,7 @@ class SnippetsMenu extends Component {
             // Note: we cannot listen to keyup in .o_default_snippet_text
             // elements via delegation because keyup only bubbles from focusable
             // elements which contenteditable are not.
-            const selection = this.ownerDocument.getSelection();
+            const selection = this.$body[0].ownerDocument.getSelection();
             if (!selection.rangeCount) {
                 return;
             }
@@ -2872,6 +2875,15 @@ class SnippetsMenu extends Component {
             // we create editors for invisible elements when translating them,
             // we only want to toggle their visibility when the related sidebar
             // buttons are clicked).
+            const translationEditors = this.snippetEditors.filter(editor => {
+                return this._allowInTranslationMode(editor.$target);
+            });
+            // Before returning, we need to clean editors if their snippets are
+            // allowed in the translation mode.
+            for (const editor of translationEditors) {
+                await editor.cleanForSave();
+                editor.destroy();
+            }
             return;
         }
         const exec = previewMode
@@ -3376,7 +3388,8 @@ class SnippetsMenu extends Component {
         }
 
         var def;
-        if (this._allowParentsEditors($snippet)) {
+        const allowParentsEditors = this._allowParentsEditors($snippet);
+        if (allowParentsEditors) {
             var $parent = globalSelector.closest($snippet.parent());
             if ($parent.length) {
                 def = this._createSnippetEditor($parent);
@@ -3394,7 +3407,13 @@ class SnippetsMenu extends Component {
             }
 
             let editableArea = self.getEditableArea();
-            snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea), self.options);
+            snippetEditor = new SnippetEditor(
+                parentEditor || self,
+                $snippet,
+                self.templateOptions,
+                $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea),
+                Object.assign({}, self.options, {allowParentsEditors: allowParentsEditors})
+            );
             self.snippetEditors.push(snippetEditor);
             // Keep parent below its child inside the DOM as its `o_handle`
             // needs to be (visually) on top of the child ones.
@@ -3627,7 +3646,7 @@ class SnippetsMenu extends Component {
                 $toInsert = $baseBody.clone();
                 isSnippetGroup = $toInsert[0].matches(".s_snippet_group");
                 // Color-customize dynamic SVGs in dropped snippets with current theme colors.
-                [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
+                [...$toInsert.find('img[src^="/html_editor/shape/"], img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
                     const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
                     colorCustomizedURL.searchParams.forEach((value, key) => {
                         const match = key.match(/^c([1-5])$/);
@@ -3758,15 +3777,7 @@ class SnippetsMenu extends Component {
 
                     var $target = $toInsert;
 
-                    if ($target[0].classList.contains("o_snippet_drop_in_only")) {
-                        // If it's a "drop in only" snippet, after dropping
-                        // it, we modify it so that it's no longer a
-                        // draggable snippet but rather simple HTML code, as
-                        // if the element had been created with the editor.
-                        $target[0].classList.remove("o_snippet_drop_in_only");
-                        delete $target[0].dataset.snippet;
-                        delete $target[0].dataset.name;
-                    }
+                    this._updateDroppedSnippet($target);
 
                     const isSnippetGroup = $target[0].matches(".s_snippet_group");
                     if (!isSnippetGroup) {
@@ -4097,6 +4108,23 @@ class SnippetsMenu extends Component {
      */
     _allowInTranslationMode($snippet) {
         return globalSelector.is($snippet, { onlyTextOptions: true });
+    }
+    /**
+     * Allows to update the snippets to build & adapt dynamic content right
+     * after adding it to the DOM.
+     *
+     * @private
+     */
+    _updateDroppedSnippet($target) {
+        if ($target[0].classList.contains("o_snippet_drop_in_only")) {
+            // If it's a "drop in only" snippet, after dropping
+            // it, we modify it so that it's no longer a
+            // draggable snippet but rather simple HTML code, as
+            // if the element had been created with the editor.
+            $target[0].classList.remove("o_snippet_drop_in_only");
+            delete $target[0].dataset.snippet;
+            delete $target[0].dataset.name;
+        }
     }
 
     //--------------------------------------------------------------------------

@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add(
     "website_sale.website_sale_shop_pricelist_tour",
     {
-        test: true,
         url: '/shop',
         steps: () => [
             {

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,7 +156,7 @@ msgstr "값 추가"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_revalue_layers
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "가치 평가 조정"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -919,7 +920,7 @@ msgstr "평가 단계가 없습니다. 재고 평가에 영향을 미칠 수 있
 msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for"
 " all lots/SN. Do you want to proceed ? "
-msgstr ""
+msgstr "이 작업으로 인해 데이터가 손실될 수 있습니다. 평가는 모든 로트/SN에 대해 동일하게 적용됩니다.계속 진행하시겠습니까?"
 
 #. module: stock_account
 #. odoo-python
@@ -928,6 +929,7 @@ msgid ""
 "This product is valuated by lot/serial number. Changing the cost will update"
 " the cost of every lot/serial number in stock."
 msgstr ""
+"이 제품은 로트/일련 번호별로 가격이 책정됩니다. 원가를 변경하면 현재 재고가 있는 모든 로트/일련 번호의 원가가 업데이트됩니다."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -1043,7 +1045,7 @@ msgstr "평가 통화"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuation Layers"
-msgstr ""
+msgstr "가치 평가 계층"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -1100,6 +1102,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"로트 값 (AVCO에서 자동으로 계산됨)은\n"
+"        구매 비용을 알 수 없는 경우 (예: 재고 조정) 제품의 가치를 계산하는 데 사용됩니다. \n"
+"        또한 판매 주문의 마진 계산에도 사용됩니다."
 
 #. module: stock_account
 #. odoo-python

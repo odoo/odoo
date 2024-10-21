@@ -199,6 +199,37 @@ test("mention a channel", async () => {
     await contains(".o-mail-Composer-input", { value: "#General " });
 });
 
+test("mention a channel thread", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "ThreadOne",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", "#");
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
+    await contains(".o-mail-Composer-suggestion:eq(0):has(i.fa-hashtag)", { text: "General" });
+    await contains(".o-mail-Composer-suggestion:eq(1):has(i.fa-comments-o)", {
+        text: "GeneralThreadOne",
+    });
+    await click(".o-mail-Composer-suggestion:eq(1)");
+    await contains(".o-mail-Composer-input", { value: "#General > ThreadOne " });
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message a.o_channel_redirect:has(i.fa-comments-o)", {
+        text: "General > ThreadOne",
+    });
+    await click("a.o_channel_redirect", { text: "General > ThreadOne" });
+    await contains(".o-mail-DiscussSidebar-item.o-active", { text: "ThreadOne" });
+});
+
 test("Channel suggestions do not crash after rpc returns", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
@@ -240,7 +271,7 @@ test("Suggestions are shown after delimiter was used in text (#)", async () => {
     await insertText(".o-mail-Composer-input", "NonExistingChannel");
     await contains(".o-mail-Composer-suggestion strong", { count: 0 });
     await insertText(".o-mail-Composer-input", " #");
-    await contains(".o-mail-Composer-suggestion strong", { text: "#General" });
+    await contains(".o-mail-Composer-suggestion strong", { text: "General" });
 });
 
 test("display partner mention when typing more than 2 words if they match", async () => {

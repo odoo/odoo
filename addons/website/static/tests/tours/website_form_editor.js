@@ -31,7 +31,7 @@ for (const data of ESSENTIAL_FIELDS_VALID_DATA_FOR_DEFAULT_FORM) {
     essentialFieldsForDefaultFormFillInSteps.push({
         content: "Enter data in model-required field",
         trigger: `:iframe .s_website_form_model_required .s_website_form_input[name="${data.name}"]`,
-        run: `edit ${data.value}`,
+        run: `edit ${data.value} && press Tab`,
     });
 }
 
@@ -104,7 +104,7 @@ const addField = function (name, type, label, required, isCustom,
         ret.push({
             content: "Set the visibility condition",
             trigger: 'we-input[data-attribute-name="visibilityCondition"] input',
-            run: `edit ${display.condition}`,
+            run: `edit ${display.condition} && press Tab`,
         });
     }
     if (required) {
@@ -120,7 +120,7 @@ const addField = function (name, type, label, required, isCustom,
         ret.push({
             content: "Change the label text",
             trigger: 'we-input[data-set-label-text] input',
-            run: `edit ${label}`,
+            run: `edit ${label} && press Tab`,
         });
     }
     if (type !== 'checkbox' && type !== 'radio' && type !== 'select') {
@@ -144,7 +144,7 @@ const addExistingField = function (name, type, label, required, display) {
 registerWebsitePreviewTour("website_form_editor_tour", {
     url: '/',
     edition: true,
-    test: true,
+    checkDelay: 100,
 }, () => [
     // Drop a form builder snippet and configure it
     {
@@ -277,21 +277,15 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     {
         content: "Change Option 1 label",
         trigger: 'we-list table input:eq(0)',
-        run: "edit Iphone",
+        run: "edit Iphone && press Tab",
     }, {
         content: "Change Option 2 label",
         trigger: 'we-list table input:eq(1)',
-        run: "edit Galaxy S",
+        run: "edit Galaxy S && press Tab",
     },{
         content: "Change first Option 3 label",
         trigger: 'we-list table input:eq(2)',
-        run: "edit Xperia",
-    },
-    {
-        // TODO: Fix code to avoid this behavior
-        content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
-        trigger: "we-list we-title",
-        run: "click",
+        run: "edit Xperia && press Tab",
     },
     {
         content: "Click on Add new Checkbox",
@@ -301,7 +295,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     {
         content: "Change added Option label",
         trigger: 'we-list table input:eq(3)',
-        run: "edit Wiko Stairway",
+        run: "edit Wiko Stairway && press Tab",
     }, {
         content: "Check the resulting field",
         trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
@@ -735,7 +729,6 @@ return [
 registerWebsitePreviewTour('website_form_contactus_edition_with_email', {
     url: '/contactus',
     edition: true,
-    test: true,
 }, () => editContactUs([
     {
         content: 'Change the Recipient Email',
@@ -747,7 +740,6 @@ registerWebsitePreviewTour('website_form_contactus_edition_with_email', {
 registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
     url: '/contactus',
     edition: true,
-    test: true,
 }, () => editContactUs([
     {
         content: "Change a random option",
@@ -760,7 +752,6 @@ registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
 ]));
 
 registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [
@@ -899,7 +890,6 @@ registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
 ]);
 
 registerWebsitePreviewTour('website_form_contactus_change_random_option', {
-    test: true,
     url: '/contactus',
     edition: true,
 }, () => editContactUs([
@@ -913,7 +903,6 @@ registerWebsitePreviewTour('website_form_contactus_change_random_option', {
 
 // Check that the editable form content is actually editable.
 registerWebsitePreviewTour("website_form_editable_content", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [
@@ -978,7 +967,6 @@ registerWebsitePreviewTour("website_form_editable_content", {
 ]);
 
 registerWebsitePreviewTour("website_form_special_characters", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

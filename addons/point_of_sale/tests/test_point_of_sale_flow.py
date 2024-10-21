@@ -2154,3 +2154,62 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.env["pos.config"].with_company(branch).create({
             "name": "Branch Point of Sale"
         })
+
+    def test_reordering_rules_triggered_closing_pos(self):
+        if self.env['ir.module.module']._get('purchase').state != 'installed':
+            self.skipTest("Purchase module is required for this test to run")
+        vendor = self.env['res.partner'].create({'name': 'Vendor'})
+        product = self.env['product.product'].create({
+            'name': 'Product Test',
+            'lst_price': 1,
+            'is_storable': 'True',
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor.id,
+                'min_qty': 1.0,
+                'price': 1.0,
+            })]
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'location_id': self.pos_config.picking_type_id.default_location_src_id.id,
+            'product_min_qty': 1.0,
+            'product_max_qty': 1.0,
+        })
+
+        self.pos_config.open_ui()
+
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'partner_id': vendor.id,
+            'lines': [Command.create({
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 1,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 1,
+                'price_subtotal_incl': 1,
+                'pack_lot_ids': []
+            })],
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'amount_paid': 1.0,
+            'amount_total': 1.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}'
+        })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.bank_payment_method.id,
+        })
+        order_payment.with_context(payment_context).check()
+        self.pos_config.current_session_id.action_pos_session_closing_control()
+        purchase_order = self.env['purchase.order'].search([], limit=1)
+        self.assertEqual(purchase_order.order_line.product_id.id, product.id)
+        self.assertEqual(purchase_order.order_line.product_qty, 2)

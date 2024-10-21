@@ -1,3 +1,5 @@
+import json
+
 from odoo import _, api, fields, models, Command
 from odoo.exceptions import UserError
 from odoo.tools import SQL
@@ -162,6 +164,32 @@ class AccountMergeWizard(models.TransientModel):
 
         # 3.2: Update Reference and Many2OneReference fields that reference account.account
         wiz._update_reference_fields_generic('account.account', accounts_to_remove, account_to_merge_into)
+
+        # 3.3: Merge translations
+        account_names = self.env.execute_query(SQL(
+            """
+                 SELECT id, name
+                   FROM account_account
+                  WHERE id IN %(account_ids)s
+            """,
+            account_ids=tuple(accounts.ids),
+        ))
+        account_name_by_id = dict(account_names)
+
+        # Construct JSON of name translations, with first account taking precedence.
+        merged_account_name = {}
+        for account_id in accounts.ids[::-1]:
+            merged_account_name.update(account_name_by_id[account_id])
+
+        self.env.cr.execute(SQL(
+            """
+             UPDATE account_account
+                SET name = %(account_name_json)s
+              WHERE id = %(account_to_merge_into_id)s
+            """,
+            account_name_json=json.dumps(merged_account_name),
+            account_to_merge_into_id=account_to_merge_into.id,
+        ))
 
         # Step 4: Remove merged accounts
         self.env.invalidate_all()

@@ -151,7 +151,7 @@ class SaleOrder(models.Model):
                 continue
 
             # Retrieve all the data : name, street, city, state, zip, country.
-            name = order.partner_shipping_id.name
+            name = order_location.get('name') or order.partner_shipping_id.name
             street = order_location['street']
             city = order_location['city']
             zip_code = order_location['zip_code']
@@ -175,21 +175,19 @@ class SaleOrder(models.Model):
                 ('type', '=', 'delivery'),
             ], limit=1)
 
-            if existing_partner:
-                order.partner_shipping_id = existing_partner
-            else:
-                order.partner_shipping_id = order.env['res.partner'].create({
-                    'parent_id': parent_id,
-                    'type': 'delivery',
-                    'name': name,
-                    'street': street,
-                    'city': city,
-                    'state_id': state,
-                    'zip': zip_code,
-                    'country_id': country,
-                    'email': email,
-                    'phone': phone,
-                })
+            shipping_partner = existing_partner or order.env['res.partner'].create({
+                'parent_id': parent_id,
+                'type': 'delivery',
+                'name': name,
+                'street': street,
+                'city': city,
+                'state_id': state,
+                'zip': zip_code,
+                'country_id': country,
+                'email': email,
+                'phone': phone,
+            })
+            order.with_context(update_delivery_shipping_partner=True).write({'partner_shipping_id': shipping_partner})
         return super()._action_confirm()
 
     def _prepare_delivery_line_vals(self, carrier, price_unit):

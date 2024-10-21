@@ -166,7 +166,6 @@ const duplicateMultiplePage = [
 ];
 
 registerWebsitePreviewTour('website_page_manager', {
-    test: true,
     url: '/',
 }, () => [
     {
@@ -204,7 +203,6 @@ registerWebsitePreviewTour('website_page_manager', {
 ]);
 
 registerWebsitePreviewTour('website_page_manager_session_forced', {
-    test: true,
     url: '/',
 }, () => [...switchWebsite(2, 'My Website 2'), {
     content: "Click on Site",
@@ -228,7 +226,6 @@ registerWebsitePreviewTour('website_page_manager_session_forced', {
 }]);
 
 registry.category("web_tour.tours").add('website_page_manager_direct_access', {
-    test: true,
     url: '/odoo/action-website.action_website_pages_list',
     steps: () => [{
     content: "Check that the homepage is the one of My Website 2",
@@ -246,7 +243,6 @@ registry.category("web_tour.tours").add('website_page_manager_direct_access', {
 registerWebsitePreviewTour(
     "website_clone_pages",
     {
-        test: true,
         url: "/",
     },
     () => [

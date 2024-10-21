@@ -38,7 +38,7 @@ class Applicant(models.Model):
 
     candidate_id = fields.Many2one('hr.candidate', required=True, index=True)
     partner_id = fields.Many2one(related="candidate_id.partner_id")
-    partner_name = fields.Char(related="candidate_id.partner_name", inverse="_inverse_name")
+    partner_name = fields.Char(compute="_compute_partner_name", search="_search_partner_name", inverse="_inverse_name", compute_sudo=True)
     email_from = fields.Char(related="candidate_id.email_from", readonly=False)
     email_normalized = fields.Char(related="candidate_id.email_normalized")
     partner_phone = fields.Char(related="candidate_id.partner_phone", readonly=False)
@@ -120,6 +120,14 @@ class Applicant(models.Model):
             ON hr_applicant(job_id, stage_id)
             WHERE active IS TRUE
         """)
+
+    @api.depends("candidate_id.partner_name")
+    def _compute_partner_name(self):
+        for applicant in self:
+            applicant.partner_name = applicant.candidate_id.partner_name
+
+    def _search_partner_name(self, operator, value):
+        return [('candidate_id.partner_name', operator, value)]
 
     def _inverse_name(self):
         for applicant in self:

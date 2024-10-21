@@ -13,6 +13,7 @@ import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/posi
 import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 
 export const BORDER_SENSITIVITY = 5;
 
@@ -455,7 +456,50 @@ export class TablePlugin extends Plugin {
         return true;
     }
 
+    hanldeFirefoxSelection(ev = null) {
+        const selection = this.document.getSelection();
+        if (isBrowserFirefox()) {
+            if (selection.rangeCount > 1) {
+                // In Firefox, selecting multiple cells within a table using the mouse can create multiple ranges.
+                // This behavior can cause the original selection (where the selection started) to be lost.
+                // To solve the issue we merge the ranges of the selection together the first time we find
+                // selection.rangeCount > 1.
+                const [anchorNode, anchorOffset] = getDeepestPosition(
+                    selection.getRangeAt(0).startContainer,
+                    selection.getRangeAt(0).startOffset
+                );
+                const [focusNode, focusOffset] = getDeepestPosition(
+                    selection.getRangeAt(selection.rangeCount - 1).startContainer,
+                    selection.getRangeAt(selection.rangeCount - 1).startOffset
+                );
+                this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+                return true;
+            } else if (
+                ev &&
+                closestElement(ev.target, "table") ===
+                    closestElement(selection.anchorNode, "table") &&
+                closestElement(ev.target, "td") !== closestElement(selection.focusNode, "td")
+            ) {
+                // After the manual update firefox will not be able the table selection automatically
+                // so we need to update the selection manually too.
+                // When we hover on a new table cell we mark it as the new focusNode.
+                this.shared.setSelection({
+                    anchorNode: selection.anchorNode,
+                    anchorOffset: selection.anchorOffset,
+                    focusNode: ev.target,
+                    focusOffset: 0,
+                });
+                return true;
+            }
+        }
+        return false;
+    }
+
     updateSelectionTable(selectionData) {
+        if (this.hanldeFirefoxSelection()) {
+            // It will be retriggered with selectionchange
+            return;
+        }
         this.deselectTable();
         const selection = selectionData.editableSelection;
         const startTd = closestElement(selection.startContainer, "td");
@@ -536,6 +580,9 @@ export class TablePlugin extends Plugin {
 
     onMousemove(ev) {
         if (this._currentMouseState !== "mousedown") {
+            return;
+        }
+        if (this.hanldeFirefoxSelection(ev)) {
             return;
         }
         const selection = this.shared.getEditableSelection();

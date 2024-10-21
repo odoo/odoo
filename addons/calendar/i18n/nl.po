@@ -199,7 +199,7 @@ msgstr ""
 "            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 om (11:00:00 tot 11:30:00) (Europa/Brussel)</t>.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            De datum van de vergadering is aangepast.\n"
+"            De datum van de afspraak is aangepast.\n"
 "            De vergadering <strong t-out=\"object.event_id.name or ''\">Opvolging van het projectvoorstel</strong> aangemaakt door <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> staat nu gepland voor\n"
 "            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 om (11:00:00 tot 11:30:00) (Europa/Brussel)</t>.\n"
 "        </t>\n"
@@ -238,7 +238,7 @@ msgstr ""
 "        </td>\n"
 "        <td width=\"20px;\"></td>\n"
 "        <td style=\"padding-top: 5px;\">\n"
-"            <p><strong>Details van het evenement</strong></p>\n"
+"            <p><strong>Details van de afspraak</strong></p>\n"
 "            <ul>\n"
 "                <t t-if=\"object.event_id.location\">\n"
 "                    <li>Locatie: <t t-out=\"object.event_id.location or ''\">Brussel</t>\n"
@@ -246,7 +246,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>Wanneer: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Elke week, voor 3 evenementen</t></li>\n"
+"                    <li>Wanneer: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Elke week, voor 3 keer</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duur: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0:30</t></li>\n"
@@ -272,7 +272,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
-"                    <li>Omschrijving van het evenement:\n"
+"                    <li>Omschrijving van de afspraak:\n"
 "                    <t t-out=\"object.event_id.description\">Interne vergadering om de nieuwe prijzen voor producten en diensten te bespreken.</t></li>\n"
 "                </t>\n"
 "            </ul>\n"
@@ -451,7 +451,7 @@ msgstr ""
 "        </td>\n"
 "        <td width=\"20px;\"></td>\n"
 "        <td style=\"padding-top: 5px;\">\n"
-"            <p><strong>Details van het evenement</strong></p>\n"
+"            <p><strong>Details van de afspraak</strong></p>\n"
 "            <ul>\n"
 "                <t t-if=\"object.event_id.location\">\n"
 "                    <li>Locatie: <t t-out=\"object.event_id.location or ''\">Brussel</t>\n"
@@ -459,7 +459,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>Wanneer: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Elke week, voor 3 evenementen</t></li>\n"
+"                    <li>Wanneer: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Elke week, voor 3 keer</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duur: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0:30</t></li>\n"
@@ -485,7 +485,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
-"                    <li>Beschrijving van het evenement:\n"
+"                    <li>Beschrijving van de afspraaak:\n"
 "                    <t t-out=\"object.event_id.description\">Interne vergardering om de nieuwe prijzen voor producten en diensten te bespreken.</t></li>\n"
 "                </t>\n"
 "            </ul>\n"
@@ -620,7 +620,7 @@ msgstr ""
 "                <td width=\"20px;\"></td>\n"
 "                <td style=\"padding-top: 5px;\">\n"
 "                    <p>\n"
-"                        <strong>Details van het evenement</strong>\n"
+"                        <strong>Details van de afspraak</strong>\n"
 "                    </p>\n"
 "                    <ul>\n"
 "                        <t t-if=\"not is_html_empty(object.description)\">\n"
@@ -641,7 +641,7 @@ msgstr ""
 "                            </li>\n"
 "                        </t>\n"
 "                        <t t-if=\"recurrent\">\n"
-"                            <li>Wanneer: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Elke week, voor 3 evenementen</t></li>\n"
+"                            <li>Wanneer: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Elke week, voor 3 keer</t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"not object.allday and object.duration\">\n"
 "                            <li>Duur:\n"
@@ -765,7 +765,7 @@ msgstr ""
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
 "    <p>\n"
 "        Hallo <t t-out=\"object.common_name or ''\">Gemini Furniture</t>,<br><br>\n"
-"        Dit is een herinnering voor onderstaand evenement:\n"
+"        Dit is een herinnering voor onderstaande afspraak:\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
@@ -801,7 +801,7 @@ msgstr ""
 "        </td>\n"
 "        <td width=\"20px;\"></td>\n"
 "        <td style=\"padding-top: 5px;\">\n"
-"            <p><strong>Details van het evenement</strong></p>\n"
+"            <p><strong>Details van de afspraak</strong></p>\n"
 "            <ul>\n"
 "                <t t-if=\"object.event_id.location\">\n"
 "                    <li>Locatie: <t t-out=\"object.event_id.location or ''\">Brussel</t>\n"
@@ -809,7 +809,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>Wanneer: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Elke week, voor 3 evenementen</t></li>\n"
+"                    <li>Wanneer: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Elke week, voor 3 keer</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duur: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0:30</t></li>\n"
@@ -835,7 +835,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
-"                    <li>Beschrijving van het evenement:\n"
+"                    <li>Beschrijving van de afspraak:\n"
 "                    <t t-out=\"object.event_id.description\">Interne vergadering om de nieuwe prijzen voor producten en diensten te bespreken.</t></li>\n"
 "                </t>\n"
 "            </ul>\n"
@@ -1193,7 +1193,7 @@ msgstr "Agenda: afspraakherinnering"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr "Agenda: Evenementupdate"
+msgstr "Agenda: Afspraakupdate"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
@@ -1217,8 +1217,8 @@ msgid ""
 "Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined\n"
 "        the event (only if the organizer is not the only attendee)"
 msgstr ""
-"Controleer of de organisator alleen is in het evenement, d.w.z. of de organisator de enige is die niet heeft geweigerd\n"
-"        het evenement (alleen als de organisator niet de enige deelnemer is)"
+"Controleer of de organisator alleen is in de afspraak, d.w.z. of de organisator de enige is die de uitnodiging niet heeft afgewezen\n"
+"(alleen als de organisator niet de enige deelnemer is)."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
@@ -1399,7 +1399,7 @@ msgstr "Standaardprivacy"
 #: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Default privacy setting for whom the calendar events will be visible."
 msgstr ""
-"Standaard privacyinstelling voor wie de agenda-evenementen zichtbaar zijn."
+"Standaard privacyinstelling voor wie de agenda-eafspraken zichtbaar zijn."
 
 #. module: calendar
 #. odoo-javascript
@@ -1412,22 +1412,22 @@ msgstr "Verwijderen"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 msgid "Delete Event"
-msgstr "Evenement verwijderen"
+msgstr "Afspraak verwijderen"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
 msgid "Delete all the events"
-msgstr "Alle evenementen verwijderen"
+msgstr "Alle afspraken verwijderen"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
 msgid "Delete this and following events"
-msgstr "Deze en de volgende evenementen verwijderen"
+msgstr "Deze en de volgende afspraken verwijderen"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
 msgid "Delete this event"
-msgstr "Dit evenement verwijderen"
+msgstr "Deze afspraak verwijderen"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -1598,7 +1598,7 @@ msgstr "Om de %(interval)s dagen"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days for %(count)s events"
-msgstr "Om de %(interval)s dagen voor %(count)s evenementen"
+msgstr "Om de %(interval)s dagen voor %(count)s keer"
 
 #. module: calendar
 #. odoo-python
@@ -1616,7 +1616,7 @@ msgstr "Om de %(interval)s maanden, dag %(day)s"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
-msgstr "Om de %(interval)s maanden, dag %(day)s voor %(count)s evenementen"
+msgstr "Om de %(interval)s maanden, dag %(day)s voor %(count)s keer"
 
 #. module: calendar
 #. odoo-python
@@ -1657,7 +1657,7 @@ msgstr "Om de %(interval)s weken op %(days)s"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
-msgstr "Om de %(interval)s weken op %(days)s voor %(count)s evenementen"
+msgstr "Om de %(interval)s weken op %(days)s voor %(count)s keer"
 
 #. module: calendar
 #. odoo-python
@@ -1675,7 +1675,7 @@ msgstr "Om de %(interval)s jaren"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years for %(count)s events"
-msgstr "Om de %(interval)s jaren voor %(count)s evenementen"
+msgstr "Om de %(interval)s jaren voor %(count)s keer"
 
 #. module: calendar
 #. odoo-python
@@ -2280,7 +2280,7 @@ msgstr "Relatie gerelateerde gegevens van de gebruiker"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr "Mensen voor wie dit evenement zichtbaar zal zijn."
+msgstr "Mensen voor wie deze afspraak zichtbaar zal zijn."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -2745,7 +2745,7 @@ msgstr "Soort"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Unable to save the recurrence with \"This Event\""
-msgstr "Kan de herhaling met \"Dit evenement\" niet opslaan"
+msgstr "Kan de herhaling met \"Deze afspraak\" niet opslaan"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form

@@ -12,6 +12,44 @@ from odoo.addons.payment_xendit.tests.common import XenditCommon
 @tagged('post_install', '-at_install')
 class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
 
+    def test_no_item_missing_from_rendering_values(self):
+        """ Test that when the redirect flow is triggered, rendering_values contains the
+        API_URL corresponding to the response of API request. """
+        tx = self._create_transaction('redirect')
+        with patch(
+            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
+            '._xendit_make_request', return_value={'invoice_url': 'https://dummy.com'}
+        ):
+            rendering_values = tx._get_specific_rendering_values(None)
+        self.assertDictEqual(rendering_values, {'api_url': 'https://dummy.com'})
+
+    def test_empty_rendering_values_if_direct(self):
+        """ Test that if it's a card payment (like in direct flow), rendering_values should be empty
+        and no API call should be committed in the process. """
+        card_pm = self.env.ref('payment.payment_method_card').id
+        tx = self._create_transaction('direct', payment_method_id=card_pm)
+        with patch(
+            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
+            '._xendit_make_request', return_value={'data': {'link': 'https://dummy.com'}}
+        ) as mock:
+            rendering_values = tx._get_specific_rendering_values(None)
+            self.assertEqual(mock.call_count, 0)
+        self.assertDictEqual(rendering_values, {})
+
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_no_input_missing_from_redirect_form(self):
+        """ Test that the `api_url` key is not omitted from the rendering values. """
+        tx = self._create_transaction('redirect')
+        with patch(
+            'odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction'
+            '._get_specific_rendering_values', return_value={'api_url': 'https://dummy.com'}
+        ):
+            processing_values = tx._get_processing_values()
+        form_info = self._extract_values_from_html_form(processing_values['redirect_form_html'])
+        self.assertEqual(form_info['action'], 'https://dummy.com')
+        self.assertEqual(form_info['method'], 'get')
+        self.assertDictEqual(form_info['inputs'], {})
+
     def test_no_item_missing_from_invoice_request_payload(self):
         """ Test that the invoice request values are conform to the transaction fields. """
         self.maxDiff = 10000  # Allow comparing large dicts.
@@ -38,20 +76,6 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
             'payment_methods': [self.payment_method_code.upper()],
             'currency': tx.currency_id.name,
         })
-
-    @mute_logger('odoo.addons.payment.models.payment_transaction')
-    def test_no_input_missing_from_redirect_form(self):
-        """ Test that the `api_url` key is not omitted from the rendering values. """
-        tx = self._create_transaction('redirect')
-        with patch(
-            'odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction'
-            '._get_specific_rendering_values', return_value={'api_url': 'https://dummy.com'}
-        ):
-            processing_values = tx._get_processing_values()
-        form_info = self._extract_values_from_html_form(processing_values['redirect_form_html'])
-        self.assertEqual(form_info['action'], 'https://dummy.com')
-        self.assertEqual(form_info['method'], 'get')
-        self.assertDictEqual(form_info['inputs'], {})
 
     def test_get_tx_from_notification_data_returns_tx(self):
         """ Test that the transaction is found based on the notification data. """

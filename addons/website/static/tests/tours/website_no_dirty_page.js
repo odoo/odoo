@@ -61,13 +61,11 @@ const makeSteps = (steps = []) => [
 ];
 
 registerWebsitePreviewTour('website_no_action_no_dirty_page', {
-    test: true,
     url: '/',
     edition: true,
 }, () => makeSteps());
 
 registerWebsitePreviewTour('website_no_dirty_page', {
-    test: true,
     url: '/',
     edition: true,
 }, () => makeSteps([
@@ -102,7 +100,6 @@ registerWebsitePreviewTour('website_no_dirty_page', {
 ]));
 
 registerWebsitePreviewTour('website_no_dirty_lazy_image', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

@@ -392,7 +392,7 @@ msgstr "고객"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__search_date_category
 msgid "Date Category"
-msgstr ""
+msgstr "날짜 카테고리"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
@@ -498,7 +498,7 @@ msgstr "멋진 아이콘 폰트 예: fa-tasks"
 msgid ""
 "For some of the parts, there is a difference between the initial demand and "
 "the actual quantity that was used. Are you sure you want to confirm ?"
-msgstr ""
+msgstr "일부 부품의 경우 초기 수요와 실제 사용된 수량에 차이가 있습니다. 확인하시겠습니까?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1071,12 +1071,12 @@ msgstr "수리 요청서 태그"
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_picking_type_kanban
 msgid "Repair Overview"
-msgstr ""
+msgstr "수리 개요"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__repair_properties_definition
 msgid "Repair Properties"
-msgstr ""
+msgstr "수리 속성"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
@@ -1340,7 +1340,7 @@ msgstr "수리 메모입니다."
 msgid ""
 "This is the default destination location for product which come for the "
 "repair when you create a repair order with this operation type."
-msgstr ""
+msgstr "이 작업 유형으로 수리 주문을 생성할 때 수리를 위해 들어오는 제품의 기본 도착지 위치입니다."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1361,7 +1361,7 @@ msgstr "해당 작업 유형으로 수리요청서를 생성할 때 기본 제�
 msgid ""
 "This is the default source location for product which come for the repair "
 "when you create a repair order with this operation type."
-msgstr ""
+msgstr " 이 작업 유형으로 수리 주문을 생성할 때 수리를 위해 들어오는 제품의 기본 출발지 위치입니다."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
@@ -1530,6 +1530,9 @@ msgid ""
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
+"기존 판매 주문과 이미 연결된 수리 주문에 대해서는 견적을 생성할 수 없습니다.\n"
+"관련 수리 주문:\n"
+"%(ref_str)s"
 
 #. module: repair
 #. odoo-python
@@ -1539,6 +1542,9 @@ msgid ""
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
+"관련 견적을 생성하려면 수리 주문에 대한 고객을 정의해야 합니다.\n"
+"관련 수리 주문:\n"
+"%(ref_str)s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view

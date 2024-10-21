@@ -49,7 +49,6 @@
                                     </t>
                                     <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
                                         checked="option.isActive ? true : false"
-                                        closingMode="'none'"
                                         t-esc="option.description"
                                         onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
                                     />
@@ -61,7 +60,6 @@
                     <t t-else="">
                         <CheckboxItem class="{ o_menu_item: true, selected: item.isActive }"
                             checked="item.isActive"
-                            closingMode="'none'"
                             t-esc="item.description"
                             onSelected="() => this.onGroupBySelected({ itemId: item.id })"
                         />

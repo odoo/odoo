@@ -395,13 +395,13 @@ test("composer suggestion should match with input selection", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "#");
-    await contains(".o-mail-Composer-suggestion", { text: "#Mario Party" });
+    await contains(".o-mail-Composer-suggestion", { text: "Mario Party" });
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#Mario Party " });
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { text: "Luigi" });
     $(".o-mail-Composer-input")[0].setSelectionRange(3, 3);
-    await contains(".o-mail-Composer-suggestion", { text: "#Mario Party" });
+    await contains(".o-mail-Composer-suggestion", { text: "Mario Party" });
     const textarea = $(".o-mail-Composer-input")[0];
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
     await contains(".o-mail-Composer-suggestion", { text: "Luigi" });

@@ -3,7 +3,7 @@
 import { Component, useRef, useState, xml } from "@odoo/owl";
 import { logLevels } from "../core/logger";
 import { refresh } from "../core/url";
-import { useWindowListener } from "../hoot_utils";
+import { useAutofocus, useWindowListener } from "../hoot_utils";
 import { generateSeed, internalRandom } from "../mock/math";
 import { toggleColorScheme, useColorScheme } from "./hoot_colors";
 import { HootCopyButton } from "./hoot_copy_button";
@@ -44,7 +44,7 @@ export class HootConfigDropdown extends Component {
             </button>
             <t t-if="state.open">
                 <form
-                    class="hoot-config-dropdown animate-slide-down bg-base text-base mt-1 absolute flex flex-col end-0 px-2 py-3 shadow rounded shadow z-2"
+                    class="hoot-dropdown animate-slide-down bg-base text-base mt-1 absolute flex flex-col end-0 px-2 py-3 shadow rounded shadow z-2"
                     t-on-submit.prevent="refresh"
                 >
                     <div
@@ -92,6 +92,7 @@ export class HootConfigDropdown extends Component {
                             <span class="text-muted whitespace-nowrap ms-1">Seed:</span>
                             <input
                                 type="text"
+                                autofocus=""
                                 class="w-full outline-none border-b border-primary px-1"
                                 t-model.number="config.random"
                             />
@@ -143,7 +144,8 @@ export class HootConfigDropdown extends Component {
                         <small class="flex items-center p-1 pt-0 gap-1">
                             <span class="text-muted whitespace-nowrap ms-1">Failed tests:</span>
                             <input
-                                type="number"
+                                type="text"
+                                autofocus=""
                                 class="outline-none w-full border-b border-primary px-1"
                                 t-model.number="config.bail"
                             />
@@ -165,7 +167,8 @@ export class HootConfigDropdown extends Component {
                         <small class="flex items-center p-1 pt-0 gap-1">
                             <span class="text-muted whitespace-nowrap ms-1">Level:</span>
                             <select
-                                class="outline-none w-full border-b border-primary px-1"
+                                autofocus=""
+                                class="outline-none w-full bg-base text-base border-b border-primary px-1"
                                 t-model.number="config.loglevel"
                             >
                                 <t t-foreach="logLevels" t-as="level" t-key="level.value">
@@ -238,6 +241,7 @@ export class HootConfigDropdown extends Component {
         this.config = useState(this.env.runner.config);
         this.state = useState({ open: false });
 
+        useAutofocus(this.rootRef);
         useWindowListener("keydown", (ev) => {
             if (this.state.open && ev.key === "Escape") {
                 ev.preventDefault();
@@ -255,24 +259,24 @@ export class HootConfigDropdown extends Component {
     }
 
     /**
-     * @param {Event} ev
+     * @param {Event & { currentTarget: HTMLInputElement }} ev
      */
     onBailChange(ev) {
-        this.config.bail = ev.target.checked ? 1 : 0;
+        this.config.bail = ev.currentTarget.checked ? 1 : 0;
     }
 
     /**
-     * @param {Event} ev
+     * @param {Event & { currentTarget: HTMLInputElement }} ev
      */
     onLogLevelChange(ev) {
-        this.config.loglevel = ev.target.checked ? logLevels.SUITES : logLevels.RUNNER;
+        this.config.loglevel = ev.currentTarget.checked ? logLevels.SUITES : logLevels.RUNNER;
     }
 
     /**
-     * @param {Event} ev
+     * @param {Event & { currentTarget: HTMLInputElement }} ev
      */
     onRandomChange(ev) {
-        if (ev.target.checked) {
+        if (ev.currentTarget.checked) {
             this.resetSeed();
         } else {
             this.config.random = 0;

@@ -161,7 +161,9 @@ export class Thread extends Record {
         compute() {
             return (
                 this.is_pinned ||
-                (["channel", "group"].includes(this.channel_type) && this.hasSelfAsMember)
+                (["channel", "group"].includes(this.channel_type) &&
+                    this.hasSelfAsMember &&
+                    !this.parent_channel_id)
             );
         },
         onUpdate() {
@@ -560,7 +562,7 @@ export class Thread extends Record {
     }
 
     get showUnreadBanner() {
-        return this.selfMember?.localMessageUnreadCounter > 0;
+        return !this.selfMember?.hideUnreadBanner && this.selfMember?.localMessageUnreadCounter > 0;
     }
 
     get rpcParams() {

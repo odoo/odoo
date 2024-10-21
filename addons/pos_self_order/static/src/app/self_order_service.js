@@ -317,7 +317,7 @@ export class SelfOrder extends Reactive {
             screenMode: screen_mode,
         });
         if (device === "kiosk") {
-            this.printKioskChanges();
+            this.printKioskChanges(access_token);
         }
     }
 
@@ -336,6 +336,10 @@ export class SelfOrder extends Reactive {
             this.models["pos.payment.method"].getAll()
         ); // Stripe, Adyen, Online
         const order = await this.sendDraftOrderToServer();
+
+        if (!order) {
+            return;
+        }
 
         // Stand number page will recall this function after the stand number is set
         if (
@@ -419,8 +423,14 @@ export class SelfOrder extends Reactive {
     initData() {
         this.productCategories = this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.product"].getAllBy("pos_categ_ids");
+        const isSpecialProduct = (p) => this.config._pos_special_products_ids.includes(p.id);
+        for (const category_id in this.productByCategIds) {
+            this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
+                (p) => !isSpecialProduct(p)
+            );
+        }
         const productWoCat = this.models["product.product"].filter(
-            (p) => p.pos_categ_ids.length === 0
+            (p) => p.pos_categ_ids.length === 0 && !isSpecialProduct(p)
         );
 
         if (productWoCat.length) {
@@ -457,8 +467,8 @@ export class SelfOrder extends Reactive {
         return new HWPrinter({ url });
     }
 
-    _getKioskPrintingCategoriesChanges(categories) {
-        return this.currentOrder.lines.filter((orderline) =>
+    _getKioskPrintingCategoriesChanges(order, categories) {
+        return order.lines.filter((orderline) =>
             categories.some((category) =>
                 this.models["product.product"]
                     .get(orderline.product_id.id)
@@ -468,22 +478,27 @@ export class SelfOrder extends Reactive {
         );
     }
 
-    async printKioskChanges() {
+    async printKioskChanges(access_token = "") {
         const d = new Date();
         let hours = "" + d.getHours();
         hours = hours.length < 2 ? "0" + hours : hours;
         let minutes = "" + d.getMinutes();
         minutes = minutes.length < 2 ? "0" + minutes : minutes;
+        const order = access_token
+            ? this.models["pos.order"].find((o) => o.access_token === access_token)
+            : this.currentOrder;
+
         for (const printer of this.kitchenPrinters) {
             const orderlines = this._getKioskPrintingCategoriesChanges(
+                order,
                 Object.values(printer.config.product_categories_ids)
             );
             if (orderlines) {
                 const printingChanges = {
                     new: orderlines,
-                    tracker: this.currentOrder.table_stand_number,
-                    trackingNumber: this.currentOrder.tracking_number || "unknown number",
-                    name: this.currentOrder.pos_reference || "unknown order",
+                    tracker: order.table_stand_number,
+                    trackingNumber: order.tracking_number || "unknown number",
+                    name: order.pos_reference || "unknown order",
                     time: {
                         hours,
                         minutes,

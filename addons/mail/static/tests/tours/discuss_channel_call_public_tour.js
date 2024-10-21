@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
-    test: true,
     steps: () => [
         {
             content: "The call does not start on the welcome page",
@@ -22,11 +21,10 @@ registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
         {
             content: "Check that the call has started",
             trigger: ".o-discuss-Call",
-            run() {
-                if (!odoo.__WOWL_DEBUG__.root.env.services["discuss.rtc"]?.selfSession) {
-                    console.error("The call should have started.");
-                }
-            },
+        },
+        {
+            content: "Check that current user is in call ('disconnect' button visible)",
+            trigger: "button[title='Disconnect']",
         },
     ],
 });

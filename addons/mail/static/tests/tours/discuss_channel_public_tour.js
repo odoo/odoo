@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { click, contains, inputFiles } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
-    test: true,
     steps: () => [
         {
             trigger: ".o-mail-Discuss",

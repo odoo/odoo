@@ -49,7 +49,6 @@ function applyForAJob(jobName, application) {
 }
 
 registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
-    test: true,
     url: '/jobs',
     steps: () => [
     ...applyForAJob('Guru', {
@@ -74,7 +73,6 @@ registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
 ]});
 
 registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
-    test: true,
     url: '/jobs',
 }, () => [
     stepUtils.waitIframeIsReady(),
@@ -152,7 +150,6 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
 // field is selected, the alert message should not display an undefined
 // action name.
 registerWebsitePreviewTour('model_required_field_should_have_action_name', {
-    test: true,
     url: '/jobs',
 }, () => [{
     content: "Select Job",

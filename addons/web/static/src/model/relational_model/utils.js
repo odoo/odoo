@@ -777,12 +777,9 @@ export async function resequence({
         let lastSequence = (asc ? -1 : 1) * Infinity;
         for (let index = 0; index < records.length; index++) {
             const sequence = getSequence(records[index]);
-            if (
-                ((index < firstIndex || index >= lastIndex) &&
-                    ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence))) ||
-                (index >= firstIndex && index < lastIndex && lastSequence === sequence)
-            ) {
+            if ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence)) {
                 reorderAll = true;
+                break;
             }
             lastSequence = sequence;
         }

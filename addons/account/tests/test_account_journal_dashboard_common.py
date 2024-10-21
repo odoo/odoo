@@ -49,8 +49,8 @@ class TestAccountJournalDashboardCommon(AccountTestInvoicingCommon):
                 'tax_ids': [],
             })]
         }).action_post()
-        # This bill has two amls of 10$. Both are waiting for payment and due in 16 and 46 days.
-        # number_waiting += 2, sum_waiting += -4000$, number_late += 0, sum_late += 0$
+        # This bill has two residual amls. One of 1000$ and one of 3000$. Both are waiting for payment and due in 16 and 46 days.
+        # number_waiting += 1, sum_waiting += -4000$, number_late += 0, sum_late += 0$
 
         self.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -67,8 +67,9 @@ class TestAccountJournalDashboardCommon(AccountTestInvoicingCommon):
                 'tax_ids': [],
             })]
         }).action_post()
-        # This bill has two amls of 100$. One which is late and due 14 days prior and one which is waiting for payment and due in 15 days.
-        # number_waiting += 2, sum_waiting += -400$, number_late += 1, sum_late += -100$
+        # This bill has two residual amls. One of 100$ and one of 300$. One is late and due 14 days prior and one which is waiting for payment and due in 15 days.
+        # Even though one entry is late, the entire move isn't considered late since all entries are not.
+        # number_waiting += 1, sum_waiting += -400$, number_late += 0, sum_late += 0$
 
         self.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -85,8 +86,8 @@ class TestAccountJournalDashboardCommon(AccountTestInvoicingCommon):
                 'tax_ids': [],
             })]
         }).action_post()
-        # This bill has two amls of 1000$. Both of them are late and due 45 and 15 days prior.
-        # number_waiting += 2, sum_waiting += -40$, number_late += 2, sum_late += -40$
+        # This bill has two residual amls. One of 10$ and one of 30$. Both of them are late and due 45 and 15 days prior.
+        # number_waiting += 1, sum_waiting += -40$, number_late += 1, sum_late += -40$
 
     def assertDashboardPurchaseSaleData(self, journal, number_draft, sum_draft, number_waiting, sum_waiting, number_late, sum_late, currency, **kwargs):
         expected_values = {

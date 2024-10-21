@@ -22,7 +22,6 @@ let itemId;
 
 
 registry.category("web_tour.tours").add('google_analytics_view_item', {
-    test: true,
     url: '/shop?search=Customizable Desk',
     steps: () => [
     {
@@ -56,7 +55,6 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
 ]});
 
 registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
-    test: true,
     url: '/shop?search=Acoustic Bloc Screens',
     steps: () => [
     ...tourUtils.addToCart({productName: 'Acoustic Bloc Screens', search: false}),

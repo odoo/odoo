@@ -2,7 +2,6 @@ import {clickOnSnippet, insertSnippet, registerWebsitePreviewTour } from "@websi
 
 registerWebsitePreviewTour("website_powerbox_snippet",{
     edition: true,
-    test: true,
 },
 () => [
 ...insertSnippet({

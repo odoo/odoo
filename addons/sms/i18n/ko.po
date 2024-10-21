@@ -3,9 +3,9 @@
 # 	* sms
 # 
 # Translators:
-# Daye Jeong, 2024
 # Sarah Park, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgstr "%s 잘못된 수신자"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "+1 555-555-555"
-msgstr ""
+msgstr "+1 555-555-555"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -662,6 +662,8 @@ msgid ""
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
+"입력한 전화번호가 잘못되었습니다. 더하기 기호(+) 다음에 국가 번호, 도시 번호, 지역 전화번호가 오는 국제 형식을 따르는지 "
+"확인하세요. 예를 들면 다음과 같습니다: +1 555-555-555."
 
 #. module: sms
 #. odoo-python
@@ -808,7 +810,7 @@ msgstr "메모만"
 msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
-msgstr ""
+msgstr "발신자 이름을 지정하지 않으면 SMS가 짧은 코드로 전송되므로 반드시 필요한 사항은 아닙니다."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -1614,7 +1616,7 @@ msgstr ""
 msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
-msgstr ""
+msgstr "귀하의 휴대폰 번호로 연결할 수 없습니다. 최근에 여러 번 코드를 요청한 경우 나중에 다시 시도하세요."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1695,6 +1697,8 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
 "                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
 msgstr ""
+"발신자 이름은 3~11자 사이여야 하며 영숫자로만 구성되어야 합니다.\n"
+"                        회사명과 일치해야 하며, 한 번 등록하면 변경할 수 없으므로 신중하게 선택하세요."
 
 #. module: sms
 #. odoo-python

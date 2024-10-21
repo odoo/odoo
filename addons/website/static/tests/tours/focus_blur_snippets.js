@@ -50,7 +50,6 @@ function clickAndCheck(blockID, expected) {
 window.focusBlurSnippetsResult = [];
 
 registerWebsitePreviewTour("focus_blur_snippets", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

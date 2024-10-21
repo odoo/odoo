@@ -7,7 +7,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from '@web/views/form/form_view';
 import { renderToFragment } from "@web/core/utils/render";
-import { Component, useEffect, useRef, useState, xml } from "@odoo/owl";
+import { Component, onWillDestroy, useEffect, useRef, useState, xml } from "@odoo/owl";
 import { FormController } from '@web/views/form/form_controller';
 import { registry } from "@web/core/registry";
 
@@ -42,6 +42,10 @@ export class PageDependencies extends Component {
         this.state = useState({
             dependencies: {},
         });
+
+        onWillDestroy(async () => {
+            await this.destroyDependenciesPopover();
+        });
     }
 
     async getResIds() {
@@ -69,6 +73,25 @@ export class PageDependencies extends Component {
             },
         });
         popover.toggle();
+    }
+
+    async destroyDependenciesPopover() {
+        const actionEl = this.action.el;
+        const popover = window.Popover.getInstance(actionEl);
+        if (popover) {
+            // If popover is hiding (animation), wait for the animation to
+            // complete.
+            if (!popover.tip.classList.contains("show")) {
+                await new Promise((resolve) => {
+                    const handler = () => {
+                        actionEl.removeEventListener("hidden.bs.popover", handler);
+                        resolve();
+                    };
+                    actionEl.addEventListener("hidden.bs.popover", handler);
+                });
+            }
+            popover.dispose();
+        }
     }
 }
 

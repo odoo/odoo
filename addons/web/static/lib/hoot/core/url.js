@@ -78,7 +78,7 @@ export function createUrl(params) {
 }
 
 /**
- * @param {string} id
+ * @param {string | Iterable<string>} id
  * @param {keyof DEFAULT_FILTERS} type
  * @param {CreateUrlFromIdOptions} [options]
  */

@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('order_lunch_tour', {
     url: "/odoo",
-    test: true,
     steps: () => [{
     trigger: 'a[data-menu-xmlid="lunch.menu_lunch"]',
     content: _t("Start by accessing the lunch app."),
@@ -13,25 +12,26 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     run: "click",
 },
 {
-    trigger: ".o_search_panel_filter_value .form-check-input",
-    content: _t("Restrict your search using filters"),
-    tooltipPosition: 'bottom',
+    content:"click on location",
+    trigger: ".lunch_location .o_input_dropdown input",
+    run: 'click'
+},
+{
+    content: "Pick 'Farm 1' option",
+    trigger: '.dropdown-item:contains("Farm 1")',
     run: "click",
 },
 {
-    trigger: ".o_search_panel_filter_value .form-check-input:checked",
+    trigger: '.lunch_location input:value("Farm 1")',
+    run: () => {},  // wait for article to be correctly loaded
 },
 {
-    trigger: "div[role=article]",
+    trigger: ".o_kanban_record",
     content: _t("Click on a product you want to order and is available."),
-    tooltipPosition: 'bottom',
-    run: "click",
+    run: 'click'
 },
 {
-    trigger: `button[name="add_to_cart"]`,
-},
-{
-    trigger: 'textarea[name="note"]',
+    trigger: 'textarea[id="note_0"]',
     content: _t("Add additionnal information about your order."),
     tooltipPosition: 'bottom',
     run: "edit allergy to peanuts",
@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     run: "click",
 },
 {
-    trigger: '.o_lunch_widget_order_button',
+    trigger: 'button:contains("Order Now")',
     content: _t("Validate your order"),
     tooltipPosition: 'left',
     run: 'click',

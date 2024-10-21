@@ -4,7 +4,6 @@ import { registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
-    test: true,
     url: `/shop`,
 }, () => [
     {

@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('website_sale_fiscal_position_portal_tour', {
-    test: true,
     url: '/shop?search=Super%20Product',
     steps: () => [
         {
@@ -13,7 +12,6 @@ registry.category("web_tour.tours").add('website_sale_fiscal_position_portal_tou
 ]});
 
 registry.category("web_tour.tours").add('website_sale_fiscal_position_public_tour', {
-    test: true,
     url: '/shop?search=Super%20Product',
     steps: () => [
         {

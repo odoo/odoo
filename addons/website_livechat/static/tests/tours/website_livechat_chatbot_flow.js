@@ -4,7 +4,6 @@ import { contains } from "@web/../tests/utils";
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
-    test: true,
     checkDelay: 50,
     steps: () => [
         {

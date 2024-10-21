@@ -71,13 +71,13 @@ msgid ""
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
 " * Concept: de overdracht is nog niet bevestigd. Reservering is niet van toepassing.\n"
-" * Wachten op een andere bewerking: deze overdracht wacht op een andere bewerking voordat deze gereed is.\n"
+" * Wachten op een andere bewerking: deze overdracht wacht op een andere bewerking voordat deze beschikbaar is.\n"
 " * Wachten: de overdracht wacht op de beschikbaarheid van sommige producten.\n"
 "(a) Het verzendbeleid is \"Zo snel mogelijk\": er kan geen product worden gereserveerd.\n"
-"(b) Het verzendbeleid is \"Wanneer alle producten gereed zijn\": niet alle producten kunnen worden gereserveerd.\n"
-" * Gereed: de overdracht kan worden verwerkt.\n"
+"(b) Het verzendbeleid is \"Wanneer alle producten beschikbaar zijn\": niet alle producten kunnen worden gereserveerd.\n"
+" * Beschikbaar: de overdracht kan worden verwerkt.\n"
 "(a) Het verzendbeleid is \"Zo snel mogelijk\": er is tenminste één product gereserveerd.\n"
-"(b) Het verzendbeleid is \"Wanneer alle producten gereed zijn\": alle producten zijn gereserveerd.\n"
+"(b) Het verzendbeleid is \"Wanneer alle producten beschikbaar zijn\": alle producten zijn gereserveerd.\n"
 " * Gereed: de overdracht is verwerkt.\n"
 " * Geannuleerd: de overdracht is geannuleerd."
 
@@ -278,7 +278,7 @@ msgstr "'Partij-Serie - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr "'Bewerkingstype - %s' % object.name"
+msgstr "'Bewerkingssoort - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
@@ -1604,7 +1604,7 @@ msgstr "Bruto gewicht"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
-msgstr "Op partijen"
+msgstr "Op partijnummers"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
@@ -1790,7 +1790,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Changing the operation type of this record is forbidden at this point."
 msgstr ""
-"Het wijzigen van het bewerkingstype van dit record is op dit moment niet "
+"Het wijzigen van het bewerkingssoort van dit record is op dit moment niet "
 "toegestaan."
 
 #. module: stock
@@ -2123,7 +2123,7 @@ msgstr "Aantal"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_move_ready
 msgid "Count Move Ready"
-msgstr "Aantal boekingen gereed"
+msgstr "Aantal boekingen beschikbaar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
@@ -2148,7 +2148,7 @@ msgstr "Aantal te late pickings"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr "Aantal pickings gereed"
+msgstr "Aantal pickings beschikbaar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
@@ -2215,7 +2215,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid "Create a new operation type"
-msgstr "Maak een nieuwe bewerkingstype aan"
+msgstr "Maak een nieuwe bewerkingssoort aan"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -2554,7 +2554,7 @@ msgstr "Datum waarop de overdracht verwerkt of geannuleerd is."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
 msgid "Date for next planned inventory based on cyclic schedule."
-msgstr "Datum voor volgende geplande voorraad op basis van cyclisch schema."
+msgstr "Datum voor volgende geplande telling op basis van cyclisch schema."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
@@ -3198,7 +3198,7 @@ msgstr "Documentatie"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Done"
-msgstr "Afgehandeld"
+msgstr "Gereed"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
@@ -3848,7 +3848,7 @@ msgstr "Heeft varianten"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Having Category"
-msgstr "Categorie hebben"
+msgstr "Heeft categorie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__height
@@ -3895,7 +3895,7 @@ msgstr "Horizon"
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
 msgid "How products in transfers of this operation type should be reserved."
 msgstr ""
-"Hoe producten in overdrachten van deze bewerkingstype moeten worden "
+"Hoe producten in overdrachten van deze bewerkingssoort moeten worden "
 "gereserveerd."
 
 #. module: stock
@@ -4062,7 +4062,7 @@ msgid ""
 "of a picking when it is validated."
 msgstr ""
 "Als dit selectievakje is aangevinkt, zal Odoo automatisch de leveringsbon "
-"van een pick-up afdrukken wanneer deze wordt gevalideerd."
+"van een picking afdrukken wanneer deze wordt gevalideerd."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
@@ -4174,7 +4174,7 @@ msgid ""
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
 "Indien aangevinkt kun je serienummers/partijen kiezen. Je kunt ook beslissen"
-" om geen partijen in deze bewerkingstype te gebruiken. Dit betekent dat er "
+" om geen partijen in deze bewerkingssoort te gebruiken. Dit betekent dat er "
 "voorraad wordt aangemaakt zonder partij of zonder restrictie op de genomen "
 "partij. "
 
@@ -4522,7 +4522,7 @@ msgstr "Teldatum"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__cyclic_inventory_frequency
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Inventory Frequency"
-msgstr "voorraadtelfrequentie"
+msgstr "Telfrequentie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
@@ -4647,7 +4647,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
-msgstr "Is de hoeveelheid gereed te bewerken"
+msgstr "Is de hoeveelheid gereed nog bewerkbaar"
 
 #. module: stock
 #. odoo-python
@@ -5668,7 +5668,7 @@ msgstr "Volgende activiteit type"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected"
-msgstr "Volgende Verwacht"
+msgstr "Volgende telling"
 
 #. module: stock
 #. odoo-python
@@ -6008,12 +6008,12 @@ msgstr "Operatiehoeveelheden"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Type"
-msgstr "Bewerkingstype"
+msgstr "Bewerkingssoort"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr "Bewerkingstype voor retouren"
+msgstr "Bewerkingssoort voor retouren"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking_type_label
@@ -6034,17 +6034,17 @@ msgstr "Bewerking niet ondersteund"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_id
 msgid "Operation type"
-msgstr "Bewerkingstype"
+msgstr "Bewerkingssoort"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
 msgid "Operation type (PDF)"
-msgstr "Bewerkingstype (PDF)"
+msgstr "Bewerkingssoort (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking_type
 msgid "Operation type (ZPL)"
-msgstr "Bewerkingstype (ZPL)"
+msgstr "Bewerkingssoort (ZPL)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_get_picking_type_operations
@@ -6224,7 +6224,7 @@ msgstr "Uitgaande verplaatsingsregel"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
 msgid "Outgoing Shipments"
-msgstr "Uitgaande verzendingen"
+msgstr "Leveringen"
 
 #. module: stock
 #. odoo-python
@@ -6592,7 +6592,7 @@ msgstr "Gepicked"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__picking_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "Verplaatsing"
+msgstr "Picking"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6607,22 +6607,22 @@ msgstr "Pickbewerkingen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
 msgid "Picking Properties"
-msgstr "Eigenschappen plukken"
+msgstr "Eigenschappen picking"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Picking type"
+msgstr "Pickingsoort"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_code_domain
 msgid "Picking Type Code Domain"
-msgstr "Pickingstype Code Domein"
+msgstr "Pickingsoort Code Domein"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Picking list"
-msgstr "Pickingslijst"
+msgstr "Verzamellijst"
 
 #. module: stock
 #. odoo-javascript
@@ -7454,12 +7454,12 @@ msgstr "Beoordelingen"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
-msgstr "Gereed"
+msgstr "Beschikbaar"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_get_picking_type_ready_moves
 msgid "Ready Moves"
-msgstr "Gereedstaande verplaatsingen"
+msgstr "Beschikbare verplaatsingen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -7892,7 +7892,7 @@ msgstr "Retour"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Retour boeken"
+msgstr "Retour picking"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
@@ -7902,7 +7902,7 @@ msgstr "Retour pickingregel"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Return Slip"
-msgstr "Retourstrookje"
+msgstr "Retourbon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -8095,7 +8095,7 @@ msgstr "SSCC:"
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "STANDAARD VERKOOPVOORWAARDEN"
+msgstr "ALGEMENE VOORWAARDEN"
 
 #. module: stock
 #. odoo-javascript
@@ -8234,7 +8234,7 @@ msgstr "Selecteer route"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Select the places where this route can be selected"
-msgstr "Selecteer de plaatsen waar deze route kan worden geselecteerd"
+msgstr "Selecteer de plaatsen waar deze route kan worden ingesteld"
 
 #. module: stock
 #. odoo-python
@@ -8283,7 +8283,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
-"Verzend een automatische bevestiging per e-mail wanneer levering gereed is"
+"Verzend een automatische bevestiging per e-mail wanneer leveringen gereed "
+"zijn"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
@@ -8564,7 +8565,7 @@ msgstr "Toon partijtekst"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_next_pickings
 msgid "Show Next Pickings"
-msgstr "Toon volgende Pickings"
+msgstr "Toon volgende pickings"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
@@ -8580,7 +8581,7 @@ msgstr "Toon bewerking in overzicht"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
 msgid "Show Picking Type"
-msgstr "Toon pickingstype"
+msgstr "Toon pickingsoort"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
@@ -8859,7 +8860,7 @@ msgstr "Voorraad verpakkingsniveau"
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn
 msgid "Stock Picking"
-msgstr "Voorraad picking"
+msgstr "Voorraadpicking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
@@ -9309,7 +9310,7 @@ msgid ""
 "            On the operation type you could e.g. specify if packing is needed by default,\n"
 "            if it should show the customer."
 msgstr ""
-"Met het systeem van het bewerkingstype kun je elke voorraad toewijzen\n"
+"Met het systeem van het bewerkingssoort kun je elke voorraad toewijzen\n"
 "            operatie een specifiek type dat zijn standpunten dienovereenkomstig zal veranderen.\n"
 "            Op het type operatie kun je bijv specificeren of de verpakking standaard nodig is,\n"
 "            als het de klant moet laten zien."
@@ -9539,8 +9540,8 @@ msgid ""
 "routes put another location."
 msgstr ""
 "Dit is de standaard bestemmingslocatie wanneer je handmatig een levering "
-"aanmaakt met dit bewerkingstype. Het is mogelijk om dit te wijzigen of om de"
-" routes via een andere locatie te laten gaan."
+"aanmaakt met dit bewerkingssoort. Het is mogelijk om dit te wijzigen of om "
+"de routes via een andere locatie te laten gaan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9550,7 +9551,7 @@ msgid ""
 "put another location."
 msgstr ""
 "Dit is de standaard bronlocatie wanneer je handmatig een levering aanmaakt "
-"met dit bewerkingstype. Het is mogelijk om dit te wijzigen of om de routes "
+"met dit bewerkingssoort. Het is mogelijk om dit te wijzigen of om de routes "
 "via een andere locatie te laten gaan."
 
 #. module: stock
@@ -9707,8 +9708,8 @@ msgid ""
 " type."
 msgstr ""
 "Het voorvoegsel van deze reeks wordt reeds gebruikt door een andere "
-"bewerkingstype. Het wordt aanbevolen om een uniek voorvoegsel te selecteren "
-"om problemen en/of herhaalde referentiewaarden te voorkomen of om de "
+"bewerkingssoort. Het wordt aanbevolen om een uniek voorvoegsel te selecteren"
+" om problemen en/of herhaalde referentiewaarden te voorkomen of om de "
 "bestaande referentiereeks toe te wijzen aan dit type bewerking."
 
 #. module: stock
@@ -10837,7 +10838,7 @@ msgid ""
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "De bestemmingslocatie van de stock.move geldt als de regel als deze is "
-"ingesteld op True. Anders geldt de regel van het pickingtype."
+"ingesteld op True. Anders geldt de regel van het pickingsoort."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10995,7 +10996,7 @@ msgid ""
 " Lots/Serial Numbers\"."
 msgstr ""
 "Het is niet toegestaan om een partij- of serienummer met dit type bewerking "
-"te maken. Om dit te wijzigen, ga je naar het bewerkingstype en vink je het "
+"te maken. Om dit te wijzigen, ga je naar het bewerkingssoort en vink je het "
 "vakje \"Nieuwe partijnummers / serienummers maken\" aan."
 
 #. module: stock
@@ -11286,7 +11287,7 @@ msgid ""
 "transfers with different operation types."
 msgstr ""
 "Je kunt producten niet in hetzelfde pakket verpakken als ze afkomstig zijn "
-"van verschillende verplaatsingen met verschillende bewerkingstypes."
+"van verschillende verplaatsingen met verschillende bewerkingssoorten."
 
 #. module: stock
 #. odoo-python

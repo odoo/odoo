@@ -55,7 +55,7 @@ export function usePosition(refName, getTarget, options = {}) {
     let lock = false;
     const update = () => {
         const targetEl = getTarget();
-        if (!ref.el || !targetEl || lock) {
+        if (!ref.el || !targetEl?.isConnected || lock) {
             // No compute needed
             return;
         }

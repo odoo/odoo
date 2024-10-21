@@ -377,7 +377,7 @@ msgstr "<span class=\"o_stat_text\">Bill Matching</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "<span class=\"o_stat_text\">Purchase Matching</span>"
-msgstr "<span class=\"o_stat_text\">Aankoopmatching</span>"
+msgstr "<span class=\"o_stat_text\">Inkoopmatching</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -487,7 +487,7 @@ msgstr "<strong>Betalingsvoorwaarden: </strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Purchase Representative</strong>"
-msgstr "<strong>Aankoopvertegenwoordiger</strong>"
+msgstr "<strong>Inkoopvertegenwoordiger</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -538,12 +538,12 @@ msgstr "<strong>Deze inkoop is geannuleerd.</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>This quotation has been accepted.</strong>"
-msgstr ""
+msgstr "<strong>Deze offerte is geaccepteerd.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>This quotation has been declined.</strong>"
-msgstr ""
+msgstr "<strong>Deze offerte is afgewezen.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -562,7 +562,7 @@ msgid ""
 "supplier to deliver goods or services to the buyer at a preset price for a "
 "period of time."
 msgstr ""
-"Een afroeporder is een aankoopovereenkomst tussen een koper en een "
+"Een afroeporder is een inkoopovereenkomst tussen een koper en een "
 "leverancier om gedurende een bepaalde periode goederen of diensten aan de "
 "koper te leveren tegen een vooraf vastgestelde prijs."
 
@@ -609,7 +609,7 @@ msgid ""
 msgstr ""
 "Afhankelijk van de productconfiguratie kan de ontvangen hoeveelheid automatisch berekend worden door een mechanisme:\n"
 "  - Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
-"  - Voorraadbewegingen: het aantal is berekend op basis van de bevestigde pickings\n"
+"  - Voorraadbewegingen: het aantal is berekend op basis van de bevestigde ontvangesten\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__account_move_id
@@ -1258,7 +1258,7 @@ msgstr "Standaard maateenheid gebruikt voor alle voorraadbewegingen."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr "Definieer je voorwaarden ..."
+msgstr "Definieer je algemene voorwaarden ..."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__date_planned
@@ -1337,7 +1337,7 @@ msgstr "Domein"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__done
 msgid "Done"
-msgstr "Afgehandeld"
+msgstr "Gereed"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
@@ -1631,7 +1631,7 @@ msgstr "Is In Inkooporder"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__is_purchase_matched
 #: model:ir.model.fields,field_description:purchase.field_account_move__is_purchase_matched
 msgid "Is Purchase Matched"
-msgstr "Is aankoop gematcht"
+msgstr "Is inkoop gematcht"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1693,7 +1693,7 @@ msgid ""
 "Let's try the Purchase app to manage the flow from purchase to reception and"
 " invoice control."
 msgstr ""
-"Laten we de inkoop-app proberen om de stroom van aankoop tot ontvangst en "
+"Laten we de inkoop-app proberen om de stroom van inkoop tot ontvangst en "
 "factuurcontrole te beheren."
 
 #. module: purchase
@@ -1714,7 +1714,7 @@ msgstr "Regel Bedrag Onbelast"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_qty
 msgid "Line Qty"
-msgstr "Aantal lijnen"
+msgstr "Aantal regels"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_uom_id
@@ -2314,7 +2314,7 @@ msgstr "Inkoopovereenkomsten"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
 msgid "Purchase Amount Untaxed"
-msgstr "Aankoopbedrag Belastingvrij"
+msgstr "Inkoopbedrag excl. BTW"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2366,7 +2366,7 @@ msgstr "Regelmatching van inkoopregels en facturen van verkopers"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Purchase Matching"
-msgstr "Aankoopmatching"
+msgstr "Inkoopmatching"
 
 #. module: purchase
 #. odoo-python
@@ -2793,7 +2793,7 @@ msgid ""
 msgstr ""
 "Referentie van de verkooporder of bieding van je leverancier. Het is bedoeld"
 " om de koppeling te doen tussen ontvangen producten omdat deze referentie "
-"meestal geschreven is op de pakbon verzonden door je leverancier."
+"meestal geschreven is op de leveringsbon verzonden door je leverancier."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed

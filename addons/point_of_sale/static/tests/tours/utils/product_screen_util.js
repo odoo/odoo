@@ -177,7 +177,14 @@ export function clickControlButton(name) {
         },
     ];
 }
-
+export function clickCloseButton() {
+    return [
+        {
+            trigger: `.btn-close`,
+            run: "click",
+        },
+    ];
+}
 export function clickControlButtonMore() {
     return [
         {
@@ -330,26 +337,10 @@ export function closeWithCashAmount(val) {
         },
     ];
 }
-export function scan_barcode(barcode) {
+export function clickCloseSession() {
     return [
         {
-            content: `PoS model scan barcode '${barcode}'`,
-            trigger: ".pos", // The element here does not really matter as long as it is present
-            run: () => {
-                window.posmodel.env.services.barcode_reader.scan(barcode);
-            },
-        },
-    ];
-}
-export function scan_ean13_barcode(barcode) {
-    return [
-        {
-            content: `PoS model scan EAN13 barcode '${barcode}'`,
-            trigger: ".pos", // The element here does not really matter as long as it is present
-            run: () => {
-                const barcode_reader = window.posmodel.env.services.barcode_reader;
-                barcode_reader.scan(barcode_reader.parser.sanitize_ean(barcode));
-            },
+            trigger: "footer .button:contains('Close Session')",
         },
     ];
 }
@@ -397,11 +388,17 @@ export function selectedOrderlineHas(productName, quantity, price) {
 export function orderIsEmpty() {
     return inLeftSide(Order.doesNotHaveLine());
 }
-export function productIsDisplayed(name) {
+
+/**
+ * @param {number} position The position of the product in the list. If -1 (default), the product can be anywhere in the list.
+ */
+export function productIsDisplayed(name, position = -1) {
     return [
         {
             content: `'${name}' should be displayed`,
-            trigger: `.product-list .product-name:contains("${name}")`,
+            trigger: `.product-list ${
+                position > -1 ? `article:eq(${position})` : ""
+            } .product-name:contains("${name}")`,
         },
     ];
 }

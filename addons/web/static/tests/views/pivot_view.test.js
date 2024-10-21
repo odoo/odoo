@@ -4487,3 +4487,64 @@ test("avoid duplicates in read_group parameter 'groupby'", async () => {
     });
     expect.verifySteps([[], ["date:month"]]);
 });
+
+test("Close header dropdown when a simple groupby is selected", async function (assert) {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `<pivot/>`,
+    });
+    expect(".o-overlay-container .dropdown-menu").toHaveCount(0);
+    expect(queryAllTexts("thead th")).toEqual(["", "Total", "Count"]);
+
+    await contains("thead .o_pivot_header_cell_closed").click();
+    expect(".o-overlay-container .dropdown-menu").toHaveCount(1);
+
+    await contains(".o-overlay-container .o-dropdown--menu .dropdown-item").click();
+    expect(".o-overlay-container .dropdown-menu").toHaveCount(0);
+    expect(queryAllTexts("thead th")).toEqual([
+        "",
+        "Total",
+        "",
+        "Company",
+        "individual",
+        "Count",
+        "Count",
+        "Count",
+    ]);
+});
+
+test.tags("desktop")(
+    "Close header dropdown when a simple date groupby option is selected",
+    async function (assert) {
+        await mountView({
+            type: "pivot",
+            resModel: "partner",
+            arch: `<pivot/>`,
+        });
+        expect(".o-overlay-container .dropdown-menu").toHaveCount(0);
+        expect(queryAllTexts("thead th")).toEqual(["", "Total", "Count"]);
+
+        await contains("thead .o_pivot_header_cell_closed").click();
+        expect(".o-overlay-container .dropdown-menu").toHaveCount(1);
+
+        // open the Date sub dropdown
+        await contains(".o-dropdown--menu .dropdown-toggle.o_menu_item").hover();
+        const subDropdownMenu = getDropdownMenu(".o-dropdown--menu .dropdown-toggle.o_menu_item");
+
+        await contains(queryOne(".dropdown-item:eq(2)", { root: subDropdownMenu })).click();
+        expect(".o-overlay-container .dropdown-menu").toHaveCount(0);
+        expect(queryAllTexts("thead th")).toEqual([
+            "",
+            "Total",
+            "",
+            "April 2016",
+            "October 2016",
+            "December 2016",
+            "Count",
+            "Count",
+            "Count",
+            "Count",
+        ]);
+    }
+);

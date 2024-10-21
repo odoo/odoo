@@ -292,14 +292,14 @@ class IrFieldsConverter(models.AbstractModel):
                 try:
                     property_dict['value'] = int(val)
                 except ValueError:
-                    msg = _("Unknown value '%(value)s' for integer '%(label_property)s' property (subfield of '%%(field)s' field).")
+                    msg = _("'%(value)s' does not seem to be an integer for field '%(label_property)s' property (subfield of '%%(field)s' field).")
                     raise self._format_import_error(ValueError, msg, {'value': val, 'label_property': property_dict['string']})
 
             elif property_type == 'float':
                 try:
                     property_dict['value'] = float(val)
                 except ValueError:
-                    msg = _("Unknown value '%(value)s' for float '%(label_property)s' property (subfield of '%%(field)s' field).")
+                    msg = _("'%(value)s' does not seem to be an float for field '%(label_property)s' property (subfield of '%%(field)s' field).")
                     raise self._format_import_error(ValueError, msg, {'value': val, 'label_property': property_dict['string']})
 
         return value, warnings

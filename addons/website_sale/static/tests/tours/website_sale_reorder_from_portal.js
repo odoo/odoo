@@ -5,7 +5,6 @@ import { assertCartContains } from '@website_sale/js/tours/tour_utils';
 import { clickOnElement } from '@website/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
-        test: true,
         url: '/my/orders',
         steps: () => [
         // Initial reorder, nothing in cart

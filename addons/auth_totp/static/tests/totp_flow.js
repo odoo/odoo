@@ -73,7 +73,6 @@ function closeProfileDialog({content, totp_state}) {
 }
 
 registry.category("web_tour.tours").add('totp_tour_setup', {
-    test: true,
     url: '/odoo',
     steps: () => [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
@@ -132,7 +131,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 ]});
 
 registry.category("web_tour.tours").add('totp_login_enabled', {
-    test: true,
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
@@ -172,7 +170,6 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }]});
 
 registry.category("web_tour.tours").add('totp_login_device', {
-    test: true,
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
@@ -271,7 +268,6 @@ registry.category("web_tour.tours").add('totp_login_device', {
 ]});
 
 registry.category("web_tour.tours").add('totp_login_disabled', {
-    test: true,
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
@@ -301,7 +297,6 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
 
 const columns = {};
 registry.category("web_tour.tours").add('totp_admin_disables', {
-    test: true,
     url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), {
     content: 'Go to settings',

@@ -37,7 +37,6 @@ function observeOrmCalls() {
 }
 
 registry.category("web_tour.tours").add("test_base_automation", {
-    test: true,
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -120,7 +119,6 @@ registry.category("web_tour.tours").add("test_base_automation", {
 });
 
 registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
-    test: true,
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -153,7 +151,6 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
                 assertEqual(
                     JSON.stringify(options),
                     JSON.stringify({
-                        false: "",
                         on_stage_set: "Stage is set to",
                         on_user_set: "User is set",
                         on_tag_set: "Tag is added",
@@ -285,7 +282,6 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
 });
 
 registry.category("web_tour.tours").add("test_open_automation_from_grouped_kanban", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_kanban_view .o_kanban_config button.dropdown-toggle",
@@ -321,7 +317,6 @@ registry.category("web_tour.tours").add("test_open_automation_from_grouped_kanba
 });
 
 registry.category("web_tour.tours").add("test_kanban_automation_view_stage_trigger", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
@@ -340,7 +335,6 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_stage_trigg
 });
 
 registry.category("web_tour.tours").add("test_kanban_automation_view_time_trigger", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
@@ -365,7 +359,6 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_time_trigge
 });
 
 registry.category("web_tour.tours").add("test_kanban_automation_view_time_updated_trigger", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
@@ -386,7 +379,6 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_time_update
 });
 
 registry.category("web_tour.tours").add("test_kanban_automation_view_create_action", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
@@ -402,7 +394,6 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_create_acti
 });
 
 registry.category("web_tour.tours").add("test_resize_kanban", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
@@ -425,7 +416,6 @@ registry.category("web_tour.tours").add("test_resize_kanban", {
 });
 
 registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
-    test: true,
     steps: () => [
         {
             trigger:
@@ -497,7 +487,6 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
 
 let waitOrmCalls;
 registry.category("web_tour.tours").add("test_form_view_model_id", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
@@ -565,7 +554,6 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
 });
 
 registry.category("web_tour.tours").add("test_form_view_custom_reference_field", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
@@ -623,7 +611,6 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
 });
 
 registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
@@ -685,7 +672,6 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
 });
 
 registry.category("web_tour.tours").add("base_automation.on_change_rule_creation", {
-    test: true,
     url: "/odoo/action-base_automation.base_automation_act",
     steps: () => [
         {

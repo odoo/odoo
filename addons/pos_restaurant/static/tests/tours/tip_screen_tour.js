@@ -12,7 +12,6 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosResTipScreenTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -55,6 +54,12 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             // order 4
             ProductScreen.addOrderline("Coca-Cola", "4", "2"),
             ProductScreen.totalAmountIs("8.0"),
+            ProductScreen.clickControlButton("Guests"),
+            NumberPopup.enterValue("2"),
+            NumberPopup.isShown("2"),
+            Dialog.confirm(),
+            ProductScreen.guestNumberIs("2"),
+            ProductScreen.clickCloseButton(),
             Chrome.clickPlanButton(),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.nthRowContains("4", "Tipping"),
@@ -92,6 +97,8 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.totalAmountIs("8.0"),
+            ProductScreen.guestNumberIs("2"),
+            ProductScreen.clickCloseButton(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),

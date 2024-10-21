@@ -231,6 +231,9 @@ class PurchaseOrder(models.Model):
     def _compute_tax_totals(self):
         AccountTax = self.env['account.tax']
         for order in self:
+            if not order.company_id:
+                order.tax_totals = False
+                continue
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)

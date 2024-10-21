@@ -127,7 +127,7 @@ class AccountMoveSendWizard(models.TransientModel):
         2. email,
         3. manual.
         """
-        methods = self.env['res.partner']._fields['invoice_sending_method'].selection
+        methods = self.env['ir.model.fields'].get_field_selection('res.partner', 'invoice_sending_method')
         for wizard in self:
             preferred_method = self._get_default_sending_method(wizard.move_id)
             need_fallback = not self._is_applicable_to_move(preferred_method, wizard.move_id)
@@ -167,6 +167,7 @@ class AccountMoveSendWizard(models.TransientModel):
         for wizard in self:
             wizard.pdf_report_id = self._get_default_pdf_report_id(wizard.move_id)
 
+    @api.depends('move_id')
     def _compute_display_pdf_report_id(self):
         # show pdf template menu if there are more than 1 template available and there is at least one move that needs a pdf
         available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)

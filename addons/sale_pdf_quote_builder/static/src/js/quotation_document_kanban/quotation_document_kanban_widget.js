@@ -21,6 +21,7 @@ export class QuotationDocumentX2ManyField extends X2ManyField {
         this.formData = {
             'sale_order_template_id': this.props.record.resId,
         };
+        this.allowedMIMETypes='application/pdf';
     }
 }
 

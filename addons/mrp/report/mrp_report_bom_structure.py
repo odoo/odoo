@@ -840,12 +840,12 @@ class ReportBomStructure(models.AbstractModel):
             simulated_leaves_per_workcenter = defaultdict(list)
         # Plan operation after its predecessors
         date_start = max(start_date, datetime.now())
-        for operation in operation.blocked_by_operation_ids:
-            if operation._skip_operation_line(product):
+        for op in operation.blocked_by_operation_ids:
+            if op._skip_operation_line(product):
                 continue
-            if operation not in planning_per_operation:
-                self._simulate_operation_planning(operation, product, start_date, quantity, planning_per_operation, simulated_leaves_per_workcenter)
-            date_start = max(date_start, planning_per_operation[operation]['date_finished'])
+            if op not in planning_per_operation:
+                self._simulate_operation_planning(op, product, start_date, quantity, planning_per_operation, simulated_leaves_per_workcenter)
+            date_start = max(date_start, planning_per_operation[op]['date_finished'])
         # Consider workcenter and alternatives
         workcenters = operation.workcenter_id | operation.workcenter_id.alternative_workcenter_ids
         best_date_finished = datetime.max

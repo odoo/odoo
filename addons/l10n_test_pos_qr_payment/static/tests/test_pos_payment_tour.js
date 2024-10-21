@@ -43,7 +43,6 @@ function addProductandPay() {
  */
 
 registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentFailure", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -55,7 +54,6 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentFailure", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -80,7 +78,6 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentSwiss", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

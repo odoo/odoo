@@ -747,7 +747,8 @@ export class StaticList extends DataPoint {
         const options = {
             parentRecord: this._parent,
             onUpdate: async ({ withoutParentUpdate }) => {
-                if (!this.currentIds.includes(record.isNew ? record._virtualId : record.resId)) {
+                const id = record.isNew ? record._virtualId : record.resId;
+                if (!this.currentIds.includes(id)) {
                     // the record hasn't been added to the list yet (we're currently creating it
                     // from a dialog)
                     return;
@@ -940,12 +941,9 @@ export class StaticList extends DataPoint {
         let lastSequence = (asc ? -1 : 1) * Infinity;
         for (let index = 0; index < records.length; index++) {
             const sequence = getSequence(records[index]);
-            if (
-                ((index < firstIndex || index >= lastIndex) &&
-                    ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence))) ||
-                (index >= firstIndex && index < lastIndex && lastSequence === sequence)
-            ) {
+            if ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence)) {
                 reorderAll = true;
+                break;
             }
             lastSequence = sequence;
         }

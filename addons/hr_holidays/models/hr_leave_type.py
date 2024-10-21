@@ -213,6 +213,11 @@ class HolidaysType(models.Model):
             else:
                 leave_type.has_valid_allocation = True
 
+    def _load_records_write(self, values):
+        if 'requires_allocation' in values and self.requires_allocation == values['requires_allocation']:
+            values.pop('requires_allocation')
+        return super()._load_records_write(values)
+
     @api.constrains('requires_allocation')
     def check_allocation_requirement_edit_validity(self):
         if self.env['hr.leave'].search_count([('holiday_status_id', 'in', self.ids)], limit=1):

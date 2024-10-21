@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("sidebar_in_public_page_tour", {
-    test: true,
     steps: () => [
         {
             trigger: ".o-mail-Discuss-header [title='Channel 1']",

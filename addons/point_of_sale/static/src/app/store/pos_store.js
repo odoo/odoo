@@ -140,6 +140,7 @@ export class PosStore extends Reactive {
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
+        this.syncingOrders = new Set();
         await this.initServerData();
         if (this.useProxy()) {
             await this.connectToProxy();
@@ -247,14 +248,14 @@ export class PosStore extends Reactive {
         this.config.iface_printers = !!this.unwatched.printers.length;
 
         // Monitor product pricelist
-        this.models["product.product"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
-        this.models["product.pricelist.item"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
+        ["product.product", "product.pricelist.item"].forEach((model) => {
+            ["create", "update"].forEach((event) => {
+                this.models[model].addEventListener(
+                    event,
+                    this.computeProductPricelistCache.bind(this)
+                );
+            });
+        });
         if (this.data.loadedIndexedDBProducts && this.data.loadedIndexedDBProducts.length > 0) {
             await this._loadMissingPricelistItems(this.data.loadedIndexedDBProducts);
             delete this.data.loadedIndexedDBProducts;
@@ -316,7 +317,7 @@ export class PosStore extends Reactive {
                 title: _t("Existing orderlines"),
                 body: _t(
                     "%s has a total amount of %s, are you sure you want to delete this order?",
-                    order.name,
+                    order.pos_reference,
                     this.env.utils.formatCurrency(order.get_total_with_tax())
                 ),
             });
@@ -329,6 +330,7 @@ export class PosStore extends Reactive {
             order.uiState.displayed = false;
             this.afterOrderDeletion();
         }
+        return orderIsDeleted;
     }
     afterOrderDeletion() {
         this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
@@ -338,7 +340,10 @@ export class PosStore extends Reactive {
         const ids = new Set();
         for (const order of orders) {
             if (order && (await this._onBeforeDeleteOrder(order))) {
-                if (Object.keys(order.last_order_preparation_change).length > 0) {
+                if (
+                    typeof order.id === "number" &&
+                    Object.keys(order.last_order_preparation_change.lines).length > 0
+                ) {
                     await this.sendOrderInPreparation(order, true);
                 }
 
@@ -929,6 +934,11 @@ export class PosStore extends Reactive {
             }
         }
 
+        if (typeof order.id === "string" && order.finalized) {
+            this.addPendingOrder([order.id]);
+            return;
+        }
+
         return this.data.localDeleteCascade(order, removeFromServer);
     }
 
@@ -1090,14 +1100,18 @@ export class PosStore extends Reactive {
     preSyncAllOrders(orders) {}
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
+        const { orderToCreate, orderToUpdate } = this.getPendingOrder();
+        let orders = [...orderToCreate, ...orderToUpdate];
+
+        // Filter out orders that are already being synced
+        orders = orders.filter((order) => !this.syncingOrders.has(order.id));
+
         try {
             const orderIdsToDelete = this.getOrderIdsToDelete();
             if (orderIdsToDelete.length > 0) {
                 await this.deleteOrders([], orderIdsToDelete);
             }
 
-            const { orderToCreate, orderToUpdate } = this.getPendingOrder();
-            const orders = [...orderToCreate, ...orderToUpdate];
             const context = this.getSyncAllOrdersContext(orders, options);
             this.preSyncAllOrders(orders);
 
@@ -1107,6 +1121,9 @@ export class PosStore extends Reactive {
             if (orders.length === 0 && !context.force) {
                 return;
             }
+
+            // Add order IDs to the syncing set
+            orders.forEach((order) => this.syncingOrders.add(order.id));
 
             // Re-compute all taxes, prices and other information needed for the backend
             for (const order of orders) {
@@ -1139,6 +1156,10 @@ export class PosStore extends Reactive {
                 // a higher id than the original one since it's the last one created.
                 const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
                 session.delete();
+                this.models["pos.order"]
+                    .getAll()
+                    .filter((order) => order.state === "draft")
+                    .forEach((order) => (order.session_id = this.session));
             }
 
             this.clearPendingOrder();
@@ -1150,6 +1171,8 @@ export class PosStore extends Reactive {
 
             console.warn("Offline mode active, order will be synced later");
             return error;
+        } finally {
+            orders.forEach((order) => this.syncingOrders.delete(order.id));
         }
     }
 

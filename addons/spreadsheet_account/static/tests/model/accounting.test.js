@@ -182,6 +182,7 @@ test("Server requests", async () => {
     setCellContent(model, "A7", `=ODOO.DEBIT("5", "05/04/2021", 1)`);
     setCellContent(model, "A8", `=ODOO.BALANCE("5", "2022",,,FALSE)`);
     setCellContent(model, "A9", `=ODOO.BALANCE("100", "05/05/2022",,,TRUE)`);
+    setCellContent(model, "A10", `=ODOO.BALANCE(33,2021,-2)`);
     await waitForDataLoaded(model);
 
     expect.verifySteps([
@@ -247,6 +248,14 @@ test("Server requests", async () => {
                 codes: ["100"],
                 companyId: null,
                 includeUnposted: true,
+            })
+        ),
+        JSON.stringify(
+            camelToSnakeObject({
+                dateRange: parseAccountingDate({ value: "2019" }, locale),
+                codes: ["33"],
+                companyId: null,
+                includeUnposted: false,
             })
         ),
     ]);

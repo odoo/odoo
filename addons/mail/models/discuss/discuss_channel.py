@@ -1181,6 +1181,10 @@ class Channel(models.Model):
             'model': "discuss.channel",
             'id': channel.id,
             'name': channel.name,
+            'parent_channel_id': {
+                'id': channel.parent_channel_id.id,
+                'model': 'discuss.channel'
+            } if channel.parent_channel_id else False,
         } for channel in channels]
 
     def _get_last_messages(self):

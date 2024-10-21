@@ -5,7 +5,6 @@ import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 
 registry.category("web_tour.tours").add('website_event_booth_tour', {
-    test: true,
     url: '/event',
     steps: () => [
 {

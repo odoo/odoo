@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_survey', {
-    test: true,
     url: '/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae',
     steps: () => [
     // Page-1

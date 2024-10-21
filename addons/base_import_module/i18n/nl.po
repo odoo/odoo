@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -89,15 +90,6 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr ""
-"Demo-gegevens moeten alleen worden gebruikt op testdatabases. Zodra ze zijn "
-"geladen, kunnen ze niet volledig worden verwijderd!"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
@@ -153,11 +145,6 @@ msgid "Import Module"
 msgstr "Importeer module"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "Importeer demo gegevens"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
 msgstr "Importeer demogegevens van de module"
@@ -170,7 +157,7 @@ msgstr "Geïmporteerde module"
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__industries
 msgid "Industries"
-msgstr "Bedrijfstakken"
+msgstr "Sectoren"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -197,6 +184,20 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Laad demo data"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -283,12 +284,7 @@ msgstr "Studio aanpassingen vereisen de Odoo Studio app."
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "The following modules will also be installed:\n"
-msgstr "De volgende modules worden ook geïnstalleerd:\n"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
 msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
@@ -325,7 +321,7 @@ msgstr "Bekijk"
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__done
 msgid "done"
-msgstr "afgehandeld"
+msgstr "gereed"
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__init

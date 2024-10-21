@@ -48,7 +48,13 @@
                 <field name="sale_order_id" optional="show"/>
                 <field name="location_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
-                <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
+                <field name="state" optional="show" widget='badge'
+                    decoration-success="state == 'done'"
+                    decoration-info="state == 'confirmed'"
+                    decoration-warning="state == 'under_repair'"
+                    decoration-danger="state == 'cancel'"
+                    decoration-muted="state == 'draft'"
+                />
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
         </field>

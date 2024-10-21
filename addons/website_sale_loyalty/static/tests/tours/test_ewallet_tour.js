@@ -6,7 +6,6 @@ import { TourError } from "@web_tour/tour_service/tour_utils";
 
 
 registry.category("web_tour.tours").add('shop_sale_ewallet', {
-    test: true,
     url: '/shop',
     steps: () => [
         // Add a $50 gift card to the order

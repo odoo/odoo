@@ -443,6 +443,13 @@
                     <cbc:DocumentTypeCode t-out="billing_reference_vals.get('document_type_code')"/>
                 </cac:InvoiceDocumentReference>
             </cac:BillingReference>
+            <t t-foreach="vals.get('additional_document_reference_list', [])" t-as="foreach_vals">
+                <cac:AdditionalDocumentReference>
+                    <cbc:ID t-out="foreach_vals.get('id')"/>
+                    <cbc:DocumentTypeCode t-out="foreach_vals.get('document_type_code')"/>
+                    <cbc:DocumentDescription t-out="foreach_vals.get('document_description')"/>
+                </cac:AdditionalDocumentReference>
+            </t>
             <cac:Signature t-foreach="vals.get('signature_vals', [])" t-as="foreach_vals">
                 <t t-call="{{SignatureType_template}}">
                     <t t-set="vals" t-value="foreach_vals"/>

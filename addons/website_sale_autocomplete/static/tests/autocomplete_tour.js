@@ -9,7 +9,6 @@ function fail (errorMessage) {
 }
 
 registry.category("web_tour.tours").add('autocomplete_tour', {
-    test: true,
     url: '/shop', // /shop/address is redirected if no sales order
     steps: () => [
     ...tourUtils.addToCart({productName: "A test product"}),

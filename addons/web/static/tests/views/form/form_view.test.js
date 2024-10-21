@@ -2319,6 +2319,39 @@ test(`two occurrences of invalid integer fields in form view`, async () => {
     expect(`.o_field_integer.o_field_invalid`).toHaveCount(0);
 });
 
+test(`mutually exclusive required fields in form view`, async () => {
+    delete Partner._fields.foo.default;
+
+    onRpc("web_save", () => expect.step("saved"));
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <group>
+                    <field name="foo" required="not name"/>
+                    <field name="name" required="not foo"/>
+                </group>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    await contains(".o_field_widget[name=foo] input").edit("");
+    await contains(".o_field_widget[name=name] input").edit("");
+
+    await contains(`.o_form_button_save`).click();
+    expect(`.o_field_widget.o_field_invalid`).toHaveCount(2);
+    expect(`.o_form_button_save`).toHaveAttribute("disabled");
+
+    await contains(`.o_field_widget[name=foo] input`).edit("some value");
+    expect(`.o_field_widget.o_field_invalid`).toHaveCount(0);
+    expect(`.o_form_button_save`).not.toHaveAttribute("disabled");
+
+    await contains(`.o_form_button_save`).click();
+    expect.verifySteps(["saved"]);
+});
+
 test(`twice same field with different required attributes`, async () => {
     Partner._fields.foo = fields.Char();
 
@@ -3156,8 +3189,8 @@ test.tags("mobile")(`buttons should be in CogMenu in form view header on mobile`
     });
 
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    expect(`.o_statusbar_button_dropdown_item > button`).toHaveAttribute("name", "0");
-    expect(`.o_statusbar_button_dropdown_item > div`).toHaveAttribute("name", "foo");
+    expect(`.o-dropdown-item-unstyled-button > button`).toHaveAttribute("name", "0");
+    expect(`.o-dropdown-item-unstyled-button > div`).toHaveAttribute("name", "foo");
 });
 
 test(`button in form view and long willStart`, async () => {
@@ -3292,11 +3325,11 @@ test.tags("mobile")(`button in form view and long willStart on mobile`, async ()
     expect.verifySteps(["web_read1"]);
 
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    await contains(`.o_statusbar_button_dropdown_item button.child_ids`).click();
+    await contains(`.o-dropdown-item-unstyled-button button.child_ids`).click();
     expect.verifySteps(["web_read2", "willUpdateProps"]);
 
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    await contains(`.o_statusbar_button_dropdown_item button.child_ids`).click();
+    await contains(`.o-dropdown-item-unstyled-button button.child_ids`).click();
     expect.verifySteps(["web_read3", "willUpdateProps"]);
 });
 
@@ -3430,7 +3463,7 @@ test.tags("mobile")(
         });
 
         await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-        await contains(`.o_statusbar_button_dropdown_item button.child_ids`).click();
+        await contains(`.o-dropdown-item-unstyled-button button.child_ids`).click();
         expect.verifySteps(["get_views", "onchange", "web_save", "execute_action", "web_read"]);
     }
 );
@@ -8764,16 +8797,16 @@ test.tags("mobile")(
 
         // click on button, and cancel in confirm dialog
         await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-        await contains(`.o_statusbar_button_dropdown_item button`).click();
-        expect(`.o_statusbar_button_dropdown_item button`).not.toBeEnabled();
+        await contains(`.o-dropdown-item-unstyled-button button`).click();
+        expect(`.o-dropdown-item-unstyled-button button`).not.toBeEnabled();
 
         await contains(`.modal-footer button.btn-secondary`).click();
-        expect(`.o_statusbar_button_dropdown_item button`).toBeEnabled();
+        expect(`.o-dropdown-item-unstyled-button button`).toBeEnabled();
 
         expect.verifySteps(["get_views", "onchange"]);
 
         // click on button, and click on ok in confirm dialog
-        await contains(`.o_statusbar_button_dropdown_item button`).click();
+        await contains(`.o-dropdown-item-unstyled-button button`).click();
         expect.verifySteps([]);
         await contains(`.modal-footer button.btn-primary`).click();
         expect.verifySteps(["web_save", "execute_action"]);
@@ -8826,7 +8859,7 @@ test.tags("mobile")(
         `,
         });
         await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-        await contains(`.o_statusbar_button_dropdown_item button`).click();
+        await contains(`.o-dropdown-item-unstyled-button button`).click();
         expect(`.modal-title`).toHaveText("Confirm Title");
         expect(`.modal-footer button.btn-primary`).toHaveText("Confirm Label");
         expect.verifySteps(["get_views", "onchange"]);
@@ -8888,7 +8921,7 @@ test.tags("mobile")(`buttons with "confirm" attribute: click twice on "Ok" on mo
     expect.verifySteps(["get_views", "onchange"]);
 
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    await contains(`.o_statusbar_button_dropdown_item button`).click();
+    await contains(`.o-dropdown-item-unstyled-button button`).click();
     expect.verifySteps([]);
 
     contains(`.modal-footer button.btn-primary`).click();
@@ -9400,7 +9433,7 @@ test.tags("mobile")(
         `,
         });
         await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-        await contains(`.o_statusbar_button_dropdown_item button`).click();
+        await contains(`.o-dropdown-item-unstyled-button button`).click();
         expect.verifySteps(["doActionButton"]);
     }
 );

@@ -150,7 +150,7 @@ export class ImageCrop extends Component {
         this.mimetype = this.props.mimetype || mimetype;
 
         await loadImageInfo(this.media);
-        const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.media.dataset.originalSrc);
+        const isIllustration = /^\/(?:html|web)_editor\/shape\/illustration\//.test(this.media.dataset.originalSrc);
         this.uncroppable = false;
         if (this.media.dataset.originalSrc && !isIllustration) {
             this.originalSrc = this.media.dataset.originalSrc;

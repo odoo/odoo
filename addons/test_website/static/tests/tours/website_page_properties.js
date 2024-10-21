@@ -88,7 +88,7 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
             ? [
                   {
                       content: `Verify template ${pageTitle} exists`,
-                      trigger: `:visible .o_page_template .o_page_name:text(${pageTitle})`,
+                      trigger: `:visible .o_page_template .o_page_name:contains(${pageTitle})`,
                   },
               ]
             : [
@@ -262,7 +262,7 @@ function testWebsitePageProperties() {
     steps.check.push(
         {
             content: "Verify page title",
-            trigger: ":visible :iframe head title:text(/Cool Page/)",
+            trigger: ":visible :iframe head title:contains(/Cool Page/)",
         },
         ...assertPageCanonicalUrlIs("/cool-page"),
         stepUtils.goToUrl(getClientActionUrl("/new-page")),
@@ -317,7 +317,7 @@ function testWebsitePageProperties() {
     steps.checkTorndown.push(
         {
             content: "Verify page title",
-            trigger: ":visible :iframe head title:text(/New Page/)",
+            trigger: ":visible :iframe head title:contains(/New Page/)",
         },
         ...assertPageCanonicalUrlIs("/new-page"),
         stepUtils.goToUrl(getClientActionUrl("/new-page")),
@@ -334,7 +334,6 @@ function testWebsitePageProperties() {
 registerWebsitePreviewTour(
     "website_page_properties_common",
     {
-        test: true,
         url: "/test_view",
     },
     () => [...testCommonProperties("/test_view", false).finalize()],
@@ -343,7 +342,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_page_properties_can_publish",
     {
-        test: true,
         url: "/test_website/model_item/1",
     },
     () => [...testCommonProperties("/test_website/model_item/1", true).finalize()],
@@ -352,7 +350,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_page_properties_website_page",
     {
-        test: true,
         url: "/",
     },
     () => [

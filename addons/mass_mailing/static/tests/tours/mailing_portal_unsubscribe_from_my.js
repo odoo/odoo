@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
  * as well as manage blocklist (add / remove my own email from block list).
  */
 registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_my", {
-    test: true,
     steps: () => [
         {
             content: "List1 is present, opt-in member",

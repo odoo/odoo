@@ -6,6 +6,7 @@ from uuid import uuid4
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.tests import Form
 from odoo import fields
+from odoo.tools import format_date
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSSale(TestPointOfSaleHttpCommon):
@@ -665,6 +666,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(invoice_pdf_content.count('Product A'), 1)
         self.assertEqual(invoice_pdf_content.count('Product B'), 1)
         self.assertEqual(invoice_pdf_content.count('Product C'), 1)
+
+        for order_line in sale_order.order_line.filtered(lambda l: l.product_id == self.downpayment_product):
+            order_line = order_line.with_context(lang=partner_test.lang)
+            self.assertIn(format_date(order_line.env, order_line.order_id.date_order), order_line.name)
 
     def test_settle_so_with_pos_downpayment(self):
         so = self.env['sale.order'].create({

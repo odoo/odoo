@@ -302,12 +302,12 @@ msgstr "<span>Geschiedenis</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Minimum purchase of</span>"
-msgstr "<span>Minimale aankoop van</span>"
+msgstr "<span>Minimale bestelling van</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Valid for purchase above</span>"
-msgstr "<span>Geldig voor aankoop hierboven</span>"
+msgstr "<span>Geldig voor bestelling boven</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -405,12 +405,12 @@ msgstr ""
 "        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
 "            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    Minimale aankoop van <t t-out=\"rule.minimum_qty or ''\">10</t> producten\n"
+"                    Minimale bestelling van <t t-out=\"rule.minimum_qty or ''\">10</t> producten\n"
 "                </span><br>\n"
 "            </t>\n"
 "            <t t-if=\"rule.minimum_amount != 0.00\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    Geldig voor een aankoop boven <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
+"                    Geldig voor een bestelling boven <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
 "                </span><br>\n"
 "            </t>\n"
 "        </t>\n"
@@ -1003,7 +1003,7 @@ msgid ""
 "next purchase when a customer buys something in your store."
 msgstr ""
 "Stimuleer herhalingsaankopen door een unieke kortingscode voor eenmalig "
-"gebruik te sturen voor de volgende aankoop wanneer een klant iets in je "
+"gebruik te sturen voor de volgende bestelling wanneer een klant iets in je "
 "winkel koopt."
 
 #. module: loyalty
@@ -1273,7 +1273,7 @@ msgstr "Geschiedenis"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
 msgid "History Lines"
-msgstr "Geschiedenis Lijnen"
+msgstr "Geschiedenisregels"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_history
@@ -1497,7 +1497,7 @@ msgstr "Minimumbedrag BTW"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
 msgid "Minimum Purchase"
-msgstr "Minimale aankoop"
+msgstr "Minimale bestelling"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_qty
@@ -1836,7 +1836,8 @@ msgstr "Verzenden"
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Send a coupon after an order, valid for next purchase"
 msgstr ""
-"Verzend een kortingsbon na een bestelling, geldig voor een volgende aankoop"
+"Verzend een kortingsbon na een bestelling, geldig voor een volgende "
+"bestelling"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -2134,7 +2135,7 @@ msgstr "Zal e-mail verzenden"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Win points with each purchase, and claim gifts"
-msgstr "Win punten met elke aankoop en vraag je geschenken"
+msgstr "Win punten met elke bestelling en vraag je geschenken"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code

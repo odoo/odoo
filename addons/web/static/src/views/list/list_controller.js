@@ -25,8 +25,9 @@ import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { session } from "@web/session";
+import { ListCogMenu } from "./list_cog_menu";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 import {
     Component,
@@ -49,7 +50,8 @@ export class ListController extends Component {
         ViewButton,
         MultiRecordViewButton,
         SearchBar,
-        CogMenu,
+        CogMenu: ListCogMenu,
+        DropdownItem,
     };
     static props = {
         ...standardViewProps,
@@ -273,7 +275,7 @@ export class ListController extends Component {
         }
     }
 
-    async openRecord(record) {
+    async openRecord(record, force = false) {
         await record.save();
         if (this.archInfo.openAction) {
             this.actionService.doActionButton({
@@ -289,7 +291,7 @@ export class ListController extends Component {
             });
         } else {
             const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-            this.props.selectRecord(record.resId, { activeIds });
+            this.props.selectRecord(record.resId, { activeIds, force });
         }
     }
 
@@ -409,8 +411,8 @@ export class ListController extends Component {
             );
 
         return {
-            action: [...staticActionItems, ...(actionMenus.action || [])],
-            print: actionMenus.print,
+            action: [...staticActionItems, ...(actionMenus?.action || [])],
+            print: actionMenus?.print,
         };
     }
 
@@ -522,7 +524,7 @@ export class ListController extends Component {
         if (!this.isDomainSelected) {
             const resIds = await this.getSelectedResIds();
             const ids = resIds.length > 0 && resIds;
-            domain = [['id', 'in', ids]]
+            domain = [["id", "in", ids]];
         }
         return await rpc("/web/export/get_fields", {
             ...parentParams,

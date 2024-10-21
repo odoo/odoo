@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 
 registry.category("web_tour.tours").add('totportal_tour_setup', {
-    test: true,
     url: '/my/security',
     steps: () => [{
     content: "Open totp wizard",
@@ -43,7 +42,6 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
 }]});
 
 registry.category("web_tour.tours").add('totportal_login_enabled', {
-    test: true,
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
@@ -103,7 +101,6 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 }]});
 
 registry.category("web_tour.tours").add('totportal_login_disabled', {
-    test: true,
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",

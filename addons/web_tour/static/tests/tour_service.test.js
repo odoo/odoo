@@ -115,7 +115,6 @@ test("Step Tour validity", async () => {
         },
     ];
     tourRegistry.add("tour1", {
-        sequence: 10,
         steps: () => steps,
     });
     await makeMockEnv({});
@@ -549,7 +548,6 @@ test("registering test tour after service is started doesn't auto-start the tour
     await mountWithCleanup(Root);
     expect(".o_tour_pointer").toHaveCount(0);
     registry.category("web_tour.tours").add("tour1", {
-        test: true,
         steps: () => [
             {
                 content: "content",
@@ -859,7 +857,6 @@ test("automatic tour with invisible element", async () => {
 
     await mountWithCleanup(Root);
     registry.category("web_tour.tours").add("tour_de_wallonie", {
-        test: true,
         steps: () => [
             {
                 trigger: ".button0",
@@ -912,7 +909,6 @@ test("automatic tour with invisible element but use :not(:visible))", async () =
 
     await mountWithCleanup(Root);
     registry.category("web_tour.tours").add("tour_de_wallonie", {
-        test: true,
         steps: () => [
             {
                 trigger: ".button0",
@@ -1021,8 +1017,6 @@ test("automatic tour with alternative trigger", async () => {
         },
     });
     registry.category("web_tour.tours").add("tour_des_flandres", {
-        test: true,
-        sequence: 17,
         steps: () => [
             {
                 trigger: ".interval, .button1",
@@ -1397,7 +1391,6 @@ test("check rainbowManMessage", async () => {
 
 test("check alternative trigger that appear after the initial trigger", async () => {
     registry.category("web_tour.tours").add("rainbow_tour", {
-        sequence: 87,
         steps: () => [
             {
                 trigger: ".button0, .button1",

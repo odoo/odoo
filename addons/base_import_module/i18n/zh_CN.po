@@ -85,13 +85,6 @@ msgid "Created on"
 msgstr "创建日期"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr "演示数据应该只在测试数据库中使用。一旦它们被加载，它们就不能被完全移除!"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -145,11 +138,6 @@ msgid "Import Module"
 msgstr "导入模块"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "导入演示数据"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
 msgstr "导入模块的演示数据"
@@ -189,6 +177,20 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
 msgstr "上次更新日期"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "装入样例数据"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -274,12 +276,7 @@ msgstr "Studio 定制需要安装 Odoo Studio应用。"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "The following modules will also be installed:\n"
-msgstr "还将安装以下模块：\n"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
 msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"

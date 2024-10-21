@@ -5,7 +5,6 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
 import { redirect } from "@web/core/utils/urls";
 
 registry.category("web_tour.tours").add('shop_mail', {
-    test: true,
     url: '/shop?search=Acoustic Bloc Screens',
     steps: () => [
         ...tourUtils.addToCart({productName: 'Acoustic Bloc Screens', search: false}),

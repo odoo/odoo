@@ -4,6 +4,9 @@
 # 
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2024
+# Umur Akın <umura@projetgrup.com>, 2024
+# Tugay Hatıl <tugayh@projetgrup.com>, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2024\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,22 +25,22 @@ msgstr ""
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Otomatik Etkinlik Postalama"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr ""
+msgstr "Etkinlik: Kayıt"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "Etkinlik: Hatırlatma"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Etkinlik Kategorisine göre  E-Posta Planlama"
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_reminder
@@ -49,7 +52,7 @@ msgstr ""
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr ""
+msgstr "Mail Zamanlayıcı Kaydı"
 
 #. module: event_sms
 #. odoo-javascript
@@ -59,18 +62,18 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__template_ref__sms_template
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_sms_template
 msgid "SMS Templates"
-msgstr ""
+msgstr "SMS Şablonları"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
 #: model:ir.model.fields,field_description:event_sms.field_event_type_mail__notification_type
 msgid "Send"
-msgstr ""
+msgstr "Gönder"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__template_ref
@@ -85,3 +88,6 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: {{ object.event_id.name }} etkinliğine kaydınızı "
+"onaylamaktan mutluluk duyuyoruz."

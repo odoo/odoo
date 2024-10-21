@@ -7,7 +7,6 @@ import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 
 registry.category("web_tour.tours").add("GiftCardProgramTour1", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -19,7 +18,6 @@ registry.category("web_tour.tours").add("GiftCardProgramTour1", {
 });
 
 registry.category("web_tour.tours").add("GiftCardProgramTour2", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -31,7 +29,6 @@ registry.category("web_tour.tours").add("GiftCardProgramTour2", {
 });
 
 registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -56,7 +53,6 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
 });
 
 registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -72,7 +68,6 @@ registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -92,7 +87,6 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyGiftCardTaxes", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -109,7 +103,6 @@ registry.category("web_tour.tours").add("PosLoyaltyGiftCardTaxes", {
 });
 
 registry.category("web_tour.tours").add("PhysicalGiftCardProgramSaleTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
