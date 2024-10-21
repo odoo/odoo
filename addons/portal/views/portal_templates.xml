@@ -632,7 +632,9 @@
                 </a>
             </li>
             <t t-foreach="pager['pages']" t-as="page">
-                <li t-attf-class="page-item #{'active' if page['num'] == pager['page']['num'] else ''}"> <a t-att-href="page['url']" t-attf-class="page-link #{extraLinkClass}" t-out="page['num']"/></li>
+                <li t-attf-class="page-item #{'active' if page['num'] == pager['page']['num'] else ''} #{'disabled' if page['num'] == '…' else ''}">
+                    <a t-att-href="page['url']" t-attf-class="page-link #{extraLinkClass} #{'px-0' if page['num'] == '…' else ''}" t-out="page['num']"/>
+                </li>
             </t>
             <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
                 <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" t-attf-class="page-link #{extraLinkClass}">
