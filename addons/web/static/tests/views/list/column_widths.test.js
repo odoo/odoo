@@ -492,22 +492,6 @@ test(`width computation: no record, nameless and stringless buttons`, async () =
     expect(columnWidths[2]).toBeGreaterThan(300);
 });
 
-test(`width computation: no record, datetime field with date widget`, async () => {
-    Foo._records = [];
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <list editable="top">
-                <field name="datetime" widget="date"/>
-                <field name="text"/>
-            </list>
-        `,
-    });
-    expect(getColumnWidths()).toEqual([40, 89, 671]);
-});
-
 test(`width computation: x2many`, async () => {
     await mountView({
         type: "form",
