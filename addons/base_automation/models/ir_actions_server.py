@@ -88,7 +88,5 @@ class ServerAction(models.Model):
         eval_context = super()._get_eval_context(action)
         if action and action.state == "code":
             eval_context['json'] = json_scriptsafe
-            payload = get_webhook_request_payload()
-            if payload:
-                eval_context["payload"] = payload
+            eval_context['payload'] = get_webhook_request_payload()
         return eval_context
