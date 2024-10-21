@@ -13,6 +13,14 @@ export const pageOptionsCallbacks = {
         footerEl.classList.toggle('d-none', !value);
         footerEl.classList.toggle('o_snippet_invisible', !value);
     },
+    breadcrumb_overlay(value) {
+        this.document.querySelector("#wrapwrap > main").classList.toggle("o_breadcrumb_overlay", value);
+    },
+    breadcrumb_visible(value) {
+        const breadcrumbEl = this.document.querySelector("#wrapwrap > main > .page_breadcrumb");
+        breadcrumbEl.classList.toggle("d-none", !value);
+        breadcrumbEl.classList.toggle("o_snippet_invisible", !value);
+    },
 };
 export class PageOption {
     /***
