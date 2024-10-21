@@ -161,7 +161,7 @@ class HrEmployeeBase(models.AbstractModel):
         for employee in self:
             state = 'to_define'
             if check_login:
-                if 'online' in str(employee.user_id.im_status):
+                if employee.user_id._is_user_available():
                     state = 'present'
                 elif 'offline' in str(employee.user_id.im_status) and employee.id not in working_now_list:
                     state = 'absent'

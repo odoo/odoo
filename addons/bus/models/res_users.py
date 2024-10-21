@@ -17,3 +17,6 @@ class ResUsers(models.Model):
         }
         for user in self:
             user.im_status = presence_by_user.get(user, "offline")
+
+    def _is_user_available(self):
+        return self.im_status == 'online'
