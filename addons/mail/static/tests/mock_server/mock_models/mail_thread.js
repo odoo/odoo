@@ -604,7 +604,7 @@ export class MailThread extends models.ServerModel {
             fields = [];
         }
         const [thread] = this.env[this._name].browse(id);
-        const [res] = this.read(thread.id, fields, makeKwArgs({ load: false }));
+        const [res] = this._read_format(thread.id, fields, makeKwArgs({ load: false }));
         if (request_list) {
             res.hasReadAccess = true;
             res.hasWriteAccess = thread.hasWriteAccess ?? true; // mimic user with write access by default
@@ -679,8 +679,8 @@ export class MailThread extends models.ServerModel {
         if (request_list && request_list.includes("scheduledMessages")) {
             res["scheduledMessages"] = mailDataHelpers.Store.many(
                 MailScheduledMessage.filter(
-                    (message) => message.model === this._name && message.res_id === id,
-                ),
+                    (message) => message.model === this._name && message.res_id === id
+                )
             );
         }
         store.add(this.env[this._name].browse(id), res, makeKwArgs({ as_thread: true }));
