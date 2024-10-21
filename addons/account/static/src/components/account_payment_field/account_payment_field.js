@@ -80,7 +80,7 @@ export class AccountPaymentField extends Component {
 
 export const accountPaymentField = {
     component: AccountPaymentField,
-    supportedTypes: ["char"],
+    supportedTypes: ["binary"],
 };
 
 registry.category("fields").add("payment", accountPaymentField);
