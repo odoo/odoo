@@ -2033,4 +2033,4 @@ class TestErrorManagement(HttpCase):
             'path': 'test_assetsbundle/static/src/css/test_error.scss',
         })
         with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.start_tour('/', 'css_error_tour_frontend', login='admin')
+            self.start_tour('/', 'css_error_tour_frontend')
