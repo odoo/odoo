@@ -1,7 +1,7 @@
-import { Component, markup } from "@odoo/owl";
+import { Component, markup, onWillStart } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { RPCError } from "@web/core/network/rpc";
+import { rpc, RPCError } from "@web/core/network/rpc";
 import { PyDateTime } from "@web/core/py_js/py_date";
 import { registry } from "@web/core/registry";
 import { useDraggable } from "@web/core/utils/draggable";
@@ -23,7 +23,11 @@ export class BlockTab extends Component {
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
+        this.company = useService("company");
 
+        onWillStart(async () => {
+            this.contextSnippetData = await rpc("/mysterious_egg/builder_data");
+        });
         useDraggable({
             ref: this.env.builderRef,
             elements: ".o-website-snippetsmenu .o_draggable",
@@ -35,9 +39,14 @@ export class BlockTab extends Component {
                 const { x, y } = params;
 
                 const elementToAdd = renderToElement(params.element.dataset.templateContent, {
+                    ...this.contextSnippetData,
                     datetime: {
                         datetime: PyDateTime,
+                        timestamp: () => {
+                            return new Date().getTime();
+                        },
                     },
+                    test_mode_enabled: false, // TODO to imp
                 });
                 this.props.editor.shared.dropElement(elementToAdd, { x, y });
             },
