@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
+from odoo.exceptions import UserError
 
 
 @tagged('post_install', '-at_install')
@@ -490,3 +491,21 @@ class TestRepair(AccountTestInvoicingCommon):
         repair_order.action_repair_start()
         repair_order.action_repair_end()
         self.assertEqual(repair_order.state, 'done')
+
+    def test_add_part_with_same_sn_as_repaired_product(self):
+        """
+        Test that a UserError is triggered when the same SN is used for both the product to repair and a part.
+        """
+        self.product_a.tracking = 'serial'
+        self.product_a.type = 'product'
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_a.id})
+        # update the quantity of the product in the stock with SN1
+        self.env['stock.quant']._update_available_quantity(self.product_a, self.stock_warehouse.lot_stock_id, 1, lot_id=sn_1)
+        # create a repair order
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = self.product_a
+        with self.assertRaises(UserError):
+            with ro_form.operations.new() as ro_line:
+                ro_line.product_id = self.product_a
+                ro_line.lot_id = sn_1
+                ro_line.type = 'add'
