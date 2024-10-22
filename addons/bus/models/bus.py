@@ -14,6 +14,7 @@ import odoo
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
 from odoo.tools import json_default, SQL
+from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)
@@ -92,8 +93,8 @@ class BusBus(models.Model):
     def _gc_messages(self):
         timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT*2)
         domain = [('create_date', '<', timeout_ago)]
-        records = self.search(domain, limit=models.GC_UNLINK_LIMIT)
-        if len(records) >= models.GC_UNLINK_LIMIT:
+        records = self.search(domain, limit=GC_UNLINK_LIMIT)
+        if len(records) >= GC_UNLINK_LIMIT:
             self.env.ref('base.autovacuum_job')._trigger()
         return records.unlink()
 
