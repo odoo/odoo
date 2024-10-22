@@ -190,7 +190,7 @@ class TestMailMail(MailCommon):
         # note that formatting is lost for cc
         self.assertSentEmail(mail.env.user.partner_id,
                              ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=['"Herbert" <test.cc.2@example.com>', 'test.cc.1@example.com'])
         # don't put CCs as copy of each outgoing email, only the first one (and never
         # with partner based recipients as those may receive specific links)
         self.assertSentEmail(mail.env.user.partner_id, [self.user_employee.email_formatted],
@@ -213,7 +213,7 @@ class TestMailMail(MailCommon):
         # note that formatting is lost for cc
         self.assertSentEmail('"Ignasse" <test.from@example.com>',
                              ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=['"Herbert" <test.cc.2@example.com>', 'test.cc.1@example.com'])
         self.assertEqual(len(self._mails), 1)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -814,7 +814,7 @@ class TestMailMailServer(MailCommon):
         # CC are added to first email
         self.assertEqual(
             [_mail['email_cc'] for _mail in self._mails],
-            [['test.cc.1@test.example.com'], [], []],
+            [['"Ignasse, le Poilu" <test.cc.1@test.example.com>'], [], []],
             'Mail: currently always removing formatting in email_cc'
         )
 
