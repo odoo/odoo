@@ -147,12 +147,14 @@ def fix_import_export_id_paths(fieldname):
     return fixed_external_id.split('/')
 
 
-def to_company_ids(companies):
-    if isinstance(companies, BaseModel):
-        return companies.ids
-    elif isinstance(companies, (list, tuple, str)):
-        return companies
-    return [companies]
+def to_record_ids(arg) -> list[int]:
+    """ Return the record ids of ``arg``, which may be a recordset, an integer or a list of integers. """
+    if isinstance(arg, BaseModel):
+        return arg.ids
+    elif isinstance(arg, int):
+        return [arg] if arg else []
+    else:
+        return [id_ for id_ in arg if id_]
 
 
 def check_company_domain_parent_of(self, companies):
@@ -163,7 +165,7 @@ def check_company_domain_parent_of(self, companies):
     if isinstance(companies, str):
         return ['|', ('company_id', '=', False), ('company_id', 'parent_of', companies)]
 
-    companies = [id for id in to_company_ids(companies) if id]
+    companies = to_record_ids(companies)
     if not companies:
         return [('company_id', '=', False)]
 
@@ -181,7 +183,7 @@ def check_companies_domain_parent_of(self, companies):
     if isinstance(companies, str):
         return [('company_ids', 'parent_of', companies)]
 
-    companies = [id_ for id_ in to_company_ids(companies) if id_]
+    companies = to_record_ids(companies)
     if not companies:
         return []
 
@@ -4160,7 +4162,7 @@ class BaseModel(metaclass=MetaModel):
             return [('company_id', '=', False)]
         if isinstance(companies, str):
             return [('company_id', 'in', unquote(f'{companies} + [False]'))]
-        return [('company_id', 'in', to_company_ids(companies) + [False])]
+        return [('company_id', 'in', to_record_ids(companies) + [False])]
 
     def _check_company(self, fnames=None):
         """ Check the companies of the values of the given field names.
