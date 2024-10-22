@@ -64,7 +64,7 @@ from odoo.tools.translate import _, LazyTranslate
 from . import fields
 from . import decorators as api
 from .commands import Command
-from .fields import Field
+from .fields import Field, determine
 from .fields_misc import Id
 from .fields_temporal import Datetime
 from .fields_textual import Char
@@ -5121,7 +5121,7 @@ class BaseModel(metaclass=MetaModel):
         return records
 
     def _compute_field_value(self, field):
-        fields.determine(field.compute, self)
+        determine(field.compute, self)
 
         if field.store and any(self._ids):
             # check constraints of the fields that have been computed
