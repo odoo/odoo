@@ -81,6 +81,14 @@ class PaymentTransaction(models.Model):
             confirmed_orders = done_tx._check_amount_and_confirm_order()
             (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
+            # The wire transfer communication refers to the first payment transaction only.
+            # All the others can be cancelled.
+            confirmed_orders.transaction_ids.filtered(
+                lambda tx: tx.state == 'pending'
+                and tx.provider_code == 'custom'
+                and tx.provider_id.custom_mode == 'wire_transfer'
+            )._set_canceled()
+
             auto_invoice = str2bool(
                 self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')
             )
