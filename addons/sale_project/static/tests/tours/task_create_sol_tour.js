@@ -48,9 +48,7 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
         in_modal: false,
         run: "click",
     }, {
-        trigger: ".o_form_button_save",
-        content: "Save task",
-        run: "click",
+        trigger: "body:not(:has(.modal))",
     }, {
         trigger: ".o_field_widget[name='sale_line_id'] input",
         content: "Check if the Sales Order Item is saved correctly.",
@@ -59,6 +57,10 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
                 console.error("Sales Order Item is not saved correctly.");
             }
         },
+    }, {
+        trigger: ".o_form_button_save",
+        content: "Save task",
+        run: "click",
     },
     // Those steps are currently needed in order to prevent the following issue:
     // "Form views in edition mode are automatically saved when the page is closed, which leads to stray network requests and inconsistencies."
