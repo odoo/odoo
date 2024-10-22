@@ -16,4 +16,8 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
                 sum(free_shipping_lines.mapped('price_subtotal')),
                 {'display_currency': order.currency_id}
             )
+        if order.reward_amount:
+            res['amount_discounted'] = Monetary.value_to_html(
+                order.reward_amount, {'display_currency': order.currency_id}
+            )
         return res
