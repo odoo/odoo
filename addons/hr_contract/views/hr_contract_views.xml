@@ -262,11 +262,13 @@
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
                 <list string="Contracts" multi_edit="1" sample="1" default_order='date_start DESC'>
+                    <field name="currency_id" column_invisible="1"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
                     <field name="name" readonly="1"/>
                     <field name="department_id" readonly="1" optional="show"/>
                     <field name="job_id" optional="show"/>
+                    <field name="hr_responsible_id" optional="hidden"/>
                     <field name="date_start" readonly="1"/>
                     <field name="date_end" readonly="1"/>
                     <field name="contract_type_id" optional="show"/>
