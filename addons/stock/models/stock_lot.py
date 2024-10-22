@@ -150,6 +150,11 @@ class StockLot(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self._check_create()
+        if (self.env.context.get('active_product_id')
+                and not self.env.context.get('default_product_id')
+                and len(vals_list) == 1
+                and not vals_list[0].get('product_id')):
+            vals_list[0]['product_id'] = self.env.context['active_product_id']
         return super(StockLot, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
     def write(self, vals):
