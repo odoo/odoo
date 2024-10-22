@@ -16,4 +16,6 @@ class MailActivityMixin(models.AbstractModel):
         """This computes the calendar event of the next activity.
         It evaluates to false if there is no such event."""
         for record in self:
-            record.activity_calendar_event_id = fields.first(record.activity_ids).calendar_event_id
+            activities = record.activity_ids
+            activity = next(iter(activities), activities)
+            record.activity_calendar_event_id = activity.calendar_event_id

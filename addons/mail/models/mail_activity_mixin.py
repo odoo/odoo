@@ -193,7 +193,8 @@ class MailActivityMixin(models.AbstractModel):
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
         for record in self:
-            record.activity_date_deadline = fields.first(record.activity_ids).date_deadline
+            activities = record.activity_ids
+            record.activity_date_deadline = next(iter(activities), activities).date_deadline
 
     def _search_activity_date_deadline(self, operator, operand):
         if operator == '=' and not operand:
