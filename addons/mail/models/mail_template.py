@@ -50,6 +50,7 @@ class MailTemplate(models.Model):
     # recipients
     use_default_to = fields.Boolean(
         'Default recipients',
+        default=True,
         help="Default recipients of the record:\n"
              "- partner (using id on a partner or the partner_id field) OR\n"
              "- email (using email_from or email field)")
@@ -142,6 +143,14 @@ class MailTemplate(models.Model):
             return [('id', 'in' if operator == "=" else 'not in', value_templates.ids)]
 
         raise NotImplementedError(_('Operation not supported'))
+
+    @api.onchange("model")
+    def _onchange_model(self):
+        for template in self.filtered("model"):
+            target = self.env[template.model]
+            if hasattr(target, "_mail_template_default_values"):
+                upd_values = target._mail_template_default_values()
+                template.update(upd_values)
 
     # ------------------------------------------------------------
     # CRUD

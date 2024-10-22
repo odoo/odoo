@@ -1135,7 +1135,7 @@ class ProjectTask(models.Model):
 
         all_partner_emails = []
         for task in tasks:
-            all_partner_emails += tools.email_split(task.email_cc)
+            all_partner_emails += tools.email_normalize_all(task.email_cc)
         partners = self.env['res.partner'].search([('email', 'in', all_partner_emails)])
         partner_per_email = {
             partner.email: partner
@@ -1153,7 +1153,7 @@ class ProjectTask(models.Model):
                 task.message_subscribe(current_partner.ids)
             if task.email_cc:
                 partners_with_internal_user = self.env['res.partner']
-                for email in tools.email_split(task.email_cc):
+                for email in tools.email_normalize_all(task.email_cc):
                     new_partner = partner_per_email.get(email)
                     if new_partner:
                         partners_with_internal_user |= new_partner
@@ -1625,7 +1625,7 @@ class ProjectTask(models.Model):
                 self.with_context(lang=user.lang)._get_default_personal_stage_create_vals(user.id)
             )
 
-    def email_split(self, msg):
+    def task_email_split(self, msg):
         email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
         # check left-part is not already an alias
         aliases = self.mapped('project_id.alias_name')
@@ -1660,14 +1660,14 @@ class ProjectTask(models.Model):
         defaults.update(custom_values)
 
         task = super(ProjectTask, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        email_list = task.email_split(msg)
+        email_list = task.task_email_split(msg)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
         task.message_subscribe(partner_ids)
         return task
 
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
-        email_list = self.email_split(msg)
+        email_list = self.task_email_split(msg)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=self, force_create=False) if p]
         self.message_subscribe(partner_ids)
         return super().message_update(msg, update_vals=update_vals)

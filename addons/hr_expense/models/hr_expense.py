@@ -6,7 +6,7 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import email_split, float_repr, float_round, is_html_empty
+from odoo.tools import email_normalize, float_repr, float_round, is_html_empty
 
 
 class HrExpense(models.Model):
@@ -1058,7 +1058,7 @@ class HrExpense(models.Model):
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
-        email_address = email_split(msg_dict.get('email_from', False))[0]
+        email_address = email_normalize(msg_dict.get('email_from'))
         employee = self._get_employee_from_email(email_address)
 
         if not employee:
@@ -1103,6 +1103,8 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_employee_from_email(self, email_address):
+        if not email_address:
+            return self.env['hr.employee']
         employee = self.env['hr.employee'].search([
             ('user_id', '!=', False),
             '|',

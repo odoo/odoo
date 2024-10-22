@@ -8,9 +8,9 @@
                         <div class="oe_structure"></div>
                         <div class="row text-center">
                             <div class="o_offer col-lg-12">
-                                <h4 t-if="o._get_mail_partner().name">
+                                <h4 t-if="o._mail_get_customer().name">
                                     Congratulations
-                                    <span t-out="o._get_mail_partner().name">John Doe</span>,
+                                    <span t-out="o._mail_get_customer().name">John Doe</span>,
                                 </h4>
                                 <t t-set="text">on your next order</t>
                                 <h4>Here is your reward from <span t-out="o.program_id.company_id.name">Odoo</span>.</h4>
@@ -73,8 +73,8 @@
     <template id="loyalty_report_i18n">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-set="o" t-value="o.with_context(lang=o._get_mail_partner().lang or o.env.lang)"/>
-                <t t-call="loyalty.loyalty_report" t-lang="o._get_mail_partner().lang or o.env.lang"/>
+                <t t-set="o" t-value="o.with_context(lang=o._mail_get_customer().lang or o.env.lang)"/>
+                <t t-call="loyalty.loyalty_report" t-lang="o._mail_get_customer().lang or o.env.lang"/>
             </t>
         </t>
     </template>
@@ -124,8 +124,8 @@
         <t t-call="web.html_container">
             <div class="oe_structure"></div>
             <t t-foreach="docs" t-as="o">
-                <t t-set="o" t-value="o.with_context(lang=o._get_mail_partner().lang or o.env.lang)"/>
-                <t t-call="loyalty.gift_card_report" t-lang="o._get_mail_partner().lang or o.env.lang"/>
+                <t t-set="o" t-value="o.with_context(lang=o._mail_get_customer().lang or o.env.lang)"/>
+                <t t-call="loyalty.gift_card_report" t-lang="o._mail_get_customer().lang or o.env.lang"/>
             </t>
             <div class="oe_structure"></div>
         </t>

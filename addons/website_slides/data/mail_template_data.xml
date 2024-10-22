@@ -5,6 +5,7 @@
             <field name="name">Elearning: New Course Content Notification</field>
             <field name="model_id" ref="model_slide_slide"/>
             <field name="subject">New {{ object.slide_category }} published on {{ object.channel_id.name }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Sent to attendees when new course is published</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
@@ -40,6 +41,7 @@
             <field name="subject">{{ user.name }} shared a {{ object.slide_category }} with you!</field>
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="email_to">{{ ctx.get('email', '') }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Sent when attendees share the course by email</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
@@ -71,7 +73,8 @@
             <field name="model_id" ref="model_slide_channel_partner"/>
             <field name="subject">Congratulations! You completed {{ object.channel_id.name }}</field>
             <field name="email_from">{{ (object.channel_id.user_id.email_formatted or object.channel_id.user_id.company_id.catchall_formatted) }}</field>
-            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
             <field name="description">Sent to attendees once they've completed the course</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
@@ -103,6 +106,7 @@
             <field name="model_id" ref="model_slide_channel"/>
             <field name="subject">{{ user.name }} shared a Course</field>
             <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">

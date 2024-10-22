@@ -13,12 +13,15 @@ from odoo.tests import tagged, users, warmup
 from odoo.tools import formataddr, mute_logger
 
 
-@tagged('event_mail', 'post_install', '-at_install')
-class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
+class EventMailCommon(EventCase, MockEmail, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        # give default values for all email aliases and domain
+        cls._init_mail_gateway()
+        cls._init_mail_servers()
 
         cls.env.company.write({
             'email': 'info@yourcompany.example.com',
@@ -74,6 +77,10 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                     }),
                 ]
             })
+
+
+@tagged('event_mail', 'post_install', '-at_install')
+class TestMailSchedule(EventMailCommon):
 
     def test_assert_initial_values(self):
         """ Ensure base values for tests """
@@ -556,6 +563,53 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                 'email_from': self.user_eventmanager.company_id.email_formatted,
                 'subject': f'Confirmation for {test_event.name}',
             })
+
+
+@tagged('event_mail', 'post_install', '-at_install')
+class TestMailScheduleInternals(EventMailCommon):
+
+    def test_scheduled_date(self):
+        now = self.reference_now.replace(microsecond=0)
+        start, end = now + relativedelta(days=1), now + relativedelta(days=5)
+        with self.mock_datetime_and_now(self.reference_now):
+            event = self.env["event.event"].create({
+                "event_mail_ids": False,
+                "date_begin": start,
+                "date_end": end,
+                "name": "Test Scheduled Date",
+            })
+        self.assertEqual(event.create_date, self.reference_now)
+        self.assertFalse(event.event_mail_ids)
+        for i_type, i_unit, i_nbr, exp in [
+            # attendee: create date
+            ("after_sub", "now", 3, now),
+            ("after_sub", "hours", 3, now + relativedelta(hours=3)),
+            ("after_sub", "days", 3, now + relativedelta(days=3)),
+            ("after_sub", "weeks", 3, now + relativedelta(weeks=3)),
+            ("after_sub", "months", 3, now + relativedelta(months=3)),
+            # event: start date
+            ("before_event", "now", 3, start),
+            ("before_event", "hours", 3, start - relativedelta(hours=3)),
+            ("before_event", "days", 3, start - relativedelta(days=3)),
+            ("before_event", "weeks", 3, start - relativedelta(weeks=3)),
+            ("before_event", "months", 3, start - relativedelta(months=3)),
+            # event: end date
+            ("after_event", "now", 3, end),
+            ("after_event", "hours", 3, end + relativedelta(hours=3)),
+            ("after_event", "days", 3, end + relativedelta(days=3)),
+            ("after_event", "weeks", 3, end + relativedelta(weeks=3)),
+            ("after_event", "days", 3, end + relativedelta(days=3)),
+        ]:
+            with self.subTest(i_type=i_type, i_unit=i_unit, i_nbr=i_nbr):
+                event.write({
+                    "event_mail_ids": [(5, 0), (0, 0, {
+                        "interval_nbr": i_nbr,
+                        "interval_type": i_type,
+                        "interval_unit": i_unit,
+                        "template_ref": f"mail.template,{self.template_subscription.id}",
+                    })],
+                })
+                self.assertEqual(event.event_mail_ids.scheduled_date, exp)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_unique_event_mail_ids(self):

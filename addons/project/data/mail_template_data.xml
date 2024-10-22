@@ -34,6 +34,7 @@
             <field name="subject">{{ object.project_id.company_id.name or user.env.company.name }}: Satisfaction Survey</field>
             <field name="email_from">{{ (object._rating_get_operator().email_formatted if object._rating_get_operator() else user.email_formatted) }}</field>
             <field name="partner_to" >{{ object._rating_get_partner().id }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Set this template on a project stage to request feedback from your customers. Enable the "customer ratings" feature on the project</field>
             <field name="body_html" type="html">
 <div>

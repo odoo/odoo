@@ -12,6 +12,7 @@ class GamificationBadgeUser(models.Model):
     _rec_name = "badge_name"
 
     user_id = fields.Many2one('res.users', string="User", required=True, ondelete="cascade", index=True)
+    user_partner_id = fields.Many2one('res.partner', related='user_id.partner_id')
     sender_id = fields.Many2one('res.users', string="Sender")
     badge_id = fields.Many2one('gamification.badge', string='Badge', required=True, ondelete="cascade", index=True)
     challenge_id = fields.Many2one('gamification.challenge', string='Challenge')
@@ -47,3 +48,6 @@ class GamificationBadgeUser(models.Model):
         for vals in vals_list:
             self.env['gamification.badge'].browse(vals['badge_id']).check_granting()
         return super().create(vals_list)
+
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return ['user_partner_id']

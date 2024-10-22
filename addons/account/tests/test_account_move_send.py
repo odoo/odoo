@@ -461,7 +461,7 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
         return self.env['mail.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=1)
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install', 'mail_template')
 class TestAccountMoveSend(TestAccountMoveSendCommon):
 
     @classmethod

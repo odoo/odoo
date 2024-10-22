@@ -77,10 +77,6 @@ class LoyaltyCard(models.Model):
         self.ensure_one()
         return self.program_id.communication_plan_ids.filtered(lambda m: m.trigger == 'create').mail_template_id[:1]
 
-    def _get_mail_partner(self):
-        self.ensure_one()
-        return self.partner_id
-
     def _get_signature(self):
         """To be overriden"""
         self.ensure_one()
@@ -126,7 +122,7 @@ class LoyaltyCard(models.Model):
         for program in self.program_id:
             create_comm_per_program[program] = program.communication_plan_ids.filtered(lambda c: c.trigger == 'create')
         for coupon in self:
-            if not create_comm_per_program[coupon.program_id] or not coupon._get_mail_partner():
+            if not create_comm_per_program[coupon.program_id] or not coupon._mail_get_customer():
                 continue
             for comm in create_comm_per_program[coupon.program_id]:
                 comm.mail_template_id.send_mail(res_id=coupon.id, force_send=force_send, email_layout_xmlid='mail.mail_notification_light')
@@ -145,7 +141,7 @@ class LoyaltyCard(models.Model):
                 .filtered(lambda c: c.trigger == 'points_reach')\
                 .sorted('points', reverse=True)
         for coupon in self:
-            if not coupon._get_mail_partner():
+            if not coupon._mail_get_customer():
                 continue
             coupon_change = points_changes[coupon]
             # Do nothing if coupon lost points or did not change

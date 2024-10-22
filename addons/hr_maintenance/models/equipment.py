@@ -113,14 +113,10 @@ class MaintenanceRequest(models.Model):
 
     @api.model
     def message_new(self, msg, custom_values=None):
-        """ Overrides mail_thread message_new that is called by the mailgateway
-            through message_process.
-            This override updates the document according to the email.
-        """
         if custom_values is None:
             custom_values = {}
-        email = tools.email_split(msg.get('from')) and tools.email_split(msg.get('from'))[0] or False
-        user = self.env['res.users'].search([('login', '=', email)], limit=1)
+        email = tools.email_normalize(msg.get('from'), strict=False)
+        user = self.env['res.users'].search([('login', '=', email)], limit=1) if email else self.env['res.users']
         if user:
             employee = self.env.user.employee_id
             if employee:

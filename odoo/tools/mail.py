@@ -610,16 +610,20 @@ def email_split_tuples(text):
 
 def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
-    if not text:
-        return []
     return [email for (name, email) in email_split_tuples(text)]
 
 def email_split_and_format(text):
     """ Return a list of email addresses found in ``text``, formatted using
     formataddr. """
-    if not text:
-        return []
     return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
+
+def email_split_and_format_normalize(text):
+    """ Same as 'email_split_and_format' but normalizing email. """
+    return [
+        formataddr(
+            (name, _normalize_email(email))
+        ) for (name, email) in email_split_tuples(text)
+    ]
 
 def email_normalize(text, strict=True):
     """ Sanitize and standardize email address entries. As of rfc5322 section
@@ -655,16 +659,7 @@ def email_normalize(text, strict=True):
     emails = email_split(text)
     if not emails or (strict and len(emails) != 1):
         return False
-
-    local_part, at, domain = emails[0].rpartition('@')
-    try:
-        local_part.encode('ascii')
-    except UnicodeEncodeError:
-        pass
-    else:
-        local_part = local_part.lower()
-
-    return local_part + at + domain.lower()
+    return _normalize_email(emails[0])
 
 def email_normalize_all(text):
     """ Tool method allowing to extract email addresses from a text input and returning
@@ -675,10 +670,19 @@ def email_normalize_all(text):
 
     :return list: list of normalized emails found in text
     """
-    if not text:
-        return []
     emails = email_split(text)
-    return list(filter(None, [email_normalize(email) for email in emails]))
+    return list(filter(None, [_normalize_email(email) for email in emails]))
+
+def _normalize_email(email):
+    local_part, at, domain = email.rpartition('@')
+    try:
+        local_part.encode('ascii')
+    except UnicodeEncodeError:
+        pass
+    else:
+        local_part = local_part.lower()
+
+    return local_part + at + domain.lower()
 
 def email_domain_extract(email):
     """ Extract the company domain to be used by IAP services notably. Domain
