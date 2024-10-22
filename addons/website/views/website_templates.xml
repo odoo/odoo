@@ -371,7 +371,7 @@
                 <div class="offcanvas-body d-flex flex-column justify-content-between h-100 w-100">
                     <ul class="navbar-nav">
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_classes" t-valuef="mb-3"/>
                             <t t-set="_input_classes" t-valuef="rounded-start-pill text-bg-light ps-3"/>
                             <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 pe-3"/>
@@ -495,7 +495,7 @@
                 <!-- Extra elements -->
                 <ul class="navbar-nav align-items-center gap-2 flex-shrink-0 justify-content-end ps-3">
                     <!-- Search Bar -->
-                    <t t-call="website.placeholder_header_search_box">
+                    <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                         <t t-set="_layout" t-valuef="modal"/>
                         <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                         <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -581,7 +581,7 @@
                     <div class="offcanvas-body d-flex flex-column justify-content-between">
                         <ul class="navbar-nav">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3"/>
                                 <t t-set="limit" t-valuef="0"/>
@@ -705,7 +705,7 @@
                             <t t-set="_div_class" t-valuef="h-100 border-start o_border_contrast"/>
                         </t>
                     <!-- Search bar -->
-                    <t t-call="website.placeholder_header_search_box">
+                    <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                         <t t-set="_input_classes" t-valuef="o_header_stretch_search_input border-0 rounded-0 bg-transparent text-reset"/>
                         <t t-set="_submit_classes" t-valuef="o_navlink_background_hover rounded-0 text-reset"/>
                         <t t-set="_form_classes" t-valuef="h-100 z-index-0"/>
@@ -770,7 +770,7 @@
                 <div class="o_header_hide_on_scroll d-grid align-items-center w-100 o_grid_header_3_cols pb-3">
                     <ul class="navbar-nav align-items-center gap-1">
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_layout" t-valuef="modal"/>
                             <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                             <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -888,7 +888,7 @@
                     </t>
                     <ul class="o_header_search_right_col navbar-nav align-items-center gap-2 ms-auto ps-3">
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                             <t t-set="_submit_classes" t-valuef="rounded-end-pill pe-3 bg-o-color-3"/>
                         </t>
@@ -965,7 +965,7 @@
                             <t t-set="_div_class" t-valuef="d-flex align-items-center"/>
                         </t>
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_layout" t-valuef="modal"/>
                             <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                             <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -1066,7 +1066,7 @@
                         </t>
                         <ul class="navbar-nav align-items-center gap-1">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill p-3 bg-o-color-3 lh-1"/>
                             </t>
@@ -1152,7 +1152,7 @@
                         </ul>
                         <ul class="navbar-nav">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_input_classes" t-valuef="border-0 border-start rounded-0"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-0 bg-o-color-4"/>
                                 <t t-set="_form_classes" t-valuef="h-100 z-index-0"/>
@@ -1274,7 +1274,7 @@
                         <ul class="navbar-nav d-grid align-items-center py-2 o_grid_header_3_cols">
                             <!-- Search bar -->
                             <li class="o_header_sales_four_search_placeholder" t-if="is_view_active('website.header_search_box') == False"/>
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_form_classes" t-valuef="me-auto"/>
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 lh-1"/>
@@ -1334,7 +1334,7 @@
                     <div class="d-flex flex-column justify-content-between h-100 w-100">
                         <ul class="navbar-nav p-0">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_classes" t-valuef="mb-3"/>
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill pe-3 bg-o-color-3"/>
@@ -1466,7 +1466,7 @@
                     <!-- Extra elements -->
                     <ul class="navbar-nav align-items-center gap-1 flex-wrap flex-shrink-0 justify-content-end ps-3">
                         <!-- Search Bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_layout" t-valuef="modal"/>
                             <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                             <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -2621,7 +2621,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="website_search_box" name="Website Searchbox">
-    <div t-attf-class="input-group #{_classes}" role="search" t-nocache="The searchbox should not cache previous searches.">
+    <div t-attf-class="input-group #{_classes}" role="search">
         <t t-set="search_placeholder">Search...</t>
         <input type="search" name="search" t-att-class="'search-query form-control oe_search_box border-0 bg-light %s' % _input_classes" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
         <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-light')" aria-label="Search" title="Search">
