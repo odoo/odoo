@@ -94,7 +94,7 @@ export class PaymentRazorpay extends PaymentInterface {
             return Promise.resolve();
         }
 
-        const orderId = order.name.replace(" ", "").replaceAll("-", "").toUpperCase();
+        const orderId = order.pos_reference.replace(" ", "").replaceAll("-", "").toUpperCase();
         const referencePrefix = this.pos.config.name.replace(/\s/g, "").slice(0, 4);
         localStorage.setItem(
             "referenceId",
