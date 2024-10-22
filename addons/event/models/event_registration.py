@@ -443,7 +443,6 @@ class EventRegistration(models.Model):
             'name': self.name,
             'ticket_name': self.event_ticket_id.name if self.event_ticket_id else None,
             'ticket_color': self.event_ticket_id.color if self.event_ticket_id else None,
-            'ticket_text_color': self.event_ticket_id._get_ticket_printing_color() if self.event_ticket_id else None,
             'registration_answers': self.registration_answer_choice_ids.mapped('display_name'),
             'company_name': self.company_name
         }

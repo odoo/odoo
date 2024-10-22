@@ -406,14 +406,6 @@ def print_event_template(event: dict, layout: dict, flip=False):
         command.print_image("LOGOFLIP" if flip else "LOGO", (logo_x_pos, logo_y_pos))
 
     command.set_color(layout["secondary_text_color"], alpha=layout["secondary_text_alpha"])
-    print_centered_text(
-        layout,
-        text=event["sponsor_text"],
-        y_position=layout["custom_text_y_pos"],
-        font_size=layout["details_font_size"],
-        command=command,
-        flip=flip
-    )
 
     return command
 
@@ -483,7 +475,6 @@ def print_attendee_badge(attendee: dict, layout: dict, flip=False):
             .set_color(color=attendee["ticket_color"], bg_color=attendee["ticket_color"], bg_alpha=255)
             .print_box(position=(0, ticket_bg_y_pos), size=(layout["print_width"], layout["ticket_bg_height"]))
             )
-        command.set_color(attendee["ticket_text_color"])
         print_centered_text(
             layout,
             text=attendee["ticket_name"],
@@ -533,7 +524,6 @@ layout_96x82 = {
     "answers_y_pos": 1120,
     "logo_y_pos": 1200,
     "ticket_text_y_pos": 1780,
-    "custom_text_y_pos": 1550,
     "secondary_text_color": "#374151",
     "secondary_text_alpha": 200
 }
