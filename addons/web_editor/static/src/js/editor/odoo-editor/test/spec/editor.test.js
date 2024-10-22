@@ -499,6 +499,15 @@ X[]
                         contentAfter: `<p>test[]</p><p>abc</p>`,
                     });
                 });
+                it('should remove whitespace and merge paragraph with heading', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<h1><strong>abc[]</strong>\n</h1><p>abc</p>`,
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                        },
+                        contentAfter: `<h1><strong>abc</strong>[]abc</h1>`,
+                    });
+                });
             });
             describe('white spaces', () => {
                 describe('no intefering spaces', () => {
