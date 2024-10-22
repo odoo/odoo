@@ -21,44 +21,45 @@ import { markup } from "@odoo/owl";
  * and only for the main product.
  *
  * @param {MouseEvent} ev
- * @param {$.Element} $parent
+ * @param {Element} parent
  * @param {Array} combination
  */
-VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
+VariantMixin._onChangeCombinationStock = function (ev, parentEl, combination) {
     let product_id = 0;
     // needed for list view of variants
-    if ($parent.find('input.product_id:checked').length) {
-        product_id = $parent.find('input.product_id:checked').val();
+    if (parentEl.querySelector("input.product_id:checked")) {
+        product_id = parentEl.querySelector("input.product_id:checked").value;
     } else {
-        product_id = $parent.find('.product_id').val();
+        product_id = parentEl.querySelector(".product_id").value;
     }
-    const isMainProduct = combination.product_id &&
-        $parent.is('.js_main_product') &&
+    const isMainProduct =
+        combination.product_id &&
+        parentEl.classList.contains("js_main_product") &&
         combination.product_id === parseInt(product_id);
 
     if (!this.isWebsite || !isMainProduct) {
         return;
     }
 
-    const $addQtyInput = $parent.find('input[name="add_qty"]');
-    let qty = $addQtyInput.val();
-    let ctaWrapper = $parent[0].querySelector('#o_wsale_cta_wrapper');
-    ctaWrapper.classList.replace('d-none', 'd-flex');
-    ctaWrapper.classList.remove('out_of_stock');
+    const addQtyInputEl = parentEl.querySelector('input[name="add_qty"]');
+    let qty = addQtyInputEl.value;
+    const ctaWrapperEl = parentEl.querySelector("#o_wsale_cta_wrapper");
+    ctaWrapperEl.classList.replace("d-none", "d-flex");
+    ctaWrapperEl.classList.remove("out_of_stock");
 
     if (combination.is_storable && !combination.allow_out_of_stock_order) {
         combination.free_qty -= parseInt(combination.cart_qty);
-        $addQtyInput.data('max', combination.free_qty || 1);
+        addQtyInputEl.dataset.max = combination.free_qty || 1;
         if (combination.free_qty < 0) {
             combination.free_qty = 0;
         }
         if (qty > combination.free_qty) {
             qty = combination.free_qty || 1;
-            $addQtyInput.val(qty);
+            addQtyInputEl.value = qty;
         }
         if (combination.free_qty < 1) {
-            ctaWrapper.classList.replace('d-flex', 'd-none');
-            ctaWrapper.classList.add('out_of_stock');
+            ctaWrapperEl.classList.replace("d-flex", "d-none");
+            ctaWrapperEl.classList.add("out_of_stock");
         }
     }
 
@@ -75,15 +76,18 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         }
     }
 
-    $('.oe_website_sale')
-        .find('.availability_message_' + combination.product_template)
-        .remove();
-    combination.has_out_of_stock_message = $(combination.out_of_stock_message).text() !== '';
-    combination.out_of_stock_message = markup(combination.out_of_stock_message);
-    $('div.availability_messages').append(renderToFragment(
-        'website_sale_stock.product_availability',
-        combination
-    ));
+    this.el
+        .querySelectorAll(".oe_website_sale .availability_message_" + combination.product_template)
+        .forEach((elem) => {
+            elem.remove();
+        });
+    combination.has_out_of_stock_message = combination.out_of_stock_message && combination.out_of_stock_message !== "";
+    if (combination.has_out_of_stock_message) {
+        combination.out_of_stock_message = markup(combination.out_of_stock_message);
+    }
+    this.el
+        .querySelector("div.availability_messages")
+        .append(renderToFragment("website_sale_stock.product_availability", combination));
 };
 
 publicWidget.registry.WebsiteSale.include({
@@ -101,7 +105,7 @@ publicWidget.registry.WebsiteSale.include({
      */
     _onClickAdd(ev) {
         return this._super.apply(this, arguments).then(() => {
-            if ($('div.availability_messages').length) {
+            if (document.querySelector("div.availability_messages")) {
                 this._getCombinationInfo(ev);
             }
         });

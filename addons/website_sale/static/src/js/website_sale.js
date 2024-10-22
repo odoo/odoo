@@ -4,7 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
-import "@website/libs/zoomodoo/zoomodoo";
+import { zoomOdoo } from "@website/libs/zoomodoo/zoomodoo";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import { rpc } from "@web/core/network/rpc";
@@ -12,6 +12,7 @@ import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import { isBrowserFirefox, hasTouch } from "@web/core/browser/feature_detection";
 import { Component } from "@odoo/owl";
+import { redirect } from "@web/core/utils/urls";
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -65,11 +66,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         this._applyHash();
 
         // This has to be triggered to compute the "out of stock" feature and the hash variant changes
-        this.triggerVariantChange(this.$el);
+        this.triggerVariantChange(this.el);
 
         listenSizeChange(() => {
             if (uiUtils.getSize() === SIZES.XL) {
-                $('.toggle_summary_div').addClass('d-none d-xl-block');
+                this.el
+                    .querySelectorAll(".toggle_summary_div")
+                    .forEach((el) => el.classList.add("d-none d-xl-block"));
             }
         })
 
@@ -105,12 +108,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      *
      * @override
      */
-    getSelectedVariantValues: function ($container) {
-        var combination = $container.find('input.js_product_change:checked')
-            .data('combination');
-
+    getSelectedVariantValues(container) {
+        const checkedJsProductEl = container?.querySelector("input.js_product_change:checked");
+        const combination = checkedJsProductEl ? checkedJsProductEl.dataset.combination : "";
         if (combination) {
-            return combination;
+            return JSON.parse(combination);
         }
         return VariantMixin.getSelectedVariantValues.apply(this, arguments);
     },
@@ -179,7 +181,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      *
      * @private
      */
-    _setUrlHash: function ($parent) {
+    _setUrlHash(parent) {
         const inputs = document.querySelectorAll(
             'input.js_variant_change:checked, select.js_variant_change option:checked'
         );
@@ -197,39 +199,51 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      */
     _changeAttribute: function (valueSelectors) {
         valueSelectors.forEach((selector) => {
-            $(selector).removeClass("active").filter(":has(input:checked)").addClass("active");
+            const els = document.querySelectorAll(selector);
+            els.forEach((el) => {
+                el.classList.remove("active");
+                if (el.querySelector("input:checked")) {
+                    el.classList.add("active");
+                }
+            });
         });
     },
     /**
      * @private
      */
-    _changeCartQuantity: function ($input, value, $dom_optional, line_id, productIDs) {
-        $($dom_optional).toArray().forEach((elem) => {
-            $(elem).find('.js_quantity').text(value);
-            productIDs.push($(elem).find('span[data-product-id]').data('product-id'));
+    _changeCartQuantity(inputEl, value, dom_optional, line_id, productIDs) {
+        [...dom_optional].forEach((elem) => {
+            elem.querySelector(".js_quantity").textContent = value;
+            productIDs.push(elem.querySelector("span[data-product-id]").dataset.productId);
         });
-        $input.data('update_change', true);
+        inputEl.dataset.updateChange = "true";
 
         rpc("/shop/cart/update_json", {
             line_id: line_id,
-            product_id: parseInt($input.data('product-id'), 10),
+            product_id: parseInt(inputEl.dataset.productId, 10),
             set_qty: value,
             display: true,
         }).then((data) => {
-            $input.data('update_change', false);
-            var check_value = parseInt($input.val() || 0, 10);
+            inputEl.dataset.updateChange = "false";
+            let check_value = parseInt(inputEl.value || 0, 10);
             if (isNaN(check_value)) {
                 check_value = 1;
             }
             if (value !== check_value) {
-                $input.trigger('change');
+                inputEl?.dispatchEvent(new Event("change", { bubbles: true }));
                 return;
             }
             if (!data.cart_quantity) {
                 return window.location = '/shop/cart';
             }
-            $input.val(data.quantity);
-            $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
+            inputEl.value = data.quantity;
+            const jsQtyLineIdEL = this.el.querySelector(
+                '.js_quantity[data-line-id="' + line_id + '"]'
+            );
+            if (jsQtyLineIdEL) {
+                jsQtyLineIdEL.value = data.quantity;
+                jsQtyLineIdEL.textContent = data.quantity;
+            }
 
             wSaleUtils.updateCartNavBar(data);
             wSaleUtils.showWarning(data.notification_info.warning);
@@ -247,11 +261,10 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      *
      * @override
      */
-    _getProductId: function ($parent) {
-        if ($parent.find('input.js_product_change').length !== 0) {
-            return parseInt($parent.find('input.js_product_change:checked').val());
-        }
-        else {
+    _getProductId(parentEl) {
+        if (parentEl?.querySelector("input.js_product_change")) {
+            return parseInt(parentEl.querySelector("input.js_product_change:checked").value);
+        } else {
             return VariantMixin._getProductId.apply(this, arguments);
         }
     },
@@ -287,23 +300,24 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         if (salePage.dataset.ecomZoomAuto && !uiUtils.isSmall()) {
             const images = salePage.querySelectorAll("img[data-zoom]");
             for (const image of images) {
-                const $image = $(image);
                 const callback = () => {
-                    $image.zoomOdoo({
-                        event: "mouseenter",
-                        attach: this._getProductImageContainerSelector(),
-                        preventClicks: salePage.dataset.ecomZoomClick,
-                        attachToTarget: this._getProductImageLayout() === "grid",
-                    });
+                    if (typeof zoomOdoo !== "object") {
+                        zoomOdoo(image, {
+                            event: "mouseenter",
+                            attach: this._getProductImageContainerSelector(),
+                            preventClicks: salePage.dataset.ecomZoomClick,
+                            attachToTarget: this._getProductImageLayout() === "grid",
+                        });
+                    }
                     image.dataset.zoom = 1;
                 };
                 image.addEventListener('load', callback);
                 this.zoomCleanup.push(() => {
                     image.removeEventListener('load', callback);
-                    const zoomOdoo = $image.data("zoomOdoo");
+                    const zoomOdoo = image.dataset.zoomOdoo;
                     if (zoomOdoo) {
                         zoomOdoo.hide();
-                        $image.unbind();
+                        image.removeEventListener();
                     }
                 });
                 if (image.complete) {
@@ -351,29 +365,32 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newImages, isCombinationPossible) {
-        let $images = $productContainer.find(this._getProductImageContainerSelector());
+    _updateProductImage(productContainerEl, displayImage, productId, productTemplateId, newImages, isCombinationPossible) {
+        let imagesEl = productContainerEl.querySelector(this._getProductImageContainerSelector());
         // When using the web editor, don't reload this or the images won't
         // be able to be edited depending on if this is done loading before
         // or after the editor is ready.
-        if ($images.length && !this._isEditorEnabled()) {
-            const $newImages = $(newImages);
-            $images.after($newImages);
-            $images.remove();
-            $images = $newImages;
-            // Update the sharable image (only work for Pinterest).
-            const shareImageSrc = $images[0].querySelector('img').src;
-            document.querySelector('meta[property="og:image"]')
-                .setAttribute('content', shareImageSrc);
-
-            if ($images.attr('id') === 'o-carousel-product') {
-                $images.carousel(0);
+        if (imagesEl && !this._isEditorEnabled()) {
+            const parser = new DOMParser();
+            newImages = parser
+                .parseFromString(newImages, "text/html")
+                .querySelector("#o-carousel-product");
+            if (newImages) {
+                imagesEl.parentNode.replaceChild(newImages, imagesEl);
+                imagesEl = newImages;
+                // Update the sharable image (only work for Pinterest).
+                const shareImageSrc = imagesEl.querySelector('img').src;
+                document.querySelector('meta[property="og:image"]')
+                    .setAttribute('content', shareImageSrc);
+                if (imagesEl.getAttribute("id") === "o-carousel-product") {
+                    window.Carousel.getOrCreateInstance(imagesEl).to(0);
+                }
+                this._startZoom();
+                // fix issue with carousel height
+                this.trigger_up("widgets_start_request", { $target: $(imagesEl) });
             }
-            this._startZoom();
-            // fix issue with carousel height
-            this.trigger_up('widgets_start_request', {$target: $images});
         }
-        $images.toggleClass('css_not_available', !isCombinationPossible);
+        imagesEl.classList.toggle("css_not_available", !isCombinationPossible);
     },
     /**
      * @private
@@ -381,13 +398,15 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      */
     _onClickAdd: function (ev) {
         ev.preventDefault();
-        var def = () => {
+        const def = () => {
             this.getCartHandlerOptions(ev);
-            return this._handleAdd($(ev.currentTarget).closest('form'));
+            return this._handleAdd(ev.currentTarget.closest("form"));
         };
-        if ($('.js_add_cart_variants').children().length) {
+        if (this.el.querySelector(".js_add_cart_variants")?.children.length) {
             return this._getCombinationInfo(ev).then(() => {
-                return !$(ev.target).closest('.js_product').hasClass("css_not_available") ? def() : Promise.resolve();
+                return !ev.target.closest(".js_product").classList.contains("css_not_available")
+                    ? def()
+                    : Promise.resolve();
             });
         }
         return def();
@@ -397,29 +416,28 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * and add handlers to the modal events (confirm, back, ...)
      *
      * @private
-     * @param {$.Element} $form the related webshop form
+     * @param {Element} formEl the related webshop form
      */
-    _handleAdd: function ($form) {
+    _handleAdd(formEl) {
         var self = this;
-        this.$form = $form;
 
         var productSelector = [
             'input[type="hidden"][name="product_id"]',
-            'input[type="radio"][name="product_id"]:checked'
+            'input[type="radio"][name="product_id"]:checked',
         ];
-
-        const productTemplateId =
-            parseInt($form.find('input[type="hidden"][name="product_template_id"]').first().val());
-        var productReady = this.selectOrCreateProduct(
-            $form,
-            parseInt($form.find(productSelector.join(', ')).first().val(), 10),
-            productTemplateId,
+        const productTemplateId = parseInt(
+            formEl.querySelector('input[type="hidden"][name="product_template_id"]')?.value
+        );
+        const productReady = this.selectOrCreateProduct(
+            formEl,
+            parseInt(formEl.querySelector(productSelector.join(", ")).value, 10),
+            productTemplateId
         );
 
         return productReady.then(function (productId) {
-            $form.find(productSelector.join(', ')).val(productId);
-            self._updateRootProduct($form, productId, productTemplateId);
-            return self._onProductReady($form.closest('.o_wsale_product_page').length > 0);
+            formEl.querySelector(productSelector.join(", ")).value = productId;
+            self._updateRootProduct(formEl, productId, productTemplateId);
+            return self._onProductReady(formEl.closest(".o_wsale_product_page") !== null);
         });
     },
 
@@ -438,11 +456,16 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     _submitForm: function () {
         const params = this.rootProduct;
 
-        const $product = $('#product_detail');
-        const productTrackingInfo = $product.data('product-tracking-info');
+        const productEl = document.querySelector("#product_detail");
+        let productTrackingInfo;
+        if (productEl && productEl.dataset.productTrackingInfo) {
+            productTrackingInfo = JSON.parse(productEl.dataset.productTrackingInfo);
+        }
         if (productTrackingInfo) {
             productTrackingInfo.quantity = params.quantity;
-            $product.trigger('add_to_cart_event', [productTrackingInfo]);
+            productEl.dispatchEvent(
+                new CustomEvent("add_to_cart_event", { detail: [productTrackingInfo] })
+            );
         }
 
         params.add_qty = params.quantity;
@@ -470,58 +493,73 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @param {Event} ev
      */
     _onMouseupPublish: function (ev) {
-        $(ev.currentTarget).parents('.thumbnail').toggleClass('disabled');
+        ev.currentTarget.parents(".thumbnail").forEach((elem) => {
+            elem.classList.toggle("disabled");
+        });
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onChangeCartQuantity: function (ev) {
-        var $input = $(ev.currentTarget);
-        if ($input.data('update_change')) {
+        const inputEl = ev.currentTarget;
+        if (inputEl.dataset.updateChange) {
             return;
         }
-        var value = parseInt($input.val() || 0, 10);
+        let value = parseInt(inputEl.value || 0, 10);
         if (isNaN(value)) {
             value = 1;
         }
-        var $dom = $input.closest('tr');
+        const domEl = inputEl.closest("tr");
         // var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
-        var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
-        var line_id = parseInt($input.data('line-id'), 10);
-        var productIDs = [parseInt($input.data('product-id'), 10)];
-        this._changeCartQuantity($input, value, $dom_optional, line_id, productIDs);
+        const dom_optional = [];
+        let siblingEl = domEl?.nextElementSibling;
+        while (
+            siblingEl &&
+            siblingEl.matches(".optional_product.info")
+        ) {
+            dom_optional.push(siblingEl);
+            siblingEl = siblingEl.nextElementSibling;
+        }
+        const line_id = parseInt(inputEl.dataset.lineId, 10);
+        const productIDs = [parseInt(inputEl.dataset.productId, 10)];
+        this._changeCartQuantity(inputEl, value, dom_optional, line_id, productIDs);
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onClickSuggestedProduct: function (ev) {
-        $(ev.currentTarget).prev('input').val(1).trigger('change');
+        const inputElement = ev.currentTarget.previousElementSibling;
+        if (inputElement && inputElement.tagName === "INPUT") {
+            inputElement.value = 1;
+            inputElement.dispatchEvent(new Event("change", { bubbles: true }));
+        }
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onClickSubmit: function (ev) {
-        if ($(ev.currentTarget).is('#add_to_cart, #products_grid .a-submit')) {
+        if (ev.currentTarget.matches("#add_to_cart, #products_grid .a-submit")) {
             return;
         }
-        var $aSubmit = $(ev.currentTarget);
-        if (!ev.defaultPrevented && !$aSubmit.is(".disabled")) {
+        var aSubmitEl = ev.currentTarget;
+        if (!ev.isDefaultPrevented() && !aSubmitEl.classList.contains("disabled")) {
             ev.preventDefault();
-            $aSubmit.closest('form').submit();
+            aSubmitEl.closest("form").submit();
         }
-        if ($aSubmit.hasClass('a-submit-disable')) {
-            $aSubmit.addClass("disabled");
+        if (aSubmitEl.classList.contains("a-submit-disable")) {
+            aSubmitEl.classList.add("disabled");
         }
-        if ($aSubmit.hasClass('a-submit-loading')) {
-            var loading = '<span class="fa fa-cog fa-spin"/>';
-            var fa_span = $aSubmit.find('span[class*="fa"]');
-            if (fa_span.length) {
-                fa_span.replaceWith(loading);
+        if (aSubmitEl.classList.contains("a-submit-loading")) {
+            const loadingEl = document.createElement("SPAN");
+            loadingEl.className = "fa fa-cog fa-spin";
+            const fa_spanEl = aSubmitEl.querySelector('span[class*="fa"]');
+            if (fa_spanEl) {
+                fa_spanEl.parentNode.replaceChild(loadingEl, fa_spanEl);
             } else {
-                $aSubmit.append(loading);
+                aSubmitEl.append(loadingEl);
             }
         }
     },
@@ -536,7 +574,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             if (productGrid) {
                 productGrid.classList.add("opacity-50");
             }
-            $(ev.currentTarget).closest("form").submit();
+            ev.currentTarget.closest("form").submit();
         }
     },
     /**
@@ -544,34 +582,41 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @param {Event} ev
      */
     _onMouseupAddCartLabel: function (ev) { // change price when they are variants
-        var $label = $(ev.currentTarget);
-        var $price = $label.parents("form:first").find(".oe_price .oe_currency_value");
-        if (!$price.data("price")) {
-            $price.data("price", parseFloat($price.text()));
+        const labelEl = ev.currentTarge;
+        const priceEl = labelEl.closest("form").querySelector(".oe_price .oe_currency_value");
+        if (!priceEl.dataset.price) {
+            priceEl.dataset.price = parseFloat(priceEl.textContent);
         }
-        var value = $price.data("price") + parseFloat($label.find(".badge span").text() || 0);
+        const value =
+            priceEl.dataset.price + parseFloat(labelEl.querySelector(".badge span").textContent || 0);
 
-        var dec = value % 1;
-        $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
+        const dec = value % 1;
+        priceEl.textContent = value + (dec < 0.01 ? ".00" : dec < 1 ? "0" : "");
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onSubmitSaleSearch: function (ev) {
-        if (!this.$('.dropdown_sorty_by').length) {
+        if (!this.el.querySelector(".dropdown_sorty_by")) {
             return;
         }
-        var $this = $(ev.currentTarget);
-        if (!ev.defaultPrevented && !$this.is(".disabled")) {
+        const targetEl = ev.currentTarget;
+        if (!ev.isDefaultPrevented() && !targetEl.classList.contains("disabled")) {
             ev.preventDefault();
-            var oldurl = $this.attr('action');
+            let oldurl = targetEl.getAttribute("action");
             oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
-            if ($this.find('[name=noFuzzy]').val() === "true") {
+            if (targetEl.querySelector("[name=noFuzzy]")?.value === "true") {
                 oldurl += '&noFuzzy=true';
             }
-            var search = $this.find('input.search-query');
-            window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
+            const searchEl = targetEl.querySelector("input.search-query");
+            const url =
+                oldurl +
+                "&" +
+                searchEl.getAttribute("name") +
+                "=" +
+                encodeURIComponent(searchEl.value);
+            redirect(url);
         }
     },
     /**
@@ -580,10 +625,12 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      *
      * @override
      */
-    _toggleDisable: function ($parent, isCombinationPossible) {
+    _toggleDisable(parentEl, isCombinationPossible) {
         VariantMixin._toggleDisable.apply(this, arguments);
-        $parent.find("#add_to_cart").toggleClass('disabled', !isCombinationPossible);
-        $parent.find(".o_we_buy_now").toggleClass('disabled', !isCombinationPossible);
+        parentEl?.querySelector("#add_to_cart").classList.toggle("disabled", !isCombinationPossible);
+        parentEl
+            ?.querySelector(".o_we_buy_now")
+            ?.classList.toggle("disabled", !isCombinationPossible);
     },
     /**
      * Write the properties of the form elements in the DOM to prevent the
@@ -592,17 +639,15 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @override
      */
     onChangeVariant: function (ev) {
-        var $component = $(ev.currentTarget).closest('.js_product');
-        $component.find('input').each(function () {
-            var $el = $(this);
-            $el.attr('checked', $el.is(':checked'));
+        const componentEl = ev.currentTarget.closest(".js_product");
+        componentEl.querySelectorAll("input").forEach(() => {
+            this.el.setAttribute("checked", this.el.checked);
         });
-        $component.find('select option').each(function () {
-            var $el = $(this);
-            $el.attr('selected', $el.is(':selected'));
+        componentEl.querySelectorAll("select option").forEach(() => {
+            this.el.setAttribute("selected", this.el.selected);
         });
 
-        this._setUrlHash($component);
+        this._setUrlHash(componentEl);
 
         return VariantMixin.onChangeVariant.apply(this, arguments);
     },
@@ -610,14 +655,17 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _onToggleSummary: function () {
-        $('.toggle_summary_div').toggleClass('d-none');
-        $('.toggle_summary_div').removeClass('d-xl-block');
+        this.el.querySelectorAll(".toggle_summary_div").forEach((element) => {
+            element.classList.toggle("d-none");
+            element.classList.remove("d-xl-block");
+        });
     },
     /**
      * @private
      */
     _onClickReviewsLink: function () {
-        $('#o_product_page_reviews_content').collapse('show');
+        const collapse = new Collapse(document.querySelector("#o_product_page_reviews_content"));
+        collapse.show();
     },
     /**
      * Prevent multiclicks on confirm button when the form is submitted
@@ -625,11 +673,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _onClickConfirmOrder: function () {
-        // FIXME ANVFE this should only be triggered when we effectively click on that specific button no?
-        // should not impact the address page at least
-        const submitFormButton = $('form[name="o_wsale_confirm_order"]').find('button[type="submit"]');
-        submitFormButton.attr('disabled', true);
-        setTimeout(() => submitFormButton.attr('disabled', false), 5000);
+        const submitFormButtonEl = this.el.querySelector(
+            'form[name="o_wsale_confirm_order"] button[type="submit"]'
+        );
+        if (submitFormButtonEl) {
+            submitFormButtonEl.setAttribute("disabled", true);
+            setTimeout(() => submitFormButtonEl.setAttribute("disabled", false), 5000);
+        }
     },
 
     // -------------------------------------
@@ -639,18 +689,22 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * Update the root product during an Add process.
      *
      * @private
-     * @param {Object} $form
+     * @param {Object} formEl
      * @param {Number} productId
      * @param {Number} productTemplateId
      */
-    _updateRootProduct($form, productId, productTemplateId) {
+    _updateRootProduct(formEl, productId, productTemplateId) {
         this.rootProduct = {
             product_id: productId,
             product_template_id: productTemplateId,
-            quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
-            product_custom_attribute_values: this.getCustomVariantValues($form.find('.js_product')),
-            variant_values: this.getSelectedVariantValues($form.find('.js_product')),
-            no_variant_attribute_values: this.getNoVariantAttributeValues($form.find('.js_product'))
+            quantity: parseFloat(formEl.querySelector('input[name="add_qty"]')?.value || 1),
+            product_custom_attribute_values: this.getCustomVariantValues(
+                formEl.querySelector(".js_product")
+            ),
+            variant_values: this.getSelectedVariantValues(formEl.querySelector(".js_product")),
+            no_variant_attribute_values: this.getNoVariantAttributeValues(
+                formEl.querySelector(".js_product")
+            ),
         };
     },
 });
@@ -677,7 +731,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         if (wysiwyg) {
             wysiwyg.odooEditor.observerUnactive('_onApplyShopLayoutChange');
         }
-        var clickedValue = $(ev.target).val();
+        const clickedValue = ev.target.value;
         var isList = clickedValue === 'list';
         if (!this.editableMode) {
             rpc('/shop/save_shop_layout_mode', {
@@ -690,15 +744,19 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
             activeClasses.map(c => btn.classList.toggle(c));
         });
 
-        var $grid = this.$('#products_grid');
+        const gridEl = this.el.querySelector('#products_grid');
         // Disable transition on all list elements, then switch to the new
         // layout then reenable all transitions after having forced a redraw
         // TODO should probably be improved to allow disabling transitions
         // altogether with a class/option.
-        $grid.find('*').css('transition', 'none');
-        $grid.toggleClass('o_wsale_layout_list', isList);
-        void $grid[0].offsetWidth;
-        $grid.find('*').css('transition', '');
+        gridEl.querySelectorAll("*").forEach((gridEls) => {
+            gridEls.style.transition = "none";
+        });
+        gridEl.classList.toggle("o_wsale_layout_list", isList);
+        void gridEl.offsetWidth;
+        gridEl.querySelectorAll("*").forEach((gridEls) => {
+            gridEls.style.transition = "";
+        });
         if (wysiwyg) {
             wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');
         }
@@ -749,9 +807,12 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
         this._updateCarouselPosition();
         this.throttleOnResize = throttleForAnimation(this._onSlideCarouselProduct.bind(this));
         extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
-        if (this.$el.find('.carousel-indicators').length > 0) {
-            this.$el.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
-            $(window).on('resize.carousel_product_slider', this.throttleOnResize);
+        if (this.el.querySelector(".carousel-indicators")) {
+            this.el.addEventListener(
+                "slide.bs.carousel.carousel_product_slider",
+                this._onSlideCarouselProduct.bind(this)
+            );
+            window.addEventListener("resize.carousel_product_slider", this.throttleOnResize);
             this._updateJustifyContent();
         }
     },
@@ -759,8 +820,12 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
-        this.$el.css('top', '');
-        this.$el.off('.carousel_product_slider');
+        this.el.style.top = "";
+        this.el.removeEventListener(
+            "slide.bs.carousel.carousel_product_slider",
+            this._onSlideCarouselProduct.bind(this)
+        );
+        window.removeEventListener("resize.carousel_product_slider", this.throttleOnResize);
         if (this.throttleOnResize) {
             this.throttleOnResize.cancel();
         }
@@ -777,9 +842,9 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     _updateCarouselPosition() {
         let size = 5;
         for (const el of document.querySelectorAll('.o_top_fixed_element')) {
-            size += $(el).outerHeight();
+            size += el.style.offsetHeight;
         }
-        this.$el.css('top', size);
+        this.el.style.top = size;
     },
 
     //--------------------------------------------------------------------------
@@ -794,33 +859,49 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onSlideCarouselProduct: function (ev) {
-        const isReversed = this.$el.css('flex-direction') === "column-reverse";
-        const isLeftIndicators = this.$el.hasClass('o_carousel_product_left_indicators');
-        const $indicatorsDiv = isLeftIndicators ? this.$el.find('.o_carousel_product_indicators') : this.$el.find('.carousel-indicators');
-        let indicatorIndex = $(ev.relatedTarget).index();
-        indicatorIndex = indicatorIndex > -1 ? indicatorIndex : this.$el.find('li.active').index();
-        const $indicator = $indicatorsDiv.find('[data-bs-slide-to=' + indicatorIndex + ']');
-        const indicatorsDivSize = isLeftIndicators && !isReversed ? $indicatorsDiv.outerHeight() : $indicatorsDiv.outerWidth();
-        const indicatorSize = isLeftIndicators && !isReversed ? $indicator.outerHeight() : $indicator.outerWidth();
-        const indicatorPosition = isLeftIndicators && !isReversed ? $indicator.position().top : $indicator.position().left;
-        const scrollSize = isLeftIndicators && !isReversed ? $indicatorsDiv[0].scrollHeight : $indicatorsDiv[0].scrollWidth;
+        const isReversed = getComputedStyle(this.el).flexDirection === "column-reverse";
+        const isLeftIndicators = this.el.classList.contains("o_carousel_product_left_indicators");
+        const indicatorsDivEl = isLeftIndicators
+            ? this.el.querySelectorAll(".o_carousel_product_indicators")
+            : this.el.querySelectorAll(".carousel-indicators");
+        let indicatorIndex = Array.from(ev.relatedTarget.parentNode.children).indexOf(ev.relatedTarget)
+        indicatorIndex =
+            indicatorIndex > -1
+                ? indicatorIndex
+                : Array.from(this.el.querySelectorAll("li")).indexOf(
+                      this.el.querySelector("li.active")
+                  );
+        const indicatorEl = indicatorsDivEl.querySelector("[data-bs-slide-to=" + indicatorIndex + "]");
+        const indicatorsDivSize =
+            isLeftIndicators && !isReversed
+                ? indicatorsDivEl.offsetHeight
+                : indicatorsDivEl.offsetWidth;
+        const indicatorSize = isLeftIndicators && !isReversed ? indicatorEl.offsetHeight : indicatorEl.offsetWidth;
+        const indicatorPosition = isLeftIndicators && !isReversed ? indicatorEl.top : indicatorEl.left;
+        const scrollSize =
+            isLeftIndicators && !isReversed
+                ? indicatorsDivEl.scrollHeight
+                : indicatorsDivEl.scrollWidth;
         let indicatorsPositionDiff = (indicatorPosition + (indicatorSize/2)) - (indicatorsDivSize/2);
         indicatorsPositionDiff = Math.min(indicatorsPositionDiff, scrollSize - indicatorsDivSize);
         this._updateJustifyContent();
         const indicatorsPositionX = isLeftIndicators && !isReversed ? '0' : '-' + indicatorsPositionDiff;
         const indicatorsPositionY = isLeftIndicators && !isReversed ? '-' + indicatorsPositionDiff : '0';
         const translate3D = indicatorsPositionDiff > 0 ? "translate3d(" + indicatorsPositionX + "px," + indicatorsPositionY + "px,0)" : '';
-        $indicatorsDiv.css("transform", translate3D);
+        indicatorsDivEl.style.transform = translate3D;
     },
     /**
      * @private
      */
      _updateJustifyContent: function () {
-        const $indicatorsDiv = this.$el.find('.carousel-indicators');
-        $indicatorsDiv.css('justify-content', 'start');
+        const indicatorsDivEl = this.el.querySelector(".carousel-indicators");
+        indicatorsDivEl.style.justifyContent = "start";
         if (uiUtils.getSize() <= SIZES.MD) {
-            if (($indicatorsDiv.children().last().position().left + this.$el.find('li').outerWidth()) < $indicatorsDiv.outerWidth()) {
-                $indicatorsDiv.css('justify-content', 'center');
+            const lastChild = indicatorsDivEl.lastElementChild.getBoundingClientRect();
+            const liWidth = this.el.querySelector("li").offsetWidth;
+            const indicatorsWidth = indicatorsDivEl.offsetWidth;
+            if (lastChild.left + liWidth < indicatorsWidth) {
+                indicatorsDivEl.style.justifyContent = "center";
             }
         }
     },
@@ -830,10 +911,11 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      */
     _onMouseWheel: function (ev) {
         ev.preventDefault();
+        const carousel = window.Carousel.getOrCreateInstance(this.el);
         if (ev.originalEvent.deltaY > 0) {
-            this.$el.carousel('next');
+            carousel.next();
         } else {
-            this.$el.carousel('prev');
+            carousel.prev();
         }
     },
 });
@@ -854,7 +936,9 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
      * @override
      */
     destroy() {
-        this.$el.find('.o_portal_chatter_composer').css('top', '');
+        if (this.el.querySelector(".o_portal_chatter_composer")) {
+            this.el.querySelector(".o_portal_chatter_composer").style.top = "";
+        }
         this._super(...arguments);
     },
 
@@ -868,9 +952,12 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
     _updateChatterComposerPosition() {
         let size = 20;
         for (const el of document.querySelectorAll('.o_top_fixed_element')) {
-            size += $(el).outerHeight();
+            size += el.offsetHeight;
         }
-        this.$el.find('.o_portal_chatter_composer').css('top', size);
+        const portalChatterComposerEl = this.el.querySelector(".o_portal_chatter_composer");
+        if (portalChatterComposerEl) {
+            portalChatterComposerEl.style.top = size;
+        }
     },
 });
 
