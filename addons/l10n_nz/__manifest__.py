@@ -5,7 +5,7 @@
 
 {
     'name': 'New Zealand - Accounting',
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 New Zealand Accounting Module
