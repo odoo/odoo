@@ -76,6 +76,7 @@ class PurchaseOrderLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
     is_downpayment = fields.Boolean()
+    old_price_unit = fields.Float(help="Technical field for price computation")
 
     _sql_constraints = [
         ('accountable_required_fields',
@@ -308,7 +309,30 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.depends('product_qty', 'product_uom', 'company_id', 'order_id.partner_id')
+    def _get_price_unit(self, seller=False):
+        price_unit = 0.0
+        if not seller:
+            po_line_uom = self.product_uom or self.product_id.uom_po_id
+            price_unit = self.env['account.tax']._fix_tax_included_price_company(
+                self.product_id.uom_id._compute_price(self.product_id.standard_price, po_line_uom),
+                self.product_id.supplier_taxes_id,
+                self.taxes_id,
+                self.company_id,
+            )
+            price_unit = self.product_id.cost_currency_id._convert(
+                price_unit,
+                self.currency_id,
+                self.company_id,
+                self.date_order or fields.Date.context_today(self),
+                False
+            )
+        else:
+            price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, self.product_id.supplier_taxes_id, self.taxes_id, self.company_id) if seller else 0.0
+            price_unit = seller.currency_id._convert(price_unit, self.currency_id, self.company_id, self.date_order or fields.Date.context_today(self), False)
+            price_unit = float_round(price_unit, precision_digits=max(self.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+        return price_unit
+
+    @api.depends('product_qty', 'product_uom', 'company_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
             if not line.product_id or line.invoice_lines or not line.company_id:
@@ -329,31 +353,24 @@ class PurchaseOrderLine(models.Model):
                 line.discount = 0
                 unavailable_seller = line.product_id.seller_ids.filtered(
                     lambda s: s.partner_id == line.order_id.partner_id)
-                if not unavailable_seller and line.price_unit and line.product_uom == line._origin.product_uom:
-                    # Avoid to modify the price unit if there is no price list for this partner and
-                    # the line has already one to avoid to override unit price set manually.
+
+                # If there is no unavailable seller, price unit is alredy set and product quntity is set to 0 so stop recomputation.
+                if not unavailable_seller and line.product_qty == 0 and line.price_unit:
                     continue
+
                 po_line_uom = line.product_uom or line.product_id.uom_po_id
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(
-                    line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
-                    line.product_id.supplier_taxes_id,
-                    line.taxes_id,
-                    line.company_id,
-                )
-                price_unit = line.product_id.cost_currency_id._convert(
-                    price_unit,
-                    line.currency_id,
-                    line.company_id,
-                    line.date_order or fields.Date.context_today(line),
-                    False
-                )
+                price_unit = line._get_price_unit()
+                manual_set = not (line.price_unit in (0, price_unit, line.old_price_unit))
+                line.old_price_unit = price_unit
+                price_unit = line.price_unit if manual_set else price_unit
+
                 line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
 
             elif seller:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
-                price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
-                price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
-                line.price_unit = seller.product_uom._compute_price(price_unit, line.product_uom)
+                price_unit = line._get_price_unit(seller)
+                manual_set = not (line.price_unit in (0, price_unit, line.old_price_unit))
+                line.old_price_unit = price_unit
+                line.price_unit = line.price_unit if manual_set else seller.product_uom._compute_price(price_unit, line.product_uom)
                 line.discount = seller.discount or 0.0
 
             # record product names to avoid resetting custom descriptions
