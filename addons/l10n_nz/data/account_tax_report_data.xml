@@ -93,11 +93,35 @@
                         <field name="name">[BOX 13] Credit adjustments from your calculation sheet</field>
                         <field name="code">NZBOX13</field>
                         <field name="expression_ids">
-                            <record id="tax_report_box13_formula" model="account.report.expression">
+                            <record id="tax_report_box13_aggregation" model="account.report.expression">
                                 <field name="label">balance</field>
-                                <field name="engine">external</field>
-                                <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NZBOX13_tags.balance + NZBOX13_manual.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="tax_report_box13_tags" model="account.report.line">
+                                <field name="name">[BOX 13] Amount computed from tax tags</field>
+                                <field name="code">NZBOX13_tags</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_box13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">BOX 13</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_box13_manual" model="account.report.line">
+                                <field name="name">[BOX 13] Manual adjustments</field>
+                                <field name="code">NZBOX13_manual</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_box13_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
