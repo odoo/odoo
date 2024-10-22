@@ -1,41 +1,21 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import importlib
 import io
 import re
-
+import sys
 from datetime import datetime
 from hashlib import md5
 from logging import getLogger
-from zlib import compress, decompress
+from zlib import compress, decompress, decompressobj
+
 from PIL import Image, PdfImagePlugin
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+
 from odoo.tools.parse_version import parse_version
-
-try:
-    # class were renamed in PyPDF2 > 2.0
-    # https://pypdf2.readthedocs.io/en/latest/user/migration-1-to-2.html#classes
-    from PyPDF2 import PdfReader
-    import PyPDF2
-    # monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
-    # https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
-    class PdfFileReader(PdfReader):
-        def __init__(self, *args, **kwargs):
-            if "strict" not in kwargs and len(args) < 2:
-                kwargs["strict"] = True  # maintain the default
-            kwargs = {k:v for k, v in kwargs.items() if k in ('strict', 'stream')}
-            super().__init__(*args, **kwargs)
-
-    PyPDF2.PdfFileReader = PdfFileReader
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-    PdfFileReader.getFields = PdfFileReader.get_fields
-    PdfFileWriter._addObject = PdfFileWriter._add_object
-except ImportError:
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-
-from PyPDF2.generic import ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject, IndirectObject, NameObject, NumberObject, createStringObject
+from odoo.tools.misc import file_open
 
 try:
     import fontTools
@@ -43,7 +23,54 @@ try:
 except ImportError:
     TTFont = None
 
-from odoo.tools.misc import file_open
+
+# might be a good case for exception groups
+error = None
+# keep pypdf2 2.x first so noble uses that rather than pypdf 4.0
+for submod in ['._pypdf2_2', '._pypdf', '._pypdf2_1']:
+    try:
+        pypdf = importlib.import_module(submod, __spec__.name)
+        break
+    except ImportError as e:
+        if error is None:
+            error = e
+else:
+    raise ImportError("pypdf implementation not found") from error
+del error
+
+PdfReader, PdfWriter, filters, generic, errors, create_string_object =\
+    pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object
+# because they got re-exported
+ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject, IndirectObject, NameObject, NumberObject =\
+    generic.ArrayObject, generic.BooleanObject, generic.ByteStringObject, generic.DecodedStreamObject, generic.DictionaryObject, generic.IndirectObject, generic.NameObject, generic.NumberObject
+
+# compatibility aliases
+PdfReadError = errors.PdfReadError  # moved in 2.0
+PdfStreamError = errors.PdfStreamError  # moved in 2.0
+createStringObject = create_string_object  # deprecated in 2.0, removed in 5.0
+
+# ----------------------------------------------------------
+# PyPDF2 hack
+# ensure that zlib does not throw error -5 when decompressing
+# because some pdf won't fit into allocated memory
+# https://docs.python.org/3/library/zlib.html#zlib.decompressobj
+# ----------------------------------------------------------
+pypdf.filters.decompress = lambda data: decompressobj().decompress(data)
+
+
+# monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
+# https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
+class PdfFileReader(PdfReader):
+    def __init__(self, *args, **kwargs):
+        if "strict" not in kwargs and len(args) < 2:
+            kwargs["strict"] = True  # maintain the default
+        kwargs = {k: v for k, v in kwargs.items() if k in ('strict', 'stream')}
+        super().__init__(*args, **kwargs)
+
+
+if 'PyPDF2' in sys.modules:
+    pypdf.PdfFileReader = PdfFileReader
+    pypdf.PdfFileWriter = PdfWriter
 
 _logger = getLogger(__name__)
 DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
@@ -53,6 +80,7 @@ REGEX_SUBTYPE_FORMATED = re.compile(r'^/\w+#2F[\w-]+$')
 
 # Disable linter warning: this import is needed to make sure a PDF stream can be saved in Image.
 PdfImagePlugin.__name__
+
 
 # make sure values are unwrapped by calling the specialized __getitem__
 def _unwrapping_get(self, key, default=None):
@@ -65,13 +93,24 @@ def _unwrapping_get(self, key, default=None):
 DictionaryObject.get = _unwrapping_get
 
 
-class BrandedFileWriter(PdfFileWriter):
-    def __init__(self):
-        super().__init__()
-        self.addMetadata({
-            '/Creator': "Odoo",
-            '/Producer': "Odoo",
-        })
+if hasattr(PdfWriter, 'write_stream'):
+    # >= 2.x has a utility `write` which can open a path, so `write_stream` could be called directly
+    class BrandedFileWriter(PdfWriter):
+        def write_stream(self, *args, **kwargs):
+            self.add_metadata({
+                '/Creator': "Odoo",
+                '/Producer': "Odoo",
+            })
+            super().write_stream(*args, **kwargs)
+else:
+    # 1.x has a monolithic write method
+    class BrandedFileWriter(PdfWriter):
+        def write(self, *args, **kwargs):
+            self.addMetadata({
+                '/Creator': "Odoo",
+                '/Producer': "Odoo",
+            })
+            super().write(*args, **kwargs)
 
 
 PdfFileWriter = BrandedFileWriter
@@ -92,6 +131,7 @@ def merge_pdf(pdf_data):
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
         return _buffer.getvalue()
+
 
 def fill_form_fields_pdf(writer, form_fields):
     ''' Fill in the form fields of a PDF
@@ -140,6 +180,7 @@ def fill_form_fields_pdf(writer, form_fields):
                 # Mark filled fields as readonly to avoid the blue overlay:
                 if annot.get('/T') == field:
                     annot.update({NameObject("/Ff"): NumberObject(1)})
+
 
 def rotate_pdf(pdf):
     ''' Rotate clockwise PDF (90°) into a new PDF.
@@ -232,13 +273,6 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     return output
 
 
-# by default PdfFileReader will overwrite warnings.showwarning which is what
-# logging.captureWarnings does, meaning it essentially reverts captureWarnings
-# every time it's called which is undesirable
-old_init = PdfFileReader.__init__
-PdfFileReader.__init__ = lambda self, stream, strict=True, warndest=None, overwriteWarnings=True: \
-    old_init(self, stream=stream, strict=strict, warndest=None, overwriteWarnings=False)
-
 class OdooPdfFileReader(PdfFileReader):
     # OVERRIDE of PdfFileReader to add the management of multiple embedded files.
 
@@ -255,10 +289,10 @@ class OdooPdfFileReader(PdfFileReader):
 
             if not file_path:
                 return []
-            for i in range(0, len(file_path), 2):
-                attachment = file_path[i+1].getObject()
+            for p in file_path[1::2]:
+                attachment = p.getObject()
                 yield (attachment["/F"], attachment["/EF"]["/F"].getObject().getData())
-        except Exception:
+        except Exception:  # noqa: BLE001
             # malformed pdf (i.e. invalid xref page)
             return []
 
@@ -274,7 +308,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         self._reader = None
         self.is_pdfa = False
 
-    def addAttachment(self, name, data, subtype=None):
+    def add_attachment(self, name, data, subtype=None):
         """
         Add an attachment to the pdf. Supports adding multiple attachment, while respecting PDF/A rules.
         :param name: The name of the attachement
@@ -327,6 +361,7 @@ class OdooPdfFileWriter(PdfFileWriter):
             self._root_object.update({
                 NameObject("/AF"): attachment_array
             })
+    addAttachment = add_attachment
 
     def embed_odoo_attachment(self, attachment, subtype=None):
         assert attachment, "embed_odoo_attachment cannot be called without attachment."
@@ -347,11 +382,28 @@ class OdooPdfFileWriter(PdfFileWriter):
             # Also check the second line. If it is PDF/A, it should be a line starting by % following by four bytes + \n
             second_line = stream.readlines(1)[0]
             if second_line.decode('latin-1')[0] == '%' and len(second_line) == 6:
-                self._header += second_line
                 self.is_pdfa = True
-        # Look if we have an ID in the incoming stream and use it.
-        pdf_id = reader.trailer.get('/ID', None)
-        if pdf_id:
+                # This is broken in pypdf 3+ and pypdf2 has been automatically
+                # writing a binary comment since 1.27
+                # py-pdf/pypdf@036789a4664e3f572292bc7dceec10f08b7dbf62 so we
+                # only need this if running on 1.x
+                #
+                # incidentally that means the heuristic above is completely broken
+                if submod == '._pypdf2_1':
+                    self._header += second_line
+        # clone_reader_document_root clones reader._ID since 3.2 (py-pdf/pypdf#1520)
+        if not hasattr(self, '_ID'):
+            # Look if we have an ID in the incoming stream and use it.
+            self._set_id(reader.trailer.get('/ID', None))
+
+    def _set_id(self, pdf_id):
+        if not pdf_id:
+            return
+
+        # property in pypdf
+        if hasattr(type(self), '_ID'):
+            self.trailers['/ID'] = pdf_id
+        else:
             self._ID = pdf_id
 
     def convert_to_pdfa(self):
@@ -365,14 +417,16 @@ class OdooPdfFileWriter(PdfFileWriter):
         # where 'n' is a single digit number between 0 (30h) and 7 (37h) "
         # " The aforementioned EOL marker shall be immediately followed by a % (25h) character followed by at least four
         # bytes, each of whose encoded byte values shall have a decimal value greater than 127 "
-        self._header = b"%PDF-1.7\n%\xFF\xFF\xFF\xFF"
+        self._header = b"%PDF-1.7\n"
+        if submod == '._pypdf2_1':
+            self._header += b"\xDE\xAD\xBE\xEF"
 
         # Add a document ID to the trailer. This is only needed when using encryption with regular PDF, but is required
         # when using PDF/A
         pdf_id = ByteStringObject(md5(self._reader.stream.getvalue()).digest())
         # The first string is based on the content at the time of creating the file, while the second is based on the
         # content of the file when it was last updated. When creating a PDF, both are set to the same value.
-        self._ID = ArrayObject((pdf_id, pdf_id))
+        self._set_id(ArrayObject((pdf_id, pdf_id)))
 
         with file_open('tools/data/files/sRGB2014.icc', mode='rb') as icc_profile:
             icc_profile_file_data = compress(icc_profile.read())

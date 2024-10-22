@@ -48,24 +48,24 @@ class TestAutomation(TransactionCaseWithUserDemo):
         self.assertFalse(bilbo.active)
 
         # verify the "Base Action Rule: check and execute" frequency is updated correctly when a new action is created.
-        automation = self.env["base.automation"].create([
+        self.env["base.automation"].create([
             {
                 "name": "Bilbo time senstive reminder in a hurry",
                 "trigger": "on_time",
-                "model_id": self.env.ref("hr_contract.model_hr_contract").id,
+                "model_id": self.env.ref("base.model_res_partner").id,
                 "trigger_field_ids": [],
                 "trg_date_range": -60,
                 "trg_date_range_type": "minutes",
-                "trg_date_id": self.env.ref("hr_contract.field_hr_contract__date_end").id,
+                "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
             },
             {
                 "name": "Bilbo time senstive reminder late",
                 "trigger": "on_time",
-                "model_id": self.env.ref("hr_contract.model_hr_contract").id,
+                "model_id": self.env.ref("base.model_res_partner").id,
                 "trigger_field_ids": [],
                 "trg_date_range": 60,
                 "trg_date_range_type": "minutes",
-                "trg_date_id": self.env.ref("hr_contract.field_hr_contract__date_end").id,
+                "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
             }
             ])
 

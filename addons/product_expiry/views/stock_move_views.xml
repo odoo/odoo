@@ -33,7 +33,8 @@
             <xpath expr="//field[@name='lot_name']" position="after">
                 <field name="is_expired" column_invisible="True"/>
                 <field name="picking_type_use_existing_lots" column_invisible="True"/>
-                <field name="expiration_date" force_save="1" column_invisible="context.get('picking_code') != 'incoming'" readonly="picking_type_use_existing_lots" decoration-danger="is_expired"/>
+                <field name="tracking" column_invisible="True"/>
+                <field name="expiration_date" force_save="1" column_invisible="context.get('picking_code') != 'incoming'" invisible="tracking == 'none'" readonly="picking_type_use_existing_lots" decoration-danger="is_expired"/>
             </xpath>
         </field>
     </record>
