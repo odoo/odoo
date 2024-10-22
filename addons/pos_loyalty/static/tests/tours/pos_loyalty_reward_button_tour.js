@@ -179,7 +179,7 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
             ProductScreen.clickDisplayedProduct("Test Product A"),
             ProductScreen.clickDisplayedProduct("Test Product C"),
             PosLoyalty.orderTotalIs("130.00"),
-            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.isRewardButtonHighlighted(true, false),
             {
                 content: `click Reward button`,
                 trigger: ProductScreen.controlButtonTrigger("Reward"),
