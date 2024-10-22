@@ -15,8 +15,6 @@ from odoo.orm.models import (
     MetaModel,
     Model,
     TransientModel,
-    UserError,
-    ValidationError,
     check_companies_domain_parent_of,
     check_company_domain_parent_of,
     fix_import_export_id_paths,
