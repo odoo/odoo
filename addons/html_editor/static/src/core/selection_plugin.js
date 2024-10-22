@@ -504,14 +504,14 @@ export class SelectionPlugin extends Plugin {
         const focus = { node: selection.focusNode, offset: selection.focusOffset };
 
         return {
-            restore: () => {
+            restore: ({ log = false } = {}) => {
                 const selectionToRestore = {
                     anchorNode: anchor.node,
                     anchorOffset: anchor.offset,
                     focusNode: focus.node,
                     focusOffset: focus.offset,
                 };
-                if (!selectionsAreEqual(this.getEditableSelection(), selectionToRestore)) {
+                if (log && !selectionsAreEqual(this.getEditableSelection(), selectionToRestore)) {
                     console.log("selection fixed post-delete");
                 }
                 this.setSelection(selectionToRestore, { normalize: false });

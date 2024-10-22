@@ -60,6 +60,7 @@ export class DeletePlugin extends Plugin {
         onBeforeInput: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
+            this.onBeforeInputAndroid.bind(this),
         ],
         onInput: this.onInput.bind(this),
         onSelectionChange: withSequence(5, this.onSelectionChange.bind(this)),
@@ -103,6 +104,8 @@ export class DeletePlugin extends Plugin {
                 loggerArea.firstChild.remove();
             }
         };
+
+        this.setupAndroid();
     }
 
     handleCommand(command, payload) {
@@ -169,7 +172,7 @@ export class DeletePlugin extends Plugin {
      * @param {"backward"|"forward"} direction
      * @param {"character"|"word"|"line"} granularity
      */
-    delete(direction, granularity) {
+    delete(direction, granularity, { addStep = true } = {}) {
         const selection = this.shared.getEditableSelection();
 
         if (!selection.isCollapsed) {
@@ -184,7 +187,9 @@ export class DeletePlugin extends Plugin {
             throw new Error("Invalid direction");
         }
 
-        this.dispatch("ADD_STEP");
+        if (addStep) {
+            this.dispatch("ADD_STEP");
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -1195,7 +1200,7 @@ export class DeletePlugin extends Plugin {
             this.log(`onBeforeInputDelete: ${serializeCurrentSelection()}`);
             ev.preventDefault();
             if (isAndroid()) {
-                this.handleBeforeInputAndroid(argsForDelete);
+                this.handleBeforeInputAndroid(ev, argsForDelete);
             } else {
                 this.delete(...argsForDelete);
             }
@@ -1214,32 +1219,69 @@ export class DeletePlugin extends Plugin {
 
     // ======== ANDROID =============
 
-    handleBeforeInputAndroid(argsForDelete) {
-        const savePointRestore = this.shared.makeSavePoint();
-        this.fixSelectionPreDelete();
-        this.delete(...argsForDelete);
+    setupAndroid() {
+        this.selectionHistory = [];
+        this.listeners = {
+            beforeinput: [],
+            input: [],
+        };
+    }
 
+    addSameTickListener(evType, callback) {
+        this.listeners[evType].push(callback);
+        setTimeout(() => {
+            this.listeners[evType] = [];
+        });
+    }
+
+    handleBeforeInputAndroid(ev, argsForDelete) {
+        const undoDelete = this.shared.makeSavePoint();
+        
+        const shouldFixSelection = () => {
+            const currentSelection = this.shared.getEditableSelection();
+            const selectedText = currentSelection.textContent();
+            const selectedTextNonWhitespace = selectedText.replace(/\s/g, "");
+            if (selectedTextNonWhitespace.length > 1) {
+                return false;
+            }
+            return true;
+        };
+
+        const fixSelection = shouldFixSelection();
+
+        if (fixSelection) {
+            // Delete the selection set by the "user". This means reverting the
+            // selection set by the virtual keyboard.
+            this.fixSelectionPreDelete();
+        } else {
+            console.log("deleting original selection");
+        }
+        this.delete(...argsForDelete);
         // Record the resulting selection as trusted: it matters for fast sequential deletes.
         this.recordSelection(this.shared.getEditableSelection(), { trusted: true });
 
         if (isBrowserChrome()) {
-            this.preventDefaultDeleteAndroidChrome();
+            this.preventDefaultDeleteAndroidChrome(ev);
         }
 
         // In case we just broke a dictionary replacement:
-        const deleteOriginalSelection = (ev) => {
-            if (ev.inputType === "insertText") {
-                savePointRestore();
-                this.delete(...argsForDelete);
-                console.log("virtual keyboard's selection restored and deleted");
-                // TODO: rename this better
-                this.runOnceOnSelectionChange = null;
+        // beforeinput deleteContentBackward and beforeInput insertText on the
+        // same tick means dictionary replacement by Gboard.
+        this.addSameTickListener("beforeinput", (ev) => {
+            if (fixSelection && ev.inputType === "insertText") {
+                console.log("dictionary input detected, revert 1st delete:");
+                undoDelete();
+                console.log(
+                    "reverted, delete again with the original virtual keyboard's selection:"
+                );
+                this.delete(...argsForDelete, { addStep: false });
             }
-        };
-        this.editable.addEventListener("beforeinput", deleteOriginalSelection);
-        setTimeout(() => {
-            this.editable.removeEventListener("beforeinput", deleteOriginalSelection);
         });
+
+        // this.editable.addEventListener("beforeinput", deleteOriginalSelection);
+        // setTimeout(() => {
+        //     this.editable.removeEventListener("beforeinput", deleteOriginalSelection);
+        // });
     }
 
     // Revert selection changes that happened right before delete.
@@ -1257,22 +1299,72 @@ export class DeletePlugin extends Plugin {
     // Beforeinput event of type deleteContentBackward cannot be default
     // prevented in Android Chrome. So we need to revert eventual mutations and
     // selection change.
-    preventDefaultDeleteAndroidChrome() {
-        const revertDomChanges = this.shared.makeSavePoint();
-        this.runOnceOnInput = () => {
-            revertDomChanges();
-            // Chrome might change the selection *after* the input event.
-            const { restore: revertSelectionChange } = this.shared.preserveSelection();
-            this.runOnceOnSelectionChange = revertSelectionChange;
-        };
+    preventDefaultDeleteAndroidChrome(ev) {
+        const inputType = ev.inputType;
+        const restoreDOM = this.shared.makeSavePoint();
+        this.addSameTickListener("input", (ev) => {
+            if (ev.inputType === inputType) {
+                console.log("preventing default on chrome");
+                // Mind the mutations
+                restoreDOM();
+                // Mind the selection change that might happen afterwards (Chrome
+                // bug)...
+                const { restore: restoreSelection } = this.shared.preserveSelection();
+                this.runOnceOnSelectionChange = () => restoreSelection({ log: true });
+                // ... but do not interfere with the selection if delete is followed
+                // by text input in the same tick (dictionary replacement).
+                this.addSameTickListener("beforeinput", (ev) => {
+                    if (ev.inputType === "insertText") {
+                        delete this.runOnceOnSelectionChange;
+                    }
+                });
+            }
+            // this.clearScheduledTasks("selectionchange");
+            // const restoreSelectionTask = this.scheduleTask("selectionchange", restoreSelection);
+            // this.scheduleTaskSameTick("beforeinput", (ev) => {
+            // });
+        });
+        // Chrome might change the selection *after* the input event to a
+        // bad place, so we want to revert it.
+        // But we don't want to interfere if it's followed by text input in
+        // the same tick (dictionary replacement).
+
+        // this.runOnceOnInput = () => {
+        //     revertDomChanges();
+        //     // Chrome might change the selection *after* the input event to a
+        //     // bad place, so we want to revert it.
+        //     const { restore: revertSelectionChange } = this.shared.preserveSelection();
+        //     this.runOnceOnSelectionChange = revertSelectionChange;
+        //     // But we don't want to interfere if it's followed by text input in
+        //     // the same tick (dictionary replacement).
+        //     const cancelOnSelectionChange = (ev) => {
+        //         if (ev.inputType === "insertText") {
+        //             delete this.runOnceOnSelectionChange;
+        //         }
+        //     };
+        //     this.editable.addEventListener("beforeinput", cancelOnSelectionChange);
+        //     setTimeout(() => {
+        //         this.editable.removeEventListener("beforeinput", cancelOnSelectionChange);
+        //     });
+        // };
     }
 
-    onInput() {
-        if (this.runOnceOnInput) {
-            this.runOnceOnInput();
-            delete this.runOnceOnInput;
-        }
+    onBeforeInputAndroid(ev) {
+        this.listeners.beforeinput.forEach((listener) => listener(ev));
+        // this.runScheduledTasks("beforeinput", ev);
     }
+
+    onInput(ev) {
+        this.listeners.input.forEach((listener) => listener(ev));
+        // this.runScheduledTasks("input", ev);
+    }
+
+    // onInput() {
+    //     if (this.runOnceOnInput) {
+    //         this.runOnceOnInput();
+    //         delete this.runOnceOnInput;
+    //     }
+    // }
 
     onSelectionChange({ editableSelection }) {
         this.log(`onSelectionChange: ${serializeCurrentSelection()}`);
@@ -1286,7 +1378,6 @@ export class DeletePlugin extends Plugin {
 
     recordSelection(editableSelection, { trusted = false } = {}) {
         const SELECTION_HISTORY_SIZE = 10;
-        this.selectionHistory ??= [];
 
         this.selectionHistory.push({ editableSelection, timestamp: Date.now(), trusted });
 
