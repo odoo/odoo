@@ -12,7 +12,6 @@ var VariantMixin = {
     events: {
         'change .css_attribute_color input': '_onChangeColorAttribute',
         'click .o_variant_pills': '_onChangePillsAttribute',
-        'change [data-attribute_exclusions]': 'onChangeVariant'
     },
 
     //--------------------------------------------------------------------------
