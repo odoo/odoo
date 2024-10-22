@@ -4,7 +4,7 @@
 from datetime import datetime
 import time
 
-from odoo.fields import Command, first
+from odoo.fields import Command
 from odoo.tools import float_compare
 
 from odoo.addons.product.tests.common import ProductCommon
@@ -302,7 +302,7 @@ class TestProductPricelist(ProductCommon):
         # Arrange: Change precision digits
         uom_precision = self.env.ref("product.decimal_product_uom")
         uom_precision.digits = 3
-        pricelist_item = first(self.customer_pricelist.item_ids[0])
+        pricelist_item = self.customer_pricelist.item_ids[0]
         precise_value = 1.234
 
         # Act: Set a value for the increased precision
