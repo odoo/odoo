@@ -157,6 +157,10 @@
                                     </div>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="1" class="ms-auto"/>
                                 </div>
+                                <div invisible="birthday_public_display_string == 'hidden'">
+                                    <i class="fa fa-fw me-2 fa-birthday-cake text-primary" title="Birthday"/>
+                                    <field name="birthday_public_display_string"/>
+                                </div>
                             </main>
                         </t>
                     </templates>

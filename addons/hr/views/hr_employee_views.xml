@@ -38,6 +38,7 @@
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter name="group_birthday" string="Date of Birth" domain="[]" context="{'group_by': 'birthday'}"/>
                         <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'create_date'}"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
                     </group>
@@ -160,7 +161,14 @@
                                         <field name="ssnid"/>
                                         <field name="passport_id"/>
                                         <field name="gender"/>
-                                        <field name="birthday"/>
+                                        <label for="birthday"/>
+                                        <div class="o_row" name="div_km_home_work">
+                                            <field name="birthday" class="o_hr_narrow_field"/>
+                                            <span invisible="not birthday" >
+                                                <label for="birthday_public_display" class="fw-bold text-900 form-check-label ms-3"/>
+                                                <field name="birthday_public_display" class="ms-3"/>
+                                            </span>
+                                        </div>
                                         <field name="place_of_birth"/>
                                         <field name="country_of_birth"/>
                                     </group>
@@ -326,6 +334,10 @@
                                 <div t-if="record.work_phone.raw_value">
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                     <field name="work_phone" />
+                                </div>
+                                <div invisible="birthday_public_display_string == 'hidden'">
+                                    <i class="fa fa-fw me-2 fa-birthday-cake text-primary" title="Birthday"/>
+                                    <field name="birthday_public_display_string"/>
                                 </div>
                                 <field name="employee_properties" widget="properties"/>
                                 <field class="hr_tags" name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
