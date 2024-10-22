@@ -9,6 +9,7 @@ from odoo import fields
 from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tools.misc import format_date
+from unittest.mock import patch
 
 
 class TestMrpOrder(TestMrpCommon):
@@ -1521,7 +1522,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mos.move_finished_ids.mapped('quantity_done'), [1] * 3)
 
     def test_components_availability(self):
-        self.bom_2.unlink()  # remove the kit bom of product_5 
+        self.bom_2.unlink()  # remove the kit bom of product_5
         now = fields.Datetime.now()
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_3  # product_5 (2), product_4 (8), product_2 (12)
@@ -3011,3 +3012,34 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(mo.move_raw_ids.product_id, component)
+
+    @patch('odoo.addons.mrp.models.mrp_production.MrpProduction._plan_workorders')
+    def test_ignore_replanning_workorder(self, patched):
+        """
+            Test that replan work order does not get called unneccessarily
+        """
+        add_product = self.env['product.product'].create({
+            'name': 'additional',
+            'type': 'product',
+        })
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_2
+        production_form.product_qty = 1
+        production = production_form.save()
+        production_form = Form(production)
+        with production_form.workorder_ids.new() as wo:
+            wo.name = 'OP1'
+            wo.workcenter_id = self.workcenter_1
+            wo.duration_expected = 40
+        production = production_form.save()
+        production.action_confirm()
+        production.button_plan()
+
+        with production_form.move_raw_ids.new() as line:
+            line.product_id = add_product
+        production_form.save()
+
+        # _plan_workorders should be called once when planining workorder initially.
+        # Changing the move_raw_ids should not call _plan_workorders
+        patched.assert_called_once()

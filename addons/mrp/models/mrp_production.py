@@ -744,8 +744,8 @@ class MrpProduction(models.Model):
         if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
             vals['move_finished_ids'] = vals['move_byproduct_ids']
             del vals['move_byproduct_ids']
-        if 'workorder_ids' in self:
-            production_to_replan = self.filtered(lambda p: p.is_planned)
+
+        production_to_replan = self.filtered(lambda p: p.is_planned)
         res = super(MrpProduction, self).write(vals)
 
         for production in self:
@@ -774,7 +774,7 @@ class MrpProduction(models.Model):
                         'date_deadline': production.date_deadline
                     })
                 production._autoconfirm_production()
-                if production in production_to_replan:
+                if production in production_to_replan and 'workorder_ids' in vals:
                     production._plan_workorders(replan=True)
             if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
                 finished_move_lines = production.move_finished_ids.filtered(
