@@ -1329,6 +1329,15 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                     || dependencyEl.nodeName === 'TEXTAREA') && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_no_text_opt':
                 return dependencyEl && (dependencyEl.type === 'checkbox' || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT');
+            case 'hidden_condition_no_text_select_opt':
+                return dependencyEl && (dependencyEl.type === 'checkbox'
+                    || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT')
+                    && ['selected',
+                    '!selected'].includes(this.$target[0].dataset.visibilityComparator);
+            case 'hidden_condition_no_text_list_opt':
+                return dependencyEl && (dependencyEl.type === 'checkbox'
+                    || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT')
+                    && ['contains', '!contains'].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_num_opt':
                 return dependencyEl && dependencyEl.type === 'number';
             case 'hidden_condition_text_opt':
@@ -1487,10 +1496,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 const selectOptName =
                     fieldType === "record"
                         ? "hidden_condition_record_opt"
-                        : "hidden_condition_no_text_opt";
-                const selectOptEl = uiFragment.querySelectorAll(
-                    `we-select[data-name="${selectOptName}"]`,
-                )[1];
+                        : "hidden_condition_no_text_select_opt";
+                let selectOptEl = uiFragment.querySelectorAll(
+                    `we-select[data-name="${selectOptName}"]`);
+                selectOptEl = selectOptEl[selectOptEl.length - 1];
                 const inputContainerEl = this.$target[0];
                 const dependencyEl = this._getDependencyEl();
                 if (dependencyEl.nodeName === 'SELECT') {
