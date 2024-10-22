@@ -9,7 +9,7 @@
             <xpath expr="//head">
                 <t t-if="not no_livechat and website and website.channel_id">
                     <script>
-                        <t t-call="im_livechat.loader">
+                        <t t-call="im_livechat.loader" t-nocache="Should be up-to-date with available operators">
                             <t t-set="info" t-value="website._get_livechat_channel_info()"/>
                         </t>
                     </script>
