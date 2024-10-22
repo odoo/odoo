@@ -1004,7 +1004,7 @@ class BaseModel(metaclass=MetaModel):
                         result.append(properties_field._dict_to_list(raw_properties, definition))
 
                 # FIXME: Far from optimal, it will fetch display_name for no reason
-                res_ids_per_model = properties_field._get_res_ids_per_model(self, result)
+                res_ids_per_model = properties_field._get_res_ids_per_model(self.env, result)
 
                 cache_properties[properties_fname] = record_map = {}
                 for properties, rec in zip(result, self):

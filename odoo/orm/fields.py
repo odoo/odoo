@@ -963,10 +963,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         """
         if self.company_dependent:
             return PsycopgJson(value)
-        return self.convert_to_column_insert(
-            self.convert_to_write(value, record),
-            record,
-        )
+        return self.convert_to_column_insert(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         """ Convert ``value`` to the cache format; ``value`` may come from an

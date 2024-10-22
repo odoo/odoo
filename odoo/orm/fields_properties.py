@@ -105,23 +105,25 @@ class Properties(Field):
         if not value:
             return None
 
-        if isinstance(value, dict):
-            # avoid accidental side effects from shared mutable data
-            return copy.deepcopy(value)
-
-        if isinstance(value, str):
-            value = json.loads(value)
-            if not isinstance(value, dict):
-                raise ValueError(f"Wrong property value {value!r}")
-            return value
+        if not isinstance(value, (str, dict, list)):
+            raise ValueError(f"Wrong property type {type(value)!r}")
 
         if isinstance(value, list):
             # Convert the list with all definitions into a simple dict
             # {name: value} to store the strict minimum on the child
             self._remove_display_name(value)
-            return self._list_to_dict(value)
+        else:
+            if isinstance(value, str):
+                value = json.loads(value)
+                if not isinstance(value, dict):
+                    raise ValueError(f"Wrong property value {value!r}")
+            # writing the same truthy value to properties with different definitions doesn't make sense
+            definition = self._get_properties_definition(record[0])
+            value = self._dict_to_list(value, definition)
+            res_ids_per_model = self._get_res_ids_per_model(record.env, [value])
+            self._parse_json_types(value, record.env, res_ids_per_model)
 
-        raise ValueError(f"Wrong property type {type(value)!r}")
+        return self._list_to_dict(value)
 
     # Record format: the value is either False, or a dict mapping property
     # names to their corresponding value, like
@@ -170,7 +172,7 @@ class Properties(Field):
                 assert isinstance(value, dict), f"Wrong type {value!r}"
                 result.append(self._dict_to_list(value, definition))
 
-        res_ids_per_model = self._get_res_ids_per_model(records, result)
+        res_ids_per_model = self._get_res_ids_per_model(records.env, result)
 
         # value is in record format
         for value in result:
@@ -190,7 +192,7 @@ class Properties(Field):
 
         return super().convert_to_write(value, record)
 
-    def _get_res_ids_per_model(self, records, values_list):
+    def _get_res_ids_per_model(self, env, values_list):
         """Read everything needed in batch for the given records.
 
         To retrieve relational properties names, or to check their existence,
@@ -204,14 +206,14 @@ class Properties(Field):
         # ids per model we need to fetch in batch to put in cache
         ids_per_model = defaultdict(OrderedSet)
 
-        for record, record_values in zip(records, values_list):
+        for record_values in values_list:
             for property_definition in record_values:
                 comodel = property_definition.get('comodel')
                 type_ = property_definition.get('type')
                 property_value = property_definition.get('value') or []
                 default = property_definition.get('default') or []
 
-                if type_ not in ('many2one', 'many2many') or comodel not in records.env:
+                if type_ not in ('many2one', 'many2many') or comodel not in env:
                     continue
 
                 if type_ == 'many2one':
@@ -224,7 +226,7 @@ class Properties(Field):
         # check existence and pre-fetch in batch
         res_ids_per_model = {}
         for model, ids in ids_per_model.items():
-            recs = records.env[model].browse(ids).exists()
+            recs = env[model].browse(ids).exists()
             res_ids_per_model[model] = set(recs.ids)
 
             for record in recs:
