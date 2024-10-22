@@ -1935,41 +1935,6 @@ class CrmLead(models.Model):
                 _('Deadline: %s', self.date_deadline.strftime(get_lang(self.env).date_format)))
         return render_context
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
-        """ Handle salesman recipients that can convert leads into opportunities
-        and set opportunities as won / lost. """
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
-        if not self:
-            return groups
-
-        local_msg_vals = dict(msg_vals or {})
-
-        self.ensure_one()
-        if self.type == 'lead':
-            convert_action = self._notify_get_action_link('controller', controller='/lead/convert', **local_msg_vals)
-            salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
-        else:
-            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won', **local_msg_vals)
-            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost', **local_msg_vals)
-            salesman_actions = [
-                {'url': won_action, 'title': _('Mark Won')},
-                {'url': lost_action, 'title': _('Mark Lost')}]
-
-        salesman_group_id = self.env.ref('sales_team.group_sale_salesman').id
-        new_group = (
-            'group_sale_salesman',
-            lambda pdata: pdata['type'] == 'user' and salesman_group_id in pdata['groups'],
-            {
-                'actions': salesman_actions,
-                'active': True,
-                'has_button_access': True,
-            }
-        )
-
-        return [new_group] + groups
-
     def _notify_get_reply_to(self, default=None):
         """ Override to set alias of lead and opportunities to their sales team if any. """
         aliases = self.mapped('team_id').sudo()._notify_get_reply_to(default=default)
