@@ -9,6 +9,22 @@
                 <setting help="Use this if setup with Reseller(E-Commerce)." name="ecommerce_reseller_setting" title="Manage Reseller(E-Commerce)" invisible="country_code != 'IN'">
                     <field name="group_l10n_in_reseller"/>
                 </setting>
+<<<<<<< 18.0
+||||||| f6d7e650a677e72b17fd59bcb4204d630e1c62a3
+                <setting help="Connect to NIC (National Informatics Center) to submit invoices on posting." name="electronic_invoices_in" invisible="country_code != 'IN'" documentation="/applications/finance/accounting/fiscal_localizations/localizations/india.html#indian-e-invoicing">
+                    <field name="module_l10n_in_edi" class="oe_inline" widget="upgrade_boolean"/>
+                </setting>
+                <setting help="Connect to NIC (National Informatics Center) to submit e-waybill on posting." name="electronic_waybill_in" invisible="country_code != 'IN'" documentation="/applications/finance/accounting/fiscal_localizations/localizations/india.html#indian-e-waybill">
+                    <field name="module_l10n_in_edi_ewaybill" class="oe_inline" widget="upgrade_boolean"/>
+                </setting>
+=======
+                <setting help="Connect to NIC (National Informatics Center) to submit invoices on posting." name="electronic_invoices_in" invisible="country_code != 'IN'" documentation="/applications/finance/accounting/fiscal_localizations/localizations/india.html#indian-e-invoicing">
+                    <field name="module_l10n_in_edi" class="oe_inline" widget="upgrade_boolean"/>
+                </setting>
+                <setting help="Connect to NIC (National Informatics Center) to submit e-waybill on posting." name="electronic_waybill_in" invisible="country_code != 'IN'" documentation="/applications/finance/accounting/fiscal_localizations/localizations/india.html#indian-e-waybill">
+                    <field name="module_l10n_in_edi_ewaybill" class="oe_inline"/>
+                </setting>
+>>>>>>> f14d63c47c84b8206eadd691788f0f8b9b1a9874
             </block>
             <xpath expr="//app[@name='account']" position="inside">
                 <div id="india_integration_section">
