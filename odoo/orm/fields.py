@@ -14,9 +14,10 @@ from psycopg2.extras import Json as PsycopgJson
 from odoo.exceptions import AccessError, MissingError
 from odoo.osv import expression
 from odoo.tools import SQL, lazy_property, sql
+from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel
 
-from .utils import PREFETCH_MAX, expand_ids
+from .utils import expand_ids
 
 if typing.TYPE_CHECKING:
     from .models import BaseModel
