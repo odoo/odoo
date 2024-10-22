@@ -54,7 +54,11 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             ProductScreen.addOrderline("Desk Pad", "6", "5"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickTipButton(),
-            NumberPopup.enterValue("1"),
+            {
+                content: "click numpad button: 1",
+                trigger: ".modal div.numpad button:contains(/^1/)",
+                run: "click",
+            },
             NumberPopup.isShown("1"),
             Dialog.confirm(),
             PaymentScreen.emptyPaymentlines("31.0"),

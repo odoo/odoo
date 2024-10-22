@@ -322,7 +322,6 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
                 content: "cancel dialog",
                 trigger: ".modal .modal-header button[aria-label='Close']",
                 run: "click",
-                isActive: ["mobile"],
             }
         );
     }
