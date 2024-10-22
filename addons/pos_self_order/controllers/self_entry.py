@@ -21,6 +21,7 @@ class PosSelfKiosk(http.Controller):
                             'self_ordering_mode': pos_config.self_ordering_mode,
                         },
                         "base_url": request.env['pos.session'].get_base_url(),
+                        "db": request.env.cr.dbname,
                     }
                 }
             )
