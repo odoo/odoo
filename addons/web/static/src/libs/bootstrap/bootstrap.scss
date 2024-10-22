@@ -1,0 +1,10 @@
+.form-control {
+    // Overridden file input buttons theming
+    &::file-selector-button {
+        @include gradient-bg(darken($input-bg, 2%));
+    }
+
+    &:hover:not(:disabled):not([readonly])::file-selector-button {
+        background-color: darken($input-bg, 6%);
+    }
+}
