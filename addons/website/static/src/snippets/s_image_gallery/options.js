@@ -173,16 +173,16 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with the "grid" layout.
      */
     grid: function () {
-        const imgs = this._getImgHolderEls();
+        const columnsContent = this._getColumnsContent();
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
-        _.each(imgs, function (img, index) {
-            const $img = $(img.cloneNode(true));
+        _.each(columnsContent, function (columnContent, index) {
             var $col = $('<div/>', {class: colClass});
-            $col.append($img).appendTo($row);
+            $col[0].innerHTML = columnContent;
+            $col.appendTo($row);
             if ((index + 1) % columns === 0) {
                 $row = $('<div/>', {class: 'row s_nb_column_fixed'});
                 $row.appendTo($container);
@@ -283,7 +283,7 @@ options.registry.gallery = options.Class.extend({
     nomode: function () {
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var imgs = this._getImages();
-        const imgHolderEls = this._getImgHolderEls();
+        const columnsContent = this._getColumnsContent();
 
         this._replaceContent($row);
 
@@ -292,7 +292,7 @@ options.registry.gallery = options.Class.extend({
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = 'col-lg-6';
             }
-            var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
+            var $wrap = $('<div/>', {class: wrapClass}).append(columnsContent[index]);
             $row.append($wrap);
         });
     },
@@ -523,6 +523,19 @@ options.registry.gallery = options.Class.extend({
     _getImgHolderEls: function () {
         const imgEls = this._getImages();
         return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
+    },
+    /**
+     * Returns the inner HTML of the parent column for each image.
+     *
+     * @private
+     * @returns {Array.<string>}
+     */
+    _getColumnsContent() {
+        const imgEls = this._getImages();
+        return imgEls.map(imgEl => {
+            const colEl = imgEl.closest("[class^='col-lg-']");
+            return (colEl && colEl.innerHTML) || imgEl.outerHTML;
+        });
     },
     /**
      * Returns the index associated to a given image.
