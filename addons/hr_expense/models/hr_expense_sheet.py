@@ -586,8 +586,16 @@ class HrExpenseSheet(models.Model):
 
     def action_sheet_move_post(self):
         # When a move has been deleted
-        self.filtered(lambda sheet: not sheet.account_move_ids).with_prefetch()._do_create_moves()
-        self.account_move_ids.action_post()
+        self.filtered(lambda sheet: not sheet.account_move_ids)._do_create_moves()
+
+        company_sheets = self.filtered(lambda sheet: sheet.payment_mode == 'company_account')
+        employee_sheets = self - company_sheets
+
+        # Post the employee-paid expenses moves
+        employee_sheets.account_move_ids.action_post()
+
+        # Post the company-paid expense through the payment instead, to post both at the same time
+        company_sheets.account_move_ids.origin_payment_id.action_post()
 
     def action_reset_expense_sheets(self):
         self.filtered(lambda sheet: sheet.state not in {'draft', 'submit'})._check_can_reset_approval()
@@ -757,11 +765,15 @@ class HrExpenseSheet(models.Model):
                 expense._prepare_payments_vals()
                 for expense in company_account_sheets.expense_line_ids
             ])
-            payments_sudo = self.env['account.payment'].sudo().create(payment_vals_list)
+
             moves_sudo = self.env['account.move'].sudo().create(move_vals_list)
+            moves_sudo.line_ids.flush_recordset(fnames=['company_currency_id'])  # Else the sync dynamic lines sets the field at False
+            for payment_vals, move in zip(payment_vals_list, moves_sudo):
+                payment_vals['move_id'] = move.id
+
+            payments_sudo = self.env['account.payment'].sudo().create(payment_vals_list)
             for payment, move in zip(payments_sudo, moves_sudo):
-                payment.write({'move_id': move.id, 'state': 'in_process'})
-                move.origin_payment_id = payment
+                move.origin_payment_id = payment.id
             moves_sudo |= payments_sudo.move_id
 
         # returning the move with the super user flag set back as it was at the origin of the call
@@ -862,11 +874,16 @@ class HrExpenseSheet(models.Model):
                 or journal.company_id.expense_outstanding_account_id
             )
             if not account_dest:
-                raise UserError(_(
+                error_msg = _(
                     "The payment method %(method)s needs an account, "
                     "or a default outstanding account must be defined in the settings.",
                     method=self.payment_method_line_id.display_name,
-                ))
+                )
+                if self.env['res.config.settings'].has_access('write'):
+                    action = self.env.ref('hr_expense.action_hr_expense_configuration')
+                    raise RedirectWarning(error_msg, action=action.id, button_text=_("Go to settings"))
+                else:
+                    raise UserError(error_msg)
         else:
             if not self.employee_id.sudo().work_contact_id:
                 raise UserError(_("No work contact found for the employee %s, please configure one.", self.employee_id.name))
