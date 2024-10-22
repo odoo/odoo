@@ -2899,7 +2899,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     the same parameters (eg. header desktop + header mobile)
 -->
 <template id="header_search_box_input" name="Header Search Box Input">
-    <t t-call="website.website_search_box_input">
+    <t t-call="website.website_search_box_input"  t-nocache="True">
         <t t-set="search_type" t-valuef="all"/>
         <t t-set="action" t-valuef="/website/search"/>
         <t t-set="limit" t-value="limit or '5'"/>
