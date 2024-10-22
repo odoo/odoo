@@ -294,25 +294,6 @@ class SaleOrder(models.Model):
             self.env['project.project'].sudo().search([('sale_line_id.order_id', 'in', self.ids)]).sale_line_id = False
         return res
 
-    def _prepare_analytic_account_data(self, prefix=None):
-        """ Prepare SO analytic account creation values.
-
-        :return: `account.analytic.account` creation values
-        :rtype: dict
-        """
-        self.ensure_one()
-        name = self.name
-        if prefix:
-            name = prefix + ": " + self.name
-        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
-        return {
-            'name': name,
-            'code': self.client_order_ref,
-            'company_id': self.company_id.id,
-            'plan_id': project_plan.id,
-            'partner_id': self.partner_id.id,
-        }
-
     def _compute_completed_task_percentage(self):
         for so in self:
             so.completed_task_percentage = so.tasks_count and so.closed_task_count / so.tasks_count
