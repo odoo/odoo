@@ -8,20 +8,16 @@ from odoo.exceptions import ValidationError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _get_warehouse_available(self):
-        self.ensure_one()
-        warehouse = self.website_id._get_warehouse_available()
-        if not warehouse and self.user_id and self.company_id:
-            warehouse = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id()
-        if not warehouse:
-            warehouse = self.env.user._get_default_warehouse_id()
-        return warehouse
-
     def _compute_warehouse_id(self):
         website_orders = self.filtered('website_id')
         super(SaleOrder, self - website_orders)._compute_warehouse_id()
         for order in website_orders:
-            order.warehouse_id = order._get_warehouse_available()
+            if order.website_id.warehouse_id:
+                order.warehouse_id = order.website_id.warehouse_id
+            else:
+                super(SaleOrder, order)._compute_warehouse_id()
+            if not order.warehouse_id:
+                order.warehouse_id = self.env.user._get_default_warehouse_id()
 
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         self.ensure_one()
@@ -70,7 +66,10 @@ class SaleOrder(models.Model):
         if not line and not product:
             return 0, 0
         cart_qty = sum(self._get_common_product_lines(line, product).mapped('product_uom_qty'))
-        free_qty = (product or line.product_id).with_context(warehouse_id=self.warehouse_id.id).free_qty
+        free_qty = (product or line.product_id).with_context(
+            warehouse_id=self.website_id.warehouse_id.id
+        ).free_qty
+
         return cart_qty, free_qty
 
     def _get_common_product_lines(self, line=None, product=None):
