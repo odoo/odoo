@@ -6,6 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import OR
+from odoo.tools import SQL
 
 bypass_token = object()
 
@@ -103,10 +104,20 @@ class Message(models.Model):
         return self._search_audit_log_related_record_id('res.company', operator, value)
 
     def _compute_account_audit_log_partner_id(self):
-        self._compute_audit_log_related_record_id('res.partner', 'account_audit_log_partner_id', [
-            '|', ('company_id', '=', False), ('company_id.check_account_audit_trail', '=', True),
-            '|', ('customer_rank', '>', 0), ('supplier_rank', '>', 0),
-        ])
+        messages_of_related = self.filtered(lambda m: m.model == 'res.partner' and m.res_id)
+        (self - messages_of_related).account_audit_log_partner_id = False
+        if messages_of_related:
+            moves_partners = self.env['account.move'].sudo()._read_group(
+                [
+                    ('partner_id', 'in', messages_of_related.mapped('res_id')),
+                    ('company_id.check_account_audit_trail', '=', True),
+                 ],
+                ['partner_id'],
+                ['partner_id:min']
+            )
+            partners_by_id = {p[1]: p[0] for p in moves_partners}
+            for message in messages_of_related:
+                message.account_audit_log_partner_id = partners_by_id.get(message.res_id, False)
 
     def _search_account_audit_log_partner_id(self, operator, value):
         return self._search_audit_log_related_record_id('res.partner', operator, value)
@@ -144,10 +155,12 @@ class Message(models.Model):
             [('model', '=', 'account.tax'), ('res_id', 'in', self.env['account.tax']._search([
                 ('company_id.check_account_audit_trail', operator, value),
             ]))],
-            [('model', '=', 'res.partner'), ('res_id', 'in', self.env['res.partner']._search([
-                '|', ('company_id', '=', False), ('company_id.check_account_audit_trail', operator, value),
-                '|', ('customer_rank', '>', 0), ('supplier_rank', '>', 0),
-            ]))],
+            [
+                ('model', '=', 'res.partner'),
+                ('res_id', 'in', SQL('(%s)', self.env['account.move'].sudo()._search(
+                    [('company_id.check_account_audit_trail', operator, value)]
+                ).select('partner_id')))
+            ],
             [('model', '=', 'res.company'), ('res_id', 'in', self.env['res.company']._search([
                 ('check_account_audit_trail', operator, value),
             ]))],
