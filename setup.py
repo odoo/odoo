@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# ruff: noqa: F821
+# (ruff don't see read variables from release.py)
 
 from setuptools import find_packages, setup
 from os.path import join, dirname
@@ -65,7 +67,7 @@ setup(
         'xlwt',
         'zeep',
     ],
-    python_requires='>=3.10',
+    python_requires='>=' + ".".join(map(str, MIN_PY_VERSION)),
     extras_require={
         'ldap': ['python-ldap'],
     },
