@@ -32,10 +32,13 @@ export class LocationSelectorDialog extends Component {
             zipCode: this.props.zipCode,
             // Some APIs like FedEx use strings to identify locations.
             selectedLocationId: String(this.props.selectedLocationId),
+            filtered_locations: [],
             isSmall: this.env.isSmall,
         });
 
         this.getLocationUrl = '/delivery/get_pickup_locations';
+
+        this.countries = [];
 
         this.debouncedOnResize = useDebounced(this.updateSize, 300);
         this.debouncedSearchButton = useDebounced((zipCode) => {
@@ -98,11 +101,47 @@ export class LocationSelectorDialog extends Component {
             console.error(error);
         } else {
             this.state.locations = pickup_locations;
-            if (!this.state.locations.find(l => String(l.id) === this.state.selectedLocationId)) {
-                this.state.selectedLocationId = this.state.locations[0]
-                                                ? String(this.state.locations[0].id)
+
+            let filtered_locations = [];
+            if(!this.selectedCountry){
+                filtered_locations = this.state.locations;
+            }else{
+                filtered_locations = this.state.locations.filter(
+                    (location) => location.country_id === this.selectedCountry.id
+                );
+            }
+            this.state.filtered_locations = filtered_locations;
+            if (!this.state.filtered_locations.find(l => String(l.id) === this.state.selectedLocationId)) {
+                this.state.selectedLocationId = this.state.filtered_locations[0]
+                                                ? String(this.state.filtered_locations[0].id)
                                                 : false;
             }
+            this.countries = [
+                ...new Map(
+                    this.state.locations.map(location => [location.country_id, {
+                        'id': location.country_id,
+                        'name': location.country_name,
+                        'flag': location.country_flag,
+                    }])
+                ).values()
+            ];
+        }
+    }
+
+    selectCountry(location=undefined) {
+        if(!location){
+            this.selectedCountry = undefined;
+            this.state.filtered_locations = this.state.locations;
+            return;
+        }
+        this.selectedCountry = location;
+        this.state.filtered_locations = this.state.locations.filter(
+                (location) => location.country_id === this.selectedCountry.id
+            )
+        if (!this.state.filtered_locations.find(l => String(l.id) === this.state.selectedLocationId)) {
+            this.state.selectedLocationId = this.state.filtered_locations[0]
+                                            ? String(this.state.filtered_locations[0].id)
+                                            : false;
         }
     }
 
@@ -112,7 +151,7 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The selected location.
      */
     get selectedLocation() {
-        return this.state.locations.find(l => String(l.id) === this.state.selectedLocationId);
+        return this.state.filtered_locations.find(l => String(l.id) === this.state.selectedLocationId);
     }
 
     /**
@@ -132,7 +171,7 @@ export class LocationSelectorDialog extends Component {
      */
     async validateSelection() {
         if (!this.state.selectedLocationId) return;
-        const selectedLocation = this.state.locations.find(
+        const selectedLocation = this.state.filtered_locations.find(
             l => String(l.id) === this.state.selectedLocationId
         );
         await this.props.save(selectedLocation);

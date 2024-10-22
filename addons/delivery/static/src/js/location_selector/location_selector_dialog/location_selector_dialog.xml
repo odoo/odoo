@@ -32,9 +32,9 @@
                 <!-- Component -->
                 <div class="flex-grow-1 overflow-x-auto">
                     <t
-                        t-if="this.state.locations.length"
+                        t-if="this.state.filtered_locations.length"
                         t-component="mobileComponent"
-                        locations="this.state.locations"
+                        locations="this.state.filtered_locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="setSelectedLocation"
                         validateSelection.bind="validateSelection"
@@ -63,8 +63,8 @@
 
                     <!-- List group -->
                     <LocationList
-                        t-if="this.state.locations.length"
-                        locations="this.state.locations"
+                        t-if="this.state.filtered_locations.length"
+                        locations="this.state.filtered_locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="setSelectedLocation"
                         validateSelection.bind="validateSelection"
@@ -82,7 +82,7 @@
                 <!-- Map view -->
                 <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start pe-2">
                     <MapContainer
-                        locations="this.state.locations"
+                        locations="this.state.filtered_locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="setSelectedLocation"
                         validateSelection.bind="validateSelection"
@@ -109,6 +109,53 @@
 
     <t t-name="delivery.locationSelector.searchbar">
         <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
+            <div class="dropdown">
+                <button
+                    class="btn btn-light dropdown-toggle"
+                    type="button"
+                    id="locationDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <t t-if="this.selectedCountry">
+                        <img
+                            class="img-fluid me-2"
+                            t-att-src="this.selectedCountry.flag"
+                            alt="Country flag"
+                            width="20"
+                            height="15"
+                        />
+                    </t>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="locationDropdown">
+                    <li>
+                        <a
+                            class="dropdown-item d-flex align-items-center py-3"
+                            href="#"
+                            t-on-click="() => this.selectCountry()"
+                        >
+                        </a>
+                    </li>
+                    <t t-foreach="this.countries" t-as="country" t-key="country.id">
+                        <li>
+                            <a
+                                class="dropdown-item d-flex align-items-center"
+                                href="#"
+                                t-on-click="() => this.selectCountry(country)"
+                            >
+                                <img
+                                    class="img-fluid me-2"
+                                    t-att-src="country.flag"
+                                    alt="Country flag"
+                                    width="20"
+                                    height="15"
+                                />
+                                <span t-esc="country.name" />
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+            </div>
             <input
                 class="search-query form-control oe_search_box border-0 text-bg-light"
                 t-model.lazy="this.state.zipCode"
