@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_pk_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_pk_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@name='electronic_invoices_pk']" position="inside">
+                <div class="content-group" invisible="not module_l10n_pk_edi">
+                    <div class="mt16 row">
+                        <label for="l10n_pk_edi_pos_key" string="PoS ID" class="col-3 col-lg-3 o_light_label"/>
+                        <field name="l10n_pk_edi_pos_key" nolabel="1"/>
+                    </div>
+                    <div class="mt16 row">
+                        <label for="l10n_pk_edi_token" string="Token" class="col-3 col-lg-3 o_light_label"/>
+                        <field name="l10n_pk_edi_token" password="True" nolabel="1"/>
+                    </div>
+                    <div class="mt16 row">
+                        <label for="l10n_pk_edi_proxy" string="HTTPS Proxy" class="col-3 col-lg-3 o_light_label"/>
+                        <field name="l10n_pk_edi_proxy" nolabel="1"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
