@@ -787,9 +787,4 @@ class EventEvent(models.Model):
             'timeframe': self._get_event_timeframe_string(),
             'address': self.address_id.name if self.address_id else None,
             'logo': self.company_id.logo,
-            'sponsor_text': self._get_printing_sponsor_text()
         }
-
-    def _get_printing_sponsor_text(self):
-        sponsor_text = self.env['ir.config_parameter'].sudo().get_param('event.badge_printing_sponsor_text')
-        return sponsor_text or "Powered by Odoo"
