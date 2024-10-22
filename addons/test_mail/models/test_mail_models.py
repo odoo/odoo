@@ -241,14 +241,6 @@ class MailTestTicket(models.Model):
             elif group_name == 'customer':
                 group_data['active'] = True
                 group_data['has_button_access'] = True
-                group_data['actions'] = [{
-                    'url': self._notify_get_action_link(
-                        'controller',
-                        controller='/test_mail/do_stuff',
-                        **local_msg_vals
-                    ),
-                    'title': _('NotificationButtonTitle')
-                }]
 
         return groups
 

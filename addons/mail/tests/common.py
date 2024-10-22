@@ -1456,7 +1456,6 @@ class MailCommon(common.TransactionCase, MailCase):
             * description: English:    Lang Chatter Model (depends on test_record._name)
                            translated: Spanish Model Description
           * module
-            * _('NotificationButtonTitle') -> SpanishNotificationButtonTitle (used as link button name in layout)
             * _('View %s') -> SpanishView %s
           * template
             * body: English:    <p>EnglishBody for <t t-out="object.name"/></p> (depends on test_template.body)
@@ -1478,10 +1477,6 @@ class MailCommon(common.TransactionCase, MailCase):
             cls.env['ir.model']._get(test_record._name).with_context(lang=lang_code).name = 'Spanish Model Description'
 
         # Translate some code strings used in mailing
-        code_translations.python_translations[('test_mail', 'es_ES')] = {
-            **code_translations.python_translations[('test_mail', 'es_ES')],
-            'NotificationButtonTitle': 'SpanishButtonTitle'
-        }
         code_translations.python_translations[('mail', 'es_ES')] = {
             **code_translations.python_translations[('mail', 'es_ES')],
             'View %s': 'SpanishView %s'
