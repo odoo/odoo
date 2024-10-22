@@ -3,7 +3,9 @@
 import json
 
 from odoo import fields
-
+from odoo import tools
+from odoo.tools.query import Query
+from odoo.osv import expression
 
 def monkey_patch(cls):
     """ Return a method decorator to monkey-patch the given class. """
@@ -42,6 +44,7 @@ def _get_attrs(self, model_class, name):
         attrs['store'] = False
         attrs['copy'] = attrs.get('copy', False)
         attrs['compute'] = self._compute_sparse
+        attrs['search'] = self._search_sparse
         if not attrs.get('readonly'):
             attrs['inverse'] = self._inverse_sparse
     return attrs
@@ -70,6 +73,18 @@ def _inverse_sparse(self, records):
                 record[self.sparse] = values
 
 
+@monkey_patch(fields.Field)
+def _search_sparse(self, records, operator, value):
+    """ Determine the domain to search on field ``self``. """
+    if isinstance(value, Query):
+        value = list(value)
+    model = records.env[self.model_name]
+    cast_type = self.column_type[0]
+    sql_op = expression.SQL_OPERATORS[operator].code
+
+    base_query = f"SELECT id FROM {model._table} WHERE ({self.sparse} ->> %s)::{cast_type} {sql_op} %s"
+    return [("id", "inselect", (base_query, [self.name, value]))]
+
 #
 # Definition and implementation of serialized fields
 #
@@ -77,7 +92,7 @@ def _inverse_sparse(self, records):
 class Serialized(fields.Field):
     """ Serialized fields provide the storage for sparse fields. """
     type = 'serialized'
-    column_type = ('text', 'text')
+    column_type = ('jsonb', 'jsonb')
 
     prefetch = False                    # not prefetched by default
 
@@ -90,6 +105,26 @@ class Serialized(fields.Field):
 
     def convert_to_record(self, value, record):
         return json.loads(value or "{}")
+
+    def update_db(self, model, columns):
+        res = super().update_db(model, columns)
+        if self.store:
+            constraint_name = f"{model._table}_{self.name}_jsonobject"
+            definition = f"CHECK (jsonb_typeof({self.name}) = 'object')"
+            current_definition = tools.constraint_definition(
+                model._cr, model._table, constraint_name
+            )
+            if current_definition != definition:
+                if current_definition:
+                    tools.drop_constraint(model._cr, model._table, constraint_name)
+                model.pool.post_constraint(
+                    tools.add_constraint,
+                    model._cr,
+                    model._table,
+                    constraint_name,
+                    definition,
+                )
+        return res
 
 
 fields.Serialized = Serialized
