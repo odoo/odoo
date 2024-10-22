@@ -311,5 +311,20 @@
             <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
             <field name="sequence">3</field>
         </record>
+
+        <!-- Maternity Time Off -->
+        <record id="holiday_status_maternity" model="hr.leave.type">
+            <field name="name">Maternity Time Off</field>
+            <field name="requires_allocation">yes</field>
+            <field name="employee_requests">yes</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="leave_notif_subtype_id" ref="mt_leave_maternity"/>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="icon_id" ref="hr_holidays.icon_11"/>
+            <field name="color">6</field>
+            <field name="company_id" eval="False"/> <!-- Explicitly set to False for it to be available to all companies -->
+            <field name="sequence">5</field>
+        </record>
+
     </data>
 </odoo>
