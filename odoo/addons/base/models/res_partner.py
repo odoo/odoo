@@ -307,6 +307,7 @@ class ResPartner(models.Model):
 
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
+        ('ref_uniq', 'unique(ref, company_id)', 'Reference must be unique per Company!'),
     ]
 
     def _get_street_split(self):
