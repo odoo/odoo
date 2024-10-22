@@ -71,6 +71,8 @@ test("signature can be drawn", async () => {
             y: 1,
         },
         relative: true,
+        isPrimary: true,
+        button: 0,
     });
     await drop(".modal .o_web_sign_signature", {
         position: {
@@ -78,6 +80,7 @@ test("signature can be drawn", async () => {
             y: 10, // Arbitrary value
         },
         relative: true,
+        isPrimary: true,
     });
     await animationFrame(); // await owl rendering
     expect(".modal .btn.btn-primary:not([disabled])").toHaveCount(1);
@@ -215,6 +218,8 @@ test("clicking save manually after changing signature should change the unique o
                 y: 1,
             },
             relative: true,
+            isPrimary: true,
+            button: 0,
         });
         await drop(".modal .o_web_sign_signature", {
             position: {
@@ -222,6 +227,7 @@ test("clicking save manually after changing signature should change the unique o
                 y: lineToY,
             },
             relative: true,
+            isPrimary: true,
         });
         await animationFrame();
         await click(".modal-footer .btn-primary");
