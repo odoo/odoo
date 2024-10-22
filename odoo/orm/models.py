@@ -3981,7 +3981,7 @@ class BaseModel(metaclass=MetaModel):
         if fetched != self:
             forbidden = (self - fetched).exists()
             if forbidden:
-                raise self.env['ir.rule']._make_access_error('read', forbidden)
+                raise self.env['ir.access']._make_access_error(forbidden, 'read')
 
     def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False) -> list[Field]:
         """
@@ -4291,17 +4291,16 @@ class BaseModel(metaclass=MetaModel):
         and :meth:`_filtered_access`. The method may be overridden in order to
         restrict the access to ``self``.
         """
-        Access = self.env['ir.model.access']
-        if not Access.check(self._name, operation, raise_exception=False):
-            return self, functools.partial(Access._make_access_error, self._name, operation)
+        Access = self.env['ir.access']
+        domain = Access._get_access_domain(self._name, operation)
+        if domain is None:
+            return self, functools.partial(Access._make_access_error, self.browse(), operation)
 
         # we only check access rules on real records, which should not be mixed
         # with new records
         if any(self._ids):
-            Rule = self.env['ir.rule']
-            domain = Rule._compute_domain(self._name, operation)
             if domain and (forbidden := self - self.sudo().filtered_domain(domain)):
-                return forbidden, functools.partial(Rule._make_access_error, operation, forbidden)
+                return forbidden, functools.partial(Access._make_access_error, forbidden, operation)
 
         return None
 
@@ -5408,8 +5407,7 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # apply main rules on the object
-        Rule = self.env['ir.rule']
-        domain = Rule._compute_domain(self._name, mode)
+        domain = self.env['ir.access']._get_access_domain(self._name, mode)
         if domain:
             expression.expression(domain, self.sudo(), self._table, query)
 
@@ -5600,7 +5598,7 @@ class BaseModel(metaclass=MetaModel):
             self.env[model_name].check_field_access_rights('read', field_names)
 
         # also take into account the fields in the record rules
-        if ir_rule_domain := self.env['ir.rule']._compute_domain(self._name, 'read'):
+        if ir_rule_domain := self.env['ir.access']._get_access_domain(self._name, 'read'):
             collect_from_domain(self, ir_rule_domain)
 
         # flush model dependencies (recursively)
@@ -6009,7 +6007,7 @@ class BaseModel(metaclass=MetaModel):
         the allowed_company_ids in the context. This method can be
         overridden, for example on the hr.leave model, where the
         most suited company is the company of the leave type, as
-        specified by the ir.rule.
+        specified by the access rules.
         """
         if 'company_id' in self:
             return self.company_id
