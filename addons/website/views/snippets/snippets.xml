@@ -327,6 +327,7 @@
                 </t>
                 <t t-snippet="website.s_opening_hours" string="Opening Hours" group="contact_and_forms"/>
                 <t t-snippet="website.s_contact_info" string="Contact Info" group="contact_and_forms"/>
+                <t t-snippet="website.s_form_aside" string="Form Aside" group="contact_and_forms"/>
 
                 <!-- Products group -->
                 <t id="sale_products_hook"/>
@@ -915,7 +916,7 @@
     <t t-set="only_bg_image_selector" t-value="base_only_bg_image_selector"/>
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
-    <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable'"/>
+    <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable, .s_form_aside .row > .o_not_editable'"/>
     <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper'"/>
 
     <t t-call="website.snippet_options_background_options">
