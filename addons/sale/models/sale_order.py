@@ -1226,19 +1226,9 @@ class SaleOrder(models.Model):
         cancel_warning = self._show_cancel_wizard()
         if cancel_warning:
             self.ensure_one()
-            template_id = self.env['ir.model.data']._xmlid_to_res_id(
-                'sale.mail_template_sale_cancellation', raise_if_not_found=False
-            )
-            lang = self.env.context.get('lang')
-            template = self.env['mail.template'].browse(template_id)
-            if template.lang:
-                lang = template._render_lang(self.ids)[self.id]
             ctx = {
-                'default_template_id': template_id,
                 'default_order_id': self.id,
                 'mark_so_as_canceled': True,
-                'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
-                'model_description': self.with_context(lang=lang).type_name,
             }
             return {
                 'name': _('Cancel %s', self.type_name),
