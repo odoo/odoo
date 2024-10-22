@@ -4,7 +4,6 @@
 
 # TODO we should only expose *Model objects here, maybe check_comp*
 
-from odoo.orm.commands import Command
 from odoo.orm.identifiers import NewId
 from odoo.orm.models import (
     GC_UNLINK_LIMIT,
