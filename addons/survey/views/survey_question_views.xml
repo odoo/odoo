@@ -175,6 +175,8 @@
                                     <field name="value_image_filename" column_invisible="not parent.has_image_only_suggested_answer"/>
                                     <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
                                            column_invisible="parent.question_type in ['matrix', 'scale']" required="not value"/>
+                                    <field name="tag_ids" invisible="parent.end_message_selection == 'unique'" widget="many2many_tags"
+                                    options="{'no_create': True}" domain="[('survey_id', '=', parent.survey_id)]"/>
                                 </list>
                             </field>
 
@@ -393,6 +395,40 @@
           <p class="o_view_nocontent_empty_folder">
             No survey labels found
           </p>
+        </field>
+    </record>
+
+    <record id="survey_question_answer_tag" model="ir.ui.view">
+        <field name="name">survey.question.answer.tag.view.form</field>
+        <field name="model">survey.question.answer.tag</field>
+        <field name="arch" type="xml">
+            <form string="Question Answer Tag Form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="end_message"/>
+                        </group>
+                        <group>
+                            <field name="survey_id"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="question_answer_ids" domain="[('question_id' ,'in', parent.question_ids)]">
+                                <list create="false">
+                                    <field name="question_id"/>
+                                    <field name="value" string="Answer"/>
+                                    <field name="answer_score"/>
+                                </list>
+                            </field>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 

@@ -864,3 +864,60 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
                     'suggested_answer_id': answer.id,
                 })
                 self.assertEqual(user_input_line.answer_score, expected_score)
+
+    def test_survey_user_input_most_answered_tag(self):
+        """When the survey end message depends on the most frequent tag
+        associated with the user's answers, check this tag is correctly
+        computed."""
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Survey with conditional end messages',
+            'end_message_selection': 'most_answered',
+            'answer_tag_ids': [
+                Command.create({'name': 'Tag_1', 'end_message': '<p>Tag 1</p>', 'sequence': 2}),
+                Command.create({'name': 'Tag_2', 'end_message': '<p>Tag 2</p>', 'sequence': 1}),
+            ],
+            'question_and_page_ids': [
+                Command.create({'title': 'Pick one tag.',
+                'question_type': 'simple_choice'}),
+                Command.create({'title': 'Pick one or more tags.',
+                'question_type': 'multiple_choice'})]
+        })
+        tag_1, tag_2 = test_survey.answer_tag_ids
+        q_1, q_2 = test_survey.question_and_page_ids
+        q_1_a_1, q_1_a_2, q_2_a_1, q_2_a_2, q_2_a_3 = self.env['survey.question.answer'].create([
+            {'question_id': q_1.id, 'value': 'Tag 1', 'tag_ids': tag_1},
+            {'question_id': q_1.id, 'value': 'Tag 2', 'tag_ids': tag_2},
+            {'question_id': q_2.id, 'value': 'Tag 1', 'tag_ids': tag_1},
+            {'question_id': q_2.id, 'value': 'Tag 2', 'tag_ids': tag_2},
+            {'question_id': q_2.id, 'value': 'Tag 1 + 2', 'tag_ids': tag_1 + tag_2}])
+        user_inputs = self.env['survey.user_input'].create([
+            {'survey_id': test_survey.id,
+            'user_input_line_ids': [
+                # Happy path: most frequent tag wins
+                Command.create({'question_id': q_1.id, 'suggested_answer_id': q_1_a_2.id}),
+                Command.create({'question_id': q_2.id, 'suggested_answer_id': q_2_a_1.id}),
+                Command.create({'question_id': q_2.id, 'suggested_answer_id': q_2_a_2.id}),
+            ]},
+            {'survey_id': test_survey.id,
+            'user_input_line_ids': [
+                # Strict equality: lowest sequence number wins
+                Command.create({'question_id': q_1.id, 'suggested_answer_id': q_1_a_1.id}),
+                Command.create({'question_id': q_2.id, 'suggested_answer_id': q_2_a_2.id}),
+            ]},
+            {'survey_id': test_survey.id,
+            'user_input_line_ids': [
+                # Answer(s) with multiple tags
+                Command.create({'question_id': q_1.id, 'suggested_answer_id': q_1_a_1.id}),
+                Command.create({'question_id': q_2.id, 'suggested_answer_id': q_2_a_3.id}),
+            ]},
+            {'survey_id': self.survey.id,
+            'user_input_line_ids': [
+                # No Answer Tag, no crash
+                Command.create({'question_id': self.question_ft.id, 'value_char_box': 'Test'}),
+                Command.create({'question_id': self.question_num.id, 'value_numerical_box': 1.5}),
+                Command.create({'question_id': self.question_scale.id, 'value_scale': 1}),
+            ]},
+        ])
+        results = [tag_2, tag_2, tag_1, self.env['survey.question.answer.tag']]
+        for user_input, most_answered_tag in zip(user_inputs, results):
+            self.assertEqual(user_input.most_answered_tag, most_answered_tag)
