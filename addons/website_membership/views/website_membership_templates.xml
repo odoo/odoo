@@ -27,7 +27,7 @@
                     <t t-foreach="memberships_data" t-as="membership_data">
                         <li class="nav-item">
                             <a t-attf-href="/members/association/#{ membership_data['id'] }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"
-                                t-attf-class="nav-link#{membership_id and membership_data['id'] == membership_id and ' active' or ''}"><t t-esc="membership_data['name']"/></a>
+                                t-attf-class="nav-link#{membership_id and membership_data['id'] == membership_id and ' active' or ''}"><t t-out="membership_data['name']"/></a>
                         </li>
                     </t>
                 </ul>
@@ -49,7 +49,7 @@
                     </t>
                     <t t-foreach="memberships_data" t-as="membership_data">
                         <t t-if="memberships_partner_ids.get(membership_data['id'])">
-                            <h3 class="text-center"><span t-esc="membership_data['name']"/></h3>
+                            <h3 class="text-center"><span t-out="membership_data['name']"/></h3>
                             <t t-foreach="memberships_partner_ids[membership_data['id']]" t-as="partner_id">
                                 <t t-set="partner" t-value="partners[partner_id]"/>
                                 <div class="d-flex mt-3">
@@ -85,8 +85,8 @@
             <t t-foreach="countries" t-as="country">
                 <li t-if="country['country_id']" class="nav-item">
                     <a t-attf-href="/members#{ membership_id and '/association/%s' % membership_id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"
-                        t-attf-class="nav-link#{country['country_id'] and country['country_id'][0] == current_country_id and ' active' or ''}"><t t-esc="country['country_id'][1]"/>
-                        <span class="badge float-end"><t t-esc="country['country_id_count'] or '0'"/></span>
+                        t-attf-class="nav-link#{country['country_id'] and country['country_id'][0] == current_country_id and ' active' or ''}"><t t-out="country['country_id'][1]"/>
+                        <span class="badge float-end"><t t-out="country['country_id_count'] or '0'"/></span>
                     </a>
                 </li>
             </t>

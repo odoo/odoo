@@ -5,7 +5,7 @@
         <div t-if="is_storable and !prevent_zero_price_sale" id="product_stock_availability">
             <div t-if="free_qty lte 0 and !cart_qty" t-attf-class="availability_message_#{product_template} mb-1">
                 <div id="out_of_stock_message">
-                    <t t-if='has_out_of_stock_message' t-out='out_of_stock_message'/>
+                    <t t-if='has_out_of_stock_message' t-out="out_of_stock_message"/>
                     <t t-elif="!allow_out_of_stock_order">
                         <div class="text-danger fw-bold">
                             <i class="fa fa-times me-1"/>
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div id="threshold_message" t-elif="show_availability and free_qty lte available_threshold" t-attf-class="availability_message_#{product_template} text-warning fw-bold">
-                Only <t t-esc="formatQuantity(free_qty)"/> <t t-esc="uom_name" /> left in stock.
+                Only <t t-out="formatQuantity(free_qty)"/> <t t-out="uom_name" /> left in stock.
             </div>
 
             <div id="already_in_cart_message" t-if="!allow_out_of_stock_order and show_availability and cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
@@ -53,7 +53,7 @@
                     You already added all the available product in your cart.
                 </t>
                 <t t-else=''>
-                    You already added <t t-esc="cart_qty" /> <t t-esc="uom_name" /> in your cart.
+                    You already added <t t-out="cart_qty" /> <t t-out="uom_name" /> in your cart.
                 </t>
             </div>
         </div>

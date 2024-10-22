@@ -68,7 +68,7 @@
                 <a href="/shop/wishlist" t-attf-class="#{_link_class}">
                     <div t-attf-class="#{_icon_wrap_class}">
                         <i t-if="_icon" class="fa fa-1x fa-heart fa-stack"/>
-                        <sup t-esc="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class}"/>
+                        <sup t-out="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class}"/>
                     </div>
                     <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
                 </a>
@@ -237,7 +237,7 @@
                                             </a>
                                         </td>
                                         <td class='text-start align-middle'>
-                                            <strong><a t-att-href="wish.product_id.website_url"><t t-esc="wish.product_id.display_name" /></a></strong>
+                                            <strong><a t-att-href="wish.product_id.website_url"><t t-out="wish.product_id.display_name" /></a></strong>
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>

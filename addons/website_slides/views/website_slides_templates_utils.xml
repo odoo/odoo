@@ -70,7 +70,7 @@
         <div>
             <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();" t-attf-id="wslides_share_embed_id_{{record.id}}">
                 <!-- Use the external embedding URL here, see python controller '_slide_embed' method for more details. -->
-                <t t-esc="slide.embed_code_external"/>
+                <t t-out="slide.embed_code_external"/>
             </textarea>
             <button t-att-id="'share_embed_clipboard_button_id_%s' % record.id" class="btn btn-sm btn-primary o_embed_clipboard_button float-end mt-1 p-2" >
                 <i class="fa fa-clipboard"/> Copy Embed Code
