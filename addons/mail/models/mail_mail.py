@@ -442,10 +442,10 @@ class MailMail(models.Model):
         # with partner-specific sending)
         if self.email_cc:
             if email_list:
-                email_list[0]['email_cc'] = tools.email_split(self.email_cc)
+                email_list[0]['email_cc'] = tools.mail.email_split_and_format(self.email_cc)
             else:
                 email_list.append({
-                    'email_cc':  tools.email_split(self.email_cc),
+                    'email_cc':  tools.mail.email_split_and_format(self.email_cc),
                     'email_to': [],
                     'email_to_raw': False,
                     'partner_id': False,
