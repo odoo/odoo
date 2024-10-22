@@ -40,6 +40,8 @@ class TestSaleMatrixUi(TestMatrixCommon):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
 
+        self.env['product.pricelist'].search([]).unlink()
+
         # Set the template as configurable by matrix.
         self.matrix_template.product_add_mode = "matrix"
 
