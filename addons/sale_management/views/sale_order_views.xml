@@ -101,6 +101,7 @@
             </page>
 
             <field name="partner_shipping_id" position="after">
+                <field name="company_id" invisible="1"/><!-- ensure that `company_id` onchange is triggered before `sale_order_template_id` onchange to avoid an unnecessary warning -->
                 <field name="sale_order_template_id"
                     options="{'no_create': True}"
                     groups="sale_management.group_sale_order_template"
