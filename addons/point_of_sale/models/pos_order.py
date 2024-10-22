@@ -1386,7 +1386,8 @@ class PosOrderLine(models.Model):
             self.is_edited = True
             body = _("%(product_name)s: Ordered quantity: %(old_qty)s", product_name=self.full_product_name, old_qty=self.qty)
             body += Markup("&rarr;") + str(values.get('qty'))
-            self.order_id._post_chatter_message(body)
+            for line in self:
+                line.order_id._post_chatter_message(body)
         return super().write(values)
 
     @api.model
