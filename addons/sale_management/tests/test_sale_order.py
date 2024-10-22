@@ -496,3 +496,20 @@ class TestSaleOrder(SaleManagementCommon):
             "The sale order line should use the quotation template's description when both \
             product and the quotation template descriptions are set."
         )
+
+    def test_warning_quotation(self):
+        """
+        ensure "warning for the change of your quotation's company" isn't triggered
+        during the creation of a quotation when a quotation template is set as default
+        """
+        quotation_template = self.empty_order_template
+        quotation_template.sale_order_template_line_ids = [
+            Command.create({'product_id': self.product.id})
+        ]
+        self.env['ir.default'].set('sale.order', 'sale_order_template_id', quotation_template.id)
+        try:
+            with self.assertLogs('odoo.tests.form.onchange') as log_catcher:
+                Form(self.env['sale.order'])
+        except AssertionError:
+            pass
+        self.assertEqual(len(log_catcher.output), 0, "Form creation shouldn't trigger a warning")
