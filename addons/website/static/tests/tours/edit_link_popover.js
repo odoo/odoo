@@ -173,7 +173,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
             await helpers.click();
             const el = this.anchor;
             const sel = el.ownerDocument.getSelection();
-            sel.collapse(el, 0);
+            sel.collapse(el.childNodes[1], 1);
             el.focus();
         }
     },
