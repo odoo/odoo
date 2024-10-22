@@ -50,6 +50,30 @@ class PaymentTransaction(models.Model):
         prefix = payment_utils.singularize_reference_prefix(prefix=prefix, max_length=40)
         return super()._compute_reference(provider_code, prefix=prefix, **kwargs)
 
+    def _get_specific_processing_values(self, processing_values):
+        """ Override of payment to redirect failed token-flow transactions.
+
+        If the financial institution insists on 3-D Secure authentication, this
+        override will reset the transaction, and switch the flow to redirect.
+
+        Note: `self.ensure_one()`
+        """
+        res = super()._get_specific_processing_values(processing_values)
+        if (
+            self.provider_code == 'ogone'
+            and self.operation == 'online_token'
+            and self.state == 'error'
+            and self.state_message.endswith('3ds-authentication-required')
+        ):
+            # Tokenized payment failed due to 3-D Secure authentication request.
+            # Reset transaction to draft and switch to redirect flow.
+            self.write({
+                'state': 'draft',
+                'operation': 'online_redirect',
+            })
+            res['force_flow'] = 'redirect'
+        return res
+
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Ogone-specific rendering values.
 
@@ -219,12 +243,14 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['declined']:
-            if notification_data.get("NCERRORPLUS"):
-                reason = notification_data.get("NCERRORPLUS")
-            elif notification_data.get("NCERROR"):
-                reason = "Error code: %s" % notification_data.get("NCERROR")
+            if ncerror := notification_data.get('NCERROR'):
+                reason = (
+                    const.PAYMENT_ERROR_TYPES_MAPPING.get(int(ncerror))
+                    or notification_data.get('NCERRORPLUS')
+                    or _("Error code: %s", ncerror)
+                )
             else:
-                reason = "Unknown reason"
+                reason = _("Unknown reason")
             _logger.info("the payment has been declined: %s.", reason)
             self._set_error(
                 "Ogone: " + _("The payment has been declined: %s", reason)

@@ -77,6 +77,11 @@ PAYMENT_STATUS_MAPPING = {
     'declined': (2,),
 }
 
+# See https://epayments-support.ingenico.com/en/get-started/transaction-management/transaction-error-codes
+PAYMENT_ERROR_TYPES_MAPPING = {
+    40001139: '3ds-authentication-required',
+}
+
 # The codes of the payment methods to activate when Ogone is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.

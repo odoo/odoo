@@ -14,6 +14,11 @@
 
         'data/payment_provider_data.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'payment_ogone/static/src/js/payment_form.js',
+        ],
+    },
     'pre_init_hook': 'pre_init_hook',
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
