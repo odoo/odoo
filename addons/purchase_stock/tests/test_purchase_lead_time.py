@@ -21,7 +21,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         company.write({'po_lead': 3.00})
 
         # Make procurement request from product_1's form view, create procurement and check it's state
-        date_planned = fields.datetime.now() + timedelta(days=10)
+        date_planned = fields.Datetime.now() + timedelta(days=10)
         self._create_make_procurement(self.product_1, 15.00, date_planned=date_planned)
         purchase = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
 
@@ -52,12 +52,12 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         company.write({'po_lead': 0.00})
 
         # Make procurement request from product_1's form view, create procurement and check it's state
-        date_planned1 = fields.datetime.now() + timedelta(days=10)
+        date_planned1 = fields.Datetime.now() + timedelta(days=10)
         self._create_make_procurement(self.product_1, 10.00, date_planned=date_planned1)
         purchase1 = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
 
         # Make procurement request from product_2's form view, create procurement and check it's state
-        date_planned2 = fields.datetime.now() + timedelta(days=10)
+        date_planned2 = fields.Datetime.now() + timedelta(days=10)
         self._create_make_procurement(self.product_2, 5.00, date_planned=date_planned2)
         purchase2 = self.env['purchase.order.line'].search([('product_id', '=', self.product_2.id)], limit=1).order_id
 
@@ -161,7 +161,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         procurement_values = {
             'warehouse_id': self.warehouse_1,
             'rule_id': self.warehouse_1.buy_pull_id,
-            'date_planned': fields.datetime.now() + timedelta(days=10),
+            'date_planned': fields.Datetime.now() + timedelta(days=10),
             'group_id': False,
             'route_ids': [],
         }

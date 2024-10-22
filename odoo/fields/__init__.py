@@ -17,6 +17,3 @@ from odoo.orm.fields_properties import Properties, PropertiesDefinition
 from odoo.orm.fields_binary import Binary, Image
 
 from odoo.orm.commands import Command
-
-# TODO these should not be exposed here
-from datetime import date, datetime

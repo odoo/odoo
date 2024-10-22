@@ -38,7 +38,7 @@ class HrEmployee(models.Model):
         return result
 
     def _delete_future_public_holidays_timesheets(self):
-        future_timesheets = self.env['account.analytic.line'].sudo().search([('global_leave_id', '!=', False), ('date', '>=', fields.date.today()), ('employee_id', 'in', self.ids)])
+        future_timesheets = self.env['account.analytic.line'].sudo().search([('global_leave_id', '!=', False), ('date', '>=', fields.Date.today()), ('employee_id', 'in', self.ids)])
         future_timesheets.write({'global_leave_id': False})
         future_timesheets.unlink()
 

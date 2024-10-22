@@ -23,7 +23,7 @@ def create_internal_project(env):
     env['account.analytic.line'].create([{
         'name': env._("Analysis"),
         'user_id': admin.id,
-        'date': fields.datetime.today(),
+        'date': fields.Date.today(),
         'unit_amount': 0,
         'project_id': task.project_id.id,
         'task_id': task.id,

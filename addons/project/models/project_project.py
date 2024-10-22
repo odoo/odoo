@@ -265,7 +265,7 @@ class ProjectProject(models.Model):
     def _compute_rating_request_deadline(self):
         periods = {'daily': 1, 'weekly': 7, 'bimonthly': 15, 'monthly': 30, 'quarterly': 90, 'yearly': 365}
         for project in self:
-            project.rating_request_deadline = fields.datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
+            project.rating_request_deadline = fields.Datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
 
     @api.depends('last_update_id.status')
     def _compute_last_update_status(self):

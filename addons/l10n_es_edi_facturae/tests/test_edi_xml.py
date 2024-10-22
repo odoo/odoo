@@ -102,7 +102,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
         cls.certificate_module = "odoo.addons.certificate.models.certificate"
         cls.move_module = "odoo.addons.l10n_es_edi_facturae.models.account_move"
-        with freeze_time(cls.frozen_today), patch(f"{cls.certificate_module}.fields.datetime.now", lambda x=None: cls.frozen_today):
+        with freeze_time(cls.frozen_today), patch(f"{cls.certificate_module}.fields.Datetime.now", lambda x=None: cls.frozen_today):
             cls.certificate = cls.env["certificate.certificate"].create({
                 'name': 'Test ES certificate',
                 'content': b64encode(file_open('l10n_es_edi_facturae/tests/data/certificate_test.pfx', 'rb').read()),
@@ -157,7 +157,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         date = date or self.frozen_today
         # We need to patch dates and uuid to ensure the signature's consistency
         with freeze_time(date), \
-                patch(f"{self.certificate_module}.fields.datetime.now", lambda x=None: date), \
+                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: date), \
                 patch(f"{self.move_module}.sha1", lambda x: sha1()):
             invoice = self.create_invoice(
                 partner_id=self.partner_a.id,
@@ -187,7 +187,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
         random.seed(42)
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.datetime.now", lambda x=None: self.frozen_today), \
+                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 patch(f'{self.certificate_module}.CertificateCertificate._compute_is_valid', _compute_is_valid), \
                 patch(f"{self.move_module}.sha1", lambda x: sha1()):
             invoice = self.create_invoice(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}])
@@ -206,7 +206,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
     def test_tax_withheld(self):
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.datetime.now", lambda x=None: self.frozen_today), \
+                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 patch(f"{self.move_module}.sha1", lambda x: sha1()):
             witholding_taxes = self.env["account.tax"].create([{
                 'name': "IVA 21%",
@@ -243,7 +243,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         random.seed(42)
         # We need to patch dates and uuid to ensure the signature's consistency
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.datetime.now", lambda x=None: self.frozen_today), \
+                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 patch(f"{self.move_module}.sha1", lambda x: sha1()):
             invoice = self.create_invoice(
                 partner_id=self.partner_a.id,
@@ -269,7 +269,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         random.seed(42)
         # We need to patch dates and uuid to ensure the signature's consistency
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.datetime.now", lambda x=None: self.frozen_today), \
+                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 patch(f"{self.move_module}.sha1", lambda x: sha1()):
             invoice = self.create_invoice(
                 partner_id=self.partner_a.id,
@@ -301,7 +301,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
     def test_discount_100_percent(self):
         """ Create an invoice with a 100% discount """
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.datetime.now", lambda x=None: self.frozen_today), \
+                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 patch(f"{self.move_module}.sha1", lambda x: sha1()):
             invoice = self.create_invoice(
                 partner_id=self.partner_a.id,

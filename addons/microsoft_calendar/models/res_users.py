@@ -4,7 +4,7 @@
 import logging
 import requests
 from odoo.addons.microsoft_calendar.models.microsoft_sync import microsoft_calendar_token
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
@@ -97,7 +97,7 @@ class ResUsers(models.Model):
 
     def _sync_microsoft_calendar(self):
         self.ensure_one()
-        self.sudo().microsoft_last_sync_date = fields.datetime.now()
+        self.sudo().microsoft_last_sync_date = datetime.now()
         if self._get_microsoft_sync_status() != "sync_active":
             return False
         calendar_service = self.env["calendar.event"]._get_microsoft_service()
@@ -121,7 +121,7 @@ class ResUsers(models.Model):
 
         events = self.env['calendar.event']._get_microsoft_records_to_sync(full_sync=full_sync)
         (events - synced_events)._sync_odoo2microsoft()
-        self.sudo().microsoft_last_sync_date = fields.datetime.now()
+        self.sudo().microsoft_last_sync_date = datetime.now()
 
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 
@@ -145,7 +145,7 @@ class ResUsers(models.Model):
 
     def restart_microsoft_synchronization(self):
         self.ensure_one()
-        self.sudo().microsoft_last_sync_date = fields.datetime.now()
+        self.sudo().microsoft_last_sync_date = datetime.now()
         self.sudo().microsoft_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_microsoft_sync()
         self.env['calendar.event']._restart_microsoft_sync()
