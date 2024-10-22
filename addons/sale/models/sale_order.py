@@ -736,6 +736,12 @@ class SaleOrder(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
+    def onchange(self, values, field_names, fields_spec):
+        self_with_context = self
+        if not field_names: # Some warnings should not be displayed for the first onchange
+            self_with_context = self.with_context(sale_onchange_first_call=True)
+        return super(SaleOrder, self_with_context).onchange(values, field_names, fields_spec)
+
     @api.onchange('commitment_date', 'expected_date')
     def _onchange_commitment_date(self):
         """ Warn if the commitment dates is sooner than the expected date """
@@ -751,6 +757,8 @@ class SaleOrder(models.Model):
     @api.onchange('company_id')
     def _onchange_company_id_warning(self):
         self.show_update_pricelist = True
+        if self.env.context.get('sale_onchange_first_call'):
+            return
         if self.order_line and self.state == 'draft':
             return {
                 'warning': {
