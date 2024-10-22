@@ -110,6 +110,7 @@ class Http(models.AbstractModel):
                     mods, request.session.context['lang']
                 ) if session_uid else None,
             },
+            "company_currency_id": user.get_company_currency_id(),
             "currencies": self.sudo().get_currencies(),
             'bundle_params': {
                 'lang': request.session.context['lang'],

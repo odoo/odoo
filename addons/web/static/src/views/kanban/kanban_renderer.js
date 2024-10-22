@@ -20,6 +20,7 @@ import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
 import { Component, useState, useRef, onPatched, onWillPatch, onWillDestroy } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
@@ -302,11 +303,48 @@ export class KanbanRenderer extends Component {
 
     getGroupAggregate(group) {
         const { sumField } = this.props.list.model.progressAttributes;
-        const value = group.getAggregates(sumField && sumField.name);
-        const title = sumField ? sumField.string : this.env._t("Count");
+        let value = group.getAggregates(sumField && sumField.name);
+        let title = sumField ? sumField.string : this.env._t("Count");
         let currency = false;
         if (sumField && value && sumField.currency_field) {
             currency = session.currencies[session.company_currency_id];
+        }
+        for (const fieldName in this.props.list.activeFields) {
+            const values = this.group.list.records.map((r) => r.data);;
+            const field = this.group.fields[fieldName];
+            const fieldValues = values.map((v) => v[fieldName]).filter((v) => v || v === 0);
+            if (!fieldValues.length) {
+                continue;
+            }
+            const type = field.type;
+            if (type !== "integer" && type !== "float" && type !== "monetary") {
+                continue;
+            }
+            const { widget } = this.props.list.activeFields[fieldName];
+            let currencyId;
+            if (type === "monetary" || widget === "monetary") {
+                const currencyField =
+                    this.props.list.activeFields[fieldName].options.currency_field ||
+                    this.group.fields[fieldName].currency_field ||
+                    "currency_id";
+                currencyId =
+                    currencyField in this.props.list.activeFields &&
+                    values[0][currencyField] &&
+                    values[0][currencyField][0];
+                if (currencyId) {
+                    const sameCurrency = values.every(
+                        (value) => currencyId === value[currencyField][0]
+                    );
+                    if (!sameCurrency) {
+                        value = 0;
+                        title = _t("Different currencies cannot be aggregated");
+                        currency = false;
+                        break;
+                    } else {
+                        currency = session.currencies[currencyId];
+                    }
+                }
+            }
         }
         return { value, currency, title };
     }
