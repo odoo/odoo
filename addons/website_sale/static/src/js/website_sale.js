@@ -9,7 +9,7 @@ import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import { rpc } from "@web/core/network/rpc";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import { isBrowserFirefox, hasTouch } from "@web/core/browser/feature_detection";
 
 
@@ -23,7 +23,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
-        'click .toggle_summary': '_onToggleSummary',
         'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
@@ -58,12 +57,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         // This has to be triggered to compute the "out of stock" feature and the hash variant changes
         this.triggerVariantChange(this.$el);
-
-        listenSizeChange(() => {
-            if (uiUtils.getSize() === SIZES.XL) {
-                $('.toggle_summary_div').addClass('d-none d-xl-block');
-            }
-        })
 
         this._startZoom();
 
@@ -526,13 +519,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         this._setUrlHash($component);
 
         return VariantMixin.onChangeVariant.apply(this, arguments);
-    },
-    /**
-     * @private
-     */
-    _onToggleSummary: function () {
-        $('.toggle_summary_div').toggleClass('d-none');
-        $('.toggle_summary_div').removeClass('d-xl-block');
     },
     /**
      * @private
