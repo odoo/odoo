@@ -7988,6 +7988,17 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                     const defaultSnippetName = _.str.sprintf(_t("Custom %s"), this.data.snippetName);
                                     const targetCopyEl = this.$target[0].cloneNode(true);
                                     targetCopyEl.classList.add('s_custom_snippet');
+                                    // when cloning the snippets which has o_snippet_invisible, o_snippet_mobile_invisible or
+                                    // o_snippet_desktop_invisible class will be hidden because of d-none class added on it,
+                                    // so we needs to remove `d-none` explicity in such case from the target.
+                                    const isTargetHidden = [
+                                        "o_snippet_invisible",
+                                        "o_snippet_mobile_invisible",
+                                        "o_snippet_desktop_invisible"
+                                    ].some(className => this.$target[0].classList.contains(className));
+                                    if (isTargetHidden) {
+                                        targetCopyEl.classList.remove("d-none");
+                                    }
                                     delete targetCopyEl.dataset.name;
                                     // By the time onSuccess is called after request_save, the
                                     // current widget has been destroyed and is orphaned, so this._rpc
