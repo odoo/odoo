@@ -92,6 +92,31 @@ class CalendarAttendee(models.Model):
             partners = (event.attendee_ids & self).partner_id & event.message_partner_ids
             event.message_unsubscribe(partner_ids=partners.ids)
 
+    # ------------------------------------------------------------
+    # MAILING
+    # ------------------------------------------------------------
+
+    @api.model
+    def _mail_template_default_values(self):
+        return {
+            "email_from": "{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}",
+            "email_to": False,
+            "partner_to": False,
+            "lang": "{{ object.partner_id.lang }}",
+            "use_default_to": True,
+        }
+
+    def _message_get_default_recipients(self):
+        # override: partner_id being the only stored field, we can currently
+        # simplify computation, we have no other choice than relying on it
+        return {
+            attendee.id: {
+                'partner_ids': attendee.partner_id.ids,
+                'email_to': False,
+                'email_cc': False
+            } for attendee in self
+        }
+
     def _send_invitation_emails(self):
         """ Hook to be able to override the invitation email sending process.
          Notably inside appointment to use a different mail template from the appointment type. """
@@ -189,6 +214,10 @@ class CalendarAttendee(models.Model):
         partner_not_sender = self.partner_id != self.env.user.partner_id
         mail_notify_author = self.env.context.get('mail_notify_author')
         return partner_not_sender or mail_notify_author
+
+    # ------------------------------------------------------------
+    # STATE MANAGEMENT
+    # ------------------------------------------------------------
 
     def do_tentative(self):
         """ Makes event invitation as Tentative. """

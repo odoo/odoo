@@ -70,7 +70,10 @@ class TestAutoBlacklist(common.TestMassMailCommon):
             mailing.action_send_mail()
 
         self.assertMailTraces(
-            [{'email': 'test.record.00@test.example.com'}],
+            [{
+                'email': 'test.record.00@test.example.com',
+                'email_to_mail': '"TestCustomer 00" <test.record.00@test.example.com>',
+            }],
             mailing, target,
             check_mail=True
         )
@@ -88,6 +91,11 @@ class TestAutoBlacklist(common.TestMassMailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             new_mailing.action_send_mail()
         self.assertMailTraces(
-            [{'email': 'test.record.00@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_bl'}],
+            [{
+                'email': 'test.record.00@test.example.com',
+                'email_to_mail': '"TestCustomer 00" <test.record.00@test.example.com>',
+                'failure_type': 'mail_bl',
+                'trace_status': 'cancel',
+            }],
             new_mailing, target, check_mail=True
         )

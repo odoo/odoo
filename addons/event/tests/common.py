@@ -86,6 +86,13 @@ class EventCase(common.TransactionCase):
             tz='Europe/Brussels',
         )
 
+        cls.event_organizer = cls.env['res.partner'].create({
+            'city': 'Bruxelles',
+            'country_id': cls.env.ref('base.be').id,
+            'email': 'organizer@example.com',
+            'name': 'Organizer',
+            'street': 'Organizer Street',
+        })
         cls.event_customer = cls.env['res.partner'].create({
             'name': 'Constantin Customer',
             'email': 'constantin@test.example.com',
@@ -185,22 +192,22 @@ class EventCase(common.TransactionCase):
         cls.template_subscription = cls.env['mail.template'].create({
             "body_html": """<div>Hello your registration to <t t-out="object.event_id.name"/> is confirmed.</div>""",
             "email_from": "{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}",
-            "email_to": """{{ (object.email and '"%s" <%s>' % (object.name, object.email)) or object.partner_id.email_formatted or '' }}""",
             "lang": "{{ object.event_id.lang or object.partner_id.lang }}",
             "model_id": cls.env['ir.model']._get_id("event.registration"),
             "name": "Event: Registration Confirmation TEST",
             "subject": "Confirmation for {{ object.event_id.name }}",
             "report_template_ids": [(4, cls.test_report_action.id)],
+            "use_default_to": True,
         })
         cls.template_reminder = cls.env['mail.template'].create({
             "body_html": """<div>Hello this is a reminder for your registration to  <t t-out="object.event_id.name"/>.</div>""",
             "email_from": "{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}",
-            "email_to": """{{ (object.email and '"%s" <%s>' % (object.name, object.email)) or object.partner_id.email_formatted or '' }}""",
             "lang": "{{ object.event_id.lang or object.partner_id.lang }}",
             "model_id": cls.env['ir.model']._get_id("event.registration"),
             "name": "Event: Registration Reminder TEST",
             "subject": "Reminder for {{ object.event_id.name }}: {{ object.event_date_range }}",
             "report_template_ids": [(4, cls.test_report_action.id)],
+            "use_default_to": True,
         })
 
     def assertSchedulerCronTriggers(self, capture, call_at_list):

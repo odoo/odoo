@@ -17,7 +17,7 @@ from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
 from odoo.http import request, Response
 from odoo.osv import expression
-from odoo.tools import consteq, email_split
+from odoo.tools import consteq, email_normalize_all
 
 _logger = logging.getLogger(__name__)
 
@@ -919,7 +919,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/send_share_email'], type='json', auth='user', website=True)
     def slide_channel_send_share_email(self, channel_id, emails):
-        if not email_split(emails):
+        if not email_normalize_all(emails):
             return False
         channel = request.env['slide.channel'].browse(int(channel_id))
         channel._send_share_email(emails)
@@ -1132,7 +1132,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
     def slide_send_share_email(self, slide_id, emails, fullscreen=False):
-        if not email_split(emails):
+        if not email_normalize_all(emails):
             return False
         slide = request.env['slide.slide'].browse(int(slide_id))
         slide._send_share_email(emails, fullscreen)

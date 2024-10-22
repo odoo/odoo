@@ -22,6 +22,7 @@ class GamificationGoal(models.Model):
 
     definition_id = fields.Many2one('gamification.goal.definition', string="Goal Definition", required=True, ondelete="cascade")
     user_id = fields.Many2one('res.users', string="User", required=True, auto_join=True, ondelete="cascade")
+    user_partner_id = fields.Many2one('res.partner', related='user_id.partner_id')
     line_id = fields.Many2one('gamification.challenge.line', string="Challenge Line", ondelete="cascade")
     challenge_id = fields.Many2one(
         related='line_id.challenge_id', store=True, readonly=True, index=True,
@@ -331,3 +332,6 @@ class GamificationGoal(models.Model):
             return action
 
         return False
+
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return ['user_partner_id']

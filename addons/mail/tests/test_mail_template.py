@@ -18,6 +18,10 @@ class TestMailTemplate(MailCommon):
         # Enable the Jinja rendering restriction
         cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
         cls.user_employee.groups_id -= cls.env.ref('mail.group_mail_template_editor')
+        cls.test_partner = cls.env['res.partner'].create({
+            'email': 'test.rendering@test.example.com',
+            'name': 'Test Rendering',
+        })
 
         cls.mail_template = cls.env['mail.template'].create({
             'name': 'Test template',
@@ -26,11 +30,12 @@ class TestMailTemplate(MailCommon):
             'lang': '{{ object.lang }}',
             'auto_delete': True,
             'model_id': cls.env.ref('base.model_res_partner').id,
+            'use_default_to': False,
         })
 
     @users('employee')
     def test_mail_compose_message_content_from_template(self):
-        form = Form(self.env['mail.compose.message'])
+        form = Form(self.env['mail.compose.message'].with_context(active_ids=self.test_partner.ids))
         form.template_id = self.mail_template
         mail_compose_message = form.save()
 

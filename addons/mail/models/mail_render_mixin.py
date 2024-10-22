@@ -261,11 +261,12 @@ class MailRenderMixin(models.AbstractModel):
         """
         render_context = {
             'ctx': self._context,
+            'format_addr': tools.formataddr,
             'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
             'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
             'format_time': lambda time, tz=False, time_format=False, lang_code=False: format_time(self.env, time, tz, time_format, lang_code),
             'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
-            'format_duration': lambda value: tools.format_duration(value),
+            'format_duration': tools.format_duration,
             'is_html_empty': is_html_empty,
             'slug': self.env['ir.http']._slug,
             'user': self.env.user,

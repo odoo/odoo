@@ -144,15 +144,27 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _get_default_mail_partner_ids(self, move, mail_template, mail_lang):
         partners = self.env['res.partner'].with_company(move.company_id)
-        if mail_template.email_to:
-            email_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_to')
-            for mail_data in tools.email_split(email_to):
-                partners |= partners.find_or_create(mail_data)
-        if mail_template.email_cc:
-            email_cc = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_cc')
-            for mail_data in tools.email_split(email_cc):
-                partners |= partners.find_or_create(mail_data)
-        if mail_template.partner_to:
+        if mail_template.use_default_to:
+            defaults = move._message_get_default_recipients()[move.id]
+            email_cc = defaults['email_to']
+            email_to = defaults['email_to']
+            partners |= partners.browse(defaults['partner_ids'])
+        else:
+            if mail_template.email_cc:
+                email_cc = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_cc')
+            else:
+                email_cc = ''
+            if mail_template.email_to:
+                email_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_to')
+            else:
+                email_to = ''
+
+        for mail_data in tools.email_split(email_cc):
+            partners |= partners.find_or_create(mail_data)
+        for mail_data in tools.email_split(email_to):
+            partners |= partners.find_or_create(mail_data)
+
+        if not mail_template.use_default_to and mail_template.partner_to:
             partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
             partner_ids = mail_template._parse_partner_to(partner_to)
             partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()

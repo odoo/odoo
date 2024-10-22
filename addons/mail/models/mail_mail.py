@@ -442,10 +442,10 @@ class MailMail(models.Model):
         # with partner-specific sending)
         if self.email_cc:
             if email_list:
-                email_list[0]['email_cc'] = tools.email_split(self.email_cc)
+                email_list[0]['email_cc'] = tools.mail.email_split_and_format(self.email_cc)
             else:
                 email_list.append({
-                    'email_cc':  tools.email_split(self.email_cc),
+                    'email_cc':  tools.mail.email_split_and_format(self.email_cc),
                     'email_to': [],
                     'email_to_raw': False,
                     'partner_id': False,
@@ -664,13 +664,15 @@ class MailMail(models.Model):
                 mail = self.browse(mail_id)
                 if mail.state != 'outgoing':
                     continue
+                no_recipients = (not (mail.email_to or '').strip() and not mail.recipient_ids and not (mail.email_cc or '').strip())
 
                 # Writing on the mail object may fail (e.g. lock on user) which
                 # would trigger a rollback *after* actually sending the email.
                 # To avoid sending twice the same email, provoke the failure earlier
                 mail.write({
                     'state': 'exception',
-                    'failure_reason': _('Error without exception. Probably due to sending an email without computed recipients.'),
+                    'failure_reason': IrMailServer.NO_VALID_RECIPIENT if no_recipients else _('Error without exception. Probably due to sending an email without computed recipients.'),
+                    'failure_type': 'mail_email_missing' if no_recipients else 'unknown',
                 })
                 # Update notification in a transient exception state to avoid concurrent
                 # update in case an email bounces while sending all emails related to current
@@ -745,6 +747,7 @@ class MailMail(models.Model):
                                 failure_type = "mail_email_missing"
                             else:
                                 failure_type = "mail_email_invalid"
+                            failure_reason = tools.exception_to_unicode(error)
                             # No valid recipient found for this particular
                             # mail item -> ignore error to avoid blocking
                             # delivery to next recipients, if any. If this is
@@ -754,12 +757,20 @@ class MailMail(models.Model):
                         else:
                             raise
                 if res:  # mail has been sent at least once, no major exception occurred
-                    mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False})
+                    mail.write({'state': 'sent', 'message_id': res, 'failure_type': False, 'failure_reason': False})
                     if not modules.module.current_test:
                         _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error
                     # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
-                mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type)
+                else:
+                    mail_vals = {}
+                    if failure_reason:
+                        mail_vals['failure_reason'] = failure_reason
+                    if failure_type:
+                        mail_vals['failure_type'] = failure_type
+                    if mail_vals:
+                        mail.write(mail_vals)
+                mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type, failure_reason=failure_reason)
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed

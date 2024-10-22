@@ -5,7 +5,7 @@ import os
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.addons.event.tools.esc_label_tools import print_event_attendees, setup_printer, layout_96x82, layout_96x134
-from odoo.tools import email_normalize, email_normalize_all
+from odoo.tools import email_normalize, email_normalize_all, formataddr
 from odoo.exceptions import AccessError, ValidationError
 _logger = logging.getLogger(__name__)
 
@@ -14,6 +14,7 @@ class EventRegistration(models.Model):
     _description = 'Event Registration'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
+    _mail_defaults_to_email = True
 
     @api.model
     def _get_random_barcode(self):
@@ -335,6 +336,14 @@ class EventRegistration(models.Model):
     # MAILING / GATEWAY
     # ------------------------------------------------------------
 
+    @api.model
+    def _mail_template_default_values(self):
+        return {
+            "email_from": "{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}",
+            "lang": "{{ object.event_id.lang or object.partner_id.lang }}",
+            "use_default_to": True,
+        }
+
     def _message_compute_subject(self):
         if self.name:
             return _(
@@ -367,13 +376,15 @@ class EventRegistration(models.Model):
     def _message_get_default_recipients(self):
         # Prioritize registration email over partner_id, which may be shared when a single
         # partner booked multiple seats
-        return {r.id:
-            {
-                'partner_ids': [],
-                'email_to': ','.join(email_normalize_all(r.email)) or r.email,
-                'email_cc': False,
-            } for r in self
-        }
+        results = super()._message_get_default_recipients()
+        for record in self:
+            email_to = results[record.id]['email_to']
+            if email_to:
+                results[record.id]['email_to'] = ','.join(
+                    formataddr((record.name or "", email))
+                    for email in email_normalize_all(email_to) if email
+                )
+        return results
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email and not self.partner_id:
