@@ -361,6 +361,7 @@ class ResPartner(models.Model):
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
+    company_registry_placeholder = fields.Char(compute='_compute_company_registry_placeholder')
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -999,6 +1000,18 @@ class ResPartner(models.Model):
         if self.vat and self.vat[:2].isalpha():
             country_code = self.vat[:2].upper()
         return country_code
+
+    @api.model
+    def _get_company_registry_placeholder(self, country_code):
+        placeholders = {
+            'FR': '12345678900001',  # SIRET
+        }
+        return placeholders.get(country_code, '')
+
+    @api.depends('country_id')
+    def _compute_company_registry_placeholder(self):
+        for partner in self:
+            partner.company_registry_placeholder = partner._get_company_registry_placeholder(partner.country_code)
 
     @api.depends('country_id')
     def _compute_partner_vat_placeholder(self):

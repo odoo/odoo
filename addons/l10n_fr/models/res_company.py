@@ -8,7 +8,6 @@ class ResCompany(models.Model):
     _inherit = ['res.company']
 
     l10n_fr_closing_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to build sale closings', readonly=True)
-    siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, readonly=False)
     ape = fields.Char(string='APE')
 
     @api.model

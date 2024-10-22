@@ -165,6 +165,13 @@
                 <field name="vat" position="attributes">
                     <attribute name="options">{'placeholder_field': 'partner_vat_placeholder'}</attribute>
                 </field>
+
+                <field name="company_registry" position="before">
+                    <field name="company_registry_placeholder" invisible="1"/>
+                </field>
+                <field name="company_registry" position="attributes">
+                    <attribute name="options">{'placeholder_field': 'company_registry_placeholder'}</attribute>
+                </field>
             </field>
         </record>
 

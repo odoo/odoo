@@ -19,11 +19,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             partner.peppol_eas
             and partner.peppol_endpoint
             and partner.peppol_eas + ":" + partner.peppol_endpoint == CHORUS_PRO_PEPPOL_ID
-            and 'siret' in partner._fields
-            and partner.siret
+            and partner.company_registry
         ):
             return [{
-                'id': partner.siret,
+                'id': partner.company_registry,
             }]
         return super()._get_partner_party_identification_vals_list(partner)
 
