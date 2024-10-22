@@ -8,6 +8,7 @@ const threadPatch = {
     setup() {
         super.setup();
         this.collaborator_ids = Record.many("Persona");
+        this.settingsVisibility = false;
     },
 };
 patch(Thread.prototype, threadPatch);
