@@ -158,3 +158,52 @@ class TestMailGroupMessage(TestMailListCommon):
 
         mails = self.env['mail.mail'].search([('subject', '=', 'Test subject')])
         self.assertEqual(len(mails), 0, "Email should not be delivered when no email is specified")
+
+    def test_received_email_forwarded_to_another_group(self):
+        """Simulates the scenario where a received email from one group is forwarded to another group.
+
+        When an email is forwarded, the email client typically adds the Message-ID of the original email
+        to the 'References' header of the forwarded email. This ensures that the emails are linked
+        and displayed as part of the same conversation thread.
+
+        The 'References' header is used to help route incoming emails and match them to existing threads.
+        However, this can cause issues with mail groups. When a forwarded email is received and Odoo prioritizes
+        the 'References' header over the intended mail alias, the email will be mis-routed to the wrong mail group.
+        """
+
+        # Have two mail groups (already got one, adding another)
+        mail_group_1 = self.test_group
+        mail_group_1.write({'moderation': False})
+        mail_group_2 = self.env['mail.group'].create({
+            'access_mode': 'public',
+            'alias_name': 'test.mail.group.2',
+            'name': 'Test group 2',
+        })
+
+        # Have some mail in the 1st group
+        MESSAGE_ID = '<message-id-normally-assigned-by-the-system@localhost>'
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                template=GROUP_TEMPLATE,
+                email_from="adam@example.com",
+                to=mail_group_1.alias_id.display_name,
+                subject='1st emails that goes to 1st mail group',
+                msg_id=MESSAGE_ID,
+                target_model='mail.group'
+            )
+
+        # Simulate forwarding of the previous email to the 2nd group (use previous messageId in references header)
+        FORWARDED_MESSAGE_ID = '<message-id-of-the-forwarded-mail@localhost>'
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                template=GROUP_TEMPLATE,
+                email_from="eve@example.com",
+                to=mail_group_2.alias_id.display_name,
+                subject='1st email forwarded to 2nd mail group',
+                msg_id=FORWARDED_MESSAGE_ID,
+                target_model='mail.group',
+                extra=f'References: {MESSAGE_ID}'
+            )
+
+        message = self.env['mail.group.message'].search([('mail_message_id.message_id', '=', FORWARDED_MESSAGE_ID)])
+        self.assertEqual(message.mail_group_id, mail_group_2)
