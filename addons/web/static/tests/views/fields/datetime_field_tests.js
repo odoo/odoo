@@ -33,6 +33,12 @@ QUnit.module("Fields", (hooks) => {
                     fields: {
                         date: { string: "A date", type: "date", searchable: true },
                         datetime: { string: "A datetime", type: "datetime", searchable: true },
+                        date2: { string: "A 2nd date", type: "date", searchable: true },
+                        placeholder_field_value: {
+                            string: "A placeholder date",
+                            type: "date",
+                            searchable: true,
+                        },
                         p: {
                             string: "one2many field",
                             type: "one2many",
@@ -50,7 +56,9 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 2,
                             date: false,
+                            date2: false,
                             datetime: false,
+                            placeholder_field_value: "2024-01-01",
                         },
                     ],
                     onchanges: {},
@@ -604,5 +612,59 @@ QUnit.module("Fields", (hooks) => {
             "02/08/2017 11:00:00",
             "for datetime field both date and time should be visible with show_time as false and edit"
         );
+    });
+
+    QUnit.test("Date field with dynamic placeholder field", async (assert) => {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <list editable="bottom">
+                    <field name="placeholder_field_value" column_invisible="1"/>
+                    <field name="date" options="{'placeholder_field': 'placeholder_field_value'}" placeholder="02/01/2024"/>
+                    <field name="date2" placeholder="02/01/2024"/>
+                </list>
+            `,
+        });
+
+        // Dynamic placeholder takes precedence over normal placeholder if both are present
+        const dateElements = target.querySelectorAll(`td[name="date"]`);
+        await click(dateElements[1]);
+
+        const dateInputElement = target.querySelector(`td[name="date"] input`);
+        assert.strictEqual(dateInputElement.placeholder, "01/01/2024");
+
+        //Picker should still work
+        await click(dateInputElement);
+        assert.containsOnce(target, ".o_datetime_picker", "datepicker should be opened");
+
+        await zoomOut();
+        await zoomOut();
+        await click(getPickerCell("2024"));
+        await click(getPickerCell("Nov"));
+        await click(getPickerCell("4").at(0));
+
+        assert.containsNone(target, ".o_datetime_picker", "datepicker should be closed");
+
+        const newExpectedDateString = "11/04/2024";
+        assert.strictEqual(
+            dateInputElement.value,
+            newExpectedDateString,
+            "the date should be updated in the input"
+        );
+
+        await clickSave(target);
+        assert.strictEqual(
+            dateElements[1].textContent,
+            newExpectedDateString,
+            "the selected datetime should be displayed after saving"
+        );
+
+        // If no dynamic placeholder, fallback on normal placeholder
+        const date2Elements = target.querySelectorAll(`td[name="date2"]`);
+        await click(date2Elements[1]);
+        const date2InputElement = target.querySelector(`td[name="date2"] input`);
+        assert.strictEqual(date2InputElement.placeholder, "02/01/2024");
     });
 });
