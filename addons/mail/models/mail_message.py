@@ -559,7 +559,7 @@ class MailMessage(models.Model):
             "Records: %(records)s, User: %(user)s",
             type=self._description,
             operation=operation,
-            records=self.ids[:6],
+            records=format_list(self.env, list(map(str, self.ids[:6]))),
             user=self.env.uid,
         ))
 
