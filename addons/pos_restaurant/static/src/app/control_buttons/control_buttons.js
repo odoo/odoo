@@ -21,7 +21,10 @@ patch(ControlButtons.prototype, {
         (await this.printer.print(OrderReceipt, {
             data: this.pos.orderExportForPrinting(this.pos.get_order()),
             formatCurrency: this.env.utils.formatCurrency,
-        })) || this.dialog.add(BillScreen);
+        })) ||
+            this.dialog.add(BillScreen, {
+                printBillActionTriggered: true,
+            });
     },
     clickTableGuests() {
         this.dialog.add(NumberPopup, {
