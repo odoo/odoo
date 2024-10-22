@@ -287,6 +287,7 @@ class AssetsBundle(object):
             unique=unique,
             extension=extension,
         )
+        _logger.runbot("save_attachment(%s) = %s bytes", self.name, len(content))
         values = {
             'name': fname,
             'mimetype': mimetype,
@@ -338,6 +339,7 @@ class AssetsBundle(object):
 
             if is_minified:
                 content_bundle = ';\n'.join(asset.minify() for asset in self.javascripts)
+                _logger.runbot("js %d + %d = %d bytes", len(content_bundle), len(template_bundle), len(content_bundle) + len(template_bundle))
                 content_bundle += template_bundle
                 js_attachment = self.save_attachment(extension, content_bundle)
             else:
