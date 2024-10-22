@@ -6,7 +6,7 @@ from odoo.addons.hw_drivers.tools import helpers
 
 
 _logger = logging.getLogger(__name__)
-MIN_IMAGE_VERSION = 24.08
+MIN_IMAGE_VERSION = 24.10
 
 CHROMIUM_ARGS = [
     '--incognito',

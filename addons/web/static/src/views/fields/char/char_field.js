@@ -109,22 +109,13 @@ export const charField = {
     supportedTypes: ["char"],
     supportedOptions: [
         {
-            label: _t("Dynamic placeholder"),
-            name: "dynamic_placeholder",
-            type: "boolean",
-            help: _t("Enable this option to allow the input to display a dynamic placeholder."),
-        },
-        {
-            label: _t("Model reference field"),
-            name: "dynamic_placeholder_model_reference_field",
-            type: "field",
-            availableTypes: ["char"],
-        },
-        {
-            label: _t("Placeholder field"),
+            label: _t("Dynamic Placeholder"),
             name: "placeholder_field",
             type: "field",
             availableTypes: ["char"],
+            help: _t(
+                "Displays the value of the selected field as a textual hint. If the selected field is empty, the static placeholder attribute is displayed instead."
+            ),
         },
     ],
     extractProps: ({ attrs, options }) => ({

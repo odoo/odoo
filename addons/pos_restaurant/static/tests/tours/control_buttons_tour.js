@@ -82,13 +82,29 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 
             // Test GuestButton
             ProductScreen.clickControlButton("Guests"),
-            NumberPopup.enterValue("15"),
+            {
+                content: `click numpad button: 1`,
+                trigger: ".modal div.numpad button:contains(/^1$/)",
+                run: "click",
+            },
+            {
+                content: `click numpad button: 5`,
+                trigger: ".modal div.numpad button:contains(/^5$/)",
+                run: "click",
+            },
             NumberPopup.isShown("15"),
             Dialog.confirm(),
             ProductScreen.guestNumberIs("15"),
-
-            ProductScreen.clickControlButton("Guests"),
-            NumberPopup.enterValue("5"),
+            {
+                content: `click guests 15 button`,
+                trigger: `.modal .control-buttons button:contains(15Guests)`,
+                run: "click",
+            },
+            {
+                content: `click numpad button: 5`,
+                trigger: ".modal div.numpad button:contains(/^5$/)",
+                run: "click",
+            },
             NumberPopup.isShown("5"),
             Dialog.confirm(),
             ProductScreen.guestNumberIs("5"),
