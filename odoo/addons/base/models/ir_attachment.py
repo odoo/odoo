@@ -815,3 +815,17 @@ class IrAttachment(models.Model):
             stream.size = 0
 
         return stream
+
+    def action_x509_extract_public_key(self):
+        ctx = dict(self.env.context)
+        res_id = ctx.pop('res_id')
+        res_model = ctx.pop('res_model')
+        self = self.with_context(ctx)
+        return self.env[res_model].browse(res_id).action_x509_extract_public_key()
+
+    def action_x509_download_public_key(self):
+        ctx = dict(self.env.context)
+        res_id = ctx.pop('res_id')
+        res_model = ctx.pop('res_model')
+        self = self.with_context(ctx)
+        return self.env[res_model].browse(res_id).action_x509_download_public_key()
