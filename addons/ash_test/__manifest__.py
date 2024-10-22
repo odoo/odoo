@@ -6,7 +6,7 @@
     'depends': ['stock','base', 'product'],
     'data': [
         'views/ash_test_views.xml',
-        'views/stock_picking_views.xml'
+        # 'views/stock_picking_views.xml'
     ],
     'installable': True,
     'application': False,
