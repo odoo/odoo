@@ -404,7 +404,7 @@ class PrinterDriver(Driver):
 
 class PrinterController(http.Controller):
 
-    @http.route('/hw_proxy/default_printer_action', type='json', auth='none', cors='*')
+    @http.route('/hw_proxy/default_printer_action', type='jsonrpc', auth='none', cors='*')
     def default_printer_action(self, data):
         printer = next((d for d in iot_devices if iot_devices[d].device_type == 'printer' and iot_devices[d].device_connection == 'direct'), None)
         if printer:

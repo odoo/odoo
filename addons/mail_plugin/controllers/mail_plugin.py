@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 
 class MailPluginController(http.Controller):
 
-    @http.route('/mail_client_extension/modules/get', type="json", auth="outlook", csrf=False, cors="*")
+    @http.route('/mail_client_extension/modules/get', type="jsonrpc", auth="outlook", csrf=False, cors="*")
     def modules_get(self, **kwargs):
         """
             deprecated as of saas-14.3, not needed for newer versions of the mail plugin but necessary
@@ -27,7 +27,7 @@ class MailPluginController(http.Controller):
         return {'modules': ['contacts', 'crm']}
 
     @http.route('/mail_plugin/partner/enrich_and_create_company',
-                type="json", auth="outlook", cors="*")
+                type="jsonrpc", auth="outlook", cors="*")
     def res_partner_enrich_and_create_company(self, partner_id):
         """
         Route used when the user clicks on the create and enrich partner button
@@ -57,7 +57,7 @@ class MailPluginController(http.Controller):
             'company': self._get_company_data(company),
         }
 
-    @http.route('/mail_plugin/partner/enrich_and_update_company', type='json', auth='outlook', cors='*')
+    @http.route('/mail_plugin/partner/enrich_and_update_company', type='jsonrpc', auth='outlook', cors='*')
     def res_partner_enrich_and_update_company(self, partner_id):
         """
         Enriches an existing company using IAP
@@ -130,7 +130,7 @@ class MailPluginController(http.Controller):
         }
 
     @http.route(['/mail_client_extension/partner/get', '/mail_plugin/partner/get']
-        , type="json", auth="outlook", cors="*")
+        , type="jsonrpc", auth="outlook", cors="*")
     def res_partner_get(self, email=None, name=None, partner_id=None, **kwargs):
         """
         returns a partner given it's id or an email and a name.
@@ -192,7 +192,7 @@ class MailPluginController(http.Controller):
 
         return response
 
-    @http.route('/mail_plugin/partner/search', type="json", auth="outlook", cors="*")
+    @http.route('/mail_plugin/partner/search', type="jsonrpc", auth="outlook", cors="*")
     def res_partners_search(self, search_term, limit=30, **kwargs):
         """
         Used for the plugin search contact functionality where the user types a string query in order to search for
@@ -220,7 +220,7 @@ class MailPluginController(http.Controller):
         return {"partners": partners}
 
     @http.route(['/mail_client_extension/partner/create', '/mail_plugin/partner/create'],
-                type="json", auth="outlook", cors="*")
+                type="jsonrpc", auth="outlook", cors="*")
     def res_partner_create(self, email, name, company):
         """
         params email: email of the new partner
@@ -247,7 +247,7 @@ class MailPluginController(http.Controller):
         response = {'id': partner.id}
         return response
 
-    @http.route('/mail_plugin/log_mail_content', type="json", auth="outlook", cors="*")
+    @http.route('/mail_plugin/log_mail_content', type="jsonrpc", auth="outlook", cors="*")
     def log_mail_content(self, model, res_id, message, attachments=None):
         """Log the email on the given record.
 
@@ -269,7 +269,7 @@ class MailPluginController(http.Controller):
         request.env[model].browse(res_id).message_post(body=Markup(message), attachments=attachments)
         return True
 
-    @http.route('/mail_plugin/get_translations', type="json", auth="outlook", cors="*")
+    @http.route('/mail_plugin/get_translations', type="jsonrpc", auth="outlook", cors="*")
     def get_translations(self):
         return self._prepare_translations()
 

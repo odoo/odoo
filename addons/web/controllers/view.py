@@ -7,7 +7,7 @@ from odoo.tools.translate import _
 
 class View(Controller):
 
-    @route('/web/view/edit_custom', type='json', auth="user")
+    @route('/web/view/edit_custom', type='jsonrpc', auth="user")
     def edit_custom(self, custom_id, arch):
         """
         Edit a custom view

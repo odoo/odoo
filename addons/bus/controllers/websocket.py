@@ -28,7 +28,7 @@ class WebsocketController(Controller):
                    ('Cache-Control', 'no-store')]
         return request.make_response(data, headers)
 
-    @route('/websocket/peek_notifications', type='json', auth='public', cors='*')
+    @route('/websocket/peek_notifications', type='jsonrpc', auth='public', cors='*')
     def peek_notifications(self, channels, last, is_first_poll=False):
         if is_first_poll:
             # Used to detect when the current session is expired.
@@ -42,14 +42,14 @@ class WebsocketController(Controller):
         notifications = request.env["bus.bus"]._poll(channels_with_db, subscribe_data["last"])
         return {"channels": channels_with_db, "notifications": notifications}
 
-    @route('/websocket/update_bus_presence', type='json', auth='public', cors='*')
+    @route('/websocket/update_bus_presence', type='jsonrpc', auth='public', cors='*')
     def update_bus_presence(self, inactivity_period, im_status_ids_by_model):
         if 'is_websocket_session' not in request.session:
             raise SessionExpiredException()
         request.env['ir.websocket']._update_bus_presence(int(inactivity_period), im_status_ids_by_model)
         return {}
 
-    @route("/websocket/on_closed", type="json", auth="public", cors="*")
+    @route("/websocket/on_closed", type="jsonrpc", auth="public", cors="*")
     def on_websocket_closed(self):
         request.env["ir.websocket"]._on_websocket_closed(request.cookies)
 

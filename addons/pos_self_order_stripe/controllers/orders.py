@@ -6,14 +6,14 @@ from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 from werkzeug.exceptions import Unauthorized
 
 class PosSelfOrderControllerStripe(PosSelfOrderController):
-    @http.route("/pos-self-order/stripe-connection-token/", auth="public", type="json", website=True)
+    @http.route("/pos-self-order/stripe-connection-token/", auth="public", type="jsonrpc", website=True)
     def get_stripe_creditentials(self, access_token, payment_method_id):
         # stripe_connection_token
         pos_config, _ = self._verify_authorization(access_token, "", False)
         payment_method = pos_config.payment_method_ids.filtered(lambda p: p.id == payment_method_id)
         return payment_method.stripe_connection_token()
 
-    @http.route("/pos-self-order/stripe-capture-payment/", auth="public", type="json", website=True)
+    @http.route("/pos-self-order/stripe-capture-payment/", auth="public", type="jsonrpc", website=True)
     def stripe_capture_payment(self, access_token, order_access_token, payment_intent_id, payment_method_id):
         pos_config, _ = self._verify_authorization(access_token, "", False)
         stripe_confirmation = pos_config.env['pos.payment.method'].stripe_capture_payment(payment_intent_id)

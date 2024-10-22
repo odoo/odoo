@@ -181,7 +181,7 @@ class ExhibitorController(WebsiteEventController):
     # BUSINESS / MISC
     # ------------------------------------------------------------
 
-    @http.route('/event_sponsor/<int:sponsor_id>/read', type='json', auth='public', website=True)
+    @http.route('/event_sponsor/<int:sponsor_id>/read', type='jsonrpc', auth='public', website=True)
     def event_sponsor_read(self, sponsor_id):
         """ Marshmalling data for "event not started / sponsor not available" modal """
         sponsor = request.env['event.sponsor'].browse(sponsor_id)

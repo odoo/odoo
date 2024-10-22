@@ -74,7 +74,7 @@ class HrAttendance(http.Controller):
         else:
             return request.not_found()
 
-    @http.route('/hr_attendance/kiosk_keepalive', auth='user', type='json')
+    @http.route('/hr_attendance/kiosk_keepalive', auth='user', type='jsonrpc')
     def kiosk_keepalive(self):
         request.session.touch()
         return {}
@@ -117,7 +117,7 @@ class HrAttendance(http.Controller):
                 }
             )
 
-    @http.route('/hr_attendance/attendance_employee_data', type="json", auth="public")
+    @http.route('/hr_attendance/attendance_employee_data', type="jsonrpc", auth="public")
     def employee_attendance_data(self, token, employee_id):
         company = self._get_company(token)
         if company:
@@ -126,7 +126,7 @@ class HrAttendance(http.Controller):
                 return self._get_employee_info_response(employee)
         return {}
 
-    @http.route('/hr_attendance/attendance_barcode_scanned', type="json", auth="public")
+    @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
     def scan_barcode(self, token, barcode):
         company = self._get_company(token)
         if company:
@@ -136,7 +136,7 @@ class HrAttendance(http.Controller):
                 return self._get_employee_info_response(employee)
         return {}
 
-    @http.route('/hr_attendance/manual_selection', type="json", auth="public")
+    @http.route('/hr_attendance/manual_selection', type="jsonrpc", auth="public")
     def manual_selection(self, token, employee_id, pin_code):
         company = self._get_company(token)
         if company:
@@ -146,7 +146,7 @@ class HrAttendance(http.Controller):
                 return self._get_employee_info_response(employee)
         return {}
 
-    @http.route('/hr_attendance/employees_infos', type="json", auth="public")
+    @http.route('/hr_attendance/employees_infos', type="jsonrpc", auth="public")
     def employees_infos(self, token, limit, offset, domain):
         company = self._get_company(token)
         if company:
@@ -162,7 +162,7 @@ class HrAttendance(http.Controller):
             return {'records': employees_data, 'length': request.env['hr.employee'].sudo().search_count(domain)}
         return []
 
-    @http.route('/hr_attendance/systray_check_in_out', type="json", auth="user")
+    @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
     def systray_attendance(self, latitude=False, longitude=False):
         employee = request.env.user.employee_id
         geo_ip_response = self._get_geoip_response(mode='systray',
@@ -171,7 +171,7 @@ class HrAttendance(http.Controller):
         employee._attendance_action_change(geo_ip_response)
         return self._get_employee_info_response(employee)
 
-    @http.route('/hr_attendance/attendance_user_data', type="json", auth="user")
+    @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user")
     def user_attendance_data(self):
         employee = request.env.user.employee_id
         return self._get_user_attendance_data(employee)
@@ -189,7 +189,7 @@ class HrAttendance(http.Controller):
                 ''', user_id=request.env.user.id))
         return bool(request.env.cr.fetchone()[0])
 
-    @http.route('/hr_attendance/is_fresh_db', type="json", auth="public")
+    @http.route('/hr_attendance/is_fresh_db', type="jsonrpc", auth="public")
     def is_fresh_db(self, token):
         company = self._get_company(token)
         if company:
@@ -197,7 +197,7 @@ class HrAttendance(http.Controller):
             return len(users) == 1 and not users[0].employee_id.barcode
         return False
 
-    @http.route('/hr_attendance/set_user_barcode', type="json", auth="public")
+    @http.route('/hr_attendance/set_user_barcode', type="jsonrpc", auth="public")
     def set_user_barcode(self, token, barcode):
         company = self._get_company(token)
         if company and self.is_fresh_db(token):
@@ -205,7 +205,7 @@ class HrAttendance(http.Controller):
             return True
         return False
 
-    @http.route('/hr_attendance/set_settings', type="json", auth="public")
+    @http.route('/hr_attendance/set_settings', type="jsonrpc", auth="public")
     def set_attendance_settings(self, token, mode):
         company = self._get_company(token)
         if company:

@@ -39,7 +39,7 @@ class PortalChatter(http.Controller):
         )
         return stream.get_response()
 
-    @http.route("/portal/chatter_init", type="json", auth="public", website=True)
+    @http.route("/portal/chatter_init", type="jsonrpc", auth="public", website=True)
     def portal_chatter_init(self, thread_model, thread_id, **kwargs):
         store = Store()
         thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
@@ -56,7 +56,7 @@ class PortalChatter(http.Controller):
             store.add(partner, {"is_user_publisher": True})
         return store.get_result()
 
-    @http.route('/mail/chatter_fetch', type='json', auth='public', website=True)
+    @http.route('/mail/chatter_fetch', type='jsonrpc', auth='public', website=True)
     def portal_message_fetch(
             self, thread_model, thread_id, limit=10, after=None, before=None, **kw
     ):
@@ -94,7 +94,7 @@ class PortalChatter(http.Controller):
     def _setup_portal_message_fetch_extra_domain(self, data):
         return []
 
-    @http.route(['/mail/update_is_internal'], type='json', auth="user", website=True)
+    @http.route(['/mail/update_is_internal'], type='jsonrpc', auth="user", website=True)
     def portal_message_update_is_internal(self, message_id, is_internal):
         message = request.env['mail.message'].browse(int(message_id))
         message.write({'is_internal': is_internal})

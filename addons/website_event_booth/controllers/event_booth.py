@@ -145,7 +145,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             },
         })
 
-    @http.route('/event/booth/check_availability', type='json', auth='public', methods=['POST'])
+    @http.route('/event/booth/check_availability', type='jsonrpc', auth='public', methods=['POST'])
     def check_booths_availability(self, event_booth_ids=None):
         if not event_booth_ids:
             return {}
@@ -154,7 +154,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             'unavailable_booths': booths.filtered(lambda booth: not booth.is_available).ids
         }
 
-    @http.route(['/event/booth_category/get_available_booths'], type='json', auth='public')
+    @http.route(['/event/booth_category/get_available_booths'], type='jsonrpc', auth='public')
     def get_booth_category_available_booths(self, event_id, booth_category_id):
         booth_ids = request.env['event.booth'].sudo().search([
             ('event_id', '=', int(event_id)),

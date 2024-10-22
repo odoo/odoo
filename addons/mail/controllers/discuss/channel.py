@@ -23,7 +23,7 @@ class DiscussChannelWebclientController(WebclientController):
 
 
 class ChannelController(http.Controller):
-    @http.route("/discuss/channel/members", methods=["POST"], type="json", auth="public", readonly=True)
+    @http.route("/discuss/channel/members", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_members(self, channel_id, known_member_ids):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -31,14 +31,14 @@ class ChannelController(http.Controller):
             raise NotFound()
         return channel._load_more_members(known_member_ids)
 
-    @http.route("/discuss/channel/update_avatar", methods=["POST"], type="json")
+    @http.route("/discuss/channel/update_avatar", methods=["POST"], type="jsonrpc")
     def discuss_channel_avatar_update(self, channel_id, data):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel or not data:
             raise NotFound()
         channel.write({"image_128": data})
 
-    @http.route("/discuss/channel/info", methods=["POST"], type="json", auth="public", readonly=True)
+    @http.route("/discuss/channel/info", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_info(self, channel_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -46,7 +46,7 @@ class ChannelController(http.Controller):
             return
         return Store(channel).get_result()
 
-    @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/messages", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_messages(self, channel_id, search_term=None, before=None, after=None, limit=30, around=None):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -69,7 +69,7 @@ class ChannelController(http.Controller):
             "messages": Store.many_ids(messages),
         }
 
-    @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public", readonly=True)
+    @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_pins(self, channel_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -78,7 +78,7 @@ class ChannelController(http.Controller):
         messages = channel.pinned_message_ids.sorted(key="pinned_at", reverse=True)
         return Store(messages, for_current_user=True).get_result()
 
-    @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_mark_as_read(self, channel_id, last_message_id, sync=False):
         member = request.env["discuss.channel.member"].search([
@@ -89,7 +89,7 @@ class ChannelController(http.Controller):
             return  # ignore if the member left in the meantime
         member._mark_as_read(last_message_id, sync=sync)
 
-    @http.route("/discuss/channel/mark_as_unread", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/mark_as_unread", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_mark_as_unread(self, channel_id, message_id):
         member = request.env["discuss.channel.member"].search([
@@ -100,7 +100,7 @@ class ChannelController(http.Controller):
             raise NotFound()
         return member._set_new_message_separator(message_id, sync=True)
 
-    @http.route("/discuss/channel/notify_typing", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/notify_typing", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_notify_typing(self, channel_id, is_typing):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -111,7 +111,7 @@ class ChannelController(http.Controller):
             raise NotFound()
         member._notify_typing(is_typing)
 
-    @http.route("/discuss/channel/attachments", methods=["POST"], type="json", auth="public", readonly=True)
+    @http.route("/discuss/channel/attachments", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
     def load_attachments(self, channel_id, limit=30, before=None):
         """Load attachments of a channel. If before is set, load attachments
@@ -134,7 +134,7 @@ class ChannelController(http.Controller):
             request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
         ).get_result()
 
-    @http.route("/discuss/channel/fold", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/fold", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_fold(self, channel_id, state, state_count):
         member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
@@ -142,7 +142,7 @@ class ChannelController(http.Controller):
             raise NotFound()
         return member._channel_fold(state, state_count)
 
-    @http.route("/discuss/channel/join", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_join(self, channel_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
@@ -151,7 +151,7 @@ class ChannelController(http.Controller):
         channel._find_or_create_member_for_self()
         return Store(channel).get_result()
 
-    @http.route("/discuss/channel/sub_channel/create", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
@@ -162,7 +162,7 @@ class ChannelController(http.Controller):
             "sub_channel": Store.one_id(sub_channel),
         }
 
-    @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_sub_channel_fetch(self, parent_channel_id, search_term=None, before=None, limit=30):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])

@@ -14,7 +14,7 @@ class DiscussGifController(Controller):
         response.raise_for_status()
         return response
 
-    @route("/discuss/gif/search", type="json", auth="user")
+    @route("/discuss/gif/search", type="jsonrpc", auth="user")
     def search(self, search_term, locale="en", country="US", position=None, readonly=True):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
@@ -35,7 +35,7 @@ class DiscussGifController(Controller):
         if response:
             return response.json()
 
-    @route("/discuss/gif/categories", type="json", auth="user", readonly=True)
+    @route("/discuss/gif/categories", type="jsonrpc", auth="user", readonly=True)
     def categories(self, locale="en", country="US"):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
@@ -53,7 +53,7 @@ class DiscussGifController(Controller):
         if response:
             return response.json()
 
-    @route("/discuss/gif/add_favorite", type="json", auth="user")
+    @route("/discuss/gif/add_favorite", type="jsonrpc", auth="user")
     def add_favorite(self, tenor_gif_id):
         request.env["discuss.gif.favorite"].create({"tenor_gif_id": tenor_gif_id})
 
@@ -72,14 +72,14 @@ class DiscussGifController(Controller):
         if response:
             return response.json()["results"]
 
-    @route("/discuss/gif/favorites", type="json", auth="user", readonly=True)
+    @route("/discuss/gif/favorites", type="jsonrpc", auth="user", readonly=True)
     def get_favorites(self, offset=0):
         tenor_gif_ids = request.env["discuss.gif.favorite"].search(
             [("create_uid", "=", request.env.user.id)], limit=20, offset=offset
         )
         return (self._gif_posts(tenor_gif_ids.mapped("tenor_gif_id")) or [],)
 
-    @route("/discuss/gif/remove_favorite", type="json", auth="user")
+    @route("/discuss/gif/remove_favorite", type="jsonrpc", auth="user")
     def remove_favorite(self, tenor_gif_id):
         request.env["discuss.gif.favorite"].search(
             [

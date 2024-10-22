@@ -11,7 +11,7 @@ from .mail_plugin import MailPluginController
 class CrmClient(MailPluginController):
 
     @http.route(route='/mail_client_extension/log_single_mail_content',
-                type="json", auth="outlook", cors="*")
+                type="jsonrpc", auth="outlook", cors="*")
     def log_single_mail_content(self, lead, message, **kw):
         """
             deprecated as of saas-14.3, not needed for newer versions of the mail plugin but necessary
@@ -20,7 +20,7 @@ class CrmClient(MailPluginController):
         crm_lead = request.env['crm.lead'].browse(lead)
         crm_lead.message_post(body=message)
 
-    @http.route('/mail_client_extension/lead/get_by_partner_id', type="json", auth="outlook", cors="*")
+    @http.route('/mail_client_extension/lead/get_by_partner_id', type="jsonrpc", auth="outlook", cors="*")
     def crm_lead_get_by_partner_id(self, partner, limit=5, offset=0, **kwargs):
         """
             deprecated as of saas-14.3, not needed for newer versions of the mail plugin but necessary
@@ -39,7 +39,7 @@ class CrmClient(MailPluginController):
         return request.redirect(
             '/odoo/action-%s?partner_id=%s' % (server_action.id, int(partner_id)))
 
-    @http.route('/mail_plugin/lead/create', type='json', auth='outlook', cors="*")
+    @http.route('/mail_plugin/lead/create', type='jsonrpc', auth='outlook', cors="*")
     def crm_lead_create(self, partner_id, email_body, email_subject):
         partner = request.env['res.partner'].browse(partner_id).exists()
         if not partner:

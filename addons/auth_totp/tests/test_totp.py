@@ -35,7 +35,7 @@ class TestTOTPMixin:
         totp_hook.routing_type = 'json'
         self.env.registry.clear_cache('routing')
         # patch Home to add test endpoint
-        Home.totp_hook = http.route('/totphook', type='json', auth='none')(totp_hook)
+        Home.totp_hook = http.route('/totphook', type='jsonrpc', auth='none')(totp_hook)
         # remove endpoint and destroy routing map
         @self.addCleanup
         def _cleanup():

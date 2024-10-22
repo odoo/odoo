@@ -8,7 +8,7 @@ from odoo.osv import expression
 
 class EventTrackLiveController(EventTrackController):
 
-    @http.route('/event_track/get_track_suggestion', type='json', auth='public', website=True)
+    @http.route('/event_track/get_track_suggestion', type='jsonrpc', auth='public', website=True)
     def get_next_track_suggestion(self, track_id):
         track = self._fetch_track(track_id)
         track_suggestion = track._get_track_suggestions(

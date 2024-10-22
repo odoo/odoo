@@ -234,7 +234,7 @@ class WebsiteEventController(http.Controller):
             'quantity': count,
         } for tid, count in ticket_order.items() if count]
 
-    @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
         tickets = self._process_tickets_form(event, post)
         availability_check = True

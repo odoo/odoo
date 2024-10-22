@@ -11,7 +11,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
 
     @route(
         route='/website_sale/should_show_product_configurator',
-        type='json',
+        type='jsonrpc',
         auth='public',
         website=True,
     )
@@ -44,7 +44,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
 
     @route(
         route='/website_sale/product_configurator/get_values',
-        type='json',
+        type='jsonrpc',
         auth='public',
         website=True,
     )
@@ -54,7 +54,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
 
     @route(
         route='/website_sale/product_configurator/create_product',
-        type='json',
+        type='jsonrpc',
         auth='public',
         methods=['POST'],
         website=True,
@@ -64,7 +64,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
 
     @route(
         route='/website_sale/product_configurator/update_combination',
-        type='json',
+        type='jsonrpc',
         auth='public',
         methods=['POST'],
         website=True,
@@ -75,7 +75,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
 
     @route(
         route='/website_sale/product_configurator/get_optional_products',
-        type='json',
+        type='jsonrpc',
         auth='public',
         website=True,
     )
@@ -85,7 +85,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
 
     @route(
         route='/website_sale/product_configurator/update_cart',
-        type='json',
+        type='jsonrpc',
         auth='public',
         methods=['POST'],
         website=True,

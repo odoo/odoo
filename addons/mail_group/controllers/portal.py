@@ -178,7 +178,7 @@ class PortalMailGroup(http.Controller):
         return request.render('mail_group.group_message', values)
 
     @http.route('/groups/<model("mail.group"):group>/<model("mail.group.message"):message>/get_replies',
-                type='json', auth='public', methods=['POST'], website=True)
+                type='jsonrpc', auth='public', methods=['POST'], website=True)
     def group_message_get_replies(self, group, message, last_displayed_id, **post):
         if group != message.mail_group_id:
             raise werkzeug.exceptions.NotFound()
@@ -236,7 +236,7 @@ class PortalMailGroup(http.Controller):
             raise werkzeug.exceptions.NotFound()
         return Response(status=200)
 
-    @http.route('/group/subscribe', type='json', auth='public', website=True)
+    @http.route('/group/subscribe', type='jsonrpc', auth='public', website=True)
     def group_subscribe(self, group_id=0, email=None, token=None, **kw):
         """Subscribe the current logged user or the given email address to the mailing list.
 
@@ -270,7 +270,7 @@ class PortalMailGroup(http.Controller):
         group_sudo._send_subscribe_confirmation_email(email)
         return 'email_sent'
 
-    @http.route('/group/unsubscribe', type='json', auth='public', website=True)
+    @http.route('/group/unsubscribe', type='jsonrpc', auth='public', website=True)
     def group_unsubscribe(self, group_id=0, email=None, token=None, **kw):
         """Unsubscribe the current logged user or the given email address to the mailing list.
 

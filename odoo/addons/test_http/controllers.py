@@ -93,11 +93,11 @@ class TestHttp(http.Controller):
     def echo_http_context_lang(self, **kwargs):
         return self.env.context.get('lang', '')
 
-    @http.route('/test_http/echo-json', type='json', auth='none', methods=['POST'], csrf=False)
+    @http.route('/test_http/echo-json', type='jsonrpc', auth='none', methods=['POST'], csrf=False)
     def echo_json(self, **kwargs):
         return kwargs
 
-    @http.route('/test_http/echo-json-context', type='json', auth='user', methods=['POST'], csrf=False, readonly=True)
+    @http.route('/test_http/echo-json-context', type='jsonrpc', auth='user', methods=['POST'], csrf=False, readonly=True)
     def echo_json_context(self, **kwargs):
         return self.env.context
 
@@ -151,7 +151,7 @@ class TestHttp(http.Controller):
     def cors_http_verbs(self, **kwargs):
         return "Hello"
 
-    @http.route('/test_http/cors_json', type='json', auth='none', cors='*')
+    @http.route('/test_http/cors_json', type='jsonrpc', auth='none', cors='*')
     def cors_json(self, **kwargs):
         return {}
 
@@ -195,7 +195,7 @@ class TestHttp(http.Controller):
         )
         raise request.not_found()
 
-    @http.route('/test_http/json_value_error', type='json', auth='none')
+    @http.route('/test_http/json_value_error', type='jsonrpc', auth='none')
     def json_value_error(self):
         raise ValueError('Unknown destination')
 

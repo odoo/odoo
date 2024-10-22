@@ -12,7 +12,7 @@ from odoo.osv import expression
 class WebclientController(http.Controller):
     """Routes for the web client."""
 
-    @http.route("/mail/action", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/action", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def mail_action(self, **kwargs):
         """Execute actions and returns data depending on request parameters.
@@ -20,7 +20,7 @@ class WebclientController(http.Controller):
         """
         return self._process_request(**kwargs)
 
-    @http.route("/mail/data", methods=["POST"], type="json", auth="public", readonly=True)
+    @http.route("/mail/data", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
     def mail_data(self, **kwargs):
         """Returns data depending on request parameters.

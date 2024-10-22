@@ -82,7 +82,7 @@ ADAMEquipmentProtocol = ScaleProtocol(
 
 # Ensures compatibility with older versions of Odoo
 class ScaleReadOldRoute(http.Controller):
-    @http.route('/hw_proxy/scale_read', type='json', auth='none', cors='*')
+    @http.route('/hw_proxy/scale_read', type='jsonrpc', auth='none', cors='*')
     def scale_read(self):
         if ACTIVE_SCALE:
             return {'weight': ACTIVE_SCALE._scale_read_old_route()}

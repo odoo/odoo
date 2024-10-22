@@ -19,7 +19,7 @@ class InStoreDelivery(Delivery):
                 order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
         return super().website_sale_get_pickup_locations(zip_code, **kwargs)
 
-    @route('/shop/set_click_and_collect_location', type='json', auth='public', website=True)
+    @route('/shop/set_click_and_collect_location', type='jsonrpc', auth='public', website=True)
     def shop_set_click_and_collect_location(self, pickup_location_data):
         """ Set the pickup location and the in-store delivery method on the current order.
 

@@ -29,12 +29,12 @@ class DataSet(http.Controller):
                 return method._readonly
         return False
 
-    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', auth="user", readonly=_call_kw_readonly)
+    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly)
     def call_kw(self, model, method, args, kwargs, path=None):
         check_method_name(method)
         return call_kw(request.env[model], method, args, kwargs)
 
-    @http.route(['/web/dataset/call_button', '/web/dataset/call_button/<path:path>'], type='json', auth="user", readonly=_call_kw_readonly)
+    @http.route(['/web/dataset/call_button', '/web/dataset/call_button/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly)
     def call_button(self, model, method, args, kwargs, path=None):
         check_method_name(method)
         action = call_kw(request.env[model], method, args, kwargs)
@@ -42,7 +42,7 @@ class DataSet(http.Controller):
             return clean_action(action, env=request.env)
         return False
 
-    @http.route('/web/dataset/resequence', type='json', auth="user")
+    @http.route('/web/dataset/resequence', type='jsonrpc', auth="user")
     def resequence(self, model, ids, field='sequence', offset=0, context=None):
         """ Re-sequences a number of records in the model, by their ids
 

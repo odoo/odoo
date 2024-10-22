@@ -8,7 +8,7 @@ from odoo.http import Controller, route, request
 
 class Board(Controller):
 
-    @route('/board/add_to_dashboard', type='json', auth='user')
+    @route('/board/add_to_dashboard', type='jsonrpc', auth='user')
     def add_to_dashboard(self, action_id, context_to_save, domain, view_mode, name=''):
         # Retrieve the 'My Dashboard' action from its xmlid
         action = request.env.ref('board.open_board_my_dash_action').sudo()

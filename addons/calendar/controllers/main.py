@@ -94,11 +94,11 @@ class CalendarController(http.Controller):
         return request.redirect('/calendar/meeting/view?token=%s&id=%s' % (attendee.access_token, event.id))
 
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
-    @http.route('/calendar/notify', type='json', auth="user")
+    @http.route('/calendar/notify', type='jsonrpc', auth="user")
     def notify(self):
         return request.env['calendar.alarm_manager'].get_next_notif()
 
-    @http.route('/calendar/notify_ack', type='json', auth="user")
+    @http.route('/calendar/notify_ack', type='jsonrpc', auth="user")
     def notify_ack(self):
         return request.env['res.partner'].sudo()._set_calendar_last_notif_ack()
 
@@ -114,7 +114,7 @@ class CalendarController(http.Controller):
 
         return request.redirect(event.videocall_channel_id.invitation_url)
 
-    @http.route('/calendar/check_credentials', type='json', auth='user')
+    @http.route('/calendar/check_credentials', type='jsonrpc', auth='user')
     def check_calendar_credentials(self):
         # method should be overwritten by sync providers
         return request.env['res.users'].check_calendar_credentials()
