@@ -457,6 +457,7 @@ class AccountMove(models.Model):
             'payment_method': 'MP05',
             'tax_details': tax_details,
             'downpayment_moves': downpayment_moves,
+            'reconciled_moves': self._get_reconciled_invoices(),
             'rc_refund': reverse_charge_refund,
             'invoice_lines': invoice_lines,
             'tax_lines': tax_lines,
