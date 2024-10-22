@@ -1510,20 +1510,48 @@
 
     <template id="alternative_products" name="Alternative Products" inherit_id="website_sale.product" active="True">
         <div itemprop="description" position="after">
-            <div class="oe_structure oe_structure_solo oe_unremovable oe_unmovable" id="oe_structure_website_sale_recommended_products" t-ignore="true" t-if="product.alternative_product_ids">
+            <div class="oe_structure oe_structure_solo oe_unremovable oe_unmovable"
+                id="oe_structure_website_sale_recommended_products"
+                t-ignore="true"
+                t-if="product.alternative_product_ids">
                 <section data-snippet="s_dynamic_snippet_products"
-                    class="oe_unmovable oe_unremovable s_dynamic_snippet_products o_wsale_alternative_products s_dynamic pt32 pb32 o_colored_level s_product_product_borderless_1"
-                    data-name="Alternative Products" style="background-image: none;" t-att-data-filter-id="product._get_alternative_product_filter()"
-                    data-template-key="website_sale.dynamic_filter_template_product_product_borderless_1" data-product-category-id="all" data-number-of-elements="4"
-                    data-number-of-elements-small-devices="1" data-number-of-records="16" data-carousel-interval="5000" data-bs-original-title="" title="">
-                    <div class="container o_not_editable">
-                        <div class="css_non_editable_mode_hidden">
-                            <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none o_default_snippet_text">
-                                Your Dynamic Snippet will be displayed here...
-                                This message is displayed because youy did not provide both a filter and a template to use.
-                            </div>
+                        class="oe_unmovable oe_unremovable s_dynamic_snippet_products
+                        o_wsale_alternative_products s_dynamic pt16 pb16
+                        o_colored_level s_product_product_borderless_1"
+                        data-name="Alternative Products"
+                        style="background-image: none;"
+                        t-att-data-filter-id="product._get_alternative_product_filter()"
+                        data-template-key="website_sale.dynamic_filter_template_product_product_borderless_1"
+                        data-product-category-id="all"
+                        data-number-of-elements="4"
+                        data-number-of-elements-small-devices="1"
+                        data-number-of-records="16"
+                        data-carousel-interval="5000">
+                    <div class="container">
+                        <div class="row s_nb_column_fixed">
+                            <section class="s_dynamic_snippet_title oe_unremovable oe_unmovable d-flex
+                                            flex-column flex-md-row justify-content-between mb-lg-0 pb-3 pb-md-0">
+                                <div>
+                                    <h4>Alternative Products</h4>
+                                    <p class="lead">Check out what else we have for you !</p>
+                                </div>
+                                <div>
+                                    <a title="See All" class="s_dynamic_snippet_main_page_url d-none" href="#">
+                                        See all <i class="fa fa-long-arrow-right ms-2"/>
+                                    </a>
+                                </div>
+                            </section>
+                            <section class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col">
+                                <div class="css_non_editable_mode_hidden">
+                                    <div class="missing_option_warning alert alert-info fade show d-none
+                                                d-print-none rounded-0">
+                                            Your Dynamic Snippet will be displayed here...
+                                            This message is displayed because you did not provide both a filter and a template to use.<br/>
+                                    </div>
+                                </div>
+                                <div class="dynamic_snippet_template"></div>
+                            </section>
                         </div>
-                        <div class="dynamic_snippet_template"></div>
                     </div>
                 </section>
             </div>
