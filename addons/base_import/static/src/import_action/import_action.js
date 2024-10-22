@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { useFileUploader } from "@web/core/utils/files";
 import { useService } from "@web/core/utils/hooks";
 import { FileInput } from "@web/core/file_input/file_input";
-import { useDropzone } from "@web/core/dropzone/dropzone_hook";
+import { useImportRecordsDropzone } from "@base_import/import_records_dropzone/import_records_dropzone_hook";
 import { useImportModel } from "../import_model";
 import { ImportDataContent } from "../import_data_content/import_data_content";
 import { ImportDataProgress } from "../import_data_progress/import_data_progress";
@@ -57,38 +57,17 @@ export class ImportAction extends Component {
         });
 
         this.uploadFiles = useFileUploader();
-        useDropzone(useRef("root"), async event => {
-            const { files } = event.dataTransfer;
-            if (files.length === 0) {
-                this.notification.add(_t("Please upload an Excel (.xls or .xlsx) or .csv file to import."), {
-                    type: "danger",
-                });
-            } else if (files.length > 1) {
-                this.notification.add(_t("Please upload a single file."), {
-                    type: "danger",
-                });
-            } else {
-                const file = files[0];
-                const isValidFile = file.name.endsWith(".csv")
-                                 || file.name.endsWith(".xls")
-                                 || file.name.endsWith(".xlsx");
-                if (!isValidFile) {
-                    this.notification.add(_t("Please upload an Excel (.xls or .xlsx) or .csv file to import."), {
-                        type: "danger",
-                    });
-                } else {
-                    await this.uploadFiles(this.uploadFilesRoute, {
-                        csrf_token: odoo.csrf_token,
-                        ufile: [file],
-                        model: this.resModel,
-                        id: this.model.id,
-                    });
-                    this.handleFilesUpload([file]);
-                }
-            }
+        useImportRecordsDropzone(useRef("root"), this.resModel, file => {
+            this.onDropFile(file);
         });
 
-        onWillStart(() => this.model.init());
+        onWillStart(async () => {
+            await this.model.init();
+            const file = this.props.action?.params?.file;
+            if (file) {
+                await this.onDropFile(file);
+            }
+        });
         onMounted(() => this.enter());
     }
 
@@ -166,6 +145,19 @@ export class ImportAction extends Component {
     //--------------------------------------------------------------------------
     // File
     //--------------------------------------------------------------------------
+
+    /**
+     * @param {File} file
+     */
+    async onDropFile(file) {
+        await this.uploadFiles(this.uploadFilesRoute, {
+            csrf_token: odoo.csrf_token,
+            ufile: [file],
+            model: this.resModel,
+            id: this.model.id,
+        });
+        this.handleFilesUpload([file]);
+    }
 
     async handleFilesUpload(files) {
         if (!files || files.length <= 0) {
