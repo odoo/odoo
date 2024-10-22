@@ -21,7 +21,7 @@
                         <label for="display_price"/>
                         <div class="o_row">
                             <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not carrier_id"/>
-                            <button name="update_price" type="object" invisible="delivery_type in ('fixed', 'base_on_rule')">
+                            <button name="update_price" type="object" invisible="delivery_type in ('fixed', 'base_on_rule') or invoice_policy == 'estimated'">
                                 <i class="oi oi-arrow-right me-1"/>Get rate
                             </button>
                         </div>
