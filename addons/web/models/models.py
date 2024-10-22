@@ -4,15 +4,19 @@ from __future__ import annotations
 import base64
 import itertools
 import json
+import typing
 
 from odoo import api, models
+from odoo.api import NewId
 from odoo.fields import Command
-from odoo.models import BaseModel, NewId
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
 from odoo.tools import unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
 from collections import defaultdict
 from odoo.tools.translate import LazyTranslate
+
+if typing.TYPE_CHECKING:
+    from odoo.models import BaseModel
 
 _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
