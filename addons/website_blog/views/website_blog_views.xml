@@ -6,6 +6,7 @@
             <field name="model">blog.blog</field>
             <field name="arch" type="xml">
                 <list string="Blogs">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="blog_post_count"/>
                     <field name="website_id" groups="website.group_multi_website"/>
