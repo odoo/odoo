@@ -331,7 +331,7 @@ class TestWebsiteSaleCoupon(HttpCase):
         icp_validity = ICP.create({'key': 'website_sale_coupon.abandonned_coupon_validity', 'value': 5})
         self.env.flush_all()
         query = """UPDATE %s SET write_date = %%s WHERE id = %%s""" % (order._table,)
-        self.env.cr.execute(query, (fields.Datetime.to_string(fields.datetime.now() - timedelta(days=4, hours=2)), order.id))
+        self.env.cr.execute(query, (fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=4, hours=2)), order.id))
         order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 1, "The coupon shouldn't have been removed from the order the order is 4 days old but icp validity is 5 days")

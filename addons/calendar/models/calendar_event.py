@@ -1060,7 +1060,7 @@ class CalendarEvent(models.Model):
 
     def get_next_alarm_date(self, events_by_alarm):
         self.ensure_one()
-        now = fields.datetime.now()
+        now = fields.Datetime.now()
         sorted_alarms = self.alarm_ids.sorted("duration_minutes")
         triggered_alarms = sorted_alarms.filtered(lambda alarm: alarm.id in events_by_alarm)[0]
         event_has_future_alarms = sorted_alarms[0] != triggered_alarms

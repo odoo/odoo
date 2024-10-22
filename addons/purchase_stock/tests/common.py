@@ -13,7 +13,7 @@ class PurchaseTestCommon(TestStockCommon):
         order_values = {
             'warehouse_id': self.warehouse_1,
             'action': 'pull_push',
-            'date_planned': date_planned or fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
+            'date_planned': date_planned or fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
             'group_id': self.env['procurement.group'],
         }
         return ProcurementGroup.run([self.env['procurement.group'].Procurement(

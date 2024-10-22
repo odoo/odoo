@@ -163,7 +163,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             ('location_dest_id', '=', self.wh.lot_stock_id.id)
         ])
         # Simulate a supplier delay
-        move.date = fields.datetime.now() + timedelta(days=1)
+        move.date = fields.Datetime.now() + timedelta(days=1)
         orderpoint = self.env['stock.warehouse.orderpoint'].search([
             ('product_id', '=', self.product_replenished.id)
         ])

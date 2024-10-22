@@ -308,7 +308,7 @@ class HrApplicant(models.Model):
     def _compute_date_closed(self):
         for applicant in self:
             if applicant.stage_id and applicant.stage_id.hired_stage and not applicant.date_closed:
-                applicant.date_closed = fields.datetime.now()
+                applicant.date_closed = fields.Datetime.now()
             if not applicant.stage_id.hired_stage:
                 applicant.date_closed = False
 

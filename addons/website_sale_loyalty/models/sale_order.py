@@ -193,7 +193,7 @@ class SaleOrder(models.Model):
         """Remove coupons from abandonned ecommerce order."""
         ICP = self.env['ir.config_parameter']
         validity = ICP.get_param('website_sale_coupon.abandonned_coupon_validity', 4)
-        validity = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=int(validity)))
+        validity = fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=int(validity)))
         so_to_reset = self.env['sale.order'].search([
             ('state', '=', 'draft'),
             ('write_date', '<', validity),
