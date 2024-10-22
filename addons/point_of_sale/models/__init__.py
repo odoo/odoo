@@ -23,6 +23,7 @@ from . import product_combo_item
 from . import res_partner
 from . import res_company
 from . import res_config_settings
+from . import ir_module_module
 from . import stock_picking
 from . import stock_rule
 from . import stock_warehouse
