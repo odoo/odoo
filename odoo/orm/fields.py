@@ -37,12 +37,6 @@ COMPANY_DEPENDENT_FIELDS = (
 _logger = logging.getLogger('odoo.fields')
 
 
-def first(records):
-    """ Return the first record in ``records``, with the same prefetching. """
-    # TODO move to tools.misc
-    return next(iter(records)) if len(records) > 1 else records
-
-
 def resolve_mro(model, name, predicate):
     """ Return the list of successively overridden values of attribute ``name``
         in mro order on ``model`` that satisfy ``predicate``.  Model registry
@@ -628,7 +622,9 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
         for name in self.related.split('.')[:-1]:
-            record = first(record[name])
+            # take the first record when traversing
+            corecord = record[name]
+            record = next(iter(corecord), corecord)
         return record, self.related_field
 
     def _compute_related(self, records):
@@ -662,7 +658,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         values = list(records)
         for name in self.related.split('.')[:-1]:
             try:
-                values = [first(value[name]) for value in values]
+                values = [next(iter(val := value[name]), val) for value in values]
             except AccessError as e:
                 description = records.env['ir.model']._get(records._name).name
                 env = records.env
@@ -1327,7 +1323,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             # [rec.line_ids.mapped('name') for rec in recs] would generate one
             # query per record in `recs`!
             remaining = records.__class__(records.env, records._ids[len(vals):], records._prefetch_ids)
-            self.__get__(first(remaining))
+            self.__get__(next(iter(remaining)))
             vals += records.env.cache.get_until_miss(remaining, self)
 
         return self.convert_to_record_multi(vals, records)
