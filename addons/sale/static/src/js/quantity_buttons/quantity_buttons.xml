@@ -3,7 +3,7 @@
     <t t-name="sale.QuantityButtons">
         <div name="quantity_buttons_wrapper" class="input-group justify-content-center">
             <button
-                class="btn btn-secondary d-none d-md-inline-block"
+                t-attf-class="btn btn-secondary {{ props.btnClasses or 'd-none d-md-inline-block' }}"
                 name="sale_quantity_button_minus"
                 aria-label="Remove one"
                 t-att-disabled="props.isMinusButtonDisabled"
@@ -17,7 +17,7 @@
                 t-att-value="props.quantity"
                 t-on-change="setQuantity"/>
             <button
-                class="btn btn-secondary d-none d-md-inline-block"
+                t-attf-class="btn btn-secondary {{ props.btnClasses or 'd-none d-md-inline-block' }}"
                 name="sale_quantity_button_plus"
                 aria-label="Add one"
                 t-att-disabled="props.isPlusButtonDisabled"
