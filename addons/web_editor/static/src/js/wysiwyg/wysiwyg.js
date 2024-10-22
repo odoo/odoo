@@ -1377,7 +1377,13 @@ const Wysiwyg = Widget.extend({
                     params.node.setAttribute(attribute.nodeName, attribute.nodeValue);
                 }
             } else {
-                params.node.replaceWith(element);
+                const parentEl = params.node.parentElement;
+                // Replace video element with parent if it's anchor.
+                if (parentEl.tagName === "A" && element.classList.contains("media_iframe_video")) {
+                    parentEl.replaceWith(element);
+                } else {
+                    params.node.replaceWith(element);
+                }
             }
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
