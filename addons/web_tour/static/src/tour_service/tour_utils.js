@@ -40,7 +40,9 @@ export function getScrollParent(element) {
     // tour (in website edit mode). When the modal opens, not all "building
     // blocks" are loaded yet, and the scrollbar is not present initially.
     const overflowY = window.getComputedStyle(element).overflowY;
-    const isScrollable = overflowY === "auto" || overflowY === "scroll" ||
+    const isScrollable =
+        overflowY === "auto" ||
+        overflowY === "scroll" ||
         (overflowY === "visible" && element === element.ownerDocument.scrollingElement);
     if (isScrollable) {
         return element;
@@ -168,7 +170,7 @@ export const stepUtils = {
         return [
             {
                 isActive: ["mobile"],
-                trigger: `.o_control_panel_navigation .btn .fa-search`,
+                trigger: `.modal:not(.o_inactive_modal) .o_control_panel_navigation .btn .fa-search`,
                 tooltipPosition: "bottom",
                 run: "click",
             },

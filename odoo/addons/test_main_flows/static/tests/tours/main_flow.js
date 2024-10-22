@@ -1110,7 +1110,15 @@ stepUtils.autoExpandMoreButtons(true),
     trigger: '.modal-content.o_form_view div[name="unit_amount"] input',
     content: 'Enter one hour for this timesheet',
     run: "edit 10",
-}, {
+},
+{
+    isActive: ["mobile"],
+    content: "save",
+    trigger: ".modal .o_form_button_save",
+    run: "click",
+},
+{
+    isActive: ["desktop"],
     content: "save",
     trigger: ".o_form_button_save",
     run: "click",
