@@ -11,7 +11,7 @@ class Base(models.AbstractModel):
     def _alias_get_error(self, message, message_dict, alias):
         if alias.alias_contact == 'employees':
             email_from = tools.mail.decode_message_header(message, 'From')
-            email_address = tools.email_split(email_from)[0]
+            email_address = tools.email_normalize(email_from, strict=False)
             employee = self.env['hr.employee'].search([('work_email', 'ilike', email_address)], limit=1)
             if not employee:
                 employee = self.env['hr.employee'].search([('user_id.email', 'ilike', email_address)], limit=1)
