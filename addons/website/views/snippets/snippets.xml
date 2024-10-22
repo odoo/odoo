@@ -340,6 +340,9 @@
                 <t t-snippet="website.s_quotes_carousel_minimal" string="Quotes Minimal" group="people" label="Carousel">
                     <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations, carousel</keywords>
                 </t>
+                <t t-snippet="website.s_quotes_carousel_compact" string="Quotes Compact" group="people" label="Carousel">
+                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations, carousel</keywords>
+                </t>
 
                 <!-- Text group -->
                 <t t-snippet="website.s_title" string="Title" group="text">
@@ -656,7 +659,7 @@
 <template id="snippet_options_carousel">
     <div data-js="Carousel"
          data-selector="section"
-         data-exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper"
+         data-exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper"
          data-target="> .carousel">
         <we-row string="Slide">
             <we-button data-add-slide="true" data-no-preview="true" class="o_we_bg_brand_primary">Add Slide</we-button>
@@ -691,7 +694,7 @@
 
 <template id="snippet_options_carousel_bottom_controllers" inherit_id="website.snippet_options_carousel" primary="True">
     <xpath expr="//div" position="attributes">
-        <attribute name="data-target">.s_carousel_intro</attribute>
+        <attribute name="data-target">.s_carousel_intro, .s_quotes_carousel_compact</attribute>
         <attribute name="data-exclude"/>
         <attribute name="data-js">Carousel</attribute>
     </xpath>

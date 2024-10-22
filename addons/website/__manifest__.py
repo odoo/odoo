@@ -101,6 +101,7 @@
         'views/snippets/s_quotes_carousel.xml',
         'views/snippets/s_numbers_grid.xml',
         'views/snippets/s_quotes_carousel_minimal.xml',
+        'views/snippets/s_quotes_carousel_compact.xml',
         'views/snippets/s_numbers.xml',
         'views/snippets/s_contact_info.xml',
         'views/snippets/s_numbers_boxed.xml',
