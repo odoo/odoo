@@ -22,8 +22,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            trigger: ".o_list_number:contains('5')",
-            run: "click",
+            trigger: ".modal .o_list_number:contains(5)",
         },
         {
             content: "Click Save",
