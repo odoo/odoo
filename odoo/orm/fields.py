@@ -920,7 +920,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         """ Return whether the field is accessible from the given environment. """
         if not self.groups or env.is_superuser():
             return True
-        if self.groups == '.':
+        if self.groups == NO_ACCESS:
             return False
         return env.user.has_groups(self.groups)
 
