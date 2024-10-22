@@ -47,8 +47,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         this.filmStripIsDown = false;
         this.filmStripScrollLeft = 0;
         this.filmStripMoved = false;
-
-        delete this.events['change [data-attribute_exclusions]'];
     },
     /**
      * @override
