@@ -57,7 +57,8 @@
         </div>
 
         <div data-selector=".s_blockquote" data-target=".s_blockquote_infos">
-            <we-select string="Author Alignment">
+            <we-checkbox string="Author" data-name="toggle_blockquote_author_opt" data-select-class="d-flex"/>
+            <we-select string="Alignment" class="o_we_sublevel_1" data-dependencies="toggle_blockquote_author_opt">
                 <we-button data-select-class="flex-row align-items-start justify-content-start text-start">Left</we-button>
                 <we-button data-select-class="flex-column align-items-center text-center">Center</we-button>
                 <we-button data-select-class="flex-row-reverse align-items-start justify-content-start text-end">Right</we-button>
