@@ -3,7 +3,7 @@
     'name': 'New Zealand - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['nz'],
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 New Zealand Accounting Module
