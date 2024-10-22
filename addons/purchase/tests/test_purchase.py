@@ -148,6 +148,9 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.partner_a.reminder_date_before_receipt = 2
         # Invalidate the cache to ensure that the computed fields are recomputed
         self.env.invalidate_all()
+        # receipt_reminder_email and reminder_date_before_receipt are editable until RFQ. Since both fields are stored, they need to be changed manually in this case.
+        po.receipt_reminder_email = True
+        po.reminder_date_before_receipt = 2
         self.assertTrue(po.receipt_reminder_email)
         self.assertEqual(po.reminder_date_before_receipt, 2)
 

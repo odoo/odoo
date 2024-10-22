@@ -153,8 +153,8 @@ class PurchaseOrder(models.Model):
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
     mail_reception_declined = fields.Boolean("Reception Declined", readonly=True, copy=False, help="True if PO reception is declined by the vendor.")
 
-    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email')
-    reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email')
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -257,16 +257,12 @@ class PurchaseOrder(models.Model):
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     def write(self, vals):
-        vals, partner_vals = self._write_partner_values(vals)
         res = super().write(vals)
-        if partner_vals:
-            self.partner_id.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
         orders = self.browse()
-        partner_vals_list = []
         for vals in vals_list:
             company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
             # Ensures default picking type and currency are taken from the right company.
@@ -276,12 +272,7 @@ class PurchaseOrder(models.Model):
                 if 'date_order' in vals:
                     seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
                 vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
-            vals, partner_vals = self._write_partner_values(vals)
-            partner_vals_list.append(partner_vals)
             orders |= super(PurchaseOrder, self_comp).create(vals)
-        for order, partner_vals in zip(orders, partner_vals_list):
-            if partner_vals:
-                order.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
         return orders
 
     @api.ondelete(at_uninstall=False)
@@ -983,8 +974,7 @@ class PurchaseOrder(models.Model):
             ('partner_id', '!=', False),
             ('state', 'in', ['purchase', 'done']),
             ('mail_reminder_confirmed', '=', False)
-        ]).filtered(lambda p: p.partner_id.with_company(p.company_id).receipt_reminder_email and\
-            p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
+        ]).filtered(lambda p: p.receipt_reminder_email and p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
 
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)
@@ -1237,14 +1227,6 @@ class PurchaseOrder(models.Model):
                 original_receipt_date=line.date_planned.date(),
                 new_receipt_date=date.date()
             )
-
-    def _write_partner_values(self, vals):
-        partner_values = {}
-        if 'receipt_reminder_email' in vals:
-            partner_values['receipt_reminder_email'] = vals.pop('receipt_reminder_email')
-        if 'reminder_date_before_receipt' in vals:
-            partner_values['reminder_date_before_receipt'] = vals.pop('reminder_date_before_receipt')
-        return vals, partner_values
 
     def _is_readonly(self):
         """ Return whether the purchase order is read-only or not based on the state.

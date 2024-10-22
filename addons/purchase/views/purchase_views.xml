@@ -203,10 +203,10 @@
                             </div>
                             <label for="receipt_reminder_email" class="d-none" groups="purchase.group_send_reminder"/>
                             <div name="reminder" class="o_row" groups='purchase.group_send_reminder' title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
-                                <field name="receipt_reminder_email"/>
+                                <field name="receipt_reminder_email" readonly="state not in ('draft')" />
                                 <span>Ask confirmation</span>
                                 <div class="o_row oe_inline" invisible="not receipt_reminder_email">
-                                    <field name="reminder_date_before_receipt" class="oe_inline" style="max-width: 30px;"/>
+                                    <field name="reminder_date_before_receipt" class="oe_inline" style="max-width: 110px;" readonly="state not in ('draft')" />
                                     day(s) before
                                     <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself." invisible="not id"/>
                                 </div>
@@ -765,12 +765,7 @@
                     <filter string="Status" name="purchase_state" domain="[('state', '=', 'purchase')]"/>
                     <separator/>
                     <filter name="filter_date_order" date="date_order" default_period="month"/>
-                    <filter name="order_date_last_year" string="Order Date: Last 365 Days"
-                        domain="[
-                            ('date_order', '>', ((context_today() - relativedelta(years=1)).strftime('%Y-%m-%d')))
-                        ]" invisible="1"/>
                     <group expand="0" string="Group By">
-                        <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter string="Order Reference" name="order_reference" domain="[]" context="{'group_by' :'order_id'}"/>
                         <separator/>
