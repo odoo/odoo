@@ -64,6 +64,9 @@ class SaleOrder(models.Model):
             return ['name', 'partner_id.name']
         return ['name']
 
+    def _get_journal_domain(self):
+        return [('type', '=', 'sale')] if not self.env.user.has_group('sale.group_proforma_sales') else [('type', '=', ('sale', 'bank'))]
+
     #=== FIELDS ===#
 
     name = fields.Char(
@@ -148,7 +151,7 @@ class SaleOrder(models.Model):
     journal_id = fields.Many2one(
         'account.journal', string="Invoicing Journal",
         compute="_compute_journal_id", store=True, readonly=False, precompute=True,
-        domain=[('type', '=', 'sale')], check_company=True,
+        domain=_get_journal_domain, check_company=True,
         help="If set, the SO will invoice in this journal; "
              "otherwise the sales journal with the lowest sequence is used.")
 

@@ -121,7 +121,15 @@
                                 </td>
                                 <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_id])"/>
                                 <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
-                                    <span t-out="taxes">Tax 15%</span>
+                                    <t t-if="is_proforma">
+                                        <span t-out="round(line.price_tax / line.product_uom_qty, 2)">10</span>
+                                        <div class="fst-italic o_line_note text-muted fs-7">
+                                            <span t-out="taxes">Tax 15%</span>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-out="taxes">Tax 15%</span>
+                                    </t>
                                 </td>
                                 <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
                                     <span t-field="line.price_subtotal">27.00</span>
@@ -180,6 +188,25 @@
                 </div>
             </div>
             <div class="oe_structure"></div>
+
+            <div class="oe_structure" t-if="is_proforma">
+                <div>
+                    <strong>Issued by:</strong> <div t-field="env.user.partner_id.name">Mitchell Admin</div>
+                </div>
+
+                <br/>
+
+                <div>
+                    <t t-set="move" t-value="doc.invoice_ids"/>
+                    <strong>Payment Details:</strong>
+                    <div t-field="doc.partner_id.name"/>
+                    <div t-field="doc.partner_id.vat"/>
+                    <div t-if="doc.journal_id">
+                        <div t-if="doc.journal_id.bank_account_id" t-field="doc.journal_id.bank_account_id.acc_number"/>
+                        <div t-if="doc.journal_id.bank_id" t-field="doc.journal_id.bank_id.name"/>
+                    </div>
+                </div>
+            </div>
 
             <div t-if="not doc.signature" class="oe_structure"></div>
             <div t-else="" class="mt-4 ml64 mr4" name="signature">
