@@ -559,8 +559,8 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
             'subject': 'Hello',
             'body_html': 'en',
         })
-        template.lang = '{{ object.partner_id.lang }}'
         template.render_model = 'slide.channel.partner'
+        template.lang = '{{ object.partner_id.lang }}'
 
         template.with_context(lang='fr_FR').subject = 'Bonjour'
         template.with_context(lang='fr_FR').body_html = 'fr'

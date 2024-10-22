@@ -6,7 +6,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tests import Form, HttpCase, tagged, users
-from odoo.tools import convert_file
+from odoo.tools import convert_file, mute_logger
 
 
 @tagged('mail_template')
@@ -26,6 +26,21 @@ class TestMailTemplate(MailCommon):
             'lang': '{{ object.lang }}',
             'auto_delete': True,
             'model_id': cls.env.ref('base.model_res_partner').id,
+        })
+
+    @users('employee')
+    def test_invalid_template_on_save(self):
+        """Check templates having invalid object references can't be stored."""
+        with mute_logger('odoo.addons.mail.models.mail_render_mixin'), self.assertRaises(ValidationError):
+            self.mail_template.write({
+                'subject': '{{ object.unknown_field }}',
+            })
+
+    @users('employee')
+    def test_invalid_template_context_on_save(self):
+        """Check object references having context will be ignored."""
+        self.mail_template.write({
+            'subject': '{{ ctx.unknown_field}}'
         })
 
     @users('employee')
@@ -121,17 +136,17 @@ class TestMailTemplate(MailCommon):
 
         # Standard employee cannot create and edit templates with dynamic inline fields
         with self.assertRaises(AccessError):
-            self.env['mail.template'].with_user(self.user_employee).create({'email_to': '{{ object.partner_id.email }}', 'model_id': model})
+            self.env['mail.template'].with_user(self.user_employee).create({'email_to': '{{ object.user_id.email }}', 'model_id': model})
 
         # Standard employee cannot edit his own templates if dynamic
         with self.assertRaises(AccessError):
             employee_template.body_html = '''<p t-out="'foo'"></p>'''
 
         forbidden_expressions = (
-            'object.partner_id.email',
-            'object.password',
+            'object.user_id.email',
+            'object.user_id.password',
             "object.name or (1+1)",
-            'password',
+            'user',
             'object.name or object.name',
             '[a for a in (1,)]',
             "object.name or f''",
@@ -175,8 +190,8 @@ class TestMailTemplate(MailCommon):
         self.assertNotIn('12', body)
 
         forbidden_qweb_expressions = (
-            '<p t-out="partner_id.name"></p>',
-            '<p t-esc="partner_id.name"></p>',
+            '<p t-out="user_id.name"></p>',
+            '<p t-esc="user_id.name"></p>',
             '<p t-debug=""></p>',
             '<p t-set="x" t-value="object.name"></p>',
             '<p t-set="x" t-value="object.name"></p>',
@@ -190,7 +205,7 @@ class TestMailTemplate(MailCommon):
             '<p t-out="object.name" title="Test"></p>',
             # allowed expression with child
             '<p t-out="object.name"><img/></p>',
-            '<p t-out="object.password"></p>',
+            '<p t-out="object.user_id.password"></p>',
         )
         for expression in forbidden_qweb_expressions:
             with self.assertRaises(AccessError):
@@ -203,7 +218,7 @@ class TestMailTemplate(MailCommon):
             '<p t-out="object.name"></p><img/>',
             '<p t-out="object.name"></p><img title="Test"/>',
             '<p t-out="object.name">Default</p>',
-            '<p t-out="object.partner_id.name">Default</p>',
+            '<p t-out="object.user_id.name">Default</p>',
 
         )
         o_qweb_render = self.env['ir.qweb']._render
@@ -290,13 +305,12 @@ class TestMailTemplate(MailCommon):
 
         ### check qweb inline dynamic
         # write on translation for template without dynamic code is allowed
-        employee_template.with_context(lang='fr_FR').subject = 'non-qweb'
-
+        employee_template.subject = 'non-qweb'
         # cannot write dynamic code on mail_template translation for employee without the group mail_template_editor.
         with self.assertRaises(AccessError):
-            employee_template.with_context(lang='fr_FR').subject = '{{ object.foo }}'
+            employee_template.subject = '{{ object.foo }}'
 
-        employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.foo }}'
+        employee_template.sudo().subject = '{{ object.name }}'
 
     def test_mail_template_parse_partner_to(self):
         for partner_to, expected in [
