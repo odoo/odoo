@@ -194,11 +194,20 @@ class AccountChartTemplate(models.AbstractModel):
         reload_template = template_code == company.chart_template
         company.chart_template = template_code
 
+        child_companies = self.env['res.company'].search([('id', 'child_of', company.id)])
         if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:
                     company_field = 'company_id' if 'company_id' in self.env[model] else 'company_ids'
-                    self.env[model].sudo().with_context(active_test=False).search([(company_field, 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    recs = self.env[model].sudo().with_context(active_test=False).search([(company_field, 'child_of', company.id)])
+                    if company_field == 'company_ids':
+                        recs_by_companies = recs.grouped(lambda r: r.company_ids)
+                        for companies, recs_of_companies in recs_by_companies.items():
+                            if companies_to_unlink := companies & child_companies:
+                                # Remove companies from shared records, but don't unlink them
+                                recs_of_companies.write({'company_ids': [Command.unlink(c.id) for c in companies_to_unlink]})
+                                recs -= recs_of_companies
+                    recs.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
