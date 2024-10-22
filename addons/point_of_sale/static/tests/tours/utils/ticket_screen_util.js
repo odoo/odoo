@@ -192,6 +192,13 @@ export function receiptTotalIs(amount) {
         },
     ];
 }
+export function receiptChangeIs(amount) {
+    return [
+        {
+            trigger: `.receipt-screen .receipt-change:contains("${amount}")`,
+        },
+    ];
+}
 export function back() {
     return {
         isActive: ["mobile"],
