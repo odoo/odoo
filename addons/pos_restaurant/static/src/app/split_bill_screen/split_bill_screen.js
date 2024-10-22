@@ -71,6 +71,7 @@ export class SplitBillScreen extends Component {
                         ...line.serialize(),
                         qty: this.qtyTracker[line.uuid],
                         order_id: newOrder.id,
+                        skip_change: true,
                     },
                     false,
                     true
