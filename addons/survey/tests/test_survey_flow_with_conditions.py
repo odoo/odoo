@@ -123,11 +123,11 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
         answer_token = user_inputs.access_token
 
         # User begins survey with first page
-        response = self._access_page(survey, answer_token)
+        response = self._access_page(survey, answer_token, user_inputs.id)
         self.assertResponse(response, 200)
         csrf_token = self._find_csrf_token(response.text)
 
-        r = self._access_begin(survey, answer_token)
+        r = self._access_begin(survey, answer_token, user_inputs.id)
         self.assertResponse(r, 200)
 
         answers = {
@@ -139,7 +139,7 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
             q07: q07.suggested_answer_ids[1],  # Right
         }
 
-        self._answer_page(page_0, answers, answer_token, csrf_token)
+        self._answer_page(page_0, answers, answer_token, user_inputs.id, csrf_token)
         self.assertEqual(len(user_inputs.predefined_question_ids), 6, "q04 should have been removed as not triggered.")
 
         user_inputs.invalidate_recordset()

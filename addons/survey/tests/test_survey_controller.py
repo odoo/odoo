@@ -4,8 +4,10 @@
 from odoo import Command
 from odoo.addons.survey.tests import common
 from odoo.tests.common import HttpCase
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSurveyController(common.TestSurveyCommon, HttpCase):
 
     def test_submit_route_scoring_after_page(self):
@@ -83,11 +85,11 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
                 user_input = self.env['survey.user_input'].search([('access_token', '=', response.url.split('/')[-1])])
                 answer_token = user_input.access_token
 
-                r = self._access_page(survey, answer_token)
+                r = self._access_page(survey, answer_token, user_input.id)
                 self.assertResponse(r, 200)
                 csrf_token = self._find_csrf_token(response.text)
 
-                r = self._access_begin(survey, answer_token)
+                r = self._access_begin(survey, answer_token, user_input.id)
                 self.assertResponse(r, 200)
 
                 post_data = {'csrf_token': csrf_token, 'token': answer_token}
