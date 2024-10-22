@@ -9,6 +9,11 @@ class TestAnalytics(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        with cls.admin_permissions():
+            cls.env.user.groups_id += (
+                cls.env.ref('analytic.group_analytic_accounting') +
+                cls.env.ref('project.group_project_manager')
+            )
         cls.plan1, cls.plan2 = cls.env['account.analytic.plan'].create([{'name': 'Plan 1'}, {'name': 'Plan 2'}])
         cls.plan1_name = cls.plan1._column_name()
         cls.plan2_name = cls.plan2._column_name()
@@ -42,17 +47,17 @@ class TestAnalytics(TestStockCommon):
 
     def test_analytic_lines_generation_delivery(self):
         picking_out = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
             'project_id': self.project.id,
         })
         picking_out.picking_type_id.analytic_costs = True
         move_values = {
             'product_uom': self.uom_unit.id,
             'picking_id': picking_out.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         }
         self.MoveObj.create([
             {
@@ -85,17 +90,17 @@ class TestAnalytics(TestStockCommon):
 
     def test_analytic_lines_generation_receipt(self):
         picking_in = self.PickingObj.create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'project_id': self.project.id,
         })
         picking_in.picking_type_id.analytic_costs = True
         move_values = {
             'product_uom': self.uom_unit.id,
             'picking_id': picking_in.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
         }
         self.MoveObj.create([
             {
@@ -133,9 +138,9 @@ class TestAnalytics(TestStockCommon):
             'applicability': 'mandatory',
         })
         picking_in = self.PickingObj.create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'project_id': self.project.id,
         })
         picking_in.picking_type_id.analytic_costs = True
@@ -144,8 +149,8 @@ class TestAnalytics(TestStockCommon):
             'name': 'Move',
             'product_uom': self.uom_unit.id,
             'picking_id': picking_in.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'product_id': self.product2.id,
             'product_uom_qty': 5,
         })

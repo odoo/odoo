@@ -8,6 +8,11 @@ class TestReInvoice(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        with cls.admin_permissions():
+            cls.env.user.groups_id += (
+                cls.env.ref('sales_team.group_sale_manager') +
+                cls.env.ref('project.group_project_manager')
+            )
         cls.partner = cls.env['res.partner'].create({'name': 'Test Partner'})
         cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,
@@ -19,9 +24,9 @@ class TestReInvoice(TestStockCommon):
             'reinvoiced_sale_order_id': cls.sale_order.id,
         })
         cls.picking_out = cls.PickingObj.create({
-            'picking_type_id': cls.picking_type_out,
-            'location_id': cls.stock_location,
-            'location_dest_id': cls.customer_location,
+            'picking_type_id': cls.picking_type_out.id,
+            'location_id': cls.stock_location.id,
+            'location_dest_id': cls.customer_location.id,
             'project_id': cls.project.id,
         })
         cls.picking_out.picking_type_id.analytic_costs = True
@@ -44,8 +49,8 @@ class TestReInvoice(TestStockCommon):
             'name': 'Move',
             'product_uom': self.uom_unit.id,
             'picking_id': self.picking_out.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         }
         self.MoveObj.create([
             {
