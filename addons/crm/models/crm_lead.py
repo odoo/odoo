@@ -571,7 +571,7 @@ class CrmLead(models.Model):
             return res if len(res) < SEARCH_RESULT_LIMIT else model
 
         for lead in self:
-            lead_id = lead._origin.id if isinstance(lead.id, models.NewId) else lead.id
+            lead_id = lead._origin.id
             common_lead_domain = [
                 ('id', '!=', lead_id)
             ]
