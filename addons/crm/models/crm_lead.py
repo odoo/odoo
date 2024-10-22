@@ -15,7 +15,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import date_utils, email_split, is_html_empty, groupby, parse_contact_from_email, SQL
+from odoo.tools import date_utils, email_normalize_all, is_html_empty, groupby, parse_contact_from_email, SQL
 from odoo.tools.misc import get_lang
 
 from . import crm_stage
@@ -475,7 +475,7 @@ class CrmLead(models.Model):
             email_state = False
             if lead.email_from:
                 email_state = 'incorrect'
-                for email in email_split(lead.email_from):
+                for email in email_normalize_all(lead.email_from):
                     if mail_validation.mail_validate(email):
                         email_state = 'correct'
                         break
@@ -1755,8 +1755,9 @@ class CrmLead(models.Model):
             return self.env['crm.lead']
 
         domain = []
-        for normalized_email in [tools.email_normalize(email) for email in tools.email_split(email)]:
-            domain.append(('email_normalized', '=', normalized_email))
+        normalized_emails = email_normalize_all(email)
+        if normalized_emails:
+            domain.append(('email_normalized', 'in', normalized_emails))
         if partner:
             domain.append(('partner_id', '=', partner.id))
 
