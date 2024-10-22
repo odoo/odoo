@@ -20,4 +20,3 @@ from odoo.orm.commands import Command
 
 # TODO these should not be exposed here
 from datetime import date, datetime
-from odoo.tools import date_utils
