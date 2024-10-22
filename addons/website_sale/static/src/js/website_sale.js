@@ -17,8 +17,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     selector: '.oe_website_sale',
     events: Object.assign({}, VariantMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
-        'mouseup .js_publish': '_onMouseupPublish',
-        'touchend .js_publish': '_onMouseupPublish',
         'click a.js_add_cart_json': '_onClickAddCartJSON',
         'click .a-submit': '_onClickSubmit',
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
@@ -423,13 +421,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      */
     _onChangeAddQuantity: function (ev) {
         this.onChangeAddQuantity(ev);
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onMouseupPublish: function (ev) {
-        $(ev.currentTarget).parents('.thumbnail').toggleClass('disabled');
     },
     /**
      * @private
