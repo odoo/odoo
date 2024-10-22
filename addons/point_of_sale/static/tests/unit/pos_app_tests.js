@@ -85,6 +85,18 @@ export class MockPosData {
             models: {
                 "product.product": { relations: {}, fields: {}, data: [] },
                 "product.pricelist": { relations: {}, fields: {}, data: [] },
+                "res.country": {
+                    fields: {
+                        code: { string: "Code", type: "string" },
+                    },
+                    data: [
+                        {
+                            id: 1,
+                            name: "United States of America",
+                            code: "US",
+                        },
+                    ],
+                },
                 "pos.session": {
                     relations: {},
                     fields: {},
@@ -102,10 +114,16 @@ export class MockPosData {
                             string: "Tax rounding method",
                             type: "string",
                         },
+                        account_fiscal_country_id: {
+                            string: "Account fiscal country",
+                            type: "many2one",
+                            relation: "res.country",
+                        },
                     },
                     data: [
                         {
                             tax_calculation_rounding_method: "round_globally",
+                            account_fiscal_country_id: 1,
                         },
                     ],
                 },
