@@ -1011,7 +1011,7 @@ export function getAdjacentCharacter(editable, side) {
     return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
 }
 
-function isZwnbsp(node) {
+export function isZwnbsp(node) {
     return node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff';
 }
 
