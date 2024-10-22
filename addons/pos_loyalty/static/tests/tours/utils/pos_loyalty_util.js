@@ -67,7 +67,7 @@ export function hasRewardLine(rewardName, amount, qty) {
 export function orderTotalIs(total_str) {
     return [...Order.hasTotal(total_str)];
 }
-export function isRewardButtonHighlighted(isHighlighted, closeModal) {
+export function isRewardButtonHighlighted(isHighlighted, closeModal = true) {
     const steps = [
         ...ProductScreen.clickControlButtonMore(),
         {
@@ -85,15 +85,24 @@ export function isRewardButtonHighlighted(isHighlighted, closeModal) {
     }
     return steps;
 }
-export function eWalletButtonState({ highlighted, text = "eWallet" }) {
-    return [
-        ...ProductScreen.clickControlButtonMore(),
-        {
-            trigger: highlighted
-                ? `.control-buttons button.highlight:contains("${text}")`
-                : `.control-buttons button:contains("${text}"):not(:has(.highlight))`,
-        },
-    ];
+export function eWalletButtonState({ highlighted, text = "eWallet", click = false }) {
+    const step = {
+        trigger: highlighted
+            ? `.control-buttons button.highlight:contains("${text}")`
+            : `.control-buttons button:contains("${text}"):not(:has(.highlight))`,
+    };
+    if (click) {
+        step.run = "click";
+    }
+    const steps = [...ProductScreen.clickControlButtonMore(), step];
+    if (!click) {
+        steps.push({
+            //Previous step is just a check. No need to keep modal openened
+            trigger: ".modal header .btn-close",
+            run: "click",
+        });
+    }
+    return steps;
 }
 export function customerIs(name) {
     return [
