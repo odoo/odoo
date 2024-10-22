@@ -76,6 +76,7 @@
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/pos_kanban_view/*',
             'point_of_sale/static/src/app/utils/hooks.js',
+            'point_of_sale/static/src/overrides/webclient.js'
         ],
         'web.assets_tests': [
             'barcodes/static/tests/helpers.js',
@@ -139,6 +140,7 @@
             'web/static/src/webclient/webclient_layout.scss',
 
             'web/static/src/webclient/icons.scss',
+            'web/static/src/webclient/**/*',
 
             # scss variables and utilities
             'point_of_sale/static/src/scss/pos_variables_extra.scss',
