@@ -1,16 +1,13 @@
-/** @odoo-module **/
-
-import publicWidget from "@web/legacy/js/public/public_widget";
-import VariantMixin from "@website_sale/js/sale_variant_mixin";
-import wSaleUtils from "@website_sale/js/website_sale_utils";
-const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
-import "@website/libs/zoomodoo/zoomodoo";
-import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
-import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
+import { hasTouch, isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { rpc } from "@web/core/network/rpc";
-import { throttleForAnimation } from "@web/core/utils/timing";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-import { isBrowserFirefox, hasTouch } from "@web/core/browser/feature_detection";
+import { throttleForAnimation } from "@web/core/utils/timing";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import { extraMenuUpdateCallbacks } from "@website/js/content/menu";
+import "@website/libs/zoomodoo/zoomodoo";
+import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
+import VariantMixin from "@website_sale/js/sale_variant_mixin";
+import { cartHandlerMixin } from "@website_sale/js/website_sale_utils";
 
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {

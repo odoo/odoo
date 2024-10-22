@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
+import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { memoize, uniqueId } from "@web/core/utils/functions";
-import { throttleForAnimation } from "@web/core/utils/timing";
 import { insertThousandsSep } from "@web/core/utils/numbers";
-import { _t } from "@web/core/l10n/translation";
-import { localization } from "@web/core/l10n/localization";
-import { rpc } from "@web/core/network/rpc";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
 var VariantMixin = {
     events: {
