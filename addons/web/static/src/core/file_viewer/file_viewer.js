@@ -34,6 +34,7 @@ export class FileViewer extends Component {
         useAutofocus();
         this.imageRef = useRef("image");
         this.zoomerRef = useRef("zoomer");
+        this.attachmentService = useService("mail.attachment");
 
         this.isDragging = false;
         this.dragStartX = 0;
@@ -248,5 +249,10 @@ export class FileViewer extends Component {
                     </body>
                 </html>`);
         printWindow.document.close();
+    }
+
+    onDeleteAttachment() {
+        this.attachmentService.delete(this.state.file);
+        this.props.close();
     }
 }

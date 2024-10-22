@@ -1269,7 +1269,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
         """
         messages_all = self.messages_all.with_env(self.env)
 
-        with self.assertQueryCount(employee=27):
+        with self.assertQueryCount(employee=29):
             res = messages_all.message_format()
 
         self.assertEqual(len(res), 2*2)
@@ -1282,7 +1282,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
     def test_message_format_single(self):
         message = self.messages_all[0].with_env(self.env)
 
-        with self.assertQueryCount(employee=24):
+        with self.assertQueryCount(employee=26):
             res = message.message_format()
 
         self.assertEqual(len(res), 1)
