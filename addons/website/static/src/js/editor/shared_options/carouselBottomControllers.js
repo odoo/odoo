@@ -1,7 +1,25 @@
 import options from "@web_editor/js/editor/snippets.options";
 import "@website/js/editor/snippets.options";
 
-options.registry.CarouselIntro = options.registry.Carousel.extend({
+options.registry.CarouselBottomControllers = options.registry.Carousel.extend({
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+    /**
+     * Add a custom class if all controllers are hidden.
+     */
+    toggleControllers() {
+        const carouselEl = this.$target[0].closest(".carousel");
+        const indicatorsWrapEl = carouselEl.querySelector(".carousel-indicators");
+        if(
+            carouselEl.classList.contains("s_carousel_arrows_hidden") &&
+            indicatorsWrapEl.classList.contains("s_carousel_indicators_hidden")
+        ) {
+            carouselEl.classList.add("s_carousel_controllers_hidden");
+        } else {
+            carouselEl.classList.remove("s_carousel_controllers_hidden");
+        }
+    },
     /**
      * @override
      */

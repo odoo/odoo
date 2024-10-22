@@ -49,3 +49,4 @@ FormEditorRegistry.add('send_mail', {
         defaultValue: 'info@yourcompany.example.com',
     }],
 });
+// Remove me
