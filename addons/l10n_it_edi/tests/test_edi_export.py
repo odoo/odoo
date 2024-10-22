@@ -248,6 +248,40 @@ class TestItEdiExport(TestItEdi):
         })
         self.assertEqual(['l10n_it_edi_partner_address_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
 
+    def test_bill_refund_no_reconcile(self):
+        Move = self.env['account.move'].with_company(self.company)
+        purchase_tax = self.env['account.tax'].with_company(self.company).create({
+            'name': 'Tax 4%',
+            'amount': 4.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'invoice_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('+03', )),
+                self.RepartitionLine(100, 'tax', ('+5v', ))),
+            'refund_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('-03', )),
+                self.RepartitionLine(100, 'tax', False))
+        })
+        values = {
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'partner_bank_id': self.test_bank.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Product A",
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(purchase_tax.ids)],
+                })
+            ]
+        }
+
+        bill = Move.create({'move_type': 'in_invoice', **values})
+        credit_note = Move.create({'move_type': 'in_refund', **values})
+        (bill + credit_note).action_post()
+        credit_note.reversed_entry_id = bill
+        self._assert_export_invoice(credit_note, 'credit_note_refund_no_reconcile.xml')
+
     def test_invoice_negative_price(self):
         tax_10 = self.env['account.tax'].create({
             'name': '10% tax',
