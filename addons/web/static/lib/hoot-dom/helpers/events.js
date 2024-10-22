@@ -965,6 +965,9 @@ const _hover = async (target, options) => {
         const leaveEventInit = {
             ...previousPosition,
             relatedTarget: current,
+            button: options?.button || 0,
+            buttons: options?.button === undefined ? 0 : 1 << options?.button,
+            isPrimary: options?.isPrimary,
         };
 
         if (runTime.isDragging) {
@@ -995,6 +998,9 @@ const _hover = async (target, options) => {
         const enterEventInit = {
             ...runTime.position,
             relatedTarget: previous,
+            button: options?.button || 0,
+            buttons: options?.button === undefined ? 0 : 1 << options?.button,
+            isPrimary: options?.isPrimary,
         };
         if (runTime.isDragging) {
             // If dragging, only drag events are triggered
@@ -1327,6 +1333,8 @@ const _pointerDown = async (target, options) => {
     const eventInit = {
         ...runTime.position,
         button: options?.button || 0,
+        buttons: options?.button === undefined ? 0 : 1 << options?.button,
+        isPrimary: options?.isPrimary,
     };
 
     if (pointerDownTarget !== runTime.previousPointerDownTarget) {
@@ -1371,6 +1379,8 @@ const _pointerUp = async (target, options) => {
     const eventInit = {
         ...runTime.position,
         button: options?.button || 0,
+        buttons: options?.button === undefined ? 0 : 1 << options?.button,
+        isPrimary: options?.isPrimary,
     };
 
     if (runTime.isDragging) {
