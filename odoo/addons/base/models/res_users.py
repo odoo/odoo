@@ -338,7 +338,7 @@ class ResUsers(models.Model):
         In order to add fields, please override this property on model extensions.
         """
         return [
-            'signature', 'company_id', 'login', 'email', 'name', 'image_1920',
+            'signature', 'company_id', 'login', 'email', 'phone', 'name', 'image_1920',
             'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
             'tz_offset', 'groups_id', 'partner_id', 'write_date', 'action_id',
             'avatar_1920', 'avatar_1024', 'avatar_512', 'avatar_256', 'avatar_128',
@@ -350,7 +350,7 @@ class ResUsers(models.Model):
         """ The list of fields a user can write on their own user record.
         In order to add fields, please override this property on model extensions.
         """
-        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
+        return ['signature', 'action_id', 'company_id', 'email', 'phone', 'name', 'image_1920', 'lang', 'tz']
 
     def _default_groups(self):
         """Default groups for employees
@@ -400,6 +400,7 @@ class ResUsers(models.Model):
     # access to the user but not its corresponding partner
     name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
+    phone = fields.Char(related='partner_id.phone', inherited=True, readonly=False)
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)

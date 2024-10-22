@@ -123,6 +123,20 @@ class TestUsers(TransactionCase):
             "the company_id of the partner_id shall be updated"
         )
 
+    def test_user_phone(self):
+        """ Check that the user has access to write his phone.
+        The partner phone update when the user phone is changed.
+        """
+        test_user = self.env['res.users'].create({'name': 'John Smith', 'login': 'jsmith'})
+        self.assertFalse(test_user.phone)
+        test_user.with_user(test_user).write({'phone': '2387478'})
+
+        self.assertEqual(
+            test_user.partner_id.phone,
+            '2387478',
+            "The phone of the partner_id shall be updated."
+        )
+
     @mute_logger('odoo.sql_db')
     def test_deactivate_portal_users_access(self):
         """Test that only a portal users can deactivate his account."""

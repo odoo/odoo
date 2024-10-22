@@ -209,10 +209,9 @@ class TestSelfAccessRights(TestHrCommon):
                 self.hubert.with_user(self.richard).write(v)
 
     def testWriteSelfPhoneEmployee(self):
-        # phone is a related from res.partner (from base) but added in SELF_READABLE_FIELDS
         self.env['ir.config_parameter'].set_param('hr.hr_employee_self_edit', False)
         with self.assertRaises(AccessError):
-            self.richard.with_user(self.richard).write({'phone': '2154545'})
+            self.richard.with_user(self.richard).write({'work_phone': '2154545'})
 
     def testWriteOtherUserEmployee(self):
         for f in self.self_protected_fields_user:
