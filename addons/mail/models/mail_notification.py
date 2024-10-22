@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
+from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.translate import _
 from odoo.addons.mail.tools.discuss import Store
 
@@ -97,8 +98,8 @@ class MailNotification(models.Model):
             ('res_partner_id.partner_share', '=', False),
             ('notification_status', 'in', ('sent', 'canceled'))
         ]
-        records = self.search(domain, limit=models.GC_UNLINK_LIMIT)
-        if len(records) >= models.GC_UNLINK_LIMIT:
+        records = self.search(domain, limit=GC_UNLINK_LIMIT)
+        if len(records) >= GC_UNLINK_LIMIT:
             self.env.ref('base.autovacuum_job')._trigger()
         return records.unlink()
 

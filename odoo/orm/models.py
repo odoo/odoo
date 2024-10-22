@@ -57,6 +57,7 @@ from odoo.tools import (
     ormcache, partition, Query, split_every, unique,
     SQL, sql,
 )
+from odoo.tools.constants import GC_UNLINK_LIMIT, PREFETCH_MAX
 from odoo.tools.lru import LRU
 from odoo.tools.misc import LastOrderedSet, ReversedIterable, unquote
 from odoo.tools.translate import _, LazyTranslate
@@ -70,7 +71,7 @@ from .fields_temporal import Datetime
 from .fields_textual import Char
 
 from .identifiers import NewId
-from .utils import OriginIds, expand_ids, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
+from .utils import OriginIds, expand_ids, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
 from odoo.osv import expression
 
 import typing
@@ -102,7 +103,6 @@ regex_read_group_spec = re.compile(r'(\w+)(\.(\w+))?(?::(\w+))?$')  # For _read_
 regex_camel_case = re.compile(r'(?<=[^_])([A-Z])')
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
-GC_UNLINK_LIMIT = 100_000
 
 INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
