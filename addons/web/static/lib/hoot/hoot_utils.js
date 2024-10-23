@@ -800,7 +800,7 @@ export function getTypeOf(value) {
             if (value instanceof RegExp) {
                 return "regex";
             }
-            if (isIterable(value)) {
+            if (Array.isArray(value)) {
                 const types = [...value].map(getTypeOf);
                 const arrayType = new Set(types).size === 1 ? types[0] : "any";
                 if (arrayType.endsWith("[]")) {
