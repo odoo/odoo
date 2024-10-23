@@ -27,8 +27,7 @@
     }
 
     .o_current,
-    .o_highlight_start:not(.o_selected),
-    .o_highlight_end:not(.o_selected),
+    .o_highlighted,
     .o_select_start,
     .o_select_end {
         &:before {
@@ -125,7 +124,9 @@
     // Compute  spacing  between the two month by compensating buttons size and tables gap
 
     .o_zoom_out {
-        gap: calc(#{$btn-border-width} * 4 + #{$o-font-size-base} * 2 + #{$input-btn-padding-x} * 4);
+        gap: calc(
+            #{$btn-border-width} * 4 + #{$o-font-size-base} * 2 + #{$input-btn-padding-x} * 4
+        );
     }
 
     .o_cell_md {
