@@ -62,6 +62,28 @@ class Menu(models.Model):
             res.append((menu.id, menu_name))
         return res
 
+    def _validate_parent_menu(self):
+        for record in self:
+            parent_menu = record.parent_id.sudo() if record.parent_id else None
+
+            if parent_menu:
+                # Check hierarchy level
+                if parent_menu.parent_id and parent_menu.parent_id.parent_id:
+                    raise UserError(_("Menus cannot have more than two levels of hierarchy."))
+
+                # Check mega menu conditions
+                if record.is_mega_menu:
+                    if parent_menu.parent_id:
+                        raise UserError(_("A mega menu cannot have a parent menu."))
+                    if record.child_id:
+                        raise UserError(_("A mega menu cannot have a child menu."))
+                elif parent_menu.is_mega_menu:
+                    raise UserError(_("A mega menu cannot have a child menu."))
+
+                # Check for child menu condition
+                if record.child_id and (parent_menu.parent_id or record.child_id.child_id):
+                    raise UserError(_("Menus with child menus cannot be added as a submenu."))
+
     @api.model_create_multi
     def create(self, vals_list):
         ''' In case a menu without a website_id is trying to be created, we duplicate
@@ -98,11 +120,16 @@ class Menu(models.Model):
                     new_menu = super().create(vals)
                 menus |= new_menu
         # Only one record per vals is returned but multiple could have been created
+        menus._validate_parent_menu()
         return menus
 
     def write(self, values):
+        res = super().write(values)
+        if any(key in values for key in ('parent_id', 'is_mega_menu')):
+            self._validate_parent_menu()
+
         self.clear_caches()
-        return super().write(values)
+        return res
 
     def unlink(self):
         self.clear_caches()
