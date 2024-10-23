@@ -70,6 +70,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         # on `ir_model_fields` table.
         IrModelFieldsSudo = self.env['ir.model.fields'].sudo()
         field_id = IrModelFieldsSudo.search([('name', '=', 'stage_id'), ('model', '=', 'project.task')]).id
+        project_id_field = IrModelFieldsSudo.search([('name', '=', 'project_id'), ('model', '=', 'project.task')]).id
 
         groupby = self.env.context['project_task_burndown_chart_report_groupby']
         date_groupby = [g for g in groupby if g.startswith('date')][0]
@@ -111,7 +112,16 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                                      SELECT pt.id as task_id,
                                             pt.allocated_hours,
                                             pt.project_id,
-                                            COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
+                                            COALESCE(
+                                                -- Take date when project has changed
+                                                (SELECT MAX(mm.date)
+                                                FROM mail_tracking_value mtv
+                                                JOIN mail_message mm ON mm.id = mtv.mail_message_id
+                                                WHERE mtv.field_id = %(project_id_field)s
+                                                AND mm.res_id = pt.id
+                                                ),
+                                                COALESCE(LAG(mm.date) OVER (PARTITION BY pt.id ORDER BY mm.id), pt.create_date)
+                                            ) AS date_begin,
                                             CASE WHEN mtv.id IS NOT NULL THEN mm.date
                                                 ELSE (now() at time zone 'utc')::date + INTERVAL '%(interval)s'
                                             END as date_end,
@@ -194,6 +204,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
             date_end=SQL(simple_date_groupby_sql.replace('"date"', '"date_end"')),
             interval=SQL(sql_interval),
             field_id=field_id,
+            project_id_field=project_id_field,
         )
 
         # hardcode 'project_task_burndown_chart_report' as the query above
