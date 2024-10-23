@@ -571,6 +571,7 @@ class MailActivity(models.Model):
             'target': 'current',
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
+            'views': [(False, 'form')],
         }
 
     def action_snooze(self):
