@@ -5,10 +5,11 @@ from odoo.addons.mail.tests.test_thread_controller import (
     MessagePostSubTestData,
     TestThreadControllerCommon,
 )
+from odoo.addons.portal.tests.test_portal_controller_common import TestPortalControllerCommon
 
 
 @odoo.tests.tagged("-at_install", "post_install")
-class TestProjectThreadController(TestThreadControllerCommon):
+class TestProjectThreadController(TestThreadControllerCommon, TestPortalControllerCommon):
     def test_message_post_partner_ids_project(self):
         """Test partner_ids of message_post for task.
         Followers of task and followers of related project are allowed to be
@@ -18,13 +19,7 @@ class TestProjectThreadController(TestThreadControllerCommon):
         self.env["project.collaborator"].create(
             {"project_id": project.id, "partner_id": self.user_portal.partner_id.id}
         )
-        access_token = task._portal_ensure_token()
-        partner = self.env["res.partner"].create({"name": "Sign Partner"})
-        _hash = task._sign_token(partner.id)
-        token = {"token": access_token}
-        bad_token = {"token": "incorrect token"}
-        sign = {"hash": _hash, "pid": partner.id}
-        bad_sign = {"hash": "incorrect hash", "pid": partner.id}
+        token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(task)
         all_partners = (
             self.user_portal + self.user_employee + self.user_demo + self.user_admin
         ).partner_id
