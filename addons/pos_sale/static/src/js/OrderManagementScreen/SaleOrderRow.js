@@ -4,6 +4,7 @@ odoo.define('pos_sale.SaleOrderRow', function (require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
     const utils = require('web.utils');
+    const { deserializeDateTime } = require("@web/core/l10n/dates");
 
     /**
      * @props {models.Order} order
@@ -25,7 +26,7 @@ odoo.define('pos_sale.SaleOrderRow', function (require) {
             return this.order.name;
         }
         get date() {
-            return moment(this.order.date_order).format('YYYY-MM-DD hh:mm A');
+            return deserializeDateTime(this.order.date_order).toFormat("yyyy-MM-dd HH:mm a");
         }
         get partner() {
             const partner = this.order.partner_id;
