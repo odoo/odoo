@@ -30,7 +30,7 @@
                 </button>
             </xpath>
             <field name="journal_id" position="before">
-                <field name="project_id" groups="project.group_project_user"/>
+                <field name="project_id" groups="project.group_project_user" context="{'default_allow_billable': True}"/>
             </field>
         </field>
     </record>
