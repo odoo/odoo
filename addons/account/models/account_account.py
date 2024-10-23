@@ -48,7 +48,10 @@ class AccountAccount(models.Model):
     company_fiscal_country_code = fields.Char(compute='_compute_company_fiscal_country_code')
     code = fields.Char(string="Code", size=64, tracking=True, compute='_compute_code', search='_search_code', inverse='_inverse_code')
     code_store = fields.Char(company_dependent=True)
-    placeholder_code = fields.Char(string="Display code", compute='_compute_placeholder_code', search='_search_placeholder_code')
+    placeholder_code = fields.Char(
+        string="Placeholder code", compute='_compute_placeholder_code', search='_search_placeholder_code',
+        help="Code in a company to which the account belongs",
+    )
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
     account_type = fields.Selection(
@@ -148,35 +151,37 @@ class AccountAccount(models.Model):
             return self.with_company(self.env.company.root_id).sudo()._field_to_sql(alias, 'code_store', query, flush)
         if fname == 'placeholder_code':
             query.add_join(
-                'JOIN',
+                'LEFT JOIN',
                 'account_first_company',
                 SQL(
                     """(
-                        SELECT DISTINCT ON (rel.account_account_id)
-                               rel.account_account_id AS account_id,
-                               rel.res_company_id AS company_id,
-                               SPLIT_PART(res_company.parent_path, '/', 1) AS root_company_id,
-                               res_company.name AS company_name
-                          FROM account_account_res_company_rel rel
-                          JOIN res_company
-                            ON res_company.id = rel.res_company_id
-                         WHERE rel.res_company_id IN %(authorized_company_ids)s
-                      ORDER BY rel.account_account_id, company_id
+                        SELECT DISTINCT ON (account_companies.account_account_id)
+                               account_companies.account_account_id AS account_id,
+                               account_companies.res_company_id AS company_id,
+                               SPLIT_PART(active_company.parent_path, '/', 1) AS root_company_id,
+                               active_company.name AS company_name
+                          FROM unnest(%(authorized_company_ids)s) WITH ORDINALITY AS active_company_ordering(id, idx)
+                          JOIN res_company active_company
+                            ON active_company.id = active_company_ordering.id
+                    CROSS JOIN unnest(string_to_array(active_company.parent_path, '/')) WITH ORDINALITY AS active_company_parent_ordering(id, idx)
+                          JOIN account_account_res_company_rel account_companies
+                            ON account_companies.res_company_id::text = active_company_parent_ordering.id
+                      ORDER BY account_companies.account_account_id,
+                               active_company_ordering.idx,
+                               active_company_parent_ordering.idx DESC
                     )""",
-                    authorized_company_ids=self.env.user._get_company_ids(),
+                    authorized_company_ids=list(self.env.companies.ids),
                 ),
                 SQL('account_first_company.account_id = %(account_id)s', account_id=SQL.identifier(alias, 'id')),
             )
 
             # Can't have spaces because of how stupidly the `Model._read_group_orderby` method is written
             # see https://github.com/odoo/odoo/blob/2a3466e8f86bc08594391658e08ba3416fb8307b/odoo/models.py#L2222
+            # U+0020 is another way of writing a space.
             return SQL(
-                "COALESCE("
-                "%(code_store)s->>%(active_company_root_id)s,"
-                "%(code_store)s->>%(account_first_company_root_id)s||'('||%(account_first_company_name)s||')'"
-                ")",
+                "%(code_store)s->>%(account_first_company_root_id)s||U&'\\0020'||'('||%(account_first_company_name)s||')'",
+                code=self._field_to_sql(alias, 'code', query, flush),
                 code_store=SQL.identifier(alias, 'code_store'),
-                active_company_root_id=self.env.company.root_id.id,
                 account_first_company_name=SQL.identifier('account_first_company', 'company_name'),
                 account_first_company_root_id=SQL.identifier('account_first_company', 'root_company_id'),
             )
@@ -351,7 +356,7 @@ class AccountAccount(models.Model):
     @api.constrains('code')
     def _check_account_code(self):
         for account in self:
-            if account.code and not re.match(ACCOUNT_CODE_REGEX, account.code):
+            if account.code and not re.match(ACCOUNT_CODE_REGEX, account.code) and self.env.company in account.company_ids:
                 raise ValidationError(_(
                     "The account code can only contain alphanumeric characters and dots."
                 ))
@@ -386,24 +391,27 @@ class AccountAccount(models.Model):
             # Need to set record.code with `company = self.env.company`, not `self.env.company.root_id`
             record_root.code_store = record.code
 
-    @api.depends_context('company')
+    @api.depends_context('allowed_company_ids')
     @api.depends('code')
     def _compute_placeholder_code(self):
         self.placeholder_code = False
         for record in self:
-            if record.code:
-                record.placeholder_code = record.code
-            elif authorized_companies := (record.company_ids & self.env['res.company'].browse(self.env.user._get_company_ids())).sorted('id'):
-                company = authorized_companies[0]
+            with contextlib.suppress(StopIteration):
+                company = next(c for c in self.env.companies if c.parent_ids & record.company_ids)
                 if code := record.with_company(company).code:
                     record.placeholder_code = f'{code} ({company.name})'
 
     def _search_placeholder_code(self, operator, value):
-        if operator != '=like':
+        if operator not in ('=', '=like', '=ilike'):
             raise NotImplementedError
         query = Query(self.env, 'account_account')
         placeholder_code_sql = self.env['account.account']._field_to_sql('account_account', 'placeholder_code', query)
-        query.add_where(SQL("%s LIKE %s", placeholder_code_sql, value))
+        sql_operators = {
+            '=': '=',
+            '=like': 'LIKE',
+            '=ilike': 'ILIKE',
+        }
+        query.add_where(SQL("%s %s %s", placeholder_code_sql, SQL(sql_operators[operator]), value))
         return [('id', 'in', query)]
 
     @api.depends_context('company')
@@ -820,11 +828,18 @@ class AccountAccount(models.Model):
             self.name = name
             self.code = code
 
-    @api.depends_context('company')
+    @api.depends_context('allowed_company_ids')
     @api.depends('code')
     def _compute_display_name(self):
         for account in self:
-            account.display_name = f"{account.code} {account.name}" if account.code else account.name
+            try:
+                company = next(c for c in self.env.companies if c.parent_ids & account.company_ids)
+                display_name_elements = [account.with_company(company).code, account.name]
+                if company != self.env.company:
+                    display_name_elements.append(f"({company.display_name})")
+            except StopIteration:
+                display_name_elements = [account.name]
+            account.display_name = " ".join(x for x in display_name_elements if x)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)
