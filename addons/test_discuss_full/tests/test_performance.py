@@ -396,6 +396,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),
                 "odoobot": {"id": self.user_root.partner_id.id, "type": "partner"},
+                "odoobotOnboarding": False,
                 "self": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "settings": {
                     "channel_notifications": False,
@@ -454,7 +455,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "model": "mail.box",
                 },
                 "initChannelsUnreadCounter": 2,
-                "odoobotOnboarding": False,
             },
         }
 

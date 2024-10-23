@@ -47,9 +47,9 @@ test("new message from operator displays unread counter", async () => {
             livechatUserId: serverState.publicUserId,
         })
     );
-    onRpcBefore("/mail/action", (args) => {
+    onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     const userId = serverState.userId;
@@ -57,7 +57,7 @@ test("new message from operator displays unread counter", async () => {
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {
                 channel_types: ["livechat"],
             },
@@ -80,9 +80,9 @@ test("new message from operator displays unread counter", async () => {
 test("focus on unread livechat marks it as read [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
-    onRpcBefore("/mail/action", (args) => {
+    onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     const userId = serverState.userId;
@@ -96,7 +96,7 @@ test("focus on unread livechat marks it as read [REQUIRE FOCUS]", async () => {
     await waitUntilSubscribe();
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {
                 channel_types: ["livechat"],
             },

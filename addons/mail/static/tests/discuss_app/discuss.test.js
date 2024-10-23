@@ -45,7 +45,7 @@ test("sanity check", async () => {
     });
     await start();
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -1091,7 +1091,8 @@ test("out-of-focus notif on needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/mail/action", async (args) => {
+    mockService("mail.out_of_focus", { setInterval: () => {} }); // so that no setInterval runs
+    onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
         }
@@ -1136,7 +1137,8 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             }
         },
     });
-    onRpcBefore("/mail/action", async (args) => {
+    mockService("mail.out_of_focus", { setInterval: () => {} }); // so that no setInterval runs
+    onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
         }
@@ -1179,7 +1181,8 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/mail/action", async (args) => {
+    mockService("mail.out_of_focus", { setInterval: () => {} }); // so that no setInterval runs
+    onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
         }
@@ -1309,7 +1312,7 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/action", async (args) => {
+    onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
         }
@@ -1348,7 +1351,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
         channel_type: "group",
     });
     mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/action", async (args) => {
+    onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
         }
@@ -1393,7 +1396,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/action", async (args) => {
+    onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
         }
