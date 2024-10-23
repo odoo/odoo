@@ -712,7 +712,11 @@ export const editorCommands = {
             return selectedNodes.flatMap(node => {
                 let font = closestElement(node, 'font') || closestElement(node, 'span');
                 const children = font && descendants(font);
-                if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
+                if (
+                    font &&
+                    (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode])) &&
+                    (isColorGradient(color) || !isColorGradient(font.style["background-image"]))
+                ) {
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter(child => selectedNodes.includes(child));
                     if (selectedChildren.length) {
