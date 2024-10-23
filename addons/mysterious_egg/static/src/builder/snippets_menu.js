@@ -2,12 +2,13 @@ import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { Component, onWillDestroy, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { BuilderOverlayPlugin } from "./builder_overlay_plugin/builder_overlay_plugin";
+import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
 import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
 import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
+import { ElementToolboxPlugin } from "./plugins/element_toolbox_plugin";
 
-const BUILDER_PLUGIN = [BuilderOverlayPlugin, DropZonePlugin];
+const BUILDER_PLUGIN = [ElementToolboxPlugin, BuilderOverlayPlugin, DropZonePlugin];
 
 function onIframeLoaded(iframe, callback) {
     const doc = iframe.contentDocument;
@@ -30,7 +31,7 @@ export class SnippetsMenu extends Component {
             canUndo: false,
             canRedo: false,
             activeTab: "blocks",
-            selectedSnippet: undefined,
+            selectedToolboxes: undefined,
         });
         this.editor = new Editor(
             {
@@ -41,8 +42,8 @@ export class SnippetsMenu extends Component {
                     this.state.canRedo = this.editor.shared.canRedo();
                 },
                 resources: {
-                    onSnippetChange: (element) => {
-                        this.state.selectedSnippet = element;
+                    change_selected_toolboxes_listeners: (selectedToolboxes) => {
+                        this.state.selectedToolboxes = selectedToolboxes;
                         this.setTab("customize");
                     },
                 },
