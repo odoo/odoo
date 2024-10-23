@@ -4,6 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { defineActions, defineParams, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 import { addRecordsFromServerData, addViewsFromServerData } from "./data";
 import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { setCellContent } from "./commands";
 
 /**
  * @typedef {import("@spreadsheet/../tests/helpers/data").ServerData} ServerData
@@ -78,4 +79,14 @@ export async function makeSpreadsheetMockEnv(params = {}) {
     }
     const env = getMockEnv() || (await makeMockEnv());
     return env;
+}
+
+export function createModelFromGrid(grid) {
+  const model = new Model();
+  for (let xc in grid) {
+    if (grid[xc] !== undefined) {
+      setCellContent(model, xc, grid[xc]);
+    }
+  }
+  return model;
 }
