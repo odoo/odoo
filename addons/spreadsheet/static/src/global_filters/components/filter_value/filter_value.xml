@@ -13,11 +13,16 @@
             </div>
             <span t-if="filter.type === 'relation'" class="w-100">
                 <MultiRecordSelector
+                    t-if="isValid"
                     placeholder="' ' + translate(filter.label)"
                     resModel="filter.modelName"
                     resIds="filterValue || []"
                     domain="relationalAllowedDomain"
                     update="(resIds) => this.onTagSelected(filter.id, resIds)" />
+                <ValidationMessages t-else="1"
+                                    messages="[invalidModel]"
+                                    msgType="'error'"/>
+
             </span>
             <div t-if="filter.type === 'date'" class="w-100">
                 <select t-if="filter.rangeType === 'relative'"

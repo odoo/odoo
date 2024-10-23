@@ -1057,3 +1057,29 @@ test("INSERT_ODOO_LIST_WITH_TABLE adds a table that maches the list dimension", 
     expect(table.type).toBe("static");
     expect(table.config).toEqual({ ...PIVOT_TABLE_CONFIG, firstColumn: false });
 });
+
+test("An error is displayed if the list has invalid model", async function () {
+    const { model } = await createSpreadsheetWithList({
+        mockRPC: async function (route, { model, method, kwargs }) {
+            if (model === "unknown" && method === "fields_get") {
+                throw makeServerError({ code: 404 });
+            }
+        },
+    });
+    const listId = model.getters.getListIds()[0];
+    const listDefinition = model.getters.getListModelDefinition(listId);
+    model.dispatch("UPDATE_ODOO_LIST", {
+        listId,
+        list: {
+            ...listDefinition,
+            metaData: {
+                ...listDefinition.metaData,
+                resModel: "unknown",
+            },
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.LIST(1,1,"foo")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+});
