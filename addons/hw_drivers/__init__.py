@@ -1,5 +1,18 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from . import cli
+
+
+def check_requirements():
+    import cryptocode
+    import ghostscript
+    import netifaces
+    import PyKCS11
+    import pysmb
+    import schedule
+    import websocket_client
+
+
+check_requirements()
+
 
 from . import server_logger
 from . import connection_manager
