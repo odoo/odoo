@@ -35,6 +35,13 @@
         ],
         # this bundle is lazy loaded when the editor is ready
         'website.assets_builder': [
+            ('include', 'web._assets_helpers'),
+
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+
             'mysterious_egg/static/src/builder/**/*.js',
             'mysterious_egg/static/src/builder/**/*.xml',
         ]
