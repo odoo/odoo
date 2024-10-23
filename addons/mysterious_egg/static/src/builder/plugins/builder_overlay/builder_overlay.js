@@ -1,5 +1,6 @@
 import { Component, useRef, useState } from "@odoo/owl";
 import { usePosition } from "@web/core/position/position_hook";
+import { useDraggable } from "@web/core/utils/draggable";
 
 export class BuilderOverlay extends Component {
     static template = "mysterious_egg.BuilderOverlay";
@@ -22,6 +23,26 @@ export class BuilderOverlay extends Component {
                 this.size.paddingTop = window
                     .getComputedStyle(this.props.target)
                     .getPropertyValue("padding-top");
+            },
+        });
+        //WIP
+        useDraggable({
+            ref: { el: window.document.body },
+            elements: ".o_handle",
+            onWillStartDrag: () => {
+                console.log("onWillStartDrag", arguments);
+            },
+            onDragStart: ({ element }) => {
+                console.log("onDragStart", arguments);
+            },
+            onDrag: ({ x, y, element }) => {
+                console.log("onDrag", arguments);
+            },
+            onDrop: ({ element }) => {
+                console.log("onDrop", arguments);
+            },
+            onDragEnd: ({ element }) => {
+                console.log("onDragEnd", arguments);
             },
         });
     }
