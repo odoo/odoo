@@ -26,7 +26,7 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
      */
     getStaticActionMenuItems() {
         return {
-            ...super.getStaticActionMenuItems(),
+            ...super.getStaticActionMenuItems(...arguments),
             openHistoryDialog: {
                 sequence: 50,
                 icon: "fa fa-history",
