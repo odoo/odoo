@@ -50,6 +50,36 @@ class PaymentTransaction(models.Model):
         prefix = payment_utils.singularize_reference_prefix(prefix=prefix, max_length=40)
         return super()._compute_reference(provider_code, prefix=prefix, **kwargs)
 
+    def _get_processing_values(self):
+        """ Override of payment to redirect failed token-flow transactions.
+
+        If the financial institution insists on 3-D Secure authentication, this
+        override will reset the transaction, and switch the flow to redirect.
+
+        Note: `self.ensure_one()`
+
+        :return: The processing values.
+        :rtype: dict
+        """
+        if not (
+            self.provider_code == 'ogone'
+            and self.operation == 'online_token'
+            and self.state == 'error'
+            and self.state_message == '3ds-authentication-required'
+        ):
+            return super()._get_processing_values()
+        else:
+            # Tokenized payment failed due to 3-D Secure authentication request.
+            # Reset transaction to draft and switch to redirect flow.
+            self.write({
+                'state': 'draft',
+                'operation': 'online_redirect',
+            })
+            return dict(
+                super()._get_processing_values(),
+                force_flow='redirect',
+            )
+
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Ogone-specific rendering values.
 
@@ -221,8 +251,8 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING['declined']:
             if notification_data.get("NCERRORPLUS"):
                 reason = notification_data.get("NCERRORPLUS")
-            elif notification_data.get("NCERROR"):
-                reason = "Error code: %s" % notification_data.get("NCERROR")
+            elif ncerror := notification_data.get('NCERROR'):
+                reason = const.PAYMENT_ERROR_TYPES_MAPPING.get(ncerror) or f"Error code: {ncerror}"
             else:
                 reason = "Unknown reason"
             _logger.info("the payment has been declined: %s.", reason)
