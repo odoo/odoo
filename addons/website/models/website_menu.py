@@ -87,10 +87,15 @@ class Menu(models.Model):
                 continue
             else:
                 # create for every site
-                w_vals = [dict(vals, **{
-                    'website_id': website.id,
-                    'parent_id': website.menu_id.id,
-                }) for website in self.env['website'].search([])]
+                websites = self.env['website'].search([])
+
+                w_vals = [
+                    dict(vals, **{
+                        'website_id': website.id,
+                        **({'parent_id': website.menu_id.id} if vals.get("website_id") else {}),
+                    })
+                    for website in websites
+                ]
                 new_menu = super().create(w_vals)[-1:]  # take the last one
                 # if creating a default menu, we should also save it as such
                 default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
