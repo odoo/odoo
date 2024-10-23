@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
+import { useRecordClick } from "@web/core/utils/record_click";
 
 const explicitRankClasses = [
     "btn-primary",
@@ -88,6 +89,12 @@ export class ViewButton extends Component {
             model: this.props.record && this.props.record.resModel,
         });
         this.dropdownControl = useDropdownCloser();
+        useRecordClick({
+            onOpen: ({ ev, middleClick }) => {
+                this.onClick(ev, middleClick);
+            },
+            refName: "root",
+        });
     }
 
     get clickParams() {
@@ -110,7 +117,7 @@ export class ViewButton extends Component {
     /**
      * @param {MouseEvent} ev
      */
-    onClick(ev) {
+    onClick(ev, middleClick) {
         if (this.props.tag === "a") {
             ev.preventDefault();
         }
@@ -119,19 +126,24 @@ export class ViewButton extends Component {
             return this.props.onClick();
         }
 
-        this.env.onClickViewButton({
-            clickParams: this.clickParams,
-            getResParams: () =>
-                pick(
-                    this.props.record || {},
-                    "context",
-                    "evalContext",
-                    "resModel",
-                    "resId",
-                    "resIds"
-                ),
-            beforeExecute: () => this.dropdownControl.close(),
-        });
+        this.env.onClickViewButton(
+            {
+                clickParams: this.clickParams,
+                getResParams: () =>
+                    pick(
+                        this.props.record || {},
+                        "context",
+                        "evalContext",
+                        "resModel",
+                        "resId",
+                        "resIds"
+                    ),
+                beforeExecute: () => this.dropdownControl.close(),
+            },
+            {
+                newWindow: middleClick,
+            }
+        );
     }
 
     getClassName() {

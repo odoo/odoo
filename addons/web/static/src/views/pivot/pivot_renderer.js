@@ -11,6 +11,7 @@ import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
 import { download } from "@web/core/network/download";
 import { useService } from "@web/core/utils/hooks";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
+import { useRecordClick } from "@web/core/utils/record_click";
 
 const formatters = registry.category("formatters");
 
@@ -27,6 +28,17 @@ export class PivotRenderer extends Component {
         this.tableRef = useRef("table");
 
         onWillUpdateProps(this.onWillUpdateProps);
+        useRecordClick({
+            onOpen: ({ middleClick, node }) => {
+                const cell = this.table.rows
+                    .map((r) => r.subGroupMeasurements)
+                    .flat()
+                    .find((cell) => cell.id === node.dataset.id);
+                return this.onOpenView(cell, middleClick);
+            },
+            refName: "table",
+            selector: ".o_pivot_cell_value",
+        });
     }
     onWillUpdateProps() {
         this.table = this.model.getTable();
@@ -206,22 +218,27 @@ export class PivotRenderer extends Component {
      * @param {Array} views
      * @param {Object} context
      */
-    openView(domain, views, context) {
-        this.actionService.doAction({
-            type: "ir.actions.act_window",
-            name: this.model.metaData.title,
-            res_model: this.model.metaData.resModel,
-            views: views,
-            view_mode: "list",
-            target: "current",
-            context,
-            domain,
-        });
+    openView(domain, views, context, middleClick) {
+        this.actionService.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: this.model.metaData.title,
+                res_model: this.model.metaData.resModel,
+                views: views,
+                view_mode: "list",
+                target: "current",
+                context,
+                domain,
+            },
+            {
+                newWindow: middleClick,
+            }
+        );
     }
     /**
      * @param {CustomEvent} ev
      */
-    onOpenView(cell) {
+    onOpenView(cell, middleClick) {
         if (cell.value === undefined || this.model.metaData.disableLinking) {
             return;
         }
@@ -245,6 +262,6 @@ export class PivotRenderer extends Component {
             colValues: cell.groupId[1],
             originIndex: cell.originIndexes[0],
         };
-        this.openView(this.model.getGroupDomain(group), this.views, context);
+        this.openView(this.model.getGroupDomain(group), this.views, context, middleClick);
     }
 }

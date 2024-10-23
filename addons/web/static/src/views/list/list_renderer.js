@@ -7,6 +7,7 @@ import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { useRecordClick } from "@web/core/utils/record_click";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
@@ -96,7 +97,31 @@ export class ListRenderer extends Component {
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
         this.tableRef = useRef("table");
-
+        if (!this.props.editable) {
+            useRecordClick({
+                onOpen: ({ middleClick, node }) => {
+                    const record = this.props.list.records.find((r) => r.id === node.dataset.id);
+                    if (!this.props.archInfo.noOpen) {
+                        this.props.openRecord(record, false, middleClick);
+                    }
+                },
+                selector: ".o_data_row",
+                refName: "table",
+            });
+        } else if (this.props.hasOpenFormViewButton) {
+            useRecordClick({
+                onOpen: ({ middleClick, node }) => {
+                    const record = this.props.list.records.find((r) => r.id === node.dataset.id);
+                    if (this.isX2Many && record.isNew) {
+                        this.displaySaveNotification();
+                    } else {
+                        this.props.onOpenFormView(record, true, middleClick);
+                    }
+                },
+                selector: ".o_list_record_open_form_view",
+                refName: "table",
+            });
+        }
         this.longTouchTimer = null;
         this.touchStartMs = 0;
 
@@ -1029,7 +1054,7 @@ export class ListRenderer extends Component {
             }
         } else if (this.props.list.editedRecord && this.props.list.editedRecord !== record) {
             this.props.list.leaveEditMode();
-        } else if (!this.props.archInfo.noOpen) {
+        } else if (this.props.editable && !this.props.archInfo.noOpen) {
             this.props.openRecord(record);
         }
     }

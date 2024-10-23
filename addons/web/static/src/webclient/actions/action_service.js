@@ -451,14 +451,6 @@ export function makeActionManager(env, router = _router) {
         let actionRequest = null;
         const newTabStoredAction = browser.sessionStorage.getItem("new_tab_action");
         browser.sessionStorage.removeItem("new_tab_action");
-        if (newTabStoredAction) {
-            const newTabAction = JSON.parse(newTabStoredAction || "{}");
-            if (newTabAction.help) {
-                newTabAction.help = markup(newTabAction.help);
-            }
-            actionRequest = newTabAction;
-            return { actionRequest, options };
-        }
         if (state.action) {
             const context = {};
             if (state.active_id) {
@@ -527,6 +519,13 @@ export function makeActionManager(env, router = _router) {
                     options.viewType = state.view_type;
                 }
             }
+        }
+        if (newTabStoredAction) {
+            const newTabAction = JSON.parse(newTabStoredAction || "{}");
+            if (newTabAction.help) {
+                newTabAction.help = markup(newTabAction.help);
+            }
+            actionRequest = newTabAction;
         }
         if (!actionRequest) {
             // If the last action isn't valid (eg a model with no resId and no view_type) which can

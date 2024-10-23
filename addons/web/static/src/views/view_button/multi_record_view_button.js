@@ -3,7 +3,7 @@ import { ViewButton } from "./view_button";
 export class MultiRecordViewButton extends ViewButton {
     static props = [...ViewButton.props, "list", "domain"];
 
-    async onClick() {
+    async onClick(ev, middleClick) {
         const { clickParams, list } = this.props;
         const resIds = await list.getResIds(true);
         clickParams.buttonContext = {
@@ -12,14 +12,19 @@ export class MultiRecordViewButton extends ViewButton {
             active_model: list.resModel,
         };
 
-        this.env.onClickViewButton({
-            clickParams,
-            getResParams: () => ({
-                context: list.context,
-                evalContext: list.evalContext,
-                resModel: list.resModel,
-                resIds,
-            }),
-        });
+        this.env.onClickViewButton(
+            {
+                clickParams,
+                getResParams: () => ({
+                    context: list.context,
+                    evalContext: list.evalContext,
+                    resModel: list.resModel,
+                    resIds,
+                }),
+            },
+            {
+                newWindow: middleClick,
+            }
+        );
     }
 }

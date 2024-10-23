@@ -29,7 +29,7 @@
                     t-if="value"
                     t-attf-class="o_form_uri #{classFromDecoration}"
                     t-att-href="value ? `/odoo/${urlRelation}/${value[0]}` : '/'"
-                    t-on-click.prevent="onClick"
+                    t-ref="openRecordButton"
                 >
                     <span t-esc="displayName" />
                     <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
@@ -51,7 +51,7 @@
                         draggable="false"
                         aria-label="Internal link"
                         data-tooltip="Internal link"
-                        t-on-click="onExternalBtnClick"
+                        t-ref="openRecordButton"
                     />
                 </t>
                 <button

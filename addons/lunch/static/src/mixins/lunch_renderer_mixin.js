@@ -8,10 +8,10 @@ export const LunchRendererMixin = (T) => class LunchRendererMixin extends T {
         super.setup(...arguments);
 
         this.action = useService("action");
-        useBus(this.env.bus, 'lunch_open_order', (ev) => this.openOrderLine(ev.detail.productId));
+        useBus(this.env.bus, 'lunch_open_order', (ev) => this.openOrderLine(ev.detail.productId, false, ev.detail.newWindow));
     }
 
-    openOrderLine(productId, orderId) {
+    openOrderLine(productId, orderId, newWindow) {
         let context = {};
 
         if (this.env.searchModel.lunchState.userId) {
@@ -42,6 +42,6 @@ export const LunchRendererMixin = (T) => class LunchRendererMixin extends T {
 
         this.action.doAction(action, {
             onClose: () => this.env.bus.trigger('lunch_update_dashboard')
-        });
+        }, { newWindow });
     }
 };

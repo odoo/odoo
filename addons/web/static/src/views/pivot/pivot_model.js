@@ -5,6 +5,7 @@ import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
 import { Model } from "@web/model/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
+import { getId } from "@web/model/relational_model/utils";
 
 /**
  * @param {number} value
@@ -1329,6 +1330,7 @@ export class PivotModel extends Model {
             });
 
             const measurement = {
+                id: getId("cell"),
                 groupId: groupIntersectionId,
                 originIndexes: originIndexes,
                 measure: measure,

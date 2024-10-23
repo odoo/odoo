@@ -13,8 +13,8 @@ import { LunchSearchModel } from './search_model';
 
 
 export class LunchKanbanRecord extends KanbanRecord {
-    onGlobalClick(ev) {
-        this.env.bus.trigger('lunch_open_order', {productId: this.props.record.resId});
+    onOpenRecord({ middleClick }) {
+        this.env.bus.trigger('lunch_open_order', {productId: this.props.record.resId, newWindow: middleClick});
     }
 }
 

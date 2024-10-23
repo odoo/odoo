@@ -254,9 +254,9 @@ export class KanbanController extends Component {
         return evaluateBooleanExpr(modifier, { context: this.props.context });
     }
 
-    async openRecord(record, mode) {
+    async openRecord(record, mode, options) {
         const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        this.props.selectRecord(record.resId, { activeIds, mode });
+        this.props.selectRecord(record.resId, { activeIds, mode }, options);
     }
 
     async createRecord() {

@@ -26,8 +26,8 @@
                                     o_empty: cell.value === undefined,
                                     'cursor-pointer': cell.value !== undefined,
                                     'fw-bold': cell.isBold,
-                                }" t-on-click="() => this.onOpenView(cell)"
-                                   t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
+                                }" t-att-data-id="cell.id"
+                                t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
                                 <t t-if="cell.value !== undefined">
                                     <div t-if="cell.originIndexes.length > 1" class="o_variation" t-att-class="{
                                              'o_positive text-success': cell.value &gt; 0,
