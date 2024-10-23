@@ -7,6 +7,7 @@ from . import report
 from . import wizard
 
 from odoo import api, fields, SUPERUSER_ID, _
+from odoo.tools.sql import column_exists, create_column
 
 from odoo.addons.project import _check_exists_collaborators_for_project_sharing
 
@@ -50,3 +51,24 @@ def _uninstall_hook(cr, registry):
         project_ids.write({'active': False})
 
     env['ir.model.data'].search([('name', 'ilike', 'internal_project_default_stage')]).unlink()
+
+def _pre_init_hr_timesheet(cr):
+    """ Prevent memory error during install of hr_timesheet with a lot of existing account.analytic.line.
+    Avoid heavy computes during install since those fields are not used for non-timesheet AAL.
+    """
+    new_columns = [
+        ('project_task', 'subtask_effective_hours', 'float8'),
+        ('project_task', 'overtime', 'float8'),
+        ('project_task', 'progress', 'float8'),
+        ('project_task', 'total_hours_spent', 'float8'),
+        ('project_task', 'remaining_hours', 'float8'),
+        ('project_task', 'effective_hours', 'float8'),
+        ('account_analytic_line', 'manager_id', 'int4'),
+        ('account_analytic_line', 'department_id', 'int4'),
+        ('account_analytic_line', 'project_id', 'int4'),
+        ('account_analytic_line', 'ancestor_task_id', 'int4'),
+        ('account_analytic_line', 'task_id', 'int4'),
+    ]
+    for table, column, column_type in new_columns:
+        if not column_exists(cr, table, column):
+            create_column(cr, table, column, column_type)

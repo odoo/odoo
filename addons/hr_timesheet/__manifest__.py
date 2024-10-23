@@ -45,6 +45,7 @@ up a management by affair.
     'installable': True,
     'application': False,
     'auto_install': False,
+    'pre_init_hook': '_pre_init_hr_timesheet',
     'post_init_hook': 'create_internal_project',
     'uninstall_hook': '_uninstall_hook',
     'assets': {
