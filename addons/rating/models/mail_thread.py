@@ -126,7 +126,7 @@ class MailThread(models.AbstractModel):
         if not rating:
             raise ValueError(_('Invalid token or rating.'))
 
-        rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
+        rating.write({'rating': rate, 'feedback': feedback, 'consumed': True, 'rated_on': fields.Datetime.now()})
         if isinstance(self, self.env.registry['mail.thread']):
             if subtype_xmlid is None:
                 subtype_id = self._rating_apply_get_default_subtype_id()
@@ -175,10 +175,12 @@ class MailThread(models.AbstractModel):
                 'res_id': self.id,
                 'consumed': True,
                 'partner_id': self.env.user.partner_id.id,
+                'rated_on': fields.Datetime.now(),
             }
             rating_id = self.env["rating.rating"].sudo().create(rating_vals).id
         if rating_id:
             kwargs["rating_id"] = rating_id
+            self.env['rating.rating'].browse(rating_id).sudo().write({'rated_on': fields.Datetime.now()})
         return super().message_post(**kwargs)
 
     def _message_post_after_hook(self, message, msg_values):

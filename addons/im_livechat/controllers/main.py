@@ -5,7 +5,7 @@ import re
 from werkzeug.exceptions import NotFound
 from urllib.parse import urlsplit
 
-from odoo import http, tools, _, release
+from odoo import http, _, fields
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import replace_exceptions
@@ -222,6 +222,7 @@ class LivechatController(http.Controller):
                 'consumed': True,
                 'feedback': reason,
                 'is_internal': False,
+                'rated_on': fields.Datetime.now(),
             }
             # sudo: rating.rating - visitor can access rating to check if
             # feedback was already given
