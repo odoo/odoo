@@ -120,8 +120,7 @@ export class PosOrder extends Base {
             base_url: baseUrl,
             footer: this.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?
-            shippingDate:
-                this.shipping_date && formatDate(DateTime.fromJSDate(new Date(this.shipping_date))),
+            shippingDate: this.shipping_date && formatDate(DateTime.fromSQL(this.shipping_date)),
             headerData: headerData,
             screenName: "ReceiptScreen",
         };
