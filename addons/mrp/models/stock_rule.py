@@ -143,7 +143,10 @@ class StockRule(models.Model):
             return values['bom_id']
         if values.get('orderpoint_id', False) and values['orderpoint_id'].bom_id:
             return values['orderpoint_id'].bom_id
-        return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
+        bom = self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
+        if bom:
+            return bom
+        return self.env['mrp.bom']._bom_find(product_id, picking_type=False, bom_type='normal', company_id=company_id.id)[product_id]
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
         date_planned = self._get_date_planned(bom, values)
@@ -155,8 +158,8 @@ class StockRule(models.Model):
             'never_product_template_attribute_value_ids': values.get('never_product_template_attribute_value_ids'),
             'product_qty': product_uom._compute_quantity(product_qty, bom.product_uom_id) if bom else product_qty,
             'product_uom_id': bom.product_uom_id.id if bom else product_uom.id,
-            'location_src_id': self.picking_type_id.default_location_src_id.id,
-            'location_dest_id': self.picking_type_id.default_location_dest_id.id or location_dest_id.id,
+            'location_src_id': bom.picking_type_id.default_location_src_id.id or self.picking_type_id.default_location_src_id.id,
+            'location_dest_id': bom.picking_type_id.default_location_dest_id.id or self.picking_type_id.default_location_dest_id.id or location_dest_id.id,
             'location_final_id': location_dest_id.id,
             'bom_id': bom.id,
             'date_deadline': date_deadline,
@@ -164,7 +167,7 @@ class StockRule(models.Model):
             'procurement_group_id': False,
             'propagate_cancel': self.propagate_cancel,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
-            'picking_type_id': self.picking_type_id.id or values['warehouse_id'].manu_type_id.id,
+            'picking_type_id': bom.picking_type_id.id or self.picking_type_id.id or values['warehouse_id'].manu_type_id.id,
             'company_id': company_id.id,
             'move_dest_ids': values.get('move_dest_ids') and [(4, x.id) for x in values['move_dest_ids']] or False,
             'user_id': False,

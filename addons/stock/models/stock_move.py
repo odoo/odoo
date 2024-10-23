@@ -2206,7 +2206,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         for move in self:
             product_id = move.product_id
             domain = [
-                ('location_src_id', '=', move.location_id.id),
+                ('location_src_id', 'parent_of', move.location_id.id),
                 ('location_dest_id', '=', move.location_dest_id.id),
                 ('action', '!=', 'push')
             ]
