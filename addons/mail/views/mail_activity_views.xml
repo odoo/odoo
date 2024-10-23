@@ -351,7 +351,7 @@
         <field name="name">mail.activity.view.kanban.open.target</field>
         <field name="model">mail.activity</field>
         <field name="arch" type="xml">
-            <kanban string="Activity" action="action_open_document" type="object">
+            <kanban string="Activity" action="action_open_document" type="object" create="False">
                 <templates>
                     <field name="active" invisible="1"/>
                     <t t-name="kanban-box">
