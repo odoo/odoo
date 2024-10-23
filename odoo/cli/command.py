@@ -14,6 +14,10 @@ commands = {}
 class Command:
     name = None
 
+    @property
+    def prog(self):
+        return f'{Path(sys.argv[0]).name} {self.name}'
+
     def __init_subclass__(cls):
         cls.name = cls.name or cls.__name__.lower()
         commands[cls.name] = cls

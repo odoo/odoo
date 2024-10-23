@@ -1,6 +1,5 @@
 import argparse
 import sys
-from pathlib import Path
 
 from odoo.tools import cloc, config
 
@@ -11,7 +10,7 @@ class Cloc(Command):
     """ Count lines of code per modules """
     def run(self, args):
         parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
+            prog=self.prog,
             description="""\
 Odoo cloc is a tool to count the number of relevant lines written in
 Python, Javascript or XML. This can be used as rough metric for pricing
