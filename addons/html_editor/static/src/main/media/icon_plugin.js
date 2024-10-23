@@ -122,11 +122,11 @@ export class IconPlugin extends Plugin {
                     if (classString.match(/^fa-[2-5]x$/)) {
                         selectedIcon.classList.remove(classString);
                     }
-                    this.dispatch("ADD_STEP");
                 }
                 if (payload !== "1") {
                     selectedIcon.classList.add(`fa-${payload}x`);
                 }
+                this.dispatch("ADD_STEP");
                 break;
             }
             case "TOGGLE_SPIN_ICON": {

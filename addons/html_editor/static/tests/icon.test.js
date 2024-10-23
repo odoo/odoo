@@ -3,6 +3,7 @@ import { click, waitFor } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setContent } from "./_helpers/selection";
+import { undo } from "./_helpers/user_actions";
 
 test("icon toolbar is displayed", async () => {
     await setupEditor(`<p><span class="fa fa-glass">[]</span></p>`);
@@ -85,4 +86,15 @@ test("Can set icon color", async () => {
     expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect("span.fa-glass").toHaveStyle({ color: "rgb(107, 173, 222)" });
+});
+
+test("Can undo to 1x size after applying 2x size", async () => {
+    const { editor } = await setupEditor(`<p><span class="fa fa-glass">[]</span></p>`);
+    await waitFor(".o-we-toolbar");
+    expect("span.fa-glass").toHaveCount(1);
+    await click("button[name='icon_size_2']");
+    expect("span.fa-glass.fa-2x").toHaveCount(1);
+    undo(editor);
+    expect("span.fa-glass").toHaveCount(1);
+    expect("span.fa-glass.fa-2x").toHaveCount(0);
 });
