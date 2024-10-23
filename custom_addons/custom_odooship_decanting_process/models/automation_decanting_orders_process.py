@@ -284,12 +284,14 @@ class AutomationDecantingOrdersProcessLine(models.Model):
                 move_lines = line.automation_decanting_process_id.license_plate_id.license_plate_order_line_ids.filtered(
                     lambda m: m.product_id == line.product_id)
                 available_qty = sum(move_lines.mapped('quantity'))
-
+                print("\n\n\n Available and remaining qty=====0---", available_qty, move_lines,
+                      total_quantity_selected)
                 line.remaining_quantity = (
                     available_qty - total_quantity_selected
                     if not move_lines.is_remaining_qty
                     else move_lines.remaining_qty - total_quantity_selected
                 )
+                print("remainifn qty====", line.remaining_quantity)
             else:
                 line.remaining_quantity = 0.0
 
@@ -327,16 +329,18 @@ class AutomationDecantingOrdersProcessLine(models.Model):
                         self.automation_decanting_process_id.container_partition)
                 )
 
-    @api.constrains('quantity')
-    def _check_quantity(self):
-        """Ensure that the quantity does not exceed available quantity from license.plate.orders."""
+    @api.onchange('quantity')
+    def onchange_quantity(self):
         for line in self:
-            total_quantity = sum(line.automation_decanting_process_id.license_plate_id.license_plate_order_line_ids.filtered(lambda l: l.product_id == line.product_id).mapped('remaining_qty'))
-            if line.quantity > total_quantity:
-                raise ValidationError(
-                    f"The quantity of '{line.product_id.name}' exceeds the available quantity on the License Plate. "
-                    f"Available: {total_quantity}, Requested: {line.quantity}"
-                )
+            line._compute_remaining_quantity()
+            if line.remaining_quantity < 0:
+                if line.remaining_quantity < line.quantity:
+                    return {
+                        'warning': {
+                            'title': _("Invalid Quantity "),
+                            'message': _("The selected quantity is greater than actual remaining quantity."),
+                        }
+                    }
 
     @api.model
     def create(self, vals):
@@ -354,7 +358,7 @@ class AutomationDecantingOrdersProcessLine(models.Model):
         # Call the original create method
         new_record = super(AutomationDecantingOrdersProcessLine, self).create(vals)
         # Check the quantity after creation
-        new_record._check_quantity()
+        new_record.onchange_quantity()
         return new_record
 
     @api.model

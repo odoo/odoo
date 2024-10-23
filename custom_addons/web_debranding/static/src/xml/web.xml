@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Copyright 2015-2018,2020 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+    Copyright 2016 Stanislav Krotov <https://it-projects.info/team/ufaks>
+    Copyright 2016 Gabbasov Dinar <https://it-projects.info/team/GabbasovDinar>
+    Copyright 2020 Denis Mudarisov <https://github.com/trojikman>
+    License MIT (https://opensource.org/licenses/MIT).
+    License OPL-1 (https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html#odoo-apps) for derivative work. -->
+<templates>
+    <t t-extend="wysiwyg.widgets.image">
+        <t t-jquery="t[t-set='urlPlaceholder']" t-operation="inner">
+            https://www.example.com/logo.png
+        </t>
+    </t>
+    <t t-extend="wysiwyg.widgets.document">
+        <t t-jquery="t[t-set='urlPlaceholder']" t-operation="inner">
+            https://www.example.com/mydocument
+        </t>
+    </t>
+    <!-- enterprise: hide database expiration panel -->
+    <!-- WARNING: running odoo instance with uncommented lines below may be illegal -->
+    <!--
+   <t t-extend="WebClient.database_expiration_panel">
+       <t t-jquery=".database_expiration_panel">
+           $(this).empty();
+       </t>
+   </t>
+-->
+</templates>
