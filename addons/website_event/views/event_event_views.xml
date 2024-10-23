@@ -35,17 +35,25 @@
             <div name="button_box" position="inside">
                 <field name="website_url" invisible="1"/>
             </div>
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="website_menu" string="Website Submenu"/>
+                <!-- hidden sub-menus, they are triggered all at once based on "website_menu" -->
                 <div name="event_menu_configuration" groups="base.group_no_one">
-                    <label for="website_menu" string="Website Submenu"/>
-                    <field name="website_menu"/>
-                    <!-- hidden sub-menus, they are triggered all at once based on "website_menu" -->
                     <field name="introduction_menu" invisible="1"/>
                     <field name="location_menu" invisible="1"/>
                     <field name="register_menu" invisible="1"/>
-                    <label for="community_menu" string="Community" invisible="1"/>
-                    <field name="community_menu" invisible="1"/>
                 </div>
+            </xpath>
+            <xpath expr="//page[@name='event_notes']" position="before">
+                <page name="sub_menu" string="Sub-menu" invisible="not website_menu">
+                    <group>
+                        <group name="sub_menu_left">
+                        </group>
+                        <group name="sub_menu_right">
+                            <field name="community_menu" string="Community" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
             <field name="tag_ids" position="attributes">
                 <attribute name="domain">['|', ('category_id.website_id', '=', website_id), ('category_id.website_id', '=', False)]</attribute>

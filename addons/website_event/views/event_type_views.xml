@@ -6,15 +6,19 @@
         <field name="model">event.type</field>
         <field name="inherit_id" ref="event.view_event_type_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
-                    <span name="website_menu">
-                        <label for="website_menu" string="Website Submenu"/>
-                        <field name="website_menu"/>
-                    </span>
-                    <span name="community_menu" invisible="1">
-                        <label for="community_menu" string="Community"/>
-                        <field name="community_menu"/>
-                    </span>
+            <xpath expr="//group[@name='event_template_left']" position="inside">
+                <field name="website_menu" string="Website Submenu"/>
+            </xpath>
+            <xpath expr="//page[@name='notes']" position="before">
+                <page name="sub_menu_template" string="Sub-menu" invisible="not website_menu">
+                    <group>
+                        <group name="sub_menu_left">
+                        </group>
+                        <group name="sub_menu_right">
+                            <field name="community_menu" string="Community" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

@@ -9,10 +9,9 @@
             <field name="address_id" position="after">
                 <field name="exhibition_map"/>
             </field>
-            <field name="website_menu" position="after">
-                <label for="booth_menu"/>
-                <field name="booth_menu"/>
-            </field>
+            <xpath expr="//group[@name='sub_menu_left']" position="inside">
+                <field name="booth_menu" string="Get a Booth"/>
+            </xpath>
         </field>
     </record>
 
