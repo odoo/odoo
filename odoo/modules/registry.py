@@ -31,6 +31,20 @@ _logger = logging.getLogger(__name__)
 _schema = logging.getLogger('odoo.schema')
 
 
+def _uniquify(dupes):
+    """
+    Return unique elements from `dupes` keeping the last instance
+    Elements in `dupes` may not be hasheable, comparison is done by equality
+    Example: [A, B, A] -> [B, A]
+    """
+    res = []
+    for item in reversed(dupes):
+        if item not in res:
+            res.append(item)
+    res.reverse()
+    return res
+
+
 class Registry(Mapping):
     """ Model registry for a particular database.
 
@@ -117,7 +131,7 @@ class Registry(Mapping):
         self._assertion_report = odoo.tests.result.OdooTestResult()
         self._fields_by_model = None
         self._ordinary_tables = None
-        self._constraint_queue = deque()
+        self._constraint_stacks = defaultdict(list)  # key order is important
         self.__cache = LRU(8192)
 
         # modules fully loaded (maintained during init phase by `loading` module)
@@ -474,32 +488,45 @@ class Registry(Mapping):
 
     def post_constraint(self, func, *args, **kwargs):
         """ Call the given function, and delay it if it fails during an upgrade. """
+        key = "{!r} {!r} {!r}".format(func, args[:3], dict(kwargs, definition=None))
         try:
-            if (func, args, kwargs) not in self._constraint_queue:
-                # Module A may try to apply a constraint and fail but another module B inheriting
-                # from Module A may try to reapply the same constraint and succeed, however the
-                # constraint would already be in the _constraint_queue and would be executed again
-                # at the end of the registry cycle, this would fail (already-existing constraint)
-                # and generate an error, therefore a constraint should only be applied if it's
-                # not already marked as "to be applied".
-                func(*args, **kwargs)
-        except Exception as e:
-            if self._is_install:
-                _schema.error(*e.args)
-            else:
-                _schema.info(*e.args)
-                self._constraint_queue.append((func, args, kwargs))
+            func(*args, **kwargs)
+        except sql.ConstraintError as e:
+            _schema.info(e.args[0])
+            # Try to apply the constraint once the registry is fully loaded. We keep multiple
+            # constraints under same key because we still want to attempt to add a constraint
+            # even if some override failed.
+            self._constraint_stacks[key].append((func, args, kwargs))
+        else:
+            # If a module successfully applies a constraint, we remove all queued constraints with
+            # same name ignoring the definition. In effect, if module A defines a constraint that is
+            # overridden by module B (loaded after) with a different definition, whenever we load A,
+            # the original constraint may fail to be applied, hence it is queued. The issue is that
+            # later when we post process the queue the constraint still fails to be added. The
+            # solution is to clean the previously enqeueud constraints that were just overriden.
+            removed = self._constraint_stacks.pop(key, [])
+            same = _uniquify(removed)
+            if same:
+                _schema.info("Skipping already applied constraints: %s", same)
 
     def finalize_constraints(self):
         """ Call the delayed functions from above. """
-        while self._constraint_queue:
-            func, args, kwargs = self._constraint_queue.popleft()
-            try:
-                func(*args, **kwargs)
-            except Exception as e:
-                # warn only, this is not a deployment showstopper, and
-                # can sometimes be a transient error
-                _schema.warning(*e.args)
+        for key, funcs_data in reversed(self._constraint_stacks.items()):
+            errors = []
+            for (func, args, kwargs) in reversed(funcs_data):
+                try:
+                    func(*args, **kwargs)
+                except sql.ConstraintError as e:
+                    errors.append(e.args[0])
+                else:
+                    if errors:
+                        errors = _uniquify(errors)
+                        _schema.warning("Constraint %s added, with previous errors:\n%s", key, "\n".join(errors))
+                    break
+            else:
+                errors = _uniquify(errors)
+                _schema.error("Couldn't apply constraint %s, errors:\n%s", key, "\n".join(errors))
+        self._constraint_stacks.clear()
 
     def init_models(self, cr, model_names, context, install=True):
         """ Initialize a list of models (given by their name). Call methods
