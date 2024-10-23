@@ -469,6 +469,22 @@ class MailMail(models.Model):
                 'partner_id': partner,
             })
 
+        # update headers with information coming from recipients, used to tweak
+        # SMTP versus Msg['To']
+        if headers.get('X-Msg-To-Consolidate'):
+            to_add = tools.mail.email_split_and_format(headers.get('X-Msg-To-Add') or '')
+            all_email_to = [
+                email for outgoing in email_list for email in outgoing['email_to']
+                if tools.email_normalize(email) not in to_add
+            ]
+            to_add += all_email_to
+            all_email_cc = [
+                email for outgoing in email_list for email in outgoing['email_cc']
+                if tools.email_normalize(email) not in to_add
+            ]
+            to_add += all_email_cc
+            headers['X-Msg-To-Add'] = ','.join(to_add)
+
         attachments = self.attachment_ids
         # Prepare attachments:
         # Remove attachments if user send the link with the access_token.
