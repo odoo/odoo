@@ -128,6 +128,11 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                         "module_icon": "/mail/static/description/icon.png",
                         "rating_avg": 5.0,
                         "rating_count": 1,
+                        "rating_stats": {
+                            "avg": 5.0,
+                            "total": 1,
+                            "percent": {1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 100.0},
+                        },
                     },
                 ),
                 "rating.rating": [
@@ -232,6 +237,11 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                                         "module_icon": "/mail/static/description/icon.png",
                                         "rating_avg": 5.0,
                                         "rating_count": 1,
+                                        "rating_stats": {
+                                            "avg": 5.0,
+                                            "total": 1,
+                                            "percent": {1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 100.0},
+                                        },
                                     },
                                 ),
                                 "rating.rating": [

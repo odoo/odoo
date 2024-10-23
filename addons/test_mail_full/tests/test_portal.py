@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.urls import url_parse, url_decode, url_encode, url_unparse
 
-import json
-
-from odoo import http
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
@@ -82,11 +78,6 @@ class TestPortalControllers(TestPortal):
             'res_id': self.record_portal.id,
         })
         token = self.record_portal.access_token
-        formatted_record = mail_record.portal_message_format(options={"token": token})[0]
-        self.assertEqual(
-            formatted_record.get("author_avatar_url"),
-            f"/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50?access_token={token}",
-        )
         response = self.url_open(
             f"/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50?access_token={token}"
         )
@@ -126,11 +117,6 @@ class TestPortalControllers(TestPortal):
         res.raise_for_status()
         self.assertNotIn("error", res.json())
         message = self.record_portal.message_ids[0]
-        formatted_message = message.portal_message_format(options={"hash": _hash, "pid": pid})[0]
-        self.assertEqual(
-            formatted_message.get("author_avatar_url"),
-            f"/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={_hash}&pid={pid}",
-        )
         response = self.url_open(
             f"/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={_hash}&pid={pid}"
         )

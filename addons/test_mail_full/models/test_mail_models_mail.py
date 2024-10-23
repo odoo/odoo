@@ -38,6 +38,16 @@ class MailTestPortalNoPartner(models.Model):
         for record in self.filtered('id'):
             record.access_url = '/my/test_portal_no_partner/%s' % self.id
 
+    def _get_sign_token_params(self):
+        access_token = self._portal_ensure_token()
+        partner = self.env["res.partner"].create({"name": "Sign Partner"})
+        _hash = self._sign_token(partner.id)
+        token = {"token": access_token}
+        bad_token = {"token": "incorrect token"}
+        sign = {"hash": _hash, "pid": partner.id}
+        bad_sign = {"hash": "incorrect hash", "pid": partner.id}
+        return token, bad_token, sign, bad_sign, partner
+
 
 class MailTestRating(models.Model):
     """ A model inheriting from rating.mixin (which inherits from mail.thread) with some fields used for SMS

@@ -59,8 +59,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             'res_id': self.test_blog_post.id,
             'subtype_id': self.ref('mail.mt_comment'),
         })
-        portal_message = mail_message.portal_message_format()
-        response = self.url_open(portal_message[0]['author_avatar_url'])
+        response = self.url_open(f'/web/image/mail.message/{mail_message.id}/author_avatar/50x50')
         # Ensure that the avatar is visible
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers.get('Content-Type'), 'image/png')

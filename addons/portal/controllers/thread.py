@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request
+from odoo.osv import expression
 from odoo.addons.mail.controllers import thread
 from odoo.addons.portal.utils import get_portal_partner
 
@@ -20,3 +21,16 @@ class ThreadController(thread.ThreadController):
         if message._is_editable_in_portal(**kwargs):
             return True
         return super()._is_message_editable(message, **kwargs)
+
+    def _get_fetch_domain(self, thread_model, thread_id, **kwargs):
+        domain = super()._get_fetch_domain(thread_model, thread_id, **kwargs)
+        model = request.env[thread_model]
+        if kwargs.get("portal"):
+            domain = expression.AND(
+                [
+                    domain,
+                    model._fields["website_message_ids"].get_domain_list(model),
+                    [("subtype_id", "=", request.env.ref("mail.mt_comment").id)],
+                ]
+            )
+        return domain
