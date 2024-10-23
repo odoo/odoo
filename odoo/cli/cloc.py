@@ -1,12 +1,11 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
-import os
 import sys
-import textwrap
 from pathlib import Path
 
 from odoo.tools import cloc, config
+
 from . import Command
+
 
 class Cloc(Command):
     """ Count lines of code per modules """
