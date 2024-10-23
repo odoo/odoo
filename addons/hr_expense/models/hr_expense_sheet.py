@@ -341,10 +341,10 @@ class HrExpenseSheet(models.Model):
 
         for sheet in self:
             reason = False
-            if not is_team_approver:
+            if not is_team_approver and not self.env.su:
                 reason = _("%s: Your are not a Manager or HR Officer", sheet.name)
 
-            elif not is_hr_admin:
+            elif not is_hr_admin and not self.env.su:
                 sheet_employee = sheet.employee_id
                 current_managers = sheet_employee.expense_manager_id \
                                    | sheet_employee.parent_id.user_id \
@@ -463,6 +463,19 @@ class HrExpenseSheet(models.Model):
         sheets = super(HrExpenseSheet, self.with_context(context)).create(vals_list)
         sheets.activity_update()
         return sheets
+
+    def write(self, vals):
+        if 'state' in vals or 'approval_state' in vals:
+            # Avoid user with write access on expense sheet in draft state to bypass the validation process
+            if (not self.user_has_groups('hr_expense.group_hr_expense_manager')
+                and all(self.mapped(lambda e: e.state == 'draft')) and vals.get('state') not in ['submit', None]
+                and vals.get('approval_state') not in ['sumbit', None]):
+                raise UserError(_("You don't have the rights to bypass the validation process of this expense report."))
+            elif vals.get('state') == 'approve' or vals.get('approval_state') == 'approve':
+                self._check_can_approve()
+            elif vals.get('state') == 'cancel' or vals.get('approval_state') == 'cancel':
+                self._check_can_refuse()
+        return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted_or_paid(self):
@@ -696,13 +709,14 @@ class HrExpenseSheet(models.Model):
     def _do_reverse_moves(self):
         self = self.with_context(clean_context(self.env.context))
         moves = self.account_move_ids
-        draft_moves = moves.filtered(lambda m: m.state == 'draft')
-        non_draft_moves = moves - draft_moves
-        non_draft_moves._reverse_moves(
-            default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in non_draft_moves],
-            cancel=True
-        )
-        draft_moves.unlink()
+        if moves:
+            draft_moves = moves.filtered(lambda m: m.state == 'draft')
+            non_draft_moves = moves - draft_moves
+            non_draft_moves._reverse_moves(
+                default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in non_draft_moves],
+                cancel=True
+            )
+            draft_moves.unlink()
 
     def _prepare_bills_vals(self):
         self.ensure_one()

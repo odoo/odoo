@@ -23,8 +23,17 @@
         <record id="ir_rule_hr_expense_employee" model="ir.rule">
             <field name="name">Employee Expense</field>
             <field name="model_id" ref="model_hr_expense"/>
-            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id), ('state', 'in', ('draft', 'reported'))]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_employee_not_draft" model="ir.rule">
+            <field name="name">Employee can't modify expense that is not in draft state</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id), ('state', 'not in', ('draft', 'reported'))]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
 
         <record id="ir_rule_hr_expense_sheet_manager" model="ir.rule">
