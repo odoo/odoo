@@ -37,6 +37,8 @@ class _OdooOption(optparse.Option):
         self.file_loadable = attrs.pop('file_loadable', True)
         self.file_exportable = attrs.pop('file_exportable', self.file_loadable)
         super().__init__(*opts, **attrs)
+        if 'default' in attrs:
+            self.config._log(logging.WARNING, "please use my_default= instead of default= with option %s", self)
         if self.file_exportable and not self.file_loadable:
             e = (f"it makes no sense that the option {self} can be exported "
                   "to the config file but not loaded from the config file")
@@ -133,15 +135,14 @@ class configmanager:
         group = optparse.OptionGroup(parser, "Common options")
         group.add_option("-c", "--config", dest="config", file_loadable=False,
                          help="specify alternate config file")
-        group.add_option("-s", "--save", action="store_true", dest="save", default=False, file_loadable=False,
+        group.add_option("-s", "--save", action="store_true", dest="save", my_default=False, file_loadable=False,
                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
         group.add_option("-i", "--init", dest="init", file_loadable=False,
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update", file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
-        group.add_option("--without-demo", dest="without_demo",
-                         help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
-                         my_default=False)
+        group.add_option("--without-demo", dest="without_demo", my_default='',
+                         help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i.")
         group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
@@ -223,10 +224,10 @@ class configmanager:
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-handler', action="append", default=[], my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.api:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+        group.add_option('--log-handler', action="append", my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.api:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="odoo.http:DEBUG", help='shortcut for --log-handler=odoo.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="odoo.sql_db:DEBUG", help='shortcut for --log-handler=odoo.sql_db:DEBUG')
-        group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
+        group.add_option('--log-db', dest='log_db', help="Logging database", my_default='')
         group.add_option('--log-db-level', dest='log_db_level', my_default='warning', help="Logging database level")
         # For backward-compatibility, map the old log levels to something
         # quite close.
@@ -242,9 +243,9 @@ class configmanager:
 
         # SMTP Group
         group = optparse.OptionGroup(parser, "SMTP Configuration")
-        group.add_option('--email-from', dest='email_from', my_default=False,
+        group.add_option('--email-from', dest='email_from', my_default='',
                          help='specify the SMTP email address for sending email')
-        group.add_option('--from-filter', dest='from_filter', my_default=False,
+        group.add_option('--from-filter', dest='from_filter', my_default='',
                          help='specify for which email address the SMTP configuration can be used')
         group.add_option('--smtp', dest='smtp_server', my_default='localhost',
                          help='specify the SMTP server for sending email')
@@ -252,39 +253,40 @@ class configmanager:
                          help='specify the SMTP port', type="int")
         group.add_option('--smtp-ssl', dest='smtp_ssl', action='store_true', my_default=False,
                          help='if passed, SMTP connections will be encrypted with SSL (STARTTLS)')
-        group.add_option('--smtp-user', dest='smtp_user', my_default=False,
+        group.add_option('--smtp-user', dest='smtp_user', my_default='',
                          help='specify the SMTP username for sending email')
-        group.add_option('--smtp-password', dest='smtp_password', my_default=False,
+        group.add_option('--smtp-password', dest='smtp_password', my_default='',
                          help='specify the SMTP password for sending email')
-        group.add_option('--smtp-ssl-certificate-filename', dest='smtp_ssl_certificate_filename', my_default=False,
+        group.add_option('--smtp-ssl-certificate-filename', dest='smtp_ssl_certificate_filename', my_default='',
                          help='specify the SSL certificate used for authentication')
-        group.add_option('--smtp-ssl-private-key-filename', dest='smtp_ssl_private_key_filename', my_default=False,
+        group.add_option('--smtp-ssl-private-key-filename', dest='smtp_ssl_private_key_filename', my_default='',
                          help='specify the SSL private key used for authentication')
         parser.add_option_group(group)
 
         # Database Group
         group = optparse.OptionGroup(parser, "Database related options")
-        group.add_option("-d", "--database", dest="db_name", my_default=False,
+        group.add_option("-d", "--database", dest="db_name", my_default='',
                          help="specify the database name")
-        group.add_option("-r", "--db_user", dest="db_user", my_default=False,
+        group.add_option("-r", "--db_user", dest="db_user", my_default='',
                          help="specify the database user name")
-        group.add_option("-w", "--db_password", dest="db_password", my_default=False,
+        group.add_option("-w", "--db_password", dest="db_password", my_default='',
                          help="specify the database password")
-        group.add_option("--pg_path", dest="pg_path", help="specify the pg executable path")
-        group.add_option("--db_host", dest="db_host", my_default=False,
+        group.add_option("--pg_path", dest="pg_path", my_default='',
+                         help="specify the pg executable path")
+        group.add_option("--db_host", dest="db_host", my_default='',
                          help="specify the database host")
-        group.add_option("--db_replica_host", dest="db_replica_host", my_default=False,
+        group.add_option("--db_replica_host", dest="db_replica_host", my_default='',
                          help="specify the replica host. Specify an empty db_replica_host to use the default unix socket.")
-        group.add_option("--db_port", dest="db_port", my_default=False,
+        group.add_option("--db_port", dest="db_port", my_default=None,
                          help="specify the database port", type="int")
-        group.add_option("--db_replica_port", dest="db_replica_port", my_default=False,
+        group.add_option("--db_replica_port", dest="db_replica_port", my_default=None,
                          help="specify the replica port", type="int")
         group.add_option("--db_sslmode", dest="db_sslmode", type="choice", my_default='prefer',
                          choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
                          help="specify the maximum number of physical connections to PostgreSQL")
-        group.add_option("--db_maxconn_gevent", dest="db_maxconn_gevent", type='int', my_default=False,
+        group.add_option("--db_maxconn_gevent", dest="db_maxconn_gevent", type='int', my_default=None,
                          help="specify the maximum number of physical connections to PostgreSQL specifically for the gevent worker")
         group.add_option("--db-template", dest="db_template", my_default="template0",
                          help="specify a custom database template to create a new database")
@@ -306,7 +308,7 @@ class configmanager:
                          help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
         group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False, file_exportable=False,
                          help="overwrites existing translation terms on updating a module or importing a CSV or a PO file.")
-        group.add_option("--modules", dest="translate_modules", default='all', file_loadable=False,
+        group.add_option("--modules", dest="translate_modules", my_default='all', file_loadable=False,
                          help="specify modules to export. Use in combination with --i18n-export")
         parser.add_option_group(group)
 
@@ -357,7 +359,7 @@ class configmanager:
                              help="Maximum allowed virtual memory per worker (in bytes), when reached the worker be "
                              "reset after the current request (default 2048MiB).",
                              type="int")
-            group.add_option("--limit-memory-soft-gevent", dest="limit_memory_soft_gevent", my_default=False,
+            group.add_option("--limit-memory-soft-gevent", dest="limit_memory_soft_gevent", my_default=None,
                              help="Maximum allowed virtual memory per gevent worker (in bytes), when reached the worker will be "
                              "reset after the current request. Defaults to `--limit-memory-soft`.",
                              type="int")
@@ -365,7 +367,7 @@ class configmanager:
                              help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory "
                              "allocation will fail (default 2560MiB).",
                              type="int")
-            group.add_option("--limit-memory-hard-gevent", dest="limit_memory_hard_gevent", my_default=False,
+            group.add_option("--limit-memory-hard-gevent", dest="limit_memory_hard_gevent", my_default=None,
                              help="Maximum allowed virtual memory per gevent worker (in bytes), when reached, any memory "
                              "allocation will fail. Defaults to `--limit-memory-hard`.",
                              type="int")
@@ -565,7 +567,7 @@ class configmanager:
         self._runtime_options['demo'] = (dict(self['init'])
                                 if not self['without_demo'] else {})
         self._runtime_options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
-        self._runtime_options['translate_modules'] = [m.strip() for m in opt.translate_modules.split(',')]
+        self._runtime_options['translate_modules'] = [m.strip() for m in self['translate_modules'].split(',')]
         self._runtime_options['translate_modules'].sort()
 
         dev_split = [s.strip() for s in opt.dev_mode.split(',')] if opt.dev_mode else []
@@ -698,7 +700,12 @@ class configmanager:
                 elif value == 'True' or value == 'true':
                     value = True
                 elif value == 'False' or value == 'false':
-                    value = False
+                    # "False" used to be the my_default of many non-bool options
+                    if option.action in ('store_true', 'store_false', 'callback'):
+                        value = False
+                    else:
+                        self._log(logging.WARNING, "option %s reads %r in the config file at %s but isn't a boolean option, skip", name, value, self.rcfile)
+                        continue
                 elif option.type in optparse.Option.TYPE_CHECKER:
                     value = optparse.Option.TYPE_CHECKER[option.type](option, name, value)
                 self._file_options[name] = value
