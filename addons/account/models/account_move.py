@@ -3745,7 +3745,8 @@ class AccountMove(models.Model):
         if not float_is_zero(tax_amount_rounding_error, precision_rounding=self.currency_id.rounding):
             for subtotal in totals['subtotals']:
                 if _('Untaxed Amount') == subtotal['name']:
-                    subtotal['tax_groups'][0]['tax_amount_currency'] += tax_amount_rounding_error
+                    if subtotal['tax_groups']:
+                        subtotal['tax_groups'][0]['tax_amount_currency'] += tax_amount_rounding_error
                     totals['total_amount_currency'] = amount_total
                     self.tax_totals = totals
                     break
