@@ -19,6 +19,8 @@ class StockMove(models.Model):
             project = self.raw_material_production_id.project_id
             mandatory_plans = project._get_mandatory_plans(self.company_id, business_domain='manufacturing_order')
             missing_plan_names = [plan['name'] for plan in mandatory_plans if not project[plan['column_name']]]
+            for value in res:
+                value['category'] = 'manufacturing_order'
             if missing_plan_names:
                 raise ValidationError(_(
                     "'%(missing_plan_names)s' analytic plan(s) required on the project '%(project_name)s' linked to the manufacturing order.",
