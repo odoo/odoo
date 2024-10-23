@@ -163,3 +163,43 @@
         }
     }
 }
+
+.o_column_handle.o_side_y:hover, .o_column_handle.o_side_y:active {
+    background: repeating-linear-gradient(
+                    45deg,
+                    rgba($o-we-handles-accent-color, .1),
+                    rgba($o-we-handles-accent-color, .1) 5px,
+                    darken(rgba($o-we-handles-accent-color, .25), 5%) 5px,
+                    darken(rgba($o-we-handles-accent-color, .25), 5%) 10px
+                );
+}
+
+// HANDLES - ACTIVE AND HOVER STATES
+// By using `o_handlers_idle` class, we can avoid hovering another
+// handle when we're already dragging another one.
+.o_handle:hover, .o_handle:active {
+
+    .o_handle_indicator {
+        outline-color: $o-we-handles-accent-color;
+    }
+}
+
+.o_side_x:hover, .o_side_x:active {
+
+    &::before {
+        width: $o-we-handle-border-width * 2;
+    }
+    .o_handle_indicator {
+        height: $o-we-handles-btn-size * 2;
+    }
+}
+
+.o_side_y:hover, .o_side_y:active {
+
+    &::before {
+        height: $o-we-handle-border-width * 2;
+    }
+    .o_handle_indicator {
+        width: $o-we-handles-btn-size * 2;
+    }
+}
