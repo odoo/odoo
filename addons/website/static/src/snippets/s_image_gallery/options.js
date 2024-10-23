@@ -258,7 +258,6 @@ options.registry.gallery = options.Class.extend({
      */
     mode: function (previewMode, widgetValue, params) {
         widgetValue = widgetValue || 'slideshow'; // FIXME should not be needed
-        this.$target.css('height', '');
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + widgetValue);
@@ -348,7 +347,6 @@ options.registry.gallery = options.Class.extend({
         _.each(this.$('img'), function (img, index) {
             $(img).attr({contenteditable: true, 'data-index': index});
         });
-        this.$target.css('height', Math.round(window.innerHeight * 0.7));
 
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
