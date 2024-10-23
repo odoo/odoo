@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             // Test SplitBillButton
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickBack(),
-
+            ProductScreen.clickLine("Water", "5.0"),
             ProductScreen.clickInternalNoteButton(),
             TextInputPopup.inputText("test note"),
             Dialog.confirm(),
@@ -70,7 +70,6 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
                 quantity: "5",
                 price: "10.0",
                 internalNote: "test note",
-                withClass: ".selected",
             }),
 
             ProductScreen.addOrderline("Water", "8", "1", "8.0"),

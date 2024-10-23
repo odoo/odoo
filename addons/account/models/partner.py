@@ -51,13 +51,17 @@ class AccountFiscalPosition(models.Model):
     zip_to = fields.Char(string='Zip Range To')
     # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
     states_count = fields.Integer(compute='_compute_states_count')
-    foreign_vat = fields.Char(string="Foreign Tax ID", help="The tax ID of your company in the region mapped by this fiscal position.")
+    foreign_vat = fields.Char(string="Foreign Tax ID", inverse="_inverse_foreign_vat", help="The tax ID of your company in the region mapped by this fiscal position.")
 
     # Technical field used to display a banner on top of foreign vat fiscal positions,
     # in order to ease the instantiation of foreign taxes when possible.
     foreign_vat_header_mode = fields.Selection(
         selection=[('templates_found', "Templates Found"), ('no_template', "No Template")],
         compute='_compute_foreign_vat_header_mode')
+
+    def _inverse_foreign_vat(self):
+        # Hook for extension
+        pass
 
     def _compute_states_count(self):
         for position in self:
@@ -518,6 +522,10 @@ class ResPartner(models.Model):
             else:
                 partner.currency_id = self.env.company.currency_id
 
+    def _default_display_invoice_template_pdf_report_id(self):
+        available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
+        return available_templates_count > 1
+
     name = fields.Char(tracking=True)
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.",
@@ -595,14 +603,14 @@ class ResPartner(models.Model):
         inverse='_inverse_invoice_edi_format',
     )
     invoice_edi_format_store = fields.Char(company_dependent=True)
-    display_invoice_edi_format = fields.Boolean(compute='_compute_display_invoice_edi_format')
+    display_invoice_edi_format = fields.Boolean(default=lambda self: len(self._fields['invoice_edi_format'].selection), store=False)
     invoice_template_pdf_report_id = fields.Many2one(
         comodel_name='ir.actions.report',
         domain="[('is_invoice_report', '=', True)]",
         readonly=False,
         store=True,
     )
-    display_invoice_template_pdf_report_id = fields.Boolean(compute='_compute_display_invoice_template_pdf_report_id')
+    display_invoice_template_pdf_report_id = fields.Boolean(default=_default_display_invoice_template_pdf_report_id, store=False)
     # Computed fields to order the partners as suppliers/customers according to the
     # amount of their generated incoming/outgoing account moves
     supplier_rank = fields.Integer(default=0, copy=False)
@@ -654,13 +662,6 @@ class ResPartner(models.Model):
             domain = expression.AND([domain, [('company_id', 'in', (False, self.company_id.id))]])
         domain = expression.AND([domain, [('partner_id', '!=', self._origin.id)]])
         return self.env['res.partner.bank'].search(domain)
-
-    def _compute_display_invoice_edi_format(self):
-        self.display_invoice_edi_format = len(self._fields['invoice_edi_format'].selection)
-
-    def _compute_display_invoice_template_pdf_report_id(self):
-        available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
-        self.display_invoice_template_pdf_report_id = available_templates_count > 1
 
     @api.depends_context('company')
     def _compute_invoice_edi_format(self):

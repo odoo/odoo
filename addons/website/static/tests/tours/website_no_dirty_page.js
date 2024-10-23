@@ -99,6 +99,168 @@ registerWebsitePreviewTour('website_no_dirty_page', {
     },
 ]));
 
+registerWebsitePreviewTour(
+    "website_default_snippet_text",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({
+            id: "s_text_image",
+            name: "Text - Image",
+            groupName: "Content",
+        }),
+        ...insertSnippet({
+            id: "s_banner",
+            name: "Banner",
+            groupName: "Intro",
+        }),
+        {
+            content: "Click on first paragraph",
+            trigger: ":iframe .s_text_image p.o_default_snippet_text",
+            run: "click",
+        },
+        {
+            content: "Select the first word (Write)",
+            trigger: ":iframe .s_text_image p.o_default_snippet_text",
+            run() {
+                const paragraph = this.anchor;
+                const range = document.createRange();
+                const text = paragraph.textContent;
+                const firstWordLength = text.split(" ")[0].length;
+                range.setStart(paragraph.firstChild, 0);
+                range.setEnd(paragraph.firstChild, firstWordLength);
+                const selection = this.anchor.ownerDocument.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+            },
+        },
+        {
+            content: "Apply bold formatting",
+            trigger: ".o_we_toolbar_wrapper #bold",
+            run: "click",
+        },
+        {
+            content: "Check if default_snippet_text class is removed",
+            trigger: ":iframe .s_text_image p:eq(0)",
+            run() {
+                if (this.anchor.classList.contains("o_default_snippet_text")) {
+                    console.error("The class o_default_snippet_text should be removed");
+                }
+            },
+        },
+        {
+            content: "Click on second paragraph",
+            trigger: ":iframe .s_text_image p.o_default_snippet_text",
+            run: "click",
+        },
+        {
+            content: "The paragraph should be selected",
+            trigger: ":iframe .s_text_image p:eq(1)",
+            run() {
+                const pText = this.anchor.textContent;
+                const selection = this.anchor.ownerDocument.getSelection();
+                if (selection.toString() !== pText) {
+                    console.error("The paragraph should be selected");
+                }
+            },
+        },
+        {
+            content: "Replace the paragraph by typing something",
+            trigger: ":iframe .s_text_image p:eq(1)",
+            run(actions) {
+                // We must invoke 'trigger' from a jQuery object because
+                // the 'keyup.snippets_menu' event needs to be dispatched.
+                // TODO: Replace this event trigger with vanilla JavaScript
+                // once jQuery is removed from the snippets editor.
+                $(this.anchor.ownerDocument.body).trigger("keyup.snippets_menu");
+                actions.editor("Another brick in the wall");
+            },
+        },
+        {
+            content: "Check if default_snippet_text class is removed",
+            trigger: ":iframe .s_text_image p:eq(1)",
+            run() {
+                if (this.anchor.classList.contains("o_default_snippet_text")) {
+                    console.error("The class o_default_snippet_text should be removed");
+                }
+            },
+        },
+        {
+            content: "Re-click on the paragraph",
+            trigger: ":iframe .s_text_image p:eq(1)",
+            run: "click",
+        },
+        {
+            content: "The paragraph should not be selected",
+            trigger: ":iframe .s_text_image p:eq(1)",
+            run() {
+                const pText = this.anchor.textContent;
+                const selection = this.anchor.ownerDocument.getSelection();
+                if (selection.toString() === pText) {
+                    console.error("The paragraph should not be selected");
+                }
+            },
+        },
+        {
+            content: "Click on the paragraph",
+            trigger: ":iframe .s_banner p.o_default_snippet_text",
+            run: "click",
+        },
+        {
+            content: "The paragraph should be selected",
+            trigger: ":iframe .s_banner p.o_default_snippet_text",
+            run() {
+                const pText = this.anchor.textContent.trim();
+                const selectionText = this.anchor.ownerDocument.getSelection().toString().trim();
+                if (selectionText !== pText) {
+                    console.error("The paragraph should be selected: ", selectionText, pText);
+                }
+            },
+        },
+        {
+            content: "Click elsewhere",
+            trigger: ":iframe .s_banner img",
+            run: "click",
+        },
+        {
+            content: "Re-click on the paragraph",
+            trigger: ":iframe .s_banner p.o_default_snippet_text",
+            run: "click",
+        },
+        {
+            content: "The paragraph should not be selected",
+            trigger: ":iframe .s_banner p.o_default_snippet_text",
+            run() {
+                const pText = this.anchor.textContent.trim();
+                const selectionText = this.anchor.ownerDocument.getSelection().toString().trim();
+                if (selectionText === pText) {
+                    console.error("The paragraph should not be selected: ", selectionText, pText);
+                }
+            },
+        },
+        ...clickOnSave(),
+        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Click on the paragraph",
+            trigger: ":iframe .s_banner p.o_default_snippet_text",
+            run: "click",
+        },
+        {
+            content: "The paragraph should be re-selected",
+            trigger: ":iframe .s_banner p.o_default_snippet_text",
+            run() {
+                const pText = this.anchor.textContent.trim();
+                const selectionText = this.anchor.ownerDocument.getSelection().toString().trim();
+                if (selectionText !== pText) {
+                    console.error("The paragraph should be re-selected: ", selectionText, pText);
+                }
+            },
+        },
+    ]
+);
+
 registerWebsitePreviewTour('website_no_dirty_lazy_image', {
     url: '/',
     edition: true,

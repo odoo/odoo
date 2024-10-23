@@ -212,16 +212,16 @@ class ChannelMember(models.Model):
     def unlink(self):
         # sudo: discuss.channel.rtc.session - cascade unlink of sessions for self member
         self.sudo().rtc_session_ids.unlink()  # ensure unlink overrides are applied
-        # Always unlink members of sub-channels as well. Member list should be
-        # kept in sync.
-        sub_members = []
-        for parent in self.channel_id.filtered(lambda c: c.sub_channel_ids):
-            sub_members += parent.sub_channel_ids.channel_member_ids.filtered(
-                lambda m: m.partner_id in set(parent.channel_member_ids.partner_id)
-                if m.partner_id
-                else m.guest_id in set(parent.channel_member_ids.guest_id)
-            )
-        for member in sub_members:
+        # always unlink members of sub-channels as well
+        domains = [
+            [
+                ("partner_id", "=", member.partner_id.id),
+                ("guest_id", "=", member.guest_id.id),
+                ("channel_id", "in", member.channel_id.sub_channel_ids.ids),
+            ]
+            for member in self
+        ]
+        for member in self.env["discuss.channel.member"].search(expression.OR(domains)):
             member.channel_id._action_unfollow(partner=member.partner_id, guest=member.guest_id)
         return super().unlink()
 

@@ -125,8 +125,9 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.confirmRefund(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.isShown(),
-            ProductScreen.selectedOrderlineHas("Desk Pad", "-1.00"),
             inLeftSide([
+                ...ProductScreen.clickLine("Desk Pad"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "-1.00"),
                 // Try changing the refund line to positive number.
                 // Error popup should show.
                 Numpad.click("2"),
@@ -135,10 +136,10 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
                 // so error popup.
                 ...["+/-", "3"].map(Numpad.click),
                 Dialog.confirm(),
+                // Change the refund line quantity to -2 -- allowed.
+                ...["+/-", "2"].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "-2.00"),
             ]),
-            // Change the refund line quantity to -2 -- allowed.
-            ProductScreen.clickNumpad("+/-", "2"),
-            ProductScreen.selectedOrderlineHas("Desk Pad", "-2.00"),
             // Check if the amount being refunded changed to 2.
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("-0005"),
@@ -215,10 +216,12 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Sugar"),
-            ProductScreen.clickNumpad("0", "."),
-            ProductScreen.selectedOrderlineHas("Sugar", "0.00", "0.00"),
-            ProductScreen.clickNumpad("0", "2"),
-            ProductScreen.selectedOrderlineHas("Sugar", "0.02", "0.06"),
+            inLeftSide([
+                ...["0", "."].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Sugar", "0.00", "0.00"),
+                ...["0", "2"].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Sugar", "0.02", "0.06"),
+            ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),

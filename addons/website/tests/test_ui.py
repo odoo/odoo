@@ -581,6 +581,9 @@ class TestUi(odoo.tests.HttpCase):
 
         self.start_tour('/', 'website_no_dirty_page', login='admin')
 
+    def test_website_default_snippet_text(self):
+        self.start_tour('/', 'website_default_snippet_text', login='admin')
+
     def test_widget_lifecycle(self):
         self.env['ir.asset'].create({
             'name': 'wysiwyg_patch_start_and_destroy',
