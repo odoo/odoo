@@ -253,6 +253,70 @@
         </xpath>
     </template>
 
+    <template id="product_attrbiutes_values" inherit_id="website_sale.products_item" name="Product Attributes" active="True">
+        <xpath expr="//div[hasclass('o_wsale_product_information_text')]" position="before">
+                <ul t-attf-class="list-unstyled js_add_cart_variants mb-0 #{ul_class}">
+                        <!-- Check if there is any color attribute -->
+                        <t t-set="has_color" t-value="False"/>
+                        <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
+                            <t t-set="attribute" t-value="ptal.attribute_id"/>
+                                <t t-if="attribute.display_type == 'color' and attribute.show_variants == 'visible'">
+                                    <t t-set="has_color" t-value="True"/>
+                                </t>
+                        </t>
+
+                        <!-- Now display attributes based on the priority of color and radio -->
+                        <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
+                            <t t-set="attribute" t-value="ptal.attribute_id"/>
+                            <t t-set="ptavs" t-value="ptal.product_template_value_ids._only_active()"/>
+
+                            <!-- Only show color attributes if present -->
+                            <t t-if="has_color and attribute.display_type == 'color'">
+                                <li t-att-data-attribute_id="attribute.id"
+                                    t-att-data-attribute_name="attribute.name"
+                                    t-att-data-attribute_display_type="attribute.display_type"
+                                >
+                                    <ul t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
+                                        <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-1">
+                                            <t t-set="img_style"
+                                                t-value="'background:url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''"
+                                            />
+                                            <t t-set="color_style"
+                                                t-value="'background:' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"
+                                            />
+                                            <a t-att-href="product_href + '#attribute_values=' + str(ptav.product_attribute_value_id.id)">
+                                                <label t-attf-style="#{img_style or color_style}"
+                                                    t-attf-class="css_attribute_color_shop">
+                                                </label>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </t>
+
+                            <!-- Show radio attributes only if no color attribute exists -->
+                            <t t-elif="not has_color and attribute.display_type == 'radio' and attribute.show_variants == 'visible'">
+                                <li t-att-data-attribute_id="attribute.id"
+                                    t-att-data-attribute_name="attribute.name"
+                                    t-att-data-attribute_display_type="attribute.display_type"
+                                >
+                                    <ul t-att-data-attribute_id="attribute.id" t-attf-class="list-inline list-unstyled o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
+                                        <t t-foreach="ptavs" t-as="ptav">
+                                            <li class="list-inline-item js_attribute_value">
+                                                <a class="text-primary text-primary text-decoration-none attribute_value_shop"
+                                                    t-att-href="product_href + '#attribute_values=' + str(ptav.product_attribute_value_id.id)">
+                                                    <span style="font-size: 15px;" t-field="ptav.name"/>
+                                                </a>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </li>
+                            </t>
+                        </t>
+                </ul>
+        </xpath>
+    </template>
+
     <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" name="Add to Cart">
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>

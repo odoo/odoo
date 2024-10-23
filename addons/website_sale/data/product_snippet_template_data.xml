@@ -19,6 +19,11 @@
                         t-att-data-product-template-id="product_template_id"
                         t-att-data-product-selected="record.is_product_variant"/>
                     <div class="o_carousel_product_card_body card-body d-flex flex-wrap">
+                        <div class="mb-0">
+                            <t t-if="not record.is_product_variant">
+                                <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                            </t>
+                        </div>
                         <a t-att-href="record.website_url" class="text-decoration-none d-block w-100">
                             <div class="h6 card-title mb-0" t-field="record.display_name"/>
                         </a>
@@ -61,6 +66,11 @@
                         <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
                     <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
+                        <div class="mb-0">
+                            <t t-if="not record.is_product_variant">
+                                <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                            </t>
+                        </div>
                         <div class="card-title h5" t-field="record.display_name"/>
                         <div class="card-text flex-grow-1 text-muted h6" t-field="record.description_sale"/>
                         <div class="mt-2">
@@ -103,6 +113,11 @@
                         <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
                     <div class="o_carousel_product_card_body mt-2 d-flex justify-content-between">
+                        <div class="mb-0">
+                            <t t-if="not record.is_product_variant">
+                                <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                            </t>
+                        </div>
                         <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
                             <t t-set="rating_style_compressed" t-value="true"/>
                             <t t-set="rating_avg" t-value="record.rating_avg"/>
@@ -145,6 +160,11 @@
                         <img class="card-img-top rounded-0" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
                     <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
+                        <div class="mb-0">
+                            <t t-if="not record.is_product_variant">
+                                <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                            </t>
+                        </div>
                         <div class="card-title h5 text-center" t-field="record.display_name"/>
                         <div class="text-center">
                             <div class="h5">
@@ -181,7 +201,12 @@
                             t-att-alt="record.display_name"/>
                         </div>
                     </a>
-                    <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
+                    <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between p-3">
+                        <div class="mb-0">
+                            <t t-if="not record.is_product_variant">
+                                <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                            </t>
+                        </div>
                         <div class="h6 card-title" t-field="record.display_name"/>
                         <div>
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
@@ -209,6 +234,11 @@
                         </div>
                     </a>
                     <div class="o_carousel_product_card_body h-100 p-3 d-flex flex-column justify-content-between">
+                        <div class="mb-0">
+                            <t t-if="not record.is_product_variant">
+                                <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                            </t>
+                        </div>
                         <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
                             <div class="h5 mb-0 me-4">
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
@@ -256,6 +286,11 @@
                         </div>
                         <div class="col-lg-6 px-5 d-flex align-items-center">
                             <div class="o_carousel_product_card_body card-body p-5">
+                                <div class="mb-0">
+                                    <t t-if="not record.is_product_variant">
+                                        <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                                    </t>
+                                </div>
                                 <div class="card-title h1" t-field="record.display_name"/>
                                 <div class="d-flex align-items-center my-4">
                                     <div class="h4 mb-0 me-3">
@@ -314,6 +349,11 @@
                             </a>
                         </div>
                         <div class="o_carousel_product_card_body col-lg-8 d-flex flex-column justify-content-between">
+                            <div class="mb-0">
+                                <t t-if="not record.is_product_variant">
+                                    <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                                </t>
+                            </div>
                             <div>
                                 <div class="card-title h6" t-field="record.display_name"/>
                             </div>
@@ -366,6 +406,11 @@
                         <img class="img img-fluid position-absolute w-100 h-100 o_img_product_cover" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
                     <div class="o_carousel_product_card_body d-flex flex-column justify-content-between h-100 bg-black-50 p-3 position-relative">
+                        <div class="mb-0">
+                            <t t-if="not record.is_product_variant">
+                                <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                            </t>
+                        </div>
                         <div class="mb-3">
                             <div class="card-title h5" t-field="record.display_name"/>
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
@@ -413,6 +458,11 @@
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <div class="o_carousel_product_card_body card-body justify-content-between h-100 p-3">
+                        <div class="mb-0">
+                            <t t-if="not record.is_product_variant">
+                                <t t-call="website_sale.dynamic_filter_attribute_value"/>
+                            </t>
+                        </div>
                         <div class="row h-100">
                             <div class="col-8 d-flex flex-column">
                                 <div class="card-title h5" t-field="record.display_name"/>
@@ -461,4 +511,61 @@
             <field name="path">website_sale/static/src/snippets/s_dynamic_snippet_products/000.scss</field>
         </record>
 
+        <template id="dynamic_filter_attribute_value" name="Dynamic Product Attribute Value">
+                <ul t-attf-class="list-unstyled js_add_cart_variants mb-0 #{ul_class}">
+                    <t t-set="has_color" t-value="False"/>
+                    <t t-foreach="record.valid_product_template_attribute_line_ids" t-as="ptal">
+                        <t t-set="attribute" t-value="ptal.attribute_id"/>
+                            <t t-if="attribute.display_type == 'color' and attribute.show_variants == 'visible'">
+                                <t t-set="has_color" t-value="True"/>
+                            </t>
+                    </t>
+
+                    <t t-foreach="record.valid_product_template_attribute_line_ids" t-as="ptal">
+                        <t t-set="attribute" t-value="ptal.attribute_id"/>
+                        <t t-set="ptavs" t-value="ptal.product_template_value_ids._only_active()"/>
+
+                        <t t-if="has_color and attribute.display_type == 'color'">
+                            <li t-att-data-attribute_id="attribute.id"
+                                t-att-data-attribute_name="attribute.name"
+                                t-att-data-attribute_display_type="attribute.display_type"
+                            >
+                                <ul t-attf-class="list-inline o_wsale_product_attribute mb-2 #{'d-none' if single_and_custom else ''}">
+                                    <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-1">
+                                        <t t-set="img_style"
+                                            t-value="'background:url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''"
+                                        />
+                                        <t t-set="color_style"
+                                            t-value="'background:' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"
+                                        />
+                                        <a t-att-href="(product_href or '') + '#attribute_values=' + str(ptav.product_attribute_value_id.id)">
+                                            <label t-attf-style="#{img_style or color_style}"
+                                                t-attf-class="css_attribute_color_shop">
+                                            </label>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </t>
+
+                        <t t-if="not has_color and attribute.display_type == 'radio' and attribute.show_variants == 'visible'">
+                            <li t-att-data-attribute_id="attribute.id"
+                                t-att-data-attribute_name="attribute.name"
+                                t-att-data-attribute_display_type="attribute.display_type"
+                            >
+                                <ul t-att-data-attribute_id="attribute.id" t-attf-class="list-inline list-unstyled o_wsale_product_attribute mb-2 #{'d-none' if single_and_custom else ''}">
+                                    <t t-foreach="ptavs" t-as="ptav">
+                                        <li class="list-inline-item js_attribute_value">
+                                            <a class="text-primary attribute_value_shop"
+                                                t-att-href="(product_href or '') + '#attribute_values=' + str(ptav.product_attribute_value_id.id)">
+                                                <span style="font-size: 15px;" t-field="ptav.name"/>
+                                            </a>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </li>
+                        </t>
+                    </t>
+                </ul>
+        </template>
 </odoo>

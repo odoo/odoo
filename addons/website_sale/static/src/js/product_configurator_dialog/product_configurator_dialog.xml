@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-inherit="sale.ProductConfiguratorDialog" t-inherit-mode="extension">
+        <xpath expr="//Dialog[@id='product_config_dialog_id']" position="attributes">
+            <attribute name="title.translate">Item(s) added to your cart</attribute>
+        </xpath>
         <button name="sale_product_configurator_confirm_button" position="attributes">
             <attribute name="t-if">!this.props.isFrontend</attribute>
         </button>
         <button name="sale_product_configurator_cancel_button" position="attributes">
             <attribute name="t-if">!this.props.isFrontend</attribute>
         </button>
-        <button name="sale_product_configurator_confirm_button" position="after">
-            <button
-                name="website_sale_product_configurator_continue_button"
-                class="btn btn-secondary"
+        <t t-set-slot="footer" position="inside">
+            <div
                 t-if="this.props.isFrontend"
-                t-on-click="() => this.onConfirm({goToCart: false})"
-                t-att-disabled="!isPossibleConfiguration() || !canBeSold()"
+                class="d-flex flex-column pt-3 align-items-end w-100"
             >
-                Continue Shopping
-            </button>
-        </button>
-        <button name="sale_product_configurator_cancel_button" position="after">
-            <button
+            <a  role="button"
                 name="website_sale_product_configurator_checkout_button"
-                class="btn btn-primary"
-                t-if="this.props.isFrontend"
+                class="btn btn-primary w-100 mb-2"
                 t-on-click="() => this.onConfirm({goToCart: true})"
                 t-att-disabled="!isPossibleConfiguration() || !canBeSold()"
-            >
+                style="max-width: 250px;"
+                >
                 Proceed to Checkout
-            </button>
-        </button>
+                <i class="fa fa-angle-right ms-2 fw-light"/>
+            </a>
+            <a  role="button"
+                name="website_sale_product_configurator_continue_button"
+                class="btn btn-secondary w-100"
+                t-on-click="() => this.onConfirm({goToCart: false})"
+                t-att-disabled="!isPossibleConfiguration() || !canBeSold()"
+                style="max-width: 250px;"
+                >
+                <i class="fa fa-angle-left me-2 fw-light"/>
+                Continue Shopping
+            </a>
+            </div>
+        </t>
     </t>
 </templates>
