@@ -142,7 +142,7 @@ class L10n_InWithholdWizard(models.TransientModel):
                 'in_refund': 'in_refund_withhold',
             }[move_type]
         else:
-            withhold_type = 'in_withhold' if self.related_payment_id.payment_type == 'outbound' else 'out_withhold'
+            withhold_type = 'in_withhold' if self.related_payment_id.partner_type == 'supplier' else 'out_withhold'
         return withhold_type
 
     # ===== MOVE CREATION METHODS =====
