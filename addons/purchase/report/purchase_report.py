@@ -31,9 +31,19 @@ class PurchaseReport(models.Model):
     product_uom = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
+<<<<<<< saas-17.2
     user_id = fields.Many2one('res.users', 'Purchase Representative', readonly=True)
     delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, aggregator='avg', help="Amount of time between purchase approval and order by date.")
     delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, aggregator='avg',
+||||||| ff91cd81cf33bb3690d8be7491b6c93734f12240
+    user_id = fields.Many2one('res.users', 'Purchase Representative', readonly=True)
+    delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, group_operator='avg', help="Amount of time between purchase approval and order by date.")
+    delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, group_operator='avg',
+=======
+    user_id = fields.Many2one('res.users', 'Buyer', readonly=True)
+    delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, group_operator='avg', help="Amount of time between purchase approval and order by date.")
+    delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, group_operator='avg',
+>>>>>>> 3a51c2c91affeb55dd587f3cb0a965964e15e12d
                               help="Amount of time between date planned and order by date for each purchase order line.")
     price_total = fields.Float('Total', readonly=True)
     price_average = fields.Float('Average Cost', readonly=True, aggregator="avg", digits='Product Price')
