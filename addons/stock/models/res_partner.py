@@ -20,9 +20,12 @@ class ResPartner(models.Model):
     picking_warn = fields.Selection(WARNING_MESSAGE, 'Stock Picking', help=WARNING_HELP, default='no-message')
     picking_warn_msg = fields.Text('Message for Stock Picking')
 
-    def action_view_stock_lots(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('stock.action_lot_report')
-        all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        action["domain"] = [("partner_id", "in", all_child.ids)]
-        action["context"] = {'search_default_filter_not_has_return': True}
+    def action_view_stock_serial(self):
+        action = self.env["ir.actions.act_window"]._for_xml_id("stock.action_production_lot_form")
+        action.update({
+            'domain': [('last_delivery_partner_id', '=', self.id)],
+            'context': {
+                'default_last_delivery_partner_id': self.id,
+            },
+        })
         return action

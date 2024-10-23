@@ -55,7 +55,7 @@ class StockLot(models.Model):
     company_id = fields.Many2one('res.company', 'Company', index=True, store=True, readonly=False, compute='_compute_company_id')
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
-    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_last_delivery_partner_id')
+    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_last_delivery_partner_id', store=True)
     lot_properties = fields.Properties('Properties', definition='product_id.lot_properties_definition', copy=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
@@ -146,6 +146,7 @@ class StockLot(models.Model):
             lot.delivery_ids = delivery_ids_by_lot[lot.id]
             lot.delivery_count = len(lot.delivery_ids)
 
+    @api.depends('quant_ids')
     def _compute_last_delivery_partner_id(self):
         serial_products = self.filtered(lambda l: l.product_id.tracking == 'serial')
         delivery_ids_by_lot = serial_products._find_delivery_ids_by_lot()

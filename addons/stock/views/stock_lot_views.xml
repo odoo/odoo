@@ -101,6 +101,7 @@
         <field name="arch" type="xml">
             <search string="Product Lots Filter">
                 <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
+                <field name="last_delivery_partner_id" string="Customer" filter_domain="[('last_delivery_partner_id', 'child_of', self)]"/>
                 <field name="product_id"/>
                 <field name="lot_properties"/>
                 <field name="create_date"/>
@@ -109,6 +110,7 @@
                 <filter string="Creation Date" name="creation_date" date="create_date"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_by_last_delivery_partner_id" string="Last delivery partner" domain="[]" context="{'group_by': 'last_delivery_partner_id'}"/>
                     <filter name="group_by_location" string="Location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
                     <filter name="group_by_creation_date" string="Creation date" domain="[]" context="{'group_by': 'create_date'}"/>
                     <filter name="group_by_Company" string="Company" domain="[]" context="{'group_by': 'company_id'}"/>
