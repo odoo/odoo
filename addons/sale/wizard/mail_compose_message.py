@@ -8,7 +8,7 @@ class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
     def _action_send_mail(self, auto_commit=False):
-        if self.model == 'sale.order':
+        if (len(self) == 1 and self.model == 'sale.order') or all(wizard.model == 'sale.order' for wizard in self):
             self = self.with_context(mailing_document_based=True)
             if self.env.context.get('mark_so_as_sent'):
                 self = self.with_context(mail_notify_author=self.env.user.partner_id in self.partner_ids)
