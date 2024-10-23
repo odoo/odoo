@@ -48,6 +48,9 @@ export class BuilderOverlayPlugin extends Plugin {
 
     changeSnippet(selectedElement) {
         const snippetElement = this.findSnippetElementFromTarget(selectedElement);
+        if (!snippetElement) {
+            return;
+        }
         this.openBuilderOverlay(snippetElement);
         for (const handler of this.resources.onSnippetChange || []) {
             handler(snippetElement);
