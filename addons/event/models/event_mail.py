@@ -202,6 +202,16 @@ class EventMailScheduler(models.Model):
             return self.env['event.mail.registration'].create(new)
         return self.env['event.mail.registration']
 
+    def _prepare_event_mail_values(self):
+        self.ensure_one()
+        return {
+            'notification_type': self.notification_type,
+            'interval_nbr': self.interval_nbr,
+            'interval_unit': self.interval_unit,
+            'interval_type': self.interval_type,
+            'template_ref': '%s,%i' % (self.template_ref._name, self.template_ref.id)
+        }
+
     @api.model
     def _warn_template_error(self, scheduler, exception):
         # We warn ~ once by hour ~ instead of every 10 min if the interval unit is more than 'hours'.
