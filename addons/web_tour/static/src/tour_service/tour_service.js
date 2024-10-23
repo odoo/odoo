@@ -246,7 +246,11 @@ export const tourService = {
             }
 
             if (tourState.getCurrentTour()) {
-                resumeTour();
+                if (tourState.getCurrentConfig().mode === "auto" || toursEnabled) {
+                    resumeTour();
+                } else {
+                    tourState.clear();
+                }
             } else if (session.current_tour) {
                 startTour(session.current_tour.name, {
                     mode: "manual",
