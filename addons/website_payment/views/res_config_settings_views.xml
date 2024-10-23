@@ -18,6 +18,7 @@
                             <div class="row" invisible="providers_state == 'other_than_paypal'">
                                 <field name="providers_state" invisible="1"/>
                                 <field name="is_stripe_supported_country" invisible="1"/>
+                                <field name="is_razorpay_supported_currency" invisible="1"/>
                                 <div class="oe_inline"
                                      invisible="not is_stripe_supported_country">
                                     <button string="Activate Stripe" name="action_activate_stripe" type="object" class="btn-primary"/>
@@ -26,6 +27,19 @@
                                      title="Stripe Connect is not available in your country, please use another payment provider."
                                      invisible="is_stripe_supported_country">
                                     <button string="Activate Stripe" class="btn-primary" disabled=""/>
+                                </div>
+                                <div class="oe_inline"
+                                     invisible="not is_razorpay_supported_currency">
+                                    <button string="Connect Razorpay"
+                                            name="action_activate_razorpay"
+                                            type="object"
+                                            class="btn-primary"/>
+                                </div>
+                                <div class="oe_inline"
+                                     title="Razorpay is not available in your country, please use another payment provider."
+                                     invisible="is_razorpay_supported_currency">
+                                    <button string="Connect Razorpay"
+                                            class="btn-primary"/>
                                 </div>
                                 <button type="action"
                                         name="%(payment.action_payment_provider)d"

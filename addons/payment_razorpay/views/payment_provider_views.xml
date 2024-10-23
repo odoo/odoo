@@ -11,16 +11,59 @@
                        invisible="code != 'razorpay'">
                     <field name="razorpay_key_id"
                            string="Key Id"
-                           required="code == 'razorpay' and state != 'disabled'"/>
+                           groups="base.group_no_one"/>
                     <field name="razorpay_key_secret"
                            string="Key Secret"
-                           required="code == 'razorpay' and state != 'disabled'"
+                           groups="base.group_no_one"
                            password="True"/>
-                    <field name="razorpay_webhook_secret"
-                           string="Webhook Secret"
-                           required="code == 'razorpay' and state != 'disabled'"
-                           password="True"/>
+                    <label for="razorpay_webhook_secret"/>
+                    <div class="o_row">
+                        <field name="razorpay_webhook_secret"
+                            string="Webhook Secret"
+                            groups="base.group_no_one"
+                            password="True"/>
+                        <button string="Create Webhook"
+                                name="action_razorpay_create_and_update_webhook"
+                                type="object"
+                                help="If you change the your base url, you will need to update the webhook. else payment state will not be updated in odoo."
+                                class="btn-primary"
+                                groups="base.group_no_one"
+                                invisible="not razorpay_access_token or razorpay_webhook_id"/>
+                        <button string="Update Webhook"
+                                name="action_razorpay_create_and_update_webhook"
+                                type="object"
+                                help="If you change the your base url, you will need to update the webhook. else payment state will not be updated in odoo."
+                                class="btn-primary"
+                                groups="base.group_no_one"
+                                invisible="not razorpay_access_token or not razorpay_webhook_id"/>
+                    </div>
                 </group>
+            </group>
+            <group name="provider_credentials" position="after">
+                <field name="razorpay_public_token" invisible="1"/>
+                <field name="razorpay_refresh_token" invisible="1"/>
+                <field name="razorpay_account_id" invisible="1"/>
+                <field name="razorpay_access_token" invisible="1"/>
+                <field name="razorpay_access_token_expiration" invisible="1"/>
+                <field name="razorpay_key_id" invisible="1"/>
+                <field name="razorpay_webhook_secret" invisible="1"/>
+                <field name="razorpay_webhook_id" invisible="1"/>
+                <div class="alert alert-warning" role="alert" invisible="not razorpay_key_id">
+                    You are using Old method key and secret suggested to change to Oauth By click on Connect.
+                </div>
+                <div invisible="code != 'razorpay'">
+                    <button string="Connect"
+                            name="action_razorpay_connect_account"
+                            type="object"
+                            class="btn-primary"
+                            invisible="razorpay_public_token"/>
+                    <button string="Disconnect"
+                            name="action_razorpay_revoked_token"
+                            type="object"
+                            class="btn-secondary"
+                            confirm="Are you sure you want to disconnect?"
+                            invisible="not razorpay_access_token"/>
+                </div>
             </group>
             <field name="allow_tokenization" position="after">
                 <div invisible="code != 'razorpay' or not allow_tokenization" colspan="2">
@@ -28,6 +71,13 @@
                 </div>
             </field>
         </field>
+    </record>
+
+    <record id="action_payment_provider_onboarding_using_key" model="ir.actions.act_window">
+        <field name="name">Payment Providers</field>
+        <field name="res_model">payment.provider</field>
+        <field name="view_mode">form</field>
+        <!-- <field name="view_id" ref="payment_provider_form_razorpay_oauth_fail"/> -->
     </record>
 
 </odoo>
