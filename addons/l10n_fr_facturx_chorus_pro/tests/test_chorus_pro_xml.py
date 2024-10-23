@@ -13,6 +13,7 @@ class TestChorusProXml(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref='fr'):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.company = cls.company_data['company']
+        cls.company.siret = "02546465000024"
         chorus_eas, chorus_endpoint = CHORUS_PRO_PEPPOL_ID.split(":")
         cls.chorus_pro_partner = cls.env['res.partner'].create({
             'name': "Chorus Pro - Commune de Nantes",
@@ -22,6 +23,7 @@ class TestChorusProXml(AccountTestInvoicingCommon):
             # Peppol ID for the AIFE (= Chorus Pro)
             'peppol_eas': chorus_eas,
             'peppol_endpoint': chorus_endpoint,
+            'country_id': cls.env.ref('base.fr').id,
         })
 
     def test_export_invoice_chorus_pro(self):
@@ -45,8 +47,13 @@ class TestChorusProXml(AccountTestInvoicingCommon):
         self.assertEqual(endpoint_node.text, chorus_endpoint)
         self.assertEqual(endpoint_node.attrib, {'schemeID': chorus_eas})
 
-        final_receiver = xml_etree.findtext("{*}AccountingCustomerParty/{*}Party/{*}PartyIdentification/{*}ID")
-        self.assertEqual(final_receiver, "21440109300015")
+        supplier_identification_node = xml_etree.find("{*}AccountingSupplierParty/{*}Party/{*}PartyIdentification/{*}ID")
+        self.assertEqual(supplier_identification_node.text, "02546465000024")
+        self.assertEqual(supplier_identification_node.attrib, {'schemeName': '1'})
+
+        customer_identification_node = xml_etree.find("{*}AccountingCustomerParty/{*}Party/{*}PartyIdentification/{*}ID")
+        self.assertEqual(customer_identification_node.text, "21440109300015")
+        self.assertEqual(customer_identification_node.attrib, {'schemeName': '1'})
 
         self.assertEqual(xml_etree.findtext("{*}BuyerReference"), "buyer_ref_123")
         self.assertEqual(xml_etree.findtext("{*}OrderReference/{*}ID"), "order_ref_123")
