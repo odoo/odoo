@@ -268,7 +268,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param dict kwargs: Locally unused data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
-        :raise: ValidationError if the access token is invalid
+        :raise ValidationError: If the access token is invalid.
         """
         # Check the access token against the transaction values
         amount = amount and float(amount)  # Cast as float in case the JS stripped the '.0'

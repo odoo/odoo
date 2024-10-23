@@ -9,8 +9,9 @@ import requests
 from werkzeug.urls import url_join
 
 from odoo import _, fields, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_razorpay import const
 
 
@@ -79,23 +80,22 @@ class PaymentProvider(models.Model):
         auth = (self.razorpay_key_id, self.razorpay_key_secret)
         try:
             if method == 'GET':
-                response = requests.get(url, params=payload, auth=auth, timeout=10)
-            else:
-                response = requests.post(url, json=payload, auth=auth, timeout=10)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
+                response = requests.get(
+                    url, params=payload, auth=auth, timeout=payment_const.TIMEOUT
                 )
-                raise ValidationError("Razorpay: " + _(
-                    "Razorpay gave us the following information: '%s'",
-                    response.json().get('error', {}).get('description')
-                ))
+            else:
+                response = requests.post(
+                    url, json=payload, auth=auth, timeout=payment_const.TIMEOUT
+                )
+            response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Razorpay: " + _("Could not establish the connection to the API.")
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            err_msg = err.response.json().get('error', {}).get('description')
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
+            return payment_utils.format_error_response(
+                payment_const.API_COMMUNICATION_ERROR + err_msg
             )
         return response.json()
 

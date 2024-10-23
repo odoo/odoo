@@ -6,7 +6,6 @@ from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.payment import utils as payment_utils
@@ -43,10 +42,25 @@ class TestPaymentTransaction(RazorpayCommon):
                 }
             self.assertDictEqual(request_payload, expected_payload)
 
+    def test_tx_state_after_send_capture_request_when_request_error(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider'
+            '._razorpay_make_request', return_value=self.response_error,
+        ):
+            child_tx = source_tx._send_capture_request()
+        self.assertEqual(
+            child_tx.state, 'error', msg="When request failed tx state should be changed to error."
+        )
+
     def test_void_is_not_supported(self):
-        """ Test that trying to void an authorized transaction raises an error. """
+        """ Test that trying to void an authorized transaction sets an error. """
         tx = self._create_transaction('direct', state='authorized')
-        self.assertRaises(UserError, func=tx._send_void_request)
+        void_tx = tx._send_void_request()
+        self.assertEqual(
+            void_tx.state, 'error', msg="Transactions processed by Razorpay can not be voided."
+        )
 
     def test_get_tx_from_notification_data_returns_refund_tx(self):
         """ Test that the refund transaction is returned if it exists when processing refund
@@ -84,6 +98,16 @@ class TestPaymentTransaction(RazorpayCommon):
         tx = self._create_transaction('direct')
         tx._process_notification_data(self.payment_data)
         self.assertEqual(tx.state, 'done')
+
+    def test_tx_state_after_processing_notification_data_when_request_error(self):
+        """ Test that the transaction state is set to 'error' when request fails. """
+        tx = self._create_transaction('direct')
+        with patch(
+            'odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider'
+            '._razorpay_make_request', return_value=self.response_error,
+        ):
+            tx._process_notification_data({'razorpay_payment_id': 1})
+            self.assertEqual(tx.state, 'error')
 
     def test_processing_notification_data_only_tokenizes_once(self):
         """ Test that only one token is created when notification data of a given transaction are
