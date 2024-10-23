@@ -303,7 +303,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             raise AssertionError(f'sent mail not found for email_to {email_to}\n{debug_info}')
         return sent_email
 
-    def _filter_mail(self, status=None, mail_message=None, author=None, email_from=None):
+    def _filter_mail(self, status=None, mail_message=None, author=None, content=None, email_from=None):
         """ Filter mail generated during mock, based on common parameters
 
         :param status: state of mail.mail. If not void use it to filter mail.mail
@@ -312,6 +312,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
           a ``mail.message`` record;
         :param author: optional check/filter on author_id field aka a ``res.partner``
           record;
+        :param content: optional check/filter on content, aka body_html (using an
+          assertIn, not a pure equality check);
         :param email_from: optional check/filter on email_from field (may differ from
           author, used notably in case of concurrent mailings to distinguish emails);
         """
@@ -323,19 +325,21 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 continue
             if author is not None and mail.author_id != author:
                 continue
+            if content is not None and content not in mail.body_html:
+                continue
             if email_from is not None and mail.email_from != email_from:
                 continue
             filtered += mail
         return filtered
 
-    def _find_mail_mail_wid(self, mail_id, status=None, mail_message=None, author=None, email_from=None):
+    def _find_mail_mail_wid(self, mail_id, status=None, mail_message=None, author=None, content=None, email_from=None):
         """ Find a ``mail.mail`` record based on a given ID (used notably when having
         mail ID in mailing traces).
 
         :return mail: a ``mail.mail`` record generated during the mock and matching
           given ID;
         """
-        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, email_from=email_from)
+        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, content=content, email_from=email_from)
         for mail in filtered:
             if mail.id == mail_id:
                 break
@@ -349,7 +353,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             )
         return mail
 
-    def _find_mail_mail_wpartners(self, recipients, status, mail_message=None, author=None, email_from=None):
+    def _find_mail_mail_wpartners(self, recipients, status, mail_message=None, author=None, content=None, email_from=None):
         """ Find a mail.mail record based on various parameters, notably a list
         of recipients (partners).
 
@@ -359,7 +363,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         :return mail: a ``mail.mail`` record generated during the mock and matching
           given parameters and filters;
         """
-        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, email_from=email_from)
+        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, content=content, email_from=email_from)
         for mail in filtered:
             if all(p in mail.recipient_ids for p in recipients):
                 break
@@ -374,7 +378,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             )
         return mail
 
-    def _find_mail_mail_wemail(self, email_to, status, mail_message=None, author=None, email_from=None):
+    def _find_mail_mail_wemail(self, email_to, status, mail_message=None, author=None, content=None, email_from=None):
         """ Find a mail.mail record based on various parameters, notably a list
         of email to (string emails).
 
@@ -384,7 +388,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         :return mail: a ``mail.mail`` record generated during the mock and matching
           given parameters and filters;
         """
-        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, email_from=email_from)
+        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, content=content, email_from=email_from)
         for mail in filtered:
             if (mail.email_to == email_to and not mail.recipient_ids) or (not mail.email_to and mail.recipient_ids.email == email_to):
                 break
@@ -398,12 +402,12 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             )
         return mail
 
-    def _find_mail_mail_wrecord(self, record, status=None, mail_message=None, author=None, email_from=None):
+    def _find_mail_mail_wrecord(self, record, status=None, mail_message=None, author=None, content=None, email_from=None):
         """ Find a mail.mail record based on model / res_id of a record.
 
         :return mail: a ``mail.mail`` record generated during the mock;
         """
-        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, email_from=email_from)
+        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, content=content, email_from=email_from)
         for mail in filtered:
             if mail.model == record._name and mail.res_id == record.id:
                 break
@@ -522,7 +526,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         """
         found_mail = self._find_mail_mail_wpartners(
             recipients, status, mail_message=mail_message,
-            author=author, email_from=(fields_values or {}).get('email_from')
+            author=author,
+            content=content,
+            email_from=(fields_values or {}).get('email_from')
         )
         self.assertTrue(bool(found_mail))
         self._assertMailMail(
@@ -550,7 +556,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         for email_to in emails:
             found_mail = self._find_mail_mail_wemail(
                 email_to, status, mail_message=mail_message,
-                author=author, email_from=(fields_values or {}).get('email_from')
+                author=author,
+                content=content,
+                email_from=(fields_values or {}).get('email_from'),
             )
             self.assertTrue(bool(found_mail))
             self._assertMailMail(
@@ -577,7 +585,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         """
         found_mail = self._find_mail_mail_wrecord(
             record, status, mail_message=mail_message,
-            author=author, email_from=(fields_values or {}).get('email_from')
+            author=author,
+            content=content,
+            email_from=(fields_values or {}).get('email_from')
         )
         self.assertTrue(bool(found_mail))
         self._assertMailMail(
