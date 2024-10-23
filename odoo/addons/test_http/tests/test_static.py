@@ -455,7 +455,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
             'Content-Type': 'image/png',
             'Content-Disposition': 'inline; filename=nologo.png'
         }
-        super_user = cls.env['res.users'].browse([odoo.SUPERUSER_ID])
+        super_user = cls.env['res.users'].browse([odoo.api.SUPERUSER_ID])
         companies = ResCompany.browse([super_user.company_id.id]) | ResCompany.create(
             {
                 'name': 'Company 2',

@@ -16,11 +16,11 @@ except ImportError:
 
 import odoo
 import odoo.modules.registry
-from odoo import SUPERUSER_ID, _, http, api
+from odoo import api, http
 from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, Response
-from odoo.tools import file_open, file_path, replace_exceptions, str2bool
+from odoo.tools import _, file_open, file_path, replace_exceptions, str2bool
 from odoo.tools.image import image_guess_size_from_field_name
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -106,7 +106,7 @@ class Binary(http.Controller):
                 ('url', '=like', url),
                 ('res_model', '=', 'ir.ui.view'),
                 ('res_id', '=', 0),
-                ('create_uid', '=', SUPERUSER_ID),
+                ('create_uid', '=', api.SUPERUSER_ID),
             ]
             attachment = env['ir.attachment'].sudo().search(domain, limit=1)
         if not attachment:
@@ -257,7 +257,7 @@ class Binary(http.Controller):
         imgname = 'logo'
         imgext = '.png'
         dbname = request.db
-        uid = (request.session.uid if dbname else None) or odoo.SUPERUSER_ID
+        uid = (request.session.uid if dbname else None) or api.SUPERUSER_ID
 
         if not dbname:
             response = http.Stream.from_path(file_path('web/static/img/logo.png')).get_response()

@@ -3,7 +3,7 @@
 
 from odoo.exceptions import AccessDenied
 
-from odoo import api, models, SUPERUSER_ID
+from odoo import api, models
 from odoo.modules.registry import Registry
 
 
@@ -22,7 +22,7 @@ class ResUsers(models.Model):
                 if res:
                     raise e
 
-                env = api.Environment(cr, SUPERUSER_ID, {})
+                env = api.Environment(cr, api.SUPERUSER_ID, {})
                 Ldap = env['res.company.ldap']
                 for conf in Ldap._get_ldap_dicts():
                     entry = Ldap._authenticate(conf, login, credential['password'])

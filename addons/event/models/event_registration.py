@@ -3,7 +3,7 @@
 import logging
 import os
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models
 from odoo.addons.event.tools.esc_label_tools import print_event_attendees, setup_printer, layout_96x82, layout_96x134
 from odoo.tools import email_normalize, email_normalize_all, formataddr
 from odoo.exceptions import AccessError, ValidationError
@@ -327,7 +327,7 @@ class EventRegistration(models.Model):
                 try:
                     scheduler.with_context(
                         event_mail_registration_ids=open_registrations.ids
-                    ).with_user(SUPERUSER_ID).execute()
+                    ).with_user(api.SUPERUSER_ID).execute()
                 except Exception as e:
                     _logger.exception("Failed to run scheduler %s", scheduler.id)
                     self.env["event.mail"]._warn_template_error(scheduler, e)

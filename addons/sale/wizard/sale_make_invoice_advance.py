@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import format_date, frozendict
@@ -205,7 +205,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             # Unsudo the invoice after creation if not already sudoed
             invoice = invoice.sudo(self.env.su)
 
-            poster = self.env.user._is_internal() and self.env.user.id or SUPERUSER_ID
+            poster = self.env.user._is_internal() and self.env.user.id or api.SUPERUSER_ID
             invoice.with_user(poster).message_post_with_source(
                 'mail.message_origin_link',
                 render_values={'self': invoice, 'origin': order},

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import SUPERUSER_ID, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.translate import _, LazyTranslate
@@ -430,11 +430,11 @@ class Website(models.Model):
         # cart creation was requested
         if not sale_order_sudo:
             so_data = self._prepare_sale_order_values(partner_sudo)
-            sale_order_sudo = SaleOrder.with_user(SUPERUSER_ID).create(so_data)
+            sale_order_sudo = SaleOrder.with_user(api.SUPERUSER_ID).create(so_data)
 
             request.session['sale_order_id'] = sale_order_sudo.id
             request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
-            # The order was created with SUPERUSER_ID, revert back to request user.
+            # The order was created with api.SUPERUSER_ID, revert back to request user.
             return sale_order_sudo.with_user(self.env.user).sudo()
 
         # Existing Cart:

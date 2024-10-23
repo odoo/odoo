@@ -2,7 +2,7 @@
 
 from ast import literal_eval
 
-from odoo import models, fields, api, SUPERUSER_ID
+from odoo import models, fields, api
 from odoo.http import request
 from odoo.osv import expression
 
@@ -57,7 +57,7 @@ class IrModel(models.Model):
             fields_get.pop(val, None)
 
         # Unrequire fields with default values
-        default_values = model.with_user(SUPERUSER_ID).default_get(list(fields_get))
+        default_values = model.with_user(api.SUPERUSER_ID).default_get(list(fields_get))
         for field in [f for f in fields_get if f in default_values]:
             fields_get[field]['required'] = False
 

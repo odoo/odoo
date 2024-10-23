@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 
 
 class PaymentTransaction(models.Model):
@@ -221,7 +221,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
-        author = self.env.user.partner_id if self.env.uid == SUPERUSER_ID else self.partner_id
+        author = self.env.user.partner_id if self.env.uid == api.SUPERUSER_ID else self.partner_id
         if self.source_transaction_id:
             for invoice in self.source_transaction_id.invoice_ids:
                 invoice.message_post(body=message, author_id=author.id)

@@ -4,11 +4,6 @@
 """
 from __future__ import annotations
 
-__all__ = [
-    'Environment',
-    'Transaction',
-]
-
 import logging
 import typing
 from collections import defaultdict
@@ -17,7 +12,6 @@ from contextlib import contextmanager
 from pprint import pformat
 from weakref import WeakSet
 
-from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL
@@ -25,6 +19,7 @@ from odoo.tools.translate import get_translation, get_translated_module, LazyGet
 from odoo.tools.misc import StackMap
 
 from .registry import Registry
+from .utils import SUPERUSER_ID
 
 if typing.TYPE_CHECKING:
     from .types import BaseModel

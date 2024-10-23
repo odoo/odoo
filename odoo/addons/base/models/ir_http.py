@@ -27,7 +27,8 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, http, models, tools, SUPERUSER_ID
+from odoo import api, http, models, tools
+from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied
 from odoo.http import request, Response, ROUTING_KEYS
 from odoo.modules.registry import Registry

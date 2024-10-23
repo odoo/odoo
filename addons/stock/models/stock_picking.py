@@ -7,7 +7,7 @@ from ast import literal_eval
 from datetime import date, timedelta
 from collections import defaultdict
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
@@ -1668,7 +1668,7 @@ class StockPicking(models.Model):
                 'mail.mail_activity_data_warning',
                 date.today(),
                 note=note,
-                user_id=responsible.id or SUPERUSER_ID
+                user_id=responsible.id or api.SUPERUSER_ID
             )
 
     def _log_less_quantities_than_expected(self, moves):

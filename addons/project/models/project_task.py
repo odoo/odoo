@@ -6,7 +6,7 @@ from pytz import UTC
 from collections import defaultdict
 from datetime import timedelta, datetime, time
 
-from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, tools, _
 from odoo.addons.rating.models import rating_data
 from odoo.addons.web_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
@@ -1076,7 +1076,7 @@ class ProjectTask(models.Model):
                 vals['date_assign'] = fields.Datetime.now()
                 if not (vals.get('parent_id') or project_id):
                     user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self.env['project.task'])
-                    if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
+                    if self.env.user.id not in list(user_ids) + [api.SUPERUSER_ID]:
                         vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
             if default_personal_stage and 'personal_stage_type_id' not in vals:
                 vals['personal_stage_type_id'] = default_personal_stage[0]

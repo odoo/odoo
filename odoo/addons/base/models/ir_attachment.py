@@ -14,7 +14,7 @@ import werkzeug
 
 from collections import defaultdict
 
-from odoo import api, fields, models, SUPERUSER_ID, tools, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.http import Stream, root, request
 from odoo.tools import config, human_size, image, str2bool, consteq
@@ -726,7 +726,7 @@ class IrAttachment(models.Model):
             ("url", "=like", "/web/assets/%"),
             ('res_model', '=', 'ir.ui.view'),
             ('res_id', '=', 0),
-            ('create_uid', '=', SUPERUSER_ID),
+            ('create_uid', '=', api.SUPERUSER_ID),
         ]).unlink()
         self.env.registry.clear_cache('assets')
 

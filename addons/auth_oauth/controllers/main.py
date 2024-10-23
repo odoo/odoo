@@ -10,7 +10,7 @@ import werkzeug.urls
 import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
-from odoo import api, http, SUPERUSER_ID, _
+from odoo import api, http, _
 from odoo.exceptions import AccessDenied
 from odoo.http import request, Response
 from odoo import registry as registry_get
@@ -136,7 +136,7 @@ class OAuthController(http.Controller):
         try:
             # auth_oauth may create a new user, the commit makes it
             # visible to authenticate()'s own transaction below
-            _, login, key = request.env['res.users'].with_user(SUPERUSER_ID).auth_oauth(provider, kw)
+            _, login, key = request.env['res.users'].with_user(api.SUPERUSER_ID).auth_oauth(provider, kw)
             request.env.cr.commit()
 
             action = state.get('a')
@@ -190,7 +190,7 @@ class OAuthController(http.Controller):
         registry = registry_get(dbname)
         with registry.cursor() as cr:
             try:
-                env = api.Environment(cr, SUPERUSER_ID, {})
+                env = api.Environment(cr, api.SUPERUSER_ID, {})
                 provider = env.ref('auth_oauth.provider_openerp')
             except ValueError:
                 redirect = request.redirect(f'/web?db={dbname}', 303)

@@ -13,7 +13,7 @@ import time
 import odoo.sql_db
 import odoo.tools.sql
 import odoo.tools.translate
-from odoo import SUPERUSER_ID, api, tools
+from odoo import api, tools
 
 from . import db as modules_db
 from .graph import Graph
@@ -419,7 +419,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
         report = registry._assertion_report
-        env = api.Environment(cr, SUPERUSER_ID, {})
+        env = api.Environment(cr, api.SUPERUSER_ID, {})
         loaded_modules, processed_modules = load_module_graph(
             env, graph, status, perform_checks=update_module,
             report=report, models_to_check=models_to_check)

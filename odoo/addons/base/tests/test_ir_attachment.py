@@ -317,14 +317,14 @@ class TestPermissions(TransactionCaseWithUserDemo):
         # Check the user can access his own attachment
         attachment_user.datas
         # Create an attachment as superuser without res_model/res_id
-        attachment_admin = self.Attachments.with_user(odoo.SUPERUSER_ID).create({'name': 'foo'})
+        attachment_admin = self.Attachments.with_user(odoo.api.SUPERUSER_ID).create({'name': 'foo'})
         # Check the record cannot be accessed by a regular user
         with self.assertRaises(AccessError):
             attachment_admin.with_user(self.env.user).datas
         # Check the record can be accessed by an admin (other than superuser)
         admin_user = self.env.ref('base.user_admin')
         # Safety assert that base.user_admin is not the superuser, otherwise the test is useless
-        self.assertNotEqual(odoo.SUPERUSER_ID, admin_user.id)
+        self.assertNotEqual(odoo.api.SUPERUSER_ID, admin_user.id)
         attachment_admin.with_user(admin_user).datas
 
     def test_with_write_permissions(self):

@@ -6,7 +6,7 @@ from uuid import uuid4
 import pytz
 import secrets
 
-from odoo import api, fields, models, _, Command, tools, SUPERUSER_ID
+from odoo import api, fields, models, _, Command, tools
 from odoo.http import request
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import convert, SQL
@@ -625,7 +625,7 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         # In case of test environment, don't create the pdf
-        if self.env.uid == SUPERUSER_ID and not tools.config['test_enable']:
+        if self.env.uid == api.SUPERUSER_ID and not tools.config['test_enable']:
             raise UserError(_("You do not have permission to open a POS session. Please try opening a session with a different user"))
 
         if not self.current_session_id:

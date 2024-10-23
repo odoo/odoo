@@ -13,7 +13,7 @@ import math
 import re
 from textwrap import shorten
 
-from odoo import api, fields, models, _, Command, SUPERUSER_ID, modules, tools
+from odoo import api, fields, models, _, Command, modules, tools
 from odoo.tools.sql import column_exists, create_column
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
@@ -5949,7 +5949,7 @@ class AccountMove(models.Model):
         if not attachments or self.env.context.get('no_new_invoice'):
             return False
         if self.state != 'draft':
-            self.with_user(SUPERUSER_ID).message_post(
+            self.with_user(api.SUPERUSER_ID).message_post(
                 body=_('The invoice is not a draft, it was not updated from the attachment.'),
                 message_type='comment',
             )
@@ -5959,7 +5959,7 @@ class AccountMove(models.Model):
         # will enhance the invoice thanks to EDI / OCR / .. capabilities
         move_per_decodable_attachment = self._extend_with_attachments(attachments, new=bool(self._context.get('from_alias')))
         if self.invoice_line_ids and not move_per_decodable_attachment:
-            self.with_user(SUPERUSER_ID).message_post(
+            self.with_user(api.SUPERUSER_ID).message_post(
                 body=_('The invoice already contains lines, it was not updated from the attachment.'),
                 message_type='comment',
             )

@@ -7,7 +7,7 @@ from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.osv.expression import AND
 from odoo.tools.date_utils import get_month, subtract
 from odoo.tools.float_utils import float_compare
@@ -55,7 +55,7 @@ class StockReplenishmentInfo(models.TransientModel):
                 'product_min_qty': self.env['ir.qweb.field.float'].value_to_html(orderpoint.product_min_qty, {'decimal_precision': 'Product Unit of Measure'}),
                 'product_max_qty': self.env['ir.qweb.field.float'].value_to_html(orderpoint.product_max_qty, {'decimal_precision': 'Product Unit of Measure'}),
                 'product_uom_name': orderpoint.product_uom_name,
-                'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
+                'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == api.SUPERUSER_ID,
                 'visibility_days': orderpoint.visibility_days if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=orderpoint.product_uom.rounding) < 0 else 0,
                 'visibility_days_date': format_date(self.env, replenishment_report.orderpoint_id.lead_days_date + relativedelta(days=orderpoint.visibility_days))
             })

@@ -14,7 +14,7 @@ from collections import defaultdict
 
 from dateutil.parser import parse
 
-from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
+from odoo import _, api, fields, models, modules, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.modules.registry import Registry
 
@@ -593,7 +593,7 @@ class MailMail(models.Model):
         def send_emails_with_new_cursor():
             db_registry = Registry(dbname)
             with db_registry.cursor() as cr:
-                env = api.Environment(cr, SUPERUSER_ID, _context)
+                env = api.Environment(cr, api.SUPERUSER_ID, _context)
                 env['mail.mail'].browse(email_ids).send()
 
     def send(self, auto_commit=False, raise_exception=False, post_send_callback=None):
