@@ -2,7 +2,21 @@
 <templates xml:space="preserve">
 
 <t t-name="mysterious_egg.BuilderOverlay">
-    <div t-ref="root" class="border border-primary pe-none" t-attf-style="width: {{size.width}}px; height:{{size.height}}px;">
+    <div t-ref="root" class="border border-info pe-none border-2" t-attf-style="width: {{size.width}}px; height:{{size.height}}px;">
+        <div class="o_handles" t-attf-style="height: {{size.height}}px">
+            <div class="o_handle o_column_handle o_side o_side_y n o_handle_start" style="height: 24px;">
+                <span class="o_handle_indicator"></span>
+            </div>
+            <div class="o_handle o_column_handle o_side o_side_y s o_handle_start" style="height: 24px;">
+                <span class="o_handle_indicator"></span>
+            </div>
+            <div class="o_handle o_column_handle o_side o_side_x e o_handle_start">
+                <span class="o_handle_indicator"></span>
+            </div>
+            <div class="o_handle o_column_handle o_side o_side_x w o_handle_start">
+                <span class="o_handle_indicator"></span>
+            </div>
+        </div>
     </div>
 </t>
 
