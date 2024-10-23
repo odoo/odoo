@@ -218,6 +218,13 @@ export class VideoSelector extends Component {
         return selectedMedia.map(video => {
             const div = document.createElement('div');
             div.dataset.oeExpression = video.src;
+            if (video.platform == "instagram") {
+                div.classList.remove("media_iframe_video_horizontal");
+                div.classList.add("media_iframe_video_vertical");
+            } else {
+                div.classList.remove("media_iframe_video_vertical");
+                div.classList.add("media_iframe_video_horizontal");
+            }
             div.innerHTML = `
                 <div class="css_editable_mode_display"></div>
                 <div class="media_iframe_video_size" contenteditable="false"></div>
