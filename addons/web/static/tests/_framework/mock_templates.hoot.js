@@ -52,13 +52,13 @@ const { loader } = odoo;
 
 /**
  * @param {string} name
- * @param {OdooModule} module
+ * @param {OdooModuleFactory} factory
  */
-export function makeTemplateFactory(name, module) {
+export function makeTemplateFactory(name, factory) {
     return () => {
         if (!loader.modules.has(name)) {
-            const factory = module.fn;
-            module.fn = (...args) => {
+            const factory = factory.fn;
+            factory.fn = (...args) => {
                 const exports = factory(...args);
 
                 exports.registerTemplateProcessor(replaceAttributes);
