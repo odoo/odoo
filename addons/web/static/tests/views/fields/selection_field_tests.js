@@ -333,26 +333,26 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.containsN(
-            target.querySelector(".o_field_widget[name='color']"),
-            "option",
-            3,
-            "Three options in non required field (one blank option)"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_widget[name='color'] option")].map(
+                (option) => option.style.display
+            ),
+            ["", "", ""]
         );
-        assert.containsN(
-            target.querySelector(".o_field_widget[name='feedback_value']"),
-            "option",
-            2,
-            "Two options in required field (no blank option)"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_widget[name='feedback_value'] option")].map(
+                (option) => option.style.display
+            ),
+            ["none", "", ""]
         );
 
         // change value to update widget modifier values
         await editSelect(target, ".o_field_widget[name='feedback_value'] select", '"bad"');
-        assert.containsN(
-            target.querySelector(".o_field_widget[name='color']"),
-            "option",
-            2,
-            "Two options in required field (no blank option)"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_field_widget[name='color'] option")].map(
+                (option) => option.style.display
+            ),
+            ["none", "", ""]
         );
     });
 
@@ -395,11 +395,11 @@ QUnit.module("Fields", (hooks) => {
 
             // change value to update widget modifier values
             await editSelect(target, ".o_field_widget[name='feedback_value'] select", '"bad"');
-            assert.containsN(
-                target.querySelector(".o_field_widget[name='color']"),
-                "option",
-                2,
-                "Two options in required field (no blank option)"
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_field_widget[name='color'] option")].map(
+                    (option) => option.style.display
+                ),
+                ["none", "", ""]
             );
         }
     );
