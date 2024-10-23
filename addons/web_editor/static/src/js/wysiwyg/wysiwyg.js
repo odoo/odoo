@@ -2172,9 +2172,10 @@ const Wysiwyg = Widget.extend({
         return new Promise(function () {});
     },
     _onSelectionChange() {
-        if (this.options.autohideToolbar) {
-            const isVisible = this.linkPopover && this.linkPopover.el.offsetParent;
-            if (isVisible && !this.odooEditor.document.getSelection().isCollapsed) {
+        if (this.linkPopover) {
+            const selectionInLink = getInSelection(this.odooEditor.document, 'a') === this.linkPopover.target;
+            const isVisible = this.linkPopover.el.offsetParent;
+            if (isVisible && (!this.odooEditor.document.getSelection().isCollapsed || !selectionInLink)) {
                 this.linkPopover.hide();
             }
         }
