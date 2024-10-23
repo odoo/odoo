@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="unavailable_products_warning" inherit_id="website_sale_collect.unavailable_products_warning">
+        <div name="o_wsale_cart_line_button_container" position="inside">
+            <span class="d-none d-md-inline-block ms-1">
+                <a
+                    href="#"
+                    class="o_update_wishlist small px-2 border-start"
+                    t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
+                    t-att-data-product-product-id="order_line.product_id.id"
+                    data-action="o_wishlist"
+                    title="Save for later"
+                >
+                    <span t-att-data-product-id="order_line.product_id.id">Save for Later</span>
+                </a>
+            </span>
+            <button
+                class="o_update_wishlist small btn btn-light d-inline-block d-md-none"
+                t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
+                t-att-data-product-product-id="order_line.product_id.id"
+                data-action="o_wishlist"
+                title="Wishlist"
+            >
+                <i class="fa fa-heart-o" t-att-data-product-id="order_line.product_id.id" />
+            </button>
+        </div>
+    </template>
+</odoo>
