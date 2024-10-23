@@ -95,7 +95,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush()
 
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=675):  # crm 675
+            with self.assertQueryCount(user_sales_manager=679):  # crm 679
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
@@ -178,7 +178,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
         # randomness: at least 6 queries
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=6930):  # crm 6863 - com 6925
+            with self.assertQueryCount(user_sales_manager=6944):  # crm 6863 - com 6925
                 self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
         # teams assign

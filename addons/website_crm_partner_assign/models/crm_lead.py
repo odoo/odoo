@@ -306,3 +306,14 @@ class CrmLead(models.Model):
                     'url': '/my/opportunity/%s' % record.id,
                 }
         return super(CrmLead, self).get_access_action(access_uid)
+
+    def write(self, vals):
+        if self.user_has_groups('base.group_portal'):
+            for fname, value in vals.items():
+                field = self._fields.get(fname)
+                if isinstance(field, fields.Many2one):
+                    model = getattr(self, fname)
+                    record = model.browse(value)
+                    record.check_access_rights('read')
+                    record.check_access_rule('read')
+        return super().write(vals)
