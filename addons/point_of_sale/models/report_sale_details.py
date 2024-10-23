@@ -242,15 +242,16 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 'name': category_name,
                 'products': sorted([{
                     'product_id': product.id,
-                    'product_name': product.name,
-                    'code': product.default_code,
+                    'product_name': product.display_name,
+                    'barcode': product.barcode,
                     'quantity': qty,
                     'price_unit': price_unit,
                     'discount': discount,
                     'uom': product.uom_id.name,
                     'total_paid': product_total,
                     'base_amount': base_amount,
-                } for (product, price_unit, discount), (qty, product_total, base_amount) in product_list.items()], key=lambda l: l['product_name']),
+                    'combo_products_label': combo_products_label,
+                } for (product, price_unit, discount), (qty, product_total, base_amount, combo_products_label) in product_list.items()], key=lambda l: l['product_name']),
             }
             products.append(category_dictionnary)
         products = sorted(products, key=lambda l: str(l['name']))
@@ -260,15 +261,16 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 'name': category_name,
                 'products': sorted([{
                     'product_id': product.id,
-                    'product_name': product.name,
-                    'code': product.default_code,
+                    'product_name': product.display_name,
+                    'barcode': product.barcode,
                     'quantity': qty,
                     'price_unit': price_unit,
                     'discount': discount,
                     'uom': product.uom_id.name,
                     'total_paid': product_total,
                     'base_amount': base_amount,
-                } for (product, price_unit, discount), (qty, product_total, base_amount) in product_list.items()], key=lambda l: l['product_name']),
+                    'combo_products_label': combo_products_label,
+                } for (product, price_unit, discount), (qty, product_total, base_amount, combo_products_label) in product_list.items()], key=lambda l: l['product_name']),
             }
             refund_products.append(category_dictionnary)
         refund_products = sorted(refund_products, key=lambda l: str(l['name']))
@@ -342,10 +344,15 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         key2 = (line.product_id, line.price_unit, line.discount)
         key1 = line.product_id.product_tmpl_id.pos_categ_ids[0].name if len(line.product_id.product_tmpl_id.pos_categ_ids) else _('Not Categorized')
         products.setdefault(key1, {})
-        products[key1].setdefault(key2, [0.0, 0.0, 0.0])
+        products[key1].setdefault(key2, [0.0, 0.0, 0.0, ''])
         products[key1][key2][0] += line.qty
         products[key1][key2][1] += line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
         products[key1][key2][2] += line.price_subtotal
+
+        # Name of each combo products along with the combo
+        if line.combo_line_ids:
+            combo_products_label = ' (' + ", ".join(line.combo_line_ids.product_id.mapped('name')) + ')'
+            products[key1][key2][3] = combo_products_label
 
         if line.tax_ids_after_fiscal_position:
             line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
