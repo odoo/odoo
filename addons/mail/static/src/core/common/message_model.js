@@ -128,6 +128,7 @@ export class Message extends Record {
         inverse: "message_id",
         onDelete: (r) => r.delete(),
     });
+    messagesToUpdate = Record.many("mail.message");
     /** @type {number[]} */
     parentMessage = Record.one("mail.message");
     /**

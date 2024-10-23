@@ -34,7 +34,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { url } from "@web/core/utils/urls";
+import { getOrigin, url } from "@web/core/utils/urls";
 import { messageActionsRegistry, useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
@@ -190,6 +190,23 @@ export class Message extends Component {
                 this.props.messageSearch?.searchTerm,
                 this.message.body,
             ]
+        );
+        useEffect(
+            () => {
+                if (this.message.messagesToUpdate.length !== 0) {
+                    this.message.messagesToUpdate = [];
+                }
+                this.updateThreadNotificaion();
+            },
+            () => [this.message.body]
+        );
+        useEffect(
+            () => {
+                if (this.message.messagesToUpdate.map((msg) => msg.thread?.name).join() !== "") {
+                    this.updateThreadNotificaion();
+                }
+            },
+            () => [this.message.messagesToUpdate.map((msg) => msg.thread?.name).join()]
         );
     }
 
@@ -495,6 +512,28 @@ export class Message extends Component {
         }
         this.state.showTranslation =
             !this.state.showTranslation && Boolean(message.translationValue);
+    }
+
+    updateThreadNotificaion() {
+        const linkEl = this.root.el?.getElementsByTagName("a")[0];
+        if (linkEl && this.message.message_type === "notification") {
+            const channelModel = linkEl.getAttribute("data-oe-model");
+            if (
+                `${linkEl.protocol}//${linkEl.host}` === getOrigin() &&
+                channelModel === "discuss.channel"
+            ) {
+                const channelId = linkEl.getAttribute("data-oe-id");
+                const channel = Object.values(this.store.Thread.records).find(
+                    (thread) =>
+                        thread.id === parseInt(channelId) && thread.model === "discuss.channel"
+                );
+                if (channel?.name) {
+                    const msg = this.store["mail.message"].insert(this.message.id);
+                    this.message.messagesToUpdate.push(msg);
+                    linkEl.innerHTML = `${channel.name}`;
+                }
+            }
+        }
     }
 }
 
