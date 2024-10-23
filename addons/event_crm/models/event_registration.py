@@ -297,7 +297,7 @@ class EventRegistration(models.Model):
         lead creation and update existing groups with new registrations.
 
         Heuristic in event is the following. Registrations created in multi-mode
-        are grouped by event. Customer use case: website_event flow creates
+        are grouped by creation date. Customer use case: website_event flow creates
         several registrations in a create-multi.
 
         Update is not supported as there is no way to determine if a registration
@@ -310,20 +310,16 @@ class EventRegistration(models.Model):
         :return dict: for each rule, rule (key of dict) gives a list of groups.
           Each group is a tuple (
             existing_lead: existing lead to update;
-            group_record: record used to group;
+            group_key: key used to group;
             registrations: sub record set of self, containing registrations
                            belonging to the same group;
           )
         """
-        event_to_reg_ids = defaultdict(lambda: self.env['event.registration'])
-        for registration in self:
-            event_to_reg_ids[registration.event_id] += registration
-
-        return dict(
-            (rule, [(False, event, (registrations & rule_to_new_regs[rule]).sorted('id'))
-                    for event, registrations in event_to_reg_ids.items()])
+        return {
+            rule: [(False, create_date, (registrations & rule_to_new_regs[rule]).sorted('id'))
+                    for create_date, registrations in self.grouped('create_date').items()]
             for rule in rules
-        )
+        }
 
     # ------------------------------------------------------------
     # TOOLS
