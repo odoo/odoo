@@ -519,7 +519,7 @@ export class StateChangeManager {
         for (const key of currentKeys) {
             if (key in (this.config.propertyUpdater || {})) {
                 this.config.propertyUpdater[key](state, previous, next);
-            } else {
+            } else if (JSON.stringify(previous[key]) !== JSON.stringify(next[key])) {
                 replaceProperty(state, key, next[key]);
             }
         }
