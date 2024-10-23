@@ -1,5 +1,4 @@
 import argparse
-import sys
 
 from odoo.tools import cloc, config
 
@@ -34,7 +33,7 @@ In the latter mode, only the custom code is accounted for.
         opt, unknown = parser.parse_known_args(args)
         if not opt.database and not opt.path:
             parser.print_help()
-            sys.exit()
+            self.exit()
 
         c = cloc.Cloc()
         if opt.database:

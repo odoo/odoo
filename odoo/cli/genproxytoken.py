@@ -1,8 +1,6 @@
 import argparse
 import secrets
-import sys
 import textwrap
-from pathlib import Path
 from passlib.hash import pbkdf2_sha512
 
 from odoo.tools import config
@@ -20,7 +18,7 @@ class GenProxyToken(Command):
 
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
+            prog=self.prog,
             description=self.__doc__.strip()
         )
         parser.add_argument('-c', '--config', type=str, help="Specify an alternate config file")
@@ -31,4 +29,4 @@ class GenProxyToken(Command):
         token = self.generate_token(length=args.token_length)
         config['proxy_access_token'] = pbkdf2_sha512.hash(token)
         config.save()
-        sys.stdout.write(f'{token}\n')
+        self.stdout.write(f'{token}\n')
