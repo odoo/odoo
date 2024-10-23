@@ -657,6 +657,7 @@ class IrMail_Server(models.Model):
         :param message: the email.message.Message to send, information like the
             Return-Path, the From, etc... will be used to find the smtp_from and to smtp_to
         :param smtp_session: the opened SMTP session to use to authenticate the sender
+
         :return: smtp_from, smtp_to_list, message
             smtp_from: email to used during the authentication to the mail server
             smtp_to_list: list of email address which will receive the email
@@ -671,33 +672,8 @@ class IrMail_Server(models.Model):
         smtp_from = message['From'] or bounce_address
         assert smtp_from, self.NO_FOUND_SMTP_FROM
 
-        email_to = message['To']
-        email_cc = message['Cc']
-        email_bcc = message['Bcc']
-        del message['Bcc']
-
-        # All recipient addresses must only contain ASCII characters; support
-        # optional pre-validated To list, used notably when formatted emails may
-        # create fake emails using extract_rfc2822_addresses, e.g.
-        # '"Bike@Home" <email@domain.com>' which can be considered as containing
-        # 2 emails by extract_rfc2822_addresses
-        validated_to = self.env.context.get('send_validated_to') or []
-        smtp_to_list = [
-            address
-            for base in [email_to, email_cc, email_bcc]
-            # be sure a given address does not return duplicates (but duplicates
-            # in final smtp to list is still ok)
-            for address in tools.misc.unique(extract_rfc2822_addresses(base))
-            if address and (not validated_to or address in validated_to)
-        ]
+        smtp_to_list = self._prepare_smtp_to_list(message, smtp_session)
         assert smtp_to_list, self.NO_VALID_RECIPIENT
-
-        x_forge_to = message['X-Forge-To']
-        if x_forge_to:
-            # `To:` header forged, e.g. for posting on discuss.channels, to avoid confusion
-            del message['X-Forge-To']
-            del message['To']           # avoid multiple To: headers!
-            message['To'] = x_forge_to
 
         # Try to not spoof the mail from headers; fetch session-based or contextualized
         # values for encapsulation computation
@@ -709,9 +685,8 @@ class IrMail_Server(models.Model):
         if notifications_email and email_normalize(smtp_from) == notifications_email and email_normalize(message['From']) != notifications_email:
             smtp_from = encapsulate_email(message['From'], notifications_email)
 
-        if message['From'] != smtp_from:
-            del message['From']
-            message['From'] = smtp_from
+        # alter message
+        self._alter_message(message, smtp_from, smtp_to_list)
 
         # Check if it's still possible to put the bounce address as smtp_from
         if self._match_from_filter(bounce_address, from_filter):
@@ -730,6 +705,48 @@ class IrMail_Server(models.Model):
         smtp_from = smtp_from_rfc2822[-1]
 
         return smtp_from, smtp_to_list, message
+
+    @api.model
+    def _alter_message(self, message, smtp_from, smtp_to_list):
+        x_forge_to = message['X-Forge-To']
+        # `To:` header forged, e.g. for posting on discuss.channels, to avoid confusion
+        if x_forge_to:
+            del message['To']                # avoid multiple To: headers!
+            message['To'] = x_forge_to
+
+        if message['From'] != smtp_from:
+            del message['From']              # always remove before adding
+            message['From'] = smtp_from
+
+        # cleanup unwanted headers
+        del message['Bcc']                   # see odoo/odoo@2445f9e3c22db810d61996afde883e4ca608f15b
+        del message['X-Forge-To']
+
+    @api.model
+    def _prepare_smtp_to_list(self, message, smtp_session):
+        """ Prepare SMTP To address list, based on To / Cc / Bcc.
+
+        Optional 'send_validated_to' context key filter restricts addresses to
+        be part of that list. """
+        email_to = message['To']
+        email_cc = message['Cc']
+        email_bcc = message['Bcc']
+
+        # Support optional pre-validated To list, used notably when formatted
+        # emails may create fake emails using extract_rfc2822_addresses, e.g.
+        # '"Bike@Home" <email@domain.com>' which can be considered as containing
+        # 2 emails by extract_rfc2822_addresses
+        validated_to = self.env.context.get('send_validated_to') or []
+
+        # All recipient addresses must only contain ASCII characters;
+        return [
+            address
+            for base in [email_to, email_cc, email_bcc]
+            # be sure a given address does not return duplicates (but duplicates
+            # in final smtp to list is still ok)
+            for address in tools.misc.unique(extract_rfc2822_addresses(base))
+            if address and (not validated_to or address in validated_to)
+        ]
 
     @api.model
     def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,
