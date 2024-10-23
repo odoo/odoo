@@ -7,7 +7,9 @@ import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, click, selectDropdownItem } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { patchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_popover_patch";
+import { patchAvatarCardResourcePopover } from "@hr/components/avatar_card_resource/avatar_card_resource_popover_patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 import { getOrigin } from "@web/core/utils/urls";
 
 /* The widgets M2XAVatarEmployee inherits from M2XAvatarUser. Those tests therefore allows
@@ -20,6 +22,7 @@ import { getOrigin } from "@web/core/utils/urls";
 QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
     beforeEach(() => {
         patchWithCleanup(AvatarCardPopover.prototype, patchAvatarCardPopover);
+        patchWithCleanup(AvatarCardResourcePopover.prototype, patchAvatarCardResourcePopover);
     });
 
     QUnit.test("many2one_avatar_employee widget in list view", async function (assert) {
@@ -29,7 +32,10 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             { name: "Luigi" },
         ]);
         const [userId_1, userId_2] = pyEnv["res.users"].create([
-            { partner_id: partnerId_1 },
+            {
+                partner_id: partnerId_1,
+                phone: "+45687468",
+            },
             { partner_id: partnerId_2 },
         ]);
         const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
@@ -38,7 +44,6 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 user_id: userId_1,
                 user_partner_id: partnerId_1,
                 work_email: "Mario@partner.com",
-                phone: "+45687468",
             },
             {
                 name: "Luigi",
@@ -188,14 +193,34 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 mockRPC(route, args) {
                     if (args.method === "web_read") {
                         assert.step(`web_read ${args.model} ${args.args[0]}`);
-                        assert.deepEqual(args.kwargs.specification, {
-                            display_name: {},
-                            employee_id: {
-                                fields: {
-                                    display_name: {},
+                        if (["hr.employee", "hr.employee.public"].includes(args.model)) {
+                            assert.deepEqual(args.kwargs.specification, {
+                                department_id: {
+                                    fields: {
+                                        display_name: {},
+                                    },
                                 },
-                            },
-                        });
+                                hr_icon_display: {},
+                                job_title: {},
+                                name: {},
+                                show_hr_icon_display: {},
+                                user_id: {
+                                    fields: {
+                                        email: {},
+                                        im_status: {},
+                                        name: {},
+                                        partner_id: {},
+                                        phone: {},
+                                        share: {},
+                                    },
+                                },
+                                work_location_name: {},
+                                work_location_type: {},
+                                work_email: {},
+                                im_status: {},
+                                work_phone: {},
+                            });
+                        }
                     }
                 },
                 serverData: { views },
@@ -203,7 +228,10 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             await openFormView("m2x.avatar.employee", avatarId);
             await contains(".o_field_widget[name=employee_id] input", { value: "Mario" });
             await click(document.querySelector(".o_m2o_avatar > img"));
-            assert.verifySteps([`web_read m2x.avatar.employee ${avatarId}`]);
+            assert.verifySteps([
+                `web_read m2x.avatar.employee ${avatarId}`,
+                `web_read hr.employee.public ${employeeId}`,
+            ]);
             // Nothing should happen
         }
     );
@@ -345,7 +373,10 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             { name: "Luigi" },
         ]);
         const [userId_1, userId_2] = pyEnv["res.users"].create([
-            { partner_id: partnerId_1 },
+            {
+                partner_id: partnerId_1,
+                phone: "+45684999",
+            },
             { partner_id: partnerId_2 },
         ]);
         const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
@@ -354,7 +385,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 user_partner_id: partnerId_1,
                 name: "Mario",
                 work_email: "Mario@partner.com",
-                phone: "+45687468",
+                work_phone: "+45687468",
             },
             {
                 name: "Luigi",
@@ -437,7 +468,11 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             const pyEnv = await startServer();
             const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([{}, {}]);
             const [userId_1, userId_2] = pyEnv["res.users"].create([
-                { partner_id: partnerId_1 },
+                {
+                    partner_id: partnerId_1,
+                    phone: "+45699999",
+                    email: "Mario@perso.net",
+                },
                 { partner_id: partnerId_2 },
             ]);
             const [employeeData_1, employeeData_2] = [
@@ -497,8 +532,8 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             );
             assert.verifySteps([
                 `web_read m2x.avatar.employee ${avatarId_1}`,
-                `read hr.employee ${employeeId_1}`,
-                `read hr.employee ${employeeId_2}`,
+                `web_read hr.employee ${employeeId_1}`,
+                `web_read hr.employee ${employeeId_2}`,
             ]);
         }
     );
@@ -510,7 +545,11 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             { name: "Yoshi" },
         ]);
         const [userId_1, userId_2] = pyEnv["res.users"].create([
-            { partner_id: partnerId_1 },
+            {
+                partner_id: partnerId_1,
+                phone: "+45699999",
+                email: "Mario@perso.net",
+            },
             { partner_id: partnerId_2 },
         ]);
         const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
@@ -518,8 +557,8 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 name: "Mario",
                 user_id: userId_1,
                 user_partner_id: partnerId_1,
-                phone: "+45687468",
-                email: "Mario@partner.com",
+                work_phone: "+45687468",
+                work_email: "Mario@partner.com",
             },
             {
                 name: "Yoshi",
@@ -596,7 +635,10 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             { name: "Luigi" },
         ]);
         const [userId_1, userId_2] = pyEnv["res.users"].create([
-            { partner_id: partnerId_1 },
+            {
+                partner_id: partnerId_1,
+                phone: "+45687468",
+            },
             { partner_id: partnerId_2 },
         ]);
         const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([

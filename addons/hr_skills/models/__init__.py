@@ -11,4 +11,3 @@ from . import hr_employee_skill_log
 from . import hr_skill_level
 from . import hr_skill_type
 from . import res_users
-from . import resource_resource
