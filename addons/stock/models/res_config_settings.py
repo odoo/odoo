@@ -47,6 +47,8 @@ class ResConfigSettings(models.TransientModel):
     annual_inventory_day = fields.Integer(related='company_id.annual_inventory_day', readonly=False)
     group_stock_reception_report = fields.Boolean("Reception Report", implied_group='stock.group_reception_report')
     group_stock_auto_reception_report = fields.Boolean("Show Reception Report at Validation", implied_group='stock.group_auto_reception_report')
+    stock_replenishment_info_periods = fields.Selection(related='company_id.stock_replenishment_info_periods', readonly=False)
+
 
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):
