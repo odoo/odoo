@@ -228,7 +228,7 @@ export class ModelFieldSelectorPopover extends Component {
         this.keepLast.add(Promise.resolve());
         this.state.page.selectedName = field.name;
         this.props.update(this.state.page.path, field);
-        this.props.close();
+        this.props.close(true);
     }
 
     onDebugInputKeydown(ev) {
