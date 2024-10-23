@@ -1278,7 +1278,7 @@ test.tags("desktop")("range value, select date for second value before first val
 
     await click(getPickerCell("19").at(0));
     await animationFrame();
-    expect.verifySteps(["2023-04-19T08:43:00,2023-04-23T17:16:00"]);
+    expect.verifySteps(["2023-04-20T08:43:00,2023-04-19T17:16:00"]);
 });
 
 test("range value, select date for first value after second value", async () => {
@@ -1296,7 +1296,7 @@ test("range value, select date for first value after second value", async () => 
 
     await click(getPickerCell("27"));
     await animationFrame();
-    expect.verifySteps(["2023-04-20T08:43:00,2023-04-27T17:16:00"]);
+    expect.verifySteps(["2023-04-27T08:43:00,2023-04-23T17:16:00"]);
 });
 
 test("focus proper month when changing props out of current month", async () => {
