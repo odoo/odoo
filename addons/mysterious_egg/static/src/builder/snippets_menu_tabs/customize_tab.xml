@@ -8,7 +8,7 @@
         </div>
     </t>
     <t t-else="">
-        <t t-foreach="props.selectedToolboxes" t-as="selectedToolbox" t-key="selectedToolbox">
+        <t t-foreach="props.selectedToolboxes" t-as="selectedToolbox" t-key="selectedToolbox.toolbox.selector">
             <t t-component="selectedToolbox.toolbox.ToolboxComponent" />
         </t>
         <Toolbar class="'flex-wrap h-auto'" toolbar="props.editor.shared.getToolbarInfo()"/>
