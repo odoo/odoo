@@ -3,5 +3,6 @@
 
 from . import test_cancel_time_off
 from . import test_employee
+from . import test_project_project
 from . import test_timesheet_holidays
 from . import test_timesheet_global_time_off
