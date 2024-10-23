@@ -30,11 +30,11 @@ class TestImageUploadProgress(odoo.tests.HttpCase):
                     'alt_description': 'brown fox sitting on green grass field during daytime',
                     'urls': {
                         # 'regular': 'https://images.unsplash.com/photo-1462953491269-9aff00919695?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzMDUwOHwwfDF8c2VhcmNofDF8fGZveHxlbnwwfHx8fDE2MzEwMzIzNDE&ixlib=rb-1.2.1&q=80&w=1080',
-                        'regular': BASE_URL + '/website/static/src/img/phone.png',
+                        'regular': BASE_URL + '/website/static/src/img/phone.svg',
                     },
                     'links': {
                         # 'download_location': 'https://api.unsplash.com/photos/HQqIOc8oYro/download?ixid=MnwzMDUwOHwwfDF8c2VhcmNofDF8fGZveHxlbnwwfHx8fDE2MzEwMzIzNDE'
-                        'download_location': BASE_URL + '/website/static/src/img/phone.png',
+                        'download_location': BASE_URL + '/website/static/src/img/phone.svg',
                     },
                     'user': {
                         'name': 'Mitchell Admin',
