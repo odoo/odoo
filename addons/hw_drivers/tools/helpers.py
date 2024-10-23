@@ -656,3 +656,17 @@ def parse_url(url):
         "url": f"{url.scheme}://{url.netloc}",
         **search_params,
     }
+
+
+def reset_log_level():
+    """Reset the log level to the default one if the reset timestamp is reached
+    This timestamp is set by the log controller in `hw_posbox_homepage/homepage.py` when the log level is changed
+    """
+    log_level_reset_timestamp = get_conf('log_level_reset_timestamp')
+    if log_level_reset_timestamp and float(log_level_reset_timestamp) <= time.time():
+        _logger.info("Resetting log level to default.")
+        update_conf({
+            'log_level_reset_timestamp': '',
+            'log_handler': ':WARNING',
+            'log_level': 'warn',
+        })
