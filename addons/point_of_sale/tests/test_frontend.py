@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from contextlib import contextmanager
 from unittest.mock import patch
 from odoo import Command
 
@@ -27,7 +28,17 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         return f"/pos/ui?config_id={pos_config.id}"
 
     def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
-        self.start_tour(self._get_url(kwargs.get('pos_config')), tour_name, login=login, **kwargs)
+        self.start_tour(self._get_url(pos_config=kwargs.get('pos_config')), tour_name, login=login, **kwargs)
+
+    @contextmanager
+    def with_new_session(self, config=None, user=None):
+        config = config or self.main_pos_config
+        user = user or self.pos_user
+        config.with_user(user).open_ui()
+        session = config.current_session_id
+        yield session
+        session.post_closing_cash_details(0)
+        session.close_session_from_ui()
 
     @classmethod
     def setUpClass(cls):
@@ -110,13 +121,13 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         cls.tip = env.ref('point_of_sale.product_product_tip')
 
-        pos_desk_misc_test = env['pos.category'].create({
+        cls.pos_desk_misc_test = env['pos.category'].create({
             'name': 'Misc test',
         })
-        pos_cat_chair_test = env['pos.category'].create({
+        cls.pos_cat_chair_test = env['pos.category'].create({
             'name': 'Chair test',
         })
-        pos_cat_desk_test = env['pos.category'].create({
+        cls.pos_cat_desk_test = env['pos.category'].create({
             'name': 'Desk test',
         })
 
@@ -128,7 +139,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'taxes_id': False,
             'weight': 0.01,
             'to_weight': True,
-            'pos_categ_ids': [(4, pos_desk_misc_test.id)],
+            'pos_categ_ids': [(4, cls.pos_desk_misc_test.id)],
         })
         cls.wall_shelf = env['product.product'].create({
             'name': 'Wall Shelf Unit',
@@ -162,14 +173,14 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
-            'pos_categ_ids': [(4, pos_cat_desk_test.id)],
+            'pos_categ_ids': [(4, cls.pos_cat_desk_test.id)],
         })
         cls.letter_tray = env['product.product'].create({
             'name': 'Letter Tray',
             'available_in_pos': True,
             'list_price': 4.80,
             'taxes_id': False,
-            'pos_categ_ids': [(4, pos_cat_chair_test.id)],
+            'pos_categ_ids': [(4, cls.pos_cat_chair_test.id)],
         })
         cls.desk_organizer = env['product.product'].create({
             'name': 'Desk Organizer',

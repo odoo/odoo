@@ -1862,6 +1862,8 @@ class AccountTax(models.Model):
             company_currency_id:                    The id of the company's currency used.
             company_currency_pd:                    The company's currency rounding (to be used js-side by the widget).
             has_tax_groups:                         Flag indicating if there is at least one involved tax group.
+            same_tax_base:                          Flag indicating the base amount of all tax groups are the same and it's
+                                                    redundant to display them.
             base_amount_currency:                   The untaxed amount expressed in foreign currency.
             base_amount:                            The untaxed amount expressed in local currency.
             tax_amount_currency:                    The tax amount expressed in foreign currency.

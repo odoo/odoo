@@ -664,59 +664,7 @@ class PosOrder(models.Model):
     def _create_invoice(self, move_vals):
         self.ensure_one()
         new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type']).create(move_vals)
-        message = _("This invoice has been created from the point of sale session: %s",
-            self._get_html_link())
-
-        new_move.message_post(body=message)
-        if self.config_id.cash_rounding:
-            with self.env['account.move']._check_balanced({'records': new_move}):
-                rounding_applied = float_round(self.amount_paid - self.amount_total,
-                                            precision_rounding=new_move.currency_id.rounding)
-                rounding_line = new_move.line_ids.filtered(lambda line: line.display_type == 'rounding')
-                if rounding_line and rounding_line.debit > 0:
-                    rounding_line_difference = rounding_line.debit + rounding_applied
-                elif rounding_line and rounding_line.credit > 0:
-                    rounding_line_difference = -rounding_line.credit + rounding_applied
-                else:
-                    rounding_line_difference = rounding_applied
-                if rounding_applied:
-                    if rounding_applied > 0.0:
-                        account_id = new_move.invoice_cash_rounding_id.loss_account_id.id
-                    else:
-                        account_id = new_move.invoice_cash_rounding_id.profit_account_id.id
-                    if rounding_line:
-                        if rounding_line_difference:
-                            rounding_line.with_context(skip_invoice_sync=True).write({
-                                'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
-                                'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
-                                'account_id': account_id,
-                                'price_unit': rounding_applied,
-                            })
-
-                    else:
-                        self.env['account.move.line'].sudo().with_context(skip_invoice_sync=True).create({
-                            'balance': -rounding_applied,
-                            'quantity': 1.0,
-                            'partner_id': new_move.partner_id.id,
-                            'move_id': new_move.id,
-                            'currency_id': new_move.currency_id.id,
-                            'company_id': new_move.company_id.id,
-                            'company_currency_id': new_move.company_id.currency_id.id,
-                            'display_type': 'rounding',
-                            'sequence': 9999,
-                            'name': self.config_id.rounding_method.name,
-                            'account_id': account_id,
-                        })
-                else:
-                    if rounding_line:
-                        rounding_line.with_context(skip_invoice_sync=True).unlink()
-                if rounding_line_difference:
-                    existing_terms_line = new_move.line_ids.filtered(
-                        lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
-                    existing_terms_line_new_val = float_round(
-                        existing_terms_line.balance + rounding_line_difference,
-                        precision_rounding=new_move.currency_id.rounding)
-                    existing_terms_line.with_context(skip_invoice_sync=True).balance = existing_terms_line_new_val
+        new_move.message_post(body=_("This invoice has been created from the point of sale session: %s", self._get_html_link()))
         return new_move
 
     def action_pos_order_paid(self):
@@ -771,9 +719,7 @@ class PosOrder(models.Model):
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': self._prepare_invoice_lines(),
             'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
-            'invoice_cash_rounding_id': self.config_id.rounding_method.id
-            if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
-            else False
+            'invoice_cash_rounding_id': self.config_id.rounding_method.id,
         }
         if self.refunded_order_id.account_move:
             vals['ref'] = _('Reversal of: %s', self.refunded_order_id.account_move.name)
@@ -1673,4 +1619,4 @@ class AccountCashRounding(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'rounding', 'rounding_method']
+        return ['id', 'name', 'rounding', 'rounding_method', 'strategy']

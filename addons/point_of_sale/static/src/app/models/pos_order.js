@@ -8,6 +8,8 @@ import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { changesToOrder } from "./utils/order_change";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 
 const { DateTime } = luxon;
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
@@ -95,21 +97,59 @@ export class PosOrder extends Base {
         return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
     }
 
+    get taxTotals() {
+        const currency = this.config_id.currency_id;
+        const company = this.company_id;
+        const extraValues = { currency_id: currency };
+        const orderLines = this.lines;
+
+        const baseLines = [];
+        for (const line of orderLines) {
+            let taxes = line.tax_ids;
+            if (this.fiscal_position_id) {
+                taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
+            }
+            baseLines.push(
+                accountTaxHelpers.prepare_base_line_for_taxes_computation(line, {
+                    ...extraValues,
+                    quantity: line.qty,
+                    tax_ids: taxes,
+                })
+            );
+        }
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
+
+        const cashRounding =
+            !this.config.only_round_cash_method && this.config.cash_rounding
+                ? this.config.rounding_method
+                : null;
+
+        return accountTaxHelpers.get_tax_totals_summary(baseLines, currency, company, {
+            cash_rounding: cashRounding,
+        });
+    }
+
     export_for_printing(baseUrl, headerData) {
         const paymentlines = this.payment_ids
             .filter((p) => !p.is_change)
             .map((p) => p.export_for_printing());
+
         return {
             orderlines: this.getSortedOrderlines().map((l) =>
                 omit(l.getDisplayData(), "internalNote")
             ),
+            taxTotals: this.taxTotals,
+            label_total: _t("TOTAL"),
+            label_rounding: _t("Rounding"),
+            label_change: _t("CHANGE"),
+            label_discounts: _t("Discounts"),
             paymentlines,
             amount_total: this.get_total_with_tax(),
             total_without_tax: this.get_total_without_tax(),
             amount_tax: this.get_total_tax(),
             total_paid: this.get_total_paid(),
             total_discount: this.get_total_discount(),
-            rounding_applied: this.get_rounding_applied(),
             tax_details: this.get_tax_details(),
             change: this.amount_return,
             name: this.pos_reference,
