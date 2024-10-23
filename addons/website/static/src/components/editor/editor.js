@@ -77,7 +77,7 @@ export class WebsiteEditorComponent extends Component {
             this.state.reloading = false;
         }
         this.websiteService.unblockPreview();
-        document.body.classList.add("o_website_navbar_transition_hide");
+        setTimeout(() => document.body.classList.add("o_website_sidebar_show")); // Ensure transition on Firefox
         setTimeout(() => document.body.classList.add("o_website_navbar_hide"), 400);
     }
     /**
@@ -127,7 +127,7 @@ export class WebsiteEditorComponent extends Component {
         }
         this.websiteContext.snippetsLoaded = false;
         document.body.classList.remove("o_website_navbar_hide");
-        setTimeout(() => document.body.classList.remove("o_website_navbar_transition_hide"));
+        setTimeout(() => document.body.classList.remove("o_website_sidebar_show"));
         setTimeout(this.destroyAfterTransition.bind(this), 400);
     }
     /**
