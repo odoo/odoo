@@ -1140,11 +1140,63 @@ export class PosStore extends Reactive {
     setLoadingOrderState(bool) {
         this.loadingOrderState = bool;
     }
+
+    settleRefundPaymentLines(currentOrder) {
+        const refundedOrderLine = currentOrder.lines[0]?.refunded_orderline_id;
+        if (refundedOrderLine) {
+            const refundedOrder = refundedOrderLine.order_id;
+            const paymentIds = refundedOrder.payment_ids || [];
+            // Add all the available payment lines in the refunded order if the current order amount is the same as the refunded order
+            if (Math.abs(currentOrder.getTotalDue()) === refundedOrder.amount_total) {
+                paymentIds.forEach((pi) => {
+                    if (pi.payment_method_id) {
+                        const paymentLine = currentOrder.add_paymentline(pi.payment_method_id);
+                        paymentLine.set_amount(-pi.amount);
+                        paymentLine.updateRefundPaymentLine(pi);
+                    }
+                });
+            } else {
+                // Add available payment lines of refunded order based on conditions.
+                // Settle current order terminal based payment lines with refunded order terminal based payment lines
+                const terminalPayments = paymentIds.filter(
+                    (pi) => pi.payment_method_id.use_payment_terminal
+                );
+                terminalPayments.forEach((pi) => {
+                    var current_due = currentOrder.get_due();
+                    if (current_due < 0) {
+                        const paymentLine = currentOrder.add_paymentline(pi.payment_method_id);
+                        const amountToSet = Math.min(Math.abs(current_due), pi.amount);
+                        paymentLine.set_amount(-amountToSet);
+                        paymentLine.updateRefundPaymentLine(pi);
+                    }
+                });
+                // Add payment lines for other methods if needed
+                if (currentOrder.get_due() < 0) {
+                    paymentIds.forEach((pi) => {
+                        var current_due = currentOrder.get_due();
+                        if (
+                            current_due < 0 &&
+                            pi.payment_method_id &&
+                            !pi.payment_method_id.use_payment_terminal
+                        ) {
+                            const paymentLine = currentOrder.add_paymentline(pi.payment_method_id);
+                            paymentLine.set_amount(current_due);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
     async pay() {
         const currentOrder = this.get_order();
 
         if (!currentOrder.canPay()) {
             return;
+        }
+
+        if (currentOrder._isRefundOrder()) {
+            this.settleRefundPaymentLines(currentOrder);
         }
 
         if (

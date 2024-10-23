@@ -86,6 +86,10 @@ export class PosPayment extends Base {
         }
         return isPaymentSuccessful;
     }
+
+    updateRefundPaymentLine(refundedPaymentLine) {
+        this.transaction_id = refundedPaymentLine.transaction_id;
+    }
 }
 
 registry.category("pos_available_models").add(PosPayment.pythonModel, PosPayment);

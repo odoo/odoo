@@ -9,7 +9,10 @@
                         <div class="o_payment_successful d-flex flex-column w-100 w-xxl-75 p-3 pt-xxl-5 mx-auto">
                             <div class="d-flex flex-column align-items-center p-1 p-lg-3 border border-success rounded-3 bg-success-subtle text-success fs-3">
                                 <i t-if="!ui.isSmall" class="fa fa-fw fa-2x fa-check-circle"/>
-                                <span class="fs-3 fw-bolder">Payment Successful</span>
+                                <span class="fs-3 fw-bolder">
+                                    <t t-if="pos.get_order()._isRefundOrder()">Refund Initiated</t>
+                                    <t t-else="">Payment Successful</t>
+                                </span>
                                 <div class="fs-4 fw-bold d-flex justify-content-center align-items-center gap-2">
                                     <span t-esc="orderAmountPlusTip" />
                                     <span t-if="this.currentOrder.nb_print === 0" class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.pos.get_order())">Edit payment</span>
