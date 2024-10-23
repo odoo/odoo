@@ -173,15 +173,15 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with the "grid" layout.
      */
     grid: function () {
-        const columnsContent = this._getColumnsContent();
+        const imgs = this._getImgHolderEls();
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
-        _.each(columnsContent, function (columnContent, index) {
+        _.each(imgs, function (img, index) {
             var $col = $('<div/>', {class: colClass});
-            $col[0].innerHTML = columnContent;
+            $col[0].innerHTML = img.classList.contains("o_gallery_image_wrapper") ? img.innerHTML : img.outerHTML;
             $col.appendTo($row);
             if ((index + 1) % columns === 0) {
                 $row = $('<div/>', {class: 'row s_nb_column_fixed'});
@@ -219,7 +219,7 @@ options.registry.gallery = options.Class.extend({
                     let min = Infinity;
                     let smallestColEl;
                     for (const colEl of cols) {
-                        const imgEls = colEl.querySelectorAll("img");
+                        const imgEls = colEl.children;
                         const lastImgRect = imgEls.length && imgEls[imgEls.length - 1].getBoundingClientRect();
                         const height = lastImgRect ? Math.round(lastImgRect.top + lastImgRect.height) : 0;
                         if (height < min) {
@@ -239,9 +239,10 @@ options.registry.gallery = options.Class.extend({
         while (imgs.length) {
             var min = Infinity;
             var $lowest;
-            _.each(cols, function (col) {
+            cols.forEach((col) => {
                 var $col = $(col);
-                var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
+                const rect = col.lastElementChild?.getBoundingClientRect();
+                var height = $col.is(':empty') ? 0 : rect.top + rect.height;
                 // Neutralize invisible sub-pixel height differences.
                 height = Math.round(height);
                 if (height < min) {
@@ -282,8 +283,7 @@ options.registry.gallery = options.Class.extend({
      */
     nomode: function () {
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
-        var imgs = this._getImages();
-        const columnsContent = this._getColumnsContent();
+        const imgs = this._getImgHolderEls();
 
         this._replaceContent($row);
 
@@ -292,7 +292,7 @@ options.registry.gallery = options.Class.extend({
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = 'col-lg-6';
             }
-            var $wrap = $('<div/>', {class: wrapClass}).append(columnsContent[index]);
+            var $wrap = $('<div/>', {class: wrapClass}).append(imgs[index]);
             $row.append($wrap);
         });
     },
@@ -522,19 +522,13 @@ options.registry.gallery = options.Class.extend({
      */
     _getImgHolderEls: function () {
         const imgEls = this._getImages();
-        return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
-    },
-    /**
-     * Returns the inner HTML of the parent column for each image.
-     *
-     * @private
-     * @returns {Array.<string>}
-     */
-    _getColumnsContent() {
-        const imgEls = this._getImages();
         return imgEls.map(imgEl => {
-            const colEl = imgEl.closest("[class^='col-lg-']");
-            return (colEl && colEl.innerHTML) || imgEl.outerHTML;
+            const columnEl = imgEl.closest(".container .row > [class*=col-]:not(.o_masonry_col)");
+            if (columnEl) {
+                columnEl.className = "o_gallery_image_wrapper";
+                return columnEl;
+            }
+            return imgEl.closest(".o_gallery_image_wrapper") || imgEl.closest("a") || imgEl;
         });
     },
     /**
