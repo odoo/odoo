@@ -625,7 +625,7 @@ class IrMailServer(models.Model):
         smtp_from = getattr(smtp_session, 'smtp_from', False) or smtp_from
 
         notifications_email = email_normalize(self._get_default_from_address())
-        if notifications_email and smtp_from == notifications_email and message['From'] != notifications_email:
+        if notifications_email and email_normalize(smtp_from) == notifications_email and email_normalize(message['From']) != notifications_email:
             smtp_from = encapsulate_email(message['From'], notifications_email)
 
         if message['From'] != smtp_from:
@@ -747,7 +747,7 @@ class IrMailServer(models.Model):
 
         # 1. Try to find a mail server for the right mail from
         # Skip if passed email_from is False (example Odoobot has no email address)
-        if email_from:
+        if email_from_normalized:
             mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == email_from_normalized)
             if mail_server:
                 return mail_server[0], email_from
