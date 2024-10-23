@@ -37,7 +37,6 @@ const { DEFAULT_LOCALE, PIVOT_TABLE_CONFIG } = spreadsheet.constants;
 const { toZone } = spreadsheet.helpers;
 const { cellMenuRegistry } = spreadsheet.registries;
 
-
 describe.current.tags("headless");
 defineSpreadsheetModels();
 defineSpreadsheetActions();
@@ -635,7 +634,7 @@ test("Can see record on vectorized list index", async function () {
     model.dispatch("CREATE_SHEET", { sheetId: "42" });
     model.dispatch("ACTIVATE_SHEET", {
         sheetIdFrom: model.getters.getActiveSheetId(),
-        sheetIdTo: "42"
+        sheetIdTo: "42",
     });
     setCellContent(model, "C1", "1");
     setCellContent(model, "C2", "2");
@@ -972,9 +971,11 @@ test("Can duplicate a list", async () => {
     const listIds = model.getters.getListIds();
     expect(model.getters.getListIds().length).toBe(2);
 
+    const originalListDefinition = model.getters.getListDefinition(listId);
     const expectedDuplicatedDefinition = {
-        ...model.getters.getListDefinition(listId),
+        ...originalListDefinition,
         id: "2",
+        name: `${originalListDefinition.name} (copy)`,
     };
     expect(model.getters.getListDefinition(listIds[1])).toEqual(expectedDuplicatedDefinition);
 
