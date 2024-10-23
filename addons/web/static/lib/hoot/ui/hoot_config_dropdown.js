@@ -3,7 +3,7 @@
 import { Component, useRef, useState, xml } from "@odoo/owl";
 import { logLevels } from "../core/logger";
 import { refresh } from "../core/url";
-import { useAutofocus, useWindowListener } from "../hoot_utils";
+import { STORAGE, storageSet, useAutofocus, useWindowListener } from "../hoot_utils";
 import { generateSeed, internalRandom } from "../mock/math";
 import { toggleColorScheme, useColorScheme } from "./hoot_colors";
 import { HootCopyButton } from "./hoot_copy_button";
@@ -213,6 +213,18 @@ export class HootConfigDropdown extends Component {
                         Color scheme
                     </button>
 
+                    <t t-if="runnerState.failedIds.size">
+                        <button
+                            type="button"
+                            class="p-1 hover:bg-gray-300 dark:hover:bg-gray-700"
+                            t-on-click="clearFailedTests"
+                            title="Remove current failed test IDs from the local storage"
+                        >
+                            <i class="fa fa-trash" />
+                            Clear failed tests
+                        </button>
+                    </t>
+
                     <button class="flex bg-btn justify-center rounded mt-1 p-1 transition-colors">
                         Apply and refresh
                     </button>
@@ -239,6 +251,7 @@ export class HootConfigDropdown extends Component {
 
         this.color = useColorScheme();
         this.config = useState(this.env.runner.config);
+        this.runnerState = useState(this.env.runner.state);
         this.state = useState({ open: false });
 
         useAutofocus(this.rootRef);
@@ -256,6 +269,12 @@ export class HootConfigDropdown extends Component {
                 this.state.open = !this.state.open;
             }
         });
+    }
+
+    clearFailedTests() {
+        this.runnerState.failedIds.clear();
+
+        storageSet(STORAGE.failed, []);
     }
 
     /**

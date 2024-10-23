@@ -646,16 +646,18 @@ export class MockServer {
 
         let result = null;
         for (const [callback, routeParams, routeOptions] of listeners) {
+            const pure = options.pure ?? routeOptions.pure;
+            const alwaysReturns = options.alwaysReturns ?? routeOptions.alwaysReturns;
             try {
                 result = await callback.call(this, request, routeParams);
             } catch (error) {
+                if (pure) {
+                    throw error;
+                }
                 result = ensureError(error);
             }
-            if (!isNil(result) || (options.alwaysReturns ?? routeOptions.alwaysReturns)) {
-                if (options.pure ?? routeOptions.pure) {
-                    if (result instanceof Error) {
-                        throw result;
-                    }
+            if (!isNil(result) || alwaysReturns) {
+                if (pure) {
                     return result;
                 }
                 if (result instanceof RPCError) {

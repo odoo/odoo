@@ -1,24 +1,61 @@
-interface OdooModule {
+interface OdooModuleFactory {
     deps: string[];
-    fn: OdooModuleFactory;
+    fn: OdooModuleFactoryFn;
     ignoreMissingDeps: boolean;
 }
 
-type OdooModuleFactory<T = string> = (require: (dependency: T) => any) => any;
-
-type OdooModuleDefineFn = <T = string>(name: string, deps: T[], factory: OdooModuleFactory<T>, lazy?: boolean) => void;
-
-class ModuleLoader {
-    define: OdooModuleDefineFn;
-    factories: Map<string, OdooModule>;
+class OdooModuleLoader {
+    bus: EventTarget;
+    checkErrorProm: Promise<void> | null;
+    /**
+     * Mapping [name => factory]
+     */
+    factories: Map<string, OdooModuleFactory>;
+    /**
+     * Names of failed modules
+     */
     failed: Set<string>;
+    /**
+     * Names of modules waiting to be started
+     */
     jobs: Set<string>;
-    modules: Map<string, any>;
+    /**
+     * Mapping [name => module]
+     */
+    modules: Map<string, OdooModule>;
+
+    addJob: (name: string) => void;
+
+    checkAndReportErrors: () => Promise<void>;
+
+    define: (
+        name: string,
+        deps: string[],
+        factory: OdooModuleFactoryFn,
+        lazy?: boolean
+    ) => OdooModule;
+
+    findErrors: () => {
+        failed: string[];
+        cycle: string | null;
+        missing: string[];
+        unloaded: string[];
+    };
+
+    findJob: () => string | null;
+
+    startModule: (name: string) => OdooModule;
+
+    startModules: () => void;
 }
+
+type OdooModule = Record<string, any>;
+
+type OdooModuleFactoryFn = (require: (dependency: string) => OdooModule) => OdooModule;
 
 declare const odoo: {
     csrf_token: string;
     debug: string;
-    define: OdooModuleDefineFn;
-    loader: ModuleLoader;
+    define: OdooModuleLoader["define"];
+    loader: OdooModuleLoader;
 };
