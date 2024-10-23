@@ -5,7 +5,6 @@ import requests
 import sys
 import tempfile
 import zipfile
-from pathlib import Path
 
 from . import Command
 
@@ -62,7 +61,7 @@ class Deploy(Command):
 
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
+            prog=self.prog,
             description=self.__doc__
         )
         parser.add_argument('path', help="Path of the module to deploy")
