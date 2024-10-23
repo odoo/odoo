@@ -5,20 +5,15 @@ from odoo.addons.mail.tests.test_thread_controller import (
     MessagePostSubTestData,
     TestThreadControllerCommon,
 )
+from odoo.addons.portal.tests.test_portal_controller_common import TestPortalControllerCommon
 
 
 @odoo.tests.tagged("-at_install", "post_install")
-class TestPortalThreadController(TestThreadControllerCommon):
+class TestPortalThreadController(TestThreadControllerCommon, TestPortalControllerCommon):
     def test_message_post_access_portal_no_partner(self):
         """Test access of message post for portal without partner."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
-        access_token = record._portal_ensure_token()
-        partner = self.env["res.partner"].create({"name": "Sign Partner"})
-        _hash = record._sign_token(partner.id)
-        token = {"token": access_token}
-        bad_token = {"token": "incorrect token"}
-        sign = {"hash": _hash, "pid": partner.id}
-        bad_sign = {"hash": "incorrect hash", "pid": partner.id}
+        token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
 
         def test_access(user, allowed, route_kw=None, exp_author=None):
             return MessagePostSubTestData(user, allowed, route_kw=route_kw, exp_author=exp_author)
@@ -117,13 +112,7 @@ class TestPortalThreadController(TestThreadControllerCommon):
         """Test partner_ids of message_post for portal record without partner.
         Only followers are allowed to be mentioned by non-internal users."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
-        access_token = record._portal_ensure_token()
-        partner = self.env["res.partner"].create({"name": "Sign Partner"})
-        _hash = record._sign_token(partner.id)
-        token = {"token": access_token}
-        bad_token = {"token": "incorrect token"}
-        sign = {"hash": _hash, "pid": partner.id}
-        bad_sign = {"hash": "incorrect hash", "pid": partner.id}
+        token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
         all_partners = (
             self.user_portal + self.user_employee + self.user_demo + self.user_admin
         ).partner_id
