@@ -17,6 +17,7 @@ class Users(models.Model):
          ('confidential', 'Only internal users')],
         compute="_compute_calendar_default_privacy",
         inverse="_inverse_calendar_res_users_settings",
+        compute_sudo=True,
     )
 
     @property
@@ -83,9 +84,9 @@ class Users(models.Model):
         fields in 'res.users'. If there is no 'res.users.settings' record for the user, then the record is created.
         """
         for user in self:
-            settings = self.env["res.users.settings"]._find_or_create_for_user(user)
+            settings = self.env["res.users.settings"].sudo()._find_or_create_for_user(user)
             configuration = {field: user[field] for field in self._get_user_calendar_configuration_fields()}
-            settings.update(configuration)
+            settings.sudo().update(configuration)
 
     @api.model
     def _get_user_calendar_configuration_fields(self) -> list[str]:
