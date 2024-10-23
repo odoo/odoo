@@ -30,7 +30,7 @@ export class BadgeField extends Component {
                 return `text-bg-${decorationName}`;
             }
         }
-        return "";
+        return "bg-300";
     }
 }
 
