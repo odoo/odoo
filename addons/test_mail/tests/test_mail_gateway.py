@@ -40,6 +40,19 @@ class TestEmailParsing(TestMailCommon):
              "Content-Type 'binary/octet-stream', assuming 'application/octet-stream'"),
         ])
 
+    def test_message_parse_and_replace_bin_plain(self):
+        """ Incoming email containing bin/plain Content-Type with pdf attachment """
+        received_mail = self.from_string(test_mail_data.MAIL_MULTIPART_BIN_PLAIN)
+        with self.assertLogs('odoo.addons.mail.models.mail_thread', level="WARNING") as capture:
+            extracted_mail = self.env['mail.thread']._message_parse_extract_payload(received_mail)
+
+        self.assertEqual(len(extracted_mail['attachments']), 1)
+        attachment = extracted_mail['attachments'][0]
+        self.assertEqual(attachment.fname, '20241007.pdf')
+        self.assertEqual(capture.output, [
+            ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected Content-Type 'bin/plain', assuming 'application/pdf'"),
+        ])
+
     def test_message_parse_body(self):
         # test pure plaintext
         plaintext = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>')
