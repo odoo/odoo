@@ -271,10 +271,10 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
     def test_ambiguous_full_day(self):
         """ Test date stays the same, regardless of DST changes """
         self.event.write({
+            'allday': True,
             'start': datetime(2020, 3, 23, 0, 0),
             'stop': datetime(2020, 3, 23, 23, 59),
         })
-        self.event.allday = True
         self.event._apply_recurrence_values({
             'interval': 1,
             'rrule_type': 'weekly',
