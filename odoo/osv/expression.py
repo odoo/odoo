@@ -971,7 +971,7 @@ class expression(object):
 
             if is_operator(leaf):
                 if leaf == NOT_OPERATOR:
-                    push_result(SQL("(NOT (%s))", pop_result()))
+                    push_result(SQL("((%s) IS NOT TRUE)", pop_result()))
                 elif leaf == AND_OPERATOR:
                     push_result(SQL("(%s AND %s)", pop_result(), pop_result()))
                 else:

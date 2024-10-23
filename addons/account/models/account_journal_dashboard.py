@@ -153,7 +153,7 @@ class AccountJournal(models.Model):
                       JOIN account_journal journal ON move.journal_id = journal.id
                      WHERE move.journal_id = ANY(%(journal_ids)s)
                        AND move.company_id = %(company_id)s
-                       AND move.made_sequence_gap = TRUE
+                       AND move.made_sequence_gap IS TRUE
                        AND move.date > %(fiscal_lock_date)s
                        AND (journal.type <> 'sale' OR move.date > %(sale_lock_date)s)
                        AND (journal.type <> 'purchase' OR move.date > %(purchase_lock_date)s)
@@ -843,7 +843,7 @@ class AccountJournal(models.Model):
                    SUM(amount_company_currency_signed) AS amount_total_company
               FROM account_payment payment
               JOIN account_move move ON move.origin_payment_id = payment.id
-             WHERE (NOT payment.is_matched OR payment.is_matched IS NULL)
+             WHERE payment.is_matched IS NOT TRUE
                AND move.state = 'posted'
                AND payment.journal_id = ANY(%s)
                AND payment.company_id = ANY(%s)
