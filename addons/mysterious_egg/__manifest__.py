@@ -30,11 +30,13 @@
     'assets': {
         'web.assets_backend': [
             'mysterious_egg/static/src/**/*',
-            ('remove', 'mysterious_egg/static/src/builder/**/*'),
+            ('remove', 'mysterious_egg/static/src/builder/**/*.js'),
+            ('remove', 'mysterious_egg/static/src/builder/**/*.xml'),
         ],
         # this bundle is lazy loaded when the editor is ready
         'website.assets_builder': [
-            'mysterious_egg/static/src/builder/**/*',
+            'mysterious_egg/static/src/builder/**/*.js',
+            'mysterious_egg/static/src/builder/**/*.xml',
         ]
     },
 }
