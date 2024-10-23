@@ -243,7 +243,7 @@
     <t t-name="web_editor.invisibleSnippetEntry">
         <div class="o_we_invisible_entry d-flex align-items-center justify-content-between"
             t-att-class="{'o_we_invisible_root_parent': entry.isRootParent, 'o_we_sublevel_1': entry.isDescendant}"
-            t-on-click="() => menu.onInvisibleEntryClick(entry)">
+            t-on-click="() => menu._onInvisibleEntryClick(entry)">
             <we-title t-out="entry.name"/>
             <i class="fa ms-2" t-att-class="entry.isVisible ? 'fa-eye' : 'fa-eye-slash'"></i>
         </div>
