@@ -41,6 +41,18 @@ class TestIrMailServer(MailCommon):
                 ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com'],
                 [],
             ),
+            # 'send_smtp_skip_to' context key: block list of SMTP recipients
+            (
+                IrMailServer.with_context(send_smtp_skip_to=['skip@test.example.com', 'other@test.example.com', 'wrong', 'skip.2@test.example.com']),
+                {
+                    'email_to': ['"Customer" <customer@test.example.com>', '"Skip Me" <skip@test.example.com>',
+                                 '"User" <user@test.mycompany.com>', 'user2@test.mycompany.com', '"Skip Me 2" <skip.2@test.example.com>'],
+                },
+                ['customer@test.example.com', 'user@test.mycompany.com', 'user2@test.mycompany.com'],
+                ['"Customer" <customer@test.example.com>', '"Skip Me" <skip@test.example.com>',
+                 '"User" <user@test.mycompany.com>', 'user2@test.mycompany.com', '"Skip Me 2" <skip.2@test.example.com>'],
+                {},
+            ),
             # 'X-Forge-To' header: force envelope Msg['To'] (not SMTP recipients)
             # used notably for mailing lists
             (
@@ -52,6 +64,18 @@ class TestIrMailServer(MailCommon):
                 ['customer@test.example.com', 'user2@test.mycompany.com'],
                 ['mailing@some.domain'],
                 [],
+            ),
+            # 'X-Msg-To-Add' header: add in Msg['To'] without impacting SMTP To, e.g.
+            # displaying more recipients than actually mailed
+            (
+                IrMailServer,
+                {
+                    'email_to': ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com'],
+                    'headers': {'X-Msg-To-Add': '"Other" <other.customer@test.example.com>'}
+                },
+                ['customer@test.example.com', 'user2@test.mycompany.com'],
+                ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com', '"Other" <other.customer@test.example.com>'],
+                {},
             ),
         ]:
             with self.subTest(mail_values=mail_values, smtp_to_lst=smtp_to_lst):
