@@ -442,7 +442,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
                     ":has(label:contains('State'))" +
                     ":has(select[required])" +
-                    ":has(option[selected]:contains('Belgium'))" +
+                    ":has(option:contains('Belgium')):not([selected])" +
                     ":has(option:contains('France'))" +
                     ":has(option:contains('Canada'))" +
                     ":has(option:contains('44 - UK'))" +
