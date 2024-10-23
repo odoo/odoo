@@ -1,15 +1,13 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
-import os
 import secrets
 import sys
 import textwrap
 from pathlib import Path
-
 from passlib.hash import pbkdf2_sha512
 
-from . import Command
 from odoo.tools import config
+
+from . import Command
 
 
 class GenProxyToken(Command):
