@@ -658,6 +658,17 @@ class Product(models.Model):
         or_domains = expression.OR(or_domains)
         return expression.AND([base_domain, or_domains])
 
+    def filter_has_routes(self):
+        """ Return products with route_ids
+            or whose categ_id has total_route_ids.
+        """
+        products_with_routes = self.env['product.product']
+        # retrieve products with route_ids
+        products_with_routes += self.search([('id', 'in', self.ids), ('route_ids', '!=', False)])
+        # retrive products with categ_ids having routes
+        products_with_routes += self.search([('id', 'in', (self - products_with_routes).ids), ('categ_id.total_route_ids', '!=', False)])
+        return products_with_routes
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -1043,7 +1054,7 @@ class ProductCategory(models.Model):
     parent_route_ids = fields.Many2many(
         'stock.route', string='Parent Routes', compute='_compute_parent_route_ids')
     total_route_ids = fields.Many2many(
-        'stock.route', string='Total routes', compute='_compute_total_route_ids',
+        'stock.route', string='Total routes', compute='_compute_total_route_ids', search='_search_total_route_ids',
         readonly=True)
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'category_id', 'Putaway Rules')
     packaging_reserve_method = fields.Selection([
@@ -1062,6 +1073,10 @@ class ProductCategory(models.Model):
                 base_cat = base_cat.parent_id
                 routes |= base_cat.route_ids
             category.parent_route_ids = routes - category.route_ids
+
+    def _search_total_route_ids(self, operator, value):
+        categ_ids = self.filtered_domain([('total_route_ids', operator, value)]).ids
+        return [('id', 'in', categ_ids)]
 
     @api.depends('route_ids', 'parent_route_ids')
     def _compute_total_route_ids(self):
