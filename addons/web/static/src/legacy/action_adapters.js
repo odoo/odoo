@@ -28,6 +28,7 @@ class ActionAdapter extends ComponentAdapter {
         // In Wowl, we want to have all states pushed during the same setTimeout.
         // This is protected in legacy (backward compatibility) but should not e supported in Wowl
         this.tempQuery = {};
+        this.willKeepAliveWidget = false;
         let originalUpdateControlPanel;
         useEffect(
             () => {
@@ -66,6 +67,7 @@ class ActionAdapter extends ComponentAdapter {
     }
 
     pushState(state) {
+        this.willKeepAliveWidget = false;
         if (this.wowlEnv.inDialog) {
             return;
         }
@@ -129,14 +131,14 @@ class ActionAdapter extends ComponentAdapter {
      * This function is called just before the component will be unmounted,
      * because it will be replaced by another one. However, we need to keep it
      * alive, because we might come back to this one later. We thus return the
-     * widget instance, and set this.widget to null so that it is not destroyed
-     * by the compatibility layer. That instance will be destroyed by the
-     * ActionManager service when it will be removed from the controller stack,
-     * and if we ever come back to that controller, the instance will be given
-     * in props so that we can re-use it.
+     * widget instance, and set the willKeepAliveWidget flag so that it is not
+     * destroyed by the compatibility layer. That instance will be destroyed by
+     * the ActionManager service when it will be removed from the controller
+     * stack, and if we ever come back to that controller, the instance will be
+     * given in props so that we can re-use it.
      */
     exportState() {
-        this.widget = null;
+        this.willKeepAliveWidget = true;
         return {
             __legacy_widget__: this.__widget,
             __on_reverse_breadcrumb__: this.onReverseBreadcrumb,
@@ -157,7 +159,7 @@ class ActionAdapter extends ComponentAdapter {
         super.willUnmount();
     }
     __destroy() {
-        if (this.actionService.__legacy__isActionInStack(this.actionId)) {
+        if (this.willKeepAliveWidget || this.actionService.__legacy__isActionInStack(this.actionId)) {
             this.widget = null;
         }
         super.__destroy(...arguments);
