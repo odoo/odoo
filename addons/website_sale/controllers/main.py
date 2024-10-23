@@ -1479,6 +1479,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             address_values['website_id'] = order_sudo.website_id.id
 
         commercial_partner = order_sudo.partner_id.commercial_partner_id
+        # Avoid linking the address to the default archived 'Public user' partner.
+        if commercial_partner.active:
+            address_values['parent_id'] = commercial_partner.id
+
         if address_type == 'billing':
             if order_sudo._is_anonymous_cart():
                 # New billing addresses of public customers will be their contact address.
@@ -1487,13 +1491,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 address_values['type'] = 'other'
             else:
                 address_values['type'] = 'invoice'
-
-            # Avoid linking the address to the default archived 'Public user' partner.
-            if commercial_partner.active:
-                address_values['parent_id'] = commercial_partner.id
         elif address_type == 'delivery':
             address_values['type'] = 'delivery'
-            address_values['parent_id'] = commercial_partner.id
 
     def _create_new_address(self, address_values, address_type, use_same, order_sudo):
         """ Create a new partner, must be called after the data has been verified

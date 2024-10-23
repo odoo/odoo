@@ -54,6 +54,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
     def test_01_create_shipping_address_specific_user_account(self):
         ''' Ensure `website_id` is correctly set (specific_user_account) '''
         p = self.env.user.partner_id
+        p.active = True
         so = self._create_so(partner_id=p.id)
 
         with MockRequest(self.env, website=self.website, sale_order_id=so.id) as req:
