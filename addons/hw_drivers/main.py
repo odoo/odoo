@@ -6,7 +6,7 @@ import platform
 import logging
 from threading import Thread
 import time
-import urllib3
+import requests
 
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_drivers.websocket_client import WebsocketClient
@@ -69,27 +69,61 @@ class Manager(Thread):
                     'devices': devices_list_to_send,
                 }  # Don't send distant_display to the db
             }
-            # disable certifiacte verification
-            urllib3.disable_warnings()
-            http = urllib3.PoolManager(cert_reqs='CERT_NONE')
             try:
-                resp = http.request(
-                    'POST',
+                resp = requests.post(
                     self.server_url + "/iot/setup",
-                    body=json.dumps(data).encode('utf8'),
+                    data=json.dumps(data),
                     headers={
                         'Content-type': 'application/json',
-                        'Accept': 'text/plain',
+                        'Accept': 'application/json',
                     },
                 )
-                if iot_client:
-                    iot_client.iot_channel = json.loads(resp.data).get('result', '')
+                if resp.ok and iot_client:
+                    data = resp.json().get('result', {})
+                    iot_client.iot_channel = data.get('iot_channel', '')
             except json.decoder.JSONDecodeError:
-                _logger.exception('Could not load JSON data: Received data is not in valid JSON format\ncontent:\n%s', resp.data)
+                _logger.exception(
+                    'Could not load JSON data: Received data is not in valid JSON format\ncontent:\n%s',
+                    data
+                )
             except Exception:
                 _logger.exception('Could not reach configured server')
         else:
             _logger.info('Ignoring sending the devices to the database: no associated database')
+
+    def _ensure_db_info(self):
+        """Fetch the ``db_uuid`` and ``enterprise_code`` from the server
+        and update the configuration file.
+        It will only fetch the data if the configuration file does not have the required data.
+        """
+        if not self.server_url:
+            return
+
+        db_uuid = helpers.get_conf('db_uuid')
+        enterprise_code = helpers.get_conf('enterprise_code')
+        # if db_uuid or enterprise_code is empty, fetch the data from the server
+        if not db_uuid or not enterprise_code:
+            try:
+                response = requests.post(
+                    self.server_url + "/iot/db_info",
+                    data=json.dumps({
+                        'params': {
+                            'identifier': helpers.get_mac_address(),
+                            'db_uuid': not db_uuid,
+                            'enterprise_code': not enterprise_code,
+                        }
+                    }),
+                    headers={
+                        'Content-type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                )
+                response.raise_for_status()
+
+                data = response.json().get('result', {})
+                helpers.update_conf(data)
+            except requests.exceptions.HTTPError as e:
+                _logger.warning('Failed to fetch db_uuid and enterprise_code from the db: %s', e)
 
     def run(self):
         """
@@ -97,6 +131,7 @@ class Manager(Thread):
         """
         self.server_url = helpers.get_odoo_server_url()
         helpers.start_nginx_server()
+        self._ensure_db_info()
 
         _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
         if platform.system() == 'Linux' and self.server_url:
