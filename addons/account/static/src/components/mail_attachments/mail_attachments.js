@@ -33,6 +33,18 @@ export class MailAttachments extends Component {
         return file.name.replace(/^.*\./, "");
     }
 
+    isImage(file) {
+        return [
+            "image/jpg",
+            "image/jpeg",
+            "image/jpe",
+            "image/png",
+            "image/svg+xml",
+            "image/gif",
+            "image/webp"
+        ].includes(file.mimetype);
+    }
+
     onFileUploaded(files) {
         let extraFiles = [];
         for (const file of files) {

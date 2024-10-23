@@ -17,6 +17,7 @@ export class Many2ManyBinaryField extends Component {
         acceptedFileExtensions: { type: String, optional: true },
         className: { type: String, optional: true },
         numberOfFiles: { type: Number, optional: true },
+        reverseOrder: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -29,12 +30,13 @@ export class Many2ManyBinaryField extends Component {
         return this.props.record.fields[this.props.name].string;
     }
     get files() {
-        return this.props.record.data[this.props.name].records.map((record) => {
+        const files = this.props.record.data[this.props.name].records.map((record) => {
             return {
                 ...record.data,
                 id: record.resId,
             };
         });
+        return this.props.reverseOrder ? files.sort((f1, f2) => f2.id - f1.id) : files;
     }
 
     getUrl(id) {
@@ -43,6 +45,18 @@ export class Many2ManyBinaryField extends Component {
 
     getExtension(file) {
         return file.name.replace(/^.*\./, "");
+    }
+
+    isImage(file) {
+        return [
+            "image/jpg",
+            "image/jpeg",
+            "image/jpe",
+            "image/png",
+            "image/svg+xml",
+            "image/gif",
+            "image/webp"
+        ].includes(file.mimetype);
     }
 
     async onFileUploaded(files) {
@@ -89,6 +103,7 @@ export const many2ManyBinaryField = {
         acceptedFileExtensions: options.accepted_file_extensions,
         className: attrs.class,
         numberOfFiles: options.number_of_files,
+        reverseOrder: options.reverse_order,
     }),
 };
 

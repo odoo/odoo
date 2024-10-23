@@ -17,11 +17,10 @@
                     'download': !file.placeholder ? '' : undefined,
                    }"
                 >
-                    <span class="o_image o_hover"
-                          style="height:15px;width:30px;"
-                          t-att-data-mimetype="file.mimetype"
-                          t-att-data-ext="ext"
-                          role="img"/>
+                    <img t-if="isImage(file)" t-att-src="'/web/image/' + file.id"
+                        class="o_preview_image o_hover object-fit-cover rounded"/>
+                    <span t-else="" t-att-data-mimetype="file.mimetype" t-att-data-ext="ext"
+                        class="o_image o_preview_image o_hover" role="img"/>
                 </a>
             </div>
         </xpath>

@@ -33,7 +33,8 @@
             <t t-set="url" t-value="getUrl(file.id)"/>
             <div class="o_image_box float-start" t-att-data-tooltip="'Download ' + file.name">
                 <a t-att-href="url" aria-label="Download" download="">
-                    <span class="o_image o_hover" t-att-data-mimetype="file.mimetype" t-att-data-ext="ext" role="img"/>
+                    <img t-if="isImage(file)" t-att-src="'/web/image/' + file.id" class="o_preview_image o_hover object-fit-cover rounded"/>
+                    <span t-else="" class="o_image o_preview_image o_hover" t-att-data-mimetype="file.mimetype" t-att-data-ext="ext" role="img"/>
                 </a>
             </div>
 
