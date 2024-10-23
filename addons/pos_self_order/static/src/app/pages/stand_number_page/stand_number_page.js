@@ -16,13 +16,6 @@ export class StandNumberPage extends Component {
             standNumber: "",
         });
     }
-    numberClick(key) {
-        if (key === "Backspace") {
-            this.state.standNumber = this.state.standNumber.slice(0, -1);
-            return;
-        }
-        this.state.standNumber += key;
-    }
 
     confirm() {
         this.selfOrder.currentOrder.table_stand_number = this.state.standNumber;
