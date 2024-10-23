@@ -443,6 +443,10 @@ export class OdooPivot {
         return this.loader.lastUpdate;
     }
 
+    isModelValid() {
+        return this.loader.isModelValid();
+    }
+
     isValid() {
         return this.loader.isValid();
     }
