@@ -31,6 +31,7 @@
         "views.xml",
         "pre_install.xml",
         "views/res_config.xml",
+        'views/favicon_view.xml',
     ],
     "assets": {
         "web.assets_backend": [
