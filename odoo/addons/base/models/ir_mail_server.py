@@ -708,26 +708,42 @@ class IrMail_Server(models.Model):
 
     @api.model
     def _alter_message(self, message, smtp_from, smtp_to_list):
-        x_forge_to = message['X-Forge-To']
         # `To:` header forged, e.g. for posting on discuss.channels, to avoid confusion
-        if x_forge_to:
-            del message['To']                # avoid multiple To: headers!
-            message['To'] = x_forge_to
+        if x_forge_to := message['X-Forge-To']:
+            message.replace_header('To', x_forge_to)
+        # `To:` header extended, e.g. for adding "virtual" recipients, aka fake recipients
+        # that do not impact SMTP To
+        elif x_msg_add_to := message['X-Msg-To-Add']:
+            to = message['To'] or ''
+            to_normalized = tools.mail.email_normalize_all(to)
+            message.replace_header(
+                'To', ', '.join([
+                    to,
+                    ', '.join(
+                        address for address in tools.mail.email_split_and_format(x_msg_add_to)
+                        if tools.mail.email_normalize(address, strict=False) not in to_normalized
+                    ),
+                ]
+                ))
 
         if message['From'] != smtp_from:
-            del message['From']              # always remove before adding
-            message['From'] = smtp_from
+            message.replace_header('From', smtp_from)
 
         # cleanup unwanted headers
         del message['Bcc']                   # see odoo/odoo@2445f9e3c22db810d61996afde883e4ca608f15b
         del message['X-Forge-To']
+        del message['X-Msg-To-Add']
+        del message['X-Msg-To-Consolidate']
 
     @api.model
     def _prepare_smtp_to_list(self, message, smtp_session):
         """ Prepare SMTP To address list, based on To / Cc / Bcc.
 
         Optional 'send_validated_to' context key filter restricts addresses to
-        be part of that list. """
+        be part of that list.
+        
+        Optional 'send_smtp_skip_to' context key holds a recipients block list
+        """
         email_to = message['To']
         email_cc = message['Cc']
         email_bcc = message['Bcc']
@@ -738,14 +754,20 @@ class IrMail_Server(models.Model):
         # 2 emails by extract_rfc2822_addresses
         validated_to = self.env.context.get('send_validated_to') or []
 
-        # All recipient addresses must only contain ASCII characters;
+        # Support optional skip To list
+        skip_to_lst = self.env.context.get('send_smtp_skip_to') or []
+
+        # All recipient addresses must only contain ASCII characters
         return [
             address
             for base in [email_to, email_cc, email_bcc]
             # be sure a given address does not return duplicates (but duplicates
             # in final smtp to list is still ok)
             for address in tools.misc.unique(extract_rfc2822_addresses(base))
-            if address and (not validated_to or address in validated_to)
+            if (
+                address and (not validated_to or address in validated_to)
+                and email_normalize(address, strict=False) not in skip_to_lst
+            )
         ]
 
     @api.model
