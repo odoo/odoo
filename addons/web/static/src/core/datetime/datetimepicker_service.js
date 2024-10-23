@@ -8,7 +8,7 @@ import { DateTimePicker } from "./datetime_picker";
 import { DateTimePickerPopover } from "./datetime_picker_popover";
 
 /**
- * @typedef {luxon.DateTime} DateTime
+ * @typedef {luxon["DateTime"]["prototype"]} DateTime
  *
  * @typedef DateTimePickerHookParams
  * @property {string} [format]
@@ -346,8 +346,9 @@ export const datetimePickerService = {
 
                 /**
                  * @param {DateTimePickerProps["value"]} value
+                 * @param {"input" | "picker"} source
                  */
-                const updateValue = (value) => {
+                const updateValue = (value, source) => {
                     const previousValue = pickerProps.value;
                     pickerProps.value = value;
 
@@ -355,22 +356,31 @@ export const datetimePickerService = {
                         return;
                     }
 
-                    if (pickerProps.range) {
-                        // When in range: compare each individual value
-                        const [prevStart, prevEnd] = ensureArray(previousValue);
-                        const [nextStart, nextEnd] = ensureArray(pickerProps.value);
+                    if (pickerProps.range && source === "picker") {
                         if (
-                            (pickerProps.focusedDateIndex === 0 &&
-                                areDatesEqual(prevEnd, nextEnd)) ||
-                            (pickerProps.focusedDateIndex === 1 &&
-                                areDatesEqual(prevStart, nextStart))
+                            pickerProps.focusedDateIndex === 0 ||
+                            (value[0] && value[1] && value[1] < value[0])
                         ) {
+                            // If selecting either:
+                            // - the first value
+                            // - OR a second value before the first:
+                            // Then:
+                            // - Set the DATE (year + month + day) of all values
+                            // to the one that has been selected.
+                            const { year, month, day } = value[pickerProps.focusedDateIndex];
+                            for (let i = 0; i < value.length; i++) {
+                                value[i] = value[i] && value[i].set({ year, month, day });
+                            }
+                            pickerProps.focusedDateIndex = 1;
+                        } else {
+                            // If selecting the second value after the first:
+                            // - simply toggle the focus index
                             pickerProps.focusedDateIndex =
                                 pickerProps.focusedDateIndex === 1 ? 0 : 1;
                         }
                     }
 
-                    hookParams.onChange?.(pickerProps.value);
+                    hookParams.onChange?.(value);
                 };
 
                 const updateValueFromInputs = () => {
@@ -390,7 +400,7 @@ export const datetimePickerService = {
                             }
                         }
                     );
-                    updateValue(values.length === 2 ? values : values[0]);
+                    updateValue(values.length === 2 ? values : values[0], "input");
                 };
 
                 // Hook variables
@@ -400,7 +410,7 @@ export const datetimePickerService = {
                     ...DateTimePicker.defaultProps,
                     onSelect: (value) => {
                         value &&= markRaw(value);
-                        updateValue(value);
+                        updateValue(value, "picker");
                         if (!pickerProps.range && pickerProps.type === "date") {
                             saveAndClose();
                         }

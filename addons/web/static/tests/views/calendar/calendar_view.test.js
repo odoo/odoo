@@ -420,8 +420,7 @@ test.tags("desktop")(`simple calendar rendering on desktop`, async () => {
 
     await changeScale("day");
     expect(`.o_event`).toHaveCount(2);
-    expect(`.o_calendar_sidebar .o_datetime_picker .o_highlight_start`).toHaveCount(1);
-    expect(`.o_calendar_sidebar .o_datetime_picker .o_highlight_end`).toHaveCount(1);
+    expect(`.o_calendar_sidebar .o_datetime_picker .o_selected`).toHaveCount(1);
 
     await changeScale("month");
     await toggleFilter("attendee_ids", "all");
