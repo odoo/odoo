@@ -13,6 +13,8 @@ import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
 import { defineModels } from "./_framework/mock_server/mock_server";
+import { afterEach, expect } from "@odoo/hoot";
+import { Deferred } from "@odoo/hoot-mock";
 
 /**
  * @typedef {import("./_framework/mock_server/mock_fields").FieldType} FieldType
@@ -165,3 +167,73 @@ export const webModels = {
     ResPartner,
     ResUsers,
 };
+
+const stepState = {
+    expectedSteps: null,
+    /** @type {Promise} */
+    deferred: null,
+    timeout: null,
+    currentSteps: [],
+
+    clear() {
+        clearTimeout(this.timeout);
+        this.timeout = null;
+        this.deferred = null;
+        this.currentSteps = [];
+        this.expectedSteps = null;
+    },
+
+    check({ crashOnFail = false } = {}) {
+        const success =
+            this.expectedSteps.length === this.currentSteps.length &&
+            this.expectedSteps.every((s, i) => s === this.currentSteps[i]);
+        if (!success && !crashOnFail) {
+            return;
+        }
+        expect.verifySteps(this.expectedSteps);
+        if (success) {
+            this.deferred.resolve();
+        } else {
+            this.deferred.reject(new Error("Steps do not match."));
+        }
+        this.clear();
+    },
+};
+
+afterEach(() => {
+    if (stepState.expectedSteps) {
+        stepState.check({ crashOnFail: true });
+    } else {
+        stepState.clear();
+    }
+});
+
+/**
+ * Indicate the completion of a test step. This step must then be verified by
+ * calling `assertSteps`.
+ *
+ * @param {string} step
+ */
+export function step(step) {
+    stepState.currentSteps.push(step);
+    expect.step(step);
+    if (stepState.expectedSteps) {
+        stepState.check();
+    }
+}
+
+/**
+ * Wait for the given steps to be executed or for the timeout to be reached.
+ *
+ * @param {string[]} steps
+ */
+export function assertSteps(steps) {
+    if (stepState.expectedSteps) {
+        stepState.check({ crashOnFail: true });
+    }
+    stepState.expectedSteps = steps;
+    stepState.deferred = new Deferred();
+    stepState.timeout = setTimeout(() => stepState.check({ crashOnFail: true }), 2000);
+    stepState.check();
+    return stepState.deferred;
+}
