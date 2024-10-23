@@ -22,7 +22,7 @@ class AccountMoveSend(models.AbstractModel):
         results = super()._get_placeholder_mail_attachments_data(move, extra_edis=extra_edis)
 
         partner_edi_format = self._get_default_invoice_edi_format(move)
-        if not move.l10n_es_edi_facturae_xml_id and partner_edi_format == 'es_facturae' and move._l10n_es_edi_facturae_get_default_enable():
+        if partner_edi_format == 'es_facturae' and move._l10n_es_edi_facturae_get_default_enable():
             filename = f'{move.name.replace("/", "_")}_facturae_signed.xml'
             results.append({
                 'id': f'placeholder_{filename}',
