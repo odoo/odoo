@@ -20,7 +20,12 @@
     'assets': {
         'web.assets_frontend': [
             'website_event_track_live_quiz/static/src/js/**/*',
-            'website_event_track_live_quiz/static/src/xml/**/*',
+        ],
+        'website_event_track_live.assets_widget_xml': [
+            'website_event_track_live_quiz/static/src/xml/website_event_track_live_templates.xml',
+        ],
+        'website_event_track_quiz.assets_widget_xml': [
+            'website_event_track_live_quiz/static/src/xml/website_event_track_quiz_templates.xml',
         ],
     },
     'license': 'LGPL-3',

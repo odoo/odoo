@@ -17,10 +17,12 @@
     'assets': {
         'web.assets_frontend': [
             'website_sale_autocomplete/static/src/js/address_form.js',
-            'website_sale_autocomplete/static/src/xml/autocomplete.xml',
         ],
         'web.assets_tests': [
             'website_sale_autocomplete/static/tests/**/*.js'
+        ],
+        'website_sale_autocomplete.assets_widget_xml': [
+            'website_sale_autocomplete/static/src/xml/autocomplete.xml',
         ],
     },
     'installable': True,

@@ -15,6 +15,9 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         'click .o_wbooth_registration_submit': '_onSubmitBoothSelectionClick',
         'click .o_wbooth_registration_confirm': '_onConfirmRegistrationClick',
     },
+    assetLibs: [
+        "website_event_booth.assets_widget_xml",
+    ],
 
     start() {
         this.eventId = parseInt(this.el.dataset.eventId);

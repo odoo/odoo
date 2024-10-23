@@ -25,6 +25,9 @@
             "click .o_btn_install": "_onClickInstall",
             "click .o_btn_close": "_onClickClose",
         },
+        assetLibs: [
+            "website_event_track.assets_widget_xml"
+        ],
 
         /**
          * @private

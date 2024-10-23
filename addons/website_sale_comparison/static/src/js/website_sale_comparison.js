@@ -19,6 +19,9 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     events: {
         'click .o_product_panel_header': '_onClickPanelHeader',
     },
+    assetLibs: [
+        "website_sale_comparison.assets_widget_xml",
+    ],
 
     /**
      * @constructor

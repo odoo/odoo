@@ -12,6 +12,9 @@ var WebsiteEventReplaySuggestion = PublicWidget.extend({
     events: {
         'click .owevent_track_suggestion_replay': '_onReplayClick'
     },
+    assetLibs: [
+        "website_event_track_live.assets_widget_xml"
+    ],
 
     init: function (parent, options) {
         this._super(...arguments);

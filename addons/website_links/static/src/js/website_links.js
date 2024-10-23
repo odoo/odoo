@@ -135,6 +135,9 @@ var RecentLinkBox = publicWidget.Widget.extend({
     events: {
         'click .btn_shorten_url_clipboard': '_onCopyShortenUrl',
     },
+    assetLibs: [
+        "website_links.assets_widget_xml",
+    ],
 
     /**
      * @constructor

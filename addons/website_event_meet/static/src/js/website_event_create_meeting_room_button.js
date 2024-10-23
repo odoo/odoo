@@ -9,6 +9,9 @@ publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend
     events: {
         'click': '_onClickCreate',
     },
+    assetLibs: [
+        "website_event_meet.assets_widget_xml",
+    ],
 
     //--------------------------------------------------------------------------
     // Handlers

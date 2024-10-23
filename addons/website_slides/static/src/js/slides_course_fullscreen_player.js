@@ -38,6 +38,9 @@
     var VideoPlayerYouTube = publicWidget.Widget.extend({
         template: 'website.slides.fullscreen.video.youtube',
         youtubeUrl: 'https://www.youtube.com/iframe_api',
+        assetLibs: [
+            "website_slides.assets_widget_xml",
+        ],
 
         init: function (parent, slide) {
             this.slide = slide;
@@ -146,6 +149,9 @@
     var VideoPlayerVimeo = publicWidget.Widget.extend({
         template: 'website.slides.fullscreen.video.vimeo',
         vimeoScriptUrl: 'https://player.vimeo.com/api/player.js',
+        assetLibs: [
+            "website_slides.assets_widget_xml",
+        ],
 
         init: function (parent, slide) {
             this.slide = slide;
@@ -383,6 +389,9 @@
             'change_slide': '_onChangeSlideRequest',
             'slide_go_next': '_onSlideGoToNext',
         }),
+        assetLibs: [
+            "website_slides.assets_widget_xml",
+        ],
         /**
         * @override
         * @param {Object} el

@@ -20,6 +20,9 @@ var Quiz = publicWidget.Widget.extend({
         "click .o_quiz_js_quiz_submit": '_submitQuiz',
         "click .o_quiz_js_quiz_reset": '_onClickReset',
     },
+    assetLibs: [
+        "website_event_track_quiz.assets_widget_xml",
+    ],
 
     /**
     * @override

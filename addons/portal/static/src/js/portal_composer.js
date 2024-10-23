@@ -22,6 +22,9 @@ var PortalComposer = publicWidget.Widget.extend({
         'click .o_portal_chatter_attachment_delete': 'async _onAttachmentDeleteClick',
         'click .o_portal_chatter_composer_btn': 'async _onSubmitButtonClick',
     },
+    assetLibs: [
+        "portal.assets_widget_xml",
+    ],
 
     /**
      * @constructor

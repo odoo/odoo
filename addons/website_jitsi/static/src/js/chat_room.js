@@ -10,6 +10,9 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
     events: {
         'click .o_wjitsi_room_link': '_onChatRoomClick',
     },
+    assetLibs: [
+        "website_jitsi.assets_widget_xml",
+    ],
 
     /**
       * Manage the chat room (Jitsi), update the participant count...

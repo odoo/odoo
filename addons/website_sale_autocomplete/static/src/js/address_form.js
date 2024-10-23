@@ -13,6 +13,9 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
         'input input[name="street"]': '_onChangeStreet',
         'click .js_autocomplete_result': '_onClickAutocompleteResult'
     },
+    assetLibs: [
+        "website_sale_autocomplete.assets_widget_xml",
+    ],
     init: function() {
         this.streetAndNumberInput = document.querySelector('input[name="street"]');
         this.cityInput = document.querySelector('input[name="city"]');
