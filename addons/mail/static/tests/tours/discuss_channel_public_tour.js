@@ -13,12 +13,9 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                 if (!window.location.pathname.startsWith("/discuss/channel")) {
                     console.error("Channel secret token is still present in URL.");
                 }
-                const { missing, failed, unloaded } = odoo.loader.findErrors();
-                if ([missing, failed, unloaded].some((arr) => arr.length)) {
-                    console.error(
-                        "Couldn't load all JS modules.",
-                        JSON.stringify({ missing, failed, unloaded })
-                    );
+                const errors = odoo.loader.findErrors();
+                if (Object.keys(errors).length) {
+                    console.error("Couldn't load all JS modules.", errors);
                 }
                 document.body.classList.add("o_discuss_channel_public_modules_loaded");
                 if (

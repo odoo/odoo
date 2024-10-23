@@ -34,7 +34,7 @@ const anchorHrefDescriptor = Object.getOwnPropertyDescriptor(HTMLAnchorElement.p
  * it can't be directly mocked on the window object.
  *
  * @param {string} name
- * @param {OdooModule} module
+ * @param {OdooModuleFactory} factory
  */
 export function mockBrowserFactory(name, { fn }) {
     return (...args) => {
