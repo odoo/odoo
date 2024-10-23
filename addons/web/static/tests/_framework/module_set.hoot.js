@@ -393,7 +393,7 @@ const __gcAndLogMemory = (label, testCount) => {
     console.log(...logs);
 };
 
-/** @extends {ModuleLoader} */
+/** @extends {OdooModuleLoader} */
 class ModuleSetLoader extends loader.constructor {
     cleanups = [];
 
