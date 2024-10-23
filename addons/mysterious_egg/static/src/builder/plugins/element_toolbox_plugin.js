@@ -34,14 +34,19 @@ export class ElementToolboxPlugin extends Plugin {
     }
 
     changeSidebarTarget(selectedElement) {
-        const toolboxes = [];
+        const map = new Map();
         for (const toolbox of this.toolboxes) {
             const { selector } = toolbox;
             const element = selectedElement.closest(selector);
             if (element) {
-                toolboxes.push({ element, toolbox });
+                map.set(element, toolbox);
             }
         }
+        const toolboxes = [...map]
+            .sort(([a], [b]) => {
+                return b.contains(a) ? 1 : -1;
+            })
+            .map(([element, toolbox]) => ({ element, toolbox }));
         for (const handler of this.resources.change_selected_toolboxes_listeners || []) {
             handler(toolboxes);
         }
