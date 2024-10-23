@@ -18,8 +18,7 @@ function connect () {
     sudo mount -o remount,rw /root_bypass_ramdisks
 
 		sudo sed -i "s/${HOSTNAME}/${IOT_NAME}/g" ${HOSTS}
-		echo "${IOT_NAME}" > /tmp/hostname
-		sudo cp /tmp/hostname "${HOST_FILE}"
+		echo "${IOT_NAME}" | sudo tee "${HOST_FILE}"
 
 		echo "interface=wlan0" > /root_bypass_ramdisks/etc/hostapd/hostapd.conf
 		echo "ssid=${IOT_NAME}" >> /root_bypass_ramdisks/etc/hostapd/hostapd.conf
