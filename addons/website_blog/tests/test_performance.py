@@ -31,6 +31,7 @@ class TestBlogPerformance(UtilPerf):
             "author_id": self.env.user.id,
             "tag_ids": [(4, tag.id) for tag in blog_tags],
             "is_published": True,
+            "published_date": "2000-01-01",
             "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
         } for blog in blogs])
 
@@ -42,7 +43,7 @@ class TestBlogPerformance(UtilPerf):
         BlogTag = self.env['blog.tag']
         blogs = self.env['blog.blog'].search([])
         blog_tags = BlogTag.create([{'name': 'Blog Tag Test %s' % i} for i in range(1, 20)])
-        BlogPost.create([{'name': 'Blog Post Test %s' % i, 'is_published': True, 'blog_id': blogs[i % 2].id} for i in range(1, 20)])
+        BlogPost.create([{'name': 'Blog Post Test %s' % i, "published_date": "2000-01-01", 'is_published': True, 'blog_id': blogs[i % 2].id} for i in range(1, 20)])
         blog_posts = BlogPost.search([])
         for blog_post in blog_posts:
             blog_post.tag_ids += blog_tags
@@ -57,7 +58,7 @@ class TestBlogPerformance(UtilPerf):
         BlogTag = self.env['blog.tag']
         blogs = self.env['blog.blog'].search([])
         blog_tags = BlogTag.create([{'name': 'New Blog Tag Test %s' % i} for i in range(1, 50)])
-        BlogPost.create([{'name': 'New Blog Post Test %s' % i, 'is_published': True, 'blog_id': blogs[random.randint(0, 1)].id} for i in range(1, 100)])
+        BlogPost.create([{'name': 'New Blog Post Test %s' % i, 'is_published': True, 'published_date': '2000-01-01', 'blog_id': blogs[random.randint(0, 1)].id} for i in range(1, 100)])
         blog_posts = BlogPost.search([])
         for blog_post in blog_posts:
             blog_post.write({'tag_ids': [[6, 0, random.choices(blog_tags.ids, k=random.randint(0, len(blog_tags)))]]})

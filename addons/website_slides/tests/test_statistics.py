@@ -18,8 +18,8 @@ class TestChannelStatistics(common.SlidesCase):
 
     @mute_logger('odoo.models')
     def test_channel_new_content(self):
-        (self.slide | self.slide_2).write({'date_published': fields.Datetime.now() + relativedelta(days=-6)})
-        self.slide_3.write({'date_published': fields.Datetime.now() + relativedelta(days=-8)})
+        (self.slide | self.slide_2).write({'published_date': fields.Datetime.now() + relativedelta(days=-6)})
+        self.slide_3.write({'published_date': fields.Datetime.now() + relativedelta(days=-8)})
         self.assertTrue(all(slide.is_new_slide for slide in (self.slide | self.slide_2)))
         self.assertFalse(self.slide_3.is_new_slide)
 
@@ -32,7 +32,7 @@ class TestChannelStatistics(common.SlidesCase):
         channel_asportal = self.channel.with_user(self.user_portal)
         self.assertTrue(channel_asportal.partner_has_new_content)
 
-        (self.slide | self.slide_2).write({'date_published': fields.Datetime.now() + relativedelta(days=-8)})
+        (self.slide | self.slide_2).write({'published_date': fields.Datetime.now() + relativedelta(days=-8)})
         channel_asportal.invalidate_recordset(['partner_has_new_content'])
         self.assertFalse(channel_asportal.partner_has_new_content)
 
@@ -108,6 +108,7 @@ class TestChannelStatistics(common.SlidesCase):
 
         # Should update completion when slide is (un)archived
         self.slide_3.active = True
+        self.slide_3.website_published = True
         self.assertEqual(member_emp.completion, 100)
         self.assertEqual(channel_emp.completion, 100)
         self.assertEqual(member_publisher.completion, 33)

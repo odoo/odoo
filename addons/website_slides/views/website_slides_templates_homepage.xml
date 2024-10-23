@@ -345,7 +345,8 @@
         </a>
         <div class="card-body p-3">
             <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-field="channel.name"/>
-            <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
+            <span t-if="channel.publish_on" class="badge text-bg-warning">Scheduled</span>
+            <span t-elif="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
                 <div class="fw-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
                 <div t-if="channel_frontend_tags" class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
