@@ -73,6 +73,7 @@ Create electronic sales invoices with Avatax.
         'views/res_company_views.xml',
         'views/account_journal_views.xml',
         'views/res_bank_views.xml',
+        'views/res_config_settings_view.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
