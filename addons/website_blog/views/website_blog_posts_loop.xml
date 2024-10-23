@@ -168,7 +168,7 @@ according to the enabled options.
             <time t-field="blog_post.post_date" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
             <div t-if="is_view_active('website_blog.opt_posts_loop_show_stats')" class="px-2">
                 <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted me-1"/><t t-esc="len(blog_post.message_ids)"/></b>
-                <b class="text-nowrap ps-2" title="Views"><i class="fa fa-binoculars text-muted me-1"/><t t-esc="blog_post.visits"/></b>
+                <b class="text-nowrap ps-2" title="Views"><i class="fa fa-eye text-muted me-1"/><t t-esc="blog_post.visits"/></b>
             </div>
             <b t-if="posts_list_show_parent_blog" class="text-nowrap text-truncate px-2">
                 <i class="fa fa-folder-open text-muted"/>
