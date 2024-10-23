@@ -192,7 +192,7 @@ def check_companies_domain_parent_of(self, companies):
     ])]
 
 
-class MetaModel(api.Meta):
+class MetaModel(type):
     """ The metaclass of all model classes.
         Its main purpose is to register the models per module.
     """
@@ -1610,7 +1610,6 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     @api.readonly
-    @api.returns('self')
     def search(self, domain, offset=0, limit=None, order=None) -> Self:
         """ search(domain[, offset=0][, limit=None][, order=None])
 
@@ -1632,7 +1631,6 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     @api.readonly
-    @api.returns('self')
     def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         """ search_fetch(domain, field_names[, offset=0][, limit=None][, order=None])
 
@@ -5779,7 +5777,6 @@ class BaseModel(metaclass=MetaModel):
                             translations[lang][from_lang_term] = to_lang_term
                     new.update_field_translations(name, translations)
 
-    @api.returns('self')
     def copy(self, default: ValuesType | None = None) -> Self:
         """ copy(default=None)
 
@@ -5796,7 +5793,6 @@ class BaseModel(metaclass=MetaModel):
             old_record.copy_translations(new_record, excluded=default or ())
         return new_records
 
-    @api.returns('self')
     def exists(self) -> Self:
         """  exists() -> records
 

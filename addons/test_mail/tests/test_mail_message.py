@@ -372,9 +372,9 @@ class TestMessageAccess(MailCommon):
         cls.user_public = mail_new_test_user(cls.env, login='bert', groups='base.group_public', name='Bert Tartignole')
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
-        cls.group_restricted_channel = cls.env['discuss.channel'].channel_create(name='Channel for Groups', group_id=cls.env.ref('base.group_user').id)
-        cls.public_channel = cls.env['discuss.channel'].channel_create(name='Public Channel', group_id=None)
-        cls.private_group = cls.env['discuss.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
+        cls.group_restricted_channel = cls.env['discuss.channel']._channel_create(name='Channel for Groups', group_id=cls.env.ref('base.group_user').id)
+        cls.public_channel = cls.env['discuss.channel']._channel_create(name='Public Channel', group_id=None)
+        cls.private_group = cls.env['discuss.channel']._create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
         cls.message = cls.env['mail.message'].create({
             'body': 'My Body',
             'model': 'discuss.channel',
@@ -559,8 +559,8 @@ class TestMessageLinks(MailCommon, HttpCase):
         super().setUpClass()
 
         cls.user_employee_1 = mail_new_test_user(cls.env, login='tao1', groups='base.group_user', name='Tao Lee')
-        cls.public_channel = cls.env['discuss.channel'].channel_create(name='Public Channel1', group_id=None)
-        cls.private_group = cls.env['discuss.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
+        cls.public_channel = cls.env['discuss.channel']._channel_create(name='Public Channel1', group_id=None)
+        cls.private_group = cls.env['discuss.channel']._create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
 
     @users('employee')
     def test_message_link_by_employee(self):

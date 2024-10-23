@@ -674,7 +674,6 @@ class DiscussChannel(models.Model):
     def _get_allowed_message_post_params(self):
         return super()._get_allowed_message_post_params() | {"special_mentions", "parent_id"}
 
-    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
         if (not self.env.user or self.env.user._is_public()) and self.is_member:
             # sudo: discuss.channel - guests don't have access for creating mail.message
@@ -944,10 +943,12 @@ class DiscussChannel(models.Model):
             info["rtcSessions"] = Store.many(channel.sudo().rtc_session_ids, "ADD", extra=True)
             store.add(channel, info)
 
-    # User methods
     @api.model
-    @api.returns('self', lambda channels: Store(channels).get_result())
     def channel_get(self, partners_to, pin=True, force_open=False):
+        return Store(self._channel_get(partners_to, pin, force_open)).get_result()
+
+    @api.model
+    def _channel_get(self, partners_to, pin=True, force_open=False):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
             only the given partners.
@@ -1086,8 +1087,11 @@ class DiscussChannel(models.Model):
         self.add_members(self.env.user.partner_id.ids)
 
     @api.model
-    @api.returns('self', lambda channels: Store(channels).get_result())
     def channel_create(self, name, group_id):
+        return Store(self._channel_create(name, group_id)).get_result()
+
+    @api.model
+    def _channel_create(self, name, group_id):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
             :param name : the name of the channel to create
@@ -1108,8 +1112,11 @@ class DiscussChannel(models.Model):
         return new_channel
 
     @api.model
-    @api.returns('self', lambda channels: Store(channels).get_result())
     def create_group(self, partners_to, default_display_mode=False, name=''):
+        return Store(self._create_group(partners_to, default_display_mode, name)).get_result()
+
+    @api.model
+    def _create_group(self, partners_to, default_display_mode=False, name=''):
         """ Creates a group channel.
 
             :param partners_to : list of res.partner ids to add to the conversation

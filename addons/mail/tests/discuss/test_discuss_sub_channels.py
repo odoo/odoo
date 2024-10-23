@@ -62,7 +62,7 @@ class TestDiscussSubChannels(HttpCase):
     def test_04_sub_channel_panel_search(self):
         bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
         self.authenticate("bob_user", "bob_user")
-        channel = self.env["discuss.channel"].channel_create(name="General", group_id=None)
+        channel = self.env["discuss.channel"]._channel_create(name="General", group_id=None)
         channel.add_members(partner_ids=[bob_user.partner_id.id])
         for i in range(100):
             channel._create_sub_channel(name=f"Sub Channel {i}")
