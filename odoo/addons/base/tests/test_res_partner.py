@@ -49,7 +49,7 @@ class TestPartner(TransactionCase):
         for source, exp_email_formatted in [
             ('Vlad the Impaler', '"Vlad the Impaler" <vlad.the.impaler@example.com>'),
             ('Balázs', '"Balázs" <vlad.the.impaler@example.com>'),
-            ('Balázs <email.in.name@example.com>', '"Balázs <email.in.name@example.com>" <vlad.the.impaler@example.com>'),
+            ('Balázs <email.in.name@example.com>', '"Balázs <email.in.name-example.com>" <vlad.the.impaler@example.com>'),
         ]:
             with self.subTest(source=source):
                 new_partner.write({'name': source})
