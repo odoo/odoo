@@ -10,7 +10,7 @@ from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, grou
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import HttpCase, tagged, users
 from odoo.tools import html_escape, mute_logger
 
@@ -23,6 +23,8 @@ class TestChannelInternals(MailCommon, HttpCase):
         super().setUpClass()
         cls.maxDiff = None
         cls.test_channel = cls.env['discuss.channel'].with_context(cls._test_context).channel_create(name='Channel', group_id=None)
+        cls.test_channel_readonly = cls.env['discuss.channel'].with_context(cls._test_context).channel_create(name='Channel', group_id=None)
+        cls.test_channel_readonly.read_only = True
         cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Test Partner',
             'email': 'test_customer@example.com',
@@ -840,3 +842,35 @@ class TestChannelInternals(MailCommon, HttpCase):
             ],
         ):
             test_group.execute_command_help()
+
+    @users('employee')
+    def test_channel_read_only_create_multi(self):
+        with self.assertRaises(AccessError):
+            self.env["mail.message"].create([
+                {
+                    "body": "test",
+                    "model": "discuss.channel",
+                    "pinned_at": fields.Datetime.now(),
+                    "res_id": self.test_channel.id,
+                    "author_id": self.test_partner.id,
+                    "message_type": "comment",
+                },
+                {
+                    "body": "test",
+                    "model": "discuss.channel",
+                    "pinned_at": fields.Datetime.now(),
+                    "res_id": self.test_channel_readonly.id,
+                    "author_id": self.test_partner.id,
+                    "message_type": "comment",
+                }
+            ])
+
+    @users('employee')
+    def test_message_post_in_readonly_channel(self):
+        channel = self.env["discuss.channel"].create({
+            "group_public_id": None,
+            "name": "public channel",
+            "read_only": True,
+        })
+        with self.assertRaises(AccessError):
+            channel.message_post(body="public message")

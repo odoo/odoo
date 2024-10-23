@@ -497,6 +497,13 @@ class MailMessage(models.Model):
 
         for model, docid_msgids in model_docid_msgids.items():
             documents = self.env[model].browse(docid_msgids)
+            # Handle discuss channel read only
+            if model == "discuss.channel" and operation in ["write", "create"]:
+                for document in documents:
+                    # sudo: we need to check this status, even if the user
+                    # cannot read the thread.
+                    if document.sudo().read_only:
+                        forbidden += self.browse(messages_to_check)
             if hasattr(documents, '_get_mail_message_access'):
                 doc_operation = documents._get_mail_message_access(docid_msgids, operation)  # why not giving model here?
             else:

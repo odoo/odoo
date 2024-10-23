@@ -304,6 +304,7 @@ export class Thread extends Record {
      *  @type {integer|undefined}
      */
     pid;
+    read_only = false;
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
