@@ -60,7 +60,7 @@ QUnit.module("Project", (hooks) => {
             context: { group_by: ["project_id"] },
         });
 
-        assert.strictEqual(target.querySelector(".o_group_name").innerText, "🔒 Private (1)");
+        assert.strictEqual(target.querySelector(".o_group_name").innerText, "🔒 Private\n(1)");
     });
     QUnit.test("Test group label for empty assignees in tree", async function (assert) {
         assert.expect(1);
@@ -77,7 +77,7 @@ QUnit.module("Project", (hooks) => {
             context: { group_by: ["user_ids"] },
         });
 
-        assert.strictEqual(target.querySelector(".o_group_name").innerText, "👤 Unassigned (1)");
+        assert.strictEqual(target.querySelector(".o_group_name").innerText, "👤 Unassigned\n(1)");
     });
 
     QUnit.test("Test group label for empty deadline in tree", async function (assert) {
@@ -95,7 +95,7 @@ QUnit.module("Project", (hooks) => {
             context: { group_by: ["date_deadline"] },
         });
 
-        assert.strictEqual(target.querySelector(".o_group_name").innerText, "None (1)");
+        assert.strictEqual(target.querySelector(".o_group_name").innerText, "None\n(1)");
     });
 
     QUnit.test("Test group label for empty project in kanban", async function (assert) {
