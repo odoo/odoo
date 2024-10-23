@@ -40,6 +40,7 @@
 
         <template id="auth_signup.signup" name="Sign up login">
             <t t-call="web.login_layout">
+                <div class="oe_structure" id="oe_structure_signup_top"/>
                 <form class="oe_signup_form" role="form" method="post" t-if="not message" data-captcha="signup">
                   <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
@@ -58,11 +59,13 @@
                         <div class="o_login_auth"/>
                     </div>
                 </form>
+                <div class="oe_structure" id="oe_structure_signup_bottom"/>
             </t>
         </template>
 
         <template id="auth_signup.reset_password" name="Reset password">
             <t t-call="web.login_layout">
+                <div class="oe_structure" id="oe_structure_reset_password_top"/>
                 <div t-if="message" class="oe_login_form clearfix">
                     <p class="alert alert-success" t-if="message" role="status">
                         <t t-esc="message"/>
@@ -102,6 +105,7 @@
                     </div>
 
                 </form>
+                <div class="oe_structure" id="oe_structure_reset_password_bottom"/>
 
             </t>
         </template>
