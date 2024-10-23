@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
+import { debounce } from "@web/core/utils/timing";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -34,6 +35,9 @@ export class Persona extends Record {
     landlineNumber;
     /** @type {string} */
     mobileNumber;
+    debouncedSetImStatus = debounce((newStatus) => {
+        this._store.Persona.records[this.localId].im_status = newStatus;
+    }, 1000);
     storeAsTrackedImStatus = Record.one("Store", {
         /** @this {import("models").Persona} */
         compute() {

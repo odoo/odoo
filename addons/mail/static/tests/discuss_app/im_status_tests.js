@@ -61,7 +61,7 @@ QUnit.test("change icon on change partner im_status", async () => {
         channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
         channel_type: "chat",
     });
-    const { openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-ImStatus i[title='Online']");
 
