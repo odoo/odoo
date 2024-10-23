@@ -22,7 +22,7 @@ patch(Orderline, {
             ...Orderline.props.line,
             shape: {
                 ...Orderline.props.line.shape,
-                l10n_in_hsn_code: { type: String, optional: true },
+                l10n_in_hsn_code: { type: [String, { value: false }], optional: true },
             },
         },
     },

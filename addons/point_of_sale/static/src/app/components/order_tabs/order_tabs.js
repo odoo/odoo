@@ -77,4 +77,7 @@ export class OrderTabs extends Component {
             }
         });
     }
+    showOrderTabs() {
+        return !this.ui.isSmall || this.env.inDialog;
+    }
 }
