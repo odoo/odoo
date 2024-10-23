@@ -357,7 +357,10 @@ class WebsiteHrRecruitment(WebsiteForm):
             # pop the fields since there are only useful to generate a candidate record
             partner_name = values.pop('partner_name')
             partner_phone = values.pop('partner_phone', None)
-            partner_email = values.pop('email_from', None)
+            if request.session.uid:
+                partner_email = values.get('email_from', None)
+            else:
+                partner_email = values.pop('email_from', None)
             if partner_phone and partner_email:
                 candidate = request.env['hr.candidate'].sudo().search([
                     ('email_from', '=', partner_email),
