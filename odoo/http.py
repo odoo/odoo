@@ -129,7 +129,6 @@ endpoint
 """
 
 import base64
-import cgi
 import collections
 import collections.abc
 import contextlib
@@ -2313,8 +2312,7 @@ class Application:
         if 'Content-Security-Policy' in headers:
             return
 
-        mime, _params = cgi.parse_header(headers.get('Content-Type', ''))
-        if not mime.startswith('image/'):
+        if not headers.get('Content-Type', '').startswith('image/'):
             return
 
         headers['Content-Security-Policy'] = "default-src 'none'"
