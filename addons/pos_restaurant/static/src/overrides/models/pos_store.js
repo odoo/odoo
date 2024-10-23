@@ -22,6 +22,7 @@ patch(PosStore.prototype, {
      * @override
      */
     async setup() {
+        this.mergedTableOrders = {};
         this.isEditMode = false;
         this.tableSyncing = false;
         await super.setup(...arguments);
@@ -326,7 +327,13 @@ patch(PosStore.prototype, {
             [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
         );
     },
-    async transferOrder(orderUuid, destinationTable) {
+    getMainTable(table) {
+        while (table.parent_id) {
+            table = table.parent_id;
+        }
+        return table;
+    },
+    async transferOrder(orderUuid, destinationTable, releaseOriginalTable = true) {
         const order = this.models["pos.order"].getBy("uuid", orderUuid);
         const originalTable = order.table_id;
         this.loadingOrderState = false;
@@ -341,13 +348,18 @@ patch(PosStore.prototype, {
             this.set_order(order);
             this.addPendingOrder([order.id]);
         } else {
-            const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
+            const mainTable = this.getMainTable(destinationTable);
+            const destinationOrder = this.getActiveOrdersOnTable(mainTable)[0];
             const linesToUpdate = [];
             for (const orphanLine of order.lines) {
                 const adoptingLine = destinationOrder.lines.find((l) =>
                     l.can_be_merged_with(orphanLine)
                 );
                 if (adoptingLine) {
+                    orphanLine.uiState.mergedLine = {
+                        line: adoptingLine.id,
+                        OrginalQty: adoptingLine.qty,
+                    };
                     adoptingLine.merge(orphanLine);
                 } else {
                     linesToUpdate.push(orphanLine);
@@ -360,9 +372,36 @@ patch(PosStore.prototype, {
             if (destinationOrder?.id) {
                 this.addPendingOrder([destinationOrder.id]);
             }
-            await this.deleteOrders([order]);
+            if (releaseOriginalTable) {
+                await this.deleteOrders([order]);
+            }
         }
         await this.setTable(destinationTable);
+    },
+    async restoreOrdersToOriginalTable(order) {
+        if (!order) {
+            return;
+        }
+        const orderlines = order._raw.lines
+            .map((orderlineId) => this.models["pos.order.line"].getBy("id", orderlineId))
+            .filter(Boolean);
+
+        for (const orderline of orderlines) {
+            orderline.update({ order_id: order });
+            if (orderline.uiState.mergedLine) {
+                const mergedLine = this.models["pos.order.line"].getBy(
+                    "id",
+                    orderline.uiState.mergedLine.line
+                );
+                if (mergedLine) {
+                    mergedLine.set_quantity(orderline.uiState.mergedLine.OrginalQty);
+                    this.addPendingOrder([mergedLine.order_id.id]);
+                }
+            }
+        }
+
+        this.set_order(order);
+        this.addPendingOrder([order.id]);
     },
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [

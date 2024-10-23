@@ -153,9 +153,8 @@ export class FloorScreen extends Component {
                 table.position_h = table.getX();
                 table.position_v = table.getY();
                 if (table.parent_id) {
-                    this.pos.data.write("restaurant.table", [table.id], {
-                        parent_id: null,
-                    });
+                    this.unMergeTable(table);
+                    this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
                 }
             },
             onWillStartDrag: ({ element, x, y }) => {
@@ -230,7 +229,22 @@ export class FloorScreen extends Component {
                 }
                 const oToTrans = this.pos.getActiveOrdersOnTable(table)[0];
                 if (oToTrans) {
-                    this.pos.transferOrder(oToTrans.uuid, this.state.potentialLink.parent);
+                    const destinationTable = this.pos.getMainTable(this.state.potentialLink.parent);
+                    if (table.id === this.state.potentialLink?.child.id) {
+                        this.pos.mergedTableOrders[destinationTable.id] ??= {};
+                        this.pos.mergedTableOrders[destinationTable.id][table.id] ??= [];
+                        this.pos.mergedTableOrders[destinationTable.id][table.id].push(oToTrans);
+                    }
+                    const destinationTableOrder =
+                        this.pos.getActiveOrdersOnTable(destinationTable)[0];
+                    this.pos.transferOrder(oToTrans.uuid, this.state.potentialLink.parent, false);
+
+                    if (
+                        Object.keys(oToTrans.last_order_preparation_change.lines).length > 0 &&
+                        destinationTableOrder
+                    ) {
+                        this.pos.sendOrderInPreparation(oToTrans, true);
+                    }
                 }
                 this.pos.data.write("restaurant.table", [table.id], {
                     parent_id: this.state.potentialLink.parent.id,
@@ -536,6 +550,38 @@ export class FloorScreen extends Component {
         newTableData.active = true;
         const table = await this.pos.data.create("restaurant.table", [newTableData]);
         return table[0];
+    }
+    async unMergeTable(table) {
+        const destinationTable = this.pos.getMainTable(table);
+        const mergedOrders = this.pos.mergedTableOrders[destinationTable.id]?.[table.id];
+        if (mergedOrders) {
+            const orderToRestore = mergedOrders[0];
+            this.pos.restoreOrdersToOriginalTable(orderToRestore);
+
+            const destinationTableOrder = this.pos.getActiveOrdersOnTable(destinationTable)?.[0];
+
+            // If no active order on the destination table, restore the original order
+            if (!destinationTableOrder || destinationTableOrder.id === orderToRestore.id) {
+                const order = this.pos.models["pos.order"].getBy("uuid", orderToRestore.uuid);
+                order.update({ table_id: table });
+                this.pos.set_order(order);
+                this.pos.addPendingOrder([order.id]);
+            }
+
+            const updatePreparationChange = async (order) => {
+                if (Object.keys(order?.last_order_preparation_change?.lines || {}).length > 0) {
+                    await this.pos.sendOrderInPreparationUpdateLastChange(order);
+                }
+            };
+            await updatePreparationChange(orderToRestore);
+            if (destinationTableOrder && destinationTableOrder.id !== orderToRestore.id) {
+                await updatePreparationChange(destinationTableOrder);
+            }
+            delete this.pos.mergedTableOrders[destinationTable.id][table.id];
+            if (!Object.keys(this.pos.mergedTableOrders[destinationTable.id]).length) {
+                delete this.pos.mergedTableOrders[destinationTable.id];
+            }
+        }
     }
     _getNewTableNumber() {
         let firstNum = 1;

@@ -24,6 +24,14 @@ patch(PaymentScreen.prototype, {
                 this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
             }
         }
+        // Delete orders from the original table if it has been merged with another table
+        if (this.pos.mergedTableOrders[this.currentOrder?.table_id?.id]) {
+            const ordersToDelete = this.pos.mergedTableOrders[this.currentOrder.table_id.id];
+            for (const originalTable in ordersToDelete) {
+                await this.pos.deleteOrders(ordersToDelete[originalTable]);
+            }
+            delete this.pos.mergedTableOrders[this.currentOrder?.table_id?.id];
+        }
         return await super.afterOrderValidation(...arguments);
     },
 });
