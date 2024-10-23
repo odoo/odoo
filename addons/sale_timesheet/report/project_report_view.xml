@@ -6,9 +6,9 @@
             <field name="model">report.project.task.user</field>
             <field name="inherit_id" ref="project.view_task_project_user_pivot"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='total_hours_spent']" position='before'>
+                <field name="remaining_hours" position="after">
                     <field name="remaining_hours_so" widget="timesheet_uom"/>
-                </xpath>
+                </field>
              </field>
         </record>
 
@@ -22,7 +22,7 @@
                 </field>
              </field>
         </record>
-    
+
         <record id="view_task_project_user_fsm_graph_base_inherited" model="ir.ui.view">
             <field name="name">report.project.task.user.fsm.graph.base.inherited</field>
             <field name="model">report.project.task.user</field>
