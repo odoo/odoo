@@ -506,7 +506,7 @@ class MockSmtplibCase:
         if matching_emails_count != emails_count:
             debug_info = '\n'.join(
                 f"SMTP-From: {email['smtp_from']}, SMTP-To: {email['smtp_to_list']}, "
-                f"Msg-From: {email['msg_from']}, From_filter: {email['from_filter']})"
+                f"Msg-From: {email['msg_from']}, Msg-To: {email['msg_to']}, From_filter: {email['from_filter']})"
                 for email in self.emails
             )
         self.assertEqual(
