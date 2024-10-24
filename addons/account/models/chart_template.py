@@ -681,7 +681,7 @@ class AccountChartTemplate(models.AbstractModel):
         # Set default transfer account on the internal transfer reconciliation model
         reco = self.ref('internal_transfer_reco', raise_if_not_found=False)
         if reco:
-            reco.line_ids.write({'account_id': company.transfer_account_id.id})
+            reco.line_ids.sudo().write({'account_id': company.transfer_account_id.id})
 
     def _get_property_accounts(self, additional_properties):
         return {
