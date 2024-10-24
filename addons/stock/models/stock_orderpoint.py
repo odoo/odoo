@@ -462,7 +462,7 @@ class StockWarehouseOrderpoint(models.Model):
                     ploc_per_day[(lead_days, loc)].add(product.id)
 
         # recompute virtual_available with lead days
-        today = fields.datetime.now().replace(hour=23, minute=59, second=59)
+        today = fields.Datetime.now().replace(hour=23, minute=59, second=59)
         for (days, loc), product_ids in ploc_per_day.items():
             products = self.env['product.product'].browse(product_ids)
             qties = products.with_context(

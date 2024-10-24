@@ -356,9 +356,9 @@ class MailingMailing(models.Model):
         for mass_mailing in self:
             if mass_mailing.schedule_date:
                 # max in case the user schedules a date in the past
-                mass_mailing.next_departure = max(mass_mailing.schedule_date, fields.datetime.now())
+                mass_mailing.next_departure = max(mass_mailing.schedule_date, fields.Datetime.now())
             else:
-                mass_mailing.next_departure = fields.datetime.now()
+                mass_mailing.next_departure = fields.Datetime.now()
         past = self.filtered(
             lambda mailing: mailing.state == 'in_queue' and mailing.next_departure < fields.Datetime.now()
         )

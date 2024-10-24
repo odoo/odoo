@@ -81,7 +81,7 @@ PARTNER_ADDRESS_FIELDS_TO_SYNC = [
 
 # Those values have been determined based on benchmark to minimise
 # computation time, number of transaction and transaction time.
-PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger cluster can speed up global computation
+PLS_COMPUTE_BATCH_STEP = 50000  # PREFETCH_MAX = 1000 but larger cluster can speed up global computation
 PLS_UPDATE_BATCH_STEP = 5000
 
 
@@ -571,7 +571,7 @@ class CrmLead(models.Model):
             return res if len(res) < SEARCH_RESULT_LIMIT else model
 
         for lead in self:
-            lead_id = lead._origin.id if isinstance(lead.id, models.NewId) else lead.id
+            lead_id = lead._origin.id if isinstance(lead.id, api.NewId) else lead.id
             common_lead_domain = [
                 ('id', '!=', lead_id)
             ]

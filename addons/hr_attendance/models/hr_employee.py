@@ -208,7 +208,7 @@ class HrEmployee(models.Model):
                 "create": 0
             },
             "domain": [('employee_id', '=', self.id),
-                       ('check_in', ">=", fields.datetime.today().replace(day=1, hour=0, minute=0))]
+                       ('check_in', ">=", fields.Date.today().replace(day=1, hour=0, minute=0))]
         }
 
     def action_open_last_month_overtime(self):

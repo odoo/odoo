@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import first, Command
+from odoo.fields import Command
 from odoo.tests import tagged, TransactionCase
 from odoo.tools import float_compare
 
@@ -127,7 +127,7 @@ class TestSeller(TransactionCase):
                 'partner_id': self.asustec.id,
             }),
         ]
-        supplier_info = first(product.seller_ids)
+        supplier_info = product.seller_ids[0]
         precise_value = 1.234
 
         # Act: Set a value for the increased precision

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.models import ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 
 

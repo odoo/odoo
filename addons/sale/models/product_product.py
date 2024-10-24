@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import time, timedelta
+from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -23,8 +23,7 @@ class ProductProduct(models.Model):
         self.sales_count = 0
         if not self.env.user.has_group('sales_team.group_sale_salesman'):
             return r
-        date_from = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.now() - timedelta(days=365),
-                                                                      time.min))
+        date_from = fields.Date.today() - timedelta(days=365)
 
         done_states = self.env['sale.report']._get_done_states()
 

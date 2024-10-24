@@ -147,7 +147,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         design. The attendees receive an invitation for any new event
         already.
         """
-        lastcall = self.env.context.get('lastcall', False) or fields.date.today() - relativedelta(weeks=1)
+        lastcall = self.env.context.get('lastcall', False) or fields.Date.today() - relativedelta(weeks=1)
         now = datetime.now(tz=UTC)
         self.env.cr.execute('''
             SELECT "alarm"."id", "event"."id"

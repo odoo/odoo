@@ -14,6 +14,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools import SQL
+from odoo.tools.constants import GC_UNLINK_LIMIT
 
 _logger = logging.getLogger(__name__)
 
@@ -758,8 +759,8 @@ class IrCronTrigger(models.Model):
     @api.autovacuum
     def _gc_cron_triggers(self):
         domain = [('call_at', '<', datetime.now() + relativedelta(weeks=-1))]
-        records = self.search(domain, limit=models.GC_UNLINK_LIMIT)
-        if len(records) >= models.GC_UNLINK_LIMIT:
+        records = self.search(domain, limit=GC_UNLINK_LIMIT)
+        if len(records) >= GC_UNLINK_LIMIT:
             self.env.ref('base.autovacuum_job')._trigger()
         return records.unlink()
 

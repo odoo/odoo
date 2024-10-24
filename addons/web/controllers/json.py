@@ -15,7 +15,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.models import regex_object_name
+from odoo.models import check_object_name
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
 
@@ -270,7 +270,7 @@ def get_default_domain(model, action, context, eval_context):
             for key, value in context.items():
                 if key.startswith('search_default_') and value:
                     filter_name = key[15:]
-                    if not regex_object_name.match(filter_name):
+                    if not check_object_name(filter_name):
                         raise ValueError(model.env._("Invalid default search filter name for %s", key))
                     if view_tree is None:
                         view = model.get_view(action.search_view_id.id, 'search')

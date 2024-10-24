@@ -173,15 +173,15 @@ class HrContract(models.Model):
             contracts += self.search([
                 ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'), ('company_id', '=', company.id),
                 '&',
-                ('date_end', '<=', fields.date.today() + relativedelta(days=company.contract_expiration_notice_period)),
-                ('date_end', '>=', fields.date.today() + relativedelta(days=1)),
+                ('date_end', '<=', fields.Date.today() + relativedelta(days=company.contract_expiration_notice_period)),
+                ('date_end', '>=', fields.Date.today() + relativedelta(days=1)),
             ])
 
             work_permit_contracts += self.search([
                 ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'), ('company_id', '=', company.id),
                 '&',
-                ('employee_id.work_permit_expiration_date', '<=', fields.date.today() + relativedelta(days=company.work_permit_expiration_notice_period)),
-                ('employee_id.work_permit_expiration_date', '>=', fields.date.today() + relativedelta(days=1)),
+                ('employee_id.work_permit_expiration_date', '<=', fields.Date.today() + relativedelta(days=company.work_permit_expiration_notice_period)),
+                ('employee_id.work_permit_expiration_date', '>=', fields.Date.today() + relativedelta(days=1)),
             ])
 
         for contract in contracts:

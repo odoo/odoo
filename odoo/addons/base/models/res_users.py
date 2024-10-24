@@ -330,7 +330,15 @@ class ResUsers(models.Model):
     def _check_company_domain(self, companies):
         if not companies:
             return []
-        return [('company_ids', 'in', models.to_company_ids(companies))]
+        if isinstance(companies, models.BaseModel):
+            company_ids = companies.ids
+        elif isinstance(companies, int):
+            company_ids = [companies]
+        elif isinstance(companies, str):
+            company_ids = companies
+        else:
+            company_ids = list(companies)
+        return [('company_ids', 'in', company_ids)]
 
     @property
     def SELF_READABLE_FIELDS(self):
