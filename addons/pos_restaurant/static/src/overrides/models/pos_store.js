@@ -90,6 +90,23 @@ patch(PosStore.prototype, {
             tableByIds[table.id].uiState.orderCount = table.orders;
             tableByIds[table.id].uiState.skipCount = table.skip_changes;
         }
+        if (
+            this.selectedTable &&
+            data["table_ids"].includes(this.selectedTable.id) &&
+            this.selectedOrderUuid
+        ) {
+            const changes = this.getOrderChanges();
+            if (changes.nbrOfChanges > 0) {
+                // at this stage we are sure to be on a concurrent pos session
+                // that needs to update its data from the server
+                try {
+                    this.tableSyncing = true;
+                    await this.syncAllOrders({ cancel_table_notification: true });
+                } finally {
+                    this.tableSyncing = false;
+                }
+            }
+        }
     },
     get categoryCount() {
         const orderChange = this.getOrderChanges().orderlines;
