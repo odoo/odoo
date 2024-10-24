@@ -123,7 +123,7 @@
             'pivot_column_groupby': ['create_date:month'],
             'pivot_row_groupby': ['categ_id'],
             'pivot_measures': ['remaining_qty', 'remaining_value'],
-            'graph_groupbys': ['create_date:day'],
+            'graph_groupbys': ['create_date:month', 'categ_id'],
             }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face"/>
@@ -144,9 +144,6 @@
                 <field name="product_tmpl_id" />
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <separator/>
-                <filter string="Incoming" name="incoming" domain="[('stock_move_id.location_id.usage', 'not in', ('internal', 'transit')), ('stock_move_id.location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
-                <filter string="Outgoing" name="outgoing" domain="[('stock_move_id.location_id.usage', 'in', ('internal', 'transit')), ('stock_move_id.location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
                 <separator/>
                 <filter string="Has Remaining Qty" name="has_remaining_qty" domain="[('remaining_qty', '>', 0)]"/>
                 <group expand='0' string='Group by...'>
