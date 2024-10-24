@@ -334,6 +334,15 @@ export class OdooPivotModel extends PivotModel {
         return displayName;
     }
 
+    _normalize(groupBy) {
+        const [fieldName] = groupBy.split(":");
+        const field = this.metaData.fields[fieldName];
+        if (!field) {
+            throw new EvaluationError(_t("Field %s does not exist", fieldName));
+        }
+        return super._normalize(groupBy);
+    }
+
     /**
      * @override
      */

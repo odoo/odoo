@@ -4,11 +4,14 @@ import { EvaluationError, CellErrorType } from "@odoo/o-spreadsheet";
 import { RPCError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {import("@spreadsheet").OdooFields} OdooFields
  * @typedef {import("@spreadsheet/data_sources/odoo_data_provider").OdooDataProvider} OdooDataProvider
  */
+
+class ModelNotFoundError extends Error {}
 
 export class OdooPivotLoader {
     /**
@@ -36,6 +39,8 @@ export class OdooPivotLoader {
         this._isValid = true;
         /** @protected */
         this.loadError = undefined;
+        /** @protected */
+        this._isModelValid = true;
     }
 
     /**
@@ -58,6 +63,18 @@ export class OdooPivotLoader {
                 .add(this.loadFn())
                 .catch((e) => {
                     this._isValid = false;
+                    if (e instanceof ModelNotFoundError) {
+                        this._isModelValid = false;
+                        this.loadError = Object.assign(
+                            new EvaluationError(
+                                _t(`The model "%(model)s" does not exist.`, { model: e.message })
+                            ),
+                            {
+                                cause: e,
+                            }
+                        );
+                        return;
+                    }
                     this.loadError = Object.assign(
                         new EvaluationError(e instanceof RPCError ? e.data.message : e.message),
                         { cause: e }
@@ -77,7 +94,14 @@ export class OdooPivotLoader {
      * @returns {Promise<OdooFields>} Fields of the model
      */
     async getFields(model) {
-        return await this.odooDataProvider.serverData.fetch(model, "fields_get");
+        try {
+            return await this.odooDataProvider.serverData.fetch(model, "fields_get");
+        } catch (e) {
+            if (e instanceof RPCError && e.code === 404) {
+                throw new ModelNotFoundError(model);
+            }
+            throw e;
+        }
     }
     /**
      * @param {string} model Technical name of the model
@@ -90,6 +114,10 @@ export class OdooPivotLoader {
             [[model]]
         );
         return (result[0] && result[0].display_name) || "";
+    }
+
+    isModelValid() {
+        return this.isFullyLoaded && this._isModelValid;
     }
 
     isValid() {

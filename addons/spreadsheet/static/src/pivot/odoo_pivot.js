@@ -68,11 +68,11 @@ export class OdooPivot {
 
         /** @protected @type {Object} */
         this.context = omit(
-          definition.context,
-          ...Object.keys(user.context),
-          "pivot_measures",
-          "pivot_row_groupby",
-          "pivot_column_groupby"
+            definition.context,
+            ...Object.keys(user.context),
+            "pivot_measures",
+            "pivot_row_groupby",
+            "pivot_column_groupby"
         );
 
         /** @protected */
@@ -421,6 +421,10 @@ export class OdooPivot {
 
     get lastUpdate() {
         return this.loader.lastUpdate;
+    }
+
+    isModelValid() {
+        return this.loader.isModelValid();
     }
 
     isValid() {
