@@ -50,6 +50,7 @@ class AutomationDecantingOrdersProcess(models.Model):
     site_code_id = fields.Many2one('site.code.configuration',
                                    related='picking_id.site_code_id', string='Site Code')
     location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
+    count_lines = fields.Integer(string='Count Lines')
 
     def action_open_decanting_wizard(self):
         """
@@ -66,6 +67,8 @@ class AutomationDecantingOrdersProcess(models.Model):
         # Raise validation error if no container is selected
         if not self.container_id:
             raise ValidationError(_("Container is required to process decanting."))
+        if self.count_lines == self.container_partition:
+            raise ValidationError(_("No partition left."))
         self.state = 'in_progress'
         return {
             'type': 'ir.actions.act_window',
@@ -105,22 +108,22 @@ class AutomationDecantingOrdersProcess(models.Model):
         else:
             self.picking_id = False
 
-    # @api.constrains('crate_barcode')
-    # def _check_unique_barcode(self):
-    #     """Ensure that the same pallet and crate barcode are not used in an in-progress record."""
-    #     for record in self:
-    #         if record.state == 'in_progress':
-    #             existing_record = self.search([
-    #                 ('crate_barcode', '=', record.crate_barcode),
-    #                 ('state', '=', 'in_progress'),
-    #                 ('id', '!=', record.id)  # Exclude the current record
-    #             ], limit=1)
-    #
-    #             if existing_record:
-    #                 raise ValidationError(
-    #                     f"Crate Barcode '{record.crate_barcode}' is already in progress. "
-    #                     "Please complete or close the existing record before creating a new one."
-    #                 )
+    @api.constrains('crate_barcode')
+    def _check_unique_barcode(self):
+        """Ensure that the same pallet and crate barcode are not used in an in-progress record."""
+        for record in self:
+            if record.state == 'in_progress':
+                existing_record = self.search([
+                    ('crate_barcode', '=', record.crate_barcode),
+                    ('state', '=', 'in_progress'),
+                    ('id', '!=', record.id)  # Exclude the current record
+                ], limit=1)
+
+                if existing_record:
+                    raise ValidationError(
+                        f"Crate Barcode '{record.crate_barcode}' is already in progress. "
+                        "Please complete or close the existing record before creating a new one."
+                    )
 
     # @api.onchange('license_plate_ids')
     # def _onchange_license_plate_ids(self):
@@ -145,9 +148,9 @@ class AutomationDecantingOrdersProcess(models.Model):
         """
         for record in self:
             total_lines = len(record.automation_decanting_process_line_ids)
-            if total_lines >= record.container_partition:
+            if record.count_lines >= record.container_partition:
                 record.crate_status = 'fully_filled'
-            elif total_lines > 0:
+            elif record.count_lines > 0:
                 record.crate_status = 'partially_filled'
             else:
                 record.crate_status = 'open'
@@ -201,7 +204,7 @@ class AutomationDecantingOrdersProcess(models.Model):
         # Prepare data in the required format
         receipt_list = []
         sku_list = []
-        stock_move_obj = self.env['stock.move']  # Get stock.move model
+        stock_quant_obj = self.env['stock.quant']
         # Loop through decanting process lines
         for line in self.automation_decanting_process_line_ids:
             sku_list.append({
@@ -217,20 +220,34 @@ class AutomationDecantingOrdersProcess(models.Model):
                 "batch_property08": 'zzz',
             })
             # Create stock move to update inventory location
-            move_vals = {
-                'name': f'Move for {line.product_id.name}',
-                'product_id': line.product_id.id,
-                'product_uom_qty': line.quantity,
-                'product_uom': line.product_id.uom_id.id,
-                'location_id': self.picking_id.location_dest_id.id,  # Current location
-                'location_dest_id': self.location_dest_id.id,  # New destination location
-                'picking_id': self.picking_id.id,  # Associate with the picking
-            }
+            quant = stock_quant_obj.search([
+                ('product_id', '=', line.product_id.id),
+                ('location_id', '=', self.picking_id.location_dest_id.id)
+            ], limit=1)
 
-            stock_move = stock_move_obj.create(move_vals)
-            stock_move._action_confirm()  # Confirm the stock move
-            stock_move._action_assign()  # Assign stock to the move
-            stock_move._action_done()  # Complete the stock move
+            if quant:
+                # If the quant exists, adjust the quantity
+                quant.sudo().quantity -= line.quantity  # Reduce the quantity from the current location
+            else:
+                raise UserError(f"No quant found for product '{line.product_id.name}' in the current location.")
+
+            # Now update the destination location with the new quantity
+            destination_quant = stock_quant_obj.search([
+                ('product_id', '=', line.product_id.id),
+                ('location_id', '=', self.location_dest_id.id)
+            ], limit=1)
+
+            if destination_quant:
+                # If quant exists in the destination, increase the quantity
+                destination_quant.sudo().quantity += line.quantity
+            else:
+                # If no quant exists, create a new one in the destination location
+                stock_quant_obj.sudo().create({
+                    'product_id': line.product_id.id,
+                    'location_id': self.location_dest_id.id,
+                    'quantity': line.quantity,
+                    'in_date': fields.Datetime.now(),  # Optional: to track the update time
+                })
 
         # Add the receipt entry
         receipt_list.append({
@@ -253,32 +270,32 @@ class AutomationDecantingOrdersProcess(models.Model):
         }
 
         # Convert data to JSON format
-        # json_data = json.dumps(data, indent=4)
+        json_data = json.dumps(data, indent=4)
         #
         # # Log the generated data
-        # _logger.info(f"Generated data for crate close: {json_data}")
+        _logger.info(f"Generated data for crate close: {json_data}")
         #
         # # Define the URLs for Shiperoo Connect
         # # url_geekplus = "https://shiperooconnect.automation.shiperoo.com/api/interface/geekplus/"
-        # url_automation_putaway = "https://shiperooconnect.automation.shiperoo.com/api/interface/automationputaway"
+        url_automation_putaway = "https://shiperooconnect.automation.shiperoo.com/api/interface/automationputaway"
         #
-        # headers = {
-        #     'Content-Type': 'application/json'
-        # }
+        headers = {
+            'Content-Type': 'application/json'
+        }
 
-        # try:
-        #     # Send the data to the Geekplus URL
-        #     # response_geekplus = requests.post(url_geekplus, headers=headers, data=json_data)
-        #     # if response_geekplus.status_code != 200:
-        #     #     raise UserError(f"Failed to send data to Geekplus: {response_geekplus.content.decode()}")
-        #
-        #     # Send the data to the Automation Putaway URL
-        #     response_putaway = requests.post(url_automation_putaway, headers=headers, data=json_data)
-        #     if response_putaway.status_code != 200:
-        #         raise UserError(f"Failed to send data to Automation Putaway: {response_putaway.content.decode()}")
-        #
-        # except requests.exceptions.RequestException as e:
-        #     raise UserError(f"Error occurred during API request: {str(e)}")
+        try:
+            # Send the data to the Geekplus URL
+            # response_geekplus = requests.post(url_geekplus, headers=headers, data=json_data)
+            # if response_geekplus.status_code != 200:
+            #     raise UserError(f"Failed to send data to Geekplus: {response_geekplus.content.decode()}")
+
+            # Send the data to the Automation Putaway URL
+            response_putaway = requests.post(url_automation_putaway, headers=headers, data=json_data)
+            if response_putaway.status_code != 200:
+                raise UserError(f"Failed to send data to Automation Putaway: {response_putaway.content.decode()}")
+
+        except requests.exceptions.RequestException as e:
+            raise UserError(f"Error occurred during API request: {str(e)}")
 
         return {'type': 'ir.actions.act_window_close'}
 

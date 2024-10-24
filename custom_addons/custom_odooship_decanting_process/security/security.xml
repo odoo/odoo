@@ -7,12 +7,10 @@
         <field name="sequence">10</field>
     </record>
 
-    <!-- Admin Group -->
-    <record id="group_shiperoo_admin" model="res.groups">
-        <field name="name">Admin</field>
+    <!-- Operator Group -->
+    <record id="group_shiperoo_operator" model="res.groups">
+        <field name="name">Operator</field>
         <field name="category_id" ref="module_category_shiperoo"/>
-        <!-- Admin implies Supervisor and Operator -->
-        <field name="implied_ids" eval="[(4, ref('group_shiperoo_supervisor')), (4, ref('group_shiperoo_operator'))]"/>
     </record>
 
     <!-- Supervisor Group -->
@@ -23,9 +21,12 @@
         <field name="implied_ids" eval="[(4, ref('group_shiperoo_operator'))]"/>
     </record>
 
-    <!-- Operator Group -->
-    <record id="group_shiperoo_operator" model="res.groups">
-        <field name="name">Operator</field>
+    <!-- Admin Group -->
+    <record id="group_shiperoo_admin" model="res.groups">
+        <field name="name">Admin</field>
         <field name="category_id" ref="module_category_shiperoo"/>
+        <!-- Admin implies Supervisor and Operator -->
+        <field name="implied_ids" eval="[(4, ref('group_shiperoo_supervisor')), (4, ref('group_shiperoo_operator'))]"/>
     </record>
+
 </odoo>

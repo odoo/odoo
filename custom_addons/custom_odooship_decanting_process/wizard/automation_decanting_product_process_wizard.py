@@ -130,6 +130,7 @@ class AutomationDecantingProductProcess(models.TransientModel):
                     line.product_id.display_name, line.available_quantity)))
         self._compute_crate_status()
         self.automation_decanting_process_id.crate_status = self.crate_status
+        self.automation_decanting_process_id.count_lines = self.count_lines
         return {'type': 'ir.actions.act_window_close'}
 
 
