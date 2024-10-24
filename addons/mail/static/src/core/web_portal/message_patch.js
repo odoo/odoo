@@ -21,9 +21,10 @@ patch(Message.prototype, {
         if (!bodyEl) {
             return;
         }
-        super.prepareMessageBody(...arguments);
+        const res = super.prepareMessageBody(...arguments);
         Array.from(bodyEl.querySelectorAll(".o-mail-read-more-less")).forEach((el) => el.remove());
         this.insertReadMoreLess(bodyEl);
+        return res;
     },
 
     /**

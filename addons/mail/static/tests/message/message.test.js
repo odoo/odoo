@@ -1957,5 +1957,44 @@ test("Copy Message Link", async () => {
     await assertSteps([url(`/mail/message/${messageId_2}`)]);
     await press(["ctrl", "v"]);
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
+    await contains(".o-mail-Message", { text: "channel1" });
+});
+
+test("Prettify message links", async () => {
+    const pyEnv = await startServer();
+    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
+        { name: "channel1" },
+        { name: "channel2", channel_member_ids: [], channel_type: "chat" },
+    ]);
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
+        {
+            body: "Message on joined channel",
+            res_id: partnerId,
+            model: "res.partner",
+        },
+        {
+            body: "Message on non accessible channel",
+            res_id: channelId_2,
+            model: "discuss.channel",
+        },
+    ]);
+    onRpcBefore("/mail/data", async (args) => {
+        if (args.messages) {
+            await assertSteps(["before_fetchdata"]);
+        }
+    });
+    await start();
+    await openDiscuss(channelId_1);
+    await insertText(
+        ".o-mail-Composer-input",
+        `${url(`/mail/message/${messageId_1}`)} ${url(`/mail/message/${messageId_2}`)}`
+    );
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message", { text: "Unknown   Unknown" });
+    step("before_fetchdata");
+    await contains(".o-mail-Message", { text: "TestPartner   Unknown" });
 });
