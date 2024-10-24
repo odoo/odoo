@@ -32,12 +32,15 @@ class AccountMove(models.Model):
             downpayment_lines.unlink()
         return res
 
-    @api.depends('invoice_user_id')
+    @api.depends('invoice_user_id', 'partner_id')
     def _compute_team_id(self):
         for move in self:
-            if not move.invoice_user_id.sale_team_id or not move.is_sale_document(include_receipts=True):
+            if not move.invoice_user_id.sale_team_id or not move.is_sale_document(include_receipts=True) and not move.partner_id.team_id.id:
                 continue
-            move.team_id = self.env['crm.team']._get_default_team_id(
+            default_team_id = self.env.context.get('default_team_id', False) or move.partner_id.team_id.id or move.team_id.id
+            move.team_id = self.env['crm.team'].with_context(
+                default_team_id=default_team_id
+            )._get_default_team_id(
                 user_id=move.invoice_user_id.id,
                 domain=[('company_id', '=', move.company_id.id)])
 
