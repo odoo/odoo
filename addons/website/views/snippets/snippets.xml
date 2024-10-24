@@ -198,6 +198,9 @@
                 <t t-snippet="website.s_comparisons" string="Comparisons" group="content">
                     <keywords>pricing, promotion, price, feature-comparison, side-by-side, evaluation, competitive, overview</keywords>
                 </t>
+                <t t-snippet="website.s_comparisons_horizontal" string="Comparisons Horizontal" group="content">
+                    <keywords>comparison, price, pricing, engage, call to action, cta, box, shop, table, cart, product, cost, charges, fees, tariffs, prices, expenses</keywords>
+                </t>
                 <t t-snippet="website.s_features_grid" string="Features Grid" group="content">
                     <keywords>promotion, characteristic, quality, highlights, specs, advantages, functionalities, exhibit, details, capabilities, attributes, promotion</keywords>
                 </t>
@@ -720,7 +723,7 @@
              which the s_card options should be bound (instead of the s_card).
              Note: defined here to be set above all the other options that might
              need it. -->
-        <t t-set="card_parent_handlers" t-value="'.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div'"/>
+        <t t-set="card_parent_handlers" t-value="'.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_comparisons_horizontal .row > div'"/>
 
         <!-- Binding the option on the snippet if it is not a s_card with a
              handler parent -->

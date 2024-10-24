@@ -73,6 +73,7 @@
         'views/snippets/s_countdown.xml',
         'views/snippets/s_product_catalog.xml',
         'views/snippets/s_comparisons.xml',
+        'views/snippets/s_comparisons_horizontal.xml',
         'views/snippets/s_company_team.xml',
         'views/snippets/s_company_team_basic.xml',
         'views/snippets/s_company_team_shapes.xml',
