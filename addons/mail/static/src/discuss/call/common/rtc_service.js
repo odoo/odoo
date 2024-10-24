@@ -1337,8 +1337,11 @@ export class Rtc extends Record {
         if (activeRtcSession.isMainVideoStreamActive) {
             if (videoType === session.mainVideoStreamType) {
                 if (videoType === "screen") {
-                    this.state.channel.activeRtcSession = undefined;
-                } else {
+                    session.mainVideoStreamType = "camera";
+                } else if (
+                    this.actionsStack.includes("camera-on") &&
+                    this.actionsStack.includes("share-screen")
+                ) {
                     session.mainVideoStreamType = "screen";
                 }
             }
