@@ -27,7 +27,7 @@ class WebsiteForm(http.Controller):
         return ""
 
     # Check and insert values from the form on the model <model>
-    @http.route('/website/form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True, csrf=False)
+    @http.route('/website/form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True, csrf=False, captcha='website_form')
     def website_form(self, model_name, **kwargs):
         # Partial CSRF check, only performed when session is authenticated, as there
         # is no real risk for unauthenticated sessions here. It's a common case for
@@ -43,12 +43,11 @@ class WebsiteForm(http.Controller):
             # this controller method. Instead, we use a savepoint to roll back
             # what has been done inside the try clause.
             with request.env.cr.savepoint():
-                if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
-                    # request.params was modified, update kwargs to reflect the changes
-                    kwargs = dict(request.params)
-                    kwargs.pop('model_name')
-                    return self._handle_website_form(model_name, **kwargs)
-            error = _("Suspicious activity detected by Google reCaptcha.")
+                # request.params was modified, update kwargs to reflect the changes
+                kwargs = dict(request.params)
+                kwargs.pop('model_name')
+                return self._handle_website_form(model_name, **kwargs)
+            error = _("Suspicious activity detected by captcha.")
         except (ValidationError, UserError) as e:
             error = e.args[0]
         return json.dumps({

@@ -14,8 +14,10 @@ publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
      * @private
      */
     _onSubmit: function () {
-        var $btn = this.$('.oe_login_buttons > button[type="submit"]');
-        $btn.attr('disabled', 'disabled');
-        $btn.prepend('<i class="fa fa-refresh fa-spin"/> ');
+        const btn = this.$('.oe_login_buttons > button[type="submit"]');
+        if (!btn.prop("disabled")) {
+            btn.attr("disabled", "disabled");
+            btn.prepend('<i class="fa fa-refresh fa-spin"/> ');
+        }
     },
 });

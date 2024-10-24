@@ -27,9 +27,9 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, http, models, tools, SUPERUSER_ID
-from odoo.exceptions import AccessDenied
-from odoo.http import request, Response, ROUTING_KEYS
+from odoo import _, api, http, models, tools, SUPERUSER_ID
+from odoo.exceptions import AccessDenied, UserError
+from odoo.http import request, Response, ROUTING_KEYS, SAFE_HTTP_METHODS
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.tools.json import json_default
@@ -326,6 +326,15 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _dispatch(cls, endpoint):
+        # Verify the captcha in case it was set on @http.route
+        # https://httpwg.org/specs/rfc9110.html#safe.methods
+        captcha = endpoint.routing.get('captcha')
+        if (
+            captcha
+            and request.httprequest.method not in SAFE_HTTP_METHODS
+            and not request.env['ir.http']._verify_request_recaptcha_token(captcha)
+        ):
+            raise UserError(_("Suspicious activity detected by captcha."))
         result = endpoint(**request.params)
         if isinstance(result, Response) and result.is_qweb:
             result.flatten()
@@ -426,3 +435,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
         return True if cookie_type == 'required' else bool(request.env.user)
+
+    @api.model
+    def _verify_request_recaptcha_token(self, action: str):
+        return True

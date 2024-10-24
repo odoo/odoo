@@ -1,3 +1,4 @@
+from . import test_captcha
 from . import test_common
 from . import test_device
 from . import test_echo_reply
