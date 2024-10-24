@@ -1398,6 +1398,8 @@ class AccountMoveLine(models.Model):
             yield
             return  # avoid infinite recursion
 
+        protected = container.get('protected', {})
+
         def existing():
             return {
                 line: {
@@ -1420,6 +1422,7 @@ class AccountMoveLine(models.Model):
         for line in after:
             if (
                 line.display_type == 'product'
+                and 'amount_currency' not in protected.get(line, {})
                 and (not changed('amount_currency') or line not in before)
             ):
                 amount_currency = line.move_id.direction_sign * line.currency_id.round(line.price_subtotal)
@@ -1432,10 +1435,12 @@ class AccountMoveLine(models.Model):
         for line in after:
             if (
                 (changed('amount_currency') or changed('currency_rate') or changed('move_type'))
+                and 'balance' not in protected.get(line, {})
                 and (not changed('balance') or (line not in before and not line.balance))
             ):
                 balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
                 line.balance = balance
+        # TODO: what if balance protected ?
         # Since this method is called during the sync, inside of `create`/`write`, these fields
         # already have been computed and marked as so. But this method should re-trigger it since
         # it changes the dependencies.
@@ -1445,7 +1450,7 @@ class AccountMoveLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         moves = self.env['account.move'].browse({vals['move_id'] for vals in vals_list})
-        container = {'records': self}
+        container = {'records': self, 'protected': defaultdict(lambda: set(vals_list))}
         move_container = {'records': moves}
         with moves._check_balanced(move_container),\
              moves._sync_dynamic_lines(move_container),\
@@ -1507,7 +1512,7 @@ class AccountMoveLine(models.Model):
         move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\
              self.move_id._sync_dynamic_lines(move_container),\
-             self._sync_invoice({'records': self}):
+             self._sync_invoice({'records': self, 'protected': {line: set(vals.keys()) for line in self}}):  # TODO:?: also add protected_fields
             self = line_to_write
             if not self:
                 return True
