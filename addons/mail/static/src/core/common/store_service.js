@@ -59,6 +59,8 @@ export class Store extends BaseStore {
     ["mail.followers"];
     /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */
     ["mail.link.preview"];
+    /** @type {typeof import("@mail/core/common/follower_list_view_model").FollowerListView} */
+    FollowerListView;
     /** @type {typeof import("@mail/core/common/message_model").Message} */
     ["mail.message"];
     /** @type {typeof import("@mail/core/common/notification_model").Notification} */
@@ -105,6 +107,7 @@ export class Store extends BaseStore {
     // messaging menu
     menu = { counter: 0 };
     chatHub = Record.one("ChatHub", { compute: () => ({}) });
+    followerListView = Record.many("FollowerListView");
     failures = Record.many("Failure", {
         /**
          * @param {import("models").Failure} f1

@@ -4,7 +4,7 @@ import { AttachmentList } from "@mail/core/common/attachment_list";
 import { BaseRecipientsList } from "@mail/core/web/base_recipients_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
-import { FollowerList } from "@mail/core/web/follower_list";
+import { FollowerListDropDown } from "@mail/core/web/follower_list_dropdown";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
@@ -15,10 +15,8 @@ import { useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { Dropdown } from "@web/core/dropdown/dropdown";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { patch } from "@web/core/utils/patch";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 
 export const DELAY_FOR_SPINNER = 1000;
@@ -27,9 +25,8 @@ Object.assign(Chatter.components, {
     Activity,
     AttachmentList,
     BaseRecipientsList,
-    Dropdown,
     FileUploader,
-    FollowerList,
+    FollowerListDropDown,
     ScheduledMessage,
     SearchMessagesPanel,
     SuggestedRecipientsList,
@@ -86,7 +83,6 @@ patch(Chatter.prototype, {
             this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
         );
         this.unfollowHover = useHover("unfollow");
-        this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
         useDropzone(
