@@ -114,11 +114,13 @@ class TestProjectRecurrence(TransactionCase):
             form.date_deadline = self.date_01_01
             task = form.save()
 
-        task.state = '1_done'
+        with freeze_time(self.date_01_01 + relativedelta(days=30)):
+            task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is before repeat_until, next occurrence should have been created")
 
         last_recurring_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
-        last_recurring_task.state = '1_done'
+        with freeze_time(self.date_01_01 + relativedelta(days=32)):
+            last_recurring_task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is after repeat_until, next occurrence shouldn't have been created")
 
     def test_recurring_settings_change(self):
@@ -275,3 +277,51 @@ class TestProjectRecurrence(TransactionCase):
 
         self.assertEqual(len(side_task1.depend_on_ids), 0)
         self.assertCountEqual(side_task2.depend_on_ids.ids, [node3.id, parent_copy_node3.id], 'SideTask2 - Node3 and SideTask2 - Node3copy relations should be present')
+
+    def test_next_occurrence_batch_call(self):
+        tasks = self.env['project.task'].with_context({'mail_create_nolog': True}).create([
+            {
+                'name': 'Recurring Task 1',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'repeat_unit': 'week',
+                'repeat_type': 'forever',
+                'date_deadline': "2023-01-01 00:00:00",
+                'child_ids': [
+                    Command.create({
+                        'name': 'R1 Sub Task 1',
+                        'project_id': self.project_recurring.id,
+                        'date_deadline': "2023-01-02 00:00:00",
+                        'child_ids': [
+                            Command.create({
+                                'name': 'R1 Sub Task 2',
+                                'project_id': self.project_recurring.id,
+                                'date_deadline': "2023-01-03 00:00:00",
+                            })
+                        ],
+                    }),
+                ],
+            },
+            {
+                'name': 'Recurring Task 2',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'repeat_unit': 'week',
+                'repeat_type': 'forever',
+                'date_deadline': "2023-01-04 00:00:00",
+                'child_ids': [
+                    Command.create({
+                        'name': 'R2 Sub Task',
+                        'project_id': self.project_recurring.id,
+                        'date_deadline': "2023-01-05 00:00:00",
+                    }),
+                ],
+            },
+        ])
+        tasks_copy = self.env['project.task.recurrence']._create_next_occurrences(tasks)
+        # Every date should be 1 week later
+        self.assertEqual(datetime(2023, 1, 8, 0, 0), tasks_copy[0].date_deadline)
+        self.assertEqual(datetime(2023, 1, 9, 0, 0), tasks_copy[0].child_ids.date_deadline)
+        self.assertEqual(datetime(2023, 1, 10, 0, 0), tasks_copy[0].child_ids.child_ids.date_deadline)
+        self.assertEqual(datetime(2023, 1, 11, 0, 0), tasks_copy[1].date_deadline)
+        self.assertEqual(datetime(2023, 1, 12, 0, 0), tasks_copy[1].child_ids.date_deadline)
