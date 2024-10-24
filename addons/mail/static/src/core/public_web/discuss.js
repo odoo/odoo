@@ -1,10 +1,6 @@
-import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { Composer } from "@mail/core/common/composer";
-import { CountryFlag } from "@mail/core/common/country_flag";
-import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
-import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
 import {
     useMessageEdition,
@@ -24,22 +20,17 @@ import {
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { FileUploader } from "@web/views/fields/file_handler";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
+import { DiscussHeader } from "@mail/core/common/discuss_header";
 
 export class Discuss extends Component {
     static components = {
-        AutoresizeInput,
-        CountryFlag,
         DiscussSidebar,
         Thread,
-        ThreadIcon,
         Composer,
-        FileUploader,
-        ImStatus,
         MessagingMenu,
+        DiscussHeader,
     };
     static props = {
         hasSidebar: { type: Boolean, optional: true },
@@ -98,31 +89,5 @@ export class Discuss extends Component {
 
     get thread() {
         return this.store.discuss.thread;
-    }
-
-    async onFileUploaded(file) {
-        await this.thread.notifyAvatarToServer(file.data);
-        this.notification.add(_t("The avatar has been updated!"), { type: "success" });
-    }
-
-    async renameThread(name) {
-        await this.thread.rename(name);
-    }
-
-    async updateThreadDescription(description) {
-        const newDescription = description.trim();
-        if (!newDescription && !this.thread.description) {
-            return;
-        }
-        if (newDescription !== this.thread.description) {
-            await this.thread.notifyDescriptionToServer(newDescription);
-        }
-    }
-
-    async renameGuest(name) {
-        const newName = name.trim();
-        if (this.store.self.name !== newName) {
-            await this.store.self.updateGuestName(newName);
-        }
     }
 }

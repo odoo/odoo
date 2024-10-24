@@ -110,7 +110,7 @@ test("Editing message keeps the mentioned channels", async () => {
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message-content", { text: "other bye (edited)" });
     await click(".o_channel_redirect", { text: "other" });
-    await contains(".o-mail-Discuss-threadName", { value: "other" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "other" });
 });
 
 test("Can edit message comment in chatter", async () => {

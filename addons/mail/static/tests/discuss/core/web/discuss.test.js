@@ -330,5 +330,5 @@ test("Preserve letter case and accents when creating channel from sidebar", asyn
     await click(".o-mail-DiscussSidebar [title='Add or join a channel']");
     await insertText(".o-discuss-ChannelSelector input", "Crème brûlée Fan Club");
     await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-mail-Discuss-threadName", { value: "Crème brûlée Fan Club" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Crème brûlée Fan Club" });
 });

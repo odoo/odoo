@@ -34,7 +34,7 @@ test("Thread name unchanged when inviting new users", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
+    await contains(".o-mail-DiscussHeader-threadName[title='Visitor #20']");
     await click("button[title='Invite People']");
     await click("input", {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
@@ -43,7 +43,7 @@ test("Thread name unchanged when inviting new users", async () => {
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("button[title='Members']");
     await contains(".o-discuss-ChannelMember", { text: "James" });
-    await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
+    await contains(".o-mail-DiscussHeader-threadName[title='Visitor #20']");
 });
 
 test("Display livechat custom username if defined", async () => {
