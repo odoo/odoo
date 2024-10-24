@@ -434,5 +434,11 @@ class IrHttp(models.AbstractModel):
         return True if cookie_type == 'required' else bool(request.env.user)
 
     @api.model
+<<<<<<< saas-18.1
     def _verify_request_recaptcha_token(self, action: str):
         return
+||||||| 3d716002c350031216f1b955f0c1115143eeefc2
+=======
+    def _verify_request_recaptcha_token(self, action):
+        return True
+>>>>>>> a824c6ff6397dae2a39d7c006662603a87e72224

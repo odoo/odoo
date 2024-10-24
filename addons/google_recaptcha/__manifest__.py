@@ -16,7 +16,12 @@ This module implements reCaptchaV3 so that you can prevent bot spam on your publ
         'web.assets_frontend': [
             'google_recaptcha/static/src/scss/recaptcha.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
+<<<<<<< saas-18.1
             'google_recaptcha/static/src/js/captcha.js',
+||||||| 3d716002c350031216f1b955f0c1115143eeefc2
+=======
+            'google_recaptcha/static/src/js/signup.js',
+>>>>>>> a824c6ff6397dae2a39d7c006662603a87e72224
         ],
         'web.assets_backend': [
             # TODO we may want to consider moving that file in website instead
