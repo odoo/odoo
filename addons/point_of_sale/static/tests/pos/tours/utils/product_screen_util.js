@@ -525,6 +525,10 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
         }
         return key;
     };
+
+    // Press +/- to set a negative quantity. For example, pressing +/- followed by "1" will result in "-11".
+    // To adjust the quantity from "-1" to "-3," first press "0" followed by "3" since pressing +/- will initially set it to "-1,"
+    // and entering "3" directly would result in "-13." so send 0(num) when want to change sign and set a number
     const numpadWrite = (val) =>
         val
             .toString()
