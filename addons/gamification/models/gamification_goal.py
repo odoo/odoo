@@ -129,6 +129,8 @@ class Goal(models.Model):
         the target value being reached, the goal is set as failed."""
         goals_by_definition = {}
         for goal in self.with_context(prefetch_fields=False):
+            if goal.definition_id.computation_mode in ['count', 'sum'] and not goal.definition_id.model_id:
+                continue
             goals_by_definition.setdefault(goal.definition_id, []).append(goal)
 
         for definition, goals in goals_by_definition.items():
