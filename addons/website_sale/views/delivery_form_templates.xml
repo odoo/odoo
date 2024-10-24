@@ -91,7 +91,8 @@
                 </span>
                 <span
                     name="o_pickup_location_selector"
-                    class="btn btn-primary fa fa-pencil ms-2 p-1"
+                    t-attf-class="btn btn-primary fa fa-pencil ms-2 p-1
+                                  {{'' if len(dm.warehouse_ids) > 1 else 'd-none'}}"
                     title="Change location"
                     aria-label="Change location"
                     t-att-data-location-id="pickup_location_data.get('id')"

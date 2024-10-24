@@ -481,7 +481,12 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         }
         const deliveryMethodContainer = this._getDeliveryMethodContainer(radio);
         const pickupLocation = deliveryMethodContainer.querySelector('[name="o_pickup_location"]');
+        const pickupLocationData = await this._fetchPickupLocations()
 
+        if (pickupLocationData && pickupLocationData.length === 1) {
+            await this._setPickupLocation(JSON.stringify(pickupLocationData[0]));
+            window.location = window.location; // To avoid use of window.location.reload()
+        };
         const editPickupLocationButton = pickupLocation.querySelector(
             'span[name="o_pickup_location_selector"]'
         );
@@ -490,6 +495,17 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         }
 
         pickupLocation.classList.remove('d-none'); // Show the whole div.
+    },
+
+    /**
+     * Fetch all the pickup locations
+     *
+     * @private
+     * @return {Array} Pickup locations data
+     */
+    async _fetchPickupLocations() {
+        const locations = await rpc('/website_sale/get_pickup_locations');
+        return locations.pickup_locations;
     },
 
     /**
