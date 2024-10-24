@@ -49,7 +49,7 @@ export class SelectionField extends Component {
                     : "";
             case "selection":
                 return this.props.record.data[this.props.name] !== false
-                    ? this.options.find((o) => o[0] === this.props.record.data[this.props.name])[1]
+                    ? this.options.find((o) => o[0] === this.props.record.data[this.props.name])?.[1]
                     : "";
             default:
                 return "";

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_ro_template_etransport">
+        <eTransport
+            xmlns="mfp:anaf:dgti:eTransport:declaratie:v2"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="mfp:anaf:dgti:eTransport:declaratie:v2"
+            t-att-codDeclarant="get_cod(interface.l10n_ro_edi_stock_company_id)"
+            t-att-refDeclarant="declarant_ref">
+
+            <notificare t-att-codTipOperatiune="interface.l10n_ro_edi_stock_operation_type">
+                <corectie t-if="send_type == 'amend'" t-att-uit="interface.l10n_ro_edi_stock_document_uit"/>
+
+                <t t-foreach="interface.l10n_ro_edi_stock_move_ids" t-as="move">
+                    <t t-set="product" t-value="move.product_id"/>
+
+                    <bunuriTransportate
+                            t-att-codScopOperatiune="interface.l10n_ro_edi_stock_operation_scope"
+                            t-att-codTarifar="product.intrastat_code_id.code or '00000000'"
+                            t-att-denumireMarfa="product.name"
+                            t-att-cantitate="move.product_qty"
+                            t-att-codUnitateMasura="move.product_uom._get_unece_code()"
+                            t-att-greutateNeta="move.weight"
+                            t-att-greutateBruta="get_gross_weight(move)"
+                            t-att-valoareLeiFaraTva="product.list_price"/>
+                </t>
+
+                <partenerComercial
+                        t-att-codTara="partner.country_code"
+                        t-att-denumire="partner.name"
+                        t-att-cod="partner_cod"/>
+
+                <dateTransport
+                        t-att-nrVehicul="vehicle_number"
+                        t-att-nrRemorca1="trailer1"
+                        t-att-nrRemorca2="trailer2"
+                        t-att-codTaraOrgTransport="transport_partner.country_code"
+                        t-att-codOrgTransport="get_cod(transport_partner)"
+                        t-att-denumireOrgTransport="transport_partner.name"
+                        t-att-dataTransport="scheduled_date"/>
+
+                <t t-if="interface.l10n_ro_edi_stock_start_loc_type == 'location'">
+                    <locStartTraseuRutier>
+                        <locatie
+                                t-att-codJudet="STATE_CODES[interface.l10n_ro_edi_stock_start_state_id.code]"
+                                t-att-denumireLocalitate="interface.l10n_ro_edi_stock_start_city"
+                                t-att-denumireStrada="interface.l10n_ro_edi_stock_start_street"
+                                t-att-codPostal="interface.l10n_ro_edi_stock_start_zip"
+                                t-att-alteInfo="interface.l10n_ro_edi_stock_start_other_info"/>
+                    </locStartTraseuRutier>
+                </t>
+                <t t-elif="interface.l10n_ro_edi_stock_start_loc_type == 'bcp'">
+                    <locStartTraseuRutier t-att-codPtf="interface.l10n_ro_edi_stock_start_bcp"/>
+                </t>
+                <t t-elif="interface.l10n_ro_edi_stock_start_loc_type == 'customs'">
+                    <locStartTraseuRutier t-att-codBirouVamal="interface.l10n_ro_edi_stock_start_customs_office"/>
+                </t>
+
+                <t t-if="interface.l10n_ro_edi_stock_end_loc_type == 'location'">
+                    <locFinalTraseuRutier>
+                        <locatie
+                                t-att-codJudet="STATE_CODES[interface.l10n_ro_edi_stock_end_state_id.code]"
+                                t-att-denumireLocalitate="interface.l10n_ro_edi_stock_end_city"
+                                t-att-denumireStrada="interface.l10n_ro_edi_stock_end_street"
+                                t-att-codPostal="interface.l10n_ro_edi_stock_end_zip"
+                                t-att-alteInfo="interface.l10n_ro_edi_stock_end_other_info"/>
+                    </locFinalTraseuRutier>
+                </t>
+                <t t-elif="interface.l10n_ro_edi_stock_end_loc_type == 'bcp'">
+                    <locFinalTraseuRutier t-att-codPtf="interface.l10n_ro_edi_stock_end_bcp"/>
+                </t>
+                <t t-elif="interface.l10n_ro_edi_stock_end_loc_type == 'customs'">
+                    <locFinalTraseuRutier t-att-codBirouVamal="interface.l10n_ro_edi_stock_end_customs_office"/>
+                </t>
+
+                <documenteTransport
+                        tipDocument="30"
+                        t-att-dataDocument="scheduled_date"
+                        t-att-numarDocument="declarant_ref"
+                        t-att-observatii="interface.l10n_ro_edi_stock_remarks"/>
+            </notificare>
+        </eTransport>
+    </template>
+</odoo>
