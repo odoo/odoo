@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_disclaimer" name="Disclaimer">
+        <section class="s_disclaimer oe_unmovable oe_structure_solo o_cc o_cc5">
+            <div class="text-center">
+                <small>Free Returns and Standard Shipping</small>
+            </div>
+        </section>
+    </template>
+
+    <template id="s_disclaimer_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div data-selector=".s_disclaimer" data-js="Disclaimer">
+                <we-select string="Show on" data-no-preview="true">
+                    <we-button data-move-block="allPages">All pages</we-button>
+                    <we-button data-move-block="currentPage">This page</we-button>
+                </we-select>
+            </div>
+        </xpath>
+    </template>
+</odoo>
