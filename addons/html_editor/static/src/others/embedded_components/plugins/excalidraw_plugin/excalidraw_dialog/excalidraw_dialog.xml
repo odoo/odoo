@@ -7,16 +7,15 @@
                 Sorry, we could not find your drawing, please verify that the URL is valid.
             </div>
             <div class="alert alert-info d-flex" role="alert" t-else="">
-                <i class="fa fa-info-circle py-1 pe-2"/><div>Collaborative Links require joining, while Embed Links directly show the drawing.</div>
+                <div>Open the share menu of your Excalidraw scene and paste its shareable or embed link here.</div>
             </div>
             <input class="o_input" type="text" t-ref="urlInput"
-                t-on-paste.stop="() => this.state.hasError = false"
-                t-on-input.stop="() => this.state.hasError = false"
                 t-on-keydown.stop="onKeyDown"
-                t-on-focusout.stop="() => this.checkInput()"
+                t-on-input.stop="() => this.checkInput()"
                 placeholder="e.g. https://link.excalidraw.com/..."/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="saveURL">Insert Drawing</button>
+                <button class="btn btn-primary" t-on-click="saveURL"
+                    t-att-disabled="state.hasError or state.isInputEmpty">Insert Drawing</button>
                 <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
             </t>
         </Dialog>
