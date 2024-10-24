@@ -134,7 +134,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         },
         {
             content: "Submit login",
-            trigger: `.oe_signup_form button[type="submit"]`,
+            trigger: ".s_website_form_send",
             run: "click",
             expectUnloadPage: true,
         },

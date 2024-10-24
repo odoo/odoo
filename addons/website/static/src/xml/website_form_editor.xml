@@ -378,6 +378,29 @@
         </t>
     </t>
 
+    <!-- Password Field -->
+    <t t-name="website.form_field_password">
+        <t t-call="website.form_field">
+            <div class="input-group mb-1">
+                <input
+                    type="password"
+                    class="form-control s_website_form_input"
+                    t-att-name="field.name"
+                    t-att-required="field.required || field.modelRequired || None"
+                    t-att-value="field.value"
+                    t-att-placeholder="field.placeholder"
+                    t-att-data-fill-with="field.fillWith"
+                    t-att-autocapitalize="off"
+                    t-att-autocomplete="off"
+                    t-att-id="field.id"
+                    />
+                <button type="button" class="btn btn-sm btn-secondary o_show_password">
+                    <i class="fa fa-eye"/>
+                </button>
+            </div>
+        </t>
+    </t>
+
     <!-- Monetary Field -->
     <t t-name="website.form_field_monetary">
         <t t-call="website.form_field_float" />

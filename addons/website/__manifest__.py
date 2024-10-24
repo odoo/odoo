@@ -203,6 +203,7 @@
         'views/website_pages_views.xml',
         'views/website_controller_pages_views.xml',
         'views/website_visitor_views.xml',
+        'views/website_signup_form.xml',
         'views/res_config_settings_views.xml',
         'views/website_rewrite.xml',
         'views/ir_actions_server_views.xml',

@@ -416,12 +416,16 @@ export class Form extends Interaction {
             formData.append(key, value);
         }
 
+        // The reason for using customUrlSubmit is that, in certain cases, the
+        // form URL needs to target a specific custom controller route. In such
+        // scenarios, the form action should remain unchanged. For example,
+        // the signup form should always submit to the `/web/signup` route.
+        const baseAction = this.el.getAttribute("action");
+        const actionUrl = this.el.dataset.customUrlSubmit
+            ? baseAction
+            : baseAction + (this.el.dataset.force_action || this.el.dataset.model_name);
         // Post form and handle result
-        return post(
-            this.el.getAttribute("action") +
-                (this.el.dataset.force_action || this.el.dataset.model_name),
-            formData
-        )
+        return post(actionUrl, formData)
             .then(async (resultData) => {
                 if (!resultData.id) {
                     // Failure, the server didn't return the created record ID
