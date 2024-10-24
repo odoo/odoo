@@ -330,9 +330,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_uom_qty': 3.5,
                 'product_uom': product_a.uom_id.id,
                 'price_unit': 8,  # manually set a different price than the lst_price
+                'discount': 10,
             })],
         })
-        self.assertEqual(sale_order.amount_total, 32.2)  # 3.5 * 8 * 1.15
+        self.assertEqual(sale_order.amount_total, 28.98)  # 3.5 * 8 * 1.15 * 90%
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderNotGroupable', login="accountman")
 
