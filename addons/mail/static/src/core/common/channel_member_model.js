@@ -120,6 +120,14 @@ export class ChannelMember extends Record {
               })
             : undefined;
     }
+
+    get totalUnreadMessageCounter() {
+        let counter = this.message_unread_counter;
+        if (!this.unreadSynced) {
+            counter += this.localMessageUnreadCounter;
+        }
+        return counter;
+    }
 }
 
 ChannelMember.register();
