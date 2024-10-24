@@ -32,6 +32,26 @@ WebsiteSale.include({
             }
         );
         if (combos.length) {
+            const preselectedComboItems = combos
+                .map(combo => new ProductCombo(combo))
+                .map(combo => combo.preselectedComboItem)
+                .filter(Boolean);
+            // If each combo choice has only one combo item, and that combo item can't be configured
+            // (i.e. it has no `no_variant` attributes), then the combo product is already fully
+            // configured and the user doesn't need to do anything else.
+            if (preselectedComboItems.length === combos.length) {
+                const extraPrice = preselectedComboItems.reduce(
+                    (price, item) => price + item.totalExtraPrice, 0
+                );
+                const comboProductData = {
+                    quantity: remainingData.quantity,
+                    price: remainingData.price + extraPrice,
+                };
+                return this.addComboProductToCart(
+                    comboProductData, preselectedComboItems, remainingData, {}
+                );
+            }
+            // If some combo choices need to be configured, open the combo configurator.
             return this._openComboConfigurator(combos, remainingData);
         }
         if (this.isBuyNow) {
@@ -99,27 +119,32 @@ WebsiteSale.include({
             date: serializeDateTime(DateTime.now()),
             edit: false,
             isFrontend: true,
-            save: async (comboProductData, selectedComboItems, options) => {
-                this._trackProducts([{
-                    'id': this.rootProduct.product_id,
-                    'display_name': remainingData.display_name,
-                    'category_name': remainingData.category_name,
-                    'currency_name': remainingData.currency_name,
-                    'price': comboProductData.price,
-                    'quantity': comboProductData.quantity,
-                }]);
-
-                const values = await rpc('/website_sale/combo_configurator/update_cart', {
-                    combo_product_id: this.rootProduct.product_id,
-                    quantity: comboProductData.quantity,
-                    selected_combo_items: selectedComboItems.map(serializeComboItem),
-                    ...this._getAdditionalRpcParams(),
-                });
-                this._onConfigured(options, values);
-            },
+            save: (comboProductData, selectedComboItems, options) =>
+                this.addComboProductToCart(
+                    comboProductData, selectedComboItems, remainingData, options
+                ),
             discard: () => {},
             ...this._getAdditionalDialogProps(),
         });
+    },
+
+    async addComboProductToCart(comboProductData, selectedComboItems, remainingData, options) {
+        this._trackProducts([{
+            'id': this.rootProduct.product_id,
+            'display_name': remainingData.display_name,
+            'category_name': remainingData.category_name,
+            'currency_name': remainingData.currency_name,
+            'price': comboProductData.price,
+            'quantity': comboProductData.quantity,
+        }]);
+
+        const values = await rpc('/website_sale/combo_configurator/update_cart', {
+            combo_product_id: this.rootProduct.product_id,
+            quantity: comboProductData.quantity,
+            selected_combo_items: selectedComboItems.map(serializeComboItem),
+            ...this._getAdditionalRpcParams(),
+        });
+        this._onConfigured(options, values);
     },
 
     _onConfigured(options, values) {
