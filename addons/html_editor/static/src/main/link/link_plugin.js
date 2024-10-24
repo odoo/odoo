@@ -122,7 +122,7 @@ export class LinkPlugin extends Plugin {
                 run: this.removeLinkFromSelection.bind(this),
             },
         ],
-        onBeforeInput: withSequence(5, this.onBeforeInput.bind(this)),
+        beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
         toolbarCategory: [
             withSequence(40, {
                 id: "link",
@@ -170,12 +170,12 @@ export class LinkPlugin extends Plugin {
                 commandId: "toggleLinkTools",
             },
         ],
-        onSelectionChange: this.handleSelectionChange.bind(this),
-        split_element_block: this.handleSplitBlock.bind(this),
-        handle_insert_line_break_element: this.handleInsertLineBreak.bind(this),
+        selectionchange_handlers: this.handleSelectionChange.bind(this),
+        split_element_block_overrides: this.handleSplitBlock.bind(this),
+        insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         powerButtons: ["toggleLinkTools"],
-        clean_for_save_listeners: ({ root }) => this.removeEmptyLinks(root),
-        normalize_listeners: this.normalizeLink.bind(this),
+        clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
+        normalize_handlers: this.normalizeLink.bind(this),
     };
     setup() {
         this.overlay = this.shared.createOverlay(LinkPopover, {}, { sequence: 50 });

@@ -9,7 +9,7 @@ export class NoInlineRootPlugin extends Plugin {
 
     resources = {
         ...(!this.config.allowInlineAtRoot && {
-            fix_selection_on_editable_root_listeners: this.fixSelectionOnEditableRoot.bind(this),
+            fix_selection_on_editable_root_handlers: this.fixSelectionOnEditableRoot.bind(this),
         }),
     };
 

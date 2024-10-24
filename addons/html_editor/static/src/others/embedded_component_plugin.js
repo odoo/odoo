@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { trigger } from "@html_editor/utils/resource";
 import { App } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
 
@@ -14,13 +13,13 @@ export class EmbeddedComponentPlugin extends Plugin {
         filter_descendants_to_serialize: this.filterDescendantsToSerialize.bind(this),
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         on_change_attribute: this.onChangeAttribute.bind(this),
-        clean_for_save_listeners: ({ root }) => this.cleanForSave(root),
-        normalize_listeners: this.normalize.bind(this),
-        restore_savepoint_listeners: () => this.handleComponents(this.editable),
-        history_reseted_listeners: () => this.handleComponents(this.editable),
-        history_reseted_from_steps_listeners: () => this.handleComponents(this.editable),
-        step_added_listeners: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
-        external_step_added_listeners: () => this.handleComponents(this.editable),
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        normalize_handlers: this.normalize.bind(this),
+        restore_savepoint_handlers: () => this.handleComponents(this.editable),
+        history_reset_handlers: () => this.handleComponents(this.editable),
+        history_reset_from_steps_handlers: () => this.handleComponents(this.editable),
+        step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
+        external_step_added_handlers: () => this.handleComponents(this.editable),
     };
 
     setup() {
@@ -39,8 +38,8 @@ export class EmbeddedComponentPlugin extends Plugin {
             }
             return result;
         });
-        // First mount is done during history_reseted_listeners which happens
-        // when start_edition_listeners are called.
+        // First mount is done during history_reset_handlers which happens
+        // when start_edition_handlers are called.
     }
 
     isMutationRecordSavable(record) {
@@ -156,7 +155,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (getEditableDescendants) {
             env.getEditableDescendants = getEditableDescendants;
         }
-        trigger(this.getResource("mount_component_listeners"), { name, env, props });
+        this.dispatchTo("mount_component_handlers", { name, env, props });
         const app = new App(Component, {
             test: dev,
             env,

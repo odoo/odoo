@@ -23,7 +23,6 @@ import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { convertList, getListMode } from "@html_editor/utils/list";
-import { trigger } from "@html_editor/utils/resource";
 
 export class DomPlugin extends Plugin {
     static name = "dom";
@@ -45,14 +44,14 @@ export class DomPlugin extends Plugin {
             category: "structure",
             commandId: "insertSeparator",
         },
-        clean_listeners: this.removeEmptyClassAndStyleAttributes.bind(this),
-        clean_for_save_listeners: ({ root }) => {
+        clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),
+        clean_for_save_handlers: ({ root }) => {
             this.removeEmptyClassAndStyleAttributes(root);
             for (const el of root.querySelectorAll("hr[contenteditable]")) {
                 el.removeAttribute("contenteditable");
             }
         },
-        normalize_listeners: this.normalize.bind(this),
+        normalize_handlers: this.normalize.bind(this),
     };
     contentEditableToRemove = new Set();
 
@@ -90,7 +89,7 @@ export class DomPlugin extends Plugin {
             container.textContent = content;
         } else {
             for (const child of content.children) {
-                trigger(this.getResource("normalize_listeners"), child);
+                this.dispatchTo("normalize_handlers", child);
             }
             container.replaceChildren(content);
         }
@@ -374,7 +373,7 @@ export class DomPlugin extends Plugin {
     }
 
     copyAttributes(source, target) {
-        trigger(this.getResource("clean_listeners"), source);
+        this.dispatchTo("clean_handlers", source);
         for (const attr of source.attributes) {
             if (attr.name === "class") {
                 target.classList.add(...source.classList);

@@ -9,7 +9,7 @@ export class MentionPlugin extends Plugin {
     static dependencies = ["overlay", "dom", "history", "selection"];
 
     resources = {
-        onBeforeInput: this.onBeforeInput.bind(this),
+        beforeinput_handlers: this.onBeforeInput.bind(this),
     };
 
     setup() {

@@ -1,4 +1,3 @@
-import { trigger } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 
 export class InputPlugin extends Plugin {
@@ -11,11 +10,11 @@ export class InputPlugin extends Plugin {
 
     onBeforeInput(ev) {
         this.shared.stageSelection();
-        trigger(this.getResource("onBeforeInput"), ev);
+        this.dispatchTo("beforeinput_handlers", ev);
     }
 
     onInput(ev) {
         this.shared.addStep();
-        trigger(this.getResource("onInput"), ev);
+        this.dispatchTo("input_handlers", ev);
     }
 }

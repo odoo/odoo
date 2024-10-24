@@ -63,8 +63,8 @@ export class ImagePlugin extends Plugin {
             },
             { id: "setImagePadding", run: this.setImagePadding.bind(this) },
         ],
-        handle_paste_url: this.handlePasteUrl.bind(this),
-        onSelectionChange: this.onSelectionChange.bind(this),
+        paste_url_overrides: this.handlePasteUrl.bind(this),
+        selectionchange_handlers: this.onSelectionChange.bind(this),
         toolbarNamespace: [
             {
                 id: "image",

@@ -16,7 +16,7 @@ import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../u
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { trigger, withSequence } from "@html_editor/utils/resource";
+import { withSequence } from "@html_editor/utils/resource";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -134,9 +134,9 @@ export class FormatPlugin extends Plugin {
             },
         ],
         arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
-        onBeforeInput: withSequence(20, this.onBeforeInput.bind(this)),
-        clean_for_save_listeners: this.cleanForSave.bind(this),
-        normalize_listeners: this.normalize.bind(this),
+        beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
+        normalize_handlers: this.normalize.bind(this),
     };
 
     removeFormat() {
@@ -146,7 +146,7 @@ export class FormatPlugin extends Plugin {
             }
             this._formatSelection(format, { applyStyle: false });
         }
-        trigger(this.getResource("removeFormat"));
+        this.dispatchTo("remove_format_handlers");
         this.shared.addStep();
     }
 

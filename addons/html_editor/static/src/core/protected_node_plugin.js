@@ -12,9 +12,9 @@ export class ProtectedNodePlugin extends Plugin {
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         filter_descendants_to_remove: this.filterDescendantsToRemove.bind(this),
         isUnsplittable: isProtecting, // avoid merge
-        clean_for_save_listeners: ({ root }) => this.cleanForSave(root),
-        normalize_listeners: this.normalize.bind(this),
-        before_filter_mutation_record_listeners: this.beforeFilteringMutationRecords.bind(this),
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        normalize_handlers: this.normalize.bind(this),
+        before_filter_mutation_record_handlers: this.beforeFilteringMutationRecords.bind(this),
     };
 
     setup() {

@@ -37,7 +37,7 @@ export class FilePlugin extends Plugin {
                 commandId: "openMediaDialog",
             },
         ],
-        mount_component_listeners: this.setupNewFile.bind(this),
+        mount_component_handlers: this.setupNewFile.bind(this),
     };
 
     get recordInfo() {

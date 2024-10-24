@@ -5,7 +5,7 @@ import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent } from "./selection";
 import { animationFrame } from "@odoo/hoot-mock";
-import { trigger } from "@html_editor/utils/resource";
+import { dispatchCleanForSave } from "./dispatch";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
@@ -176,10 +176,7 @@ export async function testEditor(config) {
     }
     if (contentAfter) {
         const content = editor.getContent();
-        trigger(editor.resources["clean_for_save_listeners"], {
-            root: el,
-            preserveSelection: true,
-        });
+        dispatchCleanForSave(editor, { root: el, preserveSelection: true });
         compareFunction(getContent(el), contentAfter, "Editor content, after clean");
         compareFunction(content, el.innerHTML, "Value from editor.getContent()");
     }

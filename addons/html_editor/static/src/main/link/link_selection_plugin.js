@@ -55,13 +55,13 @@ export class LinkSelectionPlugin extends Plugin {
     resources = {
         mutation_filtered_classes: ["o_link_in_selection"],
         link_ignore_classes: ["o_link_in_selection"],
-        onSelectionChange: this.resetLinkInSelection.bind(this),
-        clean_listeners: (root) => this.removeFEFFs(root, { preserveSelection: true }),
-        clean_for_save_listeners: this.cleanForSave.bind(this),
+        selectionchange_handlers: this.resetLinkInSelection.bind(this),
+        clean_handlers: (root) => this.removeFEFFs(root, { preserveSelection: true }),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
         arrows_should_skip: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
-        normalize_listeners: (el) => this.normalize(el || this.editable),
+        normalize_handlers: (el) => this.normalize(el || this.editable),
     };
 
     /**

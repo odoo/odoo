@@ -38,7 +38,7 @@ import {
     startPos,
 } from "../utils/position";
 import { CTYPES } from "../utils/content_types";
-import { delegate, trigger, withSequence } from "@html_editor/utils/resource";
+import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef {Object} RangeLike
@@ -55,7 +55,7 @@ export class DeletePlugin extends Plugin {
     static name = "delete";
     static shared = ["deleteRange", "isUnmergeable", "deleteSelection"];
     resources = {
-        onBeforeInput: [
+        beforeinput_handlers: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
@@ -75,12 +75,12 @@ export class DeletePlugin extends Plugin {
             { hotkey: "control+shift+backspace", commandId: "deleteBackwardLine" },
             { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
         ],
-        handle_delete_backward: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
-        handle_delete_backward_word: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
-        handle_delete_backward_line: this.deleteBackwardUnmergeable.bind(this),
-        handle_delete_forward: withSequence(20, this.deleteForwardUnmergeable.bind(this)),
-        handle_delete_forward_word: this.deleteForwardUnmergeable.bind(this),
-        handle_delete_forward_line: this.deleteForwardUnmergeable.bind(this),
+        delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
+        delete_backward_word_overrides: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
+        delete_backward_line_overrides: this.deleteBackwardUnmergeable.bind(this),
+        delete_forward_overrides: withSequence(20, this.deleteForwardUnmergeable.bind(this)),
+        delete_forward_word_overrides: this.deleteForwardUnmergeable.bind(this),
+        delete_forward_line_overrides: this.deleteForwardUnmergeable.bind(this),
 
         // @todo @phoenix: move these predicates to different plugins
         isUnremovable: [
@@ -121,7 +121,7 @@ export class DeletePlugin extends Plugin {
             this.fullyIncludeLinks,
         ]);
 
-        if (delegate(this.getResource("handle_delete_range"), range)) {
+        if (this.delegateTo("delete_range_overrides", range)) {
             return;
         }
 
@@ -145,7 +145,7 @@ export class DeletePlugin extends Plugin {
         } else {
             throw new Error("Invalid direction");
         }
-        trigger(this.getResource("delete_listeners"));
+        this.dispatchTo("delete_handlers");
         this.shared.addStep();
     }
 
@@ -164,11 +164,11 @@ export class DeletePlugin extends Plugin {
         let range = this.getRangeForDelete(endContainer, endOffset, "backward", granularity);
 
         const resourceIds = {
-            character: "handle_delete_backward",
-            word: "handle_delete_backward_word",
-            line: "handle_delete_backward_line",
+            character: "delete_backward_overrides",
+            word: "delete_backward_word_overrides",
+            line: "delete_backward_line_overrides",
         };
-        if (delegate(this.getResource(resourceIds[granularity]), range)) {
+        if (this.delegateTo(resourceIds[granularity], range)) {
             return;
         }
 
@@ -192,11 +192,11 @@ export class DeletePlugin extends Plugin {
         let range = this.getRangeForDelete(startContainer, startOffset, "forward", granularity);
 
         const resourceIds = {
-            character: "handle_delete_forward",
-            word: "handle_delete_forward_word",
-            line: "handle_delete_forward_line",
+            character: "delete_forward_overrides",
+            word: "delete_forward_word_overrides",
+            line: "delete_forward_line_overrides",
         };
-        if (delegate(this.getResource(resourceIds[granularity]), range)) {
+        if (this.delegateTo(resourceIds[granularity], range)) {
             return;
         }
 

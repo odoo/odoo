@@ -6,7 +6,7 @@ export class InlineCodePlugin extends Plugin {
     static name = "inline_code";
     static dependencies = ["selection", "history", "split"];
     resources = {
-        onInput: this.onInput.bind(this),
+        input_handlers: this.onInput.bind(this),
     };
 
     onInput(ev) {

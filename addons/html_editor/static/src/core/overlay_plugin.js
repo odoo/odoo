@@ -13,7 +13,7 @@ export class OverlayPlugin extends Plugin {
     static dependencies = ["history"];
     static shared = ["createOverlay"];
     resources = {
-        step_added_listeners: this.getScrollContainer.bind(this),
+        step_added_handlers: this.getScrollContainer.bind(this),
     };
 
     overlays = [];

@@ -39,8 +39,8 @@ import { deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actio
 import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
-import { trigger } from "@html_editor/utils/resource";
 import { Plugin } from "@html_editor/plugin";
+import { dispatchClean, dispatchCleanForSave } from "./_helpers/dispatch";
 
 function getConfig(components) {
     return {
@@ -584,7 +584,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.domInsert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.addStep();
         await animationFrame();
-        trigger(editor.resources["clean_listeners"], editor.editable);
+        dispatchClean(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
@@ -598,7 +598,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.domInsert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.addStep();
         await animationFrame();
-        trigger(editor.resources["clean_listeners"], editor.editable);
+        dispatchClean(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
@@ -613,7 +613,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.domInsert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.addStep();
         await animationFrame();
-        trigger(editor.resources["clean_listeners"], editor.editable);
+        dispatchClean(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
@@ -627,7 +627,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.domInsert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.addStep();
         await animationFrame();
-        trigger(editor.resources["clean_listeners"], editor.editable);
+        dispatchClean(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
@@ -846,7 +846,7 @@ describe("Mount processing", () => {
             static name = "simple";
             static dependencies = ["selection", "embedded_components", "dom", "history"];
             resources = {
-                mount_component_listeners: this.setupNewComponent.bind(this),
+                mount_component_handlers: this.setupNewComponent.bind(this),
             };
 
             setupNewComponent({ name, env }) {
@@ -917,7 +917,7 @@ describe("In-editor manipulations", () => {
             }
         );
         const clone = el.cloneNode(true);
-        trigger(editor.resources["clean_for_save_listeners"], { root: clone });
+        dispatchCleanForSave(editor, { root: clone });
         expect(getContent(clone)).toBe(`<div><p>a</p></div><div data-embedded="counter"></div>`);
     });
 
@@ -928,7 +928,7 @@ describe("In-editor manipulations", () => {
                 config: getConfig([embedding("counter", Counter)]),
             }
         );
-        trigger(editor.resources["clean_listeners"], el);
+        dispatchClean(editor);
         expect(getContent(el)).toBe(
             `<div><p>a</p></div><div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>`
         );
@@ -953,7 +953,7 @@ describe("In-editor manipulations", () => {
             `<div data-embedded="unknown"><p>UNKNOWN</p></div>`,
             { config: getConfig([]) }
         );
-        trigger(editor.resources["clean_for_save_listeners"], { root: el });
+        dispatchCleanForSave(editor, { root: el });
         expect(getContent(el)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
     });
 
@@ -1091,7 +1091,7 @@ describe("editable descendants", () => {
             }
         );
         const clone = el.cloneNode(true);
-        trigger(editor.resources["clean_for_save_listeners"], { root: clone });
+        dispatchCleanForSave(editor, { root: clone });
         expect(getContent(clone)).toBe(
             unformat(`
                 <div data-embedded="wrapper">

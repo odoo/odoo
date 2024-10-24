@@ -7,7 +7,6 @@ import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { parseHTML } from "@html_editor/utils/html";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { trigger } from "@html_editor/utils/resource";
 
 test("should ignore protected elements children mutations (true)", async () => {
     await testEditor({
@@ -65,8 +64,6 @@ test("should not normalize protected elements children (true)", async () => {
                     <ul><li>abc<p><br></p></li></ul>
                 </div>
                 `),
-        stepFunction: async (editor) =>
-            trigger(editor.resources["normalize_listeners"], editor.editable),
         contentAfterEdit: unformat(`
                 <div>
                     <p><i class="fa" contenteditable="false">\u200B</i></p>
@@ -106,9 +103,6 @@ test("should normalize unprotected elements children (false)", async () => {
                     </div>
                 </div>
                 `),
-        stepFunction: async (editor) =>
-            trigger(editor.resources["normalize_listeners"], editor.editable),
-
         contentAfterEdit: unformat(`
                 <div data-oe-protected="true" contenteditable="false">
                     <p><i class="fa"></i></p>

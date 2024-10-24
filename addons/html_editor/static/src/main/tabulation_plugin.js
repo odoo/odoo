@@ -4,7 +4,6 @@ import { isEditorTab, isTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { descendants, getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, childNodeIndex } from "@html_editor/utils/position";
-import { delegate } from "@html_editor/utils/resource";
 
 const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
 const GRID_COLUMN_WIDTH = 40; //@todo Configurable?
@@ -31,24 +30,24 @@ export class TabulationPlugin extends Plugin {
             { id: "tab", run: this.handleTab.bind(this) },
             { id: "shiftTab", run: this.handleShiftTab.bind(this) },
         ],
-        handle_tab: [],
-        handle_shift_tab: [],
-        handle_delete_forward: this.handleDeleteForward.bind(this),
+        tab_overrides: [],
+        shift_tab_overrides: [],
+        delete_forward_overrides: this.handleDeleteForward.bind(this),
         shortcuts: [
             { hotkey: "tab", commandId: "tab" },
             { hotkey: "shift+tab", commandId: "shiftTab" },
         ],
         isUnsplittable: isEditorTab, // avoid merge
-        clean_for_save_listeners: ({ root }) => {
+        clean_for_save_handlers: ({ root }) => {
             for (const tab of root.querySelectorAll("span.oe-tabs")) {
                 tab.removeAttribute("contenteditable");
             }
         },
-        normalize_listeners: this.normalize.bind(this),
+        normalize_handlers: this.normalize.bind(this),
     };
 
     handleTab() {
-        if (delegate(this.getResource("handle_tab"))) {
+        if (this.delegateTo("tab_overrides")) {
             return;
         }
 
@@ -63,7 +62,7 @@ export class TabulationPlugin extends Plugin {
     }
 
     handleShiftTab() {
-        if (delegate(this.getResource("handle_shift_tab"))) {
+        if (this.delegateTo("shift_tab_overrides")) {
             return;
         }
         const traversedBlocks = this.shared.getTraversedBlocks();

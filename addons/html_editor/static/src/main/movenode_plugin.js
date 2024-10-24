@@ -2,7 +2,6 @@ import { useNativeDraggable } from "@html_editor/utils/drag_and_drop";
 import { endPos } from "@html_editor/utils/position";
 import { Plugin } from "../plugin";
 import { ancestors, closestElement } from "../utils/dom_traversal";
-import { trigger } from "@html_editor/utils/resource";
 
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
@@ -14,7 +13,7 @@ export class MoveNodePlugin extends Plugin {
     static name = "movenode";
     static dependencies = ["selection", "history", "position", "local-overlay"];
     resources = {
-        layoutGeometryChange: () => {
+        layout_geometry_change_handlers: () => {
             if (this.currentMovableElement) {
                 this.setMovableElement(this.currentMovableElement);
             }
@@ -209,7 +208,7 @@ export class MoveNodePlugin extends Plugin {
     setMovableElement(movableElement) {
         this.removeMoveWidget();
         this.currentMovableElement = movableElement;
-        trigger(this.getResource("setMovableElement"), movableElement);
+        this.dispatchTo("set_movable_element_handlers", movableElement);
 
         const containerRect = this.widgetContainer.getBoundingClientRect();
         const anchorBlockRect = this.currentMovableElement.getBoundingClientRect();
@@ -259,7 +258,7 @@ export class MoveNodePlugin extends Plugin {
         }
     }
     removeMoveWidget() {
-        trigger(this.getResource("unsetMovableElement"));
+        this.dispatchTo("unset_movable_element_handlers");
         this.moveWidget?.remove();
         this.moveWidget = undefined;
         this.currentMovableElement = undefined;

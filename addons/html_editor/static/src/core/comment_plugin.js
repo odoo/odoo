@@ -5,7 +5,7 @@ import { descendants } from "../utils/dom_traversal";
 export class CommentPlugin extends Plugin {
     static name = "comment";
     resources = {
-        normalize_listeners: this.removeComment.bind(this),
+        normalize_handlers: this.removeComment.bind(this),
     };
 
     removeComment(node) {

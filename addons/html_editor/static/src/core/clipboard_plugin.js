@@ -4,7 +4,6 @@ import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
-import { delegate, trigger } from "@html_editor/utils/resource";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -115,12 +114,12 @@ export class ClipboardPlugin extends Plugin {
         const selection = this.shared.getEditableSelection();
         const commonAncestor = selection.commonAncestorContainer;
         if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
-            trigger(this.getResource("clean_listeners"), commonAncestor);
+            this.dispatchTo("clean_handlers", commonAncestor);
         }
         let clonedContents = selection.cloneContents();
         if (!clonedContents.hasChildNodes()) {
             if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
-                trigger(this.getResource("normalize_listeners"), commonAncestor);
+                this.dispatchTo("normalize_handlers", commonAncestor);
             }
             return;
         }
@@ -208,7 +207,7 @@ export class ClipboardPlugin extends Plugin {
         ev.clipboardData.setData("text/html", odooHtml);
         ev.clipboardData.setData("application/vnd.odoo.odoo-editor", odooHtml);
         if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
-            trigger(this.getResource("normalize_listeners"), commonAncestor);
+            this.dispatchTo("normalize_handlers", commonAncestor);
         }
     }
 
@@ -229,7 +228,7 @@ export class ClipboardPlugin extends Plugin {
 
         this.shared.stageSelection();
 
-        trigger(this.getResource("before_paste"), selection);
+        this.dispatchTo("before_paste_handlers", selection);
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.shared.getEditableSelection();
 
@@ -302,7 +301,7 @@ export class ClipboardPlugin extends Plugin {
      */
     handlePasteText(selection, clipboardData) {
         const text = clipboardData.getData("text/plain");
-        if (delegate(this.getResource("handle_paste_text"), selection, text)) {
+        if (this.delegateTo("paste_text_overrides", selection, text)) {
             return;
         } else {
             this.pasteText(selection, text);

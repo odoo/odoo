@@ -1,4 +1,3 @@
-import { delegate, trigger } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty } from "../utils/dom";
@@ -34,14 +33,14 @@ export class SplitPlugin extends Plugin {
             (element) => element.classList.contains("oe_unbreakable"),
             (element) => ["DIV", "SECTION"].includes(element.tagName),
         ],
-        onBeforeInput: this.onBeforeInput.bind(this),
+        beforeinput_handlers: this.onBeforeInput.bind(this),
     };
 
     // --------------------------------------------------------------------------
     // commands
     // --------------------------------------------------------------------------
     splitBlock() {
-        trigger(this.getResource("before_split_block_listeners"));
+        this.dispatchTo("before_split_block_handlers");
         let selection = this.shared.getEditableSelection();
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
@@ -68,18 +67,13 @@ export class SplitPlugin extends Plugin {
             targetNode = targetNode.parentElement;
         }
         const blockToSplit = closestElement(targetNode, isBlock);
+        const params = { targetNode, targetOffset, blockToSplit };
 
-        if (
-            delegate(this.getResource("split_element_block"), {
-                targetNode,
-                targetOffset,
-                blockToSplit,
-            })
-        ) {
+        if (this.delegateTo("split_element_block_overrides", params)) {
             return [undefined, undefined];
         }
 
-        return this.splitElementBlock({ targetNode, targetOffset, blockToSplit });
+        return this.splitElementBlock(params);
     }
     /**
      * @param {Object} param0
@@ -100,12 +94,7 @@ export class SplitPlugin extends Plugin {
             // reason we don't do it now is because there is a dependency cycle.
             // We should resolve this todo by resolving the dependency cycle
             // somehow.
-            if (
-                delegate(this.getResource("split_unsplittable_handlers"), {
-                    targetNode,
-                    targetOffset,
-                })
-            ) {
+            if (this.delegateTo("split_unsplittable_overrides", { targetNode, targetOffset })) {
                 return [undefined, undefined];
             }
         }
@@ -154,7 +143,7 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement, HTMLElement]}
      */
     splitElement(element, offset) {
-        trigger(this.getResource("clean_listeners"), element);
+        this.dispatchTo("clean_handlers", element);
         // const before = /** @type {HTMLElement} **/ (element.cloneNode());
         /** @type {HTMLElement} **/
         const before = element.cloneNode();

@@ -4,7 +4,7 @@ import { tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
-import { trigger } from "@html_editor/utils/resource";
+import { dispatchClean } from "../_helpers/dispatch";
 
 function span(text) {
     const span = document.createElement("span");
@@ -244,7 +244,7 @@ describe("collapsed selection", () => {
         const { el, editor } = await setupEditor(`<p>[]<br></p>`);
         editor.shared.domInsert(parseHTML(editor.document, `<div class="a">a</div>`));
         editor.shared.addStep();
-        trigger(editor.resources["clean_listeners"], editor.editable);
+        dispatchClean(editor);
         expect(getContent(el)).toBe(`<div class="a">a</div><p>[]<br></p>`);
     });
 
@@ -252,7 +252,7 @@ describe("collapsed selection", () => {
         const { el, editor } = await setupEditor(`<p>b[]</p>`);
         editor.shared.domInsert(parseHTML(editor.document, `<div class="a">a</div>`));
         editor.shared.addStep();
-        trigger(editor.resources["clean_listeners"], editor.editable);
+        dispatchClean(editor);
         expect(getContent(el)).toBe(`<p>b</p><div class="a">a</div><p>[]<br></p>`);
     });
 

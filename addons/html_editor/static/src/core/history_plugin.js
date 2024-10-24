@@ -1,4 +1,3 @@
-import { delegate, trigger } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 import { childNodes, descendants, getCommonAncestor } from "../utils/dom_traversal";
 
@@ -108,7 +107,7 @@ export class HistoryPlugin extends Plugin {
             { hotkey: "control+y", commandId: "historyRedo" },
             { hotkey: "control+shift+z", commandId: "historyRedo" },
         ],
-        start_edition_listeners: () => {
+        start_edition_handlers: () => {
             this.enableObserver();
             this.reset(this.config.content);
         },
@@ -143,7 +142,7 @@ export class HistoryPlugin extends Plugin {
         this.nodeToIdMap = new WeakMap();
         this.idToNodeMap = new Map();
         this.setNodeId(this.editable);
-        trigger(this.getResource("history_cleaned_listeners"));
+        this.dispatchTo("history_cleaned_handlers");
     }
     getNodeById(id) {
         return this.idToNodeMap.get(id);
@@ -157,7 +156,7 @@ export class HistoryPlugin extends Plugin {
         this.clean();
         this.stageSelection();
         this.steps.push(this.makeSnapshotStep());
-        trigger(this.getResource("history_reseted_listeners"), content);
+        this.dispatchTo("history_reset_handlers", content);
     }
     /**
      * @param { HistoryStep[] } steps
@@ -172,10 +171,10 @@ export class HistoryPlugin extends Plugin {
         }
         this.steps = steps;
         // todo: to test
-        trigger(this.getResource("historyResetFromSteps"));
+        this.dispatchTo("history_reset_from_steps_handlers");
 
         this.enableObserver();
-        trigger(this.getResource("history_reseted_from_steps_listeners"));
+        this.dispatchTo("history_reset_from_steps_handlers");
     }
     makeSnapshotStep() {
         return {
@@ -255,7 +254,7 @@ export class HistoryPlugin extends Plugin {
         if (!root) {
             return;
         }
-        trigger(this.getResource("content_updated_listeners"), root);
+        this.dispatchTo("content_updated_handlers", root);
     }
 
     /**
@@ -283,7 +282,7 @@ export class HistoryPlugin extends Plugin {
      * @param { MutationRecord[] } records
      */
     filterMutationRecords(records) {
-        trigger(this.getResource("before_filter_mutation_record_listeners"), records);
+        this.dispatchTo("before_filter_mutation_record_handlers", records);
         for (const callback of this.getResource("is_mutation_record_savable")) {
             records = records.filter(callback);
         }
@@ -510,7 +509,7 @@ export class HistoryPlugin extends Plugin {
             return false;
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
-        trigger(this.getResource("normalize_listeners"), stepCommonAncestor);
+        this.dispatchTo("normalize_handlers", stepCommonAncestor);
         this.handleObserverRecords();
 
         currentStep.previousStepId = this.steps.at(-1)?.id;
@@ -532,10 +531,7 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(currentStep.id, stepState);
         }
         this.stageSelection();
-        trigger(this.getResource("step_added_listeners"), {
-            step: currentStep,
-            stepCommonAncestor,
-        });
+        this.dispatchTo("step_added_handlers", { step: currentStep, stepCommonAncestor });
         this.config.onChange?.();
         return currentStep;
     }
@@ -569,7 +565,7 @@ export class HistoryPlugin extends Plugin {
             this.addStep({ stepState: "undo" });
             // Consider the last position of the history as an undo.
         }
-        trigger(this.getResource("post_undo_listeners"));
+        this.dispatchTo("post_undo_handlers");
     }
     redo() {
         this.handleObserverRecords();
@@ -589,7 +585,7 @@ export class HistoryPlugin extends Plugin {
             this.setSerializedSelection(this.steps[pos].selection);
             this.addStep({ stepState: "redo" });
         }
-        trigger(this.getResource("post_redo_listeners"));
+        this.dispatchTo("post_redo_handlers");
     }
     /**
      * @param { SerializedSelection } selection
@@ -691,8 +687,8 @@ export class HistoryPlugin extends Plugin {
             this.revertMutations(stepToRevert.mutations);
         }
         this.applyMutations(newStep.mutations);
-        trigger(
-            this.getResource("normalize_listeners"),
+        this.dispatchTo(
+            "normalize_handlers",
             this.getMutationsRoot(newStep.mutations) || this.editable
         );
         this.steps.splice(index, 0, newStep);
@@ -701,7 +697,7 @@ export class HistoryPlugin extends Plugin {
         }
         // Reapply the uncommited draft, since this is not an operation which should cancel it
         this.applyMutations(this.currentStep.mutations);
-        trigger(this.getResource("external_step_added_listeners"));
+        this.dispatchTo("external_step_added_handlers");
     }
     /**
      * @param { HistoryMutation[] } mutations
@@ -895,7 +891,7 @@ export class HistoryPlugin extends Plugin {
             this.handleObserverRecords();
             // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
             selectionToRestore.restore();
-            trigger(this.getResource("restore_savepoint_listeners"));
+            this.dispatchTo("restore_savepoint_handlers");
         };
     }
     /**
@@ -990,7 +986,7 @@ export class HistoryPlugin extends Plugin {
      * @param { string } attributeValue
      */
     setAttribute(node, attributeName, attributeValue) {
-        if (delegate(this.getResource("set_attribute"), node, attributeName, attributeValue)) {
+        if (this.delegateTo("set_attribute_overrides", node, attributeName, attributeValue)) {
             return;
         }
 

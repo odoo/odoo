@@ -3,14 +3,13 @@ import { URL_REGEX, cleanZWChars } from "./utils";
 import { isImageUrl } from "@html_editor/utils/url";
 import { Plugin } from "@html_editor/plugin";
 import { leftPos } from "@html_editor/utils/position";
-import { delegate } from "@html_editor/utils/resource";
 
 export class LinkPastePlugin extends Plugin {
     static name = "link_paste";
     static dependencies = ["link", "clipboard", "selection", "dom"];
     resources = {
-        before_paste: this.removeFullySelectedLink.bind(this),
-        handle_paste_text: this.handlePasteText.bind(this),
+        before_paste_handlers: this.removeFullySelectedLink.bind(this),
+        paste_text_overrides: this.handlePasteText.bind(this),
     };
 
     /**
@@ -50,7 +49,7 @@ export class LinkPastePlugin extends Plugin {
             this.handlePasteTextUrlInsideLink(text, url);
             return;
         }
-        if (delegate(this.getResource("handle_paste_url"), text, url)) {
+        if (this.delegateTo("paste_url_overrides", text, url)) {
             return;
         }
         this.shared.insertLink(url, text);

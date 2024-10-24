@@ -13,7 +13,7 @@ describe("reset", () => {
         const TestPlugin = class extends Plugin {
             static name = "test";
             resources = {
-                normalize_listeners: () => {
+                normalize_handlers: () => {
                     this.editable.firstChild.setAttribute("data-test-normalize", "1");
                 },
             };
@@ -529,7 +529,7 @@ describe("shortcut", () => {
             handleNewRecords: () => {
                 expect.step("handleNewRecords");
             },
-            content_updated_listeners: () => {
+            content_updated_handlers: () => {
                 expect.step("contentUpdated");
             },
         };

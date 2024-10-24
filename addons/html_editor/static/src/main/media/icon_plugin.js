@@ -117,7 +117,7 @@ export class IconPlugin extends Plugin {
                 isFormatApplied: () => this.hasSpinIcon(),
             },
         ],
-        color_apply_handlers: this.applyIconColor.bind(this),
+        color_apply_overrides: this.applyIconColor.bind(this),
     };
 
     getSelectedIcon() {

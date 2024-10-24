@@ -26,15 +26,14 @@ export class TableOfContentPlugin extends Plugin {
             },
         ],
         mutation_filtered_classes: ["o_embedded_toc_header_highlight"],
-        restore_savepoint_listeners: () => this.delayedUpdateTableOfContents(this.editable),
-        history_reseted_listeners: () => this.delayedUpdateTableOfContents(this.editable),
-        history_reseted_from_steps_listeners: () =>
-            this.delayedUpdateTableOfContents(this.editable),
-        step_added_listeners: ({ stepCommonAncestor }) =>
+        restore_savepoint_handlers: () => this.delayedUpdateTableOfContents(this.editable),
+        history_reset_handlers: () => this.delayedUpdateTableOfContents(this.editable),
+        history_reset_from_steps_handlers: () => this.delayedUpdateTableOfContents(this.editable),
+        step_added_handlers: ({ stepCommonAncestor }) =>
             this.delayedUpdateTableOfContents(stepCommonAncestor),
-        external_step_added_listeners: this.delayedUpdateTableOfContents.bind(this, this.editable),
-        clean_for_save_listeners: this.cleanForSave.bind(this),
-        mount_component_listeners: this.setupNewToc.bind(this),
+        external_step_added_handlers: this.delayedUpdateTableOfContents.bind(this, this.editable),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
+        mount_component_handlers: this.setupNewToc.bind(this),
     };
 
     setup() {

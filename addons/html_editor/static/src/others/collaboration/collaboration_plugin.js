@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { trigger } from "@html_editor/utils/resource";
 
 // 60 seconds
 export const HISTORY_SNAPSHOT_INTERVAL = 1000 * 60;
@@ -15,12 +14,12 @@ export class CollaborationPlugin extends Plugin {
     static name = "collaboration";
     static dependencies = ["history", "selection", "sanitize"];
     resources = {
-        set_attribute: this.setAttribute.bind(this),
+        set_attribute_overrides: this.setAttribute.bind(this),
         process_history_step: this.processHistoryStep.bind(this),
         is_reversible_step: this.isReversibleStep.bind(this),
-        history_cleaned_listeners: this.onHistoryClean.bind(this),
-        history_reseted_listeners: this.onHistoryReset.bind(this),
-        step_added_listeners: ({ step }) => this.onStepAdded(step),
+        history_cleaned_handlers: this.onHistoryClean.bind(this),
+        history_reset_handlers: this.onHistoryReset.bind(this),
+        step_added_handlers: ({ step }) => this.onStepAdded(step),
     };
     static shared = [
         //
@@ -148,7 +147,7 @@ export class CollaborationPlugin extends Plugin {
             this.shared.rectifySelection(selectionData.editableSelection);
         }
 
-        trigger(this.getResource("onExternalHistorySteps"));
+        this.dispatchTo("external_history_step_handlers");
 
         // todo: ensure that if the selection was not in the editable before the
         // reset, it remains where it was after applying the snapshot.
@@ -192,7 +191,7 @@ export class CollaborationPlugin extends Plugin {
                 index--;
             }
             const fromStepId = historySteps[index].id;
-            trigger(this.getResource("history_missing_parent_step_listeners"), {
+            this.dispatchTo("history_missing_parent_step_handlers", {
                 step: newStep,
                 fromStepId: fromStepId,
             });
@@ -308,7 +307,7 @@ export class CollaborationPlugin extends Plugin {
      */
     onStepAdded(step) {
         step.peerId = this.peerId;
-        trigger(this.getResource("collaboration_step_added_listeners"), step);
+        this.dispatchTo("collaboration_step_added_handlers", step);
     }
     /**
      * @param {import("../../core/history_plugin").HistoryStep} step

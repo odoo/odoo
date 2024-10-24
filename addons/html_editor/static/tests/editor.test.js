@@ -75,7 +75,7 @@ test("clean_for_save_listeners is done last", async () => {
     // Without the proper fix, this test fails with sibling elements `c-div` merged together
     class TestPlugin extends Plugin {
         resources = {
-            clean_for_save_listeners: ({ root }) => {
+            clean_for_save_handlers: ({ root }) => {
                 for (const el of root.querySelectorAll("c-div")) {
                     el.removeAttribute("class");
                 }

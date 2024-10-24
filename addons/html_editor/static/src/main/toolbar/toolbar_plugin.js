@@ -16,8 +16,8 @@ export class ToolbarPlugin extends Plugin {
     static dependencies = ["overlay", "selection", "user_command"];
     static shared = ["getToolbarInfo"];
     resources = {
-        onSelectionChange: this.handleSelectionChange.bind(this),
-        step_added_listeners: () => this.updateToolbar(),
+        selectionchange_handlers: this.handleSelectionChange.bind(this),
+        step_added_handlers: () => this.updateToolbar(),
     };
 
     setup() {

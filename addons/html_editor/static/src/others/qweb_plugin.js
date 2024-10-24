@@ -13,18 +13,18 @@ export class QWebPlugin extends Plugin {
     static name = "qweb";
     static dependencies = ["overlay", "selection"];
     resources = {
-        onSelectionChange: this.onSelectionChange.bind(this),
+        selectionchange_handlers: this.onSelectionChange.bind(this),
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
-        clean_listeners: this.clearDataAttributes.bind(this),
+        clean_handlers: this.clearDataAttributes.bind(this),
         isUnremovable: (element) => element.getAttribute("t-set") || element.getAttribute("t-call"),
         isUnsplittable: isUnsplittableQWebElement,
-        clean_for_save_listeners: ({ root }) => {
+        clean_for_save_handlers: ({ root }) => {
             this.clearDataAttributes(root);
             for (const element of root.querySelectorAll("[t-esc], [t-raw], [t-out], [t-field]")) {
                 element.removeAttribute("contenteditable");
             }
         },
-        normalize_listeners: this.normalize.bind(this),
+        normalize_handlers: this.normalize.bind(this),
     };
 
     setup() {

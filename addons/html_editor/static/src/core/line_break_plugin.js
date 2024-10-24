@@ -1,4 +1,3 @@
-import { delegate, trigger } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 import { CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
@@ -9,12 +8,12 @@ export class LineBreakPlugin extends Plugin {
     static name = "line_break";
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     resources = {
-        onBeforeInput: this.onBeforeInput.bind(this),
-        split_unsplittable_handlers: this.insertLineBreakElement.bind(this),
+        beforeinput_handlers: this.onBeforeInput.bind(this),
+        split_unsplittable_overrides: this.insertLineBreakElement.bind(this),
     };
 
     insertLineBreak() {
-        trigger(this.getResource("before_line_break_listeners"));
+        this.dispatchTo("before_line_break_handlers");
         let selection = this.shared.getEditableSelection();
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
@@ -35,12 +34,7 @@ export class LineBreakPlugin extends Plugin {
             targetNode = targetNode.parentElement;
         }
 
-        if (
-            delegate(this.getResource("handle_insert_line_break_element"), {
-                targetNode,
-                targetOffset,
-            })
-        ) {
+        if (this.delegateTo("insert_line_break_element_overrides", { targetNode, targetOffset })) {
             return;
         }
 

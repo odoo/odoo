@@ -81,11 +81,11 @@ export class MediaPlugin extends Plugin {
                 text: "Replace",
             },
         ],
-        clean_listeners: this.clean.bind(this),
+        clean_handlers: this.clean.bind(this),
         isUnsplittable: isIconElement, // avoid merge
         powerButtons: ["insertImage"],
-        clean_for_save_listeners: ({ root }) => this.cleanForSave(root),
-        normalize_listeners: this.normalizeMedia.bind(this),
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        normalize_handlers: this.normalizeMedia.bind(this),
     };
 
     get recordInfo() {

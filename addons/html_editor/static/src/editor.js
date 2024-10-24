@@ -1,7 +1,7 @@
 import { MAIN_PLUGINS } from "./plugin_sets";
 import { removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
-import { resourceSequenceSymbol, trigger, withSequence } from "./utils/resource";
+import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 import { initElementForEdition } from "./utils/sanitize";
 
 /**
@@ -162,8 +162,8 @@ export class Editor {
         for (const plugin of this.plugins) {
             plugin.setup();
         }
-        trigger(this.resources["normalize_listeners"], this.editable);
-        trigger(this.resources["start_edition_listeners"]);
+        this.resources["normalize_handlers"].forEach((cb) => cb(this.editable));
+        this.resources["start_edition_handlers"].forEach((cb) => cb());
     }
 
     createResources() {
@@ -210,7 +210,7 @@ export class Editor {
 
     getElContent() {
         const el = this.editable.cloneNode(true);
-        trigger(this.resources["clean_for_save_listeners"], { root: el });
+        this.resources["clean_for_save_handlers"].forEach((cb) => cb({ root: el }));
         return el;
     }
 

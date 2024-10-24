@@ -20,7 +20,7 @@ import { isCSSColor } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { delegate, withSequence } from "@html_editor/utils/resource";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class ColorPlugin extends Plugin {
     static name = "color";
@@ -69,8 +69,8 @@ export class ColorPlugin extends Plugin {
             },
         ],
 
-        onSelectionChange: this.updateSelectedColor.bind(this),
-        removeFormat: this.removeAllColor.bind(this),
+        selectionchange_handlers: this.updateSelectedColor.bind(this),
+        remove_format_handlers: this.removeAllColor.bind(this),
     };
 
     setup() {
@@ -164,7 +164,7 @@ export class ColorPlugin extends Plugin {
      * @param {string} mode 'color' or 'backgroundColor'
      */
     _applyColor(color, mode) {
-        if (delegate(this.getResource("color_apply_handlers"), color, mode)) {
+        if (this.delegateTo("color_apply_overrides", color, mode)) {
             return;
         }
         let selection = this.shared.getEditableSelection();
