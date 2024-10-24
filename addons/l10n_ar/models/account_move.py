@@ -391,3 +391,10 @@ class AccountMove(models.Model):
     def _l10n_ar_include_vat(self):
         self.ensure_one()
         return self.l10n_latam_document_type_id.l10n_ar_letter in ['B', 'C', 'X', 'R']
+
+    def action_post(self):
+        """ Prevent posting customer invoices with invoice date lower than lock date. """
+        lock_date_customer_invoices = self.filtered(lambda x: x.is_sale_document() and x.tax_lock_date_message and x.country_code == 'AR')
+        if lock_date_customer_invoices:
+            raise UserError(_('Is not allowed to post customer invoices with invoice date lower than lock date.'))
+        return super().action_post()
