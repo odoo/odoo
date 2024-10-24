@@ -80,8 +80,8 @@
                                       <field name="list_price" class="oe_inline" widget='monetary'
                                         options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                     </div>
-                                    <label for="standard_price" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                                    <div name="standard_price_uom" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                                    <label for="standard_price" invisible="product_variant_count != 1 and not is_product_variant"/>
+                                    <div name="standard_price_uom" invisible="product_variant_count != 1 and not is_product_variant">
                                         <field name="standard_price" class="oe_inline" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                         <span groups="uom.group_uom" >per
                                             <field name="uom_name" class="oe_inline"/>
