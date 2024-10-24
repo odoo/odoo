@@ -10,6 +10,7 @@ class CardCampaign(models.Model):
     _description = 'Marketing Card Campaign'
     _inherit = ['mail.activity.mixin', 'mail.render.mixin', 'mail.thread']
     _order = 'id DESC'
+    _unrestricted_rendering = True
 
     def _default_card_template_id(self):
         return self.env['card.template'].search([], limit=1)
@@ -114,6 +115,18 @@ class CardCampaign(models.Model):
             'content_section_path', 'content_sub_section1', 'content_sub_section1_dyn', 'content_sub_header_color',
             'content_sub_section1_path', 'content_sub_section2', 'content_sub_section2_dyn', 'content_sub_section2_path'
         ]
+
+    def _check_access_right_dynamic_template(self):
+        """Despite `_unrestricted_rendering`, a Marketing Card Manager must be able to edit the fields
+        other than the rendering fields.
+
+        The qweb rendered field `body_html` cannot be modified by users other than the `base.group_system` users,
+        as
+        - it's a related field to `card.template.body`,
+        - store=False
+        - the model `card.template` can only be altered by `base.group_system`.
+        """
+        return
 
     @api.depends(lambda self: self._get_render_fields() + ['preview_record_ref'])
     def _compute_image_preview(self):
