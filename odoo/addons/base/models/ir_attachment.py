@@ -11,7 +11,7 @@ import re
 import uuid
 
 from collections import defaultdict
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 from odoo import api, fields, models, SUPERUSER_ID, tools, _
 from odoo.exceptions import AccessError, ValidationError, MissingError, UserError
@@ -315,7 +315,7 @@ class IrAttachment(models.Model):
         supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,bmp,tiff').split(',')
 
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        _type, _, _subtype = mimetype.partition('/')
+        _type, __, _subtype = mimetype.partition('/')
         is_image_resizable = _type == 'image' and _subtype in supported_subtype
         if is_image_resizable and (values.get('datas') or values.get('raw')):
             is_raw = values.get('raw')
@@ -332,6 +332,8 @@ class IrAttachment(models.Model):
                     else:  # datas
                         img = ImageProcess(values['datas'], verify_resolution=False)
 
+                    if not img.image:
+                        raise UnidentifiedImageError()
                     w, h = img.image.size
                     nw, nh = map(int, max_resolution.split('x'))
                     if w > nw or h > nh:
@@ -339,11 +341,10 @@ class IrAttachment(models.Model):
                         quality = int(ICP('base.image_autoresize_quality', 80))
                         fn_quality = img.image_quality if is_raw else img.image_base64
                         values[is_raw and 'raw' or 'datas'] = fn_quality(quality=quality)
-                except UserError as e:
-                    # Catch error during test where we provide fake image
-                    # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
-                    _logger.info('Post processing ignored : %s', e)
-                    pass
+                except (UnidentifiedImageError, UserError):
+                    raise UserError(
+                        _("This file could not be decoded as an image file. Please try with a different file.")
+                    )
         return values
 
     def _check_contents(self, values):
