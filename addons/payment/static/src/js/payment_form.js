@@ -126,6 +126,20 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         ev.preventDefault();
 
         const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
+        const donationAmountInputEl = this.el.querySelector("#other_amount_value");
+        const otherAmountRadioEl = this.el.querySelector("#other_amount");
+        const isOtherAmountChecked = otherAmountRadioEl ? otherAmountRadioEl.checked : true;
+        if (
+            donationAmountInputEl &&
+            isOtherAmountChecked &&
+            (
+                donationAmountInputEl.value === "" ||
+                parseFloat(donationAmountInputEl.value) <= 0 ||
+                parseFloat(donationAmountInputEl.value) > parseFloat(donationAmountInputEl.max)
+            )
+        ) {
+            return donationAmountInputEl.focus();
+        }
 
         // Block the entire UI to prevent fiddling with other widgets.
         this._disableButton(true);
