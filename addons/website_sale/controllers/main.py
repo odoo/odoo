@@ -1171,6 +1171,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'vat_label': request.env._("VAT"),
         }
 
+    def _update_partner(self, partner):
+        return
+
     @route(
         '/shop/address/submit', type='http', methods=['POST'], auth='public', website=True,
         sitemap=False
@@ -1240,6 +1243,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ).create(address_values)
         elif not self._are_same_addresses(address_values, partner_sudo):
             partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
+
+        self._update_partner(partner_sudo)
 
         partner_id = partner_sudo.id
         is_anonymous_cart = order_sudo._is_anonymous_cart()
