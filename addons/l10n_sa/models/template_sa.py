@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'sa_account_102011',
             'property_account_payable_id': 'sa_account_201002',
-            'property_account_expense_categ_id': 'sa_account_400001',
-            'property_account_income_categ_id': 'sa_account_500001',
             'code_digits': '6',
         }
 
@@ -29,6 +27,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'sa_account_500011',
                 'account_sale_tax_id': 'sa_sales_tax_15',
                 'account_purchase_tax_id': 'sa_purchase_tax_15',
+                'expense_account_id': 'sa_account_400001',
+                'income_account_id': 'sa_account_500001',
             },
         }
 

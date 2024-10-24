@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'pcg_4111',
             'property_account_payable_id': 'pcg_4011',
-            'property_account_expense_categ_id': 'pcg_6011',
-            'property_account_income_categ_id': 'pcg_7011',
             'name': 'SYSCOHADA - Revised',
             'code_digits': '6',
         }
@@ -28,5 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'pcg_676',
                 'account_journal_early_pay_discount_loss_account_id': 'pcg_6019',
                 'account_journal_early_pay_discount_gain_account_id': 'pcg_7019',
+                'expense_account_id': 'pcg_6011',
+                'income_account_id': 'pcg_7011',
             },
         }

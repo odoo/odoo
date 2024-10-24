@@ -64,15 +64,16 @@ class ProductTemplate(models.Model):
 
     def _get_product_accounts(self):
         return {
-            'income': self.property_account_income_id or self.categ_id.property_account_income_categ_id,
-            'expense': self.property_account_expense_id or self.categ_id.property_account_expense_categ_id
+            'income': (
+                self.property_account_income_id
+                or self.categ_id.property_account_income_categ_id
+                or (self.company_id or self.env.company).income_account_id
+            ), 'expense': (
+                self.property_account_expense_id
+                or self.categ_id.property_account_expense_categ_id
+                or (self.company_id or self.env.company).expense_account_id
+            ),
         }
-
-    def _get_asset_accounts(self):
-        res = {}
-        res['stock_input'] = False
-        res['stock_output'] = False
-        return res
 
     def get_product_accounts(self, fiscal_pos=None):
         return {

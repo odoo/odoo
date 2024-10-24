@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'kz1210',
             'property_account_payable_id': 'kz3310',
-            'property_account_income_categ_id': 'kz6010',
-            'property_account_expense_categ_id': 'kz1330',
             'code_digits': '4',
         }
 
@@ -32,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'kz7410',
                 'account_sale_tax_id': 'l10n_kz_tax_vat_12_sale',
                 'account_purchase_tax_id': 'l10n_kz_tax_vat_12_purchase',
+                'income_account_id': 'kz6010',
+                'expense_account_id': 'kz1330',
             },
         }
 
