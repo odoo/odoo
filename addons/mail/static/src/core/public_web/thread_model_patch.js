@@ -2,6 +2,8 @@ import { patch } from "@web/core/utils/patch";
 import { Thread } from "@mail/core/common/thread_model";
 import { Record } from "@mail/core/common/record";
 import { router } from "@web/core/browser/router";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 patch(Thread.prototype, {
     setup() {
@@ -104,5 +106,30 @@ patch(Thread.prototype, {
                 { pinned: false }
             );
         }
+    },
+    askLeaveConfirmation(body) {
+        return new Promise((resolve) => {
+            this.store.env.services.dialog.add(ConfirmationDialog, {
+                body: body,
+                confirmLabel: _t("Leave Conversation"),
+                confirm: resolve,
+                cancel: () => {},
+            });
+        });
+    },
+    async leaveChannel() {
+        if (this.channel_type !== "group" && this.create_uid === this.store.self.userId) {
+            await this.askLeaveConfirmation(
+                _t("You are the administrator of this channel. Are you sure you want to leave?")
+            );
+        }
+        if (this.channel_type === "group") {
+            await this.askLeaveConfirmation(
+                _t(
+                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
+                )
+            );
+        }
+        this.leave();
     },
 });
