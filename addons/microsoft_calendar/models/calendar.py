@@ -52,13 +52,30 @@ class CalendarEvent(models.Model):
     @api.model
     def _restart_microsoft_sync(self):
         domain = self._get_microsoft_sync_domain()
+
         # Sync only events created/updated after last sync date (with 5 min of time acceptance).
         if self.env.user.microsoft_last_sync_date:
             time_offset = timedelta(minutes=5)
             domain = expression.AND([domain, [('write_date', '>=', self.env.user.microsoft_last_sync_date - time_offset)]])
-        self.env['calendar.event'].with_context(dont_notify=True).search(domain).write({
-            'need_sync_m': True,
-        })
+        # Step 1: Find the events that need to be synchronized
+        sync_needed_events = self.env['calendar.event'].with_context(dont_notify=True).search(domain)
+
+        # Step 2: Find the remaining events (i.e., those that do not need synchronization)
+        remaining_events = self.env['calendar.event'].with_context(dont_notify=True).search([
+            ('id', 'not in', sync_needed_events.ids)
+        ])
+
+        # Step 3: Mark the remaining events as "not synchronized"
+        if remaining_events:
+            remaining_events.write({
+                'is_synched': _("This event was created before you started synchronizing your calendar and therefore is not synchronized to avoid spamming attendees"),
+            })
+
+        # Step 4: Mark the sync-needed events
+        if sync_needed_events:
+            sync_needed_events.write({
+                'need_sync_m': True,
+            })
 
     def _check_microsoft_sync_status(self):
         """

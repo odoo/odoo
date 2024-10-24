@@ -61,6 +61,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
     # This field helps to know when a microsoft event need to be resynced
     need_sync_m = fields.Boolean(default=True, copy=False)
     active = fields.Boolean(default=True)
+    is_synched = fields.Char('Not Synchronized')
 
     def write(self, vals):
         fields_to_sync = [x for x in vals if x in self._get_microsoft_synced_fields()]
