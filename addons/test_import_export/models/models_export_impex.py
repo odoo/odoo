@@ -155,10 +155,8 @@ class ExportUnique(models.Model):
     value2 = fields.Integer()
     value3 = fields.Integer()
 
-    _sql_constraints = [
-        ('value_unique', 'unique (value)', "The value must be unique"),
-        ('pair_unique', 'unique (value2, value3)', "The values must be unique"),
-    ]
+    _value_unique = models.Constraint('unique (value)')
+    _pair_unique = models.Constraint('unique (value2, value3)')
 
 
 class ExportInheritsParent(models.Model):

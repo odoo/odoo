@@ -90,9 +90,10 @@ class MrpBom(models.Model):
         help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
              "Note that security lead times will also be considered when appropriate.")
 
-    _sql_constraints = [
-        ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
-    ]
+    _qty_positive = models.Constraint(
+        'check (product_qty > 0)',
+        'The quantity to produce must be positive!',
+    )
 
     @api.depends(
         'product_tmpl_id.attribute_line_ids.value_ids',
@@ -570,11 +571,10 @@ class MrpBomLine(models.Model):
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
 
-    _sql_constraints = [
-        ('bom_qty_zero', 'CHECK (product_qty>=0)', 'All product quantities must be greater or equal to 0.\n'
-            'Lines with 0 quantities can be used as optional lines. \n'
-            'You should install the mrp_byproduct module if you want to manage extra products on BoMs!'),
-    ]
+    _bom_qty_zero = models.Constraint(
+        'CHECK (product_qty>=0)',
+        'All product quantities must be greater or equal to 0.\nLines with 0 quantities can be used as optional lines. \nYou should install the mrp_byproduct module if you want to manage extra products on BoMs!',
+    )
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):

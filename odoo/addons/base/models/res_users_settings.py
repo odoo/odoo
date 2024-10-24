@@ -10,9 +10,10 @@ class ResUsersSettings(models.Model):
 
     user_id = fields.Many2one('res.users', string="User", required=True, readonly=True, ondelete='cascade')
 
-    _sql_constraints = [
-        ('unique_user_id', 'UNIQUE(user_id)', 'One user should only have one user settings.')
-    ]
+    _unique_user_id = models.Constraint(
+        'UNIQUE(user_id)',
+        "One user should only have one user settings.",
+    )
 
     @api.model
     def _get_fields_blacklist(self):

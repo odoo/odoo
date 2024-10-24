@@ -48,21 +48,24 @@ class HrWorkEntry(models.Model):
     # using special operator classes and it also supports partial WHERE clauses. Similarly to
     # CHECK constraints, it's backed by an index.
     # 1: https://www.postgresql.org/docs/9.6/sql-createtable.html#SQL-CREATETABLE-EXCLUDE
-    _sql_constraints = [
-        ('_work_entry_has_end', 'check (date_stop IS NOT NULL)', 'Work entry must end. Please define an end date or a duration.'),
-        ('_work_entry_start_before_end', 'check (date_stop > date_start)', 'Starting time should be before end time.'),
-        (
-            '_work_entries_no_validated_conflict',
-            """
-                EXCLUDE USING GIST (
-                    tsrange(date_start, date_stop, '()') WITH &&,
-                    int4range(employee_id, employee_id, '[]') WITH =
-                )
-                WHERE (state = 'validated' AND active = TRUE)
-            """,
-            'Validated work entries cannot overlap'
-        ),
-    ]
+    _work_entry_has_end = models.Constraint(
+        'CHECK (date_stop IS NOT NULL)',
+        'Work entry must end. Please define an end date or a duration.',
+    )
+    _work_entry_start_before_end = models.Constraint(
+        'CHECK (date_stop > date_start)',
+        'Starting time should be before end time.',
+    )
+    _work_entries_no_validated_conflict = models.Constraint(
+        """
+            EXCLUDE USING GIST (
+                tsrange(date_start, date_stop, '()') WITH &&,
+                int4range(employee_id, employee_id, '[]') WITH =
+            )
+            WHERE (state = 'validated' AND active = TRUE)
+        """,
+        'Validated work entries cannot overlap',
+    )
 
     def init(self):
         tools.create_index(self._cr, "hr_work_entry_date_start_date_stop_index", self._table, ["date_start", "date_stop"])
@@ -285,6 +288,7 @@ class HrUserWorkEntryEmployee(models.Model):
     employee_id = fields.Many2one('hr.employee', 'Employee', required=True)
     active = fields.Boolean('Active', default=True)
 
-    _sql_constraints = [
-        ('user_id_employee_id_unique', 'UNIQUE(user_id,employee_id)', 'You cannot have the same employee twice.')
-    ]
+    _user_id_employee_id_unique = models.Constraint(
+        'UNIQUE(user_id,employee_id)',
+        'You cannot have the same employee twice.',
+    )

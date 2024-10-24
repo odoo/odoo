@@ -107,11 +107,10 @@ class HrLeaveType(models.Model):
     max_allowed_negative = fields.Integer(string="Amount in Negative",
         help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
 
-    _sql_constraints = [(
-        'check_negative',
+    _check_negative = models.Constraint(
         'CHECK(NOT allows_negative OR max_allowed_negative > 0)',
-        'The negative amount must be greater than 0. If you want to set 0, disable the negative cap instead.'
-    )]
+        'The negative amount must be greater than 0. If you want to set 0, disable the negative cap instead.',
+    )
 
     @api.model
     def _search_valid(self, operator, value):

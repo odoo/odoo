@@ -25,9 +25,10 @@ class AccountJournalGroup(models.Model):
     excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals")
     sequence = fields.Integer(default=10)
 
-    _sql_constraints = [
-        ('uniq_name', 'unique(company_id, name)', 'A Ledger group name must be unique per company.'),
-    ]
+    _uniq_name = models.Constraint(
+        'unique(company_id, name)',
+        'A Ledger group name must be unique per company.',
+    )
 
 
 class AccountJournal(models.Model):
@@ -223,9 +224,10 @@ class AccountJournal(models.Model):
     accounting_date = fields.Date(compute='_compute_accounting_date')
     display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
 
-    _sql_constraints = [
-        ('code_company_uniq', 'unique (company_id, code)', 'Journal codes must be unique per company.'),
-    ]
+    _code_company_uniq = models.Constraint(
+        'unique (company_id, code)',
+        'Journal codes must be unique per company.',
+    )
 
     def _compute_display_alias_fields(self):
         self.display_alias_fields = self.env['mail.alias.domain'].search_count([], limit=1)

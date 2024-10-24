@@ -12,9 +12,10 @@ class CrmIapLeadRole(models.Model):
     reveal_id = fields.Char(required=True)
     color = fields.Integer(string='Color Index')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'Role name already exists!'),
-    ]
+    _name_uniq = models.Constraint(
+        'unique (name)',
+        'Role name already exists!',
+    )
 
     def _compute_display_name(self):
         for role in self:

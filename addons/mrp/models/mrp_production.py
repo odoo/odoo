@@ -272,10 +272,14 @@ class MrpProduction(models.Model):
         search='_search_date_category', readonly=True
     )
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
-        ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
-    ]
+    _name_uniq = models.Constraint(
+        'unique(name, company_id)',
+        'Reference must be unique per Company!',
+    )
+    _qty_positive = models.Constraint(
+        'check (product_qty > 0)',
+        'The quantity to produce must be positive!',
+    )
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids',
                  'procurement_group_id.stock_move_ids.move_orig_ids.created_production_id.procurement_group_id.mrp_production_ids')

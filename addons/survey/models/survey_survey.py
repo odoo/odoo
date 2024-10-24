@@ -162,22 +162,38 @@ class SurveySurvey(models.Model):
     # conditional questions management
     has_conditional_questions = fields.Boolean("Contains conditional questions", compute="_compute_has_conditional_questions")
 
-    _sql_constraints = [
-        ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
-        ('session_code_unique', 'unique(session_code)', 'Session code should be unique'),
-        ('certification_check', "CHECK( scoring_type!='no_scoring' OR certification=False )",
-            'You can only create certifications for surveys that have a scoring mechanism.'),
-        ('scoring_success_min_check', "CHECK( scoring_success_min IS NULL OR (scoring_success_min>=0 AND scoring_success_min<=100) )",
-            'The percentage of success has to be defined between 0 and 100.'),
-        ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )",
-            'The time limit needs to be a positive number if the survey is time limited.'),
-        ('attempts_limit_check', "CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )",
-            'The attempts limit needs to be a positive number if the survey has a limited number of attempts.'),
-        ('badge_uniq', 'unique (certification_badge_id)', "The badge for each survey should be unique!"),
-        ('session_speed_rating_has_time_limit',
-         "CHECK (session_speed_rating != TRUE OR session_speed_rating_time_limit IS NOT NULL AND session_speed_rating_time_limit > 0)",
-         'A positive default time limit is required when the session rewards quick answers.'),
-    ]
+    _access_token_unique = models.Constraint(
+        'unique(access_token)',
+        'Access token should be unique',
+    )
+    _session_code_unique = models.Constraint(
+        'unique(session_code)',
+        'Session code should be unique',
+    )
+    _certification_check = models.Constraint(
+        "CHECK( scoring_type!='no_scoring' OR certification=False )",
+        'You can only create certifications for surveys that have a scoring mechanism.',
+    )
+    _scoring_success_min_check = models.Constraint(
+        'CHECK( scoring_success_min IS NULL OR (scoring_success_min>=0 AND scoring_success_min<=100) )',
+        'The percentage of success has to be defined between 0 and 100.',
+    )
+    _time_limit_check = models.Constraint(
+        'CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )',
+        'The time limit needs to be a positive number if the survey is time limited.',
+    )
+    _attempts_limit_check = models.Constraint(
+        'CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )',
+        'The attempts limit needs to be a positive number if the survey has a limited number of attempts.',
+    )
+    _badge_uniq = models.Constraint(
+        'unique (certification_badge_id)',
+        'The badge for each survey should be unique!',
+    )
+    _session_speed_rating_has_time_limit = models.Constraint(
+        'CHECK (session_speed_rating != TRUE OR session_speed_rating_time_limit IS NOT NULL AND session_speed_rating_time_limit > 0)',
+        'A positive default time limit is required when the session rewards quick answers.',
+    )
 
     @api.depends('background_image', 'access_token')
     def _compute_background_image_url(self):

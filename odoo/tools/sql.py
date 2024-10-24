@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # pylint: disable=sql-injection
 from __future__ import annotations
@@ -7,6 +6,7 @@ import enum
 import json
 import logging
 import re
+import warnings
 from binascii import crc32
 from collections import defaultdict
 from typing import TYPE_CHECKING
@@ -22,7 +22,6 @@ from .misc import named_to_positional_printf
 __all__ = [
     "SQL",
     "create_index",
-    "create_unique_index",
     "drop_view_if_exists",
     "escape_psql",
     "index_exists",
@@ -482,7 +481,6 @@ def add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     ))
     _schema.debug("Table %r: added foreign key %r references %r(%r) ON DELETE %s",
                   tablename1, columnname1, tablename2, columnname2, ondelete)
-    return True
 
 
 def get_foreign_keys(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
@@ -530,8 +528,10 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
             found = True
         else:
             drop_constraint(cr, tablename1, fk[0])
-    if not found:
-        return add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
+    if found:
+        return False
+    add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
+    return True
 
 
 def index_exists(cr, indexname):
@@ -544,32 +544,73 @@ def check_index_exist(cr, indexname):
     assert index_exists(cr, indexname), f"{indexname} does not exist"
 
 
-def create_index(cr, indexname, tablename, expressions, method='btree', where=''):
-    """ Create the given index unless it exists. """
+def index_definition(cr, indexname):
+    """ Read the index definition from the database """
+    cr.execute(SQL("""
+        SELECT COALESCE(d.description, idx.indexdef) AS def
+        FROM pg_class c
+        JOIN pg_indexes idx ON c.relname = idx.indexname
+        LEFT JOIN pg_description d ON c.oid = d.objoid
+        WHERE c.relname = %s AND c.relkind = 'i'
+    """, indexname))
+    return cr.fetchone()[0] if cr.rowcount else None
+
+
+def create_index(
+    cr,
+    indexname,
+    tablename,
+    expressions,
+    method='btree',
+    where='',
+    *,
+    comment=None,
+    unique=False
+):
+    """ Create the given index unless it exists.
+
+    :param cr: The cursor
+    :param indexname: The name of the index
+    :param tablename: The name of the table
+    :param method: The type of the index (default: btree)
+    :param where: WHERE clause for the index (default: '')
+    :param comment: The comment to set on the index
+    :param unique: Whether the index is unique or not (default: False)
+    """
+    assert expressions, "Missing expressions"
     if index_exists(cr, indexname):
         return
-    cr.execute(SQL(
-        "CREATE INDEX %s ON %s USING %s (%s)%s",
-        SQL.identifier(indexname),
-        SQL.identifier(tablename),
+    definition = SQL(
+        "USING %s (%s)%s",
         SQL(method),
         SQL(", ").join(SQL(expression) for expression in expressions),
         SQL(" WHERE %s", SQL(where)) if where else SQL(),
+    )
+    add_index(cr, indexname, tablename, definition, unique=unique, comment=comment)
+
+
+def add_index(cr, indexname, tablename, definition, *, unique: bool, comment=''):
+    """ Create an index. """
+    definition = SQL(definition)
+    cr.execute(SQL(
+        "CREATE %sINDEX %s ON %s %s",
+        SQL("UNIQUE ") if unique else SQL(),
+        SQL.identifier(indexname),
+        SQL.identifier(tablename),
+        definition,
     ))
-    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, ", ".join(expressions))
+    if comment:
+        cr.execute(SQL(
+            "COMMENT ON INDEX %s IS %s",
+            SQL.identifier(indexname), comment,
+        ))
+    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, definition.code)
 
 
 def create_unique_index(cr, indexname, tablename, expressions):
     """ Create the given index unless it exists. """
-    if index_exists(cr, indexname):
-        return
-    cr.execute(SQL(
-        "CREATE UNIQUE INDEX %s ON %s (%s)",
-        SQL.identifier(indexname),
-        SQL.identifier(tablename),
-        SQL(", ").join(SQL(expression) for expression in expressions),
-    ))
-    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, ", ".join(expressions))
+    warnings.warn("Since 19.0, use create_index(unique=True)", DeprecationWarning)
+    return create_index(cr, indexname, tablename, expressions, unique=True)
 
 
 def drop_index(cr, indexname, tablename):

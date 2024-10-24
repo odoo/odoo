@@ -10,13 +10,10 @@ class ProductAttribute(models.Model):
     # `_sort_key_attribute_value` in `product.template`
     _order = 'sequence, id'
 
-    _sql_constraints = [
-        (
-            'check_multi_checkbox_no_variant',
-            "CHECK(display_type != 'multi' OR create_variant = 'no_variant')",
-            "Multi-checkbox display type is not compatible with the creation of variants"
-        ),
-    ]
+    _check_multi_checkbox_no_variant = models.Constraint(
+        "CHECK(display_type != 'multi' OR create_variant = 'no_variant')",
+        'Multi-checkbox display type is not compatible with the creation of variants',
+    )
 
     name = fields.Char(string="Attribute", required=True, translate=True)
     active = fields.Boolean(

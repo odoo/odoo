@@ -12,9 +12,10 @@ class CalendarFilters(models.Model):
     active = fields.Boolean('Active', default=True)
     partner_checked = fields.Boolean('Checked', default=True)  # used to know if the partner is checked in the filter of the calendar view for the user_id.
 
-    _sql_constraints = [
-        ('user_id_partner_id_unique', 'UNIQUE(user_id, partner_id)', 'A user cannot have the same contact twice.')
-    ]
+    _user_id_partner_id_unique = models.Constraint(
+        'UNIQUE(user_id, partner_id)',
+        'A user cannot have the same contact twice.',
+    )
 
     @api.model
     def unlink_from_partner_id(self, partner_id):

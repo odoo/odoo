@@ -12,9 +12,10 @@ class AccountPaymentMethod(models.Model):
     code = fields.Char(required=True)  # For internal identification
     payment_type = fields.Selection(selection=[('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True)
 
-    _sql_constraints = [
-        ('name_code_unique', 'unique (code, payment_type)', 'The combination code/payment type already exists!'),
-    ]
+    _name_code_unique = models.Constraint(
+        'unique (code, payment_type)',
+        'The combination code/payment type already exists!',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

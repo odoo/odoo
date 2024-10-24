@@ -20,14 +20,14 @@ class SaleOrderLine(models.Model):
     _order = 'order_id, sequence, id'
     _check_company_auto = True
 
-    _sql_constraints = [
-        ('accountable_required_fields',
-            "CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom IS NOT NULL))",
-            "Missing required fields on accountable sale order line."),
-        ('non_accountable_null_fields',
-            "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom IS NULL AND customer_lead = 0))",
-            "Forbidden values on non-accountable sale order line"),
-    ]
+    _accountable_required_fields = models.Constraint(
+        'CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom IS NOT NULL))',
+        'Missing required fields on accountable sale order line.',
+    )
+    _non_accountable_null_fields = models.Constraint(
+        'CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom IS NULL AND customer_lead = 0))',
+        'Forbidden values on non-accountable sale order line',
+    )
 
     # Fields are ordered according by tech & business logics
     # and computed fields are defined after their dependencies.

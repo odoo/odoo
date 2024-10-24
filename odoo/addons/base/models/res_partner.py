@@ -305,9 +305,10 @@ class ResPartner(models.Model):
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self: ResPartner = fields.Many2one(comodel_name='res.partner', compute='_compute_get_ids')
 
-    _sql_constraints = [
-        ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
-    ]
+    _check_name = models.Constraint(
+        "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )",
+        "Contacts require a name",
+    )
 
     def _get_street_split(self):
         self.ensure_one()

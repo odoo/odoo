@@ -56,9 +56,10 @@ class SurveyUser_Input(models.Model):
     is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
     question_time_limit_reached = fields.Boolean("Question Time Limit Reached", compute='_compute_question_time_limit_reached')
 
-    _sql_constraints = [
-        ('unique_token', 'UNIQUE (access_token)', 'An access token must be unique!'),
-    ]
+    _unique_token = models.Constraint(
+        'UNIQUE (access_token)',
+        'An access token must be unique!',
+    )
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id', 'predefined_question_ids.answer_score')
     def _compute_scoring_values(self):

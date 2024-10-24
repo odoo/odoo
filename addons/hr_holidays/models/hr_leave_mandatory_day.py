@@ -18,6 +18,7 @@ class HrLeaveMandatoryDay(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     department_ids = fields.Many2many('hr.department', string="Departments")
 
-    _sql_constraints = [
-        ('date_from_after_day_to', 'CHECK(start_date <= end_date)', 'The start date must be anterior than the end date.')
-    ]
+    _date_from_after_day_to = models.Constraint(
+        'CHECK(start_date <= end_date)',
+        'The start date must be anterior than the end date.',
+    )

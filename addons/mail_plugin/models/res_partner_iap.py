@@ -23,4 +23,7 @@ class ResPartnerIap(models.Model):
     iap_search_domain = fields.Char('Search Domain / Email', help='Domain used to find the company')
     iap_enrich_info = fields.Text('IAP Enrich Info', help='IAP response stored as a JSON string', readonly=True)
 
-    _sql_constraints = [('unique_partner_id', 'UNIQUE(partner_id)', 'Only one partner IAP is allowed for one partner')]
+    _unique_partner_id = models.Constraint(
+        'UNIQUE(partner_id)',
+        'Only one partner IAP is allowed for one partner',
+    )

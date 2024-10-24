@@ -11,9 +11,10 @@ class WebsiteControllerPage(models.Model):
     ]
     _description = 'Model Page'
     _order = 'website_id, id DESC'
-    _sql_constraints = [
-        ('unique_name_slugified', 'UNIQUE(name_slugified)', 'url should be unique')
-    ]
+    _unique_name_slugified = models.Constraint(
+        'UNIQUE(name_slugified)',
+        'url should be unique',
+    )
 
     view_id = fields.Many2one('ir.ui.view', string='Listing view', required=True, ondelete="cascade")
     record_view_id = fields.Many2one('ir.ui.view', string='Record view', ondelete="cascade")

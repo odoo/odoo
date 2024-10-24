@@ -52,9 +52,10 @@ class RatingRating(models.Model):
     access_token = fields.Char('Security Token', default=_default_access_token)
     consumed = fields.Boolean(string="Filled Rating")
 
-    _sql_constraints = [
-        ('rating_range', 'check(rating >= 0 and rating <= 5)', 'Rating should be between 0 and 5'),
-    ]
+    _rating_range = models.Constraint(
+        'check(rating >= 0 and rating <= 5)',
+        'Rating should be between 0 and 5',
+    )
 
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):

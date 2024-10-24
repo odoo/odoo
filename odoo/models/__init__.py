@@ -2,10 +2,11 @@
 # Exports features of the ORM to developers.
 # This is a `__init__.py` file to avoid merge conflicts on `odoo/models.py`.
 
-# TODO we should only expose *Model objects here, maybe check_comp*
+# TODO we should only expose *Model objects, DatabaseObjects, maybe check_comp*
 from odoo.tools import _
 
 from odoo.orm.commands import Command
+from odoo.orm.database_objects import Constraint, Index, UniqueIndex
 from odoo.orm.identifiers import NewId
 from odoo.orm.models import (
     GC_UNLINK_LIMIT,

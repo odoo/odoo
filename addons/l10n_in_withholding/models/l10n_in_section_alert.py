@@ -23,10 +23,14 @@ class L10n_InSectionAlert(models.Model):
         ], string="Aggregate Period", default='fiscal_yearly')
     l10n_in_section_tax_ids = fields.One2many("account.tax", "l10n_in_section_id", string="Taxes")
 
-    _sql_constraints = [
-        ('per_transaction_limit', 'CHECK(per_transaction_limit >= 0)', 'Per transaction limit must be positive'),
-        ('aggregate_limit', 'CHECK(aggregate_limit >= 0)', 'Aggregate limit must be positive'),
-    ]
+    _per_transaction_limit = models.Constraint(
+        'CHECK(per_transaction_limit >= 0)',
+        'Per transaction limit must be positive',
+    )
+    _aggregate_limit = models.Constraint(
+        'CHECK(aggregate_limit >= 0)',
+        'Aggregate limit must be positive',
+    )
 
     @api.depends('tax_source_type')
     def _compute_display_name(self):

@@ -85,7 +85,10 @@ class Test_Inherit_Parent(models.AbstractModel):  # noqa: F811
 
     foo = fields.Integer()
 
-    _sql_constraints = [('unique_foo', 'UNIQUE(foo)', 'foo must be unique')]
+    _unique_foo = models.Constraint(
+        'UNIQUE(foo)',
+        "foo must be unique",
+    )
 
     def stuff(self):
         return super().stuff() + 'P2'

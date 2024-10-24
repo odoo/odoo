@@ -221,11 +221,10 @@ class HrExpenseSheet(models.Model):
     cannot_approve_reason = fields.Char(string='Cannot Approve Reason', compute='_compute_can_approve')
     is_editable = fields.Boolean(string="Expense Lines Are Editable By Current User", compute='_compute_is_editable')
 
-    _sql_constraints = [(
-        'journal_id_required_posted',
+    _journal_id_required_posted = models.Constraint(
         "CHECK((state IN ('post', 'done') AND journal_id IS NOT NULL) OR (state NOT IN ('post', 'done')))",
-        'The journal must be set on posted expense'
-    )]
+        'The journal must be set on posted expense',
+    )
 
     @api.depends('expense_line_ids.total_amount', 'expense_line_ids.tax_amount')
     def _compute_amount(self):

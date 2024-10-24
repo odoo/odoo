@@ -200,9 +200,10 @@ class Website(models.Model):
         ('b2c', 'Free sign up'),
     ], string='Customer Account', default='b2b')
 
-    _sql_constraints = [
-        ('domain_unique', 'unique(domain)', 'Website Domain should be unique.'),
-    ]
+    _domain_unique = models.Constraint(
+        'unique(domain)',
+        'Website Domain should be unique.',
+    )
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):

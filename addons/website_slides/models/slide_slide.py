@@ -36,16 +36,14 @@ class SlideSlidePartner(models.Model):
     completed = fields.Boolean('Completed')
     quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
 
-    _sql_constraints = [
-        ('slide_partner_uniq',
-         'unique(slide_id, partner_id)',
-         'A partner membership to a slide must be unique!'
-        ),
-        ('check_vote',
-         'CHECK(vote IN (-1, 0, 1))',
-         'The vote must be 1, 0 or -1.'
-        ),
-    ]
+    _slide_partner_uniq = models.Constraint(
+        'unique(slide_id, partner_id)',
+        'A partner membership to a slide must be unique!',
+    )
+    _check_vote = models.Constraint(
+        'CHECK(vote IN (-1, 0, 1))',
+        'The vote must be 1, 0 or -1.',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -82,9 +80,10 @@ class SlideTag(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
 
-    _sql_constraints = [
-        ('slide_tag_unique', 'UNIQUE(name)', 'A tag must be unique!'),
-    ]
+    _slide_tag_unique = models.Constraint(
+        'UNIQUE(name)',
+        'A tag must be unique!',
+    )
 
 
 class SlideSlide(models.Model):
@@ -236,9 +235,10 @@ class SlideSlide(models.Model):
     is_published = fields.Boolean(tracking=1)
     website_published = fields.Boolean(tracking=False)
 
-    _sql_constraints = [
-        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a url or HTML content. Not both.")
-    ]
+    _exclusion_html_content_and_url = models.Constraint(
+        'CHECK(html_content IS NULL OR url IS NULL)',
+        'A slide is either filled with a url or HTML content. Not both.',
+    )
 
     @api.depends('slide_category', 'source_type', 'image_binary_content')
     def _compute_image_1920(self):

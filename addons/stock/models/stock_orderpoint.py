@@ -92,10 +92,14 @@ class StockWarehouseOrderpoint(models.Model):
 
     unwanted_replenish = fields.Boolean('Unwanted Replenish', compute="_compute_unwanted_replenish")
 
-    _sql_constraints = [
-        ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
-        ('product_location_check', 'unique (product_id, location_id, company_id)', 'A replenishment rule already exists for this product on this location.'),
-    ]
+    _qty_multiple_check = models.Constraint(
+        'CHECK( qty_multiple >= 0 )',
+        'Qty Multiple must be greater than or equal to zero.',
+    )
+    _product_location_check = models.Constraint(
+        'unique (product_id, location_id, company_id)',
+        'A replenishment rule already exists for this product on this location.',
+    )
 
     @api.depends('warehouse_id')
     def _compute_allowed_location_ids(self):

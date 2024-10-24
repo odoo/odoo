@@ -8,12 +8,10 @@ class ResCompany(models.Model):
     _inherit = ['res.company']
     _check_company_auto = True
 
-    _sql_constraints = [
-        ('check_quotation_validity_days',
-            'CHECK(quotation_validity_days >= 0)',
-            "You cannot set a negative number for the default quotation validity."
-            " Leave empty (or 0) to disable the automatic expiration of quotations."),
-    ]
+    _check_quotation_validity_days = models.Constraint(
+        'CHECK(quotation_validity_days >= 0)',
+        'You cannot set a negative number for the default quotation validity. Leave empty (or 0) to disable the automatic expiration of quotations.',
+    )
 
     portal_confirmation_sign = fields.Boolean(string="Online Signature", default=True)
     portal_confirmation_pay = fields.Boolean(string="Online Payment")

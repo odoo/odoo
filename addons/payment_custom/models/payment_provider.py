@@ -9,11 +9,10 @@ from odoo.addons.payment_custom import const
 class PaymentProvider(models.Model):
     _inherit = ['payment.provider']
 
-    _sql_constraints = [(
-        'custom_providers_setup',
+    _custom_providers_setup = models.Constraint(
         "CHECK(custom_mode IS NULL OR (code = 'custom' AND custom_mode IS NOT NULL))",
-        "Only custom providers should have a custom mode."
-    )]
+        'Only custom providers should have a custom mode.',
+    )
 
     code = fields.Selection(
         selection_add=[('custom', "Custom")], ondelete={'custom': 'set default'}

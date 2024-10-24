@@ -188,9 +188,10 @@ class ProjectProject(models.Model):
     can_mark_milestone_as_done = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
     is_milestone_deadline_exceeded = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
 
-    _sql_constraints = [
-        ('project_date_greater', 'check(date >= date_start)', "The project's start date must be before its end date.")
-    ]
+    _project_date_greater = models.Constraint(
+        'check(date >= date_start)',
+        "The project's start date must be before its end date.",
+    )
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
