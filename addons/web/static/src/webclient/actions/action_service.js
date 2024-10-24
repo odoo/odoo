@@ -270,11 +270,11 @@ export function makeActionManager(env, router = _router) {
         const results = await Promise.all(keys.map((k) => breadcrumbCache[k]));
         const controllersToRemove = [];
         for (const [controller, res] of zip(controllers, results)) {
-            if ("display_name" in res) {
+            if (res && "display_name" in res) {
                 controller.displayName = res.display_name;
             } else {
                 controllersToRemove.push(controller);
-                if ("error" in res) {
+                if (res && "error" in res) {
                     console.warn(
                         "The following element was removed from the breadcrumb and from the url.\n",
                         controller.state,
