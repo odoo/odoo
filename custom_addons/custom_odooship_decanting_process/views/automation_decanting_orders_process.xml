@@ -10,16 +10,18 @@
                     <header>
                         <button name="action_button_close" type="object"
                                 string="Close Crate" invisible="state in ('done')"/>
-                        <field name="state" widget="statusbar" statusbar_visible="in_progress,done"/>
+                        <button name="action_open_decanting_wizard" type="object"
+                                string="Product Decanting" class="btn-primary" invisible="crate_status not in ('open','partially_filled')"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
                         <hr/>
-                        <field name="crate_status" widget="statusbar" statusbar_visible="close"/>
+                        <field name="crate_status" widget="statusbar" statusbar_visible="partially_filled,fully_filled,close"/>
                     </header>
                     <group>
                         <group>
                             <field name="name" readonly="1"/>
                             <field name="pallet_barcode" invisible="1"/>
                             <field name="hu_barcode" invisible="1"/>
-                            <field name="license_plate_id"
+                            <field name="license_plate_ids" widget="many2many_tags"
                                    placeholder="Scan License Plate Barcode here"/>
                         </group>
                         <group>
@@ -34,6 +36,7 @@
                     <group string="Customer Information">
                         <group>
                             <field name="picking_id"/>
+                            <field name="location_dest_id"/>
                             <field name="partner_id"/>
                         </group>
                         <group>
@@ -44,12 +47,12 @@
                     <notebook>
                         <page string="Items">
                             <field name="automation_decanting_process_line_ids">
-                                <tree editable="bottom">
+                                <tree editable="bottom" create="0" edit="0">
                                     <field name="product_id"/>
                                     <field name="sku_code"/>
                                     <field name="quantity"/>
                                     <field name="available_quantity"/>
-                                    <field name="remaining_quantity" column_invisible="1" />
+                                    <field name="remaining_quantity"/>
                                     <field name="partition_code" readonly="True"/>
                                     <field name="bin_code" readonly="True"/>
                                     <field name="available_product_ids" column_invisible="1"/>
@@ -69,7 +72,7 @@
         <field name="arch" type="xml">
             <tree string="Automation Decanting Orders Process">
                 <field name="name"/>
-                <field name="license_plate_id"/>
+                <field name="license_plate_ids"/>
                 <field name="crate_barcode"/>
                 <field name="container_id"/>
             </tree>

@@ -20,8 +20,6 @@ class DeliveryReceiptOrders(models.Model):
         string='Select Receipt'
     )
     partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer')
-    # product_ids = fields.Many2many('product.product', string='Products')
-    # quantity = fields.Integer(string='Quantity')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'In Progress'),
@@ -41,6 +39,7 @@ class DeliveryReceiptOrders(models.Model):
     )
     site_code_id = fields.Many2one('site.code.configuration',
                                    related='picking_id.site_code_id', string='Site Code')
+    location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
 
     def button_action_draft(self):
@@ -74,9 +73,6 @@ class DeliveryReceiptOrders(models.Model):
             # Log the status of each line for debugging
             for line in order.delivery_receipt_orders_line_ids:
                 line_states.append((line.id, line.license_plate_closed))
-
-            # Print out the line states
-            print("\n\n\n Line states (ID, License Plate Closed):", line_states)
 
             if not all_closed:
                 raise UserError(_("All license plates must be closed before marking as done."))

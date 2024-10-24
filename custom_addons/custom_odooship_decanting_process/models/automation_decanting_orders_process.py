@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 import json
 import requests
 
+from odoo.tools.populate import compute
 
 _logger = logging.getLogger(__name__)
 
@@ -25,18 +26,19 @@ class AutomationDecantingOrdersProcess(models.Model):
     container_code = fields.Char(related='container_id.crate_code', string='Container Code')
     automation_decanting_process_line_ids = fields.One2many('automation.decanting.orders.process.line',
                             'automation_decanting_process_id', string='Items')
-    crate_status = fields.Selection([
-        ('open', 'Open'),
-        ('closed', 'Crate Status Closed'),
-    ], string='Crate Status', default='open')
+    crate_status = fields.Selection([('open', 'Open'),
+                                     ('closed', 'Closed'),
+                                     ('partially_filled', 'Partially Filled'),
+                                     ('fully_filled', 'Fully Filled')],
+                                    string='Crate Status', default='open')
     state = fields.Selection([
+        ('draft', 'draft'),
         ('in_progress', 'In Progress'),
         ('done', 'Done'),
-    ], string='State', default='in_progress')
-    license_plate_id = fields.Many2one('license.plate.orders', string='License Plate Barcode')
+    ], string='State', default='draft')
+    license_plate_ids = fields.Many2many('license.plate.orders', string='License Plate Barcodes')
     picking_id = fields.Many2one(
         comodel_name='stock.picking',
-        related='license_plate_id.picking_id',
         string='Receipt Order'
     )
     partner_id = fields.Many2one(related='picking_id.partner_id', string='Customer')
@@ -47,41 +49,123 @@ class AutomationDecantingOrdersProcess(models.Model):
     )
     site_code_id = fields.Many2one('site.code.configuration',
                                    related='picking_id.site_code_id', string='Site Code')
+    location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
-    @api.constrains('crate_barcode')
-    def _check_unique_barcode(self):
-        """Ensure that the same pallet and crate barcode are not used in an in-progress record."""
-        for record in self:
-            if record.state == 'in_progress':
-                existing_record = self.search([
-                    ('crate_barcode', '=', record.crate_barcode),
-                    ('state', '=', 'in_progress'),
-                    ('id', '!=', record.id)  # Exclude the current record
-                ], limit=1)
+    def action_open_decanting_wizard(self):
+        """
+        Opens the decanting product process wizard.
+        """
+        # Raise validation error if crate barcode is missing
+        if not self.crate_barcode:
+            raise ValidationError(_("Crate Barcode is required to process decanting."))
 
-                if existing_record:
+        # Raise validation error if no license plates are selected
+        if not self.license_plate_ids:
+            raise ValidationError(_("At least one License Plate must be selected to process decanting."))
+
+        # Raise validation error if no container is selected
+        if not self.container_id:
+            raise ValidationError(_("Container is required to process decanting."))
+        self.state = 'in_progress'
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Decanting Product Process Wizard',
+            'res_model': 'automation.decanting.product.process.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_automation_decanting_process_id': self.id,
+                'default_license_plate_ids': self.license_plate_ids.ids,
+                'default_container_id': self.container_id.id,
+                'default_crate_barcode': self.crate_barcode,
+            }
+        }
+
+    @api.onchange('license_plate_ids')
+    def _onchange_license_plate_ids(self):
+        """
+        Ensure all selected license plates belong to the same picking_id.
+        Set picking_id based on the first license plate scanned, and validate
+        if subsequent plates match the picking_id.
+        """
+        if self.license_plate_ids:
+            # Get the picking_id from the first license plate
+            first_picking_id = self.license_plate_ids[0].picking_id
+
+            # Check if all license plates belong to the same picking_id
+            for license_plate in self.license_plate_ids:
+                if license_plate.picking_id != first_picking_id:
                     raise ValidationError(
-                        f"Crate Barcode '{record.crate_barcode}' is already in progress. "
-                        "Please complete or close the existing record before creating a new one."
+                        _("All selected License Plates must belong to the same Picking Order. "
+                          "License Plate '%s' does not belong to the same picking order." % license_plate.name)
                     )
 
-    @api.onchange('license_plate_id')
-    def _onchange_license_plate_id(self):
-        """Allow only closed license plates with done delivery receipt order."""
-        if self.license_plate_id:
-            if self.license_plate_id.state != 'closed' or self.license_plate_id.automation_manual != 'automation':
-                raise ValidationError(
-                    f"The selected License Plate '{self.license_plate_id.name}' is not available or its status is not 'closed'."
-                )
+            # Set picking_id based on the first license plate
+            self.picking_id = first_picking_id
+        else:
+            self.picking_id = False
 
+    # @api.constrains('crate_barcode')
+    # def _check_unique_barcode(self):
+    #     """Ensure that the same pallet and crate barcode are not used in an in-progress record."""
+    #     for record in self:
+    #         if record.state == 'in_progress':
+    #             existing_record = self.search([
+    #                 ('crate_barcode', '=', record.crate_barcode),
+    #                 ('state', '=', 'in_progress'),
+    #                 ('id', '!=', record.id)  # Exclude the current record
+    #             ], limit=1)
+    #
+    #             if existing_record:
+    #                 raise ValidationError(
+    #                     f"Crate Barcode '{record.crate_barcode}' is already in progress. "
+    #                     "Please complete or close the existing record before creating a new one."
+    #                 )
+
+    # @api.onchange('license_plate_ids')
+    # def _onchange_license_plate_ids(self):
+    #     """Allow only closed license plates with done delivery receipt order."""
+    #     for license_plate in self.license_plate_ids:
+    #         if license_plate.state != 'closed' or license_plate.automation_manual != 'automation':
+    #             raise ValidationError(
+    #                 f"The selected License Plate '{license_plate.name}' is not available or its status is not 'closed'."
+    #             )
             # Check the related delivery receipt order
-            delivery_order = self.license_plate_id.delivery_receipt_order_id
-            if delivery_order and delivery_order.state != 'done':
-                raise ValidationError(
-                    f"The related Delivery Receipt Order '{delivery_order.name}' is still in progress. "
-                    "Please complete the order (Manual/Automation Order Process) before proceeding."
-                )
+            # delivery_order = self.license_plate_id.delivery_receipt_order_id
+            # if delivery_order and delivery_order.state != 'done':
+            #     raise ValidationError(
+            #         f"The related Delivery Receipt Order '{delivery_order.name}' is still in progress. "
+            #         "Please complete the order (Manual/Automation Order Process) before proceeding."
+            #     )
 
+
+    def check_crate_status(self):
+        """
+        Checks the crate status to determine if it is 'fully_filled' or 'partially_filled' based on the container partition.
+        """
+        for record in self:
+            total_lines = len(record.automation_decanting_process_line_ids)
+            if total_lines >= record.container_partition:
+                record.crate_status = 'fully_filled'
+            elif total_lines > 0:
+                record.crate_status = 'partially_filled'
+            else:
+                record.crate_status = 'open'
+
+    def write(self, vals):
+        # If crate is closed, do not allow any modifications
+        for record in self:
+            # if record.state == 'done' or record.crate_status == 'closed':
+            #     raise ValidationError(_("You cannot modify a closed or completed crate."))
+
+            if 'automation_decanting_process_line_ids' in vals:
+                # Check if crate is fully filled
+                if record.crate_status == 'fully_filled':
+                    raise ValidationError(_("The crate is fully filled. You cannot add new product lines."))
+
+        result = super(AutomationDecantingOrdersProcess, self).write(vals)
+        # self.check_crate_status()  # Update the crate status after changes
+        return result
 
     @api.onchange('crate_barcode')
     def _onchange_crate_barcode(self):
@@ -117,7 +201,7 @@ class AutomationDecantingOrdersProcess(models.Model):
         # Prepare data in the required format
         receipt_list = []
         sku_list = []
-
+        stock_move_obj = self.env['stock.move']  # Get stock.move model
         # Loop through decanting process lines
         for line in self.automation_decanting_process_line_ids:
             sku_list.append({
@@ -132,11 +216,26 @@ class AutomationDecantingOrdersProcess(models.Model):
                 "batch_property07": 'yyy',  # Assuming Color is stored here
                 "batch_property08": 'zzz',
             })
+            # Create stock move to update inventory location
+            move_vals = {
+                'name': f'Move for {line.product_id.name}',
+                'product_id': line.product_id.id,
+                'product_uom_qty': line.quantity,
+                'product_uom': line.product_id.uom_id.id,
+                'location_id': self.picking_id.location_dest_id.id,  # Current location
+                'location_dest_id': self.location_dest_id.id,  # New destination location
+                'picking_id': self.picking_id.id,  # Associate with the picking
+            }
+
+            stock_move = stock_move_obj.create(move_vals)
+            stock_move._action_confirm()  # Confirm the stock move
+            stock_move._action_assign()  # Assign stock to the move
+            stock_move._action_done()  # Complete the stock move
 
         # Add the receipt entry
         receipt_list.append({
             "warehouse_code": self.site_code_id.name,  # Site Code
-            "receipt_code": self.picking_id.name,  # Decanting Order Name as Receipt Code
+            "receipt_code": self.name,  # Decanting Order Name as Receipt Code
             "sku_list": sku_list,
             "type": 1  # Assuming type is always 1
         })
@@ -154,86 +253,46 @@ class AutomationDecantingOrdersProcess(models.Model):
         }
 
         # Convert data to JSON format
-        json_data = json.dumps(data, indent=4)
+        # json_data = json.dumps(data, indent=4)
+        #
+        # # Log the generated data
+        # _logger.info(f"Generated data for crate close: {json_data}")
+        #
+        # # Define the URLs for Shiperoo Connect
+        # # url_geekplus = "https://shiperooconnect.automation.shiperoo.com/api/interface/geekplus/"
+        # url_automation_putaway = "https://shiperooconnect.automation.shiperoo.com/api/interface/automationputaway"
+        #
+        # headers = {
+        #     'Content-Type': 'application/json'
+        # }
 
-        # Log the generated data
-        _logger.info(f"Generated data for crate close: {json_data}")
-
-        # Define the URLs for Shiperoo Connect
-        # url_geekplus = "https://shiperooconnect.automation.shiperoo.com/api/interface/geekplus/"
-        url_automation_putaway = "https://shiperooconnect.automation.shiperoo.com/api/interface/automationputaway"
-
-        headers = {
-            'Content-Type': 'application/json'
-        }
-
-        try:
-            # Send the data to the Geekplus URL
-            # response_geekplus = requests.post(url_geekplus, headers=headers, data=json_data)
-            # if response_geekplus.status_code != 200:
-            #     raise UserError(f"Failed to send data to Geekplus: {response_geekplus.content.decode()}")
-
-            # Send the data to the Automation Putaway URL
-            response_putaway = requests.post(url_automation_putaway, headers=headers, data=json_data)
-            if response_putaway.status_code != 200:
-                raise UserError(f"Failed to send data to Automation Putaway: {response_putaway.content.decode()}")
-
-        except requests.exceptions.RequestException as e:
-            raise UserError(f"Error occurred during API request: {str(e)}")
+        # try:
+        #     # Send the data to the Geekplus URL
+        #     # response_geekplus = requests.post(url_geekplus, headers=headers, data=json_data)
+        #     # if response_geekplus.status_code != 200:
+        #     #     raise UserError(f"Failed to send data to Geekplus: {response_geekplus.content.decode()}")
+        #
+        #     # Send the data to the Automation Putaway URL
+        #     response_putaway = requests.post(url_automation_putaway, headers=headers, data=json_data)
+        #     if response_putaway.status_code != 200:
+        #         raise UserError(f"Failed to send data to Automation Putaway: {response_putaway.content.decode()}")
+        #
+        # except requests.exceptions.RequestException as e:
+        #     raise UserError(f"Error occurred during API request: {str(e)}")
 
         return {'type': 'ir.actions.act_window_close'}
 
 
     @api.model_create_multi
     def create(self, vals_list):
+        records = super(AutomationDecantingOrdersProcess, self).create(vals_list)
         for vals in vals_list:
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('automation.decanting.orders.process') or _('New')
 
-            # Get the current instance for the automation process
-            current_process = self.new(vals)  # Create a new record in memory
+        return records
 
-            # Fetch the actual license plate record
-            if current_process.license_plate_id:
-                license_plate = self.env['license.plate.orders'].browse(current_process.license_plate_id.id)
-                for line in current_process.automation_decanting_process_line_ids:
-                    # Find the corresponding license plate order line based on product_id
-                    existing_line = license_plate.license_plate_order_line_ids.filtered(
-                        lambda l: l.product_id.id == line.product_id.id)
-                    if existing_line:
-                        # Update remaining_qty for the existing line
-                        existing_line.write({
-                            'remaining_qty': line.remaining_quantity,
-                            'is_remaining_qty': True,
-                        })
-                    license_plate.check_and_update_license_plate_state()
-        return super().create(vals_list)
 
-    def write(self, vals):
-        # Call the super write method first to ensure updates are made
-        result = super().write(vals)
-
-        for record in self:
-            # Fetch the license plate if it exists
-            if record.license_plate_id:
-                license_plate = self.env['license.plate.orders'].browse(record.license_plate_id.id)
-
-                for line in record.automation_decanting_process_line_ids:
-                    # Find the corresponding license plate order line based on product_id
-                    existing_line = license_plate.license_plate_order_line_ids.filtered(
-                        lambda l: l.product_id.id == line.product_id.id
-                    )
-                    if existing_line:
-                        # Update remaining_qty and set is_remaining_qty to True for the existing line
-                        existing_line.write({
-                            'remaining_qty': line.remaining_quantity,
-                            'is_remaining_qty': True,
-                        })
-
-                # Check and update the license plate state based on updated lines
-                license_plate.check_and_update_license_plate_state()
-
-        return result
 
 class AutomationDecantingOrdersProcessLine(models.Model):
     _name = 'automation.decanting.orders.process.line'
@@ -242,105 +301,18 @@ class AutomationDecantingOrdersProcessLine(models.Model):
     product_id = fields.Many2one(
         comodel_name='product.product',
         string='Product',
-        domain="[('id', 'in', available_product_ids)]",  # Domain to filter products
     )
     sku_code = fields.Char(related='product_id.default_code', string='SKU')
-    quantity = fields.Float(string='Quantity', required=True)
+    quantity = fields.Float(string='Quantity')
     barcode = fields.Char(string='Item Barcode')
     automation_decanting_process_id = fields.Many2one('automation.decanting.orders.process', string='Decanting Process')
     section = fields.Integer(string='Section')
     partition_code = fields.Char(string='Partition Code')
-    bin_code = fields.Char(string='Bin Code', compute='_compute_bin_code', store=True)
-    available_product_ids = fields.Many2many('product.product', string='Available Products', compute='_compute_available_products')
-    available_quantity = fields.Float(string='Available Quantity', compute='_compute_available_quantity')
-    remaining_quantity = fields.Float(string='Remaining Quantity', compute='_compute_remaining_quantity', store=True)
+    bin_code = fields.Char(string='Bin Code', compute='_compute_bin_code')
+    available_product_ids = fields.Many2many('product.product', string='Available Products')
+    available_quantity = fields.Float(string='Available Quantity')
+    remaining_quantity = fields.Float(string='Remaining Quantity')
 
-    @api.depends('product_id', 'automation_decanting_process_id.license_plate_id')
-    def _compute_available_quantity(self):
-        """
-        Compute the available quantity of the product based on the
-        stock moves associated with the picking_id in the wizard.
-        This method sums up the quantities from the stock moves for the
-        given product.
-        """
-        for line in self:
-            if line.automation_decanting_process_id and line.automation_decanting_process_id.license_plate_id:
-                move_lines = line.automation_decanting_process_id.license_plate_id.license_plate_order_line_ids.filtered(
-                    lambda m: m.product_id == line.product_id)
-                line.available_quantity = sum(move_lines.mapped('quantity'))  # Sum of all quantities from the picking
-            else:
-                line.available_quantity = 0.0
-
-    @api.depends('product_id', 'automation_decanting_process_id.license_plate_id')
-    def _compute_remaining_quantity(self):
-        """
-        Compute the remaining quantity for the product by subtracting the total quantity
-        already  from the available quantity.
-        """
-        for line in self:
-            if line.automation_decanting_process_id and line.automation_decanting_process_id.license_plate_id:
-                total_quantity_selected = sum(
-                    l.quantity for l in line.automation_decanting_process_id.automation_decanting_process_line_ids if l.product_id == line.product_id)
-                move_lines = line.automation_decanting_process_id.license_plate_id.license_plate_order_line_ids.filtered(
-                    lambda m: m.product_id == line.product_id)
-                available_qty = sum(move_lines.mapped('quantity'))
-                print("\n\n\n Available and remaining qty=====0---", available_qty, move_lines,
-                      total_quantity_selected)
-                line.remaining_quantity = (
-                    available_qty - total_quantity_selected
-                    if not move_lines.is_remaining_qty
-                    else move_lines.remaining_qty - total_quantity_selected
-                )
-                print("remainifn qty====", line.remaining_quantity)
-            else:
-                line.remaining_quantity = 0.0
-
-    @api.depends('automation_decanting_process_id.license_plate_id')
-    def _compute_available_products(self):
-        """Compute available products based on the selected pallet_barcode."""
-        for line in self:
-            if line.automation_decanting_process_id:
-                license_plate = line.automation_decanting_process_id.license_plate_id
-                if license_plate and license_plate.state == 'closed':
-                    line.available_product_ids = [
-                        (6, 0, license_plate.license_plate_order_line_ids.mapped('product_id').ids)]
-                else:
-                    line.available_product_ids = [(5,)]
-
-    @api.depends('automation_decanting_process_id.crate_barcode', 'partition_code')
-    def _compute_bin_code(self):
-        """Compute the bin_code as a combination of crate_barcode and partition_code."""
-        for line in self:
-            crate_barcode = line.automation_decanting_process_id.crate_barcode
-            partition_code = line.partition_code
-            if crate_barcode and partition_code:
-                line.bin_code = f"{crate_barcode}F{partition_code}"
-            else:
-                line.bin_code = False
-
-    @api.onchange('automation_decanting_process_id')
-    def _onchange_process_id(self):
-        """Ensure the line limit is checked when changing the process."""
-        if self.automation_decanting_process_id:
-            current_line_count = len(self.automation_decanting_process_id.automation_decanting_process_line_ids)
-            if current_line_count > self.automation_decanting_process_id.container_partition:
-                raise UserError(
-                    "You are not allowed to add more than {} items.".format(
-                        self.automation_decanting_process_id.container_partition)
-                )
-
-    @api.onchange('quantity')
-    def onchange_quantity(self):
-        for line in self:
-            line._compute_remaining_quantity()
-            if line.remaining_quantity < 0:
-                if line.remaining_quantity < line.quantity:
-                    return {
-                        'warning': {
-                            'title': _("Invalid Quantity "),
-                            'message': _("The selected quantity is greater than actual remaining quantity."),
-                        }
-                    }
 
     @api.model
     def create(self, vals):
@@ -358,17 +330,19 @@ class AutomationDecantingOrdersProcessLine(models.Model):
         # Call the original create method
         new_record = super(AutomationDecantingOrdersProcessLine, self).create(vals)
         # Check the quantity after creation
-        new_record.onchange_quantity()
+        # new_record.onchange_quantity()
         return new_record
 
-    @api.model
-    def write(self, vals):
-        """Override the write method to check quantity when updating."""
-        res = super(AutomationDecantingOrdersProcessLine, self).write(vals)
+    @api.depends('automation_decanting_process_id.crate_barcode', 'partition_code')
+    def _compute_bin_code(self):
+        """Compute the bin_code as a combination of crate_barcode and partition_code."""
         for line in self:
-            if 'quantity' in vals:
-                line._check_quantity()  # Re-check quantity if it was updated
-        return res
+            crate_barcode = line.automation_decanting_process_id.crate_barcode
+            partition_code = line.partition_code
+            if crate_barcode and partition_code:
+                line.bin_code = f"{crate_barcode}F{partition_code}"
+            else:
+                line.bin_code = False
 
     def _generate_partition_code(self, line_index, container_partition):
         """Generate partition code based on line index and container partition."""
