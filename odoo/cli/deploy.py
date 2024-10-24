@@ -2,10 +2,8 @@
 import argparse
 import os
 import requests
-import sys
 import tempfile
 import zipfile
-from pathlib import Path
 
 from . import Command
 
@@ -62,7 +60,7 @@ class Deploy(Command):
 
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
+            prog=self.prog,
             description=self.__doc__
         )
         parser.add_argument('path', help="Path of the module to deploy")
@@ -73,7 +71,7 @@ class Deploy(Command):
         parser.add_argument('--verify-ssl', action='store_true', help='Verify SSL certificate')
         parser.add_argument('--force', action='store_true', help='Force init even if module is already installed. (will update `noupdate="1"` records)')
         if not cmdargs:
-            sys.exit(parser.print_help())
+            self.exit(parser.print_help())
 
         args = parser.parse_args(args=cmdargs)
 
@@ -86,4 +84,4 @@ class Deploy(Command):
             result = self.deploy_module(args.path, args.url, args.login, args.password, args.db, force=args.force)
             print(result)
         except Exception as e:
-            sys.exit("ERROR: %s" % e)
+            self.exit("ERROR: %s" % e)
