@@ -347,6 +347,27 @@ class TestReplenishWizard(TestStockCommon):
             wizard.supplier_id = supplier_delay
             self.assertEqual(fields.Datetime.from_string('2023-01-04 00:00:00'), wizard.date_planned)
 
+            # Test delay handling with a different language (German - de_DE)
+            self.env['res.lang'].with_context(active_test=False).search([
+                ('code', 'in', ['de_DE'])
+            ]).write({'active': True})
+
+            self.env.user.lang = 'de_DE'
+            self.env['ir.module.module']._load_module_terms(['purchase_stock'], ['de_DE'], overwrite=True)
+
+            with freeze_time("2023-01-01"):
+                german_wizard = self.env['product.replenish'].with_context(lang='de_DE').create({
+                    'product_id': product_to_buy.id,
+                    'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+                    'product_uom_id': self.uom_unit.id,
+                    'quantity': 1,
+                    'warehouse_id': self.wh.id,
+                    'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id
+                })
+                self.assertEqual(german_wizard.route_id.with_context(lang='de_DE').name, 'Einkaufen')
+                german_wizard.supplier_id = supplier_delay
+                self.assertEqual(fields.Datetime.from_string('2023-01-04 00:00:00'), german_wizard.date_planned)
+
     def test_purchase_delay(self):
         product_to_buy = self.env['product.product'].create({
             'name': "Furniture Service",
