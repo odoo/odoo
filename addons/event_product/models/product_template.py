@@ -7,3 +7,6 @@ class ProductTemplate(models.Model):
     service_tracking = fields.Selection(selection_add=[
         ('event', 'Event Registration'),
     ], ondelete={'event': 'set default'})
+
+    def _upfront_payment_blacklist(self):
+        return super()._upfront_payment_blacklist + ['event']

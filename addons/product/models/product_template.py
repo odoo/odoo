@@ -1476,3 +1476,7 @@ class ProductTemplate(models.Model):
         To be overridden in accounting module."""
         self.ensure_one()
         return price
+
+    @api.model
+    def _upfront_payment_blacklist(self):
+        return []
