@@ -6,7 +6,7 @@
             <field name="model">report.project.task.user</field>
             <field name="inherit_id" ref="project.view_task_project_user_pivot"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='total_hours_spent']" position='before'>
+                <xpath expr="//field[@name='remaining_hours']" position='after'>
                     <field name="remaining_hours_so" widget="timesheet_uom"/>
                 </xpath>
              </field>
