@@ -1,19 +1,25 @@
+from __future__ import annotations
+
 import ast
 import contextlib
 import copy
 import json
+import typing
 import uuid
 from collections import defaultdict
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.osv import expression
-from odoo.tools import OrderedSet, is_list_of
+from odoo.tools import SQL, OrderedSet, is_list_of
 from odoo.tools.misc import has_list_types
 
+from .domains import Domain
 from .fields import Field, _logger
 from .models import BaseModel
-from .utils import check_property_field_value_name
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_property_field_value_name
+
+if typing.TYPE_CHECKING:
+    from odoo.tools import Query
 
 NoneType = type(None)
 
@@ -570,6 +576,104 @@ class Properties(Field):
             property_definition['value'] = values_dict.get(property_definition['name'])
         return values_list
 
+    def _split_field_expr(self, field_expr: str) -> (str, str):
+        if "." not in field_expr:
+            raise ValueError(f"Missing property name for {self}")
+        fname, property_name = field_expr.split('.', 1)
+        check_property_field_value_name(property_name)
+        return fname, property_name
+
+    def field_expr_to_sql(self, model: BaseModel, alias: str, field_expr: str, query: Query) -> SQL:
+        if "." in field_expr:
+            fname, property_name = self._split_field_expr(field_expr)
+            raw_sql_field = super().field_expr_to_sql(model, alias, fname, query)
+            return SQL("(%s -> %s)", raw_sql_field, property_name)
+        return super().field_expr_to_sql(model, alias, field_expr, query)
+
+    def condition_to_sql(self, model: BaseModel, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
+        fname, property_name = self._split_field_expr(field_expr)
+        raw_sql_field = self.field_expr_to_sql(model, alias, fname, query)
+        sql_left = SQL("(%s -> %s)", raw_sql_field, property_name)
+
+        if operator in ('in', 'not in'):
+            assert isinstance(value, COLLECTION_TYPES)
+            if len(value) == 1 and True in value:
+                # inverse the condition
+                check_null_op_false = "!=" if operator == 'in' else "="
+                value = []
+                operator = 'in' if operator == 'not in' else 'not in'
+            elif False in value:
+                check_null_op_false = "=" if operator == 'in' else "!="
+                value = [v for v in value if v]
+            else:
+                value = list(value)
+                check_null_op_false = None
+
+            sqls = []
+            if check_null_op_false:
+                sqls.append(SQL(
+                    "%s%s'%s'",
+                    sql_left,
+                    SQL_OPERATORS[check_null_op_false],
+                    False,
+                ))
+                if check_null_op_false == '=':
+                    # check null value too
+                    sqls.extend((
+                        SQL("%s IS NULL", raw_sql_field),
+                        SQL("NOT (%s ? %s)", raw_sql_field, property_name),
+                    ))
+            # left can be an array or a single value!
+            # Even if we use the '=' operator, we must check the list subset.
+            # There is an unsupported edge-case where left is a list and we
+            # have multiple values.
+            if len(value) == 1:
+                # check single value equality
+                sql_operator = SQL_OPERATORS['=' if operator == 'in' else '!=']
+                sql_right = SQL("%s", json.dumps(value[0]))
+                sqls.append(SQL("%s%s%s", sql_left, sql_operator, sql_right))
+            if value:
+                sql_not = SQL('NOT ') if operator == 'not in' else SQL()
+                # hackish operator to search values
+                if len(value) > 1:
+                    # left <@ value_list -- single left value in value_list
+                    # (here we suppose left is a single value)
+                    sql_operator = SQL(" <@ ")
+                else:
+                    # left @> value -- value_list in left
+                    sql_operator = SQL(" @> ")
+                sql_right = SQL("%s", json.dumps(value))
+                sqls.append(SQL(
+                    "%s%s%s%s",
+                    sql_not, sql_left, sql_operator, sql_right,
+                ))
+            assert sqls, "No SQL generated for property"
+            if len(sqls) == 1:
+                return sqls[0]
+            combine_sql = SQL(" OR ") if operator == 'in' else SQL(" AND ")
+            return SQL("(%s)", combine_sql.join(sqls))
+
+        sql_operator = SQL_OPERATORS[operator]
+        if operator in ('ilike', 'not ilike'):
+            value = f'%{value}%'
+            unaccent = model.env.registry.unaccent
+        else:
+            unaccent = lambda x: x  # noqa: E731
+
+        if isinstance(value, str):
+            sql_left = SQL("(%s ->> %s)", raw_sql_field, property_name)  # JSONified value
+            sql_right = SQL("%s", value)
+            return SQL(
+                "%s%s%s",
+                unaccent(sql_left), sql_operator, unaccent(sql_right),
+            )
+
+        sql_right = SQL("%s", json.dumps(value))
+        return SQL(
+            "%s%s%s",
+            unaccent(sql_left), sql_operator, unaccent(sql_right),
+        )
+
 
 class PropertiesDefinition(Field):
     """ Field used to define the properties definition (see :class:`~odoo.fields.Properties`
@@ -691,10 +795,9 @@ class PropertiesDefinition(Field):
                 # (e.g. if the module has been uninstalled)
                 # check if the domain is still valid
                 try:
-                    expression.expression(
-                        ast.literal_eval(property_domain),
-                        record.env[property_model],
-                    )
+                    dom = Domain(ast.literal_eval(property_domain))
+                    model = record.env[property_model].sudo()
+                    dom.validate(model)
                 except ValueError:
                     del property_definition['domain']
 

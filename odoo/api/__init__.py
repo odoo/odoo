@@ -15,6 +15,7 @@ from odoo.orm.decorators import (
     readonly,
     returns,
 )
+from odoo.orm.domains import Domain
 from odoo.orm.environments import Environment
 
 from odoo.orm.types import ContextType, DomainType, IdType, Self, ValuesType

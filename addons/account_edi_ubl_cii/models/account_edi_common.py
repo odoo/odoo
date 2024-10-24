@@ -387,17 +387,19 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _import_partner_bank(self, invoice, bank_details):
         """ Retrieve the bank account, if no matching bank account is found, create it """
-        bank_details = map(sanitize_account_number, bank_details)
+        # remove the journal from the context, as it may be set to import statements
+        Bank = self.env['res.partner.bank'].with_context(default_journal_id=False)
+        bank_details = list(map(sanitize_account_number, bank_details))
         partner = self.env.company.partner_id if invoice.is_inbound() else invoice.partner_id
         banks_to_create = []
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
-            for bank in self.env['res.partner.bank'].search(
+            for bank in Bank.search(
                 [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
             )
         }
         for account_number in bank_details:
-            partner_bank = acc_number_partner_bank_dict.get(account_number, self.env['res.partner.bank'])
+            partner_bank = acc_number_partner_bank_dict.get(account_number, Bank)
             if partner_bank.partner_id == partner:
                 invoice.partner_bank_id = partner_bank
                 return
@@ -407,7 +409,7 @@ class AccountEdiCommon(models.AbstractModel):
                     'partner_id': partner.id,
                 })
         if banks_to_create:
-            invoice.partner_bank_id = self.env['res.partner.bank'].create(banks_to_create)[0]
+            invoice.partner_bank_id = Bank.create(banks_to_create)[0]
 
     def _import_document_allowance_charges(self, tree, record, tax_type, qty_factor=1):
         logs = []

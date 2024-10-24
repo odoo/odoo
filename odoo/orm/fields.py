@@ -12,11 +12,11 @@ from operator import attrgetter
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.osv import expression
-from odoo.tools import SQL, lazy_property, sql
+from odoo.tools import SQL, Query, lazy_property, sql
 from odoo.tools.misc import SENTINEL, Sentinel
 
-from .utils import PREFETCH_MAX, expand_ids
+from .domains import NEGATIVE_CONDITION_OPERATORS, Domain
+from .utils import COLLECTION_TYPES, PREFETCH_MAX, SQL_OPERATORS, expand_ids
 
 if typing.TYPE_CHECKING:
     from .models import BaseModel
@@ -241,6 +241,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     type: str                           # type of the field (string)
     relational = False                  # whether the field is a relational one
     translate = False                   # whether the field is translated
+    falsy_value = None                  # falsy value for comparisons (optional)
 
     write_sequence = 0  # field ordering for write()
     # Database column type (ident, spec) for non-company-dependent fields.
@@ -694,39 +695,52 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """
 
-        # This should never happen to avoid bypassing security checks
-        # and should already be converted to (..., 'in', subquery)
-        assert operator not in ('any', 'not any')
+        # Compute the new domain for ('x.y.z', op, value)
+        # as ('x', 'any', [('y', 'any', [('z', op, value)])])
+        # If the followed relation is a nullable many2one, we accept null
+        # for that path as well.
 
         # determine whether the related field can be null
-        if isinstance(value, (list, tuple)):
-            value_is_null = any(val is False or val is None for val in value)
+        falsy_value = self.falsy_value
+        if isinstance(value, COLLECTION_TYPES):
+            value_is_null = any(val is False or val is None or val == falsy_value for val in value)
         else:
-            value_is_null = value is False or value is None
-
+            value_is_null = value is False or value is None or value == falsy_value
         can_be_null = (  # (..., '=', False) or (..., 'not in', [truthy vals])
-            (operator not in expression.NEGATIVE_TERM_OPERATORS and value_is_null)
-            or (operator in expression.NEGATIVE_TERM_OPERATORS and not value_is_null)
+            (operator in NEGATIVE_CONDITION_OPERATORS) != value_is_null
         )
 
-        def make_domain(path, model):
-            if '.' not in path:
-                return [(path, operator, value)]
-
-            prefix, suffix = path.split('.', 1)
-            field = model._fields[prefix]
-            comodel = model.env[field.comodel_name]
-
-            domain = [(prefix, 'in', comodel._search(make_domain(suffix, comodel)))]
-            if can_be_null and field.type == 'many2one' and not field.required:
-                return expression.OR([domain, [(prefix, '=', False)]])
-
-            return domain
-
+        # build the domain
+        # Note that the access of many2one fields in the path is done using sudo
+        # (see compute_sudo), but the given value may have a different context
         model = records.env[self.model_name].with_context(active_test=False)
         model = model.sudo(records.env.su or self.compute_sudo)
 
-        return make_domain(self.related, model)
+        # parse the path
+        path = self.related.split('.')
+        path_fields = []  # [(field, comodel | None)]
+        comodel = model
+        for fname in path:
+            field = comodel._fields[fname]
+            if field.relational:
+                comodel = model.env[field.comodel_name]
+            else:
+                comodel = None
+            path_fields.append((field, comodel))
+
+        # if the value is a domain, resolve it using records' environment
+        if isinstance(value, Domain):
+            field, comodel = path_fields[-1]
+            value = comodel.with_env(records.env)._search(value)
+
+        # build the domain backwards for the any operators
+        field, comodel = path_fields[-1]
+        domain = Domain(field.name, operator, value)
+        for field, comodel in reversed(path_fields[:-1]):
+            domain = Domain(field.name, 'any', comodel._search(domain))
+            if can_be_null and field.type == 'many2one' and not field.required:
+                domain |= Domain(field.name, '=', False)
+        return domain
 
     # properties used by setup_related() to copy values from related field
     _related_comodel_name = property(attrgetter('comodel_name'))
@@ -1135,6 +1149,192 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
     ############################################################################
     #
+    # SQL generation methods
+    #
+
+    def field_to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
+        """ Return an :class:`SQL` object that represents the value of the given
+        field from the given table alias.
+
+        The query object is necessary for fields that need to add tables to the query.
+
+        When parameter ``flush`` is true, the method adds some metadata in the
+        result to make method :meth:`~odoo.api.Environment.execute_query` flush
+        the field before executing the query.
+        """
+        if not self.store or not self.column_type:
+            raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
+        field_to_flush = self if flush else None
+        sql_field = SQL.identifier(alias, self.name, to_flush=field_to_flush)
+        if self.company_dependent:
+            fallback = self.get_company_dependent_fallback(model)
+            fallback = self.convert_to_column(self.convert_to_write(fallback, model), model)
+            # in _read_group_orderby the result of field to sql will be mogrified and split to
+            # e.g SQL('COALESCE(%s->%s') and SQL('to_jsonb(%s))::boolean') as 2 orderby values
+            # and concatenated by SQL(',') in the final result, which works in an unexpected way
+            sql_field = SQL(
+                "COALESCE(%(column)s->%(company_id)s,to_jsonb(%(fallback)s::%(column_type)s))",
+                column=sql_field,
+                company_id=str(model.env.company.id),
+                fallback=fallback,
+                column_type=SQL(self._column_type[1]),
+            )
+            if self.type in ('boolean', 'integer', 'float', 'monetary'):
+                return SQL('(%s)::%s', sql_field, SQL(self._column_type[1]))
+            # here the specified value for a company might be NULL e.g. '{"1": null}'::jsonb
+            # the result of current sql_field might be 'null'::jsonb
+            # ('null'::jsonb)::text == 'null'
+            # ('null'::jsonb->>0)::text IS NULL
+            return SQL('(%s->>0)::%s', sql_field, SQL(self._column_type[1]))
+        return sql_field
+
+    def field_expr_to_sql(self, model: BaseModel, alias: str, field_expr: str, query: Query) -> SQL:
+        """ Return an :class:`SQL` object that represents the value of the given
+        expression from the given table alias.
+
+        The query object is necessary for fields that need to add tables to the query.
+        """
+        if field_expr != self.name:
+            raise ValueError(f"Expression not supported on {self}: {field_expr!r}")
+        return model._field_to_sql(alias, field_expr, query)
+
+    def condition_to_sql(self, model: BaseModel, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
+        """ Return an :class:`SQL` object that represents the domain condition
+        given by the triple ``(field_expr, operator, value)`` with the given
+        table alias, and in the context of the given query.
+
+        This method should use the model to resolve the SQL and check access
+        of the field.
+        """
+        sql_expr = self.__condition_to_sql(model, alias, field_expr, operator, value, query)
+        if self.company_dependent:
+            sql_expr = self._condition_to_sql_company(sql_expr, model, alias, field_expr, operator, value, query)
+        return sql_expr
+
+    def _condition_to_sql_company(self, sql_expr: SQL, model: BaseModel, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
+        """ Add a not null condition on the field for company-dependent fields to use an existing index for better performance."""
+        if (
+            self.company_dependent
+            and self.index == 'btree_not_null'
+            and not (self.type in ('datetime', 'date') and field_expr != self.name)  # READ_GROUP_NUMBER_GRANULARITY is not supported
+            and model.env['ir.default']._evaluate_condition_with_fallback(model._name, field_expr, operator, value) is False
+        ):
+            return SQL('(%s IS NOT NULL AND %s)', SQL.identifier(alias, self.name), sql_expr)
+        return sql_expr
+
+    def __condition_to_sql(self, model: BaseModel, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
+        sql_field = self.field_expr_to_sql(model, alias, field_expr, query)
+
+        def _value_to_column(v):
+            return self.convert_to_column(v, model, validate=False)
+
+        # -------------------------------------------------
+        # operator: in (equality)
+
+        if operator in ('in', 'not in'):
+            assert isinstance(value, COLLECTION_TYPES) and value, \
+                f"condition_to_sql() 'in' operator expects a collection, not a {value}"
+            if self.name == 'id':
+                params = tuple(v for v in value if v)
+            elif self.relational:
+                params = tuple(_value_to_column(v) for v in value if v)
+            else:
+                params = tuple(_value_to_column(v) for v in value if v is not False and v is not None)
+            null_in_condition = len(params) < len(value)
+            # if we have a value treated as null
+            if (null_value := self.falsy_value) is not None:
+                null_value = _value_to_column(null_value)
+                if null_value in params:
+                    null_in_condition = True
+                elif null_in_condition:
+                    params = (*params, null_value)
+
+            sql = None
+            if params:
+                sql = SQL("%s%s%s", sql_field, SQL_OPERATORS[operator], params)
+            if (operator == 'in') == null_in_condition:
+                # field in {val, False} => field IN vals OR field IS NULL
+                # field not in {val} => field NOT IN vals OR field IS NULL
+                sql_null = SQL("%s IS NULL", sql_field)
+                if sql:
+                    return SQL("(%s OR %s)", sql, sql_null)
+                return sql_null
+            elif operator == 'not in' and null_in_condition and not sql:
+                # if we have a base query, null values are already exluded
+                return SQL("%s IS NOT NULL", sql_field)
+            assert sql, f"Missing sql query for {operator} {value!r}"
+            return sql
+
+        # -------------------------------------------------
+        # operator: like
+
+        if operator.endswith('like'):
+            # cast value to text for any like comparison
+            if isinstance(self, _fields_textual.BaseString):
+                sql_left = sql_field
+            else:
+                sql_left = SQL("%s::text", sql_field)
+
+            # add wildcard and unaccent depending on the operator
+            need_wildcard = '=' not in operator
+            if need_wildcard:
+                sql_value = SQL("%s", f"%{value}%")
+            else:
+                sql_value = SQL("%s", str(value))
+            if operator.endswith('ilike'):
+                sql_left = model.env.registry.unaccent(sql_left)
+                sql_value = model.env.registry.unaccent(sql_value)
+
+            sql = SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], sql_value)
+            if operator in NEGATIVE_CONDITION_OPERATORS:
+                sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
+            return sql
+
+        # -------------------------------------------------
+        # operator: inequality
+
+        if operator in ('>', '<', '>=', '<='):
+            can_be_null = False
+            if isinstance(value, SQL):
+                # here for dynamic field comparison
+                # TODO can we remove SQL support from here?
+                sql_value = value
+            else:
+                if (null_value := self.falsy_value) is not None:
+                    value = self.convert_to_cache(value, model) or null_value
+                    can_be_null = (
+                        ('=' in operator and null_value == value)
+                        or (operator[0] == '<' and null_value < value)
+                        or (operator[0] == '>' and null_value > value)
+                    )
+                sql_value = SQL("%s", _value_to_column(value))
+
+            sql = SQL("%s%s%s", sql_field, SQL_OPERATORS[operator], sql_value)
+            if can_be_null:
+                sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
+            return sql
+
+        # -------------------------------------------------
+        # operator: any
+        # Note: relational operators overwrite this function for a more specific
+        # behaviour, here we check just the field against the subselect.
+        # Example usage: ('id', 'any', Query | SQL)
+
+        if operator in ('any', 'not any'):
+            if isinstance(value, Query):
+                subselect = value.subselect()
+            elif isinstance(value, SQL):
+                subselect = SQL("(%s)", value)
+            else:
+                raise TypeError(f"condition_to_sql() operator 'any' accepts SQL or Query, got {value}")
+            sql_operator = SQL_OPERATORS["in" if operator == "any" else "not in"]
+            return SQL("%s%s%s", sql_field, sql_operator, subselect)
+
+        # -------------------------------------------------
+        raise NotImplementedError(f"Invalid operator {operator!r} in domain term {(field_expr, operator, value)!r}")
+
+    ############################################################################
+    #
     # Alternatively stored fields: if fields don't have a `column_type` (not
     # stored as regular db columns) they go through a read/create/write
     # protocol instead
@@ -1461,6 +1661,8 @@ def apply_required(model, field_name):
         sql.set_not_null(model.env.cr, model._table, field_name)
 
 
-# forward-reference to models because we have this last cyclic dependency
-# it is used in this file only for asserts
+# forward-reference to models, it is used in this file only for asserts
 from . import models as _models  # noqa: E402
+# forward-reference to fields_textual to simplify casting
+# instead of introducing a new property
+from . import fields_textual as _fields_textual  # noqa: E402

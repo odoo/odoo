@@ -8,6 +8,7 @@ from collections import defaultdict
 from psycopg2 import Error
 
 from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo.api import Domain
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import SQL, check_barcode_encoding, format_list, groupby
@@ -176,11 +177,11 @@ class StockQuant(models.Model):
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
 
     def _search(self, domain, *args, **kwargs):
-        domain = [
-            line if not isinstance(line, (list, tuple)) or not line[0].startswith('lot_properties.')
-            else ['lot_id', 'any', [line]]
-            for line in domain
-        ]
+        domain = Domain(domain).map_conditions(
+            lambda leaf: Domain('lot_id', 'any', [leaf])
+            if leaf.field.startswith('lot_properties.')
+            else leaf
+        )
         return super()._search(domain, *args, **kwargs)
 
     @api.depends('inventory_quantity')

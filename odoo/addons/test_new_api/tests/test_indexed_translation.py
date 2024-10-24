@@ -45,23 +45,17 @@ class TestIndexedTranslation(TransactionExpressionCase):
             SELECT "test_new_api_indexed_translation"."id"
             FROM "test_new_api_indexed_translation"
             WHERE (jsonb_path_query_array("test_new_api_indexed_translation"."name", '$.*')::text ILIKE %s
-            AND ("test_new_api_indexed_translation"."name"->>%s ILIKE %s))
+            AND "test_new_api_indexed_translation"."name"->>%s ILIKE %s)
             ORDER BY "test_new_api_indexed_translation"."id"
         """, """
             SELECT "test_new_api_indexed_translation"."id"
             FROM "test_new_api_indexed_translation"
             WHERE (jsonb_path_query_array("test_new_api_indexed_translation"."name", '$.*')::text ILIKE %s
-            AND (COALESCE("test_new_api_indexed_translation"."name"->>%s, "test_new_api_indexed_translation"."name"->>%s) ILIKE %s))
+            AND COALESCE("test_new_api_indexed_translation"."name"->>%s, "test_new_api_indexed_translation"."name"->>%s) ILIKE %s)
             ORDER BY "test_new_api_indexed_translation"."id"
         """, """
             SELECT "test_new_api_indexed_translation"."id"
             FROM "test_new_api_indexed_translation"
-            WHERE TRUE
-            ORDER BY "test_new_api_indexed_translation"."id"
-        """, """
-            SELECT "test_new_api_indexed_translation"."id"
-            FROM "test_new_api_indexed_translation"
-            WHERE FALSE
             ORDER BY "test_new_api_indexed_translation"."id"
         """]):
             record_en.search([('name', 'ilike', 'foo')])

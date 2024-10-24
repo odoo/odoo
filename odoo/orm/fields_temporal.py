@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import typing
 from datetime import date, datetime, time
 
@@ -6,23 +8,63 @@ from psycopg2.extras import Json as PsycopgJson
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from odoo.tools import date_utils
+from odoo.tools import SQL, date_utils
+from odoo.tools.misc import get_lang
 
 from .fields import Field, _logger
+from .utils import READ_GROUP_NUMBER_GRANULARITY
+
+if typing.TYPE_CHECKING:
+    from odoo.tools import Query
+
+    from .models import BaseModel
+
+T = typing.TypeVar("T")
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 
-class Date(Field[date | typing.Literal[False]]):
-    """ Encapsulates a python :class:`date <datetime.date>` object. """
-    type = 'date'
-    _column_type = ('date', 'date')
+class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
+    """ Common field properties for Date and Datetime. """
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
     add = staticmethod(date_utils.add)
     subtract = staticmethod(date_utils.subtract)
+
+    def field_expr_to_sql(self, model: BaseModel, alias: str, field_expr: str, query: Query) -> SQL:
+        if "." in field_expr:
+            fname, property_name = field_expr.split('.', 1)
+            sql_field = super().field_expr_to_sql(model, alias, fname, query)
+            return self.sql_expression_for_property(model, sql_field, property_name, self.type == 'datetime')
+        return super().field_expr_to_sql(model, alias, field_expr, query)
+
+    @staticmethod
+    def sql_expression_for_property(model: BaseModel, sql_expr: SQL, property_name: str, is_datetime: bool) -> SQL:
+        timezone = model.env.context.get('tz')
+        if is_datetime and timezone:
+            if timezone in pytz.all_timezones_set:
+                sql_expr = SQL("timezone(%s, timezone('UTC', %s))", timezone, sql_expr)
+            else:
+                _logger.warning("Grouping in unknown / legacy timezone %r", timezone)
+        if not property_name:
+            return sql_expr
+        if property_name not in READ_GROUP_NUMBER_GRANULARITY:
+            raise ValueError(f'Error when processing the granularity {property_name} is not supported. Only {", ".join(READ_GROUP_NUMBER_GRANULARITY.keys())} are supported')
+        granularity = READ_GROUP_NUMBER_GRANULARITY[property_name]
+        if property_name == 'day_of_week':
+            first_week_day = int(get_lang(model.env, timezone).week_start)
+            sql_expr = SQL("mod(7 - %s + date_part(%s, %s)::int, 7)", first_week_day, granularity, sql_expr)
+        else:
+            sql_expr = SQL('date_part(%s, %s)', granularity, sql_expr)
+        return sql_expr
+
+
+class Date(BaseDate[date]):
+    """ Encapsulates a python :class:`date <datetime.date>` object. """
+    type = 'date'
+    _column_type = ('date', 'date')
 
     @staticmethod
     def today(*args):
@@ -120,15 +162,10 @@ class Date(Field[date | typing.Literal[False]]):
         return Date.to_string(value)
 
 
-class Datetime(Field[datetime | typing.Literal[False]]):
+class Datetime(BaseDate[datetime]):
     """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
     type = 'datetime'
     _column_type = ('timestamp', 'timestamp')
-
-    start_of = staticmethod(date_utils.start_of)
-    end_of = staticmethod(date_utils.end_of)
-    add = staticmethod(date_utils.add)
-    subtract = staticmethod(date_utils.subtract)
 
     @staticmethod
     def now(*args):

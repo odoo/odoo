@@ -5,8 +5,8 @@ import logging
 import re
 
 from odoo import api, fields, models, Command, _
+from odoo.api import Domain
 from odoo.exceptions import ValidationError, UserError
-from odoo.osv import expression
 from odoo.tools import frozendict, format_date, float_compare, format_list, Query
 from odoo.tools.sql import create_index, SQL
 from odoo.addons.web.controllers.utils import clean_action
@@ -1715,7 +1715,8 @@ class AccountMoveLine(models.Model):
             return super()._search_panel_domain_image(field_name, domain, set_count, limit)
 
         # if domain is logically equivalent to false
-        if expression.is_false(self, domain):
+        domain = Domain(domain)
+        if domain.is_false():
             return {}
 
         # Override in order to not read the complete move line table and use the index instead
