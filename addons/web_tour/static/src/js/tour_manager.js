@@ -108,6 +108,11 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             };
         }
         this.tours[tour.name] = tour;
+        // Overriding a tour should reset its active tooltip and current step.
+        // TODO I don't understand this
+        if (options.saveAs) {
+            this._register(true, tour, tour.name);
+        }
     },
     /**
      * Returns a promise which is resolved once the tour can be started. This
