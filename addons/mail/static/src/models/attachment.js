@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert } from '@mail/model/model_field_command';
+import { session } from '@web/session';
 
 registerModel({
     name: 'Attachment',
@@ -116,6 +117,7 @@ registerModel({
         attachmentViewerViewable: one('AttachmentViewerViewable', {
             inverse: 'attachmentOwner',
         }),
+        author: attr(),
         checksum: attr(),
         /**
          * States on which composer this attachment is currently being created.
@@ -187,6 +189,15 @@ registerModel({
             },
         }),
         filename: attr(),
+        /**
+         * Determines wheather the attachment is opened inside a chatter.
+         */
+        inChatter: attr({
+            compute() {
+                const thread = this.originThread;
+                return Boolean(thread && thread.threadViews[0] && thread.threadViews[0].threadViewer.chatter);
+            }
+        }),
         id: attr({
             identifying: true,
         }),
@@ -197,6 +208,13 @@ registerModel({
             compute() {
                 if (!this.messaging) {
                     return false;
+                }
+                if (this.inChatter) {
+                    if (session.is_admin) {
+                        return true;
+                    } else if ((this.author && this.author.partnerId !== this.env.services.user.partnerId) || !this.messaging) {
+                        return false
+                    }
                 }
                 if (this.messages.length && this.originThread && this.originThread.model === 'mail.channel') {
                     return this.messages.some(message => (
