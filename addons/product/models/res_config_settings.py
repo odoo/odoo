@@ -7,7 +7,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     group_uom = fields.Boolean("Units of Measure & Packagings", implied_group='uom.group_uom')
-    group_show_uom_price = fields.Boolean(string="Base Unit Price", default=False,
+    group_show_uom_price = fields.Boolean(string="Base Unit Price",
                                           group='base.group_portal,base.group_user,base.group_public',
                                           implied_group="product.group_show_uom_price")
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
