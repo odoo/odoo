@@ -72,8 +72,8 @@ class TestInventory(TransactionCase):
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,
             'lot_id': lot1.id,
-            'inventory_quantity': 1
         })
+        inventory_quant.inventory_quantity = 1
 
         self.assertEqual(inventory_quant.quantity, 0)
         self.assertEqual(inventory_quant.inventory_diff_quantity, 1)
