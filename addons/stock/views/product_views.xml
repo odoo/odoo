@@ -116,9 +116,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='type']" position="after">
                     <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
-                    <div class="o_row w-100" invisible="type != 'consu'">
-                        <field name="is_storable"/>
-                        <field name="tracking" invisible="not is_storable" groups="stock.group_production_lot"/>
+                    <div class="w-100" invisible="type != 'consu'">
+                        <field name="has_move_line_ids" invisible="1"/>
+                        <field class="oe_inline" name="is_storable" widget="boolean_tracking"/>
+                        <field class="oe_inline w-100" name="tracking" invisible="not is_storable" groups="stock.group_production_lot" widget="tracking_selection"/>
                     </div>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="inside">

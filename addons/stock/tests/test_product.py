@@ -361,18 +361,3 @@ class TestVirtualAvailable(TestStockCommon):
         self.assertEqual(product.sudo().with_context(
             allowed_company_ids=[company_a.id, company_b.id]
         ).qty_available, 3)
-
-    def test_change_product_type_archived_product(self):
-        self.picking_out.action_confirm()
-        self.picking_out.action_assign()
-        # At this point product_3 should have the quantity reserved
-        self.product_3.active = False
-
-        # Should not be possible to change the product type when quantities are reserved
-        with self.assertRaises(UserError):
-            self.product_3.write({'is_storable': False})
-
-        # Should not be possible to change the product type when moves are done.
-        self.picking_out.button_validate()
-        with self.assertRaises(UserError):
-            self.product_3.write({'is_storable': False})
