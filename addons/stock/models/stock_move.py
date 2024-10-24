@@ -78,6 +78,7 @@ class StockMove(models.Model):
         'stock.location', 'Source Location',
         help='The operation takes and suggests products from this location.',
         auto_join=True, index=True, required=True,
+        compute='_compute_location_id', store=True, precompute=True, inverse='_set_location_id', readonly=False,
         check_company=True)
     location_dest_id = fields.Many2one(
         'stock.location', 'Intermediate Location', required=True,
@@ -202,6 +203,25 @@ class StockMove(models.Model):
     def _compute_product_uom(self):
         for move in self:
             move.product_uom = move.product_id.uom_id.id
+
+    @api.depends('picking_id.location_id')
+    def _compute_location_id(self):
+        for move in self:
+            if move.picked:
+                continue
+            if not (location := move.location_id) or move.picking_id != move._origin.picking_id or move.picking_type_id != move._origin.picking_type_id:
+                if move.picking_id:
+                    location = move.picking_id.location_id
+                elif move.picking_type_id:
+                    location = move.picking_type_id.default_location_src_id
+            move.location_id = location
+
+    def _set_location_id(self):
+        for ml in self.move_line_ids:
+            parent_path = [int(loc_id) for loc_id in ml.location_id.parent_path.split('/')[:-1]]
+            if ml.move_id.location_id.id in parent_path:
+                continue
+            ml.location_id = ml.move_id.location_id
 
     @api.depends('picking_id', 'picking_id.location_dest_id')
     def _compute_location_dest_id(self):
@@ -682,7 +702,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         receipt_moves_to_reassign = self.env['stock.move']
         move_to_recompute_state = self.env['stock.move']
         move_to_confirm = self.env['stock.move']
-        move_to_check_location = self.env['stock.move']
         if 'quantity' in vals:
             if any(move.state == 'cancel' for move in self):
                 raise UserError(_('You cannot change a cancelled stock move, create a new line instead.'))
@@ -713,8 +732,6 @@ Please change the quantity done or the rounding precision of your unit of measur
             self._set_date_deadline(vals.get('date_deadline'))
         if 'move_orig_ids' in vals:
             move_to_recompute_state |= self.filtered(lambda m: m.state not in ['draft', 'cancel', 'done'])
-        if 'location_id' in vals:
-            move_to_check_location = self.filtered(lambda m: m.location_id.id != vals.get('location_id'))
         if 'picking_id' in vals and 'group_id' not in vals:
             picking = self.env['stock.picking'].browse(vals['picking_id'])
             if picking.group_id:
@@ -722,14 +739,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         res = super(StockMove, self).write(vals)
         if move_to_recompute_state:
             move_to_recompute_state._recompute_state()
-        if move_to_check_location:
-            for ml in move_to_check_location.move_line_ids:
-                parent_path = [int(loc_id) for loc_id in ml.location_id.parent_path.split('/')[:-1]]
-                if move_to_check_location.location_id.id not in parent_path:
-                    receipt_moves_to_reassign |= move_to_check_location
-                    move_to_check_location.procure_method = 'make_to_stock'
-                    move_to_check_location.move_orig_ids = [Command.clear()]
-                    ml.unlink()
         if 'location_id' in vals or 'location_dest_id' in vals:
             wh_by_moves = defaultdict(self.env['stock.move'].browse)
             for move in self:
