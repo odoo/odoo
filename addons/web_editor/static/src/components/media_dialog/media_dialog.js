@@ -227,9 +227,9 @@ export class MediaDialog extends Component {
                 element.classList.add(...TABS[this.state.activeTab].Component.mediaSpecificClasses);
             });
             if (this.props.multiImages) {
-                this.props.save(elements);
+                await this.props.save(elements);
             } else {
-                this.props.save(elements[0]);
+                await this.props.save(elements[0]);
             }
         }
         this.props.close();
