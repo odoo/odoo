@@ -42,6 +42,14 @@ patch(PosOrderline, {
 });
 
 patch(PosOrderline.prototype, {
+    setup(vals) {
+        super.setup(...arguments);
+        this.uiState = {
+            ...this.uiState,
+            isRewardLineProduct: vals.isRewardLineProduct || false,
+            pointsApplied: 0,
+        };
+    },
     serialize(options = {}) {
         const json = super.serialize(...arguments);
         if (options.orm && json.coupon_id < 0) {
@@ -92,5 +100,11 @@ patch(PosOrderline.prototype, {
             return;
         }
         return super.getDisplayData();
+    },
+    can_be_merged_with(orderline) {
+        return (
+            this.uiState.isRewardLineProduct === orderline.uiState.isRewardLineProduct &&
+            super.can_be_merged_with(...arguments)
+        );
     },
 });

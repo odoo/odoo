@@ -9,6 +9,7 @@ import { Mutex } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { serializeDate } from "@web/core/l10n/dates";
+import { roundPrecision } from "@web/core/utils/numbers";
 
 let nextId = -1;
 const mutex = new Mutex();
@@ -39,6 +40,14 @@ patch(PosStore.prototype, {
 
                 if (order) {
                     this.updateOrder(order);
+                    if (
+                        order.get_total_without_tax() == 0 &&
+                        order._get_reward_lines().length == 0 &&
+                        !order._isRefundOrder()
+                    ) {
+                        order._resetPrograms();
+                        order.allowedPrograms = [];
+                    }
                 }
             }),
             [this.data.records["pos.order"]]
@@ -49,8 +58,16 @@ patch(PosStore.prototype, {
         order?.lines?.length;
         await this.orderUpdateLoyaltyPrograms();
     },
+    setAllowedPrograms() {
+        const order = this.get_order();
+        const programs = this.models["loyalty.program"].filter((program) =>
+            order?._programIsApplicable(program)
+        );
+        programs.forEach((program) => order?.allowedPrograms.push(program.id));
+    },
     async selectPartner(partner) {
         const res = await super.selectPartner(partner);
+        this.setAllowedPrograms();
         await this.updateRewards();
         return res;
     },
@@ -68,9 +85,8 @@ patch(PosStore.prototype, {
         if (!this.get_order()) {
             return;
         }
-
         await this.checkMissingCoupons();
-        await this.updatePrograms();
+        await this.updatePrograms(this.get_order()?.allowedPrograms);
     },
     updateRewards() {
         // Calls are not expected to take some time besides on the first load + when loyalty programs are made applicable
@@ -123,7 +139,7 @@ patch(PosStore.prototype, {
     /**
      * Update our couponPointChanges, meaning the points/coupons each program give etc.
      */
-    async updatePrograms() {
+    async updatePrograms(allowedPrograms = []) {
         const order = this.get_order();
         if (!order) {
             return;
@@ -152,9 +168,12 @@ patch(PosStore.prototype, {
         const pointsAddedPerProgram = order.pointsForPrograms(programs);
         for (const program of this.models["loyalty.program"].getAll()) {
             // Future programs may split their points per unit paid (gift cards for example), consider a non applicable program to give no points
-            const pointsAdded = order._programIsApplicable(program)
-                ? pointsAddedPerProgram[program.id]
-                : [];
+            const pointsAdded =
+                order._programIsApplicable(program) && allowedPrograms.includes(program.id)
+                    ? pointsAddedPerProgram[program.id]
+                    : changesPerProgram[program.id]
+                    ? changesPerProgram[program.id]
+                    : [];
             // For programs that apply to both (loyalty) we always add a change of 0 points, if there is none, since it makes it easier to
             //  track for claimable rewards, and makes sure to load the partner's loyalty card.
             if (program.is_nominative && !pointsAdded.length && order.get_partner()) {
@@ -268,6 +287,7 @@ patch(PosStore.prototype, {
                 return _t("That promo code program has already been activated.");
             }
             order.uiState.codeActivatedProgramRules.push(rule.id);
+            order.allowedPrograms.push(rule.program_id.id);
             await this.orderUpdateLoyaltyPrograms();
             claimableRewards = order.getClaimableRewards(false, rule.program_id.id);
         } else {
@@ -347,6 +367,122 @@ patch(PosStore.prototype, {
             );
         });
     },
+    getPointAppliedOnLine(selectedLine) {
+        const order = this.get_order();
+        const programsToCheck = new Set();
+        for (const program of this.models["loyalty.program"].getAll()) {
+            if (order._programIsApplicable(program)) {
+                programsToCheck.add(program.id);
+            }
+        }
+        const programs = [...programsToCheck].map((programId) =>
+            this.models["loyalty.program"].get(programId)
+        );
+        const orderLines = order.get_orderlines();
+        const linesPerRule = {};
+        for (const line of orderLines) {
+            for (const program of programs) {
+                for (const rule of program.rule_ids) {
+                    if (rule.any_product || rule.validProductIds.has(line.product_id.id)) {
+                        if (!linesPerRule[rule.id]) {
+                            linesPerRule[rule.id] = [];
+                        }
+                        linesPerRule[rule.id].push(line);
+                    }
+                }
+            }
+        }
+        let rewardPoints = 0;
+        for (const program of programs) {
+            if (Array.isArray(program.rule_ids)) {
+                for (const rule of program.rule_ids) {
+                    if (
+                        rule.mode === "with_code" &&
+                        !order.uiState.codeActivatedProgramRules?.includes(rule.id)
+                    ) {
+                        continue;
+                    }
+                    const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
+                    const amountWithTax = linesForRule.reduce(
+                        (sum, line) => sum + line.get_price_with_tax(),
+                        0
+                    );
+                    const amountWithoutTax = linesForRule.reduce(
+                        (sum, line) => sum + line.get_price_without_tax(),
+                        0
+                    );
+                    const amountCheck =
+                        (rule.minimum_amount_tax_mode === "incl" &&
+                            roundPrecision(amountWithTax, 0.001)) ||
+                        roundPrecision(amountWithoutTax, 0.001);
+                    if (
+                        rule.minimum_amount > amountCheck &&
+                        !selectedLine.uiState.isRewardLineProduct
+                    ) {
+                        continue;
+                    }
+                    let totalProductQty = 0;
+                    const qtyPerProduct = {};
+                    for (const line of orderLines) {
+                        if (
+                            ((!line.reward_product_id &&
+                                (rule.any_product ||
+                                    rule.validProductIds.has(line.product_id.id))) ||
+                                (line.reward_product_id &&
+                                    (rule.any_product ||
+                                        rule.validProductIds.has(line._reward_product_id?.id)))) &&
+                            !line.ignoreLoyaltyPoints({ program })
+                        ) {
+                            // We only count reward products from the same program to avoid unwanted feedback loops
+                            if (line.is_reward_line) {
+                                const reward = line.reward_id;
+                                if (
+                                    program.id === reward.program_id.id ||
+                                    ["gift_card", "ewallet"].includes(
+                                        reward.program_id.program_type
+                                    )
+                                ) {
+                                    continue;
+                                }
+                            }
+                            const lineQty = line._reward_product_id
+                                ? -line.get_quantity()
+                                : line.get_quantity();
+                            if (qtyPerProduct[line._reward_product_id || line.get_product().id]) {
+                                qtyPerProduct[line._reward_product_id || line.get_product().id] +=
+                                    lineQty;
+                            } else {
+                                qtyPerProduct[
+                                    line._reward_product_id?.id || line.get_product().id
+                                ] = lineQty;
+                            }
+                            if (!line.is_reward_line) {
+                                totalProductQty += lineQty;
+                            }
+                        }
+                    }
+                    if (totalProductQty < rule.minimum_qty) {
+                        continue;
+                    }
+                    if (rule.reward_point_mode === "money") {
+                        const amountCount =
+                            (rule.minimum_amount_tax_mode === "incl" &&
+                                roundPrecision(selectedLine.get_price_with_tax(), 0.001)) ||
+                            roundPrecision(selectedLine.get_price_without_tax(), 0.001);
+                        rewardPoints += rule.reward_point_amount * amountCount;
+                        order.allowedPrograms.push(program.id);
+                    } else if (rule.reward_point_mode === "unit") {
+                        rewardPoints += rule.reward_point_amount * selectedLine.qty;
+                        order.allowedPrograms.push(program.id);
+                    } else if (rule.reward_point_mode === "order") {
+                        rewardPoints += rule.reward_point_amount;
+                        order.allowedPrograms.push(program.id);
+                    }
+                }
+            }
+        }
+        return rewardPoints;
+    },
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
         if (!vals.product_tmpl_id && vals.product_id) {
             vals.product_tmpl_id = vals.product_id.product_tmpl_id;
@@ -411,17 +547,26 @@ patch(PosStore.prototype, {
             delete opt.price_unit;
         }
 
+        vals.isRewardLineProduct = opt?.isRewardLineProduct;
         const result = await super.addLineToCurrentOrder(vals, opt, configure);
-
-        await this.updatePrograms();
-        if (rewardsToApply.length == 1) {
+        const selectedLine = order.get_selected_orderline();
+        if (selectedLine) {
+            selectedLine.uiState.pointsApplied = this.getPointAppliedOnLine(
+                order.get_selected_orderline()
+            );
+        }
+        await this.updatePrograms(this.get_order().allowedPrograms);
+        this.orderUpdateLoyaltyPrograms();
+        if (rewardsToApply.length == 1 && opt?.isRewardLineProduct) {
             const reward = rewardsToApply[0];
             for (const id of productIds) {
                 const product = this.models["product.product"].get(id);
                 order._applyReward(reward.reward, reward.coupon_id, { product });
             }
         }
-        this.updateRewards();
+        if (selectedLine?.uiState.pointsApplied > 0 || selectedLine?.uiState.isRewardLineProduct) {
+            this.updateRewards();
+        }
 
         return result;
     },
@@ -496,17 +641,15 @@ patch(PosStore.prototype, {
             }
 
             const points = order._getRealCouponPoints(couponProgram.coupon_id);
-            const hasLine = order.lines.filter((line) => !line.is_reward_line).length > 0;
             for (const reward of program.reward_ids.filter(
-                (reward) => reward.reward_type == "product"
+                (reward) =>
+                    reward.reward_type == "product" &&
+                    (reward.reward_product_id || reward.reward_product_ids)
             )) {
                 if (points < reward.required_points) {
                     continue;
                 }
-                // Loyalty program (applies_on == 'both') should needs an orderline before it can apply a reward.
-                const considerTheReward =
-                    program.applies_on !== "both" || (program.applies_on == "both" && hasLine);
-                if (reward.reward_type === "product" && considerTheReward) {
+                if (reward.reward_type === "product") {
                     let hasPotentialQty = true;
                     let potentialQty;
                     for (const { id } of reward.reward_product_ids) {

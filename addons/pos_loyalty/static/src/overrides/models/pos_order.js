@@ -79,6 +79,7 @@ patch(PosOrder.prototype, {
             codeActivatedProgramRules: [],
             couponPointChanges: {},
         };
+        this.allowedPrograms = [];
         const oldCouponMapping = {};
         if (this.uiState.couponPointChanges) {
             for (const [key, pe] of Object.entries(this.uiState.couponPointChanges)) {
@@ -333,7 +334,7 @@ patch(PosOrder.prototype, {
                 });
             let [won, spent, total] = [0, 0, 0];
             const balance = loyaltyCard.points;
-            won += points - this._getPointsCorrection(program);
+            won += points - (points > 0 ? this._getPointsCorrection(program) : 0);
             if (coupon_id !== 0) {
                 for (const line of this._get_reward_lines()) {
                     if (line.coupon_id.id === coupon_id) {
@@ -492,31 +493,6 @@ patch(PosOrder.prototype, {
     pointsForPrograms(programs) {
         pointsForProgramsCountedRules = {};
         const orderLines = this.get_orderlines();
-        const linesPerRule = {};
-        for (const line of orderLines) {
-            const reward = line.reward_id;
-            const isDiscount = reward && reward.reward_type === "discount";
-            const rewardProgram = reward && reward.program_id;
-            // Skip lines for automatic discounts.
-            if (isDiscount && rewardProgram.trigger === "auto") {
-                continue;
-            }
-            for (const program of programs) {
-                // Skip lines for the current program's discounts.
-                if (isDiscount && rewardProgram.id === program.id) {
-                    continue;
-                }
-                for (const rule of program.rule_ids) {
-                    // Skip lines to which the rule doesn't apply.
-                    if (rule.any_product || rule.validProductIds.has(line.product_id.id)) {
-                        if (!linesPerRule[rule.id]) {
-                            linesPerRule[rule.id] = [];
-                        }
-                        linesPerRule[rule.id].push(line);
-                    }
-                }
-            }
-        }
         const result = {};
         for (const program of programs) {
             let points = 0;
@@ -526,20 +502,6 @@ patch(PosOrder.prototype, {
                     rule.mode === "with_code" &&
                     !this.uiState.codeActivatedProgramRules.includes(rule.id)
                 ) {
-                    continue;
-                }
-                const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
-                const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_with_tax(),
-                    0
-                );
-                const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
-                    0
-                );
-                const amountCheck =
-                    (rule.minimum_amount_tax_mode === "incl" && amountWithTax) || amountWithoutTax;
-                if (rule.minimum_amount > amountCheck) {
                     continue;
                 }
                 let totalProductQty = 0;
@@ -580,11 +542,6 @@ patch(PosOrder.prototype, {
                             totalProductQty += lineQty;
                         }
                     }
-                }
-                if (totalProductQty < rule.minimum_qty) {
-                    // Should also count the points from negative quantities.
-                    // For example, when refunding an ewallet payment. See TicketScreen override in this addon.
-                    continue;
                 }
                 if (!(program.id in pointsForProgramsCountedRules)) {
                     pointsForProgramsCountedRules[program.id] = [];
@@ -1270,10 +1227,10 @@ patch(PosOrder.prototype, {
                 reward.reward_product_ids.map((reward) => reward.id).includes(line.get_product().id)
             ) {
                 if (this._get_reward_lines() == 0) {
-                    if (line.get_product() === product) {
+                    if (line.uiState.isRewardLineProduct && line.get_product() === product) {
                         available += line.get_quantity();
                     }
-                } else {
+                } else if (line.uiState.isRewardLineProduct) {
                     available += line.get_quantity();
                 }
             } else if (
@@ -1355,12 +1312,8 @@ patch(PosOrder.prototype, {
                 this._isRewardProductPartOfRules(reward, product) &&
                 reward.program_id.applies_on !== "future"
             ) {
-                const line = this.get_orderlines().find(
-                    (line) => line._reward_product_id?.id === product.id
-                );
                 // Compute the correction points once even if there are multiple reward lines.
-                // This is because _getPointsCorrection is taking into account all the lines already.
-                const claimedPoints = line ? this._getPointsCorrection(reward.program_id) : 0;
+                const claimedPoints = this._getPointsCorrection(reward.program_id);
                 return Math.floor((remainingPoints - claimedPoints) / reward.required_points) > 0
                     ? reward.reward_product_qty
                     : 0;

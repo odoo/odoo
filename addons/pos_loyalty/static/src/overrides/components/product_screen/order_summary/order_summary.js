@@ -47,6 +47,22 @@ patch(OrderSummary.prototype, {
                 return;
             }
         }
+
+        const numpadMode = this.pos.numpadMode;
+        if (
+            selectedLine?.uiState?.isRewardLineProduct &&
+            ["price", "discount"].includes(numpadMode) &&
+            key !== "Backspace"
+        ) {
+            let notificationString = _t("You cannot update price of Reward.");
+            if (numpadMode === "discount") {
+                notificationString = _t("You cannot add discount on Reward.");
+            }
+            if (notificationString) {
+                this.notification.add(notificationString, 4000);
+                return;
+            }
+        }
         return super.updateSelectedOrderline({ buffer, key });
     },
     /**
@@ -84,7 +100,24 @@ patch(OrderSummary.prototype, {
             super._setValue(val);
         }
         if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === "remove")) {
+            this.pos.setAllowedPrograms();
             this.pos.updateRewards();
+        }
+        if (
+            !selectedLine.is_reward_line &&
+            !selectedLine.uiState.isRewardLineProduct &&
+            val === "remove"
+        ) {
+            const res = this.currentOrder
+                .getLoyaltyPoints()
+                ?.reduce((acc, loyalty) => (loyalty.points.total < 0 ? (acc = false) : true), true);
+            if (!res) {
+                this.notification.add(
+                    _t("Loyalty points cannot be negative"),
+                    { type: "danger" },
+                    4000
+                );
+            }
         }
     },
 

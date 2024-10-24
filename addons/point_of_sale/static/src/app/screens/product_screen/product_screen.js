@@ -459,6 +459,10 @@ export class ProductScreen extends Component {
         const info = await reactive(this.pos).getProductInfo(productTemplate, product, 1);
         this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
     }
+
+    get validToPay() {
+        return true;
+    }
 }
 
 registry.category("pos_screens").add("ProductScreen", ProductScreen);

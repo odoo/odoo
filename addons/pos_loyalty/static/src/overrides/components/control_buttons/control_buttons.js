@@ -172,8 +172,9 @@ patch(ControlButtons.prototype, {
                     product_tmpl_id: product.product_tmpl_id,
                     qty: potentialQty || 1,
                 },
-                {}
+                { isRewardLineProduct: true }
             );
+            order.allowedPrograms = [];
             return true;
         } else {
             const result = order._applyReward(reward, coupon_id, args);

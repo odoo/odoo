@@ -13,6 +13,7 @@ export class ActionpadWidget extends Component {
         actionName: String,
         actionToTrigger: Function,
         showActionButton: { type: Boolean, optional: true },
+        validToPay: Boolean,
     };
     static defaultProps = {
         showActionButton: true,
