@@ -35,19 +35,14 @@ class WebsocketController(Controller):
             request.session['is_websocket_session'] = True
         elif 'is_websocket_session' not in request.session:
             raise SessionExpiredException()
-        subscribe_data = request.env["ir.websocket"]._prepare_subscribe_data(channels, last)
-        if bus_target := request.env["ir.websocket"]._get_missed_presences_bus_target():
-            subscribe_data["missed_presences"]._send_presence(bus_target=bus_target)
+        subscribe_data = self.get_subscribe_data(channels, last)
         channels_with_db = [channel_with_db(request.db, c) for c in subscribe_data["channels"]]
         notifications = request.env["bus.bus"]._poll(channels_with_db, subscribe_data["last"])
         return {"channels": channels_with_db, "notifications": notifications}
 
-    @route('/websocket/update_bus_presence', type='json', auth='public', cors='*')
-    def update_bus_presence(self, inactivity_period, im_status_ids_by_model):
-        if 'is_websocket_session' not in request.session:
-            raise SessionExpiredException()
-        request.env['ir.websocket']._update_bus_presence(int(inactivity_period), im_status_ids_by_model)
-        return {}
+    # This method is overridden in mail module
+    def get_subscribe_data(self, channels, last):
+        return request.env["ir.websocket"]._prepare_subscribe_data(channels, last)
 
     @route("/websocket/on_closed", type="json", auth="public", cors="*")
     def on_websocket_closed(self):

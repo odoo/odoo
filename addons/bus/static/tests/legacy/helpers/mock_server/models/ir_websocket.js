@@ -11,6 +11,7 @@ patch(MockServer.prototype, {
      * @param imStatusIdsByModel
      */
     _mockIrWebsocket__updatePresence(inactivityPeriod, imStatusIdsByModel) {
+        // gito (to be moved)
         const imStatusNotifications = this._mockIrWebsocket__getImStatus(imStatusIdsByModel);
         if (Object.keys(imStatusNotifications).length > 0) {
             this._mockBusBus__sendone(

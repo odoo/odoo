@@ -14,7 +14,7 @@ from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
 @tagged("post_install", "-at_install")
-class TestBusPresence(WebsocketCase, MailCommon):
+class TestMailPresence(WebsocketCase, MailCommon):
     def _receive_presence(self, sender, recipient):
         self._reset_bus()
         sent_from_user = isinstance(sender, self.env.registry["res.users"])
@@ -32,7 +32,7 @@ class TestBusPresence(WebsocketCase, MailCommon):
             [f"odoo-presence-{sender_bus_target._name}_{sender_bus_target.id}"],
             self.env["bus.bus"]._bus_last_id(),
         )
-        self.env["bus.presence"].create(
+        self.env["mail.presence"].create(
             {"user_id" if sent_from_user else "guest_id": sender.id, "status": "online"}
         )
         self.trigger_notification_dispatching([(sender_bus_target, "presence")])

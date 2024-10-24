@@ -90,6 +90,7 @@ patch(MockServer.prototype, {
      * @param {any} message
      */
     _mockBusBus__sendone(channel, notificationType, message) {
+        console.log("mock bus sendone");
         this._mockBusBus__sendmany([[channel, notificationType, message]]);
     },
     /**
