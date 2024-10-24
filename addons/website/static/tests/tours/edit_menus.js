@@ -98,19 +98,6 @@ registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
-        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input.is-invalid",
-    },
-    {
-        content: "It didn't save without a url. Fill url input.",
-        trigger: '.modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(1)',
-        run: "edit #",
-    },
-    {
-        content: "Confirm the new menu entry",
-        trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
-        run: "click",
-    },
-    {
         trigger: '.oe_menu_editor .js_menu_label:contains("Random!")',
     },
     {
