@@ -2,6 +2,7 @@
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
+import pytz
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
@@ -492,7 +493,12 @@ class HrLeaveAllocation(models.Model):
                         # allocation.expiring_carryover_days - allocation.leaves_taken or 0 if all the expiring days were used
                         # to take time off.
                         # This ensures that only the days that weren't used to take time off will expire.
-                        expiring_days = max(0, allocation.expiring_carryover_days - allocation.leaves_taken)
+                        leaves_taken_on_nextcall = 0
+                        if allocation.nextcall == fields.Date.today():
+                            leaves_taken_on_nextcall = allocation.leaves_taken
+                        else:
+                            leaves_taken_on_nextcall = self._compute_leaves_taken()
+                        expiring_days = max(0, allocation.expiring_carryover_days - leaves_taken_on_nextcall)
                         allocation.number_of_days = max(0, allocation.number_of_days - expiring_days)
                         allocation.expiring_carryover_days = 0
 
@@ -583,29 +589,100 @@ class HrLeaveAllocation(models.Model):
             '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
         allocations._process_accrual_plans()
 
-    def _get_future_leaves_on(self, accrual_date):
+    def _get_allocation_data_on(self, accrual_date):
         # As computing future accrual allocation days automatically updates the allocation,
         # We need to create a temporary copy of that allocation to return the difference in number of days
         # to see how much more days will be allocated from now until that date.
         self.ensure_one()
-        if not accrual_date or accrual_date <= date.today():
-            return 0
+
+        res = {'future_leaves': 0,
+               'carried_over_days_expiration_date': False,
+               'expiring_carryover_days': 0}
+
+        if not accrual_date or accrual_date < date.today():
+            return res
 
         if not (self.accrual_plan_id
                 and self.state == 'validate'
                 and self.allocation_type == 'accrual'
-                and (not self.date_to or self.date_to > accrual_date)
-                and (not self.nextcall or self.nextcall <= accrual_date)):
-            return 0
+                and (not self.date_to or self.date_to > accrual_date)):
+            return res
+
+        if accrual_date == date.today() or (self.nextcall and self.nextcall > accrual_date):
+            res.update({
+                'carried_over_days_expiration_date': self.carried_over_days_expiration_date,
+                'expiring_carryover_days': self.expiring_carryover_days
+            })
+            return res
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
         fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
         if self.type_request_unit in ['hour']:
-            return float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
-        res = round((fake_allocation.number_of_days - self.number_of_days), 2)
+            res['future_leaves'] = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
+        else:
+            res['future_leaves'] = round((fake_allocation.number_of_days - self.number_of_days), 2)
+        res['carried_over_days_expiration_date'] = fake_allocation.carried_over_days_expiration_date
+        res['expiring_carryover_days'] = fake_allocation.expiring_carryover_days
         self._invalidate_cache()
         return res
 
+    def _compute_leaves_taken(self):
+        """
+        The function is the same as _get_consumed_leaves of hr_employee
+        but adjusted to return leaves_taken only.
+        """
+        self.ensure_one()
+        employee = self.employee_id
+        leave_type = self.holiday_status_id
+        leaves_domain = [
+            ('holiday_status_id', '=', leave_type.id),
+            ('employee_id', '=', employee.id),
+            ('state', '=', 'validate'),
+            ('request_date_from', '<=', self.nextcall),
+        ]
+
+        leaves = self.env['hr.leave'].search(leaves_domain)
+        leaves_taken = 0
+
+        if leave_type.request_unit in ['day', 'half_day']:
+            leave_duration_field = 'number_of_days'
+            leave_unit = 'days'
+        else:
+            leave_duration_field = 'number_of_hours'
+            leave_unit = 'hours'
+
+        virtual_remaining_leaves = self.number_of_hours_display\
+                    if self.type_request_unit in ['hour']\
+                    else self.number_of_days_display
+
+        for leave in leaves.sorted('date_from'):
+            leave_duration = leave[leave_duration_field]
+            interval_start = max(
+                leave.date_from,
+                datetime.combine(self.date_from, time.min)
+            )
+            interval_end = min(
+                leave.date_to,
+                datetime.combine(self.date_to, time.max)
+                if self.date_to else leave.date_to
+            )
+            duration = leave[leave_duration_field]
+            if leave.date_from != interval_start or leave.date_to != interval_end:
+                duration_info = employee._get_calendar_attendances(interval_start.replace(tzinfo=pytz.UTC), interval_end.replace(tzinfo=pytz.UTC))
+                duration = duration_info['hours' if leave_unit == 'hours' else 'days']
+            max_allowed_duration = min(duration, virtual_remaining_leaves)
+
+            if not max_allowed_duration:
+                continue
+
+            allocated_time = min(max_allowed_duration, leave_duration)
+            leaves_taken += allocated_time
+            virtual_remaining_leaves -= allocated_time
+            # add the following lines only if you are going to loop on allocations
+            #leave_duration -= allocated_time
+            #if not leave_duration:
+            #    break
+        return leaves_taken
     ####################################################
     # ORM Overrides methods
     ####################################################
