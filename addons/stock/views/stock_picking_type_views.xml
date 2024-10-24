@@ -134,6 +134,9 @@
                                         <field name="auto_print_product_labels" string="Product Labels"/>
                                         <label for="product_label_format" string="Print label as:" invisible="not auto_print_product_labels" class="fw-bold"/>
                                         <field name="product_label_format" invisible="not auto_print_product_labels"/>
+                                        <label for="label_with_price" string="With price:" class="fw-bold" invisible="not auto_print_product_labels"/>
+                                        <field name="label_with_price" invisible="not auto_print_product_labels" readonly="product_label_format not in ('4x12', 'zpl')"/>
+
                                     </div>
                                     <label for="auto_print_lot_labels" string="Lot/SN Labels" groups="stock.group_production_lot"/>
                                     <div class="o_row" groups="stock.group_production_lot">

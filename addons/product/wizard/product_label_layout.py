@@ -11,10 +11,12 @@ class ProductLabelLayout(models.TransientModel):
 
     print_format = fields.Selection([
         ('dymo', 'Dymo'),
-        ('2x7xprice', '2 x 7 with price'),
-        ('4x7xprice', '4 x 7 with price'),
+        ('2x7', '2 x 7'),
+        ('4x7', '4 x 7'),
         ('4x12', '4 x 12'),
-        ('4x12xprice', '4 x 12 with price')], string="Format", default='2x7xprice', required=True)
+    ], string="Format", default='2x7', required=True, store=True)
+    with_price = fields.Boolean('Print With Price', compute='_compute_with_price',
+                                readonly=False, default=True, required=True, store=True)
     custom_quantity = fields.Integer('Quantity', default=1, required=True)
     product_ids = fields.Many2many('product.product')
     product_tmpl_ids = fields.Many2many('product.template')
@@ -24,10 +26,18 @@ class ProductLabelLayout(models.TransientModel):
     pricelist_id = fields.Many2one('product.pricelist', string="Pricelist")
 
     @api.depends('print_format')
+    def _compute_with_price(self):
+        for wizard in self:
+            if wizard.print_format in ('2x7', '4x7'):
+                wizard.with_price = True
+            elif wizard.print_format == 'dymo':
+                wizard.with_price = False
+
+    @api.depends('print_format')
     def _compute_dimensions(self):
         for wizard in self:
             if 'x' in wizard.print_format:
-                columns, rows = wizard.print_format.split('x')[:2]
+                columns, rows = wizard.print_format.split('x')
                 wizard.columns = columns.isdigit() and int(columns) or 1
                 wizard.rows = rows.isdigit() and int(rows) or 1
             else:
@@ -42,7 +52,7 @@ class ProductLabelLayout(models.TransientModel):
             xml_id = 'product.report_product_template_label_dymo'
         elif 'x' in self.print_format:
             xml_id = 'product.report_product_template_label_%sx%s' % (self.columns, self.rows)
-            if 'xprice' not in self.print_format:
+            if not self.with_price:
                 xml_id += '_noprice'
         else:
             xml_id = ''
@@ -62,7 +72,7 @@ class ProductLabelLayout(models.TransientModel):
             'active_model': active_model,
             'quantity_by_product': {p: self.custom_quantity for p in products},
             'layout_wizard': self.id,
-            'price_included': 'xprice' in self.print_format,
+            'price_included': self.with_price,
         }
         return xml_id, data
 
@@ -70,7 +80,7 @@ class ProductLabelLayout(models.TransientModel):
         self.ensure_one()
         xml_id, data = self._prepare_report_data()
         if not xml_id:
-            raise UserError(_('Unable to find report template for %s format', self.print_format))
+            raise UserError(_('Unable to find report template for %s format', self.print_format, 'with price' if self.with_price else ''))
         report_action = self.env.ref(xml_id).report_action(None, data=data, config=False)
         report_action.update({'close_on_report_download': True})
         return report_action

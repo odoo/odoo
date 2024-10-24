@@ -82,12 +82,14 @@ class StockPickingType(models.Model):
         help="If this checkbox is ticked, Odoo will automatically print the product labels of a picking when it is validated.")
     product_label_format = fields.Selection([
         ('dymo', 'Dymo'),
-        ('2x7xprice', '2 x 7 with price'),
-        ('4x7xprice', '4 x 7 with price'),
+        ('2x7', '2 x 7'),
+        ('4x7', '4 x 7'),
         ('4x12', '4 x 12'),
-        ('4x12xprice', '4 x 12 with price'),
-        ('zpl', 'ZPL Labels'),
-        ('zplxprice', 'ZPL Labels with price')], string="Product Label Format to auto-print", default='2x7xprice')
+        ('zpl', 'ZPL Labels')],
+        string="Product Label Format to auto-print", default='2x7', required=True, store=True)
+    label_with_price = fields.Boolean('With price', compute='_compute_label_with_price',
+                                      readonly=False, default=True, required=True, store=True,
+                                      help="Display the product price on the label")
     auto_print_lot_labels = fields.Boolean(
         "Auto Print Lot/SN Labels",
         help="If this checkbox is ticked, Odoo will automatically print the lot/SN labels of a picking when it is validated.")
@@ -332,6 +334,14 @@ class StockPickingType(models.Model):
                 picking_type.print_label = False
             elif picking_type.code == 'outgoing':
                 picking_type.print_label = True
+
+    @api.depends('product_label_format')
+    def _compute_label_with_price(self):
+        for wizard in self:
+            if wizard.product_label_format in ('2x7', '4x7'):
+                wizard.label_with_price = True
+            elif wizard.product_label_format == 'dymo':
+                wizard.label_with_price = False
 
     @api.onchange('code')
     def _onchange_picking_code(self):
@@ -2092,6 +2102,7 @@ class StockPicking(models.Model):
                 'move_ids': pickings.move_ids.ids,
                 'move_quantity': 'move',
                 'print_format': pickings.picking_type_id.product_label_format,
+                'with_price': pickings.picking_type_id.label_with_price,
             })
             action = wizard.process()
             if action:
