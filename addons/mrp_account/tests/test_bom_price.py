@@ -4,6 +4,7 @@
 from odoo.exceptions import UserError
 from odoo.tests import common, Form
 from odoo.tools.float_utils import float_round, float_compare
+from odoo import Command
 
 
 class TestBomPriceCommon(common.TransactionCase):
@@ -254,3 +255,36 @@ class TestBomPrice(TestBomPriceCommon):
         self.assertEqual(self.dining_table.standard_price, 137.5, "After computing price from BoM price should be 137.5")
         scrap_wood.button_bom_cost()
         self.assertEqual(scrap_wood.standard_price, 20.63, "After computing price from BoM price should be 20.63")
+
+    def test_compute_price_from_bom_with_operation(self):
+        """
+        Test that the cost of the product is calculated correctly based on the total work order duration.
+        BoM:
+            Qty: 650
+            component: $3 * 650 units
+            operation: 60 min by unit with cost of 30
+
+            workcenter capacity = 2
+
+            cost = ((30 * 650)/2) + (3 * 650) = 11700.0 / 650 → $18
+        """
+        workcenter = self.env['mrp.workcenter'].create({
+            'name': 'Workcenter',
+            'costs_hour': 30,
+            'default_capacity': 2,
+        })
+        self.bolt.standard_price = 10
+        self.glass.standard_price = 3
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.bolt.product_tmpl_id.id,
+            'product_qty': 650,
+            'bom_line_ids': [
+                Command.create({'product_id': self.glass.id, 'product_qty': 650}),
+            ],
+            'operation_ids': [
+                Command.create({'name': 'op1', 'workcenter_id': workcenter.id}),
+            ]
+        })
+        self.assertEqual(self.bolt.standard_price, 10)
+        self.bolt.button_bom_cost()
+        self.assertEqual(self.bolt.standard_price, 18)
