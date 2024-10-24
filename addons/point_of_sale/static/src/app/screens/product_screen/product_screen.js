@@ -379,7 +379,7 @@ export class ProductScreen extends Component {
     getProductsByCategory(category) {
         const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
         const products = allCategoryIds.flatMap(
-            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+            (catId) => this.pos.models["product.template"].getBy("pos_categ_ids", catId) || []
         );
         // Remove duplicates since owl doesn't like it.
         return Array.from(new Set(products));
