@@ -25,6 +25,7 @@ Activates:
     ],
     'data': [
         'data/account_tax_report_data.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="jordan_res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.account</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_calculation_rounding_method']" position="attributes">
+                    <attribute name="readonly">
+                        country_code == 'JO'
+                    </attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

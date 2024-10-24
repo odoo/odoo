@@ -40,5 +40,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'jo_account_500909',
                 'deferred_expense_account_id': 'jo_account_100416',
                 'deferred_revenue_account_id': 'jo_account_200401',
+                'tax_calculation_rounding_method': 'round_globally',
             },
         }
