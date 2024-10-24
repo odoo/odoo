@@ -13,6 +13,7 @@
         'data/delivery_receipt_sequence.xml',
         'data/crate_container_configuration_data.xml',
         'security/ir.model.access.csv',
+        'security/security.xml',
         'views/crate_container_configuration.xml',
         'views/crate_barcode_configuration.xml',
         'views/delivery_receipt_orders_views.xml',
@@ -24,6 +25,8 @@
         'views/res_partner_inherit_views.xml',
         'views/menuitem_view.xml',
         'wizard/receipt_wizard_view.xml',
+        'wizard/update_qty_liocense_plate_wizard_view.xml',
+        'wizard/automation_decanting_product_process_wizard.xml',
 
     ],
     'installable': True,
