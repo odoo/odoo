@@ -2017,6 +2017,25 @@ class SaleOrder(models.Model):
                 user_id=order.user_id.id or order.partner_id.user_id.id,
                 note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
+    def _prepare_analytic_account_data(self, prefix=None):
+        """ Prepare SO analytic account creation values.
+
+        :return: `account.analytic.account` creation values
+        :rtype: dict
+        """
+        self.ensure_one()
+        name = self.name
+        if prefix:
+            name = prefix + ": " + self.name
+        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+        return {
+            'name': name,
+            'code': self.client_order_ref,
+            'company_id': self.company_id.id,
+            'plan_id': project_plan.id,
+            'partner_id': self.partner_id.id,
+        }
+
     def _prepare_down_payment_section_line(self, **optional_values):
         """ Prepare the values to create a new down payment section.
 
