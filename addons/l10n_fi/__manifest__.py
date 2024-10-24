@@ -42,4 +42,5 @@ Set the payment reference type from the Sales Journal.
     ],
     "installable": True,
     'license': 'LGPL-3',
+    'post_init_hook': '_post_init_hook',
 }
