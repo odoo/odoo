@@ -1053,6 +1053,9 @@ class Slide(models.Model):
 
         self.ensure_one()
         google_app_key = self.env['website'].get_current_website().sudo().website_slide_google_app_key
+        if not google_app_key:
+            return {}, _(
+                'Please enter a Google API key in your settings to have a preview. Settings > Website > Features > API Key')
         error_message = False
         try:
             response = requests.get(
