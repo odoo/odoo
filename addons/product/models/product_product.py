@@ -54,7 +54,7 @@ class ProductProduct(models.Model):
         string="Base Unit Count",
         help="Display base unit price. Set to 0 to hide it for this product.",
         required=True,
-        default=1,
+        default=0,
     )
     base_unit_id = fields.Many2one(
         string="Custom Unit of Measure",
