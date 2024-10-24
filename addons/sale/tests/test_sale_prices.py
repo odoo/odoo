@@ -1006,3 +1006,30 @@ class TestSalePrices(SaleCommon):
             line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision))
         self.assertAlmostEqual(line.price_subtotal, expected_price_subtotal)
         self.assertEqual(order.amount_total, order.tax_totals.get('amount_total'))
+
+    def test_sale_order_line_without_uom(self):
+        """
+        Test to create a SO with
+        - Pricelist of discount policy as without_discount and a discount pricelist item
+        - Remove UOM from the SOL and update the uom qty
+        """
+        pricelist_item = self._create_discount_pricelist_rule(
+            min_quantity=2,
+        )
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'New pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': pricelist_item
+        })
+
+        order_form = Form(self.env['sale.order'])
+        order_form.partner_id = self.partner
+        order_form.pricelist_id = pricelist
+        with self.assertRaises(AssertionError):
+            with order_form.order_line.new() as line:
+                line.name = self.product.product_variant_id.name
+                line.product_id = self.product
+                line.product_uom = self.env['uom.uom']
+                line.product_uom_qty = 3
+            sale_order = order_form.save()
+            self.assertRecordValues(sale_order.order_line, [{'product_uom_qty': 3, 'product_uom': self.product.uom_id.id}])
