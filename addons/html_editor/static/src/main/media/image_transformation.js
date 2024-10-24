@@ -261,7 +261,6 @@ export class ImageTransformation extends Component {
         settings.translatexp = Math.round((settings.translatex / width) * 1000) / 10;
         settings.translateyp = Math.round((settings.translatey / height) * 1000) / 10;
 
-        this.image.style = settings.style;
         this.setImageTransformation(this.image);
 
         this.transfoContainer.el.style.position = "absolute";

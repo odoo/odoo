@@ -328,6 +328,27 @@ test("Image transformation disappear on escape", async () => {
     expect(transfoContainers.length).toBe(0);
 });
 
+test("Image should retain style during transformation", async () => {
+    await setupEditor(`
+        <p><img class="img-fluid test-image" src="${base64Img}"></p>
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    let toolbar = document.querySelectorAll(".o-we-toolbar");
+    expect(toolbar.length).toBe(1);
+    await click(".o-we-toolbar button[name='resize_50']");
+    await animationFrame();
+    expect(queryOne("img").style.width).toBe("50%");
+    expect(".o-we-toolbar button[name='resize_50']").toHaveClass("active");
+    await click(".o-we-toolbar button[name='image_transform']");
+    await animationFrame();
+    toolbar = document.querySelectorAll(".o-we-toolbar");
+    expect(toolbar.length).toBe(0);
+    const transfoContainers = document.querySelectorAll(".transfo-container");
+    expect(transfoContainers).toHaveCount(1);
+    expect(queryOne("img").style.width).toBe("50%");
+});
+
 test("Can delete an image", async () => {
     await setupEditor(`
         <p> <img class="img-fluid test-image" src="${base64Img}"> </p>
