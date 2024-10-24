@@ -817,7 +817,7 @@ class AccountMoveLine(models.Model):
     def _compute_quantity(self):
         for line in self:
             if line.display_type == 'product':
-                line.quantity = line.quantity if line.quantity else 1
+                line.quantity = line.quantity if line.quantity is False else 1
             else:
                 line.quantity = False
 
