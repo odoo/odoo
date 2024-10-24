@@ -311,9 +311,6 @@ class configmanager:
         group.add_option('--dev', dest='dev_mode', type="string", file_exportable=False,
                          help="Enable developer mode. Param: List of options separated by comma. "
                               "Options : all, reload, qweb, xml")
-        group.add_option('--shell-interface', dest='shell_interface', type="string", file_exportable=False,
-                         help="Specify a preferred REPL to use in shell mode. Supported REPLs are: "
-                              "[ipython|ptpython|bpython|python]")
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False, file_exportable=False,
                          help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=0,
@@ -333,6 +330,17 @@ class configmanager:
                          help="Absolute path to the GeoIP City database file.")
         group.add_option("--geoip-country-db", dest="geoip_country_db", my_default='/usr/share/GeoIP/GeoLite2-Country.mmdb',
                          help="Absolute path to the GeoIP Country database file.")
+        parser.add_option_group(group)
+
+        group = optparse.OptionGroup(parser, "Shell options")
+        group.add_option(
+            '--shell-file', dest='shell_file', type="string",
+            help="Specify a python script to be run after the start of the shell. "
+                 "Overrides the env variable PYTHONSTARTUP.")
+        group.add_option(
+            '--shell-interface', dest='shell_interface', type="string",
+            help="Specify a preferred REPL to use in shell mode. "
+                 "Supported REPLs are: [ipython|ptpython|bpython|python]")
         parser.add_option_group(group)
 
         if os.name == 'posix':

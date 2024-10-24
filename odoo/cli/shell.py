@@ -37,19 +37,17 @@ _logger = logging.getLogger(__name__)
 def raise_keyboard_interrupt(*a):
     raise KeyboardInterrupt()
 
-
 class Console(code.InteractiveConsole):
-    def __init__(self, locals=None, filename="<console>"):
-        code.InteractiveConsole.__init__(self, locals, filename)
+    def __init__(self, local_vars=None, filename="<console>"):
+        code.InteractiveConsole.__init__(self, locals=local_vars, filename=filename)
         try:
             import readline
             import rlcompleter
         except ImportError:
             print('readline or rlcompleter not available, autocomplete disabled.')
         else:
-            readline.set_completer(rlcompleter.Completer(locals).complete)
+            readline.set_completer(rlcompleter.Completer(local_vars).complete)
             readline.parse_and_bind("tab: complete")
-
 
 class Shell(Command):
     """Start odoo in an interactive shell"""
@@ -78,6 +76,11 @@ class Shell(Command):
             else:
                 shells_to_try = self.supported_shells
 
+            if pythonstartup := config.options.get('shell_file') or os.environ.get('PYTHONSTARTUP'):
+                if not os.path.exists(pythonstartup):
+                    pythonstartup = None
+                os.environ['PYTHONSTARTUP'] = pythonstartup
+
             for shell in shells_to_try:
                 try:
                     return getattr(self, shell)(local_vars)
@@ -89,18 +92,23 @@ class Shell(Command):
 
     def ipython(self, local_vars):
         from IPython import start_ipython
-        start_ipython(argv=[], user_ns=local_vars)
+        start_ipython(argv=["--TerminalIPythonApp.display_banner=False"], user_ns=local_vars)
 
     def ptpython(self, local_vars):
         from ptpython.repl import embed
-        embed({}, local_vars)
+        pythonstartup = os.environ.get('PYTHONSTARTUP')
+        embed({}, local_vars, startup_paths=[pythonstartup] if pythonstartup else False)
 
     def bpython(self, local_vars):
         from bpython import embed
         embed(local_vars)
 
     def python(self, local_vars):
-        Console(locals=local_vars).interact()
+        console = Console(local_vars)
+        if pythonstartup := os.environ.get('PYTHONSTARTUP'):
+            with open(pythonstartup, encoding="utf-8") as f:
+                console.runsource(f.read(), filename=pythonstartup, symbol="exec")
+        console.interact(banner='')
 
     def shell(self, dbname):
         local_vars = {
