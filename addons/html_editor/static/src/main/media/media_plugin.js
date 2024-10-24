@@ -22,28 +22,13 @@ const getPowerboxItems = (plugin) => {
     if (!plugin.config.disableImage) {
         powerboxItems.push({
             id: "image",
-            name: _t("Image"),
-            description: _t("Insert an image"),
+            name: _t("Media"),
+            description: _t("Insert image or icon"),
+            searchKeywords: [_t("Image"), _t("Icon")],
             category: "media",
             fontawesome: "fa-file-image-o",
             async action() {
                 await plugin.openMediaDialog();
-            },
-        });
-    }
-    if (!plugin.config.disableVideo) {
-        powerboxItems.push({
-            name: _t("Video"),
-            description: _t("Insert a video"),
-            category: "media",
-            fontawesome: "fa-file-video-o",
-            action() {
-                plugin.openMediaDialog({
-                    noVideos: false,
-                    noImages: true,
-                    noIcons: true,
-                    noDocuments: true,
-                });
             },
         });
     }
