@@ -54,7 +54,7 @@ class StockRule(models.Model):
     group_id = fields.Many2one('procurement.group', 'Fixed Procurement Group')
     action = fields.Selection(
         selection=[('pull', 'Pull From'), ('push', 'Push To'), ('pull_push', 'Pull & Push')], string='Action',
-        required=True, index=True)
+        default='pull', required=True, index=True)
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company,
