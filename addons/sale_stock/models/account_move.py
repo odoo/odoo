@@ -3,13 +3,27 @@
 
 from collections import defaultdict
 
-from odoo import fields, models
+from odoo import fields, models, api
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.misc import formatLang
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
+
+    has_downpayments = fields.Boolean(help="Technical field for moves with downpayments", compute='_compute_has_downpayments')
+
+    @api.depends('invoice_line_ids', 'invoice_line_ids.sale_line_ids', 'invoice_line_ids.sale_line_ids.is_downpayment')
+    def _compute_has_downpayments(self):
+        downpayments = self.env['sale.order.line']._search([('is_downpayment', '=', True)])
+        res = self.env["account.move.line"]._read_group(
+            [("move_id", "in", self.ids), ("sale_line_ids", "in", downpayments)],
+            ["id"],
+            ["move_id"],
+        )
+        moves_with_downpayments = self.env['account.move'].browse([group['move_id'][0] for group in res])
+        moves_with_downpayments.has_downpayments = True
+        (self - moves_with_downpayments).has_downpayments = False
 
     def _stock_account_get_last_step_stock_moves(self):
         """ Overridden from stock_account.
@@ -19,7 +33,7 @@ class AccountMove(models.Model):
             if invoice.move_type not in ['out_invoice', 'out_refund']:
                 continue
             if (invoice.move_type == 'out_invoice' or (
-                invoice.move_type == 'out_refund' and any(invoice.invoice_line_ids.sale_line_ids.mapped('is_downpayment')))
+                invoice.move_type == 'out_refund' and invoice.has_downpayments)
             ):
                 rslt += invoice.mapped('invoice_line_ids.sale_line_ids.move_ids').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
             else:
@@ -125,13 +139,12 @@ class AccountMoveLine(models.Model):
         price_unit = super(AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()
 
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
-        down_payment = self.move_id.invoice_line_ids.filtered(lambda line: any(line.sale_line_ids.mapped('is_downpayment')))
         if so_line:
             is_line_reversing = False
-            if self.move_id.move_type == 'out_refund' and not down_payment:
+            if self.move_id.move_type == 'out_refund' and not self.move_id.has_downpayments:
                 is_line_reversing = True
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-            if self.move_id.move_type == 'out_refund' and down_payment:
+            if self.move_id.move_type == 'out_refund' and self.move_id.has_downpayments:
                 qty_to_invoice = -qty_to_invoice
             account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
 
