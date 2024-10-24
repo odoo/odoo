@@ -737,7 +737,7 @@ class Message(models.Model):
         # Notify front-end of messages deletion for partners having a user
         if messages_by_partner:
             self.env['bus.bus']._sendmany([
-                (partner, 'mail.message/delete', {'message_ids': messages.ids})
+                (partner, 'mail.message/delete', {'message_ids': messages.ids, 'delete_from_store': True})
                 for partner, messages in messages_by_partner.items()
             ])
 
