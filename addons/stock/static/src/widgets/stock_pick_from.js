@@ -6,7 +6,8 @@ import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2on
 
 export class StockPickFrom extends Many2OneField {
     get displayName() {
-        return super.displayName || this._quant_display_name();
+        if (!this.resId) return this._quant_display_name();
+        else return super.displayName;
     }
 
     get value() {
