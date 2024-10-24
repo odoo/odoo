@@ -442,6 +442,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         destination_move.message_post(body=Markup('<br/>\n').join(destination_messages))
         for accrual_move, messages in accrual_move_messages.items():
             accrual_move.message_post(body=Markup('<br/>\n').join(messages))
+        created_moves.adjusting_entries_origin_move_id = move.id
 
         # open the generated entries
         action = {

@@ -879,6 +879,22 @@
                                         <span class="o_stat_text">Cash Basis Entries</span>
                                     </div>
                             </button>
+                            <button name="open_adjusting_entries"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    invisible="not adjusting_entries_move_ids">
+                                    <field name="adjusting_entries_count" string="Adjusting Entries" widget="statinfo"/>
+                            </button>
+                            <button name="open_adjusting_entries_origin_move"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    invisible="not adjusting_entries_origin_move_id">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Related Invoice</span>
+                                    </div>
+                            </button>
                         </div>
 
                         <!-- Payment status for invoices / receipts -->
