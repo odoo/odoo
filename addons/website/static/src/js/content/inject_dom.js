@@ -15,6 +15,18 @@ export function unhideConditionalElements() {
     document.head.appendChild(styleEl);
     const conditionalEls = document.querySelectorAll('[data-visibility="conditional"]');
     for (const conditionalEl of conditionalEls) {
+        // For mega menu block, add conditional visibility to the navbar link
+        if (conditionalEl.classList.contains("s_mega_menu_odoo_menu")) {
+            const megaMenuDesktopEl = conditionalEl.closest("li[role='presentation']");
+            const megaMenuDesktopEls = megaMenuDesktopEl.parentElement.querySelectorAll(":scope > li[role='presentation'].dropdown");
+            const index = Array.from(megaMenuDesktopEls).indexOf(megaMenuDesktopEl);
+            const navDesktopEl = conditionalEl.closest("nav");
+            const navMobileEl = navDesktopEl.parentElement.querySelector('.o_header_mobile');
+            const megaMenuMobileEls = navMobileEl.querySelectorAll("li[role='presentation'].dropdown");
+            const megaMenuMobileEl = megaMenuMobileEls[index];
+            megaMenuDesktopEl.setAttribute('data-visibility-id', conditionalEl.getAttribute('data-visibility-id'));
+            megaMenuMobileEl.setAttribute('data-visibility-id', conditionalEl.getAttribute('data-visibility-id'));
+        }
         const selectors = conditionalEl.dataset.visibilitySelectors;
         styleEl.sheet.insertRule(`${selectors} { display: none !important; }`);
     }
