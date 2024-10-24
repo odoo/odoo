@@ -761,6 +761,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         order = self.env['pos.order'].search([])
         self.assertEqual(len(order), 1)
         self.assertEqual(order.crm_team_id, sale_team)
+        # Frontend is not sending crm_team_id, we simulate it to make sure we keep crm_team_id set
+        order.write({"crm_team_id": False})
+        self.assertEqual(order.crm_team_id, sale_team)
 
     def test_show_orders_for_pos_currency_only(self):
         currency = self.env['res.currency'].create({

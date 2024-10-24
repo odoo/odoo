@@ -270,3 +270,16 @@ registry.category("web_tour.tours").add("CategLabelCheck", {
             ProductScreen.OrderButtonNotContain("Drinks"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CrmTeamTour", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.back(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.back(),
+        ].flat(),
+});
