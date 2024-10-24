@@ -1212,8 +1212,11 @@ class HrExpenseSheet(models.Model):
         if any(sheet.state != 'approve' for sheet in self):
             raise UserError(_("You can only generate accounting entry for approved expense(s)."))
 
-        if any(not sheet.journal_id for sheet in self):
+        if any(not sheet.journal_id for sheet in self if sheet.payment_mode == 'own_account'):
             raise UserError(_("Specify expense journal to generate accounting entries."))
+
+        if any(not sheet.bank_journal_id for sheet in self if sheet.payment_mode == 'company_account'):
+            raise UserError(_("Please specify a bank journal in order to generate accounting entries."))
 
         if not self.employee_id.sudo().address_home_id:
             raise UserError(_("The private address of the employee is required to post the expense report. Please add it on the employee form."))
