@@ -31,10 +31,10 @@ tour.register('sale_product_configurator_optional_products_tour', {
 }, {
     trigger: 'tr:has(.td-product_name:contains("Conference Chair")) .fa-minus'
 }, {
-    trigger: 'tr:has(.td-product_name:contains("Chair floor protection")) .js_add',
+    trigger: 'tr:has(.td-product_name:contains("Chair floor protection")) .fa-plus',
 }, {
     content: 'Is below its parent 2',
-    trigger: 'tr:has(.td-product_name:contains("Conference Chair")) + tr:has(.td-product_name:contains("Chair floor protection"))'
+    trigger: 'tr:has(.td-product_name:contains("Conference Chair"))'
 }, {
     trigger: 'button span:contains(Confirm)',
     extra_trigger: '.oe_advanced_configurator_modal',
@@ -54,11 +54,7 @@ tour.register('sale_product_configurator_optional_products_tour', {
     extra_trigger: 'div[name="order_line"]',
     run: function () {}, // check added product
 }, {
-    trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")):nth(0) td.o_data_cell:contains("1.0")',
-    extra_trigger: 'div[name="order_line"]',
-    run: function () {}, // check added product
-}, {
-    trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")):nth(1) td.o_data_cell:contains("1.0")',
+    trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")):nth(0) td.o_data_cell:contains("2.0")',
     extra_trigger: 'div[name="order_line"]',
     run: function () {}, // check added product
 }, ...tour.stepUtils.discardForm()
