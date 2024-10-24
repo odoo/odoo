@@ -33,6 +33,7 @@ class Crawler(HttpCaseWithUserDemo):
             'social_github': 'https://github.com/odoo',
             'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
             'social_tiktok': 'https://www.tiktok.com/@odoo',
+            'social_snapchat': 'https://www.snapchat.com',
         })
 
         if hasattr(self.env['res.partner'], 'grade_id'):
