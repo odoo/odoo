@@ -8,9 +8,18 @@ from odoo.osv.expression import AND
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    # TODO in master, remove this field and use purchase_ids instead
     purchase_id = fields.Many2one(
         'purchase.order', related='move_ids.purchase_line_id.order_id',
+        string="Purchase Order", readonly=True)
+    # deprecating the field "purchase_id"
+    purchase_ids = fields.Many2many(
+        'purchase.order', compute='_compute_purchase_ids', relation='purchase_order_stock_picking_rel', store=True,
         string="Purchase Orders", readonly=True)
+
+    @api.depends('move_ids')
+    def _compute_purchase_ids(self):
+        self.purchase_ids = self.move_ids.purchase_line_id.order_id
 
 
 class StockWarehouse(models.Model):
