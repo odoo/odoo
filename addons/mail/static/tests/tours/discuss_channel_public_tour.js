@@ -150,12 +150,10 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Add one more file in composer",
-            trigger: ".o-mail-Message .o-mail-Composer button[aria-label='Attach files']",
+            trigger: ".o-mail-Message button[aria-label='Attach files']",
             async run() {
                 const extratxt = new File(["hello 2"], "extra.txt", { type: "text/plain" });
-                await inputFiles(".o-mail-Message .o-mail-Composer-coreMain .o_input_file", [
-                    extratxt,
-                ]);
+                await inputFiles(".o-mail-Message .o_input_file", [extratxt]);
             },
         },
         {

@@ -37,10 +37,6 @@
 }
 
 .o-mail-Composer-actions {
-    &.o-extended {
-        margin-left: map-get($spacers, 2) + map-get($spacers, 1);
-        margin-right: map-get($spacers, 2) + map-get($spacers, 1);
-    }
 
     button {
         opacity: 75%;
@@ -48,6 +44,10 @@
             &:hover {
                 background-color: $gray-200;
                 opacity: 100%;
+
+                .o-mail-Message.o-editing & {
+                    background-color: rgba(0, 0, 0, 0.05);
+                }
             }
         }
         &:disabled {
@@ -56,6 +56,10 @@
             opacity: var(--btn-disabled-opacity);
         }
     }
+}
+
+.o-mail-Composer-quickActions .o-mail-Composer-mainActions {
+    margin-top: map-get($spacers, 2) - map-get($spacers, 1) / 2;
 }
 
 .o-mail-Composer-bg {
