@@ -1569,7 +1569,7 @@ class BaseModel(metaclass=MetaModel):
             xid = record.get('id', False)
             # dbid
             dbid = False
-            if '.id' in record:
+            if record.get('.id'):
                 try:
                     dbid = int(record['.id'])
                 except ValueError:
