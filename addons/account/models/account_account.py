@@ -1100,13 +1100,13 @@ class AccountAccount(models.Model):
                 "You do not have the right to perform this operation as you do not have access to the following companies: %s.",
                 ", ".join(c.name for c in forbidden_companies)
             ))
-
-        if any(len(a.company_ids) == 1 for a in self):
-            raise UserError(_(
-                "Account %s cannot be unmerged as it already belongs to a single company. "
-                "The unmerge operation only splits an account based on its companies.",
-                self.display_name,
-            ))
+        for account in self:
+            if len(account.company_ids) == 1:
+                raise UserError(_(
+                    "Account %s cannot be unmerged as it already belongs to a single company. "
+                    "The unmerge operation only splits an account based on its companies.",
+                    account.display_name,
+                ))
 
     def _action_unmerge_get_user_confirmation(self):
         """ Open a RedirectWarning asking the user whether to proceed with the merge. """
