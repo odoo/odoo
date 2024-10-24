@@ -395,7 +395,8 @@
                            filter_domain="['|', '|', ('employee_id', 'ilike', self), ('name', 'ilike', self), ('product_id', 'ilike', self)]"/>
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <filter string="My Expenses" name="my_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
+                    <filter string="My Open Expenses" name="my_open_expenses" domain="[('employee_id.user_id', '=', uid), ('state', 'not in', ('done', 'refused'))]"/>
+                    <filter string="My Closed Expenses" name="my_closed_expenses" domain="[('employee_id.user_id', '=', uid), ('state', 'in', ('done', 'refused'))]"/>
                     <filter string="My Team" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]"
                             groups="hr_expense.group_hr_expense_team_approver" help="Expenses of Your Team Member"/>
                     <separator />
@@ -491,7 +492,7 @@
             <field name="res_model">hr.expense</field>
             <field name="view_mode">list,kanban,form,graph,pivot,activity</field>
             <field name="search_view_id" ref="hr_expense_view_search"/>
-            <field name="context">{'search_default_my_expenses': 1}</field>
+            <field name="context">{'search_default_my_open_expenses': 1}</field>
             <field name="help" type="html">
                 <div class="o_view_nocontent_expense_receipt o_view_pink_overlay">
                     <p class="o_view_nocontent_expense_receipt_image"/>
