@@ -268,7 +268,7 @@ class WebsiteForm(http.Controller):
 
         authenticate_message = False
         email_field_name = request.env[model_name]._mail_get_primary_email_field()
-        if email_field_name and hasattr(record, '_message_log'):
+        if email_field_name and hasattr(record, '_message_log') and email_field_name in values:
             warning_icon = ""
             if request.session.uid:
                 user_email = request.env.user.email
