@@ -222,7 +222,8 @@ export class FormOptionPlugin extends Plugin {
         on_snippet_out_dropzone_handlers: ({ dragState }) =>
             this.clearEmptyWrappersAfterDrag(dragState),
         on_cloned_handlers: this.onCloned.bind(this),
-        is_unremovable_selectors: ".s_website_form_send, .s_website_form_submit",
+        is_unremovable_selectors:
+            ".s_website_form_send, .s_website_form_submit, .s_website_form_field:has(#confirm_password)",
         properties: { predicate: ".s_website_form_send", immutableLink: true },
         normalize_processors: this.normalizeFieldName.bind(this),
     };
