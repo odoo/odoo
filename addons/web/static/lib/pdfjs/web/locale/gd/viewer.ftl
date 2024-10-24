@@ -45,12 +45,6 @@ pdfjs-save-button-label = Sàbhail
 pdfjs-bookmark-button =
     .title = An duilleag làithreach (Seall an URL on duilleag làithreach)
 pdfjs-bookmark-button-label = An duilleag làithreach
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Fosgail san aplacaid
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Fosgail san aplacaid
 
 ##  Secondary toolbar and context menu
 
@@ -277,6 +271,12 @@ pdfjs-editor-free-text-button-label = Teacsa
 pdfjs-editor-ink-button =
     .title = Tarraing
 pdfjs-editor-ink-button-label = Tarraing
+
+## Remove button for the various kind of editor.
+
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = Dath
 pdfjs-editor-free-text-size-input = Meud
@@ -296,4 +296,18 @@ pdfjs-ink-canvas =
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
+
+
+## Color picker
+
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+
+## Image alt-text settings
 

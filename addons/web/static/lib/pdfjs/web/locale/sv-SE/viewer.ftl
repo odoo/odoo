@@ -51,12 +51,6 @@ pdfjs-download-button-label = Hämta
 pdfjs-bookmark-button =
     .title = Aktuell sida (Visa URL från aktuell sida)
 pdfjs-bookmark-button-label = Aktuell sida
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Öppna i app
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Öppna i app
 
 ##  Secondary toolbar and context menu
 
@@ -111,6 +105,14 @@ pdfjs-document-properties-button-label = Dokumentegenskaper…
 pdfjs-document-properties-file-name = Filnamn:
 pdfjs-document-properties-file-size = Filstorlek:
 # Variables:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } kB ({ $b } byte)
+# Variables:
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } byte)
+# Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-kb = { $size_kb } kB ({ $size_b } byte)
@@ -124,6 +126,9 @@ pdfjs-document-properties-subject = Ämne:
 pdfjs-document-properties-keywords = Nyckelord:
 pdfjs-document-properties-creation-date = Skapades:
 pdfjs-document-properties-modification-date = Ändrades:
+# Variables:
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -281,6 +286,9 @@ pdfjs-annotation-date-string = { $date } { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type }-annotering]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -304,8 +312,6 @@ pdfjs-editor-stamp-button-label = Lägg till eller redigera bilder
 pdfjs-editor-highlight-button =
     .title = Markera
 pdfjs-editor-highlight-button-label = Markera
-pdfjs-highlight-floating-button =
-    .title = Markera
 pdfjs-highlight-floating-button1 =
     .title = Markera
     .aria-label = Markera
@@ -374,6 +380,22 @@ pdfjs-editor-resizer-label-bottom-right = Nedre högra hörnet — ändra storle
 pdfjs-editor-resizer-label-bottom-middle = Nedre mitten — ändra storlek
 pdfjs-editor-resizer-label-bottom-left = Nedre vänstra hörnet — ändra storlek
 pdfjs-editor-resizer-label-middle-left = Mitten till vänster — ändra storlek
+pdfjs-editor-resizer-top-left =
+    .aria-label = Det övre vänstra hörnet — ändra storlek
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Överst i mitten — ändra storlek
+pdfjs-editor-resizer-top-right =
+    .aria-label = Det övre högra hörnet — ändra storlek
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Mitten höger — ändra storlek
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Nedre högra hörnet — ändra storlek
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Nedre mitten — ändra storlek
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Nedre vänstra hörnet — ändra storlek
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Mitten till vänster — ändra storlek
 
 ## Color picker
 
@@ -400,3 +422,60 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = Visa alla
 pdfjs-editor-highlight-show-all-button =
     .title = Visa alla
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Redigera alternativ text (bildbeskrivning)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Lägg till alternativ text (bildbeskrivning)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Skriv din beskrivning här…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = Kort beskrivning för personer som inte kan se bilden eller när bilden inte laddas.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = Denna alternativa text skapades automatiskt och kan vara felaktig.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Läs mer
+pdfjs-editor-new-alt-text-create-automatically-button-label = Skapa alternativ text automatiskt
+pdfjs-editor-new-alt-text-not-now-button = Inte nu
+pdfjs-editor-new-alt-text-error-title = Det gick inte att skapa alternativ text automatiskt
+pdfjs-editor-new-alt-text-error-description = Skriv din egna alternativa text eller försök igen senare.
+pdfjs-editor-new-alt-text-error-close-button = Stäng
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+#   $percent (Number) - the percentage of the downloaded size.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Hämtar AI-modell med alternativ text ({ $downloadedSize } av { $totalSize } MB)
+    .aria-valuetext = Hämtar AI-modell med alternativ text ({ $downloadedSize } av { $totalSize } MB)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button-label = Alternativ text tillagd
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = Saknar alternativ text
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = Granska alternativ text
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Skapas automatiskt: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = Alternativ textinställningar för bild
+pdfjs-image-alt-text-settings-button-label = Alternativ textinställningar för bild
+pdfjs-editor-alt-text-settings-dialog-label = Alternativ textinställningar för bild
+pdfjs-editor-alt-text-settings-automatic-title = Automatisk alternativ text
+pdfjs-editor-alt-text-settings-create-model-button-label = Skapa alternativ text automatiskt
+pdfjs-editor-alt-text-settings-create-model-description = Föreslår beskrivningar för att hjälpa personer som inte kan se bilden eller när bilden inte laddas.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = AI-modell för alternativ text ({ $totalSize } MB)
+pdfjs-editor-alt-text-settings-ai-model-description = Körs lokalt på din enhet så att din data förblir privat. Krävs för automatisk alternativ text.
+pdfjs-editor-alt-text-settings-delete-model-button = Ta bort
+pdfjs-editor-alt-text-settings-download-model-button = Hämta
+pdfjs-editor-alt-text-settings-downloading-model-button = Hämtar…
+pdfjs-editor-alt-text-settings-editor-title = Alternativ textredigerare
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Visa alternativ textredigerare direkt när du lägger till en bild
+pdfjs-editor-alt-text-settings-show-dialog-description = Hjälper dig att se till att alla dina bilder har alternativ text.
+pdfjs-editor-alt-text-settings-close-button = Stäng

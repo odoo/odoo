@@ -21,7 +21,7 @@ export function hidePDFJSButtons(rootElement) {
     cssStyle.textContent = `button#secondaryOpenFile.secondaryToolbarButton, button#openFile.toolbarButton,
     button#editorFreeText.toolbarButton, button#editorInk.toolbarButton, button#editorStamp.toolbarButton,
     button#secondaryOpenFile.secondaryToolbarButton,
-a#secondaryViewBookmark.secondaryToolbarButton, a#viewBookmark.toolbarButton {
+a#secondaryViewBookmark.secondaryToolbarButton, a#viewBookmark.toolbarButton, #editorModeButtons {
 display: none !important;
 }`;
     if (isMobileOS()) {

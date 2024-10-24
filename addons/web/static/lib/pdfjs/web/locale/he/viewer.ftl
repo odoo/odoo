@@ -51,12 +51,6 @@ pdfjs-download-button-label = הורדה
 pdfjs-bookmark-button =
     .title = עמוד נוכחי (הצגת כתובת האתר מהעמוד הנוכחי)
 pdfjs-bookmark-button-label = עמוד נוכחי
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = פתיחה ביישום
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = פתיחה ביישום
 
 ##  Secondary toolbar and context menu
 
@@ -111,6 +105,14 @@ pdfjs-document-properties-button-label = מאפייני מסמך…
 pdfjs-document-properties-file-name = שם קובץ:
 pdfjs-document-properties-file-size = גודל הקובץ:
 # Variables:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } ק״ב ({ $b } בתים)
+# Variables:
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } מ״ב ({ $b } בתים)
+# Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-kb = { $size_kb } ק״ב ({ $size_b } בתים)
@@ -124,6 +126,9 @@ pdfjs-document-properties-subject = נושא:
 pdfjs-document-properties-keywords = מילות מפתח:
 pdfjs-document-properties-creation-date = תאריך יצירה:
 pdfjs-document-properties-modification-date = תאריך שינוי:
+# Variables:
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -281,6 +286,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [הערת { $type }]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -304,8 +312,6 @@ pdfjs-editor-stamp-button-label = הוספה או עריכת תמונות
 pdfjs-editor-highlight-button =
     .title = סימון
 pdfjs-editor-highlight-button-label = סימון
-pdfjs-highlight-floating-button =
-    .title = סימון
 pdfjs-highlight-floating-button1 =
     .title = סימון
     .aria-label = סימון
@@ -374,6 +380,22 @@ pdfjs-editor-resizer-label-bottom-right = פינה ימנית תחתונה - ש�
 pdfjs-editor-resizer-label-bottom-middle = למטה באמצע - שינוי גודל
 pdfjs-editor-resizer-label-bottom-left = פינה שמאלית תחתונה - שינוי גודל
 pdfjs-editor-resizer-label-middle-left = שמאלה באמצע - שינוי גודל
+pdfjs-editor-resizer-top-left =
+    .aria-label = פינה שמאלית עליונה - שינוי גודל
+pdfjs-editor-resizer-top-middle =
+    .aria-label = למעלה באמצע - שינוי גודל
+pdfjs-editor-resizer-top-right =
+    .aria-label = פינה ימנית עליונה - שינוי גודל
+pdfjs-editor-resizer-middle-right =
+    .aria-label = ימינה באמצע - שינוי גודל
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = פינה ימנית תחתונה - שינוי גודל
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = למטה באמצע - שינוי גודל
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = פינה שמאלית תחתונה - שינוי גודל
+pdfjs-editor-resizer-middle-left =
+    .aria-label = שמאלה באמצע - שינוי גודל
 
 ## Color picker
 
@@ -400,3 +422,60 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = הצגת הכול
 pdfjs-editor-highlight-show-all-button =
     .title = הצגת הכול
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = עריכת טקסט חלופי (תיאור תמונה)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = הוספת טקסט חלופי (תיאור תמונה)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = נא לכתוב את התיאור שלך כאן…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = תיאור קצר לאנשים שאינם יכולים לראות את התמונה או כאשר התמונה אינה נטענת.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = טקסט חלופי זה נוצר באופן אוטומטי ועשוי להיות לא מדויק.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = מידע נוסף
+pdfjs-editor-new-alt-text-create-automatically-button-label = יצירת טקסט חלופי באופן אוטומטי
+pdfjs-editor-new-alt-text-not-now-button = לא כעת
+pdfjs-editor-new-alt-text-error-title = לא ניתן היה ליצור טקסט חלופי באופן אוטומטי
+pdfjs-editor-new-alt-text-error-description = נא לכתוב טקסט חלופי משלך או לנסות שוב מאוחר יותר.
+pdfjs-editor-new-alt-text-error-close-button = סגירה
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+#   $percent (Number) - the percentage of the downloaded size.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = בתהליך הורדת מודל AI של טקסט חלופי ({ $downloadedSize } מתוך { $totalSize } מ״ב)
+    .aria-valuetext = בתהליך הורדת מודל AI של טקסט חלופי ({ $downloadedSize } מתוך { $totalSize } מ״ב)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button-label = טקסט חלופי נוסף
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = חסר טקסט חלופי
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = סקירת טקסט חלופי
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = נוצר באופן אוטומטי: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = הגדרות טקסט חלופי של תמונה
+pdfjs-image-alt-text-settings-button-label = הגדרות טקסט חלופי של תמונה
+pdfjs-editor-alt-text-settings-dialog-label = הגדרות טקסט חלופי של תמונה
+pdfjs-editor-alt-text-settings-automatic-title = טקסט חלופי אוטומטי
+pdfjs-editor-alt-text-settings-create-model-button-label = יצירת טקסט חלופי באופן אוטומטי
+pdfjs-editor-alt-text-settings-create-model-description = הצעת תיאורים כדי לסייע לאנשים שאינם יכולים לראות את התמונה או כאשר התמונה אינה נטענת.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = מודל AI לטקסט חלופי ({ $totalSize } מ״ב)
+pdfjs-editor-alt-text-settings-ai-model-description = פועל באופן מקומי במכשיר שלך כך שהנתונים שלך נשארים פרטיים. נדרש עבור טקסט חלופי אוטומטי.
+pdfjs-editor-alt-text-settings-delete-model-button = מחיקה
+pdfjs-editor-alt-text-settings-download-model-button = הורדה
+pdfjs-editor-alt-text-settings-downloading-model-button = בהורדה…
+pdfjs-editor-alt-text-settings-editor-title = עורך טקסט חלופי
+pdfjs-editor-alt-text-settings-show-dialog-button-label = הצגת עורך טקסט חלופי מיד בעת הוספת תמונה
+pdfjs-editor-alt-text-settings-show-dialog-description = מסייע לך לוודא שלכל התמונות שלך יש טקסט חלופי.
+pdfjs-editor-alt-text-settings-close-button = סגירה

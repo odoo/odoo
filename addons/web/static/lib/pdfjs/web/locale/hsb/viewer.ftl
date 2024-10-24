@@ -51,12 +51,6 @@ pdfjs-download-button-label = Sćahnyć
 pdfjs-bookmark-button =
     .title = Aktualna strona (URL z aktualneje strony pokazać)
 pdfjs-bookmark-button-label = Aktualna strona
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = W nałoženju wočinić
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = W nałoženju wočinić
 
 ##  Secondary toolbar and context menu
 
@@ -111,6 +105,14 @@ pdfjs-document-properties-button-label = Dokumentowe kajkosće…
 pdfjs-document-properties-file-name = Mjeno dataje:
 pdfjs-document-properties-file-size = Wulkosć dataje:
 # Variables:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } bajtow)
+# Variables:
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bajtow)
+# Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bajtow)
@@ -124,6 +126,9 @@ pdfjs-document-properties-subject = Předmjet:
 pdfjs-document-properties-keywords = Klučowe słowa:
 pdfjs-document-properties-creation-date = Datum wutworjenja:
 pdfjs-document-properties-modification-date = Datum změny:
+# Variables:
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -285,6 +290,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Typ přispomnjenki: { $type }]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -308,8 +316,6 @@ pdfjs-editor-stamp-button-label = Wobrazy přidać abo wobdźěłać
 pdfjs-editor-highlight-button =
     .title = Wuzběhnyć
 pdfjs-editor-highlight-button-label = Wuzběhnyć
-pdfjs-highlight-floating-button =
-    .title = Wuzběhnyć
 pdfjs-highlight-floating-button1 =
     .title = Wuzběhnjenje
     .aria-label = Wuzběhnjenje
@@ -378,6 +384,22 @@ pdfjs-editor-resizer-label-bottom-right = Deleka naprawo – wulkosć změnić
 pdfjs-editor-resizer-label-bottom-middle = Deleka wosrjedź – wulkosć změnić
 pdfjs-editor-resizer-label-bottom-left = Deleka nalěwo – wulkosć změnić
 pdfjs-editor-resizer-label-middle-left = Wosrjedź nalěwo – wulkosć změnić
+pdfjs-editor-resizer-top-left =
+    .aria-label = Horjeka nalěwo – wulkosć změnić
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Horjeka wosrjedź – wulkosć změnić
+pdfjs-editor-resizer-top-right =
+    .aria-label = Horjeka naprawo – wulkosć změnić
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Wosrjedź naprawo – wulkosć změnić
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Deleka naprawo – wulkosć změnić
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Deleka wosrjedź – wulkosć změnić
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Deleka nalěwo – wulkosć změnić
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Wosrjedź nalěwo – wulkosć změnić
 
 ## Color picker
 
@@ -404,3 +426,60 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = Wšě pokazać
 pdfjs-editor-highlight-show-all-button =
     .title = Wšě pokazać
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Alternatiwny tekst wobdźěłać (wobrazowe wopisanje)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Alternatiwny tekst přidać (wobrazowe wopisanje)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Pisajće tu swoje wopisanje…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = Krótke wopisanje za ludźi, kotřiž njemóžeće wobraz widźeć abo hdyž so wobraz njezačita.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = Tutón alternatiwny tekst je so awtomatisce wutworił a je snano njedokładny.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Dalše informacije
+pdfjs-editor-new-alt-text-create-automatically-button-label = Alternatiwny tekst awtomatisce wutworić
+pdfjs-editor-new-alt-text-not-now-button = Nic nětko
+pdfjs-editor-new-alt-text-error-title = Alternatiwny tekst njeda so awtomatisce wutworić
+pdfjs-editor-new-alt-text-error-description = Prošu pisajće swój alternatiwny tekst abo spytajće pozdźišo hišće raz.
+pdfjs-editor-new-alt-text-error-close-button = Začinić
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+#   $percent (Number) - the percentage of the downloaded size.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Model KI za alternatiwny tekst so sćahuje ({ $downloadedSize } z { $totalSize } MB)
+    .aria-valuetext = Model KI za alternatiwny tekst so sćahuje ({ $downloadedSize } z { $totalSize } MB)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button-label = Alternatiwny tekst je so přidał
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = Alternatiwny tekst faluje
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = Alternatiwny tekst přepruwować
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Awtomatisce wutworjeny: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = Nastajenja alternatiwneho wobrazoweho teksta
+pdfjs-image-alt-text-settings-button-label = Nastajenja alternatiwneho wobrazoweho teksta
+pdfjs-editor-alt-text-settings-dialog-label = Nastajenja alternatiwneho wobrazoweho teksta
+pdfjs-editor-alt-text-settings-automatic-title = Awtomatiski alternatiwny tekst
+pdfjs-editor-alt-text-settings-create-model-button-label = Alternatiwny tekst awtomatisce wutworić
+pdfjs-editor-alt-text-settings-create-model-description = Namjetuje wopisanja, zo by ludźom pomhał, kotřiž njemóžeće wobraz widźeć abo hdyž so wobraz njezačita.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = Model KI alternatiwneho teksta ({ $totalSize } MB)
+pdfjs-editor-alt-text-settings-ai-model-description = Běži lokalnje na wašim graće, zo bychu waše daty priwatne wostali. Za awtomatiski alternatiwny tekst trěbny.
+pdfjs-editor-alt-text-settings-delete-model-button = Zhašeć
+pdfjs-editor-alt-text-settings-download-model-button = Sćahnyć
+pdfjs-editor-alt-text-settings-downloading-model-button = Sćahuje so…
+pdfjs-editor-alt-text-settings-editor-title = Editor za alternatiwny tekst
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Editor alternatiwneho teksta hnydom pokazać, hdyž so wobraz přidawa
+pdfjs-editor-alt-text-settings-show-dialog-description = Pomha, wam wšěm swojim wobrazam alternatiwny tekst přidać.
+pdfjs-editor-alt-text-settings-close-button = Začinić
