@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form_razorpay_oauth" model="ir.ui.view">
+        <field name="name">Razorpay Provider Oauth Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment_razorpay.payment_provider_form_razorpay"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="before">
+                <div class="text-muted my-4" invisible="not razorpay_account_id">
+                    This provider is linked with your Razorpay account.
+                </div>
+            </group>
+            <field name="razorpay_key_id" position="before">
+                <label for="razorpay_account_id" groups="base.group_no_one"/>
+                <div class="o_row" groups="base.group_no_one">
+                    <field name="razorpay_account_id" readonly="True"/>
+                    <button
+                        string="Reset your Razorpay account"
+                        name="action_razorpay_revoked_token"
+                        type="object"
+                        class="btn-link"
+                        confirm="Are you sure you want to disconnect?"
+                        invisible="not razorpay_account_id"
+                        readonly="True"
+                    />
+                </div>
+            </field>
+            <field name="razorpay_key_id" position="attributes">
+                <attribute name="required">False</attribute>
+                <attribute name="groups">base.group_no_one</attribute>
+            </field>
+            <field name="razorpay_key_secret" position="attributes">
+                <attribute name="required">razorpay_key_id</attribute>
+                <attribute name="groups">base.group_no_one</attribute>
+            </field>
+            <field name="razorpay_webhook_secret" position="replace">
+                <label for="razorpay_webhook_secret" groups="base.group_no_one"/>
+                <div class="o_row" groups="base.group_no_one">
+                    <field
+                        string="Webhook Secret"
+                        name="razorpay_webhook_secret"
+                        password="True"
+                    />
+                    <button
+                        string="Generate your webhook"
+                        name="action_razorpay_create_webhook"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not razorpay_account_id or razorpay_webhook_secret"
+                    />
+                </div>
+            </field>
+            <group name="provider_credentials" position="after">
+                <field name="razorpay_key_id" invisible="1"/>
+                <field name="razorpay_account_id" invisible="1"/>
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="code != 'razorpay' or not razorpay_key_id or razorpay_account_id"
+                >
+                    You are using Old method key and secret suggested to change to Oauth By click on Connect.
+                </div>
+                <div invisible="code != 'razorpay' or razorpay_account_id">
+                    <button
+                        string="Connect"
+                        name="action_razorpay_redirect_to_oauth_url"
+                        type="object"
+                        class="btn-primary"
+                    />
+                </div>
+            </group>
+        </field>
+    </record>
+
+</odoo>

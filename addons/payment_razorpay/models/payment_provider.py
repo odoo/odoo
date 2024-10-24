@@ -27,16 +27,19 @@ class PaymentProvider(models.Model):
         string="Razorpay Key Id",
         help="The key solely used to identify the account with Razorpay.",
         required_if_provider='razorpay',
+        copy=False,
     )
     razorpay_key_secret = fields.Char(
         string="Razorpay Key Secret",
         required_if_provider='razorpay',
         groups='base.group_system',
+        copy=False,
     )
     razorpay_webhook_secret = fields.Char(
         string="Razorpay Webhook Secret",
         required_if_provider='razorpay',
         groups='base.group_system',
+        copy=False,
     )
 
     #=== COMPUTE METHODS ===#
@@ -75,13 +78,34 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        url = url_join('https://api.razorpay.com/v1/', endpoint)
-        auth = (self.razorpay_key_id, self.razorpay_key_secret)
+        api_version = self.env.context.get('razorpay_api_version', 'v1')
+        url = url_join(f'https://api.razorpay.com/{api_version}/', endpoint)
+        auth = None
+        if self.razorpay_key_id:
+            auth = (self.razorpay_key_id, self.razorpay_key_secret)
+
+        razorpay_access_token = self._razorpay_get_access_token()
+        headers = None
+        if razorpay_access_token:
+            headers = {'Authorization': f'Bearer {razorpay_access_token}'}
+
         try:
             if method == 'GET':
-                response = requests.get(url, params=payload, auth=auth, timeout=10)
+                response = requests.get(
+                    url,
+                    params=payload,
+                    headers=headers,
+                    auth=auth,
+                    timeout=10,
+                )
             else:
-                response = requests.post(url, json=payload, auth=auth, timeout=10)
+                response = requests.post(
+                    url,
+                    json=payload,
+                    headers=headers,
+                    auth=auth,
+                    timeout=10,
+                )
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError:
@@ -127,6 +151,14 @@ class PaymentProvider(models.Model):
         if self.code != 'razorpay':
             return default_codes
         return const.DEFAULT_PAYMENT_METHODS_CODES
+
+    def _razorpay_get_access_token(self):
+        self.ensure_one()
+        return False
+
+    def _razorpay_get_public_token(self):
+        self.ensure_one()
+        return False
 
     def _get_validation_amount(self):
         """ Override of `payment` to return the amount for Razorpay validation operations.

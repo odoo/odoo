@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="razorpay_redirect_error_template" name="Authorization Error">
+        <!-- Variables description:
+            - 'error_message' - The reason of the error.
+            - 'redirect_url' - The URL to the Razorpay account.
+        -->
+        <div class="wrap">
+            <div class="container">
+                <h1>An error occurred</h1>
+                <p>An error occurred while linking your Razorpay account with Odoo.</p>
+                <p><t t-out="error_message"/></p>
+                <a t-att-href="redirect_url" class="btn btn-primary mt-2">
+                    Back to Razorpay provider
+                </a>
+            </div>
+        </div>
+    </template>
+
+</odoo>
