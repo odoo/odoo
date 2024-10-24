@@ -154,9 +154,7 @@ const FormEditor = options.Class.extend({
      * @returns {HTMLElement}
      */
     _renderField: function (field, resetId = false) {
-        if (!field.id) {
-            field.id = generateHTMLId();
-        }
+        field.id = generateHTMLId();
         const template = document.createElement('template');
         template.innerHTML = qweb.render("website.form_field_" + field.type, {field: field}).trim();
         if (field.description && field.description !== true) {

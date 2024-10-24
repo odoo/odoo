@@ -141,6 +141,29 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
             run: 'drag_and_drop iframe #wrap',
         }, {
+            content: "Check if first from snippet is dropped",
+            trigger: "iframe .s_website_form_field",
+            run: () => {}, // it's a check,
+        }, {
+            content: "Drop one more form snippet",
+            trigger: "#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail:first",
+            run: "drag_and_drop iframe #wrap",
+        }, {
+            content: "Check if the second from snippet is dropped",
+            trigger: "iframe .s_website_form:first-of-type .s_website_form_field",
+            run: () => {}, // it's a check,
+        }, {
+            content: "Check that the first field of both the form snippets has different IDs",
+            trigger: "iframe section.s_website_form:first-of-type input[name='name']",
+            run: () => {
+                const iframeDoc = document.querySelector("iframe").contentDocument;
+                const firstFieldForm1 = iframeDoc.querySelector("section.s_website_form:first-of-type input[name='name']");
+                const firstFieldForm2 = iframeDoc.querySelector("section.s_website_form:nth-of-type(2) input[name='name']");
+                if (firstFieldForm1.id === firstFieldForm2.id) {
+                    console.error("The first fields of both form snippets have the same ID");
+                }
+            },
+        }, {
             content: "Select form by clicking on an input field",
             extra_trigger: 'iframe .s_website_form_field',
             trigger: 'iframe section.s_website_form input',
