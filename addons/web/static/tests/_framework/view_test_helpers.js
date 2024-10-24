@@ -138,14 +138,14 @@ export async function clickFieldDropdown(fieldName, options) {
  * @param {SelectorOptions} [options]
  */
 export async function clickFieldDropdownItem(fieldName, itemContent, options) {
-    if (getMockEnv().isSmall) {
-        await contains(`.o_kanban_record:contains('${itemContent}')`).click();
-        return;
-    }
     const dropdowns = queryAll(
         buildSelector(`[name='${fieldName}'] .dropdown .dropdown-menu`, options)
     );
     if (dropdowns.length === 0) {
+        if (getMockEnv().isSmall) {
+            await contains(`.o_kanban_record:contains('${itemContent}')`).click();
+            return;
+        }
         throw new Error(`No dropdown found for field ${fieldName}`);
     } else if (dropdowns.length > 1) {
         throw new Error(`Found ${dropdowns.length} dropdowns for field ${fieldName}`);
