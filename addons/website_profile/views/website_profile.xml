@@ -6,10 +6,10 @@
             <div class="container">
                 <div class="row align-items-center justify-content-between">
                     <!-- Desktop Mode -->
-                    <nav aria-label="breadcrumb" class="col d-none d-md-flex">
+                    <nav aria-label="breadcrumb" class="col d-none d-md-flex o_wprofile_user_profile_sub_nav_desktop_nav">
                         <ol class="breadcrumb bg-transparent mb-0 ps-0 py-0">
                             <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
-                                <a href="/profile/users">Users</a>
+                                <a t-attf-href="/profile/users?{{ keep_query() }}">Users</a>
                             </li>
                             <li t-if="view_user" class="breadcrumb-item active">
                                 <a><t t-esc="view_user"/></a>

@@ -37,6 +37,15 @@ class WebsiteSlides(WebsiteProfile):
         'date': 'create_date desc',
     }
 
+    @staticmethod
+    def _query_url_keep_bool(path='', path_args=None, **args):
+        """ Same as QueryURL but keep boolean parameter even if their value are False. """
+        query_url = QueryURL(path=path, path_args=path_args, **args)
+        return lambda **kw: query_url(**{
+            key: str(value) if isinstance(value, bool) else value
+            for key, value in kw.items()
+        })
+
     def sitemap_slide(env, rule, qs):
         Channel = env['slide.channel']
         dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
@@ -336,17 +345,16 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.CHANNEL MAIN / SEARCH
     # --------------------------------------------------
 
-    @http.route('/slides', type='http', auth="public", website=True, sitemap=True)
-    def slides_channel_home(self, **post):
-        """ Home page for eLearning platform. Is mainly a container page, does not allow search / filter. """
+    def _slides_channel_user_values(self):
+        """ Get user slide values (user courses, challenge done, top user to compare to, ...). """
         channels_all = tools.lazy(lambda: request.env['slide.channel'].search(request.website.website_domain()))
         if not request.env.user._is_public():
-            #If a course is completed, we don't want to see it in first position but in last
-            channels_my = tools.lazy(lambda: channels_all.filtered(lambda channel: channel.is_member).sorted(lambda channel: 0 if channel.completed else channel.completion, reverse=True)[:3])
+            # If a course is completed, we don't want to see it in first position but in last
+            channels_my = tools.lazy(lambda: channels_all.filtered(lambda channel: channel.is_member).sorted(
+                lambda channel: 0 if channel.completed else channel.completion, reverse=True))
         else:
             channels_my = request.env['slide.channel']
-        channels_popular = tools.lazy(lambda: channels_all.sorted('total_votes', reverse=True)[:3])
-        channels_newest = tools.lazy(lambda: channels_all.sorted('create_date', reverse=True)[:3])
+        has_channel = tools.lazy(lambda: bool(channels_all))
 
         achievements = tools.lazy(lambda: request.env['gamification.badge.user'].sudo().search([('badge_id.is_published', '=', True)], limit=5))
         if request.env.user._is_public():
@@ -368,22 +376,19 @@ class WebsiteSlides(WebsiteProfile):
             ('website_published', '=', True)], limit=5, order='karma desc'))
 
         render_values = self._slide_render_context_base()
-        render_values.update(self._prepare_user_values(**post))
         render_values.update({
             'channels_my': channels_my,
-            'channels_popular': channels_popular,
-            'channels_newest': channels_newest,
+            'has_channel': has_channel,
             'achievements': achievements,
             'users': users,
             'top3_users': tools.lazy(self._get_top3_users),
             'challenges': challenges,
             'challenges_done': challenges_done,
             'search_tags': request.env['slide.channel.tag'],
-            'slide_query_url': QueryURL('/slides/all', ['tag']),
+            'slide_query_url': WebsiteSlides._query_url_keep_bool('/slides', ['tag']),
             'slugify_tags': self._slugify_tags,
         })
-
-        return request.render('website_slides.courses_home', render_values)
+        return render_values
 
     def _get_slide_channel_search_options(self, my=None, slug_tags=None, slide_category=None, **post):
         return {
@@ -398,8 +403,9 @@ class WebsiteSlides(WebsiteProfile):
             'slide_category': slide_category,
         }
 
-    @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
-    def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
+    @http.route(['/slides', '/slides/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
+    def slides_channel(self, slide_category=None, slug_tags=None, my=True, **post):
+        my = my in ('1', 'True', True)
         if slug_tags and slug_tags.count(',') > 0 and request.httprequest.method == 'GET' and not post.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
             # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
@@ -407,12 +413,12 @@ class WebsiteSlides(WebsiteProfile):
             # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
             # Note: We allow a single tag to be GET, to keep crawlers & indexes on those pages
             # What we really want to avoid is combinatorial explosions
-            return request.redirect('/slides/all', code=301)
+            return request.redirect('/slides', code=301)
 
-        render_values = self.slides_channel_all_values(slide_category=slide_category, slug_tags=slug_tags, my=my, **post)
-        return request.render('website_slides.courses_all', render_values)
+        render_values = self.slides_channel_values(slide_category=slide_category, slug_tags=slug_tags, my=my, **post)
+        return request.render('website_slides.courses_home', render_values)
 
-    def slides_channel_all_values(self, slide_category=None, slug_tags=None, my=False, **post):
+    def slides_channel_values(self, slide_category=None, slug_tags=None, my=False, **post):
         """ Home page displaying a list of courses displayed according to some
         criterion and search terms.
 
@@ -421,14 +427,13 @@ class WebsiteSlides(WebsiteProfile):
            with certifications;
           :param string slug_tags: if provided, filter the slide.channels having
             the tag(s) (in comma separated slugified form);
-          :param bool my: if provided, filter the slide.channels for which the
-           current user is a member of
+          :param bool my: if provided, display slide.channels for which the
+            current user is a member of (doesn't impact course filtering)
           :param dict post: post parameters, including
 
            * ``search``: filter on course description / name;
         """
         options = self._get_slide_channel_search_options(
-            my=my,
             slug_tags=slug_tags,
             slide_category=slide_category,
             **post
@@ -450,6 +455,7 @@ class WebsiteSlides(WebsiteProfile):
 
         render_values = self._slide_render_context_base()
         render_values.update(self._prepare_user_values(**post))
+        render_values.update(self._slides_channel_user_values())
         render_values.update({
             'channels': channels,
             'tag_groups': tag_groups,
@@ -461,7 +467,7 @@ class WebsiteSlides(WebsiteProfile):
             'search_count': search_count,
             'top3_users': self._get_top3_users(),
             'slugify_tags': self._slugify_tags,
-            'slide_query_url': QueryURL('/slides/all', ['tag']),
+            'slide_query_url': WebsiteSlides._query_url_keep_bool('/slides', ['tag']),
         })
 
         return render_values

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <template id="user_profile_sub_nav" inherit_id="website_profile.user_profile_sub_nav">
+        <xpath expr="//nav[hasclass('o_wprofile_user_profile_sub_nav_desktop_nav')]//ol/li[1]" position="before">
+            <li t-if="request.params.get('slides_origin')" class="breadcrumb-item ">
+                <a t-att-href="(request.website.domain or '') + '/' + request.params.get('slides_origin').lstrip('/')">
+                    All Courses
+                </a>
+            </li>
+        </xpath>
+        <xpath expr="//div[hasclass('o_wprofile_user_profile_sub_nav_mobile_col')]//ul/a[1]" position="after">
+            <a t-if="request.params.get('slides_origin')" class="dropdown-item"
+               t-att-href="(request.website.domain or '') + '/' + request.params.get('slides_origin').lstrip('/')">
+                &#9492; All Courses
+            </a>
+        </xpath>
+    </template>
+</data></odoo>
