@@ -53,6 +53,7 @@ export class Thread extends Component {
         "showEmptyMessage?",
         "showJumpPresent?",
         "messageActions?",
+        "activeAction?",
     ];
     static defaultProps = {
         isInChatWindow: false,
@@ -169,7 +170,7 @@ export class Thread extends Component {
                         : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
                 }px)`;
             },
-            () => [this.jumpPresentRef.el, this.viewportEl]
+            () => [this.jumpPresentRef.el, this.viewportEl, this.props.activeAction]
         );
         useEffect(
             () => this.updateShowJumpPresent(),
