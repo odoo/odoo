@@ -48,11 +48,16 @@ class SaleOrderLine(models.Model):
         return warn
 
     def _get_displayed_unit_price(self):
+        # Remove me in master
+        return 0.0
+
+    def _get_price_before_discount(self):
         show_tax = self.order_id.website_id.show_line_subtotals_tax_selection
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
+        price_before_discount = self._get_pricelist_price_before_discount()
 
         return self.tax_id.compute_all(
-            self.price_unit, self.currency_id, 1, self.product_id, self.order_partner_id,
+            price_before_discount, self.currency_id, self.product_uom_qty, self.product_id, self.order_partner_id,
         )[tax_display]
 
     def _get_displayed_quantity(self):
