@@ -141,5 +141,6 @@ class ChatbotCase(common.HttpCase):
                 ('mail_message_id', '=', mail_message.id)
             ], limit=1).user_script_answer_id = chatbot_script_answer.id
 
-        next_step = discuss_channel.chatbot_current_step_id._process_answer(discuss_channel, mail_message.body)
+        # sudo: chatbot.script.step - members of a channel can access the current chatbot step
+        next_step = discuss_channel.chatbot_current_step_id.sudo()._process_answer(discuss_channel, mail_message.body)
         next_step._process_step(discuss_channel)
