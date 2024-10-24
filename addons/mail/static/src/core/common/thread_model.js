@@ -188,6 +188,8 @@ export class Thread extends Record {
     followersCount;
     loadOlder = false;
     loadNewer = false;
+    /** @type {string} */
+    userSignature;
     get importantCounter() {
         if (this.model === "mail.box") {
             return this.counter;

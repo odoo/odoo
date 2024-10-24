@@ -4575,6 +4575,7 @@ class MailThread(models.AbstractModel):
     def _thread_to_store(self, store: Store, /, *, fields=None, request_list=None):
         if fields is None:
             fields = []
+        user_signature = self.env.user.signature
         for thread in self:
             res = thread._read_format(
                 [field for field in fields if field not in ["display_name", "modelName"]],
@@ -4634,6 +4635,7 @@ class MailThread(models.AbstractModel):
                 ]))
             if request_list and "suggestedRecipients" in request_list:
                 res["suggestedRecipients"] = thread._message_get_suggested_recipients()
+            res["userSignature"] = user_signature
             store.add(thread, res, as_thread=True)
 
     @api.model

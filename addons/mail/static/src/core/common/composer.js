@@ -530,9 +530,11 @@ export class Composer extends Component {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
         });
+        const signature = this.thread.userSignature;
         const context = {
             default_attachment_ids: attachmentIds,
-            default_body: await prettifyMessageContent(body, validMentions),
+            default_email_add_signature: false,
+            default_body: await prettifyMessageContent(body, validMentions) + '<br>' + signature,
             default_model: this.thread.model,
             default_partner_ids:
                 this.props.type === "note"
