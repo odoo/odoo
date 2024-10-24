@@ -1606,18 +1606,23 @@
                             </t>
                         </div>
                         <div class="mb-0 h6 fw-bold text-end" name="website_sale_cart_line_price">
-                            <t t-if="line.discount">
+                            <t
+                                t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                                t-set='product_price'
+                                t-value='line.price_subtotal'
+                            />
+                            <t
+                                t-else=""
+                                t-set='product_price'
+                                t-value='line.price_total'
+                            />
+                            <t t-set="price_before_discount" t-value="line._get_price_before_discount()"/>
+                            <t t-if="product_price != price_before_discount">
                                 <del t-attf-class="#{'text-danger mr8'}"
                                      style="white-space: nowrap;"
-                                     t-out="line._get_displayed_unit_price() * line.product_uom_qty"
+                                     t-out="price_before_discount"
                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </t>
-                            <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                               t-set='product_price'
-                               t-value='line.price_subtotal'/>
-                            <t t-else=""
-                               t-set='product_price'
-                               t-value='line.price_total'/>
                             <span t-out="product_price" style="white-space: nowrap;"
                                   t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
