@@ -265,7 +265,7 @@ class MailMail(models.Model):
 
         :return: True
         """
-        notif_mails_ids = [mail.id for mail in self if mail.is_notification]
+        notif_mails_ids = [mail.id for mail in self.with_context(prefetch_fields=False) if mail.is_notification]
         if notif_mails_ids:
             notifications = self.env['mail.notification'].search([
                 ('notification_type', '=', 'email'),
@@ -500,7 +500,7 @@ class MailMail(models.Model):
         Return iterators over
             mail_server_id, email_from, Records<mail.mail>.ids
         """
-        mail_values = self.read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
+        mail_values = self.with_context(prefetch_fields=False).read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
 
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
