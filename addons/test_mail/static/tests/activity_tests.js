@@ -5,7 +5,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import testUtils from 'web.test_utils';
 
-import { legacyExtraNextTick, patchWithCleanup, click } from "@web/../tests/helpers/utils";
+import { legacyExtraNextTick, patchWithCleanup, click, editInput } from "@web/../tests/helpers/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from '@web/session';
 
@@ -639,6 +639,50 @@ QUnit.test("Activity view: luxon in renderingContext", async function (assert) {
         views: [[false, "activity"]],
     });
     assert.containsN(document.body, ".luxon", 2);
+});
+
+QUnit.test('update activity view after creating multiple activities', async function (assert) {
+    assert.expect(2);
+    pyEnv['mail.test.activity'].create({ name: 'MailTestActivity 3' });
+    Object.assign(serverData.views, {
+        'mail.test.activity,false,list': '<tree string="MailTestActivity"><field name="name"/><field name="activity_ids" widget="list_activity"/></tree>',
+        'mail.activity,false,form': '<form><field name="activity_type_id"/></form>'
+    });
+
+    const { openView } = await start({
+        mockRPC(route, args) {
+            if (args.method === 'name_search') {
+                args.kwargs.name = "MailTestActivity";
+            }
+        },
+        serverData,
+    });
+    await openView({
+        res_model: 'mail.test.activity',
+        views: [[false, 'activity']],
+    });
+
+    await click(document.querySelector("table tfoot tr .o_record_selector"));
+    await click(document.querySelectorAll(".o_ActivityButtonView")[2]);
+    await click(document.querySelector(".o_ActivityListView_addActivityButton"));
+    await editInput(document.querySelector('.o_field_many2one_selection input[id=activity_type_id]'), null, "test1");
+    await click(document.querySelector('.o_field_many2one_selection input[id=activity_type_id]'));
+    await click(document.querySelector('.o-autocomplete--dropdown-menu li:nth-child(1) .dropdown-item'));
+    await click(document.querySelector(".modal-footer .o_cp_buttons .o_form_buttons_edit .btn-primary"));
+    await click(document.querySelector(".modal-footer .o_form_button_cancel"));
+    assert.strictEqual(document.querySelector("tbody tr:nth-child(2) td:nth-child(6) .o_mail_activity .o_closest_deadline").textContent,
+        'Oct 15');
+
+    await click(document.querySelector("table tfoot tr .o_record_selector"));
+    await click(document.querySelectorAll(".o_ActivityButtonView")[1]);
+    await click(document.querySelector(".o_ActivityListView_addActivityButton"));
+    await editInput(document.querySelector('.o_field_many2one_selection input[id=activity_type_id]'), null, "test2");
+    await click(document.querySelector('.o_field_many2one_selection input[id=activity_type_id]'));
+    await click(document.querySelector('.o-autocomplete--dropdown-menu li:nth-child(1) .dropdown-item'));
+    await click(document.querySelector(".modal-footer .o_cp_buttons .o_form_buttons_edit .btn-primary"));
+    await click(document.querySelector(".modal-footer .o_form_button_cancel"));
+    assert.strictEqual(document.querySelector("tbody tr:nth-child(1) td:nth-child(7) .o_mail_activity .o_closest_deadline").textContent,
+        'Oct 15');
 });
 
 });

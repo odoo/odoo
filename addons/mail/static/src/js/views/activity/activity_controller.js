@@ -66,21 +66,29 @@ var ActivityController = BasicController.extend({
      */
     _onScheduleActivity: function () {
         var state = this.model.get(this.handle);
-        Component.env.services.dialog.add(SelectCreateDialog, {
-            resModel: state.model,
-            searchViewId: this.searchViewId,
-            domain: this.model.originalDomain,
-            title: sprintf(_t("Search: %s"), this.title),
-            noCreate: !this.activeActions.create,
-            multiSelect: false,
-            context: state.context,
-            onSelected: async resIds => {
-                const messaging = await owl.Component.env.services.messaging.get();
-                const thread = messaging.models['Thread'].insert({ id: resIds[0], model: this.model.modelName });
-                await messaging.openActivityForm({ thread });
-                this.trigger_up('reload');
+        Component.env.services.dialog.add(
+            SelectCreateDialog,
+            {
+                resModel: state.model,
+                searchViewId: this.searchViewId,
+                domain: this.model.originalDomain,
+                title: sprintf(_t("Search: %s"), this.title),
+                noCreate: !this.activeActions.create,
+                multiSelect: false,
+                context: state.context,
+                onSelected: async (resIds) => {
+                    const messaging = await owl.Component.env.services.messaging.get();
+                    const thread = messaging.models["Thread"].insert({
+                        id: resIds[0],
+                        model: this.model.modelName,
+                    });
+                    await messaging.openActivityForm({ thread });
+                },
             },
-        });
+            {
+                onClose: () => this.trigger_up("reload"),
+            }
+        );
     },
     /**
      * @private
