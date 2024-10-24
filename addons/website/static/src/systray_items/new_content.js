@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from '@web/core/registry';
+import { useActiveElement } from "@web/core/ui/ui_service";
 import { user } from "@web/core/user";
 import { useService } from '@web/core/utils/hooks';
 import { redirect } from "@web/core/utils/urls";
@@ -75,6 +76,7 @@ export class NewContentModal extends Component {
         this.website = useService('website');
         this.action = useService('action');
         this.isSystem = user.isSystem;
+        useActiveElement("modalRef");
 
         this.newContentText = {
             failed: _t('Failed to install "%s"'),

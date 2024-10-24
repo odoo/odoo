@@ -915,6 +915,27 @@ publicWidget.registry.SearchModal = publicWidget.Widget.extend({
     },
 });
 
+publicWidget.registry.WebsiteModal = publicWidget.Widget.extend({
+    selector: ".modal",
+    disabledInEditableMode: false,
+    events: {
+        "keydown.modal": "_onModalKeydown",
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    /**
+     * @param
+     */
+    _onModalKeydown(ev) {
+        // In preview mode, do not hide the menu bar when escaping from a modal.
+        if (ev.key === "Escape") {
+            ev.stopPropagation();
+        }
+    },
+});
+
 export default {
     extraMenuUpdateCallbacks: extraMenuUpdateCallbacks,
 };

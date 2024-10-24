@@ -9,6 +9,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
     events: {
         'click #o_wblog_next_container': '_onNextBlogClick',
+        'keydown #o_wblog_next_container': '_onNextBlogKeydown',
         'click #o_wblog_post_content_jump': '_onContentAnchorClick',
         'click .o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete': '_onShareArticle',
     },
@@ -51,6 +52,15 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
                 window.location.href = nexInfo.url;
             });
         });
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onNextBlogKeydown(ev) {
+        if (ev.key === "Enter" || ev.code === "Space") {
+            this._onNextBlogClick(ev);
+        }
     },
     /**
      * @private

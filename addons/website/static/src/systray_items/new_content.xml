@@ -2,19 +2,18 @@
 <templates xml:space="preserve">
 <t t-name="website.NewContentElement">
     <div class="o_new_content_element col-md-4 mb8" t-att-name="props.name">
-        <a href="#"
-                t-on-click="onClick"
+        <button t-on-click="onClick"
                 t-att-class="props.status === MODULE_STATUS.NOT_INSTALLED ? 'o_uninstalled_module' : ''"
                 t-att-title="props.title"
                 t-att-aria-label="props.title"
                 t-att-data-module-xml-id="props.moduleXmlId">
             <t t-slot="default"/>
-        </a>
+        </button>
     </div>
 </t>
 
 <t t-name="website.NewContentModal">
-    <div id="o_new_content_menu_choices">
+    <div id="o_new_content_menu_choices" role="dialog" aria-modal="true" aria-label="New content" tabindex="-1" t-ref="modalRef">
         <div class="container pt32 pb32">
             <div class="row">
                 <NewContentElement t-if="isDesigner"

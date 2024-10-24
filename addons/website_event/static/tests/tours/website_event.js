@@ -16,7 +16,7 @@ registerWebsitePreviewTour("website_event_tour", {
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: "a[data-module-xml-id='base.module_website_event']",
+    trigger: "button[data-module-xml-id='base.module_website_event']",
     content: _t("Click here to create a new event."),
     tooltipPosition: "bottom",
     run: "click",

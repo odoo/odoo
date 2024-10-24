@@ -16,7 +16,7 @@ registerWebsitePreviewTour("blog", {
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: 'a[data-module-xml-id="base.module_website_blog"]',
+    trigger: 'button[data-module-xml-id="base.module_website_blog"]',
     content: _t("Select this menu item to create a new blog post."),
     tooltipPosition: "bottom",
     run: "click",

@@ -2,7 +2,8 @@
 
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
-import { useState, Component } from "@odoo/owl";
+import { useChildRef } from "@web/core/utils/hooks";
+import { useEffect, useState, Component } from "@odoo/owl";
 
 const NO_OP = () => {};
 
@@ -21,6 +22,7 @@ export class WebsiteDialog extends Component {
         body: { type: String, optional: true },
         slots: { type: Object, optional: true },
         showFooter: { type: Boolean, optional: true },
+        validateOnEnter: { type: Function, optional: true },
     };
     static defaultProps = {
         ...Dialog.defaultProps,
@@ -38,6 +40,22 @@ export class WebsiteDialog extends Component {
         this.state = useState({
             disabled: false,
         });
+        this.modalRef = useChildRef();
+
+        if (this.props.validateOnEnter) {
+            useEffect((el) => {
+                if (!el) {
+                    return;
+                }
+                const onKeydown = async (ev) => {
+                    if (ev.key === "Enter" && !ev.target.closest(".modal-footer")) {
+                        this.props.validateOnEnter();
+                    }
+                };
+                el.addEventListener("keydown", onKeydown);
+                return () => el.removeEventListener("keydown", onKeydown);
+            }, () => [this.modalRef.el]);
+        }
     }
     /**
      * Disables the buttons of the dialog when a click is made.

@@ -387,7 +387,7 @@ list of filtered posts (by date or tag).
                 </div>
             </t>
             <t t-else="">
-                <div id="o_wblog_next_container" class="d-flex flex-column" t-cache="next_post">
+                <div id="o_wblog_next_container" class="d-flex flex-column" role="button" tabindex="0" t-cache="next_post">
                     <t t-call="website.record_cover">
                         <t t-set="_record" t-value="next_post"/>
                         <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>

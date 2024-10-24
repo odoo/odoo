@@ -17,8 +17,8 @@
             onChange="v => state.body = v"/>
 
         <t t-set-slot="footer">
-            <button class="btn btn-primary" t-on-click="onSave">Save</button>
-            <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
+            <button class="btn btn-primary" t-on-click="onSave" data-hotkey="q">Save</button>
+            <button class="btn btn-secondary" t-on-click="props.close" data-hotkey="x">Discard</button>
         </t>
     </Dialog>
 </t>

@@ -23,7 +23,7 @@ registerWebsitePreviewTour("test_01_admin_shop_tour", {
     tooltipPosition: "bottom",
     run: "click",
 }, {
-    trigger: "a[data-module-xml-id='base.module_website_sale']",
+    trigger: "button[data-module-xml-id='base.module_website_sale']",
     content: markup(_t("Select <b>New Product</b> to create it and manage its properties to boost your sales.")),
     tooltipPosition: "bottom",
     run: "click",

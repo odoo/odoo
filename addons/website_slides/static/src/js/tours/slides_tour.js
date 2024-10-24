@@ -13,7 +13,7 @@ registerWebsitePreviewTour('slides_tour', {
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: 'a[data-module-xml-id="base.module_website_slides"]',
+    trigger: 'button[data-module-xml-id="base.module_website_slides"]',
     content: markup(_t("Select <b>Course</b> to create it and manage it.")),
     tooltipPosition: 'bottom',
     run: "click",
