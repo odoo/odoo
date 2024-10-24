@@ -16,6 +16,8 @@ declare module "models" {
         discussAppCategory: DiscussAppCategory,
         setAsDiscussThread: (pushState: boolean) => void,
         unpin: () => Promise<void>,
+        askConfirmation: (body: string) => void,
+        leaveChannel: () => Promise<void>,
     }
 
     export interface Models {
