@@ -19,7 +19,8 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
-        distinct_fields.append('sale_line_id')
+        if not self.env.context.get('merge_extra'):
+            distinct_fields.append('sale_line_id')
         return distinct_fields
 
     def _get_related_invoices(self):
