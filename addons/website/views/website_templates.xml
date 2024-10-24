@@ -2734,7 +2734,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             </div>
             <div class="flex-shrink-0">
                 <t t-if="result.get('detail_strike')">
-                    <span class="text-danger text-nowrap" style="text-decoration: line-through;">
+                    <span class="text-muted text-nowrap" style="text-decoration: line-through;">
                         <t t-out="result.get('detail_strike')"/>
                     </span>
                     <br/>
