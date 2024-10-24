@@ -22,7 +22,7 @@ class PosPayment(models.Model):
                 online_account_payments_by_pm[pm_id] = set()
             online_account_payments_by_pm[pm_id].add(vals.get('online_account_payment_id'))
 
-        opms_read_id = self.env['pos.payment.method'].search_read(['&', ('id', 'in', list(online_account_payments_by_pm.keys())), ('is_online_payment', '=', True)], ["id"])
+        opms_read_id = self.env['pos.payment.method'].search_read(['&', ('id', 'in', list(online_account_payments_by_pm.keys())), ('payment_method_type', '=', 'online')], ["id"])
         opms_id = {opm_read_id['id'] for opm_read_id in opms_read_id}
         online_account_payments_to_check_id = set()
 
@@ -43,13 +43,13 @@ class PosPayment(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        if vals.keys() & ('amount', 'payment_date', 'payment_method_id', 'online_account_payment_id', 'pos_order_id') and any(payment.online_account_payment_id or payment.payment_method_id.is_online_payment for payment in self):
+        if vals.keys() & ('amount', 'payment_date', 'payment_method_id', 'online_account_payment_id', 'pos_order_id') and any(payment.online_account_payment_id or payment.payment_method_id.payment_method_type == 'online' for payment in self):
             raise UserError(_("Cannot edit a POS online payment essential data."))
         return super().write(vals)
 
     @api.constrains('payment_method_id')
     def _check_payment_method_id(self):
-        bypass_check_payments = self.filtered('payment_method_id.is_online_payment')
+        bypass_check_payments = self.filtered(lambda pi: pi.payment_method_id.payment_method_type == 'online')
         if any(payment.payment_method_id != payment.pos_order_id.online_payment_method_id for payment in bypass_check_payments):
             # An online payment must always be saved for the POS, even if the online payment method is no longer configured/allowed in the pos.config, because in any case it is saved by account_payment and payment modules.
             _logger.warning("Allow to save a POS online payment with an unexpected online payment method")

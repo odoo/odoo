@@ -5,7 +5,7 @@
         <field name="model">pos.payment.method</field>
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+            <xpath expr="//div[hasclass('payment_terminal_div')]" position="after">
                 <!-- MercadoPago -->
                 <field name="mp_bearer_token" placeholder="APP_USR-..." invisible="use_payment_terminal != 'mercado_pago'" required="use_payment_terminal == 'mercado_pago'"/>
                 <field name="mp_webhook_secret_key" placeholder="c2f3662..." invisible="use_payment_terminal != 'mercado_pago'" required="use_payment_terminal == 'mercado_pago'"/>

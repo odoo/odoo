@@ -47,7 +47,7 @@ patch(SelfOrder.prototype, {
     },
     filterPaymentMethods(pms) {
         const pm = super.filterPaymentMethods(...arguments);
-        const online_pms = pms.filter((rec) => rec.is_online_payment);
+        const online_pms = pms.filter((rec) => rec.payment_method_type === "online");
         return [...new Set([...pm, ...online_pms])];
     },
 });

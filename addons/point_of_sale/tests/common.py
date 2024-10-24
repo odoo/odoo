@@ -79,6 +79,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         })
         cls.credit_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Credit',
+            'journal_id': False,
             'receivable_account_id': cls.company_data['default_account_receivable'].id,
             'split_transactions': True,
             'company_id': cls.env.company.id,
@@ -277,7 +278,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'name': 'Split (Bank) PM',
             'split_transactions': True,
         })
-        cls.pay_later_pm = cls.env['pos.payment.method'].create({'name': 'Pay Later', 'split_transactions': True})
+        cls.pay_later_pm = cls.env['pos.payment.method'].create({'name': 'Pay Later', 'split_transactions': True, 'journal_id': False})
         config.write({'payment_method_ids': [(4, cls.cash_split_pm1.id), (4, cls.bank_split_pm1.id), (4, cls.cash_pm1.id), (4, cls.bank_pm1.id), (4, cls.pay_later_pm.id)]})
         return config
 

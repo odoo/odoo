@@ -8,34 +8,36 @@
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
-                    <field name="type" invisible="1" />
-                    <div class="oe_title">
+                    <field name="type" invisible="1"/>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+                    <div class="oe_title ms-3">
                         <label for="name"/>
-                        <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
-                        <field name="image" class="oe_avatar" widget='image'/>
+                        <h1>
+                            <div class="d-flex">
+                                <field class="text-break" name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Cash"/>
+                            </div>
+                        </h1>
                     </div>
                     <group name="Payment methods">
                         <group>
+                            <field name="config_ids" widget="many2many_tags"/>
                             <field name="split_transactions"/>
                             <field name="journal_id" required="not split_transactions" placeholder="Leave empty to use the receivable account of customer" />
                             <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" placeholder="Leave empty to use the default account from the company setting" />
                             <field name="receivable_account_id" groups="account.group_account_readonly" invisible="split_transactions" placeholder="Leave empty to use the default account from the company setting" />
-                            <field name="company_id" readonly="1" groups="base.group_multi_company" />
+                            <field name="company_id" readonly="1" groups="base.group_multi_company" invisible="1"/>
                         </group>
                         <group>
                             <field name="hide_use_payment_terminal" invisible="1"/>
                             <field name="hide_qr_code_method" invisible="1"/>
+                            <field name="is_terminal_installed" invisible="1"/>
                             <field name="payment_method_type"/>
-                            <field name="use_payment_terminal" string="Integrate with" invisible="hide_use_payment_terminal" />
-                            <field name="qr_code_method" invisible="hide_qr_code_method" required="payment_method_type == 'qr_code'"/>
-                            <div name="tips" colspan="2" invisible="not hide_use_payment_terminal or payment_method_type != 'terminal'">
-                                <h2>Tips:</h2>
-                                <p>
-                                    Go to <a href="#" name="%(action_pos_configuration)d" type="action" class="btn-link o_form_uri" role="button">Configurations > Settings</a>
-                                    <strong> > Payment Terminals</strong>
-                                    in order to install a Payment Terminal and make a fully integrated payment method.
-                                </p>
+                            <label for="use_payment_terminal" invisible="hide_use_payment_terminal"/>
+                            <div class="o_row payment_terminal_div" invisible="hide_use_payment_terminal">
+                                <field name="use_payment_terminal" string="Integrate with"  />
+                                <button type="object" class="btn btn-primary" name="button_immediate_install" string="Activate" invisible="is_terminal_installed"/>
                             </div>
+                            <field name="qr_code_method" invisible="hide_qr_code_method" required="payment_method_type == 'qr_code'"/>
                         </group>
                     </group>
                 </sheet>

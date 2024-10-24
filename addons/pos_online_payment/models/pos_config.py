@@ -14,7 +14,7 @@ class PosConfig(models.Model):
         for config in self:
             opm_amount = 0
             for pm in config.payment_method_ids:
-                if pm.is_online_payment:
+                if pm.payment_method_type == 'online':
                     opm_amount += 1
                     if opm_amount > 1:
                         raise ValidationError(_("A POS config cannot have more than one online payment method."))
@@ -23,4 +23,4 @@ class PosConfig(models.Model):
 
     def _get_cashier_online_payment_method(self):
         self.ensure_one()
-        return self.payment_method_ids.filtered('is_online_payment')[:1]
+        return self.payment_method_ids.filtered(lambda pm: pm.payment_method_type == 'online')[:1]
