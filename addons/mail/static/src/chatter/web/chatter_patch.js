@@ -379,6 +379,6 @@ patch(Chatter.prototype, {
     },
 
     popoutAttachment() {
-        this.mailPopoutService.popout().focus();
+        this.popout();
     },
 });

@@ -6,8 +6,8 @@ import { browser } from "@web/core/browser/browser";
 export const mailPopoutService = {
     start(env) {
         let externalWindow;
-        let beforeFn;
-        let afterFn;
+        let beforeFn = () => {};
+        let afterFn = () => {};
         let app;
 
         /**
@@ -30,7 +30,7 @@ export const mailPopoutService = {
 
         /**
          * Poll the external window to detect when it is closed.
-         * the afterPopout hook (afterFn) is then called after the window is closed
+         * the afterPopoutClosed hook (afterFn) is then called after the window is closed
          */
         async function pollClosedWindow() {
             while (externalWindow) {
@@ -45,11 +45,11 @@ export const mailPopoutService = {
         /**
          * This function registers hooks (before/after the window popout)
          * @param {Function} beforePopout: this function is called before the component is initially mounted on the external window.
-         * @param {Function} afterPopout: this function is called after the external window is closed.
+         * @param {Function} afterPopoutClosed: this function is called after the external window is closed.
          */
-        function addHooks(beforePopout = () => {}, afterPopout = () => {}) {
+        function addHooks(beforePopout = () => {}, afterPopoutClosed = () => {}) {
             beforeFn = beforePopout;
-            afterFn = afterPopout;
+            afterFn = afterPopoutClosed;
         }
 
         /**

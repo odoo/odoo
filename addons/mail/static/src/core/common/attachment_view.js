@@ -1,16 +1,37 @@
-import {
-    Component,
-    onWillUpdateProps,
-    onPatched,
-    onWillUnmount,
-    onMounted,
-    useEffect,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { PopoutableMixin } from "@mail/core/common/popoutable_mixin";
+
+import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/libs/pdfjs";
+
+export const AttachmentViewVisibilityControllerMixin = (component) =>
+    class extends component {
+        get attachmentViewParentElementClassList() {
+            const attachmentViewEl = document.querySelector(".o-mail-Attachment");
+            let parentElementClassList;
+            if ((parentElementClassList = attachmentViewEl?.parentElement?.classList)) {
+                return parentElementClassList;
+            }
+            return null;
+        }
+
+        showAttachmentView() {
+            const parentElementClassList = this.attachmentViewParentElementClassList;
+            const hiddenClass = "d-none";
+            if (parentElementClassList?.contains(hiddenClass)) {
+                parentElementClassList.remove(hiddenClass);
+            }
+        }
+
+        hideAttachmentView() {
+            const parentElementClassList = this.attachmentViewParentElementClassList;
+            const hiddenClass = "d-none";
+            if (!parentElementClassList?.contains(hiddenClass)) {
+                parentElementClassList?.add(hiddenClass);
+            }
+        }
+    };
 
 /**
  * @typedef {Object} Props
@@ -18,7 +39,9 @@ import { hidePDFJSButtons } from "@web/libs/pdfjs";
  * @property {string} threadModel
  * @extends {Component<Props, Env>}
  */
-export class AttachmentView extends Component {
+export class AttachmentView extends AttachmentViewVisibilityControllerMixin(
+    PopoutableMixin(Component)
+) {
     static template = "mail.AttachmentView";
     static components = {};
     static props = ["threadId", "threadModel"];
@@ -27,7 +50,6 @@ export class AttachmentView extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.uiService = useService("ui");
-        this.mailPopoutService = useService("mail.popout");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.state = useState({
             /** @type {import("models").Thread|undefined} */
@@ -40,10 +62,6 @@ export class AttachmentView extends Component {
         });
         this.updateFromProps(this.props);
         onWillUpdateProps((props) => this.updateFromProps(props));
-
-        onMounted(this.updatePopout);
-        onPatched(this.updatePopout);
-        onWillUnmount(this.resetPopout);
     }
 
     onClickNext() {
@@ -71,60 +89,26 @@ export class AttachmentView extends Component {
         });
     }
 
-    popoutAttachment() {
-        this.mailPopoutService.addHooks(
-            () => {
-                // before popout hook
-                this.hide();
-                this.uiService.bus.trigger("resize");
-            },
-            () => {
-                // after popout hook
-                this.show();
-                this.uiService.bus.trigger("resize");
-            }
-        );
-        this.mailPopoutService.popout(PopoutAttachmentView, this.props);
-    }
-
-    get attachmentViewParentElementClassList() {
-        const attachmentViewEl = document.querySelector(".o-mail-Attachment");
-        let parentElementClassList;
-        if ((parentElementClassList = attachmentViewEl?.parentElement?.classList)) {
-            return parentElementClassList;
-        }
-        return null;
-    }
-
-    show() {
-        const parentElementClassList = this.attachmentViewParentElementClassList;
-        const hiddenClass = "d-none";
-        if (parentElementClassList?.contains(hiddenClass)) {
-            parentElementClassList.remove(hiddenClass);
-        }
-    }
-
-    hide() {
-        const parentElementClassList = this.attachmentViewParentElementClassList;
-        const hiddenClass = "d-none";
-        if (!parentElementClassList?.contains(hiddenClass)) {
-            parentElementClassList.add(hiddenClass);
-        }
-    }
-
-    updatePopout() {
-        if (this.mailPopoutService.externalWindow) {
-            this.mailPopoutService.popout(PopoutAttachmentView, this.props);
-            this.hide();
-        }
-    }
-
-    resetPopout() {
-        this.mailPopoutService.reset();
-    }
-
     get displayName() {
         return this.state.thread.mainAttachment.filename;
+    }
+
+    /********** Popoutable mixin overrides **********/
+    beforePopout() {
+        this.hideAttachmentView();
+        this.uiService.bus.trigger("resize");
+    }
+    afterPopoutClosed() {
+        this.showAttachmentView();
+        this.uiService.bus.trigger("resize");
+    }
+    get popoutComponent() {
+        return PopoutAttachmentView;
+    }
+    /************************************************/
+
+    popoutAttachment() {
+        this.popout();
     }
 }
 
@@ -132,8 +116,8 @@ export class AttachmentView extends Component {
  * AttachmentView inside popout window.
  * Popout features disabled as this only makes sense in the non-popout AttachmentView.
  */
-class PopoutAttachmentView extends AttachmentView {
+export class PopoutAttachmentView extends AttachmentView {
     static template = "mail.PopoutAttachmentView";
-    updatePopout() {}
+    popout() {}
     resetPopout() {}
 }

@@ -1,4 +1,9 @@
+import {
+    AttachmentViewVisibilityControllerMixin,
+    PopoutAttachmentView,
+} from "@mail/core/common/attachment_view";
 import { Composer } from "@mail/core/common/composer";
+import { PopoutableMixin } from "@mail/core/common/popoutable_mixin";
 import { Thread } from "@mail/core/common/thread";
 
 import {
@@ -18,7 +23,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
  * @typedef {Object} Props
  * @extends {Component<Props, Env>}
  */
-export class Chatter extends Component {
+export class Chatter extends AttachmentViewVisibilityControllerMixin(PopoutableMixin(Component)) {
     static template = "mail.Chatter";
     static components = { Thread, Composer };
     static props = ["threadId?", "threadModel"];
@@ -26,6 +31,7 @@ export class Chatter extends Component {
 
     setup() {
         this.store = useState(useService("mail.store"));
+        this.uiService = useService("ui");
         this.state = useState({
             jumpThreadPresent: 0,
             /** @type {import("models").Thread} */
@@ -111,4 +117,18 @@ export class Chatter extends Component {
     onScroll() {
         this.state.isTopStickyPinned = this.rootRef.el.scrollTop !== 0;
     }
+
+    /********** Popoutable mixin overrides **********/
+    beforePopout() {
+        this.hideAttachmentView();
+        this.uiService.bus.trigger("resize");
+    }
+    afterPopoutClosed() {
+        this.showAttachmentView();
+        this.uiService.bus.trigger("resize");
+    }
+    get popoutComponent() {
+        return PopoutAttachmentView;
+    }
+    /************************************************/
 }
