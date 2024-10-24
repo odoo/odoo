@@ -221,6 +221,8 @@ class SaleOrder(models.Model):
 
         if order_line and quantity <= 0:
             # Remove zero or negative lines
+            if order_line.linked_line_ids:
+                order_line.linked_line_ids.linked_line_id = False
             order_line.unlink()
             order_line = self.env['sale.order.line']
         elif order_line:
