@@ -156,9 +156,9 @@
             <DatiConvenzione t-if="origin_document_type == 'agreement'">
                 <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
             </DatiConvenzione>
-            <DatiFattureCollegate t-if="record.reversed_entry_id">
-                <IdDocumento t-out="format_alphanumeric(record.reversed_entry_id.name, -20)"/>
-                <Data t-out="format_date(record.reversed_entry_id.invoice_date)"/>
+            <DatiFattureCollegate t-foreach="record._get_reconciled_invoices()" t-as="credit_note">
+                <IdDocumento t-out="format_alphanumeric(credit_note.name, -20)"/>
+                <Data t-out="format_date(credit_note.invoice_date)"/>
             </DatiFattureCollegate>
             <DatiFattureCollegate t-foreach="downpayment_moves" t-as="downpayment_move">
                 <IdDocumento t-out="format_alphanumeric(downpayment_move.name, -20)"/>
