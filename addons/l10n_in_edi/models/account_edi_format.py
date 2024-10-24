@@ -3,8 +3,8 @@
 
 import re
 import json
-import pytz
 import markupsafe
+import logging
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -13,7 +13,6 @@ from odoo import models, fields, api, _
 from odoo.tools import html_escape, float_is_zero, float_compare
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.iap import jsonrpc
-import logging
 
 _logger = logging.getLogger(__name__)
 
@@ -77,13 +76,6 @@ class AccountEdiFormat(models.Model):
     def _l10n_in_edi_xml_invoice_content(self, invoice):
         return json.dumps(self._l10n_in_edi_generate_invoice_json(invoice)).encode()
 
-    def _l10n_in_edi_extract_digits(self, string):
-        if not string:
-            return string
-        matches = re.findall(r"\d+", string)
-        result = "".join(matches)
-        return result
-
     def _l10n_in_is_global_discount(self, line):
         return not line.tax_ids and line.price_subtotal < 0 or False
 
@@ -92,7 +84,7 @@ class AccountEdiFormat(models.Model):
             return super()._check_move_configuration(move)
         error_message = []
         error_message += self._l10n_in_validate_partner(move.partner_id)
-        error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
+        error_message += self._l10n_in_validate_partner(move.company_id.partner_id)
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
         all_base_tags = self._get_l10n_in_gst_tags() + self._get_l10n_in_non_taxable_tags()
@@ -100,21 +92,14 @@ class AccountEdiFormat(models.Model):
             if line.display_type == 'product':
                 if line.discount < 0:
                     error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
-                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
-                if not hsn_code:
-                    error_message.append(_("HSN code is not set in product line %s", line.name))
-                elif not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code):
-                    error_message.append(_(
-                        "Invalid HSN Code (%(hsn_code)s) in product line %(product_line)s") % {
-                        'hsn_code': hsn_code,
-                        'product_line': line.product_id.name or line.name
-                    })
+                if hsn_error_message := line._l10n_in_check_invalid_hsn_code():
+                    error_message.append(hsn_error_message)
             if not line.tax_tag_ids or not any(move_line_tag.id in all_base_tags for move_line_tag in line.tax_tag_ids):
                 error_message.append(_(
                     """Set an appropriate GST tax on line "%s" (if it's zero rated or nil rated then select it also)""", line.product_id.name))
         return error_message
 
-    def _l10n_in_edi_get_iap_buy_credits_message(self, company):
+    def _l10n_in_edi_get_iap_buy_credits_message(self):
         url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
         return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
             _("You have insufficient credits to send this document!"),
@@ -132,7 +117,7 @@ class AccountEdiFormat(models.Model):
             if "1005" in error_codes:
                 # Invalid token eror then create new token and send generate request again.
                 # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
-                authenticate_response = self._l10n_in_edi_authenticate(invoice.company_id)
+                authenticate_response = invoice.company_id._l10n_in_edi_authenticate()
                 if not authenticate_response.get("error"):
                     error = []
                     response = self._l10n_in_edi_generate(invoice.company_id, generate_json)
@@ -159,7 +144,7 @@ class AccountEdiFormat(models.Model):
             if "no-credit" in error_codes:
                 return {invoice: {
                     "success": False,
-                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
+                    "error": self._l10n_in_edi_get_iap_buy_credits_message(),
                     "blocking_level": "error",
                 }}
             elif error:
@@ -195,7 +180,7 @@ class AccountEdiFormat(models.Model):
             if "1005" in error_codes:
                 # Invalid token eror then create new token and send generate request again.
                 # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
-                authenticate_response = self._l10n_in_edi_authenticate(invoice.company_id)
+                authenticate_response = invoice.company_id._l10n_in_edi_authenticate()
                 if not authenticate_response.get("error"):
                     error = []
                     response = self._l10n_in_edi_cancel(invoice.company_id, cancel_json)
@@ -215,7 +200,7 @@ class AccountEdiFormat(models.Model):
             if "no-credit" in error_codes:
                 return {invoice: {
                     "success": False,
-                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
+                    "error": self._l10n_in_edi_get_iap_buy_credits_message(),
                     "blocking_level": "error",
                 }}
             if error:
@@ -239,7 +224,7 @@ class AccountEdiFormat(models.Model):
                 })
             return {invoice: {"success": True, "attachment": attachment}}
 
-    def _l10n_in_validate_partner(self, partner, is_company=False):
+    def _l10n_in_validate_partner(self, partner):
         self.ensure_one()
         message = []
         if not re.match("^.{3,100}$", partner.street or ""):
@@ -253,7 +238,7 @@ class AccountEdiFormat(models.Model):
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
             message.append(_("- Zip code required 6 digits"))
         if partner.phone and not re.match("^[0-9]{10,12}$",
-            self._l10n_in_edi_extract_digits(partner.phone)
+            self.env['account.move']._l10n_in_extract_digits(partner.phone)
         ):
             message.append(_("- Mobile number should be minimum 10 or maximum 12 digits"))
         if partner.email and (
@@ -264,14 +249,6 @@ class AccountEdiFormat(models.Model):
         if message:
             message.insert(0, "%s" %(partner.display_name))
         return message
-
-    def _get_l10n_in_edi_saler_buyer_party(self, move):
-        return {
-            "seller_details": move.company_id.partner_id,
-            "dispatch_details": move._l10n_in_get_warehouse_address() or move.company_id.partner_id,
-            "buyer_details": move.partner_id,
-            "ship_to_details": move.partner_shipping_id or move.partner_id,
-        }
 
     @api.model
     def _get_l10n_in_edi_partner_details(self, partner, set_vat=True, set_phone_and_email=True,
@@ -284,7 +261,7 @@ class AccountEdiFormat(models.Model):
             if is_overseas is true then pin is 999999 and GSTIN(vat) is URP and Stcd is .
             if pos_state_id is passed then we use set POS
         """
-        zip_digits = self._l10n_in_edi_extract_digits(partner.zip)
+        zip_digits = self.env['account.move']._l10n_in_extract_digits(partner.zip)
         partner_details = {
             "Addr1": partner.street or "",
             "Loc": partner.city or "",
@@ -297,7 +274,7 @@ class AccountEdiFormat(models.Model):
             if partner.email:
                 partner_details.update({"Em": partner.email})
             if partner.phone:
-                partner_details.update({"Ph": self._l10n_in_edi_extract_digits(partner.phone)})
+                partner_details.update({"Ph": self.env['account.move']._l10n_in_extract_digits(partner.phone)})
         if pos_state_id:
             partner_details.update({"POS": pos_state_id.l10n_in_tin or ""})
         if set_vat:
@@ -317,16 +294,6 @@ class AccountEdiFormat(models.Model):
             })
         return partner_details
 
-    @api.model
-    def _l10n_in_round_value(self, amount, precision_digits=2):
-        """
-            This method is call for rounding.
-            If anything is wrong with rounding then we quick fix in method
-        """
-        value = round(amount, precision_digits)
-        # avoid -0.0
-        return value if value else 0.0
-
     def _get_l10n_in_edi_line_details(self, index, line, line_tax_details):
         """
         Create the dictionary with line details
@@ -337,7 +304,7 @@ class AccountEdiFormat(models.Model):
         }
         """
         sign = line.move_id.is_inbound() and -1 or 1
-        tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
+        tax_details_by_code = self.env['account.move']._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         quantity = line.quantity
         full_discount_or_zero_quantity = line.discount == 100.00 or float_is_zero(quantity, 3)
         if full_discount_or_zero_quantity:
@@ -357,34 +324,35 @@ class AccountEdiFormat(models.Model):
             unit_price_in_inr = unit_price_in_inr * -1
             quantity = quantity * -1
         PrdDesc = line.product_id.display_name or line.name
+        AccountMove = self.env['account.move']
         return {
             "SlNo": str(index),
             "PrdDesc": PrdDesc.replace("\n", ""),
             "IsServc": line.product_id.type == "service" and "Y" or "N",
-            "HsnCd": self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code),
-            "Qty": self._l10n_in_round_value(quantity or 0.0, 3),
+            "HsnCd": AccountMove._l10n_in_extract_digits(line.l10n_in_hsn_code),
+            "Qty": AccountMove._l10n_in_round_value(quantity or 0.0, 3),
             "Unit": line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split("-")[0] or "OTH",
             # Unit price in company currency and tax excluded so its different then price_unit
-            "UnitPrice": self._l10n_in_round_value(unit_price_in_inr, 3),
+            "UnitPrice": AccountMove._l10n_in_round_value(unit_price_in_inr, 3),
             # total amount is before discount
-            "TotAmt": self._l10n_in_round_value(unit_price_in_inr * quantity),
-            "Discount": self._l10n_in_round_value((unit_price_in_inr * quantity) * (line.discount / 100)),
-            "AssAmt": self._l10n_in_round_value((sign * line.balance)),
-            "GstRt": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00) or (
+            "TotAmt": AccountMove._l10n_in_round_value(unit_price_in_inr * quantity),
+            "Discount": AccountMove._l10n_in_round_value((unit_price_in_inr * quantity) * (line.discount / 100)),
+            "AssAmt": AccountMove._l10n_in_round_value(sign * line.balance),
+            "GstRt": AccountMove._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00) or (
                 tax_details_by_code.get("cgst_rate", 0.00) + tax_details_by_code.get("sgst_rate", 0.00)), 3),
-            "IgstAmt": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
-            "CgstAmt": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
-            "SgstAmt": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
-            "CesRt": self._l10n_in_round_value(tax_details_by_code.get("cess_rate", 0.00), 3),
-            "CesAmt": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
-            "CesNonAdvlAmt": self._l10n_in_round_value(
+            "IgstAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
+            "CgstAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+            "SgstAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
+            "CesRt": AccountMove._l10n_in_round_value(tax_details_by_code.get("cess_rate", 0.00), 3),
+            "CesAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
+            "CesNonAdvlAmt": AccountMove._l10n_in_round_value(
                 tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "StateCesRt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_rate_amount", 0.00), 3),
-            "StateCesAmt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_amount", 0.00)),
-            "StateCesNonAdvlAmt": self._l10n_in_round_value(
+            "StateCesRt": AccountMove._l10n_in_round_value(tax_details_by_code.get("state_cess_rate_amount", 0.00), 3),
+            "StateCesAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("state_cess_amount", 0.00)),
+            "StateCesNonAdvlAmt": AccountMove._l10n_in_round_value(
                 tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
-            "OthChrg": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
-            "TotItemVal": self._l10n_in_round_value(((sign * line.balance) + line_tax_details.get("tax_amount", 0.00))),
+            "OthChrg": AccountMove._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
+            "TotItemVal": AccountMove._l10n_in_round_value((sign * line.balance) + line_tax_details.get("tax_amount", 0.00)),
         }
 
     def _l10n_in_edi_generate_invoice_json_managing_negative_lines(self, invoice, json_payload):
@@ -413,22 +381,23 @@ class AccountEdiFormat(models.Model):
         def put_discount_on(discount_line_vals, other_line_vals):
             discount = discount_line_vals['AssAmt'] * -1
             discount_to_allow = other_line_vals['AssAmt']
+            AccountMove = self.env['account.move']
             if float_compare(discount_to_allow, discount, precision_rounding=invoice.currency_id.rounding) < 0:
                 # Update discount line, needed when discount is more then max line, in short remaining_discount is not zero
                 discount_line_vals.update({
-                    'AssAmt': self._l10n_in_round_value(discount_line_vals['AssAmt'] + other_line_vals['AssAmt']),
-                    'IgstAmt': self._l10n_in_round_value(discount_line_vals['IgstAmt'] + other_line_vals['IgstAmt']),
-                    'CgstAmt': self._l10n_in_round_value(discount_line_vals['CgstAmt'] + other_line_vals['CgstAmt']),
-                    'SgstAmt': self._l10n_in_round_value(discount_line_vals['SgstAmt'] + other_line_vals['SgstAmt']),
-                    'CesAmt': self._l10n_in_round_value(discount_line_vals['CesAmt'] + other_line_vals['CesAmt']),
-                    'CesNonAdvlAmt': self._l10n_in_round_value(discount_line_vals['CesNonAdvlAmt'] + other_line_vals['CesNonAdvlAmt']),
-                    'StateCesAmt': self._l10n_in_round_value(discount_line_vals['StateCesAmt'] + other_line_vals['StateCesAmt']),
-                    'StateCesNonAdvlAmt': self._l10n_in_round_value(discount_line_vals['StateCesNonAdvlAmt'] + other_line_vals['StateCesNonAdvlAmt']),
-                    'OthChrg': self._l10n_in_round_value(discount_line_vals['OthChrg'] + other_line_vals['OthChrg']),
-                    'TotItemVal': self._l10n_in_round_value(discount_line_vals['TotItemVal'] + other_line_vals['TotItemVal']),
+                    'AssAmt': AccountMove._l10n_in_round_value(discount_line_vals['AssAmt'] + other_line_vals['AssAmt']),
+                    'IgstAmt': AccountMove._l10n_in_round_value(discount_line_vals['IgstAmt'] + other_line_vals['IgstAmt']),
+                    'CgstAmt': AccountMove._l10n_in_round_value(discount_line_vals['CgstAmt'] + other_line_vals['CgstAmt']),
+                    'SgstAmt': AccountMove._l10n_in_round_value(discount_line_vals['SgstAmt'] + other_line_vals['SgstAmt']),
+                    'CesAmt': AccountMove._l10n_in_round_value(discount_line_vals['CesAmt'] + other_line_vals['CesAmt']),
+                    'CesNonAdvlAmt': AccountMove._l10n_in_round_value(discount_line_vals['CesNonAdvlAmt'] + other_line_vals['CesNonAdvlAmt']),
+                    'StateCesAmt': AccountMove._l10n_in_round_value(discount_line_vals['StateCesAmt'] + other_line_vals['StateCesAmt']),
+                    'StateCesNonAdvlAmt': AccountMove._l10n_in_round_value(discount_line_vals['StateCesNonAdvlAmt'] + other_line_vals['StateCesNonAdvlAmt']),
+                    'OthChrg': AccountMove._l10n_in_round_value(discount_line_vals['OthChrg'] + other_line_vals['OthChrg']),
+                    'TotItemVal': AccountMove._l10n_in_round_value(discount_line_vals['TotItemVal'] + other_line_vals['TotItemVal']),
                 })
                 other_line_vals.update({
-                    'Discount': self._l10n_in_round_value(other_line_vals['Discount'] + discount_to_allow),
+                    'Discount': AccountMove._l10n_in_round_value(other_line_vals['Discount'] + discount_to_allow),
                     'AssAmt': 0.00,
                     'IgstAmt': 0.00,
                     'CgstAmt': 0.00,
@@ -442,17 +411,17 @@ class AccountEdiFormat(models.Model):
                 })
                 return False
             other_line_vals.update({
-                'Discount': self._l10n_in_round_value(other_line_vals['Discount'] + discount),
-                'AssAmt': self._l10n_in_round_value(other_line_vals['AssAmt'] + discount_line_vals['AssAmt']),
-                'IgstAmt': self._l10n_in_round_value(other_line_vals['IgstAmt'] + discount_line_vals['IgstAmt']),
-                'CgstAmt': self._l10n_in_round_value(other_line_vals['CgstAmt'] + discount_line_vals['CgstAmt']),
-                'SgstAmt': self._l10n_in_round_value(other_line_vals['SgstAmt'] + discount_line_vals['SgstAmt']),
-                'CesAmt': self._l10n_in_round_value(other_line_vals['CesAmt'] + discount_line_vals['CesAmt']),
-                'CesNonAdvlAmt': self._l10n_in_round_value(other_line_vals['CesNonAdvlAmt'] + discount_line_vals['CesNonAdvlAmt']),
-                'StateCesAmt': self._l10n_in_round_value(other_line_vals['StateCesAmt'] + discount_line_vals['StateCesAmt']),
-                'StateCesNonAdvlAmt': self._l10n_in_round_value(other_line_vals['StateCesNonAdvlAmt'] + discount_line_vals['StateCesNonAdvlAmt']),
-                'OthChrg': self._l10n_in_round_value(other_line_vals['OthChrg'] + discount_line_vals['OthChrg']),
-                'TotItemVal': self._l10n_in_round_value(other_line_vals['TotItemVal'] + discount_line_vals['TotItemVal']),
+                'Discount': AccountMove._l10n_in_round_value(other_line_vals['Discount'] + discount),
+                'AssAmt': AccountMove._l10n_in_round_value(other_line_vals['AssAmt'] + discount_line_vals['AssAmt']),
+                'IgstAmt': AccountMove._l10n_in_round_value(other_line_vals['IgstAmt'] + discount_line_vals['IgstAmt']),
+                'CgstAmt': AccountMove._l10n_in_round_value(other_line_vals['CgstAmt'] + discount_line_vals['CgstAmt']),
+                'SgstAmt': AccountMove._l10n_in_round_value(other_line_vals['SgstAmt'] + discount_line_vals['SgstAmt']),
+                'CesAmt': AccountMove._l10n_in_round_value(other_line_vals['CesAmt'] + discount_line_vals['CesAmt']),
+                'CesNonAdvlAmt': AccountMove._l10n_in_round_value(other_line_vals['CesNonAdvlAmt'] + discount_line_vals['CesNonAdvlAmt']),
+                'StateCesAmt': AccountMove._l10n_in_round_value(other_line_vals['StateCesAmt'] + discount_line_vals['StateCesAmt']),
+                'StateCesNonAdvlAmt': AccountMove._l10n_in_round_value(other_line_vals['StateCesNonAdvlAmt'] + discount_line_vals['StateCesNonAdvlAmt']),
+                'OthChrg': AccountMove._l10n_in_round_value(other_line_vals['OthChrg'] + discount_line_vals['OthChrg']),
+                'TotItemVal': AccountMove._l10n_in_round_value(other_line_vals['TotItemVal'] + discount_line_vals['TotItemVal']),
             })
             return True
 
@@ -477,9 +446,9 @@ class AccountEdiFormat(models.Model):
         return json_payload
 
     def _l10n_in_edi_generate_invoice_json(self, invoice):
-        tax_details = self._l10n_in_prepare_edi_tax_details(invoice)
-        saler_buyer = self._get_l10n_in_edi_saler_buyer_party(invoice)
-        tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
+        tax_details = invoice._l10n_in_prepare_tax_details()
+        saler_buyer = invoice._get_l10n_in_seller_buyer_party()
+        tax_details_by_code = self.env['account.move']._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         is_intra_state = invoice.l10n_in_state_id == invoice.company_id.state_id
         is_overseas = invoice.l10n_in_gst_treatment == "overseas"
         lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding'))
@@ -489,6 +458,7 @@ class AccountEdiFormat(models.Model):
         sign = invoice.is_inbound() and -1 or 1
         rounding_amount = sum(line.balance for line in invoice.line_ids if line.display_type == 'rounding') * sign
         global_discount_amount = sum(line.balance for line in global_discount_line) * sign * -1
+        AccountMove = self.env['account.move']
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -508,28 +478,28 @@ class AccountEdiFormat(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount") + global_discount_amount),
-                "CgstVal": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
-                "SgstVal": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
-                "IgstVal": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
-                "CesVal": self._l10n_in_round_value((
+                "AssVal": AccountMove._l10n_in_round_value(tax_details.get("base_amount") + global_discount_amount),
+                "CgstVal": AccountMove._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+                "SgstVal": AccountMove._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
+                "IgstVal": AccountMove._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
+                "CesVal": AccountMove._l10n_in_round_value((
                     tax_details_by_code.get("cess_amount", 0.00)
                     + tax_details_by_code.get("cess_non_advol_amount", 0.00)),
                 ),
-                "StCesVal": self._l10n_in_round_value((
+                "StCesVal": AccountMove._l10n_in_round_value((
                     tax_details_by_code.get("state_cess_amount", 0.00)
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
                 ),
-                "Discount": self._l10n_in_round_value(global_discount_amount),
-                "RndOffAmt": self._l10n_in_round_value(
+                "Discount": AccountMove._l10n_in_round_value(global_discount_amount),
+                "RndOffAmt": AccountMove._l10n_in_round_value(
                     rounding_amount),
-                "TotInvVal": self._l10n_in_round_value(
+                "TotInvVal": AccountMove._l10n_in_round_value(
                     (tax_details.get("base_amount") + tax_details.get("tax_amount") + rounding_amount)),
             },
         }
         if invoice.company_currency_id != invoice.currency_id:
             json_payload["ValDtls"].update({
-                "TotInvValFc": self._l10n_in_round_value(
+                "TotInvValFc": AccountMove._l10n_in_round_value(
                     (tax_details.get("base_amount_currency") + tax_details.get("tax_amount_currency")))
             })
         if saler_buyer.get("seller_details") != saler_buyer.get("dispatch_details"):
@@ -563,64 +533,6 @@ class AccountEdiFormat(models.Model):
                 })
         return self._l10n_in_edi_generate_invoice_json_managing_negative_lines(invoice, json_payload)
 
-    @api.model
-    def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False, filter_invl_to_apply=None):
-        def l10n_in_grouping_key_generator(base_line, tax_data):
-            invl = base_line['record']
-            tax = tax_data['tax']
-            tags = tax.invoice_repartition_line_ids.tag_ids
-            line_code = "other"
-            if not invl.currency_id.is_zero(tax_data['tax_amount_currency']):
-                if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_cess")):
-                    if tax.amount_type != "percent":
-                        line_code = "cess_non_advol"
-                    else:
-                        line_code = "cess"
-                elif any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_state_cess")):
-                    if tax.amount_type != "percent":
-                        line_code = "state_cess_non_advol"
-                    else:
-                        line_code = "state_cess"
-                else:
-                    for gst in ["cgst", "sgst", "igst"]:
-                        if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_%s"%(gst))):
-                            line_code = gst
-                        # need to separate rc tax value so it's not pass to other values
-                        if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_%s_rc" % (gst))):
-                            line_code = gst + '_rc'
-            return {
-                "tax": tax,
-                "base_product_id": invl.product_id,
-                "tax_product_id": invl.product_id,
-                "base_product_uom_id": invl.product_uom_id,
-                "tax_product_uom_id": invl.product_uom_id,
-                "line_code": line_code,
-            }
-
-        def l10n_in_filter_to_apply(base_line, tax_values):
-            if base_line['record'].display_type == 'rounding':
-                return False
-            return True
-
-        return move._prepare_edi_tax_details(
-            filter_to_apply=l10n_in_filter_to_apply,
-            grouping_key_generator=l10n_in_grouping_key_generator,
-            filter_invl_to_apply=filter_invl_to_apply,
-        )
-
-    @api.model
-    def _get_l10n_in_tax_details_by_line_code(self, tax_details):
-        l10n_in_tax_details = {}
-        for tax_detail in tax_details.values():
-            if tax_detail["tax"].l10n_in_reverse_charge:
-                l10n_in_tax_details.setdefault("is_reverse_charge", True)
-            l10n_in_tax_details.setdefault("%s_rate" % (tax_detail["line_code"]), tax_detail["tax"].amount)
-            l10n_in_tax_details.setdefault("%s_amount" % (tax_detail["line_code"]), 0.00)
-            l10n_in_tax_details.setdefault("%s_amount_currency" % (tax_detail["line_code"]), 0.00)
-            l10n_in_tax_details["%s_amount" % (tax_detail["line_code"])] += tax_detail["tax_amount"]
-            l10n_in_tax_details["%s_amount_currency" % (tax_detail["line_code"])] += tax_detail["tax_amount_currency"]
-        return l10n_in_tax_details
-
     def _l10n_in_get_supply_type(self, move, tax_details_by_code):
         supply_type = "B2B"
         if move.l10n_in_gst_treatment in ("overseas", "special_economic_zone") and tax_details_by_code.get("igst_amount"):
@@ -641,16 +553,6 @@ class AccountEdiFormat(models.Model):
                 "Ensure GST Number set on company setting and API are Verified."
             )}
         ]}
-
-    @api.model
-    def _l10n_in_edi_get_token(self, company):
-        sudo_company = company.sudo()
-        if sudo_company.l10n_in_edi_username and sudo_company._l10n_in_edi_token_is_valid():
-            return sudo_company.l10n_in_edi_token
-        elif sudo_company.l10n_in_edi_username and sudo_company.l10n_in_edi_password:
-            self._l10n_in_edi_authenticate(company)
-            return sudo_company.l10n_in_edi_token
-        return False
 
     @api.model
     def _l10n_in_edi_connect_to_server(self, company, url_path, params):
@@ -676,21 +578,8 @@ class AccountEdiFormat(models.Model):
             }
 
     @api.model
-    def _l10n_in_edi_authenticate(self, company):
-        params = {"password": company.sudo().l10n_in_edi_password}
-        response = self._l10n_in_edi_connect_to_server(company, url_path="/iap/l10n_in_edi/1/authenticate", params=params)
-        # validity data-time in Indian standard time(UTC+05:30) so remove that gap and store in odoo
-        if "data" in response:
-            tz = pytz.timezone("Asia/Kolkata")
-            local_time = tz.localize(fields.Datetime.to_datetime(response["data"]["TokenExpiry"]))
-            utc_time = local_time.astimezone(pytz.utc)
-            company.sudo().l10n_in_edi_token_validity = fields.Datetime.to_string(utc_time)
-            company.sudo().l10n_in_edi_token = response["data"]["AuthToken"]
-        return response
-
-    @api.model
     def _l10n_in_edi_generate(self, company, json_payload):
-        token = self._l10n_in_edi_get_token(company)
+        token = company._l10n_in_edi_get_token()
         if not token:
             return self._l10n_in_edi_no_config_response()
         params = {
@@ -701,7 +590,7 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _l10n_in_edi_get_irn_by_details(self, company, json_payload):
-        token = self._l10n_in_edi_get_token(company)
+        token = company._l10n_in_edi_get_token()
         if not token:
             return self._l10n_in_edi_no_config_response()
         params = {
@@ -716,7 +605,7 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _l10n_in_edi_cancel(self, company, json_payload):
-        token = self._l10n_in_edi_get_token(company)
+        token = company._l10n_in_edi_get_token()
         if not token:
             return self._l10n_in_edi_no_config_response()
         params = {
