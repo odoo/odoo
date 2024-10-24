@@ -37,6 +37,7 @@
         'data/ir_asset.xml',
         'data/ir_cron_data.xml',
         'data/mail_mail_data.xml',
+        'data/auth_signup_data.xml',
         'data/website_data.xml',
         'data/website_visitor_cron.xml',
         'data/digest_data.xml',
@@ -197,6 +198,7 @@
         'views/website_pages_views.xml',
         'views/website_controller_pages_views.xml',
         'views/website_visitor_views.xml',
+        'views/website_signup_form.xml',
         'views/res_config_settings_views.xml',
         'views/website_rewrite.xml',
         'views/ir_actions_server_views.xml',
@@ -333,6 +335,7 @@
             'website/static/src/xml/website_form_editor.xml',
             # TODO Remove the module's form js - this is for testing.
             'website/static/src/js/send_mail_form.js',
+            'website/static/src/js/website_signup_form_editor.js',
             # TODO when moving options to website: load this from website
             # directly. This file is loaded in assets_wysiwyg in website, but we
             # need to load it here for html_builder.
