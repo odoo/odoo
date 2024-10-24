@@ -605,9 +605,8 @@ class Registry(Mapping):
                         sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
-
             elif not index and tablename == existing.get(indexname):
-                _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
+                sql.drop_index(cr, indexname, tablename)
 
     def add_foreign_key(self, table1, column1, table2, column2, ondelete,
                         model, module, force=True):
