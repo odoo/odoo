@@ -96,7 +96,7 @@ export class PosOrder extends Base {
             .map((p) => p.export_for_printing());
         return {
             orderlines: this.getSortedOrderlines().map((l) =>
-                omit(l.getDisplayData(), "internalNote")
+                omit({ ...l.getDisplayData(), ...l.getPrintingPrice() }, "internalNote")
             ),
             paymentlines,
             amount_total: this.get_total_with_tax(),
