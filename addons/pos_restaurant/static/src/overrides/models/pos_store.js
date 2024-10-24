@@ -83,6 +83,9 @@ patch(PosStore.prototype, {
         return [
             ...Object.values(categories),
             ...("generalNote" in orderChanges ? [{ count: 1, name: _t("General Note") }] : []),
+            ...(orderChanges.modeUpdate
+                ? [{ count: 1, name: this.get_order().takeaway ? _t("Take out") : _t("Dine in") }]
+                : []),
         ];
     },
     createNewOrder() {

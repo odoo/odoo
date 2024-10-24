@@ -20,8 +20,12 @@ export const changesToOrder = (
             toRemove.push(lineChange);
         }
     }
-
-    return { new: toAdd, cancelled: toRemove, generalNote: orderChanges.generalNote };
+    return {
+        new: toAdd,
+        cancelled: toRemove,
+        generalNote: orderChanges.generalNote,
+        modeUpdate: orderChanges.modeUpdate,
+    };
 };
 
 /**
@@ -58,6 +62,8 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 changes[lineKey] = {
                     uuid: orderline.uuid,
                     name: orderline.get_full_product_name(),
+                    basic_name: orderline.product_id.name,
+                    isCombo: orderline.combo_item_id?.id,
                     product_id: product.id,
                     attribute_value_ids: orderline.attribute_value_ids,
                     quantity: quantityDiff,
@@ -91,6 +97,8 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     uuid: lineResume["uuid"],
                     product_id: lineResume["product_id"],
                     name: lineResume["name"],
+                    basic_name: lineResume["basic_name"],
+                    isCombo: lineResume["isCombo"],
                     note: lineResume["note"],
                     attribute_value_ids: lineResume["attribute_value_ids"],
                     quantity: -lineResume["quantity"],
@@ -114,6 +122,13 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     const lastGeneralNote = order.last_order_preparation_change.generalNote;
     if (lastGeneralNote !== order.general_note) {
         result.generalNote = order.general_note;
+    }
+    const sittingMode = order.last_order_preparation_change.sittingMode;
+    if (
+        (sittingMode !== "dine in" && !order.takeaway) ||
+        (sittingMode !== "takeaway" && order.takeaway)
+    ) {
+        result.modeUpdate = true;
     }
     return result;
 };

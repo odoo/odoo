@@ -33,6 +33,7 @@ export class PosOrder extends Base {
             : {
                   lines: {},
                   generalNote: "",
+                  sittingMode: "dine in",
               };
         this.general_note = vals.general_note || "";
         this.tracking_number =
@@ -150,16 +151,7 @@ export class PosOrder extends Base {
     // NOTE args added [unwatchedPrinter]
     async printChanges(skipped = false, orderPreparationCategories, cancelled, unwatchedPrinter) {
         const orderChange = changesToOrder(this, skipped, orderPreparationCategories, cancelled);
-        const d = new Date();
-
-        let isPrintSuccessful = true;
-
-        let hours = "" + d.getHours();
-        hours = hours.length < 2 ? "0" + hours : hours;
-
-        let minutes = "" + d.getMinutes();
-        minutes = minutes.length < 2 ? "0" + minutes : minutes;
-
+        const unsuccedPrints = [];
         orderChange.new.sort((a, b) => {
             const sequenceA = a.pos_categ_sequence;
             const sequenceB = b.pos_categ_sequence;
@@ -175,30 +167,141 @@ export class PosOrder extends Base {
                 printer.config.product_categories_ids,
                 orderChange
             );
-            if (changes["new"].length > 0 || changes["cancelled"].length > 0) {
-                const printingChanges = {
-                    new: changes["new"],
-                    cancelled: changes["cancelled"],
-                    table_name: this.table_id?.name,
-                    floor_name: this.table_id?.floor_id?.name,
-                    name: this.pos_reference || "unknown order",
-                    time: {
-                        hours,
-                        minutes,
-                    },
-                    tracking_number: this.tracking_number,
-                };
-                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
-                    changes: printingChanges,
-                });
-                const result = await printer.printReceipt(receipt);
-                if (!result.successful) {
-                    isPrintSuccessful = false;
+            const toPrintArray = this.preparePrintingData(changes);
+            const diningModeUpdate = orderChange.modeUpdate;
+            if (diningModeUpdate || !Object.keys(this.last_order_preparation_change.lines).length) {
+                // Prepare orderlines based on the dining mode update
+                const lines =
+                    diningModeUpdate && Object.keys(this.last_order_preparation_change.lines).length
+                        ? this.last_order_preparation_change.lines
+                        : this.lines;
+
+                const orderlines = Object.entries(lines).map(([key, value]) => ({
+                    basic_name: diningModeUpdate ? value.basic_name : value.product_id.name,
+                    isCombo: diningModeUpdate ? value.isCombo : value.combo_item_id?.id,
+                    quantity: diningModeUpdate ? value.quantity : value.qty,
+                    note: value.note,
+                    attribute_value_ids: value.attribute_value_ids,
+                }));
+                // Print detailed receipt
+                const printed = await this.printReceipts(
+                    printer,
+                    "New",
+                    orderlines,
+                    true,
+                    true,
+                    diningModeUpdate
+                );
+                if (!printed) {
+                    unsuccedPrints.push("Detailed Receipt");
+                }
+            } else {
+                // Print all receipts related to line changes
+                for (const [key, value] of Object.entries(toPrintArray)) {
+                    const printed = await this.printReceipts(printer, key, value, false, false);
+                    if (!printed) {
+                        unsuccedPrints.push(key);
+                    }
+                }
+                // Print Order Note if changed
+                if (orderChange.generalNote) {
+                    const printed = await this.printReceipts(printer, "Message", []);
+                    if (!printed) {
+                        unsuccedPrints.push("General Message");
+                    }
                 }
             }
         }
+        return unsuccedPrints;
+    }
 
-        return isPrintSuccessful;
+    async printReceipts(
+        printer,
+        title,
+        lines,
+        fullReceipt = false,
+        generalNoteChanged = true,
+        diningModeUpdate
+    ) {
+        let time;
+        if (this.write_date) {
+            time = this.write_date?.split(" ")[1].split(":");
+            time = time[0] + ":" + time[1];
+        }
+
+        const printingChanges = {
+            table_name: this.table_id ? this.table_id.table_number : "",
+            config_name: this.config_id.name,
+            time: this.write_date ? time : "",
+            tracking_number: this.tracking_number,
+            takeaway: this.config_id.takeaway && this.takeaway,
+            employee_name: this.employee_id?.name || this.user_id?.name,
+            order_note: this.general_note,
+            diningModeUpdate: diningModeUpdate,
+        };
+
+        const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+            operational_title: title,
+            changes: printingChanges,
+            changedlines: lines,
+            noteChanged: generalNoteChanged,
+            fullReceipt: fullReceipt,
+        });
+        const result = await printer.printReceipt(receipt);
+        return result.successful;
+    }
+
+    preparePrintingData(changes) {
+        const order_modifications = {};
+        const pdisChangedLines = this.last_order_preparation_change.lines;
+
+        // Handle added lines
+        if (changes["new"].length) {
+            const newLines = [];
+            const onlyNoteUpdate = changes["new"].filter((line) => {
+                const key = Object.keys(pdisChangedLines).find((k) => k.startsWith(line.uuid));
+                if (!key || pdisChangedLines[key].note === line.note) {
+                    newLines.push(line);
+                    return false;
+                } else if (
+                    pdisChangedLines[key].note !== line.note &&
+                    pdisChangedLines[key].quantity !== line.quantity
+                ) {
+                    const newLine = Object.assign({}, line); // Create a shallow copy of line
+                    newLine.quantity -= pdisChangedLines[key].quantity;
+                    newLines.push(newLine);
+                    line.quantity = pdisChangedLines[key].quantity;
+                    return true;
+                }
+                return true;
+            });
+            if (newLines.length) {
+                order_modifications["New"] = newLines;
+            }
+            if (onlyNoteUpdate.length) {
+                order_modifications["Note"] = onlyNoteUpdate;
+            }
+        }
+
+        // Handle removed lines
+        if (changes["cancelled"].length) {
+            const allCancelled = changes["cancelled"].every((line) => {
+                const pdisLine = pdisChangedLines[line.uuid + " - " + line.note];
+                return !pdisLine || pdisLine.quantity <= line.quantity;
+            });
+            let title;
+            if (
+                !changes["new"].length &&
+                allCancelled &&
+                Object.keys(pdisChangedLines).length == changes["cancelled"].length
+            ) {
+                title = "Cancel";
+            } else {
+                title = "Cancelled";
+            }
+            order_modifications[title] = changes["cancelled"];
+        }
+        return order_modifications;
     }
 
     get isBooked() {
@@ -243,12 +346,15 @@ export class PosOrder extends Base {
                         line.get_quantity();
                 } else {
                     this.last_order_preparation_change.lines[line.preparationKey] = {
-                        attribute_value_ids: line.attribute_value_ids.map((a) =>
-                            a.serialize({ orm: true })
-                        ),
+                        attribute_value_ids: line.attribute_value_ids.map((a) => ({
+                            ...a.serialize({ orm: true }),
+                            name: a.name,
+                        })),
                         uuid: line.uuid,
+                        isCombo: line.combo_item_id?.id,
                         product_id: line.get_product().id,
                         name: line.get_full_product_name(),
+                        basic_name: line.get_product().name,
                         note: line.getNote(),
                         quantity: line.get_quantity(),
                     };
@@ -258,12 +364,14 @@ export class PosOrder extends Base {
         });
 
         // Checks whether an orderline has been deleted from the order since it
-        // was last sent to the preparation tools. If so we delete it to the changes.
+        // was last sent to the preparation tools or updated. If so we delete older changes.
         for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
-            if (!this.models["pos.order.line"].getBy("uuid", change.uuid)) {
+            const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
+            if (!orderline || change.note.trim() !== orderline.note.trim()) {
                 delete this.last_order_preparation_change.lines[key];
             }
         }
+        this.last_order_preparation_change.sittingMode = this.takeaway ? "takeaway" : "dine in";
         this.last_order_preparation_change.generalNote = this.general_note;
     }
 
