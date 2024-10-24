@@ -522,6 +522,13 @@ class HrEmployeePrivate(models.Model):
                self.company_id.resource_calendar_id.tz or\
                'UTC'
 
+    def _get_calendar_tz(self):
+        # same as ``_get_tz`` but prioritze the date on the employee's calendar
+        self.ensure_one()
+        return self._get_calendar().tz or\
+               self.tz or\
+               'UTC'
+
     def _get_tz_batch(self):
         # Finds the first valid timezone in his tz, his work hours tz,
         #  the company calendar tz or UTC

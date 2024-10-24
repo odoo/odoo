@@ -220,7 +220,7 @@ class HrAttendance(models.Model):
         #Returns a tuple containing the datetime in naive UTC of the employee's start of the day
         # and the date it was for that employee
         if not dt.tzinfo:
-            date_employee_tz = pytz.utc.localize(dt).astimezone(pytz.timezone(employee._get_tz()))
+            date_employee_tz = pytz.utc.localize(dt).astimezone(pytz.timezone(employee._get_calendar_tz()))
         else:
             date_employee_tz = dt
         start_day_employee_tz = date_employee_tz.replace(hour=0, minute=0, second=0)

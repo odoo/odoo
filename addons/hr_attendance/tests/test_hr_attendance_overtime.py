@@ -51,6 +51,12 @@ class TestHrAttendanceOvertime(TransactionCase):
             'tz': 'Europe/Brussels',
         })
 
+    def _set_calendar_tz(self, employee, tz):
+        employee.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'America Calendar',
+            'tz': tz,
+        })
+
     def test_overtime_company_settings(self):
         self.company.hr_attendance_overtime = False
 
@@ -158,6 +164,7 @@ class TestHrAttendanceOvertime(TransactionCase):
 
     def test_overtime_far_timezones(self):
         # Since dates have to be stored in utc these are the tokyo timezone times for 7-12 / 13-18 (UTC+9)
+        self._set_calendar_tz(self.jpn_employee, 'Asia/Tokyo')
         self.env['hr.attendance'].create({
             'employee_id': self.jpn_employee.id,
             'check_in': datetime(2021, 1, 3, 22, 0),
@@ -374,6 +381,18 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         # 5:00 -> 19:00[in emp tz] should contain 5 hours of overtime
         self.assertAlmostEqual(early_attendance.overtime_hours, 5)
+
+        # Check that the calendar's timezones take priority and that overtimes and attendances dates are consistent
+        self._set_calendar_tz(self.europe_employee, 'America/New_York')
+        self.europe_employee.flush_recordset(['resource_calendar_id'])  # Needed because we're testing an SQL query
+        early_attendance2 = self.env['hr.attendance'].create({
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2024, 5, 30, 7, 0),  # 3 am NY
+            'check_out': datetime(2024, 5, 30, 21, 0)  # 5 pm NY
+        })
+
+        # still 5 (14 - 1 lunch - 8 work)
+        self.assertAlmostEqual(early_attendance2.overtime_hours, 5)
 
         # Total overtime for that day : 5 hours
         overtime_record = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
