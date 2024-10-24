@@ -9,7 +9,6 @@ import { _t } from "@web/core/l10n/translation";
 /**
  * @typedef {Object} Props
  * @property {import("@mail/core/common/thread_model").Thread} thread
- * @property {string} [className]
  * @property {funtion} [closeSearch]
  * @property {funtion} [onClickJump]
  * @extends {Component<Props, Env>}
@@ -19,7 +18,7 @@ export class SearchMessagesPanel extends Component {
         MessageCardList,
         ActionPanel,
     };
-    static props = ["thread", "className?", "closeSearch?", "onClickJump?"];
+    static props = ["thread", "closeSearch?", "onClickJump?"];
     static template = "mail.SearchMessagesPanel";
 
     setup() {
