@@ -712,7 +712,6 @@ export class HistoryPlugin extends Plugin {
         }
         // Reapply the uncommited draft, since this is not an operation which should cancel it
         this.applyMutations(this.currentStep.mutations);
-        this.dispatch("ADD_EXTERNAL_STEP");
     }
     /**
      * @param { HistoryMutation[] } mutations

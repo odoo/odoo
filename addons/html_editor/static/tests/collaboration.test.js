@@ -6,6 +6,7 @@ import {
     EmbeddedWrapperMixin,
     offsetCounter,
     savedCounter,
+    SavedCounter,
 } from "@html_editor/../tests/_helpers/embedded_component";
 import {
     getEditableDescendants,
@@ -31,7 +32,7 @@ import { getContent } from "./_helpers/selection";
 import { click, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { onMounted, onWillDestroy } from "@odoo/owl";
+import { onMounted, onWillDestroy, xml } from "@odoo/owl";
 
 /**
  * @param {Editor} editor
@@ -1626,6 +1627,50 @@ describe("Collaboration with embedded components", () => {
             await animationFrame();
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
                 `<div>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":2,"previous":{"value":2},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></div>`
+            );
+        });
+
+        test("A pending change applied after collaborative changes only update modified properties of that change (other properties are left untouched)", async () => {
+            class NamedCounter extends SavedCounter {
+                static template = xml`
+                    <span class="counter" t-on-click="increment"><t t-esc="embeddedState.name"/>:<t t-esc="counterValue"/></span>`;
+            }
+            const namedCounter = {
+                ...savedCounter,
+                Component: NamedCounter,
+            };
+            const peerInfos = await setupMultiEditor({
+                peerIds: ["c1", "c2"],
+                contentBefore: `<div>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"name":"unnamed","value":1}'></span></div>`,
+                Plugins: [EmbeddedComponentPlugin],
+                resources: {
+                    embeddedComponents: [namedCounter],
+                },
+            });
+            const e1 = peerInfos.c1.editor;
+            const e2 = peerInfos.c2.editor;
+            const counter1 = [...peerInfos.c1.plugins.get("embedded_components").components][0].app
+                .root.component;
+            const counter2 = [...peerInfos.c2.plugins.get("embedded_components").components][0].app
+                .root.component;
+            counter1.embeddedState.name = "newName";
+            await animationFrame();
+            expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+                `<div>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":1}' data-embedded-state='{"stateChangeId":1,"previous":{"name":"unnamed","value":1},"next":{"name":"newName","value":1}}' data-oe-protected="true"><span class="counter">newName:1</span></span></div>`
+            );
+            counter2.embeddedState.value = 2;
+            mergePeersSteps(peerInfos);
+            await animationFrame();
+            expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+                `<div>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":1}' data-embedded-state='{"stateChangeId":1,"previous":{"name":"unnamed","value":1},"next":{"name":"newName","value":1}}' data-oe-protected="true"><span class="counter">newName:1</span></span></div>`
+            );
+            expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+                `<div>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":2}' data-embedded-state='{"stateChangeId":2,"previous":{"name":"newName","value":1},"next":{"name":"newName","value":2}}' data-oe-protected="true"><span class="counter">newName:2</span></span></div>`
+            );
+            mergePeersSteps(peerInfos);
+            await animationFrame();
+            expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+                `<div>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":2}' data-embedded-state='{"stateChangeId":2,"previous":{"name":"newName","value":1},"next":{"name":"newName","value":2}}' data-oe-protected="true"><span class="counter">newName:2</span></span></div>`
             );
         });
 
