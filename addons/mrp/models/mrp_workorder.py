@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
 
-from odoo import api, fields, models, _
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, format_datetime, float_is_zero, float_round
 
@@ -124,7 +124,7 @@ class MrpWorkorder(models.Model):
     is_user_working = fields.Boolean(
         'Is the Current User Working', compute='_compute_working_users') # technical: is the current user working
     working_user_ids = fields.One2many('res.users', string='Working user on this work order.', compute='_compute_working_users')
-    last_working_user_id = fields.One2many('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
+    last_working_user_id = fields.Many2one('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
     costs_hour = fields.Float(
         string='Cost per hour',
         default=0.0, aggregator="avg")
@@ -387,14 +387,16 @@ class MrpWorkorder(models.Model):
     def _compute_working_users(self):
         """ Checks whether the current user is working, all the users currently working and the last user that worked. """
         for order in self:
-            order.working_user_ids = [(4, order.id) for order in order.time_ids.filtered(lambda time: not time.date_end).sorted('date_start').mapped('user_id')]
+            no_date_end_times = order.time_ids.filtered(lambda time: not time.date_end).sorted('date_start')
+            order.working_user_ids = [Command.link(user.id) for user in no_date_end_times.user_id]
             if order.working_user_ids:
                 order.last_working_user_id = order.working_user_ids[-1]
             elif order.time_ids:
-                order.last_working_user_id = order.time_ids.filtered('date_end').sorted('date_end')[-1].user_id if order.time_ids.filtered('date_end') else order.time_ids[-1].user_id
+                times_with_date_end = order.time_ids.filtered('date_end').sorted('date_end')
+                order.last_working_user_id = times_with_date_end[-1].user_id if times_with_date_end else order.time_ids[-1].user_id
             else:
                 order.last_working_user_id = False
-            if order.time_ids.filtered(lambda x: (x.user_id.id == self.env.user.id) and (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
+            if no_date_end_times.filtered(lambda x: (x.user_id.id == self.env.user.id) and (x.loss_type in ('productive', 'performance'))):
                 order.is_user_working = True
             else:
                 order.is_user_working = False
