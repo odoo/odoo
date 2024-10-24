@@ -411,6 +411,8 @@ class Http(models.AbstractModel):
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
         result = super()._is_allowed_cookie(cookie_type)
+        if not request.env.user:  # @route(auth='none')
+            return result
         if result and cookie_type == 'optional':
             if not request.env['website'].get_current_website().cookies_bar:
                 # Cookies bar is disabled on this website
