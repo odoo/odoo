@@ -4,5 +4,8 @@
         <xpath expr="//input[@name='password']" position="after">
             <owl-component name="password_meter" props='{"selector": "input[name=password]"}'/>
         </xpath>
+        <xpath expr="//input[@name='password']" position="attributes">
+            <attribute name="t-att-minlength">password_minimum_length</attribute>
+        </xpath>
     </template>
 </odoo>
