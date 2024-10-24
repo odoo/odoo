@@ -1461,7 +1461,81 @@ class Website(models.Model):
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
-        return pager(url, total, page=page, step=step, scope=scope, url_args=url_args)
+        """
+        Custom pager logic for SEO optimization:
+        - Always shows the first and the last page
+        - Shows current page with -1 and +1 range if applicable
+        - Displays ellipsis when necessary
+        """
+
+        res = pager(url, total, page=page, step=step, scope=scope, url_args=url_args)
+        total_pages = res.get('page_count')
+        current_page = res.get('page', 1)
+
+        if isinstance(current_page, dict):
+            current_page = current_page.get('num', 1)
+
+        # Initialize the new pager structure
+        new_pages = []
+
+        # Helper function to append pages
+        def add_page(num, is_current=False):
+            new_pages.append({
+                'num': num,
+                'url': f'{url}?page={num}',
+                'is_current': is_current
+            })
+
+        # Always include the first page
+        add_page(1, current_page == 1)
+
+        if total_pages <= 4:
+            # Show all pages if there are 4 or fewer
+            for page_num in range(2, total_pages + 1):
+                add_page(page_num, page_num == current_page)
+        else:
+            # Handle the display of middle pages
+            start_page = max(2, current_page - 1)
+            end_page = min(total_pages - 1, current_page + 1)
+
+            if current_page > 3:
+                new_pages.append({'num': '...', 'url': None})
+
+            for page_num in range(start_page, end_page + 1):
+                add_page(page_num, page_num == current_page)
+
+            if current_page < total_pages - 2:
+                new_pages.append({'num': '...', 'url': None})
+
+        # Always include the last page if it's not already included
+        if total_pages > 1 and (len(new_pages) == 1 or new_pages[-1]['num'] != total_pages):
+            add_page(total_pages, current_page == total_pages)
+
+        # Handle special cases for first and last page
+        if total_pages > 4:
+            if current_page == 1:
+                new_pages = [
+                    {'num': 1, 'url': f'{url}?page=1', 'is_current': True},
+                    {'num': 2, 'url': f'{url}?page=2', 'is_current': False},
+                    {'num': 3, 'url': f'{url}?page=3', 'is_current': False},
+                    {'num': 4, 'url': f'{url}?page=4', 'is_current': False},
+                    {'num': '...', 'url': None},
+                    {'num': total_pages, 'url': f'{url}?page={total_pages}', 'is_current': False}
+                ]
+            elif current_page == total_pages:
+                new_pages = [
+                    {'num': 1, 'url': f'{url}?page=1', 'is_current': False},
+                    {'num': '...', 'url': None},
+                    {'num': total_pages - 3, 'url': f'{url}?page={total_pages - 3}', 'is_current': False},
+                    {'num': total_pages - 2, 'url': f'{url}?page={total_pages - 2}', 'is_current': False},
+                    {'num': total_pages - 1, 'url': f'{url}?page={total_pages - 1}', 'is_current': False},
+                    {'num': total_pages, 'url': f'{url}?page={total_pages}', 'is_current': True}
+                ]
+
+        # Replace the old pages with the new SEO-friendly pages
+        res['pages'] = new_pages
+
+        return res
 
     def rule_is_enumerable(self, rule):
         """ Checks that it is possible to generate sensible GET queries for
