@@ -38,7 +38,6 @@ const closestElement = OdooEditorLib.closestElement;
 const closestBlock = OdooEditorLib.closestBlock;
 const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
-const hasValidSelection = OdooEditorLib.hasValidSelection;
 const parseHTML = OdooEditorLib.parseHTML;
 
 var id = 0;
@@ -1585,9 +1584,15 @@ const Wysiwyg = Widget.extend({
         const selection = this.odooEditor.document.getSelection();
         const range = selection.rangeCount && selection.getRangeAt(0);
         const targetNode = range && range.startContainer;
-        const targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
+        let targetElement;
+        const selectedTd = closestElement(targetNode, 'td.o_selected_td');
+        if (selectedTd && eventName === 'backColor') {
+            targetElement = selectedTd;
+        } else {
+            targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
             ? targetNode
             : targetNode && targetNode.parentNode;
+        }
         const backgroundImage = $(targetElement).css('background-image');
         let backgroundGradient = false;
         if (weUtils.isColorGradient(backgroundImage)) {
@@ -1595,6 +1600,11 @@ const Wysiwyg = Widget.extend({
             if (eventName === "foreColor" && textGradient || eventName !== "foreColor" && !textGradient) {
                 backgroundGradient = backgroundImage;
             }
+        }
+        // If there is a cell selected then get background
+        // color of the cell from inline style.
+        if (selectedTd && eventName === 'backColor') {
+            return backgroundGradient || selectedTd.style.backgroundColor;
         }
         return backgroundGradient || $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor');
     },
@@ -1621,6 +1631,10 @@ const Wysiwyg = Widget.extend({
                 return !(ev.clickEvent && ev.clickEvent.__isColorpickerClick);
             });
             $dropdown.on('show.bs.dropdown', () => {
+                const selectedTds = [...this.$editable[0].querySelectorAll('.o_selected_td')];
+                if (selectedTds.length) {
+                    this.odooEditor.setKeepCellSelected(true);
+                }
                 if (manualOpening) {
                     return true;
                 }
@@ -1629,6 +1643,12 @@ const Wysiwyg = Widget.extend({
                     const hookEl = oldColorpicker ? oldColorpicker.el : elem;
                     const selectedColor = this._getSelectedColor($, eventName);
                     const selection = this.odooEditor.document.getSelection();
+                    if (selection.rangeCount > 1 && selectedTds.length > 1) {
+                        // Firefox selection in table works with multiple ranges.
+                        // Hence, we need to correct selection before applying
+                        // color otherwise it will end up with wrong result.
+                        setSelection(selectedTds[0], 0, selectedTds[selectedTds.length - 1], 0);
+                    }
                     const range = selection.rangeCount && selection.getRangeAt(0);
                     const hadNonCollapsedSelection = range && !selection.isCollapsed;
                     // The color_leave event will revert the mutations with
@@ -1657,11 +1677,11 @@ const Wysiwyg = Widget.extend({
                         // Deselect tables so the applied color can be seen
                         // without using `!important` (otherwise the selection
                         // hides it).
-                        if (this.odooEditor.deselectTable() && hasValidSelection(this.odooEditor.editable)) {
-                            this.odooEditor.document.getSelection().collapseToStart();
-                        }
+                        this.odooEditor.deselectTable();
                         this._updateEditorUI(this.lastMediaClicked && { target: this.lastMediaClicked });
-                        colorpicker.off('color_leave');
+                        if (ev.data.target.matches('.o_we_color_btn:not(.o_custom_gradient_btn)')) {
+                            colorpicker.off('color_leave');
+                        }
                     });
                     colorpicker.on('color_hover', null, ev => {
                         if (hadNonCollapsedSelection) {
@@ -1729,7 +1749,10 @@ const Wysiwyg = Widget.extend({
         coloredElements = coloredElements.filter(element => this.odooEditor.document.contains(element));
 
         const coloredTds = coloredElements && coloredElements.length && coloredElements.filter(coloredElement => coloredElement.classList.contains('o_selected_td'));
-        if (coloredTds.length) {
+        if (selectedTds.length === 1 && !previewMode) {
+            const sel = this.odooEditor.document.getSelection();
+            sel.collapseToEnd();
+        } else if (coloredTds.length) {
             const propName = eventName === 'foreColor' ? 'color' : 'background-color';
             for (const td of coloredTds) {
                 // Make it important so it has priority over selection color.
