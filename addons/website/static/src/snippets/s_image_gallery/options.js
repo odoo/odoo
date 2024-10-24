@@ -180,9 +180,9 @@ options.registry.gallery = options.Class.extend({
         var $container = this._replaceContent($row);
 
         _.each(imgs, function (img, index) {
-            const $img = $(img.cloneNode(true));
             var $col = $('<div/>', {class: colClass});
-            $col.append($img).appendTo($row);
+            $col[0].innerHTML = img.classList.contains("o_gallery_image_wrapper") ? img.innerHTML : img.outerHTML;
+            $col.appendTo($row);
             if ((index + 1) % columns === 0) {
                 $row = $('<div/>', {class: 'row s_nb_column_fixed'});
                 $row.appendTo($container);
@@ -219,7 +219,7 @@ options.registry.gallery = options.Class.extend({
                     let min = Infinity;
                     let smallestColEl;
                     for (const colEl of cols) {
-                        const imgEls = colEl.querySelectorAll("img");
+                        const imgEls = colEl.children;
                         const lastImgRect = imgEls.length && imgEls[imgEls.length - 1].getBoundingClientRect();
                         const height = lastImgRect ? Math.round(lastImgRect.top + lastImgRect.height) : 0;
                         if (height < min) {
@@ -239,9 +239,10 @@ options.registry.gallery = options.Class.extend({
         while (imgs.length) {
             var min = Infinity;
             var $lowest;
-            _.each(cols, function (col) {
+            cols.forEach((col) => {
                 var $col = $(col);
-                var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
+                const rect = col.lastElementChild?.getBoundingClientRect();
+                var height = $col.is(':empty') ? 0 : rect.top + rect.height;
                 // Neutralize invisible sub-pixel height differences.
                 height = Math.round(height);
                 if (height < min) {
@@ -261,6 +262,12 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     mode: function (previewMode, widgetValue, params) {
+        // Prevents preview because changing the mode remove custo (e.g. columns
+        // size, inner content, etc.)
+        // TODO: Remove in master, add "data-no-preview" in the XML.
+        if (previewMode == true) {
+            return;
+        }
         widgetValue = widgetValue || 'slideshow'; // FIXME should not be needed
         this.$target.css('height', '');
         this.$target
@@ -283,7 +290,7 @@ options.registry.gallery = options.Class.extend({
     nomode: function () {
         var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var imgs = this._getImages();
-        const imgHolderEls = this._getImgHolderEls();
+        const imgs = this._getImgHolderEls();
 
         this._replaceContent($row);
 
@@ -292,7 +299,7 @@ options.registry.gallery = options.Class.extend({
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = 'col-lg-6';
             }
-            var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
+            var $wrap = $('<div/>', {class: wrapClass}).append(imgs[index]);
             $row.append($wrap);
         });
     },
@@ -522,7 +529,14 @@ options.registry.gallery = options.Class.extend({
      */
     _getImgHolderEls: function () {
         const imgEls = this._getImages();
-        return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
+        return imgEls.map(imgEl => {
+            const columnEl = imgEl.closest(".container .row > [class*=col-]:not(.o_masonry_col)");
+            if (columnEl) {
+                columnEl.className = "o_gallery_image_wrapper";
+                return columnEl;
+            }
+            return imgEl.closest(".o_gallery_image_wrapper") || imgEl.closest("a") || imgEl;
+        });
     },
     /**
      * Returns the index associated to a given image.
