@@ -39,8 +39,8 @@
         <!-- Show PE fields preview info, and show warning is a required field need to be completed -->
         <xpath expr="//t[@id='partner_vat']" position="before">
             <t t-if="pos_order.company_id.country_code == 'PE'">
-                <t t-if="partner.l10n_latam_identification_type_id">
-                    <t t-out="partner.l10n_latam_identification_type_id.name" /> -
+                <t t-if="partner_sudo.l10n_latam_identification_type_id">
+                    <t t-out="partner_sudo.l10n_latam_identification_type_id.name" /> -
                 </t>
                 <t t-else="">
                     <span class="text-danger">* Please configure your Identification Type</span><br />
