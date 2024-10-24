@@ -82,7 +82,7 @@ patch(PosStore.prototype, {
 
         return [
             ...Object.values(categories),
-            ...("generalNote" in orderChanges ? [{ count: 1, name: _t("General Note") }] : []),
+            ...("generalNote" in orderChanges ? [{ count: 1, name: _t("Footer Note") }] : []),
         ];
     },
     createNewOrder() {

@@ -57,7 +57,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             FloorScreen.clickTable("5"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.clickReview(),
-            ProductScreen.clickControlButton("Cancel Order"),
+            ProductScreen.clickControlButton("Delete Order"),
             Dialog.confirm(),
             FloorScreen.clickTable("5"),
             ProductScreen.orderIsEmpty(),
