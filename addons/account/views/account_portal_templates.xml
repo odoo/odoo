@@ -50,11 +50,25 @@
         <t t-if="invoices" t-call="portal.portal_table">
             <thead>
                 <tr class="active">
+<<<<<<< 18.0
                     <th>Invoice #</th>
                     <th>Invoice Date</th>
                     <th class='d-none d-md-table-cell'>Due Date</th>
                     <th class="text-end pe-3">Amount Due</th>
                     <th>Status</th>
+||||||| ff91cd81cf33bb3690d8be7491b6c93734f12240
+                    <th>Invoice #</th>
+                    <th>Invoice Date</th>
+                    <th class='d-none d-md-table-cell'>Due Date</th>
+                    <th>Status</th>
+                    <th class="text-end">Amount Due</th>
+=======
+                    <th name="invoice_number">Invoice #</th>
+                    <th name="invoice_date">Invoice Date</th>
+                    <th name="due_date" class='d-none d-md-table-cell'>Due Date</th>
+                    <th name="status">Status</th>
+                    <th name="amount_due" class="text-end">Amount Due</th>
+>>>>>>> 582a8e3f9400c653b45f184fb66741cc6ed38e24
                 </tr>
             </thead>
             <tbody>
