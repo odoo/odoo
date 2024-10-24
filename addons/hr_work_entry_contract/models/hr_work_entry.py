@@ -189,5 +189,5 @@ class HrWorkEntryType(models.Model):
     _inherit = ['hr.work.entry.type']
     _description = 'HR Work Entry Type'
 
-    is_leave = fields.Boolean(
-        default=False, string="Time Off", help="Allow the work entry type to be linked with time off types.")
+    is_leave = fields.Boolean(default=True, string="Working Time",
+        help="If checked, the work entry is counted as work time in the working schedule")
