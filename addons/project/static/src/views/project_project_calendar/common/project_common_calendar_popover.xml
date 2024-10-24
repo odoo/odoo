@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="project.ProjectCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='isEventEditable']" position="replace">
+            <a href="#" class="btn btn-primary" t-on-click="onClickViewTasks">View Tasks</a>
+            <t t-if="isEventEditable">
+                <a href="#" class="btn btn-secondary o_cw_popover_edit" t-on-click="onEditEvent">Edit Project</a>
+            </t>
+        </xpath>
+    </t>
+</templates>
