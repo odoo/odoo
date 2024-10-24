@@ -25,34 +25,25 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
         cls.Quant = cls.env['stock.quant']
         cls.ProductCategory = cls.env['product.category']
 
-        cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
-        cls.categ_kgm = cls.env.ref('uom.product_uom_categ_kgm')
-
-        cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm.id), ('uom_type', '=', 'reference')], limit=1)
+        cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
         cls.uom_kg.write({
             'name': 'Test-KG',
             'rounding': 0.000001})
         cls.uom_gm = cls.UoM.create({
             'name': 'Test-G',
-            'category_id': cls.categ_kgm.id,
-            'uom_type': 'smaller',
-            'factor': 1000.0,
+            'factor_inv': 1000.0,
             'rounding': 0.001})
-        cls.uom_unit = cls.env['uom.uom'].search([('category_id', '=', cls.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.uom_unit.write({
             'name': 'Test-Unit',
             'rounding': 0.01})
         cls.uom_ten = cls.UoM.create({
             'name': 'Test-Ten',
-            'category_id': cls.categ_unit.id,
-            'factor_inv': 10,
-            'uom_type': 'bigger',
+            'factor': 10,
             'rounding': 0.001})
         cls.uom_dozen = cls.UoM.create({
             'name': 'Test-DozenA',
-            'category_id': cls.categ_unit.id,
-            'factor_inv': 12,
-            'uom_type': 'bigger',
+            'factor': 12,
             'rounding': 0.001})
 
         # Creating all components
@@ -164,7 +155,6 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
         p.name = name
         p.is_storable = True
         p.uom_id = uom_id
-        p.uom_po_id = uom_id
         p.route_ids.clear()
         for r in routes:
             p.route_ids.add(r)
@@ -574,9 +564,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.env.company.currency_id = self.env.ref('base.USD')
         self.uom_unit = self.UoM.create({
             'name': 'Test-Unit',
-            'category_id': self.categ_unit.id,
             'factor': 1,
-            'uom_type': 'bigger',
             'rounding': 1.0})
         self.company = self.company_data['company']
         self.company.anglo_saxon_accounting = True

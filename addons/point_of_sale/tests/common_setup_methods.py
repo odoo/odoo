@@ -174,7 +174,6 @@ def setup_product_combo_items(self):
             "type": "combo",
             "categ_id": self.env.ref("product.product_category_1").id,
             "uom_id": self.env.ref("uom.product_uom_unit").id,
-            "uom_po_id": self.env.ref("uom.product_uom_unit").id,
             "combo_ids": [
                 (6, 0, [self.desks_combo.id, self.chairs_combo.id, self.desk_accessories_combo.id])
             ],

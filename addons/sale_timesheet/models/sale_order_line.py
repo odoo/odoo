@@ -44,11 +44,9 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id.service_policy')
     def _compute_remaining_hours_available(self):
-        uom_hour = self.env.ref('uom.product_uom_hour')
         for line in self:
             is_ordered_prepaid = line.product_id.service_policy == 'ordered_prepaid'
-            is_time_product = line.product_uom.category_id == uom_hour.category_id
-            line.remaining_hours_available = is_ordered_prepaid and is_time_product
+            line.remaining_hours_available = is_ordered_prepaid
 
     @api.depends('qty_delivered', 'product_uom_qty', 'analytic_line_ids')
     def _compute_remaining_hours(self):
@@ -94,11 +92,10 @@ class SaleOrderLine(models.Model):
         product_uom = self.product_uom
         if product_uom == self.env.ref('uom.product_uom_unit'):
             product_uom = self.env.ref('uom.product_uom_hour')
-        if product_uom.category_id == company_time_uom_id.category_id:
-            if product_uom != company_time_uom_id:
-                allocated_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
-            else:
-                allocated_hours = self.product_uom_qty
+        if product_uom != company_time_uom_id:
+            allocated_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
+        else:
+            allocated_hours = self.product_uom_qty
         return allocated_hours
 
     def _timesheet_create_project(self):
@@ -118,7 +115,6 @@ class SaleOrderLine(models.Model):
         factor_inv_per_id = {
             uom.id: uom.factor_inv
             for uom in self.order_id.order_line.product_uom
-            if uom.category_id == project_uom.category_id
         }
         # if sold as units, assume hours for time allocation
         factor_inv_per_id[uom_unit.id] = uom_hour.factor_inv

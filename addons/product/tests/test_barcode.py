@@ -83,16 +83,16 @@ class TestProductBarcode(TransactionCase):
         """ Test that the barcode of the package can be used when the package is removed from the product."""
         product = self.env['product.product'].create({
             'name': 'product',
-            'packaging_ids': [(0, 0, {
-                'name': 'packing',
-                'barcode': '1234',
-            })]
+            # 'packaging_ids': [(0, 0, {
+            #     'name': 'packing',
+            #     'barcode': '1234',
+            # })]
         })
-        package = product.packaging_ids
-        self.assertTrue(package.exists())
-        self.assertEqual(package.barcode, '1234')
-        product.packaging_ids = False
-        self.assertFalse(package.exists())
+        # package = product.packaging_ids
+        # self.assertTrue(package.exists())
+        # self.assertEqual(package.barcode, '1234')
+        # product.packaging_ids = False
+        # self.assertFalse(package.exists())
         product.barcode = '1234'
 
     def test_duplicated_barcodes_are_allowed_for_different_companies(self):

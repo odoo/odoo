@@ -24,22 +24,14 @@ class UomUom(models.Model):
             'uom.product_uom_gram': 'GRM',
             'uom.product_uom_day': 'DAY',
             'uom.product_uom_hour': 'HUR',
-            'uom.product_uom_ton': 'TNE',
             'uom.product_uom_meter': 'MTR',
             'uom.product_uom_km': 'KMT',
             'uom.product_uom_cm': 'CMT',
             'uom.product_uom_litre': 'LTR',
             'uom.product_uom_lb': 'LBR',
-            'uom.product_uom_oz': 'ONZ',
             'uom.product_uom_inch': 'INH',
             'uom.product_uom_foot': 'FOT',
             'uom.product_uom_mile': 'SMI',
-            'uom.product_uom_floz': 'OZA',
-            'uom.product_uom_qt': 'QT',
-            'uom.product_uom_gal': 'GLL',
-            'uom.product_uom_cubic_meter': 'MTQ',
-            'uom.product_uom_cubic_inch': 'INQ',
-            'uom.product_uom_cubic_foot': 'FTQ',
         }
         xml_ids = self._get_external_ids().get(self.id, [])
         matches = list(set(xml_ids) & set(mapping.keys()))

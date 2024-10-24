@@ -93,9 +93,9 @@ class TestMrpOrder(TestMrpCommon):
         for move in man_order.move_raw_ids:
             self.assertEqual(move.date, date_start)
         first_move = man_order.move_raw_ids.filtered(lambda move: move.product_id == self.product_2)
-        self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor_inv * 2)
+        self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor * 2)
         first_move = man_order.move_raw_ids.filtered(lambda move: move.product_id == self.product_1)
-        self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor_inv * 4)
+        self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor * 4)
 
         # produce product
         mo_form = Form(man_order)
@@ -1766,14 +1766,12 @@ class TestMrpOrder(TestMrpCommon):
             'name': 'Plastic Laminate',
             'is_storable': True,
             'uom_id': unit.id,
-            'uom_po_id': unit.id,
             'tracking': 'serial',
         })
         ply_veneer = self.env['product.product'].create({
             'name': 'Ply Veneer',
             'is_storable': True,
             'uom_id': unit.id,
-            'uom_po_id': unit.id,
         })
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': plastic_laminate.product_tmpl_id.id,
@@ -2049,9 +2047,7 @@ class TestMrpOrder(TestMrpCommon):
         uom_L = self.env.ref('uom.product_uom_litre')
         uom_cL = self.env['uom.uom'].create({
             'name': 'cL',
-            'category_id': uom_L.category_id.id,
-            'uom_type': 'smaller',
-            'factor': 100,
+            'factor_inv': 100,
             'rounding': 1,
         })
         uom_units.rounding = 1
@@ -2065,13 +2061,11 @@ class TestMrpOrder(TestMrpCommon):
             'name': 'Consumable Component',
             'type': 'consu',
             'uom_id': uom_cL.id,
-            'uom_po_id': uom_cL.id,
         })
         storable_component = self.env['product.product'].create({
             'name': 'Storable Component',
             'is_storable': True,
             'uom_id': uom_cL.id,
-            'uom_po_id': uom_cL.id,
         })
         self.env['stock.quant']._update_available_quantity(storable_component, self.env.ref('stock.stock_location_stock'), 100)
 
@@ -2132,21 +2126,16 @@ class TestMrpOrder(TestMrpCommon):
 
         # define L and ml, L has rounding .001 but ml has rounding .01
         # when producing e.g. 187.5ml, it will be rounded to .188L
-        categ_test = self.env['uom.category'].create({'name': 'Volume Test'})
 
         uom_L = self.env['uom.uom'].create({
             'name': 'Test Liters',
-            'category_id': categ_test.id,
-            'uom_type': 'reference',
             'rounding': 0.001
         })
 
         uom_ml = self.env['uom.uom'].create({
             'name': 'Test ml',
-            'category_id': categ_test.id,
-            'uom_type': 'smaller',
             'rounding': 0.01,
-            'factor_inv': 0.001,
+            'factor': 0.001,
         })
 
         # create a product component and the final product using the component
@@ -2156,7 +2145,6 @@ class TestMrpOrder(TestMrpCommon):
             'tracking': 'lot',
             'categ_id': self.env.ref('product.product_category_all').id,
             'uom_id': uom_L.id,
-            'uom_po_id': uom_L.id,
         })
 
         product_final = self.env['product.product'].create({
@@ -2165,7 +2153,6 @@ class TestMrpOrder(TestMrpCommon):
             'tracking': 'lot',
             'categ_id': self.env.ref('product.product_category_all').id,
             'uom_id': uom_L.id,
-            'uom_po_id': uom_L.id,
         })
 
         # the products are tracked by lot, so we go through _generate_consumed_move_line
@@ -3475,9 +3462,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.box250 = self.env['uom.uom'].create({
             'name': 'box250',
-            'category_id': self.env.ref('uom.product_uom_categ_unit').id,
-            'ratio': 250.0,
-            'uom_type': 'bigger',
+            'factor': 250.0,
             'rounding': 1.0,
         })
 
@@ -3491,7 +3476,7 @@ class TestMrpOrder(TestMrpCommon):
             ]
         })
         self.env['stock.quant'].create({
-            'location_id':self.env.ref('stock.stock_location_stock').id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
             'product_id': self.product_2.id,
             'inventory_quantity': 500
         }).action_apply_inventory()

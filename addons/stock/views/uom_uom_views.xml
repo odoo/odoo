@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_uom_tree_view_inherit" model="ir.ui.view">
+        <field name="name">uom.uom.list.inherit</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="factor" position="after">
+                <field name="package_type_id"/>
+            </field>
+        </field>
+    </record>
+    
+    <record id="product_uom_form_view_inherit" model="ir.ui.view">
+        <field name="name">uom.uom.form.inherit</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <field name="factor" position="after">
+                <span>per</span>
+                <field name="package_type_id" placeholder="Package Type"/>
+            </field>
+            <xpath expr="//div[@name='factor']" position="after">
+                <field 
+                    name="product_uom_ids"
+                    widget="many2many_tags"
+                    options="{'no_create_edit': True, 'no_open': True}"
+                    invisible="not context.get('product_id')"
+                    context="{'default_uom_id': id, 'default_product_id': context.get('product_id')}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

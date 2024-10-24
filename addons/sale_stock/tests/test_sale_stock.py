@@ -964,61 +964,61 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertTrue(sale_order4.picking_ids)
         self.assertEqual(sale_order4.picking_ids.state, 'assigned')
 
-    def test_packaging_propagation(self):
-        """Create a SO with lines using packaging, check the packaging propagate
-        to its move.
-        """
-        warehouse = self.company_data['default_warehouse']
-        warehouse.delivery_steps = 'pick_pack_ship'
-        product = self.env['product.product'].create({
-            'name': 'Product with packaging',
-            'is_storable': True,
-        })
+    # def test_packaging_propagation(self):
+    #     """Create a SO with lines using packaging, check the packaging propagate
+    #     to its move.
+    #     """
+    #     warehouse = self.company_data['default_warehouse']
+    #     warehouse.delivery_steps = 'pick_pack_ship'
+    #     product = self.env['product.product'].create({
+    #         'name': 'Product with packaging',
+    #         'is_storable': True,
+    #     })
 
-        packOf10 = self.env['product.packaging'].create({
-            'name': 'PackOf10',
-            'product_id': product.id,
-            'qty': 10
-        })
+    #     packOf10 = self.env['product.packaging'].create({
+    #         'name': 'PackOf10',
+    #         'product_id': product.id,
+    #         'qty': 10
+    #     })
 
-        packOf20 = self.env['product.packaging'].create({
-            'name': 'PackOf20',
-            'product_id': product.id,
-            'qty': 20
-        })
+    #     packOf20 = self.env['product.packaging'].create({
+    #         'name': 'PackOf20',
+    #         'product_id': product.id,
+    #         'qty': 20
+    #     })
 
-        so = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'warehouse_id': self.warehouse_3_steps_pull.id,
-            'order_line': [
-                (0, 0, {
-                    'product_id': product.id,
-                    'product_uom_qty': 10.0,
-                    'product_uom': product.uom_id.id,
-                    'product_packaging_id': packOf10.id,
-                })],
-        })
-        so.action_confirm()
-        ship = so.order_line.move_ids
-        pack = ship.move_orig_ids
-        pick = pack.move_orig_ids
-        self.assertEqual(pick.product_packaging_id, packOf10)
-        self.assertEqual(pack.product_packaging_id, packOf10)
-        self.assertEqual(ship.product_packaging_id, packOf10)
+    #     so = self.env['sale.order'].create({
+    #         'partner_id': self.partner_a.id,
+    #         'warehouse_id': self.warehouse_3_steps_pull.id,
+    #         'order_line': [
+    #             (0, 0, {
+    #                 'product_id': product.id,
+    #                 'product_uom_qty': 10.0,
+    #                 'product_uom': product.uom_id.id,
+    #                 'product_packaging_id': packOf10.id,
+    #             })],
+    #     })
+    #     so.action_confirm()
+    #     ship = so.order_line.move_ids
+    #     pack = ship.move_orig_ids
+    #     pick = pack.move_orig_ids
+    #     self.assertEqual(pick.product_packaging_id, packOf10)
+    #     self.assertEqual(pack.product_packaging_id, packOf10)
+    #     self.assertEqual(ship.product_packaging_id, packOf10)
 
-        so.order_line[0].write({
-            'product_packaging_id': packOf20.id,
-            'product_uom_qty': 20
-        })
-        self.assertEqual(so.order_line.move_ids.product_packaging_id, packOf20)
-        self.assertEqual(pick.product_packaging_id, packOf20)
-        self.assertEqual(pack.product_packaging_id, packOf20)
-        self.assertEqual(ship.product_packaging_id, packOf20)
+    #     so.order_line[0].write({
+    #         'product_packaging_id': packOf20.id,
+    #         'product_uom_qty': 20
+    #     })
+    #     self.assertEqual(so.order_line.move_ids.product_packaging_id, packOf20)
+    #     self.assertEqual(pick.product_packaging_id, packOf20)
+    #     self.assertEqual(pack.product_packaging_id, packOf20)
+    #     self.assertEqual(ship.product_packaging_id, packOf20)
 
-        so.order_line[0].write({'product_packaging_id': False})
-        self.assertFalse(pick.product_packaging_id)
-        self.assertFalse(pack.product_packaging_id)
-        self.assertFalse(ship.product_packaging_id)
+    #     so.order_line[0].write({'product_packaging_id': False})
+    #     self.assertFalse(pick.product_packaging_id)
+    #     self.assertFalse(pack.product_packaging_id)
+    #     self.assertFalse(ship.product_packaging_id)
 
     def test_15_cancel_delivery(self):
         """ Suppose the option "Lock Confirmed Sales" enabled and a product with the invoicing
@@ -1052,15 +1052,12 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
     def test_16_multi_uom(self):
         yards_uom = self.env['uom.uom'].create({
-            'category_id': self.env.ref('uom.uom_categ_length').id,
             'name': 'Yards',
             'factor_inv': 0.9144,
-            'uom_type': 'bigger',
         })
         product = self.env['product.product'].create({
             'name': 'Test Product',
             'uom_id': self.env.ref('uom.product_uom_meter').id,
-            'uom_po_id': yards_uom.id,
         })
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
@@ -1137,7 +1134,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         uom_km_id = self.ref("uom.product_uom_km")
         self.product_b.write({
             'uom_id': uom_m_id,
-            'uom_po_id': uom_m_id,
         })
 
         so = self._get_new_sale_order(product=self.product_a)
@@ -1399,28 +1395,28 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(ret_pack_sm.state, 'assigned')
         self.assertEqual(ret_pack_sm.move_line_ids.quantity, 2)
 
-    def test_packaging_and_qty_decrease(self):
-        packaging = self.env['product.packaging'].create({
-            'name': "Super Packaging",
-            'product_id': self.product_a.id,
-            'qty': 10.0,
-        })
+    # def test_packaging_and_qty_decrease(self):
+    #     packaging = self.env['product.packaging'].create({
+    #         'name': "Super Packaging",
+    #         'product_id': self.product_a.id,
+    #         'qty': 10.0,
+    #     })
 
-        so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.partner_a
-        with so_form.order_line.new() as line:
-            line.product_id = self.product_a
-            line.product_uom_qty = 10
-        so = so_form.save()
-        so.action_confirm()
+    #     so_form = Form(self.env['sale.order'])
+    #     so_form.partner_id = self.partner_a
+    #     with so_form.order_line.new() as line:
+    #         line.product_id = self.product_a
+    #         line.product_uom_qty = 10
+    #     so = so_form.save()
+    #     so.action_confirm()
 
-        self.assertEqual(so.order_line.product_packaging_id, packaging)
+    #     self.assertEqual(so.order_line.product_packaging_id, packaging)
 
-        with Form(so) as so_form:
-            with so_form.order_line.edit(0) as line:
-                line.product_uom_qty = 8
+    #     with Form(so) as so_form:
+    #         with so_form.order_line.edit(0) as line:
+    #             line.product_uom_qty = 8
 
-        self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
+    #     self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
 
     def test_backorder_and_decrease_sol_qty(self):
         """

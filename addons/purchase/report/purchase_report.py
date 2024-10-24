@@ -140,8 +140,6 @@ class PurchaseReport(models.Model):
                 t.categ_id,
                 po.date_order,
                 po.state,
-                line_uom.uom_type,
-                line_uom.category_id,
                 t.uom_id,
                 t.purchase_method,
                 line_uom.id,

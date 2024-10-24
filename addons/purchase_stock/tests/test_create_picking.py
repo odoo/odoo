@@ -33,7 +33,7 @@ class TestCreatePicking(common.TestProductCommon):
                     'name': cls.product_id_1.name,
                     'product_id': cls.product_id_1.id,
                     'product_qty': 5.0,
-                    'product_uom': cls.product_id_1.uom_po_id.id,
+                    'product_uom': cls.product_id_1.uom_id.id,
                     'price_unit': 500.0,
                 })],
         }
@@ -65,7 +65,7 @@ class TestCreatePicking(common.TestProductCommon):
                 'name': self.product_id_2.name,
                 'product_id': self.product_id_2.id,
                 'product_qty': 5.0,
-                'product_uom': self.product_id_2.uom_po_id.id,
+                'product_uom': self.product_id_2.uom_id.id,
                 'price_unit': 250.0,
                 })]})
         self.assertEqual(self.po.incoming_picking_count, 2, 'New picking should be created')
@@ -157,7 +157,7 @@ class TestCreatePicking(common.TestProductCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_qty': 100.0,
-                    'product_uom': product.uom_po_id.id,
+                    'product_uom': product.uom_id.id,
                     'price_unit': 11.0,
                 })],
         })
@@ -187,7 +187,7 @@ class TestCreatePicking(common.TestProductCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
 
-        self.assertEqual(self.product_id_1.uom_po_id.id, uom_unit.id)
+        self.assertEqual(self.product_id_1.uom_id.id, uom_unit.id)
 
         # buy a dozen
         po = self.env['purchase.order'].create(self.po_vals)
@@ -403,7 +403,6 @@ class TestCreatePicking(common.TestProductCommon):
             'name': 'Usb Keyboard',
             'is_storable': True,
             'uom_id': unit,
-            'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
             'route_ids': [(6, 0, [route_buy.id, route_mto.id])]
         })

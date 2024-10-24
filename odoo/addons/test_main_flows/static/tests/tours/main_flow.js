@@ -299,7 +299,7 @@ stepUtils.autoExpandMoreButtons(),
     // click somewhere else to exit cell focus
 }, {
     isActive: ["desktop"],
-    trigger: 'label:contains("Purchase Unit")',
+    trigger: 'th:contains("Unit")',
     run: "click",
     // click somewhere else to exit cell focus
 }, {
@@ -460,7 +460,7 @@ stepUtils.autoExpandMoreButtons(),
     // click somewhere else to exit cell focus
 }, {
     isActive: ["desktop"],
-    trigger: 'label:contains("Purchase Unit")',
+    trigger: 'th:contains("Unit")',
     run: "click",
     // click somewhere else to exit cell focus
 }, {

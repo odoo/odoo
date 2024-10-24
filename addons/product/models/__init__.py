@@ -17,7 +17,6 @@ from . import product_category
 from . import product_combo
 from . import product_combo_item
 from . import product_document
-from . import product_packaging
 from . import product_pricelist
 from . import product_pricelist_item
 from . import product_supplierinfo

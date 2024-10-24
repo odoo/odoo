@@ -32,10 +32,6 @@
             <field name="taxes_id" eval="[(5,)]"/>
         </record>
 
-        <record id="uom.product_uom_categ_unit" model="uom.category">
-            <field name="is_pos_groupable">True</field>
-        </record>
-
         <record model="pos.bill" id="0_05" forcecreate="0">
             <field name="name">0.05</field>
             <field name="value">0.05</field>

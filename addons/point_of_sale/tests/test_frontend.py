@@ -1076,12 +1076,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'barcode': '12345601',
         })
 
-        self.env['product.packaging'].create({
-            'name': 'Product Packaging 10 Products',
-            'qty': 10,
-            'product_id': product.id,
-            'barcode': '12345610',
-        })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanningProductPackagingTour', login="pos_user")
 
@@ -1376,7 +1370,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'taxes_id': False,
             'available_in_pos': True,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('uom.product_uom_kgm').id
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()

@@ -2672,26 +2672,20 @@ class TestStockUOM(TestStockCommon):
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
         """ Picking transfer with diffrent unit of meassure. """
         # weight category
-        categ_test = self.env['uom.category'].create({'name': 'Bigger than tons'})
 
         T_LBS = self.env['uom.uom'].create({
             'name': 'T-LBS',
-            'category_id': categ_test.id,
-            'uom_type': 'reference',
             'rounding': 0.01
         })
         T_GT = self.env['uom.uom'].create({
             'name': 'T-GT',
-            'category_id': categ_test.id,
-            'uom_type': 'bigger',
             'rounding': 0.0000001,
-            'factor_inv': 2240.00,
+            'factor': 2240.00,
         })
         T_TEST = self.env['product.product'].create({
             'name': 'T_TEST',
             'is_storable': True,
             'uom_id': T_LBS.id,
-            'uom_po_id': T_LBS.id,
             'tracking': 'lot',
         })
 
@@ -2754,7 +2748,6 @@ class TestStockUOM(TestStockCommon):
             'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
             'uom_id': self.uom_gm.id,
-            'uom_po_id': self.uom_gm.id,
         })
 
         stock_location = self.env['stock.location'].browse(self.stock_location)
@@ -2815,7 +2808,6 @@ class TestStockUOM(TestStockCommon):
             'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
             'uom_id': self.uom_gm.id,
-            'uom_po_id': self.uom_gm.id,
         })
 
         product_GtDA = self.env['product.product'].create({
@@ -2823,7 +2815,6 @@ class TestStockUOM(TestStockCommon):
             'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
             'uom_id': self.uom_gm.id,
-            'uom_po_id': self.uom_gm.id,
         })
 
         stock_location = self.env['stock.location'].browse(self.stock_location)
@@ -3159,79 +3150,78 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
         self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move B should be "make_to_stock"')
 
-    def test_packaging_route(self):
-        """Create a route for product and another route for its packaging. Create
-        a move of this product with this packaging. Check packaging route has
-        priority over product route.
-        """
-        stock_location = self.env.ref('stock.stock_location_stock')
+    # def test_packaging_route(self):
+    #     """Create a route for product and another route for its packaging. Create
+    #     a move of this product with this packaging. Check packaging route has
+    #     priority over product route.
+    #     """
+    #     stock_location = self.env.ref('stock.stock_location_stock')
 
-        push_location_1 = self.env['stock.location'].create({
-            'location_id': stock_location.location_id.id,
-            'name': 'push location 1',
-        })
+    #     push_location_1 = self.env['stock.location'].create({
+    #         'location_id': stock_location.location_id.id,
+    #         'name': 'push location 1',
+    #     })
 
-        push_location_2 = self.env['stock.location'].create({
-            'location_id': stock_location.location_id.id,
-            'name': 'push location 2',
-        })
+    #     push_location_2 = self.env['stock.location'].create({
+    #         'location_id': stock_location.location_id.id,
+    #         'name': 'push location 2',
+    #     })
 
-        route_on_product = self.env['stock.route'].create({
-            'name': 'route on product',
-            'rule_ids': [(0, False, {
-                'name': 'create a move to push location 1',
-                'location_src_id': stock_location.id,
-                'location_dest_id': push_location_1.id,
-                'company_id': self.env.company.id,
-                'action': 'push',
-                'auto': 'manual',
-                'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            })],
-        })
+    #     route_on_product = self.env['stock.route'].create({
+    #         'name': 'route on product',
+    #         'rule_ids': [(0, False, {
+    #             'name': 'create a move to push location 1',
+    #             'location_src_id': stock_location.id,
+    #             'location_dest_id': push_location_1.id,
+    #             'company_id': self.env.company.id,
+    #             'action': 'push',
+    #             'auto': 'manual',
+    #             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+    #         })],
+    #     })
 
-        route_on_packaging = self.env['stock.route'].create({
-            'name': 'route on packaging',
-            'packaging_selectable': True,
-            'rule_ids': [(0, False, {
-                'name': 'create a move to push location 2',
-                'location_src_id': stock_location.id,
-                'location_dest_id': push_location_2.id,
-                'company_id': self.env.company.id,
-                'action': 'push',
-                'auto': 'manual',
-                'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            })],
-        })
+    #     route_on_packaging = self.env['stock.route'].create({
+    #         'name': 'route on packaging',
+    #         'packaging_selectable': True,
+    #         'rule_ids': [(0, False, {
+    #             'name': 'create a move to push location 2',
+    #             'location_src_id': stock_location.id,
+    #             'location_dest_id': push_location_2.id,
+    #             'company_id': self.env.company.id,
+    #             'action': 'push',
+    #             'auto': 'manual',
+    #             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+    #         })],
+    #     })
 
-        product = self.env['product.product'].create({
-            'name': 'Product with packaging',
-            'is_storable': True,
-            'route_ids': [(4, route_on_product.id, 0)]
-        })
+    #     product = self.env['product.product'].create({
+    #         'name': 'Product with packaging',
+    #         'is_storable': True,
+    #         'route_ids': [(4, route_on_product.id, 0)]
+    #     })
 
-        packaging = self.env['product.packaging'].create({
-            'name': 'box',
-            'product_id': product.id,
-            'route_ids': [(4, route_on_packaging.id, 0)]
-        })
+    #     packaging = self.env['product.packaging'].create({
+    #         'name': 'box',
+    #         'product_id': product.id,
+    #         'route_ids': [(4, route_on_packaging.id, 0)]
+    #     })
 
+    #     move1 = self.env['stock.move'].create({
+    #         'name': 'move with a route',
+    #         'location_id': stock_location.id,
+    #         'location_dest_id': stock_location.id,
+    #         'product_id': product.id,
+    #         'product_packaging_id': packaging.id,
+    #         'product_uom': self.uom_unit.id,
+    #         'product_uom_qty': 1.0,
+    #     })
+    #     move1._action_confirm()
+    #     # Need to complete to move to trigger the push rule
+    #     move1.write({'quantity': 1, 'picked': True})
+    #     move1._action_done()
 
-        move1 = self.env['stock.move'].create({
-            'name': 'move with a route',
-            'location_id': stock_location.id,
-            'location_dest_id': stock_location.id,
-            'product_id': product.id,
-            'product_packaging_id': packaging.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 1.0,
-        })
-        move1._action_confirm()
-        # Need to complete to move to trigger the push rule
-        move1.write({'quantity': 1, 'picked': True})
-        move1._action_done()
-
-        pushed_move = move1.move_dest_ids
-        self.assertEqual(pushed_move.location_dest_id.id, push_location_2.id)
+    #     pushed_move = move1.move_dest_ids
+    #     self.assertEqual(pushed_move.location_dest_id.id, push_location_2.id)
 
     def test_cross_dock(self):
         customer_loc = self.env['stock.location'].browse(self.customer_location)

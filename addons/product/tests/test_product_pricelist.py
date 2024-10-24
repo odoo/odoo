@@ -254,8 +254,10 @@ class TestProductPricelist(ProductCommon):
         ProductPricelist = self.env['product.pricelist']
         spam = self.env['product.product'].create({
             'name': '1 tonne of spam',
-            'uom_id': self.uom_ton.id,
-            'uom_po_id': self.uom_ton.id,
+            'uom_id': self.env['uom.uom'].create({
+                'name': 'Test-Ton',
+                'factor': 1000,
+            }).id,
             'list_price': 100,
             'type': 'consu'
         })

@@ -89,9 +89,7 @@ class RepairOrder(models.Model):
         default=1.0, digits='Product Unit of Measure')
     product_uom = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        compute='compute_product_uom', store=True, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+        compute='compute_product_uom', store=True, precompute=True)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
         default=False,
@@ -228,12 +226,12 @@ class RepairOrder(models.Model):
                 domain = expression.AND([domain, [('id', 'in', repair.picking_id.move_ids.lot_ids.ids)]])
             repair.allowed_lot_ids = self.env['stock.lot'].search(domain)
 
-    @api.depends('product_id', 'product_id.uom_id.category_id', 'product_uom.category_id')
+    @api.depends('product_id', 'product_id.uom_id')
     def compute_product_uom(self):
         for repair in self:
             if not repair.product_id:
                 repair.product_uom = False
-            elif not repair.product_uom or repair.product_uom.category_id != repair.product_id.uom_id.category_id:
+            elif not repair.product_uom:
                 repair.product_uom = repair.product_id.uom_id
 
     @api.depends('product_id', 'lot_id', 'lot_id.product_id', 'picking_id')
@@ -343,8 +341,6 @@ class RepairOrder(models.Model):
         res = {}
         if not self.product_id or not self.product_uom:
             return res
-        if self.product_uom.category_id != self.product_id.uom_id.category_id:
-            res['warning'] = {'title': _('Warning'), 'message': _('The product unit of measure you chose has a different category than the product unit of measure.')}
         return res
 
     @api.onchange('location_id', 'picking_id')

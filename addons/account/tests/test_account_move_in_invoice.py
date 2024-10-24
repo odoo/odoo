@@ -2694,7 +2694,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'uom_id': uom_gram.id,
-            'uom_po_id': uom_kgm.id,
             'standard_price': 110.0,
         })
         # customer invoice should have sale uom

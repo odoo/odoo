@@ -69,10 +69,6 @@ class ProductProduct(models.Model):
     product_document_count = fields.Integer(
         string="Documents Count", compute='_compute_product_document_count')
 
-    packaging_ids = fields.One2many(
-        'product.packaging', 'product_id', 'Product Packages',
-        help="Gives the different ways to package the same product.")
-
     additional_product_tag_ids = fields.Many2many(
         string="Variant Tags",
         comodel_name='product.tag',
@@ -229,11 +225,6 @@ class ProductProduct(models.Model):
             )
             raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
 
-    def _check_duplicated_packaging_barcodes(self, barcodes_within_company, company_id):
-        packaging_domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
-        if self.env['product.packaging'].sudo().search_count(packaging_domain, limit=1):
-            raise ValidationError(_("A packaging already uses the barcode"))
-
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
@@ -241,7 +232,6 @@ class ProductProduct(models.Model):
         # Barcodes should only be unique within a company
         for company_id, barcodes_within_company in self._get_barcodes_by_company():
             self._check_duplicated_product_barcodes(barcodes_within_company, company_id)
-            self._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
 
     def _get_invoice_policy(self):
         return False
@@ -333,16 +323,6 @@ class ProductProduct(models.Model):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             return [('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
         return ['|', ('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
-
-    @api.onchange('uom_id')
-    def _onchange_uom_id(self):
-        if self.uom_id:
-            self.uom_po_id = self.uom_id.id
-
-    @api.onchange('uom_po_id')
-    def _onchange_uom(self):
-        if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
-            self.uom_po_id = self.uom_id
 
     @api.onchange('default_code')
     def _onchange_default_code(self):

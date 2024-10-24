@@ -364,7 +364,6 @@ class StockRule(models.Model):
             'description_picking': picking_description,
             'priority': values.get('priority', "0"),
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
-            'product_packaging_id': values.get('product_packaging_id') and values['product_packaging_id'].id,
         }
         if self.location_dest_from_rule:
             move_values['location_dest_id'] = self.location_dest_id.id
@@ -504,7 +503,7 @@ class ProcurementGroup(models.Model):
         return True
 
     @api.model
-    def _search_rule(self, route_ids, packaging_id, product_id, warehouse_id, domain):
+    def _search_rule(self, route_ids, uom_id, product_id, warehouse_id, domain):
         """ First find a rule among the ones defined on the procurement
         group, then try on the routes defined for the product, finally fallback
         on the default behavior
@@ -515,8 +514,8 @@ class ProcurementGroup(models.Model):
         res = self.env['stock.rule']
         if route_ids:
             res = Rule.search(expression.AND([[('route_id', 'in', route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
-        if not res and packaging_id:
-            packaging_routes = packaging_id.route_ids
+        if not res and uom_id and uom_id.package_type_id.route_id:
+            packaging_routes = uom_id.package_type_id.route_id
             if packaging_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', packaging_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         if not res:
@@ -538,7 +537,7 @@ class ProcurementGroup(models.Model):
         location = location_id
         while (not result) and location:
             domain = self._get_rule_domain(location, values)
-            result = self._search_rule(values.get('route_ids', False), values.get('product_packaging_id', False), product_id, values.get('warehouse_id', location.warehouse_id), domain)
+            result = self._search_rule(values.get('route_ids', False), values.get('uom_id'), product_id, values.get('warehouse_id', location.warehouse_id), domain)
             location = location.location_id
         return result
 
@@ -573,7 +572,7 @@ class ProcurementGroup(models.Model):
             domain = [('location_src_id', '=', location.id), ('action', 'in', ('push', 'pull_push'))]
             if values.get('domain'):
                 domain = expression.AND([domain, values['domain']])
-            found_rule = self._search_rule(values.get('route_ids'), values.get('product_packaging_id'), product_id, values.get('warehouse_id'), domain)
+            found_rule = self._search_rule(values.get('route_ids'), values.get('uom_id'), product_id, values.get('warehouse_id'), domain)
             location = location.location_id
         return found_rule
 

@@ -40,7 +40,6 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
             'list_price': 47.0,
             'type': 'consu',
             'uom_id': cls.product_uom_id.id,
-            'uom_po_id': cls.product_uom_id.id,
             'default_code': 'E-COM10',
         })
 
@@ -51,7 +50,6 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
             'list_price': 85.0,
             'type': 'consu',
             'uom_id': cls.product_uom_id.id,
-            'uom_po_id': cls.product_uom_id.id,
             'default_code': 'FURN_1118',
         })
 

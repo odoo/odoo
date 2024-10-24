@@ -585,20 +585,17 @@ class TestBoM(TestMrpCommon):
             'name': 'Crumble',
             'is_storable': True,
             'uom_id': uom_kg.id,
-            'uom_po_id': uom_kg.id,
         })
         butter = self.env['product.product'].create({
             'name': 'Butter',
             'is_storable': True,
             'uom_id': uom_kg.id,
-            'uom_po_id': uom_kg.id,
             'standard_price': 7.01
         })
         biscuit = self.env['product.product'].create({
             'name': 'Biscuit',
             'is_storable': True,
             'uom_id': uom_kg.id,
-            'uom_po_id': uom_kg.id,
             'standard_price': 1.5
         })
         bom_form_crumble = Form(self.env['mrp.bom'])
@@ -690,7 +687,6 @@ class TestBoM(TestMrpCommon):
             'name': 'cream',
             'is_storable': True,
             'uom_id': uom_litre.id,
-            'uom_po_id': uom_litre.id,
             'standard_price': 5.17,
         })
         bom_form_cheese_cake = Form(self.env['mrp.bom'])
@@ -759,13 +755,11 @@ class TestBoM(TestMrpCommon):
             'name': 'drawer',
             'is_storable': True,
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
         })
         screw = self.env['product.product'].create({
             'name': 'screw',
             'is_storable': True,
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
             'standard_price': 7.01
         })
 
@@ -872,8 +866,7 @@ class TestBoM(TestMrpCommon):
         uom_litre = self.env.ref('uom.product_uom_litre')
         self.paint = self.env['product.template'].create({
             'name': 'Paint',
-            'uom_id': uom_litre.id,
-            'uom_po_id': uom_litre.id
+            'uom_id': uom_litre.id
         })
         self.paint_color_attribute_line = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.paint.id,
@@ -1033,28 +1026,24 @@ class TestBoM(TestMrpCommon):
             'name': 'Finished',
             'is_storable': True,
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
         })
 
         semi_finished = self.env['product.product'].create({
             'name': 'Semi-Finished',
             'is_storable': True,
             'uom_id': uom_kg.id,
-            'uom_po_id': uom_kg.id,
         })
 
         assembly = self.env['product.product'].create({
             'name': 'Assembly',
             'is_storable': True,
             'uom_id': uom_dozen.id,
-            'uom_po_id': uom_dozen.id,
         })
 
         raw_material = self.env['product.product'].create({
             'name': 'Raw Material',
             'is_storable': True,
             'uom_id': uom_litre.id,
-            'uom_po_id': uom_litre.id,
             'standard_price': 5,
         })
 
@@ -1213,7 +1202,6 @@ class TestBoM(TestMrpCommon):
             'name': 'Finished',
             'is_storable': True,
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
         })
         bom_finished = Form(self.env['mrp.bom'])
         bom_finished.product_tmpl_id = finished.product_tmpl_id
@@ -1287,7 +1275,6 @@ class TestBoM(TestMrpCommon):
             'name': 'Product sold in grams',
             'is_storable': True,
             'uom_id': uom_gram.id,
-            'uom_po_id': uom_gram.id,
             'route_ids': [(4, manufacturing_route_id)],
         })
         # We create a BoM that manufactures 2kg of product

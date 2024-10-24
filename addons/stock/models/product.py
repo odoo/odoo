@@ -103,6 +103,7 @@ class ProductProduct(models.Model):
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     valid_ean = fields.Boolean('Barcode is valid EAN', compute='_compute_valid_ean')
     lot_properties_definition = fields.PropertiesDefinition('Lot Properties')
+    product_uom_ids = fields.One2many('product.uom', 'product_id', 'Product-Unit-Barcode', store=True)
 
     @api.depends('product_tmpl_id')
     def _compute_show_qty_status_button(self):
@@ -1081,18 +1082,11 @@ class ProductCategory(models.Model):
         return []
 
 
-class ProductPackaging(models.Model):
-    _inherit = ["product.packaging"]
-
-    package_type_id = fields.Many2one('stock.package.type', 'Package Type')
-    route_ids = fields.Many2many(
-        'stock.route', 'stock_route_packaging', 'packaging_id', 'route_id', 'Routes',
-        domain=[('packaging_selectable', '=', True)],
-        help="Depending on the modules installed, this will allow you to define the route of the product in this packaging: whether it will be bought, manufactured, replenished on order, etc.")
-
-
 class UomUom(models.Model):
     _inherit = ['uom.uom']
+
+    package_type_id = fields.Many2one('stock.package.type', string='Package Type')
+    product_uom_ids = fields.One2many('product.uom', 'uom_id', string='Barcodes', domain=lambda self: [('product_id', '=', self.env.context.get('product_id'))])
 
     def write(self, values):
         # Users can not update the factor if open stock moves are based on it

@@ -38,6 +38,10 @@ class TestPricelist(ProductCommon):
         })
         # Enable pricelist feature
         cls.env.user.groups_id += cls.env.ref('product.group_product_pricelist')
+        cls.uom_ton = cls.env['uom.uom'].create({
+            'name': 'Tonne',
+            'factor': 1000,
+        })
 
     def test_10_discount(self):
         # Make sure the price using a pricelist is the same than without after
@@ -72,7 +76,6 @@ class TestPricelist(ProductCommon):
         spam = self.env['product.product'].create({
             'name': '1 tonne of spam',
             'uom_id': self.uom_ton.id,
-            'uom_po_id': self.uom_ton.id,
             'list_price': tonne_price,
             'type': 'consu'
         })

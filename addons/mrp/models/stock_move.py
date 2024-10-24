@@ -92,7 +92,7 @@ class StockMoveLine(models.Model):
         kit_qty = {}
 
         for line in aggregated_move_lines.values():
-            if line['packaging']:
+            if line.get('packaging'):
                 bom_id = line['bom']
                 if bom_id and bom_id.type == "phantom":
                     kit_aggregated_ml.add(line['line_key'])
