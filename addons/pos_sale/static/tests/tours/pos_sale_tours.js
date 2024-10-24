@@ -118,9 +118,10 @@ odoo.define('pos_sale.tour', function (require) {
     ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickQuotationButton();
     ProductScreen.do.selectFirstOrder();
-    ProductScreen.check.totalAmountIs(32.2); // 3.5 * 8 * 1.15
-    ProductScreen.do.clickOrderline("Product A", 0.5);
+    ProductScreen.check.totalAmountIs(28.98); // 3.5 * 8 * 1.15 * 90%
+    ProductScreen.do.clickOrderline("Product A", '0.5');
     ProductScreen.check.checkOrderlinesNumber(4);
+    ProductScreen.check.selectedOrderlineHas('Product A', '0.5', '4.14');
 
     Tour.register('PosSettleOrderNotGroupable', { test: true, url: '/pos/ui' }, getSteps());
 

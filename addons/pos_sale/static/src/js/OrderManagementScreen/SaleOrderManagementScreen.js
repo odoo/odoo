@@ -238,6 +238,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         while (!utils.float_is_zero(remaining_quantity, 6)) {
                             let splitted_line = Orderline.create({}, line_values);
                             splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
+                            splitted_line.set_discount(line.discount);
                             remaining_quantity -= splitted_line.quantity;
                             this.env.pos.get_order().add_orderline(splitted_line);
                         }
