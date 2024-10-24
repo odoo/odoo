@@ -459,11 +459,12 @@ export class TablePlugin extends Plugin {
     hanldeFirefoxSelection(ev = null) {
         const selection = this.document.getSelection();
         if (isBrowserFirefox()) {
-            if (selection.rangeCount > 1) {
+            if (selection.rangeCount > 1 || selection.anchorNode?.tagName === "TR") {
                 // In Firefox, selecting multiple cells within a table using the mouse can create multiple ranges.
                 // This behavior can cause the original selection (where the selection started) to be lost.
                 // To solve the issue we merge the ranges of the selection together the first time we find
-                // selection.rangeCount > 1.
+                // selection.rangeCount > 1. Morover, when hitting a double click on a cell, it spans a row
+                // inside selection which needs to be simplified here.
                 const [anchorNode, anchorOffset] = getDeepestPosition(
                     selection.getRangeAt(0).startContainer,
                     selection.getRangeAt(0).startOffset
@@ -512,11 +513,13 @@ export class TablePlugin extends Plugin {
             .pop();
 
         const traversedNodes = this.shared.getTraversedNodes({ deep: true });
-        if (startTd !== endTd && startTable === endTable) {
+        if ((startTd !== endTd || this._keepCellSelected) && startTable === endTable) {
             if (!isProtected(startTable) && !isProtecting(startTable)) {
                 // The selection goes through at least two different cells ->
-                // select cells.
+                // select cells. If selection changes after selecting single
+                // cell, let it be selected.
                 this.selectTableCells(selection);
+                delete this._keepCellSelected;
             }
         } else if (!traversedNodes.every((node) => closestElement(node.parentElement, "table"))) {
             const traversedTables = new Set(
@@ -542,12 +545,31 @@ export class TablePlugin extends Plugin {
         this._currentMouseState = ev.type;
         this._lastMousedownPosition = [ev.x, ev.y];
         this.deselectTable();
-        if (this.isPointerInsideCell(ev)) {
+        const td = closestElement(ev.target, "td");
+        if (
+            td &&
+            !isProtected(td) &&
+            !isProtecting(td) &&
+            ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
+        ) {
+            ev.preventDefault();
+            this.hanldeFirefoxSelection();
+            this.selectTableCells(this.shared.getEditableSelection());
+            if (isBrowserFirefox()) {
+                // In firefox, selection changes when hitting mouseclick
+                // second time in an empty cell. It calls updateSelectionTable
+                // which deselects the single cell. Hence, we need a label
+                // to keep it selected.
+                this._keepCellSelected = true;
+            }
+            return;
+        } else if (this.isPointerInsideCell(ev)) {
             this.editable.addEventListener("mousemove", this.onMousemove);
             const currentSelection = this.shared.getEditableSelection();
             // disable dragging on table
             this.shared.setCursorStart(currentSelection.anchorNode);
         }
+        delete this._keepCellSelected;
     }
 
     onMouseup(ev) {
