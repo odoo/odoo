@@ -106,7 +106,11 @@
                             <field name="repair_request" invisible="not sale_order_line_id"/>
                             <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" readonly="sale_order_id"/>
                             <field name="product_id" readonly="state in ['cancel', 'done']"/>
-                            <field name="lot_id" context="{'default_product_id': product_id}" groups="stock.group_production_lot" options="{'no_create': True, 'no_create_edit': True}" invisible="tracking not in ['serial', 'lot']" readonly="state == 'done' or tracking not in ['serial', 'lot']" required="tracking in ['serial', 'lot']"/>
+                            <label for="lot_id" invisible="tracking not in ['serial', 'lot']"/>
+                            <div class="o_row" invisible="tracking not in ['serial', 'lot']">
+                                <field name="lot_id" context="{'default_product_id': product_id}" groups="stock.group_production_lot" invisible="tracking not in ['serial', 'lot']" readonly="state == 'done' or tracking not in ['serial', 'lot']" required="state=='done' and tracking in ['serial', 'lot']"/>
+                                <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" invisible="tracking not in ['serial', 'lot'] or lot_id"/>
+                            </div>
                             <field name="product_uom_category_id" invisible="1"/>
                             <label for="product_qty" invisible="not product_id"/>
                             <div class="o_row" invisible="not product_id">
@@ -133,7 +137,7 @@
                 <notebook>
                     <page string="Parts" name="parts">
                         <field name="move_ids" readonly="state == 'cancel' or state == 'done'"
-                        context="{'default_repair_id': id, 'default_product_uom_qty': 1, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add'}">
+                        context="{'default_repair_id': id, 'default_product_uom_qty': 1, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add', 'active_repair_id': id}">
                             <list string="Operations" editable="bottom">
                                 <control>
                                     <create string="Add a line"/>

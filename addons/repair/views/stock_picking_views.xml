@@ -26,6 +26,9 @@
                     <field name="is_repairable"/>
                 </group>
             </xpath>
+            <xpath expr="//group[@name='stock_picking_type_lot']" position="attributes">
+                <attribute name="invisible">code not in ['incoming', 'outgoing', 'internal', 'repair_operation']</attribute>
+            </xpath>
             <field name="create_backorder" position="attributes">
                 <attribute name="invisible">code == 'repair_operation'</attribute>
             </field>

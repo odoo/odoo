@@ -404,6 +404,25 @@ class RepairOrder(models.Model):
         repairs_to_cancel = self.filtered(lambda ro: ro.state not in ('draft', 'cancel'))
         repairs_to_cancel.action_repair_cancel()
 
+    def _get_lot_id(self):
+        self.ensure_one()
+        name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+        exist_lot = not name or self.env['stock.lot'].search([
+            ('product_id', '=', self.product_id.id),
+            '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
+            ('name', '=', name),
+        ], limit=1)
+        if exist_lot:
+            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
+        if not name:
+            raise UserError(_("Please set the first Serial Number or a default sequence"))
+        lot_id = self.env['stock.lot'].create({'product_id': self.product_id.id, 'name': name})
+        return lot_id
+
+    def action_generate_serial(self):
+        self.ensure_one()
+        self.lot_id = self._get_lot_id()
+
     def action_assign(self):
         return self.move_ids._action_assign()
 
