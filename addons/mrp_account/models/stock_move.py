@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from collections import defaultdict
 
 from odoo import models
-from odoo.tools import float_round
 
 
 class StockMove(models.Model):
@@ -40,39 +38,3 @@ class StockMove(models.Model):
     def _is_production_consumed(self):
         self.ensure_one()
         return self.location_dest_id.usage == 'production' and self.location_id._should_be_valued()
-
-    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
-        rslt = super()._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description)
-
-        product_expense_account = self.product_id.product_tmpl_id.get_product_accounts()['expense']
-        labour_amounts = defaultdict(float)
-        for wo in self.production_id.workorder_ids:
-            account = wo.workcenter_id.expense_account_id or product_expense_account
-            labour_amounts[account] += wo._cal_cost()
-
-        cost_share = 1
-        if self.production_id.move_byproduct_ids:
-            if self.cost_share:
-                cost_share = self.cost_share / 100
-            else:
-                cost_share = float_round(1 - sum(self.production_id.move_byproduct_ids.mapped('cost_share')) / 100, precision_rounding=0.0001)
-
-        currency = self.env.company.currency_id
-        workcenter_total_cost = 0
-        for acc, amt in labour_amounts.items():
-            amount = float_round(amt * cost_share, precision_rounding=currency.rounding)
-            if not currency.is_zero(amount):
-                workcenter_total_cost += amount
-                rslt['labour_credit_line_vals_' + acc.code] = {
-                    'name': description,
-                    'product_id': self.product_id.id,
-                    'quantity': qty,
-                    'product_uom_id': self.product_id.uom_id.id,
-                    'ref': description,
-                    'partner_id': partner_id,
-                    'balance': -amount,
-                    'account_id': acc.id,
-                }
-        if not currency.is_zero(workcenter_total_cost):
-            rslt['credit_line_vals']['balance'] += workcenter_total_cost
-        return rslt
