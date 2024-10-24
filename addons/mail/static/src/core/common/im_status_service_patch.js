@@ -20,7 +20,7 @@ export const imStatusServicePatch = {
                 if (!persona) {
                     return; // Do not store unknown persona's status
                 }
-                persona.im_status = im_status;
+                this._handleImStatusUpdate(persona, im_status);
                 if (persona.type !== "guest" || persona.notEq(store.self)) {
                     return; // Partners are already handled by the original service
                 }
@@ -31,6 +31,10 @@ export const imStatusServicePatch = {
             }
         );
         return API;
+    },
+
+    _handleImStatusUpdate(persona, im_status) {
+        persona.im_status = im_status;
     },
 };
 export const unpatchImStatusService = patch(imStatusService, imStatusServicePatch);

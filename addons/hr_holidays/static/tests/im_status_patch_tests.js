@@ -4,8 +4,10 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 import { Command } from "@mail/../tests/helpers/command";
+import { unpatchedImStatusService } from "../src/im_status_service_patch";
 
 QUnit.module("im_status");
+unpatchedImStatusService();
 
 QUnit.test("on leave & online", async (assert) => {
     const pyEnv = await startServer();
