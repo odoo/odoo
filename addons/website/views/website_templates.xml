@@ -1638,6 +1638,13 @@
             <div class="oe_website_login_container" t-out="0"/>
         </t>
     </xpath>
+    <xpath expr="//div[hasclass('oe_website_login_container')]" position="before">
+        <div class="oe_structure" id="snippet_dropzone_login_layout_top" />
+        <span />
+    </xpath>
+    <xpath expr="//div[hasclass('oe_website_login_container')]" position="after">
+        <div class="oe_structure" id="snippet_dropzone_login_layout_bottom" />
+    </xpath>
 </template>
 
 <!-- Area for blocks shared by all pages (e.g. all pages popups) -->
