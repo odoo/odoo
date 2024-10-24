@@ -52,6 +52,7 @@ class ResConfigSettings(models.TransientModel):
     salesperson_id = fields.Many2one(
         related='website_id.salesperson_id',
         readonly=False,
+        default=lambda self: self.env.ref('base.user_admin').id,
     )
     salesteam_id = fields.Many2one(related='website_id.salesteam_id', readonly=False)
     website_sale_prevent_zero_price_sale = fields.Boolean(
