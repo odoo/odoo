@@ -52,8 +52,8 @@
                 <t t-call="mail.ChatWindow.headerContent"/>
             </t>
             <div class="flex-grow-1"/>
-            <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
-                <t t-out="thread.needactionCounter"/>
+            <div t-if="thread and thread.importantCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
+                <t t-out="thread.importantCounter"/>
             </div>
             <t t-if="threadActions.actions.length > 1" t-call="mail.ChatWindow.dropdownAction">
                 <t t-set="action" t-value="threadActions.actions[0]"/>
