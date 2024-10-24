@@ -61,13 +61,11 @@ class SaleOrder(models.Model):
             and json.loads(self.customizable_pdf_form_fields)
         ) or {}
 
-        headers_available = self.available_product_document_ids.filtered(
-            lambda doc: doc.document_type == 'header'
-        )
-        footers_available = self.available_product_document_ids.filtered(
-            lambda doc: doc.document_type == 'footer'
-        )
-        selected_documents = self.quotation_document_ids
+        available_documents = self.available_product_document_ids._filter_quote_document_access()
+        headers_available = available_documents.filtered(lambda doc: doc.document_type == 'header')
+        footers_available = available_documents.filtered(lambda doc: doc.document_type == 'footer')
+
+        selected_documents = self.quotation_document_ids._filter_quote_document_access()
         selected_headers = selected_documents.filtered(lambda doc: doc.document_type == 'header')
         selected_footers = selected_documents - selected_headers
         lines_params = []
