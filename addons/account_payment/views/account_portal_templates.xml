@@ -75,7 +75,7 @@
     </template>
 
     <template id="portal_my_invoices_payment" name="Payment on My Invoices" inherit_id="account.portal_my_invoices">
-        <xpath expr="//t[@t-call='portal.portal_table']/thead/tr/th[last()]" position="after">
+        <xpath expr="//t[@t-call='portal.portal_table']//th[@name='amount_due']" position="after">
             <th class="d-none d-lg-table-cell"/>
             <th/>
         </xpath>
