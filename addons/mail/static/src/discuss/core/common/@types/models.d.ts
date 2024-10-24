@@ -14,7 +14,7 @@ declare module "models" {
     }
 
     export interface Thread {
-        channelMembers: ChannelMember[],
+        channel_member_ids: ChannelMember[],
         channel_type: "chat" | "channel" | "group" | "livechat" | "whatsapp",
         computeCorrespondent(): ChannelMember | undefined,
         correspondent: ChannelMember,

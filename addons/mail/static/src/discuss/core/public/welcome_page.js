@@ -22,7 +22,7 @@ export class WelcomePage extends Component {
         this.audioRef = useRef("audio");
         this.videoRef = useRef("video");
         onMounted(() => {
-            if (this.store.discuss_public_thread.defaultDisplayMode === "video_full_screen") {
+            if (this.store.discuss_public_thread.default_display_mode === "video_full_screen") {
                 this.enableMicrophone();
                 this.enableVideo();
             }

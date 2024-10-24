@@ -640,8 +640,8 @@ export class Store extends BaseStore {
             model: "discuss.channel",
             name,
         });
-        if (!thread.avatarCacheKey) {
-            thread.avatarCacheKey = "hello";
+        if (!thread.avatar_cache_key) {
+            thread.avatar_cache_key = "hello";
         }
         thread.open();
         return thread;

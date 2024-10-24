@@ -201,7 +201,7 @@ export class Thread extends Record {
         },
     });
     mainAttachment = Record.one("ir.attachment");
-    memberCount = 0;
+    member_count = 0;
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
     /**
@@ -241,7 +241,7 @@ export class Thread extends Record {
     scrollTop = "bottom";
     transientMessages = Record.many("mail.message");
     /** @type {string} */
-    defaultDisplayMode;
+    default_display_mode;
     scrollUnread = true;
     suggestedRecipients = Record.attr([], {
         onUpdate() {
@@ -315,7 +315,7 @@ export class Thread extends Record {
     }
 
     get areAllMembersLoaded() {
-        return this.memberCount === this.channelMembers.length;
+        return this.member_count === this.channel_member_ids.length;
     }
 
     get busChannel() {
@@ -372,14 +372,14 @@ export class Thread extends Record {
         }
         if (this.channel_type === "group" && !this.name) {
             return formatList(
-                this.channelMembers.map((channelMember) => channelMember.persona.name)
+                this.channel_member_ids.map((channelMember) => channelMember.persona.name)
             );
         }
         return this.name;
     }
 
     get correspondents() {
-        return this.channelMembers.filter(({ persona }) => persona.notEq(this.store.self));
+        return this.channel_member_ids.filter(({ persona }) => persona.notEq(this.store.self));
     }
 
     computeIsDisplayed() {
@@ -520,7 +520,7 @@ export class Thread extends Record {
             if (!this.hasSeenFeature) {
                 return;
             }
-            const otherMembers = this.channelMembers.filter((member) =>
+            const otherMembers = this.channel_member_ids.filter((member) =>
                 member.persona.notEq(this.store.self)
             );
             if (otherMembers.length === 0) {
@@ -559,7 +559,7 @@ export class Thread extends Record {
     });
 
     get unknownMembersCount() {
-        return this.memberCount - this.channelMembers.length;
+        return this.member_count - this.channel_member_ids.length;
     }
 
     executeCommand(command, body = "") {
@@ -577,7 +577,7 @@ export class Thread extends Record {
         }
         const previousState = this.fetchMembersState;
         this.fetchMembersState = "pending";
-        const known_member_ids = this.channelMembers.map((channelMember) => channelMember.id);
+        const known_member_ids = this.channel_member_ids.map((channelMember) => channelMember.id);
         let data;
         try {
             data = await rpc("/discuss/channel/members", {
