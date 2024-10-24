@@ -1580,6 +1580,11 @@ header {
     background-color: transparent; // In order to allow the mega menu to be transparent
     border: 1px solid $gray-200; // Prevent to see the color of the block behind.
 
+    // Needed to space the megamenu on this specific header
+    @if o-website-value('header-template') == 'boxed' {
+        margin-top: $navbar-padding-y !important;
+    }
+
     .container, .container-fluid {
         // Need to reforce those because they are removed since its a container
         // inside another container (the one in the navbar)

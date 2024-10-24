@@ -20,7 +20,7 @@
         </a>
         <t t-if="submenu.is_mega_menu">
             <div t-if="not is_mobile"
-                 t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
+                 t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes} #{_extra_megamenu_classes}"
                  data-name="Mega Menu"
                  t-field="submenu.mega_menu_content"
                  role="menuitem"/>
@@ -1457,7 +1457,7 @@
     <xpath expr="//header//nav" position="replace">
         <div class="container py-3 px-0">
             <t t-call="website.navbar">
-                <t t-set="_navbar_classes" t-valuef="o_full_border d-none d-lg-block rounded-pill py-2 px-3 shadow-sm"/>
+                <t t-set="_navbar_classes" t-valuef="o_full_border d-none d-lg-block rounded-pill px-3 shadow-sm"/>
 
                 <div id="o_main_nav" class="o_main_nav container">
                     <!-- Brand -->
@@ -1473,6 +1473,7 @@
                             <t t-call="website.submenu">
                                 <t t-set="item_class" t-valuef="nav-item"/>
                                 <t t-set="link_class" t-valuef="nav-link"/>
+                                <t t-set="_extra_megamenu_classes" t-valuef="rounded-2"/>
                             </t>
                         </t>
                     </t>
@@ -1514,7 +1515,7 @@
                 </div>
             </t>
             <t t-call="website.template_header_mobile">
-                <t t-set="_extra_navbar_classes" t-valuef="o_full_border mx-1 rounded-pill"/>
+                <t t-set="_extra_navbar_classes" t-valuef="o_full_border mx-1 rounded-pill px-3"/>
             </t>
         </div>
     </xpath>
