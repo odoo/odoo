@@ -1446,7 +1446,7 @@ export function makeActionManager(env, router = _router) {
             }
             throw new InvalidButtonParamsError("Missing type for doActionButton request");
         }
-        if (action.embedded_action_ids && !this.currentController?.config.currentEmbeddedActionId) {
+        if (params.context?.current_embedded_action_id === undefined) {
             const embeddedActionsOrder = JSON.parse(
                 browser.localStorage.getItem(
                     `orderEmbedded${action.id}+${params.resId || ""}+${user.userId}`
