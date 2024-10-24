@@ -244,7 +244,7 @@
                     <t t-set="isInvisible" t-value="evalInvisible(column.invisible, record) or !(column.name in record.data)"/>
                     <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
                         class="o_data_cell cursor-pointer"
-                        t-att-class="getCellClass(column, record)"
+                        t-att-class="this.getCellClass(column, record)"
                         t-att-name="column.name"
                         t-att-colspan="column.colspan"
                         t-att-data-tooltip="!isInvisible ? getCellTitle(column, record) : false"
@@ -257,7 +257,7 @@
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">
-                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell w-print-0 p-print-0 cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
+                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell w-print-0 p-print-0 cursor-pointer" t-att-class="this.getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
                         <div class="d-flex flex-wrap gap-1">
                             <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                                 <ViewButton t-if="!evalInvisible(button.invisible, record)"
@@ -277,7 +277,7 @@
                     </td>
                 </t>
                 <t t-if="column.type === 'widget'">
-                    <td class="o_data_cell" t-att-class="getCellClass(column, record)">
+                    <td class="o_data_cell" t-att-class="this.getCellClass(column, record)">
                         <Widget t-props="column.props" record="record"/>
                     </td>
                 </t>
