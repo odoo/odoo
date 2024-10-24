@@ -368,7 +368,10 @@ export class ListPlugin extends Plugin {
     }
 
     mergeSimilarLists(element) {
-        if (!element.matches("ul, ol, li.oe-nested")) {
+        if (
+            !element.matches("ul, ol, li.oe-nested") ||
+            (element.matches("li.oe-nested") && !element.querySelector("ul, ol"))
+        ) {
             return;
         }
         const previousSibling = element.previousElementSibling;
@@ -532,7 +535,7 @@ export class ListPlugin extends Plugin {
     outdentTopLevelLI(li) {
         const cursors = this.shared.preserveSelection();
         const ul = li.parentNode;
-        const dir = ul.getAttribute("dir");
+        const dir = li.getAttribute("dir") || ul.getAttribute("dir");
         let p;
         let toMove = li.lastChild;
         while (toMove) {
@@ -695,8 +698,16 @@ export class ListPlugin extends Plugin {
             }
             element = element.parentElement;
         }
-        // Fully outdent LI.
-        this.liToBlocks(closestLIendContainer);
+        if (!closestLIendContainer.classList.contains("oe-nested")) {
+            // Remove LI marker on first backspace.
+            closestLIendContainer.classList.add("oe-nested");
+        } else {
+            // Fully outdent LI.
+            const list = closestElement(closestLIendContainer, "ul[dir], ol[dir]");
+            const dir = list?.getAttribute("dir");
+            dir && closestLIendContainer.setAttribute("dir", dir);
+            this.liToBlocks(closestLIendContainer);
+        }
         return true;
     }
 
