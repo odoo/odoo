@@ -256,6 +256,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         while (!floatIsZero(remaining_quantity, 6)) {
                             const splitted_line = new Orderline({ env: this.env }, line_values);
                             splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
+                            splitted_line.set_discount(line.discount);
                             this.pos.get_order().add_orderline(splitted_line);
                             remaining_quantity -= splitted_line.quantity;
                         }
