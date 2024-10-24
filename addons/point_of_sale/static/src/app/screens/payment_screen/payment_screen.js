@@ -149,7 +149,11 @@ export class PaymentScreen extends Component {
         }
         if (result) {
             this.numberBuffer.set(result.amount.toString());
-            if (paymentMethod.use_payment_terminal && !this.isRefundOrder) {
+            if (
+                paymentMethod.use_payment_terminal &&
+                !this.isRefundOrder &&
+                paymentMethod.payment_terminal.fastPayments
+            ) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
             }
