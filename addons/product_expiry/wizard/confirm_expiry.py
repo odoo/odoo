@@ -19,7 +19,7 @@ class ExpiryPickingConfirmation(models.TransientModel):
         if self.show_lots:
             # For multiple expired lots, they are listed in the wizard view.
             self.description = _(
-                "You are going to deliver some product expired lots."
+                "You are going to deliver some Expired SN/Lot Products"
                 "\nDo you confirm you want to proceed?"
             )
         else:
