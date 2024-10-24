@@ -703,7 +703,7 @@ class Registry(Mapping):
                   JOIN pg_namespace n ON (n.oid = c.relnamespace)
                  WHERE c.relname IN %s
                    AND c.relkind = 'r'
-                   AND n.nspname = 'public'
+                   AND n.nspname = current_schema
             """
             tables = tuple(m._table for m in self.models.values())
             cr.execute(query, [tables])
