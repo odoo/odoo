@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("FixedTaxNegativeQty", {
                     ...ProductScreen.clickLine("Zero Amount Product", "1")[0],
                     isActive: ["mobile"],
                 },
-                ...["+/-", "1"].map(Numpad.click),
+                ...["+/-"].map(Numpad.click),
                 ...ProductScreen.selectedOrderlineHasDirect("Zero Amount Product", "-1", "-1.0"),
             ]),
             ProductScreen.clickPayButton(),
