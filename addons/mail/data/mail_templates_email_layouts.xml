@@ -18,7 +18,7 @@
         <meta itemprop="name" t-att-content="button_access['title']"/>
     </div>
 </div>
-<div t-if="subtitles or has_button_access or actions or not is_discussion"
+<div t-if="subtitles or has_button_access or not is_discussion"
         summary="o_mail_notification" style="padding: 0px;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
         <tbody>
@@ -33,15 +33,6 @@
                                     </a>
                                 </td>
                                 <td t-if="has_button_access">&amp;nbsp;&amp;nbsp;</td>
-
-                                <td t-if="actions">
-                                    <t t-foreach="actions" t-as="action">
-                                        <a t-att-href="action['url']" t-att-style="'font-size: 12px; color: ' + (company.email_secondary_color or '#875A7B')+ '; text-decoration:none !important;'">
-                                            <t t-out="action['title']"/>
-                                        </a>
-                                        &amp;nbsp;&amp;nbsp;
-                                    </t>
-                                </td>
                                 <td t-if="subtitles" style="font-size: 12px;">
                                      <t t-foreach="subtitles" t-as="subtitle">
                                         <span t-attf-style="{{ 'font-weight:bold;' if subtitle_first else '' }}"
