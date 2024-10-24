@@ -75,11 +75,13 @@ class IrAttachment(models.Model):
         res_list = []
         for attachment in self:
             res = {
-                'checksum': attachment.checksum,
-                'id': attachment.id,
-                'filename': attachment.name,
-                'name': attachment.name,
-                'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+                "checksum": attachment.checksum,
+                "id": attachment.id,
+                "filename": attachment.name,
+                "name": attachment.name,
+                "mimetype": "application/octet-stream" if safari and attachment.mimetype and "video" in attachment.mimetype else attachment.mimetype,
+                "type": attachment.type,
+                "url": attachment.url,
             }
             if not legacy:
                 res['originThread'] = [('insert', {

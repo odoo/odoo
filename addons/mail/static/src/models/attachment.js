@@ -42,6 +42,12 @@ registerModel({
             if ('originThread' in data) {
                 data2.originThread = data.originThread;
             }
+            if ('type' in data) {
+                data2.type = data.type;
+            }
+            if ('url' in data) {
+                data2.url = data.url;
+            }
             return data2;
         },
     },

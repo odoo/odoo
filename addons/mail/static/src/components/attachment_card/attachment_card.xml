@@ -46,8 +46,14 @@
                                 <i class="fa fa-trash" role="img" aria-label="Remove"/>
                             </button>
                         </t>
+                        <!-- Open link button -->
+                        <t t-if="attachmentCard.attachment.type === 'url'">
+                            <a class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemOpenLink btn d-flex justify-content-center align-items-center w-100 h-100 rounded-0 bg-300" t-att-href="attachmentCard.attachment.url" target='_blank' title="Open Link">
+                                <i class="fa fa-external-link" role="img" aria-label="Open Link"/>
+                            </a>
+                        </t>
                         <!-- Download button -->
-                        <t t-if="!attachmentCard.attachmentList.composerViewOwner and !attachmentCard.attachment.isUploading">
+                        <t t-if="!attachmentCard.attachmentList.composerViewOwner and attachmentCard.attachment.type !== 'url' and !attachmentCard.attachment.isUploading">
                             <button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemDownload btn d-flex justify-content-center align-items-center w-100 h-100 rounded-0 bg-300" t-on-click="attachmentCard.attachment.onClickDownload" title="Download">
                                 <i class="fa fa-download" role="img" aria-label="Download"/>
                             </button>
