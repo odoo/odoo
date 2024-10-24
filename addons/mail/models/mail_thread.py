@@ -2121,6 +2121,7 @@ class MailThread(models.AbstractModel):
                  )
             )
         partner_ids = list(partner_ids or [])
+        parent_msg_id = kwargs.pop('parent_msg_id', None)
 
         # split message additional values from notify additional values
         msg_kwargs = {key: val for key, val in kwargs.items()
@@ -2171,7 +2172,7 @@ class MailThread(models.AbstractModel):
             # content
             'body': escape(body),  # escape if text, keep if markup
             'message_type': message_type,
-            'parent_id': self._message_compute_parent_id(parent_id),
+            'parent_id': self._message_compute_parent_id(parent_id, parent_msg_id=parent_msg_id),
             'subject': subject or False,
             'subtype_id': subtype_id,
             # recipients
@@ -2812,7 +2813,7 @@ class MailThread(models.AbstractModel):
 
         return author_id, email_from
 
-    def _message_compute_parent_id(self, parent_id):
+    def _message_compute_parent_id(self, parent_id, **kwargs):
         # parent management, depending on ``_mail_flat_thread``
         # ``_mail_flat_thread`` True: no free message. If no parent, find the first
         # posted message and attach new message to it. If parent, get back to the first
