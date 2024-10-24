@@ -356,9 +356,15 @@ test("activity view: Activity rendering with done activities", async () => {
             text: uploadPlannedActs[actIdx].user_id[1],
         });
     }
-    await contains(".o-mail-ActivityListPopoverItem", { text: "Due in 4 days" });
-    await contains(".o-mail-ActivityListPopoverItem", { text: "Due in 5 days" });
-    await contains(".o-mail-ActivityListPopoverItem", { text: "Due in 6 days" });
+    await contains(".o-mail-ActivityListPopoverItem", {
+        text: DateTime.now().plus({ days: 4 }).toFormat("LLL dd, yyyy"),
+    });
+    await contains(".o-mail-ActivityListPopoverItem", {
+        text: DateTime.now().plus({ days: 5 }).toFormat("LLL dd, yyyy"),
+    });
+    await contains(".o-mail-ActivityListPopoverItem", {
+        text: DateTime.now().plus({ days: 6 }).toFormat("LLL dd, yyyy"),
+    });
     await contains(".o-mail-ActivityListPopover .badge.text-bg-secondary", { text: "1" }); // 1 done
     await contains(".o-mail-ActivityListPopoverItem", { text: uploadDoneActs[0].user_id[1] });
     await contains(".o-mail-ActivityListPopoverItem", {
