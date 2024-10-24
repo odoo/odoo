@@ -167,6 +167,20 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     _patchForComputeSnippetTemplates($html) {
         this._super(...arguments);
 
+        // TODO adapt in master: as a stable fix the controller required fields
+        // cannot be deleted.
+        const websiteFormFieldRequiredEl = $html.find("[data-js='WebsiteFormFieldRequired'][data-selector='.s_website_form .s_website_form_model_required']")[0];
+        if (websiteFormFieldRequiredEl) {
+            websiteFormFieldRequiredEl.dataset.selector = ".s_website_form .s_website_form_model_required, .s_website_form .s_website_form_controller_required";
+        }
+
+        // TODO adapt in master: as a stable fix the controller required fields
+        // cannot be duplicated.
+        const websiteFormFieldModelEl = $html.find("[data-js='WebsiteFormFieldModel'][data-selector='.s_website_form .s_website_form_field:not(.s_website_form_custom)']")[0];
+        if (websiteFormFieldModelEl) {
+            websiteFormFieldModelEl.dataset.selector = ".s_website_form .s_website_form_field:not(.s_website_form_custom:not(.s_website_form_controller_required))";
+        }
+
         // TODO adapt in master: as a stable fix we corrected the behavior of
         // the logo button that led to an error when switching from Text to
         // Logo. Remove me in master.

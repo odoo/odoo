@@ -211,6 +211,10 @@ const FormEditor = options.Class.extend({
         template.content.querySelectorAll("[data-name]").forEach(el => {
             el.dataset.name = this._getQuotesEncodedName(el.dataset.name);
         });
+        // TODO In master handle in fields templates ?
+        if (field.controllerRequired) {
+            template.content.firstElementChild.classList.add("s_website_form_controller_required");
+        }
         return template.content.firstElementChild;
     },
 });
@@ -366,6 +370,7 @@ const FieldEditor = FormEditor.extend({
         field.rows = textarea && textarea.rows;
         field.required = classList.contains('s_website_form_required');
         field.modelRequired = classList.contains('s_website_form_model_required');
+        field.controllerRequired = classList.contains("s_website_form_controller_required");
         field.hidden = classList.contains('s_website_form_field_hidden');
         field.formatInfo = this._getFieldFormat();
     },

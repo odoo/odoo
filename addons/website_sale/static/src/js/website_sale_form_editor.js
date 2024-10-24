@@ -13,6 +13,7 @@ FormEditorRegistry.add('create_customer', {
     }, {
         type: 'email',
         required: true,
+        controllerRequired: true,
         fillWith: 'email',
         name: 'email',
         string: _t('Your Email'),
