@@ -245,6 +245,13 @@ export class MediaDialog extends Component {
             element.classList.remove('o_modified_image_to_save');
             element.classList.remove('oe_edited_link');
             element.classList.add(...TABS[this.state.activeTab].Component.mediaSpecificClasses);
+            if (
+                this.props.node &&
+                this.state.activeTab == "IMAGES" &&
+                (this.props.node.classList.contains("fa") || this.props.node.classList.contains("to_icon"))
+            ) {
+                element.classList.add("to_icon");
+            }
         });
         return elements;
     }

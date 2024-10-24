@@ -543,7 +543,10 @@ font[class*='bg-'] {
 }
 
 // Icons
-.fa {
+.to_icon {
+    object-fit: contain;
+}
+.fa, .to_icon {
     $-size: map-get($spacers, 5);
 
     font-family: "FontAwesome" !important;
