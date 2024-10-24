@@ -6377,17 +6377,15 @@ class BaseModel(metaclass=MetaModel):
                   ordering, however the tradeoff is that it can not be lazy
 
         :param key: either a callable from a :class:`Model` to a (hashable)
-                    value, or a field name. In the latter case, it is equivalent
-                    to ``itemgetter(key)`` (aka the named field's value)
+                    value, or a dot-separated sequence of field names. In the latter case, it is equivalent
+                    to ``mapped(key)`` (aka the named field's value)
         :type key: callable | str
         :rtype: dict
         """
-        if isinstance(key, str):
-            key = itemgetter(key)
 
         collator = defaultdict(list)
-        for record in self:
-            collator[key(record)].extend(record._ids)
+        for record, key in zip(self, self.mapped(key)):
+            collator[key].extend(record._ids)
 
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}
