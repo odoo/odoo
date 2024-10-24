@@ -143,10 +143,14 @@ export function parseAccountingDate(dateRange, locale) {
 const ODOO_FIN_ARGS = () => [
     arg("account_codes (string)", _t("The prefix of the accounts.")),
     arg(
-        "date_range (string, date)",
-        _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+        "date_from (string, date)",
+        _t(`The date from which we gather lines. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
     ),
-    arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
+    arg(
+        "date_to (string, date, optional)",
+        _t(`The date to which we gather lines. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+    ),
+    arg("offset (number, default=0)", _t("Offset applied to the years.")),
     arg("company_id (number, optional)", _t("The company to target (Advanced).")),
     arg(
         "include_unposted (boolean, default=FALSE)",
@@ -161,7 +165,8 @@ functionRegistry.add("ODOO.CREDIT", {
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
-        dateRange,
+        dateFrom,
+        dateTo,
         offset = { value: 0 },
         companyId = { value: null },
         includeUnposted = { value: false }
@@ -171,13 +176,18 @@ functionRegistry.add("ODOO.CREDIT", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _dateFrom = parseAccountingDate(dateFrom, this.locale);
+        if ( !dateTo?.value ) {
+            dateTo = { value: dateFrom?.value }
+        }
+        const _dateTo = parseAccountingDate(dateTo, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         return {
             value: this.getters.getAccountPrefixCredit(
                 _accountCodes,
-                _dateRange,
+                _dateFrom,
+                _dateTo,
                 _offset,
                 _companyId,
                 _includeUnposted
@@ -194,7 +204,8 @@ functionRegistry.add("ODOO.DEBIT", {
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
-        dateRange,
+        dateFrom,
+        dateTo,
         offset = { value: 0 },
         companyId = { value: null },
         includeUnposted = { value: false }
@@ -204,13 +215,18 @@ functionRegistry.add("ODOO.DEBIT", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _dateFrom = parseAccountingDate(dateFrom, this.locale);
+        if ( !dateTo?.value ) {
+            dateTo = { value: dateFrom?.value }
+        }
+        const _dateTo = parseAccountingDate(dateTo, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         return {
             value: this.getters.getAccountPrefixDebit(
                 _accountCodes,
-                _dateRange,
+                _dateFrom,
+                _dateTo,
                 _offset,
                 _companyId,
                 _includeUnposted
@@ -227,7 +243,8 @@ functionRegistry.add("ODOO.BALANCE", {
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
-        dateRange,
+        dateFrom,
+        dateTo,
         offset = { value: 0 },
         companyId = { value: null },
         includeUnposted = { value: false }
@@ -237,20 +254,26 @@ functionRegistry.add("ODOO.BALANCE", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _dateFrom = parseAccountingDate(dateFrom, this.locale);
+        if ( !dateTo?.value ) {
+            dateTo = { value: dateFrom?.value }
+        }
+        const _dateTo = parseAccountingDate(dateTo, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         const value =
             this.getters.getAccountPrefixDebit(
                 _accountCodes,
-                _dateRange,
+                _dateFrom,
+                _dateTo,
                 _offset,
                 _companyId,
                 _includeUnposted
             ) -
             this.getters.getAccountPrefixCredit(
                 _accountCodes,
-                _dateRange,
+                _dateFrom,
+                _dateTo,
                 _offset,
                 _companyId,
                 _includeUnposted

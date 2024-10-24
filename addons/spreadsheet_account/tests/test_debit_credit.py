@@ -111,7 +111,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -129,7 +133,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -173,7 +181,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -188,7 +200,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
 
     def test_response_order(self):
         request_1 = {
-            "date_range": {
+            "date_from": {
+                "range_type": "year",
+                "year": 2022,
+            },
+            "date_to": {
                 "range_type": "year",
                 "year": 2022,
             },
@@ -197,7 +213,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             "include_unposted": True,
         }
         request_2 = {
-            "date_range": {
+            "date_from": {
+                "range_type": "year",
+                "year": 2020,
+            },
+            "date_to": {
                 "range_type": "year",
                 "year": 2020,
             },
@@ -220,7 +240,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -240,7 +264,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -261,7 +289,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             Account.spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -270,7 +302,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "include_unposted": True,
                     },
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -314,7 +350,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2021,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2021,
                         },
@@ -357,7 +397,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2021,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2021,
                         },
@@ -402,7 +446,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -443,7 +491,12 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "quarter",
+                            "year": 2022,
+                            "quarter": 3,
+                        },
+                        "date_to": {
                             "range_type": "quarter",
                             "year": 2022,
                             "quarter": 3,
@@ -485,7 +538,8 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {"range_type": "month", "year": 2022, "month": 7},
+                        "date_from": {"range_type": "month", "year": 2022, "month": 7},
+                        "date_to": {"range_type": "month", "year": 2022, "month": 7},
                         "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
@@ -523,7 +577,13 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "day",
+                            "year": 2022,
+                            "month": 7,
+                            "day": 2,
+                        },
+                        "date_to": {
                             "range_type": "day",
                             "year": 2022,
                             "month": 7,
@@ -535,7 +595,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     }
                 ]
             ),
-            [{"credit": 555, "debit": 1055}],
+            [{"credit": 555, "debit": 555}],
         )
 
     def test_first_fiscal_day_date_period(self):
@@ -591,7 +651,13 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "day",
+                            "year": 2022,
+                            "month": 2,
+                            "day": 4,
+                        },
+                        "date_to": {
                             "range_type": "day",
                             "year": 2022,
                             "month": 2,
@@ -615,7 +681,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2025,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2025,
                         },
@@ -659,7 +729,12 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "quarter",
+                            "year": 2022,
+                            "quarter": 3,
+                        },
+                        "date_to": {
                             "range_type": "quarter",
                             "year": 2022,
                             "quarter": 3,
@@ -704,7 +779,8 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {"range_type": "month", "year": 2022, "month": 7},
+                        "date_from": {"range_type": "month", "year": 2022, "month": 7},
+                        "date_to": {"range_type": "month", "year": 2022, "month": 7},
                         "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
@@ -745,7 +821,13 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "day",
+                            "year": 2022,
+                            "month": 7,
+                            "day": 2,
+                        },
+                        "date_to": {
                             "range_type": "day",
                             "year": 2022,
                             "month": 7,
@@ -792,7 +874,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -810,7 +896,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -855,7 +945,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -873,7 +967,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -893,7 +991,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -914,7 +1016,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -934,7 +1040,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -952,7 +1062,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
     def test_see_records_action(self):
         action = self.env["account.account"].spreadsheet_move_line_action(
             {
-                "date_range": {
+                "date_from": {
+                    "range_type": "year",
+                    "year": 2022,
+                },
+                "date_to": {
                     "range_type": "year",
                     "year": 2022,
                 },
@@ -993,7 +1107,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
     def test_see_records_action_no_code(self):
         action = self.env["account.account"].spreadsheet_move_line_action(
             {
-                "date_range": {
+                "date_from": {
+                    "range_type": "year",
+                    "year": 2022,
+                },
+                "date_to": {
                     "range_type": "year",
                     "year": 2022,
                 },
