@@ -53,8 +53,9 @@
         <field name="name">report.hr.holidays.report.leave_all.graph</field>
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
-            <graph string="Time off Summary" sample="1">
+            <graph string="Time off Summary" sample="1" stacked="1" js_class="hr_holidays_graph">
                 <field name="employee_id" type="row"/>
+                <field name="leave_type" type="col"/>
                 <field name="number_of_days" string="Duration (Days)" type="measure"/>
                 <field name="number_of_hours" string="Duration (Hours)"/>
             </graph>
