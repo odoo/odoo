@@ -18,7 +18,7 @@ export class ExcalidrawDialog extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({});
+        this.state = useState({ isInsertionDisabled: true });
         this.inputRef = useAutofocus({ refName: "urlInput" });
         useExternalListener(window, "keydown", this.onKeyDown.bind(this));
     }
@@ -31,13 +31,17 @@ export class ExcalidrawDialog extends Component {
     }
 
     checkInput() {
-        let potentialURL = this.inputRef.el.value;
+        this.state.hasError = false;
+        let potentialURL = this.inputRef.el.value?.trim();
         if (!potentialURL) {
+            this.state.isInsertionDisabled = true;
             return false;
         }
+        this.state.isInsertionDisabled = false;
         potentialURL = checkURL(potentialURL, excalidrawWebsiteDomainList);
         if (!potentialURL) {
             this.state.hasError = true;
+            this.state.isInsertionDisabled = true;
         } else {
             return potentialURL;
         }
