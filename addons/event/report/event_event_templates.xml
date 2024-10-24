@@ -161,6 +161,11 @@
     <div class="row page">
         <div t-attf-class="o_event_full_page_ticket_container page w-100 #{'o_event_full_page_ticket_responsive_html' if responsive_html else 'o_event_full_page_ticket'}">
             <div class="o_event_full_page_ticket_wrapper">
+                <div t-if="responsive_html" class="d-flex justify-content-center">
+                    <a class="btn" title="Download All Tickets" t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendee.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendee.ids) }}">
+                        Download Tickets <i class="ms-1 fa fa-download"/>
+                    </a>
+                </div>
                 <div class="o_event_full_page_ticket_details">
                     <div class="d-flex flex-column-reverse flex-sm-row">
                         <div class="o_event_full_page_left_details ps-3 pt-3 pb-2 pe-2">
