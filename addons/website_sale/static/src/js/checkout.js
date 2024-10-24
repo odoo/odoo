@@ -485,7 +485,9 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const editPickupLocationButton = pickupLocation.querySelector(
             'span[name="o_pickup_location_selector"]'
         );
-        if (editPickupLocationButton.dataset.pickupLocationData) {
+        if (editPickupLocationButton.dataset.pickupLocationData &&
+            Object.keys(JSON.parse(editPickupLocationButton.dataset.pickupLocationData)).length != 0
+        ) {
             await this._setPickupLocation(editPickupLocationButton.dataset.pickupLocationData);
         }
 
