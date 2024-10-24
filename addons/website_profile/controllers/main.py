@@ -144,6 +144,7 @@ class WebsiteProfile(http.Controller):
 
     @http.route('/profile/user/save', type='http', auth="user", methods=['POST'], website=True)
     def save_edited_profile(self, **kwargs):
+        # breakpoint()
         user_id = int(kwargs.get('user_id', 0))
         if user_id and request.env.user.id != user_id and request.env.user._is_admin():
             user = request.env['res.users'].browse(user_id)

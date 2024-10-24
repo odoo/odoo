@@ -537,6 +537,7 @@
                         <div class="row">
                             <t t-call="portal.portal_my_details_fields"/>
                             <input type="hidden" name="redirect" t-att-value="redirect"/>
+                            <input type="file" class="d-none o_portal_file_upload" name="ufile" accept="image/*"/>
                         </div>
                         <div class="clearfix text-end mb-5">
                             <a href="/my/" class="btn btn-light me-2">
@@ -545,6 +546,22 @@
                             <button type="submit" class="btn btn-primary float-end">
                                 Save
                             </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card o_card_people">
+                            <div class="card-body">
+                                <img class="o_wportal_avatar_img w-100 mb-3" t-att-src="website.image_url(partner, 'avatar_1024')"/>
+                                <!-- t-att-src="partner.image_url(user, 'avatar_128')" -->
+                                <div class="text-center">
+                                    <a href="#" class="o_portal_profile_pic_edit btn btn-primary" aria-label="Edit">
+                                        <i class="fa fa-pencil fa-1g float-sm-none float-md-start" title="Edit"></i>
+                                    </a>
+                                    <a href="#" title="Clear" aria-label="Clear" class="btn border-primary o_portal_profile_pic_clear">
+                                        <i class="fa fa-trash-o float-sm-none float-md-end"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

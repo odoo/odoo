@@ -180,6 +180,7 @@ class CustomerPortal(Controller):
     def account(self, redirect=None, **post):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
+        website = request.website
         values.update({
             'error': {},
             'error_message': [],
@@ -212,6 +213,7 @@ class CustomerPortal(Controller):
 
         values.update({
             'partner': partner,
+            'website': website,
             'countries': countries,
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),

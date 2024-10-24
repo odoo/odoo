@@ -7,6 +7,9 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
     events: {
         'change select[name="country_id"]': '_onCountryChange',
+        'click .o_portal_profile_pic_edit': '_onEditProfilePicClick',
+        'change .o_portal_file_upload': '_onFileUploadChange',
+        'click .o_portal_profile_pic_clear': '_onProfilePicClearClick',
     },
 
     /**
@@ -47,6 +50,46 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      */
     _onCountryChange: function () {
         this._adaptAddressForm();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onEditProfilePicClick: function (ev) {
+        ev.preventDefault();
+        ev.currentTarget.closest("form").querySelector(".o_portal_file_upload").click();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFileUploadChange: function (ev) {
+        if (!ev.currentTarget.files.length) {
+            return;
+        }
+        const formEl = ev.currentTarget.closest("form");
+        var reader = new window.FileReader();
+        reader.readAsDataURL(ev.currentTarget.files[0]);
+        reader.onload = function (ev) {
+            formEl.querySelector(".o_wportal_avatar_img").src = ev.target.result;
+        };
+        formEl.querySelector("#portal_clear_image")?.remove();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onProfilePicClearClick: function (ev) {
+        const formEl = ev.currentTarget.closest("form");
+        formEl.querySelector(".o_wportal_avatar_img").src = "/web/static/img/placeholder.png";
+        // const inputElement = document.createElement("input");
+        // inputElement.setAttribute("name", "clear_image");
+        // inputElement.setAttribute("id", "forum_clear_image");
+        // inputElement.setAttribute("type", "hidden");
+        // formEl.append(inputElement);
     },
 });
 
