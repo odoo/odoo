@@ -166,6 +166,13 @@ class Module(models.Model):
 
     @api.depends('name', 'description')
     def _get_desc(self):
+        def _apply_description_images(doc):
+            html = lxml.html.document_fromstring(doc)
+            for element, attribute, link, pos in html.iterlinks():
+                if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
+                    element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
+            return tools.html_sanitize(lxml.html.tostring(html))
+
         for module in self:
             if not module.name:
                 module.description_html = False
@@ -186,6 +193,7 @@ class Module(models.Model):
                         try:
                             doc = doc.decode()
                         except UnicodeDecodeError:
+<<<<<<< 17.0
                             warnings.warn(
                                 f"Non-UTF8 module descriptions are deprecated "
                                 f"since Odoo 17 ({module.name}'s description "
@@ -198,6 +206,19 @@ class Module(models.Model):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
                     module.description_html = tools.html_sanitize(lxml.html.tostring(html))
             except FileNotFoundError:
+||||||| 12a20406e96c4579378194cb0ffb78624c86868e
+                            pass
+                    html = lxml.html.document_fromstring(doc)
+                    for element, attribute, link, pos in html.iterlinks():
+                        if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
+                            element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
+                    module.description_html = tools.html_sanitize(lxml.html.tostring(html))
+            else:
+=======
+                            pass
+                    module.description_html = _apply_description_images(doc)
+            else:
+>>>>>>> 6fe78328884d94ff7f0f50ee14fe6c4d58dbc6a3
                 overrides = {
                     'embed_stylesheet': False,
                     'doctitle_xform': False,
@@ -206,7 +227,7 @@ class Module(models.Model):
                     'file_insertion_enabled': False,
                 }
                 output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=MyWriter())
-                module.description_html = tools.html_sanitize(output)
+                module.description_html = _apply_description_images(output)
 
     @api.depends('name')
     def _get_latest_version(self):
