@@ -182,6 +182,21 @@ export class LinkPlugin extends Plugin {
         handle_insert_line_break_element: this.handleInsertLineBreak.bind(this),
         powerButtons: ["link"],
     };
+    linkProps = {
+        onRemove: () => {
+            this.removeLink();
+            this.overlay.close();
+            this.dispatch("ADD_STEP");
+        },
+        onCopy: () => {
+            this.overlay.close();
+        },
+        onClose: () => {
+            this.overlay.close();
+        },
+        getInternalMetaData: (...args) => this.getInternalMetaData(...args),
+        getExternalMetaData: (...args) => this.getExternalMetaData(...args),
+    };
     setup() {
         this.overlay = this.shared.createOverlay(LinkPopover, {}, { sequence: 40 });
         this.addDomListener(this.editable, "click", (ev) => {
@@ -300,6 +315,38 @@ export class LinkPlugin extends Plugin {
             link = this.getOrCreateLink();
         }
         this.linkElement = link;
+        this.handleImageLinkToggle();
+    }
+
+    handleImageLinkToggle() {
+        const selectedNodes = this.shared.getSelectedNodes();
+        const imageNode = selectedNodes.find((node) => node.tagName === "IMG");
+        if (imageNode && imageNode.parentNode.tagName === "A") {
+            if (this.linkElement !== imageNode.parentElement) {
+                this.overlay.close();
+                this.removeCurrentLinkIfEmtpy();
+            }
+            this.linkElement = imageNode.parentElement;
+
+            const imageLinkProps = {
+                ...this.linkProps,
+                isImage: true,
+                linkEl: this.linkElement,
+                onApply: (url, _) => {
+                    this.linkElement.href = url;
+                    this.shared.focusEditable();
+                    this.removeCurrentLinkIfEmtpy();
+                    this.dispatch("ADD_STEP");
+                },
+            };
+
+            // close the overlay to always position the popover to the bottom of selected image
+            if (this.overlay.isOpen) {
+                this.overlay.close();
+            }
+            this.shared.setCursorEnd(this.linkElement);
+            this.overlay.open({ target: imageNode, props: imageLinkProps });
+        }
     }
 
     normalizeLink() {
@@ -316,62 +363,15 @@ export class LinkPlugin extends Plugin {
 
     handleSelectionChange(selectionData) {
         const selection = selectionData.editableSelection;
-        const props = {
-            onRemove: () => {
-                this.removeLink();
-                this.overlay.close();
-                this.dispatch("ADD_STEP");
-            },
-            onCopy: () => {
-                this.overlay.close();
-            },
-            onClose: () => {
-                this.overlay.close();
-            },
-            getInternalMetaData: this.getInternalMetaData,
-            getExternalMetaData: this.getExternalMetaData,
-        };
         if (!selectionData.documentSelectionIsInEditable) {
-            // note that data-prevent-closing-overlay also used in color picker but link popover
-            // and color picker don't open at the same time so it's ok to query like this
-            const popoverEl = document.querySelector("[data-prevent-closing-overlay=true]");
+            const popoverEl = document.querySelector("[data-prevent-closing-overlay-link=true]");
             if (popoverEl?.contains(selectionData.documentSelection.anchorNode)) {
                 return;
             }
             this.overlay.close();
-        } else if (!selection.isCollapsed) {
-            const selectedNodes = this.shared.getSelectedNodes();
-            const imageNode = selectedNodes.find((node) => node.tagName === "IMG");
-            if (imageNode && imageNode.parentNode.tagName === "A") {
-                if (this.linkElement !== imageNode.parentElement) {
-                    this.overlay.close();
-                    this.removeCurrentLinkIfEmtpy();
-                }
-                this.linkElement = imageNode.parentElement;
-
-                const imageLinkProps = {
-                    ...props,
-                    isImage: true,
-                    linkEl: this.linkElement,
-                    onApply: (url, _) => {
-                        this.linkElement.href = url;
-                        this.shared.setCursorEnd(this.linkElement);
-                        this.shared.focusEditable();
-                        this.removeCurrentLinkIfEmtpy();
-                        this.dispatch("ADD_STEP");
-                    },
-                };
-
-                // close the overlay to always position the popover to the bottom of selected image
-                if (this.overlay.isOpen) {
-                    this.overlay.close();
-                }
-                this.overlay.open({ target: imageNode, props: imageLinkProps });
-            } else {
-                this.overlay.close();
-            }
-        } else {
+        } else if (selection.isCollapsed) {
             const linkEl = closestElement(selection.anchorNode, "A");
+
             if (!linkEl) {
                 this.overlay.close();
                 this.removeCurrentLinkIfEmtpy();
@@ -383,15 +383,14 @@ export class LinkPlugin extends Plugin {
                 this.linkElement = linkEl;
             }
 
-            // if the link includes an inline image, we close the previous opened popover to reposition it
+            // if the link includes an inline image, it will be handled by when emitting "CREATE_LINK_ON_SELECTION"
             const imageNode = linkEl.querySelector("img");
             if (imageNode) {
-                this.removeCurrentLinkIfEmtpy();
-                this.overlay.close();
+                return;
             }
 
             const linkProps = {
-                ...props,
+                ...this.linkProps,
                 isImage: false,
                 linkEl: this.linkElement,
                 onApply: (url, label, classes) => {

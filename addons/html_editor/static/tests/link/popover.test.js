@@ -874,4 +874,40 @@ describe("links with inline image", () => {
             `<p>ab<a href="#">c</a>]d<img src="${base64Img}">exxf<img src="${base64Img}">g[<a href="#">h</a>i</p>`
         );
     });
+    test.tags("desktop")(
+        "when link image the toolbar should disapear and only the linkpopover should be visible",
+        async () => {
+            const dialogSelector = ".o-we-linkpopover button.o_we_apply_link";
+            const popoverSelector = ".o-we-linkpopover span.o_we_preview_favicon";
+            const toolbarSelector = ".o-we-toolbar";
+            const linkButtonSelector = "button[name='link']";
+            const { el } = await setupEditor(`<p>[<img src="${base64Img}">]</p>`);
+            await animationFrame();
+            await waitFor(toolbarSelector);
+            await click(linkButtonSelector);
+            await waitFor(dialogSelector);
+            await animationFrame();
+            expect(toolbarSelector).toHaveCount(0);
+            expect(dialogSelector).toHaveCount(1);
+            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            await animationFrame();
+            expect('.o-we-linkpopover a.o_we_url_link[href="#"]').toHaveCount(1);
+            const pNode = queryOne("p a");
+            await contains(".o-we-linkpopover .fa-clone").click(); // close the linkpopover
+            await waitUntil(() => !queryFirst(".o-we-linkpopover"));
+            expect(getContent(el)).toBe(`<p><a href="#"><img src="${base64Img}">[]</a></p>`);
+            setSelection({
+                anchorNode: pNode,
+                anchorOffset: 0,
+                focusNode: pNode,
+                focusOffset: 1,
+            });
+            await waitFor(toolbarSelector);
+            await click(linkButtonSelector);
+            await animationFrame();
+            await waitUntil(() => !queryFirst(toolbarSelector));
+            expect(popoverSelector).toHaveCount(1);
+            expect(toolbarSelector).toHaveCount(0);
+        }
+    );
 });

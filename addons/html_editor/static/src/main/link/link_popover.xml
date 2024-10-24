@@ -2,7 +2,7 @@
 
     <t t-name="html_editor.linkPopover">
         <div class="o-we-linkpopover d-flex bg-white overflow-auto shadow" t-on-keydown="onKeydown">
-            <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper"  data-prevent-closing-overlay="true">
+            <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper"  data-prevent-closing-overlay-link="true">
                 <div t-if="state.isImage" class="col p-2" style="max-width: 250px;">
                     <div class="input-group mb-1">
                         <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <div t-else="" style="max-width: 260px; min-width: 200px;" data-prevent-closing-overlay="true">
+            <div t-else="" style="max-width: 260px; min-width: 200px;" data-prevent-closing-overlay-link="true">
                 <div class="d-flex flex-column p-2">
                     <div class="d-flex">
                         <span class="o_we_preview_favicon" style="width: 16px;">
