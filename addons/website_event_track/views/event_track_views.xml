@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="event_id" invisible="context.get('default_event_id', False)"/>
+                    <field name="event_id" invisible="context.get('default_event_id', False)" placeholder="All Events"/>
                     <field name="name" placeholder="e.g. Inspiring Business Talk"/>
                     <field name="date"/>
                 </group>
@@ -168,7 +168,7 @@
                         <group>
                             <field name="company_id" invisible="1"/>
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                            <field name="event_id"/>
+                            <field name="event_id" placeholder="All Events"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="color" widget="color_picker"/>
                         </group>

@@ -44,7 +44,8 @@
                         '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
                     required="service_tracking == 'event'"
-                    options="{'no_open': True, 'no_create': True}"/>
+                    options="{'no_open': True, 'no_create': True}"
+                    placeholder="All Events"/>
                 <field name="event_ticket_id"
                     column_invisible="True"
                     domain="[
