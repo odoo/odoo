@@ -3,10 +3,11 @@
 from unittest.mock import patch
 
 import odoo.tests
+from odoo.addons.website.tests.common import HttpCaseWithUserRestricted
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
+class TestUi(HttpCaseWithUserRestricted):
 
     def setUp(self):
         super().setUp()
@@ -24,4 +25,4 @@ class TestUi(odoo.tests.HttpCase):
             'source_id': self.env['utm.source'].create({'name': 'Super Specific Source'}).id,
             'url': self.env["ir.config_parameter"].sudo().get_param("web.base.url") + '/contactus',
         }])
-        self.start_tour("/", 'website_links_tour', login="admin")
+        self.start_tour("/", 'website_links_tour', login="restricted")

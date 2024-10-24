@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.website.tests.common import HttpCaseWithUserRestricted
 import odoo.tests
 from odoo.tools import mute_logger
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestRestrictedEditor(odoo.tests.HttpCase):
+class TestRestrictedEditor(HttpCaseWithUserRestricted):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -27,27 +28,9 @@ class TestRestrictedEditor(odoo.tests.HttpCase):
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_01_restricted_editor_only(self):
-        self.restricted_editor = self.env['res.users'].create({
-            'name': 'Restricted Editor',
-            'login': 'restricted',
-            'password': 'restricted',
-            'groups_id': [(6, 0, [
-                self.ref('base.group_user'),
-                self.ref('website.group_website_restricted_editor'),
-            ])]
-        })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_only', login='restricted')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_only', login="restricted")
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_02_restricted_editor_test_admin(self):
-        self.restricted_editor = self.env['res.users'].create({
-            'name': 'Restricted Editor',
-            'login': 'restricted',
-            'password': 'restricted',
-            'groups_id': [(6, 0, [
-                self.ref('base.group_user'),
-                self.ref('website.group_website_restricted_editor'),
-                self.ref('test_website.group_test_website_admin'),
-            ])]
-        })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_test_admin', login='restricted')
+        self.env.ref("base.user_restricted").groups_id += self.env.ref("test_website.group_test_website_admin")
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_test_admin', login="restricted")

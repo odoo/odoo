@@ -16,6 +16,20 @@
             <field name="phone">(441)-695-2334</field>
         </record>
 
+        <record id="partner_restricted" model="res.partner">
+            <field name="name">Rafe Restricted</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="company_name">YourCompany</field>
+            <field name="street">725 5th Ave</field>
+            <field name="city">New York</field>
+            <field name="state_id"  model="res.country.state" search="[('code','=','NY')]"/>
+            <field name="zip">10022</field>
+            <field name="country_id" ref="us"/>
+            <field name="tz">America/New_York</field>
+            <field name="email">rafe.cameron23@example.com</field>
+            <field name="phone">+1(492)-563-3759</field>
+        </record>
+
         <!-- Only update if we don't have information coming from the database manager -->
         <function model="res.partner" name="write">
             <value eval="[ref('base.main_partner')]"/>
@@ -42,8 +56,22 @@
             <field name="image_1920" type="base64" file="base/static/img/user_demo-image.png"/>
         </record>
 
+        <record id="user_restricted" model="res.users">
+            <field name="partner_id" ref="base.partner_restricted"/>
+            <field name="login">restricted</field>
+            <field name="password">restricted</field>
+            <field name="signature" type="html"><span>-- <br/>+Mr Restricted</span></field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_user'),])]"/>
+            <field name="image_1920" type="base64" file="base/static/img/user_restricted-image.png"/>
+        </record>
+
         <record id="partner_demo" model="res.partner">
             <field name="user_id" ref="base.user_demo"/>
+        </record>
+
+        <record id="partner_restricted" model="res.partner">
+            <field name="user_id" ref="base.user_restricted"/>
         </record>
 
         <record model="res.partner" id="base.partner_root">

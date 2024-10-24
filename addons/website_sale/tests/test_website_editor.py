@@ -3,6 +3,7 @@
 
 import logging
 
+from odoo.addons.website.tests.common import HttpCaseWithUserRestricted
 from odoo import Command
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
@@ -223,32 +224,22 @@ class TestProductPictureController(HttpCase):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleEditor(HttpCase):
+class TestWebsiteSaleEditor(HttpCaseWithUserRestricted):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        cls.env['res.users'].create({
-            'name': 'Restricted Editor',
-            'login': 'restricted',
-            'password': 'restricted',
-            'groups_id': [Command.set([
-                cls.env.ref('base.group_user').id,
-                cls.env.ref('sales_team.group_sale_manager').id,
-                cls.env.ref('website.group_website_restricted_editor').id
-            ])]
-        })
+        cls.user_restricted.groups_id += cls.env.ref('sales_team.group_sale_manager')
 
     def test_category_page_and_products_snippet(self):
         if not loaded_demo_data(self.env):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
         SHOP_CATEGORY_ID = 2
-        self.start_tour(self.env['website'].get_client_action_url(f'/shop/category/{SHOP_CATEGORY_ID}'), 'category_page_and_products_snippet_edition', login='restricted')
+        self.start_tour(self.env['website'].get_client_action_url(f'/shop/category/{SHOP_CATEGORY_ID}'), 'category_page_and_products_snippet_edition', login="restricted")
         self.start_tour(f'/shop/category/{SHOP_CATEGORY_ID}', 'category_page_and_products_snippet_use', login=None)
 
     def test_website_sale_restricted_editor_ui(self):
         if not loaded_demo_data(self.env):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
-        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'website_sale_restricted_editor_ui', login='restricted')
+        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'website_sale_restricted_editor_ui', login="restricted")
