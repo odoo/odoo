@@ -40,12 +40,14 @@ class MailMessage(models.Model):
             for rating in related_rating
         }
 
+        if self:
+            record = self.env[self[0].model].browse(self[0].res_id)
+            if hasattr(record, 'rating_get_stats'):
+                rating_stats = record.sudo().rating_get_stats()
+
         for message, values in zip(self, vals_list):
             values["rating"] = message_to_rating.get(message.id, {})
-
-            record = self.env[message.model].browse(message.res_id)
-            if hasattr(record, 'rating_get_stats'):
-                values['rating_stats'] = record.sudo().rating_get_stats()
+            values['rating_stats'] = rating_stats
 
         return vals_list
 

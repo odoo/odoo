@@ -124,21 +124,22 @@ PortalChatter.include({
      * @private
      */
     _updateRatingCardValues: function (result) {
-        if (!result['rating_stats']) {
+        if (!result['messages'][0]?.rating_stats) {
             return;
         }
+        const ratingStats = result['messages'][0]['rating_stats'];
         const self = this;
         const ratingData = {
-            'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
+            'avg': Math.round(ratingStats['avg'] * 100) / 100,
             'percent': [],
         };
-        Object.keys(result["rating_stats"]["percent"])
+        Object.keys(ratingStats['percent'])
             .sort()
             .reverse()
             .forEach((rating) => {
                 ratingData["percent"].push({
                     num: self.roundToHalf(rating),
-                    percent: roundPrecision(result["rating_stats"]["percent"][rating], 0.01),
+                    percent: roundPrecision(ratingStats['percent'][rating], 0.01),
                 });
             });
         this.set('rating_card_values', ratingData);
