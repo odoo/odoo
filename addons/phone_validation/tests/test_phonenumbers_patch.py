@@ -167,6 +167,14 @@ class TestPhonenumbersPatch(BaseCase):
         )
         self._assert_parsing_phonenumbers(parse_test_lines_PA)
 
+    def test_region_RW_monkey_patch(self):
+        """Makes sure that patch for Rwanda's phone numbers work"""
+        parse_test_lines_RW = (
+            self.PhoneInputOutputLine("0792 123 456", "RW"),
+            self.PhoneInputOutputLine("+250 792 321 654"),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_RW)
+
     def test_region_SN_monkey_patch(self):
         """Makes sure that patch for Senegalese phone numbers work"""
         parse_test_lines_SN = (
