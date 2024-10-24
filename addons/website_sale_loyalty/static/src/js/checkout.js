@@ -19,7 +19,7 @@ websiteSaleCheckout.include({
             const cart_summary_discount_rewards = document.querySelectorAll(
                 '[data-reward-type=discount]'
             );
-            if (cart_summary_discount_rewards.length !== result.discount_reward_amounts.length) {
+            if (cart_summary_discount_rewards.length > result.discount_reward_amounts.length) {
                 // refresh cart summary to sync number of discount items
                 location.reload();
             } else {

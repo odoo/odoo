@@ -2338,14 +2338,17 @@
                                                                 </h6>
                                                             </td>
                                                         </t>
+                                                        <t
+                                                            t-set="display_price"
+                                                            t-value="line.price_subtotal if website.show_line_subtotals_tax_selection == 'tax_excluded' else line.price_total"
+                                                        />
                                                         <td t-attf-class="#{o_cart_sum_padding_top} td-price pe-0 text-end"
                                                             name="website_sale_cart_summary_line_price">
-                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                                                                t-field="line.price_subtotal" style="white-space: nowrap;"
-                                                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
-                                                            <span t-else=""
-                                                                t-field="line.price_total" style="white-space: nowrap;"
-                                                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                                            <span
+                                                                t-out="display_price"
+                                                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+                                                                style="white-space: nowrap;"
+                                                            />
                                                         </td>
                                                     </tr>
                                                 </tbody>
