@@ -152,13 +152,14 @@ class Partner(models.Model):
             for name, email_normalized in name_emails
             if not email_normalized and name.strip()
         }
+        company_domain = ['|', '|', ('partner_share', '=', False), ('company_id', 'parent_of', self.env.companies.ids), ('company_id', '=', False)]
         if emails_normalized or names:
             domains = []
             if emails_normalized:
                 domains.append([('email_normalized', 'in', list(emails_normalized))])
             if names:
                 domains.append([('email', 'in', list(names))])
-            partners += self.search(expression.OR(domains))
+            partners += self.search(expression.AND([company_domain, expression.OR(domains)]))
 
         # create partners for valid email without any existing partner. Keep
         # only first found occurrence of each normalized email, aka: ('Norbert',
