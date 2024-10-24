@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.res_partner import _tz_get
 
@@ -79,14 +79,12 @@ class LeaveReportCalendar(models.Model):
         );
         """)
 
-    def _fetch_query(self, query, fields):
-        records = super()._fetch_query(query, fields)
+    def _compute_display_name(self):
         if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
-            self.env.cache.update(records, self._fields['name'], [
-                record.name.split(':')[-1].strip()
-                for record in records.with_user(SUPERUSER_ID)
-            ])
-        return records
+            for record in self:
+                record.display_name = record.name.removeprefix(f"{record.employee_id.name}: ")
+        else:
+            super()._compute_display_name()
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
