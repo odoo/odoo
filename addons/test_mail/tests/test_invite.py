@@ -16,14 +16,21 @@ class TestInvite(MailCommon):
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com'})
 
-        mail_invite = self.env['mail.wizard.invite'].with_context({
-            'default_res_model': 'mail.test.simple',
-            'default_res_id': test_record.id
-        }).with_user(self.user_employee).create({
-            'partner_ids': [(4, test_partner.id), (4, self.user_admin.partner_id.id)],
-            'notify': True})
+        mail_invite = (
+            self.env["mail.followers.edit"]
+            .with_context(
+                {"default_res_model": "mail.test.simple", "default_res_ids": [test_record.id]}
+            )
+            .with_user(self.user_employee)
+            .create(
+                {
+                    "partner_ids": [(4, test_partner.id), (4, self.user_admin.partner_id.id)],
+                    "notify": True,
+                }
+            )
+        )
         with self.mock_mail_app(), self.mock_mail_gateway():
-            mail_invite.add_followers()
+            mail_invite.edit_followers()
 
         # Check added followers and that notifications are sent.
         # Admin notification preference is inbox so the notification must be of inbox type
@@ -38,3 +45,27 @@ class TestInvite(MailCommon):
             self._new_msgs[0],
             [{'partner': self.partner_admin, 'type': 'inbox', 'is_read': False}]
         )
+
+        # Remove followers
+        mail_remove = (
+            self.env["mail.followers.edit"]
+            .with_context(
+                {
+                    "default_res_model": "mail.test.simple",
+                    "default_res_ids": [test_record.id],
+                }
+            )
+            .with_user(self.user_employee)
+            .create(
+                {
+                    "operation": "remove",
+                    "partner_ids": [(4, test_partner.id), (4, self.user_admin.partner_id.id)],
+                }
+            )
+        )
+
+        with self.mock_mail_app(), self.mock_mail_gateway():
+            mail_remove.edit_followers()
+
+        # Check removed followers and that notifications are sent.
+        self.assertEqual(test_record.message_partner_ids, self.env["res.partner"])

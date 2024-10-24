@@ -905,4 +905,14 @@ if isinstance(res, dict):
     action = res
         </field>
     </record>
- </odoo>
+
+    <record id="mail_followers_edit_action_from_purchase" model="ir.actions.act_window">
+        <field name="name">Add / remove followers</field>
+        <field name="res_model">mail.followers.edit</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_res_model': 'purchase.order', 'default_res_ids': active_ids}</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

@@ -1249,6 +1249,16 @@
             </field>
         </record>
 
+        <record id="mail_followers_edit_action_from_task" model="ir.actions.act_window">
+            <field name="name">Add / remove followers</field>
+            <field name="res_model">mail.followers.edit</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_res_model': 'project.task', 'default_res_ids': active_ids}</field>
+            <field name="binding_model_id" ref="project.model_project_task"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
         <record id="project_milestone_action_view_tasks" model="ir.actions.act_window">
             <field name="name">Tasks.test</field>
             <field name="res_model">project.task</field>

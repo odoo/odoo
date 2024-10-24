@@ -1113,4 +1113,14 @@
                 action = records.with_context(hide_default_template=True).action_quotation_send()
         </field>
     </record>
+
+    <record id="mail_followers_edit_action_from_sale" model="ir.actions.act_window">
+        <field name="name">Add / remove followers</field>
+        <field name="res_model">mail.followers.edit</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_res_model': 'sale.order', 'default_res_ids': active_ids}</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+    </record>
 </odoo>

@@ -246,7 +246,7 @@ patch(Chatter.prototype, {
         this.load(thread, [...this.requestList, "messages"]);
     },
 
-    onAddFollowers() {
+    onEditFollowers() {
         this.load(this.state.thread, ["followers", "suggestedRecipients"]);
         if (this.props.hasParentReloadOnFollowersUpdate) {
             this.reloadParentView();
