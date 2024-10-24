@@ -6,7 +6,7 @@
         <field name="name">Analytic multi company rule</field>
         <field name="model_id" ref="model_account_analytic_account"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
     </record>
 
     <record id="analytic_line_comp_rule" model="ir.rule">
@@ -20,14 +20,14 @@
         <field name="name">Analytic applicability multi company rule</field>
         <field name="model_id" ref="model_account_analytic_applicability"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
     </record>
 
     <record id="analytic_distribution_model_comp_rule" model="ir.rule">
         <field name="name">Analytic distribution model multi company rule</field>
         <field name="model_id" ref="model_account_analytic_distribution_model"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
     </record>
 </data>
 <data noupdate="0">
