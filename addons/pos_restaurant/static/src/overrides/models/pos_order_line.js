@@ -21,8 +21,24 @@ patch(PosOrderline.prototype, {
     },
     toggleSkipChange() {
         if (this.uiState.hasChange || this.skip_change) {
-            this.setDirty();
+            this.set_dirty();
             this.skip_change = !this.skip_change;
+            // update with the combo parent if applicable
+            if (this.combo_parent_id) {
+                const parent = this.combo_parent_id;
+                parent.skip_change = this.skip_change;
+                this.updateChildrenSkipChange(parent);
+            }
+            if (this.combo_line_ids) {
+                this.updateChildrenSkipChange(this);
+            }
+        }
+    },
+    updateChildrenSkipChange(parentOrderline) {
+        for (const comboLine of parentOrderline.combo_line_ids) {
+            if (comboLine.uiState.hasChange || comboLine.skip_change) {
+                comboLine.skip_change = this.skip_change;
+            }
         }
     },
     getDisplayClasses() {

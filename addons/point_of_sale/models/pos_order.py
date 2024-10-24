@@ -128,10 +128,19 @@ class PosOrder(models.Model):
                 continue
 
             line = line[2]
-
             if line.get('combo_line_ids'):
                 filtered_lines = list(filter(lambda l: l[2].get('id') and l[2].get('id') in line.get('combo_line_ids'), order_vals['lines']))
-                acc[line['uuid']] = [l[2]['uuid'] for l in filtered_lines]
+                if line['uuid'] in acc:
+                    acc[line['uuid']].append([l[2]['uuid'] for l in filtered_lines])
+                else:
+                    acc[line['uuid']] = [l[2]['uuid'] for l in filtered_lines]
+
+            if line.get('combo_parent_id'):
+                parent_line = self.env['pos.order.line'].search([('id', '=', line.get('combo_parent_id'))], limit=1)
+                if parent_line['uuid'] in acc:
+                    acc[parent_line['uuid']].append(line['uuid'])
+                else:
+                    acc[parent_line['uuid']] = [line['uuid']]
 
             line['combo_line_ids'] = False
             line['combo_parent_id'] = False
@@ -145,7 +154,10 @@ class PosOrder(models.Model):
             parent_line = self.lines.filtered(lambda line: line.uuid == parent_uuid)
             if not parent_line:
                 continue
-            parent_line.combo_line_ids = [(6, 0, self.lines.filtered(lambda line: line.uuid in child_uuids).ids)]
+            current_child_ids = parent_line.combo_line_ids.ids
+            new_child_ids = self.lines.filtered(lambda line: line.uuid in child_uuids).ids
+            combined_child_ids = list(set(current_child_ids + new_child_ids))
+            parent_line.combo_line_ids = [(6, 0, combined_child_ids)]
 
     def _process_saved_order(self, draft):
         self.ensure_one()

@@ -169,14 +169,14 @@ export class PosOrderline extends Base {
         if (!this.product_id.to_weight && setQuantity) {
             this.set_quantity_by_lot();
         }
-        this.setDirty();
+        this.set_dirty();
     }
 
     // FIXME related models update stuff
     set_product_lot(product) {
         this.has_product_lot = product.tracking !== "none";
         this.pack_lot_ids = this.has_product_lot && [];
-        this.setDirty();
+        this.set_dirty();
     }
 
     set_discount(discount) {
@@ -190,7 +190,7 @@ export class PosOrderline extends Base {
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
         this.discountStr = "" + disc;
-        this.setDirty();
+        this.set_dirty();
     }
 
     // sets the qty of the product. The qty will be rounded according to the
@@ -258,7 +258,7 @@ export class PosOrderline extends Base {
             );
         }
 
-        this.setDirty();
+        this.set_dirty();
         return true;
     }
 
@@ -362,7 +362,7 @@ export class PosOrderline extends Base {
             parsed_price || 0,
             this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
         );
-        this.setDirty();
+        this.set_dirty();
     }
 
     get_unit_price() {
@@ -568,7 +568,7 @@ export class PosOrderline extends Base {
 
     set_customer_note(note) {
         this.customer_note = note || "";
-        this.setDirty();
+        this.set_dirty();
     }
 
     get_customer_note() {
@@ -693,7 +693,7 @@ export class PosOrderline extends Base {
         return this.note || "";
     }
     setNote(note) {
-        this.setDirty();
+        this.set_dirty();
         this.note = note;
     }
     setHasChange(isChange) {
@@ -720,6 +720,17 @@ export class PosOrderline extends Base {
     }
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
+    }
+    set_dirty() {
+        this.setDirty();
+        const linesToSetDirty = [
+            this.combo_parent_id,
+            ...(this.combo_parent_id?.combo_line_ids || []),
+            ...(this.combo_line_ids || []),
+        ].filter(Boolean);
+        for (const line of linesToSetDirty) {
+            line.setDirty();
+        }
     }
 }
 

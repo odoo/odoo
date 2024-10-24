@@ -70,6 +70,10 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
 
                 if (!orderline.skip_change) {
                     orderline.setHasChange(true);
+                    if (orderline.combo_parent_id) {
+                        const parent = orderline.combo_parent_id;
+                        parent.setHasChange(true);
+                    }
                 }
             } else {
                 if (quantityDiff) {
