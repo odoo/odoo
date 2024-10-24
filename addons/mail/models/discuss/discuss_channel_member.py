@@ -459,6 +459,37 @@ class DiscussChannelMember(models.Model):
                     ),
                 },
             )
+            if push_parameters := self.channel_id._get_web_push_parameters(members.partner_id.ids):
+                if self.channel_id.channel_type != 'chat':
+                    icon = "/web/image/discuss.channel/%d/avatar_128" % self.channel_id.id
+                elif guest := self.env["mail.guest"]._get_guest_from_context():
+                    icon = "/web/image/mail.guest/%d/avatar_128" % guest.id
+                elif partner := self.env.user.partner_id:
+                    icon = "/web/image/res.partner/%d/avatar_128" % partner.id
+                self.channel_id._push_web_notification({
+                    "title": _("Incoming call"),
+                    "options": {
+                        "body": _("Conference: %(channel_name)s", channel_name=self.channel_id.display_name),
+                        "icon": icon,
+                        "vibrate": [100, 50, 100],
+                        "requireInteraction": True,
+                        "tag": f"call_{self.channel_id.id}",
+                        "data": {
+                            "type": "call",
+                            "model": 'discuss.channel',
+                            "action": "mail.action_discuss",
+                            "res_id": self.channel_id.id,
+                        },
+                        "actions": [
+                            {
+                                "action": "decline",
+                                "type": "button",
+                                "title": _("Decline"),
+                            },
+                            # action "accept" is not implemented until: https://issues.chromium.org/issues/40286493 is fixed.
+                        ]
+                    }
+                }, push_parameters)
         return members
 
     def _mark_as_read(self, last_message_id, sync=False):

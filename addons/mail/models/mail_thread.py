@@ -3675,25 +3675,38 @@ class MailThread(models.AbstractModel):
 
         msg_vals = dict(msg_vals or {})
         partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
+        push_parameters = self._get_web_push_parameters(partner_ids)
+        if not push_parameters:
+            return
+        payload = self._truncate_payload(self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals))
+        self._push_web_notification(payload, push_parameters)
+
+    def _get_web_push_parameters(self, partner_ids: list) -> tuple | None:
+        """
+        :param partner_ids: IDs of the res.partners
+        :returns: the `mail.push.device` records, the vapid private key and the vapid public key,
+        None if any is missing.
+        """
         if not partner_ids:
             return
-
-        partner_devices_sudo = self.env['mail.push.device'].sudo()
-        devices = partner_devices_sudo.search([
-            ('partner_id', 'in', partner_ids)
-        ])
-        if not devices:
-            return
-
         ir_parameter_sudo = self.env['ir.config_parameter'].sudo()
         vapid_private_key = ir_parameter_sudo.get_param('mail.web_push_vapid_private_key')
         vapid_public_key = ir_parameter_sudo.get_param('mail.web_push_vapid_public_key')
         if not vapid_private_key or not vapid_public_key:
-            _logger.warning("Missing web push vapid keys !")
             return
+        partner_devices_sudo = self.env['mail.push.device'].sudo()
+        devices = partner_devices_sudo.search([
+            ('partner_id', 'in', partner_ids)
+        ])
+        if devices:
+            return devices, vapid_private_key, vapid_public_key
 
-        payload = self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
-        payload = self._truncate_payload(payload)
+    def _push_web_notification(self, payload: dict, push_parameters: tuple):
+        """
+        :param payload: JSON serializable dict following the notification api specs https://notifications.spec.whatwg.org/#api
+        :param push_parameters: the `mail.push.device` records, the vapid private key and the vapid public key
+        """
+        devices, vapid_private_key, vapid_public_key = push_parameters
         if len(devices) < MAX_DIRECT_PUSH:
             session = Session()
             devices_to_unlink = set()

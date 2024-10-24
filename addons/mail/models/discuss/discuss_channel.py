@@ -498,6 +498,14 @@ class DiscussChannel(models.Model):
                     ),
                 },
             )
+            if push_parameters := self._get_web_push_parameters(members.partner_id.ids):
+                self._push_web_notification({
+                    "title": _("call cancelled"),
+                    "options": {
+                        "type": "cancel",
+                        "tag": f"call_{self.id}",
+                    }
+                }, push_parameters)
 
     # ------------------------------------------------------------
     # MAILING
