@@ -2,9 +2,10 @@
 
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import { Many2ManyTagsField, many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import { many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import { Many2ManyTaxTagsField } from "../many2many_tax_tags/many2many_tax_tags";
 
-export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
+export class AutosaveMany2ManyTagsField extends Many2ManyTaxTagsField {
     setup() {
         super.setup();
 

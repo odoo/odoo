@@ -20,7 +20,7 @@
                                    domain="[('company_id', '=', company_id)]"
                                    options="{'no_create': True}"
                                    context="{'append_type_to_tax_name': True}"
-                                   widget="many2many_tags"/>
+                                   widget="many2many_tax_tags"/>
                             <field name="show_force_tax_included" invisible="1"/>
                             <field name="force_tax_included"
                                    invisible="not show_force_tax_included" force_save="1"/>
@@ -193,7 +193,7 @@
                                                    optional="hide"/>
                                             <field name="amount_string"/>
                                             <field name="tax_ids"
-                                                   widget="many2many_tags"
+                                                   widget="many2many_tax_tags"
                                                    optional="hide"/>
                                             <field name="analytic_distribution" widget="analytic_distribution"
                                                    groups="analytic.group_analytic_accounting"

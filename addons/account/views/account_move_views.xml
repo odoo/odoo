@@ -37,7 +37,7 @@
 
                                     <group string="Taxes" invisible="not tax_line_id and not tax_ids">
                                         <field name="tax_line_id" readonly="1" invisible="not tax_line_id"/>
-                                        <field name="tax_ids" widget="many2many_tags" readonly="1" invisible="not tax_ids"/>
+                                        <field name="tax_ids" widget="many2many_tax_tags" readonly="1" invisible="not tax_ids"/>
                                         <field name="tax_tag_invert" readonly="1" groups="base.group_no_one"/>
                                     </group>
                                     <group string="Matching" invisible="not matched_debit_ids and not matched_credit_ids">
@@ -114,7 +114,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="tax_ids" widget="many2many_tax_tags"/>
                                 </div>
                                 <div class="col-6 text-end">
                                     <t t-if="record.debit.raw_value > 0">
@@ -173,7 +173,7 @@
                     <field name="ref" optional="hide" readonly="False"/>
                     <field name="product_id" readonly="1" optional="hide"/>
                     <field name="name" optional="show"/>
-                    <field name="tax_ids" widget="many2many_tags" optional="hide" readonly="1"/>
+                    <field name="tax_ids" widget="many2many_tax_tags" optional="hide" readonly="1"/>
                     <field name="amount_currency" groups="base.group_multi_currency" optional="show" readonly="1" invisible="is_same_currency"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
@@ -1174,7 +1174,7 @@
                                             </group>
                                             <group>
                                                 <field name="account_id" domain="[('company_id', 'parent_of', company_id), ('deprecated', '=', False)]" options="{'no_create': True}" context="{'partner_id': partner_id, 'move_type': parent.move_type}"/>
-                                                <field name="tax_ids" widget="many2many_tags"/>
+                                                <field name="tax_ids" widget="many2many_tax_tags"/>
                                                 <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
                                             </group>
                                             <group>
