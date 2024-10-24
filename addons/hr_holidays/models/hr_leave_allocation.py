@@ -147,6 +147,23 @@ class HolidaysAllocation(models.Model):
         if any(allocation.date_to and allocation.date_from > allocation.date_to for allocation in self):
             raise UserError(_("The Start Date of the Validity Period must be anterior to the End Date."))
 
+    @api.constrains('employee_id', 'accrual_plan_id')
+    def _check_employee_accrual_plan_based_on_working_time(self):
+        for allocation in self:
+            if allocation.accrual_plan_id.is_based_on_worked_time:
+                if not allocation.employee_id and allocation.employee_ids:
+                    # in case of multi-employee allocations, every employee must have a working schedule
+                    calendars = [employee._get_employee_calendar() for employee in allocation.employee_ids]
+                    if any(not calendar for calendar in calendars):
+                        raise UserError(
+                            _('You need to define a working schedule on the employee for accrual plan based on working time.'))
+                else:
+                    calendar = allocation.employee_id._get_employee_calendar()
+                    if not calendar:
+                        raise UserError(
+                            _('You need to define a working schedule on the employee for accrual plan based on working time.'))
+
+
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
     @api.depends_context('uid')
@@ -420,7 +437,8 @@ class HolidaysAllocation(models.Model):
         else:
             planned_worked = worked
         left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
-            domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
+            domain=[('time_type', '=', 'leave')],
+            calendar=self.employee_id.sudo()._get_employee_calendar())[self.employee_id.id]['hours']
         if level.frequency == 'hourly':
             if level.accrual_plan_id.is_based_on_worked_time:
                 work_entry_prorata = planned_worked
@@ -460,6 +478,7 @@ class HolidaysAllocation(models.Model):
         already_accrued = {allocation.id: allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start' for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
+            allocation._check_employee_accrual_plan_based_on_working_time()
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
             if not level_ids:
                 continue
@@ -871,6 +890,7 @@ class HolidaysAllocation(models.Model):
         self.number_of_hours_display = 0.0
         self.number_of_days = 0.0
         date_to = min(self.date_to, date.today()) if self.date_to else False
+        self._check_employee_accrual_plan_based_on_working_time()
         self._process_accrual_plans(date_to)
 
     # ------------------------------------------------------------
