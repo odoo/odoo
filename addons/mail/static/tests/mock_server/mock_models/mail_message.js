@@ -19,6 +19,24 @@ export class MailMessage extends models.ServerModel {
     is_note = fields.Boolean({ string: "Note" });
     pinned_at = fields.Generic({ default: false });
 
+    link_preview_message_ids = fields.One2many({
+        relation: "mail.link.preview.message",
+        relation_field: "message_id",
+    });
+    link_preview_ids = fields.Many2many({ relation: "mail.link.preview" });
+
+    _compute_link_preview_ids(message) {
+        /** @type {import("mock_models").MailLinkPreview} */
+        const MailLinkPreview = this.env["mail.link.preview"];
+        /** @type {import("mock_models").MailLinkPreviewMessage} */
+        const MailLinkPreviewMessage = this.env["mail.link.preview.message"];
+        const linkPreviewMessages = MailLinkPreviewMessage.browse(message.link_preview_message_ids);
+        const linkPreview = MailLinkPreview.browse(
+            linkPreviewMessages.map((lpm) => !lpm.is_hidden && lpm.link_preview_id)
+        );
+        return linkPreview;
+    }
+
     /** @param {DomainListRepr} [domain] */
     mark_all_as_read(domain) {
         ({ domain } = getKwArgs(arguments, "domain"));
@@ -79,8 +97,6 @@ export class MailMessage extends models.ServerModel {
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
-        /** @type {import("mock_models").MailLinkPreview} */
-        const MailLinkPreview = this.env["mail.link.preview"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").MailMessageReaction} */
@@ -144,6 +160,7 @@ export class MailMessage extends models.ServerModel {
                     makeKwArgs({ as_thread: true })
                 );
             }
+            const linkPreviews = this._compute_link_preview_ids(message);
             Object.assign(data, {
                 attachment_ids: mailDataHelpers.Store.many(
                     IrAttachment.browse(message.attachment_ids).sort((a1, a2) => a1.id - a2.id)
@@ -155,9 +172,7 @@ export class MailMessage extends models.ServerModel {
                         ? ResFake._message_compute_subject([message.res_id])
                         : MailThread._message_compute_subject([message.res_id])
                     ).get(message.res_id),
-                link_preview_ids: mailDataHelpers.Store.many(
-                    MailLinkPreview.browse(message.link_preview_ids)
-                ),
+                link_preview_ids: mailDataHelpers.Store.many(linkPreviews),
                 notifications: mailDataHelpers.Store.many(
                     notifications.filter(
                         (notification) => notification.mail_message_id == message.id

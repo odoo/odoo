@@ -117,11 +117,6 @@ class TestLinkPreview(MailCommon):
 
     def test_link_preview(self):
         with patch.object(requests.Session, 'get', self._patch_with_og_properties), patch.object(requests.Session, 'head', self._patch_head_html):
-            throttle = int(self.env['ir.config_parameter'].sudo().get_param('mail.link_preview_throttle', 99))
-            self.env['mail.link.preview'].create([
-                {'source_url': self.source_url, 'message_id': self.existing_message.id}
-                for _ in range(throttle)
-            ])
             message = self.test_partner.message_post(
                 body=Markup(f'<a href={self.source_url}>Nothing link</a>'),
             )
@@ -138,7 +133,6 @@ class TestLinkPreview(MailCommon):
                                     {
                                         "id": message.link_preview_ids.id,
                                         "image_mimetype": False,
-                                        "message_id": message.id,
                                         "og_description": self.og_description,
                                         "og_image": self.og_image,
                                         "og_mimetype": False,
@@ -161,10 +155,6 @@ class TestLinkPreview(MailCommon):
 
             with self.assertBus(get_params=get_bus_params):
                 self.env["mail.link.preview"]._create_from_message_and_notify(message)
-            link_preview_count = self.env["mail.link.preview"].search_count(
-                [("source_url", "=", self.source_url)]
-            )
-            self.assertEqual(link_preview_count, throttle + 1)
 
     def test_link_preview_no_content_type(self):
         with patch.object(requests.Session, 'request', self._patch_with_no_content_type):
@@ -207,7 +197,7 @@ class TestLinkPreview(MailCommon):
                     self.env["mail.link.preview"]._create_from_message_and_notify(
                         message, request_url
                     )
-                    link_preview_count = self.env["mail.link.preview"].search_count(
+                    link_preview_count = self.env["mail.link.preview.message"].search_count(
                         [("message_id", "=", message.id)]
                     )
                     self.assertEqual(link_preview_count, counter)

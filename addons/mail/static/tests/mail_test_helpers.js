@@ -51,6 +51,7 @@ import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_mess
 import { MailFollowers } from "./mock_server/mock_models/mail_followers";
 import { MailGuest } from "./mock_server/mock_models/mail_guest";
 import { MailLinkPreview } from "./mock_server/mock_models/mail_link_preview";
+import { MailLinkPreviewMessage } from "./mock_server/mock_models/mail_link_preview_message";
 import { MailMessage } from "./mock_server/mock_models/mail_message";
 import { MailMessageReaction } from "./mock_server/mock_models/mail_message_reaction";
 import { MailMessageSubtype } from "./mock_server/mock_models/mail_message_subtype";
@@ -123,6 +124,7 @@ export const mailModels = {
     MailFollowers,
     MailGuest,
     MailLinkPreview,
+    MailLinkPreviewMessage,
     MailMessage,
     MailMessageReaction,
     MailMessageSubtype,

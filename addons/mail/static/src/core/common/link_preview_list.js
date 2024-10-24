@@ -4,13 +4,12 @@ import { Component } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
- * @property {import("models").LinkPreview[]} linkPreviews
- * @property {boolean} [deletable]
+ * @property {import("models").LinkPreviewMessage[]} linkPreviewsMessage
  * @extends {Component<Props, Env>}
  */
 export class LinkPreviewList extends Component {
     static template = "mail.LinkPreviewList";
-    static props = ["linkPreviews", "deletable?"];
+    static props = ["linkPreviewsMessages"];
     static defaultProps = {
         deletable: false,
     };

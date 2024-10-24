@@ -546,6 +546,8 @@ async function mail_link_preview(request) {
     const BusBus = this.env["bus.bus"];
     /** @type {import("mock_models").MailLinkPreview} */
     const MailLinkPreview = this.env["mail.link.preview"];
+    /** @type {import("mock_models").MailLinkPreviewMessage} */
+    const MailLinkPreviewMessage = this.env["mail.link.preview.message"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
@@ -553,16 +555,19 @@ async function mail_link_preview(request) {
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
     if (message.body.includes("https://make-link-preview.com")) {
         const linkPreviewId = MailLinkPreview.create({
-            message_id: message.id,
             og_description: "test description",
             og_title: "Article title",
             og_type: "article",
             source_url: "https://make-link-preview.com",
         });
+        MailLinkPreviewMessage.create({
+            message_id: message.id,
+            link_preview_id: linkPreviewId,
+        });
         BusBus._sendone(
-            MailMessage._bus_notification_target(message_id),
+            this.env.user.partner_id,
             "mail.record/insert",
-            new mailDataHelpers.Store(MailLinkPreview.browse(linkPreviewId)).get_result()
+            new mailDataHelpers.Store(MailMessage.browse(message_id)).get_result()
         );
     }
 }
@@ -572,26 +577,26 @@ registerRoute("/mail/link_preview/hide", mail_link_preview_hide);
 async function mail_link_preview_hide(request) {
     /** @type {import("mock_models").BusBus} */
     const BusBus = this.env["bus.bus"];
-    /** @type {import("mock_models").MailLinkPreview} */
-    const MailLinkPreview = this.env["mail.link.preview"];
+    /** @type {import("mock_models").MailLinkPreviewMessage} */
+    const MailLinkPreviewMessage = this.env["mail.link.preview.message"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { link_preview_ids } = await parseRequestParams(request);
-    for (const linkPreview of MailLinkPreview.browse(link_preview_ids)) {
+    const { message_id, link_preview_ids } = await parseRequestParams(request);
+    const linkPreviewMessages = MailLinkPreviewMessage.browse(
+        MailLinkPreviewMessage.search([
+            ["link_preview_id", "in", link_preview_ids],
+            ["message_id", "=", message_id],
+        ])
+    );
+    for (const linkPreviewMessage of linkPreviewMessages) {
+        linkPreviewMessage.is_hidden = true;
         BusBus._sendone(
-            MailMessage._bus_notification_target(linkPreview.message_id),
+            this.env.user.partner_id,
             "mail.record/insert",
-            new mailDataHelpers.Store(MailMessage.browse(linkPreview.message_id), {
-                link_preview_ids: mailDataHelpers.Store.many(
-                    MailLinkPreview.browse(linkPreview.id),
-                    "DELETE",
-                    makeKwArgs({ only_id: true })
-                ),
-            }).get_result()
+            new mailDataHelpers.Store(MailMessage.browse(linkPreviewMessage.message_id)).get_result()
         );
     }
-    return { link_preview_ids };
 }
 
 registerRoute("/mail/message/post", mail_message_post);

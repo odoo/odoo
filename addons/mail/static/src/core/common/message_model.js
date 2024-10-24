@@ -124,10 +124,8 @@ export class Message extends Record {
     is_note;
     /** @type {boolean} */
     is_transient;
-    link_preview_ids = Record.many("mail.link.preview", {
-        inverse: "message_id",
-        onDelete: (r) => r.delete(),
-    });
+    link_preview_ids = Record.many("mail.link.preview");
+    link_preview_message_ids = Record.many("mail.link.preview.message", { inverse: "message_id" });
     /** @type {number[]} */
     parentMessage = Record.one("mail.message");
     /**
@@ -503,6 +501,16 @@ export class Message extends Record {
             channel_id: message.thread.id,
             message_id: message.id,
         });
+    }
+
+    hideAllLinkPreview() {
+        rpc(
+            "/mail/link_preview/hide",
+            {
+                link_preview_message_ids: this.link_preview_message_ids.map((lp) => lp.id)
+            },
+            { silent: true }
+        );
     }
 }
 

@@ -10,6 +10,7 @@ declare module "mock_models" {
     import { MailFollowers as MailFollowers2 } from "@mail/../tests/mock_server/mock_models/mail_followers";
     import { MailGuest as MailGuest2 } from "@mail/../tests/mock_server/mock_models/mail_guest";
     import { MailLinkPreview as MailLinkPreview2 } from "@mail/../tests/mock_server/mock_models/mail_link_preview";
+    import { MailLinkPreviewMessage as MailLinkPreviewMessage2 } from "@mail/../tests/mock_server/mock_models/mail_link_preview_message";
     import { MailMessage as MailMessage2 } from "@mail/../tests/mock_server/mock_models/mail_message";
     import { MailMessageReaction as MailMessageReaction2 } from "@mail/../tests/mock_server/mock_models/mail_message_reaction";
     import { MailMessageSubtype as MailMessageSubtype2 } from "@mail/../tests/mock_server/mock_models/mail_message_subtype";
@@ -36,6 +37,7 @@ declare module "mock_models" {
     export interface MailFollowers extends MailFollowers2 {}
     export interface MailGuest extends MailGuest2 {}
     export interface MailLinkPreview extends MailLinkPreview2 {}
+    export interface MailLinkPreviewMessage extends MailLinkPreviewMessage2 {}
     export interface MailMessage extends MailMessage2 {}
     export interface MailMessageReaction extends MailMessageReaction2 {}
     export interface MailMessageSubtype extends MailMessageSubtype2 {}
@@ -63,6 +65,7 @@ declare module "mock_models" {
         "mail.followers": MailFollowers,
         "mail.guest": MailGuest,
         "mail.link.preview": MailLinkPreview,
+        "mail.link.preview.message": MailLinkPreviewMessage,
         "mail.message": MailMessage,
         "mail.message.reaction": MailMessageReaction,
         "mail.message.subtype": MailMessageSubtype,
