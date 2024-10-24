@@ -4,9 +4,6 @@ import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 import { Mutex } from "@web/core/utils/concurrency";
-import { registry } from "@web/core/registry";
-
-const commandRegistry = registry.category("discuss.channel_commands");
 
 /** @type {import("models").Thread} */
 const threadPatch = {
@@ -146,16 +143,9 @@ const threadPatch = {
     },
     /** @param {string} body */
     async post(body) {
-        if (this.model === "discuss.channel" && body.startsWith("/")) {
-            const [firstWord] = body.substring(1).split(/\s/);
-            const command = commandRegistry.get(firstWord, false);
-            if (
-                command &&
-                (!command.channel_types || command.channel_types.includes(this.channel_type))
-            ) {
-                await this.executeCommand(command, body);
-                return;
-            }
+        if (this.model === "discuss.channel" && this.composer.command) {
+            await this.executeCommand(this.composer.command, body);
+            return;
         }
         return super.post(...arguments);
     },

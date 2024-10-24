@@ -1,6 +1,8 @@
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
 
+import { ChatbotScript } from "@im_livechat/core/common/chatbot_script_model";
+
 import { patch } from "@web/core/utils/patch";
 
 patch(Store.prototype, {
@@ -8,6 +10,8 @@ patch(Store.prototype, {
         super.setup(...arguments);
         this.livechatChannels = this.makeCachedFetchData({ livechat_channels: true });
         this.has_access_livechat = false;
+        this.ChatbotScript = ChatbotScript;
+        this.chatbotData = this.makeCachedFetchData({ chatbots: true });
     },
     /**
      * @override

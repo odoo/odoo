@@ -367,8 +367,7 @@ class DiscussChannel(models.Model):
     def action_unfollow(self):
         self._action_unfollow(self.env.user.partner_id)
 
-    def _action_unfollow(self, partner=None, guest=None):
-        self.ensure_one()
+    def _action_unfollow(self, partner=None, guest=None, post_left_message=True):
         self.message_unsubscribe(partner.ids)
         custom_store = Store(self, {"is_pinned": False, "isLocallyPinned": False})
         member = self.env["discuss.channel.member"].search(
@@ -381,13 +380,14 @@ class DiscussChannel(models.Model):
             target = partner or guest
             target._bus_send_store(custom_store, notification_type="discuss.channel/leave")
             return
-        notification = Markup('<div class="o_mail_notification">%s</div>') % _(
-            "left the channel"
-        )
-        # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
-        member.channel_id.sudo().message_post(
-            body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
-        )
+        if post_left_message:
+            notification = Markup('<div class="o_mail_notification">%s</div>') % _(
+                "left the channel"
+            )
+            # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
+            member.channel_id.sudo().message_post(
+                body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
+            )
         # send custom store after message_post to avoid is_pinned reset to True
         member._bus_send_store(custom_store, notification_type="discuss.channel/leave")
         member.unlink()

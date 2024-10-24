@@ -699,6 +699,7 @@ test("first unseen message should be directly preceded by the new message separa
     await contains(".o-mail-Message", { text: "not empty" });
     // send a command that leads to receiving a transient message
     await insertText(".o-mail-Composer-input", "/who");
+    await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { count: 2 });
     // composer is focused by default, we remove that focus
@@ -933,6 +934,7 @@ test("Transient messages are added at the end of the thread", async () => {
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "/help");
+    await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { count: 2 });
     await contains(":nth-child(1 of .o-mail-Message)", { text: "Mitchell Admin" });
