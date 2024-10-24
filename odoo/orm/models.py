@@ -512,8 +512,8 @@ class BaseModel(metaclass=MetaModel):
       :attr:`~odoo.models.Model._inherits`-ed models, the inherited field will
       correspond to the last one (in the inherits list order).
     """
-    _table = None                   #: SQL table name used by model if :attr:`_auto`
-    _table_query = None             #: SQL expression of the table's content (optional)
+    _table: str = ''                 #: SQL table name used by model if :attr:`_auto`
+    _table_query: str | None = None  #: SQL expression of the table's content (optional)
     _sql_constraints: list[tuple[str, str, str]] = []   #: SQL constraints [(name, sql_def, message)]
 
     _rec_name = None                #: field to use for labeling records, default: ``name``

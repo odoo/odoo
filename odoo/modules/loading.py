@@ -485,7 +485,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         if update_module:
             # set up the registry without the patch for translated fields
             database_translated_fields = registry._database_translated_fields
-            registry._database_translated_fields = ()
+            registry._database_translated_fields = set()
             registry.setup_models(cr)
             # determine which translated fields should no longer be translated,
             # and make their model fix the database schema
