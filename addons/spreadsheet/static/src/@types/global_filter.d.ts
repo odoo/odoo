@@ -4,15 +4,15 @@ import { DomainListRepr } from "@web/core/domain";
 declare module "@spreadsheet" {
     export type RangeType = "fixedPeriod" | "relative" | "from_to";
     export type FixedPeriods = "quarter" | "month";
-    export type RelativePeriod =
-        | "last_month"
-        | "last_week"
-        | "last_three_months"
-        | "last_six_months"
-        | "last_year"
-        | "last_three_years"
-        | "year_to_date";
-    export type DateFilterTimePeriod = RelativePeriod | "this_month" | "this_quarter" | "this_year";
+    export type RelativeUnit =
+        | "day"
+        | "week_to_date"
+        | "week"
+        | "month_to_date"
+        | "month"
+        | "quarter"
+        | "year_to_date"
+        | "year";
 
     export interface FieldMatching {
         chain: string;
@@ -45,7 +45,13 @@ declare module "@spreadsheet" {
 
     export interface RelativeDateGlobalFilter extends DateGlobalFilterCommon {
         rangeType: "relative";
-        defaultValue?: DateFilterTimePeriod;
+        defaultValue?: RelativeDateValue;
+    }
+
+    export interface RelativeDateValue {
+        reference: "this" | "next" | "previous";
+        unit: RelativeUnit;
+        interval?: number; // number of days, weeks, months, or years (undefined for "this")
     }
 
     export interface FixedPeriodDateGlobalFilter extends DateGlobalFilterCommon {

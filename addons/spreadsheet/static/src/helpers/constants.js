@@ -7,12 +7,19 @@ export const DEFAULT_LINES_NUMBER = 20;
 
 export const UNTITLED_SPREADSHEET_NAME = _t("Untitled spreadsheet");
 
-export const RELATIVE_DATE_RANGE_TYPES = [
-    { type: "year_to_date", description: _t("Year to Date") },
-    { type: "last_week", description: _t("Last 7 Days") },
-    { type: "last_month", description: _t("Last 30 Days") },
-    { type: "last_three_months", description: _t("Last 90 Days") },
-    { type: "last_six_months", description: _t("Last 180 Days") },
-    { type: "last_year", description: _t("Last 365 Days") },
-    { type: "last_three_years", description: _t("Last 3 Years") },
+export const RELATIVE_DATE_RANGE_REFERENCES = [
+    { type: "last", description: _t("Last") },
+    { type: "this", description: _t("This") },
+    { type: "next", description: _t("Next") },
+];
+
+export const RELATIVE_DATE_RANGE_UNITS = [
+    { type: "day", description: _t("Day(s)") },
+    { type: "week_to_date", description: _t("Week(s) to Date") },
+    { type: "week", description: _t("Week(s)") },
+    { type: "month_to_date", description: _t("Month(s) to Date") },
+    { type: "month", description: _t("Month(s)") },
+    { type: "quarter", description: _t("Quarter(s)") },
+    { type: "year_to_date", description: _t("Year(s) to Date") },
+    { type: "year", description: _t("Year(s)") },
 ];
