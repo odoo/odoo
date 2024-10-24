@@ -7,13 +7,18 @@ class IrAttachment(models.Model):
     _name = "ir.attachment"
     _inherit = "ir.attachment"
 
-    def _post_add_create(self, **kwargs):
-        super()._post_add_create(**kwargs)
-        if self.res_model == "mrp.bom":
-            bom = self.env['mrp.bom'].browse(self.res_id)
-            self.res_model = bom.product_id._name if bom.product_id else bom.product_tmpl_id._name
-            self.res_id = bom.product_id.id if bom.product_id else bom.product_tmpl_id.id
-            self.env['product.document'].create({
-                'ir_attachment_id': self.id,
-                'attached_on_mrp': 'bom'
-            })
+    def _pre_create_check(self, vals_list):
+        for vals in vals_list:
+            if vals.get('res_model') == 'mrp.bom':
+                bom = self.env['mrp.bom'].browse(vals['res_id'])
+                vals['res_model'] = bom.product_id._name if bom.product_id else bom.product_tmpl_id._name
+                vals['res_id'] = bom.product_id.id if bom.product_id else bom.product_tmpl_id.id
+        return vals_list
+
+    def _create_product_document(self, product_attachments):
+        self.env['product.document'].sudo().create(
+                    {
+                        'ir_attachment_id': attachment.id,
+                        'attached_on_mrp': 'bom'
+                    } for attachment in product_attachments
+                )
