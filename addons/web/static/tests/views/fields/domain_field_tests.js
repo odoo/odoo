@@ -580,7 +580,7 @@ QUnit.module("Fields", (hooks) => {
 
             const webClient = await createWebClient({
                 serverData,
-                mockRPC(route, { method, args }) {
+                mockRPC(route, { method, args, domain }) {
                     if (method === "search_count") {
                         assert.step(JSON.stringify(args[0]));
                     }
@@ -588,7 +588,7 @@ QUnit.module("Fields", (hooks) => {
                         throw new Error("should not save");
                     }
                     if (route === "/web/domain/validate") {
-                        return false;
+                        return JSON.stringify(domain) === "[[\"abc\",\"=\",1]]";
                     }
                 },
             });
@@ -658,6 +658,9 @@ QUnit.module("Fields", (hooks) => {
                 mockRPC(route, { method, args }) {
                     if (method === "search_count") {
                         assert.step(JSON.stringify(args[0]));
+                    }
+                    if (route === "/web/domain/validate") {
+                        return true;
                     }
                 },
             });
