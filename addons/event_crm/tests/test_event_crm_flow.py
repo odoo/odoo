@@ -9,8 +9,16 @@ from odoo.tests import tagged
 from odoo.tests.common import users
 
 
+<<<<<<< saas-17.4
 @tagged('event_flow')
 class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
+||||||| f958bca6e52c3e18732154122c97475cebff98a5
+@tagged('event_flow')
+class TestEventCrmFlow(TestEventCrmCommon):
+=======
+@tagged('event_crm')
+class TestEventCrmFlow(TestEventCrmCommon):
+>>>>>>> 75e3cc6bf776835bc9032728f556b84e60fa6393
 
     @classmethod
     def setUpClass(cls):
