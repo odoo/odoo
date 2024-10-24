@@ -2464,8 +2464,12 @@ class APIKeyDescription(models.TransientModel):
         self.check_access_make_key()
 
         description = self.sudo()
-        k = self.env['res.users.apikeys']._generate(None, description.name, self.expiration_date)
-        description.unlink()
+        try:
+            k = self.env['res.users.apikeys']._generate(None, description.name, self.expiration_date)
+        except UserError:
+            return self.env['res.users'].api_key_wizard()
+        finally:
+            description.unlink()
 
         return {
             'type': 'ir.actions.act_window',
