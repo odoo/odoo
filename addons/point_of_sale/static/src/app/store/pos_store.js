@@ -5,8 +5,16 @@ import { markRaw } from "@odoo/owl";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, getOnNotified, Counter } from "@point_of_sale/utils";
-import { Reactive } from "@web/core/utils/reactive";
+import {
+    deduceUrl,
+    random5Chars,
+    uuidv4,
+    getOnNotified,
+    Counter,
+    getAllGetters,
+    lazyComputed,
+    proxyTrapUtil,
+} from "@point_of_sale/utils";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
@@ -33,6 +41,9 @@ import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { unaccent } from "@web/core/utils/strings";
+import { Reactive } from "@web/core/utils/reactive";
 
 export class PosStore extends Reactive {
     loadingSkipButtonIsShown = false;
@@ -53,8 +64,35 @@ export class PosStore extends Reactive {
         "mail.sound_effects",
     ];
     constructor() {
-        super();
-        this.ready = this.setup(...arguments).then(() => this);
+        super(...arguments);
+        const getters = new Map();
+        for (const [name, func] of getAllGetters(PosStore.prototype)) {
+            if (name.startsWith("__") && name.endsWith("__")) {
+                continue;
+            }
+            getters.set(name, [
+                `__lazy_${name}`,
+                (obj) => {
+                    return func.call(obj);
+                },
+            ]);
+        }
+        for (const [lazyName, func] of getters.values()) {
+            lazyComputed(this, lazyName, func);
+        }
+        const proxiedInstance = new Proxy(this, {
+            get(target, prop, receiver) {
+                if (proxyTrapUtil.isDisabled() || !getters.has(prop)) {
+                    return Reflect.get(target, prop, receiver);
+                }
+                const getLazyGetterValue = proxyTrapUtil.withoutProxyTrap(() => {
+                    const [lazyName] = getters.get(prop);
+                    return receiver[lazyName];
+                });
+                return getLazyGetterValue();
+            },
+        });
+        this.ready = this.setup(...arguments).then(() => proxiedInstance);
     }
     // use setup instead of constructor because setup can be patched.
     async setup(
@@ -1871,6 +1909,57 @@ export class PosStore extends Reactive {
 
     getDisplayDeviceIP() {
         return this.config.proxy_ip;
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.mainProductVariant) {
+                const mainProduct = this.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    get productsToDisplay() {
+        const searchWord = this.searchProductWord.trim();
+        const allProducts = this.models["product.template"].getAll();
+        let list = [];
+
+        if (searchWord !== "") {
+            list = this.addMainProductsToDisplay(
+                fuzzyLookup(unaccent(searchWord, false), allProducts, (product) =>
+                    unaccent(product.searchString, false)
+                )
+            );
+        } else if (this.selectedCategory?.id) {
+            list = this.selectedCategory.associatedProducts;
+        } else {
+            list = allProducts;
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.config.tip_product_id?.id,
+            ...this.hiddenProductIds,
+            ...this.session._pos_special_products_ids,
+        ];
+
+        list = list
+            .filter(
+                (product) => !excludedProductIds.includes(product.id) && product.available_in_pos
+            )
+            .slice(0, 100);
+
+        return searchWord !== ""
+            ? list
+            : list.sort((a, b) => a.display_name.localeCompare(b.display_name));
     }
 }
 

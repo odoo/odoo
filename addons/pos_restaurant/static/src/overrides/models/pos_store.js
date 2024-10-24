@@ -215,11 +215,9 @@ patch(PosStore.prototype, {
     async setTable(table, orderUuid = null) {
         this.loadingOrderState = true;
 
-        const tableOrders = table.orders;
-
-        let currentOrder = tableOrders.find((order) =>
-            orderUuid ? order.uuid === orderUuid : !order.finalized
-        );
+        let currentOrder = table
+            .getOrders()
+            .find((order) => (orderUuid ? order.uuid === orderUuid : !order.finalized));
 
         if (currentOrder) {
             this.set_order(currentOrder);
@@ -240,7 +238,7 @@ patch(PosStore.prototype, {
             this.loadingOrderState = true;
             const orders = await this.syncAllOrders({ throw: true });
             const orderUuids = orders.map((order) => order.uuid);
-            for (const order of table.orders) {
+            for (const order of table.getOrders()) {
                 if (
                     !orderUuids.includes(order.uuid) &&
                     typeof order.id === "number" &&

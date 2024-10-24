@@ -375,17 +375,17 @@ export class PosOrderline extends Base {
 
     get_unit_display_price() {
         if (this.config.iface_tax_included === "total") {
-            return this.get_all_prices(1).priceWithTax;
+            return this.allUnitPrices.priceWithTax;
         } else {
-            return this.get_all_prices(1).priceWithoutTax;
+            return this.allUnitPrices.priceWithoutTax;
         }
     }
 
     getUnitDisplayPriceBeforeDiscount() {
         if (this.config.iface_tax_included === "total") {
-            return this.get_all_prices(1).priceWithTaxBeforeDiscount;
+            return this.allUnitPrices.priceWithTaxBeforeDiscount;
         } else {
-            return this.get_all_prices(1).priceWithoutTaxBeforeDiscount;
+            return this.allUnitPrices.priceWithoutTaxBeforeDiscount;
         }
     }
     get_base_price() {
@@ -434,23 +434,23 @@ export class PosOrderline extends Base {
     }
 
     get_price_without_tax() {
-        return this.get_all_prices().priceWithoutTax;
+        return this.allPrices.priceWithoutTax;
     }
 
     get_price_with_tax() {
-        return this.get_all_prices().priceWithTax;
+        return this.allPrices.priceWithTax;
     }
 
     get_price_with_tax_before_discount() {
-        return this.get_all_prices().priceWithTaxBeforeDiscount;
+        return this.allPrices.priceWithTaxBeforeDiscount;
     }
 
     get_tax() {
-        return this.get_all_prices().tax;
+        return this.allPrices.tax;
     }
 
     get_tax_details() {
-        return this.get_all_prices().taxDetails;
+        return this.allPrices.taxDetails;
     }
 
     get_total_taxes_included_in_price() {
@@ -532,6 +532,14 @@ export class PosOrderline extends Base {
         };
     }
 
+    get allPrices() {
+        return this.get_all_prices();
+    }
+
+    get allUnitPrices() {
+        return this.get_all_prices(1);
+    }
+
     display_discount_policy() {
         // Sales dropped `discount_policy`, and we only show discount if applied pricelist rule
         // is a percentage discount. However we don't have that information in pos
@@ -609,11 +617,11 @@ export class PosOrderline extends Base {
 
     getComboTotalPrice() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithTax, 0);
+        return allLines.reduce((total, line) => total + line.allUnitPrices.priceWithTax, 0);
     }
     getComboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithoutTax, 0);
+        return allLines.reduce((total, line) => total + line.allUnitPrices.priceWithoutTax, 0);
     }
 
     get_old_unit_display_price() {

@@ -1,4 +1,5 @@
 import { parseDateTime } from "@web/core/l10n/dates";
+import { effect } from "@web/core/utils/reactive";
 
 /*
  * comes from o_spreadsheet.js
@@ -136,4 +137,63 @@ export class Counter {
         this.value++;
         return this.value;
     }
+}
+
+export function getAllGetters(proto) {
+    const getterNames = new Set();
+    const getters = new Set();
+    while (proto !== null) {
+        const descriptors = Object.getOwnPropertyDescriptors(proto);
+        for (const [name, descriptor] of Object.entries(descriptors)) {
+            if (descriptor.get && !getterNames.has(name)) {
+                getterNames.add(name);
+                getters.add([name, descriptor.get]);
+            }
+        }
+        proto = Object.getPrototypeOf(proto);
+    }
+    return getters;
+}
+
+export const proxyTrapUtil = (function () {
+    let proxyTrapDisabled = 0;
+    function withoutProxyTrap(fn) {
+        return function (...args) {
+            try {
+                proxyTrapDisabled += 1;
+                return fn(...args);
+            } finally {
+                proxyTrapDisabled -= 1;
+            }
+        };
+    }
+    return {
+        isDisabled() {
+            return proxyTrapDisabled > 0;
+        },
+        withoutProxyTrap,
+    };
+})();
+
+export function lazyComputed(obj, propName, compute) {
+    const key = Symbol(propName);
+    Object.defineProperty(obj, propName, {
+        get() {
+            return this[key]();
+        },
+        configurable: true,
+    });
+
+    effect(
+        function recompute(obj) {
+            const value = [];
+            obj[key] = () => {
+                if (!value.length) {
+                    value.push(compute(obj));
+                }
+                return value[0];
+            };
+        },
+        [obj]
+    );
 }
