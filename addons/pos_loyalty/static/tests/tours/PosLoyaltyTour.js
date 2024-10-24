@@ -5,6 +5,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScr
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as Notification from "@point_of_sale/../tests/tours/helpers/generic_components/NotificationTourMethods";
+import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/tours/helpers/utils";
 
@@ -529,5 +530,22 @@ registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
             PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
             PosLoyalty.orderTotalIs("575.00"),
             PosLoyalty.finalizeOrder("Cash", "575.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("RefundRulesProduct", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("product_a"),
+            PosLoyalty.finalizeOrder("Cash", "1000"),
+            ProductScreen.isShown(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.filterIs("Paid"),
+            TicketScreen.selectOrder("-0001"),
+            ProductScreen.pressNumpad("1"),
+            TicketScreen.confirmRefund(),
+            ProductScreen.isShown(),
         ].flat(),
 });
