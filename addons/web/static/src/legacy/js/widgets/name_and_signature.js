@@ -164,6 +164,7 @@ var NameAndSignature = Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(window).off('resize.o_web_sign_name_and_signature');
+        this.$signatureField = null;
     },
 
     //----------------------------------------------------------------------
