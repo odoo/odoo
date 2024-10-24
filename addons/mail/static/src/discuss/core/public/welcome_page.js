@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 
 export class WelcomePage extends Component {
     static props = ["proceed?"];
@@ -35,10 +36,13 @@ export class WelcomePage extends Component {
         }
     }
 
-    joinChannel() {
+    async joinChannel() {
         if (this.store.self.type === "guest") {
             this.store.self.updateGuestName(this.state.userName.trim());
         }
+        await rpc("/discuss/channel/add_guest", {
+            channel_id: this.store.discuss_public_thread.id,
+        });
         browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.audioStream);
         browser.localStorage.setItem(
             "discuss_call_preview_join_video",

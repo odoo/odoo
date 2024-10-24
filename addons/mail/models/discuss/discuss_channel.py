@@ -824,7 +824,8 @@ class DiscussChannel(models.Model):
                 ).sudo(False)
                 guest._set_auth_cookie()
                 self = self.with_context(guest=guest)
-            self.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
+            if self.channel_type != 'channel':
+                self.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
     @api.model
