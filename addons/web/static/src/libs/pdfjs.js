@@ -50,7 +50,7 @@ display: none !important;
 
 export async function loadPDFJSAssets() {
     return Promise.all([
-        loadJS("/web/static/lib/pdfjs/build/pdf.js"),
-        loadJS("/web/static/lib/pdfjs/build/pdf.worker.js"),
+        loadJS("/web/static/lib/pdfjs/build/pdf.js", "module"),
+        loadJS("/web/static/lib/pdfjs/build/pdf.worker.js", "module"),
     ]);
 }
