@@ -731,7 +731,7 @@ class SaleOrder(models.Model):
     @api.onchange('company_id')
     def _onchange_company_id_warning(self):
         self.show_update_pricelist = True
-        if self.order_line and self.state == 'draft':
+        if self.order_line and self.state == 'draft' and self.env['res.company'].search_count([]) > 1:
             return {
                 'warning': {
                     'title': _("Warning for the change of your quotation's company"),
