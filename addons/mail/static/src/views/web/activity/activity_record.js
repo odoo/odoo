@@ -5,6 +5,7 @@ import { Component } from "@odoo/owl";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
 import { Field } from "@web/views/fields/field";
+import { useMiddleClick } from "@web/core/utils/middle_click";
 import {
     getFormattedRecord,
     getImageSrcFromRecordInfo,
@@ -33,6 +34,12 @@ export class ActivityRecord extends Component {
         const { templateDocs } = this.props.archInfo;
         const templates = useViewCompiler(ActivityCompiler, templateDocs);
         this.recordTemplate = templates["activity-box"];
+
+        useMiddleClick({
+            clickParams: {
+                record: this.props.record,
+            },
+        });
     }
 
     getRenderingContext() {

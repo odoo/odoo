@@ -7,6 +7,7 @@ import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { useMiddleClick } from "@web/core/utils/middle_click";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
@@ -96,7 +97,29 @@ export class ListRenderer extends Component {
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
         this.tableRef = useRef("table");
-
+        useMiddleClick({
+            clickParams: {
+                onCtrlClick: (ev) => {
+                    const recordRowId = ev.target.closest(".o_data_row")?.dataset.id;
+                    const record =
+                        recordRowId && this.props.list.records.find((r) => r.id === recordRowId);
+                    if (
+                        !record ||
+                        record.isNew ||
+                        record.isInEdition ||
+                        this.props.archInfo.noOpen
+                    ) {
+                        // if record.isNew => do nothing
+                        // if record.readonly => openRecord
+                        // if record is editable => do nothing except handling "View" click
+                        return;
+                    }
+                    // todo tells the action service to open in new window
+                    this.props.openRecord(record);
+                },
+            },
+            refName: "table",
+        });
         this.longTouchTimer = null;
         this.touchStartMs = 0;
 
