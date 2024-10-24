@@ -981,7 +981,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const _super = this._super.bind(this);
         // Build the custom select
         const select = this._getSelect();
-        if (select) {
+        if (select && !this.options.enableTranslation) {
             const field = this._getActiveField();
             await this._replaceField(field);
         }
@@ -1142,6 +1142,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     selectTextareaValue: function (previewMode, value, params) {
         this.$target[0].textContent = value;
         this.$target[0].value = value;
+        // Trigger the change event to be able to detect the change for the
+        // translation system.
+        this.$target[0].dispatchEvent(new Event("change"));
     },
     /**
      * Select the date as value property and convert it to the right format
@@ -1356,6 +1359,20 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return fieldEl.classList.contains("s_website_form_custom") ||
                     ["one2many", "many2many"].includes(fieldEl.dataset.type);
             }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        switch (widgetName) {
+            case "placeholder_opt":
+                return !!this.$target[0].getAttribute("placeholder");
+            case "textarea_value_opt":
+                return !!this.$target[0].value;
+            case "value_opt":
+                return !!this.$target[0].getAttribute("value");
         }
         return this._super(...arguments);
     },

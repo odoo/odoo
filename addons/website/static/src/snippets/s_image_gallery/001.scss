@@ -93,7 +93,7 @@
             .carousel-control-prev {
                 padding-bottom: 64px;
             }
-            ul.carousel-indicators li {
+            .carousel-indicators button {
                 border: 1px solid #aaa;
             }
             .media_iframe_video {
@@ -103,7 +103,7 @@
                 height: 100%;
             }
         }
-        ul.carousel-indicators {
+        .carousel-indicators {
             position: absolute;
             left: 0%;
             bottom: 0;
@@ -112,9 +112,7 @@
             margin-left: 0;
             padding: 0;
             border-width: 0;
-            > * {
-                list-style-image: none;
-                display: inline-block;
+            > button {
                 width: 40px;
                 height: 40px;
                 line-height: 40px;
@@ -150,7 +148,7 @@
             }
         }
         &:not(.s_image_gallery_show_indicators) .carousel {
-            ul.carousel-indicators {
+            .carousel-indicators {
                 display: none;
             }
             .carousel-item.active,
@@ -236,24 +234,27 @@
         }
         &.s_image_gallery_indicators_rounded {
             .carousel {
-                ul.carousel-indicators li {
+                .carousel-indicators button {
                     border-radius: 50%;
                 }
             }
         }
         &.s_image_gallery_indicators_dots {
             .carousel {
-                ul.carousel-indicators {
+                .carousel-indicators {
                     height: 40px;
                     margin: auto;
 
-                    li {
+                    button {
                         max-width: 8px;
                         max-height: 8px;
                         margin: 0 6px;
                         border-radius: 10px;
                         background-color: $black;
-                        background-image: none !important;
+
+                        img {
+                            display: none;
+                        }
 
                         &:not(.active) {
                             opacity: .4;
@@ -281,7 +282,7 @@
             padding: 0;
         }
     }
-    ul.carousel-indicators {
+    .carousel-indicators {
         display: none;
     }
 
