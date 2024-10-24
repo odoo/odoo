@@ -139,6 +139,27 @@ class TestActivityRights(TestActivityCommon):
                     'test_mail.mail_act_test_todo',
                     user_id=self.user_admin.id)
 
+    def test_can_write_when_not_creator_or_assignee(self):
+        """
+        Test the computation of `can_write` to make sure it is
+        false when the env user is not the creator or the assignee
+        of the activity
+        """
+        activities = self.env['mail.activity'].with_user(self.user_admin.id).create([{
+                'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                'res_id': self.test_record.id,
+                'user_id': self.user_admin.id,
+            },
+            {
+                'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                'res_id': self.test_record.id,
+                'user_id': self.user_employee.id,
+            }])
+
+        self.assertFalse(activities[0].with_user(self.user_employee.id).can_write)
+        self.assertTrue(activities[1].with_user(self.user_employee.id).can_write)
 
 @tests.tagged('mail_activity')
 class TestActivityFlow(TestActivityCommon):
