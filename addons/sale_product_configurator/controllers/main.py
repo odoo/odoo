@@ -57,13 +57,32 @@ class ProductConfiguratorController(http.Controller):
             # They are kept in the context since they are not linked to this product variant
             parent_combination |= product.env.context.get('no_variant_attribute_values')
 
-        return request.env['ir.ui.view']._render_template("sale_product_configurator.optional_product_items", {
+        exclude_product_tmpl_ids = kw.get('exclude_product_tmpl_ids')
+        if exclude_product_tmpl_ids:
+            # Temporarily exclude products from being in `optional_product_ids`
+            # to avoid issues with mutually recursive/cyclic optional products
+            optional_products = product.optional_product_ids
+            exclude_products = request.env['product.template'].browse(exclude_product_tmpl_ids)
+            request.env.cache.update(
+                product,
+                product._fields['optional_product_ids'],
+                [(optional_products - exclude_products).ids],
+            )
+        res = request.env['ir.ui.view']._render_template("sale_product_configurator.optional_product_items", {
             'product': product,
             'parent_name': product.name,
             'parent_combination': parent_combination,
             'pricelist': pricelist,
             'add_qty': add_qty,
         })
+        if exclude_product_tmpl_ids:
+            # Re-add the excluded products after rendering the configurator template
+            request.env.cache.update(
+                product,
+                product._fields['optional_product_ids'],
+                [optional_products.ids],
+            )
+        return res
 
     def _show_advanced_configurator(self, product_id, variant_values, pricelist, handle_stock, **kw):
         product = request.env['product.product'].browse(int(product_id))
