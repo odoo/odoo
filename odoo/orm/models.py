@@ -6383,7 +6383,11 @@ class BaseModel(metaclass=MetaModel):
         :rtype: dict
         """
         if isinstance(key, str):
-            key = itemgetter(key)
+            names = key.split('.')
+            key = itemgetter(names[0])
+            for name in names[1:]:
+                def key(record, name=name, key=key):
+                    return itemgetter(name)(key(record))
 
         collator = defaultdict(list)
         for record in self:
