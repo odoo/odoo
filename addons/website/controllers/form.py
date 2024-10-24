@@ -15,6 +15,7 @@ from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
 from odoo.tools.translate import _, LazyTranslate
+from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 
 _lt = LazyTranslate(__name__)
 
@@ -348,3 +349,13 @@ class WebsiteForm(http.Controller):
             # attach the custom binary field files on the attachment_ids field.
             for attachment_id_id in orphan_attachment_ids:
                 record.attachment_ids = [(4, attachment_id_id)]
+
+class CustomAuthSignupHome(AuthSignupHome):
+    
+    @http.route('/website/signup/form/<string:model_name>', type='http', auth='public', website=True, sitemap=False, captcha='signup')
+    def webite_auth_signup(self, *args, **kwargs):
+        response = super(CustomAuthSignupHome, self).web_auth_signup(*args, **kwargs)
+        if not 'error' in response.qcontext and not response.status_code in (401, 403):
+            user_id = request.env['res.users'].sudo().search([('login', '=', kwargs['login'])]).id
+            return json.dumps({'id': user_id})
+        return json.dumps({'error': response.qcontext['error']})
