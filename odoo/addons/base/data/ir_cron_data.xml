@@ -19,4 +19,14 @@
         <field name='interval_type'>days</field>
         <field name="priority">8</field>
     </record>
+
+    <record id="execute_webhook" model="ir.cron">
+        <field name="name">Base: Execute Webhook</field>
+        <field name="model_id" ref="base.model_ir_webhook"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_execute_webhook()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="priority">8</field>
+    </record>
 </odoo>
