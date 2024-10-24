@@ -272,17 +272,24 @@ class PricelistItem(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if values.get('applied_on', False):
-                # Ensure item consistency for later searches.
-                applied_on = values['applied_on']
-                if applied_on == '3_global':
-                    values.update(dict(product_id=None, product_tmpl_id=None, categ_id=None))
-                elif applied_on == '2_product_category':
-                    values.update(dict(product_id=None, product_tmpl_id=None))
-                elif applied_on == '1_product':
-                    values.update(dict(product_id=None, categ_id=None))
-                elif applied_on == '0_product_variant':
-                    values.update(dict(categ_id=None))
+            if not values.get('applied_on'):
+                values['applied_on'] = (
+                    '0_product_variant' if values.get('product_id') else
+                    '1_product' if values.get('product_tmpl_id') else
+                    '2_product_category' if values.get('categ_id') else
+                    '3_global'
+                )
+
+            # Ensure item consistency for later searches.
+            applied_on = values['applied_on']
+            if applied_on == '3_global':
+                values.update(dict(product_id=None, product_tmpl_id=None, categ_id=None))
+            elif applied_on == '2_product_category':
+                values.update(dict(product_id=None, product_tmpl_id=None))
+            elif applied_on == '1_product':
+                values.update(dict(product_id=None, categ_id=None))
+            elif applied_on == '0_product_variant':
+                values.update(dict(categ_id=None))
         return super().create(vals_list)
 
     def write(self, values):
