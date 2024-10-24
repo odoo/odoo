@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from markupsafe import Markup
 
 from odoo import _, models
@@ -52,7 +54,7 @@ class SaleEdiCommon(models.AbstractModel):
         logs = []
         lines_values = []
         for line_tree in tree.iterfind(xpath):
-            line_values = self._retrieve_line_vals(line_tree)
+            line_values = self._retrieve_line_vals(order, line_tree)
             line_values = {
                 **line_values,
                 'product_uom_qty': line_values['quantity'],
@@ -71,6 +73,9 @@ class SaleEdiCommon(models.AbstractModel):
             lines_values += self._retrieve_line_charges(order, line_values, line_values['tax_id'])
             if not line_values['product_uom']:
                 line_values.pop('product_uom')  # if no uom, pop it so it's inferred from the product_id
+            if not line_values['product_id']:
+                default_code_xpath = self._get_line_xpaths()['product']['default_code']
+                line_values['edi_customer_product_ref'] = self._find_value(default_code_xpath, line_tree)
             lines_values.append(line_values)
 
         return lines_values, logs
@@ -121,3 +126,13 @@ class SaleEdiCommon(models.AbstractModel):
             partner_details += _(", Email: %(email)s", email=email)
 
         return partner_details
+
+    def _import_product(self, partner, **product_vals):
+        product = super()._import_product(partner, **product_vals)
+        if not product:
+            product = self.env['product.partner.reference'].search([
+                ('partner_id', '=', partner.id),
+                ('partner_product_reference', '=', product_vals['default_code']),
+            ], limit=1).product_id
+
+        return product

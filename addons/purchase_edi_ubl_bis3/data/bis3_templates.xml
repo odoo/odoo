@@ -145,6 +145,9 @@
             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:Name t-out="vals.get('name')" />
             <cbc:Description t-out="vals.get('description')" />
+            <cac:SellersItemIdentification>
+                <cbc:ID t-out="vals.get('seller_item_identification')"/>
+            </cac:SellersItemIdentification>
             <cac:StandardItemIdentification>
                 <cbc:ID t-out="vals.get('standard_item_identification')" />
             </cac:StandardItemIdentification>

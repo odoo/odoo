@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models, Command
 
 
@@ -23,7 +25,8 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             **self._import_retrieve_partner_vals(tree, "BuyerCustomer"),
         )
         if partner:
-            order_values['partner_id'] = partner.id
+            # Need to set partner before in order to find products from previous order
+            order.partner_id = partner.id
         delivery_partner, delivery_partner_logs = self._import_delivery_partner(
             order,
             **self._import_retrieve_delivery_vals(tree),
