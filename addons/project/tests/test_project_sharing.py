@@ -619,3 +619,17 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertEqual(partners - partner_d, task_with_parent_partner.message_partner_ids,
                          "The first, second, and the company partner should be set as new followers for the task 3 because the partner of this task is the parent of the other 2")
         self.assertFalse(task_without_partner.message_partner_ids, "Since this task has no partner, no follower should be added")
+
+    def test_add_collaborators_from_share_edit_wizard(self):
+        """
+            This test ensures that when a project is shared in edit mode, the partners are correctly set as follower in the project and their respective tasks.
+        """
+        partner = self.env['res.partner'].create({'name': "Alice"})
+        test_project = self.env['project.project'].create({'name': "project to share"})
+        task_of_test_project = self.env['project.task'].create({
+            'name': "Task for Share",
+            'project_id': test_project.id,
+        })
+        self.assertNotIn(partner, task_of_test_project.message_follower_ids.partner_id, "Partner is not in the list followers of task")
+        test_project._add_collaborators(partners=partner)
+        self.assertIn(partner, task_of_test_project.message_follower_ids.partner_id, "Partner is in the list followers of task")
