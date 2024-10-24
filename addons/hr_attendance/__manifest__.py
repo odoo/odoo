@@ -15,7 +15,7 @@ Keeps account of the attendances of the employees on the basis of the
 actions(Check in/Check out) performed by them.
        """,
     'website': 'https://www.odoo.com/app/employees',
-    'depends': ['hr', 'barcodes'],
+    'depends': ['hr', 'barcodes', 'base_geolocalize'],
     'data': [
         'data/hr_attendance_data.xml',
         'security/hr_attendance_security.xml',
