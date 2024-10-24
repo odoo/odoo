@@ -39,7 +39,6 @@ class AccountMove(models.Model):
         compute='_compute_l10n_in_total_withholding_amount',
         help="Total withholding amount for the move",
     )
-    l10n_in_tcs_tds_warning = fields.Char('TDC/TCS Warning', compute="_compute_l10n_in_tcs_tds_warning")
     l10n_in_display_higher_tcs_button = fields.Boolean(string="Display higher TCS button", compute="_compute_l10n_in_display_higher_tcs_button")
 
     # === Compute Methods ===
@@ -70,12 +69,13 @@ class AccountMove(models.Model):
                         lines |= line._origin
             return lines
 
-    @api.depends('invoice_line_ids.tax_ids', 'commercial_partner_id.l10n_in_pan')
+    @api.depends('invoice_line_ids.tax_ids', 'commercial_partner_id.l10n_in_pan', 'invoice_line_ids.price_total')
     def _compute_l10n_in_warning(self):
         super()._compute_l10n_in_warning()
         for move in self:
             warnings = move.l10n_in_warning or {}
             lines = move._get_l10n_in_invalid_tax_lines()
+            sections = move._get_l10n_in_tds_tcs_applicable_sections()
             if lines:
                 warnings['lower_tcs_tax'] = {
                         'message': _("As the Partner's PAN missing/invalid apply TCS at the higher rate."),
@@ -87,7 +87,28 @@ class AccountMove(models.Model):
                             domain=[('id', 'in', lines.ids)]
                         )
                 }
-                move.l10n_in_warning = warnings
+            if sections:
+                tds_tcs_applicable_lines = (
+                    self.move_type == 'out_invoice'
+                    and self._get_tcs_applicable_lines(self.invoice_line_ids)
+                    or self.invoice_line_ids
+                )
+                warnings['tds_tcs_threshold_alert'] = {
+                        'message': sections._get_warning_message(),
+                        'action_text': _("View Journal Items(s)"),
+                        'action': {
+                            'type': 'ir.actions.act_window',
+                            'name': _('Journal Items(s)'),
+                            'res_model': 'account.move.line',
+                            'domain': [('id', 'in', tds_tcs_applicable_lines.ids)],
+                            'views': [(self.env.ref('l10n_in_withholding.view_move_line_list_l10n_in_withholding').id, 'list')],
+                            'context': {
+                                'default_tax_type_use': self.invoice_filter_type_domain,
+                                'move_type': self.move_type == 'in_invoice'
+                            },
+                        }
+                }
+            move.l10n_in_warning = warnings
 
     def action_l10n_in_apply_higher_tax(self):
         self.ensure_one()
@@ -175,8 +196,7 @@ class AccountMove(models.Model):
             case _:
                 return False
 
-    @api.depends('invoice_line_ids.price_total')
-    def _compute_l10n_in_tcs_tds_warning(self):
+    def _get_l10n_in_tds_tcs_applicable_sections(self):
         def _group_by_section_alert(invoice_lines):
             group_by_lines = {}
             for line in invoice_lines:
@@ -194,7 +214,7 @@ class AccountMove(models.Model):
             if section_alert.is_aggregate_limit:
                 aggregate_period_key = section_alert.consider_amount == 'total_amount' and 'price_total' or 'balance'
                 aggregate_total = threshold_sums.get(section_alert.aggregate_period, {}).get(aggregate_period_key)
-                if move.state == 'draft':
+                if self.state == 'draft':
                     aggregate_total += lines_total
                 if aggregate_total > section_alert.aggregate_limit:
                     return True
@@ -203,31 +223,31 @@ class AccountMove(models.Model):
                 and lines_total > section_alert.per_transaction_limit
             )
 
-        for move in self:
-            if move.country_code == 'IN' and move.move_type in ['in_invoice', 'out_invoice']:
-                warning = set()
-                commercial_partner_id = move.commercial_partner_id
-                existing_section = (self.l10n_in_withhold_move_ids.line_ids + move.line_ids).tax_ids.l10n_in_section_id
-                for section_alert, lines in _group_by_section_alert(move.invoice_line_ids).items():
-                    if (
-                        (section_alert not in existing_section
-                        or [line for line in lines if section_alert not in line.tax_ids.l10n_in_section_id])
-                        and move._l10n_in_is_warning_applicable(section_alert)
-                        and _is_section_applicable(
+        if self.country_code == 'IN' and self.move_type in ['in_invoice', 'out_invoice']:
+            warning = set()
+            commercial_partner_id = self.commercial_partner_id
+            existing_section = (self.l10n_in_withhold_move_ids.line_ids + self.line_ids).tax_ids.l10n_in_section_id
+            for section_alert, lines in _group_by_section_alert(self.invoice_line_ids).items():
+                if (
+                    (section_alert not in existing_section
+                    or self._get_tcs_applicable_lines(lines))
+                    and self._l10n_in_is_warning_applicable(section_alert)
+                    and _is_section_applicable(
+                        section_alert,
+                        self._get_sections_aggregate_sum_by_pan(
                             section_alert,
-                            move._get_sections_aggregate_sum_by_pan(
-                                section_alert,
-                                commercial_partner_id
-                            ),
-                            move.invoice_currency_rate,
-                            lines
-                        )
-                    ):
-                        warning.add(section_alert.id)
-                warning_sections = self.env['l10n_in.section.alert'].browse(warning)
-                if warning_sections:
-                    move.l10n_in_tcs_tds_warning = warning_sections._get_warning_message()
-                else:
-                    move.l10n_in_tcs_tds_warning = False
-            else:
-                move.l10n_in_tcs_tds_warning = False
+                            commercial_partner_id
+                        ),
+                        self.invoice_currency_rate,
+                        lines
+                    )
+                ):
+                    warning.add(section_alert.id)
+            return self.env['l10n_in.section.alert'].browse(warning)
+
+    def _get_tcs_applicable_lines(self, lines):
+        tcs_applicable_lines = set()
+        for line in lines:
+            if line.l10n_in_tds_tcs_section_id not in line.tax_ids.l10n_in_section_id:
+                tcs_applicable_lines.add(line.id)
+        return self.env['account.move.line'].browse(tcs_applicable_lines)
