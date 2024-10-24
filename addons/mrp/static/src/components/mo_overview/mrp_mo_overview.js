@@ -54,11 +54,12 @@ export class MoOverview extends Component {
             this.state.showOptions.realCosts = false;
         }
         if (this.isProductionDone) {
-            // Hide Availabilities / Receipts / Status columns when the MO is done.
+            // Hide Availabilities / Receipts / Status / MO Cost columns when the MO is done.
             this.state.showOptions.availabilities = false;
             this.state.showOptions.receipts = false;
             this.state.showOptions.replenishments = false;
             this.state.showOptions.unitCosts = true;
+            this.state.showOptions.moCosts = false;
         }
         this.state.showOptions.uom = reportValues.context.show_uom;
         this.context = reportValues.context;
