@@ -204,7 +204,7 @@ export const editorCommands = {
             block.textContent !== "" && node.textContent !== "" &&
             (
                 block.nodeName === node.nodeName ||
-                ['BLOCKQUOTE', 'PRE', 'DIV'].includes(block.nodeName)
+                block.nodeName === 'DIV'
             )
         );
 
@@ -356,12 +356,6 @@ export const editorCommands = {
                 insertBefore = false;
             } else {
                 currentNode.after(nodeToInsert);
-            }
-            if (
-                ['BLOCKQUOTE', 'PRE'].includes(block.nodeName) &&
-                paragraphRelatedElements.includes(nodeToInsert.nodeName)
-            ) {
-                nodeToInsert = setTagName(nodeToInsert, block.nodeName);
             }
             let convertedList;
             if (
