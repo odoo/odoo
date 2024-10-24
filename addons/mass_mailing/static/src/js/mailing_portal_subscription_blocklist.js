@@ -97,9 +97,9 @@ publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.e
         const buttonAddNode = document.getElementById('button_blocklist_add');
         const buttonRemoveNode = document.getElementById('button_blocklist_remove');
         if (this.customerData.blocklistEnabled && this.customerData.blocklistPossible && !this.customerData.isBlocklisted) {
-            buttonAddNode.classList.remove('d-none');
+            buttonAddNode?.classList.remove('d-none');
         } else {
-            buttonAddNode.classList.add('d-none');
+            buttonAddNode?.classList.add('d-none');
         }
         if (this.customerData.isBlocklisted) {
             buttonRemoveNode.classList.remove('d-none');

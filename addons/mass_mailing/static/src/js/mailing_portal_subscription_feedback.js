@@ -101,6 +101,7 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
     _updateDisplay: function (cleanFeedback, setReadonly) {
         const feedbackArea = document.querySelector('div#o_mailing_subscription_feedback textarea');
         const feedbackButton = document.getElementById('button_feedback');
+        const feedbackEl = document.getElementById('o_mailing_subscription_feedback');
         const feedbackReasons = document.querySelectorAll('div#o_mailing_subscription_feedback input');
         const feedbackInfo = document.getElementById('o_mailing_subscription_feedback_info');
         if (this.allowFeedback) {
@@ -112,6 +113,7 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
             feedbackArea.setAttribute('disabled', 'disabled');
             feedbackButton.setAttribute('disabled', 'disabled');
             feedbackReasons.forEach(node => node.setAttribute('disabled', 'disabled'));
+            feedbackEl.classList.add('d-none');
         }
         else {
             feedbackArea.removeAttribute('disabled');
