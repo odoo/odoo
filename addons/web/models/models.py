@@ -949,8 +949,8 @@ class Base(models.AbstractModel):
             field = self._fields[field_name]
             if field.type not in ('one2many', 'many2many'):
                 continue
-            sub_fields_spec = field_spec.get('fields') or {}
-            if sub_fields_spec and values.get(field_name):
+            sub_field_names = list(field_spec.get('fields') or {})
+            if sub_field_names and values.get(field_name):
                 # retrieve all line ids in commands
                 line_ids = OrderedSet(self[field_name].ids)
                 for cmd in values[field_name]:
@@ -960,11 +960,19 @@ class Base(models.AbstractModel):
                         line_ids.update(cmd[2])
                 # prefetch stored fields on lines
                 lines = self[field_name].browse(line_ids)
-                lines.fetch(sub_fields_spec.keys())
+
+                # We need to add the inherits field in the fields_spec in order to correctly manage
+                # the fallback in the _modified_triggers of new records called by modified latter
+                # and invalidate correctly compute fields. See test_onchange_one2many_with_domain_on_related_field.
+                for field_name_to_add in lines._inherits.values():
+                    if field_name_to_add not in sub_field_names:
+                        sub_field_names.append(field_name_to_add)
+
+                lines.fetch(sub_field_names)
                 # copy the cache of lines to their corresponding new records;
                 # this avoids computing computed stored fields on new_lines
                 new_lines = lines.browse(map(NewId, line_ids))
-                for field_name in sub_fields_spec:
+                for field_name in sub_field_names:
                     field = lines._fields[field_name]
                     line_values = [
                         field.convert_to_cache(line[field_name], new_line, validate=False)
