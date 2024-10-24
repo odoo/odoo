@@ -739,7 +739,7 @@ class Picking(models.Model):
             if picking_id:
                 moves = self.env['stock.move'].search([('picking_id', '=', picking_id)])
                 for move in moves:
-                    move.write({'partner_id': picking.partner_id.id})
+                    move.partner_id = picking.partner_id.id
 
     @api.onchange('picking_type_id', 'partner_id')
     def _onchange_picking_type(self):
