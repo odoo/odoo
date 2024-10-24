@@ -51,13 +51,17 @@ class StockQuant(models.Model):
         the quants inside a location. This doesn't work out of the box because `value` is a computed
         field.
         """
-        if 'value' not in fields:
+        value_index, _ = next(((i, field) for i, field in enumerate(fields) if field.partition(':')[0] == 'value'), None) or (None, None)
+        if value_index is None:
             return super(StockQuant, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        del fields[value_index]
         res = super(StockQuant, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         for group in res:
-            if group.get('__domain'):
+            if '__domain' in group:
                 quants = self.search(group['__domain'])
-                group['value'] = sum(quant.value for quant in quants)
+            else:
+                quants = self.search(domain)
+            group['value'] = sum(quant.value for quant in quants)
         return res
 
     def _apply_inventory(self):
