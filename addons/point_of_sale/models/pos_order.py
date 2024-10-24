@@ -1179,7 +1179,107 @@ class PosOrder(models.Model):
             if orders_info[key_order] < orderline.write_date:
                 orders_info[key_order] = orderline.write_date
         totalCount = self.search_count(real_domain)
+<<<<<<< saas-17.4
         return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
+||||||| 56a957d2a727ad7117d9acb18683e024c008e6c3
+        return {'ids': ids, 'totalCount': totalCount}
+
+    def _export_for_ui(self, order):
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        return {
+            'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
+            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
+            'name': order.pos_reference,
+            'uid': re.search('([0-9-]){14}', order.pos_reference).group(0),
+            'amount_paid': order.amount_paid,
+            'amount_total': order.amount_total,
+            'amount_tax': order.amount_tax,
+            'amount_return': order.amount_return,
+            'pos_session_id': order.session_id.id,
+            'pricelist_id': order.pricelist_id.id,
+            'partner_id': order.partner_id.id,
+            'user_id': order.user_id.id,
+            'sequence_number': order.sequence_number,
+            'creation_date': str(order.date_order.astimezone(timezone)),
+            'fiscal_position_id': order.fiscal_position_id.id,
+            'to_invoice': order.to_invoice,
+            'to_ship': order.to_ship,
+            'state': order.state,
+            'account_move': order.account_move.id,
+            'id': order.id,
+            'is_tipped': order.is_tipped,
+            'tip_amount': order.tip_amount,
+            'access_token': order.access_token,
+        }
+
+    def _get_fields_for_order_line(self):
+        """This function is here to be overriden"""
+        return []
+
+    def get_table_draft_orders(self, table_id):
+        """This function is here to be overriden"""
+        return []
+
+    def _add_activated_coupon_to_draft_orders(self, table_orders):
+        """This function is here to be overriden"""
+        return table_orders
+
+    def export_for_ui(self):
+        """ Returns a list of dict with each item having similar signature as the return of
+            `export_as_JSON` of models.Order. This is useful for back-and-forth communication
+            between the pos frontend and backend.
+        """
+        return self.mapped(self._export_for_ui) if self else []
+=======
+        return {'ids': ids, 'totalCount': totalCount}
+
+    def _export_for_ui(self, order):
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        return {
+            'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
+            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
+            'name': order.pos_reference,
+            'uid': re.search('([0-9-]){14,}', order.pos_reference).group(0),
+            'amount_paid': order.amount_paid,
+            'amount_total': order.amount_total,
+            'amount_tax': order.amount_tax,
+            'amount_return': order.amount_return,
+            'pos_session_id': order.session_id.id,
+            'pricelist_id': order.pricelist_id.id,
+            'partner_id': order.partner_id.id,
+            'user_id': order.user_id.id,
+            'sequence_number': order.sequence_number,
+            'creation_date': str(order.date_order.astimezone(timezone)),
+            'fiscal_position_id': order.fiscal_position_id.id,
+            'to_invoice': order.to_invoice,
+            'to_ship': order.to_ship,
+            'state': order.state,
+            'account_move': order.account_move.id,
+            'id': order.id,
+            'is_tipped': order.is_tipped,
+            'tip_amount': order.tip_amount,
+            'access_token': order.access_token,
+        }
+
+    def _get_fields_for_order_line(self):
+        """This function is here to be overriden"""
+        return []
+
+    def get_table_draft_orders(self, table_id):
+        """This function is here to be overriden"""
+        return []
+
+    def _add_activated_coupon_to_draft_orders(self, table_orders):
+        """This function is here to be overriden"""
+        return table_orders
+
+    def export_for_ui(self):
+        """ Returns a list of dict with each item having similar signature as the return of
+            `export_as_JSON` of models.Order. This is useful for back-and-forth communication
+            between the pos frontend and backend.
+        """
+        return self.mapped(self._export_for_ui) if self else []
+>>>>>>> f0585c03904a29849ead9dde6f98501edaf0122d
 
     def _send_order(self):
         # This function is made to be overriden by pos_self_order_preparation_display
