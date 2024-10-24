@@ -137,6 +137,18 @@ defineActions([
             [false, "form"],
         ],
     },
+    {
+        id: 4,
+        xml_id: "action_4",
+        name: "Ponies",
+        res_model: "pony",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "kanban"],
+            [false, "form"],
+        ],
+    },
 ]);
 
 defineEmbeddedActions([
@@ -156,6 +168,14 @@ defineEmbeddedActions([
         type: "ir.embedded.actions",
         parent_action_id: 1,
         python_method: "do_python_method",
+    },
+    {
+        id: 4,
+        name: "Custom Embedded Action 4",
+        type: "ir.embedded.actions",
+        user_id: user.userId,
+        parent_action_id: 4,
+        action_id: 4,
     },
 ]);
 
@@ -480,4 +500,27 @@ test("execute a regular action from an embedded action", async () => {
 
     await contains(".o_form_view button[type=action]").click();
     expect(".o_control_panel .o_embedded_actions").toHaveCount(0);
+});
+
+test("custom embedded action loaded first", async () => {
+    await mountWithCleanup(WebClient);
+    browser.localStorage.setItem(`orderEmbedded4++${user.userId}`, JSON.stringify([4, false])); // set embedded action 4 in first
+    await getService("action").doActionButton({
+        name: 4,
+        type: "action",
+    });
+    expect(".o_list_view").toHaveCount(1);
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    expect(".o_embedded_actions > button:first-child").toHaveClass("active", {
+        message: "First embedded action in order should have the 'active' class",
+    });
+    expect(".o_embedded_actions > button:first-child > span").toHaveText(
+        "Custom Embedded Action 4",
+        {
+            message: "First embedded action in order should be 'Embedded Action 4'",
+        }
+    );
+    expect(".o_last_breadcrumb_item > span").toHaveText("Ponies", {
+        message: "'Favorite Ponies' view should be loaded",
+    });
 });
