@@ -51,6 +51,17 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
                 internalNote: "test note",
                 withClass: ".selected",
             }),
+
+            // Test Cancel Order
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.addOrderline("Water", "5", "2", "10.0"),
+            ProductScreen.clickReview(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderIsEmpty(),
+
             // Check that note is imported if come back to the table
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),

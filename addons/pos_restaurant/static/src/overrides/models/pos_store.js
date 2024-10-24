@@ -38,11 +38,19 @@ patch(PosStore.prototype, {
     async onDeleteOrder(order) {
         if (
             this.config.module_pos_restaurant &&
+            typeof order.id !== "string" &&
             this.mainScreen.component.name !== "TicketScreen"
         ) {
             this.showScreen("FloorScreen");
         }
-        return super.onDeleteOrder(...arguments);
+        const orderIsDeleted = await super.onDeleteOrder(...arguments);
+        if (
+            this.config.module_pos_restaurant &&
+            this.mainScreen.component.name !== "TicketScreen"
+        ) {
+            this.showScreen("FloorScreen");
+        }
+        return orderIsDeleted;
     },
     // using the same floorplan.
     async ws_syncTableCount(data) {
