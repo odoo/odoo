@@ -532,6 +532,7 @@ const WHITE_LISTED_KEYS = [
     "Chart", // Chart.js
     "L", // Leaflet
     "lamejs", // LameJS
+    "marked", // marked.js
 ];
 
 /** @type {Record<string, string[]} */

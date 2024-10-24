@@ -85,6 +85,8 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/tours/**/*',
         ],
         'im_livechat.assets_embed_core': [
+            'web/static/lib/dompurify/DOMpurify.js',
+            'mail/static/lib/marked/**/*',
             ('remove', 'web/static/src/core/browser/title_service.js'),
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
