@@ -2,8 +2,16 @@
 from odoo import api, fields, models, _, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
+<<<<<<< 18.0
 from odoo.tools import frozendict, groupby, split_every
 from odoo.tools.float_utils import float_repr, float_round, float_compare
+||||||| 3f0ac0bed32083832e037a4d07a8ee935418d7db
+from odoo.tools import frozendict, groupby, split_every
+from odoo.tools.float_utils import float_round
+=======
+from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every
+from odoo.tools.float_utils import float_round
+>>>>>>> f14c5534be30a3925d743a001298c4f1081b4a4e
 from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.translate import html_translate
 
@@ -2478,6 +2486,12 @@ class AccountTax(models.Model):
             return -candidate['price_subtotal']
 
         return [same_product, same_price_subtotal, biggest_amount]
+
+    def _get_description_plaintext(self):
+        self.ensure_one()
+        if is_html_empty(self.description):
+            return ''
+        return html2plaintext(self.description)
 
 
 class AccountTaxRepartitionLine(models.Model):
