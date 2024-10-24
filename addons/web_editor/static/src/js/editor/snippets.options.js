@@ -6631,32 +6631,42 @@ registry.ImageTools = ImageHandlerOption.extend({
         // Preserve the cursor to be able to replace the image afterwards.
         const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
         const img = this._getImg();
-        const document = this.el.ownerDocument;
-        const imageCropWrapperElement = document.createElement("div");
-        imageCropWrapperElement.classList.add("d-none"); // Hiding the cropper.
-        document.body.append(imageCropWrapperElement);
-        const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
-            activeOnStart: true,
-            media: img,
-            mimetype: this._getImageMimetype(img),
-        });
-        await imageCropWrapper.component.mountedPromise;
-        if (widgetValue) {
-            await imageCropWrapper.component.reset();
-        } else {
-            await imageCropWrapper.component.cropSquare(false);
-            if (isGif(this._getImageMimetype(img))) {
-                img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+        // Replace the image by its clone to avoid flickering.
+        const clonedImgEl = img.cloneNode(true);
+        img.classList.add("d-none");
+        clonedImgEl.onload = async () => {
+            const document = this.el.ownerDocument;
+            const imageCropWrapperElement = document.createElement("div");
+            imageCropWrapperElement.classList.add("d-none"); // Hiding the cropper.
+            document.body.append(imageCropWrapperElement);
+            const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
+                activeOnStart: true,
+                media: img,
+                mimetype: this._getImageMimetype(img),
+            });
+            await imageCropWrapper.component.mountedPromise;
+            if (widgetValue) {
+                await imageCropWrapper.component.reset();
+            } else {
+                await imageCropWrapper.component.cropSquare(false);
+                if (isGif(this._getImageMimetype(img))) {
+                    img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+                }
             }
-        }
-        await this._reapplyCurrentShape();
-        imageCropWrapper.destroy();
-        imageCropWrapperElement.remove();
+            await this._reapplyCurrentShape();
+            imageCropWrapper.destroy();
+            imageCropWrapperElement.remove();
+            if (clonedImgEl) {
+                clonedImgEl.remove();
+                img.classList.remove("d-none");
+            }
+            if (!widgetValue) {
+                await this._onImageCropped();
+            }
+        };
+        img.insertAdjacentElement("afterend", clonedImgEl);
         restoreCursor();
         this.trigger_up("enable_loading_effect");
-        if (!widgetValue) {
-            await this._onImageCropped();
-        }
         this.options.wysiwyg.odooEditor.historyUnpauseSteps();
     },
     /**
