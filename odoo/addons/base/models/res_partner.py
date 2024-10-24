@@ -540,15 +540,13 @@ class Partner(models.Model):
             if emails_normalized:
                 # note: multi-email input leads to invalid email like "Name" <email1, email2>
                 # but this is current behavior in Odoo 14+ and some servers allow it
-                partner.email_formatted = tools.formataddr((
-                    partner.name or u"False",
-                    ','.join(emails_normalized)
-                ))
+                partner.email_formatted = tools.formataddr_sanitized_name(
+                    (partner.name or u"False", ','.join(emails_normalized))
+                )
             elif partner.email:
-                partner.email_formatted = tools.formataddr((
-                    partner.name or u"False",
-                    partner.email
-                ))
+                partner.email_formatted = tools.formataddr_sanitized_name(
+                    (partner.name or u"False", partner.email)
+                )
 
     @api.depends('is_company')
     def _compute_company_type(self):

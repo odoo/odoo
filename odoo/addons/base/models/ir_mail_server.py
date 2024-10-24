@@ -109,6 +109,17 @@ def extract_rfc2822_addresses(text):
     return valid_addresses
 
 
+def extract_rfc2822_addresses_unique(text):
+    """ Same as extract_rfc2822_addresses but ensuring emails are present only
+    once. Duplicates addresses are removed, notably to mitigate bug like parsing
+    an email looking like '"admin@example.com" <admin@example.com>' which gives
+    two times the same email address.
+    """
+    candidates = extract_rfc2822_addresses(text)
+    seen = set()
+    return [x for x in candidates if x not in seen and not seen.add(x)]
+
+
 class IrMailServer(models.Model):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"
@@ -602,7 +613,9 @@ class IrMailServer(models.Model):
         smtp_to_list = [
             address
             for base in [email_to, email_cc, email_bcc]
-            for address in extract_rfc2822_addresses(base)
+            # be sure a given address does not return duplicates (but duplicates
+            # in final smtp to list is still ok)
+            for address in extract_rfc2822_addresses_unique(base)
             if address
         ]
         assert smtp_to_list, self.NO_VALID_RECIPIENT

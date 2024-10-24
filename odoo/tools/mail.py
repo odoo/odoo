@@ -706,6 +706,7 @@ def email_escape_char(email_address):
 def decode_message_header(message, header, separator=' '):
     return separator.join(h for h in message.get_all(header, []) if h)
 
+
 def formataddr(pair, charset='utf-8'):
     """Pretty format a 2-tuple of the form (realname, email_address).
 
@@ -748,6 +749,20 @@ def formataddr(pair, charset='utf-8'):
             name = email_addr_escapes_re.sub(r'\\\g<0>', name)
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
+
+
+def formataddr_sanitized_name(pair, charset='utf-8'):
+    """Same as formataddr but sanitizing the name to not contain something
+    that looks like an email.
+
+    >>> formataddr(('John Doe', 'johndoe@example.com'))
+    '"John Doe" <johndoe@example.com>'
+
+    >>> formataddr(('', 'johndoe@example.com'))
+    'johndoe@example.com'
+    """
+    name, address = pair
+    return formataddr((prepare_name_for_email(name), address), charset=charset)
 
 
 def encapsulate_email(old_email, new_email):
@@ -803,3 +818,12 @@ def parse_contact_from_email(text):
         name, email_normalized = text, ''
 
     return name, email_normalized
+
+
+def prepare_name_for_email(text):
+    if text:
+        return re.sub(
+            '([^ ]+@[^ ]+)',
+            lambda p: p.group(0).replace('@', ' @ '),
+            text)
+    return ""
