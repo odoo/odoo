@@ -4,7 +4,7 @@ import logging
 import os
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.addons.event.tools.esc_label_tools import print_event_attendees, setup_printer, layout_96x82, layout_96x134
+from odoo.addons.event.tools.esc_label_tools import print_event_attendees, setup_printer, layout_96x82
 from odoo.tools import email_normalize, email_normalize_all
 from odoo.exceptions import AccessError, ValidationError
 _logger = logging.getLogger(__name__)
@@ -358,7 +358,7 @@ class EventRegistration(models.Model):
         try:
             is_public = self.sudo().with_context(active_test=False).partner_id.user_ids in public_users if public_users else False
             if self.partner_id and not is_public:
-                self._message_add_suggested_recipient(recipients, partner=self.partner_id, reason=_('Customer'))
+                self._message_add_sutypeggested_recipient(recipients, partner=self.partner_id, reason=_('Customer'))
             elif self.email:
                 self._message_add_suggested_recipient(recipients, email=self.email, reason=_('Customer Email'))
         except AccessError:     # no read access rights -> ignore suggested recipients
@@ -401,7 +401,7 @@ class EventRegistration(models.Model):
 
     def _get_registration_summary(self):
         self.ensure_one()
-        if self.event_id.badge_format in ["96x82", "96x134"] and self.env.get("iot.device") is not None:
+        if self.event_id.badge_format == "96x82" and self.env.get("iot.device") is not None:
             badge_printers = self.env["iot.device"].search([("subtype", "=", "label_printer")])
             iot_printers = badge_printers.mapped(lambda printer: {
                 "id": printer.id,
@@ -436,13 +436,12 @@ class EventRegistration(models.Model):
             'company_name': self.company_name
         }
 
-    def _generate_esc_label_badges(self, is_small_badge: bool):
-        badge_layout = layout_96x82 if is_small_badge else layout_96x134
-        command = setup_printer(badge_layout)
+    def _generate_esc_label_badges(self):
+        command = setup_printer(layout_96x82)
 
         attendees_per_event = self.grouped("event_id").items()
         for (event, attendees) in attendees_per_event:
             attendees_details = attendees.mapped(lambda attendee: attendee._get_registration_print_details())
-            command.concat(print_event_attendees(event._get_event_print_details(), attendees_details, badge_layout))
+            command.concat(print_event_attendees(event._get_event_print_details(), attendees_details, layout_96x82))
 
         return command.to_string()
