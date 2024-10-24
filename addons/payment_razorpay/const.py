@@ -148,3 +148,6 @@ HANDLED_WEBHOOK_EVENTS = [
     'refund.failed',
     'refund.processed',
 ]
+
+OAUTH_URL = "https://razorpay.api.odoo.com"
+OAUTH_TEST_URL = "https://razorpay.test.odoo.com"
