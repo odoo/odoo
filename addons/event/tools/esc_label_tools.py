@@ -537,33 +537,3 @@ layout_96x82 = {
     "secondary_text_color": "#374151",
     "secondary_text_alpha": 200
 }
-
-
-layout_96x134 = {
-    "print_width": 2340,
-    "print_height": 3225,
-    "print_offset_left": -30,
-    "print_offset_top": 36,
-    "double_sided": True,
-    "label_gap": 80,
-    "text_margin": 160,
-    "logo_width": 800,
-    "logo_height": 300,
-    "ticket_bg_height": 275,
-    "event_name_font_size": 150,
-    "details_font_size": 80,
-    "attendee_name_font_size": 130,
-    "company_font_size": 100,
-    "ticket_font_size": 110,
-    "event_name_y_pos": 450,
-    "date_y_pos": 650,
-    "address_y_pos": 770,
-    "attendee_name_y_pos": 1025,
-    "company_y_pos": 1200,
-    "answers_y_pos": 1350,
-    "logo_y_pos": 2380,
-    "ticket_text_y_pos": 3040,
-    "custom_text_y_pos": 2750,
-    "secondary_text_color": "#374151",
-    "secondary_text_alpha": 200
-}

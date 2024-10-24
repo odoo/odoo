@@ -180,9 +180,14 @@ export class EventRegistrationSummaryDialog extends Component {
     async printWithBadgePrinter() {
         const reportName = `event.event_report_template_esc_label_${this.registration.badge_format}_badge`;
         const [{ id: reportId }] = await this.orm.searchRead("ir.actions.report", [["report_name", "=", reportName]], ["id"]);
+        const ticket_type = this.registration.ticket_name ? this.registration.ticket_name : '';
 
         this.notification.add(
-            _t("'%(name)s' badge sent to printer '%(printer)s'", { name: this.registration.name, printer: this.selectedPrinter.name }),
+            _t("'%(name)s' %(type)s badge sent to printer '%(printer)s'", {
+                name: this.registration.name,
+                type: ticket_type,
+                printer: this.selectedPrinter.name,
+            }),
             { type: "info" }
         );
         if (await this.isIotBoxReachable()) {
