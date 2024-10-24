@@ -221,8 +221,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
             msg_vals=notify_msg_vals,
         )
         # find back information for each recipients
-        partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-        emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+        partner_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_1.ids)
+        emp_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_employee.ids)
         # partner: no access button
         self.assertFalse(partner_info['has_button_access'])
         # employee: access button and link
@@ -249,8 +249,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                     msg_vals=notify_msg_vals,
                 )
                 # find back information for partner
-                partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-                emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+                partner_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_1.ids)
+                emp_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_employee.ids)
                 # check there is no access button
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
@@ -273,8 +273,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                     msg_vals=notify_msg_vals,
                 )
                 # find back information for partner
-                partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-                emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+                partner_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_1.ids)
+                emp_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_employee.ids)
                 # check there is no access button
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
@@ -715,7 +715,7 @@ class TestMessageLog(TestMessagePostCommon):
             )
 
 
-@tagged('mail_post')
+@tagged('mail_post', 'temp')
 class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
     def test_assert_initial_values(self):
@@ -752,12 +752,20 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
 
         with self.assertSinglePostNotifications(
-                [{'partner': self.partner_employee_2, 'type': 'inbox'}],
-                message_info={
+                [
+                    {'partner': self.partner_employee_2, 'type': 'inbox'},
+                    {
+                        'email_cc': ['"Leo Pol" <leo@test.example.com>', 'fab@test.example.com'],
+                        'email_to': ['"Gaby Tlair" <gab@test.example.com>', 'ted@test.example.com'],
+                        'type': 'email',
+                    },
+                ], message_info={
                     'content': 'Body',
                     'message_values': {
                         'author_id': self.partner_employee,
                         'body': '<p>Body</p>',
+                        'email_cc': '"Leo Pol" <leo@test.example.com>,fab@test.example.com',  # normalized with comma without space
+                        'email_to': '"Gaby Tlair" <gab@test.example.com>,ted@test.example.com',  # normalized with comma without space
                         'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
                         'is_internal': False,
                         'message_type': 'comment',
@@ -767,10 +775,12 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         'res_id': test_record.id,
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
-                }
+                },
             ):
             new_message = test_record.message_post(
                 body='Body',
+                email_cc='"Leo Pol" <leo@test.example.com>, fab@test.example.com',
+                email_to='"Gaby Tlair" <gab@test.example.com>, ted@test.example.com',
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.partner_employee_2.id],

@@ -142,7 +142,10 @@ class MailMessage(models.Model):
     is_current_user_or_guest_author = fields.Boolean(compute='_compute_is_current_user_or_guest_author')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
+    # email recipients: comma separated list of emails (not normalized)
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
+    email_to = fields.Text('Emails To')
+    email_cc = fields.Char('Emails Cc')
     # list of partner having a notification. Caution: list may change over time because of notif gc cron.
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(
@@ -472,7 +475,7 @@ class MailMessage(models.Model):
                     messages_to_check.pop(mid)
         elif operation == 'create':
             for mid, message in list(messages_to_check.items()):
-                if not self.is_thread_message(message):
+                if not self._is_thread_message_visible(vals=message):
                     messages_to_check.pop(mid)
 
         if not messages_to_check:
@@ -682,7 +685,7 @@ class MailMessage(models.Model):
                 if other_cmd:
                     message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
-            if message.is_thread_message(values):
+            if message._is_thread_message_visible(vals=values):
                 message._invalidate_documents(values.get('model'), values.get('res_id'))
 
         return messages
@@ -1221,7 +1224,7 @@ class MailMessage(models.Model):
         email_from = values.get('email_from')
         message_type = values.get('message_type')
         records = None
-        if self.is_thread_message({'model': model, 'res_id': res_id, 'message_type': message_type}):
+        if self._is_thread_message(vals={'model': model, 'res_id': res_id, 'message_type': message_type}):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
@@ -1231,23 +1234,28 @@ class MailMessage(models.Model):
     def _get_message_id(self, values):
         if values.get('reply_to_force_new', False) is True:
             message_id = tools.mail.generate_tracking_message_id('reply_to')
-        elif self.is_thread_message(values):
+        elif self._is_thread_message(vals=values):
             message_id = tools.mail.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         else:
             message_id = tools.mail.generate_tracking_message_id('private')
         return message_id
 
-    def is_thread_message(self, vals=None):
-        if vals:
-            res_id = vals.get('res_id')
-            model = vals.get('model')
-            message_type = vals.get('message_type')
-        else:
-            self.ensure_one()
-            res_id = self.res_id
-            model = self.model
-            message_type = self.message_type
-        return res_id and model and message_type != 'user_notification'
+    def _is_thread_message(self, vals=None, thread=None):
+        """ Tool method to compute thread validity in notification methods. """
+        if vals is None:
+            vals = {}
+        res_model = vals['model'] if 'model' in vals else thread._name if thread else self.model
+        res_id = vals['res_id'] if 'res_id' in vals else thread.ids[0] if thread and thread.ids else self.res_id
+        return bool(res_id) if (res_model and res_model != 'mail.thread') else False
+
+    def _is_thread_message_visible(self, vals=None, thread=None):
+        """ In addition to being a thread message, it should not be a user specific
+        notification that is recipient-specific. Used mainly for ACL purpose. """
+        is_thread = self._is_thread_message(vals=vals, thread=thread)
+        if is_thread:
+            message_type = (vals or {}).get('message_type') or self.message_type
+            return is_thread and message_type != 'user_notification'
+        return is_thread
 
     def _invalidate_documents(self, model=None, res_id=None):
         """ Invalidate the cache of the documents followed by ``self``. """
