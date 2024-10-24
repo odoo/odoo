@@ -362,6 +362,20 @@
         </t>
     </t>
 
+    <!-- Password Field -->
+    <t t-name="website.form_field_password">
+        <t t-call="website.form_field">
+            <input
+                type="password"
+                class="form-control s_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required || field.modelRequired || None"
+                t-att-value="field.value"
+                t-att-data-fill-with="field.fillWith"
+                t-att-id="field.id"/>
+        </t>
+    </t>
+
     <!-- Monetary Field -->
     <t t-name="website.form_field_monetary">
         <t t-call="website.form_field_float" />

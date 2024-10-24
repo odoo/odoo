@@ -15,6 +15,7 @@ from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
 from odoo.tools.translate import _, LazyTranslate
+from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 
 _lt = LazyTranslate(__name__)
 
@@ -327,3 +328,53 @@ class WebsiteForm(http.Controller):
             # attach the custom binary field files on the attachment_ids field.
             for attachment_id_id in orphan_attachment_ids:
                 record.attachment_ids = [(4, attachment_id_id)]
+
+class CustomAuthSignup(AuthSignupHome):
+    @http.route("/web/signup", type="http")
+    def web_auth_signup(self, *args, **kwargs):
+        response = super().web_auth_signup(*args, **kwargs)
+
+        if "error" in response.qcontext:
+            return request.make_response(
+                json.dumps({"error": response.qcontext["error"]}),
+                headers=[("Content-Type", "application/json")]
+            )
+
+        if kwargs.get("login") and response.status_code in range(200, 308):
+            users = request.env["res.users"].sudo().search([("login", "=", kwargs["login"])])
+
+            existing_fields = set(self.env["res.users"]._fields.keys())
+            remaining_fields = {key: value for key, value in kwargs.items() if key not in existing_fields and key != "confirm_password"}
+
+            if remaining_fields:
+                # Add the remaining fields ( other than existing fields ) to the chatter
+                # of the user
+                custom_content = _("Other Information:\n___________\n\n") + str(remaining_fields)
+                record = self.env["res.partner"].browse(users.partner_id.id)
+                record._message_log(
+                    body=nl2br_enclose(custom_content, "p"),
+                    message_type="comment",
+                )
+                request.env.cr.commit()
+
+            return request.make_response(
+                json.dumps({"id": users.id}),
+                headers=[("Content-Type", "application/json")]
+            )
+        return response
+
+    def _prepare_signup_values(self, qcontext):
+        values = super()._prepare_signup_values(qcontext)
+        params = dict(request.params)
+
+        # This method is also called when the user is redirected to the reset password
+        # page. In that case, we don't want to update the values
+        if request.httprequest.path == "/web/reset_password":
+            return values;
+
+        existing_fields = set(self.env["res.users"]._fields.keys())
+        filtered_params = {key: value for key, value in params.items() if key in existing_fields}
+
+        values.update(filtered_params)
+
+        return values

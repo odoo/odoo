@@ -452,7 +452,11 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             this.selectActionEl = document.createElement('we-select');
             this.selectActionEl.setAttribute('string', 'Action');
             this.selectActionEl.dataset.noPreview = 'true';
-            this.models.forEach(el => {
+            // To remove signup_form action from the list
+            const updatedModels = this.models.filter(
+                (item) => item.website_form_key !== "signup_form"
+            );
+            updatedModels.forEach((el) => {
                 const option = document.createElement('we-button');
                 option.textContent = el.website_form_label;
                 option.dataset.selectAction = el.id;
