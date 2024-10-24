@@ -1315,8 +1315,16 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 }
                 return (['text', 'email', 'tel', 'url', 'search', 'password', 'number'].includes(dependencyEl.type)
                     || dependencyEl.nodeName === 'TEXTAREA') && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
-            case 'hidden_condition_no_text_opt':
+            case 'hidden_condition_no_text_opt1':
                 return dependencyEl && (dependencyEl.type === 'checkbox' || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT');
+            case 'hidden_condition_no_text_opt':
+                return dependencyEl && (dependencyEl.type === 'checkbox'
+                    || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT')
+                    && !['contains', '!contains'].includes(this.$target[0].dataset.visibilityComparator);
+            case 'hidden_condition_list_opt':
+                return dependencyEl && (dependencyEl.type === 'checkbox'
+                    || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT')
+                    && ['contains', '!contains'].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_num_opt':
                 return dependencyEl && dependencyEl.type === 'number';
             case 'hidden_condition_text_opt':
@@ -1478,7 +1486,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                         : "hidden_condition_no_text_opt";
                 const selectOptEl = uiFragment.querySelectorAll(
                     `we-select[data-name="${selectOptName}"]`,
-                )[1];
+                )[0];
                 const inputContainerEl = this.$target[0];
                 const dependencyEl = this._getDependencyEl();
                 if (dependencyEl.nodeName === 'SELECT') {

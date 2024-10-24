@@ -2195,6 +2195,12 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
+    isContainer() {
+        return this.isVisibilityCondition;
+    },
+    /**
+     * @override
+     */
     start() {
         this.addItemTitle = this.el.dataset.addItemTitle || _t("Add");
         if (this.el.dataset.availableRecords) {
@@ -2213,8 +2219,12 @@ const ListUserValueWidget = UserValueWidget.extend({
         this.containerEl.appendChild(tableWrapper);
         this.el.classList.add('o_we_fw');
         this._makeListItemsSortable();
+        this.isVisibilityCondition = this.options.dataAttributes.attributeName == 'visibilityCondition';
         if (this.createWidget) {
             return this.createWidget.appendTo(this.containerEl);
+        }
+        if (isVisibilityCondition) {
+            this._populateDependencyOptions();
         }
     },
 
@@ -2243,13 +2253,22 @@ const ListUserValueWidget = UserValueWidget.extend({
      */
     setValue() {
         this._super(...arguments);
-        const currentValues = this._value ? JSON.parse(this._value) : [];
+        let currentValues;
+
+        if (isVisibilityCondition) {
+            currentValues = this._value;
+        }
+        else {
+            currentValues = this._value ? JSON.parse(this._value) : [];
+        }
         this.listTable.innerHTML = '';
         if (this.addItemButton) {
             this.addItemButton.remove();
         }
-
-        if (this.createWidget) {
+        if (isVisibilityCondition) {
+            this._populateDependencyOptions(currentValues);
+            return;
+        } else if (this.createWidget) {
             const selectedIds = currentValues.map(({ id }) => id)
                 .filter(id => typeof id === 'number');
             // Note: it's important to simplify the domain at its maximum as the
@@ -2351,6 +2370,9 @@ const ListUserValueWidget = UserValueWidget.extend({
         if (this.hasDefault) {
             const checkboxEl = document.createElement('we-button');
             checkboxEl.classList.add('o_we_user_value_widget', 'o_we_checkbox_wrapper');
+            if (isVisibilityCondition) {
+                checkboxEl.dataset.selectDataAttribute = id;
+            }
             if (this.selected.includes(id) || recordDataSelected) {
                 checkboxEl.classList.add('active');
             }
@@ -2374,6 +2396,43 @@ const ListUserValueWidget = UserValueWidget.extend({
             trEl.appendChild(buttonTdEl);
         }
         this.listTable.appendChild(trEl);
+    },
+    /**
+     * @private
+     * @param {string} currentValues
+     */
+    _populateDependencyOptions(currentValues = '') {
+        const dependencyName = this.$target[0].dataset.visibilityDependency;
+        if(!dependencyName){
+            return;
+        }
+        const dependencyEl = this.$target[0].closest('form').querySelector(`.s_website_form_input[name="${CSS.escape(dependencyName)}"]`);
+        let selected = false;
+        currentValues = currentValues.split(',');
+        if (dependencyEl.nodeName === 'SELECT') {
+            for (const option of dependencyEl.querySelectorAll('option')) {
+                const id = option.value;
+                if (currentValues.includes(id)) {
+                    selected = true;
+                }
+                const display_name = option.textContent;
+                this._addItemToTable(id, display_name, {undeletable: true, selected});
+                selected = false;
+            }
+        }
+        else if (["radio", "checkbox"].includes(dependencyEl.type)) {
+            const dependencyContainerEl = dependencyEl.closest('.s_website_form_field');
+            const inputsInDependencyContainer = dependencyContainerEl.querySelectorAll('.s_website_form_input');
+            for (const el of inputsInDependencyContainer) {
+                const id = el.value;
+                if (currentValues.includes(id)) {
+                    selected = true;
+                }
+                const display_name = el?.nextElementSibling?.textContent;
+                this._addItemToTable(id, display_name, {undeletable: true, selected});
+                selected = false;
+            }
+        }
     },
     /**
      * @override
@@ -2430,13 +2489,19 @@ const ListUserValueWidget = UserValueWidget.extend({
                 v.selected = this.selected.includes(v.id) || v.notToggleable === 'true';
             });
         }
-        this._value = JSON.stringify(values);
+        if (isVisibilityCondition) {
+            this._value = this.selected.join();
+            this.selected = [];
+        }
+        else {
+            this._value = JSON.stringify(values);
+        }
         if (preview) {
             this._onUserValuePreview();
         } else {
             this._onUserValueChange();
         }
-        if (!this.createWidget && !this.isCustom) {
+        if (!this.createWidget && !this.isCustom && !isVisibilityCondition) {
             this._reloadSelectDropdown(values);
         }
     },
