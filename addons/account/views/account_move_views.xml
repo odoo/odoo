@@ -1398,6 +1398,10 @@
                                                context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
                                                domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]"
                                                readonly="state != 'draft'"/>
+                                        <field name="payment_reference"
+                                            invisible="move_type not in ('out_invoice', 'out_refund')"
+                                            readonly="inalterable_hash"
+                                            placeholder="Standard communication"/>
                                         <field name="qr_code_method"
                                                invisible="not display_qr_code"/>
                                         <field name="delivery_date" readonly="state != 'draft'"/>
