@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { FormController } from "@web/views/form/form_controller";
+import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 
@@ -8,6 +9,7 @@ export class CalendarFormController extends FormController {
     setup() {
         super.setup();
         const ormService = useService("orm");
+        this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
 
         onWillStart(async () => {
             this.discussVideocallLocation = await ormService.call(
@@ -39,5 +41,30 @@ export class CalendarFormController extends FormController {
             return false; // no continue
         }
         return super.beforeExecuteActionButton(...arguments);
+    }
+
+    /**
+     * Archives a record, ask for the recurrence update policy in case of recurrent event.
+     */
+    async deleteRecord() {
+        let record = this.model.root;
+        let recurrenceUpdate = false;
+        if (record.data.recurrency) {
+            recurrenceUpdate = await this.askRecurrenceUpdatePolicy();
+            if (recurrenceUpdate) {
+                await this._archiveRecord(record.resId, recurrenceUpdate);
+            }
+        } else {
+            await super.deleteRecord(...arguments);
+        }
+    }
+
+    async _archiveRecord(id, recurrenceUpdate) {
+        if (!recurrenceUpdate && recurrenceUpdate !== "self_only") {
+            await this.orm.call(this.model.root.resModel, "action_archive", [[id]]);
+        } else {
+            await this.orm.call(this.model.root.resModel, "action_mass_archive", [[id], recurrenceUpdate]);
+        }
+        this.env.config.historyBack();
     }
 }
