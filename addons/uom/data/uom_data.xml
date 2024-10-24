@@ -26,6 +26,7 @@
     <record id="product_uom_unit" model="uom.uom">
         <field name="category_id" ref="product_uom_categ_unit"/>
         <field name="name">Units</field>
+        <field name="allow_label">True</field>
         <field name="factor" eval="1.0"/>
         <field name="uom_type">reference</field>
     </record>
@@ -33,6 +34,7 @@
     <record id="product_uom_dozen" model="uom.uom">
         <field name="category_id" ref="uom.product_uom_categ_unit"/>
         <field name="name">Dozens</field>
+        <field name="allow_label">True</field>
         <field name="factor_inv" eval="12"/>
         <field name="uom_type">bigger</field>
     </record>

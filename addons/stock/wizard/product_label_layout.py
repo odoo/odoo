@@ -37,13 +37,13 @@ class ProductLabelLayout(models.TransientModel):
         elif self.move_quantity == 'move' and self.move_ids.move_line_ids:
             custom_barcodes = defaultdict(list)
             for line in self.move_ids.move_line_ids:
-                if line.product_uom_id.category_id == uom_unit:
+                if line.product_uom_id.allow_label:
                     if (line.lot_id or line.lot_name) and int(line.quantity):
                         custom_barcodes[line.product_id.id].append((line.lot_id.name or line.lot_name, int(line.quantity)))
                         continue
                     quantities[line.product_id.id] += line.quantity
                 else:
-                    quantities[line.product_id.id] = 1
+                    quantities[line.product_id.id] += 1
             # Pass only products with some quantity done to the report
             data['quantity_by_product'] = {p: int(q) for p, q in quantities.items() if q}
             data['custom_barcodes'] = custom_barcodes
