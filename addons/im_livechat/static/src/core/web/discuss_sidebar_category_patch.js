@@ -3,6 +3,18 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategory} */
 const DiscussSidebarCategoryPatch = {
+    setup() {
+        super.setup();
+        this.busService = this.env.services.bus_service;
+        this.busService.subscribe("im_livechat.channel/delete", (payload) => {
+            if (
+                this.category.livechatChannel?.are_you_inside &&
+                this.category.livechatChannel?.id === payload.id
+            ) {
+                this.category.livechatChannel.delete();
+            }
+        });
+    },
     get actions() {
         const actions = super.actions;
         if (this.store.has_access_livechat && this.category.livechatChannel && this.category.open) {

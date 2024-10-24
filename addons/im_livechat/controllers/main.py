@@ -59,6 +59,13 @@ class LivechatController(http.Controller):
         stream = request.env['ir.binary']._get_stream_from(asset.js())
         return stream.get_response()
 
+    @http.route("/livechat/channel/info", methods=["POST"], type="json", auth="public", readonly=True)
+    def livechat_channel_info(self, channel_id):
+        channel = request.env["im_livechat.channel"].search_read([("id", "=", channel_id)])
+        if not channel:
+            return
+        return {"im_livechat.channel": channel[0]}
+
     @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='public')
     def support_page(self, channel_id, **kwargs):
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)

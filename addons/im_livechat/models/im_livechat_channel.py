@@ -97,6 +97,12 @@ class Im_LivechatChannel(models.Model):
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_channel(self):
+        for channel in self:
+            payload = {"id": channel.id}
+            {user._bus_send("im_livechat.channel/delete", payload) for user in channel.user_ids}
+
     # --------------------------
     # Action Methods
     # --------------------------
@@ -335,6 +341,35 @@ class Im_LivechatChannel(models.Model):
         if fields is None:
             fields = []
         store.add(self._name, self._read_format(fields))
+
+    def web_save(self, *args, **kwargs):
+        rdata = super().web_save(*args, **kwargs)
+        if 'user_ids' in args[0]:
+            add_user_ids = [user[1] for user in args[0]['user_ids'] if user[0] == 4]
+            remove_user_ids = [user[1] for user in args[0]['user_ids'] if user[0] == 3]
+            self.update_members(add_user_ids, remove_user_ids, rdata)
+        return rdata
+
+    def update_members(self, add_user_ids=None, remove_user_ids=None, rdata=None):
+        if add_user_ids and rdata:
+            for user in self.env['res.users'].browse(add_user_ids):
+                payload = {
+                    "channel": {
+                        "name": rdata[0]['name'],
+                        "id": rdata[0]['id'],
+                    },
+                }
+                payload["invited_by_user_id"] = self.env.user.id
+                user._bus_send("im_livechat.channel/joined", payload)
+        if remove_user_ids:
+            for user in self.env['res.users'].browse(remove_user_ids):
+                payload = {
+                    "channel": {
+                        "name": self.name,
+                        "id": self.id,
+                    },
+                }
+                user._bus_send("im_livechat.channel/leave", payload)
 
 
 class Im_LivechatChannelRule(models.Model):
