@@ -55,7 +55,7 @@ class StockStorageCategoryCapacity(models.Model):
             " [('is_storable', '=', True)]"))
     package_type_id = fields.Many2one('stock.package.type', 'Package Type', ondelete='cascade', check_company=True)
     quantity = fields.Float('Quantity', required=True)
-    product_uom_id = fields.Many2one(related='product_id.uom_id')
+    product_uom_id = fields.Many2one(related='product_id.uom_id', string='Unit')
     company_id = fields.Many2one('res.company', 'Company', related="storage_category_id.company_id")
 
     _sql_constraints = [

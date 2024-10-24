@@ -21,7 +21,7 @@ class StockScrap(models.Model):
         'product.product', 'Product', domain="[('type', '=', 'consu')]",
         required=True, check_company=True)
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
+        'uom.uom', 'Unit',
         compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
         required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')

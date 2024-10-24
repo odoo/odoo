@@ -14,9 +14,9 @@
             </div>
             <field name="batch_auto_confirm" position="before">
                 <span invisible="not auto_batch"/>
-                <div class="o_row" name="batch_max_weight" invisible="not auto_batch">
-                    <field name="batch_max_weight" class="oe_inline"/>
-                    <span><field name="weight_uom_name"/></span>
+                <div class="row" name="batch_max_weight" invisible="not auto_batch">
+                    <div class="col-3"><field name="batch_max_weight" class="oe_inline"/></div>
+                    <div class="col-3"><span><field name="weight_uom_name"/></span></div>
                 </div>
             </field>
         </field>

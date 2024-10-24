@@ -44,7 +44,7 @@ class MrpBom(models.Model):
         digits='Product Unit of Measure', required=True,
         help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.")
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
+        'uom.uom', 'Unit',
         default=_get_default_product_uom_id, required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_tmpl_id.uom_id.category_id')

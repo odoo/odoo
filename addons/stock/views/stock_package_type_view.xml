@@ -24,14 +24,14 @@
                             <span><field name="length_uom_name" help="Size: Length &#215; Width &#215; Height"/></span>
                         </div>
                         <label for="base_weight"/>
-                        <div class="o_row" name="base_weight">
-                            <field name="base_weight"/>
-                            <span><field name="weight_uom_name"/></span>
+                        <div class="row" name="base_weight">
+                            <div class="col-2"><field name="base_weight"/></div>
+                            <div class="col-1"><span><field name="weight_uom_name"/></span></div>
                         </div>
                         <label for="max_weight"/>
-                        <div class="o_row" name="max_weight">
-                            <field name="max_weight"/>
-                            <span><field name="weight_uom_name"/></span>
+                        <div class="row" name="max_weight">
+                            <div class="col-2"><field name="max_weight"/></div>
+                            <div class="col-1"><span><field name="weight_uom_name"/></span></div>
                         </div>
                         <field name="barcode"/>
                         <field name="company_id" groups="base.group_multi_company"/>
