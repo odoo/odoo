@@ -80,9 +80,8 @@ export class ColumnPlugin extends Plugin {
         ],
         hints: [
             {
-                selector: `.odoo-editor-editable .o_text_columns div[class^='col-'],
-                            .odoo-editor-editable .o_text_columns div[class^='col-']>p:first-child`,
-                text: _t("Empty column"),
+                selector: `.odoo-editor-editable .o_text_columns div[class^='col-']>p:first-child`,
+                text: _t(`Empty column. Type "/" for commands`),
             },
         ],
         showPowerButtons: (selection) => !closestElement(selection.anchorNode, ".o_text_columns"),

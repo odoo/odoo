@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
-import { selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
 
 function isMutationRecordSavable(record) {
@@ -72,18 +72,50 @@ export class HintPlugin extends Plugin {
     updateHints() {
         const selectionData = this.shared.getSelectionData();
         const editableSelection = selectionData.editableSelection;
+        const blockEl = closestBlock(editableSelection.anchorNode);
         if (this.hint) {
-            const blockEl = closestBlock(editableSelection.anchorNode);
             this.removeHint(this.hint);
             this.removeHint(blockEl);
         }
         if (editableSelection.isCollapsed) {
+            const columnContainer = closestElement(editableSelection.anchorNode, ".o_text_columns");
+            if (columnContainer) {
+                this.hint = [];
+            }
             for (const hint of this.getResource("hints")) {
                 if (hint.selector) {
-                    const el = closestBlock(editableSelection.anchorNode);
-                    if (el && el.matches(hint.selector) && !isProtected(el) && isEmptyBlock(el)) {
-                        this.makeHint(el, hint.text);
-                        this.hint = el;
+                    if (columnContainer) {
+                        for (const elem of selectElements(
+                            columnContainer,
+                            `${hint.selector}:first-child`
+                        )) {
+                            // Apply helper hint on first block element of each column
+                            if (
+                                elem.closest("div[class^='col-']") ===
+                                    closestElement(
+                                        editableSelection.anchorNode,
+                                        "div[class^='col-']"
+                                    ) &&
+                                blockEl !== elem
+                            ) {
+                                // If cursor is not inside first block element but a different
+                                // one, skip that first element.
+                                continue;
+                            }
+                            if (!isProtected(elem) && isEmptyBlock(elem)) {
+                                this.makeHint(elem, hint.text);
+                                this.hint.push(elem);
+                            }
+                        }
+                    }
+                    if (
+                        blockEl &&
+                        blockEl.matches(hint.selector) &&
+                        !isProtected(blockEl) &&
+                        isEmptyBlock(blockEl)
+                    ) {
+                        this.makeHint(blockEl, hint.text);
+                        Array.isArray(this.hint) ? this.hint.push(blockEl) : (this.hint = blockEl);
                     }
                 } else {
                     const target = hint.target(selectionData, this.editable);
@@ -104,8 +136,15 @@ export class HintPlugin extends Plugin {
     }
 
     removeHint(el) {
-        el.removeAttribute("placeholder");
-        removeClass(el, "o-we-hint");
+        if (Array.isArray(el)) {
+            el.forEach((e) => {
+                e.removeAttribute("placeholder");
+                removeClass(e, "o-we-hint");
+            });
+        } else {
+            el.removeAttribute("placeholder");
+            removeClass(el, "o-we-hint");
+        }
         if (this.hint === el) {
             this.hint = null;
         }
