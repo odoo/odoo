@@ -15,12 +15,14 @@ import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import {
+    Command,
     getService,
     onRpc,
     patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -230,4 +232,50 @@ test("keep banner after mark as unread when scrolling to bottom", async () => {
     await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
     await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread-banner", { text: "30 new messages" });
+});
+
+test("sidebar and banner counters display same value", async () => {
+    const pyEnv = await startServer();
+    const bobPatnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPatnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPatnerId }),
+        ],
+    });
+    for (let i = 0; i < 30; ++i) {
+        pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebar-badge", {
+        text: "30",
+        parent: [".o-mail-DiscussSidebarChannel", { text: "Bob" }],
+    });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Bob" });
+    await contains(".o-mail-Thread-banner", { text: "30 new messages" });
+    await contains(".o-mail-DiscussSidebar-badge", { text: "30", count: 0 });
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "Hello!",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Thread-banner", { text: "31 new messages" });
+    await contains(".o-mail-DiscussSidebar-badge", {
+        text: "31",
+        parent: [".o-mail-DiscussSidebarChannel", { text: "Bob" }],
+    });
 });
