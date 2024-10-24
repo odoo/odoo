@@ -1,0 +1,13 @@
+.s_reviews_wall {
+    .s_reviews_wall_avatar {
+        width: map-get($spacers, 5) !important;
+
+        &.float-start {
+            margin-inline-end: var(--s_features_img_margin, #{map-get($spacers, 3)}) !important;
+        }
+
+        &.float-end {
+            margin-inline-start: var(--s_features_img_margin, #{map-get($spacers, 3)}) !important;
+        }
+    }
+}
