@@ -118,29 +118,27 @@ export const PublicRoot = publicWidget.Widget.extend({
      * (@see PublicWidget.selector).
      *
      * @private
-     * @param {jQuery} [$from]
+     * @param {Element[]|NodeList} [fromEls]
      *        only initialize the public widgets whose `selector` matches the
-     *        element or one of its descendant (default to the wrapwrap element)
+     *        elements or one of their descendant (default to the wrapwrap)
      * @param {Object} [options]
      * @returns {Deferred}
      */
-    _startWidgets: function ($from, options) {
+    _startWidgets: function (fromEls, options) {
         var self = this;
 
-        if ($from === undefined) {
-            $from = this.$('#wrapwrap');
-            if (!$from.length) {
-                // TODO Remove this once all frontend layouts possess a
-                // #wrapwrap element (which is necessary for those pages to be
-                // adapted correctly if the user installs website).
-                $from = this.$el;
-            }
+        if (fromEls) {
+            fromEls = [...fromEls]; // Normalize NodeList
+        } else {
+            fromEls = [this.el.getElementById("wrapwrap") || this.el];
         }
         options = Object.assign({}, options, {
+            // TODO: here wysiwyg is not stored as data attribute
+            // it's set by jquery data() method.
             wysiwyg: $('#wrapwrap').data('wysiwyg'),
         });
 
-        this._stopWidgets($from);
+        this._stopWidgets(fromEls);
 
         var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {
             const selector = PublicWidget.prototype.selector;
@@ -159,7 +157,7 @@ export const PublicRoot = publicWidget.Widget.extend({
                 };
 
             let targetEls = [];
-            for (const fromEl of $from) {
+            for (const fromEl of fromEls) {
                 targetEls.push(...selectorFunc(fromEl));
             }
             if (selectorHas) {
@@ -180,15 +178,16 @@ export const PublicRoot = publicWidget.Widget.extend({
      * saving while in edition mode for example.
      *
      * @private
-     * @param {jQuery} [$from]
+     * @param {Element[]|NodeList} [fromEls]
      *        only stop the public widgets linked to the given element(s) or one
-     *        of its descendants
+     *        of their descendants
      */
-    _stopWidgets: function ($from) {
-        var removedWidgets = this.publicWidgets.map((widget) => {
-            if (!$from
-                || $from.filter(widget.el).length
-                || $from.find(widget.el).length) {
+    _stopWidgets: function (fromEls) {
+        if (fromEls) {
+            fromEls = [...fromEls]; // Normalize NodeList
+        }
+        const removedWidgets = this.publicWidgets.map(widget => {
+            if (!fromEls || fromEls.find(el => el === widget.el || el.contains(widget.el))) {
                 widget.destroy();
                 return widget;
             }
@@ -250,7 +249,10 @@ export const PublicRoot = publicWidget.Widget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStartRequest: function (ev) {
-        this._startWidgets(ev.data.$target, ev.data.options)
+        const rootEls = typeof ev.data.rootEls instanceof Element
+            ? [ev.data.rootEls]
+            : ev.data.rootEls;
+        this._startWidgets(rootEls, ev.data.options)
             .then(ev.data.onSuccess)
             .catch((e) => {
                 if (ev.data.onFailure) {
@@ -269,7 +271,10 @@ export const PublicRoot = publicWidget.Widget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStopRequest: function (ev) {
-        this._stopWidgets(ev.data.$target);
+        const rootEls = typeof ev.data.rootEls instanceof Element
+            ? [ev.data.rootEls]
+            : ev.data.rootEls;
+        this._stopWidgets(rootEls);
     },
     /**
      * @todo review
@@ -291,7 +296,7 @@ export const PublicRoot = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onDisableOnClick: function (ev) {
-        $(ev.currentTarget).addClass('disabled');
+        ev.currentTarget.classList.add("disabled");
     },
     /**
      * Library clears the wrong date format so just ignore error
