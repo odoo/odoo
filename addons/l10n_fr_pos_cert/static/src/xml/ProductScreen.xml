@@ -3,7 +3,7 @@
 
     <t t-name="l10n_fr_pos_cert.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
 		<xpath expr="//Orderline" position="inside" >
-            <t t-if="pos.is_french_country() !== false and line.price_manually_set === 'manual'">
+            <t t-if="pos.is_french_country() !== false and line.price_type === 'manual'">
                 <li class="info">
                     Old unit price:
                     <span class="oldPrice">
