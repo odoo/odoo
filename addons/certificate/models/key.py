@@ -176,7 +176,7 @@ class CertificateKey(models.Model):
         if self.public:
             raise UserError(_("A private key is required to decrypt data."))
         if hashing_algorithm not in STR_TO_HASH:
-            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")
+            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # pylint: disable=missing-gettext
 
         private_key = serialization.load_pem_private_key(base64.b64decode(self.pem_key), None)
         if not isinstance(private_key, rsa.RSAPrivateKey):
@@ -199,7 +199,7 @@ class CertificateKey(models.Model):
             message = message.encode('utf-8')
 
         if hashing_algorithm not in STR_TO_HASH:
-            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")
+            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # pylint: disable=missing-gettext
 
         try:
             private_key = serialization.load_pem_private_key(base64.b64decode(pem_key), pwd)
@@ -247,7 +247,7 @@ class CertificateKey(models.Model):
     def _generate_ec_private_key(self, company, name='id_ec', curve='SECP256R1'):
 
         if curve not in STR_TO_CURVE:
-            raise UserError(f"Unsupported curve algorithm '{curve}'. Currently supported: SECP256R1.")
+            raise UserError(f"Unsupported curve algorithm '{curve}'. Currently supported: SECP256R1.")  # pylint: disable=missing-gettext
 
         private_key = ec.generate_private_key(STR_TO_CURVE[curve])
 

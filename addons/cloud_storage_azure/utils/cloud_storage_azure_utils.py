@@ -357,7 +357,7 @@ def get_user_delegation_key(
     if token_response.status_code in (401, 403):
         raise ClientAuthenticationError(f"Failed to get access token: {token_response.content}")
     if token_response.status_code != 200:
-        raise ValidationError(f"Failed to get access token: {token_response.content}")
+        raise ValidationError(f"Failed to get access token: {token_response.content}")  # pylint: disable=missing-gettext
     access_token = token_response.json()['access_token']
 
     # Generate User Delegation Key using Azure Storage Blob Service REST API
@@ -373,11 +373,11 @@ def get_user_delegation_key(
     try:
         key_response = requests.post(key_request_url, data=key_data, headers=headers, timeout=5)
     except requests.exceptions.ConnectionError:
-        raise ValidationError("Failed to get user delegation key: the account name may be incorrect")
+        raise ValidationError("Failed to get user delegation key: the account name may be incorrect")  # pylint: disable=missing-gettext
     if key_response.status_code in (401, 403):
         raise ClientAuthenticationError(f"Failed to get user delegation key: {key_response.content}")
     if key_response.status_code != 200:
-        raise ValidationError(f"Failed to get user delegation key: {key_response.content}")
+        raise ValidationError(f"Failed to get user delegation key: {key_response.content}")  # pylint: disable=missing-gettext
 
     # Parse the user delegation key from the response
     key_response_xml = etree.fromstring(key_response.content)

@@ -142,8 +142,7 @@ class ResPartnerBank(models.Model):
                     }
 
             if not silent_errors:
-                error_header = _("The following error prevented '%s' QR-code to be generated though it was detected as eligible: ", candidate_name)
-                raise UserError(error_header + error_message)
+                raise UserError(self.env._("The following error prevented '%(candidate)s' QR-code to be generated though it was detected as eligible: ", candidate=candidate_name) + error_message)
 
         return None
 

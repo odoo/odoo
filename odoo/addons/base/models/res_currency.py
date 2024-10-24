@@ -451,7 +451,7 @@ class ResCurrencyRate(models.Model):
     def _check_company_id(self):
         for rate in self:
             if rate.company_id.parent_id:
-                raise ValidationError("Currency rates should only be created for main companies")
+                raise ValidationError(self.env._("Currency rates should only be created for main companies"))
 
     @api.model
     def _search_display_name(self, operator, value):

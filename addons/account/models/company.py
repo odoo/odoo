@@ -276,7 +276,7 @@ class ResCompany(models.Model):
     @api.constrains("account_price_include")
     def _check_set_account_price_include(self):
         if any(company.sudo()._existing_accounting() for company in self):
-            raise ValidationError("Cannot change Price Tax computation method on a company that has already started invoicing.")
+            raise ValidationError(self.env._("Cannot change Price Tax computation method on a company that has already started invoicing."))
 
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):

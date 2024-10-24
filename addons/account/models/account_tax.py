@@ -213,12 +213,17 @@ class AccountTax(models.Model):
                     ])
             if duplicates := self.search(expression.OR(domains)):
                 raise ValidationError(
-                    _("Tax names must be unique!")
-                    + "\n" + "\n".join(_(
-                        "- %(name)s in %(company)s",
-                        name=duplicate.name,
-                        company=duplicate.company_id.name,
-                    ) for duplicate in duplicates)
+                    self.env._(
+                        "Tax names must be unique!\n%(taxes)s",
+                        taxes="\n".join(
+                            self.env._(
+                                "- %(name)s in %(company)s",
+                                name=duplicate.name,
+                                company=duplicate.company_id.name,
+                            )
+                            for duplicate in duplicates
+                        ),
+                    ),
                 )
 
     @api.constrains('tax_group_id')

@@ -260,7 +260,7 @@ class Environment(Mapping):
         lang = self.context.get('lang')
         if lang and lang != 'en_US' and not self['res.lang']._get_data(code=lang):
             # cannot translate here because we do not have a valid language
-            raise UserError(f'Invalid language code: {lang}')  # pylint: disable
+            raise UserError(f'Invalid language code: {lang}')  # pylint: disable=missing-gettext
         return lang or None
 
     @lazy_property

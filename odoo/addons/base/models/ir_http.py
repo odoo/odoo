@@ -229,12 +229,12 @@ class IrHttp(models.AbstractModel):
             if not uid:
                 raise werkzeug.exceptions.Unauthorized("Invalid apikey")
             if request.env.uid and request.env.uid != uid:
-                raise AccessDenied("Session user does not match the used apikey")
+                raise AccessDenied("Session user does not match the used apikey")  # pylint: disable=missing-gettext
             request.update_env(user=uid)
         elif not request.env.uid:
             raise werkzeug.exceptions.Unauthorized('User not authenticated, use the "Authorization" header')
         elif not check_sec_headers():
-            raise AccessDenied("Missing \"Authorization\" or Sec-headers for interactive usage")
+            raise AccessDenied("Missing \"Authorization\" or Sec-headers for interactive usage")  # pylint: disable=missing-gettext
         cls._auth_method_user()
 
     @classmethod
