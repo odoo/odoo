@@ -915,7 +915,7 @@ test("post a simple message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #general" });
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send:enabled");
@@ -944,7 +944,7 @@ test("post several messages with failures", async () => {
     await start();
     await openDiscuss(channelId);
     // post 3 messages
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #general" });
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "0");
     await click(".o-mail-Composer-send:enabled");
