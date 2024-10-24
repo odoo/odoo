@@ -238,6 +238,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/public/error_notifications.js',
             'web/static/src/public/public_component_service.js',
             'web/static/src/public/datetime_picker_widget.js',
+            'web/static/src/public/password_show_hide_widget.js',
+            'web/static/src/public/caps_lock_warning_widget.js',
             'web/static/src/libs/pdfjs.js',
 
             'web/static/src/legacy/js/public/public_root.js',

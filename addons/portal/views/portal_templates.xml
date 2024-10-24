@@ -572,34 +572,55 @@
                 <div class="alert alert-danger" role="alert" t-if="get_error(errors, 'password')">
                     <t t-esc="errors['password']"/>
                 </div>
-                <form action="/my/security" method="post" class="oe_reset_password_form">
+                <form action="/my/security" method="post" class="oe_reset_password_form"
+                    data-widget="caps-lock-check">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="op" value="password"/>
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="current">Password:</label>
-                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
-                               id="current" name="old"
-                               autocomplete="current-password" required="required"/>
-                        <div class="invalid-feedback">
-                            <t t-esc="get_error(errors, 'password.old')"/>
+                        <div data-widget="password-reveal" class="input-group input-group-sm">
+                            <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
+                                   id="current" name="old"
+                                   autocomplete="current-password" required="required"/>
+                            <button class="btn btn-secondary password-toggle rounded-end" type="button" tabindex="-1">
+                                <i class="fa fa-eye"/>
+                            </button>
+                            <div class="invalid-feedback">
+                                <t t-out="get_error(errors, 'password.old')"/>
+                            </div>
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-1">
                         <label for="new">New Password:</label>
-                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
-                               id="new" name="new1"
-                               autocomplete="new-password" required="required"/>
-                        <div class="invalid-feedback">
-                            <t t-esc="get_error(errors, 'password.new1')"/>
+                        <div data-widget="password-reveal" class="input-group input-group-sm mb-1">
+                            <input type="password"
+                                t-attf-class="form-control form-control-sm password-input {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
+                                id="new" name="new1"
+                                autocomplete="new-password" required="required"/>
+                            <button type="button" class="btn btn-secondary password-toggle rounded-end" tabindex="-1">
+                                <i class="fa fa-eye"/>
+                            </button>
+                            <div class="invalid-feedback">
+                                <t t-out="get_error(errors, 'password.new1')"/>
+                            </div>
                         </div>
+                        <span class="caps-lock-warning text-danger invisible">
+                            Caps Lock is on!
+                        </span>
                     </div>
                     <div class="mb-3">
                         <label for="new2">Verify New Password:</label>
-                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
-                               id="new2" name="new2"
-                               autocomplete="new-password" required="required"/>
-                        <div class="invalid-feedback">
-                            <t t-esc="get_error(errors, 'password.new2')"/>
+                        <div data-widget="password-reveal" class="input-group input-group-sm">
+                            <input type="password"
+                                t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
+                                id="new2" name="new2"
+                                autocomplete="new-password" required="required"/>
+                            <button type="button" class="btn btn-secondary password-toggle rounded-end" tabindex="-1">
+                                <i class="fa fa-eye"/>
+                            </button>
+                            <div class="invalid-feedback">
+                                <t t-out="get_error(errors, 'password.new2')"/>
+                            </div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-light">Change Password</button>

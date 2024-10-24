@@ -89,7 +89,7 @@ class AuthSignupHome(Home):
             try:
                 if qcontext.get('token'):
                     self.do_signup(qcontext)
-                    return self.web_login(*args, **kw)
+                    return request.redirect('/web/session/logout')
                 else:
                     login = qcontext.get('login')
                     assert login, _("No login provided.")

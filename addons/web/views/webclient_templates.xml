@@ -138,7 +138,10 @@
     <template id="web.login" name="Login">
         <t t-call="web.login_layout">
             <owl-component t-if="not login" name="web.user_switch" />
-            <form t-attf-class="oe_login_form #{'' if login else 'd-none'}" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash">
+            <form t-attf-class="oe_login_form #{'' if login else 'd-none'}"
+                role="form" t-attf-action="/web/login" method="post"
+                onsubmit="this.action = '/web/login' + location.hash"
+                data-widget="caps-lock-check">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                 <div class="mb-3" t-if="databases and len(databases) &gt; 1">
@@ -154,9 +157,20 @@
                     <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" class="form-control" required="required" autocapitalize="off" autocomplete="username"/>
                 </div>
 
-                <div class="mb-3">
+                <div>
                     <label for="password" class="form-label d-flex justify-content-between">Password</label>
-                    <input type="password" placeholder="Password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                    <div class="input-group mb-1" data-widget="password-reveal">
+                        <input type="password" placeholder="Password" name="password" id="password"
+                            class="form-control password-input"
+                            required="required" autocomplete="current-password"
+                            t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                        <button type="button" class="btn btn-sm btn-secondary password-toggle" tabindex="-1">
+                            <i class="fa fa-eye"/>
+                        </button>
+                    </div>
+                    <span class="caps-lock-warning text-danger invisible">
+                        Caps Lock is on!
+                    </span>
                 </div>
 
                 <p class="alert alert-danger" t-if="error" role="alert">
