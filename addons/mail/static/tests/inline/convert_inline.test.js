@@ -858,7 +858,7 @@ describe("Convert classes to inline styles", () => {
         document.head.removeChild(styleEl);
     });
 
-    test.debug("convert Bootstrap classes to inline styles", async () => {
+    test("convert Bootstrap classes to inline styles", async () => {
         editable.innerHTML = `
             <div class="container"><div class="row"><div class="col">Hello</div></div></div>`;
         getFixture().append(editable); // editable needs to be in the DOM to compute its dynamic styles.
