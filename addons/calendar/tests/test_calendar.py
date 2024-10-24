@@ -150,6 +150,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'start': now + timedelta(days=-1),
             'stop': now + timedelta(hours=2),
             'user_id': self.env.user.id,
+            'partner_ids': [Command.link(self.user_demo.partner_id.id)]
         })
         self.assertEqual(test_event.res_model, test_record._name)
         self.assertEqual(test_event.res_id, test_record.id)

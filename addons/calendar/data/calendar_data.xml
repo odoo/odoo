@@ -45,5 +45,16 @@
             <field name="alarm_type">email</field>
             <field name="mail_template_id" ref="calendar.calendar_template_meeting_reminder"/>
         </record>
+
+        <record id="calendar_event_own_event_write" model="ir.rule">
+            <field name="name">Calendar Event: write own events</field>
+            <field ref="model_calendar_event" name="model_id"/>
+            <field name="domain_force">['|', ('partner_ids.user_ids', 'in', user.id), ('user_id.id', '=', user.id)]</field>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+
     </data>
 </odoo>

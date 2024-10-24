@@ -286,13 +286,11 @@ class CalendarEvent(models.Model):
     @api.depends('partner_ids')
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
-        for event in self:
-            # By default, only current attendees and the organizer can edit the event.
-            editor_candidates = event.partner_ids.user_ids + event.user_id
-            # Right before saving the event, old partners must be able to save changes.
-            if event._origin:
-                editor_candidates += event._origin.partner_ids.user_ids
-            event.user_can_edit = self.env.user.id in editor_candidates.ids
+        new_events = self.filtered(lambda ev: isinstance(ev.id, models.NewId))
+        new_events.user_can_edit = True
+        edit_events = (self - new_events)._filtered_access('write')
+        edit_events.user_can_edit = True
+        (self - edit_events - new_events).user_can_edit = False
 
     @api.depends('partner_ids')
     def _compute_invalid_email_partner_ids(self):
@@ -601,7 +599,6 @@ class CalendarEvent(models.Model):
     def _fetch_query(self, query, fields):
         if self.env.su:
             return super()._fetch_query(query, fields)
-
         public_fnames = self._get_public_fields()
         private_fields = [field for field in fields if field.name not in public_fnames]
         if not private_fields:
@@ -609,7 +606,6 @@ class CalendarEvent(models.Model):
 
         fields_to_fetch = list(fields) + [self._fields[name] for name in ('privacy', 'user_id', 'partner_ids')]
         events = super()._fetch_query(query, fields_to_fetch)
-
         # determine private events to which the user does not participate
         others_private_events = events.filtered(lambda ev: ev._check_private_event_conditions())
         if not others_private_events:
@@ -730,7 +726,6 @@ class CalendarEvent(models.Model):
                 ('base_event_id', 'in', self.ids)
             ])
             recurrences._select_new_base_event()
-
         return True
 
     def _check_calendar_privacy_write_permissions(self):
