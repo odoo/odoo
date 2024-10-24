@@ -16,7 +16,12 @@ class ResUsers(models.Model):
         domain = self._load_pos_data_domain(data)
         fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
         user = self.search_read(domain, fields, load=False)
-        user[0]['role'] = 'manager' if data['pos.config']['data'][0]['group_pos_manager_id'] in user[0]['groups_id'] else 'cashier'
+        if data['pos.config']['data'][0]['group_pos_manager_id'] in user[0]['groups_id']:
+            user[0]['role'] = 'manager'
+        elif data['pos.config']['data'][0]['group_pos_user_id'] in user[0]['groups_id']:
+            user[0]['role'] = 'cashier'
+        elif data['pos.config']['data'][0]['group_pos_minimal_user_id'] in user[0]['groups_id']:
+            user[0]['role'] = 'minimal'
         del user[0]['groups_id']
         return {
             'data': user,

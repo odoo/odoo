@@ -12,6 +12,21 @@
                 !pos.config.module_pos_hr or pos.employeeIsAdmin
             </attribute>
         </xpath>
+        <xpath expr="//DropdownItem[contains(text(), 'Install App')]" position="attributes">
+            <attribute name="t-if">
+                !pos.employeeIsMinimal
+            </attribute>
+        </xpath>
+        <xpath expr="//DropdownItem[contains(text(), 'Debug Window')]" position="attributes">
+            <attribute name="t-if">
+                !pos.employeeIsMinimal
+            </attribute>
+        </xpath>
+        <xpath expr="//DropdownItem[contains(text(), 'Cash In/Out')]" position="attributes">
+            <attribute name="t-if">
+                !pos.employeeIsMinimal
+            </attribute>
+        </xpath>
         <xpath expr="//CashierName" position="after">
             <button t-if="pos.config.module_pos_hr and !ui.isSmall" class="lock-screen btn btn-light btn-lg" title="Lock" t-on-click="() => this.pos.showLoginScreen()">
                 <i class="fa fa-fw fa-unlock"/>

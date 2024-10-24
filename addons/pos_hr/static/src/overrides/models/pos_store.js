@@ -25,6 +25,10 @@ patch(PosStore.prototype, {
         const cashier = this.get_cashier();
         return cashier._role === "manager" || cashier.user_id?.id === this.user.id;
     },
+    get employeeIsMinimal() {
+        const cashier = this.get_cashier();
+        return cashier._role === "minimal";
+    },
     checkPreviousLoggedCashier() {
         if (this.config.module_pos_hr) {
             const saved_cashier_id = Number(sessionStorage.getItem("connected_cashier"));

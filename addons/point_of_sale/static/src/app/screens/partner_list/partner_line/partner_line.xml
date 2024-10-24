@@ -71,19 +71,21 @@
                     </button>
                 </td>
                 <td class="edit-partner-button-cell align-middle">
-                    <Dropdown>
-                        <button class="btn btn-light btn-lg lh-lg border float-end">
-                            <i class="fa fa-fw fa-bars"/>
-                        </button>
-                        <t t-set-slot="content">
-                            <DropdownItem onSelected="() => props.onClickEdit(props.partner)">
-                                Edit Details
-                            </DropdownItem>
-                            <DropdownItem onSelected="() => props.onClickOrders(props.partner)">
-                                All Orders
-                            </DropdownItem>
-                        </t>
-                    </Dropdown>
+                    <t t-if="this.pos.cashier._role !== 'minimal'">
+                        <Dropdown>
+                            <button class="btn btn-light btn-lg lh-lg border float-end">
+                                <i class="fa fa-fw fa-bars"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <DropdownItem onSelected="() => props.onClickEdit(props.partner)">
+                                    Edit Details
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => props.onClickOrders(props.partner)">
+                                    All Orders
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+                    </t>
                 </td>
             </tr>
         </t>

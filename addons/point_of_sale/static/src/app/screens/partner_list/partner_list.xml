@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.PartnerList">
         <Dialog bodyClass="'partner-list overflow-y-auto'" contentClass="'h-100'">
             <t t-set-slot="header">
-                <button t-if="!ui.isSmall" class="btn btn-primary btn-lg lh-lg" role="img" aria-label="Add a customer"
+                <button t-if="!ui.isSmall and this.pos.cashier._role !== 'minimal'" class="btn btn-primary btn-lg lh-lg" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
                         title="Add a customer">
                 Create 

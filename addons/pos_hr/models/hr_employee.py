@@ -31,6 +31,7 @@ class HrEmployee(models.Model):
 
         employees = self.search(domain)
         manager_ids = employees.filtered(lambda emp: data['pos.config']['data'][0]['group_pos_manager_id'] in emp.user_id.groups_id.ids).mapped('id')
+        minimal_user_ids = employees.filtered(lambda emp: data['pos.config']['data'][0]['group_pos_minimal_user_id'] in emp.user_id.groups_id.ids).mapped('id')
 
         employees_barcode_pin = employees.get_barcodes_and_pin_hashed()
         bp_per_employee_id = {bp_e['id']: bp_e for bp_e in employees_barcode_pin}
@@ -39,6 +40,8 @@ class HrEmployee(models.Model):
         for employee in employees:
             if employee['user_id'] and employee['user_id'] in manager_ids or employee['id'] in data['pos.config']['data'][0]['advanced_employee_ids']:
                 role = 'manager'
+            elif employee['user_id'] and employee['user_id'] in minimal_user_ids or employee['id'] in data['pos.config']['data'][0]['minimal_employee_ids']:
+                role = 'minimal'
             else:
                 role = 'cashier'
 
@@ -66,8 +69,8 @@ class HrEmployee(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
         configs_with_employees = self.env['pos.config'].sudo().search([('module_pos_hr', '=', True)]).filtered(lambda c: c.current_session_id)
-        configs_with_all_employees = configs_with_employees.filtered(lambda c: not c.basic_employee_ids and not c.advanced_employee_ids)
-        configs_with_specific_employees = configs_with_employees.filtered(lambda c: (c.basic_employee_ids or c.advanced_employee_ids) & self)
+        configs_with_all_employees = configs_with_employees.filtered(lambda c: not c.basic_employee_ids and not c.advanced_employee_ids and not c.minimal_employee_ids)
+        configs_with_specific_employees = configs_with_employees.filtered(lambda c: (c.basic_employee_ids or c.advanced_employee_ids or c.minimal_employee_ids) & self)
         if configs_with_all_employees or configs_with_specific_employees:
             error_msg = _("You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n")
             for employee in self:

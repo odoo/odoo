@@ -164,11 +164,13 @@
                                 </div>
                                 <div class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
-                                    <ActionpadWidget
-                                        partner="getSelectedOrder()?.get_partner()"
-                                        actionName.translate="Refund"
-                                        actionToTrigger.bind="onDoRefund"
-                                    />
+                                    <t t-if="this.pos.cashier._role !== 'minimal'">
+                                        <ActionpadWidget
+                                            partner="getSelectedOrder()?.get_partner()"
+                                            actionName.translate="Refund"
+                                            actionToTrigger.bind="onDoRefund"
+                                        />
+                                    </t>
                                 </div>
                             </t>
                             <div t-else="" class="pads border-top d-flex gap-2" >
