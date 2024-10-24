@@ -33,7 +33,7 @@ class StockForecasted(models.AbstractModel):
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
         domain = self._product_sale_domain(product_template_ids, product_ids)
-        so_lines = self.env['sale.order.line'].search(domain)
+        so_lines = self.env['sale.order.line'].sudo().search(domain)
         out_sum = 0
         if so_lines:
             product_uom = so_lines[0].product_id.uom_id
