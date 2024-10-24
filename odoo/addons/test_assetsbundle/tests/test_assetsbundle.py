@@ -653,7 +653,7 @@ class TestXMLAssetsBundle(FileTouchable):
             # there shouldn't be any test_assetsbundle.invalid_xml template.
             # there should be an parsing_error template with the parsing error message.
             with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml"):
-                self.bundle.xml()
+                self.bundle.xml_blocks()
 
     def test_02_multiple_broken_xml(self):
         """ Checks that a bundle with multiple broken xml returns a comprehensive error message.
@@ -664,7 +664,7 @@ class TestXMLAssetsBundle(FileTouchable):
             # there shouldn't be any test_assetsbundle.invalid_xml template or test_assetsbundle.second_invalid_xml template.
             # there should be one parsing_error templates with the parsing error message for the first file.
             with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml"):
-                self.bundle.xml()
+                self.bundle.xml_blocks()
 
     def test_04_template_wo_name(self):
         """ Checks that a bundle with template without name returns a comprehensive error message.
@@ -675,7 +675,7 @@ class TestXMLAssetsBundle(FileTouchable):
             # there shouldn't be raise a ValueError, there should a parsing_error template with
             # the error message.
             with self.assertRaisesRegex(XMLAssetError, "'Template name is missing.' in file \'/test_assetsbundle/static/invalid_src/xml/template_wo_name.xml\'"):
-                self.bundle.xml()
+                self.bundle.xml_blocks()
 
     def test_05_file_not_found(self):
         """ Checks that a bundle with a file in error (file not found, encoding error, or other) returns a comprehensive error message.
@@ -686,7 +686,7 @@ class TestXMLAssetsBundle(FileTouchable):
             # there shouldn't be raise a ValueError, there should a parsing_error template with
             # the error message.
             with self.assertRaisesRegex(XMLAssetError, "Could not get content for test_assetsbundle/static/invalid_src/xml/file_not_found.xml."):
-                self.bundle.xml()
+                self.bundle.xml_blocks()
 
 @tagged('-at_install', 'post_install')
 class TestAssetsBundleInBrowser(HttpCase):
@@ -966,7 +966,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': 'http://external.link/external.js',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.manifest1')
-        scripts = [link for link in bundle.get_links() if link.endswith('js')]
+        scripts = [link for link in bundle.get_links() if link.endswith('js') and not link.endswith('.xml.js')]
         self.assertEqual(len(scripts), 2)
         self.assertEqual(scripts[0], 'http://external.link/external.js')
         attach = bundle.js()
@@ -1345,7 +1345,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.manifest4')
-        scripts = [link for link in bundle.get_links() if link.endswith('js')]
+        scripts = [link for link in bundle.get_links() if link.endswith('js') and not link.endswith('.xml.js')]
         self.assertEqual(len(scripts), 2)
         self.assertEqual(scripts[0], 'http://external.link/external.js')
         attach = bundle.js()

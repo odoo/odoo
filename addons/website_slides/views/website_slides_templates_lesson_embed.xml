@@ -9,6 +9,10 @@
             <html>
                 <head>
                     <title><t t-esc="slide.name"/></title>
+                    <script id="web.layout.odooscript" type="text/javascript">
+                        // Makes template bundles load at the right time.
+                        var odoo = { loadedJsAssets: new Set() };
+                    </script>
                     <t t-call-assets="website_slides.slide_embed_assets"/>
                     <script type="module" src="/web/static/lib/pdfjs/build/pdf.js"/>
                     <script type="module" src="/web/static/lib/pdfjs/build/pdf.worker.js"/>
@@ -135,6 +139,10 @@
         <template id="embed_slide_forbidden" name="Forbidden Embedded Slide">
             <html>
                 <head>
+                    <script id="web.layout.odooscript" type="text/javascript">
+                        // Makes template bundles load at the right time.
+                        var odoo = { loadedJsAssets: new Set() };
+                    </script>
                     <t t-call-assets="website_slides.slide_embed_assets" t-js="false"/>
                 </head>
                 <body>

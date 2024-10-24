@@ -13,6 +13,8 @@
                         debug: "<t t-esc="debug"/>",
                         __session_info__: <t t-esc="json.dumps(session_info)"/>,
                     };
+                    // Makes template bundles load at the right time.
+                    odoo.loadedJsAssets = new Set();
                 </script>
                 <t t-call-assets="pos_self_order.assets" />
                 <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="pos_self_order.assets_tests" />

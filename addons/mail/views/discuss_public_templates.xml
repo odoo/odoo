@@ -13,7 +13,8 @@
                         __session_info__: <t t-out="json.dumps(session_info)"/>,
                         csrf_token: "<t t-out="request.csrf_token(None)"/>",
                         debug: "<t t-out="debug"/>",
-                        discuss_data: <t t-out="json.dumps(data)"/>
+                        discuss_data: <t t-out="json.dumps(data)"/>,
+                        loadedJsAssets: new Set(),
                     };
                     {
                         const { user_context,  cache_hashes } = odoo.__session_info__;
