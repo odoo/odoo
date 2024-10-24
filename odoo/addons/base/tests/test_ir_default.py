@@ -94,6 +94,8 @@ class TestIrDefault(TransactionCase):
             IrDefault.set('res.partner', 'partner_latitude', 'foo')
         with self.assertRaises(ValidationError):
             IrDefault.set('res.partner', 'color', 2147483648)
+        with self.assertRaises(ValidationError):
+            IrDefault.set('res.partner', 'id', 'Hello')
 
     def test_removal(self):
         """ check defaults for many2one with their value being removed """
