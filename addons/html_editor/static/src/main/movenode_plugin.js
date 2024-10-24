@@ -6,8 +6,7 @@ import { ancestors, closestElement } from "../utils/dom_traversal";
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
 
-const ALLOWED_ELEMENTS =
-    "h1, h2, h3, p, hr, pre, blockquote, ul, ol, table, [data-embedded], .o_text_columns, .o_editor_banner, .oe_movable";
+const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote, ul, ol, table";
 
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
@@ -186,7 +185,14 @@ export class MoveNodePlugin extends Plugin {
         let movableElement =
             newAnchorWidget &&
             closestElement(newAnchorWidget, (node) => {
-                return isNodeMovable(node) && node.matches(ALLOWED_ELEMENTS);
+                return (
+                    this.isNodeMovable(node) &&
+                    node.matches(
+                        [ALLOWED_ELEMENTS, ...this.getResource("allowed_elements_selectors")].join(
+                            ", "
+                        )
+                    )
+                );
             });
         // Retrive the first list container from the ancestors.
         const listContainer =
@@ -202,7 +208,7 @@ export class MoveNodePlugin extends Plugin {
     getMovableElements() {
         const elems = [];
         for (const el of this.editable.querySelectorAll(ALLOWED_ELEMENTS)) {
-            if (isNodeMovable(el)) {
+            if (this.isNodeMovable(el)) {
                 elems.push(el);
             }
         }
@@ -419,13 +425,13 @@ export class MoveNodePlugin extends Plugin {
             this.removeMoveWidget();
         }
     }
-}
-
-function isNodeMovable(node) {
-    return (
-        node.parentElement?.getAttribute("contentEditable") === "true" &&
-        !node.parentElement.closest(".o_editor_banner")
-    );
+    isNodeMovable(node) {
+        return (
+            node.parentElement?.getAttribute("contentEditable") === "true" &&
+            !node.parentElement.closest(".o_editor_banner") &&
+            !node.matches(this.getResource("disallowed_list_selectors").join(", "))
+        );
+    }
 }
 
 function isPointInside(rect, x, y) {

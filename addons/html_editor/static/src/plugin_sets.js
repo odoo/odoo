@@ -57,6 +57,7 @@ import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
 import { ExcalidrawPlugin } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin";
 import { FilePlugin } from "@html_editor/others/embedded_components/plugins/file_plugin/file_plugin";
 import { TableOfContentPlugin } from "@html_editor/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin";
+import { TogglePlugin } from "@html_editor/others/embedded_components/plugins/toggle_plugin/toggle_plugin";
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 
@@ -165,6 +166,7 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     ExcalidrawPlugin,
     FilePlugin,
     TableOfContentPlugin,
+    TogglePlugin,
     VideoPlugin,
 ];
 

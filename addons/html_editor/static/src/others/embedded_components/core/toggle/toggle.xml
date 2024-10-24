@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.EmbeddedToggle">
+       <div class="d-flex flex-row align-items-center">
+            <button class="btn d-flex align-items-center o_embedded_toggle_button" t-on-click="updateState">
+                <i t-attf-class="fa fa-fw align-self-center fa-caret-{{this.state.showContent ? 'down' : 'right'}}"/>
+            </button>
+            <div class="flex-fill" t-ref="title"/>
+        </div>
+        <div class="ps-4" t-att-class="{ 'd-none': !state.showContent, }" t-ref="content"/>
+    </t>
+</templates>
