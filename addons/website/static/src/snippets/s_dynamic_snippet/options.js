@@ -352,6 +352,11 @@ const dynamicSnippetOptions = options.Class.extend({
         } else {
             delete this.$target[0].dataset.columnClasses;
         }
+        if (template.isSnippetSolo) {
+            this.$target[0].dataset.isSnippetSolo = template.isSnippetSolo;
+        } else {
+            delete this.$target[0].dataset.isSnippetSolo;
+        }
     },
     /**
      * Sets the option value.

@@ -75,6 +75,51 @@
     </t>
 </template>
 
+<template id="dynamic_filter_template_event_event_banner" name="Banner Layout" priority="15">
+    <section class="s_event_banner">
+        <div class="container">
+            <div class="row">
+                <div t-foreach="records" t-as="data" class="col-12 col-lg-12" data-is-snippet-solo="true">
+                    <t t-set="record" t-value="data['_record']._set_tz_context()"/>
+                    <div class="s_events_event_cover o_half_screen_height o_cc o_cc5 position-relative d-flex flex-column flex-lg-row align-items-center h-100 overflow-hidden">
+                        <t t-call="website.record_cover">
+                            <t t-set="_record" t-value="record"/>
+                            <t t-set="_resize_height" t-value="512"/>
+                            <t t-set="_resize_width" t-value="512"/>
+                            <t t-set="use_filters" t-value="True"/>
+                            <t t-set="additionnal_classes" t-value="'position-absolute w-100 h-100'"/>
+                        </t>
+                        <div class="z-0 col-12 col-lg-6 px-3 px-lg-0 pt-4 pt-lg-0 ps-lg-5">
+                            <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                            <h1 t-field="record.name"/>
+                            <p class="lead" t-field="record.subtitle"/>
+                        </div>
+                        <div class="z-0 col-12 col-lg-4 d-flex flex-column justify-content-center offset-lg-2 pb-4 pb-lg-0 pe-lg-5">
+                            <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                            <div class="s_card card o_cc o_cc1 ms-3 ms-lg-auto me-auto me-lg-0 shadow" data-snippet="s_card" data-name="Card" data-vxml="001" style="border-width: 0px !important; max-width: 50%">
+                                <div class="card-body p-4">
+                                    <time t-att-datetime="record.date_begin">
+                                        <span class="fw-bold">Date</span>
+                                        <p t-out="record.date_begin"
+                                            t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
+                                        <span t-if="events_event_time_active" class="s_events_event_time">
+                                            <span class="fw-bold">Time</span>
+                                            <p><i class="fa fa-clock-o me-1" role="img"/><span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/></p>
+                                            <span class="fw-bold">Location</span>
+                                            <p><i class="fa fa-map-marker me-1" role="img"/><span t-out="record.date_tz.replace('_', ' ')"/></p>
+                                        </span>
+                                    </time>
+                                    <a t-att-href="cta_btn_href" class="btn btn-primary w-100"><t t-out="cta_btn_text">Register<i class="fa fa-long-arrow-right ms-2" role="img"/></t></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <!--SNIPPET OPTIONS -->
 
 <template id="s_events_options" inherit_id="website.snippet_options">

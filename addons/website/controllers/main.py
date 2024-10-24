@@ -440,6 +440,7 @@ class Website(Home):
             t['arrowPosition'] = attribs.get('data-arrow-position')
             t['extraClasses'] = attribs.get('data-extra-classes')
             t['columnClasses'] = attribs.get('data-column-classes')
+            t['isSnippetSolo'] = attribs.get('data-is-snippet-solo')
             t['thumb'] = attribs.get('data-thumb')
         return templates
 
