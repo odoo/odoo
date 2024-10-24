@@ -3388,9 +3388,6 @@ class MailThread(models.AbstractModel):
               defined in "_notify_get_recipients_groups" like {
               'active': if not, it is skipped in notification process (ease
                         inheritance to be already present);
-              'actions': list of actions to display as links or buttons in form
-                         {'url': link of the action, 'title': link or button
-                          string};
               'button_access': main access document button information, {'url'
                                link of the access, 'title': link or button
                                string};
@@ -3562,7 +3559,7 @@ class MailThread(models.AbstractModel):
           render_values: company, is_discussion, lang, message, model_description,
                          record, record_name, signature, subtype, tracking_values,
                          website_url
-          recipients_group: actions, button_access, has_button_access, recipients
+          recipients_group: button_access, has_button_access, recipients
 
         :return str: rendered complete layout;
         """
@@ -3870,9 +3867,6 @@ class MailThread(models.AbstractModel):
            process like {
             'active': if not, it is skipped in notification process (ease
                       inheritance to be already present);
-            'actions': list of actions to display as links or buttons in form
-                       {'url': link of the action, 'title': link or button
-                        string};
             'button_access': main access document button information, {'url'
                              link of the access, 'title': link or button
                              string};
@@ -3893,7 +3887,7 @@ class MailThread(models.AbstractModel):
         When having to find a group for recipients, the first matching one
         when iterating on groups is used. Reordering those groups is doable
         through override. Adding groups is a common override, to add specific
-        buttons or actions for users belonging to some user groups.
+        buttons for users belonging to some user groups.
 
         :param record message: <mail.message> record being notified. May be
           void as 'msg_vals' superseeds it;
@@ -3961,7 +3955,6 @@ class MailThread(models.AbstractModel):
         # fill group_data with default_values if they are not complete
         for group_name, _group_func, group_data in groups:
             group_data.setdefault('active', True)
-            group_data.setdefault('actions', [])
             group_data.setdefault('has_button_access', is_thread_message)
             group_data.setdefault('notification_group_name', group_name)
             group_data.setdefault('recipients', [])
@@ -4003,7 +3996,6 @@ class MailThread(models.AbstractModel):
           with 'recipients' key filled with matching partners, like
             [{
                 'active': True,
-                'actions': [],
                 'button_access': {},
                 'has_button_access': False,
                 'notification_group_name': 'user',
@@ -4020,6 +4012,10 @@ class MailThread(models.AbstractModel):
             model_description,
             msg_vals=local_msg_vals
         )
+        # sanitize groups
+        for _group_name, _group_func, group_data in groups:
+            if 'actions' in group_data:
+                _logger.warning('Invalid usage of actions in notification groups')
 
         # classify recipients in each group
         for recipient_data in recipients_data:
@@ -4052,14 +4048,14 @@ class MailThread(models.AbstractModel):
                        'auth_login', 'pid', 'hash')
         ))
 
-        if link_type in ['view', 'assign', 'follow', 'unfollow']:
+        if link_type in ['view', 'unfollow']:
             base_link = '/mail/%s' % link_type
         elif link_type == 'controller':
             controller = kwargs.get('controller')
             params.pop('model')
             base_link = '%s' % controller
         else:
-            return ''
+            raise NotImplementedError(f'Invalid notification link type {link_type}')
 
         if link_type not in ['view']:
             token = self._encode_link(base_link, params)

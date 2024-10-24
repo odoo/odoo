@@ -405,11 +405,6 @@ class PurchaseOrder(models.Model):
             access_opt = customer_portal_group[2].setdefault('button_access', {})
             if self.env.context.get('is_reminder'):
                 access_opt['title'] = _('View')
-                actions = customer_portal_group[2].setdefault('actions', list())
-                actions.extend([
-                    {'url': self.get_confirm_url(confirm_type='reminder'), 'title': _('Accept')},
-                    {'url': self.get_update_url(), 'title': _('Update Dates')},
-                ])
             else:
                 access_opt['title'] = _('View Quotation') if self.state in ('draft', 'sent') else _('View Order')
                 access_opt['url'] = self.get_confirm_url()
