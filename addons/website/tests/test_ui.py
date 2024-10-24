@@ -572,15 +572,6 @@ class TestUi(odoo.tests.HttpCase):
 
         self.start_tour('/', 'website_no_action_no_dirty_page', login='admin')
 
-    def test_website_no_dirty_page(self):
-        # Previous tests are testing the dirty behavior when the extra items
-        # "+" menu comes in play. For other "no dirty" tests, we just remove
-        # most menu items first to make sure they pass independently.
-        website = self.env['website'].get_current_website()
-        website.menu_id.child_id[1:].unlink()
-
-        self.start_tour('/', 'website_no_dirty_page', login='admin')
-
     def test_widget_lifecycle(self):
         self.env['ir.asset'].create({
             'name': 'wysiwyg_patch_start_and_destroy',

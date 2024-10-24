@@ -21,9 +21,16 @@ registerWebsitePreviewTour('snippet_editor_panel_options', {
 }),
 // Test keeping the text selection when using the width option.
 {
-    content: "Click on the first paragraph.",
+    content: "Select the first paragraph.",
     trigger: ':iframe .s_text_image p',
-    run: "click",
+    async run(actions) {
+        await actions.click();
+        const range = document.createRange();
+        const selection = this.anchor.ownerDocument.getSelection();
+        range.selectNodeContents(this.anchor);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    },
 }, {
     content: "The text toolbar should be visible. The paragraph should be selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
@@ -92,9 +99,16 @@ goBackToBlocks(),
     groupName: "Text",
 }),
 {
-    content: "Click on the first paragraph.",
+    content: "Select the first paragraph.",
     trigger: ':iframe .s_text_block p',
-    run: "click",
+    async run(actions) {
+        await actions.click();
+        const range = document.createRange();
+        const selection = this.anchor.ownerDocument.getSelection();
+        range.selectNodeContents(this.anchor);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    },
 }, {
     content: "The text toolbar should be visible. The paragraph should be selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',

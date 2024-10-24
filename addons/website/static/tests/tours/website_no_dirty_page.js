@@ -65,40 +65,6 @@ registerWebsitePreviewTour('website_no_action_no_dirty_page', {
     edition: true,
 }, () => makeSteps());
 
-registerWebsitePreviewTour('website_no_dirty_page', {
-    url: '/',
-    edition: true,
-}, () => makeSteps([
-    {
-        // This has been known to mark the page as dirty because of the "drag
-        // the column on image move" feature.
-        content: "Click on default image",
-        trigger: ':iframe .s_text_image img',
-        run: "click",
-    }, {
-        content: "Click on default paragraph",
-        trigger: ':iframe .s_text_image h2 + p.o_default_snippet_text',
-        run: "click",
-    }, {
-        // TODO this should be done in a dedicated test which would be testing
-        // all default snippet texts behaviors. Will be done in master where a
-        // task will review this feature.
-        // TODO also test that applying an editor command removes that class.
-        content: "Make sure the paragraph still acts as a default paragraph",
-        trigger: ':iframe .s_text_image h2 + p.o_default_snippet_text',
-    }, {
-        content: "Click on button",
-        trigger: ':iframe .s_text_image .btn',
-        async run(actions) {
-            await actions.click();
-            const el = this.anchor;
-            const sel = el.ownerDocument.getSelection();
-            sel.collapse(el, 0);
-            el.focus();
-        },
-    },
-]));
-
 registerWebsitePreviewTour('website_no_dirty_lazy_image', {
     url: '/',
     edition: true,

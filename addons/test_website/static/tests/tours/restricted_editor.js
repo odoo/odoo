@@ -134,7 +134,7 @@ registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     },
     {
         content: "Translate some banner text",
-        trigger: ":iframe [data-oe-expression='record.website_description'] strong.o_default_snippet_text",
+        trigger: ":iframe [data-oe-expression='record.website_description'] strong",
         run: "editor potentiel.",
     },
     ...clickOnSave(),

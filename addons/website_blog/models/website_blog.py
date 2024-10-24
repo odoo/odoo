@@ -163,7 +163,7 @@ class BlogPost(models.Model):
     def _default_content(self):
         text = html_escape(_("Start writing here..."))
         return """
-            <p class="o_default_snippet_text">%(text)s</p>
+            <p>%(text)s</p>
         """ % {"text": text}
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)

@@ -17,10 +17,10 @@
                     />
                     <t t-foreach="categories" t-as="category">
                         <div class="col-12 col-lg-4 py-2 text-center">
-                            <h4 class="o_default_snippet_text">
+                            <h4>
                                 <a
                                     t-att-href="'/shop/category/%s' % category.id"
-                                    class="nav-link o_default_snippet_text p-0 text-black"
+                                    class="nav-link p-0 text-black"
                                     t-esc="category.name"
                                 />
                             </h4>
@@ -28,7 +28,7 @@
                                 <t t-foreach="category.child_id" t-as="sub_category">
                                     <a
                                         t-att-href="'/shop/category/%s' % sub_category.id"
-                                        class="nav-link o_default_snippet_text"
+                                        class="nav-link"
                                         t-esc="sub_category.name"
                                     />
                                 </t>
@@ -50,10 +50,10 @@
                     />
                     <t t-foreach="categories" t-as="category">
                         <div class="col-12 col-lg-4 py-2 text-center">
-                            <h4 class="o_default_snippet_text">
+                            <h4>
                                 <a
                                     t-att-href="'/shop/category/%s' % category.id"
-                                    class="nav-link o_default_snippet_text p-0 text-black"
+                                    class="nav-link p-0 text-black"
                                     t-esc="category.name"
                                 />
                             </h4>
@@ -61,7 +61,7 @@
                                 <t t-foreach="category.child_id" t-as="sub_category">
                                     <a
                                         t-att-href="'/shop/category/%s' % sub_category.id"
-                                        class="nav-link o_default_snippet_text"
+                                        class="nav-link"
                                         t-esc="sub_category.name"
                                     />
                                 </t>
