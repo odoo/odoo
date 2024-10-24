@@ -395,6 +395,8 @@ class TestHtmlTools(BaseCase):
             '<p><br>1</p>', '<p>1<br > </p>', '<p style="margin: 4px">Hello World</p>',
             '<div style="margin: 4px"><p>Hello World</p></div>',
             '<p><span style="font-weight: bolder;"><font style="color: rgb(255, 0, 0);" class=" ">W</font></span><br></p>',
+            '<span class="fa fa-heart"></span>',
+            '<i class="fas fa-home"></i>'
         ]
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
