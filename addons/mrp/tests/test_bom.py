@@ -2498,6 +2498,40 @@ class TestBoM(TestMrpCommon):
         self.assertTrue(move_with_bom_line_op._is_manual_consumption())
         self.assertFalse(move_without_bom_line_op._is_manual_consumption())
 
+    def test_archive_operation(self):
+        """ Checks that archiving an operation having both a bom line and a byproduct line linked to it properly unlinks them.
+        """
+        final, comp1, comp2, bp1, bp2 = self.make_prods(5)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': final.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': comp1.id, 'product_qty': 1.0}),
+                Command.create({'product_id': comp2.id, 'product_qty': 1.0}),
+            ],
+            'byproduct_ids': [
+                Command.create({'product_id': bp1.id, 'product_qty': 1.0}),
+                Command.create({'product_id': bp2.id, 'product_qty': 1.0}),
+            ],
+            'operation_ids': [
+                Command.create({'name': 'OPE_1', 'workcenter_id': self.workcenter_1.id}),
+                Command.create({'name': 'OPE_2', 'workcenter_id': self.workcenter_1.id}),
+            ],
+        })
+        # Assign operation to each bom/byproduct line
+        ope_1, ope_2 = bom.operation_ids
+        bom.bom_line_ids[0].operation_id = ope_1
+        bom.byproduct_ids[0].operation_id = ope_1
+        bom.bom_line_ids[1].operation_id = ope_2
+        bom.byproduct_ids[1].operation_id = ope_2
+
+        # Archive first operation
+        ope_1.action_archive()
+        self.assertFalse(bom.bom_line_ids[0].operation_id)
+        self.assertFalse(bom.byproduct_ids[0].operation_id)
+        self.assertEqual(bom.bom_line_ids[1].operation_id, ope_2)
+        self.assertEqual(bom.byproduct_ids[1].operation_id, ope_2)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
