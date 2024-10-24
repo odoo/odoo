@@ -122,7 +122,7 @@ test("Display highligthed search in chatter", async () => {
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
     triggerHotkey("Enter");
-    await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`);
+    await contains(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
 test("Display multiple highligthed search in chatter", async () => {
@@ -139,7 +139,9 @@ test("Display multiple highligthed search in chatter", async () => {
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "not empty");
     triggerHotkey("Enter");
-    await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`, { count: 2 });
+    await contains(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}`, {
+        count: 2,
+    });
 });
 
 test("Display highligthed search in Discuss", async () => {
@@ -196,6 +198,8 @@ test("Display highligthed with escaped character must ignore them", async () => 
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "test hello");
     triggerHotkey("Enter");
-    await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`, { count: 2 });
+    await contains(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}`, {
+        count: 2,
+    });
     await contains(`.o-mail-Message-body`, { text: "<strong>test</strong> hello" });
 });
