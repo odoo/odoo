@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <template id="website_signup_form" inherit_id="auth_signup.signup">
+        <xpath expr="//section" position="attributes">
+            <attribute name="class" separator=" " add="website_oe_signup_form o_editable"></attribute>
+            <attribute name="data-name" separator=" " add="Signup form"></attribute>
+        </xpath>
+    </template>
+
+    <template id="signup_form_field" inherit_id="auth_signup.fields">
+        <xpath expr="//input[@name='login']" position="attributes">
+            <attribute name="class" separator=" " add="o_signup_field signup_form_required_field"></attribute>
+        </xpath>
+        <xpath expr="//input[@name='name']" position="attributes">
+            <attribute name="class" separator=" " add="o_signup_field signup_form_required_field"></attribute>
+        </xpath>
+        <xpath expr="//input[@name='password']" position="attributes">
+            <attribute name="class" separator=" " add="o_signup_field signup_form_required_field"></attribute>
+        </xpath>
+        <xpath expr="//input[@name='confirm_password']" position="attributes">
+            <attribute name="class" separator=" " add="o_signup_field signup_form_required_field"></attribute>
+        </xpath>
+
+        <xpath expr="//input[@name='confirm_password']" position="after">
+            <div class="form-group">
+                <label for="vat">VAT</label>
+                <input type="text" name="vat" t-att-value="vat" id="vat" class="o_signup_field form-control form-control-sm"/>
+            </div>
+            <div class="form-group">
+                <label for="company">Company Name</label>
+                <input type="text" name="company" t-att-value="company" id="company" class="o_signup_field form-control form-control-sm"/>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" name="phone" t-att-value="phone" id="phone" class="o_signup_field form-control form-control-sm"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="website_signup_form_options" data-name="Form" inherit_id="website.snippet_options">
+        <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside">, .website_oe_signup_form</xpath>
+        <xpath expr="//div" position="after">
+            <!-- Form -->
+            <div data-js="WebsiteSignupFormEditor" data-selector=".website_oe_signup_form" data-target="form">
+                <we-select string="Marked Fields" data-name="field_mark_select">
+                    <we-button data-select-class="">None</we-button>
+                    <we-button data-select-class="o_mark_required" data-name="form_required_opt">Required</we-button>
+                    <we-button data-select-class="o_mark_optional" data-name="form_optional_opt">Optional</we-button>
+                </we-select>
+                <we-input string="Mark Text" data-set-mark="" data-dependencies="form_required_opt, form_optional_opt"/>
+            </div>
+
+            <!-- Add Field Form -->
+            <div data-js="AddSignupFieldForm" data-selector=".website_oe_signup_form" data-target="form">
+                <we-button class="o_we_bg_brand_primary"
+                    title="Add a new field at the end"
+                    data-add-field=""
+                    data-no-preview="true">
+                    + Field
+                </we-button>
+            </div>
+
+            <!-- Add Field -->
+            <div data-js="AddSignupField" data-selector=".o_signup_field">
+                <we-button class="o_we_bg_brand_primary"
+                    title="Add a new field after this one"
+                    data-add-field=""
+                    data-no-preview="true">
+                    + Field
+                </we-button>
+            </div>
+
+            <!-- Field -->
+            <div data-js="WebsiteSignupFormFieldRequired" data-selector=".website_oe_signup_form .signup_form_required_field">
+                <!-- Disable the delete option of model required fields and show
+                alert and tooltip on delete buttons -->
+                <we-alert class="mt-2"></we-alert>
+            </div>
+
+            <div data-js='WebsiteSignupFieldEditor' data-selector=".o_signup_field" 
+                data-drop-near=".o_signup_field" data-drop-lock-within="form" >
+                <we-select data-name="type_opt" string="Type" data-no-preview="true">
+                    <we-button data-custom-field="number">VAT</we-button>
+                    <we-button data-custom-field="tel">Phone Number</we-button>
+                    <we-button data-custom-field="char">Company Name</we-button>
+                </we-select>
+                <we-input string="Placeholder" class="o_we_large"
+                    data-select-attribute="" data-attribute-name="placeholder"
+                    data-apply-to="input[type='text'], input[type='number'], input[type='tel']"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

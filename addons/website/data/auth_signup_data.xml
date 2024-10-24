@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.model_res_users" model="ir.model">
+      <field name="website_form_key">signup_form</field>
+      <field name="website_form_access">True</field>
+      <field name="website_form_label">Signup to account</field>
+    </record>
+    <function model="ir.model.fields" name="formbuilder_whitelist">
+      <value>res.users</value>
+      <value eval="[
+        'email',
+        'name',
+        'password',
+        'new_password',
+        ]"/>
+    </function>
+</odoo>
