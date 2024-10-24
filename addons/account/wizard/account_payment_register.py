@@ -212,9 +212,7 @@ class AccountPaymentRegister(models.TransientModel):
         payment_values = batch_result['payment_values']
         foreign_currency_id = payment_values['currency_id']
         partner_bank_id = payment_values['partner_bank_id']
-        company = batch_result['lines'].company_id
-        if len(company) > 1:
-            company = company._accessible_branches()[:1]
+        company = min(batch_result['lines'].company_id, key=lambda c: len(c.parent_ids))
 
         currency_domain = [('currency_id', '=', foreign_currency_id)]
         partner_bank_domain = [('bank_account_id', '=', partner_bank_id)]
@@ -248,13 +246,13 @@ class AccountPaymentRegister(models.TransientModel):
     @api.model
     def _get_batch_available_partner_banks(self, batch_result, journal):
         payment_values = batch_result['payment_values']
-        company = batch_result['lines'].company_id._accessible_branches()[:1]
 
         # A specific bank account is set on the journal. The user must use this one.
         if payment_values['payment_type'] == 'inbound':
             # Receiving money on a bank account linked to the journal.
             return journal.bank_account_id
         else:
+            company = min(batch_result['lines'].company_id, key=lambda c: len(c.parent_ids))
             # Sending money to a bank account owned by a partner.
             return batch_result['lines'].partner_id.bank_ids.filtered(lambda x: x.company_id.id in (False, company.id))._origin
 
@@ -278,6 +276,142 @@ class AccountPaymentRegister(models.TransientModel):
             'partner_type': 'customer' if line.account_type == 'asset_receivable' else 'supplier',
         }
 
+<<<<<<< 18.0
+||||||| b63b830174c99fa0df659978c3f492452eeab3ec
+    def _get_batches(self):
+        ''' Group the account.move.line linked to the wizard together.
+        Lines are grouped if they share 'partner_id','account_id','currency_id' & 'partner_type' and if
+        0 or 1 partner_bank_id can be determined for the group.
+        :return: A list of batches, each one containing:
+            * payment_values:   A dictionary of payment values.
+            * moves:        An account.move recordset.
+        '''
+        self.ensure_one()
+
+        lines = self.line_ids._origin
+
+        if len(lines.company_id.root_id) > 1:
+            raise UserError(_("You can't create payments for entries belonging to different companies."))
+        if not lines:
+            raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
+
+        batches = defaultdict(lambda: {'lines': self.env['account.move.line']})
+        banks_per_partner = defaultdict(lambda: {'inbound': set(), 'outbound': set()})
+        for line in lines:
+            batch_key = self._get_line_batch_key(line)
+            vals = batches[frozendict(batch_key)]
+            vals['payment_values'] = batch_key
+            vals['lines'] += line
+            banks_per_partner[batch_key['partner_id']]['inbound' if line.balance > 0.0 else 'outbound'].add(
+                batch_key['partner_bank_id']
+            )
+
+        partner_unique_inbound = {p for p, b in banks_per_partner.items() if len(b['inbound']) == 1}
+        partner_unique_outbound = {p for p, b in banks_per_partner.items() if len(b['outbound']) == 1}
+
+        # Compute 'payment_type'.
+        batch_vals = []
+        seen_keys = set()
+        for i, key in enumerate(list(batches)):
+            if key in seen_keys:
+                continue
+            vals = batches[key]
+            lines = vals['lines']
+            merge = (
+                batch_key['partner_id'] in partner_unique_inbound
+                and batch_key['partner_id'] in partner_unique_outbound
+            )
+            if merge:
+                for other_key in list(batches)[i+1:]:
+                    if other_key in seen_keys:
+                        continue
+                    other_vals = batches[other_key]
+                    if all(
+                        other_vals['payment_values'][k] == v
+                        for k, v in vals['payment_values'].items()
+                        if k not in ('partner_bank_id', 'payment_type')
+                    ):
+                        # add the lines in this batch and mark as seen
+                        lines += other_vals['lines']
+                        seen_keys.add(other_key)
+            balance = sum(lines.mapped('balance'))
+            vals['payment_values']['payment_type'] = 'inbound' if balance > 0.0 else 'outbound'
+            if merge:
+                partner_banks = banks_per_partner[batch_key['partner_id']]
+                vals['partner_bank_id'] = partner_banks[vals['payment_values']['payment_type']]
+                vals['lines'] = lines
+            batch_vals.append(vals)
+        return batch_vals
+
+=======
+    def _get_batches(self):
+        ''' Group the account.move.line linked to the wizard together.
+        Lines are grouped if they share 'partner_id','account_id','currency_id' & 'partner_type' and if
+        0 or 1 partner_bank_id can be determined for the group.
+        :return: A list of batches, each one containing:
+            * payment_values:   A dictionary of payment values.
+            * moves:        An account.move recordset.
+        '''
+        self.ensure_one()
+
+        lines = self.line_ids._origin
+
+        if len(lines.company_id.root_id) > 1:
+            raise UserError(_("You can't create payments for entries belonging to different companies."))
+        if len(lines.company_id.filtered(lambda c: c.root_id not in lines.company_id)) > 1:
+            raise UserError(_("You can't create payments for entries belonging to different branches."))
+        if not lines:
+            raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
+
+        batches = defaultdict(lambda: {'lines': self.env['account.move.line']})
+        banks_per_partner = defaultdict(lambda: {'inbound': set(), 'outbound': set()})
+        for line in lines:
+            batch_key = self._get_line_batch_key(line)
+            vals = batches[frozendict(batch_key)]
+            vals['payment_values'] = batch_key
+            vals['lines'] += line
+            banks_per_partner[batch_key['partner_id']]['inbound' if line.balance > 0.0 else 'outbound'].add(
+                batch_key['partner_bank_id']
+            )
+
+        partner_unique_inbound = {p for p, b in banks_per_partner.items() if len(b['inbound']) == 1}
+        partner_unique_outbound = {p for p, b in banks_per_partner.items() if len(b['outbound']) == 1}
+
+        # Compute 'payment_type'.
+        batch_vals = []
+        seen_keys = set()
+        for i, key in enumerate(list(batches)):
+            if key in seen_keys:
+                continue
+            vals = batches[key]
+            lines = vals['lines']
+            merge = (
+                batch_key['partner_id'] in partner_unique_inbound
+                and batch_key['partner_id'] in partner_unique_outbound
+            )
+            if merge:
+                for other_key in list(batches)[i+1:]:
+                    if other_key in seen_keys:
+                        continue
+                    other_vals = batches[other_key]
+                    if all(
+                        other_vals['payment_values'][k] == v
+                        for k, v in vals['payment_values'].items()
+                        if k not in ('partner_bank_id', 'payment_type')
+                    ):
+                        # add the lines in this batch and mark as seen
+                        lines += other_vals['lines']
+                        seen_keys.add(other_key)
+            balance = sum(lines.mapped('balance'))
+            vals['payment_values']['payment_type'] = 'inbound' if balance > 0.0 else 'outbound'
+            if merge:
+                partner_banks = banks_per_partner[batch_key['partner_id']]
+                vals['partner_bank_id'] = partner_banks[vals['payment_values']['payment_type']]
+                vals['lines'] = lines
+            batch_vals.append(vals)
+        return batch_vals
+
+>>>>>>> 213eca01d787672d9f9991ae854117959811b388
     @api.model
     def _get_wizard_values_from_batch(self, batch_result):
         ''' Extract values from the batch passed as parameter (see '_compute_batches')
@@ -287,7 +421,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         payment_values = batch_result['payment_values']
         lines = batch_result['lines']
-        company = lines[0].company_id._accessible_branches()[:1]
+        company = min(lines.company_id, key=lambda c: len(c.parent_ids))
 
         source_amount = abs(sum(lines.mapped('amount_residual')))
         if payment_values['currency_id'] == company.currency_id.id:
@@ -429,7 +563,13 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 # == Multiple batches: The wizard is not editable  ==
                 wizard.update({
+<<<<<<< 18.0
                     'company_id': wizard.batches[0]['lines'][0].company_id._accessible_branches()[:1].id,
+||||||| b63b830174c99fa0df659978c3f492452eeab3ec
+                    'company_id': batches[0]['lines'][0].company_id._accessible_branches()[:1].id,
+=======
+                    'company_id': min(batches, key=lambda batch: len(batch['lines'].company_id.parent_ids))['lines'].company_id.id,
+>>>>>>> 213eca01d787672d9f9991ae854117959811b388
                     'partner_id': False,
                     'partner_type': False,
                     'payment_type': wizard_values_from_batch['payment_type'],
