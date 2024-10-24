@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': "MRP Account Project",
+    'name': "Project - Project Manufacturing Analytics",
     'version': '1.0',
-    'summary': "Monitor MRP account using project",
+    'summary': "Track the costs of manufacturing orders associated with the analytic accounts of your projects.",
     'category': 'Services/Project',
     'depends': ['mrp_account', 'project_mrp'],
     'data': ['views/mrp_production_views.xml'],
