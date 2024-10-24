@@ -100,15 +100,6 @@
             <field name="report_name">stock.report_stock_rule</field>
             <field name="report_file">stock.report_stock_rule</field>
         </record>
-        <record id="label_product_product" model="ir.actions.report">
-            <field name="name">Product Label (ZPL)</field>
-            <field name="model">product.product</field>
-            <field name="report_type">qweb-text</field>
-            <field name="report_name">stock.label_product_product_view</field>
-            <field name="report_file">stock.label_product_product_view</field>
-            <field name="binding_model_id" eval="False"/>
-            <field name="binding_type">report</field>
-        </record>
         <record id="label_lot_template" model="ir.actions.report">
             <field name="name">Lot/Serial Number (ZPL)</field>
             <field name="model">stock.lot</field>
