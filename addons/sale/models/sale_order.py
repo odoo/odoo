@@ -1051,7 +1051,9 @@ class SaleOrder(models.Model):
         :rtype: record of `mail.template` or `None` if not found
         """
         self.ensure_one()
-        if self.env.context.get('proforma') or self.state != 'sale':
+        if self.env.context.get('proforma'):
+            return self.env.ref('sale.email_template_proforma', raise_if_not_found=False)
+        elif self.state != 'sale':
             return self.env.ref('sale.email_template_edi_sale', raise_if_not_found=False)
         else:
             return self._get_confirmation_template()
@@ -2202,3 +2204,11 @@ class SaleOrder(models.Model):
         :return: None
         """
         self.with_context(send_email=True).action_confirm()
+
+    def _get_name_proforma_report(self):
+        """
+            This method need to be inherit by the localizations if they want to print a custom proforma report instead of
+            the default one. For example please review the l10n_mx_edi_sale module
+        """
+        self.ensure_one()
+        return 'sale.report_saleorder_document'
