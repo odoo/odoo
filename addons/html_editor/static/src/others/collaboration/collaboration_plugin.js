@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { trigger } from "@html_editor/utils/resource";
 
 // 60 seconds
 export const HISTORY_SNAPSHOT_INTERVAL = 1000 * 60;
@@ -17,6 +18,9 @@ export class CollaborationPlugin extends Plugin {
         set_attribute: this.setAttribute.bind(this),
         process_history_step: this.processHistoryStep.bind(this),
         is_reversible_step: this.isReversibleStep.bind(this),
+        history_cleaned_listeners: this.onHistoryClean.bind(this),
+        history_reseted_listeners: this.onHistoryReset.bind(this),
+        step_added_listeners: ({ step }) => this.onStepAdded(step),
     };
     static shared = [
         //
@@ -27,22 +31,6 @@ export class CollaborationPlugin extends Plugin {
         "getSnapshotSteps",
         "resetFromSteps",
     ];
-    handleCommand(commandName, payload) {
-        switch (commandName) {
-            case "STEP_ADDED": {
-                this.onStepAdded(payload.step);
-                break;
-            }
-            case "HISTORY_CLEAN": {
-                this.onHistoryClean();
-                break;
-            }
-            case "HISTORY_RESET": {
-                this.onHistoryReset();
-                break;
-            }
-        }
-    }
 
     externalStepsBuffer = [];
     /** @type { CollaborationPluginConfig['peerId'] } */
@@ -133,8 +121,8 @@ export class CollaborationPlugin extends Plugin {
         let stepIndex = 0;
         const steps = this.shared.getHistorySteps();
         for (const newStep of newSteps) {
-            // todo: add a test that no 2 HISTORY_MISSING_PARENT_STEP are
-            // called for the same stack.
+            // todo: add a test that no 2 history_missing_parent_step_listeners
+            // are called for in same stack.
             const insertIndex = this.getInsertStepIndex(steps, newStep);
             if (typeof insertIndex === "undefined") {
                 continue;
@@ -160,7 +148,7 @@ export class CollaborationPlugin extends Plugin {
             this.shared.rectifySelection(selectionData.editableSelection);
         }
 
-        this.getResource("onExternalHistorySteps").forEach((cb) => cb());
+        trigger(this.getResource("onExternalHistorySteps"));
 
         // todo: ensure that if the selection was not in the editable before the
         // reset, it remains where it was after applying the snapshot.
@@ -204,7 +192,7 @@ export class CollaborationPlugin extends Plugin {
                 index--;
             }
             const fromStepId = historySteps[index].id;
-            this.dispatch("HISTORY_MISSING_PARENT_STEP", {
+            trigger(this.getResource("history_missing_parent_step_listeners"), {
                 step: newStep,
                 fromStepId: fromStepId,
             });
@@ -320,7 +308,7 @@ export class CollaborationPlugin extends Plugin {
      */
     onStepAdded(step) {
         step.peerId = this.peerId;
-        this.dispatch("COLLABORATION_STEP_ADDED", step);
+        trigger(this.getResource("collaboration_step_added_listeners"), step);
     }
     /**
      * @param {import("../../core/history_plugin").HistoryStep} step

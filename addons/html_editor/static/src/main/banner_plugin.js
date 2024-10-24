@@ -9,52 +9,70 @@ function isAvailable(node) {
 }
 export class BannerPlugin extends Plugin {
     static name = "banner";
-    static dependencies = ["dom", "emoji", "selection"];
+    static dependencies = ["history", "dom", "emoji", "selection"];
     resources = {
-        powerboxCategory: withSequence(20, { id: "banner", name: _t("Banner") }),
-        powerboxItems: [
+        user_commands: [
             {
-                category: "banner",
-                name: _t("Banner Info"),
+                id: "banner_info",
+                label: _t("Banner Info"),
                 description: _t("Insert an info banner"),
-                fontawesome: "fa-info-circle",
+                icon: "fa-info-circle",
                 isAvailable,
-                action: () => {
+                run: () => {
                     this.insertBanner(_t("Banner Info"), "💡", "info");
                 },
             },
             {
-                category: "banner",
-                name: _t("Banner Success"),
-                description: _t("Insert an success banner"),
-                fontawesome: "fa-check-circle",
+                id: "banner_success",
+                label: _t("Banner Success"),
+                description: _t("Insert a success banner"),
+                icon: "fa-check-circle",
                 isAvailable,
-                action: () => {
+                run: () => {
                     this.insertBanner(_t("Banner Success"), "✅", "success");
                 },
             },
             {
-                category: "banner",
-                name: _t("Banner Warning"),
-                description: _t("Insert an warning banner"),
-                fontawesome: "fa-exclamation-triangle",
+                id: "banner_warning",
+                label: _t("Banner Warning"),
+                description: _t("Insert a warning banner"),
+                icon: "fa-exclamation-triangle",
                 isAvailable,
-                action: () => {
+                run: () => {
                     this.insertBanner(_t("Banner Warning"), "⚠️", "warning");
                 },
             },
             {
-                category: "banner",
-                name: _t("Banner Danger"),
-                description: _t("Insert an danger banner"),
-                fontawesome: "fa-exclamation-circle",
+                id: "banner_danger",
+                label: _t("Banner Danger"),
+                description: _t("Insert a danger banner"),
+                icon: "fa-exclamation-circle",
                 isAvailable,
-                action: () => {
+                run: () => {
                     this.insertBanner(_t("Banner Danger"), "❌", "danger");
                 },
             },
         ],
         showPowerButtons: (selection) => !closestElement(selection.anchorNode, ".o_editor_banner"),
+        powerboxCategory: withSequence(20, { id: "banner", name: _t("Banner") }),
+        powerboxItems: [
+            {
+                commandId: "banner_info",
+                category: "banner",
+            },
+            {
+                commandId: "banner_success",
+                category: "banner",
+            },
+            {
+                commandId: "banner_warning",
+                category: "banner",
+            },
+            {
+                commandId: "banner_danger",
+                category: "banner",
+            },
+        ],
     };
 
     setup() {
@@ -84,7 +102,7 @@ export class BannerPlugin extends Plugin {
             bannerElement.before(zws);
         }
         this.shared.setCursorStart(bannerElement.querySelector(".o_editor_banner > div > p"));
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     onBannerEmojiChange(iconElement) {
@@ -92,7 +110,7 @@ export class BannerPlugin extends Plugin {
             target: iconElement,
             onSelect: (emoji) => {
                 iconElement.textContent = emoji;
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
             },
         });
     }

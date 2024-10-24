@@ -2,6 +2,7 @@ import { useNativeDraggable } from "@html_editor/utils/drag_and_drop";
 import { endPos } from "@html_editor/utils/position";
 import { Plugin } from "../plugin";
 import { ancestors, closestElement } from "../utils/dom_traversal";
+import { trigger } from "@html_editor/utils/resource";
 
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
@@ -11,7 +12,7 @@ const ALLOWED_ELEMENTS =
 
 export class MoveNodePlugin extends Plugin {
     static name = "movenode";
-    static dependencies = ["selection", "position", "local-overlay"];
+    static dependencies = ["selection", "history", "position", "local-overlay"];
     resources = {
         layoutGeometryChange: () => {
             if (this.currentMovableElement) {
@@ -208,7 +209,7 @@ export class MoveNodePlugin extends Plugin {
     setMovableElement(movableElement) {
         this.removeMoveWidget();
         this.currentMovableElement = movableElement;
-        this.getResource("setMovableElement").forEach((cb) => cb(movableElement));
+        trigger(this.getResource("setMovableElement"), movableElement);
 
         const containerRect = this.widgetContainer.getBoundingClientRect();
         const anchorBlockRect = this.currentMovableElement.getBoundingClientRect();
@@ -258,7 +259,7 @@ export class MoveNodePlugin extends Plugin {
         }
     }
     removeMoveWidget() {
-        this.getResource("unsetMovableElement").forEach((cb) => cb());
+        trigger(this.getResource("unsetMovableElement"));
         this.moveWidget?.remove();
         this.moveWidget = undefined;
         this.currentMovableElement = undefined;
@@ -388,7 +389,7 @@ export class MoveNodePlugin extends Plugin {
                 anchorNode: selectionPosition[0],
                 anchorOffset: selectionPosition[1],
             });
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
         }
     }
     onMousemove(e) {

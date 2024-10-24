@@ -21,30 +21,14 @@ const getPowerboxItems = (plugin) => {
     const powerboxItems = [];
     if (!plugin.config.disableImage) {
         powerboxItems.push({
-            id: "image",
-            name: _t("Image"),
-            description: _t("Insert an image"),
             category: "media",
-            fontawesome: "fa-file-image-o",
-            async action() {
-                await plugin.openMediaDialog();
-            },
+            commandId: "insertImage",
         });
     }
     if (!plugin.config.disableVideo) {
         powerboxItems.push({
-            name: _t("Video"),
-            description: _t("Insert a video"),
             category: "media",
-            fontawesome: "fa-file-video-o",
-            action() {
-                plugin.openMediaDialog({
-                    noVideos: false,
-                    noImages: true,
-                    noIcons: true,
-                    noDocuments: true,
-                });
-            },
+            commandId: "insertVideo",
         });
     }
     return powerboxItems;
@@ -55,6 +39,34 @@ export class MediaPlugin extends Plugin {
     static dependencies = ["selection", "history", "dom", "dialog"];
     static shared = ["savePendingImages"];
     resources = {
+        user_commands: [
+            {
+                id: "replaceImage",
+                label: _t("Replace media"),
+                run: this.replaceImage.bind(this),
+            },
+            {
+                id: "insertImage",
+                label: _t("Image"),
+                description: _t("Insert an image"),
+                icon: "fa-file-image-o",
+                run: this.openMediaDialog.bind(this),
+            },
+            {
+                id: "insertVideo",
+                label: _t("Video"),
+                description: _t("Insert a video"),
+                icon: "fa-file-video-o",
+                run: () => {
+                    this.openMediaDialog({
+                        noVideos: false,
+                        noImages: true,
+                        noIcons: true,
+                        noDocuments: true,
+                    });
+                },
+            },
+        ],
         powerboxCategory: withSequence(40, { id: "media", name: _t("Media") }),
         powerboxItems: getPowerboxItems(this),
         toolbarCategory: withSequence(29, {
@@ -65,41 +77,27 @@ export class MediaPlugin extends Plugin {
             {
                 id: "replace_image",
                 category: "replace_image",
-                action(dispatch) {
-                    dispatch("REPLACE_IMAGE");
-                },
-                title: _t("Replace media"),
+                commandId: "replaceImage",
                 text: "Replace",
             },
         ],
+        clean_listeners: this.clean.bind(this),
         isUnsplittable: isIconElement, // avoid merge
-        powerButtons: ["image"],
+        powerButtons: ["insertImage"],
+        clean_for_save_listeners: ({ root }) => this.cleanForSave(root),
+        normalize_listeners: this.normalizeMedia.bind(this),
     };
 
     get recordInfo() {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE":
-                this.normalizeMedia(payload.node);
-                break;
-            case "CLEAN":
-                this.clean(payload.root);
-                break;
-            case "CLEAN_FOR_SAVE":
-                this.cleanForSave(payload.root);
-                break;
-            case "REPLACE_IMAGE": {
-                const selectedNodes = this.shared.getSelectedNodes();
-                const node = selectedNodes.find((node) => node.tagName === "IMG");
-                if (node) {
-                    this.openMediaDialog({ node });
-                    this.dispatch("ADD_STEP");
-                }
-                break;
-            }
+    replaceImage() {
+        const selectedNodes = this.shared.getSelectedNodes();
+        const node = selectedNodes.find((node) => node.tagName === "IMG");
+        if (node) {
+            this.openMediaDialog({ node });
+            this.shared.addStep();
         }
     }
 
@@ -163,7 +161,7 @@ export class MediaPlugin extends Plugin {
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
         this.shared.setSelection({ anchorNode, anchorOffset });
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     openMediaDialog(params = {}) {

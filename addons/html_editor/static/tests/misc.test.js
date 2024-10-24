@@ -11,7 +11,7 @@ test("can instantiate a Editor", async () => {
     expect(el.innerHTML).toBe(`<p>hello world</p>`);
     expect(getContent(el)).toBe(`<p>hel[lo] world</p>`);
     setContent(el, "<div>a[dddb]</div>");
-    editor.dispatch("FORMAT_BOLD");
+    editor.shared.execCommand("formatBold");
     expect(getContent(el)).toBe(`<div>a<strong>[dddb]</strong></div>`);
 });
 
@@ -35,7 +35,7 @@ test.tags("iframe")("can instantiate a Editor in an iframe", async () => {
     expect(el.innerHTML).toBe(`<p>hello world</p>`);
     expect(getContent(el)).toBe(`<p>hel[lo] world</p>`);
     setContent(el, "<div>a[dddb]</div>");
-    editor.dispatch("FORMAT_BOLD");
+    editor.shared.execCommand("formatBold");
     expect(getContent(el)).toBe(`<div>a<strong>[dddb]</strong></div>`);
 });
 

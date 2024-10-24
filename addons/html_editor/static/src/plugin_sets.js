@@ -57,8 +57,11 @@ import { FilePlugin } from "@html_editor/others/embedded_components/plugins/file
 import { TableOfContentPlugin } from "@html_editor/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin";
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
+import { NoInlineRootPlugin } from "./core/no_inline_root_plugin";
+import { UserCommandPlugin } from "./core/user_command_plugin";
 
 export const CORE_PLUGINS = [
+    UserCommandPlugin,
     ClipboardPlugin,
     CommentPlugin,
     DeletePlugin,
@@ -72,6 +75,7 @@ export const CORE_PLUGINS = [
     ProtectedNodePlugin,
     SanitizePlugin,
     SelectionPlugin,
+    NoInlineRootPlugin,
     SplitPlugin,
 ];
 

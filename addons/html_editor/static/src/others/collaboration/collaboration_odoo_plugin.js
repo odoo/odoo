@@ -4,6 +4,7 @@ import { user } from "@web/core/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { PeerToPeer, RequestError } from "./PeerToPeer";
+import { trigger } from "@html_editor/utils/resource";
 
 /**
  * @typedef {Object} CollaborationSelection
@@ -50,6 +51,11 @@ export class CollaborationOdooPlugin extends Plugin {
                 }
             );
         }, 50),
+        clean_for_save_listeners: ({ root }) => this.attachHistoryIds(root),
+        history_missing_parent_step_listeners: this.onHistoryMissingParentStep.bind(this),
+        history_reseted_listeners: this.onReset.bind(this),
+        step_added_listeners: ({ step }) =>
+            this.ptp?.notifyAllPeers("oe_history_step", step, { transport: "rtc" }),
     };
 
     setup() {
@@ -96,23 +102,6 @@ export class CollaborationOdooPlugin extends Plugin {
         // todo: to implement
         // clearInterval(this.collaborationInterval);
         super.destroy();
-    }
-
-    handleCommand(commandName, payload) {
-        switch (commandName) {
-            case "HISTORY_MISSING_PARENT_STEP":
-                this.onHistoryMissingParentStep(payload);
-                break;
-            case "STEP_ADDED":
-                this.ptp?.notifyAllPeers("oe_history_step", payload.step, { transport: "rtc" });
-                break;
-            case "CLEAN_FOR_SAVE":
-                this.attachHistoryIds(payload.root);
-                break;
-            case "HISTORY_RESET":
-                this.onReset(payload.content);
-                break;
-        }
     }
 
     stopPeerToPeer() {
@@ -269,9 +258,7 @@ export class CollaborationOdooPlugin extends Plugin {
                 },
             },
             onNotification: async (notification) => {
-                for (const cb of this.getResource("handleCollaborationNotification")) {
-                    cb(notification);
-                }
+                trigger(this.getResource("handleCollaborationNotification"), notification);
                 let { fromPeerId, notificationName, notificationPayload } = notification;
                 switch (notificationName) {
                     case "ptp_remove":
@@ -361,7 +348,7 @@ export class CollaborationOdooPlugin extends Plugin {
      * @param {CollaborationSelection} selection
      */
     onExternalMultiselectionUpdate(selection) {
-        this.getResource("collaborativeSelectionUpdate").forEach((cb) => cb(selection));
+        trigger(this.getResource("collaborativeSelectionUpdate"), selection);
     }
 
     async requestPeer(peerId, requestName, requestPayload, params) {
@@ -597,7 +584,8 @@ export class CollaborationOdooPlugin extends Plugin {
         // content here is trusted
         this.editable.innerHTML = content;
         stripHistoryIds(this.editable);
-        this.dispatch("NORMALIZE", { node: this.editable });
+        trigger(this.getResource("normalize_listeners"), this.editable);
+
         this.shared.reset(content);
 
         // After resetting from the server, try to resynchronise with a peer as

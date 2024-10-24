@@ -3,7 +3,7 @@ import { Component, useExternalListener, useState } from "@odoo/owl";
 export class TablePicker extends Component {
     static template = "html_editor.TablePicker";
     static props = {
-        dispatch: Function,
+        insertTable: Function,
         editable: {
             validate: (el) => el.nodeType === Node.ELEMENT_NODE,
         },
@@ -67,7 +67,7 @@ export class TablePicker extends Component {
     }
 
     insertTable() {
-        this.props.dispatch("INSERT_TABLE", { cols: this.state.cols, rows: this.state.rows });
+        this.props.insertTable({ cols: this.state.cols, rows: this.state.rows });
         this.props.overlay.close();
     }
 }

@@ -9,8 +9,17 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class ChatGPTPlugin extends Plugin {
     static name = "chatgpt";
-    static dependencies = ["selection", "history", "dom", "sanitize", "dialog"];
+    static dependencies = ["selection", "history", "dom", "sanitize", "dialog", "user_command"];
     resources = {
+        user_commands: [
+            {
+                id: "openChatGPTDialog",
+                label: _t("ChatGPT"),
+                description: _t("Generate or transform content with AI."),
+                icon: "fa-magic",
+                run: this.openDialog.bind(this),
+            },
+        ],
         toolbarCategory: withSequence(50, {
             id: "ai",
         }),
@@ -18,53 +27,40 @@ export class ChatGPTPlugin extends Plugin {
             {
                 id: "translate",
                 category: "ai",
-                title: _t("Translate with AI"),
+                label: _t("Translate with AI"),
                 isAvailable: (selection) => {
                     return !selection.isCollapsed;
                 },
                 Component: LanguageSelector,
+                props: {
+                    onSelected: (language) => {
+                        this.shared.execCommand("openChatGPTDialog", { language });
+                    },
+                },
             },
             {
                 id: "chatgpt",
                 category: "ai",
-                title: _t("Generate or transform content with AI."),
-                action(dispatch) {
-                    dispatch("OPEN_CHATGPT_DIALOG");
-                },
-                icon: "fa-magic",
+                commandId: "openChatGPTDialog",
                 text: "AI",
             },
         ],
 
         powerboxCategory: withSequence(70, { id: "ai", name: _t("AI Tools") }),
         powerboxItems: {
-            name: _t("ChatGPT"),
-            description: _t("Generate or transform content with AI."),
             searchKeywords: [_t("AI")],
             category: "ai",
-            fontawesome: "fa-magic",
-            action(dispatch) {
-                dispatch("OPEN_CHATGPT_DIALOG");
-            },
+            commandId: "openChatGPTDialog",
             // isAvailable: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
         },
     };
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "OPEN_CHATGPT_DIALOG": {
-                this.openDialog(payload);
-                break;
-            }
-        }
-    }
 
     openDialog(params = {}) {
         const selection = this.shared.getEditableSelection();
         const dialogParams = {
             insert: (content) => {
                 const insertedNodes = this.shared.domInsert(content);
-                this.dispatch("ADD_STEP");
+                this.shared.addStep();
                 // Add a frame around the inserted content to highlight it for 2
                 // seconds.
                 const start = insertedNodes?.length && closestElement(insertedNodes[0]);

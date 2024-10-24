@@ -11,25 +11,30 @@ import { TablePicker } from "./table_picker";
  */
 export class TableUIPlugin extends Plugin {
     static name = "table_ui";
-    static dependencies = ["overlay", "table"];
+    static dependencies = ["history", "overlay", "table", "user_command"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                id: "table",
-                name: _t("Table"),
+                id: "openPickerOrInsertTable",
+                label: _t("Table"),
                 description: _t("Insert a table"),
-                category: "structure",
-                fontawesome: "fa-table",
-                action: (dispatch) => {
-                    if (this.services.ui.isSmall) {
-                        dispatch("INSERT_TABLE", { cols: 3, rows: 3 });
-                    } else {
-                        dispatch("OPEN_TABLE_PICKER");
-                    }
-                },
+                icon: "fa-table",
+                run: this.openPickerOrInsertTable.bind(this),
+            },
+            {
+                id: "openTablePicker",
+                label: _t("Table"),
+                icon: "fa-table",
+                run: this.openPicker.bind(this),
             },
         ],
-        powerButtons: ["table"],
+        powerboxItems: [
+            {
+                category: "structure",
+                commandId: "openPickerOrInsertTable",
+            },
+        ],
+        powerButtons: ["openPickerOrInsertTable"],
     };
 
     setup() {
@@ -85,23 +90,23 @@ export class TableUIPlugin extends Plugin {
         this.addDomListener(this.document, "scroll", closeMenus, true);
     }
 
-    handleCommand(command) {
-        switch (command) {
-            case "OPEN_TABLE_PICKER":
-                this.openPicker();
-                break;
-        }
-    }
-
     openPicker() {
         this.picker.open({
             props: {
-                dispatch: this.dispatch,
                 editable: this.editable,
                 overlay: this.picker,
                 direction: this.config.direction || "ltr",
+                insertTable: (params) => this.shared.execCommand("insertTable", params),
             },
         });
+    }
+
+    openPickerOrInsertTable() {
+        if (this.services.ui.isSmall) {
+            this.shared.execCommand("insertTable", { cols: 3, rows: 3 });
+        } else {
+            this.openPicker();
+        }
     }
 
     onMouseMove(ev) {
@@ -152,15 +157,30 @@ export class TableUIPlugin extends Plugin {
         if (!td) {
             return;
         }
+        const wrapAddStep = (fn) => {
+            return (...args) => {
+                fn(...args);
+                this.shared.addStep();
+            };
+        };
+        const tableMethods = {
+            moveColumn: wrapAddStep(this.shared.moveColumn),
+            addColumn: wrapAddStep(this.shared.addColumn),
+            removeColumn: wrapAddStep(this.shared.removeColumn),
+            moveRow: wrapAddStep(this.shared.moveRow),
+            addRow: wrapAddStep(this.shared.addRow),
+            removeRow: wrapAddStep(this.shared.removeRow),
+            resetTableSize: wrapAddStep(this.shared.resetTableSize),
+        };
         if (td.cellIndex === 0) {
             this.rowMenu.open({
                 target: td,
                 props: {
                     type: "row",
-                    dispatch: this.dispatch,
                     overlay: this.rowMenu,
                     target: td,
                     dropdownState: this.createDropdownState(this.colMenu),
+                    ...tableMethods,
                 },
             });
         }
@@ -169,11 +189,11 @@ export class TableUIPlugin extends Plugin {
                 target: td,
                 props: {
                     type: "column",
-                    dispatch: this.dispatch,
                     overlay: this.colMenu,
                     target: td,
                     dropdownState: this.createDropdownState(this.rowMenu),
                     direction: this.config.direction || "ltr",
+                    ...tableMethods,
                 },
             });
         }

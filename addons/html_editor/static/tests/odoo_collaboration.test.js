@@ -307,7 +307,7 @@ async function createPeers(peerIds) {
 
 async function insertEditorText(editor, text) {
     await insertText(editor, text);
-    editor.dispatch("ADD_STEP");
+    editor.shared.addStep();
 }
 
 beforeEach(() => {
@@ -1014,7 +1014,7 @@ describe("Disconnect & reconnect", () => {
             const p = document.createElement("p");
             p.textContent = content;
             peer.editor.editable.append(p);
-            peer.editor.dispatch("ADD_STEP");
+            peer.editor.shared.addStep();
         };
 
         setSelection(peers.p1);
@@ -1139,11 +1139,13 @@ describe("History steps Ids", () => {
         const peers = pool.peers;
         const editor = peers.p1.editor;
         await peers.p1.focus();
-        editor.dispatch("SPLIT_BLOCK");
+        editor.shared.splitBlock();
+        editor.shared.addStep();
         expect(getContent(editor.editable)).toBe(
             `<p>a</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
-        editor.dispatch("SPLIT_BLOCK");
+        editor.shared.splitBlock();
+        editor.shared.addStep();
         expect(getContent(editor.editable)).toBe(
             `<p>a</p><p><br></p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );

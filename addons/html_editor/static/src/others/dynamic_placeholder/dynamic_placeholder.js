@@ -8,18 +8,23 @@ export class DynamicPlaceholderPlugin extends Plugin {
     static dependencies = ["overlay", "selection", "history", "dom", "qweb"];
     static shared = ["updateDphDefaultModel"];
     resources = {
+        user_commands: [
+            {
+                id: "openDynamicPlaceholder",
+                label: _t("Dynamic Placeholder"),
+                description: _t("Insert a field"),
+                icon: "fa-hashtag",
+                run: (params = {}) => {
+                    return this.open(params.resModel || this.defaultResModel);
+                },
+            },
+        ],
         powerboxCategory: withSequence(60, { id: "marketing_tools", name: _t("Marketing Tools") }),
         powerboxItems: {
-            id: "dynamic_placeholder",
-            name: _t("Dynamic Placeholder"),
-            description: _t("Insert a field"),
             category: "marketing_tools",
-            fontawesome: "fa-hashtag",
-            action(dispatch) {
-                dispatch("OPEN_DYNAMIC_PLACEHOLDER");
-            },
+            commandId: "openDynamicPlaceholder",
         },
-        powerButtons: ["dynamic_placeholder"],
+        powerButtons: ["openDynamicPlaceholder"],
     };
     setup() {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;
@@ -29,15 +34,6 @@ export class DynamicPlaceholderPlugin extends Plugin {
             hasAutofocus: true,
             className: "popover",
         });
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "OPEN_DYNAMIC_PLACEHOLDER": {
-                this.open(payload.resModel || this.defaultResModel);
-                break;
-            }
-        }
     }
 
     /**
@@ -82,7 +78,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
         }
 
         this.shared.domInsert(t);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     onClose() {

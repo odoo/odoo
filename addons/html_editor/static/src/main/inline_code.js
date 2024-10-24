@@ -4,7 +4,7 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
     static name = "inline_code";
-    static dependencies = ["selection", "split"];
+    static dependencies = ["selection", "history", "split"];
     resources = {
         onInput: this.onInput.bind(this),
     };
@@ -35,7 +35,7 @@ export class InlineCodePlugin extends Plugin {
         this.shared.setSelection({ anchorNode: textNode, anchorOffset: offset });
         const textHasTwoTicks = /`.*`/.test(textNode.textContent);
         if (textHasTwoTicks) {
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
                 0,
@@ -91,6 +91,6 @@ export class InlineCodePlugin extends Plugin {
                 });
             }
         }
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 }

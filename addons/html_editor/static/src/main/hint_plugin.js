@@ -33,6 +33,9 @@ export class HintPlugin extends Plugin {
             this.clearHints();
             this.updateHints();
         },
+        clean_listeners: this.clearHints.bind(this),
+        clean_for_save_listeners: ({ root }) => this.clearHints(root),
+        content_updated_listeners: this.updateHints.bind(this),
         ...(this.config.placeholder && {
             hints: [
                 {
@@ -51,19 +54,6 @@ export class HintPlugin extends Plugin {
     destroy() {
         super.destroy();
         this.clearHints();
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "CONTENT_UPDATED": {
-                this.updateHints(payload.root);
-                break;
-            }
-            case "CLEAN":
-            case "CLEAN_FOR_SAVE":
-                this.clearHints(payload.root);
-                break;
-        }
     }
 
     /**

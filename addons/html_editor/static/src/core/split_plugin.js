@@ -1,3 +1,4 @@
+import { delegate, trigger } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty } from "../utils/dom";
@@ -8,10 +9,11 @@ import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
 export class SplitPlugin extends Plugin {
-    static dependencies = ["selection"];
+    static dependencies = ["selection", "history", "delete"];
     static name = "split";
     static shared = [
         "splitBlock",
+        "splitBlockNode",
         "splitElementBlock",
         "splitElement",
         "splitAroundUntil",
@@ -35,27 +37,16 @@ export class SplitPlugin extends Plugin {
         onBeforeInput: this.onBeforeInput.bind(this),
     };
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SPLIT_BLOCK":
-                this._splitBlock();
-                break;
-            case "SPLIT_BLOCK_NODE":
-                this.splitBlockNode(payload);
-                break;
-        }
-    }
-
     // --------------------------------------------------------------------------
     // commands
     // --------------------------------------------------------------------------
     splitBlock() {
+        trigger(this.getResource("before_split_block_listeners"));
         let selection = this.shared.getEditableSelection();
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
             // this.shared.collapseIfZWS();
-            this.dispatch("RESET_TABLE_SELECTION");
-            this.dispatch("DELETE_SELECTION");
+            this.shared.deleteSelection();
             selection = this.shared.getEditableSelection();
         }
 
@@ -63,10 +54,6 @@ export class SplitPlugin extends Plugin {
             targetNode: selection.anchorNode,
             targetOffset: selection.anchorOffset,
         });
-    }
-    _splitBlock() {
-        this.splitBlock();
-        this.dispatch("ADD_STEP");
     }
 
     /**
@@ -82,10 +69,14 @@ export class SplitPlugin extends Plugin {
         }
         const blockToSplit = closestElement(targetNode, isBlock);
 
-        for (const callback of this.getResource("split_element_block")) {
-            if (callback({ targetNode, targetOffset, blockToSplit })) {
-                return [undefined, undefined];
-            }
+        if (
+            delegate(this.getResource("split_element_block"), {
+                targetNode,
+                targetOffset,
+                blockToSplit,
+            })
+        ) {
+            return [undefined, undefined];
         }
 
         return this.splitElementBlock({ targetNode, targetOffset, blockToSplit });
@@ -104,8 +95,19 @@ export class SplitPlugin extends Plugin {
             // unsplittable.  The check must be done from the targetNode up to
             // the block for unsplittables. There are apparently no tests for
             // this.
-            this.dispatch("INSERT_LINEBREAK_ELEMENT", { targetNode, targetOffset });
-            return [undefined, undefined];
+            // @todo: instead of calling a resource, we should directly use the
+            // method `insertLineBreakElement` of the linebreak plugin. The
+            // reason we don't do it now is because there is a dependency cycle.
+            // We should resolve this todo by resolving the dependency cycle
+            // somehow.
+            if (
+                delegate(this.getResource("split_unsplittable_handlers"), {
+                    targetNode,
+                    targetOffset,
+                })
+            ) {
+                return [undefined, undefined];
+            }
         }
         const restore = prepareUpdate(targetNode, targetOffset);
 
@@ -152,7 +154,7 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement, HTMLElement]}
      */
     splitElement(element, offset) {
-        this.dispatch("CLEAN", { root: element });
+        trigger(this.getResource("clean_listeners"), element);
         // const before = /** @type {HTMLElement} **/ (element.cloneNode());
         /** @type {HTMLElement} **/
         const before = element.cloneNode();
@@ -322,7 +324,8 @@ export class SplitPlugin extends Plugin {
     onBeforeInput(e) {
         if (e.inputType === "insertParagraph") {
             e.preventDefault();
-            this._splitBlock();
+            this.splitBlock();
+            this.shared.addStep();
         }
     }
 }

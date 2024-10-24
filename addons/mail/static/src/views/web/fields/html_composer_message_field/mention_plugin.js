@@ -35,7 +35,7 @@ export class MentionPlugin extends Plugin {
         mentionBlock.appendChild(nameNode);
         this.historySavePointRestore();
         this.shared.domInsert(mentionBlock);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     onBeforeInput(ev) {

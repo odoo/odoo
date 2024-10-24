@@ -13,10 +13,11 @@ const DELAY_TOOLBAR_OPEN = 300;
 
 export class ToolbarPlugin extends Plugin {
     static name = "toolbar";
-    static dependencies = ["overlay", "selection"];
+    static dependencies = ["overlay", "selection", "user_command"];
     static shared = ["getToolbarInfo"];
     resources = {
         onSelectionChange: this.handleSelectionChange.bind(this),
+        step_added_listeners: () => this.updateToolbar(),
     };
 
     setup() {
@@ -27,20 +28,9 @@ export class ToolbarPlugin extends Plugin {
             }
             categoryIds.add(category.id);
         }
-        this.categories = this.getResource("toolbarCategory");
-        this.buttonGroups = [];
-        for (const category of this.categories) {
-            this.buttonGroups.push({
-                ...category,
-                buttons: this.getResource("toolbarItems").filter(
-                    (command) => command.category === category.id
-                ),
-            });
-        }
-        this.buttonsDict = Object.assign(
-            {},
-            ...this.getResource("toolbarItems").map((button) => ({ [button.id]: button }))
-        );
+
+        this.buttonGroups = this.getButtonGroups();
+
         this.isMobileToolbar = hasTouch() && window.visualViewport;
 
         if (this.isMobileToolbar) {
@@ -66,10 +56,6 @@ export class ToolbarPlugin extends Plugin {
             namespace: undefined,
         });
         this.updateSelection = null;
-
-        for (const button of Object.values(this.buttonsDict)) {
-            this.resolveButtonInheritance(button.id);
-        }
 
         this.onSelectionChangeActive = true;
         this.debouncedUpdateToolbar = debounce(this.updateToolbar, DELAY_TOOLBAR_OPEN);
@@ -122,36 +108,64 @@ export class ToolbarPlugin extends Plugin {
         super.destroy();
     }
 
-    handleCommand(command) {
-        switch (command) {
-            case "STEP_ADDED":
-                this.updateToolbar();
-                break;
-        }
-    }
-
-    /**
-     * Resolves the inheritance of a button.
-     *
-     * Copies the properties of the parent button to the child button.
-     *
-     * @param {string} buttonId - The id of the button to resolve inheritance for.
-     * @throws {Error} If the inheritance button is not found.
-     */
-    resolveButtonInheritance(buttonId) {
-        const button = this.buttonsDict[buttonId];
-        if (button.inherit) {
-            const parentButton = this.buttonsDict[button.inherit];
+    getButtons() {
+        const commands = this.shared.getCommands();
+        const toolbarItems = this.getResource("toolbarItems");
+        const buttons = toolbarItems.map((item) => {
+            const command = commands[item.commandId] || {};
+            const label = item.label || command.label;
+            const isAvailable = item.isAvailable || command.isAvailable;
+            const icon = item.icon || command.icon;
+            const button = {
+                ...item,
+            };
+            if (label) {
+                button.label = label;
+            }
+            if (isAvailable) {
+                button.isAvailable = isAvailable;
+            }
+            if (icon && !item.Component) {
+                button.icon = icon;
+            }
+            return button;
+        });
+        const buttonsDict = Object.fromEntries(buttons.map((button) => [button.id, button]));
+        const buttonsWithInheritance = buttons.map((button) => {
+            if (!button.inherit) {
+                return button;
+            }
+            const parentButton = buttonsDict[button.inherit];
             if (!parentButton) {
                 throw new Error(`Inheritance button ${button.inherit} not found`);
             }
-            Object.assign(button, { ...parentButton, ...button });
-        }
+            return { ...parentButton, ...button };
+        });
+        const buttonsWithRun = buttonsWithInheritance.map((button) => {
+            if (!button.Component) {
+                const { commandId, commandParams } = button;
+                button.run = () => this.shared.execCommand(commandId, commandParams);
+            }
+            delete button.commandId;
+            delete button.commandParams;
+            return button;
+        });
+
+        return buttonsWithRun;
+    }
+
+    getButtonGroups() {
+        const buttons = this.getButtons();
+        const categories = this.getResource("toolbarCategory");
+
+        return categories.map((category) => ({
+            ...category,
+            buttons: buttons.filter((button) => button.category === category.id),
+        }));
     }
 
     getToolbarInfo() {
         return {
-            dispatch: this.dispatch,
             buttonGroups: this.buttonGroups,
             getSelection: () => this.shared.getEditableSelection(),
             state: this.state,
@@ -218,7 +232,7 @@ export class ToolbarPlugin extends Plugin {
 
     updateNamespace() {
         const traversedNodes = this.getFilterTraverseNodes();
-        for (const namespace of this.getResource('toolbarNamespace') || []) {
+        for (const namespace of this.getResource("toolbarNamespace") || []) {
             if (namespace.isApplied(traversedNodes)) {
                 this.state.namespace = namespace.id;
                 return;
