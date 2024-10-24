@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="address_autocomplete.AddressAutoCompleteTemplate">
+        <ExtendedAutocomplete
+            value="props.record.data[props.name] || ''"
+            sources="sources"
+            onSelect.bind="onSelect"
+            placeholder="props.placeholder || ''"
+         />
+    </t>
+    <t t-name="address_autocomplete.CharFieldDropdownOption">
+        <strong t-esc="option.formatted_address or '&#160;'"/>
+    </t>
+</templates>

@@ -8,11 +8,11 @@
     'version': '1.0',
     'description': "Assist your users with automatic completion & suggestions when filling their address during checkout",
     'depends': [
-        'website_sale'
+        'website_sale',
+        'address_autocomplete',
     ],
     'data': [
         'views/templates.xml',
-        'views/res_config_settings_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [

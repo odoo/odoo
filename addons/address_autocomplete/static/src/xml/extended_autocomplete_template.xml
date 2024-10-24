@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="address_autocomplete.extended_autocomplete" t-inherit="web.AutoComplete">
+        <xpath expr="//t[@t-foreach='source.options']" position="after">
+            <img class="ms-auto pe-1" src="/website_sale_autocomplete/static/src/img/powered_by_google_on_white.png" alt="Powered by Google"/>
+        </xpath>
+    </t>
+</template>
