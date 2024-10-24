@@ -144,7 +144,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,kanban": `<kanban js_class="project_task_kanban" default_group_by="date_deadline">
+            "project.task,false,kanban": `<kanban js_class="project_task_kanban" default_group_by="date_deadline:month">
                     <templates>
                         <t t-name="card"/>
                     </templates>

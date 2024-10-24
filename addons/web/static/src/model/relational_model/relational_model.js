@@ -15,6 +15,7 @@ import { Record } from "./record";
 import { StaticList } from "./static_list";
 import {
     extractInfoFromGroupData,
+    getAggregateSpecifications,
     getBasicEvalContext,
     getFieldsSpec,
     isRelational,
@@ -254,6 +255,12 @@ export class RelationalModel extends Model {
             config.groupBy = "groupBy" in params ? params.groupBy : config.groupBy;
             // apply default groupBy if any
             if (this.defaultGroupBy && !config.groupBy.length) {
+                if (
+                    !this.defaultGroupBy.includes(':') && 
+                    ['date', 'datetime'].includes(config.fields[this.defaultGroupBy].type)
+                ) {
+                    this.defaultGroupBy = `${this.defaultGroupBy}:month`
+                } 
                 config.groupBy = [this.defaultGroupBy];
             }
             // restrict the number of groupbys if requested
@@ -366,6 +373,7 @@ export class RelationalModel extends Model {
                 config.activeFields[propertiesFieldName] = makeActiveField();
             }
         }
+        // TODO: clean orderBy
         const orderBy = config.orderBy.filter(
             (o) =>
                 o.name === firstGroupByName ||
@@ -684,19 +692,15 @@ export class RelationalModel extends Model {
     }
 
     async _webReadGroup(config, orderBy) {
-        const aggregates = Object.values(config.fields)
-            .filter((field) => field.aggregator && field.name in config.activeFields)
-            .map((field) => `${field.name}:${field.aggregator}`);
         return this.orm.webReadGroup(
             config.resModel,
             config.domain,
-            aggregates,
             [config.groupBy[0]],
+            ['__count', ...getAggregateSpecifications(config.activeFields)],
             {
-                orderby: orderByToString(orderBy),
-                lazy: true,
+                order: orderByToString(orderBy),
                 offset: config.offset,
-                limit: config.limit, // TODO: remove limit when == MAX_integer
+                limit: config.limit !== Number.MAX_SAFE_INTEGER ? config.limit : undefined,
                 context: config.context,
             }
         );

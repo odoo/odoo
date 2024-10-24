@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { loadBundle } from "@web/core/assets";
+import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 const { DateTime } = luxon;
@@ -178,19 +179,12 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             var formattedClicksByDay = {};
             var beginDate;
             for (var i = 0; i < _clicksByDay.length; i++) {
-                // This is a trick to get the date without the local formatting.
-                // We can't simply do .locale("en") because some Odoo languages
-                // are not supported by moment.js (eg: Arabic Syria).
-                // FIXME this now uses luxon, check if this is still needed? Probably can be replaced by deserializeDate
-                const date = DateTime.fromFormat(
-                    _clicksByDay[i]["__domain"].find((el) => el.length && el.includes(">="))[2]
-                        .split(" ")[0], "yyyy-MM-dd"
-                );
+                const date = deserializeDate(_clicksByDay[i]["create_date:day"][0])
                 if (i === 0) {
                     beginDate = date;
                 }
                 formattedClicksByDay[date.setLocale("en").toFormat("yyyy-MM-dd")] =
-                    _clicksByDay[i]["create_date_count"];
+                    _clicksByDay[i]["__count"];
             }
 
             // Process all time line chart data
@@ -242,8 +236,8 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
         return this.orm.readGroup(
             "link.tracker.click",
             [this.links_domain],
-            ["create_date"],
-            ["create_date:day"]
+            ["create_date:day"],
+            ["__count"]
         );
     },
     /**
@@ -254,7 +248,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             "link.tracker.click",
             [this.links_domain],
             ["country_id"],
-            ["country_id"]
+            ["__count"]
         );
     },
     /**
@@ -269,7 +263,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             "link.tracker.click",
             [this.links_domain, ["create_date", ">", aWeekAgoString]],
             ["country_id"],
-            ["country_id"]
+            ["__count"]
         );
     },
     /**
@@ -284,7 +278,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             "link.tracker.click",
             [this.links_domain, ["create_date", ">", aMonthAgoString]],
             ["country_id"],
-            ["country_id"]
+            ["__count"]
         );
     },
 });

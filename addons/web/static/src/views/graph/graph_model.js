@@ -459,10 +459,9 @@ export class GraphModel extends Model {
             const data = await this.orm.webReadGroup(
                 resModel,
                 domain.arrayRepr,
-                measures,
                 groupBy.map((gb) => gb.spec),
+                measures,
                 {
-                    lazy: false, // what is this thing???
                     context: { fill_temporal: true, ...this.searchParams.context },
                 }
             );
@@ -473,7 +472,7 @@ export class GraphModel extends Model {
                 data.groups.length &&
                 domain.arrayRepr.some((leaf) => leaf.length === 3 && leaf[0] == sequential_field)
             ) {
-                const first_date = data.groups[0].__range[sequential_spec].from;
+                const first_date = data.groups[0][sequential_spec][0];
                 const new_domain = Domain.combine(
                     [
                         new Domain([[sequential_field, "<", first_date]]),
@@ -484,10 +483,9 @@ export class GraphModel extends Model {
                 start = await this.orm.webReadGroup(
                     resModel,
                     new_domain,
-                    measures,
                     groupBy.filter((gb) => gb.fieldName != sequential_field).map((gb) => gb.spec),
+                    measures,
                     {
-                        lazy: false, // what is this thing???
                         context: { ...this.searchParams.context },
                     }
                 );
@@ -532,6 +530,8 @@ export class GraphModel extends Model {
                     } else if (type === "selection") {
                         const selected = fields[fieldName].selection.find((s) => s[0] === val);
                         label = selected[1];
+                    } else if (["date", "datetime"].includes(type)) {
+                        label = val[1]
                     } else {
                         label = val;
                     }
@@ -539,10 +539,6 @@ export class GraphModel extends Model {
                 }
 
                 let value = group[measure];
-                if (value instanceof Array) {
-                    // case where measure is a many2one and is used as groupBy
-                    value = 1;
-                }
                 if (!Number.isInteger(value)) {
                     metaData.allIntegers = false;
                 }

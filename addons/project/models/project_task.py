@@ -15,6 +15,7 @@ from odoo.tools import format_list, SQL
 from odoo.addons.resource.models.utils import filter_domain_leaf
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
+from odoo.tools.query import Query
 
 
 PROJECT_TASK_READABLE_FIELDS = {
@@ -200,7 +201,7 @@ class ProjectTask(models.Model):
         domain="[('user_id', '=', uid)]", string='Personal Stages', export_string_translation=False)
     # Personal Stage computed from the user
     personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
-        compute='_compute_personal_stage_id', help="The current user's personal stage.")
+        compute='_compute_personal_stage_id', group_expand='_read_group_personal_stage_type_ids', help="The current user's personal stage.")
     # This field is actually a related field on personal_stage_id.stage_id
     # However due to the fact that personal_stage_id is computed, the orm throws out errors
     # saying the field cannot be searched.
@@ -1979,18 +1980,32 @@ class ProjectTask(models.Model):
             'target': 'new',
         }
 
+    def _read_group_groupby(self, groupby_spec: str, query: Query) -> SQL:
+        # Override for the read_progress which not using base_read_group but _read_group
+        if groupby_spec == 'personal_stage_type_id':
+            return super()._read_group_groupby('personal_stage_type_ids', query)
+        return super()._read_group_groupby(groupby_spec, query)
+
+    def _read_group_orderby(self, order: str, groupby_terms: dict[str, SQL], query: Query) -> tuple[SQL, SQL]:
+        # Override for the read_progress which not using base_read_group but _read_group
+        if order == 'personal_stage_type_id':
+            groupby_terms = {**groupby_terms, 'personal_stage_type_ids': groupby_terms['personal_stage_type_id']}
+            return super()._read_group_orderby('personal_stage_type_ids', groupby_terms, query)
+        return super()._read_group_orderby(order, groupby_terms, query)
+
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        # A read_group can not be performed if records are grouped by personal_stage_type_id as it is a computed field.
-        # personal_stage_type_ids behaves like a M2O from the point of view of the user, we therefore use this field instead.
-        if 'personal_stage_type_id' in groupby and (not lazy or groupby[0] == 'personal_stage_type_id'):
-            groupby = ["personal_stage_type_ids" if field == "personal_stage_type_id" else field for field in groupby] # limitation: problem when both personal_stage_type_id and personal_stage_type_ids appear in read_group, but this has no functional utility
-            result = super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+    def base_read_group(self, domain, groupby=(), aggregates=(), limit=None, offset=0, order=''):
+        # A read_group can not be performed if records are grouped by personal_stage_type_id
+        # as it is a computed field. personal_stage_type_ids behaves like a M2O from the point
+        # of view of the user, we therefore use this field instead.
+        if 'personal_stage_type_id' in groupby:
+            # limitation: problem when both personal_stage_type_id and personal_stage_type_ids appear in read_group, but this has no functional utility
+            groupby = ['personal_stage_type_ids' if field == 'personal_stage_type_id' else field for field in groupby]
+            result = super().base_read_group(domain, groupby, aggregates, limit, offset, order)
             for group in result:
                 group['personal_stage_type_id'] = group.pop('personal_stage_type_ids', False)
-                group['personal_stage_type_id_count'] = group.pop('personal_stage_type_ids_count', 0)
             return result
-        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        return super().base_read_group(domain, groupby, aggregates, limit, offset, order)
 
     # ---------------------------------------------------
     # Project Sharing

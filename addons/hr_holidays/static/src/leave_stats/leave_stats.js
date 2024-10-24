@@ -129,8 +129,7 @@ export class LeaveStatsComponent extends Component {
 
         const dateFrom = date.startOf("year");
         const dateTo = date.endOf("year");
-
-        this.state.leaves = await this.orm.readGroup(
+        this.state.leaves = await this.orm.webReadGroup(
             "hr.leave",
             [
                 ["employee_id", "=", employee[0]],

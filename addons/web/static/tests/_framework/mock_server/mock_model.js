@@ -63,8 +63,6 @@ const { DateTime } = luxon;
  *
  * @typedef {{
  *  __domain: string;
- *  __count: number;
- *  __range: Record<string, any>;
  *  [key: string]: any;
  * }} ModelRecordGroup
  *
@@ -953,14 +951,14 @@ const searchPanelDomainImage = (model, fieldName, domain, setCount = false, limi
         groupIdName = (value) => [value, selection[value]];
     }
     domain = new Domain([...domain, [fieldName, "!=", false]]).toList();
-    const groups = model.read_group(domain, [fieldName], [fieldName], makeKwArgs({ limit }));
+    const groups = model.read_group(domain, [fieldName], ['__count'], makeKwArgs({ limit }));
     /** @type {Map<number, Record<string, any>>} */
     const domainImage = new Map();
     for (const group of groups) {
         const [id, display_name] = groupIdName(group[fieldName]);
         const values = { id, display_name };
         if (setCount) {
-            values.__count = group[fieldName + "_count"];
+            values.__count = group.__count;
         }
         domainImage.set(id, values);
     }
@@ -2147,7 +2145,7 @@ export class Model extends Array {
         const kwargs = getKwArgs(arguments, "domain", "group_by", "progress_bar");
         ({ domain, group_by: groupBy, progress_bar: progressBar } = kwargs);
 
-        const groups = this.read_group(domain, [], [groupBy]);
+        const groups = this.read_group(domain, [groupBy], []);
 
         // Find group by field
         const data = {};
@@ -2623,21 +2621,20 @@ export class Model extends Array {
      * @param {string} [orderby]
      * @param {boolean} [lazy]
      */
-    web_read_group(domain, fields, groupby, limit, offset, orderby, lazy) {
+    web_read_group(domain, groupby, aggregates, limit, offset, order) {
         const kwargs = getKwArgs(
             arguments,
             "domain",
-            "fields",
             "groupby",
+            "aggregates",
             "limit",
             "offset",
-            "orderby",
-            "lazy"
+            "order",
         );
-        ({ domain, fields, groupby, limit, offset, orderby, lazy } = kwargs);
+        ({ domain, groupby, aggregates, limit, offset, order } = kwargs);
 
         const groups = this.read_group(kwargs);
-        const allGroups = this.read_group(domain, ["display_name"], groupby, makeKwArgs({ lazy }));
+        const allGroups = this.read_group(domain, groupby, []);
         return { groups, length: allGroups.length };
     }
 

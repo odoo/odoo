@@ -252,8 +252,8 @@ test("webReadGroup method", async () => {
     await services.orm.webReadGroup(
         "sale.order",
         [["user_id", "=", 2]],
+        ["date_order:month"],
         ["amount_total:sum"],
-        ["date_order"],
         { offset: 1 }
     );
 
@@ -284,11 +284,11 @@ test("readGroup method", async () => {
     });
 
     const { services } = await makeMockEnv();
-    await services.orm.readGroup(
+    await services.orm.webReadGroup(
         "sale.order",
         [["user_id", "=", 2]],
+        ["date_order:month"],
         ["amount_total:sum"],
-        ["date_order"],
         { offset: 1 }
     );
 
@@ -305,11 +305,11 @@ test("test readGroup method removes duplicate values from groupby", async () => 
     });
 
     const { services } = await makeMockEnv();
-    await services.orm.readGroup(
+    await services.orm.webReadGroup(
         "sale.order",
         [["user_id", "=", 2]],
-        ["amount_total:sum"],
         ["date_order:month", "date_order:month"],
+        ["amount_total:sum"],
         { offset: 1 }
     );
 

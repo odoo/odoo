@@ -564,7 +564,7 @@ export class OdooPivotModel extends PivotModel {
             )
             .map((dimension) => `${dimension.nameWithGranularity} ${dimension.order}`)
             .join(",");
-        params.kwargs.orderby = order;
+        params.kwargs.order = order;
         return super._getSubGroups(groupBys, params);
     }
 

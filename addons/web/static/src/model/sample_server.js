@@ -29,10 +29,7 @@ function serializeGroupDateValue(range, field) {
     if (!range) {
         return false;
     }
-    let dateValue = parseServerValue(field, range.to);
-    dateValue = dateValue.minus({
-        [field.type === "date" ? "day" : "second"]: 1,
-    });
+    const dateValue = parseServerValue(field, range[0]);
     return field.type === "date" ? serializeDate(dateValue) : serializeDateTime(dateValue);
 }
 
@@ -52,7 +49,7 @@ function fieldNameRegex(...terms) {
     return new RegExp(`\\b((\\w+)?_)?(${terms.join("|")})(_(\\w+)?)?\\b`);
 }
 
-const MEASURE_SPEC_REGEX = /(?<measure>\w+):(?<aggregateFunction>\w+)(\((?<fieldName>\w+)\))?/;
+const MEASURE_SPEC_REGEX = /(?<fieldName>\w+):(?<aggregateFunction>\w+)/;
 const DESCRIPTION_REGEX = fieldNameRegex("description", "label", "title", "subject", "message");
 const EMAIL_REGEX = fieldNameRegex("email");
 const PHONE_REGEX = fieldNameRegex("phone");
@@ -169,6 +166,10 @@ export class SampleServer {
     _aggregateFields(measures, records) {
         const values = {};
         for (const { fieldName, type, aggregateFunction } of measures) {
+            if (fieldName == "__count") {
+                values["__count"] = (records || []).length
+                continue;
+            }
             if (["float", "integer", "monetary"].includes(type)) {
                 if (aggregateFunction === "array_agg") {
                     values[fieldName] = (records || []).map((r) => r[fieldName]);
@@ -205,7 +206,7 @@ export class SampleServer {
         const { type, interval, relation } = options;
         if (["date", "datetime"].includes(type)) {
             const fmt = SampleServer.FORMATS[interval];
-            return parseDate(value).toFormat(fmt);
+            return [value, parseDate(value).toFormat(fmt)];
         } else if (["many2one", "many2many"].includes(type)) {
             const rec = this.data[relation].records.find(({ id }) => id === value);
             return [value, rec.display_name];
@@ -399,25 +400,19 @@ export class SampleServer {
      *
      * @param {Object} params
      * @param {string} params.model
-     * @param {string[]} [params.fields] defaults to the list of all fields
      * @param {string[]} params.groupBy
-     * @param {boolean} [params.lazy=true]
+     * @param {string[]} params.aggregates
      * @returns {Object[]} Object with keys groups and length
      */
     _mockReadGroup(params) {
-        const lazy = "lazy" in params ? params.lazy : true;
         const model = params.model;
+        const groupBy = params.groupBy;
         const fields = this.data[model].fields;
         const records = this.data[model].records;
-
         const normalizedGroupBys = [];
-        let groupBy = [];
-        if (params.groupBy.length) {
-            groupBy = lazy ? [params.groupBy[0]] : params.groupBy;
-        }
+
         for (const groupBySpec of groupBy) {
-            let [fieldName, interval] = groupBySpec.split(":");
-            interval = interval || "month";
+            const [fieldName, interval] = groupBySpec.split(":");
             const { type, relation } = fields[fieldName];
             if (type) {
                 const gb = { fieldName, type, interval, relation, alias: groupBySpec };
@@ -428,7 +423,7 @@ export class SampleServer {
         const groupsFromRecord = (record) => {
             const values = [];
             for (const gb of normalizedGroupBys) {
-                const { fieldName, type } = gb;
+                const { fieldName, type, alias } = gb;
                 let fieldVals;
                 if (["date", "datetime"].includes(type)) {
                     fieldVals = [this._formatValue(record[fieldName], gb)];
@@ -437,7 +432,7 @@ export class SampleServer {
                 } else {
                     fieldVals = [record[fieldName]];
                 }
-                values.push(fieldVals.map((val) => ({ [fieldName]: val })));
+                values.push(fieldVals.map((val) => ({ [alias]: val })));
             }
             const cart = cartesian(...values);
             return cart.map((tuple) => {
@@ -461,36 +456,21 @@ export class SampleServer {
         }
 
         const measures = [];
-        for (const measureSpec of params.fields || Object.keys(fields)) {
+        for (const measureSpec of params.aggregates) {
             const matches = measureSpec.match(MEASURE_SPEC_REGEX);
-            let { fieldName, aggregateFunction, measure } = (matches && matches.groups) || {};
-            if (!aggregateFunction && fieldName in fields && fields[fieldName].aggregator) {
-                aggregateFunction = fields[fieldName].aggregator;
-                measure = fieldName;
+            if (measureSpec == '__count') {
+                measures.push({ fieldName: '__count', type: 'integer', aggregateFunction: 'count'})
+                continue;
             }
-            if (!fieldName && !measure) {
-                continue; // this is for _count measure
-            }
-            const fName = fieldName || measure;
-            const { type } = fields[fName];
-            if (
-                !params.groupBy.includes(fName) &&
-                type &&
-                (type !== "many2one" || aggregateFunction !== "count_distinct")
-            ) {
-                measures.push({ fieldName: fName, type, aggregateFunction });
-            }
+            const { fieldName, aggregateFunction } = (matches && matches.groups) || {};
+            const { type } = fields[fieldName];
+            measures.push({ fieldName, type, aggregateFunction });
         }
 
         let result = [];
         for (const id in groups) {
             const records = groups[id];
-            const group = { __domain: [] };
-            let countKey = `__count`;
-            if (normalizedGroupBys.length && lazy) {
-                countKey = `${normalizedGroupBys[0].fieldName}_count`;
-            }
-            group[countKey] = records.length;
+            const group = { __domain_part: [] };
             const firstElem = records[0];
             const parsedId = JSON.parse(id);
             for (const gb of normalizedGroupBys) {
@@ -499,31 +479,20 @@ export class SampleServer {
                     group[alias] = this._formatValue(parsedId[fieldName], gb);
                 } else {
                     group[alias] = this._formatValue(firstElem[fieldName], gb);
-                    if (["date", "datetime"].includes(type)) {
-                        group.__range = {};
-                        const val = firstElem[fieldName];
-                        if (val) {
-                            const deserialize =
-                                type === "date" ? deserializeDate : deserializeDateTime;
-                            const serialize = type === "date" ? serializeDate : serializeDateTime;
-                            const from = deserialize(val).startOf(gb.interval);
-                            const to = SampleServer.INTERVALS[gb.interval](from);
-                            group.__range[alias] = { from: serialize(from), to: serialize(to) };
-                        } else {
-                            group.__range[alias] = false;
-                        }
-                    }
+                    // TODO: not correct for the date, it's depends of the granularity
                 }
             }
             Object.assign(group, this._aggregateFields(measures, records));
             result.push(group);
         }
         if (normalizedGroupBys.length > 0) {
-            const { alias, interval, type } = normalizedGroupBys[0];
+            const { alias, type } = normalizedGroupBys[0];
             result = arraySortBy(result, (group) => {
                 const val = group[alias];
-                if (["date", "datetime"].includes(type)) {
-                    return parseDate(val, { format: SampleServer.FORMATS[interval] });
+                if (type === "datetime") {
+                    return deserializeDateTime(val);
+                } else if (type === "date") {
+                    return deserializeDate(val);
                 }
                 return val;
             });
@@ -679,10 +648,7 @@ export class SampleServer {
         for (const r of this.data[params.model].records) {
             const group = getSampleFromId(r.id, groups);
             if (["date", "datetime"].includes(groupByField.type)) {
-                r[groupBy] = serializeGroupDateValue(
-                    group.__range[params.groupBy[0]],
-                    groupByField
-                );
+                r[groupBy] = serializeGroupDateValue(group[params.groupBy[0]], groupByField);
             } else if (groupByField.type === "many2one") {
                 r[groupBy] = group[params.groupBy[0]] ? group[params.groupBy[0]][0] : false;
             } else {
@@ -750,25 +716,28 @@ export class SampleServer {
         const groupBy = fullGroupBy.split(":")[0];
         const groupByField = this.data[params.model].fields[groupBy];
         const records = this.data[params.model].records;
-        const fields = params.fields.map((aggregate_spec) => aggregate_spec.split(":")[0])
         for (const g of groups) {
             const recordsInGroup = records.filter((r) => {
                 if (["date", "datetime"].includes(groupByField.type)) {
                     return (
-                        r[groupBy] === serializeGroupDateValue(g.__range[fullGroupBy], groupByField)
+                        r[groupBy] === serializeGroupDateValue(g[fullGroupBy], groupByField)
                     );
                 } else if (groupByField.type === "many2one") {
                     return (!r[groupBy] && !g[fullGroupBy]) || r[groupBy] === g[fullGroupBy][0];
                 }
                 return r[groupBy] === g[fullGroupBy];
             });
-            for (const field of fields) {
-                const fieldType = this.data[params.model].fields[field].type;
+            for (const aggregateSpec of params.aggregates) {
+                if (aggregateSpec === '__count') {
+                    g.__count = recordsInGroup.length;
+                    continue;
+                }
+                const fieldName = aggregateSpec.split(":")[0];
+                const fieldType = this.data[params.model].fields[fieldName].type;
                 if (["integer, float", "monetary"].includes(fieldType)) {
-                    g[field] = recordsInGroup.reduce((acc, r) => acc + r[field], 0);
+                    g[aggregateSpec] = recordsInGroup.reduce((acc, r) => acc + r[fieldName], 0);
                 }
             }
-            g[`${groupBy}_count`] = recordsInGroup.length;
             g.__recordIds = recordsInGroup.map((r) => r.id);
         }
     }

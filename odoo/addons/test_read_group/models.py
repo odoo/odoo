@@ -64,6 +64,8 @@ class Test_Read_GroupOrder(models.Model):
     date = fields.Date()
     company_dependent_name = fields.Char(company_dependent=True)
     many2one_id = fields.Many2one('test_read_group.order')
+    name = fields.Char()
+    fold = fields.Boolean()
 
     @property
     def _order(self):
@@ -75,7 +77,8 @@ class Test_Read_GroupOrder(models.Model):
 class Test_Read_GroupOrderLine(models.Model):
     _description = 'Sales order line'
 
-    order_id = fields.Many2one('test_read_group.order', ondelete='cascade')
+    order_id = fields.Many2one('test_read_group.order')
+    order_expand_id = fields.Many2one('test_read_group.order', group_expand='_read_group_expand_full')
     value = fields.Integer()
     date = fields.Date(related='order_id.date')
 
@@ -137,7 +140,7 @@ class Test_Read_GroupRelated_Foo(models.Model):
     bar_name_sudo = fields.Char('bar_name_sudo', related='bar_id.name')
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
 
-    bar_base_ids = fields.Many2many('bar_name', related='bar_id.base_ids')
+    bar_base_ids = fields.Many2many(related='bar_id.base_ids')
 
 
 class Test_Read_GroupRelated_Base(models.Model):

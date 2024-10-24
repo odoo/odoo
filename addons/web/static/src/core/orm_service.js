@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
+import { Domain } from "@web/core/domain";
 
 /**
  * This ORM service is the standard way to interact with the ORM in python from
@@ -161,17 +162,17 @@ export class ORM {
     /**
      * @param {string} model
      * @param {import("@web/core/domain").DomainListRepr} domain
-     * @param {string[]} fields
      * @param {string[]} groupby
+     * @param {string[]} aggregates
      * @param {any} [kwargs={}]
      * @returns {Promise<any[]>}
      */
-    readGroup(model, domain, fields, groupby, kwargs = {}) {
+    readGroup(model, domain, groupby, aggregates, kwargs = {}) {
         validateArray("domain", domain);
-        validatePrimitiveList("fields", "string", fields);
+        validatePrimitiveList("aggregates", "string", aggregates);
         validatePrimitiveList("groupby", "string", groupby);
         groupby = [...new Set(groupby)];
-        return this.call(model, "read_group", [], { ...kwargs, domain, fields, groupby });
+        return this.call(model, "base_read_group", [], { domain, groupby, aggregates, ...kwargs, });
     }
 
     /**
@@ -233,15 +234,20 @@ export class ORM {
      * @param {any} [kwargs={}]
      * @returns {Promise<any[]>}
      */
-    webReadGroup(model, domain, fields, groupby, kwargs = {}) {
+    webReadGroup(model, domain, groupby, aggregates, kwargs = {}) {
         validateArray("domain", domain);
-        validatePrimitiveList("fields", "string", fields);
         validatePrimitiveList("groupby", "string", groupby);
+        validatePrimitiveList("aggregates", "string", aggregates);
         return this.call(model, "web_read_group", [], {
-            ...kwargs,
-            groupby,
             domain,
-            fields,
+            groupby,
+            aggregates,
+            ...kwargs,
+        }).then((res) => {
+            for (const group of res.groups) {
+                group['__domain'] = Domain.and([domain, group['__domain_part']]).toList();
+            }
+            return res;
         });
     }
 
@@ -317,6 +323,7 @@ export const ormService = {
         "nameGet",
         "read",
         "readGroup",
+        "webReadGroup",
         "search",
         "searchRead",
         "unlink",

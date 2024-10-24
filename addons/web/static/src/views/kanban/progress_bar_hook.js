@@ -1,7 +1,7 @@
 import { reactive } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
-import { extractInfoFromGroupData } from "@web/model/relational_model/utils";
+import { extractInfoFromGroupData, getAggregateSpecifications } from "@web/model/relational_model/utils";
 
 const FALSE = Symbol("False");
 
@@ -192,12 +192,12 @@ class ProgressBarState {
         );
         const { context, fields, groupBy, resModel } = this.model.root;
         const kwargs = { context };
-        const fieldNames = [...this._aggregateFields.map((f) => f.name), group.groupByField.name];
+        const aggregateSpecs = getAggregateSpecifications(fields);
         const domain = filterDomain
             ? Domain.and([group.groupDomain, filterDomain]).toList()
             : group.groupDomain;
         return this.model.orm
-            .webReadGroup(resModel, domain, fieldNames, groupBy, kwargs)
+            .webReadGroup(resModel, domain, groupBy, aggregateSpecs, kwargs)
             .then((res) => {
                 if (res.length) {
                     const groupByField = group.groupByField;
@@ -231,14 +231,12 @@ class ProgressBarState {
 
     async _updateAggregates() {
         const { context, fields, groupBy, domain, resModel } = this.model.root;
-        const fieldsName = this._aggregateFields.map((f) => f.name);
-        const firstGroupByName = groupBy[0].split(":")[0];
         const kwargs = { context };
         const res = await this.model.orm.webReadGroup(
             resModel,
             domain,
-            [...fieldsName, firstGroupByName],
             groupBy,
+            getAggregateSpecifications(this._aggregateFields),
             kwargs
         );
         this._aggregateValues = _groupsToAggregateValues(res.groups, groupBy, fields);

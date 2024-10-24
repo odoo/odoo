@@ -2655,7 +2655,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     @api.readonly
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """Get the list of records in list view grouped by the given ``groupby`` fields.
+        """Deprecated - Get the list of records in list view grouped by the given ``groupby`` fields.
 
         :param list domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
                      list to match all records.
@@ -2693,6 +2693,7 @@ class BaseModel(metaclass=MetaModel):
         :rtype: [{'field_name_1': value, ...}, ...]
         :raise AccessError: if user is not allowed to access requested information
         """
+        warnings.warn('Since 18.0, read_group is deprecated used _read_group or web_read_group instead')
 
         groupby = [groupby] if isinstance(groupby, str) else groupby
         lazy_groupby = groupby[:1] if lazy else groupby
