@@ -13,3 +13,8 @@ class MrpProduction(models.Model):
         if not self.env.context.get('from_project_action'):
             for production in self:
                 production.project_id = production.bom_id.project_id
+
+    def action_generate_bom(self):
+        action = super().action_generate_bom()
+        action['context']['default_project_id'] = self.project_id.id
+        return action
