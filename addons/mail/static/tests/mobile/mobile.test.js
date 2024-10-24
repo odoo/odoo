@@ -52,3 +52,13 @@ test("show loading on initial opening", async () => {
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin", { count: 0 });
     await contains(".o-mail-NotificationItem", { text: "General" });
 });
+
+test("can leave channel in mobile", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-ChatWindow-command", { text: "General" });
+    await contains(".o-dropdown-item", { text: "Leave" });
+});
