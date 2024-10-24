@@ -8,7 +8,7 @@ from threading import Thread
 import time
 import urllib3
 
-from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.websocket_client import WebsocketClient
 
 _logger = logging.getLogger(__name__)
@@ -90,11 +90,13 @@ class Manager(Thread):
             _logger.info('Ignoring sending the devices to the database: no associated database')
 
     def run(self):
-        """
-        Thread that will load interfaces and drivers and contact the odoo server with the updates
+        """Thread that will load interfaces and drivers and contact the odoo server
+        with the updates. It will also reconnect to the Wi-Fi if the connection is lost.
         """
         helpers.migrate_old_config_files_to_new_config_file()
-        server_url = helpers.get_odoo_server_url()
+        wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
+        # Only contact db if connected to the internet
+        server_url = helpers.get_odoo_server_url() if wifi.get_current() else None
 
         helpers.start_nginx_server()
         _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))

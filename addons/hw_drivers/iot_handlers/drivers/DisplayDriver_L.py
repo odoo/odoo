@@ -7,7 +7,6 @@ import logging
 import netifaces as ni
 import os
 import subprocess
-import socket
 import threading
 import time
 import urllib3
@@ -17,7 +16,7 @@ from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
-from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.tools.misc import file_open
 
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '../../views'))
@@ -238,14 +237,15 @@ class DisplayController(http.Controller):
             if 'wlan' in iface_id or 'eth' in iface_id:
                 iface_obj = ni.ifaddresses(iface_id)
                 ifconfigs = iface_obj.get(ni.AF_INET, [])
-                essid = helpers.get_ssid()
+                essid = wifi.get_current() or wifi.get_access_point_ssid()
+                is_ethernet = 'eth' in iface_id
                 for conf in ifconfigs:
                     if conf.get('addr'):
                         display_ifaces.append({
                             'iface_id': iface_id,
-                            'essid': essid,
+                            'essid': 'Ethernet' if is_ethernet else essid,
                             'addr': conf.get('addr'),
-                            'icon': 'sitemap' if 'eth' in iface_id else 'wifi',
+                            'icon': 'sitemap' if is_ethernet else 'wifi',
                         })
 
         default_display = DisplayDriver.get_default_display()
@@ -258,7 +258,7 @@ class DisplayController(http.Controller):
             'cust_js': cust_js,
             'display_ifaces': display_ifaces,
             'display_identifier': display_identifier,
-            'hostname': socket.gethostname(),
+            'hostname': helpers.get_hostname(),
             'pairing_code': connection_manager.pairing_code,
         })
 
