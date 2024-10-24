@@ -4051,11 +4051,12 @@ class TestMrpOrder(TestMrpCommon):
         ])
 
         # Set a different duration, finish the wo and validate the second bo
-        bo_2.workorder_ids.button_start()
-        bo_2.workorder_ids.duration = 100
-        bo_2.workorder_ids.button_finish()
-        self.assertRecordValues(bo_2.workorder_ids, [
-            {'qty_produced': 4.0, 'qty_remaining': 0.0, 'duration_expected': 165.0, 'duration': 100.0, 'state': 'done'}
-        ])
-        bo_2.button_mark_done()
-        self.assertRecordValues(bo_2, [{'qty_produced': 4.0, 'state': 'done'}])
+        with freeze_time('2024-01-01 00:00:00'):
+            bo_2.workorder_ids.button_start()
+            bo_2.workorder_ids.duration = 100
+            bo_2.workorder_ids.button_finish()
+            self.assertRecordValues(bo_2.workorder_ids, [
+                {'qty_produced': 4.0, 'qty_remaining': 0.0, 'duration_expected': 165.0, 'duration': 100.0, 'state': 'done'}
+            ])
+            bo_2.button_mark_done()
+            self.assertRecordValues(bo_2, [{'qty_produced': 4.0, 'state': 'done'}])
