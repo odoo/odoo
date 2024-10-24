@@ -8,9 +8,11 @@ import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update
 import { deleteConfirmationMessage, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class AttendeeCalendarModel extends CalendarModel {
-    setup(params, { dialog }) {
+    static services = [...CalendarModel.services, "dialog", "orm"];
+
+    setup(params, services) {
         super.setup(...arguments);
-        this.dialog = dialog;
+        this.dialog = services.dialog;
         this.rpc = rpc;
     }
 
@@ -208,4 +210,3 @@ export class AttendeeCalendarModel extends CalendarModel {
         await this.load();
     }
 }
-AttendeeCalendarModel.services = [...CalendarModel.services, "dialog", "orm"];
