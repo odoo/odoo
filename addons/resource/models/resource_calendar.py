@@ -134,6 +134,12 @@ class ResourceCalendar(models.Model):
                     (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
             })
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if (self.env['resource.resource'].search([('company_id', '=', self._origin.company_id.id), ('calendar_id', '=', self.id.origin)])):
+            raise ValidationError(_("You cannot change the company of a calendar that is linked to resources. "
+                                    "Duplicate or unlink the resources first."))
+
     @api.depends('tz')
     def _compute_tz_offset(self):
         for calendar in self:
