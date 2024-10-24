@@ -12,6 +12,7 @@ class SaleOrder(models.Model):
         string="Available Product Documents",
         comodel_name='quotation.document',
         compute='_compute_available_product_document_ids',
+        check_company=True,
     )
     is_pdf_quote_builder_available = fields.Boolean(
         compute='_compute_is_pdf_quote_builder_available',
@@ -20,6 +21,7 @@ class SaleOrder(models.Model):
         string="Headers/Footers",
         comodel_name='quotation.document',
         readonly=False,
+        check_company=True,
     )
     customizable_pdf_form_fields = fields.Json(
         string="Customizable PDF Form Fields",
@@ -32,7 +34,8 @@ class SaleOrder(models.Model):
     def _compute_available_product_document_ids(self):
         for order in self:
             order.available_product_document_ids = self.env['quotation.document'].search(
-                [], order='sequence'
+                ['|', ('company_id', '=', False), ('company_id', 'parent_of', self.company_id.id)],
+                order='sequence',
             ).filtered(lambda doc:
                 self.sale_order_template_id in doc.quotation_template_ids
                 or not doc.quotation_template_ids

@@ -15,6 +15,7 @@ class QuotationDocument(models.Model):
         'ir.attachment': 'ir_attachment_id',
     }
     _order = 'document_type desc, sequence, name'
+    _check_company_auto = True
 
     ir_attachment_id = fields.Many2one(
         string="Related attachment",
@@ -37,6 +38,7 @@ class QuotationDocument(models.Model):
         string="Quotation Templates",
         comodel_name='sale.order.template',
         relation='header_footer_quotation_template_rel',
+        check_company=True,
     )
     form_field_ids = fields.Many2many(
         string="Form Fields Included",
