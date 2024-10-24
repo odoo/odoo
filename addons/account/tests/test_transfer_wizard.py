@@ -423,6 +423,54 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         adjustment_move = created_moves[1]  # There are 2 created moves; the adjustment move is the second one.
         self.assertRecordValues(adjustment_move, [{'date': fields.Date.to_date('2019-03-31')}])
 
+    def test_period_change_tax_lock_date(self):
+        """ If there is only a tax lock date, we should be able to proceed with the flow"""
+        move = self.env['account.move'].create({
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'date': '2019-01-01',
+            'line_ids': [
+                # Base Tax line
+                Command.create({
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'tax_ids': [(6, 0, self.tax_sale_a.ids)],
+                }),
+
+                # Tax line
+                Command.create({
+                    'debit': 0.0,
+                    'credit': 15.0,
+                    'account_id': self.accounts[0].id,
+                }),
+
+                # Receivable line
+                Command.create({
+                    'debit': 115,
+                    'credit': 0.0,
+                    'account_id': self.receivable_account.id,
+                }),
+            ]
+        })
+        move.action_post()
+
+        # Set the tax lock date
+        move.company_id.write({'tax_lock_date': '2019-02-28'})
+
+        # Open the transfer wizard at a date after the lock date
+        wizard = self.env['account.automatic.entry.wizard'] \
+            .with_context(active_model='account.move.line', active_ids=move.line_ids[0].ids) \
+                .create({
+                'action': 'change_period',
+                'date': '2019-05-01',
+                'journal_id': self.company_data['default_journal_misc'].id,
+            })
+
+        # Check that there is no lock message
+        self.assertRecordValues(wizard, [{
+            'lock_date_message': False,
+        }])
+
     def test_transfer_wizard_amount_currency_is_zero(self):
         """ Tests that the transfer wizard create a transfer move when the amount_currency is zero.
         """
