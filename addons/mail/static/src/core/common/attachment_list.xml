@@ -21,7 +21,7 @@
                     aria-label="View image"
                     role="menuitem"
                     t-att-data-mimetype="attachment.mimetype"
-                    t-on-click="() => this.fileViewer.open(attachment, props.attachments)"
+                    t-on-click="() => this.onOpen(attachment)"
                 >
                     <img
                         class="img img-fluid my-0 mx-auto o-viewable"
@@ -60,7 +60,7 @@
                     }"
                     t-attf-class="bg-300"
                     t-att-title="attachment.name ? attachment.name : undefined" role="menu" t-att-aria-label="attachment.name"
-                    t-on-click="() => this.fileViewer.open(attachment, props.attachments)"
+                    t-on-click="() => this.onOpen(attachment)"
                 >
                     <!-- o_image from mimetype.scss -->
                     <t t-ref="nonImageMain">

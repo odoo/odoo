@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.FileViewer" t-inherit="web.FileViewer" t-inherit-mode="primary">
+    <xpath expr="//div[@role='toolbar']/div[@title='Download']" position="after">
+        <div t-if="ui.isSmall" class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="onClickUnlink" title="Remove" role="button">
+            <i class="fa fa-fw fa-trash" role="img"/>
+        </div>
+    </xpath>
+</t>
+
+</templates>
