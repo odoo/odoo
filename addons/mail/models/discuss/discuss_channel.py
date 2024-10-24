@@ -647,6 +647,20 @@ class Channel(models.Model):
             ),
             (self, "discuss.channel/new_message", payload),
         ]
+        # notify mentioned internal users with access which are not member
+        if "partner_ids" in msg_vals:
+            member_partner_ids = self.env['discuss.channel.member'].with_context(active_test=False).search([
+                ('partner_id', '!=', self.env.user.partner_id.id),
+                ('channel_id', '=', self.id)
+            ]).mapped('partner_id.id')
+            for p in self.env["res.partner"].browse([pid for pid in msg_vals["partner_ids"] if pid not in member_partner_ids]):
+                bus_notifications.append((p, 'discuss.channel/mentioned', {
+                                'channel': {
+                                    **self._channel_basic_info(),
+                                    "is_pinned": True,
+                                },
+                                'mentioned_by_user_id': self.env.user.id,
+                }))
         # sudo: bus.bus - sending on safe channel (discuss.channel)
         self.env["bus.bus"].sudo()._sendmany(bus_notifications)
         return rdata

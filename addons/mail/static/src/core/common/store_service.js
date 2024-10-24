@@ -90,6 +90,7 @@ export class Store extends BaseStore {
     users = {};
     /** @type {number} */
     internalUserGroupId;
+    partnersWithAccess = Record.many("Persona");
     /** @type {number} */
     mt_comment_id;
     /** @type {boolean} */
