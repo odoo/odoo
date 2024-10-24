@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -364,7 +363,6 @@ READ_GROUP_NUMBER_GRANULARITY = {
 }
 
 READ_GROUP_ALL_TIME_GRANULARITY = READ_GROUP_TIME_GRANULARITY | READ_GROUP_NUMBER_GRANULARITY
-
 
 
 # valid SQL aggregation functions
@@ -2526,7 +2524,7 @@ class BaseModel(metaclass=MetaModel):
                         if granularity == 'week':
                             year, week = date_utils.weeknumber(
                                 babel.Locale.parse(locale),
-                                range_start,
+                                value,  # provide date or datetime without UTC conversion
                             )
                             label = f"W{week} {year:04}"
 
@@ -4124,7 +4122,6 @@ class BaseModel(metaclass=MetaModel):
             res = self.read(LOG_ACCESS_COLUMNS)
         else:
             res = [{'id': x} for x in self.ids]
-
 
         xml_data = defaultdict(list)
         imds = IrModelData.search_read(
