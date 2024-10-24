@@ -19,6 +19,12 @@ websiteSaleCheckout.include({
             const cart_summary_discount_rewards = document.querySelectorAll(
                 '[data-reward-type=discount]'
             );
+            if (!cart_summary_discount_rewards.length) {
+                // return in case the current XML template hasn't been adjusted yet to
+                // add data-reward-type attributes when displaying prices tax-included,
+                // leading to an endless refresh cycle
+                return;
+            }
             if (cart_summary_discount_rewards.length !== result.discount_reward_amounts.length) {
                 // refresh cart summary to sync number of discount items
                 location.reload();
