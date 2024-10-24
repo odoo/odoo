@@ -7,9 +7,7 @@ import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
     static components = { Orderline, OrderWidget };
-    static props = {
-        disallow: { type: Boolean, optional: true },
-    };
+    static props = {};
 
     setup() {
         this.pos = usePos();
@@ -80,6 +78,15 @@ export class SplitBillScreen extends Component {
         return `${latestOrderName.slice(0, -1)}${nextChar}`;
     }
 
+<<<<<<< master
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+    createSplittedOrder() {
+=======
+    // Meant to be overridden
+    async preSplitOrder(originalOrder, newOrder) {}
+    async postSplitOrder(originalOrder, newOrder) {}
+
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
     async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
@@ -89,8 +96,7 @@ export class SplitBillScreen extends Component {
         const newOrder = this.pos.createNewOrder(await this.pos.getNextOrderRefs());
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
-        newOrder.originalSplittedOrder = originalOrder;
-
+        await this.preSplitOrder(originalOrder, newOrder);
         // Create lines for the new order
         const lineToDel = [];
         for (const line of originalOrder.lines) {
@@ -132,6 +138,7 @@ export class SplitBillScreen extends Component {
         }
 
         originalOrder.customer_count -= 1;
+        await this.postSplitOrder(originalOrder, newOrder);
         originalOrder.set_screen_data({ name: "ProductScreen" });
         this.pos.selectedOrderUuid = null;
         this.pos.set_order(newOrder);

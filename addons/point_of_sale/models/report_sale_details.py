@@ -301,12 +301,15 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
         invoiceList = []
         invoiceTotal = 0
+        totalPaymentsAmount = 0
+
         for session in sessions:
             invoiceList.append({
                 'name': session.name,
                 'invoices': session._get_invoice_total_list(),
             })
             invoiceTotal += session._get_total_invoice()
+            totalPaymentsAmount += session.total_payments_amount
 
         for payment in payments:
             if payment.get('id'):
@@ -320,7 +323,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'nbr_orders': len(orders),
             'date_start': date_start,
             'date_stop': date_stop,
-            'session_name': session_name if session_name else False,
+            'session_name': session_name or False,
             'config_names': config_names,
             'payments': payments,
             'company_name': self.env.company.name,
@@ -336,7 +339,11 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'discount_amount': discount_amount,
             'invoiceList': invoiceList,
             'invoiceTotal': invoiceTotal,
+            'total_paid': totalPaymentsAmount,
         }
+
+    def _get_product_total_amount(self, line):
+        return line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
 
     def _get_products_and_taxes_dict(self, line, products, taxes, currency):
         key2 = (line.product_id, line.price_unit, line.discount)
@@ -344,7 +351,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         products.setdefault(key1, {})
         products[key1].setdefault(key2, [0.0, 0.0, 0.0])
         products[key1][key2][0] += line.qty
-        products[key1][key2][1] += line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
+        products[key1][key2][1] += self._get_product_total_amount(line)
         products[key1][key2][2] += line.price_subtotal
 
         if line.tax_ids_after_fiscal_position:
