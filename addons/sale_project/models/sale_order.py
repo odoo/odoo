@@ -147,7 +147,7 @@ class SaleOrder(models.Model):
                 action['views'] = [(form_view_id, 'form')]
                 action['res_id'] = self.tasks_ids.id
         # filter on the task of the current SO
-        action['domain'] = [('id', 'in', self.tasks_ids.ids)]
+        action['domain'] = [('project_id', 'in', self.project_ids.ids), '|', ('sale_order_id', '=', self.id), ('sale_line_id', 'in', self.order_line.ids)]
         action.setdefault('context', {})
         return action
 
