@@ -198,7 +198,8 @@ export class FormOptionPlugin extends Plugin {
         so_content_addition_selectors: [".s_website_form"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
-        is_unremovable_selectors: ".s_website_form_send, .s_website_form_submit",
+        is_unremovable_selectors:
+            ".s_website_form_send, .s_website_form_submit, .s_website_form_field:has(#confirm_password)",
         immutable_link_selectors: [".s_website_form_send"],
     };
     setup() {
