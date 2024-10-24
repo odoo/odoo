@@ -995,13 +995,13 @@ export class Record extends DataPoint {
                 this.data[fieldName]._abandonRecords();
             }
         }
+        if (!this._checkValidity({ displayNotification: true })) {
+            return false;
+        }
         const changes = this._getChanges();
         delete changes.id; // id never changes, and should not be written
         if (!creation && !Object.keys(changes).length) {
             return true;
-        }
-        if (!this._checkValidity({ displayNotification: true })) {
-            return false;
         }
         if (
             this.model._urgentSave &&

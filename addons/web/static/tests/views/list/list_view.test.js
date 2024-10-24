@@ -2410,45 +2410,6 @@ test(`opening records when clicking on record`, async () => {
     expect.verifySteps(["openRecord", "openRecord"]);
 });
 
-test(`open invalid but unchanged record`, async () => {
-    const listView = registry.category("views").get("list");
-    class CustomListController extends listView.Controller {
-        openRecord(record) {
-            expect.step(`open record ${record.resId}`);
-            return super.openRecord(record);
-        }
-    }
-    registry.category("views").add(
-        "custom_list",
-        {
-            ...listView,
-            Controller: CustomListController,
-        },
-        { force: true }
-    );
-
-    mockService("notification", {
-        add() {
-            expect.step("should not display a notification");
-        },
-    });
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <list js_class="custom_list">
-                <field name="foo"/>
-                <field name="date" required="1"/>
-            </list>`,
-    });
-
-    // second record is invalid as date is not set
-    expect(".o_data_row:eq(1) .o_data_cell[name=date]").toHaveText("");
-    await contains(".o_data_row:eq(1) .o_data_cell").click();
-    expect.verifySteps(["open record 2"]);
-});
-
 test(`execute an action before and after each valid save in a list view`, async () => {
     const listView = registry.category("views").get("list");
     class CustomListController extends listView.Controller {
