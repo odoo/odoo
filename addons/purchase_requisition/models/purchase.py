@@ -135,6 +135,9 @@ class PurchaseOrder(models.Model):
             else:
                 self.env['purchase.order.group'].create({'order_ids': [Command.set(origin_po_id.ids + orders.ids)]})
         for order in orders:
+            if order.partner_id and order.partner_id.property_purchase_currency_id:
+                # Set the partner's currency
+                order.currency_id = order.partner_id.property_purchase_currency_id.id
             if order.requisition_id:
                 order.message_post_with_source(
                     'mail.message_origin_link',

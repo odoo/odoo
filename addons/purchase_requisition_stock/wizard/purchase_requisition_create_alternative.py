@@ -7,8 +7,8 @@ from odoo import api, Command, models
 class PurchaseRequisitionCreateAlternative(models.TransientModel):
     _inherit = ['purchase.requisition.create.alternative']
 
-    def _get_alternative_values(self):
-        vals = super(PurchaseRequisitionCreateAlternative, self)._get_alternative_values()
+    def _get_alternative_values(self, partner):
+        vals = super()._get_alternative_values(partner)
         vals.update({
             'picking_type_id': self.origin_po_id.picking_type_id.id,
             'group_id': self.origin_po_id.group_id.id,
