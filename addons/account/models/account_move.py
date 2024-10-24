@@ -3473,9 +3473,9 @@ class AccountMove(models.Model):
                             - sum(x['balance'] for x in res['base_lines'][payment_term_line].values()) \
                             - sum(x['balance'] for x in res['tax_lines'][payment_term_line].values())
 
-            last_tax_line = (list(res['tax_lines'][payment_term_line].values()) or list(res['base_lines'][payment_term_line].values()))[-1]
-            last_tax_line['amount_currency'] += delta_amount_currency
-            last_tax_line['balance'] += delta_balance
+            biggest_base_line = max(list(res['base_lines'][payment_term_line].values()), key=lambda x: x['amount_currency'])
+            biggest_base_line['amount_currency'] += delta_amount_currency
+            biggest_base_line['balance'] += delta_balance
 
         else:
             grouping_dict = {'account_id': cash_discount_account.id}
