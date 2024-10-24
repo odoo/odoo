@@ -1,33 +1,28 @@
 /** @odoo-module **/
 
-import publicWidget from "@web/legacy/js/public/public_widget";
-import VariantMixin from "@website_sale/js/sale_variant_mixin";
-import wSaleUtils from "@website_sale/js/website_sale_utils";
-const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
-import "@website/libs/zoomodoo/zoomodoo";
-import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
-import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
-import { rpc } from "@web/core/network/rpc";
-import { debounce, throttleForAnimation } from "@web/core/utils/timing";
-import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import { isBrowserFirefox, hasTouch } from "@web/core/browser/feature_detection";
-import { Component } from "@odoo/owl";
+import { rpc } from "@web/core/network/rpc";
+import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { throttleForAnimation } from "@web/core/utils/timing";
+import publicWidget from "@web/legacy/js/public/public_widget";
+
+import "@website/libs/zoomodoo/zoomodoo";
+import { extraMenuUpdateCallbacks } from "@website/js/content/menu";
+import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
+import VariantMixin from "@website_sale/js/sale_variant_mixin";
+import { cartHandlerMixin } from "@website_sale/js/website_sale_utils";
+
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
     events: Object.assign({}, VariantMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
-        'mouseup .js_publish': '_onMouseupPublish',
-        'touchend .js_publish': '_onMouseupPublish',
-        'change .oe_cart input.js_quantity[data-product-id]': '_onChangeCartQuantity',
-        'click .oe_cart a.js_add_suggested_products': '_onClickSuggestedProduct',
         'click a.js_add_cart_json': '_onClickAddCartJSON',
         'click .a-submit': '_onClickSubmit',
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
-        'click .toggle_summary': '_onToggleSummary',
         'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
@@ -46,15 +41,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     init: function () {
         this._super.apply(this, arguments);
 
-        this._changeCartQuantity = debounce(this._changeCartQuantity.bind(this), 500);
-
         this.isWebsite = true;
         this.filmStripStartX = 0;
         this.filmStripIsDown = false;
         this.filmStripScrollLeft = 0;
         this.filmStripMoved = false;
-
-        delete this.events['change [data-attribute_exclusions]'];
     },
     /**
      * @override
@@ -66,12 +57,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         // This has to be triggered to compute the "out of stock" feature and the hash variant changes
         this.triggerVariantChange(this.$el);
-
-        listenSizeChange(() => {
-            if (uiUtils.getSize() === SIZES.XL) {
-                $('.toggle_summary_div').addClass('d-none d-xl-block');
-            }
-        })
 
         this._startZoom();
 
@@ -198,43 +183,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     _changeAttribute: function (valueSelectors) {
         valueSelectors.forEach((selector) => {
             $(selector).removeClass("active").filter(":has(input:checked)").addClass("active");
-        });
-    },
-    /**
-     * @private
-     */
-    _changeCartQuantity: function ($input, value, $dom_optional, line_id, productIDs) {
-        $($dom_optional).toArray().forEach((elem) => {
-            $(elem).find('.js_quantity').text(value);
-            productIDs.push($(elem).find('span[data-product-id]').data('product-id'));
-        });
-        $input.data('update_change', true);
-
-        rpc("/shop/cart/update_json", {
-            line_id: line_id,
-            product_id: parseInt($input.data('product-id'), 10),
-            set_qty: value,
-            display: true,
-        }).then((data) => {
-            $input.data('update_change', false);
-            var check_value = parseInt($input.val() || 0, 10);
-            if (isNaN(check_value)) {
-                check_value = 1;
-            }
-            if (value !== check_value) {
-                $input.trigger('change');
-                return;
-            }
-            if (!data.cart_quantity) {
-                return window.location = '/shop/cart';
-            }
-            $input.val(data.quantity);
-            $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
-
-            wSaleUtils.updateCartNavBar(data);
-            wSaleUtils.showWarning(data.notification_info.warning);
-            // Propagating the change to the express checkout forms
-            Component.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
         });
     },
     /**
@@ -469,40 +417,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      * @param {Event} ev
      */
-    _onMouseupPublish: function (ev) {
-        $(ev.currentTarget).parents('.thumbnail').toggleClass('disabled');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangeCartQuantity: function (ev) {
-        var $input = $(ev.currentTarget);
-        if ($input.data('update_change')) {
-            return;
-        }
-        var value = parseInt($input.val() || 0, 10);
-        if (isNaN(value)) {
-            value = 1;
-        }
-        var $dom = $input.closest('tr');
-        // var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
-        var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
-        var line_id = parseInt($input.data('line-id'), 10);
-        var productIDs = [parseInt($input.data('product-id'), 10)];
-        this._changeCartQuantity($input, value, $dom_optional, line_id, productIDs);
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickSuggestedProduct: function (ev) {
-        $(ev.currentTarget).prev('input').val(1).trigger('change');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onClickSubmit: function (ev) {
         if ($(ev.currentTarget).is('#add_to_cart, #products_grid .a-submit')) {
             return;
@@ -605,13 +519,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         this._setUrlHash($component);
 
         return VariantMixin.onChangeVariant.apply(this, arguments);
-    },
-    /**
-     * @private
-     */
-    _onToggleSummary: function () {
-        $('.toggle_summary_div').toggleClass('d-none');
-        $('.toggle_summary_div').removeClass('d-xl-block');
     },
     /**
      * @private

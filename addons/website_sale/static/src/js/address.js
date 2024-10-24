@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     // /shop/address
