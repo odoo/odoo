@@ -169,8 +169,21 @@
         </xpath>
     </template>
 
+<<<<<<< 18.0
     <template id="cart_summary" name="Payment" inherit_id="website_sale.cart_product_price">
         <xpath expr="//span" position="attributes">
+||||||| d391f7b9d87849624d067746f1c9db0dc401a2ae
+    <template id="cart_summary" name="Payment" inherit_id="website_sale.checkout_layout">
+        <xpath expr="//td[@name='website_sale_cart_summary_line_price']/child::*" position="attributes">
+=======
+    <template id="cart_summary" name="Payment" inherit_id="website_sale.checkout_layout">
+        <!-- `tax_excluded` line price -->
+        <xpath expr="//td[@name='website_sale_cart_summary_line_price']/*[1]" position="attributes">
+            <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
+        </xpath>
+        <!-- `tax_included` line price -->
+        <xpath expr="//td[@name='website_sale_cart_summary_line_price']/*[2]" position="attributes">
+>>>>>>> 29612626357a15dfc429dddd2fd358169e3e1957
             <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
         </xpath>
     </template>
