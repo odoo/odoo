@@ -3,19 +3,22 @@
 import base64
 import json
 import psycopg2
+import contextlib
 
 from markupsafe import Markup
 from psycopg2 import IntegrityError
 import re
+import werkzeug
 from werkzeug.exceptions import BadRequest
 
-from odoo import http, SUPERUSER_ID
+from odoo import http, SUPERUSER_ID, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
 from odoo.tools.translate import _, LazyTranslate
+from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 
 _lt = LazyTranslate(__name__)
 
@@ -334,3 +337,127 @@ class WebsiteForm(http.Controller):
             # attach the custom binary field files on the attachment_ids field.
             for attachment_id_id in orphan_attachment_ids:
                 record.attachment_ids = [(4, attachment_id_id)]
+
+
+class WebsiteAuthSignupHome(AuthSignupHome):
+
+    @http.route()
+    def web_auth_signup(self, *args, **kwargs):
+        response = super().web_auth_signup(*args, **kwargs)
+
+        if "error" in response.qcontext:
+            error_data = response.qcontext["error"]
+            if isinstance(error_data, str):
+                with contextlib.suppress(json.JSONDecodeError):
+                    error_data = json.loads(error_data)
+            error_response = {
+                "error": error_data["error"] if isinstance(error_data, dict) else error_data
+            }
+            if isinstance(error_data, dict) and error_data.get("field"):
+                error_response.update({"error_fields": {error_data["field"]: error_data["field"]}})
+            return request.make_response(
+                json.dumps(error_response),
+                headers=[("Content-Type", "application/json")]
+            )
+
+        login = kwargs.get("login")
+        user_domain = self.env['res.users']._get_login_domain(login)
+        users = self.env['res.users'].sudo().search(user_domain)
+        if not users:
+            return response
+
+        # Prepare message for non-existing fields.
+        partner = users.partner_id
+        message_body_parts, attachments = self._prepare_message_for_non_existing_field(partner, kwargs)
+
+        # Log message in chatter
+        if message_body_parts or attachments:
+            partner._message_log(
+                body=tools.html_sanitize(''.join(message_body_parts)),
+                attachment_ids=[(6, 0, attachments)] if attachments else [],
+                message_type="comment",
+            )
+
+        return request.make_response(
+            json.dumps({"id": users.id}),
+            headers=[("Content-Type", "application/json")]
+        )
+
+    def _prepare_signup_values(self, qcontext):
+        if qcontext.get('password') != qcontext.get('confirm_password'):
+            error_data = {"error": _("Passwords do not match."), "field": "confirm_password"}
+            raise UserError(json.dumps(error_data))
+
+        values = super()._prepare_signup_values(qcontext)
+        params = dict(request.params)
+
+        # This method is also called when the user is redirected to the reset
+        # password page. In that case, we don't want to update the values.
+        if request.httprequest.path == "/web/reset_password":
+            return values
+
+        existing_fields = set(self.env["res.users"]._fields.keys())
+        filtered_params = {}
+        for key, value in params.items():
+            if isinstance(value, werkzeug.datastructures.FileStorage):
+                # Normalize key to remove any indexing (e.g., image_1920[0][0]
+                # → image_1920 / image_1024[0][0] → image_1024)
+                normalized_key = key.split('[')[0]
+                if normalized_key in existing_fields:
+                    if not value.mimetype.startswith("image/"):
+                        raise UserError(_("Only image files are allowed."))
+                    filtered_params[normalized_key] = base64.b64encode(value.read()).decode("utf-8")
+
+            elif key in existing_fields:
+                filtered_params[key] = value
+
+        values.update(filtered_params)
+        return values
+
+    def _prepare_message_for_non_existing_field(self, partner, kwargs):
+        """
+        Prepare message body and attachments for fields in kwargs that do not
+        exist on res.users.
+        Returns (message_body_parts, attachments)
+        """
+        existing_fields = set(self.env["res.users"]._fields.keys())
+        non_existing_fields = {}
+        for key, value in kwargs.items():
+            if key == "confirm_password":
+                continue
+            if isinstance(value, werkzeug.datastructures.FileStorage):
+                # Normalize key to remove index pattern (e.g.,
+                # 'image_1920[1][0]' → 'image_1920')
+                normalized_key = key.split('[')[0]
+                if normalized_key in existing_fields:
+                    continue
+            # Keep all other unknown fields
+            if key not in existing_fields:
+                non_existing_fields[key] = value
+
+        # Separate text fields and file attachments
+        attachments, text_fields = [], {}
+        for key, value in non_existing_fields.items():
+            if isinstance(value, werkzeug.datastructures.FileStorage):
+                attachment = self.env["ir.attachment"].sudo().create({
+                    "name": value.filename,
+                    "datas": base64.b64encode(value.read()).decode("utf-8"),
+                    "res_model": "res.partner",
+                    "res_id": partner.id,
+                    "mimetype": value.content_type,
+                })
+                attachments.append(attachment.id)
+            else:
+                text_fields[key] = value
+
+        # Prepare message body
+        message_body_parts = []
+        if text_fields:
+            message_body_parts.append("<p><strong>Other Information:</strong></p><ul>")
+            message_body_parts.extend(
+                f"<li><strong>{key}:</strong> {value}</li>" for key, value in text_fields.items()
+            )
+            message_body_parts.append("</ul>")
+        if attachments:
+            message_body_parts.append("<p><strong>📎 Attachment Files</strong></p>")
+        return message_body_parts, attachments

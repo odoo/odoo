@@ -359,9 +359,14 @@ export class Form extends Interaction {
         for (const [key, value] of Object.entries(formValues)) {
             formData.append(key, value);
         }
-
+        // The reason for this change is to ensure the signup form controller
+        // (`/web/signup`) is called correctly.
+        let actionUrl = this.el.getAttribute("action");
+        if (!this.el.dataset.customUrlSubmit) {
+            actionUrl += this.el.dataset.force_action || this.el.dataset.model_name;
+        }
         // Post form and handle result
-        return post(this.el.getAttribute("action") + (this.el.dataset.force_action || this.el.dataset.model_name), formData)
+        return post(actionUrl, formData)
             .then(async (resultData) => {
                 if (!resultData.id) {
                     // Failure, the server didn't return the created record ID
