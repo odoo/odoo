@@ -7978,6 +7978,11 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                     const defaultSnippetName = _.str.sprintf(_t("Custom %s"), this.data.snippetName);
                                     const targetCopyEl = this.$target[0].cloneNode(true);
                                     targetCopyEl.classList.add('s_custom_snippet');
+                                    // when cloning the s_popup, it doesn't re-populate/open.
+                                    // so we needs to remove `d-none` explicity.
+                                    if (targetCopyEl.classList.contains("s_popup")) {
+                                        targetCopyEl.classList.remove("d-none");
+                                    }
                                     delete targetCopyEl.dataset.name;
                                     // By the time onSuccess is called after request_save, the
                                     // current widget has been destroyed and is orphaned, so this._rpc
