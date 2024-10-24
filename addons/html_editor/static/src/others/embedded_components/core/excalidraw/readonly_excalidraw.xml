@@ -16,7 +16,7 @@
                 <iframe class="flex-grow-1 position-relative" t-att-src="templateState.source" allowfullscreen="true"/>
                 <div t-if="!isMobile" t-on-mousedown.prevent="onHandleMouseDown"
                     t-attf-class="{{ this.displayState.isResizing ? 'visible' : '' }} o_embedded_draw_handle o_embedded_draw_handle_right fa fa-arrows-h align-self-end position-absolute bottom-0 end-0"/>
-                <a title="Open in new Window" t-att-href="templateState.source" target="_blank" role="button" class="fa fa-external-link end-0 top-0 position-absolute pe-3 pt-3"/>
+                <a title="Open in new Window" t-att-href="templateState.source" target="_blank" role="button" class="btn btn-secondary end-0 top-0 mt-1 me-1 position-absolute">Open</a>
             </div>
         </div>
     </t>
