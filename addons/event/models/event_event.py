@@ -239,7 +239,6 @@ class EventEvent(models.Model):
             ('A6', 'A6'),
             ('four_per_sheet', '4 per sheet'),
             ('96x82', '96x82mm (Badge Printer)'),
-            ('96x134', '96x134mm (Badge Printer)')
         ], default='A6', required=True)
     badge_image = fields.Image('Badge Background', max_width=1024, max_height=1024)
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
