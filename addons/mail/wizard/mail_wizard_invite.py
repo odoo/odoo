@@ -18,7 +18,7 @@ class Invite(models.TransientModel):
     res_id = fields.Integer('Related Document ID', help='Id of the followed resource')
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     message = fields.Html('Message')
-    notify = fields.Boolean('Notify Recipients', default=True)
+    notify = fields.Boolean('Notify Recipients', default=False)
 
     def add_followers(self):
         if not self.env.user.email:
