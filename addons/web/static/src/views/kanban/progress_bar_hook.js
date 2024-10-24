@@ -246,8 +246,7 @@ class ProgressBarState {
 
     async _updateProgressBar() {
         const groupBy = this.model.root.groupBy;
-        const defaultGroupBy = this.model.root.defaultGroupBy;
-        if (groupBy.length || defaultGroupBy) {
+        if (groupBy.length) {
             const resModel = this.model.root.resModel;
             const domain = this.model.root.domain;
             const context = this.model.root.context;
@@ -255,7 +254,7 @@ class ProgressBarState {
             const groupsId = this.model.root.groups.map((g) => g.id).join();
             const res = await this.model.orm.call(resModel, "read_progress_bar", [], {
                 domain,
-                group_by: groupBy.length ? groupBy[0] : defaultGroupBy,
+                group_by: groupBy.length ? groupBy[0] : [],
                 progress_bar: { colors, field, help },
                 context,
             });
