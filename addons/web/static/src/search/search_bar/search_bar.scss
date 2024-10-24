@@ -10,10 +10,22 @@
     }
 
     animation: animate .25s ease-out;
+    max-width: 100%;
 
     .btn, .btn:focus {
         // Boostrap plays around with the z-index of buttons, but this is not needed here
         // It was causing issues with the hotkey overlay
         z-index: 0;
+    }
+
+    .o_facet_values {
+        overflow: hidden;
+    }
+
+    .o_facet_value {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 16rem;
     }
 }
