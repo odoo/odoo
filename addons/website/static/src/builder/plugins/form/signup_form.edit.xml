@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Password Field: only used by the passwords of the signup form, whose
+        layout is kept when the form builder renders them again. -->
+    <t t-name="website.form_field_password">
+        <t t-call="website.form_field">
+            <div class="o_caps_lock_warning">
+                <div class="input-group mb-1">
+                    <input
+                        type="password"
+                        class="form-control s_website_form_input"
+                        t-att-name="field.name"
+                        t-att-required="field.required || field.modelRequired || None"
+                        t-att-placeholder="field.placeholder"
+                        t-att-id="field.id"
+                        t-att-minlength="field.minLength"
+                        t-att-maxlength="field.maxLength"
+                        autocomplete="new-password"
+                    />
+                    <button type="button" class="btn btn-sm border border-start-0 o_show_password">
+                        <i class="oi" data-icon="visibility"/>
+                    </button>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>
