@@ -1,9 +1,8 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
-import { onExternalClick } from "@mail/utils/common/hooks";
 import { useEffect, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useService, onExternalClick } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
 import { isIOS } from "@web/core/browser/feature_detection";

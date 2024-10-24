@@ -1,5 +1,4 @@
 import { ChannelSelector } from "@mail/discuss/core/web/channel_selector";
-import { onExternalClick } from "@mail/utils/common/hooks";
 
 import { patch } from "@web/core/utils/patch";
 import {
@@ -7,7 +6,7 @@ import {
     DiscussSidebarChannel,
 } from "../public_web/discuss_sidebar_categories";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useService, onExternalClick } from "@web/core/utils/hooks";
 import { useEffect, useState } from "@odoo/owl";
 
 DiscussSidebarCategory.components = { ...DiscussSidebarCategory.components, ChannelSelector };

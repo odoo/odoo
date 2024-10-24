@@ -12,7 +12,7 @@ import { rpc } from "@web/core/network/rpc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
-
+import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import {
     Component,
     markup,
@@ -142,7 +142,13 @@ export class Composer extends Component {
         useChildSubEnv({
             inComposer: true,
         });
-        this.picker = usePicker(this.pickerSettings);
+        if (!this.ui.isSmall || !this.env.inChatter) {
+            this.picker = usePicker(this.pickerSettings);
+        } else {
+            useEmojiPicker(this.emojiButton, {
+                onSelect: (emoji) => this.addEmoji(emoji),
+            });
+        }
         useEffect(
             (focus) => {
                 if (focus && this.ref.el) {
