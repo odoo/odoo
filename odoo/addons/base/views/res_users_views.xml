@@ -202,9 +202,10 @@
                         <div class="oe_title">
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. John Doe" required="1"/></h1>
-                            <field name="email" invisible="1"/><!-- needed to update partner's email from on_change_login() -->
-                            <label for="login" string="Email Address"/>
-                            <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
+                            <label for="login" string="Login ID"/>
+                            <h2><field name="login" placeholder="e.g. Administrator"/></h2>
+                            <label for="email" string="Email Address"/>
+                            <h2><field name="email" placeholder="e.g. email@yourcompany.com"/></h2>
                             <group>
                                 <field name="partner_id" groups="base.group_no_one"
                                         readonly="1"

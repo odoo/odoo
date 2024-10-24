@@ -453,6 +453,10 @@
                 <br/>Please contact us directly for that operation.
             </small>
         </div>
+        <div t-attf-class="mb-3 #{error.get('login') and 'o_has_error' or ''} col-xl-12">
+            <label class="col-form-label" for="login">Login ID</label>
+            <input type="text" name="login" t-attf-class="form-control #{error.get('login') and 'is-invalid' or ''}" t-att-value="login" />
+        </div>
         <div t-attf-class="mb-3 #{error.get('name') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label" for="name">Name</label>
             <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="name or partner.name" />

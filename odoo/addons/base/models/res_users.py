@@ -557,10 +557,10 @@ class ResUsers(models.Model):
     def _search_res_users_settings_id(self, operator, operand):
         return [('res_users_settings_ids', operator, operand)]
 
-    @api.onchange('login')
-    def on_change_login(self):
-        if self.login and tools.single_email_re.match(self.login):
-            self.email = self.login
+    # @api.onchange('login')
+    # def on_change_login(self):
+    #     if self.login and tools.single_email_re.match(self.login):
+    #         self.email = self.login
 
     @api.onchange('parent_id')
     def onchange_parent_id(self):

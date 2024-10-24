@@ -202,7 +202,12 @@ class CustomerPortal(Controller):
                         values[field] = False
                 values.update({'zip': values.pop('zipcode', '')})
                 self.on_account_update(values, partner)
+                login = values["login"]
+                del values["login"]
                 partner.sudo().write(values)
+                if request.env.user.login != login:
+                    request.env.user.write({"login": login})
+                    request.session.logout()
                 if redirect:
                     return request.redirect(redirect)
                 return request.redirect('/my/home')
@@ -211,6 +216,7 @@ class CustomerPortal(Controller):
         states = request.env['res.country.state'].sudo().search([])
 
         values.update({
+            'login': request.env.user.login,
             'partner': partner,
             'countries': countries,
             'states': states,
@@ -364,7 +370,7 @@ class CustomerPortal(Controller):
 
     def _get_mandatory_fields(self):
         """ This method is there so that we can override the mandatory fields """
-        return ["name", "phone", "email", "street", "city", "country_id"]
+        return ["name", "phone", "email", "street", "city", "country_id", "login"]
 
     def _get_optional_fields(self):
         """ This method is there so that we can override the optional fields """
