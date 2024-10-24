@@ -185,17 +185,13 @@ class AccountMove(models.Model):
             exclude_amount += order_amount_company
         return exclude_amount
 
+    # todo need to remove both the field and compute method in master as this field is neither used in python nor in XML
     @api.depends('line_ids.sale_line_ids.order_id', 'currency_id', 'tax_totals', 'date')
     def _compute_partner_credit(self):
         super()._compute_partner_credit()
         for move in self.filtered(lambda m: m.is_invoice(include_receipts=True)):
             sale_orders = move.line_ids.sale_line_ids.order_id
-            amount_total_currency = move.currency_id._convert(
-                move.tax_totals['amount_total'],
-                move.company_currency_id,
-                move.company_id,
-                move.date
-            )
+            amount_total_currency = move.tax_totals['total_amount_currency']
             amount_to_invoice_currency = sum(
                 sale_order.currency_id._convert(
                     sale_order.amount_to_invoice,
