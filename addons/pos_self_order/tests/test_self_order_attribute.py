@@ -112,3 +112,29 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.assertEqual(order.lines[0].price_unit, 10.0)
         self.assertEqual(order.lines[1].product_id.id, chair_product_tmpl.product_variant_ids[1].id)
         self.assertEqual(order.lines[1].price_unit, 15.0)
+
+    def test_self_order_product_info(self):
+        self.pos_config.write({
+            'self_ordering_default_user_id': self.pos_admin.id,
+            'self_ordering_takeaway': False,
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'counter',
+        })
+
+        pos_categ_misc = self.env['pos.category'].create({
+            'name': 'Miscellaneous',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Info Test',
+            'available_in_pos': True,
+            'list_price': 1,
+            'pos_categ_ids': [(4, pos_categ_misc.id)],
+            'public_description': 'Nice Product'
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self_route = self.pos_config._get_self_order_route()
+
+        self.start_tour(self_route, "self_order_product_info")
