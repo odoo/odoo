@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import datetime
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
@@ -43,6 +43,17 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'department_id': cls.rd_dept.id,
         })
         cls.employee_emp_id = cls.employee_emp.id
+
+        if 'hr.contract' in cls.env:
+
+            employee_contract = cls.env['hr.contract'].create({
+                'name': "employee's contract",
+                'employee_id': cls.employee_emp.id,
+                'date_start': datetime.date(2010, 1, 1),
+                'date_end': False,
+                'wage': 2500
+            })
+            employee_contract.write({'state': 'open'})
 
         cls.employee_hruser = cls.env['hr.employee'].create({
             'name': 'Armande HrUser',
