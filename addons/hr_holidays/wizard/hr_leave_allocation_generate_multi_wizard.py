@@ -93,7 +93,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
                 mail_notify_force_send=False,
                 mail_activity_automation_skip=True
             ).create(vals_list)
-            allocations.filtered(lambda c: c.validation_type != 'no_validation').action_validate()
+            allocations.filtered(lambda c: c.validation_type != 'no_validation').action_approve()
 
             return {
                 'type': 'ir.actions.act_window',

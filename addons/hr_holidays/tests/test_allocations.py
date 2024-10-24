@@ -213,7 +213,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee.id,
             'date_from': date(2024, 1, 1),
         })
-        allocation.action_validate()
+        allocation.action_approve()
 
         leave_request = self.env['hr.leave'].create({
             'name': 'Leave Request',
@@ -239,7 +239,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 1, 1),
             'date_to': date(2024, 1, 30),
         })
-        allocation_one.action_validate()
+        allocation_one.action_approve()
 
         # Creating the second overlapping allocation
         allocation_two = self.env['hr.leave.allocation'].create({
@@ -250,7 +250,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 1, 20),
             'date_to': date(2024, 2, 20),
         })
-        allocation_two.action_validate()
+        allocation_two.action_approve()
 
         # Creating a leave request consuming days from both allocations
         leave_request = self.env['hr.leave'].create({
@@ -286,7 +286,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 1, 1),
             'date_to': date(2024, 4, 30)
         })
-        allocation.action_validate()
+        allocation.action_approve()
 
         second_allocation = self.env['hr.leave.allocation'].sudo().create({
             'name': 'Alloc2',
@@ -297,7 +297,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 5, 1),
             'date_to': date(2024, 12, 31)
         })
-        second_allocation.action_validate()
+        second_allocation.action_approve()
         result = self.env['hr.leave.type'].with_context(
             employee_id=self.employee.id,
             default_date_from='2024-08-18 06:00:00',
