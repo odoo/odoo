@@ -237,3 +237,19 @@ registry.category("web_tour.tours").add("BillScreenTour", {
         BillScreen.isQRCodeShown(),
     ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosRestaurantRewardStay", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            FloorScreen.clickTable("5"),
+
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.totalAmountIs("1.98"),
+            FloorScreen.backToFloor(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.totalAmountIs("1.98"),
+        ].flat()
+})

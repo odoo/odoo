@@ -383,6 +383,7 @@ export class FloorScreen extends Component {
                 }
             }
             const order = this.pos.get_order();
+            order._updateRewards();
             this.pos.showScreen(order.get_screen_data().name);
         }
     }

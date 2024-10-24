@@ -7,6 +7,8 @@ from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
+from odoo import Command
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontendCommon(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
@@ -326,3 +328,35 @@ class TestFrontend(TestFrontendCommon):
         self.env.company.point_of_sale_use_ticket_qr_code = True
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'BillScreenTour', login="pos_admin")
+
+    def test_change_table_rewards_stay(self):
+        """
+        Test that make sure that rewards stay on the order when leaving the table
+        """
+
+        if not self.env["ir.module.module"].search([("name", "=", "pos_loyalty"), ("state", "=", "installed")]):
+            self.skipTest("pos_loyalty module is required for this test")
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'My super program',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+            'pos_config_ids': [Command.link(self.pos_config.id)],
+        })
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.pos_config.id,
+            "PosRestaurantRewardStay",
+            login="pos_admin",
+        )
