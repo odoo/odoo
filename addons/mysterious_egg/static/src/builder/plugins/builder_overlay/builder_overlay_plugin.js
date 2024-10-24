@@ -16,6 +16,10 @@ export class BuilderOverlayPlugin extends Plugin {
         });
     }
 
+    destroy() {
+        this.removeCurrentOverlay?.();
+    }
+
     openBuilderOverlay(toolboxes) {
         const toolbox = toolboxes[0];
         this.removeCurrentOverlay?.();
