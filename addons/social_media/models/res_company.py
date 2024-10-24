@@ -14,3 +14,4 @@ class ResCompany(models.Model):
     social_youtube = fields.Char('Youtube Account')
     social_instagram = fields.Char('Instagram Account')
     social_tiktok = fields.Char('TikTok Account')
+    social_discord = fields.Char("Discord Account")
