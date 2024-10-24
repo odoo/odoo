@@ -754,7 +754,7 @@ registerModel({
         _generateEmojisOnHtml(htmlString) {
             for (const emoji of this.messaging.emojiRegistry.allEmojis) {
                 for (const source of emoji.sources) {
-                    const escapedSource = String(source).replace(
+                    const escapedSource = escape(String(source)).replace(
                         /([.*+?=^!:${}()|[\]/\\])/g,
                         '\\$1');
                     const regexp = new RegExp(
