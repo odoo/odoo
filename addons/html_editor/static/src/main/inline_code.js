@@ -34,7 +34,8 @@ export class InlineCodePlugin extends Plugin {
         }
         this.shared.setSelection({ anchorNode: textNode, anchorOffset: offset });
         const textHasTwoTicks = /`.*`/.test(textNode.textContent);
-        if (textHasTwoTicks) {
+        // We don't apply the code tag if there is no content between the two `
+        if (textHasTwoTicks && textNode.textContent.replace(/`/g, "").length) {
             this.dispatch("ADD_STEP");
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
