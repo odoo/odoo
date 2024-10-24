@@ -1,8 +1,24 @@
 
-.o_list_view .o_field_translate {
-    margin-left: -35px;
-    padding: 0px 1px;
-    text-align: right;
+.btn.o_field_translate {
+    position: absolute;
+    right: 5px;
+    top: 5px;
     width: 35px;
+    padding: 0;
     vertical-align: top;
+    text-align: right;
+    visibility: hidden;
+}
+
+input, textarea {
+    &.o_field_translate {
+        padding-right: 30px;
+    }
+}
+
+.o_field_widget:hover,
+.o_field_widget:focus-within {
+    .btn.o_field_translate {
+        visibility: visible;
+    }
 }
