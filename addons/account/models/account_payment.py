@@ -402,6 +402,7 @@ class AccountPayment(models.Model):
             if (
                 not payment.outstanding_account_id
                 and payment.invoice_ids
+                and self.env['account.move']._get_invoice_in_payment_state() != 'paid'
                 and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids)
             ):
                 payment.state = 'paid'
