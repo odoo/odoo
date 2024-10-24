@@ -52,3 +52,17 @@ registry.category("web_tour.tours").add("self_multi_attribute_selector", {
         ProductPage.verifyIsCheckedAttribute("Attribute 1", ["Attribute Val 1", "Attribute Val 2"]),
     ],
 });
+
+registry.category("web_tour.tours").add("self_order_product_info", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        {
+            trigger: ".self_order_product_card .product-information-tag",
+            run: "click",
+        },
+        {
+            trigger: '.modal-body p:contains("Nice Product")',
+            run: () => {},
+        },
+    ],
+});
