@@ -32,6 +32,8 @@ from odoo.tools.misc import find_in_path
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
 from odoo.tools.safe_eval import safe_eval, time
 
+from .ir_actions import IrActionsActions
+
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -134,9 +136,8 @@ else:
         _logger.info('Wkhtmltoimage seems to be broken.')
 
 
-class IrActionsReport(models.Model):
+class IrActionsReport(models.Model, IrActionsActions):
     _description = 'Report Action'
-    _inherit = ['ir.actions.actions']
     _table = 'ir_act_report_xml'
     _order = 'name, id'
     _allow_sudo_commands = False

@@ -93,12 +93,13 @@ _DEFAULT_MANIFEST = {
 # matches field definitions like
 #     partner_id: base.ResPartner = fields.Many2one
 #     partner_id = fields.Many2one[base.ResPartner]
+#     partner_id = fields.Many2one['base.ResPartner']
 TYPED_FIELD_DEFINITION_RE = re.compile(r'''
     \b (?P<field_name>\w+) \s*
     (:\s*(?P<field_type>[^ ]*))? \s*
     = \s*
     fields\.(?P<field_class>Many2one|One2many|Many2many)
-    (\[(?P<type_param>[^\]]+)\])?
+    (\[['"]?(?P<type_param>[^\]]+)['"]?\])?
 ''', re.VERBOSE)
 
 _logger = logging.getLogger(__name__)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from .ir_module import IrModuleCategory
 
 import binascii
 import contextlib
@@ -1435,8 +1436,7 @@ ResUsersPatchedInTest = ResUsers
 
 # TODO: reorganize or split the file to avoid declaring classes multiple times
 # pylint: disable=E0102
-class ResGroups(models.Model):  # noqa: F811
-    _inherit = ['res.groups']
+class ResGroups(ResGroups):  # noqa: F811
 
     implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
         string='Inherits', help='Users of this group automatically inherit those groups')
@@ -1551,9 +1551,8 @@ class ResGroups(models.Model):  # noqa: F811
         return SetDefinitions(data)
 
 
-class UsersImplied(models.Model):
+class UsersImplied(ResUsers):
     _name = 'res.users'
-    _inherit = ['res.users']
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1610,8 +1609,7 @@ class UsersImplied(models.Model):
 
 
 # pylint: disable=E0102
-class ResGroups(models.Model):  # noqa: F811
-    _inherit = ['res.groups']
+class ResGroups(ResGroups):  # noqa: F811
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1830,8 +1828,7 @@ class ResGroups(models.Model):  # noqa: F811
         return res
 
 
-class IrModuleCategory(models.Model):
-    _inherit = ["ir.module.category"]
+class IrModuleCategory(IrModuleCategory):
 
     def write(self, values):
         res = super().write(values)
@@ -1846,8 +1843,7 @@ class IrModuleCategory(models.Model):
 
 
 # pylint: disable=E0102
-class ResUsers(models.Model):  # noqa: F811
-    _inherit = ['res.users']
+class ResUsers(ResUsers):  # noqa: F811
 
     user_group_warning = fields.Text(string="User Group Warning", compute="_compute_user_group_warning")
 
@@ -2232,8 +2228,7 @@ KEY_CRYPT_CONTEXT = CryptContext(
 
 
 # pylint: disable=E0102
-class ResUsers(models.Model):  # noqa: F811
-    _inherit = ['res.users']
+class ResUsers(ResUsers):  # noqa: F811
 
     api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
 

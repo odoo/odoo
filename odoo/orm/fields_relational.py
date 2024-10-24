@@ -14,7 +14,7 @@ from .commands import Command
 from .fields import IR_MODELS, Field, _logger
 from .fields_reference import Many2oneReference
 from .identifiers import NewId
-from .models import BaseModel
+from .models import BaseModel, class_name_to_model_name
 from .utils import check_pg_name
 
 M = typing.TypeVar('M', bound=BaseModel)
@@ -40,8 +40,30 @@ class _Relational(Field[M], typing.Generic[M]):
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
+
+        if not self.comodel_name:
+            for cls in model.__class__._model_classes:
+                field = getattr(cls, self.name, None)
+                if hasattr(field, '__orig_class__'):
+                    # determine the model name from typing
+                    args = field.__orig_class__.__args__[0]
+                    if isinstance(args, type):
+                        # title = fields.Many2one[ResPartnerTitle]()
+                        class_name = args.__name__
+                        comodel_name = args._name
+                    else:
+                        # title = fields.Many2one['ResPartnerTitle']()
+                        class_name = args.__forward_arg__.split('.').pop()
+                        comodel_name = class_name_to_model_name(class_name)
+
+                    if comodel_name not in model.pool:
+                        _logger.warning("Field %s with unknown comodel name %r from the class %r", self, comodel_name, class_name)
+                        self.comodel_name = '_unknown'
+                    else:
+                        self.comodel_name = comodel_name
+
         if self.comodel_name not in model.pool:
-            _logger.warning("Field %s with unknown comodel_name %r", self, self.comodel_name)
+            _logger.warning("Field %r with unknown comodel_name %r", self, self.comodel_name)
             self.comodel_name = '_unknown'
 
     def get_domain_list(self, model):
