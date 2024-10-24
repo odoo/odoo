@@ -215,7 +215,7 @@ _logger = logging.getLogger(__name__)
 CORS_MAX_AGE = 60 * 60 * 24
 
 # The HTTP methods that do not require a CSRF validation.
-CSRF_FREE_METHODS = ('GET', 'HEAD', 'OPTIONS', 'TRACE')
+SAFE_HTTP_METHODS = ('GET', 'HEAD', 'OPTIONS', 'TRACE')
 
 # The default csrf token lifetime, a salt against BREACH, one year
 CSRF_TOKEN_SALT = 60 * 60 * 24 * 365
@@ -707,6 +707,9 @@ def route(route=None, **routing):
     :param Callable[[Exception], Response] handle_params_access_error:
         Implement a custom behavior if an error occurred when retrieving the record
         from the URL parameters (access error or missing error).
+    :param str captcha: The action name of the captcha. When set the request will be
+        validated against a captcha implementation. Upon failing these requests will
+        return a UserError.
     """
     def decorator(endpoint):
         fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"
@@ -2107,7 +2110,7 @@ class HttpDispatcher(Dispatcher):
         self.request.params = dict(self.request.get_http_params(), **args)
 
         # Check for CSRF token for relevant requests
-        if self.request.httprequest.method not in CSRF_FREE_METHODS and endpoint.routing.get('csrf', True):
+        if self.request.httprequest.method not in SAFE_HTTP_METHODS and endpoint.routing.get('csrf', True):
             if not self.request.db:
                 return self.request.redirect('/web/database/selector')
 

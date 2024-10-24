@@ -37,7 +37,7 @@ class MassMailController(main.MassMailController):
         if not request.env['ir.http']._verify_request_recaptcha_token('website_mass_mailing_subscribe'):
             return {
                 'toast_type': 'danger',
-                'toast_content': _("Suspicious activity detected by Google reCaptcha."),
+                'toast_content': _("Suspicious activity detected by captcha."),
             }
 
         fname = self._get_fname(subscription_type)
