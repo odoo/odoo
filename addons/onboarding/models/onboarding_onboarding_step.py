@@ -55,7 +55,7 @@ class OnboardingStep(models.Model):
         for step in self:
             if step in existing_progress_steps.step_id:
                 current_progress_step_id = existing_progress_steps.filtered(
-                    lambda progress_step: progress_step.step_id == step)
+                    lambda progress_step: progress_step.step_id == step).sorted('create_date', reverse=True)[:1]
                 step.current_progress_step_id = current_progress_step_id
                 step.current_step_state = current_progress_step_id.step_state
             else:

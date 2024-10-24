@@ -57,7 +57,7 @@ class Onboarding(models.Model):
     def _compute_current_progress(self):
         for onboarding in self:
             current_progress_id = onboarding.progress_ids.filtered(
-                lambda progress: progress.company_id.id in {False, self.env.company.id})
+                lambda progress: progress.company_id.id in {False, self.env.company.id}).sorted('create_date', reverse=True)[:1]
             if current_progress_id:
                 onboarding.current_onboarding_state = current_progress_id.onboarding_state
                 onboarding.current_progress_id = current_progress_id
