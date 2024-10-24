@@ -20,17 +20,6 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
     webModels,
-} from "@web/../tests/web_test_helpers";
-
-import { browser } from "@web/core/browser/browser";
-import { router } from "@web/core/browser/router";
-import { redirect } from "@web/core/utils/urls";
-import { useSetupAction } from "@web/search/action_hook";
-import { listView } from "@web/views/list/list_view";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
-import { WebClient } from "@web/webclient/webclient";
-import {
     clickSave,
     editFavoriteName,
     editSearch,
@@ -44,7 +33,16 @@ import {
     serverState,
     toggleSaveFavorite,
     validateSearch,
-} from "../../web_test_helpers";
+} from "@web/../tests/web_test_helpers";
+
+import { browser } from "@web/core/browser/browser";
+import { router } from "@web/core/browser/router";
+import { redirect } from "@web/core/utils/urls";
+import { useSetupAction } from "@web/search/action_hook";
+import { listView } from "@web/views/list/list_view";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
+import { WebClient } from "@web/webclient/webclient";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 
@@ -123,7 +121,27 @@ class Pony extends models.Model {
     };
 }
 
-defineModels([Partner, Pony, ResCompany, ResPartner, ResUsers]);
+class Project extends models.Model {
+    foo = fields.Boolean({ string: "Foo" });
+    _records = [
+        {
+            id: 1,
+            foo: true,
+        },
+        {
+            id: 2,
+            foo: false,
+        },
+    ];
+
+    _views = {
+        search: /* xml */ `<search/>`,
+        list: /* xml */ `<list><field name="foo"/></list>`,
+        kanban: /* xml */ `<kanban><templates><t t-name="card"><field name="foo" /></t></templates></kanban>`,
+    };
+}
+
+defineModels([Partner, Pony, Project, ResCompany, ResPartner, ResUsers]);
 
 defineActions([
     {
@@ -2758,4 +2776,21 @@ test.tags("desktop")("executing an action closes dialogs", async () => {
     await contains(".o_dialog .o_form_view .o_statusbar_buttons button[name='4']").click();
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_dialog").toHaveCount(0);
+});
+
+test.tags("mobile")("execute a window action with mobile_view_mode", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        xml_id: "project.action",
+        name: "Project Action",
+        res_model: "project",
+        type: "ir.actions.act_window",
+        view_mode: "list,kanban",
+        mobile_view_mode: "list",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+        ],
+    });
+    expect(".o_list_view").toHaveCount(1);
 });
