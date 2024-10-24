@@ -90,8 +90,10 @@ class ProductTemplate(models.Model):
             record.tax_string = record._construct_tax_string(record.list_price)
 
     def _construct_tax_string(self, price):
+        company_id = self._context.get('company_id', self.env.company.id)
         currency = self.currency_id
-        res = self.taxes_id.compute_all(price, product=self, partner=self.env['res.partner'])
+        res = self.taxes_id.filtered(lambda x: x.company_id.id == company_id).\
+            compute_all(price, product=self, partner=self.env['res.partner'])
         joined = []
         included = res['total_included']
         if currency.compare_amounts(included, price):
