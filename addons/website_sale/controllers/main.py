@@ -315,6 +315,9 @@ class WebsiteSale(http.Controller):
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
 
+        if attrib_list:
+            post['attrib'] = attrib_list
+
         keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
 
         now = datetime.timestamp(datetime.now())
@@ -337,8 +340,6 @@ class WebsiteSale(http.Controller):
         url = "/shop"
         if search:
             post["search"] = search
-        if attrib_list:
-            post['attrib'] = attrib_list
 
         options = self._get_search_options(
             category=category,
