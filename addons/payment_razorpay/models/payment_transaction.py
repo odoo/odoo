@@ -219,7 +219,11 @@ class PaymentTransaction(models.Model):
                 self.reference, pprint.pformat(payload)
             )
             recurring_payment_data = self.provider_id._razorpay_make_request(
-                'payments/create/recurring', payload=payload
+                'payments/create/recurring',
+                payload=payload,
+                idempotency_key=payment_utils.generate_idempotency_key(
+                    self, scope='paymnent_recurring'
+                ),  # Make the request idempotent to prevent multiple payments.
             )
             _logger.info(
                 "Response of '/payments/create/recurring' request for transaction with reference "
