@@ -78,6 +78,11 @@ class PaymentMethod(models.Model):
         required=True,
         default='none',
     )
+    support_manual_capture = fields.Boolean(
+        string="Manual Capture",
+        help="Manual capture allows the authorization of a payment but delays the actual transfer"
+             " of funds until a later date.",
+    )
     supported_country_ids = fields.Many2many(
         string="Countries",
         comodel_name='res.country',
@@ -293,6 +298,25 @@ class PaymentMethod(models.Model):
                 available=False,
                 reason=REPORT_REASONS_MAPPING['express_checkout_not_supported'],
             )
+
+        # Filter pms that does not support manual capture.
+        unfiltered_pms = payment_methods
+        automatic_capture_pms = payment_methods.filtered(
+            lambda p: not p.support_manual_capture
+        )
+        providers = self.env['payment.provider'].browse(provider_ids)
+        capture_manually_active_pp = providers.filtered('capture_manually')
+        if automatic_capture_pms and capture_manually_active_pp:
+            for pm in automatic_capture_pms:
+                if any(p in pm.provider_ids for p in capture_manually_active_pp):
+                    payment_methods -= pm
+
+        payment_utils.add_to_report(
+            report,
+            unfiltered_pms - payment_methods,
+            available=False,
+            reason=REPORT_REASONS_MAPPING['manual_capture_not_supported'],
+        )
 
         return payment_methods
 
