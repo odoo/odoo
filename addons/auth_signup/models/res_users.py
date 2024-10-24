@@ -344,9 +344,9 @@ class ResUsers(models.Model):
                     users_with_email.partner_id.with_context(create_user=True).signup_cancel()
         return users
 
-    def copy(self, default=None):
-        self.ensure_one()
+    def copy_data(self, default=None):
+        default = dict(default or {})
         if not default or not default.get('email'):
             # avoid sending email to the user we are duplicating
             self = self.with_context(no_reset_password=True)
-        return super().copy(default=default)
+        return super().copy_data(default=default)

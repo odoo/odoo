@@ -64,3 +64,21 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         with self.assertRaises(AccessError):
             partner.with_user(user.id).signup_url
+
+    def test_users_copy_data(self):
+        user_1 = self.env['res.users'].create({
+            'name': "test_user_1",
+            'login': "test_user_1",
+        })
+        user_2 = self.env['res.users'].create({
+            'name': "test_user_2",
+            'login': "test_user_2",
+        })
+
+        duplicate_user_1, duplicate_user_2 = (user_1 + user_2).copy()
+
+        self.assertEqual(duplicate_user_1.name, user_1.name + ' (copy)')
+        self.assertEqual(duplicate_user_2.name, user_2.name + ' (copy)')
+
+        self.assertEqual(duplicate_user_1.login, user_1.login + ' (copy)')
+        self.assertEqual(duplicate_user_2.login, user_2.login + ' (copy)')
