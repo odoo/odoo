@@ -1630,6 +1630,11 @@ Please change the quantity done or the rounding precision of your unit of measur
         rounding = self.product_id.uom_id.rounding
         return dict((k, v) for k, v in available_move_lines.items() if float_compare(v, 0, precision_rounding=rounding) > 0)
 
+    def _get_moves_to_assign(self, moves_to_assign):
+        return moves_to_assign.filtered(
+            lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
+        )
+
     def _action_assign(self, force_qty=False):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `reserved_qty` for all its move lines is
@@ -1650,9 +1655,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_to_redirect = OrderedSet()
         moves_to_assign = self
         if not force_qty:
-            moves_to_assign = moves_to_assign.filtered(
-                lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
-            )
+            moves_to_assign = self._get_moves_to_assign(moves_to_assign)
         moves_mto = moves_to_assign.filtered(lambda m: m.move_orig_ids and not m._should_bypass_reservation())
         quants_cache = self.env['stock.quant']._get_quants_cache_by_products_locations(moves_mto.product_id, moves_mto.location_id)
         for move in moves_to_assign:

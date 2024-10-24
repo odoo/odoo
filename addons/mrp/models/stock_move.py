@@ -381,6 +381,8 @@ class StockMove(models.Model):
                     values['location_dest_id'] = mo.production_location_id.id
                     if not values.get('location_id'):
                         values['location_id'] = mo.location_src_id.id
+                    if mo.state in ['progress', 'to_close'] and mo.qty_producing > 0:
+                        values['picked'] = True
                     continue
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id
@@ -417,6 +419,16 @@ class StockMove(models.Model):
             # ex. when spliting MO to backorders we don't want to move qty from pre prod to stock in 2/3 step config
             self.filtered(lambda m: m.raw_material_production_id.state == 'confirmed')._run_procurement(old_demand)
         return res
+
+    def _get_moves_to_assign(self, moves_to_assign):
+        if hasattr(self, 'raw_material_production_id') and \
+                all(not (move.move_line_ids and move.quantity > 0) for move in self) and \
+                any(code == 'mrp_operation' for code in self.raw_material_production_id.mapped('picking_type_id.code')) and \
+                any(raw_material_production.qty_producing > 0 for raw_material_production in self.raw_material_production_id):
+            return moves_to_assign.filtered(
+                lambda m: m.state in ['confirmed', 'waiting', 'partially_available']
+            )
+        return super()._get_moves_to_assign(moves_to_assign)
 
     def _run_procurement(self, old_qties=False):
         procurements = []
