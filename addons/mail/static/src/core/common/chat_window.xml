@@ -121,7 +121,7 @@
 <t t-name="mail.ChatWindow.dropdownAction">
     <DropdownItem class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-2 py-2 m-0'" onSelected="() => action.onSelect()">
         <i t-att-class="action.icon"/>
-        <span class="mx-2" t-out="action.name"/>
+        <span class="mx-2" t-att-class="action.nameClass" t-out="action.name"/>
     </DropdownItem>
 </t>
 

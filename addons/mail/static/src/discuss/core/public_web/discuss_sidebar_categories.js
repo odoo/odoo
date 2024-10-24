@@ -6,7 +6,6 @@ import { useHover } from "@mail/utils/common/hooks";
 
 import { Component, useState, useSubEnv } from "@odoo/owl";
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -71,7 +70,6 @@ export class DiscussSidebarChannel extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.dialogService = useService("dialog");
         this.hover = useHover(["root", "floating*"], {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
@@ -114,7 +112,7 @@ export class DiscussSidebarChannel extends Component {
         const commands = [];
         if (this.thread.canLeave) {
             commands.push({
-                onSelect: () => this.leaveChannel(),
+                onSelect: () => this.thread.leaveChannel(),
                 label: _t("Leave Channel"),
                 icon: "oi oi-close",
                 sequence: 20,
@@ -140,34 +138,6 @@ export class DiscussSidebarChannel extends Component {
     /** @returns {import("models").Thread} */
     get thread() {
         return this.props.thread;
-    }
-
-    askConfirmation(body) {
-        return new Promise((resolve) => {
-            this.dialogService.add(ConfirmationDialog, {
-                body: body,
-                confirmLabel: _t("Leave Conversation"),
-                confirm: resolve,
-                cancel: () => {},
-            });
-        });
-    }
-
-    async leaveChannel() {
-        const thread = this.thread;
-        if (thread.channel_type !== "group" && thread.create_uid === thread.store.self.userId) {
-            await this.askConfirmation(
-                _t("You are the administrator of this channel. Are you sure you want to leave?")
-            );
-        }
-        if (thread.channel_type === "group") {
-            await this.askConfirmation(
-                _t(
-                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
-                )
-            );
-        }
-        thread.leave();
     }
 
     /** @param {MouseEvent} ev */

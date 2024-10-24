@@ -130,6 +130,12 @@ function transformAction(component, id, action) {
             const res = this.isActive && action.nameActive ? action.nameActive : action.name;
             return typeof res === "function" ? res(component) : res;
         },
+        /** ClassName on name of this action */
+        get nameClass() {
+            return typeof action.nameClass === "function"
+                ? action.nameClass(component)
+                : action.nameClass;
+        },
         /**
          * Action to execute when this action is selected (on or off).
          *
