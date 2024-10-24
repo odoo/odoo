@@ -21,6 +21,8 @@ var ForumShare = publicWidget.registry.socialShare.extend({
     init: function (parent, options, targetType) {
         this._super.apply(this, arguments);
         this.targetType = targetType;
+        this.socialAlertEl = null;
+        this.socialModalEl = null;
     },
     /**
      * @override
@@ -46,17 +48,25 @@ var ForumShare = publicWidget.registry.socialShare.extend({
      * @private
      */
     _render: function () {
-        var $question = this.$('article.question');
+        var questionEl = this.el.querySelector('article.question');
+        const parser = new DOMParser();
         if (!this.targetType) {
             this._super.apply(this, arguments);
         } else if (this.targetType === 'social-alert') {
-            $question.before(qweb.render('website.social_alert', {medias: this.socialList}));
+            this.socialAlertEl = parser.parseFromString(
+                qweb.render('website.social_alert',{
+                    medias: this.socialList
+                }), "text/html").body.firstChild;
+            questionEl.insertBefore(this.socialAlertEl);
         } else {
-            $('body').append(qweb.render('website.social_modal', {
-                medias: this.socialList,
-                target_type: this.targetType,
-                state: $question.data('state'),
-            }));
+            this.socialModalEl = parser.parseFromString(
+                qweb.render('website.social_modal', {
+                    medias: this.socialList,
+                    target_type: this.targetType,
+                    state: questionEl.dataset.state,
+                }), "text/html").body.firstChild;
+            document.querySelector('body').appendChild(this.socialModalEl);
+            // TODO in master, remove the modal from the DOM when it is closed.
             $('#oe_social_share_modal').modal('show');
         }
     },
@@ -70,6 +80,32 @@ var ForumShare = publicWidget.registry.socialShare.extend({
                 post_id: this.element.data('id'),
             },
         });
+    },
+    /**
+    * @override
+    * TODO remove me in master. This has been introduced as a stable fix to not
+    * remove the document body at the `destroy()` of the `ForumShare` public
+    * widget.
+    *
+    * Background: The `ForumShare` public widget is initially attached to the document
+    * body upon instantiation, which means its root element (`this.$el`) is set
+    * to the document body. Normally, when a widget is destroyed, its root
+    * element is removed which, in this case, would result in the document body
+    * removal.
+    *
+    * To prevent this, the fix assigns `null` to the root element before
+    * invoking the `destroy()` method, ensuring that the document body remains
+    * intact.
+    */
+    destroy: function () {
+        this.setElement(null);
+        if (this.socialAlertEl) {
+            this.socialAlertEl.remove();
+        }
+        if (this.socialModalEl) {
+            this.socialModalEl.remove();
+        }
+        this._super();
     },
 });
 
