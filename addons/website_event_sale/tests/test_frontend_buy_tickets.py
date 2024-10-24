@@ -7,6 +7,8 @@ from datetime import timedelta
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.tools import mute_logger
 from odoo.fields import Datetime
 
 
@@ -132,3 +134,91 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
     def test_pricelists_different_currencies(self):
         self.start_tour("/", 'event_sale_pricelists_different_currencies', login='admin')
     # TO DO - add public test with new address when convert to web.tour format.
+
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCommon):
+
+    @mute_logger('odoo.http')
+    def test_check_seats_avail_before_purchase(self):
+        self.authenticate(None, None)
+
+        event_2 = self.env['event.event'].create({
+            'date_begin': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
+            'date_end': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 16:30:00'),
+            'name': 'Pycon 2',
+            'user_id': self.env.ref('base.user_admin').id,
+            'website_published': True,
+        })
+        ticket_2 = self.env['event.event.ticket'].create({
+            'event_id': event_2.id,
+            'name': 'Standard',
+            'product_id': self.product_event.id,
+            'price': 100,
+        })
+
+        so_line_1, so_line_2 = self.env['sale.order.line'].create([
+            {
+                'event_id': self.event.id,
+                'event_ticket_id': self.ticket.id,
+                'name': self.event.name,
+                'order_id': self.so.id,
+                'product_id': self.ticket.product_id.id,
+                'product_uom_qty': 2,
+            },
+            {
+                'event_id': event_2.id,
+                'event_ticket_id': ticket_2.id,
+                'name': event_2.name,
+                'order_id': self.so.id,
+                'product_id': ticket_2.product_id.id,
+                'product_uom_qty': 2,
+            },
+        ])
+        self.so._cart_update(line_id=so_line_1.id, product_id=self.ticket.product_id.id, set_qty=1)
+        self.so._cart_update(line_id=so_line_2.id, product_id=ticket_2.product_id.id, set_qty=1)
+
+        url = self._build_url(f'/shop/payment/transaction/{self.so.id}')
+        self.assertEqual(self.event.seats_taken, 0)
+        self.assertEqual(event_2.seats_taken, 0)
+        self.env['event.registration'].create([
+            {
+                'event_id': self.event.id,
+                'name': 'reg1',
+                'state': 'done',
+            },
+            {
+                'event_id': event_2.id,
+                'name': 'reg2',
+                'state': 'done',
+            }
+        ])
+        self.assertEqual(self.event.seats_taken, 1)
+        self.assertEqual(event_2.seats_taken, 1)
+        self.ticket.write({
+            'seats_max': 2,
+            'seats_limited': True,
+        })
+        ticket_2.write({
+            'seats_max': 2,
+            'seats_limited': True,
+        })
+        self.env['event.registration'].create([
+            {'event_id': e.id, 'sale_order_id': self.so.id, 'partner_id': p.id, 'event_ticket_id': t.id}
+            for p in [(self.partner), (self.partner_admin)]
+            for e, t in [(self.event, self.ticket), (event_2, ticket_2)]
+        ])
+        route_kwargs = {
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method.id,
+            'token_id': None,
+            'amount': self.so.amount_total,
+            'flow': 'direct',
+            'tokenization_requested': False,
+            'landing_route': '/shop/payment/validate',
+            'is_validation': False,
+            'csrf_token': odoo.http.Request.csrf_token(self),
+            'access_token': self.so._portal_ensure_token(),
+        }
+        with self.assertRaisesRegex(odoo.tests.JsonRpcException, 'odoo.exceptions.ValidationError'):
+            self.make_jsonrpc_request(url, route_kwargs)
