@@ -4742,7 +4742,13 @@ class AccountMove(models.Model):
             'invoice_source_email': from_mail_addresses[0],
             'partner_id': partners and partners[0].id or False,
         }
-        move_ctx = self.with_context(default_move_type=custom_values['move_type'], default_journal_id=custom_values['journal_id'])
+        ctx = {
+            'default_move_type': custom_values['move_type'],
+            'default_journal_id': custom_values['journal_id'],
+        }
+        if custom_values.get('company_id'):
+            ctx['default_company_id'] = custom_values['company_id']
+        move_ctx = self.with_context(**ctx)
         move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
         move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
 
