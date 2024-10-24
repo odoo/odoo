@@ -11,7 +11,7 @@ from odoo.tools import format_list, SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
-from odoo.addons.base_vat.models.res_partner import _ref_vat
+from odoo.addons.account.models.partner import _ref_vat
 
 
 MONTH_SELECTION = [
