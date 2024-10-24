@@ -146,6 +146,7 @@ patch(PosStore.prototype, {
                         ...newLineValues,
                     });
                     splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
+                    splitted_line.set_discount(line.discount);
                     remaining_quantity -= splitted_line.qty;
                 }
             }
