@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, html2plaintext, get_lang
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.exceptions import UserError
 
@@ -678,3 +678,7 @@ class PurchaseOrderLine(models.Model):
         return {
             "order_id": self.order_id,
         }
+
+    def _get_cleaned_tax_names(self):
+        """ Return a comma-separated string of the taxes names, without HTML tags. """
+        return ', '.join(html2plaintext(tax.description or tax.name) for tax in self.taxes_id)
