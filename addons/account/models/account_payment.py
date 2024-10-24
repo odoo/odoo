@@ -394,16 +394,18 @@ class AccountPayment(models.Model):
             if payment.journal_id.company_id not in payment.company_id.parent_ids:
                 payment.company_id = (payment.journal_id.company_id or self.env.company)._accessible_branches()[:1]
 
-    @api.depends('invoice_ids.payment_state')
+    @api.depends('invoice_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
         for payment in self:
             if not payment.state:
                 payment.state = 'draft'
-            if (
-                not payment.outstanding_account_id
-                and payment.invoice_ids
-                and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids)
-            ):
+            if payment.outstanding_account_id:
+                move = payment.move_id
+                lines = move.line_ids
+                amount_residual = sum(lines.mapped('amount_residual'))
+                if move and move.currency_id.is_zero(amount_residual):
+                    payment.state = 'paid'
+            elif payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
                 payment.state = 'paid'
 
     @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
