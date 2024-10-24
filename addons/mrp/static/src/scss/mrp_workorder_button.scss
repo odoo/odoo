@@ -1,0 +1,16 @@
+// This CSS code tries to bypass the column width computation by setting the size of the column manually
+// The columns size can be set as the element size are not supposed to change (not based on text)
+// This is a dirty hack around but no better solution was found atm without modifying the web module
+.o_mrp_workorder_list_view_view {
+    th[data-name="employee_ids"] + th.o_list_button{
+        width: 127px !important;
+    }
+
+    th.o_list_button + th + th.o_list_button{
+        width: 30px !important;
+    }
+
+    th.o_mrp_workorder_popover_cell{
+        width: 30px !important;
+    }
+}

@@ -32,6 +32,18 @@ viewWidgetRegistry.addValidation({
         type: [Function, { type: Array, element: Object, shape: { name: String, type: String } }],
         optional: true,
     },
+    listViewWidth: {
+        type: [
+            Number,
+            {
+                type: Array,
+                element: Number,
+                validate: (array) => array.length === 1 || array.length === 2,
+            },
+            Function,
+        ],
+        optional: true,
+    },
     supportedAttributes: supportedInfoValidation,
     supportedOptions: supportedInfoValidation,
 });
