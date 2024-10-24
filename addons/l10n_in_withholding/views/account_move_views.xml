@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="%(l10n_in_withholding_entry_form_action)d" string="TDS Entry" type="action" class="btn btn-secondary float-end"
-                        invisible="country_code != 'IN' or move_type not in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund') or state != 'posted'"/>
+                        invisible="country_code != 'IN' or move_type not in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund') or state != 'posted'" data-hotkey="t"/>
                 <button name="action_l10n_in_apply_higher_tax" string="Apply Higher TCS" type="object" class="btn btn-secondary float-end"
                         invisible="not l10n_in_display_higher_tcs_button"/>
             </xpath>
@@ -38,6 +38,20 @@
                     <field name="l10n_in_tcs_tds_warning" readonly="1"/>
                 </div>
             </xpath>
+        </field>
+    </record>
+
+    <record id="account_move_tds_tcs_applicable_view_list" model="ir.ui.view">
+        <field name="name">account.move.tds.tcs.applicable.view.list</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list string="Journal Entries">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="amount_total_in_currency_signed" string="Total"/>
+                <field name="l10n_in_applicable_section_ids" widget='many2many_tags'/>
+            </list>
         </field>
     </record>
 </odoo>

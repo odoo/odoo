@@ -41,6 +41,7 @@ class AccountMove(models.Model):
     )
     l10n_in_tcs_tds_warning = fields.Char('TDC/TCS Warning', compute="_compute_l10n_in_tcs_tds_warning")
     l10n_in_display_higher_tcs_button = fields.Boolean(string="Display higher TCS button", compute="_compute_l10n_in_display_higher_tcs_button")
+    l10n_in_applicable_section_ids = fields.Many2many('l10n_in.section.alert', string="TDS/TCS Applicable Sections", compute="_compute_l10n_in_tcs_tds_warning")
 
     # === Compute Methods ===
     @api.depends('line_ids', 'l10n_in_is_withholding')
@@ -139,6 +140,8 @@ class AccountMove(models.Model):
             default_domain += [('move_id.commercial_partner_id.l10n_in_pan', '=', commercial_partner_id.l10n_in_pan)]
         else:
             default_domain += [('move_id.commercial_partner_id', '=', commercial_partner_id.id)]
+        if self.invoice_date and section_alert in self._get_non_applicable_sections():
+            fiscalyear_end_date = self.date
         frequency_domains = {
             'monthly': [('date', '>=', month_start_date), ('date', '<=', month_end_date)],
             'fiscal_yearly': [('date', '>=', fiscalyear_start_date), ('date', '<=', fiscalyear_end_date)],
@@ -225,9 +228,18 @@ class AccountMove(models.Model):
                     ):
                         warning.add(section_alert.id)
                 warning_sections = self.env['l10n_in.section.alert'].browse(warning)
+                move.l10n_in_applicable_section_ids = warning_sections
                 if warning_sections:
                     move.l10n_in_tcs_tds_warning = warning_sections._get_warning_message()
                 else:
                     move.l10n_in_tcs_tds_warning = False
             else:
                 move.l10n_in_tcs_tds_warning = False
+
+    def _get_non_applicable_sections(self):
+        self.ensure_one()
+        return [
+            self.env.ref("l10n_in_withholding.tds_section_194n"),
+            self.env.ref("l10n_in_withholding.tds_section_194q"),
+            self.env.ref("l10n_in_withholding.tcs_section206c1h_g")
+        ]
