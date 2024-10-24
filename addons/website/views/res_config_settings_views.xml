@@ -25,41 +25,39 @@
                         <button name="action_website_create_new" type="object" string="+ New Website" class="btn btn-link"/>
                     </setting>
                     <block title="Website Info" id="website_info_settings">
-                        <setting>
+                        <setting string="Website Identification" help="Set your website's name and favicon, displayed in the browser tab next to the page title.">
                             <div class="content-group">
                                 <div class="row mt8">
-                                    <label class="col-lg-3" string="Domain" for="website_domain"/>
-                                    <field name="website_domain" placeholder="https://www.odoo.com" title="Display this website when users visit this domain"/>
-                                </div>
-                                <div class="row mt8">
-                                    <label class="col-lg-3" string="Languages" for="language_ids"/>
-                                    <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" required="website_id" title="Languages available on your website"/>
-                                </div>
-                                <div class="row mt8" invisible="website_language_count &lt; 2">
-                                    <field name="website_language_count" invisible="1"/>
-                                    <label class="col-lg-3" string="Default" for="website_default_lang_id"/>
-                                    <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" required="website_id"/>
-                                </div>
-                                <div class="mt8">
-                                    <button type="action" name="%(base.action_view_base_language_install)d" string="Install languages" class="btn-link" icon="oi-arrow-right"/>
-                                </div>
-                            </div>
-                        </setting>
-                        <setting>
-                            <div class="content-group">
-                                <div class="row mt8">
-                                    <label class="col-lg-3" string="Website Name" for="website_name"/>
+                                    <label class="col-lg-3" string="Name" for="website_name"/>
                                     <field name="website_name" required="website_id"/>
-                                </div>
-                                <div class="row mt8" groups="base.group_multi_company">
-                                    <label class="col-lg-3" string="Company" for="website_company_id"/>
-                                    <field name="website_company_id" required="website_id" title="The company this website belongs to"/>
                                 </div>
                                 <div class="row mt8">
                                     <label class="col-lg-3" string="Favicon" for="favicon"/>
-                                    <field name="favicon" widget="image" class="float-start oe_avatar bg-view"/>
+                                    <field name="favicon" widget="image" class="float-start o_avatar bg-view"/>
                                 </div>
                             </div>
+                        </setting>
+                        <setting string="Languages"
+                                 title="Languages available on your website"
+                                 documentation="/applications/websites/website/configuration/translate.html">
+                            <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" required="website_id"/>
+                            <div class="row mt8" invisible="website_language_count &lt; 2">
+                                <field name="website_language_count" invisible="1"/>
+                                <label class="col-lg-3" string="Default" for="website_default_lang_id"/>
+                                <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" required="website_id"/>
+                            </div>
+                            <div class="mt8">
+                                <button type="action" name="%(base.action_view_base_language_install)d" string="Install new languages" class="btn-link" icon="oi-arrow-right"/>
+                            </div>
+                        </setting>
+                        <setting string="Domain"
+                                 help="Display this website for this web address"
+                                 title="Display this website when users visit this domain"
+                                 documentation="/applications/websites/website/configuration/domain_names.html#domain-name-website-map">
+                            <field name="website_domain" placeholder="https://www.odoo.com"/>
+                        </setting>
+                        <setting string="Company" title="The company this website is linked to" groups="base.group_multi_company">
+                            <field name="website_company_id" required="website_id"/>
                         </setting>
                     </block>
 
