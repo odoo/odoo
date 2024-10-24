@@ -1,4 +1,5 @@
 /** @odoo-module **/
+/* global Carousel */
 
 /**
  * Provides a way to start JS code for snippets' initialization and animations.
@@ -492,6 +493,40 @@ registry.slider = publicWidget.Widget.extend({
             this.options.wysiwyg.odooEditor.observerUnactive("disable_controls");
             this.controlEls.forEach(controlEl => controlEl.removeAttribute("data-bs-slide"));
             indicatorEls.forEach(indicatorEl => indicatorEl.removeAttribute("data-bs-slide-to"));
+            // Deactivate auto slide of carousel
+            const waitForSlideToComplete = () => {
+                return new Promise((resolve) => {
+                    // Check if a slide transition is currently happening
+                    const isSliding = Array.from(
+                        this.el.querySelectorAll(".carousel-inner > .carousel-item")
+                    ).some((item) => item.classList.contains("carousel-item-start"));
+
+                    if (isSliding) {
+                        // Wait until the current slide completes
+                        this.el.addEventListener("slid.bs.carousel", () => resolve(), {
+                            once: true,
+                        });
+                    } else {
+                        resolve();
+                    }
+                });
+            };
+            waitForSlideToComplete().then(() => {
+                this.savedRideAttribute = this.el.getAttribute("data-bs-ride") || undefined;
+
+                if (this.savedRideAttribute) {
+                    const currentCarousel = Carousel.getOrCreateInstance(this.el);
+
+                    // Clear any pending timeouts to prevent invalid references after disposal
+                    if (currentCarousel.touchTimeout) {
+                        clearTimeout(currentCarousel.touchTimeout);
+                    }
+                    currentCarousel.dispose();
+
+                    this.el.removeAttribute("data-bs-ride");
+                    Carousel.getOrCreateInstance(this.el); // Reinitialize to reflect the updated config
+                }
+            });
             this.options.wysiwyg.odooEditor.observerActive("disable_controls");
             // Redirect the clicks on the active slide, in order to start the
             // carousel options.
@@ -521,6 +556,12 @@ registry.slider = publicWidget.Widget.extend({
         $(window).off('.slider');
         this.$el.off('.slider'); // TODO remove in master
         this.$('img').off('.slider');
+
+        // Restore auto slide
+        if (this.savedRideAttribute !== undefined) {
+            this.el.setAttribute("data-bs-ride", this.savedRideAttribute);
+            delete this.savedRideAttribute;
+        }
 
         if (this.editableMode && this.el.matches("section > .carousel")
                 && !this.options.wysiwyg.options.enableTranslation) {

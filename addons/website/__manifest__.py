@@ -157,6 +157,7 @@
             'website/static/src/xml/website.cookies_warning.xml',
             'website/static/src/js/text_processing.js',
             'website/static/src/snippets/observing_cookie_mixin.js',
+            'website/static/src/snippets/s_carousel/000.js'
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
