@@ -15,11 +15,27 @@
     font-display: block;
 }
 
+@font-face {
+    font-family: 'FontAwesome-threads-only';
+    src: url('../../fonts/threads_only.woff') format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
 .fa.fa-tiktok {
     font-family: 'FontAwesome-tiktok-only' !important;
 
     &:before {
         content: '\e07b';
+    }
+}
+
+.fa.fa-threads {
+    font-family: 'FontAwesome-threads-only' !important;
+
+    &:before {
+        content: '\e618';
     }
 }
 

@@ -152,6 +152,9 @@ class Website(models.Model):
     def _default_social_tiktok(self):
         return self.env.ref('base.main_company').social_tiktok
 
+    def _default_social_threads(self):
+        return self.env.ref('base.main_company').social_threads
+
     def _default_logo(self):
         with tools.file_open('website/static/src/img/website_logo.svg', 'rb') as f:
             return base64.b64encode(f.read())
@@ -164,6 +167,7 @@ class Website(models.Model):
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
     social_tiktok = fields.Char('TikTok Account', default=_default_social_tiktok)
+    social_threads = fields.Char('Threads Account', default=_default_social_threads)
     social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the website logo as the default social share image.")
     has_social_default_image = fields.Boolean(compute='_compute_has_social_default_image', store=True)
 
