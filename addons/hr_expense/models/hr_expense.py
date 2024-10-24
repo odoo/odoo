@@ -1339,6 +1339,7 @@ class HrExpenseSheet(models.Model):
             'partner_id': self.employee_id.sudo().address_home_id.commercial_partner_id.id,
             'currency_id': self.currency_id.id,
             'line_ids':[Command.create(expense._prepare_move_line_vals()) for expense in self.expense_line_ids],
+            'partner_bank_id': self.employee_id.sudo().bank_account_id.id,
         }
 
     def _prepare_move_vals(self):
@@ -1423,6 +1424,10 @@ class HrExpenseSheet(models.Model):
 
     def approve_expense_sheets(self):
         self._check_can_approve()
+
+        for sheet in self:
+            if sheet.payment_mode == 'own_account' and not sheet.employee_id.sudo().bank_account_id:
+                raise UserError(_("Employee should have a bank account set. Please Set it on the employee form."))
 
         self._validate_analytic_distribution()
         duplicates = self.expense_line_ids.duplicate_expense_ids.filtered(lambda exp: exp.state in ['approved', 'done'])
@@ -1544,7 +1549,7 @@ class HrExpenseSheet(models.Model):
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,
-                'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id if len(self.employee_id.sudo().bank_account_id.ids) <= 1 else None,
+                'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
