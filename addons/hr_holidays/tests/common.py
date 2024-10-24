@@ -16,6 +16,21 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.company = cls.env['res.company'].create({'name': 'Test company'})
         cls.env.user.company_id = cls.company
 
+        # The available time off types are the ones whose:
+        # 1. Company is one of the selected companies.
+        # 2. Company is false but whose country is one the countries of the selected companies.
+        # 3. Company is false and country is false
+        # Thus, a time off type is defined to be available for `Test company`
+        # For example, the tour 'time_off_request_calendar_view' would succeed (false positive) without this leave type.
+        # However, the tour won't create a time-off request (as expected)because no time-off type is available to be selected on the leave
+        # This would cause the test case that uses the tour to fail.
+        cls.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'requires_allocation': 'no',
+            'request_unit': 'day',
+            'company_id': cls.company.id,
+        })
+
         # Test users to use through the various tests
         cls.user_hruser = mail_new_test_user(cls.env, login='armande', groups='base.group_user,hr_holidays.group_hr_holidays_user')
         cls.user_hruser_id = cls.user_hruser.id
