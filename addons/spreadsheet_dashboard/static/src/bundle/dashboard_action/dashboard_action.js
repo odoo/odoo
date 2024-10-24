@@ -15,7 +15,7 @@ import { useSpreadsheetPrint } from "@spreadsheet/hooks";
 import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
 
-import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
+import { Component, onWillStart, useState, useEffect, onWillDestroy } from "@odoo/owl";
 
 export const dashboardActionRegistry = new Registry();
 
@@ -79,6 +79,12 @@ export class SpreadsheetDashboardAction extends Component {
                     dashboardLoader: this.loader.getState(),
                 };
             },
+        });
+
+        onWillDestroy(() => {
+            for (const dashboard of Object.values(this.loader.dashboards)) {
+                this.loader.stopListeningToDataSourceUpdate(dashboard);
+            }
         });
         useSpreadsheetPrint(() => this.state.activeDashboard?.model);
         /** @type {{ activeDashboard: import("./dashboard_loader").Dashboard}} */

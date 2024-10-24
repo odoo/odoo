@@ -54,7 +54,7 @@ export class DashboardLoader {
         this.orm = orm;
         /** @private @type {Array<DashboardGroupData>} */
         this.groups = [];
-        /** @private @type {Object<number, Dashboard>} */
+        /** @public @type {Object<number, Dashboard>} */
         this.dashboards = {};
     }
 
@@ -211,9 +211,21 @@ export class DashboardLoader {
             revisions
         );
         this._activateFirstSheet(model);
-        odooDataProvider.addEventListener("data-source-updated", () =>
-            model.dispatch("EVALUATE_CELLS")
+        odooDataProvider.addEventListener(
+            "data-source-updated",
+            this.listenToDataSourceUpdate.bind(this, model)
         );
         return model;
     }
+
+    listenToDataSourceUpdate = (model) => {
+        model.dispatch("EVALUATE_CELLS");
+    };
+
+    stopListeningToDataSourceUpdate = (model) => {
+        model.config?.custom?.odooDataProvider.removeEventListener(
+            "data-source-updated",
+            this.listenToDataSourceUpdate.bind(this, model)
+        );
+    };
 }

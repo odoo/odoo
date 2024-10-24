@@ -2,7 +2,8 @@
 
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import { Spreadsheet, Model } from "@odoo/o-spreadsheet";
-import { Component } from "@odoo/owl";
+import { Component, onWillUnmount } from "@odoo/owl";
+import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 
 /**
  * Component wrapping the <Spreadsheet> component from o-spreadsheet
@@ -19,7 +20,13 @@ export class SpreadsheetComponent extends Component {
     get model() {
         return this.props.model;
     }
+
     setup() {
         useSpreadsheetNotificationStore();
+        onWillUnmount(() => {
+            for (const key in globalFiltersFieldMatchers) {
+                delete globalFiltersFieldMatchers[key];
+            }
+        });
     }
 }
