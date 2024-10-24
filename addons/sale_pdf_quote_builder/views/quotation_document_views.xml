@@ -39,14 +39,19 @@
                             />
                         </group>
                     </group>
-                    <group string="Attached To" groups="base.group_no_one">
+                    <group string="Attached To" groups="base.group_multi_company,base.group_no_one">
                         <field
                             name="company_id"
+                            placeholder="Visible to all"
                             groups="base.group_multi_company"
                             options="{'no_create': True}"
                             class="oe_inline"
                         />
-                        <field name="form_field_ids" widget="many2many_tags"/>
+                        <field
+                            name="form_field_ids"
+                            groups="base.group_no_one"
+                            widget="many2many_tags"
+                        />
                     </group>
                     <group string="History" groups="base.group_no_one" invisible="not create_date">
                         <label for="create_uid" string="Creation"/>
