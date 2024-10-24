@@ -85,6 +85,9 @@ class CustomerPortalLoyalty(CustomerPortal):
 
     @route('/my/loyalty_card/<int:card_id>/values', type='json', auth='user')
     def portal_get_card_history_values(self, card_id):
+        return self.get_card_history_values(card_id)
+
+    def get_card_history_values(self, card_id):
         card_sudo = request.env['loyalty.card'].sudo().search([
             ('id', '=', int(card_id)),
             ('partner_id', '=', request.env.user.partner_id.id)
