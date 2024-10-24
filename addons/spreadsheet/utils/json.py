@@ -6,7 +6,7 @@ def extend_serialized_json(json: str, key_value_pairs: list) -> str:
     value should be already serialized.
     """
     # avoid copying strings as much as possible for performance reasons
-    parts = [json.rstrip('}')]
+    parts = [json.removesuffix('}')]
     if json != '{}':
         parts.append(',')
     for i, (key, value) in enumerate(key_value_pairs):
