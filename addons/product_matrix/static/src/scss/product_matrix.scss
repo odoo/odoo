@@ -25,4 +25,11 @@
             border-bottom: $o-black 1px solid;
         }
     }
+    // Sticky header styles
+    thead {
+        position: sticky;
+        top: 0;
+        z-index: 10; // Ensure it stays on top of other content
+        background-color: $o-view-background-color; // Background for visibility
+    }
 }
