@@ -268,6 +268,11 @@ test("toolbar works: can select font size", async () => {
     await contains(`.o_font_selector_menu .dropdown-item:contains('${h1Size}')`).click();
     expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
     expect(".o-we-toolbar [name='font-size']").toHaveText(h1Size);
+    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    const oSmallSize = getFontSizeFromVar("small-font-size").toString();
+    await contains(`.o_font_selector_menu .dropdown-item:contains('${oSmallSize}')`).click();
+    expect(getContent(el)).toBe(`<p><span class="o_small-fs">[test]</span></p>`);
+    expect(".o-we-toolbar [name='font-size']").toHaveText(oSmallSize);
 });
 
 test.tags("desktop")("toolbar should not open on keypress tab inside table", async () => {

@@ -6,8 +6,8 @@
             </button>
             <t t-set-slot="content">
                 <t t-foreach="items" t-as="item" t-key="item_index">
-                    <DropdownItem onSelected="() => this.onSelected(item)">
-                        <div class="user-select-none" t-esc="item.name"/>
+                    <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(item)">
+                        <t t-esc="item.name"/>
                     </DropdownItem>
                 </t>
             </t>
