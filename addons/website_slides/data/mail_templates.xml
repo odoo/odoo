@@ -30,7 +30,7 @@
             <t t-out="message.body"/>
             <div style="margin: 32px 0px 32px 0px; text-align: center;">
                 <a t-att-href="record.invitation_link"
-                    style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                    t-attf-style="background-color: {{company.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                     <t t-if="enroll_mode"> Click here to start the course </t> <t t-else=""> Click here to get started </t>
                 </a>
             </div>
@@ -66,7 +66,7 @@
 </td></tr>
 <!-- POWERED BY -->
 <tr><td align="center" style="min-width: 590px;">
-        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" t-attf-style="color: {{company.email_secondary_color or '#875A7B'}};">Odoo</a>
 </td></tr>
 </table>
         </template>
