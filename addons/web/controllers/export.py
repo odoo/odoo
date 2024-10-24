@@ -431,8 +431,34 @@ class Export(http.Controller):
 
     @http.route('/web/export/namelist', type='json', auth='user', readonly=True)
     def namelist(self, model, export_id):
+<<<<<<< 18.0
         export = request.env['ir.exports'].browse([export_id])
         return self.fields_info(model, export.export_fields.mapped('name'))
+||||||| 92bbedd9df49c8b3da7bd815493d91af03d3e67d
+        # TODO: namelist really has no reason to be in Python (although itertools.groupby helps)
+        export = request.env['ir.exports'].browse([export_id]).read()[0]
+        export_fields_list = request.env['ir.exports.line'].browse(export['export_fields']).read()
+
+        fields_data = self.fields_info(
+            model, [f['name'] for f in export_fields_list])
+
+        return [
+            {'name': field['name'], 'label': fields_data[field['name']]}
+            for field in export_fields_list
+        ]
+=======
+        # TODO: namelist really has no reason to be in Python (although itertools.groupby helps)
+        export = request.env['ir.exports'].browse([export_id]).read()[0]
+        export_fields_list = request.env['ir.exports.line'].browse(export['export_fields']).read()
+
+        fields_data = self.fields_info(
+            model, [f['name'] for f in export_fields_list])
+
+        return [
+            {'name': field['name'], 'label': fields_data[field['name']]}
+            for field in export_fields_list if field['name'] in fields_data
+        ]
+>>>>>>> d1db3d3088623ec654ab494a7013ae7e52a65f79
 
     def fields_info(self, model, export_fields):
         field_info = []
