@@ -3,6 +3,7 @@
 
 import base64
 import json
+import logging
 import re
 
 from markupsafe import escape
@@ -15,6 +16,8 @@ from odoo.tools import plaintext2html
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
+
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteForm(http.Controller):
@@ -237,7 +240,9 @@ class WebsiteForm(http.Controller):
     def insert_record(self, request, model, values, custom, meta=None):
         model_name = model.sudo().model
         if model_name == 'mail.mail':
-            email_from = _('"%s form submission" <%s>') % (request.env.company.name, request.env.company.email)
+            if not request.env.company.email:
+                _logger.info('Form submitted by email: company email is empty, using the email_to as email_from')
+            email_from = _('"%s form submission" <%s>') % (request.env.company.name, request.env.company.email or values.get('email_to'))
             values.update({'reply_to': values.get('email_from'), 'email_from': email_from})
         record = request.env[model_name].with_user(SUPERUSER_ID).with_context(
             mail_create_nosubscribe=True,
