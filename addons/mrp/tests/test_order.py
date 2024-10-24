@@ -4485,8 +4485,8 @@ class TestMrpOrder(TestMrpCommon):
 
         # Set a different duration, finish the wo and validate the second bo
         bo_2.workorder_ids.button_start()
-        bo_2.workorder_ids.duration = 100
         bo_2.workorder_ids.button_finish()
+        bo_2.workorder_ids.duration = 100
         self.assertRecordValues(bo_2.workorder_ids, [
             {'qty_produced': 4.0, 'qty_remaining': 0.0, 'duration_expected': 165.0, 'duration': 100.0, 'state': 'done'}
         ])
