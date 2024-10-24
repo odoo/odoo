@@ -751,7 +751,7 @@ class TestCustomFields(TestCommonCustomFields):
 
         # create a non-computed field, and assert how many queries it takes
         model_id = self.env['ir.model']._get_id('res.partner')
-        query_count = 49
+        query_count = 50
         with self.assertQueryCount(query_count):
             self.env.registry.clear_cache()
             self.env['ir.model.fields'].create({

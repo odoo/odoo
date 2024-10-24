@@ -5192,7 +5192,8 @@ class BaseModel(metaclass=MetaModel):
             if prefix:
                 parent_ids = {int(label) for label in prefix.split('/')[:-1]}
                 if not parent_ids.isdisjoint(records._ids):
-                    raise UserError(_("Recursion Detected."))
+                    # TODO: improve message ?
+                    raise ValidationError(_("Recursion Detected."))
 
             # update parent_path of all records and their descendants
             rows = self.env.execute_query(SQL(

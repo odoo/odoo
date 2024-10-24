@@ -191,6 +191,7 @@ class ResPartner(models.Model):
     _order = "complete_name ASC, id DESC"
     _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
     _allow_sudo_commands = False
+    _parent_store = True
     _check_company_domain = models.check_company_domain_parent_of
 
     # the partner types that must be added to a partner's complete name, like "Delivery"
@@ -220,6 +221,7 @@ class ResPartner(models.Model):
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     title: ResPartnerTitle = fields.Many2one('res.partner.title')
     parent_id: ResPartner = fields.Many2one('res.partner', string='Related Company', index=True)
+    parent_path = fields.Char(index='btree')
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
     child_ids: ResPartner = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
     ref = fields.Char(string='Reference', index=True)
@@ -451,11 +453,6 @@ class ResPartner(models.Model):
         # exists to allow overrides
         for company in self:
             company.company_registry = company.company_registry
-
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if self._has_cycle():
-            raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
 
     @api.constrains('company_id')
     def _check_partner_company(self):
