@@ -1150,6 +1150,16 @@ class TestComputeOnchange2(TransactionCase):
         self.assertEqual(form.bar, "foor")
         self.assertEqual(form.baz, "baz")
 
+    def test_onchange_default_on_inherits(self):
+        message = self.env.ref('test_new_api.message_0_0')
+        form = Form(
+            self.env['test_new_api.emailmessage'].with_context(
+                default_message=message.id,
+            )
+        )
+        self.assertEqual(form.label, message.label)
+        self.assertEqual(form.message, message)
+
     def test_onchange_once(self):
         """ Modifies `foo` field which will trigger an onchange method and
         checks it was triggered only one time. """
