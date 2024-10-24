@@ -3082,7 +3082,7 @@ class AccountMoveLine(models.Model):
 
             # Early payment discount.
             # In that case, we want to report the difference of the epd and display it on the UI.
-            if move._is_eligible_for_early_payment_discount(payment_currency or line.currency_id, payment_date):
+            if move.state != 'cancel' and move._is_eligible_for_early_payment_discount(payment_currency or line.currency_id, payment_date):
                 installment.update({
                     'amount_residual_currency': line.discount_amount_currency,
                     'amount_residual': line.discount_balance,
