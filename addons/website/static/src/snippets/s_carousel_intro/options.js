@@ -23,4 +23,11 @@ options.registry.CarouselIntro = options.registry.Carousel.extend({
         }
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        // Set Indicator to the first image on save
+        this._updateIndicator(0);
+    },
 });
