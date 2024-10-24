@@ -118,7 +118,6 @@ export class ProductCard extends Component {
     showProductInfo() {
         this.dialog.add(ProductInfoPopup, {
             productTemplate: this.props.productTemplate,
-            title: this.props.productTemplate.name,
             addToCart: (qty) => {
                 this.selectProduct(qty);
             },
