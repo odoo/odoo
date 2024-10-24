@@ -376,10 +376,13 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
             true
         ).then(function (productId) {
             $parent.find('.product_id').val(productId);
-
+            const product_tmpl_ids = [...$modal.find('input.product_template_id')].map((el) =>
+                parseInt(el.value)
+            );
             ajax.jsonRpc(self._getUri("/sale_product_configurator/optional_product_items"), 'call', {
                 'product_id': productId,
                 'pricelist_id': self.pricelistId || false,
+                'exclude_product_tmpl_ids': product_tmpl_ids,
             }).then(function (addedItem) {
                 var $addedItem = $(addedItem);
                 $modal.find('tr:last').after($addedItem);
