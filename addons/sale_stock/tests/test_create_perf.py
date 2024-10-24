@@ -39,7 +39,7 @@ class TestPERF(TransactionCaseWithUserDemo):
     @users('admin')
     @warmup
     def test_empty_sale_order_creation_perf(self):
-        with self.assertQueryCount(admin=35):
+        with self.assertQueryCount(admin=34):
             self.env['sale.order'].create({
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
