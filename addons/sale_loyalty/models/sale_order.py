@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-
 import itertools
-
 import random
 
 from odoo import api, fields, models, _
@@ -13,8 +10,10 @@ from odoo.fields import Command
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.osv import expression
 
+
 def _generate_random_reward_code():
     return str(random.getrandbits(32))
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -415,12 +414,13 @@ class SaleOrder(models.Model):
             if not price:
                 continue
             mapped_taxes = self.fiscal_position_id.map_tax(tax)
-            tax_desc = ''
-            if any(t.name for t in mapped_taxes):
+            if len(discountable_per_tax) > 1 and any(t.name for t in mapped_taxes):
                 tax_desc = _(
                     ' - On product with the following taxes: %(taxes)s',
                     taxes=", ".join(mapped_taxes.mapped('name')),
                 )
+            else:
+                tax_desc = ""
             reward_dict[tax] = {
                 'name': _(
                     'Discount: %(desc)s%(tax_str)s',
