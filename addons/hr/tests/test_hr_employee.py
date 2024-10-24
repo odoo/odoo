@@ -207,7 +207,7 @@ class TestHrEmployee(TestHrCommon):
     def test_employee_update_work_contact_id(self):
         """
             Check that the `work_contact_id` information is no longer
-            updated when an employee's `user_id` is removed.
+            updated when an employee's `user_id` is added to another employee.
         """
         user = self.env['res.users'].create({
             'name': 'Test',
@@ -231,6 +231,8 @@ class TestHrEmployee(TestHrCommon):
         employee_B.work_email = 'new_email@example.com'
         self.assertEqual(employee_A.work_email, 'employee_A@example.com')
         self.assertEqual(employee_B.work_email, 'new_email@example.com')
+        self.assertFalse(employee_A.work_contact_id)
+        self.assertEqual(employee_B.work_contact_id, user.partner_id)
 
     @users('admin')
     def test_change_user_on_employee(self):
@@ -264,6 +266,33 @@ class TestHrEmployee(TestHrCommon):
         # change user back -> check that there is no company error
         with Form(test_employee) as employee_form:
             employee_form.user_id = test_user
+
+    def test_change_user_on_employee_keep_partner(self):
+        """
+            Check that removing user from employee keeps the link in
+            work_contact_id until the user is assigned to another employee.
+        """
+        test_user = self.env['res.users'].create({
+            'name': 'Test User',
+            'login': 'test_user',
+        })
+        test_employee = self.env['hr.employee'].create({
+            'name': 'Test User - employee',
+            'user_id': test_user.id,
+        })
+        # remove user
+        test_employee.user_id = None
+        self.assertEqual(test_employee.work_contact_id, test_user.partner_id)
+        self.assertFalse(test_employee.user_id)
+        # create new employee from user
+        test_user.action_create_employee()
+        self.assertTrue(len(test_user.employee_ids) == 1, "Test user should have exactly one employee associated with it")
+        # previous employee shouldn't have a work_contact_id anymore, as the partner is reassigned
+        self.assertFalse(test_employee.work_contact_id)
+        # the new employee should be associated to both the user and its partner
+        new_employee = self.env['hr.employee'].browse(test_user.employee_ids.id)
+        self.assertEqual(new_employee.work_contact_id, test_user.partner_id)
+        self.assertEqual(new_employee.user_id, test_user)
 
     def test_avatar(self):
         # Check simple employee has a generated image (initials)
