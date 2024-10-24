@@ -15,13 +15,13 @@ patch(OutOfFocusService.prototype, {
         this.titleService.setCounters({ discuss: undefined });
     },
     notify(message) {
-        super.notify(...arguments);
         if (this.contributingMessageLocalIds.has(message.localId)) {
             return;
         }
         this.contributingMessageLocalIds.add(message.localId);
         this.counter++;
         this.titleService.setCounters({ discuss: this.counter });
+        super.notify(...arguments);
     },
 });
 outOfFocusService.dependencies = [...outOfFocusService.dependencies, "title"];

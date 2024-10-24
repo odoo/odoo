@@ -79,7 +79,7 @@ will update the cost of every lot/serial number in stock."),
                     out_stock_valuation_layers = SVL.create(out_svl_vals_list)
                     if tmpl.valuation == 'real_time':
                         move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
-                impacted_templates[tmpl] = (products, description, products_orig_quantity_svl)
+                    impacted_templates[tmpl] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductTemplate, self).write(vals)
 
