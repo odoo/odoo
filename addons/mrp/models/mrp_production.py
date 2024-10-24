@@ -1547,8 +1547,8 @@ class MrpProduction(models.Model):
             return
 
         self.with_context(force_date=True).write({
-            'date_start': min([workorder.leave_id.date_from for workorder in workorders]),
-            'date_finished': max([workorder.leave_id.date_to for workorder in workorders])
+            'date_start': min(leave_id.date_from for leave_id in workorders.leave_id),
+            'date_finished': max(leave_id.date_to for leave_id in workorders.leave_id)
         })
 
     def button_unplan(self):
