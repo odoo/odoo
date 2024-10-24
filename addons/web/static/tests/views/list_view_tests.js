@@ -2842,12 +2842,13 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["openRecord", "openRecord"]);
     });
 
-    QUnit.test("open invalid but unchanged record", async function (assert) {
+    QUnit.test("invalidating save on opening record with invalid datas", async function (assert) {
         const listView = registry.category("views").get("list");
+        let count = 1;
         class CustomListController extends listView.Controller {
             openRecord(record) {
                 assert.step("openRecord");
-                assert.strictEqual(record.resId, 2);
+                assert.strictEqual(record.resId, count++);
                 return super.openRecord(record);
             }
         }
@@ -2868,18 +2869,23 @@ QUnit.module("Views", (hooks) => {
         });
 
         patchWithCleanup(list.env.services.notification, {
-            add: () => {
-                throw new Error("should not display a notification");
+            add: (message) => {
+                assert.step(`Invalid Field: ${message}`);
             },
         });
 
+        assert.verifySteps([]);
+        // open the valid record => trigger a save and does not raise an invalid notification
+        await click(target.querySelector(".o_data_row:nth-child(1) .o_data_cell"));
+        assert.verifySteps(["openRecord"]);
         // second record is invalid as date is not set
         assert.strictEqual(
             target.querySelector(".o_data_row:nth-child(2) .o_data_cell[name=date]").innerText,
             ""
         );
+        // open the invalid record => invalidate save and notify invalid Field thanks to `_checkValidity`
         await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
-        assert.verifySteps(["openRecord"]);
+        assert.verifySteps(["openRecord", "Invalid Field: <ul><li>Some Date</li></ul>"]);
     });
 
     QUnit.test(
