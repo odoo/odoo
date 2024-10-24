@@ -22,6 +22,7 @@ This addon provides an extensible, maintainable editor.
         'web.assets_backend': [
             'html_editor/static/src/**/*',
             ('remove', 'html_editor/static/src/components/history_dialog/history_dialog.dark.scss'),
+            ('remove', 'html_editor/static/src/main/movenode.dark.scss'),
             ('include', 'html_editor.assets_media_dialog'),
         ],
         'html_editor.assets_media_dialog': [
@@ -32,6 +33,7 @@ This addon provides an extensible, maintainable editor.
         ],
         "web.assets_web_dark": [
             'html_editor/static/src/components/history_dialog/history_dialog.dark.scss',
+            'html_editor/static/src/main/movenode.dark.scss',
         ],
         'web.assets_unit_tests': [
             'html_editor/static/tests/**/*',
