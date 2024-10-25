@@ -11,7 +11,7 @@ const ALLOWED_ELEMENTS =
 
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
-    static dependencies = ["selection", "history", "position", "localOverlay"];
+    static dependencies = ["baseContainer", "selection", "history", "position", "localOverlay"];
     resources = {
         layout_geometry_change_handlers: () => {
             if (this.currentMovableElement) {
@@ -186,7 +186,15 @@ export class MoveNodePlugin extends Plugin {
         let movableElement =
             newAnchorWidget &&
             closestElement(newAnchorWidget, (node) => {
-                return isNodeMovable(node) && node.matches(ALLOWED_ELEMENTS);
+                return (
+                    isNodeMovable(node) &&
+                    node.matches(
+                        [
+                            ALLOWED_ELEMENTS,
+                            this.dependencies.baseContainer.getBaseContainer().selector,
+                        ].join(", ")
+                    )
+                );
             });
         // Retrive the first list container from the ancestors.
         const listContainer =
@@ -201,7 +209,11 @@ export class MoveNodePlugin extends Plugin {
     }
     getMovableElements() {
         const elems = [];
-        for (const el of this.editable.querySelectorAll(ALLOWED_ELEMENTS)) {
+        for (const el of this.editable.querySelectorAll(
+            [ALLOWED_ELEMENTS, this.dependencies.baseContainer.getBaseContainer().selector].join(
+                ", "
+            )
+        )) {
             if (isNodeMovable(el)) {
                 elems.push(el);
             }
@@ -386,7 +398,7 @@ export class MoveNodePlugin extends Plugin {
                 focusElelement.after(movableElement);
             }
             if (previousParent.innerHTML.trim() === "") {
-                const p = document.createElement("p");
+                const p = this.dependencies.baseContainer.getBaseContainer().create();
                 const br = document.createElement("br");
                 p.append(br);
                 previousParent.append(p);

@@ -12,19 +12,19 @@ function isMutationRecordSavable(record) {
  * @param {SelectionData} selectionData
  * @param {HTMLElement} editable
  */
-function target(selectionData, editable) {
+function target(baseContainer, selectionData, editable) {
     if (selectionData.documentSelectionIsInEditable || editable.childNodes.length !== 1) {
         return;
     }
     const el = editable.firstChild;
-    if (el.tagName === "P" && isEmptyBlock(el)) {
+    if (isEmptyBlock(el) && el.matches(baseContainer.selector)) {
         return el;
     }
 }
 
 export class HintPlugin extends Plugin {
     static id = "hint";
-    static dependencies = ["history", "selection"];
+    static dependencies = ["baseContainer", "history", "selection"];
     resources = {
         /** Handlers */
         selectionchange_handlers: this.updateHints.bind(this),
@@ -39,7 +39,15 @@ export class HintPlugin extends Plugin {
         savable_mutation_record_predicates: isMutationRecordSavable,
         system_classes: ["o-we-hint"],
         ...(this.config.placeholder && {
-            hints: { text: this.config.placeholder, target },
+            hints: [
+                {
+                    text: this.config.placeholder,
+                    target: target.bind(
+                        undefined,
+                        this.dependencies.baseContainer.getBaseContainer()
+                    ),
+                },
+            ],
         }),
     };
 

@@ -175,6 +175,7 @@ export class ImageTransformation extends Component {
             return;
         }
         let type = "position";
+        // TODO ABD: suspect usage of closest div, to evaluate
         const target = ev.target.closest("div");
 
         if (target.classList.contains("transfo-rotator")) {

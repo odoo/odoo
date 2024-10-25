@@ -7,6 +7,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 const REGEX_BOOTSTRAP_COLUMN = /(?:^| )col(-[a-zA-Z]+)?(-\d+)?(?:$| )/;
 
 function isUnremovableColumn(node, root) {
+    // TODO ABD: make sure that columns are never set to be a baseContainer
     const isColumnInnerStructure =
         node.nodeName === "DIV" && [...node.classList].some((cls) => /^row$|^col$|^col-/.test(cls));
 
@@ -29,7 +30,7 @@ function columnIsAvailable(numberOfColumns) {
 
 export class ColumnPlugin extends Plugin {
     static id = "column";
-    static dependencies = ["selection", "history"];
+    static dependencies = ["baseContainer", "selection", "history"];
     resources = {
         user_commands: [
             {
@@ -141,12 +142,12 @@ export class ColumnPlugin extends Plugin {
         block.before(container);
         columns.shift().append(block);
         for (const column of columns) {
-            const p = this.document.createElement("p");
+            const p = this.dependencies.baseContainer.getBaseContainer().create();
             p.append(this.document.createElement("br"));
             column.append(p);
         }
         if (addParagraphAfter) {
-            const p = this.document.createElement("p");
+            const p = this.dependencies.baseContainer.getBaseContainer().create();
             p.append(this.document.createElement("br"));
             container.after(p);
         }
@@ -172,7 +173,7 @@ export class ColumnPlugin extends Plugin {
             for (let i = 0; i < diff; i++) {
                 const column = this.document.createElement("div");
                 column.classList.add(`col-${columnSize}`);
-                const p = this.document.createElement("p");
+                const p = this.dependencies.baseContainer.getBaseContainer().create();
                 p.append(this.document.createElement("br"));
                 column.append(p);
                 lastColumn.after(column);

@@ -46,7 +46,15 @@ function isUnremovableTableComponent(node, root) {
  */
 export class TablePlugin extends Plugin {
     static id = "table";
-    static dependencies = ["dom", "history", "selection", "delete", "split", "color"];
+    static dependencies = [
+        "baseContainer",
+        "dom",
+        "history",
+        "selection",
+        "delete",
+        "split",
+        "color",
+    ];
     static shared = [
         "insertTable",
         "addColumn",
@@ -148,7 +156,9 @@ export class TablePlugin extends Plugin {
     }
     insertTable({ rows = 2, cols = 2 } = {}) {
         const table = this._insertTable({ rows, cols });
-        this.dependencies.selection.setCursorStart(table.querySelector("p"));
+        this.dependencies.selection.setCursorStart(
+            table.querySelector(this.dependencies.baseContainer.getBaseContainer().selector)
+        );
         this.dependencies.history.addStep();
     }
     /**
@@ -183,7 +193,7 @@ export class TablePlugin extends Plugin {
         }
         referenceColumn.forEach((cell, rowIndex) => {
             const newCell = this.document.createElement("td");
-            const p = this.document.createElement("p");
+            const p = this.dependencies.baseContainer.getBaseContainer().create();
             p.append(this.document.createElement("br"));
             newCell.append(p);
             cell[position](newCell);
@@ -219,7 +229,7 @@ export class TablePlugin extends Plugin {
         newRow.append(
             ...Array.from(Array(cells.length)).map(() => {
                 const td = this.document.createElement("td");
-                const p = this.document.createElement("p");
+                const p = this.dependencies.baseContainer.getBaseContainer().create();
                 p.append(this.document.createElement("br"));
                 td.append(p);
                 return td;
@@ -334,7 +344,7 @@ export class TablePlugin extends Plugin {
         if (!table) {
             return;
         }
-        const p = this.document.createElement("p");
+        const p = this.dependencies.baseContainer.getBaseContainer().create();
         p.appendChild(this.document.createElement("br"));
         table.before(p);
         table.remove();
