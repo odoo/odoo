@@ -1,27 +1,21 @@
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import { registries, chartHelpers } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
 
-const { chartRegistry } = spreadsheet.registries;
-const { INTERACTIVE_LEGEND_CONFIG } = spreadsheet.constants;
+const { chartRegistry } = registries;
 
 const {
-    getDefaultChartJsRuntime,
-    getChartAxisTitleRuntime,
-    getCustomLegendLabels,
-    chartFontColor,
-    ColorGenerator,
-    getFillingMode,
-    colorToRGBA,
-    rgbaToHex,
+    getLineChartDatasets,
+    CHART_COMMON_OPTIONS,
+    getLineChartLayout,
+    getLineChartScales,
+    getLineChartTooltip,
+    getChartTitle,
+    getLineChartLegend,
+    getChartShowValues,
     getTrendDatasetForLineChart,
-    getChartAxisType,
-    formatTickValue,
-} = spreadsheet.helpers;
-
-const { TREND_LINE_XAXIS_ID } = spreadsheet.constants;
-
-const LINE_FILL_TRANSPARENCY = 0.4;
+    truncateLabel,
+} = chartHelpers;
 
 export class OdooLineChart extends OdooChart {
     constructor(definition, sheetId, getters) {
@@ -60,140 +54,64 @@ chartRegistry.add("odoo_line", {
 
 function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
-    const { datasets, labels } = chart.dataSource.getData();
+    let { datasets, labels } = chart.dataSource.getData();
+    datasets = computeCumulatedDatasets(chart, datasets);
+
+    const definition = chart.getDefinition();
+    definition.dataSets = datasets.map(() => ({ trend: definition.trend }));
     const locale = getters.getLocale();
-    const chartJsConfig = getLineConfiguration(chart, labels, locale);
-    const colors = new ColorGenerator(datasets.length);
 
-    let maxLength = 0;
-    const trendDatasets = [];
-    const axisType = getChartAxisType(chart, getters);
+    const trendDataSetsValues = datasets.map((dataset, index) => {
+        const trend = definition.dataSets[index].trend;
+        return !trend?.display
+            ? undefined
+            : getTrendDatasetForLineChart(trend, dataset.data, labels, "category", locale);
+    });
 
-    for (const index in datasets) {
-        let { label, data, cumulatedStart } = datasets[index];
+    const chartData = {
+        labels,
+        dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        locale,
+        trendDataSetsValues,
+    };
 
-        const color = colors.next();
-        let backgroundColor = color;
-        if (chart.fillArea) {
-            const backgroundRGBA = colorToRGBA(color);
-            // use the transparency of Odoo to keep consistency
-            backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
-            backgroundColor = rgbaToHex(backgroundRGBA);
-        }
+    const chartJsDatasets = getLineChartDatasets(definition, chartData);
+    const config = {
+        type: "line",
+        data: {
+            labels: chartData.labels.map(truncateLabel),
+            datasets: chartJsDatasets,
+        },
+        options: {
+            ...CHART_COMMON_OPTIONS,
+            layout: getLineChartLayout(definition),
+            scales: getLineChartScales(definition, chartData),
+            plugins: {
+                title: getChartTitle(definition),
+                legend: getLineChartLegend(definition, chartData),
+                tooltip: getLineChartTooltip(definition, chartData),
+                chartShowValuesPlugin: getChartShowValues(definition, chartData),
+            },
+            ...getters.getChartDatasetActionCallbacks(chart),
+        },
+    };
+
+    return { background, chartJsConfig: config };
+}
+
+function computeCumulatedDatasets(chart, datasets) {
+    const cumulatedDatasets = [];
+    for (const dataset of datasets) {
         if (chart.cumulative) {
-            let accumulator = cumulatedStart;
-            data = data.map((value) => {
+            let accumulator = dataset.cumulatedStart || 0;
+            const data = dataset.data.map((value) => {
                 accumulator += value;
                 return accumulator;
             });
-        }
-
-        const dataset = {
-            label,
-            data,
-            lineTension: 0,
-            borderColor: color,
-            backgroundColor,
-            pointBackgroundColor: color,
-            fill: chart.fillArea ? getFillingMode(parseInt(index), chart.stacked) : false,
-        };
-        chartJsConfig.data.datasets.push(dataset);
-
-        const trend = chart.getDefinition().trend;
-        if (!trend?.display) {
-            continue;
-        }
-
-        const trendDataset = getTrendDatasetForLineChart(trend, dataset, axisType, locale);
-        if (trendDataset) {
-            maxLength = Math.max(maxLength, trendDataset.data.length);
-            trendDatasets.push(trendDataset);
+            cumulatedDatasets.push({ ...dataset, data });
+        } else {
+            cumulatedDatasets.push(dataset);
         }
     }
-
-    if (trendDatasets.length) {
-        /* We add a second x axis here to draw the trend lines, with the labels length being
-         * set so that the second axis points match the classical x axis
-         */
-        chartJsConfig.options.scales[TREND_LINE_XAXIS_ID] = {
-            ...chartJsConfig.options.scales.x,
-            type: "category",
-            labels: Array(maxLength).fill(""),
-            offset: false,
-            display: false,
-        };
-        /* These datasets must be inserted after the original datasets to ensure the way we
-         * distinguish the originals and trendLine datasets after
-         */
-        trendDatasets.forEach((x) => chartJsConfig.data.datasets.push(x));
-
-        const originalTooltipTitle = chartJsConfig.options.plugins.tooltip.callbacks.title;
-        chartJsConfig.options.plugins.tooltip.callbacks.title = function (tooltipItems) {
-            if (tooltipItems.some((item) => item.dataset.xAxisID !== TREND_LINE_XAXIS_ID)) {
-                return originalTooltipTitle?.(tooltipItems);
-            }
-            return "";
-        };
-    }
-    return { background, chartJsConfig };
-}
-
-function getLineConfiguration(chart, labels, locale) {
-    const fontColor = chartFontColor(chart.background);
-    const config = getDefaultChartJsRuntime(chart, labels, fontColor, { locale });
-    const filled = chart.fillArea || chart.stacked;
-    const pointStyle = filled ? "rect" : "line";
-    const lineWidth = filled ? 2 : 3;
-    config.type = chart.type.replace("odoo_", "");
-    const legend = {
-        ...config.options.legend,
-        display: chart.legendPosition !== "none",
-        ...INTERACTIVE_LEGEND_CONFIG,
-        ...getCustomLegendLabels(fontColor, {
-            pointStyle,
-            lineWidth,
-        }),
-    };
-    legend.position = chart.legendPosition;
-    config.options.plugins = config.options.plugins || {};
-    config.options.plugins.legend = legend;
-    config.options.layout = {
-        padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-    };
-    config.options.scales = {
-        x: {
-            ticks: {
-                // x axis configuration
-                maxRotation: 60,
-                minRotation: 15,
-                padding: 5,
-                labelOffset: 2,
-                color: fontColor,
-            },
-            title: getChartAxisTitleRuntime(chart.axesDesign?.x),
-            grid: {
-                display: false,
-            },
-        },
-        y: {
-            position: chart.verticalAxisPosition,
-            ticks: {
-                color: fontColor,
-            },
-            title: getChartAxisTitleRuntime(chart.axesDesign?.y),
-            grid: {
-                display: true,
-            },
-        },
-    };
-    if (chart.stacked) {
-        config.options.scales.y.stacked = true;
-    }
-
-    config.options.plugins.chartShowValuesPlugin = {
-        showValues: chart.showValues,
-        background: chart.background,
-        callback: formatTickValue({ locale }),
-    };
-    return config;
+    return cumulatedDatasets;
 }
