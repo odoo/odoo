@@ -124,6 +124,18 @@ objectify.set_default_parser(default_parser)
 NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 
 
+# Configure csv
+class UNIX_LINE_TERMINATOR(csv.excel):
+    lineterminator = '\n'
+
+
+# the default limit for CSV fields in the module is 128KiB, which is not
+# quite sufficient to import images to store in attachment. 500MiB is a
+# bit overkill, but better safe than sorry I guess
+csv.field_size_limit(500 * 1024 * 1024)
+csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
+
+
 class Sentinel(enum.Enum):
     """Class for typing parameters with a sentinel as a default"""
     SENTINEL = -1
