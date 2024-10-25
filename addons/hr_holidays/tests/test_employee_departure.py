@@ -14,7 +14,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         })
         cls.departure_date = date.today()
         departure_reason = cls.env['hr.departure.reason'].create({'name': "Fired"})
-        cls.departure_wizard = cls.env['hr.departure.wizard'].create({
+        cls.departure_wizard = cls.env['hr.employee.departure'].create({
             'departure_reason_id': departure_reason.id,
             'departure_date': cls.departure_date,
             'employee_ids': [Command.link(cls.employee.id)],

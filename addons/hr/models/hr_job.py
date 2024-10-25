@@ -7,8 +7,8 @@ from odoo.addons.web_editor.tools import handle_history_divergence
 
 class HrJob(models.Model):
     _name = 'hr.job'
-    _description = "Job Position"
     _inherit = ['mail.thread']
+    _description = "Job Position"
     _order = 'sequence'
 
     active = fields.Boolean(default=True)

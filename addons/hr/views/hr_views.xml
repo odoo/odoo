@@ -42,12 +42,13 @@
             groups="group_hr_user"
             sequence="95"/>
 
-        <menuitem
-           id="menu_hr_reporting_timesheet"
-           name="Reporting"
-           parent="menu_hr_root"
-           groups="group_hr_manager,group_hr_user"
-           sequence="99"/>
+            <menuitem
+                id="menu_hr_employee_departure"
+                name="Ends of Collaboration"
+                action="hr_employee_departure_action"
+                parent="hr_menu_hr_reports"
+                groups="hr.group_hr_user"
+                sequence="10"/>
 
         <menuitem
             id="menu_human_resources_configuration"

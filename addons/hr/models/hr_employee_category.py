@@ -8,7 +8,6 @@ from odoo import fields, models
 
 class HrEmployeeCategory(models.Model):
     _name = 'hr.employee.category'
-
     _description = "Employee Category"
 
     def _get_default_color(self):

@@ -25,6 +25,6 @@ from . import test_timeoff_event
 from . import test_working_hours
 from . import test_dashboard
 from . import test_expiring_leaves
-from . import test_hr_departure_wizard
 from . import test_time_off_card_tour
 from . import test_hr_leave_type_tour
+from . import test_employee_departure
