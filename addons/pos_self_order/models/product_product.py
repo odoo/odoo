@@ -33,8 +33,15 @@ class ProductTemplate(models.Model):
 
         data['pos.config'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
+        self._process_pos_self_ui_products(products)
 
         return products
+
+    def _process_pos_self_ui_products(self, products):
+        for product in products:
+            product['_archived_combinations'] = []
+            for product_product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', '=', product['id']), ('active', '=', False)]):
+                product['_archived_combinations'].append(product_product.product_template_attribute_value_ids.ids)
 
     @api.model
     def _load_pos_self_data_fields(self, config_id):

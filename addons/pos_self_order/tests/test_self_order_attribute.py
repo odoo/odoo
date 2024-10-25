@@ -105,7 +105,7 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "selfAlwaysAttributeVariants", watch=True)
+        self.start_tour(self_route, "selfAlwaysAttributeVariants")
 
         order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.lines[0].product_id.id, chair_product_tmpl.product_variant_ids[0].id)
