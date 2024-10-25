@@ -263,8 +263,8 @@ class SaleOrderLine(models.Model):
         return qty
 
     def _get_outgoing_incoming_moves(self):
-        outgoing_moves = self.env['stock.move']
-        incoming_moves = self.env['stock.move']
+        outgoing_moves_ids = set()
+        incoming_moves_ids = set()
 
         moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id)
         if self._context.get('accrual_entry_date'):
@@ -273,11 +273,11 @@ class SaleOrderLine(models.Model):
         for move in moves:
             if move.location_dest_id.usage == "customer":
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
-                    outgoing_moves |= move
+                    outgoing_moves_ids.add(move.id)
             elif move.location_id.usage == "customer" and move.to_refund:
-                incoming_moves |= move
+                incoming_moves_ids.add(move.id)
 
-        return outgoing_moves, incoming_moves
+        return self.env['stock.move'].browse(outgoing_moves_ids), self.env['stock.move'].browse(incoming_moves_ids)
 
     def _get_procurement_group(self):
         return self.order_id.procurement_group_id
