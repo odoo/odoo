@@ -2890,9 +2890,6 @@ class MailThread(models.AbstractModel):
 
         for values in values_list:
             create_values = dict(values)
-            # Avoid warnings about non-existing fields
-            for x in ('from', 'to', 'cc'):
-                create_values.pop(x, None)
             create_values['partner_ids'] = [Command.link(pid) for pid in (create_values.get('partner_ids') or [])]
             create_values_list.append(create_values)
 
