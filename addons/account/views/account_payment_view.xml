@@ -143,13 +143,11 @@
                                 invisible="state != 'draft'" data-hotkey="q"/>
                         <button name="action_validate" string="Validate" type="object" class="oe_highlight"
                                 invisible="state != 'in_process'" data-hotkey="q"/>
-                        <button name="action_reject" string="Reject" type="object" class="oe_highlight"
+                        <button name="action_reject" string="Reject" type="object"
                                 invisible="state != 'in_process' or not is_sent" data-hotkey="q"/>
-                        <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
+                        <button name="action_draft" string="Reset to Draft" type="object" class="btn btn-secondary"
                                 invisible="state in ('draft')"
                                 groups="account.group_account_invoice" data-hotkey="w"/>
-                        <button name="action_cancel" string="Cancel" type="object"
-                                invisible="not id or not (state == 'draft' or (state == 'in_process' and is_sent))" data-hotkey="x"/>
                         <button string="Request Cancel"
                                 name="button_request_cancel"
                                 type="object"
@@ -160,6 +158,8 @@
                                 invisible="state != 'in_process' or is_sent or payment_method_code != 'manual'"/>
                         <button name="unmark_as_sent" string="Unmark as Sent" type="object" data-hotkey="k"
                                 invisible="state != 'in_process' or not is_sent or payment_method_code != 'manual'"/>
+                        <button name="action_cancel" string="Cancel" type="object"
+                                invisible="not id or not (state == 'draft' or (state == 'in_process' and is_sent))" data-hotkey="x"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_process,paid"/>
                     </header>
                     <div class="alert alert-warning mb-0" role="alert" invisible="not duplicate_payment_ids or state!='draft'">
