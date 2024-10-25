@@ -225,9 +225,9 @@ export class SelfOrder extends Reactive {
             const productVariant = this.models["product.product"].find(
                 (prd) =>
                     prd.product_tmpl_id.id === productTemplate.id &&
-                    prd.product_template_variant_value_ids.every((ptav) => {
-                        return Object.values(selectedValues).some((value) => ptav.id == value);
-                    })
+                    prd.product_template_variant_value_ids.every((ptav) =>
+                        Object.values(selectedValues).some((value) => ptav.id == value)
+                    )
             );
             if (productVariant) {
                 Object.assign(values, {
