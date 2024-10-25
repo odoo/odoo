@@ -4,14 +4,14 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
-    static name = "inline_code";
+    static id = "inlineCode";
     static dependencies = ["selection", "history"];
     resources = {
         input_handlers: this.onInput.bind(this),
     };
 
     onInput(ev) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         if (ev.data !== "`" || closestElement(selection.anchorNode, "code")) {
             return;
         }
@@ -33,11 +33,11 @@ export class InlineCodePlugin extends Plugin {
             sibling.remove();
             sibling = textNode.nextSibling;
         }
-        this.shared.setSelection({ anchorNode: textNode, anchorOffset: offset });
+        this.dependencies.selection.setSelection({ anchorNode: textNode, anchorOffset: offset });
         const textHasTwoTicks = /`.*`/.test(textNode.textContent);
         // We don't apply the code tag if there is no content between the two `
         if (textHasTwoTicks && textNode.textContent.replace(/`/g, "").length) {
-            this.shared.addStep();
+            this.dependencies.history.addStep();
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
                 0,
@@ -82,17 +82,17 @@ export class InlineCodePlugin extends Plugin {
             if (isClosingForward) {
                 // Move selection out of code element.
                 codeElement.after(document.createTextNode("\u200B"));
-                this.shared.setSelection({
+                this.dependencies.selection.setSelection({
                     anchorNode: codeElement.nextSibling,
                     anchorOffset: 1,
                 });
             } else {
-                this.shared.setSelection({
+                this.dependencies.selection.setSelection({
                     anchorNode: codeElement.firstChild,
                     anchorOffset: 0,
                 });
             }
         }
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 }

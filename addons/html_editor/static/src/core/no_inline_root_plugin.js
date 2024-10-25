@@ -4,7 +4,7 @@ import { isNotAllowedContent } from "./selection_plugin";
 import { nodeSize } from "@html_editor/utils/position";
 
 export class NoInlineRootPlugin extends Plugin {
-    static name = "no_inline_root";
+    static id = "noInlineRoot";
     static dependencies = ["selection", "history"];
 
     resources = {
@@ -65,10 +65,13 @@ export class NoInlineRootPlugin extends Plugin {
             }
             const [anchorNode] = getDeepestPosition(nodeAfterCursor, 0);
             if (nodeAfterCursor) {
-                this.shared.setSelection({ anchorNode: anchorNode, anchorOffset: 0 });
+                this.dependencies.selection.setSelection({
+                    anchorNode: anchorNode,
+                    anchorOffset: 0,
+                });
                 return true;
             } else {
-                this.shared.resetActiveSelection();
+                this.dependencies.selection.resetActiveSelection();
             }
         } else if (currentKeyDown === "ArrowLeft" || currentKeyDown === "ArrowUp") {
             while (nodeBeforeCursor && isNotAllowedContent(nodeBeforeCursor)) {
@@ -79,13 +82,13 @@ export class NoInlineRootPlugin extends Plugin {
                     nodeBeforeCursor,
                     nodeSize(nodeBeforeCursor)
                 );
-                this.shared.setSelection({
+                this.dependencies.selection.setSelection({
                     anchorNode: anchorNode,
                     anchorOffset: anchorOffset,
                 });
                 return true;
             } else {
-                this.shared.resetActiveSelection();
+                this.dependencies.selection.resetActiveSelection();
             }
         }
     }
@@ -98,14 +101,14 @@ export class NoInlineRootPlugin extends Plugin {
         // Handle arrow key presses.
         if (nodeAfterCursor && paragraphRelatedElements.includes(nodeAfterCursor.nodeName)) {
             // Cursor is right before a 'P'.
-            this.shared.setCursorStart(nodeAfterCursor);
+            this.dependencies.selection.setCursorStart(nodeAfterCursor);
             return true;
         } else if (
             nodeBeforeCursor &&
             paragraphRelatedElements.includes(nodeBeforeCursor.nodeName)
         ) {
             // Cursor is right after a 'P'.
-            this.shared.setCursorEnd(nodeBeforeCursor);
+            this.dependencies.selection.setCursorEnd(nodeBeforeCursor);
             return true;
         }
     }
@@ -141,8 +144,8 @@ export class NoInlineRootPlugin extends Plugin {
                 // Cursor is between two non-p blocks
                 nodeAfterCursor.before(p);
             }
-            this.shared.setCursorStart(p);
-            this.shared.addStep();
+            this.dependencies.selection.setCursorStart(p);
+            this.dependencies.history.addStep();
             return true;
         }
         return false;

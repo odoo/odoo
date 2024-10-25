@@ -6,8 +6,8 @@ import { memoize } from "@web/core/utils/functions";
  * sub components in an editor.
  */
 export class EmbeddedComponentPlugin extends Plugin {
-    static name = "embedded_components";
-    static dependencies = ["history", "protected_node"];
+    static id = "embeddedComponents";
+    static dependencies = ["history", "protectedNode"];
     resources = {
         filter_descendants_to_serialize: this.filterDescendantsToSerialize.bind(this),
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
@@ -132,7 +132,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (!this.hostToStateChangeManagerMap.has(host)) {
             const config = {
                 host,
-                commitStateChanges: () => this.shared.addStep(),
+                commitStateChanges: () => this.dependencies.history.addStep(),
             };
             const stateChangeManager = embedding.getStateChangeManager(config);
             stateChangeManager.setup();
@@ -241,10 +241,10 @@ export class EmbeddedComponentPlugin extends Plugin {
 
     normalize(elem) {
         this.forEachEmbeddedComponentHost(elem, (host, { getEditableDescendants }) => {
-            this.shared.setProtectingNode(host, true);
+            this.dependencies.protectedNode.setProtectingNode(host, true);
             const editableDescendants = getEditableDescendants?.(host) || {};
             for (const editableDescendant of Object.values(editableDescendants)) {
-                this.shared.setProtectingNode(editableDescendant, false);
+                this.dependencies.protectedNode.setProtectingNode(editableDescendant, false);
             }
         });
     }

@@ -6,8 +6,8 @@ import { nextLeaf } from "@html_editor/utils/dom_info";
 import { isBlock } from "@html_editor/utils/blocks";
 
 export class FilePlugin extends Plugin {
-    static name = "file";
-    static dependencies = ["embedded_components", "dom", "selection", "history"];
+    static id = "file";
+    static dependencies = ["embeddedComponents", "dom", "selection", "history"];
     resources = {
         user_commands: [
             {
@@ -45,9 +45,9 @@ export class FilePlugin extends Plugin {
     }
 
     openMediaDialog(params = {}) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const restoreSelection = () => {
-            this.shared.setSelection(selection);
+            this.dependencies.selection.setSelection(selection);
         };
         const { resModel, resId, field, type } = this.recordInfo;
         this.services.dialog.add(FileMediaDialog, {
@@ -71,8 +71,8 @@ export class FilePlugin extends Plugin {
 
     onSaveMediaDialog(element, { restoreSelection }) {
         restoreSelection();
-        this.shared.domInsert(element);
-        this.shared.addStep();
+        this.dependencies.dom.insert(element);
+        this.dependencies.history.addStep();
     }
 
     setupNewFile({ name, env }) {
@@ -87,7 +87,7 @@ export class FilePlugin extends Plugin {
                             }
                             const leafEl = isBlock(leaf) ? leaf : leaf.parentElement;
                             if (isBlock(leafEl) && leafEl.isContentEditable) {
-                                this.shared.setSelection({
+                                this.dependencies.selection.setSelection({
                                     anchorNode: leafEl,
                                     anchorOffset: 0,
                                 });

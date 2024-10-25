@@ -8,7 +8,7 @@ function isAvailable(selection) {
     return !closestElement(selection.anchorNode, ".o_editor_banner");
 }
 export class BannerPlugin extends Plugin {
-    static name = "banner";
+    static id = "banner";
     static dependencies = ["history", "dom", "emoji", "selection"];
     resources = {
         user_commands: [
@@ -93,7 +93,7 @@ export class BannerPlugin extends Plugin {
                 </div>
             </div`
         ).childNodes[0];
-        this.shared.domInsert(bannerElement);
+        this.dependencies.dom.insert(bannerElement);
         // If the first child of editable is contenteditable false element
         // a chromium bug prevents selecting the container. Prepend a
         // zero-width space so it's no longer the first child.
@@ -101,16 +101,18 @@ export class BannerPlugin extends Plugin {
             const zws = document.createTextNode("\u200B");
             bannerElement.before(zws);
         }
-        this.shared.setCursorStart(bannerElement.querySelector(".o_editor_banner > div > p"));
-        this.shared.addStep();
+        this.dependencies.selection.setCursorStart(
+            bannerElement.querySelector(".o_editor_banner > div > p")
+        );
+        this.dependencies.history.addStep();
     }
 
     onBannerEmojiChange(iconElement) {
-        this.shared.showEmojiPicker({
+        this.dependencies.emoji.showEmojiPicker({
             target: iconElement,
             onSelect: (emoji) => {
                 iconElement.textContent = emoji;
-                this.shared.addStep();
+                this.dependencies.history.addStep();
             },
         });
     }

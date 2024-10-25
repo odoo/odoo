@@ -50,10 +50,17 @@ import { withSequence } from "@html_editor/utils/resource";
 
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
+/**
+ * @typedef {Object} DeleteShared
+ * @property { DeletePlugin['delete'] } delete
+ * @property { DeletePlugin['deleteRange'] } deleteRange
+ * @property { DeletePlugin['deleteSelection'] } deleteSelection
+ */
+
 export class DeletePlugin extends Plugin {
     static dependencies = ["selection", "history"];
-    static name = "delete";
-    static shared = ["deleteRange", "isUnmergeable", "deleteSelection", "delete"];
+    static id = "delete";
+    static shared = ["deleteRange", "deleteSelection", "delete"];
     resources = {
         beforeinput_handlers: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
@@ -104,12 +111,12 @@ export class DeletePlugin extends Plugin {
     /**
      * @param {EditorSelection} [selection]
      */
-    deleteSelection(selection = this.shared.getEditableSelection()) {
+    deleteSelection(selection = this.dependencies.selection.getEditableSelection()) {
         // @todo @phoenix: handle non-collapsed selection around a ZWS
         // see collapseIfZWS
 
         // Normalize selection
-        selection = this.shared.setSelection(selection);
+        selection = this.dependencies.selection.setSelection(selection);
 
         if (selection.isCollapsed) {
             return;
@@ -134,7 +141,7 @@ export class DeletePlugin extends Plugin {
      * @param {"character"|"word"|"line"} granularity
      */
     delete(direction, granularity) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
 
         if (!selection.isCollapsed) {
             this.deleteSelection(selection);
@@ -146,7 +153,7 @@ export class DeletePlugin extends Plugin {
             throw new Error("Invalid direction");
         }
         this.dispatchTo("delete_handlers");
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     // --------------------------------------------------------------------------
@@ -159,7 +166,7 @@ export class DeletePlugin extends Plugin {
      */
     deleteBackward(selection, granularity) {
         // Normalize selection
-        const { endContainer, endOffset } = this.shared.setSelection(selection);
+        const { endContainer, endOffset } = this.dependencies.selection.setSelection(selection);
 
         let range = this.getRangeForDelete(endContainer, endOffset, "backward", granularity);
 
@@ -187,7 +194,7 @@ export class DeletePlugin extends Plugin {
      */
     deleteForward(selection, granularity) {
         // Normalize selection
-        const { startContainer, startOffset } = this.shared.setSelection(selection);
+        const { startContainer, startOffset } = this.dependencies.selection.setSelection(selection);
 
         let range = this.getRangeForDelete(startContainer, startOffset, "forward", granularity);
 
@@ -217,7 +224,7 @@ export class DeletePlugin extends Plugin {
                 break;
             case "word":
                 ({ focusNode: destContainer, focusOffset: destOffset } =
-                    this.shared.modifySelection("extend", direction, "word"));
+                    this.dependencies.selection.modifySelection("extend", direction, "word"));
                 break;
             case "line":
                 [destContainer, destOffset] = this.findLineBoundary(node, offset, direction);
@@ -1155,7 +1162,7 @@ export class DeletePlugin extends Plugin {
 
     onBeforeInputInsertText(ev) {
         if (ev.inputType === "insertText") {
-            const selection = this.shared.getEditableSelection();
+            const selection = this.dependencies.selection.getEditableSelection();
             if (!selection.isCollapsed) {
                 this.deleteSelection();
             }
@@ -1191,9 +1198,15 @@ export class DeletePlugin extends Plugin {
 
         if (isEmpty(closestUnmergeable) && !this.isUnremovable(closestUnmergeable)) {
             closestUnmergeable.remove();
-            this.shared.setSelection({ anchorNode: destContainer, anchorOffset: destOffset });
+            this.dependencies.selection.setSelection({
+                anchorNode: destContainer,
+                anchorOffset: destOffset,
+            });
         } else {
-            this.shared.setSelection({ anchorNode: sourceContainer, anchorOffset: sourceOffset });
+            this.dependencies.selection.setSelection({
+                anchorNode: sourceContainer,
+                anchorOffset: sourceOffset,
+            });
         }
         return true;
     }
@@ -1231,7 +1244,7 @@ export class DeletePlugin extends Plugin {
             range.startContainer,
             range.startOffset
         );
-        this.shared.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
     // @todo: no need for this once selection in the editable root is corrected?

@@ -7,8 +7,8 @@ import { Plugin } from "../../plugin";
  */
 
 export class SearchPowerboxPlugin extends Plugin {
-    static name = "search_powerbox";
-    static dependencies = ["powerbox", "selection", "history", "user_command"];
+    static id = "searchPowerbox";
+    static dependencies = ["powerbox", "selection", "history"];
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
         input_handlers: this.onInput.bind(this),
@@ -29,7 +29,7 @@ export class SearchPowerboxPlugin extends Plugin {
     }
     onBeforeInput(ev) {
         if (ev.data === "/") {
-            this.historySavePointRestore = this.shared.makeSavePoint();
+            this.historySavePointRestore = this.dependencies.history.makeSavePoint();
         }
     }
     onInput(ev) {
@@ -43,28 +43,28 @@ export class SearchPowerboxPlugin extends Plugin {
         if (!this.shouldUpdate) {
             return;
         }
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         this.searchNode = selection.startContainer;
         if (!this.isSearching(selection)) {
-            this.shared.closePowerbox();
+            this.dependencies.powerbox.closePowerbox();
             return;
         }
         const searchTerm = this.searchNode.nodeValue.slice(this.offset + 1, selection.endOffset);
         if (!searchTerm) {
-            this.shared.updatePowerbox(this.enabledCommands, this.categories);
+            this.dependencies.powerbox.updatePowerbox(this.enabledCommands, this.categories);
             return;
         }
         if (searchTerm.includes(" ")) {
-            this.shared.closePowerbox();
+            this.dependencies.powerbox.closePowerbox();
             return;
         }
         const commands = this.filterCommands(searchTerm);
         if (!commands.length) {
-            this.shared.closePowerbox();
+            this.dependencies.powerbox.closePowerbox();
             this.shouldUpdate = true;
             return;
         }
-        this.shared.updatePowerbox(commands);
+        this.dependencies.powerbox.updatePowerbox(commands);
     }
     /**
      * @param {string} searchTerm
@@ -89,10 +89,10 @@ export class SearchPowerboxPlugin extends Plugin {
         );
     }
     openPowerbox() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         this.offset = selection.startOffset - 1;
-        this.enabledCommands = this.shared.getAvailablePowerboxCommands();
-        this.shared.openPowerbox({
+        this.enabledCommands = this.dependencies.powerbox.getAvailablePowerboxCommands();
+        this.dependencies.powerbox.openPowerbox({
             commands: this.enabledCommands,
             categories: this.categories,
             onApplyCommand: this.historySavePointRestore,

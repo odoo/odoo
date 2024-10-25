@@ -96,7 +96,7 @@ const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
 const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 
 export class FontPlugin extends Plugin {
-    static name = "font";
+    static id = "font";
     static dependencies = ["split", "selection", "dom", "format"];
     resources = {
         user_commands: [
@@ -105,42 +105,42 @@ export class FontPlugin extends Plugin {
                 title: _t("Heading 1"),
                 description: _t("Big section heading"),
                 icon: "fa-header",
-                run: () => this.shared.setTag({ tagName: "H1" }),
+                run: () => this.dependencies.dom.setTag({ tagName: "H1" }),
             },
             {
                 id: "setTagHeading2",
                 title: _t("Heading 2"),
                 description: _t("Medium section heading"),
                 icon: "fa-header",
-                run: () => this.shared.setTag({ tagName: "H2" }),
+                run: () => this.dependencies.dom.setTag({ tagName: "H2" }),
             },
             {
                 id: "setTagHeading3",
                 title: _t("Heading 3"),
                 description: _t("Small section heading"),
                 icon: "fa-header",
-                run: () => this.shared.setTag({ tagName: "H3" }),
+                run: () => this.dependencies.dom.setTag({ tagName: "H3" }),
             },
             {
                 id: "setTagParagraph",
                 title: _t("Text"),
                 description: _t("Paragraph block"),
                 icon: "fa-paragraph",
-                run: () => this.shared.setTag({ tagName: "P" }),
+                run: () => this.dependencies.dom.setTag({ tagName: "P" }),
             },
             {
                 id: "setTagQuote",
                 title: _t("Quote"),
                 description: _t("Add a blockquote section"),
                 icon: "fa-quote-right",
-                run: () => this.shared.setTag({ tagName: "blockquote" }),
+                run: () => this.dependencies.dom.setTag({ tagName: "blockquote" }),
             },
             {
                 id: "setTagPre",
                 title: _t("Code"),
                 description: _t("Add a code section"),
                 icon: "fa-code",
-                run: () => this.shared.setTag({ tagName: "pre" }),
+                run: () => this.dependencies.dom.setTag({ tagName: "pre" }),
             },
         ],
         split_element_block_overrides: [
@@ -167,7 +167,7 @@ export class FontPlugin extends Plugin {
                 props: {
                     getItems: () => fontItems,
                     onSelected: (item) => {
-                        this.shared.setTag({
+                        this.dependencies.dom.setTag({
                             tagName: item.tagName,
                             extraClass: item.extraClass,
                         });
@@ -182,7 +182,7 @@ export class FontPlugin extends Plugin {
                 props: {
                     getItems: () => this.fontSizeItems,
                     onSelected: (item) =>
-                        this.shared.formatSelection("setFontSizeClassName", {
+                        this.dependencies.format.formatSelection("setFontSizeClassName", {
                             formatProps: { className: item.className },
                         }),
                     isFontSize: true,
@@ -269,11 +269,11 @@ export class FontPlugin extends Plugin {
             const p = this.document.createElement("p");
             closestPre.after(p);
             fillEmpty(p);
-            this.shared.setCursorStart(p);
+            this.dependencies.selection.setCursorStart(p);
         } else {
             const lineBreak = this.document.createElement("br");
             targetNode.insertBefore(lineBreak, targetNode.childNodes[targetOffset]);
-            this.shared.setCursorEnd(lineBreak);
+            this.dependencies.selection.setCursorEnd(lineBreak);
         }
         return true;
     }
@@ -290,7 +290,7 @@ export class FontPlugin extends Plugin {
             headingTags.includes(element.tagName)
         );
         if (closestHeading) {
-            const [, newElement] = this.shared.splitElementBlock(params);
+            const [, newElement] = this.dependencies.split.splitElementBlock(params);
             // @todo @phoenix: if this condition can be anticipated before the split,
             // handle the splitBlock only in such case.
             if (
@@ -300,7 +300,7 @@ export class FontPlugin extends Plugin {
                 const p = this.document.createElement("P");
                 newElement.replaceWith(p);
                 p.replaceChildren(this.document.createElement("br"));
-                this.shared.setCursorStart(p);
+                this.dependencies.selection.setCursorStart(p);
             }
             return true;
         }
@@ -331,7 +331,7 @@ export class FontPlugin extends Plugin {
         p.append(...closestHandledElement.childNodes);
         closestHandledElement.after(p);
         closestHandledElement.remove();
-        this.shared.setCursorStart(p);
+        this.dependencies.selection.setCursorStart(p);
         return true;
     }
 
@@ -339,7 +339,7 @@ export class FontPlugin extends Plugin {
         if (ev.data !== " ") {
             return;
         }
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const blockEl = closestBlock(selection.anchorNode);
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
         let spaceOffset = selection.anchorOffset;
@@ -355,15 +355,17 @@ export class FontPlugin extends Plugin {
         if (/^(#{1,6})\s$/.test(precedingText)) {
             const numberOfHash = precedingText.length - 1;
             const headingToBe = headingTags[numberOfHash - 1];
-            this.shared.setSelection({
+            this.dependencies.selection.setSelection({
                 anchorNode: blockEl.firstChild,
                 anchorOffset: 0,
                 focusNode: selection.focusNode,
                 focusOffset: selection.focusOffset,
             });
-            this.shared.extractContent(this.shared.getEditableSelection());
+            this.dependencies.selection.extractContent(
+                this.dependencies.selection.getEditableSelection()
+            );
             fillEmpty(blockEl);
-            this.shared.setTag({ tagName: headingToBe });
+            this.dependencies.dom.setTag({ tagName: headingToBe });
         }
     }
 }

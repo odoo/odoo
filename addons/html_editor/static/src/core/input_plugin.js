@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 
 export class InputPlugin extends Plugin {
-    static name = "input";
+    static id = "input";
     static dependencies = ["history"];
     setup() {
         this.addDomListener(this.editable, "beforeinput", this.onBeforeInput);
@@ -9,12 +9,12 @@ export class InputPlugin extends Plugin {
     }
 
     onBeforeInput(ev) {
-        this.shared.stageSelection();
+        this.dependencies.history.stageSelection();
         this.dispatchTo("beforeinput_handlers", ev);
     }
 
     onInput(ev) {
-        this.shared.addStep();
+        this.dependencies.history.addStep();
         this.dispatchTo("input_handlers", ev);
     }
 }

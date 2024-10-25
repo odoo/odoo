@@ -100,9 +100,16 @@ async function fetchInternalMetaData(url) {
     return result;
 }
 
+/**
+ * @typedef { Object } LinkShared
+ * @property { LinkPlugin['createLink'] } createLink
+ * @property { LinkPlugin['getPathAsUrlCommand'] } getPathAsUrlCommand
+ * @property { LinkPlugin['insertLink'] } insertLink
+ */
+
 export class LinkPlugin extends Plugin {
-    static name = "link";
-    static dependencies = ["dom", "history", "selection", "split", "line_break", "overlay"];
+    static id = "link";
+    static dependencies = ["dom", "history", "selection", "split", "lineBreak", "overlay"];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     resources = {
@@ -178,7 +185,7 @@ export class LinkPlugin extends Plugin {
         normalize_handlers: this.normalizeLink.bind(this),
     };
     setup() {
-        this.overlay = this.shared.createOverlay(LinkPopover, {}, { sequence: 50 });
+        this.overlay = this.dependencies.overlay.createOverlay(LinkPopover, {}, { sequence: 50 });
         this.addDomListener(this.editable, "click", (ev) => {
             if (ev.target.tagName === "A" && ev.target.isContentEditable) {
                 ev.preventDefault();
@@ -191,12 +198,13 @@ export class LinkPlugin extends Plugin {
             "Create link",
             () => {
                 this.toggleLinkTools();
-                this.shared.focusEditable();
+                this.dependencies.selection.focusEditable();
             },
             {
                 hotkey: "control+k",
                 category: "shortcut_conflict",
-                isAvailable: () => this.shared.getSelectionData().documentSelectionIsInEditable,
+                isAvailable: () =>
+                    this.dependencies.selection.getSelectionData().documentSelectionIsInEditable,
             }
         );
         this.ignoredClasses = new Set(this.getResource("link_ignore_classes"));
@@ -242,19 +250,19 @@ export class LinkPlugin extends Plugin {
      * @param {string} label
      */
     insertLink(url, label) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         let link = closestElement(selection.anchorNode, "a");
         if (link) {
             link.setAttribute("href", url);
             link.innerText = label;
         } else {
             link = this.createLink(url, label);
-            this.shared.domInsert(link);
+            this.dependencies.dom.insert(link);
         }
-        this.shared.addStep();
+        this.dependencies.history.addStep();
         const linkParent = link.parentElement;
         const linkOffset = Array.from(linkParent.childNodes).indexOf(link);
-        this.shared.setSelection(
+        this.dependencies.selection.setSelection(
             { anchorNode: linkParent, anchorOffset: linkOffset + 1 },
             { normalize: false }
         );
@@ -269,8 +277,8 @@ export class LinkPlugin extends Plugin {
             description: _t("Create an URL."),
             icon: "fa-link",
             run: () => {
-                this.shared.domInsert(this.createLink(url, text));
-                this.shared.addStep();
+                this.dependencies.dom.insert(this.createLink(url, text));
+                this.dependencies.history.addStep();
             },
         };
         return pasteAsURLCommand;
@@ -289,7 +297,7 @@ export class LinkPlugin extends Plugin {
     }
 
     normalizeLink() {
-        const { anchorNode } = this.shared.getEditableSelection();
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
         const linkEl = closestElement(anchorNode, "a");
         if (linkEl && linkEl.isContentEditable) {
             const label = linkEl.innerText;
@@ -306,7 +314,7 @@ export class LinkPlugin extends Plugin {
             onRemove: () => {
                 this.removeLink();
                 this.overlay.close();
-                this.shared.addStep();
+                this.dependencies.history.addStep();
             },
             onCopy: () => {
                 this.overlay.close();
@@ -326,7 +334,7 @@ export class LinkPlugin extends Plugin {
             }
             this.overlay.close();
         } else if (!selection.isCollapsed) {
-            const selectedNodes = this.shared.getSelectedNodes();
+            const selectedNodes = this.dependencies.selection.getSelectedNodes();
             const imageNode = selectedNodes.find((node) => node.tagName === "IMG");
             if (imageNode && imageNode.parentNode.tagName === "A") {
                 if (this.linkElement !== imageNode.parentElement) {
@@ -341,10 +349,10 @@ export class LinkPlugin extends Plugin {
                     linkEl: this.linkElement,
                     onApply: (url, _) => {
                         this.linkElement.href = url;
-                        this.shared.setCursorEnd(this.linkElement);
-                        this.shared.focusEditable();
+                        this.dependencies.selection.setCursorEnd(this.linkElement);
+                        this.dependencies.selection.focusEditable();
                         this.removeCurrentLinkIfEmtpy();
-                        this.shared.addStep();
+                        this.dependencies.history.addStep();
                     },
                 };
 
@@ -384,22 +392,24 @@ export class LinkPlugin extends Plugin {
                     this.linkElement.href = url;
                     if (cleanZWChars(this.linkElement.innerText) === label) {
                         this.overlay.close();
-                        this.shared.setSelection(this.shared.getEditableSelection());
+                        this.dependencies.selection.setSelection(
+                            this.dependencies.selection.getEditableSelection()
+                        );
                     } else {
                         const restore = prepareUpdate(...leftPos(this.linkElement));
                         this.linkElement.innerText = label;
                         restore();
                         this.overlay.close();
-                        this.shared.setCursorEnd(this.linkElement);
+                        this.dependencies.selection.setCursorEnd(this.linkElement);
                     }
                     if (classes) {
                         this.linkElement.className = classes;
                     } else {
                         this.linkElement.removeAttribute("class");
                     }
-                    this.shared.focusEditable();
+                    this.dependencies.selection.focusEditable();
                     this.removeCurrentLinkIfEmtpy();
-                    this.shared.addStep();
+                    this.dependencies.history.addStep();
                 },
             };
 
@@ -416,15 +426,15 @@ export class LinkPlugin extends Plugin {
      * @return {HTMLElement}
      */
     getOrCreateLink() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const linkElement = findInSelection(selection, "a");
         if (linkElement) {
             if (
                 !linkElement.contains(selection.anchorNode) ||
                 !linkElement.contains(selection.focusNode)
             ) {
-                this.shared.splitSelection();
-                const selectedNodes = this.shared.getSelectedNodes();
+                this.dependencies.split.splitSelection();
+                const selectedNodes = this.dependencies.selection.getSelectedNodes();
                 let before = linkElement.previousSibling;
                 while (before !== null && selectedNodes.includes(before)) {
                     linkElement.insertBefore(before, linkElement.firstChild);
@@ -435,26 +445,26 @@ export class LinkPlugin extends Plugin {
                     linkElement.appendChild(after);
                     after = linkElement.nextSibling;
                 }
-                this.shared.setCursorEnd(linkElement);
-                this.shared.addStep();
+                this.dependencies.selection.setCursorEnd(linkElement);
+                this.dependencies.history.addStep();
             }
             return linkElement;
         } else {
             // create a new link element
-            const selectedNodes = this.shared.getSelectedNodes();
+            const selectedNodes = this.dependencies.selection.getSelectedNodes();
             const imageNode = selectedNodes.find((node) => node.tagName === "IMG");
 
             const link = this.document.createElement("a");
             if (!selection.isCollapsed) {
-                const content = this.shared.extractContent(selection);
+                const content = this.dependencies.selection.extractContent(selection);
                 link.append(content);
                 link.normalize();
             }
-            this.shared.domInsert(link);
+            this.dependencies.dom.insert(link);
             if (!imageNode) {
-                this.shared.setCursorEnd(link);
+                this.dependencies.selection.setCursorEnd(link);
             } else {
-                this.shared.setSelection({
+                this.dependencies.selection.setSelection({
                     anchorNode: link,
                     anchorOffset: 0,
                     focusNode: link,
@@ -480,7 +490,7 @@ export class LinkPlugin extends Plugin {
             !this.linkElement.hasAttribute("t-att-href")
         ) {
             this.removeLink();
-            this.shared.addStep();
+            this.dependencies.history.addStep();
         }
     }
 
@@ -489,7 +499,7 @@ export class LinkPlugin extends Plugin {
      */
     removeLink() {
         const link = this.linkElement;
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         if (link && link.isContentEditable) {
             cursors.update(callbacksForCursorUpdate.unwrap(link));
             unwrapContents(link);
@@ -499,8 +509,8 @@ export class LinkPlugin extends Plugin {
     }
 
     removeLinkFromSelection() {
-        const selection = this.shared.splitSelection();
-        const cursors = this.shared.preserveSelection();
+        const selection = this.dependencies.split.splitSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
 
         // If not, unlink only the part(s) of the link(s) that are selected:
         // `<a>a[b</a>c<a>d</a>e<a>f]g</a>` => `<a>a</a>[bcdef]<a>g</a>`.
@@ -512,15 +522,15 @@ export class LinkPlugin extends Plugin {
             closestElement(focusNode, "a"),
         ];
         // to remove link from selected images
-        const selectedNodes = this.shared.getSelectedNodes();
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
         const selectedImageNodes = selectedNodes.filter((node) => node.tagName === "IMG");
         if (selectedImageNodes && startLink && endLink && startLink === endLink) {
             for (const imageNode of selectedImageNodes) {
                 let imageLink;
                 if (direction === DIRECTIONS.RIGHT) {
-                    imageLink = this.shared.splitAroundUntil(imageNode, endLink);
+                    imageLink = this.dependencies.split.splitAroundUntil(imageNode, endLink);
                 } else {
-                    imageLink = this.shared.splitAroundUntil(imageNode, startLink);
+                    imageLink = this.dependencies.split.splitAroundUntil(imageNode, startLink);
                 }
                 cursors.update(callbacksForCursorUpdate.unwrap(imageLink));
                 unwrapContents(imageLink);
@@ -536,28 +546,28 @@ export class LinkPlugin extends Plugin {
                 selectedImageNodes.length === 1 &&
                 selectedImageNodes.length === selectedNodes.length
             ) {
-                this.shared.addStep();
+                this.dependencies.history.addStep();
                 return;
             }
         }
         if (startLink && startLink.isConnected) {
-            anchorNode = this.shared.splitAroundUntil(anchorNode, startLink);
+            anchorNode = this.dependencies.split.splitAroundUntil(anchorNode, startLink);
             anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
-            this.shared.setSelection(
+            this.dependencies.selection.setSelection(
                 { anchorNode, anchorOffset, focusNode, focusOffset },
                 { normalize: true }
             );
         }
         // Only split the end link if it was not already done above.
         if (endLink && endLink.isConnected) {
-            focusNode = this.shared.splitAroundUntil(focusNode, endLink);
+            focusNode = this.dependencies.split.splitAroundUntil(focusNode, endLink);
             focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
-            this.shared.setSelection(
+            this.dependencies.selection.setSelection(
                 { anchorNode, anchorOffset, focusNode, focusOffset },
                 { normalize: true }
             );
         }
-        const targetedNodes = this.shared.getSelectedNodes();
+        const targetedNodes = this.dependencies.selection.getSelectedNodes();
         const links = new Set(
             targetedNodes
                 .map((node) => closestElement(node, "a"))
@@ -570,7 +580,7 @@ export class LinkPlugin extends Plugin {
             }
             cursors.restore();
         }
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     removeEmptyLinks(root) {
@@ -601,7 +611,7 @@ export class LinkPlugin extends Plugin {
      * Performs a regex check to determine if the url has correct syntax.
      */
     handleAutomaticLinkInsertion() {
-        let selection = this.shared.getEditableSelection();
+        let selection = this.dependencies.selection.getEditableSelection();
         if (
             isHtmlContentSupported(selection.anchorNode) &&
             !closestElement(selection.anchorNode, "a") &&
@@ -609,7 +619,7 @@ export class LinkPlugin extends Plugin {
         ) {
             // Merge adjacent text nodes.
             selection.anchorNode.parentNode.normalize();
-            selection = this.shared.getEditableSelection();
+            selection = this.dependencies.selection.getEditableSelection();
             const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
             const textNodeSplitted = textSliced.split(/\s/);
             const potentialUrl = textNodeSplitted.pop();
@@ -631,8 +641,8 @@ export class LinkPlugin extends Plugin {
                 const textNodeToReplace = selection.anchorNode.splitText(startOffset);
                 textNodeToReplace.splitText(match[0].length);
                 selection.anchorNode.parentElement.replaceChild(link, textNodeToReplace);
-                this.shared.setCursorStart(nodeForSelectionRestore);
-                this.shared.addStep();
+                this.dependencies.selection.setCursorStart(nodeForSelectionRestore);
+                this.dependencies.history.addStep();
             }
         }
     }
@@ -647,7 +657,7 @@ export class LinkPlugin extends Plugin {
      * @param {Element} params.blockToSplit
      */
     handleSplitBlock(params) {
-        return this.handleEnterAtEdgeOfLink(params, this.shared.splitElementBlock);
+        return this.handleEnterAtEdgeOfLink(params, this.dependencies.split.splitElementBlock);
     }
 
     /**
@@ -659,7 +669,10 @@ export class LinkPlugin extends Plugin {
      * @param {number} params.targetOffset
      */
     handleInsertLineBreak(params) {
-        return this.handleEnterAtEdgeOfLink(params, this.shared.insertLineBreakElement);
+        return this.handleEnterAtEdgeOfLink(
+            params,
+            this.dependencies.lineBreak.insertLineBreakElement
+        );
     }
 
     /**

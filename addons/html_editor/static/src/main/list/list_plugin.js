@@ -32,7 +32,7 @@ function isListActive(listMode) {
 }
 
 export class ListPlugin extends Plugin {
-    static name = "list";
+    static id = "list";
     static dependencies = ["tabulation", "history", "split", "selection", "delete", "dom"];
     resources = {
         user_commands: [
@@ -121,14 +121,14 @@ export class ListPlugin extends Plugin {
 
     toggleListCommand({ mode } = {}) {
         this.toggleList(mode);
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     onInput(ev) {
         if (ev.data !== " ") {
             return;
         }
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const blockEl = closestBlock(selection.anchorNode);
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
         let spaceOffset = selection.anchorOffset;
@@ -148,13 +148,13 @@ export class ListPlugin extends Plugin {
             (shouldCreateNumberList || shouldCreateBulletList || shouldCreateCheckList) &&
             !closestElement(selection.anchorNode, "li")
         ) {
-            this.shared.setSelection({
+            this.dependencies.selection.setSelection({
                 anchorNode: blockEl.firstChild,
                 anchorOffset: 0,
                 focusNode: selection.focusNode,
                 focusOffset: selection.focusOffset,
             });
-            this.shared.deleteSelection();
+            this.dependencies.delete.deleteSelection();
             if (shouldCreateNumberList) {
                 const listStyle = { a: "lower-alpha", A: "upper-alpha", 1: null }[
                     stringToConvert.substring(0, 1)
@@ -165,7 +165,7 @@ export class ListPlugin extends Plugin {
             } else if (shouldCreateCheckList) {
                 this.toggleList("CL");
             }
-            this.shared.addStep();
+            this.dependencies.history.addStep();
         }
     }
 
@@ -199,7 +199,7 @@ export class ListPlugin extends Plugin {
         // @todo @phoenix: original implementation removed whitespace-only text nodes from traversedNodes.
         // Check if this is necessary.
 
-        const traversedBlocks = this.shared.getTraversedBlocks();
+        const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
 
         // Keep deepest blocks only.
         for (const block of traversedBlocks) {
@@ -231,7 +231,7 @@ export class ListPlugin extends Plugin {
         // Apply changes.
         if (listsToSwitch.size || nonListBlocks.size) {
             for (const list of listsToSwitch) {
-                const cursors = this.shared.preserveSelection();
+                const cursors = this.dependencies.selection.preserveSelection();
                 const newList = switchListMode(list, mode);
                 cursors.remapNode(list, newList).restore();
             }
@@ -285,7 +285,7 @@ export class ListPlugin extends Plugin {
             return this.blockContentsToList(element, mode);
         }
         let list;
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         if (element === this.editable) {
             // @todo @phoenix: check if this is needed
             // Refactor insertListAfter in order to make proper preserveCursor
@@ -319,16 +319,16 @@ export class ListPlugin extends Plugin {
      * @param {"UL"|"OL"|"CL"} mode
      */
     pToList(p, mode) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         const list = insertListAfter(this.document, p, mode, [[...p.childNodes]]);
-        this.shared.copyAttributes(p, list);
+        this.dependencies.dom.copyAttributes(p, list);
         p.remove();
         cursors.remapNode(p, list.firstChild).restore();
         return list;
     }
 
     blockContentsToList(block, mode) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         const list = insertListAfter(this.document, block.lastChild, mode, [[...block.childNodes]]);
         cursors.remapNode(block, list.firstChild).restore();
         return list;
@@ -371,7 +371,7 @@ export class ListPlugin extends Plugin {
             previousSibling.isContentEditable &&
             compareListTypes(previousSibling, element)
         ) {
-            const cursors = this.shared.preserveSelection();
+            const cursors = this.dependencies.selection.preserveSelection();
             cursors.update(callbacksForCursorUpdate.merge(element));
             previousSibling.append(...element.childNodes);
             // @todo @phoenix: what if unremovable/unmergeable?
@@ -391,10 +391,10 @@ export class ListPlugin extends Plugin {
 
         if (
             [...element.children].some(
-                (child) => isBlock(child) && !this.shared.isUnsplittable(child)
+                (child) => isBlock(child) && !this.dependencies.split.isUnsplittable(child)
             )
         ) {
-            const cursors = this.shared.preserveSelection();
+            const cursors = this.dependencies.selection.preserveSelection();
             wrapInlinesInBlocks(element, cursors);
             cursors.restore();
         }
@@ -405,7 +405,7 @@ export class ListPlugin extends Plugin {
             return;
         }
         if (["UL", "OL"].includes(element.parentElement?.tagName)) {
-            const cursors = this.shared.preserveSelection();
+            const cursors = this.dependencies.selection.preserveSelection();
             const li = this.document.createElement("li");
             element.parentElement.insertBefore(li, element);
             li.appendChild(element);
@@ -433,7 +433,7 @@ export class ListPlugin extends Plugin {
         const ul = createList(this.document, getListMode(destul));
         lip.append(ul);
 
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         // lip replaces li
         li.before(lip);
         ul.append(li);
@@ -474,7 +474,7 @@ export class ListPlugin extends Plugin {
      * @param {HTMLLIElement} li
      */
     splitList(li) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         // Create new list
         const currentList = li.parentElement;
         const newList = currentList.cloneNode(false);
@@ -501,7 +501,7 @@ export class ListPlugin extends Plugin {
     }
 
     outdentNestedLI(li) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         const ul = li.parentNode;
         const lip = ul.parentNode;
         // Move LI
@@ -523,7 +523,7 @@ export class ListPlugin extends Plugin {
     }
 
     outdentTopLevelLI(li) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         const ul = li.parentNode;
         const dir = ul.getAttribute("dir");
         let p;
@@ -577,7 +577,7 @@ export class ListPlugin extends Plugin {
         const listItems = new Set();
         const navListItems = new Set();
         const nonListItems = [];
-        for (const block of this.shared.getTraversedBlocks()) {
+        for (const block of this.dependencies.selection.getTraversedBlocks()) {
             const closestLI = block.closest("li");
             if (closestLI) {
                 if (closestLI.classList.contains("nav-item")) {
@@ -598,13 +598,15 @@ export class ListPlugin extends Plugin {
     // --------------------------------------------------------------------------
 
     handleTab() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
                 paragraphRelatedElements.includes(block.nodeName) &&
-                ancestors(block, closestLI).find((node) => this.shared.isUnsplittable(node));
+                ancestors(block, closestLI).find((node) =>
+                    this.dependencies.split.isUnsplittable(node)
+                );
             if (isLiContainsUnSpittable) {
                 return;
             }
@@ -612,21 +614,23 @@ export class ListPlugin extends Plugin {
         const { listItems, navListItems, nonListItems } = this.separateListItems();
         if (listItems.length || navListItems.length) {
             this.indentListNodes(listItems);
-            this.shared.indentBlocks(nonListItems);
+            this.dependencies.tabulation.indentBlocks(nonListItems);
             // Do nothing to nav-items.
-            this.shared.addStep();
+            this.dependencies.history.addStep();
             return true;
         }
     }
 
     handleShiftTab() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
                 paragraphRelatedElements.includes(block.nodeName) &&
-                ancestors(block, closestLI).find((node) => this.shared.isUnsplittable(node));
+                ancestors(block, closestLI).find((node) =>
+                    this.dependencies.split.isUnsplittable(node)
+                );
             if (isLiContainsUnSpittable) {
                 return;
             }
@@ -634,9 +638,9 @@ export class ListPlugin extends Plugin {
         const { listItems, navListItems, nonListItems } = this.separateListItems();
         if (listItems.length || navListItems.length) {
             this.outdentListNodes(listItems);
-            this.shared.outdentBlocks(nonListItems);
+            this.dependencies.tabulation.outdentBlocks(nonListItems);
             // Do nothing to nav-items.
-            this.shared.addStep();
+            this.dependencies.history.addStep();
             return true;
         }
     }
@@ -646,7 +650,7 @@ export class ListPlugin extends Plugin {
         const isBlockUnsplittable =
             closestLI &&
             Array.from(closestLI.childNodes).some(
-                (node) => isBlock(node) && this.shared.isUnsplittable(node)
+                (node) => isBlock(node) && this.dependencies.split.isUnsplittable(node)
             );
         if (!closestLI || isBlockUnsplittable) {
             return;
@@ -655,12 +659,15 @@ export class ListPlugin extends Plugin {
             this.outdentLI(closestLI);
             return true;
         }
-        const [, newLI] = this.shared.splitElementBlock({ ...params, blockToSplit: closestLI });
+        const [, newLI] = this.dependencies.split.splitElementBlock({
+            ...params,
+            blockToSplit: closestLI,
+        });
         if (closestLI.classList.contains("o_checked")) {
             removeClass(newLI, "o_checked");
         }
         const [anchorNode, anchorOffset] = getDeepestPosition(newLI, 0);
-        this.shared.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         return true;
     }
 
@@ -683,7 +690,7 @@ export class ListPlugin extends Plugin {
         // Check if li or parent list(s) are unsplittable.
         let element = closestLIendContainer;
         while (["LI", "UL", "OL"].includes(element.tagName)) {
-            if (this.shared.isUnsplittable(element)) {
+            if (this.dependencies.split.isUnsplittable(element)) {
                 return;
             }
             element = element.parentElement;
@@ -705,8 +712,8 @@ export class ListPlugin extends Plugin {
             return;
         }
 
-        range = this.shared.deleteRange(range);
-        this.shared.setSelection({
+        range = this.dependencies.delete.deleteRange(range);
+        this.dependencies.selection.setSelection({
             anchorNode: range.startContainer,
             anchorOffset: range.startOffset,
         });
@@ -742,7 +749,7 @@ export class ListPlugin extends Plugin {
         if (isChecklistItem && this.isPointerInsideCheckbox(node, offsetX, offsetY)) {
             toggleClass(node, "o_checked");
             ev.preventDefault();
-            this.shared.addStep();
+            this.dependencies.history.addStep();
         }
     }
 

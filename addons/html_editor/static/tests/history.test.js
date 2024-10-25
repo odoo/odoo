@@ -12,24 +12,24 @@ import { execCommand } from "./_helpers/userCommands";
 describe("reset", () => {
     test("should not add mutations in the current step from the normalization when calling reset", async () => {
         const TestPlugin = class extends Plugin {
-            static name = "test";
+            static id = "test";
             resources = {
                 normalize_handlers: () => {
                     this.editable.firstChild.setAttribute("data-test-normalize", "1");
                 },
             };
         };
-        const { editor, el } = await setupEditor("<p>a</p>", {
+        const { el, plugins } = await setupEditor("<p>a</p>", {
             config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
         });
-        const historyPlugin = editor.plugins.find((p) => p.constructor.name === "history");
+        const historyPlugin = plugins.get("history");
         expect(el.firstChild.getAttribute("data-test-normalize")).toBe("1");
         expect(historyPlugin.steps.length).toBe(1);
         expect(historyPlugin.currentStep.mutations.length).toBe(0);
     });
 
     test.tags("desktop")("open table picker shouldn't add mutations", async () => {
-        const { editor, el } = await setupEditor("<p>[]</p>");
+        const { editor, el, plugins } = await setupEditor("<p>[]</p>");
 
         await insertText(editor, "/tab");
         await press("enter");
@@ -38,7 +38,7 @@ describe("reset", () => {
         expect(getContent(el)).toBe(
             `<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`
         );
-        const historyPlugin = editor.plugins.find((p) => p.constructor.name === "history");
+        const historyPlugin = plugins.get("history");
         expect(historyPlugin.currentStep.mutations.length).toBe(0);
 
         await click(".odoo-editor-editable p");
@@ -75,8 +75,8 @@ describe("undo", () => {
     test("should discard draft mutations", async () => {
         const { el, editor } = await setupEditor(`<p>[]c</p>`);
         const p = el.querySelector("p");
-        editor.shared.domInsert("a");
-        editor.shared.addStep();
+        editor.shared.dom.insert("a");
+        editor.shared.history.addStep();
         p.prepend(document.createTextNode("b"));
         undo(editor);
         expect(getContent(el)).toBe(`<p>[]c</p>`);
@@ -198,8 +198,8 @@ describe("redo", () => {
     test("should discard draft mutations", async () => {
         const { el, editor } = await setupEditor(`<p>[]c</p>`);
         const p = el.querySelector("p");
-        editor.shared.domInsert("a");
-        editor.shared.addStep();
+        editor.shared.dom.insert("a");
+        editor.shared.history.addStep();
         undo(editor);
         expect(getContent(el)).toBe(`<p>[]c</p>`);
         p.prepend(document.createTextNode("b"));
@@ -212,7 +212,7 @@ describe("redo", () => {
 
 describe("selection", () => {
     test("should stage the selection upon click", async () => {
-        const { el, editor } = await setupEditor("<p>a</p>");
+        const { el, plugins } = await setupEditor("<p>a</p>");
         const pElement = queryOne("p");
         await pointerDown(pElement);
         setSelection({
@@ -224,7 +224,7 @@ describe("selection", () => {
         await tick();
         await pointerUp(pElement);
         await tick();
-        const historyPlugin = editor.plugins.find((p) => p.constructor.name === "history");
+        const historyPlugin = plugins.get("history");
         const nodeId = historyPlugin.nodeToIdMap.get(pElement.firstChild);
         expect(historyPlugin.currentStep.selection).toEqual({
             anchorNodeId: nodeId,
@@ -243,7 +243,7 @@ describe("step", () => {
             stepFunction: async (editor) => {
                 const editable = '<div contenteditable="true">abc</div>';
                 editor.editable.querySelector("div").innerHTML = editable;
-                editor.shared.addStep();
+                editor.shared.history.addStep();
             },
             contentAfter: `<div contenteditable="false"><div contenteditable="true">abc</div></div>`,
         });
@@ -252,7 +252,7 @@ describe("step", () => {
 
 describe("prevent mutationFilteredClasses to be set from history", () => {
     class TestMutationFilteredClassesPlugin extends Plugin {
-        static name = "testRenderClasses";
+        static id = "testRenderClasses";
         resources = {
             mutation_filtered_classes: ["x"],
         };
@@ -264,8 +264,8 @@ describe("prevent mutationFilteredClasses to be set from history", () => {
             stepFunction: async (editor) => {
                 const p = editor.editable.querySelector("p");
                 p.className = "x";
-                editor.shared.addStep();
-                const history = editor.plugins.find((p) => p.constructor.name === "history");
+                editor.shared.history.addStep();
+                const history = editor.plugins.find((p) => p.constructor.id === "history");
                 expect(history.steps.length).toBe(1);
             },
             config: { Plugins: Plugins },
@@ -288,9 +288,9 @@ describe("prevent mutationFilteredClasses to be set from history", () => {
     });
 
     test("should prevent mutationFilteredClasses to be added in historyApply", async () => {
-        const { el, editor } = await setupEditor(`<p>a</p>`, { config: { Plugins } });
+        const { el, plugins } = await setupEditor(`<p>a</p>`, { config: { Plugins } });
         /** @type import("../src/core/history_plugin").HistoryPlugin") */
-        const historyPlugin = editor.plugins.find((p) => p.constructor.name === "history");
+        const historyPlugin = plugins.get("history");
         const p = el.querySelector("p");
 
         historyPlugin.applyMutations([
@@ -307,10 +307,10 @@ describe("prevent mutationFilteredClasses to be set from history", () => {
     });
 
     test("should skip the mutations if no changes in state", async () => {
-        const { el, editor } = await setupEditor(`<p class="y">a</p>`, { config: { Plugins } });
+        const { el, plugins } = await setupEditor(`<p class="y">a</p>`, { config: { Plugins } });
 
         /** @type import("../src/core/history_plugin").HistoryPlugin") */
-        const historyPlugin = editor.plugins.find((p) => p.constructor.name === "history");
+        const historyPlugin = plugins.get("history");
         const p = el.querySelector("p");
         p.className = "";
         p.className = "y";
@@ -332,40 +332,40 @@ describe("makeSavePoint", () => {
         // If the selection of the editor would be programatically set upon start
         // (like an autofocus feature), it would be the role of the autofocus
         // feature to trigger the stageSelection.
-        editor.shared.stageSelection();
-        const restore = editor.shared.makeSavePoint();
+        editor.shared.history.stageSelection();
+        const restore = editor.shared.history.makeSavePoint();
         execCommand(editor, "formatBold");
         restore();
         expect(getContent(el)).toBe(`<p>a[b<span style="color: tomato;">c</span>d]e</p>`);
     });
     test("makeSavePoint keeps old draft mutations, discards new ones, and does not add an unnecessary step", async () => {
         const { el, editor } = await setupEditor(`<p>[]c</p>`);
-        expect(editor.shared.getHistorySteps().length).toBe(1);
+        expect(editor.shared.history.getHistorySteps().length).toBe(1);
         const p = el.querySelector("p");
         // draft to save
         p.append(document.createTextNode("d"));
         expect(getContent(el)).toBe(`<p>[]cd</p>`);
-        const savepoint = editor.shared.makeSavePoint();
+        const savepoint = editor.shared.history.makeSavePoint();
         // draft to discard
         p.append(document.createTextNode("e"));
         expect(getContent(el)).toBe(`<p>[]cde</p>`);
         savepoint();
         expect(getContent(el)).toBe(`<p>[]cd</p>`);
-        expect(editor.shared.getHistorySteps().length).toBe(1);
+        expect(editor.shared.history.getHistorySteps().length).toBe(1);
     });
     test("applying a makeSavePoint consumes ulterior reversible steps and adds a new consumed step, while handling draft mutations", async () => {
         const { el, editor, plugins } = await setupEditor(`<p>[]c</p>`);
         const historyPlugin = plugins.get("history");
-        expect(editor.shared.getHistorySteps().length).toBe(1);
+        expect(editor.shared.history.getHistorySteps().length).toBe(1);
         const p = el.querySelector("p");
         // draft to save
         p.append(document.createTextNode("d"));
         expect(getContent(el)).toBe(`<p>[]cd</p>`);
-        const savepoint = editor.shared.makeSavePoint();
+        const savepoint = editor.shared.history.makeSavePoint();
         // step to consume
-        editor.shared.domInsert("z");
-        editor.shared.addStep();
-        let steps = editor.shared.getHistorySteps();
+        editor.shared.dom.insert("z");
+        editor.shared.history.addStep();
+        let steps = editor.shared.history.getHistorySteps();
         expect(steps.length).toBe(2);
         const zStep = steps.at(-1);
         expect(historyPlugin.stepsStates.get(zStep.id)).toBe(undefined);
@@ -374,7 +374,7 @@ describe("makeSavePoint", () => {
         expect(getContent(el)).toBe(`<p>z[]cde</p>`);
         savepoint();
         expect(getContent(el)).toBe(`<p>[]cd</p>`);
-        steps = editor.shared.getHistorySteps();
+        steps = editor.shared.history.getHistorySteps();
         expect(steps.length).toBe(3);
         expect(steps.at(-2)).toBe(zStep);
         expect(historyPlugin.stepsStates.get(zStep.id)).toBe("consumed");
@@ -396,9 +396,9 @@ describe("makeSavePoint", () => {
         // operation can therefore be incomplete and cannot be re-applied. The goal of this test is to
         // verify that the makeSavePoint does not revert more mutation that it should.
 
-        const { el, editor } = await setupEditor("<p>this is another paragraph with color 2</p>");
+        const { el, plugins } = await setupEditor("<p>this is another paragraph with color 2</p>");
 
-        const history = editor.plugins.find((plugin) => plugin.constructor.name === "history");
+        const history = plugins.get("history");
         const p = queryOne("p");
         const font = document.createElement("font");
         // The following line cause a REMOVE since the child does not belong to the p element anymore
@@ -416,9 +416,9 @@ describe("makeSavePoint", () => {
 
 describe("makePreviewableOperation", () => {
     test("makePreviewableOperation correctly revert previews", async () => {
-        const { editor } = await setupEditor(`<div id="test"></div>`);
+        const { plugins } = await setupEditor(`<div id="test"></div>`);
 
-        const history = editor.plugins.find((plugin) => plugin.constructor.name === "history");
+        const history = plugins.get("history");
         const div = queryOne("#test");
         const previewableAddParagraph = history.makePreviewableOperation((elemId) => {
             const newElem = document.createElement("p");
@@ -445,9 +445,9 @@ describe("makePreviewableOperation", () => {
     });
 
     test("makePreviewableOperation correctly commit operation", async () => {
-        const { editor } = await setupEditor(`<div id="test"></div>`);
+        const { plugins } = await setupEditor(`<div id="test"></div>`);
 
-        const history = editor.plugins.find((plugin) => plugin.constructor.name === "history");
+        const history = plugins.get("history");
         const div = queryOne("#test");
         const previewableAddParagraph = history.makePreviewableOperation((elemId) => {
             const newElem = document.createElement("p");
@@ -502,8 +502,8 @@ describe("shortcut", () => {
     test("canUndo canRedo", async () => {
         const state = {};
         const onChange = () => {
-            state.canUndo = editor.shared.canUndo();
-            state.canRedo = editor.shared.canRedo();
+            state.canUndo = editor.shared.history.canUndo();
+            state.canRedo = editor.shared.history.canRedo();
         };
         const { editor, el } = await setupEditor(`<p>[]</p>`, {
             config: { onChange },
@@ -555,7 +555,7 @@ describe("destroy", () => {
         class TestPlugin extends Plugin {
             // Added history dependency so that this plugin is loaded after and unloaded before.
             static dependencies = ["history", "dom"];
-            static name = "test";
+            static id = "test";
             resources = {
                 is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
             };
@@ -572,7 +572,7 @@ describe("destroy", () => {
                 return true;
             }
             destroy() {
-                this.shared.domInsert(
+                this.dependencies.dom.insert(
                     parseHTML(this.document, `<div class="test">destroyed</div>`)
                 );
             }
@@ -580,7 +580,7 @@ describe("destroy", () => {
         const Plugins = [...MAIN_PLUGINS, TestPlugin];
         const { editor } = await setupEditor(`<div>a[]b</div>`, { config: { Plugins } });
         // Ensure dispatch when plugins are alive.
-        editor.shared.domInsert(parseHTML(editor.document, `<div class="test">destroyed</div>`));
+        editor.shared.dom.insert(parseHTML(editor.document, `<div class="test">destroyed</div>`));
         await animationFrame();
         expect.verifySteps(["dispatch"]);
         editor.destroy();

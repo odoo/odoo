@@ -100,9 +100,14 @@ import { omit, pick } from "@web/core/utils/objects";
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
 const DELAY_TOOLBAR_OPEN = 300;
 
+/**
+ * @typedef { Object } ToolbarShared
+ * @property { ToolbarPlugin['getToolbarInfo'] } getToolbarInfo
+ */
+
 export class ToolbarPlugin extends Plugin {
-    static name = "toolbar";
-    static dependencies = ["overlay", "selection", "user_command"];
+    static id = "toolbar";
+    static dependencies = ["overlay", "selection", "userCommand"];
     static shared = ["getToolbarInfo"];
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
@@ -125,7 +130,7 @@ export class ToolbarPlugin extends Plugin {
         if (this.isMobileToolbar) {
             this.overlay = new MobileToolbarOverlay(this.editable);
         } else {
-            this.overlay = this.shared.createOverlay(Toolbar, {
+            this.overlay = this.dependencies.overlay.createOverlay(Toolbar, {
                 positionOptions: {
                     position: "top-start",
                 },
@@ -221,7 +226,7 @@ export class ToolbarPlugin extends Plugin {
 
         /** @returns {ToolbarCommandButton} */
         const commandItemToButton = (/** @type {ToolbarCommandItem}*/ item) => {
-            const command = this.shared.getCommand(item.commandId);
+            const command = this.dependencies.userCommand.getCommand(item.commandId);
             return {
                 ...pick(command, "title", "icon", "isAvailable"),
                 ...omit(item, "commandId", "commandParams"),
@@ -246,9 +251,9 @@ export class ToolbarPlugin extends Plugin {
     getToolbarInfo() {
         return {
             buttonGroups: this.buttonGroups,
-            getSelection: () => this.shared.getEditableSelection(),
+            getSelection: () => this.dependencies.selection.getEditableSelection(),
             state: this.state,
-            focusEditable: () => this.shared.focusEditable(),
+            focusEditable: () => this.dependencies.selection.focusEditable(),
         };
     }
 
@@ -258,7 +263,7 @@ export class ToolbarPlugin extends Plugin {
         }
     }
 
-    updateToolbar(selectionData = this.shared.getSelectionData()) {
+    updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
         this.updateToolbarVisibility(selectionData);
         if (this.overlay.isOpen || this.config.disableFloatingToolbar) {
             this.updateNamespace();
@@ -267,7 +272,7 @@ export class ToolbarPlugin extends Plugin {
     }
 
     getFilterTraverseNodes() {
-        return this.shared
+        return this.dependencies.selection
             .getTraversedNodes()
             .filter((node) => !isTextNode(node) || (node.textContent !== "\n" && !isZWS(node)));
     }

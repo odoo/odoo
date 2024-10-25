@@ -23,7 +23,7 @@ function target(selectionData, editable) {
 }
 
 export class HintPlugin extends Plugin {
-    static name = "hint";
+    static id = "hint";
     static dependencies = ["history", "selection"];
     resources = {
         mutation_filtered_classes: ["o-we-hint"],
@@ -60,7 +60,7 @@ export class HintPlugin extends Plugin {
      * @param {HTMLElement} [root]
      */
     updateHints() {
-        const selectionData = this.shared.getSelectionData();
+        const selectionData = this.dependencies.selection.getSelectionData();
         const editableSelection = selectionData.editableSelection;
         if (this.hint) {
             const blockEl = closestBlock(editableSelection.anchorNode);

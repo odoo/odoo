@@ -29,7 +29,7 @@ function columnIsAvailable(numberOfColumns) {
 }
 
 export class ColumnPlugin extends Plugin {
-    static name = "column";
+    static id = "column";
     static dependencies = ["selection", "history"];
     resources = {
         user_commands: [
@@ -88,7 +88,7 @@ export class ColumnPlugin extends Plugin {
     };
 
     columnize({ numberOfColumns, addParagraphAfter = true } = {}) {
-        const selectionToRestore = this.shared.getEditableSelection();
+        const selectionToRestore = this.dependencies.selection.getEditableSelection();
         const anchor = selectionToRestore.anchorNode;
         const hasColumns = !!closestElement(anchor, ".o_text_columns");
         if (hasColumns) {
@@ -100,8 +100,8 @@ export class ColumnPlugin extends Plugin {
         } else if (numberOfColumns) {
             this.createColumns(anchor, numberOfColumns, addParagraphAfter);
         }
-        this.shared.setSelection(selectionToRestore);
-        this.shared.addStep();
+        this.dependencies.selection.setSelection(selectionToRestore);
+        this.dependencies.history.addStep();
     }
 
     removeColumns(anchor) {

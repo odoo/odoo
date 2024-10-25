@@ -356,7 +356,7 @@ test("toolbar behave properly if selection has no range", async () => {
 
 test("toolbar correctly show namespace button group and stop showing when namespace change", async () => {
     class TestPlugin extends Plugin {
-        static name = "TestPlugin";
+        static id = "TestPlugin";
         resources = {
             toolbar_namespaces: [
                 {
@@ -391,7 +391,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
 
 test("toolbar does not evaluate isActive when namespace does not match", async () => {
     class TestPlugin extends Plugin {
-        static name = "TestPlugin";
+        static id = "TestPlugin";
         resources = {
             user_commands: { id: "test_cmd", run: () => null },
             toolbar_groups: withSequence(24, { id: "test_group", namespace: "image" }),
@@ -427,7 +427,7 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
 
 test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
-        static name = "TestPlugin";
+        static id = "TestPlugin";
         resources = {
             user_commands: { id: "test_cmd", run: () => null },
             toolbar_groups: withSequence(24, { id: "test_group" }),

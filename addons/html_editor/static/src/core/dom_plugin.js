@@ -25,10 +25,16 @@ import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/positio
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { convertList, getListMode } from "@html_editor/utils/list";
 
+/**
+ * @typedef {Object} DomShared
+ * @property { DomPlugin['insert'] } insert
+ * @property { DomPlugin['copyAttributes'] } copyAttributes
+ */
+
 export class DomPlugin extends Plugin {
-    static name = "dom";
-    static dependencies = ["selection", "history", "split", "delete", "line_break"];
-    static shared = ["domInsert", "copyAttributes", "setTag"];
+    static id = "dom";
+    static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
+    static shared = ["insert", "copyAttributes", "setTag"];
     resources = {
         user_commands: [
             { id: "insertFontAwesome", run: this.insertFontAwesome.bind(this) },
@@ -61,16 +67,16 @@ export class DomPlugin extends Plugin {
     /**
      * @param {string | DocumentFragment | null} content
      */
-    domInsert(content) {
+    insert(content) {
         if (!content) {
             return;
         }
-        let selection = this.shared.getEditableSelection();
+        let selection = this.dependencies.selection.getEditableSelection();
         let startNode;
         let insertBefore = false;
         if (!selection.isCollapsed) {
-            this.shared.deleteSelection();
-            selection = this.shared.getEditableSelection();
+            this.dependencies.delete.deleteSelection();
+            selection = this.dependencies.selection.getEditableSelection();
         }
         if (selection.startContainer.nodeType === Node.TEXT_NODE) {
             insertBefore = !selection.startOffset;
@@ -107,7 +113,7 @@ export class DomPlugin extends Plugin {
             unwrapContents(container.lastChild);
         }
 
-        startNode = startNode || this.shared.getEditableSelection().anchorNode;
+        startNode = startNode || this.dependencies.selection.getEditableSelection().anchorNode;
         const block = closestBlock(selection.anchorNode);
 
         const shouldUnwrap = (node) =>
@@ -151,7 +157,7 @@ export class DomPlugin extends Plugin {
                 // container to extract and paste the text content of the list.
                 if (container.firstChild.nodeName === "LI") {
                     const deepestBlock = closestBlock(firstLeaf(container.firstChild));
-                    this.shared.splitAroundUntil(deepestBlock, container.firstChild);
+                    this.dependencies.split.splitAroundUntil(deepestBlock, container.firstChild);
                     container.firstElementChild.replaceChildren(...deepestBlock.childNodes);
                 }
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
@@ -163,7 +169,7 @@ export class DomPlugin extends Plugin {
                 // to extract and paste the text content of the list.
                 if (container.lastChild.nodeName === "LI") {
                     const deepestBlock = closestBlock(lastLeaf(container.lastChild));
-                    this.shared.splitAroundUntil(deepestBlock, container.lastChild);
+                    this.dependencies.split.splitAroundUntil(deepestBlock, container.lastChild);
                     container.lastElementChild.replaceChildren(...deepestBlock.childNodes);
                 }
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
@@ -216,8 +222,8 @@ export class DomPlugin extends Plugin {
         // If all the Html have been isolated, We force a split of the parent element
         // to have the need new line in the final result
         if (!container.hasChildNodes()) {
-            if (this.shared.isUnsplittable(closestBlock(currentNode.nextSibling))) {
-                this.shared.insertLineBreakNode({
+            if (this.dependencies.split.isUnsplittable(closestBlock(currentNode.nextSibling))) {
+                this.dependencies.lineBreak.insertLineBreakNode({
                     targetNode: currentNode.nextSibling,
                     targetOffset: 0,
                 });
@@ -225,7 +231,7 @@ export class DomPlugin extends Plugin {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
                 const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
-                this.shared.splitBlockNode({
+                this.dependencies.split.splitBlockNode({
                     targetNode: parent,
                     targetOffset: index,
                 });
@@ -243,9 +249,9 @@ export class DomPlugin extends Plugin {
                     !this.isEditionBoundary(currentNode.parentElement) &&
                     (!allowsParagraphRelatedElements(currentNode.parentElement) ||
                         (currentNode.parentElement.nodeName === "LI" &&
-                            !this.shared.isUnsplittable(nodeToInsert)))
+                            !this.dependencies.split.isUnsplittable(nodeToInsert)))
                 ) {
-                    if (this.shared.isUnsplittable(currentNode.parentElement)) {
+                    if (this.dependencies.split.isUnsplittable(currentNode.parentElement)) {
                         // If we have to insert a table, we cannot afford to unwrap it
                         // we need to search for a more suitable spot to put the table in
                         if (nodeToInsert.nodeName === "TABLE") {
@@ -263,14 +269,14 @@ export class DomPlugin extends Plugin {
                         offset += 1;
                     }
                     if (offset) {
-                        const [left, right] = this.shared.splitElement(
+                        const [left, right] = this.dependencies.split.splitElement(
                             currentNode.parentElement,
                             offset
                         );
                         currentNode = insertBefore ? right : left;
                         const otherNode = insertBefore ? left : right;
                         if (
-                            this.shared.isUnsplittable(nodeToInsert) &&
+                            this.dependencies.split.isUnsplittable(nodeToInsert) &&
                             container.childNodes.length === 1
                         ) {
                             fillShrunkPhrasingParent(otherNode);
@@ -294,7 +300,7 @@ export class DomPlugin extends Plugin {
                 if (
                     currentNode.parentElement.nodeName === "LI" &&
                     isBlock(nodeToInsert) &&
-                    this.shared.isUnsplittable(nodeToInsert)
+                    this.dependencies.split.isUnsplittable(nodeToInsert)
                 ) {
                     const br = document.createElement("br");
                     currentNode[currentNode.textContent ? "after" : "before"](br);
@@ -326,7 +332,7 @@ export class DomPlugin extends Plugin {
                 (nodeToInsert.nodeType !== Node.ELEMENT_NODE ||
                     nodeToInsert.tagName !== "BR" ||
                     nodeToInsert.nextSibling) &&
-                !(isBlock(nodeToInsert) && this.shared.isUnsplittable(nodeToInsert))
+                !(isBlock(nodeToInsert) && this.dependencies.split.isUnsplittable(nodeToInsert))
             ) {
                 // Avoid cleaning the trailing BR if it is nodeToInsert
                 cleanTrailingBR(currentNode.parentElement);
@@ -338,7 +344,7 @@ export class DomPlugin extends Plugin {
         }
         const previousNode = currentNode.previousSibling;
         if (
-            !(isBlock(currentNode) && this.shared.isUnsplittable(currentNode)) &&
+            !(isBlock(currentNode) && this.dependencies.split.isUnsplittable(currentNode)) &&
             cleanTrailingBR(currentNode.parentElement)
         ) {
             // Clean the last inserted trailing BR if any
@@ -355,7 +361,7 @@ export class DomPlugin extends Plugin {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
         }
-        this.shared.setSelection(
+        this.dependencies.selection.setSelection(
             { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
             { normalize: false }
         );
@@ -369,6 +375,10 @@ export class DomPlugin extends Plugin {
         return node.hasAttribute("contenteditable");
     }
 
+    /**
+     * @param {HTMLElement} source
+     * @param {HTMLElement} target
+     */
     copyAttributes(source, target) {
         this.dispatchTo("clean_handlers", source);
         for (const attr of source.attributes) {
@@ -387,10 +397,10 @@ export class DomPlugin extends Plugin {
     insertFontAwesome({ faClass = "fa fa-star" } = {}) {
         const fontAwesomeNode = document.createElement("i");
         fontAwesomeNode.className = faClass;
-        this.domInsert(fontAwesomeNode);
-        this.shared.addStep();
+        this.insert(fontAwesomeNode);
+        this.dependencies.history.addStep();
         const [anchorNode, anchorOffset] = rightPos(fontAwesomeNode);
-        this.shared.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
     /**
@@ -400,8 +410,8 @@ export class DomPlugin extends Plugin {
      */
     setTag({ tagName, extraClass = "" }) {
         tagName = tagName.toUpperCase();
-        const cursors = this.shared.preserveSelection();
-        const selectedBlocks = [...this.shared.getTraversedBlocks()];
+        const cursors = this.dependencies.selection.preserveSelection();
+        const selectedBlocks = [...this.dependencies.selection.getTraversedBlocks()];
         const deepestSelectedBlocks = selectedBlocks.filter(
             (block) =>
                 !descendants(block).some((descendant) => selectedBlocks.includes(descendant)) &&
@@ -446,11 +456,11 @@ export class DomPlugin extends Plugin {
             }
         }
         cursors.restore();
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     insertSeparator() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const sep = this.document.createElement("hr");
         const block = closestBlock(selection.startContainer);
         const element =
@@ -461,7 +471,7 @@ export class DomPlugin extends Plugin {
         if (element && element !== this.editable) {
             element.before(sep);
         }
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     removeEmptyClassAndStyleAttributes(root) {

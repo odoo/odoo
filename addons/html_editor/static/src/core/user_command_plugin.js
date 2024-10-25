@@ -14,8 +14,13 @@ import { Plugin } from "../plugin";
  * @property { (selection: EditorSelection) => boolean  } [isAvailable]
  */
 
+/**
+ * @typedef { Object } UserCommandShared
+ * @property { UserCommandPlugin['getCommand'] } getCommand
+ */
+
 export class UserCommandPlugin extends Plugin {
-    static name = "user_command";
+    static id = "userCommand";
     static shared = ["getCommand"];
 
     setup() {

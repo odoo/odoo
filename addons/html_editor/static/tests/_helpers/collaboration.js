@@ -91,14 +91,14 @@ export const setupMultiEditor = async (spec) => {
         });
         peerInfo.editor = base.editor;
         if (selection && selection.anchorNode) {
-            base.editor.shared.setSelection(selection);
+            base.editor.shared.selection.setSelection(selection);
             base.plugins.get("history").stageSelection();
         } else {
             base.editor.document.getSelection().removeAllRanges();
         }
         peerInfo.plugins = base.plugins;
         // TODO @phoenix refactor tests, no need to assign every plugin individually
-        const getPlugin = (name) => base.editor.plugins.find((x) => x.constructor.name === name);
+        const getPlugin = (id) => base.editor.plugins.find((x) => x.constructor.id === id);
         peerInfo.collaborationPlugin = getPlugin("collaboration");
         peerInfo.historyPlugin = getPlugin("history");
     }

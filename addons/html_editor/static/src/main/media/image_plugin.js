@@ -14,7 +14,7 @@ function hasShape(imagePlugin, shapeName) {
 }
 
 export class ImagePlugin extends Plugin {
-    static name = "image";
+    static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
     resources = {
         user_commands: [
@@ -192,8 +192,13 @@ export class ImagePlugin extends Plugin {
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (e.target.tagName === "IMG") {
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
-                this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
-                this.shared.focusEditable();
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
+                });
+                this.dependencies.selection.focusEditable();
             }
         });
         this.fileViewer = createFileViewer();
@@ -215,7 +220,7 @@ export class ImagePlugin extends Plugin {
             }
         }
         selectedImg.classList.add(`p-${size}`);
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
     resizeImage({ size } = {}) {
         const selectedImg = this.getSelectedImage();
@@ -223,7 +228,7 @@ export class ImagePlugin extends Plugin {
             return;
         }
         selectedImg.style.width = size || "";
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     transformImage() {
@@ -245,7 +250,7 @@ export class ImagePlugin extends Plugin {
             }
         }
         selectedImg.classList.toggle(className);
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     previewImage() {
@@ -269,7 +274,7 @@ export class ImagePlugin extends Plugin {
         if (selectedImg) {
             selectedImg.remove();
             this.closeImageTransformation();
-            this.shared.addStep();
+            this.dependencies.history.addStep();
         }
     }
 
@@ -282,7 +287,7 @@ export class ImagePlugin extends Plugin {
     }
 
     getSelectedImage() {
-        const selectedNodes = this.shared.getSelectedNodes();
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
         return selectedNodes.find((node) => node.tagName === "IMG");
     }
 
@@ -292,14 +297,14 @@ export class ImagePlugin extends Plugin {
     }
 
     isSelectionShaped(shape) {
-        const selectedNodes = this.shared
+        const selectedNodes = this.dependencies.selection
             .getTraversedNodes()
             .filter((n) => n.tagName === "IMG" && n.classList.contains(shape));
         return selectedNodes.length > 0;
     }
 
     getImageAttribute(attributeName) {
-        const selectedNodes = this.shared.getSelectedNodes();
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
         const selectedImg = selectedNodes.find((node) => node.tagName === "IMG");
         return selectedImg.getAttribute(attributeName) || undefined;
     }
@@ -310,11 +315,11 @@ export class ImagePlugin extends Plugin {
      */
     handlePasteUrl(text, url) {
         if (isImageUrl(url)) {
-            const restoreSavepoint = this.shared.makeSavePoint();
+            const restoreSavepoint = this.dependencies.history.makeSavePoint();
             // Open powerbox with commands to embed media or paste as link.
             // Insert URL as text, revert it later if a command is triggered.
-            this.shared.domInsert(text);
-            this.shared.addStep();
+            this.dependencies.dom.insert(text);
+            this.dependencies.history.addStep();
             const embedImageCommand = {
                 title: _t("Embed Image"),
                 description: _t("Embed the image in the document."),
@@ -322,12 +327,15 @@ export class ImagePlugin extends Plugin {
                 run: () => {
                     const img = document.createElement("IMG");
                     img.setAttribute("src", url);
-                    this.shared.domInsert(img);
-                    this.shared.addStep();
+                    this.dependencies.dom.insert(img);
+                    this.dependencies.history.addStep();
                 },
             };
-            const commands = [embedImageCommand, this.shared.getPathAsUrlCommand(text, url)];
-            this.shared.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
+            const commands = [
+                embedImageCommand,
+                this.dependencies.link.getPathAsUrlCommand(text, url),
+            ];
+            this.dependencies.powerbox.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
             return true;
         }
     }
@@ -345,7 +353,7 @@ export class ImagePlugin extends Plugin {
                 image,
                 document: this.document,
                 destroy: () => this.closeImageTransformation(),
-                onChange: () => this.shared.addStep(),
+                onChange: () => this.dependencies.history.addStep(),
             },
         });
     }
@@ -366,6 +374,6 @@ export class ImagePlugin extends Plugin {
         }
         selectedImg.setAttribute("alt", description);
         selectedImg.setAttribute("title", tooltip);
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 }

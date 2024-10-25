@@ -6,8 +6,8 @@ import { loadBundle } from "@web/core/assets";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageCropPlugin extends Plugin {
-    static name = "image_crop";
-    static dependencies = ["image", "selection", "history"];
+    static id = "imageCrop";
+    static dependencies = ["selection", "history"];
     resources = {
         user_commands: [
             {
@@ -38,7 +38,7 @@ export class ImageCropPlugin extends Plugin {
     }
 
     getSelectedImage() {
-        const selectedNodes = this.shared.getSelectedNodes();
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
         return selectedNodes.find((node) => node.tagName === "IMG");
     }
 
@@ -55,7 +55,7 @@ export class ImageCropPlugin extends Plugin {
         };
 
         const onSave = () => {
-            this.shared.addStep();
+            this.dependencies.history.addStep();
         };
 
         await loadBundle("html_editor.assets_image_cropper");
