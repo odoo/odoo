@@ -96,9 +96,13 @@ registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "check upload progress bar is correctly shown (4)",
         trigger: ".o_we_progressbar:contains('image.jpeg'):contains('File has been uploaded')",
-    }, {
-        content: "there should only have one notification toaster",
+    },
+    {
         trigger: ".o_notification",
+    },
+    {
+        content: "there should only have one notification toaster",
+        trigger: "body",
         run() {
             const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {

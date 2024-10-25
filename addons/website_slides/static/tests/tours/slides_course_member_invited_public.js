@@ -3,6 +3,12 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("invite_check_channel_preview_as_public", {
     steps: () => [
         {
+            isActive: ["body:has(.modal:not(.o_inactive_modal):contains(oops))"],
+            content: "Close Oops modal",
+            trigger: ".modal button:contains(close)",
+            run: "click",
+        },
+        {
             trigger: ".o_wslides_identification_banner",
             content: "Check that there is an identification banner",
         },
