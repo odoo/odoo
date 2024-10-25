@@ -1,14 +1,14 @@
-import { Reactive, effect } from "@web/core/utils/reactive";
+import { Reactive } from "@web/core/utils/reactive";
 import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
-import { batched } from "@web/core/utils/timing";
 import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
 import { uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { batched } from "@web/core/utils/timing";
 
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
@@ -33,25 +33,16 @@ export class PosData extends Reactive {
 
         this.network = {
             warningTriggered: false,
-            offline: false,
+            offline: navigator.onLine ? false : true,
             loading: true,
             unsyncData: [],
         };
 
-        this.initIndexedDB();
-        await this.initData();
-
-        effect(
-            batched((records) => {
-                this.syncDataWithIndexedDB(records);
-            }),
-            [this.records]
-        );
-
+        await this.intializeDataRelation();
         browser.addEventListener("online", () => {
             if (this.network.offline) {
                 this.network.offline = false;
-                this.network.warningTriggered = false; // Avoid the display of the offline popup multiple times
+                this.network.warningTriggered = false;
             }
 
             this.syncData();
@@ -62,97 +53,80 @@ export class PosData extends Reactive {
         });
     }
 
-    async resetIndexedDB() {
-        await this.indexedDB.reset();
-    }
-
     get databaseName() {
         return `config-id_${odoo.pos_config_id}_${odoo.access_token}`;
     }
 
-    initIndexedDB() {
-        // In web tests info is not defined
-        const models = Object.entries(this.opts.databaseTable).map(([name, data]) => {
-            return [data.key, name];
+    get serverDateKey() {
+        return `data_server_date_${odoo.pos_config_id}`;
+    }
+
+    async resetIndexedDB() {
+        // Remove data_server_date since it's used to determine the last time the data was loaded
+        await this.indexedDB.reset();
+    }
+
+    async initIndexedDB(relations) {
+        // This method initializes indexedDB with all models loaded into the PoS. The default key is ID.
+        // But some models have another key configured in data_service_options.js. These models are
+        // generally those that can be created in the frontend.
+        const models = Object.keys(relations).map((model) => {
+            const key = this.opts.databaseTable[model]?.key || "id";
+            return [key, model];
         });
-        this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models);
+
+        return new Promise((resolve) => {
+            this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models, resolve);
+        });
     }
 
-    deleteDataIndexedDB(model, uuid) {
-        this.indexedDB.delete(model, [{ uuid }]);
-    }
+    async synchronizeLocalDataInIndexedDB() {
+        // This methods will synchronize local data and state in indexedDB. This methods is mostly
+        // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
+        // in the frontend and are not loaded from the backend.
+        const modelsParams = Object.entries(this.opts.databaseTable);
+        for (const [model, params] of modelsParams) {
+            const put = [];
+            const remove = [];
+            const data = this.models[model].getAll();
 
-    syncDataWithIndexedDB(records) {
-        // Will separate records to remove from indexedDB and records to add
-        const dataSorter = (records, isFinalized, key) => {
-            return records.reduce(
-                (acc, record) => {
-                    const finalizedState = isFinalized(record);
+            for (const record of data) {
+                const isToRemove = params.condition(record);
 
-                    if (finalizedState === undefined || finalizedState === true) {
-                        if (record[key]) {
-                            acc.remove.push(record[key]);
-                        }
-                    } else {
-                        acc.put.push(dataFormatter(record));
+                if (isToRemove === undefined || isToRemove === true) {
+                    if (record[params.key]) {
+                        remove.push(record[params.key]);
                     }
-
-                    return acc;
-                },
-                { put: [], remove: [] }
-            );
-        };
-
-        // This methods will add uiState to the serialized object
-        const dataFormatter = (record) => {
-            const serializedData = record.serialize();
-            const uiState = typeof record.uiState === "object" ? record.serializeState() : "{}";
-            return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
-        };
-
-        for (const [model, params] of Object.entries(this.opts.databaseTable)) {
-            const nbrRecords = records[model].size;
-
-            if (!nbrRecords) {
-                continue;
-            }
-
-            const data = dataSorter(this.models[model].getAll(), params.condition, params.key);
-            this.indexedDB.create(model, data.put);
-            this.indexedDB.delete(model, data.remove);
-        }
-
-        this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
-            if (!data) {
-                return;
-            }
-
-            for (const [model, records] of Object.entries(data)) {
-                const key = this.opts.databaseTable[model].key;
-                for (const record of records) {
-                    const localRecord = this.models[model].get(record.id);
-
-                    if (!localRecord) {
-                        this.indexedDB.delete(model, [record[key]]);
-                    }
+                } else {
+                    const serializedData = record.serialize();
+                    const uiState =
+                        typeof record.uiState === "object" ? record.serializeState() : "{}";
+                    const serializedRecord = {
+                        ...serializedData,
+                        JSONuiState: JSON.stringify(uiState),
+                        id: record.id,
+                    };
+                    put.push(serializedRecord);
                 }
             }
-        });
+
+            await this.indexedDB.create(model, put);
+            await this.indexedDB.delete(model, remove);
+        }
     }
 
-    async preLoadData(data) {
-        return data;
-    }
-
-    async loadIndexedDBData() {
-        const data = await this.indexedDB.readAll();
+    async getLocalDataFromIndexedDB() {
+        // Used to retrieve models containing states from the indexedDB.
+        // This method will load the records directly via loadData.
+        const models = Object.keys(this.opts.databaseTable);
+        const data = await this.indexedDB.readAll(models);
 
         if (!data) {
             return;
         }
 
         const newData = {};
-        for (const model of Object.keys(this.opts.databaseTable)) {
+        for (const model of models) {
             const rawRec = data[model];
 
             if (rawRec) {
@@ -160,23 +134,13 @@ export class PosData extends Reactive {
             }
         }
 
-        if (data["product.product"]) {
-            data["product.product"] = data["product.product"].filter(
-                (p) => !this.models["product.product"].get(p.id)
-            );
-        }
-
         const preLoadData = await this.preLoadData(data);
         const missing = await this.missingRecursive(preLoadData);
         const results = this.models.loadData(missing, [], true);
-        for (const [model, data] of Object.entries(results)) {
+        for (const data of Object.values(results)) {
             for (const record of data) {
                 if (record.raw.JSONuiState) {
-                    const loadedRecords = this.models[model].find((r) => r.uuid === record.uuid);
-
-                    if (loadedRecords) {
-                        loadedRecords.setupState(JSON.parse(record.raw.JSONuiState));
-                    }
+                    record.setupState(JSON.parse(record.raw.JSONuiState));
                 }
             }
         }
@@ -184,26 +148,119 @@ export class PosData extends Reactive {
         return results;
     }
 
-    resetUnsyncQueue() {
-        this.network.unsyncData = [];
+    async getCachedServerDataFromIndexedDB() {
+        // Used to load models that have not yet been loaded into related_models.
+        // These models have been sent to the indexedDB directly after the RPC load_data.
+        const data = await this.indexedDB.readAll();
+        const modelToIgnore = Object.keys(this.opts.databaseTable);
+        const results = {};
+
+        for (const name in data) {
+            if (name in modelToIgnore) {
+                continue;
+            }
+            results[name] = data[name];
+        }
+
+        return results;
     }
 
     async loadInitialData() {
-        return await this.orm.call("pos.session", "load_data", [
-            odoo.pos_session_id,
-            PosData.modelToLoad,
-        ]);
+        let localData = await this.getCachedServerDataFromIndexedDB();
+
+        if (navigator.onLine) {
+            try {
+                const limitedLoading = this.isLimitedLoading();
+                const serverDate = localData?.["pos.session"]?.[0]?._data_server_date;
+                const lastConfigChange = DateTime.fromSQL(odoo.last_data_change);
+                const serverDateTime = DateTime.fromSQL(serverDate);
+
+                if (serverDateTime < lastConfigChange) {
+                    await this.resetIndexedDB();
+                    await this.initIndexedDB(this.relations);
+                    localData = [];
+                }
+
+                const data = await this.orm.call(
+                    "pos.session",
+                    "load_data",
+                    [odoo.pos_session_id, PosData.modelToLoad],
+                    {
+                        context: {
+                            pos_last_server_date: serverDateTime > lastConfigChange && serverDate,
+                            pos_limited_loading: limitedLoading,
+                        },
+                    }
+                );
+
+                for (const [model, values] of Object.entries(data)) {
+                    const local = localData[model] || [];
+
+                    if (this.opts.uniqueModels.includes(model) && values.length > 0) {
+                        this.indexedDB.delete(
+                            model,
+                            local.map((r) => r.id)
+                        );
+                        localData[model] = values;
+                    } else {
+                        localData[model] = local.concat(values);
+                    }
+                }
+
+                // Synchronize new server data with indexedDB
+                for (const [model, data] of Object.entries(localData)) {
+                    this.indexedDB.create(model, data);
+                }
+            } catch {
+                return localData;
+            }
+        }
+
+        return localData;
     }
-    async initData() {
+
+    async initData(hard = false, limit = true) {
+        const data = await this.loadInitialData(hard, limit);
+        const order = data["pos.order"] || [];
+        const orderlines = data["pos.order.line"] || [];
+
+        delete data["pos.order"];
+        delete data["pos.order.line"];
+
+        this.models.loadData(data, this.modelToLoad);
+        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
+    }
+
+    async loadFieldsAndRelations() {
+        const key = `pos_data_params_${odoo.pos_config_id}`;
+        if (!navigator.onLine) {
+            return JSON.parse(localStorage.getItem(key));
+        }
+
+        try {
+            const params = await this.orm.call("pos.session", "load_data_params", [
+                odoo.pos_session_id,
+            ]);
+            localStorage.setItem(key, JSON.stringify(params));
+            return params;
+        } catch {
+            return JSON.parse(localStorage.getItem(key));
+        }
+    }
+
+    async intializeDataRelation() {
+        // Here the order is important. loadFieldsAndRelations will load all the information
+        // about the models loaded in the PoS. Then initIndexedDB needs it to update/create
+        // the indexedDB. loadInitialData needs indexedDB, so it comes at the end.
         const modelClasses = {};
-        const relations = {};
         const fields = {};
-        const data = {};
-        const response = await this.loadInitialData();
-        for (const [model, values] of Object.entries(response)) {
+        const relations = {};
+        const dataParams = await this.loadFieldsAndRelations();
+        await this.initIndexedDB(dataParams);
+
+        for (const [model, values] of Object.entries(dataParams)) {
             relations[model] = values.relations;
             fields[model] = values.fields;
-            data[model] = values.data;
         }
 
         for (const posModel of registry.category("pos_available_models").getAll()) {
@@ -229,17 +286,24 @@ export class PosData extends Reactive {
         this.relations = relations;
         this.models = models;
 
-        const order = data["pos.order"] || [];
-        const orderlines = data["pos.order.line"] || [];
-
-        delete data["pos.order"];
-        delete data["pos.order.line"];
-
-        this.models.loadData(data, this.modelToLoad);
-        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
-        const dbData = await this.loadIndexedDBData();
-        this.loadedIndexedDBProducts = dbData ? dbData["product.product"] : [];
+        await this.initData();
+        await this.getLocalDataFromIndexedDB();
+        this.initListeners();
         this.network.loading = false;
+    }
+
+    initListeners() {
+        this.models["pos.order"].addEventListener(
+            "update",
+            batched(this.synchronizeLocalDataInIndexedDB.bind(this))
+        );
+
+        for (const model of Object.keys(this.relations)) {
+            this.models[model].addEventListener("delete", (params) => {
+                console.info(`Deleting record with key ${params.key} from model ${model}`);
+                this.indexedDB.delete(model, [params.key]);
+            });
+        }
     }
 
     async execute({
@@ -390,6 +454,10 @@ export class PosData extends Reactive {
     }
 
     async missingRecursive(recordMap, idsMap = {}, acc = {}) {
+        if (!navigator.onLine) {
+            return acc;
+        }
+
         const missingRecords = {};
 
         for (const [model, records] of Object.entries(recordMap)) {
@@ -443,10 +511,14 @@ export class PosData extends Reactive {
                 idsMap[model] = idsMap[model] = new Set([...idsMap[model], ...ids]);
             }
 
-            const data = await this.orm.read(model, Array.from(ids), this.fields[model], {
-                load: false,
-            });
-            newRecordMap[model] = data;
+            try {
+                const data = await this.orm.read(model, Array.from(ids), this.fields[model], {
+                    load: false,
+                });
+                newRecordMap[model] = data;
+            } catch {
+                newRecordMap[model] = [];
+            }
         }
 
         if (Object.keys(newRecordMap).length > 0) {
@@ -588,6 +660,22 @@ export class PosData extends Reactive {
 
     deleteUnsyncData(uuid) {
         this.network.unsyncData = this.network.unsyncData.filter((d) => d.uuid !== uuid);
+    }
+
+    async preLoadData(data) {
+        return data;
+    }
+
+    isLimitedLoading() {
+        const url = new URL(window.location.href);
+        const limitedLoading = url.searchParams.get("limited_loading") === "0" ? false : true;
+
+        if (!limitedLoading) {
+            url.searchParams.delete("limited_loading");
+            window.history.replaceState({}, "", url);
+        }
+
+        return limitedLoading;
     }
 }
 

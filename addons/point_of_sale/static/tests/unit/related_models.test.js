@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { toRaw } from "@odoo/owl";
 import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 
 describe("models with backlinks", () => {
@@ -24,7 +25,7 @@ describe("models with backlinks", () => {
             expect(product.category_id).toBe(category);
             expect(category.product_ids.includes(product)).toBe(true);
         });
-        test("read operation", () => {
+        test("read operation 1", () => {
             const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({});
@@ -40,8 +41,8 @@ describe("models with backlinks", () => {
             expect(readP1).toEqual(p1);
 
             // Test the one2many relationship from category to products
-            expect(readC1.product_ids.includes(p1)).toBe(true);
-            expect(readC1.product_ids.includes(p2)).toBe(true);
+            expect(readC1.product_ids.includes(toRaw(p1))).toBe(true);
+            expect(readC1.product_ids.includes(toRaw(p2))).toBe(true);
 
             // Test the many2one relationship from products to category
             expect(readP1.category_id).toEqual(c1);
@@ -177,7 +178,7 @@ describe("models with backlinks", () => {
             expect(c1.child_ids.includes(c2)).toBe(true);
         });
 
-        test("read operation", () => {
+        test("read operation 2", () => {
             const models = getModels();
             const c1 = models["product.category"].create({});
             const c2 = models["product.category"].create({ parent_id: c1 });
@@ -329,7 +330,7 @@ describe("models with backlinks", () => {
             expect(tag1.product_ids.includes(product)).toBe(true);
         });
 
-        test("read operation", () => {
+        test("read operation 3", () => {
             const models = getModels();
             const p1 = models["product.product"].create({});
             const p2 = models["product.product"].create({});
@@ -338,18 +339,19 @@ describe("models with backlinks", () => {
             const t2 = models["product.tag"].create({ product_ids: [["link", p1, p2]] });
 
             const readT1 = models["product.tag"].read(t1.id);
-            expect(readT1).toEqual(t1);
+            expect(readT1).toEqual(toRaw(t1));
             const readP1 = models["product.product"].read(p1.id);
-            expect(readP1).toEqual(p1);
+            expect(readP1).toEqual(toRaw(p1));
 
             expect(readT1.product_ids.includes(p1)).toBe(true);
             expect(readT1.product_ids.includes(p2)).toBe(true);
             expect(readT1.product_ids.includes(p3)).toBe(true);
-            expect(readP1.tag_ids.includes(t1)).toBe(true);
-            expect(readP1.tag_ids.includes(t2)).toBe(true);
+            expect(readP1.tag_ids.includes(toRaw(t1))).toBe(true);
+            expect(readP1.tag_ids.includes(toRaw(t2))).toBe(true);
 
             const readMany = models["product.product"].readMany([p2.id, p3.id]);
-            expect(readMany).toEqual([p2, p3]);
+            expect(readMany[0]).toBe(toRaw(p2));
+            expect(readMany[1]).toBe(toRaw(p3));
         });
 
         test("update operation, many2many", () => {
@@ -438,7 +440,7 @@ describe("models with backlinks", () => {
                 expect(note1.parent_ids.includes(note)).toBe(true);
             });
 
-            test("read operation", () => {
+            test("read operation 4", () => {
                 const models = getModels();
                 const n1 = models["note.note"].create({});
                 const n2 = models["note.note"].create({});
@@ -453,10 +455,11 @@ describe("models with backlinks", () => {
                 expect(readN4).toEqual(n4);
 
                 expect([n1, n2, n3].every((n) => readN4.parent_ids.includes(n))).toBe(true);
-                expect([n4, n5].every((n) => readN1.child_ids.includes(n))).toBe(true);
+                expect([n4, n5].every((n) => readN1.child_ids.includes(toRaw(n)))).toBe(true);
 
                 const readMany = models["note.note"].readMany([n2.id, n3.id]);
-                expect(readMany).toEqual([n2, n3]);
+                expect(readMany[0]).toBe(toRaw(n2));
+                expect(readMany[1]).toBe(toRaw(n3));
             });
 
             test("update operation, many2many", () => {
@@ -539,7 +542,7 @@ describe("models without backlinks", () => {
             expect(category["<-product.product.category_id"]).toEqual([product]);
         });
 
-        test("read operation", () => {
+        test("read operation 5", () => {
             const models = getModels();
             const c1 = models["product.category"].create({});
             const p1 = models["product.product"].create({ category_id: c1 });
@@ -619,7 +622,7 @@ describe("models without backlinks", () => {
             expect(tag1["<-product.product.tag_ids"].includes(product)).toBe(true);
         });
 
-        test("read operation", () => {
+        test("read operation 6", () => {
             const models = getModels();
             const t1 = models["product.tag"].create({});
             const t2 = models["product.tag"].create({});

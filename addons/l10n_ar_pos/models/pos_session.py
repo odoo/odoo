@@ -15,5 +15,5 @@ class PosSession(models.Model):
     def _load_pos_data(self, data):
         data = super()._load_pos_data(data)
         if self.env.company.country_id.code == 'AR':
-            data['data'][0]['_consumidor_final_anonimo_id'] = self.env.ref('l10n_ar.par_cfa').id
+            data[0]['_consumidor_final_anonimo_id'] = self.env.ref('l10n_ar.par_cfa').id
         return data

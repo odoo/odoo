@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import logging
+import json
 
 from odoo import http, _
 from odoo.http import request
 from odoo.osv.expression import AND
-from odoo.tools import format_amount
+from odoo.tools import format_amount, file_open
 from odoo.addons.account.controllers.portal import PortalAccount
 from datetime import timedelta, datetime
 
@@ -12,6 +13,22 @@ _logger = logging.getLogger(__name__)
 
 
 class PosController(PortalAccount):
+
+    @http.route('/pos/service-worker.js', type='http', auth='user')
+    def pos_web_service_worker(self):
+        response = request.make_response(
+            self._get_pos_service_worker(),
+            [
+                ('Content-Type', 'text/javascript'),
+                ('Service-Worker-Allowed', '/pos'),
+            ],
+        )
+        return response
+
+    def _get_pos_service_worker(self):
+        with file_open('point_of_sale/static/src/app/service_worker.js') as f:
+            body = f.read()
+            return body
 
     @http.route(['/pos/web', '/pos/ui'], type='http', auth='user')
     def pos_web(self, config_id=False, from_backend=False, **k):
@@ -74,6 +91,8 @@ class PosController(PortalAccount):
             'pos_session_id': pos_session.id,
             'pos_config_id': pos_session.config_id.id,
             'access_token': pos_session.config_id.access_token,
+            'last_data_change': pos_session.config_id.last_data_change.strftime("%Y-%m-%d %H:%M:%S"),
+            'urls_to_cache': json.dumps(pos_config._get_url_to_cache(request.session.debug))
         }
         response = request.render('point_of_sale.index', context)
         response.headers['Cache-Control'] = 'no-store'

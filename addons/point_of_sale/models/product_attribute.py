@@ -17,7 +17,7 @@ class ProductAttributeCustomValue(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']['data']])]
+        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -33,7 +33,7 @@ class ProductTemplateAttributeLine(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']['data']})
+        loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
         return [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
 
 
@@ -42,10 +42,10 @@ class ProductTemplateAttributeValue(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']['data']})
+        loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
         return AND([
             [('ptav_active', '=', True)],
-            [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']['data']])],
+            [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']])],
             [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
         ])
 

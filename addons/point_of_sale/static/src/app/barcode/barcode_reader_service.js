@@ -133,23 +133,27 @@ export const barcodeReaderService = {
         const { dialog, barcode, orm } = deps;
         let barcodeReader = null;
 
-        if (session.nomenclature_id) {
-            const nomenclature = await BarcodeParser.fetchNomenclature(
-                orm,
-                session.nomenclature_id
-            );
-            const parser = new BarcodeParser({ nomenclature });
-            barcodeReader = new BarcodeReader(parser, deps);
-        }
+        try {
+            if (session.nomenclature_id) {
+                const nomenclature = await BarcodeParser.fetchNomenclature(
+                    orm,
+                    session.nomenclature_id
+                );
+                const parser = new BarcodeParser({ nomenclature });
+                barcodeReader = new BarcodeReader(parser, deps);
+            }
 
-        if (session.fallback_nomenclature_id && barcodeReader) {
-            const fallbackNomenclature = await BarcodeParser.fetchNomenclature(
-                orm,
-                session.fallback_nomenclature_id
-            );
-            barcodeReader.fallbackParser = new BarcodeParser({
-                nomenclature: fallbackNomenclature,
-            });
+            if (session.fallback_nomenclature_id && barcodeReader) {
+                const fallbackNomenclature = await BarcodeParser.fetchNomenclature(
+                    orm,
+                    session.fallback_nomenclature_id
+                );
+                barcodeReader.fallbackParser = new BarcodeParser({
+                    nomenclature: fallbackNomenclature,
+                });
+            }
+        } catch (error) {
+            console.warn("Failed to start barcode reader", error);
         }
 
         barcode.bus.addEventListener("barcode_scanned", (ev) => {

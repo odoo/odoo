@@ -112,7 +112,7 @@ export class DebugWidget extends Component {
                 } orders in the browser. You will lose all the data. This operation cannot be undone.`
             ),
             confirm: () => {
-                this.pos.data.resetUnsyncQueue();
+                this.pos.data.network.unsyncData = [];
                 const orders = this.pos.models["pos.order"].filter(
                     (order) => order.finalized === paid
                 );

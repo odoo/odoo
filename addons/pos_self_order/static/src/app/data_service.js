@@ -8,6 +8,10 @@ patch(PosData.prototype, {
         const configId = session.data.config_id;
         return await rpc(`/pos-self/data/${parseInt(configId)}`);
     },
+    async loadFieldsAndRelations() {
+        const configId = session.data.config_id;
+        return await rpc(`/pos-self/relations/${parseInt(configId)}`);
+    },
     get databaseName() {
         return `self_order-config-id_${session.data.config_id}_${session.data.access_token}`;
     },
@@ -16,19 +20,24 @@ patch(PosData.prototype, {
             ? super.initIndexedDB(...arguments)
             : true;
     },
-    deleteDataIndexedDB() {
+    initListeners() {
         return session.data.self_ordering_mode === "mobile"
-            ? super.deleteDataIndexedDB(...arguments)
+            ? super.initListeners(...arguments)
             : true;
     },
-    syncDataWithIndexedDB() {
+    synchronizeLocalDataInIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
-            ? super.syncDataWithIndexedDB(...arguments)
+            ? super.synchronizeLocalDataInIndexedDB(...arguments)
             : true;
     },
-    async loadIndexedDBData() {
+    async getCachedServerDataFromIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
-            ? await super.loadIndexedDBData(...arguments)
+            ? await super.getCachedServerDataFromIndexedDB(...arguments)
+            : {};
+    },
+    async getLocalDataFromIndexedDB() {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.getLocalDataFromIndexedDB(...arguments)
             : {};
     },
 });
