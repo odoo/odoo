@@ -17,6 +17,10 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),
             combo.isConfirmationButtonDisabled(),
+            combo.select("Combo Product 9"),
+            // Check Product Configurator is open
+            Dialog.is("Attribute selection"),
+            Dialog.discard(),
             combo.select("Combo Product 5"),
             combo.select("Combo Product 7"),
             combo.isSelected("Combo Product 7"),
