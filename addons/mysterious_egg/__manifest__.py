@@ -32,6 +32,7 @@
             'mysterious_egg/static/src/**/*',
             ('remove', 'mysterious_egg/static/src/builder/**/*.js'),
             ('remove', 'mysterious_egg/static/src/builder/**/*.xml'),
+            ('remove', 'mysterious_egg/static/src/builder/**/*.inside.scss'),
         ],
         # this bundle is lazy loaded when the editor is ready
         'website.assets_builder': [
@@ -44,6 +45,12 @@
 
             'mysterious_egg/static/src/builder/**/*.js',
             'mysterious_egg/static/src/builder/**/*.xml',
-        ]
+        ],
+        'mysterious_egg.inside_builder_style': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_primary_variables'),
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'mysterious_egg/static/src/builder/**/*.inside.scss',
+        ],
     },
 }
