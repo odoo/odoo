@@ -736,6 +736,12 @@ class TestPartnerAddressCompany(TransactionCase):
         res_bhide = test_partner_bhide.with_context(show_address=1, address_inline=1).display_name
         self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
+        test_invoice_partner_no_name = self.env['res.partner'].create({'name': '', 'parent_id': test_partner_jetha.id, 'type': 'invoice'})
+        res_invoice_partner_no_name = test_invoice_partner_no_name.display_name
+        self.assertEqual(res_invoice_partner_no_name, "Jethala, Invoice Address", "name should contain parent name and address type")
+        res_invoice_partner_no_name = test_invoice_partner_no_name.with_context(no_address_type=1).display_name
+        self.assertEqual(res_invoice_partner_no_name, "Jethala", "name should contain only parent name and no address type")
+
     def test_accessibility_of_company_partner_from_branch(self):
         """ Check accessibility of company partner from branch. """
         company = self.env['res.company'].create({'name': 'company'})
