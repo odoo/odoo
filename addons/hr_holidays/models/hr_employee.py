@@ -221,7 +221,7 @@ class HrEmployee(models.Model):
             if allocation.allocation_type == 'accrual':
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
-                if allocation.type_request_unit in ['hour']\
+                if allocation.holiday_status_id.request_unit in ['hour']\
                 else allocation.number_of_days_display
             max_leaves += future_leaves
             allocation_data.update({
