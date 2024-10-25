@@ -19,6 +19,7 @@ class SaleOrder(models.Model):
         # release gift card amount when order state become canceled
         for record in self.filtered(lambda so: so.state == 'cancel'):
             record.order_line.filtered(lambda ol: ol.gift_card_id).unlink()
+            record.order_line.mapped('generated_gift_card_ids').unlink()
 
         # create and send gift card when order become confirmed
         for record in self.filtered(lambda so: so.state == 'sale'):
