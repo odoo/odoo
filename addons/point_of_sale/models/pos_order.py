@@ -251,7 +251,11 @@ class PosOrder(models.Model):
                     'name': line.customer_note,
                     'display_type': 'line_note',
                 }))
-
+        if self.general_customer_note:
+            invoice_lines.append((0, None, {
+                'name': self.general_customer_note,
+                'display_type': 'line_note',
+            }))
         return invoice_lines
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
@@ -306,7 +310,8 @@ class PosOrder(models.Model):
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     floating_order_name = fields.Char(string='Order Name')
-    general_note = fields.Text(string='General Note')
+    general_customer_note = fields.Text(string='General Customer Note')
+    internal_note = fields.Text(string='Internal Note')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
     pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True, help="""
         Human readable reference for this order.

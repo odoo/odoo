@@ -21,7 +21,7 @@ class PosSession(models.Model):
             order = self.env['pos.order'].browse(order_id)
             last_order_preparation_change = {
                 'lines': {},
-                'generalNote': '',
+                'generalCustomerNote': '',
             }
             for orderline in order['lines']:
                 last_order_preparation_change['lines'][orderline.uuid + " - "] = {

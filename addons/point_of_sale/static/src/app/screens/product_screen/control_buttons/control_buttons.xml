@@ -4,11 +4,10 @@
         <!-- All buttons always displayed -->
         <SelectPartnerButton partner="partner" t-if="!props.showRemainingButtons"/>
         <t t-if="!props.showRemainingButtons || (ui.isSmall and props.showRemainingButtons)">
-            <OrderlineNoteButton
+            <NoteButton
                 label="internalNoteLabel()"
-                getter="(orderline) => orderline.getNote()"
-                class="buttonClass"
-                setter="(orderline, note) => orderline.setNote(note)" />
+                type="'internal'"
+                class="buttonClass"/>
         </t>
         <button class="btn btn-light btn-lg flex-shrink-0 ms-auto" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
             Actions
@@ -16,8 +15,11 @@
         <!-- All these buttons will only be displayed in a dialog -->
         <t t-if="props.showRemainingButtons">
             <div class="control-buttons control-buttons-modal d-grid gap-2 mt-2">
-                <OrderlineNoteButton class="buttonClass" label="internalNoteLabel(this.pos.get_order())"/>
-                <OrderlineNoteButton class="buttonClass" icon="'fa fa-sticky-note'"/>
+                <NoteButton
+                    label.translate="Customer Note"
+                    type="'customer'"
+                    class="buttonClass"
+                    icon="'fa fa-sticky-note'"/>
                 <button class="o_pricelist_button btn btn-secondary btn-lg py-5" t-on-click="() => this.clickPricelist()">
                     <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
                     <t t-if="currentOrder?.pricelist_id" t-esc="currentOrder.pricelist_id.display_name" />
