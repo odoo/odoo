@@ -630,3 +630,79 @@ class TestMiscToken(TransactionCase):
         new_timestamp = new_timestamp.to_bytes(8, byteorder='little')
         token = base64.urlsafe_b64encode(token[:1] + new_timestamp + token[9:]).decode()
         self.assertIsNone(misc.verify_hash_signed(self.env, 'test', token))
+
+
+class TestFormatAmountFunction(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.currency_object_format_amount = cls.env["res.currency"].create({
+            "name": "format_amount Currency",
+            "symbol": "fA",
+            "rounding": 0.01,  # Makes 12.345 as 12.34
+            "position": "before",
+        })
+        # A language where decimal separator and thousands separator is same to check effectiveness of
+        # regular expression used in format_amount
+        cls.kiliki_language = cls.env["res.lang"].create({
+            "name": "Kili kili",
+            "code": "GFL",
+            "grouping": "[3,0]",
+            "decimal_point": "#",
+            "thousands_sep": "#",
+        })
+
+        cls.kiliki_language.install_lang()
+        cls.kiliki_language.active = True
+
+    def assert_format_amount(self, amount, expected, trailing_zeroes=True, lang_code=None):
+        result = misc.format_amount(
+            self.env,
+            amount,
+            self.currency_object_format_amount,
+            trailing_zeroes=trailing_zeroes,
+            lang_code=lang_code,
+        )
+        self.assertEqual(result, expected)
+
+    def test_trailing_true_on_number_having_no_trailing_zeroes(self):
+        # Has no effect on number not having trailing zeroes
+        self.assert_format_amount(1.234, "fA%s1.23" % "\N{NO-BREAK SPACE}")
+
+        # Has no effect on number not having trailing zeroes - currency position after
+        self.currency_object_format_amount.position = "after"
+        self.assert_format_amount(1.234, "1.23%sfA" % "\N{NO-BREAK SPACE}")
+
+    def test_trailing_false_on_number_having_no_trailing_zeroes(self):
+        # Has no effect on number not having trailing zeroes even if trailing zeroes set as False
+        self.assert_format_amount(1.234, "fA%s1.23" % "\N{NO-BREAK SPACE}")
+
+        # Has no effect on number not having trailing zeroes - currency position after
+        self.currency_object_format_amount.position = "after"
+        self.assert_format_amount(1.234, "1.23%sfA" % "\N{NO-BREAK SPACE}")
+
+    def test_trailing_zeroes_true_on_number_having_trailing_zeroes(self):
+        # Has no effect on number having trailing zeroes if trailing zeroes set as True (True by default)
+        self.assert_format_amount(1.0000, "fA%s1.00" % "\N{NO-BREAK SPACE}")
+
+        # Has no effect on number having trailing zeroes - currency position after
+        self.currency_object_format_amount.position = "after"
+        self.assert_format_amount(1.0000, "1.00%sfA" % "\N{NO-BREAK SPACE}")
+
+    def test_trailing_false_on_number_having_trailing_zeroes(self):
+        # Has effect (removes trailing zeroes) on number having trailing zeroes if trailing zeroes set as False
+        self.assert_format_amount(1.0000, "fA%s1" % "\N{NO-BREAK SPACE}", False)
+
+        # Has effect on number having trailing zeroes - currency position after
+        self.currency_object_format_amount.position = "after"
+        self.assert_format_amount(1.0000, "1%sfA" % "\N{NO-BREAK SPACE}", False)
+
+    def test_trailing_false_on_number_having_trailing_zeroes_with_kilikili_language(self):
+        # Here the amount is first will be given decimal separator and thousandth separator as
+        # follows 10#000#00 in which second # is decimal so, the RE targets the decimal separator
+        # at the last position.
+        self.assert_format_amount(10000, "fA%s10#000" % "\N{NO-BREAK SPACE}", False, "GFL")
+
+        # Has no effect on number having same decimal and thousandth seperator - currency position after
+        self.currency_object_format_amount.position = "after"
+        self.assert_format_amount(10000, "10#000%sfA" % "\N{NO-BREAK SPACE}", False, "GFL")

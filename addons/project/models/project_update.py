@@ -121,7 +121,7 @@ class ProjectUpdate(models.Model):
             'show_activities': milestones['show_section'],
             'milestones': milestones,
             'format_lang': lambda value, digits: formatLang(self.env, value, digits=digits),
-            'format_monetary': lambda value: format_amount(self.env, value, project.currency_id),
+            'format_monetary': lambda value: format_amount(self.env, value, project.currency_id, trailing_zeroes=False),
         }
 
     @api.model
