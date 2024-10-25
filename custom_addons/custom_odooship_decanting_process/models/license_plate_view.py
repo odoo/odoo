@@ -37,6 +37,7 @@ class LicensePlateOrders(models.Model):
     )
     site_code_id = fields.Many2one('site.code.configuration',
                                    related='picking_id.site_code_id', string='Site Code')
+    location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
 
     def action_open(self):
@@ -57,35 +58,46 @@ class LicensePlateOrders(models.Model):
 class LicensePlateOrdersLine(models.Model):
     _name = 'license.plate.orders.line'
     _description = 'License Plate Orders Line'
-    _order = 'sequence, id'
 
     name = fields.Char(string='Name')
-    license_plate_orders_id = fields.Many2one(
-        comodel_name='license.plate.orders',
-        string='License Plate Orders',
-        required=True,
-        ondelete='cascade'
-    )
+    license_plate_orders_id = fields.Many2one('license.plate.orders', string='License Plate Orders', required=True, ondelete='cascade')
     sequence = fields.Integer(string="Sequence")
-    product_id = fields.Many2one(
-        comodel_name='product.product',
-        string='Product',
-    )
+    product_id = fields.Many2one('product.product', string='Product')
     quantity = fields.Float(string='Quantity', required=True)
     sku_code = fields.Char(string='SKU')
-    state = fields.Selection([
-        ('open', 'Open'),
-        ('closed', 'Closed'),
-    ], string='State', default='open')
+    state = fields.Selection([('open', 'Open'), ('closed', 'Closed')], string='State', default='open')
     remaining_qty = fields.Float('Remaining Quantity')
     is_remaining_qty = fields.Boolean(string='Remaining', default=False)
+
+    def action_open_update_qty_wizard(self):
+        """
+        This method opens the wizard for updating the quantity.
+        It passes the default picking_id and license_plate_orders_line_id to the context.
+        """
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'update.qty.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_license_plate_orders_line_id': self.id,
+                'default_picking_id': self.license_plate_orders_id.picking_id.id,  # Pass picking_id
+            }
+        }
+
+    @api.depends('quantity')
+    def _compute_remaining_qty(self):
+        """
+        Compute remaining quantity based on the quantity ordered (product_uom_qty)
+        and the quantity done (quantity). Remaining qty is initially equal to available qty.
+        """
+        for move in self:
+            # Initial remaining qty is the product_uom_qty (expected qty)
+            move.remaining_qty = move.quantity
 
     def button_close_license_plate(self):
         """
         Close the license plate for this delivery receipt order line.
-        This method sets the license_plate_closed field to True
-        and updates the state to 'closed'.
         """
-        self.license_plate_closed = True
         self.state = 'closed'
 

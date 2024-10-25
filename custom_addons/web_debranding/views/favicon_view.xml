@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Inherited and Override Base functionality to update Title logo i.e Favicon.ico-->
+    <template id="assets_frontend" name="Custom Favicon" inherit_id="web.layout">
+        <xpath expr="//link[@rel='shortcut icon']" position="replace">
+            <link rel="shortcut icon" href="/web_debranding/static/src/img/favicon.ico" type="image/x-icon"/>
+        </xpath>
+    </template>
+</odoo>
