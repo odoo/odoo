@@ -7,7 +7,8 @@ import time
 
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
 
-import odoo
+import odoo.api
+import odoo.modules
 from odoo.tools import config, topological_sort, unique
 from odoo.modules.registry import Registry
 from odoo.netsvc import init_logger
@@ -207,9 +208,9 @@ if __name__ == '__main__':
 
     # handle paths option
     if args.addons_path:
-        odoo.tools.config['addons_path'] = args.addons_path + odoo.tools.config['addons_path']
+        config['addons_path'] = args.addons_path + config['addons_path']
         if args.data_dir:
-            odoo.tools.config['data_dir'] = args.data_dir
+            config['data_dir'] = args.data_dir
         odoo.modules.module.initialize_sys_path()
 
     init_logger()

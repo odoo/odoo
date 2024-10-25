@@ -14,7 +14,7 @@ from psycopg2.extensions import quote_ident
 from decorator import decorator
 from pytz import country_timezones
 
-import odoo
+import odoo.api
 import odoo.modules.neutralize
 import odoo.release
 import odoo.sql_db

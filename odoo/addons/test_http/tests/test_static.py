@@ -8,7 +8,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 from urllib3.util import parse_url
 
-import odoo
+import odoo.http
 from odoo.tests import new_test_user, tagged, RecordCapturer
 from odoo.tools import config, file_open, image_process
 from odoo.tools.misc import submap
