@@ -4338,3 +4338,31 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(move.quantity_done, 24)
         self.assertRecordValues(move.stock_valuation_layer_ids, [{'quantity': 12}, {'quantity': 12}])
+
+    def test_internal_location_with_no_company(self):
+        """ An internal location without a company should not be valued """
+        location = self.env['stock.location'].create({
+            'name': 'Internal no company',
+            'usage': 'internal',
+            'company_id': False,
+        })
+        self.assertFalse(location._should_be_valued())
+
+        move = self.env['stock.move'].create({
+            'name': 'Receipt of 1 unit',
+            'product_id': self.product1.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': location.id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': 1,
+            'price_unit': 1,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.move_line_ids.qty_done = 1
+        move._action_done()
+
+        self.assertEqual(move.state, "done")
+        self.assertFalse(move.stock_valuation_layer_ids)
+        self.assertEqual(self.product1.quantity_svl, 0)
