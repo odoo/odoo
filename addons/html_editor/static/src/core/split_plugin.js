@@ -7,9 +7,20 @@ import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_tr
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
+/**
+ * @typedef { Object } SplitShared
+ * @property { SplitPlugin['isUnsplittable'] } isUnsplittable
+ * @property { SplitPlugin['splitAroundUntil'] } splitAroundUntil
+ * @property { SplitPlugin['splitBlock'] } splitBlock
+ * @property { SplitPlugin['splitBlockNode'] } splitBlockNode
+ * @property { SplitPlugin['splitElement'] } splitElement
+ * @property { SplitPlugin['splitElementBlock'] } splitElementBlock
+ * @property { SplitPlugin['splitSelection'] } splitSelection
+ */
+
 export class SplitPlugin extends Plugin {
     static dependencies = ["selection", "history", "delete", "lineBreak"];
-    static name = "split";
+    static id = "split";
     static shared = [
         "splitBlock",
         "splitBlockNode",
@@ -40,12 +51,12 @@ export class SplitPlugin extends Plugin {
     // --------------------------------------------------------------------------
     splitBlock() {
         this.dispatchTo("before_split_block_handlers");
-        let selection = this.shared.getEditableSelection();
+        let selection = this.dependencies.selection.getEditableSelection();
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
             // this.shared.collapseIfZWS();
-            this.shared.deleteSelection();
-            selection = this.shared.getEditableSelection();
+            this.dependencies.delete.deleteSelection();
+            selection = this.dependencies.selection.getEditableSelection();
         }
 
         return this.splitBlockNode({
@@ -114,11 +125,15 @@ export class SplitPlugin extends Plugin {
         removeEmptyAndFill(lastLeaf(beforeElement));
         removeEmptyAndFill(firstLeaf(afterElement));
 
-        this.shared.setCursorStart(afterElement);
+        this.dependencies.selection.setCursorStart(afterElement);
 
         return [beforeElement, afterElement];
     }
 
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     isUnsplittable(node) {
         return (
             node.nodeType === Node.ELEMENT_NODE &&
@@ -223,7 +238,7 @@ export class SplitPlugin extends Plugin {
 
     splitSelection() {
         let { startContainer, startOffset, endContainer, endOffset, direction } =
-            this.shared.getEditableSelection();
+            this.dependencies.selection.getEditableSelection();
         const isInSingleContainer = startContainer === endContainer;
         if (isTextNode(endContainer) && endOffset > 0 && endOffset < nodeSize(endContainer)) {
             const endParent = endContainer.parentNode;
@@ -260,14 +275,14 @@ export class SplitPlugin extends Plugin {
                       focusNode: startContainer,
                       focusOffset: startOffset,
                   };
-        return this.shared.setSelection(selection, { normalize: false });
+        return this.dependencies.selection.setSelection(selection, { normalize: false });
     }
 
     onBeforeInput(e) {
         if (e.inputType === "insertParagraph") {
             e.preventDefault();
             this.splitBlock();
-            this.shared.addStep();
+            this.dependencies.history.addStep();
         }
     }
 }

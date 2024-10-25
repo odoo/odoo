@@ -83,7 +83,7 @@ test("no arrow key press or mouse click should keep selection near a contentedit
 test("event handlers are properly cleaned up after destruction", async () => {
     let count = 0;
     class TestHandlerPlugin extends Plugin {
-        static name = "test_handler";
+        static id = "testHandler";
 
         setup() {
             this.addDomListener(document.body, "click", () => count++);
@@ -106,7 +106,7 @@ test("event handlers are properly cleaned up after destruction", async () => {
 test("can give resources in config", async () => {
     expect.assertions(1);
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
 
         setup() {
             expect(this.getResource("some")).toEqual(["value"]);
@@ -124,7 +124,7 @@ test("can give resources in config", async () => {
 test("resource can have sequence", async () => {
     expect.assertions(1);
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
         resources = {
             test_resource: [
                 { value: 2 },

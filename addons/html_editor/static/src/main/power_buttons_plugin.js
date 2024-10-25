@@ -39,22 +39,24 @@ import { omit, pick } from "@web/core/utils/objects";
  */
 
 export class PowerButtonsPlugin extends Plugin {
-    static name = "power_buttons";
-    static dependencies = ["selection", "local-overlay", "powerbox", "user_command"];
+    static id = "powerButtons";
+    static dependencies = ["selection", "localOverlay", "powerbox", "userCommand"];
     resources = {
         layout_geometry_change_handlers: this.updatePowerButtons.bind(this),
         selectionchange_handlers: this.updatePowerButtons.bind(this),
     };
 
     setup() {
-        this.powerButtonsOverlay = this.shared.makeLocalOverlay("oe-power-buttons-overlay");
+        this.powerButtonsOverlay = this.dependencies.localOverlay.makeLocalOverlay(
+            "oe-power-buttons-overlay"
+        );
         this.createPowerButtons();
     }
 
     createPowerButtons() {
         /** @returns {HTMLButtonElement} */
         const itemToButton = (/**@type {PowerButton} */ item) => {
-            const command = this.shared.getCommand(item.commandId);
+            const command = this.dependencies.userCommand.getCommand(item.commandId);
             const composedPowerButton = {
                 ...pick(command, "title", "icon"),
                 ...omit(item, "commandId", "commandParams"),
@@ -78,7 +80,8 @@ export class PowerButtonsPlugin extends Plugin {
 
     updatePowerButtons() {
         this.powerButtonsContainer.classList.add("d-none");
-        const { editableSelection, documentSelectionIsInEditable } = this.shared.getSelectionData();
+        const { editableSelection, documentSelectionIsInEditable } =
+            this.dependencies.selection.getSelectionData();
         if (!documentSelectionIsInEditable) {
             return;
         }

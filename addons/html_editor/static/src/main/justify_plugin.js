@@ -3,7 +3,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 
 export class JustifyPlugin extends Plugin {
-    static name = "justify";
+    static id = "justify";
     static dependencies = ["selection"];
     resources = {
         user_commands: [
@@ -16,7 +16,7 @@ export class JustifyPlugin extends Plugin {
 
     align(mode) {
         const visitedBlocks = new Set();
-        const traversedNode = this.shared.getTraversedNodes();
+        const traversedNode = this.dependencies.selection.getTraversedNodes();
         for (const node of traversedNode) {
             if (isVisibleTextNode(node)) {
                 const block = closestBlock(node);

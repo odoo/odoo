@@ -8,35 +8,35 @@ import { getContent } from "../_helpers/selection";
 
 function addRow(position) {
     return (editor) => {
-        const selection = editor.shared.getEditableSelection();
-        editor.shared.addRow(position, findInSelection(selection, "tr"));
+        const selection = editor.shared.selection.getEditableSelection();
+        editor.shared.table.addRow(position, findInSelection(selection, "tr"));
     };
 }
 
 function addColumn(position) {
     return (editor) => {
-        const selection = editor.shared.getEditableSelection();
-        editor.shared.addColumn(position, findInSelection(selection, "td"));
+        const selection = editor.shared.selection.getEditableSelection();
+        editor.shared.table.addColumn(position, findInSelection(selection, "td"));
     };
 }
 
 function removeRow(row) {
     return (editor) => {
         if (!row) {
-            const selection = editor.shared.getEditableSelection();
+            const selection = editor.shared.selection.getEditableSelection();
             row = findInSelection(selection, "tr");
         }
-        editor.shared.removeRow(row);
+        editor.shared.table.removeRow(row);
     };
 }
 
 function removeColumn(cell) {
     return (editor) => {
         if (!cell) {
-            const selection = editor.shared.getEditableSelection();
+            const selection = editor.shared.selection.getEditableSelection();
             cell = findInSelection(selection, "td");
         }
-        editor.shared.removeColumn(cell);
+        editor.shared.table.removeColumn(cell);
     };
 }
 

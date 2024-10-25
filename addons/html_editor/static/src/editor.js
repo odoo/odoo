@@ -5,7 +5,7 @@ import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 import { initElementForEdition } from "./utils/sanitize";
 
 /**
- * @typedef { import("./plugin").SharedMethods } SharedMethods
+ * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
  * @typedef {typeof import("./plugin").Plugin} PluginConstructor
  **/
 
@@ -52,14 +52,14 @@ function sortPlugins(plugins) {
         }
     }
     while ((P = findPlugin())) {
-        inResult.add(P.name);
+        inResult.add(P.id);
         result.push(P);
     }
     if (initialPlugins.size) {
         const messages = [];
         for (const P of initialPlugins) {
             messages.push(
-                `"${P.name}" is missing (${P.dependencies
+                `"${P.id}" is missing (${P.dependencies
                     .filter((d) => !inResult.has(d))
                     .join(", ")})`
             );
@@ -122,34 +122,34 @@ export class Editor {
         const Plugins = sortPlugins(this.config.Plugins || MAIN_PLUGINS);
         const plugins = new Map();
         for (const P of Plugins) {
-            if (P.name === "") {
-                throw new Error(`Missing plugin name (class ${P.constructor.name})`);
+            if (P.id === "") {
+                throw new Error(`Missing plugin id (class ${P.name})`);
             }
-            if (plugins.has(P.name)) {
-                throw new Error(`Duplicate plugin name: ${P.name}`);
+            if (plugins.has(P.id)) {
+                throw new Error(`Duplicate plugin id: ${P.id}`);
             }
-            const _shared = {};
+            const imports = {};
             for (const dep of P.dependencies) {
                 if (plugins.has(dep)) {
+                    imports[dep] = {};
                     for (const h of plugins.get(dep).shared) {
-                        _shared[h] = this.shared[h];
+                        imports[dep][h] = this.shared[dep][h];
                     }
                 } else {
-                    throw new Error(`Missing dependency for plugin ${P.name}: ${dep}`);
+                    throw new Error(`Missing dependency for plugin ${P.id}: ${dep}`);
                 }
             }
-            plugins.set(P.name, P);
-            const plugin = new P(this.document, this.editable, _shared, this.config, this.services);
+            plugins.set(P.id, P);
+            const plugin = new P(this.document, this.editable, imports, this.config, this.services);
             this.plugins.push(plugin);
+            const exports = {};
             for (const h of P.shared) {
-                if (h in this.shared) {
-                    throw new Error(`Duplicate shared name: ${h}`);
-                }
                 if (!(h in plugin)) {
-                    throw new Error(`Missing helper implementation: ${h} in plugin ${P.name}`);
+                    throw new Error(`Missing helper implementation: ${h} in plugin ${P.id}`);
                 }
-                this.shared[h] = plugin[h].bind(plugin);
+                exports[h] = plugin[h].bind(plugin);
             }
+            this.shared[P.id] = exports;
         }
         const resources = this.createResources();
         for (const plugin of this.plugins) {

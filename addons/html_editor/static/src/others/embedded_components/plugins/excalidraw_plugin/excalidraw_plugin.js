@@ -4,8 +4,8 @@ import { renderToElement } from "@web/core/utils/render";
 import { ExcalidrawDialog } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog";
 
 export class ExcalidrawPlugin extends Plugin {
-    static name = "excalidraw";
-    static dependencies = ["embedded_components", "dom", "selection", "link", "history"];
+    static id = "excalidraw";
+    static dependencies = ["embeddedComponents", "dom", "selection", "link", "history"];
     resources = {
         user_commands: [
             {
@@ -25,9 +25,9 @@ export class ExcalidrawPlugin extends Plugin {
     };
 
     insertDrawingBoard() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         let restoreSelection = () => {
-            this.shared.setSelection(selection);
+            this.dependencies.selection.setSelection(selection);
         };
         this.services.dialog.add(
             ExcalidrawDialog,
@@ -39,8 +39,8 @@ export class ExcalidrawPlugin extends Plugin {
                             embeddedProps: JSON.stringify({ source: href }),
                         }
                     );
-                    this.shared.domInsert(templateBlock);
-                    this.shared.addStep();
+                    this.dependencies.dom.insert(templateBlock);
+                    this.dependencies.history.addStep();
 
                     restoreSelection = () => {};
                 },

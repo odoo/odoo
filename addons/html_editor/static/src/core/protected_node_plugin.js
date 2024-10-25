@@ -5,8 +5,13 @@ import { childNodes } from "../utils/dom_traversal";
 const PROTECTED_SELECTOR = `[data-oe-protected="true"],[data-oe-protected=""]`;
 const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
 
+/**
+ * @typedef { Object } ProtectedNodeShared
+ * @property { ProtectedNodePlugin['setProtectingNode'] } setProtectingNode
+ */
+
 export class ProtectedNodePlugin extends Plugin {
-    static name = "protected_node";
+    static id = "protectedNode";
     static shared = ["setProtectingNode"];
     resources = {
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
