@@ -9,4 +9,14 @@
         <field name="context">{"from_embedded_action": true}</field>
         <field name="groups_ids" eval="[(4, ref('hr_expense.group_hr_expense_user'))]"/>
     </record>
+
+    <record id="project_embedded_action_hr_expenses_dashbord" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">77</field>
+        <field name="name">Expenses</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="python_method">action_open_project_expenses</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('hr_expense.group_hr_expense_user'))]"/>
+    </record>
 </odoo>
