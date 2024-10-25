@@ -34,17 +34,17 @@ class TestL10nInHSNSummary(TestTaxCommon):
         ChartTemplate = cls.env['account.chart.template']
         cls.gst_5 = ChartTemplate.ref('sgst_sale_5')
         cls.gst_18 = ChartTemplate.ref('sgst_sale_18')
-        cls.igst_0 = ChartTemplate.ref('igst_sale_0')
         cls.igst_5 = ChartTemplate.ref('igst_sale_5')
         cls.igst_18 = ChartTemplate.ref('igst_sale_18')
         cls.cess_5_plus_1591 = ChartTemplate.ref('cess_5_plus_1591_sale')
+        cls.nil_rated = ChartTemplate.ref('nil_rated_sale')
         cls.exempt_0 = ChartTemplate.ref('exempt_sale')
         cls.igst_18_rc = ChartTemplate.ref('igst_sale_18_rc')
 
     def _jsonify_tax(self, tax):
         # EXTENDS 'account.
         values = super()._jsonify_tax(tax)
-        values['l10n_in_tax_type'] = tax.l10n_in_tax_type
+        values['l10n_in_gst_tax_type'] = tax.l10n_in_gst_tax_type
         return values
 
     def _jsonify_document_line(self, document, index, line):
@@ -560,9 +560,9 @@ class TestL10nInHSNSummary(TestTaxCommon):
         }
         yield 1, document, expected_values
 
-        # No tax to IGST 0%/exempt.
+        # No tax to Nil Rated/exempt.
         document = self.populate_document(self.init_document([
-            {'l10n_in_hsn_code': self.test_hsn_code_1,  'quantity': 1.0,    'price_unit': 350.0,    'product_uom_id': self.uom_unit,    'tax_ids': self.igst_0},
+            {'l10n_in_hsn_code': self.test_hsn_code_1,  'quantity': 1.0,    'price_unit': 350.0,    'product_uom_id': self.uom_unit,    'tax_ids': self.nil_rated},
             {'l10n_in_hsn_code': self.test_hsn_code_1,  'quantity': 1.0,    'price_unit': 350.0,    'product_uom_id': self.uom_unit,    'tax_ids': self.exempt_0},
         ]))
         expected_values = {
@@ -737,8 +737,8 @@ class TestL10nInHSNSummary(TestTaxCommon):
         })
 
         # Manual edition of the tax.
-        sgst_tax = self.gst_5.children_tax_ids.filtered(lambda tax: tax.l10n_in_tax_type == 'sgst')
-        cgst_tax = self.gst_5.children_tax_ids.filtered(lambda tax: tax.l10n_in_tax_type == 'cgst')
+        sgst_tax = self.gst_5.children_tax_ids.filtered(lambda tax: tax.l10n_in_gst_tax_type == 'sgst')
+        cgst_tax = self.gst_5.children_tax_ids.filtered(lambda tax: tax.l10n_in_gst_tax_type == 'cgst')
         tax_line_sgst = invoice.line_ids.filtered(lambda aml: aml.tax_line_id == sgst_tax)
         tax_line_cgst = invoice.line_ids.filtered(lambda aml: aml.tax_line_id == cgst_tax)
         payment_term = invoice.line_ids.filtered(lambda aml: aml.display_type == 'payment_term')

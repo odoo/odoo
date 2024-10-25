@@ -8,13 +8,13 @@ patch(accountTaxHelpers, {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     l10n_in_get_hsn_summary_table(base_lines, display_uom) {
-        const l10n_in_tax_types = new Set();
+        const l10n_in_gst_tax_types = new Set();
         const items_map = {};
 
         function get_base_line_grouping_key(base_line) {
             const unique_taxes_data = new Set(
                 base_line.tax_details.taxes_data
-                    .filter(tax_data => ['igst', 'cgst', 'sgst'].includes(tax_data.tax.l10n_in_tax_type))
+                    .filter(tax_data => ['igst', 'cgst', 'sgst'].includes(tax_data.tax.l10n_in_gst_tax_type))
                     .map(tax_data => tax_data.tax)
             );
             const rate = [...unique_taxes_data].reduce((sum, tax) => sum + tax.amount, 0);
@@ -58,7 +58,7 @@ patch(accountTaxHelpers, {
         function grouping_function(base_line, tax_data) {
             return tax_data ? {
                 ...get_base_line_grouping_key(base_line),
-                l10n_in_tax_type: tax_data.tax.l10n_in_tax_type,
+                l10n_in_gst_tax_type: tax_data.tax.l10n_in_gst_tax_type,
             } : null;
         }
 
@@ -66,7 +66,7 @@ patch(accountTaxHelpers, {
         const values_per_grouping_key = this.aggregate_base_lines_aggregated_values(base_lines_aggregated_values);
         for (const values of Object.values(values_per_grouping_key)) {
             const grouping_key = values.grouping_key;
-            if (!grouping_key || !grouping_key.l10n_in_hsn_code || !grouping_key.l10n_in_tax_type) {
+            if (!grouping_key || !grouping_key.l10n_in_hsn_code || !grouping_key.l10n_in_gst_tax_type) {
                 continue;
             }
 
@@ -76,9 +76,9 @@ patch(accountTaxHelpers, {
                 rate: grouping_key.rate,
             });
             const item = items_map[key];
-            const l10n_in_tax_type = grouping_key.l10n_in_tax_type;
-            item[`tax_amount_${l10n_in_tax_type}`] += values.tax_amount_currency;
-            l10n_in_tax_types.add(l10n_in_tax_type);
+            const l10n_in_gst_tax_type = grouping_key.l10n_in_gst_tax_type;
+            item[`tax_amount_${l10n_in_gst_tax_type}`] += values.tax_amount_currency;
+            l10n_in_gst_tax_types.add(l10n_in_gst_tax_type);
         }
 
         const items = [];
@@ -88,10 +88,10 @@ patch(accountTaxHelpers, {
             items.push(item);
         }
         return {
-            has_igst: l10n_in_tax_types.has("igst"),
-            has_gst: l10n_in_tax_types.has("cgst") || l10n_in_tax_types.has("sgst"),
-            has_cess: l10n_in_tax_types.has("cess"),
-            nb_columns: 5 + l10n_in_tax_types.size,
+            has_igst: l10n_in_gst_tax_types.has("igst"),
+            has_gst: l10n_in_gst_tax_types.has("cgst") || l10n_in_gst_tax_types.has("sgst"),
+            has_cess: l10n_in_gst_tax_types.has("cess"),
+            nb_columns: 5 + l10n_in_gst_tax_types.size,
             display_uom: display_uom,
             items: items,
         };

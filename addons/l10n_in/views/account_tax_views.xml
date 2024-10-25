@@ -5,14 +5,15 @@
         <field name="model">account.tax</field>
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
-            <field name="is_base_affected" position="after">
-                <field name="l10n_in_reverse_charge" invisible="amount_type == 'group' or country_code != 'IN'"/>
+            <field name="tax_scope" position="after">
+                <field name="l10n_in_tax_type" invisible="amount_type == 'group' or country_code != 'IN'"/>
             </field>
-            <xpath expr="//field[@name='country_id']" position="after">
-                <field name="l10n_in_tds_tax_type" invisible="country_code != 'IN' or not l10n_in_tds_feature_enabled"/>
-            </xpath>
+            <field name="is_base_affected" position="after">
+                <field name="l10n_in_reverse_charge" invisible="amount_type == 'group' or country_code != 'IN' or l10n_in_tax_type != 'gst'"/>
+                <field name="l10n_in_is_lut" invisible="amount_type == 'group' or country_code != 'IN' or l10n_in_tax_type != 'gst'"/>
+            </field>
             <xpath expr="//field[@name='tax_group_id']" position="after">
-                <field name="l10n_in_section_id" invisible="country_code != 'IN' or not (l10n_in_tds_feature_enabled and l10n_in_tcs_feature_enabled)"/>
+                <field name="l10n_in_section_id" invisible="country_code != 'IN' or not (l10n_in_tds_feature_enabled and l10n_in_tcs_feature_enabled) or l10n_in_tax_type not in ['tcs', 'tds_sale', 'tds_purchase']"/>
             </xpath>
         </field>
     </record>

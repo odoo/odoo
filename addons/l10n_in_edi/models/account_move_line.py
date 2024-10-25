@@ -32,12 +32,7 @@ class AccountMoveLine(models.Model):
                 error_codes.append('invalid_hsn')
             if line.discount < 0:
                 error_codes.append('restrict_negative_discount_line')
-            Move = line.env['account.move']
-            all_base_tags = Move._get_l10n_in_gst_tags() + Move._get_l10n_in_non_taxable_tags()
-            if (
-                not line.tax_tag_ids
-                or not any(line_tag_id in all_base_tags for line_tag_id in line.tax_tag_ids.ids)
-            ):
+            if not any(tax.l10n_in_tax_type in ['gst', 'nil_rated', 'exempt', 'non_gst'] for tax in line.tax_ids):
                 error_codes.append('tax_validation')
             for code in error_codes:
                 error_lines[code] = error_lines.get(code, self.env['account.move.line']) | line

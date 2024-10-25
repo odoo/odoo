@@ -3,6 +3,7 @@ import logging
 import json
 import re
 
+from contextlib import contextmanager
 from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
@@ -397,7 +398,7 @@ class AccountMove(models.Model):
         for line in invalid_lines:
             updated_tax_ids = []
             for tax in line.tax_ids:
-                if tax.l10n_in_section_id.tax_source_type == 'tcs':
+                if tax.l10n_in_tax_type == 'tcs':
                     max_tax = max(
                         tax.l10n_in_section_id.l10n_in_section_tax_ids,
                         key=lambda t: t.amount
@@ -415,7 +416,7 @@ class AccountMove(models.Model):
             for line in self.invoice_line_ids:
                 for tax in line.tax_ids:
                     if (
-                        tax.l10n_in_section_id.tax_source_type == 'tcs'
+                        tax.l10n_in_tax_type == 'tcs'
                         and tax.amount != max(tax.l10n_in_section_id.l10n_in_section_tax_ids, key=lambda t: abs(t.amount)).amount
                     ):
                         lines |= line._origin
@@ -634,10 +635,11 @@ class AccountMove(models.Model):
                 else:
                     for gst in ["cgst", "sgst", "igst"]:
                         if xmlid_to_res_id(f"l10n_in.tax_tag_{gst}") in tag_ids:
-                            line_code = gst
-                        # need to separate rc tax value so it's not pass to other values
-                        elif xmlid_to_res_id(f"l10n_in.tax_tag_{gst}_rc") in tag_ids:
-                            line_code = gst + '_rc'
+                            # need to separate rc tax value so it's not passed to other values
+                            if tax.l10n_in_reverse_charge:
+                                line_code = gst + '_rc'
+                            else:
+                                line_code = gst
             return {
                 "tax": tax,
                 "base_product_id": invl.product_id,
@@ -702,3 +704,17 @@ class AccountMove(models.Model):
             url,
             _("Buy Credits")
         )
+
+    def _get_sync_stack(self, container):
+        stack, update_containers = super()._get_sync_stack(container)
+        _tax_container, invoice_container, misc_container = update_containers()
+        moves = invoice_container['records'] + misc_container['records']
+        stack.append((9, self._sync_l10n_in_gstr_section(moves)))
+        return stack, update_containers
+
+    @contextmanager
+    def _sync_l10n_in_gstr_section(self, moves):
+        yield
+        for move in moves:
+            # we set the section on the invoice lines
+            move.line_ids._set_l10n_in_gstr_section()

@@ -144,18 +144,18 @@ class AccountMove(models.Model):
     def _l10n_in_check_einvoice_eligible(self):
         self.ensure_one()
         return (
-            self.country_code == 'IN'
-            and self.company_id.l10n_in_edi_feature
-            and self.is_sale_document(include_receipts=True)
+            self.company_id.l10n_in_edi_feature
             and self.journal_id.type == 'sale'
-            and self.l10n_in_gst_treatment in (
-                'regular',
-                'composition',
-                'overseas',
-                'special_economic_zone',
-                'deemed_export',
+            and any(
+                line.display_type == 'product'
+                and line.l10n_in_gstr_section in [
+                    'sale_b2b_rcm', 'sale_b2b_regular', 'sale_exp_wp', 'sale_exp_wop',
+                    'sale_sez_wp', 'sale_sez_wop', 'sale_deemed_export', 'sale_cdnr_rcm',
+                    'sale_cdnr_regular', 'sale_cdnr_deemed_export', 'sale_cdnr_sez_wp',
+                    'sale_cdnr_sez_wop', 'sale_cdnur_exp_wp', 'sale_cdnur_exp_wop',
+                ]
+                for line in self.line_ids
             )
-            and any(tag in self._get_l10n_in_gst_tags() for tag in self.line_ids.tax_tag_ids.ids)
         )
 
     def _get_l10n_in_edi_response_json(self):
@@ -684,31 +684,6 @@ class AccountMove(models.Model):
                 'action': invalid_records._get_records_action(name=_("Check Invoices")),
             }
         return alerts
-
-    # ------Utils------
-    @api.model
-    def _get_l10n_in_gst_tags(self):
-        return [
-            self.env['ir.model.data']._xmlid_to_res_id(f'l10n_in.tax_tag_{xmlid}')
-            for xmlid in (
-                'base_sgst',
-                'base_cgst',
-                'base_igst',
-                'base_cess',
-                'zero_rated'
-            )
-        ]
-
-    @api.model
-    def _get_l10n_in_non_taxable_tags(self):
-        return [
-            self.env['ir.model.data']._xmlid_to_res_id(f'l10n_in.tax_tag_{xmlid}')
-            for xmlid in (
-                'exempt',
-                'nil_rated',
-                'non_gst_supplies'
-            )
-        ]
 
     # ================================ API methods ===========================
     def _l10n_in_edi_connect_to_server(self, url_end_point, json_payload=False, params=False):
