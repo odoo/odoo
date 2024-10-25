@@ -605,7 +605,8 @@ publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
             // we remove the bsRide.
             delete this.el.dataset.bsRide;
             await this._destroyCarouselInstance();
-            window.Carousel.getOrCreateInstance(this.el);
+            const options = this.editableMode ? {ride: false, pause: true} : undefined;
+            window.Carousel.getOrCreateInstance(this.el, options);
         } else if (hasInterval && !this.el.dataset.bsRide) {
             // Re-add bsRide on carousels that don't have it but still have
             // a bsInterval. E.g. s_image_gallery must auto-slide on load,
@@ -618,7 +619,8 @@ publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
             const snippetName = this.el.closest("[data-snippet]").dataset.snippet;
             this.el.dataset.bsRide = this.OLD_AUTO_SLIDING_SNIPPETS.includes(snippetName) ? "carousel" : "true";
             await this._destroyCarouselInstance();
-            window.Carousel.getOrCreateInstance(this.el);
+            const options = this.editableMode ? {ride: false, pause: true} : undefined;
+            window.Carousel.getOrCreateInstance(this.el, options);
         }
     },
     /**
