@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 
 export class SanitizePlugin extends Plugin {
-    static name = "sanitize";
+    static id = "sanitize";
     static shared = ["sanitize"];
     setup() {
         if (!window.DOMPurify) {

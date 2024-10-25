@@ -8,7 +8,7 @@ import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class ChatGPTPlugin extends Plugin {
-    static name = "chatgpt";
+    static id = "chatgpt";
     static dependencies = ["selection", "history", "dom", "sanitize", "dialog", "userCommand"];
     resources = {
         user_commands: [

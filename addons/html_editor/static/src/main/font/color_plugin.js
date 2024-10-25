@@ -23,7 +23,7 @@ import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class ColorPlugin extends Plugin {
-    static name = "color";
+    static id = "color";
     static dependencies = ["selection", "split", "history", "format"];
     static shared = ["colorElement"];
     resources = {

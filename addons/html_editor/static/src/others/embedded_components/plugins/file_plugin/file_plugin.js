@@ -6,7 +6,7 @@ import { nextLeaf } from "@html_editor/utils/dom_info";
 import { isBlock } from "@html_editor/utils/blocks";
 
 export class FilePlugin extends Plugin {
-    static name = "file";
+    static id = "file";
     static dependencies = ["embeddedComponents", "dom", "selection", "history"];
     resources = {
         user_commands: [

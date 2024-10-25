@@ -358,7 +358,7 @@ test("toolbar behave properly if selection has no range", async () => {
 
 test("toolbar correctly show namespace button group and stop showing when namespace change", async () => {
     class TestPlugin extends Plugin {
-        static name = "TestPlugin";
+        static id = "TestPlugin";
         resources = {
             toolbarNamespace: [
                 {
@@ -392,7 +392,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
 
 test("toolbar correctly process inheritance buttons chain", async () => {
     class TestPlugin extends Plugin {
-        static name = "TestPlugin";
+        static id = "TestPlugin";
         resources = {
             toolbarCategory: withSequence(24, { id: "test_group" }),
             toolbarItems: [
@@ -428,7 +428,7 @@ test("toolbar correctly process inheritance buttons chain", async () => {
 
 test("toolbar does not evaluate isFormatApplied when namespace does not match", async () => {
     class TestPlugin extends Plugin {
-        static name = "TestPlugin";
+        static id = "TestPlugin";
         resources = {
             toolbarCategory: withSequence(24, { id: "test_group", namespace: "image" }),
             toolbarItems: [
@@ -463,7 +463,7 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
 
 test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
-        static name = "TestPlugin";
+        static id = "TestPlugin";
         resources = {
             toolbarCategory: withSequence(24, { id: "test_group" }),
             toolbarItems: [

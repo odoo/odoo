@@ -5,7 +5,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
 export class MentionPlugin extends Plugin {
-    static name = "mention";
+    static id = "mention";
     static dependencies = ["overlay", "dom", "history", "selection"];
 
     resources = {

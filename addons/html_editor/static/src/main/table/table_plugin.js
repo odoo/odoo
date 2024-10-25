@@ -34,7 +34,7 @@ function isUnremovableTableComponent(element, root) {
  * code is located in the table_ui plugin
  */
 export class TablePlugin extends Plugin {
-    static name = "table";
+    static id = "table";
     static dependencies = ["dom", "history", "selection", "delete", "split", "color", "delete"];
     static shared = [
         "addColumn",

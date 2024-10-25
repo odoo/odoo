@@ -5,7 +5,7 @@ import { user } from "@web/core/user";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class SignaturePlugin extends Plugin {
-    static name = "signature";
+    static id = "signature";
     static dependencies = ["dom", "history"];
     resources = {
         user_commands: [

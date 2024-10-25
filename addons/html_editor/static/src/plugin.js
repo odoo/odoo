@@ -95,7 +95,7 @@
 import { isProtected, isProtecting, isUnprotecting } from "./utils/dom_info";
 
 export class Plugin {
-    static name = "";
+    static id = "";
     static dependencies = [];
     static shared = [];
 

@@ -8,7 +8,7 @@ function isAvailable(node) {
     return !!closestElement(node, ".o_editor_banner");
 }
 export class BannerPlugin extends Plugin {
-    static name = "banner";
+    static id = "banner";
     static dependencies = ["history", "dom", "emoji", "selection"];
     resources = {
         user_commands: [

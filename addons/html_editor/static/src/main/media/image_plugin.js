@@ -14,7 +14,7 @@ function hasShape(imagePlugin, shapeName) {
 }
 
 export class ImagePlugin extends Plugin {
-    static name = "image";
+    static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
     resources = {
         user_commands: [

@@ -3,7 +3,7 @@ import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 
 export class EmojiPlugin extends Plugin {
-    static name = "emoji";
+    static id = "emoji";
     static dependencies = ["history", "overlay", "dom", "selection"];
     static shared = ["showEmojiPicker"];
     resources = {

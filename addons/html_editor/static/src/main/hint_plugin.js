@@ -23,7 +23,7 @@ function target(selectionData, editable) {
 }
 
 export class HintPlugin extends Plugin {
-    static name = "hint";
+    static id = "hint";
     static dependencies = ["history", "selection"];
     resources = {
         mutation_filtered_classes: ["o-we-hint"],

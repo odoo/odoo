@@ -11,7 +11,7 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
  */
 
 export class CollaborationPlugin extends Plugin {
-    static name = "collaboration";
+    static id = "collaboration";
     static dependencies = ["history", "selection", "sanitize"];
     resources = {
         set_attribute_overrides: this.setAttribute.bind(this),

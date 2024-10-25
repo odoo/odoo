@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 
 export class OdooLinkSelectionPlugin extends Plugin {
+    static id = "odooLinkSelection";
     resources = {
         excludeLinkZwnbsp: [
             (link) =>

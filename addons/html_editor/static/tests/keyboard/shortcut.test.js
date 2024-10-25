@@ -7,7 +7,7 @@ import { press } from "@odoo/hoot-dom";
 test("shortcut plugin allow registering shortcuts", async () => {
     let count = 0;
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
         resources = {
             user_commands: [{ id: "TEST_CMD", run: () => count++ }],
             shortcuts: [{ hotkey: "a", commandId: "TEST_CMD" }],
@@ -27,7 +27,7 @@ test("shortcut plugin allow registering shortcuts", async () => {
 test.tags("iframe")("shortcut plugin allow registering shortcuts in iframe", async () => {
     let count = 0;
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
         resources = {
             user_commands: [{ id: "TEST_CMD", run: () => count++ }],
             shortcuts: [{ hotkey: "a", commandId: "TEST_CMD" }],

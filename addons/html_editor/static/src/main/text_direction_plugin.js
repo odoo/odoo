@@ -5,7 +5,7 @@ import { closestElement } from "../utils/dom_traversal";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 
 export class TextDirectionPlugin extends Plugin {
-    static name = "textDirection";
+    static id = "textDirection";
     static dependencies = ["selection", "history", "split", "format"];
     resources = {
         user_commands: [

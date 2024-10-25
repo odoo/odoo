@@ -4,7 +4,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { ExcalidrawDialog } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog";
 
 export class ExcalidrawPlugin extends Plugin {
-    static name = "excalidraw";
+    static id = "excalidraw";
     static dependencies = ["embeddedComponents", "dom", "selection", "link", "history"];
     resources = {
         user_commands: [

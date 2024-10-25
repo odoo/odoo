@@ -78,7 +78,7 @@ import { childNodes, descendants, getCommonAncestor } from "../utils/dom_travers
  */
 
 export class HistoryPlugin extends Plugin {
-    static name = "history";
+    static id = "history";
     static dependencies = ["selection", "sanitize"];
     static shared = [
         "reset",

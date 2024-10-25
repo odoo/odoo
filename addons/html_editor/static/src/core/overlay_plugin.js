@@ -9,7 +9,7 @@ import { findUpTo } from "@html_editor/utils/dom_traversal";
  * - adding a component in overlay above the editor, with proper positioning
  */
 export class OverlayPlugin extends Plugin {
-    static name = "overlay";
+    static id = "overlay";
     static dependencies = ["history"];
     static shared = ["createOverlay"];
     resources = {

@@ -7,7 +7,7 @@ import { parseHTML } from "@html_editor/utils/html";
 import { _t } from "@web/core/l10n/translation";
 
 export class StarPlugin extends Plugin {
-    static name = "star";
+    static id = "star";
     static dependencies = ["dom", "history"];
     resources = {
         user_commands: [

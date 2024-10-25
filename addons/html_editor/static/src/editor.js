@@ -52,14 +52,14 @@ function sortPlugins(plugins) {
         }
     }
     while ((P = findPlugin())) {
-        inResult.add(P.name);
+        inResult.add(P.id);
         result.push(P);
     }
     if (initialPlugins.size) {
         const messages = [];
         for (const P of initialPlugins) {
             messages.push(
-                `"${P.name}" is missing (${P.dependencies
+                `"${P.id}" is missing (${P.dependencies
                     .filter((d) => !inResult.has(d))
                     .join(", ")})`
             );
@@ -122,11 +122,11 @@ export class Editor {
         const Plugins = sortPlugins(this.config.Plugins || MAIN_PLUGINS);
         const plugins = new Map();
         for (const P of Plugins) {
-            if (P.name === "") {
-                throw new Error(`Missing plugin name (class ${P.constructor.name})`);
+            if (P.id === "") {
+                throw new Error(`Missing plugin id (class ${P.name})`);
             }
-            if (plugins.has(P.name)) {
-                throw new Error(`Duplicate plugin name: ${P.name}`);
+            if (plugins.has(P.id)) {
+                throw new Error(`Duplicate plugin id: ${P.id}`);
             }
             const _shared = {};
             for (const dep of P.dependencies) {
@@ -135,10 +135,10 @@ export class Editor {
                         _shared[h] = this.shared[h];
                     }
                 } else {
-                    throw new Error(`Missing dependency for plugin ${P.name}: ${dep}`);
+                    throw new Error(`Missing dependency for plugin ${P.id}: ${dep}`);
                 }
             }
-            plugins.set(P.name, P);
+            plugins.set(P.id, P);
             const plugin = new P(this.document, this.editable, _shared, this.config, this.services);
             this.plugins.push(plugin);
             for (const h of P.shared) {
@@ -146,7 +146,7 @@ export class Editor {
                     throw new Error(`Duplicate shared name: ${h}`);
                 }
                 if (!(h in plugin)) {
-                    throw new Error(`Missing helper implementation: ${h} in plugin ${P.name}`);
+                    throw new Error(`Missing helper implementation: ${h} in plugin ${P.id}`);
                 }
                 this.shared[h] = plugin[h].bind(plugin);
             }

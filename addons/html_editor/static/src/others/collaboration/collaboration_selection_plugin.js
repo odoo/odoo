@@ -11,7 +11,7 @@ import { getCursorDirection } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 
 export class CollaborationSelectionPlugin extends Plugin {
-    static name = "collaborationSelection";
+    static id = "collaborationSelection";
     static dependencies = [
         "history",
         "position",

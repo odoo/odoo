@@ -29,7 +29,7 @@ test("getEditableSelection should work, even if getSelection returns null", asyn
 test("plugins should be notified when ranges are removed", async () => {
     let count = 0;
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
         resources = {
             selectionchange_handlers: () => count++,
         };
@@ -172,7 +172,7 @@ test("restore a selection when you are not in the editable shouldn't move the fo
     }
 
     class TestPlugin extends Plugin {
-        static name = "test";
+        static id = "test";
         static dependencies = ["overlay"];
         resources = {
             user_commands: [

@@ -35,7 +35,7 @@ const getPowerboxItems = (plugin) => {
 };
 
 export class MediaPlugin extends Plugin {
-    static name = "media";
+    static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
     static shared = ["savePendingImages"];
     resources = {

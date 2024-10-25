@@ -37,7 +37,7 @@ const REQUEST_ERROR = Symbol("REQUEST_ERROR");
 let ICE_SERVERS = null;
 
 export class CollaborationOdooPlugin extends Plugin {
-    static name = "collaborationOdoo";
+    static id = "collaborationOdoo";
     static dependencies = ["history", "collaboration", "selection"];
     static shared = ["getPeerMetadata"];
     resources = {

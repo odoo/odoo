@@ -98,7 +98,7 @@ export const setupMultiEditor = async (spec) => {
         }
         peerInfo.plugins = base.plugins;
         // TODO @phoenix refactor tests, no need to assign every plugin individually
-        const getPlugin = (name) => base.editor.plugins.find((x) => x.constructor.name === name);
+        const getPlugin = (id) => base.editor.plugins.find((x) => x.constructor.id === id);
         peerInfo.collaborationPlugin = getPlugin("collaboration");
         peerInfo.historyPlugin = getPlugin("history");
     }

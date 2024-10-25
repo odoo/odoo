@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 
 export class DialogPlugin extends Plugin {
-    static name = "dialog";
+    static id = "dialog";
     static dependencies = ["selection"];
     static shared = ["addDialog"];
 

@@ -5,7 +5,7 @@ import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
 
 export class LineBreakPlugin extends Plugin {
     static dependencies = ["selection", "history", "split", "delete"];
-    static name = "lineBreak";
+    static id = "lineBreak";
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),

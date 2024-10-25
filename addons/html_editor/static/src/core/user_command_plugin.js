@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 
 export class UserCommandPlugin extends Plugin {
-    static name = "userCommand";
+    static id = "userCommand";
     static shared = ["execCommand", "getCommands"];
 
     setup() {

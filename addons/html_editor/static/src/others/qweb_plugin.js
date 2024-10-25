@@ -10,7 +10,7 @@ const isUnsplittableQWebElement = (element) =>
     );
 
 export class QWebPlugin extends Plugin {
-    static name = "qweb";
+    static id = "qweb";
     static dependencies = ["overlay", "selection"];
     resources = {
         selectionchange_handlers: this.onSelectionChange.bind(this),

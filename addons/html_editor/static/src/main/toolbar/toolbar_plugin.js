@@ -12,7 +12,7 @@ import { debounce } from "@web/core/utils/timing";
 const DELAY_TOOLBAR_OPEN = 300;
 
 export class ToolbarPlugin extends Plugin {
-    static name = "toolbar";
+    static id = "toolbar";
     static dependencies = ["overlay", "selection", "userCommand"];
     static shared = ["getToolbarInfo"];
     resources = {

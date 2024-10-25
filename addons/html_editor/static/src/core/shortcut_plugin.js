@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 
 export class ShortCutPlugin extends Plugin {
-    static name = "shortcut";
+    static id = "shortcut";
     static dependencies = ["userCommand"];
 
     setup() {

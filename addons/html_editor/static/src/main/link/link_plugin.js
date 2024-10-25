@@ -101,7 +101,7 @@ async function fetchInternalMetaData(url) {
 }
 
 export class LinkPlugin extends Plugin {
-    static name = "link";
+    static id = "link";
     static dependencies = ["dom", "history", "selection", "split", "lineBreak", "overlay"];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];

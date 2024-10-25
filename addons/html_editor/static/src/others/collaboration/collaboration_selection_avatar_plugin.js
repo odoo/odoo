@@ -19,7 +19,7 @@ import { user } from "@web/core/user";
 export const AVATAR_SIZE = 25;
 
 export class CollaborationSelectionAvatarPlugin extends Plugin {
-    static name = "collaboration_selection_avatar";
+    static id = "collaboration_selection_avatar";
     static dependencies = ["history", "position", "localOverlay", "collaborationOdoo"];
     resources = {
         collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),

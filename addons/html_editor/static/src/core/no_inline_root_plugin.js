@@ -4,7 +4,7 @@ import { isNotAllowedContent } from "./selection_plugin";
 import { nodeSize } from "@html_editor/utils/position";
 
 export class NoInlineRootPlugin extends Plugin {
-    static name = "noInlineRoot";
+    static id = "noInlineRoot";
     static dependencies = ["selection", "history"];
 
     resources = {

@@ -9,7 +9,7 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
 export class SplitPlugin extends Plugin {
     static dependencies = ["selection", "history", "delete"];
-    static name = "split";
+    static id = "split";
     static shared = [
         "splitBlock",
         "splitBlockNode",

@@ -4,7 +4,7 @@ import { VideoSelectorDialog } from "@html_editor/others/embedded_components/plu
 import { renderToElement } from "@web/core/utils/render";
 
 export class VideoPlugin extends Plugin {
-    static name = "video";
+    static id = "video";
     static dependencies = ["embeddedComponents", "dom", "selection", "link", "history"];
     resources = {
         user_commands: [

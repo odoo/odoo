@@ -7,7 +7,7 @@ import {
 } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 
 export class TableOfContentPlugin extends Plugin {
-    static name = "tableOfContent";
+    static id = "tableOfContent";
     static dependencies = ["dom", "selection", "embeddedComponents", "link", "history"];
     resources = {
         user_commands: [

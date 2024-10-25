@@ -113,7 +113,7 @@ describe("search", () => {
 
     test("press 'backspace' should adapt adapt the search in the Powerbox", async () => {
         class TestPlugin extends Plugin {
-            static name = "test";
+            static id = "test";
             resources = {
                 powerboxCategory: { id: "test", name: "Test" },
                 powerboxItems: [
@@ -253,7 +253,7 @@ describe("search", () => {
     describe("search keywords", () => {
         test("should search commands by optional keywords", async () => {
             class TestPlugin extends Plugin {
-                static name = "test";
+                static id = "test";
                 resources = {
                     powerboxCategory: { id: "test", name: "Test" },
                     powerboxItems: [
@@ -300,7 +300,7 @@ describe("search", () => {
 
         test("match order: full match on keyword should come before partial matches on names or descriptions", async () => {
             class TestPlugin extends Plugin {
-                static name = "test";
+                static id = "test";
                 resources = {
                     powerboxCategory: { id: "test", name: "Test" },
                     powerboxItems: [
@@ -496,7 +496,7 @@ test("should toggle list on empty paragraph", async () => {
 });
 
 class NoOpPlugin extends Plugin {
-    static name = "noOp";
+    static id = "noOp";
     resources = {
         user_commands: [
             {

@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 
 export class InputPlugin extends Plugin {
-    static name = "input";
+    static id = "input";
     static dependencies = ["history"];
     setup() {
         this.addDomListener(this.editable, "beforeinput", this.onBeforeInput);

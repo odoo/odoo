@@ -689,7 +689,7 @@ describe("post process external steps", () => {
             return null;
         };
         class ConfigPlugin extends Plugin {
-            static name = "collab-test-config";
+            static id = "collab-test-config";
             resources = {
                 post_process_external_steps: postProcessExternalSteps,
             };

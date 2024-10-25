@@ -6,7 +6,7 @@ const PROTECTED_SELECTOR = `[data-oe-protected="true"],[data-oe-protected=""]`;
 const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
 
 export class ProtectedNodePlugin extends Plugin {
-    static name = "protectedNode";
+    static id = "protectedNode";
     static shared = ["setProtectingNode"];
     resources = {
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),

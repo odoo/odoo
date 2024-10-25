@@ -843,7 +843,7 @@ describe("Mount processing", () => {
     test("Mount a component with a plugin that modifies the Component's env", async () => {
         let setSelection;
         class SimplePlugin extends Plugin {
-            static name = "simple";
+            static id = "simple";
             static dependencies = ["selection", "embeddedComponents", "dom", "history"];
             resources = {
                 mount_component_handlers: this.setupNewComponent.bind(this),

@@ -22,7 +22,7 @@ function isIndentationTab(tab) {
 }
 
 export class TabulationPlugin extends Plugin {
-    static name = "tabulation";
+    static id = "tabulation";
     static dependencies = ["dom", "selection", "history", "delete", "split"];
     static shared = ["indentBlocks", "outdentBlocks"];
     resources = {

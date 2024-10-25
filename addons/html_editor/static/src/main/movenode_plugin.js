@@ -10,7 +10,7 @@ const ALLOWED_ELEMENTS =
     "h1, h2, h3, p, hr, pre, blockquote, ul, ol, table, [data-embedded], .o_text_columns, .o_editor_banner, .oe_movable";
 
 export class MoveNodePlugin extends Plugin {
-    static name = "movenode";
+    static id = "movenode";
     static dependencies = ["selection", "history", "position", "localOverlay"];
     resources = {
         layout_geometry_change_handlers: () => {

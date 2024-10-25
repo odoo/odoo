@@ -181,7 +181,7 @@ class Wysiwygs extends Component {
         const loadedResolver = this.peerResolvers[peerId];
         const startPlugins = editor.startPlugins.bind(editor);
         editor.startPlugins = () => {
-            const plugins = Object.fromEntries(editor.plugins.map((p) => [p.constructor.name, p]));
+            const plugins = Object.fromEntries(editor.plugins.map((p) => [p.constructor.id, p]));
             const { pool } = this.props;
             const { peers } = this.props.pool;
 

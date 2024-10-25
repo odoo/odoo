@@ -104,7 +104,7 @@ function getUnselectedEdgeNodes(selection) {
 }
 
 export class SelectionPlugin extends Plugin {
-    static name = "selection";
+    static id = "selection";
     static shared = [
         "getSelectionData",
         "getEditableSelection",

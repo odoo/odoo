@@ -3,7 +3,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 
 export class JustifyPlugin extends Plugin {
-    static name = "justify";
+    static id = "justify";
     static dependencies = ["selection"];
     resources = {
         user_commands: [

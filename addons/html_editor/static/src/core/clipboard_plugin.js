@@ -79,7 +79,7 @@ export const CLIPBOARD_WHITELISTS = {
 };
 
 export class ClipboardPlugin extends Plugin {
-    static name = "clipboard";
+    static id = "clipboard";
     static dependencies = [
         "dom",
         "selection",

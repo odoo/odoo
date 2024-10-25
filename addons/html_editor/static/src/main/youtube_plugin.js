@@ -7,7 +7,7 @@ export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 
 export class YoutubePlugin extends Plugin {
-    static name = "youtube";
+    static id = "youtube";
     static dependencies = ["history", "history", "powerbox", "link", "dom"];
     static shared = [];
     resources = {

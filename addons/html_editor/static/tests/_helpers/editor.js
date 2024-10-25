@@ -68,9 +68,13 @@ class TestEditor extends Component {
  */
 
 /**
+ *@typedef { import("@html_editor/plugin").Plugin } Plugin
+ */
+
+/**
  * @param { string } content
  * @param {TestConfig} [options]
- * @returns { Promise<{el: HTMLElement; editor: Editor; }> }
+ * @returns { Promise<{el: HTMLElement; editor: Editor; plugins: Map<string,Plugin>}> }
  */
 export async function setupEditor(content, options = {}) {
     const wysiwygProps = Object.assign({}, options.props);
@@ -100,7 +104,7 @@ export async function setupEditor(content, options = {}) {
     const editor = await attachedEditor;
     const plugins = new Map(
         editor.plugins.map((plugin) => {
-            return [plugin.constructor.name, plugin];
+            return [plugin.constructor.id, plugin];
         })
     );
     if (plugins.get("embeddedComponents")) {

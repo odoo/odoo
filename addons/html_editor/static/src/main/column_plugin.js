@@ -29,7 +29,7 @@ function columnisAvailable(numberOfColumns) {
 }
 
 export class ColumnPlugin extends Plugin {
-    static name = "column";
+    static id = "column";
     static dependencies = ["selection", "history"];
     resources = {
         user_commands: [

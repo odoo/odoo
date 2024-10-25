@@ -25,7 +25,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { convertList, getListMode } from "@html_editor/utils/list";
 
 export class DomPlugin extends Plugin {
-    static name = "dom";
+    static id = "dom";
     static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
     static shared = ["domInsert", "copyAttributes"];
     resources = {

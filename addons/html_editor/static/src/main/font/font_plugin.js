@@ -96,7 +96,7 @@ const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
 const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 
 export class FontPlugin extends Plugin {
-    static name = "font";
+    static id = "font";
     static dependencies = ["split", "selection", "userCommand"];
     resources = {
         user_commands: [
