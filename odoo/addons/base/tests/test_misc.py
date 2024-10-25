@@ -630,3 +630,55 @@ class TestMiscToken(TransactionCase):
         new_timestamp = new_timestamp.to_bytes(8, byteorder='little')
         token = base64.urlsafe_b64encode(token[:1] + new_timestamp + token[9:]).decode()
         self.assertIsNone(misc.verify_hash_signed(self.env, 'test', token))
+
+
+class TestFormatAmountFunctiom(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.currency_object_format_amount = cls.env["res.currency"].create(
+            {
+                "name": "format_amount Currency",
+                "symbol": "fA",
+                "rounding": 0.01,  # Makes 12.345 as 12.34
+                "position": "before",
+            }
+        )
+
+    def test_trailing_true_on_number_having_no_trailing_zeroes(self):
+        # Has no effect on number not having trailing zeroes
+        self.assertEqual(
+            misc.format_amount(self.env, 1.234, self.currency_object_format_amount),
+            "fA%s1.23" % "\N{NO-BREAK SPACE}",
+        )
+
+    def test_trailing_false_on_number_having_no_trailing_zeroes(self):
+        # Has no effect on number not having trailing zeroes even if trailing zeroes set as False
+        self.assertEqual(
+            misc.format_amount(
+                self.env,
+                1.234,
+                self.currency_object_format_amount,
+                trailing_zeroes=False,
+            ),
+            "fA%s1.23" % "\N{NO-BREAK SPACE}",
+        )
+
+    def test_trailing_zeroes_true_on_number_having_trailing_zeroes(self):
+        # Has no effect on number having trailing zeroes if trailing zeroes set as True (True by default)
+        self.assertEqual(
+            misc.format_amount(self.env, 1.0000, self.currency_object_format_amount),
+            "fA%s1.00" % "\N{NO-BREAK SPACE}",
+        )
+
+    def test_trailing_false_on_number_having_trailing_zeroes(self):
+        # Has effect (removes trailing zeroes) on number having trailing zeroes if trailing zeroes set as False
+        self.assertEqual(
+            misc.format_amount(
+                self.env,
+                1.0000,
+                self.currency_object_format_amount,
+                trailing_zeroes=False,
+            ),
+            "fA%s1" % "\N{NO-BREAK SPACE}",
+        )
