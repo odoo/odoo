@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import re
 
-from collections import defaultdict
 from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
@@ -28,9 +25,9 @@ class HrEmployee(models.Model):
     that are available according to the group defined on them.
     """
     _name = 'hr.employee'
+    _inherit = ['hr.employee.base', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _description = "Employee"
     _order = 'name'
-    _inherit = ['hr.employee.base', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
     _primary_email = 'work_email'
 
@@ -155,6 +152,7 @@ class HrEmployee(models.Model):
                                           copy=False, tracking=True, ondelete='restrict')
     departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
+    departure_ids = fields.One2many('hr.employee.departure', 'employee_id', groups="hr.group_hr_user")
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
@@ -691,17 +689,6 @@ class HrEmployee(models.Model):
                 for field in user_fields_to_empty:
                     if employee[field] in archived_employees.user_id:
                         employee[field] = False
-
-            if len(archived_employees) == 1 and not self.env.context.get('no_wizard', False):
-                return {
-                    'type': 'ir.actions.act_window',
-                    'name': _('Register Departure'),
-                    'res_model': 'hr.departure.wizard',
-                    'view_mode': 'form',
-                    'target': 'new',
-                    'context': {'active_id': self.id},
-                    'views': [[False, 'form']]
-                }
         return res
 
     @api.onchange('company_id')
@@ -834,3 +821,21 @@ class HrEmployee(models.Model):
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['work_contact_id', 'user_partner_id']
+
+    def action_new_departure(self):
+        self.ensure_one()
+        action = {
+            'name': _('End of collaboration'),
+            'res_model': 'hr.employee.departure',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'target': 'new',
+            'domain': [('employee_id', '=', self.id)],
+        }
+        return action
+
+    def action_open_departures(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id("hr.hr_employee_departure_action")
+        action['domain'] = [('employee_id', '=', self.id)]
+        return action

@@ -7,7 +7,6 @@ from odoo import api, fields, models
 
 class HrHolidaysSummaryEmployee(models.TransientModel):
     _name = 'hr.holidays.summary.employee'
-
     _description = 'HR Time Off Summary Report By Employee'
 
     date_from = fields.Date(string='From', required=True, default=lambda *a: time.strftime('%Y-%m-01'))

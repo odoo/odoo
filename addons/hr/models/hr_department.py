@@ -9,8 +9,8 @@ from odoo.osv import expression
 
 class HrDepartment(models.Model):
     _name = 'hr.department'
-    _description = "Department"
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = "Department"
     _order = "name"
     _rec_name = 'complete_name'
     _parent_store = True

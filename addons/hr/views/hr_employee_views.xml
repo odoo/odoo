@@ -58,7 +58,7 @@
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <form string="Employee" js_class="hr_employee_form">
+                <form string="Employee">
                     <field name="active" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="user_partner_id" invisible="1"/>
@@ -70,9 +70,20 @@
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
+                        <button name="action_new_departure" string="End of Collaboration" type="object"
+                            groups="hr.group_hr_user" invisible="not id"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
+                            <button name="action_open_departures"
+                                icon="fa-minus"
+                                type="object"
+                                invisible="not departure_ids"
+                                groups="hr.group_hr_user">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Departures</span>
+                                </div>
+                            </button>
                         </div>
                         <field name="avatar_128" invisible="1"/>
                         <div class="row justify-content-between position-relative w-100 m-0 mb-2">
@@ -276,7 +287,7 @@
             <field name="name">hr.employee.list</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
+                <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>

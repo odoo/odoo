@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_departure_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.departure.view.form.extend</field>
+        <field name="model">hr.employee.departure</field>
+        <field name="inherit_id" ref="hr.hr_employee_departure_view_form" />
+        <field name="arch" type="xml">
+            <group name="planned_actions_right" position="inside">
+                <label for="do_unassign_equipment" string="Equipment"/>
+                <div class="o_row">
+                    <field name="do_unassign_equipment" nolabel="1" readonly="state == 'done'"/>
+                    <span>Unassign Equipment</span>
+                </div>
+            </group>
+        </field>
+    </record>
+</odoo>

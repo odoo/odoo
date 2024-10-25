@@ -99,5 +99,10 @@
         <field name="domain_force">[('country_code', 'in', user.env.companies.mapped('country_code') + [False])]</field>
     </record>
 
+    <record id="ir_rule_hr_employee_departure_multi_company" model="ir.rule">
+        <field name="name">HR Employee Departure: Multi Company</field>
+        <field name="model_id" ref="model_hr_employee_departure"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
 </data>
 </odoo>
