@@ -1,8 +1,7 @@
 import collections
 import inspect
-import itertools
 
-import odoo
+from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tests.common import get_db_name, tagged
 from .lint_case import LintCase
@@ -28,7 +27,7 @@ Incompatible definition in {child_module}:
 
 methods_to_sanitize = {
     method_name
-    for method_name in dir(odoo.models.BaseModel)
+    for method_name in dir(BaseModel)
     if not method_name.startswith('_')
 } - {
     # Not yet sanitized...

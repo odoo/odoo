@@ -12,7 +12,6 @@ import fnmatch
 import functools
 import inspect
 import io
-import itertools
 import json
 import locale
 import logging
@@ -34,10 +33,12 @@ from lxml import etree, html
 from markupsafe import escape, Markup
 from psycopg2.extras import Json
 
-import odoo
 from odoo.exceptions import UserError
 from .config import config
 from .misc import file_open, file_path, get_iso_codes, split_every, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
+
+if typing.TYPE_CHECKING:
+    from odoo.api import Environment
 
 __all__ = [
     "_",
@@ -494,7 +495,8 @@ def get_translated_module(arg: str | int | typing.Any) -> str:  # frame not repr
             # just a quick lookup because `get_resource_from_path is slow compared to this`
             return module_name.split('.')[2]
         path = inspect.getfile(frame)
-        path_info = odoo.modules.get_resource_from_path(path)
+        from odoo.modules import get_resource_from_path  # noqa: PLC0415
+        path_info = get_resource_from_path(path)
         return path_info[0] if path_info else 'base'
 
 
@@ -1380,6 +1382,7 @@ class TranslationModuleReader(TranslationReader):
     def __init__(self, cr, modules=None, lang=None):
         super().__init__(cr, lang)
         self._modules = modules or ['all']
+        import odoo.addons  # noqa: PLC0415
         self._path_list = [(path, True) for path in odoo.addons.__path__]
         self._installed_modules = [
             m['name']
@@ -1784,7 +1787,7 @@ def get_base_langs(lang: str) -> str:
     return base_langs
 
 
-def get_po_paths(module_name: str, lang: str, env: odoo.api.Environment | None = None):
+def get_po_paths(module_name: str, lang: str, env: Environment | None = None):
     base_langs = get_base_langs(lang)
     # Load the base as a fallback in case a translation is missing:
     po_names = base_langs + [lang]
@@ -1798,8 +1801,9 @@ def get_po_paths(module_name: str, lang: str, env: odoo.api.Environment | None =
             yield file_path(path, env=env)
 
 
-def get_datafile_translation_path(module_name: str, env: odoo.api.Environment | None = None):
-    manifest = odoo.modules.get_manifest(module_name)
+def get_datafile_translation_path(module_name: str, env: Environment | None = None):
+    from odoo.modules import get_manifest  # noqa: PLC0415
+    manifest = get_manifest(module_name)
     for data_type in ('data', 'demo'):
         for path in manifest.get(data_type, ()):
             if path.endswith(('.xml', '.csv')):

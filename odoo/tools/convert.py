@@ -22,7 +22,6 @@ try:
 except ImportError:
     jingtrang = None
 
-import odoo
 from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from odoo.exceptions import ValidationError
@@ -40,14 +39,15 @@ class ParseError(Exception):
     ...
 
 def _get_idref(self, env, model_str, idref):
+    from odoo import fields, release  # noqa: PLC0415
     idref2 = dict(idref,
-                  Command=odoo.fields.Command,
+                  Command=fields.Command,
                   time=time,
                   DateTime=datetime,
                   datetime=datetime,
                   timedelta=timedelta,
                   relativedelta=relativedelta,
-                  version=odoo.release.major_version,
+                  version=release.major_version,
                   ref=self.id_get,
                   pytz=pytz)
     if model_str:
@@ -312,15 +312,15 @@ form: module.record_id""" % (xml_id,)
         if not values.get('name'):
             values['name'] = rec_id or '?'
 
-
+        from odoo.fields import Command  # noqa: PLC0415
         groups = []
         for group in rec.get('groups', '').split(','):
             if group.startswith('-'):
                 group_id = self.id_get(group[1:])
-                groups.append(odoo.Command.unlink(group_id))
+                groups.append(Command.unlink(group_id))
             elif group:
                 group_id = self.id_get(group)
-                groups.append(odoo.Command.link(group_id))
+                groups.append(Command.link(group_id))
         if groups:
             values['groups_id'] = groups
 
@@ -380,6 +380,7 @@ form: module.record_id""" % (xml_id,)
                     return None
                 raise Exception("Cannot update missing record %r" % xid)
 
+        from odoo.fields import Command  # noqa: PLC0415
         res = {}
         sub_records = []
         for field in rec.iterchildren('field'):
@@ -403,7 +404,7 @@ form: module.record_id""" % (xml_id,)
                 _fields = env[rec_model]._fields
                 # if the current field is many2many
                 if (f_name in _fields) and _fields[f_name].type == 'many2many':
-                    f_val = [odoo.Command.set([x[f_use] for x in s])]
+                    f_val = [Command.set([x[f_use] for x in s])]
                 elif len(s):
                     # otherwise (we are probably in a many2one field),
                     # take the first element of the search

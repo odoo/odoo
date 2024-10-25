@@ -47,8 +47,6 @@ import psycopg2.errors
 import psycopg2.extensions
 from psycopg2.extras import Json
 
-import odoo
-from odoo import tools
 from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
 from odoo.tools import (
     clean_context, config, date_utils, discardattr,
@@ -59,7 +57,7 @@ from odoo.tools import (
 )
 from odoo.tools.constants import GC_UNLINK_LIMIT, PREFETCH_MAX
 from odoo.tools.lru import LRU
-from odoo.tools.misc import LastOrderedSet, ReversedIterable, unquote
+from odoo.tools.misc import LastOrderedSet, ReversedIterable, exception_to_unicode, unquote
 from odoo.tools.translate import _, LazyTranslate
 
 from . import domains
@@ -68,7 +66,7 @@ from .commands import Command
 from .domains import Domain, NEGATIVE_CONDITION_OPERATORS
 from .fields import Field, determine
 from .fields_misc import Id
-from .fields_temporal import Datetime
+from .fields_temporal import Date, Datetime
 from .fields_textual import Char
 
 from .identifiers import NewId
@@ -1168,6 +1166,7 @@ class BaseModel(metaclass=MetaModel):
         :type data: list(list(str))
         :returns: {ids: list(int)|False, messages: [Message][, lastrow: int]}
         """
+        from .fields_relational import One2many  # noqa: PLC0415
         self.env.flush_all()
 
         # determine values of mode, current_module and noupdate
@@ -1200,7 +1199,7 @@ class BaseModel(metaclass=MetaModel):
                 if field_name in (None, 'id', '.id'):
                     break
 
-                if isinstance(model_fields.get(field_name), odoo.fields.One2many):
+                if isinstance(model_fields.get(field_name), One2many):
                     comodel = model_fields[field_name].comodel_name
                     creatable_models.add(comodel)
                     model_fields = self.env[comodel]._fields
@@ -2378,14 +2377,14 @@ class BaseModel(metaclass=MetaModel):
         # assumption: existing data is sorted by field 'groupby_name'
         existing_from, existing_to = existing[0], existing[-1]
         if fill_from:
-            fill_from = odoo.fields.Datetime.to_datetime(fill_from) if isinstance(fill_from, datetime.datetime) else odoo.fields.Date.to_date(fill_from)
+            fill_from = Datetime.to_datetime(fill_from) if isinstance(fill_from, datetime.datetime) else Date.to_date(fill_from)
             fill_from = date_utils.start_of(fill_from, granularity) - datetime.timedelta(days=days_offset)
             if tz:
                 fill_from = tz.localize(fill_from)
         elif existing_from:
             fill_from = existing_from
         if fill_to:
-            fill_to = odoo.fields.Datetime.to_datetime(fill_to) if isinstance(fill_to, datetime.datetime) else odoo.fields.Date.to_date(fill_to)
+            fill_to = Datetime.to_datetime(fill_to) if isinstance(fill_to, datetime.datetime) else Date.to_date(fill_to)
             fill_to = date_utils.start_of(fill_to, granularity) - datetime.timedelta(days=days_offset)
             if tz:
                 fill_to = tz.localize(fill_to)
@@ -3252,7 +3251,7 @@ class BaseModel(metaclass=MetaModel):
         # No good message can be created for psycopg2.errors.CheckViolation
 
         # fallback
-        return tools.exception_to_unicode(exc)
+        return exception_to_unicode(exc)
 
     #
     # Update objects that use this one to update their _inherits fields
