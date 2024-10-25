@@ -2416,11 +2416,7 @@ class AccountMoveLine(models.Model):
                 raise UserError(_("Entries are not from the same account: %s != %s")
                                 % (account.display_name, line.account_id.display_name))
 
-        if self._context.get('reduced_line_sorting'):
-            sorting_f = lambda line: (line.date_maturity or line.date, line.currency_id)
-        else:
-            sorting_f = lambda line: (line.date_maturity or line.date, line.currency_id, line.amount_currency)
-        sorted_lines = self.sorted(key=sorting_f)
+        sorted_lines = self.sorted(key=lambda line: (line.date_maturity or line.date, line.currency_id))
 
         # ==== Collect all involved lines through the existing reconciliation ====
 
