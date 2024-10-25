@@ -612,6 +612,8 @@ patch(MockServer.prototype, 'mail', {
                 'id': attachment.id,
                 'mimetype': attachment.mimetype,
                 'name': attachment.name,
+                'type': attachment.type,
+                'url': attachment.url,
             };
             res['originThread'] = [['insert', {
                 'id': attachment.res_id,
