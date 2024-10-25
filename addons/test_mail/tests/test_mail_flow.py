@@ -4,7 +4,7 @@ from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.tests import tagged
 
 
-@tagged('mail_gateway', 'mail_flow')
+@tagged('mail_gateway', 'mail_flow', 'post_install', '-at_install')
 class TestMailFlow(MailCommon, TestRecipients):
     """ Test flows matching business cases with incoming / outgoing emails. """
 
@@ -64,6 +64,10 @@ class TestMailFlow(MailCommon, TestRecipients):
         message = lead.message_ids
         self.assertEqual(self._new_msgs, message)
         self.assertIn('Please call me as soon as possible', message.body)
+        self.assertEqual(message.email_cc, ','.join(emails_cc),
+                         'mail: not that message email_cc is reformated, no spaces')
+        self.assertEqual(message.email_from, self.email_from)
+        self.assertEqual(message.email_to, f'lead@{self.alias_domain}')
         self.assertFalse(message.partner_ids)
 
         # user is assigned
