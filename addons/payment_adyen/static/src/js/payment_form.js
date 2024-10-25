@@ -53,11 +53,13 @@ paymentForm.include({
 
         // Create the checkout object if not already done for another payment method.
         if (!this.adyenCheckout) {
-            await this.rpc('/payment/adyen/payment_methods', { // Await the RPC to let it create AdyenCheckout before using it.
-                'provider_id': providerId,
-                'partner_id': parseInt(this.paymentContext['partnerId']),
-                'formatted_amount': formattedAmount,
-            }).then(async response => {
+            try {
+                // Await the RPC to let it create AdyenCheckout before using it.
+                const response = await this.rpc('/payment/adyen/payment_methods', {
+                    'provider_id': providerId,
+                    'partner_id': parseInt(this.paymentContext['partnerId']),
+                    'formatted_amount': formattedAmount,
+                });
                 // Create the Adyen Checkout SDK.
                 const providerState = this._getProviderState(radio);
                 const configuration = {
@@ -69,18 +71,23 @@ paymentForm.include({
                     onAdditionalDetails: this._adyenOnSubmitAdditionalDetails.bind(this),
                     onError: this._adyenOnError.bind(this),
                     onSubmit: this._adyenOnSubmit.bind(this),
+                    paymentMethodsConfiguration: {
+                        card: {hasHolderName: true, holderNameRequired: true},
+                    }
                 };
                 this.adyenCheckout = await AdyenCheckout(configuration);
-            }).catch((error) => {
+            } catch (error) {
                 if (error instanceof RPCError) {
                     this._displayErrorDialog(
                         _t("Cannot display the payment form"), error.data.message
                     );
                     this._enableButton();
-                } else {
+                    return;
+                }
+                else {
                     return Promise.reject(error);
                 }
-            });
+            }
         }
 
         // Instantiate and mount the component.
@@ -141,13 +148,18 @@ paymentForm.include({
             return;
         }
 
+        if (!this.adyenComponents[paymentOptionId]) {  // Component creation failed.
+            this._enableButton();
+            return;
+        }
+
+        this.adyenComponents[paymentOptionId].submit();
+
         // The `onError` event handler is not used to validate inputs anymore since v5.0.0.
         if (!this.adyenComponents[paymentOptionId].isValid) {
             this._displayErrorDialog(_t("Incorrect payment details"));
             this._enableButton();
-            return;
         }
-        this.adyenComponents[paymentOptionId].submit();
     },
 
     /**
