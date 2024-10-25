@@ -2839,14 +2839,12 @@ describe("youtube video", () => {
         });
 
         test("should paste and not transform a youtube URL in a existing link", async () => {
-            const { el, editor } = await setupEditor(
+            const { el, editor, plugins } = await setupEditor(
                 '<p>a<a href="http://existing.com">b[]c</a>d</p>'
             );
             pasteText(editor, "https://youtu.be/dQw4w9WgXcQ");
             // Ensure the powerbox is active
-            const powerbox = editor.plugins.find(
-                (plugin) => plugin.constructor.name === "powerbox"
-            );
+            const powerbox = plugins.get("powerbox");
             expect(powerbox.overlay.isOpen).not.toBe(true);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p>a<a href="http://existing.com">bhttps://youtu.be/dQw4w9WgXcQ[]c</a>d</p>'
@@ -2921,14 +2919,12 @@ describe("youtube video", () => {
         });
 
         test("should paste and not transform a youtube URL in a existing link", async () => {
-            const { el, editor } = await setupEditor(
+            const { el, editor, plugins } = await setupEditor(
                 '<p>a<a href="http://existing.com">b[qsdqsd]c</a>d</p>'
             );
             pasteText(editor, videoUrl);
             // Ensure the powerbox is active
-            const powerbox = editor.plugins.find(
-                (plugin) => plugin.constructor.name === "powerbox"
-            );
+            const powerbox = plugins.get("powerbox");
             expect(powerbox.overlay.isOpen).not.toBe(true);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>a<a href="http://existing.com">b${videoUrl}[]c</a>d</p>`

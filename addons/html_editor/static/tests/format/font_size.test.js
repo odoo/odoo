@@ -157,6 +157,7 @@ test("should apply font size in unbreakable span with class", async () => {
 
 test("should apply font size in unbreakable span without class", async () => {
     class AddUnsplittableRulePlugin extends Plugin {
+        static id = "addUnsplittableRule";
         resources = {
             isUnsplittable: (element) => element.getAttribute("t") === "unbreakable",
         };
