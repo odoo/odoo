@@ -505,7 +505,8 @@ class HolidaysAllocation(models.Model):
                     allocation.last_executed_carryover_date = carryover_date
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
                         allocation_days = allocation.number_of_days + leaves_taken
-                        allocation_max_days = current_level.postpone_max_days + leaves_taken
+                        postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                        allocation_max_days = postpone_max_days + leaves_taken
                         allocation.number_of_days = min(allocation_days, allocation_max_days)
                     allocation.expiring_carryover_days = allocation.number_of_days
 
@@ -548,7 +549,9 @@ class HolidaysAllocation(models.Model):
                         if carryover_level.action_with_unused_accruals in ['lost', 'maximum']:
                             allocation.last_executed_carryover_date = carryover_date
                             allocation_days = allocation.number_of_days + leaves_taken
-                            allocation_max_days = current_level.postpone_max_days + leaves_taken
+                            postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' \
+                                else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                            allocation_max_days = postpone_max_days + leaves_taken
                             allocation.number_of_days = min(allocation_days, allocation_max_days)
 
                 if is_accrual_date:
@@ -604,9 +607,10 @@ class HolidaysAllocation(models.Model):
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
         fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
-        if self.type_request_unit in ['hour']:
-            return float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
-        res = round((fake_allocation.number_of_days - self.number_of_days), 2)
+        if self.holiday_status_id.request_unit in ['hour']:
+            res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
+        else:
+            res = round((fake_allocation.number_of_days - self.number_of_days), 2)
         fake_allocation.invalidate_recordset()
         return res
 
