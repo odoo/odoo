@@ -5,7 +5,8 @@ import { url } from "@web/core/utils/urls";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 
 export class PdfViewerField extends Component {
     static template = "web.PdfViewerField";
@@ -22,11 +23,23 @@ export class PdfViewerField extends Component {
             isValid: true,
             objectUrl: "",
         });
+        this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         onWillUpdateProps((nextProps) => {
             if (nextProps.readonly) {
                 this.state.objectUrl = "";
             }
         });
+        useEffect(
+            (el) => {
+                if (el) {
+                    hidePDFJSButtons(this.iframeViewerPdfRef.el, {
+                        hideDownload: true,
+                        hidePrint: true,
+                    });
+                }
+            },
+            () => [this.iframeViewerPdfRef.el]
+        );
     }
 
     get url() {
