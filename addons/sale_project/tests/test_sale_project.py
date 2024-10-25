@@ -196,7 +196,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         expected_sale_line_dict = {
             sol_read['id']: sol_read
             for sol_read in sale_order_lines._read_format(
-                ['name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id'])
+                ['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id'])
         }
         actual_sol_ids = []
         for line in sale_items_data['sol_items']:
