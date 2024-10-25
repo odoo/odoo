@@ -12,7 +12,6 @@ import fnmatch
 import functools
 import inspect
 import io
-import itertools
 import json
 import locale
 import logging
@@ -34,10 +33,12 @@ from lxml import etree, html
 from markupsafe import escape, Markup
 from psycopg2.extras import Json
 
-import odoo
 from odoo.exceptions import UserError
 from .config import config
 from .misc import file_open, file_path, get_iso_codes, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
+
+if typing.TYPE_CHECKING:
+    from odoo.api import Environment
 
 __all__ = [
     "_",
@@ -496,7 +497,8 @@ def get_translated_module(arg: str | int | typing.Any) -> str:  # frame not repr
             # just a quick lookup because `get_resource_from_path is slow compared to this`
             return module_name.split('.')[2]
         path = inspect.getfile(frame)
-        path_info = odoo.modules.get_resource_from_path(path)
+        from odoo.modules import get_resource_from_path  # noqa: PLC0415
+        path_info = get_resource_from_path(path)
         return path_info[0] if path_info else 'base'
 
 
@@ -566,7 +568,8 @@ def _get_lang(frame, default_lang='') -> str:
     cr = _get_cr(frame)
     uid = _get_uid(frame)
     if cr and uid:
-        env = odoo.api.Environment(cr, uid, {})
+        from odoo import api  # noqa: PLC0415
+        env = api.Environment(cr, uid, {})
         if lang := env['res.users'].context_get().get('lang'):
             return lang
     # fallback
@@ -1118,6 +1121,7 @@ class TranslationReader:
     def __init__(self, cr, lang=None):
         self._cr = cr
         self._lang = lang or 'en_US'
+        import odoo  # noqa: PLC0415
         self.env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
         self._to_translate = []
 
@@ -1300,6 +1304,7 @@ class TranslationModuleReader(TranslationReader):
     def __init__(self, cr, modules=None, lang=None):
         super().__init__(cr, lang)
         self._modules = modules or ['all']
+        import odoo.addons  # noqa: PLC0415
         self._path_list = [(path, True) for path in odoo.addons.__path__]
         self._installed_modules = [
             m['name']
@@ -1437,6 +1442,7 @@ class TranslationImporter:
     def __init__(self, cr, verbose=True):
         self.cr = cr
         self.verbose = verbose
+        import odoo  # noqa: PLC0415
         self.env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
 
         # {model_name: {field_name: {xmlid: {lang: value}}}}
@@ -1671,13 +1677,14 @@ def load_language(cr, lang):
     :param str lang: language ISO code with optional underscore (``_``) and
         l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     """
+    import odoo.api  # noqa: PLC0415
     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
     lang_ids = env['res.lang'].with_context(active_test=False).search([('code', '=', lang)]).ids
     installer = env['base.language.install'].create({'lang_ids': [(6, 0, lang_ids)]})
     installer.lang_install()
 
 
-def get_po_paths(module_name: str, lang: str, env: odoo.api.Environment | None = None):
+def get_po_paths(module_name: str, lang: str, env: Environment | None = None):
     lang_base = lang.split('_')[0]
     # Load the base as a fallback in case a translation is missing:
     po_names = [lang_base, lang]

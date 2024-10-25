@@ -18,12 +18,12 @@ import sys
 
 from psycopg2.errors import InsufficientPrivilege
 
-import odoo
+import odoo.addons
+from odoo.release import author as __author__  # noqa: F401
+from odoo.release import version as __version__
+from odoo.tools import config
 
 from . import Command
-
-__author__ = odoo.release.author
-__version__ = odoo.release.version
 
 # Also use the `odoo` logger for the main script.
 _logger = logging.getLogger('odoo')
@@ -42,7 +42,6 @@ def check_postgres_user():
 
     This function assumes the configuration has been initialized.
     """
-    config = odoo.tools.config
     if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
         sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
@@ -52,7 +51,6 @@ def report_configuration():
 
     This function assumes the configuration has been initialized.
     """
-    config = odoo.tools.config
     _logger.info("Odoo version %s", __version__)
     if os.path.isfile(config['config']):
         _logger.info("Using configuration file at %s", config['config'])
@@ -74,7 +72,6 @@ def report_configuration():
         )
 
 def rm_pid_file(main_pid):
-    config = odoo.tools.config
     if config['pidfile'] and main_pid == os.getpid():
         try:
             os.unlink(config['pidfile'])
@@ -86,7 +83,6 @@ def setup_pid_file():
 
     This function assumes the configuration has been initialized.
     """
-    config = odoo.tools.config
     if not odoo.evented and config['pidfile']:
         pid = os.getpid()
         with open(config['pidfile'], 'w') as fd:
@@ -94,7 +90,8 @@ def setup_pid_file():
         atexit.register(rm_pid_file, pid)
 
 def export_translation():
-    config = odoo.tools.config
+    from odoo.modules.registry import Registry  # noqa: PLC0415
+    from odoo.tools.translate import trans_export  # noqa: PLC0415
     dbnames = config['db_name']
     if len(dbnames) > 1:
         sys.exit("-d/--database/db_name has multiple database, please provide a single one")
@@ -111,36 +108,37 @@ def export_translation():
         fileformat = "po"
 
     with open(config["translate_out"], "wb") as buf:
-        registry = odoo.modules.registry.Registry.new(dbnames[0])
+        registry = Registry.new(dbnames[0])
         with registry.cursor() as cr:
-            odoo.tools.translate.trans_export(config["language"],
+            trans_export(config["language"],
                 config["translate_modules"] or ["all"], buf, fileformat, cr)
 
     _logger.info('translation file written successfully')
 
 def import_translation():
-    config = odoo.tools.config
+    from odoo.modules.registry import Registry  # noqa: PLC0415
+    from odoo.tools.translate import TranslationImporter  # noqa: PLC0415
     overwrite = config["overwrite_existing_translations"]
     dbnames = config['db_name']
     if len(dbnames) > 1:
         sys.exit("-d/--database/db_name has multiple database, please provide a single one")
-    registry = odoo.modules.registry.Registry.new(dbnames[0])
+    registry = Registry.new(dbnames[0])
     with registry.cursor() as cr:
-        translation_importer = odoo.tools.translate.TranslationImporter(cr)
+        translation_importer = TranslationImporter(cr)
         translation_importer.load_file(config["translate_in"], config["language"])
         translation_importer.save(overwrite=overwrite)
 
+
 def main(args):
     check_root_user()
-    odoo.tools.config.parse_config(args, setup_logging=True)
+    config.parse_config(args, setup_logging=True)
     check_postgres_user()
     report_configuration()
 
-    config = odoo.tools.config
-
     for db_name in config['db_name']:
+        from odoo.service import db  # noqa: PLC0415
         try:
-            odoo.service.db._create_empty_database(db_name)
+            db._create_empty_database(db_name)
             config['init']['base'] = True
         except InsufficientPrivilege as err:
             # We use an INFO loglevel on purpose in order to avoid
@@ -148,7 +146,7 @@ def main(args):
             # using restricted database access.
             _logger.info("Could not determine if database %s exists, "
                          "skipping auto-creation: %s", db_name, err)
-        except odoo.service.db.DatabaseExists:
+        except db.DatabaseExists:
             pass
 
     if config["translate_out"]:
@@ -170,5 +168,5 @@ class Server(Command):
     """Start the odoo server (default command)"""
 
     def run(self, args):
-        odoo.tools.config.parser.prog = self.prog
+        config.parser.prog = self.prog
         main(args)
