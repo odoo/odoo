@@ -3,7 +3,7 @@
 import { negate } from "@point_of_sale/../tests/tours/helpers/utils";
 
 const productTrigger = (productName) =>
-    `label.combo-line:has(article.product .product-name:contains("${productName}"))`;
+    `label.combo-line article.product:has( .product-name:contains("${productName}"))`;
 const isComboSelectedTrigger = (productName) => `input:checked ~ ${productTrigger(productName)}`;
 const confirmationButtonTrigger = `footer button.confirm`;
 
