@@ -19,6 +19,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { session } from "@web/session";
 import { MacroEngine } from "@web/core/macro";
 import { tourState } from "@web_tour/tour_service/tour_state";
+import { useService } from "@web/core/utils/hooks";
 
 describe.current.tags("desktop");
 
@@ -1419,4 +1420,69 @@ test("check alternative trigger that appear after the initial trigger", async ()
     queryFirst(".add_button").appendChild(otherButton);
     await contains(".button1").click();
     expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("check not possible to click below modal", async () => {
+    patchWithCleanup(console, {
+        warn: () => {},
+        error: (s) => expect.step(`error: ${s}`),
+        log: (s) => expect.step(`log: ${s}`),
+        dir: () => {},
+    });
+    class DummyDialog extends Component {
+        static props = ["*"];
+        static components = { Dialog };
+        static template = xml`
+            <Dialog>
+                <button class="a">A</button>
+                <button class="b">B</button>
+            </Dialog>
+        `;
+    }
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <div class="p-3"><button class="button0" t-on-click="openDialog">Button 0</button></div>
+                    <div class="p-3"><button class="button1">Button 1</button></div>
+                    <div class="p-3"><button class="button2">Button 2</button></div>
+                    <div class="p-3"><button class="button3">Button 3</button></div>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+        setup() {
+            this.dialogService = useService("dialog");
+        }
+        openDialog() {
+            this.dialogService.add(DummyDialog);
+        }
+    }
+    await mountWithCleanup(Root);
+
+    registry.category("web_tour.tours").add("tour_check_modal", {
+        steps: () => [
+            {
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                trigger: ".button1",
+                run: "click",
+            },
+        ],
+    });
+    await odoo.startTour("tour_check_modal", { mode: "auto" });
+    await animationFrame();
+    await advanceTime(750);
+    await advanceTime(750);
+    await advanceTime(750);
+    await advanceTime(10000);
+    expect.verifySteps([
+        "log: [1/2] Tour tour_check_modal → Step .button0",
+        "log: [2/2] Tour tour_check_modal → Step .button1",
+        `error: FAILED: [2/2] Tour tour_check_modal → Step .button1.
+Element has been found but it's not allowed to do action on an element that's below a modal.`,
+    ]);
 });
