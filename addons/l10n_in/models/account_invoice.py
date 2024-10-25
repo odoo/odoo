@@ -3,6 +3,7 @@ import logging
 import json
 import re
 
+from contextlib import contextmanager
 from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
@@ -701,3 +702,15 @@ class AccountMove(models.Model):
             url,
             _("Buy Credits")
         )
+
+    def _get_sync_stack(self, invoice_container, tax_container, misc_container):
+        stack = super()._get_sync_stack(invoice_container, tax_container, misc_container)
+        stack.append((8, self._sync_l10n_in_gstr_section(invoice_container)))
+        return stack
+
+    @contextmanager
+    def _sync_l10n_in_gstr_section(self, container):
+        yield
+        for invoice in container['records']:
+            # we set the section on the invoice lines
+            invoice.line_ids._set_l10n_in_gstr_section()
