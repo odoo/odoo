@@ -1,14 +1,7 @@
-import {
-    Component,
-    onWillDestroy,
-    onWillStart,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, useRef, useState, useSubEnv } from "@odoo/owl";
+import { LazyComponent, loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { LazyComponent } from "@web/core/assets";
 import { WebsiteSystrayItem } from "./website_systray_item";
 
 function unslugHtmlDataObject(repr) {
@@ -35,10 +28,7 @@ class WebsiteBuilder extends Component {
         this.state = useState({ isEditing: false });
 
         onWillStart(async () => {
-            const slugCurrentWebsite = await this.orm.call(
-                "website",
-                "get_current_website",
-            );
+            const slugCurrentWebsite = await this.orm.call("website", "get_current_website");
             this.backendWebsiteId = unslugHtmlDataObject(slugCurrentWebsite).id;
             this.initialUrl = `/website/force/${encodeURIComponent(this.backendWebsiteId)}`;
         });
@@ -65,7 +55,7 @@ class WebsiteBuilder extends Component {
             .add(
                 "website.WebsiteSystrayItem",
                 { Component: WebsiteSystrayItem, props: systrayProps },
-                { sequence: -100 },
+                { sequence: -100 }
             );
     }
 
@@ -89,6 +79,7 @@ class WebsiteBuilder extends Component {
 
     onIframeLoad(ev) {
         // history.pushState(null, "", ev.target.contentWindow.location.pathname);
+        loadBundle("mysterious_egg.inside_builder_style", this.websiteContent.el.contentDocument);
     }
 }
 
