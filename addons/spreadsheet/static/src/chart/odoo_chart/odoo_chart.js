@@ -51,6 +51,8 @@ export class OdooChart extends AbstractChart {
         this.dataSource = undefined;
         this.actionXmlId = definition.actionXmlId;
         this.showValues = definition.showValues;
+        this._dataSets = definition.dataSets || [];
+        // this.trend = definition.trend; ADRM TODO: migrate ? how ?
     }
 
     static transformDefinition(definition) {
@@ -89,6 +91,8 @@ export class OdooChart extends AbstractChart {
             type: this.type,
             actionXmlId: this.actionXmlId,
             showValues: this.showValues,
+            dataSets: this.dataSets,
+            datasetsConfig: this.datasetsConfig,
         };
     }
 
@@ -133,5 +137,13 @@ export class OdooChart extends AbstractChart {
         } else {
             throw new Error("Only ChartDataSources can be added.");
         }
+    }
+
+    get dataSets() {
+        if (!this.dataSource) {
+            return this.datasetsConfig || [];
+        }
+        const data = this.dataSource.getData();
+        return data.datasets.map((ds, index) => this._dataSets?.[index] || {});
     }
 }
