@@ -275,23 +275,28 @@ export class ListController extends Component {
         }
     }
 
-    async openRecord(record, force = false) {
+    async openRecord(record, force = false, newWindow = false) {
         await record.save();
         if (this.archInfo.openAction) {
-            this.actionService.doActionButton({
-                name: this.archInfo.openAction.action,
-                type: this.archInfo.openAction.type,
-                resModel: record.resModel,
-                resId: record.resId,
-                resIds: record.resIds,
-                context: record.context,
-                onClose: async () => {
-                    await record.model.root.load();
+            this.actionService.doActionButton(
+                {
+                    name: this.archInfo.openAction.action,
+                    type: this.archInfo.openAction.type,
+                    resModel: record.resModel,
+                    resId: record.resId,
+                    resIds: record.resIds,
+                    context: record.context,
+                    onClose: async () => {
+                        await record.model.root.load();
+                    },
                 },
-            });
+                {
+                    newWindow,
+                }
+            );
         } else {
             const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-            this.props.selectRecord(record.resId, { activeIds, force });
+            this.props.selectRecord(record.resId, { activeIds, force }, { newWindow });
         }
     }
 

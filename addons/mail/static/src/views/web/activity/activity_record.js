@@ -10,6 +10,7 @@ import {
     getImageSrcFromRecordInfo,
     isHtmlEmpty,
 } from "@web/views/kanban/kanban_record";
+import { useRecordClick } from "@web/core/utils/record_click";
 import { useViewCompiler } from "@web/views/view_compiler";
 
 export class ActivityRecord extends Component {
@@ -32,6 +33,12 @@ export class ActivityRecord extends Component {
         };
         const { templateDocs } = this.props.archInfo;
         const templates = useViewCompiler(ActivityCompiler, templateDocs);
+        useRecordClick({
+            onOpen: (ev, newWindow) => {
+                this.props.openRecord(this.props.record, undefined, { newWindow });
+            },
+            refName: "root",
+        });
         this.recordTemplate = templates["activity-box"];
     }
 

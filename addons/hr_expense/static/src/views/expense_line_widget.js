@@ -38,7 +38,7 @@ export class ExpenseLinesKanbanRecord extends KanbanRecord {
     }
 
     /** @override **/
-    async onGlobalClick(ev) {
+    async onOpenRecord(ev) {
         const expenseName = this.props.record.data.name;
         const attachments = await this.orm.call('hr.expense', 'get_expense_attachments', [this.props.record.resId]);
         const files = attachments.map((attachment, index) => ({
@@ -62,7 +62,7 @@ export class ExpenseLinesKanbanRecord extends KanbanRecord {
                 },
             });
         }
-        super.onGlobalClick(ev);
+        super.onOpenRecord(...arguments);
     }
 }
 

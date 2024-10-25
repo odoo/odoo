@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { pick } from "@web/core/utils/objects";
-import { debounce as debounceFn } from "@web/core/utils/timing";
+import { useRecordClick } from "@web/core/utils/record_click";
 
 const explicitRankClasses = [
     "btn-primary",
@@ -65,10 +65,6 @@ export class ViewButton extends Component {
         if (this.props.icon) {
             this.icon = iconFromString(this.props.icon);
         }
-        const { debounce } = this.clickParams;
-        if (debounce) {
-            this.onClick = debounceFn(this.onClick.bind(this), debounce, true);
-        }
         this.tooltip = JSON.stringify({
             debug: Boolean(odoo.debug),
             button: {
@@ -88,6 +84,32 @@ export class ViewButton extends Component {
             model: this.props.record && this.props.record.resModel,
         });
         this.dropdownControl = useDropdownCloser();
+        useRecordClick({
+            onOpen: (ev, newWindow = false) => {
+                if (this.props.onClick) {
+                    return this.props.onClick();
+                }
+                this.env.onClickViewButton(
+                    {
+                        clickParams: this.clickParams,
+                        getResParams: () =>
+                            pick(
+                                this.props.record || {},
+                                "context",
+                                "evalContext",
+                                "resModel",
+                                "resId",
+                                "resIds"
+                            ),
+                        beforeExecute: () => this.dropdownControl.close(),
+                    },
+                    {
+                        newWindow,
+                    }
+                );
+            },
+            refName: "button",
+        });
     }
 
     get clickParams() {
@@ -105,33 +127,6 @@ export class ViewButton extends Component {
     get disabled() {
         const { name, type, special } = this.clickParams;
         return (!name && !type && !special) || this.props.disabled;
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     */
-    onClick(ev) {
-        if (this.props.tag === "a") {
-            ev.preventDefault();
-        }
-
-        if (this.props.onClick) {
-            return this.props.onClick();
-        }
-
-        this.env.onClickViewButton({
-            clickParams: this.clickParams,
-            getResParams: () =>
-                pick(
-                    this.props.record || {},
-                    "context",
-                    "evalContext",
-                    "resModel",
-                    "resId",
-                    "resIds"
-                ),
-            beforeExecute: () => this.dropdownControl.close(),
-        });
     }
 
     getClassName() {

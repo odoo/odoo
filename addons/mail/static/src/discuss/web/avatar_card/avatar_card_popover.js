@@ -1,6 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart } from "@odoo/owl";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
+import { useRecordClick } from "@web/core/utils/record_click";
 
 export class AvatarCardPopover extends Component {
     static template = "mail.AvatarCardPopover";
@@ -14,6 +15,13 @@ export class AvatarCardPopover extends Component {
         this.actionService = useService("action");
         this.orm = useService("orm");
         this.openChat = useOpenChat("res.users");
+        useRecordClick({
+            onOpen: async (ev, newWindow) => {
+                const action = await this.getProfileAction();
+                this.actionService.doAction(action, { newWindow });
+            },
+            refName: "viewProfileBtn",
+        });
         onWillStart(async () => {
             [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
         });
@@ -51,10 +59,5 @@ export class AvatarCardPopover extends Component {
     onSendClick() {
         this.openChat(this.userId);
         this.props.close();
-    }
-
-    async onClickViewProfile() {
-        const action = await this.getProfileAction();
-        this.actionService.doAction(action);
     }
 }

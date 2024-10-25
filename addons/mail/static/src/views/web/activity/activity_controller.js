@@ -38,7 +38,10 @@ export class ActivityController extends Component {
                 onUpdate: async (params) => {
                     // Ensure that only (active) records with at least one activity, "done" (archived) or not, are fetched.
                     // We don't use active_test=false in the context because otherwise we would also get archived records.
-                    params.domain = [...(this.model.originalDomain || []), ["activity_ids.active", "in", [true, false]]];
+                    params.domain = [
+                        ...(this.model.originalDomain || []),
+                        ["activity_ids.active", "in", [true, false]],
+                    ];
                     await Promise.all([
                         this.model.root.load(params),
                         this.model.fetchActivityData(params),
@@ -116,9 +119,9 @@ export class ActivityController extends Component {
         this.model.orm.call(this.props.resModel, "activity_send_mail", [resIds, templateID], {});
     }
 
-    async openRecord(record, mode) {
+    async openRecord(record, mode, options) {
         const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        this.props.selectRecord(record.resId, { activeIds, mode });
+        this.props.selectRecord(record.resId, { activeIds, mode }, options);
     }
 
     get rendererProps() {

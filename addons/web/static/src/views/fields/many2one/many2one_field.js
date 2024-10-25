@@ -14,6 +14,7 @@ import { standardFieldProps } from "../standard_field_props";
 
 import { Component, markup, onWillUpdateProps, useState } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
+import { useRecordClick } from "@web/core/utils/record_click";
 
 class CreateConfirmationDialog extends Component {
     static template = "web.Many2OneField.CreateConfirmationDialog";
@@ -150,6 +151,21 @@ export class Many2OneField extends Component {
             this.state.isFloating = bool;
         };
 
+        useRecordClick({
+            onOpen: (ev, newWindow) => {
+                if (this.props.canOpen && this.props.readonly) {
+                    this.openAction(newWindow);
+                } else {
+                    if (this.env.inDialog) {
+                        this.openDialog(this.resId);
+                    } else {
+                        this.openAction(newWindow);
+                    }
+                }
+            },
+            refName: "openRecordButton",
+        });
+
         onWillUpdateProps(async (nextProps) => {
             this.computeActiveActions(nextProps);
         });
@@ -241,7 +257,7 @@ export class Many2OneField extends Component {
     getDomain() {
         return getFieldDomain(this.props.record, this.props.name, this.props.domain);
     }
-    async openAction() {
+    async openAction(newWindow) {
         const { name, openActionContext, record } = this.props;
         const context = makeContext(
             [openActionContext || this.context, record.fields[name].context],
@@ -250,7 +266,7 @@ export class Many2OneField extends Component {
         const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {
             context,
         });
-        await this.action.doAction(action);
+        await this.action.doAction(action, { newWindow });
     }
     async openDialog(resId) {
         return this.openMany2X({ resId, context: this.context });
@@ -276,13 +292,6 @@ export class Many2OneField extends Component {
     onClick(ev) {
         if (this.props.canOpen && this.props.readonly) {
             ev.stopPropagation();
-            this.openAction();
-        }
-    }
-    onExternalBtnClick() {
-        if (this.env.inDialog) {
-            this.openDialog(this.resId);
-        } else {
             this.openAction();
         }
     }
