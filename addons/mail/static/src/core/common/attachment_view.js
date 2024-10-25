@@ -27,11 +27,14 @@ class AbstractAttachmentView extends Component {
             /** @type {import("models").Thread|undefined} */
             thread: undefined,
         });
-        useEffect(() => {
-            if (this.iframeViewerPdfRef.el) {
-                hidePDFJSButtons(this.iframeViewerPdfRef.el);
-            }
-        });
+        useEffect(
+            (el) => {
+                if (el) {
+                    hidePDFJSButtons(this.iframeViewerPdfRef.el);
+                }
+            },
+            () => [this.iframeViewerPdfRef.el]
+        );
         this.updateFromProps(this.props);
         onWillUpdateProps((props) => this.updateFromProps(props));
     }
