@@ -143,11 +143,6 @@ _LOCALE2WIN32 = {
 
 # these direct uses of CSV are ok.
 import csv # pylint: disable=deprecated-module
-class UNIX_LINE_TERMINATOR(csv.excel):
-    lineterminator = '\n'
-
-csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
-
 
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
