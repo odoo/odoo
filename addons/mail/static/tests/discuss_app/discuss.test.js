@@ -27,11 +27,13 @@ import {
     makeKwArgs,
     mockService,
     onRpc,
+    patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
+import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1374,7 +1376,55 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", {
         text: "Mitchell Admin and Dumbledore",
     });
+    await contains(".o_notification", { count: 1 });
     expect(titleService.current).toBe("(1) Inbox");
+});
+
+test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "channel",
+    });
+    mockService("presence", { isOdooFocused: () => false });
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.init_messaging) {
+            step("init_messaging");
+        }
+    });
+    patchWithCleanup(OutOfFocusService.prototype, {
+        _playSound() {
+            step("play_sound");
+        },
+    });
+    await start();
+    await assertSteps(["init_messaging"]);
+    // simulate receiving a new needaction message with odoo out-of-focused
+    const adminId = serverState.partnerId;
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "@Michell Admin",
+                partner_ids: [adminId],
+                message_type: "comment",
+            },
+            thread_id: partnerId,
+            thread_model: "res.partner",
+        })
+    );
+    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
+    // check no chat window nor chat bubble spawn: can be delayed, hence opening and folding chat by hand
+    await click("button.dropdown i[aria-label='Messages']");
+    await click(".o-mail-MessagingMenu button:contains(general)");
+    await contains(".o-mail-ChatWindow:contains(general)");
+    await contains(".o-mail-ChatWindow", { count: 1 });
+    await click(".o-mail-ChatWindow button[title='Fold']");
+    await contains(".o-mail-ChatBubble", { count: 1 }); // no other chat bubble other than manually folded one
+    await assertSteps([]); // no sound alert whatsoever
 });
 
 test("should auto-pin chat when receiving a new DM", async () => {
