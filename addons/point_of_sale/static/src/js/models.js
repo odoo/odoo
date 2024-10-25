@@ -134,6 +134,7 @@ class PosGlobalState extends PosModel {
             },
         };
 
+        this.syncingOrders = new Set();
         this.tempScreenIsShown = false;
         // these dynamic attributes can be watched for change by other models or widgets
         Object.assign(this, {
@@ -962,20 +963,31 @@ class PosGlobalState extends PosModel {
         if (!orders || !orders.length) {
             return Promise.resolve([]);
         }
-        this.set_synch('connecting', orders.length);
+
+        // Filter out orders that are already being synced
+        const ordersToSync = orders.filter(order => !this.syncingOrders.has(order.id));
+
+        if (!ordersToSync.length) {
+            return Promise.resolve([]);
+        }
+
+        // Add these order IDs to the syncing set
+        ordersToSync.forEach(order => this.syncingOrders.add(order.id));
+
+        this.set_synch('connecting', ordersToSync.length);
         options = options || {};
 
         var self = this;
-        var timeout = typeof options.timeout === 'number' ? options.timeout : 30000 * orders.length;
+        var timeout = typeof options.timeout === 'number' ? options.timeout : 30000 * ordersToSync.length;
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
         // new orders may have been added to it.
-        var order_ids_to_sync = _.pluck(orders, 'id');
+        var order_ids_to_sync = _.pluck(ordersToSync, 'id');
 
         // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
-        var args = [_.map(orders, function (order) {
+        var args = [_.map(ordersToSync, function (order) {
                 order.to_invoice = options.to_invoice || false;
                 return order;
             })];
@@ -992,12 +1004,14 @@ class PosGlobalState extends PosModel {
             .then(function (server_ids) {
                 _.each(order_ids_to_sync, function (order_id) {
                     self.db.remove_order(order_id);
+                    self.syncingOrders.delete(order_id)
                 });
                 self.failed = false;
                 self.set_synch('connected');
                 return server_ids;
             }).catch(function (error){
-                console.warn('Failed to send orders:', orders);
+                ordersToSync.forEach(order_id => self.syncingOrders.delete(order_id));
+                console.warn('Failed to send orders:', ordersToSync);
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
                     // Hide error if already shown before ...
                     if ((!self.failed || options.show_error) && !options.to_invoice) {
