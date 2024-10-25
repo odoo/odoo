@@ -50,7 +50,7 @@ registerModel({
             const strCookie = decodeURIComponent(getCookie('im_livechat_session'));
             let isSessionCookieAvailable = Boolean(strCookie);
             let cookie = JSON.parse(strCookie || '{}');
-            if (isSessionCookieAvailable && cookie.visitor_uid !== session.user_id) {
+            if (isSessionCookieAvailable && (cookie.visitor_uid !== session.user_id || !cookie.id)) {
                 this.leaveSession();
                 isSessionCookieAvailable = false;
                 cookie = {};
@@ -66,8 +66,6 @@ registerModel({
                     message.body = Markup(message.body);
                 }
                 this.update({ isAvailableForMe: true });
-            } else if (isSessionCookieAvailable) {
-                this.update({ history: [], isAvailableForMe: true });
             } else {
                 const result = await this.messaging.rpc({
                     route: '/im_livechat/init',
@@ -92,7 +90,6 @@ registerModel({
          *   method overrides ('sendWelcomeMessage', 'sendMessage', ...)
          *
          * - If the chat has been started before, but the user did not interact with the bot
-         *   The default behavior is to open an empty chat window, without any messages.
          *   In addition, we fetch the configuration (with a '/init' call), to see if we have a bot
          *   configured.
          *   Indeed we want to trigger the bot script on every page where the associated rule is matched.
