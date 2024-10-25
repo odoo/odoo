@@ -2022,7 +2022,6 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
      * @override
      */
     start: function () {
-        this.$bsTarget.carousel('pause');
         this.$indicators = this.$target.find('.carousel-indicators');
         this.$controls = this.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
 
