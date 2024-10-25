@@ -18,20 +18,18 @@ class TestPaymentProvider(AccountPaymentCommon):
             'name': 'Child Company',
             'parent_id': self.env.company.id,
         })
-        provider_duplicated = self.dummy_provider.copy()
-        provider_duplicated.write({
-            'name': 'Duplicated Provider',
-            'company_id': child_company.id,
-            'state': 'disabled',
-            'journal_id': False,
-        })
-        provider_duplicated._compute_journal_id()
-        self.assertFalse(provider_duplicated.journal_id)
+        with self.mocked_get_payment_method_information():
+            provider_duplicated = self.dummy_provider.copy(default={
+                'name': 'Duplicated Provider',
+                'company_id': child_company.id,
+                'state': 'test',
+            })
+            self.assertFalse(provider_duplicated.journal_id)
 
-        bank_journal = self.env['account.journal'].create({
-            'name': 'Bank Journal',
-            'type': 'bank',
-            'company_id': child_company.id,
-        })
-        provider_duplicated._compute_journal_id()
-        self.assertEqual(provider_duplicated.journal_id, bank_journal)
+            bank_journal = self.env['account.journal'].create({
+                'name': 'Bank Journal',
+                'type': 'bank',
+                'company_id': child_company.id,
+            })
+            provider_duplicated.invalidate_recordset(fnames=['journal_id'])
+            self.assertEqual(provider_duplicated.journal_id, bank_journal)

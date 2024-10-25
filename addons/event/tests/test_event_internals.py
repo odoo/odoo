@@ -88,6 +88,30 @@ class TestEventData(TestEventInternalsCommon):
             })
             self.assertTrue(event.is_one_day)
 
+        # Checks case when mocked today changes date before event, when event.date_tz considered
+        with freeze_time(datetime(2020, 6, 20, 20, 0, 0)):
+            event.write({
+                'date_begin': datetime(2020, 6, 27, 1, 0, 0),
+                'date_end': datetime(2020, 7, 8, 2, 0, 0),
+                'date_tz': 'America/Los_Angeles'
+            })
+            # event_date_tz = 2020-06-26 18:00
+            # today_tz = 2020-06-20 13:00
+            # event_date_tz.date() - today_tz.date() = 6 days
+            self.assertEqual(registration.get_date_range_str(), 'in 6 days')
+
+        # Checks case when event changes date before mocked today, when event.date_tz considered
+        with freeze_time(datetime(2020, 6, 20, 13, 0, 0)):
+            event.write({
+                'date_begin': datetime(2020, 6, 25, 20, 0, 0),
+                'date_end': datetime(2020, 7, 8, 2, 0, 0),
+                'date_tz': 'Australia/Sydney'
+            })
+            # event_date_tz = 2020-06-26 06:00
+            # today_tz = 2020-06-20 23:00
+            # event_date_tz.date() - today_tz.date() = 6 days
+            self.assertEqual(registration.get_date_range_str(), 'in 6 days')
+
     @freeze_time('2020-1-31 10:00:00')
     @users('user_eventmanager')
     def test_event_date_timezone(self):

@@ -384,3 +384,61 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         testUnit(self.mo_lot_tmpl)
         testUnit(self.mo_serial_tmpl, 1)
         testUnit(self.mo_serial_tmpl, 2)
+
+    def test_tracked_production_2_steps_manufacturing(self):
+        """
+        Create an MO for a product tracked by SN in 2-steps manufacturing with tracked compoenents.
+        Assign a SN to the final product using the auto generation, then validate the pbm picking.
+        This test checks that the tracking of components is updated on the MO.
+        """
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm'
+        bom = self.bom_serial
+        bom.product_id = self.produced_serial
+        components = self.bom_serial.bom_line_ids.mapped('product_id')
+        lot_1 = self.env['stock.lot'].create({
+            'name': 'lot_1',
+            'product_id': components[1].id,
+            'company_id': self.env.company.id,
+        })
+        lot_2 = self.env['stock.lot'].create({
+            'name': 'SN01',
+            'product_id': components[2].id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(components[0], self.env.ref('stock.warehouse0').lot_stock_id, 3)
+        self.env['stock.quant']._update_available_quantity(components[1], self.env.ref('stock.warehouse0').lot_stock_id, 2, lot_id=lot_1)
+        self.env['stock.quant']._update_available_quantity(components[2], self.env.ref('stock.warehouse0').lot_stock_id, 1, lot_id=lot_2)
+        mo = self.env['mrp.production'].create({
+            'product_id': bom.product_id.id,
+            'product_qty': 1,
+            'bom_id': bom.id,
+        })
+        mo.action_confirm()
+        self.assertRecordValues(mo.picking_ids.move_ids, [
+            {'quantity': 3.0, 'picked': False, 'lot_ids': []},
+            {'quantity': 2.0, 'picked': False, 'lot_ids': lot_1.ids},
+            {'quantity': 1.0, 'picked': False, 'lot_ids': lot_2.ids},
+        ])
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'should_consume_qty': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
+            {'should_consume_qty': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
+        ])
+        mo.action_generate_serial()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'should_consume_qty': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
+            {'should_consume_qty': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
+        ])
+        self.assertTrue(mo.lot_producing_id)
+        mo.picking_ids.button_validate()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'quantity': 2.0, 'picked': False, 'lot_ids': lot_1.ids},
+            {'quantity': 1.0, 'picked': False, 'lot_ids': lot_2.ids},
+        ])
+        mo.move_raw_ids.picked = True
+        mo.button_mark_done()

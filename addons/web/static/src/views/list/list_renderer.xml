@@ -25,8 +25,8 @@
                                 t-on-pointerup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
-                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
-                                t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
+                                t-att-data-tooltip-info="makeTooltip(column)"
                                 data-tooltip-delay="1000"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
@@ -179,7 +179,7 @@
                     <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
                         t-attf-style="--o-list-group-level: {{getGroupLevel(group)}}"/>
                     <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
-                    <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
+                    <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded and group.record.resId)" class="o_group_buttons">
                         <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
                             <t t-if="!evalInvisible(button.invisible, group.record)">
                                 <t t-if="button.clickParams.type === 'edit'">
@@ -201,7 +201,7 @@
                             </t>
                         </t>
                     </div>
-                    <div t-if="showGroupPager(group)" class="ms-auto">
+                    <div t-if="showGroupPager(group)" t-on-click.stop="" class="ms-auto">
                         <Pager t-props="getGroupPagerProps(group)"/>
                     </div>
                 </div>
@@ -291,7 +291,7 @@
                 <t t-if="hasX2ManyAction">
                     <td class="o_list_record_remove text-center"
                         t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                        t-on-click.stop="() => this.onDeleteRecord(record)"
+                        t-on-click.stop="(ev) => this.onDeleteRecord(record, ev)"
                         tabindex="-1"
                     >
                         <button class="fa"
@@ -315,6 +315,11 @@
             <attribute name="t-portal">`.${props.listRendererClass}`</attribute>
             <attribute name="class" add="o_optional_columns_dropdown" separator=" "/>
         </xpath>
+    </t>
+
+    <t t-name="web.ListHeaderTooltip">
+        <t t-esc="field.label"/>
+        <div t-if="field.help" class="mt-2" t-esc="field.help"/>
     </t>
 
 </templates>

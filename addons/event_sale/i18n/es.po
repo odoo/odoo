@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -32,7 +33,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "<span class=\"o_stat_text\">Sale Order</span>"
-msgstr "<span class=\"o_stat_text\">Orden de venta</span>"
+msgstr "<span class=\"o_stat_text\">Pedido de venta</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -66,7 +67,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
 msgid "All sale order lines pointing to this event"
-msgstr "Todas las líneas de órdenes de venta apunten este evento"
+msgstr "Todas las líneas del pedido de venta apunten este evento"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -239,7 +240,7 @@ msgstr "Configurador de eventos"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_end
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event End Date"
-msgstr "Fecha del final del evento"
+msgstr "Fecha de finalización del evento"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -460,7 +461,7 @@ msgstr "Reducción de precio"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr "Precio reducido con IVA"
+msgstr "Reducción de precio con IVA"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_incl
@@ -546,18 +547,18 @@ msgstr "Ingresos"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Sale Order"
-msgstr "Orden de venta"
+msgstr "Pedido de venta"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_line_id
 msgid "Sale Order Line"
-msgstr "Línea de orden de venta"
+msgstr "Línea de pedido de venta"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_state
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Sale Order Status"
-msgstr "Estado de la orden de venta"
+msgstr "Estado del pedido de venta"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
@@ -572,7 +573,7 @@ msgstr "Ventas"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_subtotal
 msgid "Sales (Tax Excluded)"
-msgstr "Ventas (libre de impuestos)"
+msgstr "Ventas (impuestos no incluidos)"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
@@ -585,14 +586,14 @@ msgstr "Fin de la venta"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sale
 msgid "Sales Order"
-msgstr "Orden de venta"
+msgstr "Pedido de venta"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "Línea de orden de venta"
+msgstr "Líneas de pedido de venta"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
@@ -665,8 +666,8 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
-"Sin confirmar: inscripciones en estado pendiente, en espera de una acción (es un caso específico, en particular con el estado de venta)\n"
-"Inscrito: inscripciones que se consideran hechas por cliente\n"
+"No confirmado: inscripciones en estado pendiente, en espera de una acción (es un caso específico, en particular con el estado de venta)\n"
+"Inscrito: inscripciones que se consideran hechos por cliente\n"
 "Asistido: inscripciones en las que el participante asistió al evento\n"
 "Cancelado: inscripciones canceladas manualmente"
 
@@ -683,7 +684,7 @@ msgstr "Siguientes eventos desde hoy"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming/Running"
-msgstr "Próximos/En marcha"
+msgstr "Próximos/En curso"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

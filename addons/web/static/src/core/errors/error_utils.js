@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { loadJS } from "../assets"; // use the real, non patched (in tests), loadJS
-import { isBrowserChrome } from "../browser/feature_detection";
 
 /** @typedef {import("./error_service").UncaughtError} UncaughtError */
 
@@ -118,19 +117,15 @@ export function getErrorTechnicalName(error) {
 export function formatTraceback(error) {
     let traceback = error.stack;
     const errorName = getErrorTechnicalName(error);
-    if (!isBrowserChrome()) {
-        // transforms the stack into a chromium stack by adding the error name
-        // to the stack and indenting the lines, eg:
-        // Error: Mock: Can't write value
-        //     _onOpenFormView@http://localhost:8069/web/content/425-baf33f1/web.assets.js:1064:30
-        //     ...
-        traceback = `${errorName}: ${error.message}\n${error.stack}`
-            .replace(/\n/g, "\n    ")
-            .trim();
-    } else if (error.stack) {
-        // Chromium stack starts with the error's name but the name is "Error" by default
-        // so we replace it to have the error type name
-        traceback = error.stack.replace(/^[^:]*/g, errorName);
+    // ensure the proper error name and error message are present in the traceback, no matter the error.stack brower's formatting.
+    // Stack example:
+    // Error: Mock: Can't write value
+    //     _onOpenFormView@http://localhost:8069/web/content/425-baf33f1/web.assets.js:1064:30
+    //     ...
+    const descriptionLine = `${errorName}: ${error.message}`;
+    if (error.stack.split("\n")[0].trim() !== descriptionLine) {
+        // avoid having the description line twice if already present
+        traceback = `${descriptionLine}\n${error.stack}`.replace(/\n/g, "\n    ");
     }
     return traceback;
 }

@@ -6,22 +6,23 @@ import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_pop
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { PrinterService } from "@point_of_sale/app/printer/printer_service";
 
-const posPrinterService = {
-    dependencies: ["hardware_proxy", "popup", "renderer"],
-    start(env, { hardware_proxy, popup, renderer }) {
-        return new PosPrinterService(env, { hardware_proxy, popup, renderer });
+export const posPrinterService = {
+    dependencies: ["hardware_proxy", "popup", "renderer", "pos"],
+    start(env, { hardware_proxy, popup, renderer, pos }) {
+        return new PosPrinterService(env, { hardware_proxy, popup, renderer, pos });
     },
 };
-class PosPrinterService extends PrinterService {
+export class PosPrinterService extends PrinterService {
     constructor(...args) {
         super(...args);
         this.setup(...args);
     }
-    setup(env, { hardware_proxy, popup, renderer }) {
+    setup(env, { hardware_proxy, popup, renderer, pos }) {
         this.renderer = renderer;
         this.hardware_proxy = hardware_proxy;
         this.popup = popup;
         this.device = hardware_proxy.printer;
+        this.pos = pos;
     }
     printWeb() {
         try {
@@ -39,18 +40,21 @@ class PosPrinterService extends PrinterService {
         try {
             return await super.printHtml(...arguments);
         } catch (error) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: error.title || _t("Printing error"),
-                body: error.body + _t("Do you want to print using the web printer? "),
-            });
-            if (!confirmed) {
-                return false;
-            }
-            // We want to call the _printWeb when the popup is fully gone
-            // from the screen which happens after the next animation frame.
-            await new Promise(requestAnimationFrame);
-            return await this.printWeb(...arguments);
+            return this.printHtmlAlternative(error, ...arguments);
         }
+    }
+    async printHtmlAlternative(error, ...args) {
+        const { confirmed } = await this.popup.add(ConfirmPopup, {
+            title: error.title || _t("Printing error"),
+            body: error.body + _t("Do you want to print using the web printer? "),
+        });
+        if (!confirmed) {
+            return false;
+        }
+        // We want to call the _printWeb when the popup is fully gone
+        // from the screen which happens after the next animation frame.
+        await new Promise(requestAnimationFrame);
+        return this.printWeb(...args);
     }
 }
 

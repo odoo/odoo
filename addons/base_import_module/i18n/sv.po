@@ -4,20 +4,20 @@
 # 
 # Translators:
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
-# Robin Calvin, 2023
 # Haojun Zou <apollo_zhj@msn.com>, 2023
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Lasse L, 2023
 # Martin Trigaux, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
+# Robin Calvin, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -36,8 +36,12 @@ msgid ""
 "You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
+"\n"
+"Du kan behöva Enterprise-versionen för att installera datamodulen. Besök https://www.odoo.com/pricing-plan för mer information.\n"
+"Om du behöver Website themes kan du ladda ner det från https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Activate"
 msgstr "Aktivera"
@@ -94,13 +98,6 @@ msgid "Created on"
 msgstr "Skapad den"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr ""
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
@@ -115,6 +112,10 @@ msgid ""
 " %(error_message)s \n"
 "\n"
 msgstr ""
+"Fel vid import av modul '%(module)s'.\n"
+"\n"
+" %(error_message)s\n"
+"\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -155,11 +156,6 @@ msgid "Import Module"
 msgstr "Importera modulen"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "Importera demodata"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
 msgstr "Importera demodata för modulen"
@@ -184,7 +180,7 @@ msgstr "Installera"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Install an Industry"
-msgstr ""
+msgstr "Installera en industri"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -200,6 +196,22 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
 msgstr "Senast uppdaterad den"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Ladda demodata"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
+"Ladda demodata för att testa branschens funktioner med exempelposter. Ladda "
+"dem inte om detta är din produktionsdatabas."
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -250,7 +262,7 @@ msgstr "Officiella appar"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only administrators can install data modules."
-msgstr ""
+msgstr "Endast administratörer kan installera datamoduler."
 
 #. module: base_import_module
 #. odoo-python
@@ -289,17 +301,12 @@ msgstr "Studio-anpassningar kräver Odoo Studio-appen."
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "The following modules will also be installed:\n"
-msgstr ""
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
+"Installationen av datamodulen skulle misslyckas eftersom följande beroenden "
+"inte kan hittas i addons-sökvägen:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -318,6 +325,7 @@ msgid "The module %s cannot be downloaded"
 msgstr "Modulen %s kan inte laddas ner"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Upgrade"
 msgstr "Uppgradera"

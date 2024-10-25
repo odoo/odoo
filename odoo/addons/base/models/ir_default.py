@@ -39,7 +39,9 @@ class IrDefault(models.Model):
     def write(self, vals):
         if self:
             self.env.registry.clear_cache()
-        return super(IrDefault, self).write(vals)
+        new_default = super().write(vals)
+        self.check_access_rule('write')
+        return new_default
 
     def unlink(self):
         if self:

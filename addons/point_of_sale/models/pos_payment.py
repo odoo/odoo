@@ -31,7 +31,7 @@ class PosPayment(models.Model):
     payment_status = fields.Char('Payment Status')
     ticket = fields.Char('Payment Receipt Info')
     is_change = fields.Boolean(string='Is this payment change?', default=False)
-    account_move_id = fields.Many2one('account.move')
+    account_move_id = fields.Many2one('account.move', index='btree_not_null')
 
     @api.depends('amount', 'currency_id')
     def _compute_display_name(self):
@@ -65,7 +65,13 @@ class PosPayment(models.Model):
 
     def _create_payment_moves(self, is_reverse=False):
         result = self.env['account.move']
-        for payment in self:
+        target_payment = self.filtered(lambda p: p.payment_method_id.type == 'cash' and not p.is_change)[:1]
+        if not target_payment:
+            target_payment = self.filtered(lambda p: not p.is_change)[:1]
+        change_payment = self.filtered(lambda p: p.is_change and p.payment_method_id.type == 'cash')
+        if target_payment and change_payment:
+            target_payment.amount += change_payment.amount
+        for payment in self.filtered(lambda p: not p.is_change):
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
             if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):

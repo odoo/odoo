@@ -523,6 +523,11 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         self.assertFalse(self.recurrence.tue)
         self.assertTrue(self.recurrence.wed)
 
+    def test_rrule_x_params(self):
+        self.recurrence.rrule = 'RRULE;X-EVOLUTION-ENDDATE=20191112;X-OTHER-PARAM=0:X-AMAZING=1;FREQ=WEEKLY;COUNT=3;X-MAIL-special=1;BYDAY=WE;X-RELATIVE=True'
+        self.assertFalse(self.recurrence.tue)
+        self.assertTrue(self.recurrence.wed)
+
     def test_shift_all_base_inactive(self):
         self.recurrence.base_event_id.active = False
         event = self.events[1]

@@ -717,6 +717,11 @@
         }
     }
 
+    // Prevent table overflow when having long chars in x2many list and the o_field_{one,many}2many class is not applied
+    .o_field_widget:has(.o_field_x2many.o_field_x2many_list) {
+        width: 100%;
+    }
+
     // Specific style classes
     .o_inner_group.oe_subtotal_footer {
         grid-template-columns: 1fr auto;
@@ -1098,9 +1103,6 @@
 }
 
 .o_form_view.o_xxs_form_view {
-    .oe_title {
-        word-break: break-all;
-    }
     .o_group {
         .o_inner_group {
             margin-bottom: $o-form-spacing-unit * 4;

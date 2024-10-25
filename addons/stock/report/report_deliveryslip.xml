@@ -47,14 +47,14 @@
                     </h2>
                     <div class="oe_structure"></div>
                     <div class="row mt32 mb32">
-                        <div t-if="o.origin" class="col-auto" name="div_origin">
+                        <div t-if="o.origin" class="col-auto col-3 mw-100 mb-2" name="div_origin">
                             <strong>Order:</strong>
-                            <p t-field="o.origin">S0001</p>
+                            <p t-field="o.origin" class="m-0">S0001</p>
                         </div>
-                        <div t-if="o.state" class="col-auto" name="div_sched_date">
+                        <div t-if="o.state" class="col-auto col-3 mw-100 mb-2"  name="div_sched_date">
                             <strong>Shipping Date:</strong>
-                                <p t-if="o.state == 'done'" t-field="o.date_done"/>
-                                <p t-else="" t-field="o.scheduled_date"/>
+                                <p t-if="o.state == 'done'" t-field="o.date_done" class="m-0"/>
+                                <p t-else="" t-field="o.scheduled_date" class="m-0"/>
                         </div>
                     </div>
                     <div class="oe_structure"></div>
@@ -202,7 +202,7 @@
                         <div class="offset-8">
                             <img t-att-src="image_data_uri(o.signature)" style="max-height: 4cm; max-width: 8cm;"/>
                         </div>
-                        <div t-if="o.partner_id" class="offset-8 text-center">
+                        <div t-if="o.partner_id.name" class="offset-8 text-center">
                             <p t-field="o.partner_id.name">John Doe</p>
                         </div>
                     </div>
@@ -242,7 +242,7 @@
             <td>
                 <span t-esc="aggregated_lines[line]['name']"/>
                 <p t-if="aggregated_lines[line]['description']">
-                    <span t-esc="aggregated_lines[line]['description']"/>
+                    <span t-esc="aggregated_lines[line]['description']"  t-options="{'widget': 'text'}"/>
                 </p>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_ordered">

@@ -51,10 +51,18 @@ class User(models.Model):
             status = "sync_stopped"
         return status
 
+    def _check_pending_odoo_records(self):
+        """ Returns True if sync is active and there are records to be synchronized to Google. """
+        if self._get_google_sync_status() != "sync_active":
+            return False
+        pending_events = self.env['calendar.event']._check_any_records_to_sync()
+        pending_recurrences = self.env['calendar.recurrence']._check_any_records_to_sync()
+        return pending_events or pending_recurrences
+
     def _sync_google_calendar(self, calendar_service: GoogleCalendarService):
         self.ensure_one()
         results = self._sync_request(calendar_service)
-        if not results or not results.get('events'):
+        if not results or (not results.get('events') and not self._check_pending_odoo_records()):
             return False
         events, default_reminders, full_sync = results.values()
         # Google -> Odoo
@@ -82,7 +90,7 @@ class User(models.Model):
         events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
         (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
 
-        return bool(events | synced_events) or bool(recurrences | synced_recurrences)
+        return bool(results) and (bool(events | synced_events) or bool(recurrences | synced_recurrences))
 
     def _sync_single_event(self, calendar_service: GoogleCalendarService, odoo_event, event_id):
         self.ensure_one()

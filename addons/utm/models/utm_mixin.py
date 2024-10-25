@@ -3,6 +3,7 @@
 
 import re
 from collections import defaultdict
+import itertools
 
 from odoo import api, fields, models
 from odoo.http import request
@@ -14,11 +15,11 @@ class UtmMixin(models.AbstractModel):
     _name = 'utm.mixin'
     _description = 'UTM Mixin'
 
-    campaign_id = fields.Many2one('utm.campaign', 'Campaign',
+    campaign_id = fields.Many2one('utm.campaign', 'Campaign', index='btree_not_null',
                                   help="This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
-    source_id = fields.Many2one('utm.source', 'Source',
+    source_id = fields.Many2one('utm.source', 'Source', index='btree_not_null',
                                 help="This is the source of the link, e.g. Search Engine, another domain, or name of email list")
-    medium_id = fields.Many2one('utm.medium', 'Medium',
+    medium_id = fields.Many2one('utm.medium', 'Medium', index='btree_not_null',
                                 help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad")
 
     @api.model
@@ -89,39 +90,33 @@ class UtmMixin(models.AbstractModel):
         :param names: list of names, we will ensure that each name will be unique
         :return: a list of new values for each name, in the same order
         """
-        def _split_name_and_count(name):
-            """
-            Return the name part and the counter based on the given name.
-
-            e.g.
-                "Medium" -> "Medium", 1
-                "Medium [1234]" -> "Medium", 1234
-            """
-            name = name or ''
-            name_counter_re = r'(.*)\s+\[([0-9]+)\]'
-            match = re.match(name_counter_re, name)
-            if match:
-                return match.group(1), int(match.group(2) or '1')
-            return name, 1
-
+        # Avoid conflicting with itself, otherwise each check at update automatically
+        # increments counters
+        skip_record_ids = self.env.context.get("utm_check_skip_record_ids") or []
         # Remove potential counter part in each names
-        names_without_counter = {_split_name_and_count(name)[0] for name in names}
+        names_without_counter = {self._split_name_and_count(name)[0] for name in names}
 
         # Retrieve existing similar names
-        seach_domain = expression.OR([[('name', 'ilike', name)] for name in names_without_counter])
-        existing_names = {vals['name'] for vals in self.env[model_name].search_read(seach_domain, ['name'])}
+        search_domain = expression.OR([[('name', 'ilike', name)] for name in names_without_counter])
+        if skip_record_ids:
+            search_domain = expression.AND([
+                [('id', 'not in', skip_record_ids)],
+                search_domain
+            ])
+        existing_names = {vals['name'] for vals in self.env[model_name].search_read(search_domain, ['name'])}
 
-        # Count for each names, based on the names list given in argument
+        # Counter for each names, based on the names list given in argument
         # and the record names in database
-        count_per_names = defaultdict(lambda: 0)
-        count_per_names.update({
-            name: max((
-                _split_name_and_count(existing_name)[1] + 1
+        used_counters_per_name = {
+            name: {
+                self._split_name_and_count(existing_name)[1]
                 for existing_name in existing_names
                 if existing_name == name or existing_name.startswith(f'{name} [')
-            ), default=1)
-            for name in names_without_counter
-        })
+            } for name in names_without_counter
+        }
+        # Automatically incrementing counters for each name, will be used
+        # to fill holes in used_counters_per_name
+        current_counter_per_name = defaultdict(lambda: itertools.count(1))
 
         result = []
         for name in names:
@@ -129,9 +124,32 @@ class UtmMixin(models.AbstractModel):
                 result.append(False)
                 continue
 
-            name_without_counter = _split_name_and_count(name)[0]
-            counter = count_per_names[name_without_counter]
-            result.append(f'{name_without_counter} [{counter}]' if counter > 1 else name)
-            count_per_names[name_without_counter] += 1
+            name_without_counter, asked_counter = self._split_name_and_count(name)
+            existing = used_counters_per_name.get(name_without_counter, set())
+            if asked_counter and asked_counter not in existing:
+                count = asked_counter
+            else:
+                # keep going until the count is not already used
+                for count in current_counter_per_name[name_without_counter]:
+                    if count not in existing:
+                        break
+            existing.add(count)
+            result.append(f'{name_without_counter} [{count}]' if count > 1 else name_without_counter)
 
         return result
+
+    @staticmethod
+    def _split_name_and_count(name):
+        """
+        Return the name part and the counter based on the given name.
+
+        e.g.
+            "Medium" -> "Medium", 1
+            "Medium [1234]" -> "Medium", 1234
+        """
+        name = name or ''
+        name_counter_re = r'(.*)\s+\[([0-9]+)\]'
+        match = re.match(name_counter_re, name)
+        if match:
+            return match.group(1), int(match.group(2) or '1')
+        return name, 1

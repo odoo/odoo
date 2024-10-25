@@ -28,7 +28,7 @@ async function applyProduct(record, product) {
     }
 
     const noVariantPTAVIds = product.attribute_lines.filter(
-        ptal => ptal.create_variant === "no_variant" && ptal.attribute_values.length > 1
+        ptal => ptal.create_variant === "no_variant"
     ).flatMap(ptal => ptal.selected_attribute_value_ids);
 
     await record.update({

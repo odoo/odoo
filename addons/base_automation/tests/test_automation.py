@@ -47,6 +47,32 @@ class TestAutomation(TransactionCaseWithUserDemo):
         bilbo.name = "Bilbo"
         self.assertFalse(bilbo.active)
 
+        # verify the "Base Action Rule: check and execute" frequency is updated correctly when a new action is created.
+        self.env["base.automation"].create([
+            {
+                "name": "Bilbo time senstive reminder in a hurry",
+                "trigger": "on_time",
+                "model_id": self.env.ref("base.model_res_partner").id,
+                "trigger_field_ids": [],
+                "trg_date_range": -60,
+                "trg_date_range_type": "minutes",
+                "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
+            },
+            {
+                "name": "Bilbo time senstive reminder late",
+                "trigger": "on_time",
+                "model_id": self.env.ref("base.model_res_partner").id,
+                "trigger_field_ids": [],
+                "trg_date_range": 60,
+                "trg_date_range_type": "minutes",
+                "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
+            }
+            ])
+
+        cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
+        self.assertEqual(cron.interval_number, 6)
+        self.assertEqual(cron.interval_type, "minutes")
+
     def test_02_on_create_or_write_restricted(self):
         """ on_create action with low portal user """
         model = self.env.ref("base.model_ir_filters")
@@ -155,3 +181,21 @@ class TestAutomation(TransactionCaseWithUserDemo):
         }
         server_action.with_context(context).run()
         self.assertEqual(partner.name, 'Reset Name', 'The automatic action must not be performed')
+
+    def test_create_automation_rule_for_valid_model(self):
+        """
+        Automation rules cannot be created for models that have no fields.
+        """
+        model_field = self.env['base.automation']._fields['model_id']
+        base_model = self.env['base']
+
+        # Verify that the base model is abstract and has _auto set to False
+        self.assertTrue(base_model._abstract, "The base model should be abstract")
+        self.assertFalse(base_model._auto, "The base model should have _auto set to False")
+
+        # check whether the field hase domain attribute
+        self.assertTrue(model_field.domain)
+        domain = model_field.domain
+
+        allowed_models = self.env['ir.model'].search(domain)
+        self.assertTrue(base_model._name not in allowed_models.mapped('model'), "The base model should not be in the allowed models")

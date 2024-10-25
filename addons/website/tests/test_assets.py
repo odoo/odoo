@@ -4,7 +4,7 @@ import re
 
 import odoo.tests
 
-from odoo.tools import config
+from odoo.tools import config, mute_logger
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -263,3 +263,13 @@ class TestWebAssets(odoo.tests.HttpCase):
             [base_url_versioned, website_url_versioned],
             'base asset is expected to be present',
         )
+
+    def test_assets_bundle_css_error_frontend(self):
+        self.env['ir.qweb']._get_asset_bundle('web.assets_frontend', assets_params={'website_id': self.env['website'].search([], limit=1).id}).css()  # force pregeneration so that we have the base style
+        self.env['ir.asset'].create({
+            'name': 'Css error',
+            'bundle': 'web.assets_frontend',
+            'path': 'website/static/src/css/test_error.scss',
+        })
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.start_tour('/', 'css_error_tour_frontend', login='admin')

@@ -1,22 +1,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Turkey - Accounting',
-    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
+    'name': 'Türkiye - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['tr'],
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
-Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.
-==========================================================
+This is the base module to manage the accounting chart for Türkiye in Odoo
+==========================================================================
 
-Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
-    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap
-      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.
+Türkiye accounting basic charts and localizations
+-------------------------------------------------
+Activates:
+
+- Chart of Accounts
+- Taxes
+- Tax Report
     """,
-    'author': 'Odoo',
+    'author': 'Odoo S.A., Drysharks Consulting and Trading Ltd.',
     'depends': [
         'account',
+    ],
+    'data': [
+        'data/account_tax_report_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

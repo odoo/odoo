@@ -258,7 +258,7 @@ class Module(models.Model):
                 path = modules.module.get_module_icon_path(module)
             if path:
                 try:
-                    with tools.file_open(path, 'rb') as image_file:
+                    with tools.file_open(path, 'rb', filter_ext=('.png', '.svg', '.gif', '.jpeg', '.jpg')) as image_file:
                         module.icon_image = base64.b64encode(image_file.read())
                 except FileNotFoundError:
                     module.icon_image = ''
@@ -928,11 +928,12 @@ class Module(models.Model):
             if not modpath:
                 continue
             for lang in langs:
-                po_paths = get_po_paths(module_name, lang)
-                for po_path in po_paths:
+                is_lang_imported = False
+                for po_path in get_po_paths(module_name, lang):
                     _logger.info('module %s: loading translation file %s for language %s', module_name, po_path, lang)
                     translation_importer.load_file(po_path, lang)
-                if lang != 'en_US' and not po_paths:
+                    is_lang_imported = True
+                if lang != 'en_US' and not is_lang_imported:
                     _logger.info('module %s: no translation for language %s', module_name, lang)
 
         translation_importer.save(overwrite=overwrite)

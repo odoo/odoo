@@ -317,6 +317,7 @@
                                     <field name="product_uom" groups="!uom.group_uom" column_invisible="True"/>
                                     <field name="picked" optional="hide" column_invisible="parent.state=='draft'"/>
                                     <field name="lot_ids" widget="many2many_tags"
+                                        column_invisible="parent.state == 'draft'"
                                         groups="stock.group_production_lot"
                                         invisible="not show_details_visible or has_tracking != 'serial'"
                                         optional="hide"
@@ -513,6 +514,7 @@
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
             <field name="binding_view_types">form</field>
             <field name="state">code</field>
+            <field name="groups_id" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
             <field name="code">
             if records:
                 records.action_toggle_is_locked()</field>

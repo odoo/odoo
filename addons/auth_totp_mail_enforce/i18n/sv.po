@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Robin Calvin, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Simon S, 2023
 # Martin Trigaux, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,8 @@ msgid ""
 ".\n"
 "                <br/>"
 msgstr ""
+".\n"
+"                <br /> <br />"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,body_html:auth_totp_mail_enforce.mail_template_totp_mail_code
@@ -70,6 +72,41 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Kära <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"    <p>Någon försöker logga in på ditt konto med en ny enhet.</p>\n"
+"    <ul>\n"
+"        <t t-set=\"inte_tillgänglig\">N/A</t>\n"
+"        <li>Lokalisering: <t t-out=\"ctx.get('location') or not_available\"></t></li>\n"
+"        <li>Enhet: <t t-out=\"ctx.get('device') or not_available\"></t></li>\n"
+"        <li>Webbläsare: <t t-out=\"ctx.get('browser') or not_available\"></t></li>\n"
+"        <li>IP-adress: <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
+"    </ul>\n"
+"    <p>Om detta är du, ange följande kod för att slutföra inloggningen:</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"></t>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"></t> <t-set=\"code\" t-value=\"code_expiration[0]\"></t>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"></t>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"></span>\n"
+"    </div> </div>.\n"
+"    <small>Observera att denna kod upphör att gälla om <t t-out=\"expiration\"></t>.</small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Om du INTE initierade den här inloggningen,\n"
+"        bör du omedelbart ändra ditt lösenord för att säkerställa kontosäkerhet.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Vi rekommenderar också starkt att du aktiverar tvåfaktorsautentisering med hjälp av en autentiseringsapp för att hjälpa till att säkra ditt konto.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            Aktivera min tvåfaktorsautentisering\n"
+"        </a>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -77,6 +114,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
+"<i class=\"fa fa-kuvert-o\"/>\n"
+"                För att logga in, ange nedan den sexsiffriga autentiseringskoden som just skickats via e-post till"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
@@ -93,7 +132,7 @@ msgstr "Kan inte skicka e-post: användaren %s har ingen e-postadress."
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__code_check
 msgid "Code Checking"
-msgstr ""
+msgstr "Kontroll av kod"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_config_settings
@@ -118,7 +157,7 @@ msgstr "Visningsnamn"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__employee_required
 msgid "Employees only"
-msgstr ""
+msgstr "Endast anställda"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.res_config_settings_view_form
@@ -127,11 +166,14 @@ msgid ""
 "users (including portal users) if they didn't enable any other two-factor "
 "authentication method."
 msgstr ""
+"Tillämpa tvåfaktorsautentisering via e-post för anställda eller för alla "
+"användare (inklusive portalanvändare) om de inte har aktiverat någon annan "
+"metod för tvåfaktorsautentisering."
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr ""
+msgstr "Tillämpa tvåfaktorsautentisering"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__id
@@ -141,7 +183,7 @@ msgstr "ID"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__ip
 msgid "Ip"
-msgstr ""
+msgstr "Ip"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__write_uid
@@ -161,12 +203,12 @@ msgstr "Läs mer"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__limit_type
 msgid "Limit Type"
-msgstr ""
+msgstr "Typ av gräns"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
 msgid "Re-send email"
-msgstr ""
+msgstr "Skicka e-post på nytt"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__scope
@@ -181,17 +223,17 @@ msgstr "Skicka e-post"
 #. module: auth_totp_mail_enforce
 #: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr ""
+msgstr "Inställningar: 2Fa Ny inloggning"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
 msgid "TOTP rate limit logs"
-msgstr ""
+msgstr "Loggar för TOTP-gränsvärden"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr ""
+msgstr "Tvåfaktorsautentisering för att genomdriva policy"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_users
@@ -213,6 +255,8 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
+"Vi rekommenderar starkt att du aktiverar tvåfaktorsautentisering med hjälp av en autentiseringsapp för att säkra ditt konto.\n"
+"                <br/>"
 
 #. module: auth_totp_mail_enforce
 #. odoo-python
@@ -220,15 +264,17 @@ msgstr ""
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
 msgstr ""
+"Du har nått gränsen för antalet autentiseringsmeddelanden som skickats för "
+"ditt konto"
 
 #. module: auth_totp_mail_enforce
 #. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr ""
+msgstr "Du har nått gränsen för kodverifieringar för ditt konto"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr ""
+msgstr "Din kod för tvåfaktorsautentisering"

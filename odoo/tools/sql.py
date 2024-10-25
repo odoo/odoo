@@ -147,10 +147,10 @@ class SQL:
     @classmethod
     def identifier(cls, name: str, subname: (str | None) = None) -> SQL:
         """ Return an SQL object that represents an identifier. """
-        assert IDENT_RE.match(name), f"{name!r} invalid for SQL.identifier()"
+        assert name.isidentifier() or IDENT_RE.match(name), f"{name!r} invalid for SQL.identifier()"
         if subname is None:
             return cls(f'"{name}"')
-        assert IDENT_RE.match(subname), f"{subname!r} invalid for SQL.identifier()"
+        assert subname.isidentifier() or IDENT_RE.match(subname), f"{subname!r} invalid for SQL.identifier()"
         return cls(f'"{name}"."{subname}"')
 
 

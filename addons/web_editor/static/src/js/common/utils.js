@@ -163,7 +163,7 @@ function _convertNumericToUnit(value, unitFrom, unitTo, cssProp, $target) {
  * @returns {Array|null}
  */
 function _getNumericAndUnit(value) {
-    const m = value.trim().match(/^(-?[0-9.]+(?:e[+|-]?[0-9]+)?)\s*([A-Za-z%-]*)$/);
+    const m = value.trim().match(/^(-?[0-9.]+(?:e[+|-]?[0-9]+)?)\s*([^\s]*)$/);
     if (!m) {
         return null;
     }
@@ -486,6 +486,24 @@ function _isMobileView(targetEl) {
 function _getLinkLabel(linkEl) {
     return linkEl.textContent.replaceAll("\u200B", "").replaceAll("\uFEFF", "");
 }
+/**
+ * Forwards an image source to its carousel thumbnail.
+ * @param {HTMLElement} imgEl
+ */
+function _forwardToThumbnail(imgEl) {
+    const carouselEl = imgEl.closest(".carousel");
+    if (carouselEl) {
+        const carouselInnerEl = imgEl.closest(".carousel-inner");
+        const carouselItemEl = imgEl.closest(".carousel-item");
+        if (carouselInnerEl && carouselItemEl) {
+            const imageIndex = [...carouselInnerEl.children].indexOf(carouselItemEl);
+            const miniatureEl = carouselEl.querySelector(`.carousel-indicators [data-bs-slide-to="${imageIndex}"]`);
+            if (miniatureEl && miniatureEl.style.backgroundImage) {
+                miniatureEl.style.backgroundImage = `url(${imgEl.getAttribute("src")})`;
+            }
+        }
+    }
+}
 
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
@@ -515,4 +533,5 @@ export default {
     shouldEditableMediaBeEditable: _shouldEditableMediaBeEditable,
     isMobileView: _isMobileView,
     getLinkLabel: _getLinkLabel,
+    forwardToThumbnail: _forwardToThumbnail,
 };

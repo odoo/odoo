@@ -2,10 +2,10 @@
 
 from unittest.mock import patch
 
-from odoo.exceptions import UserError
-from odoo.tests import tagged
-
+from odoo import Command
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
+from odoo.tests import tagged
 
 
 @tagged('-at_install', 'post_install')
@@ -185,3 +185,45 @@ class TestAccountPayment(AccountPaymentCommon):
         self.assertEqual(self.dummy_provider.state, 'test')
         with self.assertRaises(UserError):
             self.dummy_provider.journal_id.inbound_payment_method_line_ids.unlink()
+
+    def test_provider_journal_assignation(self):
+        """ Test the computation of the 'journal_id' field and so, the link with the accounting side. """
+        def get_payment_method_line(provider):
+            return self.env['account.payment.method.line'].search([('payment_provider_id', '=', provider.id)])
+
+        with self.mocked_get_payment_method_information():
+            journal = self.company_data['default_journal_bank']
+            provider = self.provider
+            self.assertRecordValues(provider, [{'journal_id': journal.id}])
+
+            # Test changing the journal.
+            copy_journal = journal.copy()
+            payment_method_line = get_payment_method_line(provider)
+            provider.journal_id = copy_journal
+            self.assertRecordValues(provider, [{'journal_id': copy_journal.id}])
+            self.assertRecordValues(payment_method_line, [{'journal_id': copy_journal.id}])
+
+            # Test duplication of the provider.
+            payment_method_line.payment_account_id = self.env.company.account_journal_payment_debit_account_id
+            copy_provider = self.provider.copy()
+            self.assertRecordValues(copy_provider, [{'journal_id': False}])
+            copy_provider.state = 'test'
+            self.assertRecordValues(copy_provider, [{'journal_id': journal.id}])
+            self.assertRecordValues(get_payment_method_line(copy_provider), [{
+                'journal_id': journal.id,
+                'payment_account_id': payment_method_line.payment_account_id.id,
+            }])
+
+            # We are able to have both on the same journal...
+            with self.assertRaises(ValidationError):
+                # ...but not having both with the same name.
+                provider.journal_id = journal
+
+            method_line = get_payment_method_line(copy_provider)
+            method_line.name = "dummy (copy)"
+            provider.journal_id = journal
+
+            # You can't have twice the same acquirer on the same journal.
+            copy_provider_pml = get_payment_method_line(copy_provider)
+            with self.assertRaises(ValidationError):
+                journal.inbound_payment_method_line_ids = [Command.update(copy_provider_pml.id, {'payment_provider_id': provider.id})]

@@ -534,3 +534,40 @@ class TestKitPicking(common.TestMrpCommon):
         aggregate_kit_values = delivery.move_line_ids._get_aggregated_product_quantities(kit_name=bom_kit.product_id.name)
         self.assertEqual(len(aggregate_kit_values.keys()), 2)
         self.assertTrue(all('Component' in val for val in aggregate_kit_values), 'Only kit products should be included')
+
+    def test_scrap_consu_kit_not_available(self):
+        """
+        Scrap a consumable kit with one product not available in stock
+        """
+        self._test_scrap_kit_not_available('consu')
+
+    def test_scrap_storable_kit_not_available(self):
+        """
+        Scrap a storable kit with one product not available in stock
+        """
+        self._test_scrap_kit_not_available('product')
+
+    def _test_scrap_kit_not_available(self, kit_type):
+        bom = self.bom_4
+        bom.type = 'phantom'
+
+        kit = bom.product_id
+        component = bom.bom_line_ids.product_id
+        kit.type = kit_type
+        component.type = 'product'
+
+        scrap = self.env['stock.scrap'].create({
+            'product_id': kit.id,
+            'product_uom_id': kit.uom_id.id,
+            'scrap_qty': 1,
+            'bom_id': bom.id,
+        })
+
+        res = scrap.action_validate()
+        wizard = Form(self.env[res['res_model']].with_context(**res['context'])).save()
+        wizard.action_done()
+
+        self.assertEqual(scrap.state, 'done')
+        self.assertRecordValues(scrap.move_ids, [
+            {'product_id': component.id, 'quantity': 1, 'state': 'done'}
+        ])

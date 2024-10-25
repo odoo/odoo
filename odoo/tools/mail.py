@@ -9,7 +9,8 @@ import re
 import socket
 import threading
 import time
-from email.utils import getaddresses
+import email.utils
+from email.utils import getaddresses as orig_getaddresses
 from urllib.parse import urlparse
 import html as htmllib
 
@@ -24,6 +25,17 @@ from odoo.loglevels import ustr
 from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
+
+
+# disable strict mode when present: we rely on original non-strict
+# parsing, and we know that it isn't reliable, that ok.
+# cfr python/cpython@4a153a1d3b18803a684cd1bcc2cdf3ede3dbae19
+if hasattr(email.utils, 'supports_strict_parsing'):
+    def getaddresses(fieldvalues):
+        return orig_getaddresses(fieldvalues, strict=False)
+else:
+    getaddresses = orig_getaddresses
+
 
 #----------------------------------------------------------
 # HTML Sanitizer
@@ -379,6 +391,15 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             link.tag = 'span'
             link.text = '%s [%s]' % (link.text, i)
             url_index.append(url)
+
+    for img in tree.findall('.//img'):
+        src = img.get('src')
+        if src:
+            i += 1
+            img.tag = 'span'
+            img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
+            img.text = '%s [%s]' % (img_name.group(0) if img_name else 'Image', i)
+            url_index.append(src)
 
     html = ustr(etree.tostring(tree, encoding=encoding))
     # \r char is converted into &#13;, must remove it

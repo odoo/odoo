@@ -34,3 +34,21 @@ class Partner(models.Model):
             'res_id': self.employee_ids.id,
             'view_mode': 'form',
         }
+
+    def _get_all_addr(self):
+        self.ensure_one()
+        employee_id = self.env['hr.employee'].search(
+            [('id', 'in', self.employee_ids.ids)],
+            limit=1,
+        )
+        if not employee_id:
+            return super()._get_all_addr()
+
+        pstl_addr = {
+            'contact_type': 'employee',
+            'street': employee_id.private_street,
+            'zip': employee_id.private_zip,
+            'city': employee_id.private_city,
+            'country': employee_id.private_country_id.code,
+        }
+        return [pstl_addr] + super()._get_all_addr()

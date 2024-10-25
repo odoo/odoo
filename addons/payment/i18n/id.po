@@ -3,14 +3,15 @@
 # 	* payment
 # 
 # Translators:
-# Wil Odoo, 2023
+# Karya Gemilang, 2024
+# Wil Odoo, 2024
 # Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -147,11 +148,6 @@ msgid ""
 msgstr ""
 "<span><i class=\"oi oi-arrow-right\"/> Bagaimana cara mengonfigurasi akun "
 "PayPal Anda</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>Metode pembayaran Anda</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1580,9 +1576,7 @@ msgstr "Sips"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Skip"
-msgstr ""
-"<p>Jika Anda tidak memberikan kontribusi atau mengembangkan di Odoo, "
-"melewati halaman ini.</p>"
+msgstr "Lewati"
 
 #. module: payment
 #. odoo-python
@@ -1656,6 +1650,17 @@ msgstr "Didukung oleh"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
 msgstr "Mode Testing"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr ""
+"<p>Dear ${object.partner_name atau 'pelamar'},</p>\n"
+"        <p>Kami terima kasih atas minat Anda pada perusahaan kami dan untuk aplikasi Anda.\n"
+"        Sayangnya, profil Anda tidak cocok dengan kebutuhan kita atau kampanye rekrutmen kami telah mencapai istilah.</p>\n"
+"        <p>Jika Anda ingin informasi lebih lanjut, jangan ragu untuk menghubungi kami melalui telepon.</p>\n"
+"        <p>Salam</p>\n"
+"        <br>${object.user_id dan object.user_id.signature | aman atau ''}"
 
 #. module: payment
 #. odoo-python
@@ -2222,7 +2227,7 @@ msgstr "Anda tidak dapat mengakses token pembayaran ini."
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
-"Anda harusnya menerima email yang mengonfirmasi pembayaran Anda dalam "
+"Anda seharusnya menerima email yang mengonfirmasi pembayaran Anda dalam "
 "beberapa menit."
 
 #. module: payment
@@ -2324,6 +2329,11 @@ msgid "Your payment has not been processed yet."
 msgstr "Pembayaran Anda belum diproses."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr "Metode pembayaran Anda"
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr "Kode Pos"
@@ -2332,16 +2342,6 @@ msgstr "Kode Pos"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "Kode Pos"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "bahaya"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "info"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2360,11 +2360,6 @@ msgid "provider"
 msgstr "penyedia"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "sukses"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2372,8 +2367,3 @@ msgid ""
 msgstr ""
 "untuk membuat pembayaran\n"
 "                    ini."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "peringatan"

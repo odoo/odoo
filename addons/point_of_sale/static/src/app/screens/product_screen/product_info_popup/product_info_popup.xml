@@ -104,7 +104,7 @@
                                         </div>
                                         <div class="d-flex flex-wrap gap-1">
                                             <t t-foreach="variant.values" t-as="attribute_value" t-key="attribute_value.name">
-                                                <span class="searchable btn btn-secondary" t-on-click="() => this.searchProduct(attribute_value.search)">
+                                                <span class="searchable btn btn-secondary" t-on-click="() => this.searchProduct(attribute_value.search + ';product_tmpl_id:' + props.product.product_tmpl_id)">
                                                     <t t-esc="attribute_value.name"/>
                                                 </span>
                                                 <t t-if="attribute_value_index lt variant.values.length - 1"> </t>

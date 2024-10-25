@@ -99,6 +99,7 @@ class TestCreatePicking(common.TestProductCommon):
         stock_location = self.env.ref('stock.stock_location_stock')
         customer_location = self.env.ref('stock.stock_location_customers')
         picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_out.reservation_method = 'at_confirm'
         # route buy should be there by default
         partner = self.env['res.partner'].create({
             'name': 'Jhon'

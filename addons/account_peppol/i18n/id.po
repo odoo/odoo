@@ -3,16 +3,16 @@
 # 	* account_peppol
 # 
 # Translators:
-# Wil Odoo, 2023
 # Abe Manyo, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Abe Manyo, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +74,7 @@ msgid ""
 "A participant with these details has already been registered on the network."
 " If you have previously registered to an alternative Peppol service, please "
 "deregister from that service, or request a migration key before trying "
-"again."
+"again. "
 msgstr ""
 "Partisipan dengan detail ini sudah terdaftar di jaringan kami. Jika Anda "
 "sebelumnya mendaftar ke layanan Peppol alternatif, mohon hapus pendaftaran "
@@ -191,6 +191,11 @@ msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "Tidak dapat membatalkan entri yang sudah dikirim ke PEPPOL"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Cannot receive this format"
+msgstr "Tidak dapat menerima format ini"
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
@@ -253,8 +258,8 @@ msgstr "Detail kontak telah diupdate."
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
-msgid "Contact email and phone number are required."
-msgstr "Email kontak dan nomor telepon dibutuhkan."
+msgid "Contact email and mobile number are required."
+msgstr " Email dan nomor telepon kontak dibutuhkan."
 
 #. module: account_peppol
 #. odoo-python
@@ -322,6 +327,12 @@ msgid "Incoming Invoices Journal"
 msgstr "Jurnal Faktur yang Akan Masuk"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__is_peppol_edi_format
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__is_peppol_edi_format
+msgid "Is Peppol Edi Format"
+msgstr "Apakah Format Peppol Edi"
+
+#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_journal
 msgid "Journal"
 msgstr "Jurnal"
@@ -360,6 +371,17 @@ msgstr "Kunci Migrasi"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Migration key"
 msgstr "Kunci migrasi"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Mobile Number"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "Mobile number (for validation)"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
@@ -536,17 +558,6 @@ msgstr "Update status Peppol: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Phone Number"
-msgstr "Nomor Telepon"
-
-#. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
-#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "Phone number (for validation)"
-msgstr "Nomor telepon (untuk validasi)"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "Please do not hesitate to contact our support if you need further "
 "assistance."
@@ -558,8 +569,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
-msgid "Please enter a phone number to verify your application."
-msgstr "Mohon masukkan nomor telepon untuk memverifikasi aplikasi Anda."
+msgid "Please enter a mobile number to verify your application."
+msgstr "Silakan masukkan nomor telepon untuk memverifikasi pendaftaran Anda."
 
 #. module: account_peppol
 #. odoo-python
@@ -573,12 +584,12 @@ msgstr "Mohon masukkan nomor telepon utama untuk memverifikasi aplikasi Anda."
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid ""
-"Please enter the phone number in the correct international format.\n"
+"Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
-"Mohon masukkan nomor telepon dengan format internasional yang tepat.\n"
-"Contoh: +32123456789, di mana +32 adalah kode negara.\n"
+"Silakan masukkan nomor telepon dengan format internasional yang tepat.\n"
+"Contoh: +3213456789, di mana +32 adalah kode negara.\n"
 "Saat ini, hanya negara-negara Eropa yang didukung."
 
 #. module: account_peppol
@@ -711,6 +722,13 @@ msgstr "Nomor identifikasi endpoint Peppol tidak benar."
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "The Peppol service that is used is likely to be %s."
+msgstr "Layanan Peppol yang digunakan mungkin adalah %s."
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
@@ -805,6 +823,14 @@ msgid "This verification code has expired. Please request a new one."
 msgstr "Kode verifikasi sudah kadaluwarsa. Silakan minta kode baru."
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate complete electronic invoices, also set a country for this "
+"partner."
+msgstr ""
+"Untuk membuat faktur elektronik, tetapkan juga negara untuk partner ini."
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
@@ -885,16 +911,16 @@ msgid "Verify Peppol"
 msgstr "Verifikasi PEPPOL"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid "Verify partner's PEPPOL endpoint"
-msgstr "Verifikasi endpoint PEPPOL mitra"
-
-#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
-msgid "Verify phone number"
-msgstr "Verifikasi nomor telepon"
+msgid "Verify mobile number"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid "Verify partner's PEPPOL endpoint"
+msgstr "Verifikasi endpoint PEPPOL mitra"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -921,8 +947,8 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this phone number"
-msgstr "Anda akan menerima kode verifikasi di nomor telepon ini"
+msgid "You will receive a verification code to this mobile number"
+msgstr "Anda akan menerima kode verifikasi ke nomor telepon ini"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

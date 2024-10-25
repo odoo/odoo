@@ -104,6 +104,7 @@
         <!-- Sub-template used for every instance of InvoiceLineType -->
         <template id="invoice_line_type">
             <InvoiceLine>
+                <ReceiverTransactionReference t-out="line.get('ReceiverTransactionReference')"/>
                 <FileReference t-out="line.get('FileReference')"/>
                 <FileDate t-out="line.get('FileDate')"/>
                 <SequenceNumber t-out="line.get('SequenceNumber')"/>
@@ -131,12 +132,12 @@
                     </t>
                 </Charges>
                 <GrossAmount t-out="float_repr(refund_multiplier*line['GrossAmount'], file_currency.decimal_places)"/>
-                <TaxesOutputs>
-                    <t t-foreach="line['TaxesOutputs']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
-                </TaxesOutputs>
                 <TaxesWithheld t-if="line.get('TaxesWithheld')">
                     <t t-foreach="line['TaxesWithheld']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
                 </TaxesWithheld>
+                <TaxesOutputs>
+                    <t t-foreach="line['TaxesOutputs']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
+                </TaxesOutputs>
                 <LineItemPeriod t-if="line.get('LineItemPeriod')">
                     <StartDate t-out="line['LineItemPeriod']['StartDate']"/>
                     <EndDate t-out="line['LineItemPeriod']['EndDate']"/>
@@ -182,6 +183,9 @@
                     </ExchangeRateDetails>
                     <TaxCurrencyCode t-out="invoice['invoice_currency'].name"/>
                     <LanguageName t-out="invoice['InvoiceIssueData']['LanguageName']"/>
+                    <ReceiverTransactionReference t-out="invoice['InvoiceIssueData']['ReceiverTransactionReference']"/>
+                    <FileReference t-out="invoice['InvoiceIssueData']['FileReference']"/>
+                    <ReceiverContractReference t-out="invoice['InvoiceIssueData']['ReceiverContractReference']"/>
                 </InvoiceIssueData>
                 <TaxesOutputs>
                     <t t-foreach="invoice['TaxOutputs']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
@@ -249,7 +253,7 @@
                     </Installment>
                 </PaymentDetails>
                 <LegalLiterals t-if="invoice.get('LegalLiterals')">
-                    <t t-foreach="invoice['LegalLiterals']" t-as="reference"><LegalReference t-out="reference"/></t>
+                    <t t-foreach="invoice['LegalLiterals']" t-as="reference"><LegalReference t-out="reference[:250]"/></t>
                 </LegalLiterals>
             </Invoice>
         </template>
@@ -285,7 +289,7 @@
                             <t t-set="partner" t-value="self_party if is_outstanding else other_party"/>
                             <t t-set="partner_country_code" t-value="self_party_country_code if is_outstanding else other_party_country_code"/>
                             <t t-set="partner_phone" t-value="False if is_outstanding else other_party_phone"/>
-                            <t t-set="partner_name" t-value="{} if is_outstanding else other_party_name"/>
+                            <t t-set="partner_name" t-value="self_party_name if is_outstanding else other_party_name"/>
                         </t>
                     </SellerParty>
                     <BuyerParty>
@@ -293,7 +297,7 @@
                             <t t-set="partner" t-value="other_party if is_outstanding else self_party"/>
                             <t t-set="partner_country_code" t-value="other_party_country_code if is_outstanding else self_party_country_code"/>
                             <t t-set="partner_phone" t-value="other_party_phone if is_outstanding else False"/>
-                            <t t-set="partner_name" t-value="other_party_name if is_outstanding else {}"/>
+                            <t t-set="partner_name" t-value="other_party_name if is_outstanding else self_party_name"/>
                         </t>
                     </BuyerParty>
                 </Parties>

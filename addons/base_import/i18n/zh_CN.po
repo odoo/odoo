@@ -3,18 +3,18 @@
 # 	* base_import
 # 
 # Translators:
-# Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
-# 湘子 南 <1360857908@qq.com>, 2024
 # Chloe Wang, 2024
+# Wil Odoo, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -237,6 +237,8 @@ msgstr "点"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -418,9 +420,18 @@ msgid ""
 "                    simpler especially when the file has many columns."
 msgstr ""
 "如果该文件包含\n"
-"                    列名，ERP 可以尝试自动检测列所对应的\n"
+"                    列名，Odoo可以尝试自动检测列所对应的\n"
 "                    与该列对应的字段。这使得导入\n"
-"                    更加简单，特别是当文件有很多列时."
+"                    更加简单，特别是当文件有很多列时。"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr "如果模型使用openchatter，则历史跟踪将在导入期间设置订阅并发送通知，但会导致导入速度变慢。"
 
 #. module: base_import
 #. odoo-python
@@ -488,6 +499,7 @@ msgstr "导入中"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -849,7 +861,7 @@ msgid ""
 "system. You can use a custom format in addition to the suggestions provided."
 " Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
-"在 24 小时制中使用 HH 表示小时，在 12 小时制中使用 II 和 \"p\"。您还可以使用自定义格式。留空，把格式交给 ERP (推荐使用)"
+"在 24 小时制中使用 HH 表示小时，在 12 小时制中使用 II 和 \"p\"。您还可以使用自定义格式。留空，把格式交给 Odoo  （推荐使用）"
 
 #. module: base_import
 #. odoo-javascript
@@ -861,8 +873,8 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
-"用 YYYY 表示年，MM 表示月，DD 表示日。包括分隔符，如点、正斜线或破折号。除已有建议外，您还可以使用自定义格式。留空，把格式交给 ERP "
-"毫米(推荐使用)"
+"用 YYYY 表示年，MM 表示月，DD 表示日。包括分隔符，如点、正斜线或破折号。除已有建议外，您还可以使用自定义格式。留空，把格式交给 Odoo "
+"（推荐使用）"
 
 #. module: base_import
 #. odoo-javascript
@@ -875,6 +887,15 @@ msgstr "使用第一行作为标题"
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "用户"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr "警告：忽略标签行、空行和仅由空单元格组成的行。"
 
 #. module: base_import
 #. odoo-javascript

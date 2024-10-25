@@ -44,8 +44,7 @@
                 <table name="invoices"
                        t-if="values['display_invoices']"
                        class="table table-sm">
-                    <t t-set="partials" t-value="o.move_id._get_reconciled_invoices_partials()[0]"/>
-                    <t t-set="invoices" t-value="{partial[2].move_id for partial in partials}"/>
+                    <t t-set="invoices" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
                     <!-- Check if invoices include different currencies -->
                     <t t-foreach="invoices" t-as="inv">
                         <t t-if="any(inv.currency_id != par[2].currency_id for par in inv._get_reconciled_invoices_partials()[0])" t-set="otherCurrency" t-value="True"/>
@@ -77,7 +76,7 @@
                                     <td><span t-field="payment.date">2023-01-05</span></td>
                                     <td><span t-field="payment.name">PAY001</span></td>
                                     <td><span t-field="payment.ref">Payment Ref</span></td>
-                                    <t t-set="amountPayment" t-value="-payment.amount_total"/>
+                                    <t t-set="amountPayment" t-value="-par[0].amount"/>
                                     <t t-set="amountInvoice" t-value="-par[1]"/>
                                     <t t-set="currencyPayment" t-value="payment.currency_id"/>
                                     <t t-set="currencyInvoice" t-value="inv.currency_id"/>

@@ -6,7 +6,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields, sql_db, tools, Command
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
@@ -228,3 +228,45 @@ class TestItEdiImport(TestItEdi):
                 }
             ],
         }], applied_xml)
+
+    def test_receive_bill_with_multiple_discounts_in_line(self):
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]" position="inside">
+                <ScontoMaggiorazione>
+                    <Tipo>SC</Tipo>
+                    <Percentuale>50.00</Percentuale>
+                </ScontoMaggiorazione>
+                <ScontoMaggiorazione>
+                    <Tipo>SC</Tipo>
+                    <Percentuale>25.00</Percentuale>
+                </ScontoMaggiorazione>
+                <ScontoMaggiorazione>
+                    <Tipo>SC</Tipo>
+                    <Percentuale>20.00</Percentuale>
+                </ScontoMaggiorazione>
+            </xpath>
+
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoTotale" position="replace">
+                <PrezzoTotale>1.50</PrezzoTotale>
+            </xpath>
+        """
+
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 1.5,
+            'amount_tax': 0.33,
+            'invoice_line_ids': [
+                {
+                    'quantity': 5.0,
+                    'name': 'DESCRIZIONE DELLA FORNITURA',
+                    'price_unit': 1.0,
+                    'discount': 70.0,
+                }
+            ],
+        }], applied_xml)
+
+    def test_invoice_user_can_compute_is_self_invoice(self):
+        """Ensure that a user having only group_account_invoice can compute field l10n_it_edi_is_self_invoice"""
+        user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
+        move = self.env['account.move'].create({'move_type': 'in_invoice'})
+        move.with_user(user).read(['l10n_it_edi_is_self_invoice'])  # should not raise

@@ -55,3 +55,14 @@ export function login(name, pin) {
     }
     return res;
 }
+
+export function refreshPage() {
+    return [
+        {
+            trigger: "body",
+            run: () => {
+                window.location.reload();
+            },
+        },
+    ];
+}

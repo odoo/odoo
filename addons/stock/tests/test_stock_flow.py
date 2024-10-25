@@ -2135,6 +2135,7 @@ class TestStockFlow(TestStockCommon):
             picking.action_confirm()
             return picking
 
+        self.env['stock.picking.type'].browse(self.picking_type_out).reservation_method = 'at_confirm'
         out01 = create_picking(self.picking_type_out, self.stock_location, self.customer_location)
         out02 = create_picking(self.picking_type_out, self.stock_location, self.customer_location, sequence=2, delay=1)
         in01 = create_picking(self.picking_type_in, self.supplier_location, self.stock_location, delay=2)
@@ -2375,8 +2376,8 @@ class TestStockFlow(TestStockCommon):
         steps), the out-move should be automatically assigned.
         """
         self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', False)
-
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.out_type_id.reservation_method = 'by_date'
         warehouse.reception_steps = 'two_steps'
 
         out_move = self.env['stock.move'].create({
@@ -2678,3 +2679,22 @@ class TestStockFlowPostInstall(TestStockCommon):
         self.assertEqual(picking.name, "PT1/00002")
         picking.picking_type_id = picking_type_1
         self.assertEqual(picking.name, "PT1/00002")
+
+    def test_name_create_location(self):
+        """
+        e.g., from .csv/.xlsx import:
+            If name str has a parent location prefix we try to create as child location
+            else ignore prefixes
+        """
+        parent_location = self.env['stock.location'].create({'name': 'ParentLocation'})
+        new_location_id = self.env['stock.location'].name_create('ParentLocation/TestLocation1')[0]
+        new_location = self.env['stock.location'].browse(new_location_id)
+        self.assertEqual(new_location.name, 'TestLocation1')
+        self.assertEqual(new_location.complete_name, 'ParentLocation/TestLocation1')
+        self.assertEqual(new_location.location_id, parent_location)
+
+        new_location_complete_name = self.env['stock.location'].name_create('FauxParentLocation/TestLocation2')[1]
+        self.assertEqual(new_location_complete_name, 'TestLocation2')
+
+        new_location_complete_name = self.env['stock.location'].name_create('NoPrefixLocation')[1]
+        self.assertEqual(new_location_complete_name, 'NoPrefixLocation')

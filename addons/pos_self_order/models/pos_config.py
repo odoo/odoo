@@ -25,8 +25,13 @@ class PosConfig(models.Model):
 
     def _self_order_default_user(self):
         user_ids = self.env["res.users"].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
+        admin_user_ids = user_ids.filtered(lambda u: u.has_group("point_of_sale.group_pos_manager"))
+
+        if admin_user_ids:
+            return admin_user_ids[0]
+
         for user_id in user_ids:
-            if user_id.has_group("point_of_sale.group_pos_user") or user_id.has_group("point_of_sale.group_pos_manager"):
+            if user_id.has_group("point_of_sale.group_pos_user"):
                 return user_id
 
     status = fields.Selection(
@@ -447,6 +452,7 @@ class PosConfig(models.Model):
         self.ensure_one()
 
         if not self.current_session_id:
+            self._check_before_creating_new_session()
             pos_session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
             pos_session._ensure_access_token()
             self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'STATUS', {

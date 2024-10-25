@@ -11,7 +11,7 @@ class MailMainAttachmentMixin(models.AbstractModel):
     _inherit = 'mail.thread'
     _description = 'Mail Main Attachment management'
 
-    message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', copy=False)
+    message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', copy=False, index='btree_not_null')
 
     def _message_post_after_hook(self, message, msg_values):
         """ Set main attachment field if necessary """

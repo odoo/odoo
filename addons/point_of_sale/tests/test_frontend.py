@@ -235,6 +235,10 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Leather',
             'attribute_id': chair_fabrics_attribute.id,
         })
+        chair_fabrics_wool = env['product.attribute.value'].create({
+            'name': 'wool',
+            'attribute_id': chair_fabrics_attribute.id,
+        })
         chair_fabrics_other = env['product.attribute.value'].create({
             'name': 'Other',
             'attribute_id': chair_fabrics_attribute.id,
@@ -243,7 +247,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         chair_fabrics_line = env['product.template.attribute.line'].create({
             'product_tmpl_id': configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_fabrics_attribute.id,
-            'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_other.id])]
+            'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_wool.id, chair_fabrics_other.id])]
         })
         chair_color_line.product_template_value_ids[1].is_custom = True
 
@@ -524,6 +528,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
 
+        self.tip.write({
+            'taxes_id': False,
+        })
         self.main_pos_config.write({
             'iface_tipproduct': True,
             'tip_product_id': self.tip.id,
@@ -570,8 +577,17 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
 
     def test_04_product_configurator(self):
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="pos_user")
+        # Making one attribute inactive to verify that it doesn't show
+        configurable_product = self.env['product.product'].search([('name', '=', 'Configurable Chair'), ('available_in_pos', '=', 'True')], limit=1)
+        fabrics_line = configurable_product.attribute_line_ids[2]
+        fabrics_line.product_template_value_ids[1].ptav_active = False
+
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="pos_admin")
+
+        paid_order = self.env['pos.order'].search([('state', '=', 'paid')])
+        self.assertEqual(len(paid_order), 1)
+        self.assertTrue('(Red, Metal, Other: Custom Fabric)' in paid_order.lines[0].full_product_name)
 
     def test_05_ticket_screen(self):
         if not loaded_demo_data(self.env):
@@ -1137,6 +1153,119 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'MultiProductOptionsTour', login="pos_user")
+
+    def test_customer_display_as_public(self):
+        self.main_pos_config.iface_customer_facing_display = True
+        self.main_pos_config.iface_customer_facing_display_background_image_1920 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
+        response = self.url_open(f"/web/image/pos.config/{self.main_pos_config.id}/iface_customer_facing_display_background_image_1920")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('Shop.png' in response.headers['Content-Disposition'])
+
+    def test_fiscal_position_two_tax_included(self):
+        """This tests make sure that if both tax in a fiscal position are tax included, the total price is still the same
+           but only the tax amount is modified"""
+
+        tax_1 = self.env['account.tax'].create({
+            'name': 'Tax 10%',
+            'amount': 10,
+            'price_include': True,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        tax_2 = self.env['account.tax'].create({
+            'name': 'Tax 5%',
+            'amount': 5,
+            'price_include': True,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        self.product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'taxes_id': [(6, 0, [tax_1.id])],
+            'list_price': 100,
+            'available_in_pos': True,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'test fp',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax_1.id,
+                'tax_dest_id': tax_2.id,
+            })],
+        })
+
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionTwoTaxIncluded', login="accountman")
+
+    def test_pos_combo_change_fp(self):
+        """
+        Verify than when the fiscal position is changed,
+        the price of the combo doesn't change and taxes are well taken into account
+        """
+        tax_1 = self.env['account.tax'].create({
+            'name': 'Tax 10%',
+            'amount': 10,
+            'price_include': True,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        tax_2 = self.env['account.tax'].create({
+            'name': 'Tax 5%',
+            'amount': 5,
+            'price_include': True,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        setup_pos_combo_items(self)
+        self.office_combo.write({'list_price': 50, 'taxes_id': [(6, 0, [tax_1.id])]})
+        for combo in self.office_combo.combo_ids:  # Set the tax to all the products of the combo
+            for line in combo.combo_line_ids:
+                line.product_id.taxes_id = [(6, 0, [tax_1.id])]
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'test fp',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax_1.id,
+                'tax_dest_id': tax_2.id,
+            })],
+        })
+
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboChangeFP', login="pos_user")
+
+    def test_cash_rounding_payment(self):
+        """Verify than an error popup is shown if the payment value is more precise than the rounding method"""
+        rounding_method = self.env['account.cash.rounding'].create({
+            'name': 'Down 0.10',
+            'rounding': 0.10,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': self.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'DOWN',
+        })
+
+        self.main_pos_config.write({
+            'cash_rounding': True,
+            'only_round_cash_method': False,
+            'rounding_method': rounding_method.id,
+        })
+
+        self.env['ir.config_parameter'].sudo().set_param('barcode.max_time_between_keys_in_ms', 1)
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

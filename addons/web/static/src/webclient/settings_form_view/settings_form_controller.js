@@ -26,15 +26,19 @@ export class SettingsFormController extends formView.Controller {
         useSubEnv({ searchState: this.searchState });
         useEffect(
             () => {
-                if (
-                    this.rootRef.el.querySelector(".o_settings_container:not(.d-none)") ||
-                    this.rootRef.el.querySelector(
-                        ".settings .o_settings_container:not(.d-none) .o_setting_box.o_searchable_setting"
-                    )
-                ) {
-                    this.state.displayNoContent = false;
+                if (this.searchState.value) {
+                    if (
+                        this.rootRef.el.querySelector(".o_settings_container:not(.d-none)") ||
+                        this.rootRef.el.querySelector(
+                            ".settings .o_settings_container:not(.d-none) .o_setting_box.o_searchable_setting"
+                        )
+                    ) {
+                        this.state.displayNoContent = false;
+                    } else {
+                        this.state.displayNoContent = true;
+                    }
                 } else {
-                    this.state.displayNoContent = true;
+                    this.state.displayNoContent = false;
                 }
             },
             () => [this.searchState.value]

@@ -46,6 +46,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             return sale_orders.with_context(
                 timesheet_start_date=self.date_start_invoice_timesheet,
                 timesheet_end_date=self.date_end_invoice_timesheet
-            )._create_invoices(final=self.deduct_down_payments)
+            )._create_invoices(final=self.deduct_down_payments, grouped=not self.consolidated_billing)
 
         return super()._create_invoices(sale_orders)

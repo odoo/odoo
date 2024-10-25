@@ -11,7 +11,7 @@
                 <field name="res_id" column_invisible="True"/>
                 <field name="date"/>
                 <field name="author_id" widget="many2one_avatar"/>
-                <field name="account_audit_log_move_id"/>
+                <field name="account_audit_log_display_name" string="Name"/>
                 <field name="account_audit_log_preview"/>
             </tree>
         </field>
@@ -25,12 +25,25 @@
         <field name="arch" type="xml">
             <search string="Messages Search">
                 <field name="account_audit_log_move_id"/>
+                <field name="account_audit_log_account_id"/>
+                <field name="account_audit_log_tax_id"/>
+                <field name="account_audit_log_partner_id"/>
+                <field name="account_audit_log_company_id"/>
                 <field name="author_id"/>
-                <field name="date" string="Date"/>
+                <field name="date"/>
+                <filter string="Journal Entry" name="account_move" domain="[('model', '=', 'account.move')]"/>
+                <filter string="Account" name="account_account" domain="[('model', '=', 'account.account')]"/>
+                <filter string="Taxes" name="account_tax" domain="[('model', '=', 'account.tax')]"/>
+                <filter string="Partners" name="res_partner" domain="[('model', '=', 'res.partner')]"/>
+                <filter string="Company" name="res_company" domain="[('model', '=', 'res.company')]"/>
+                <separator/>
                 <filter string="Update Only" name="update_only" domain="[('tracking_value_ids', '!=', False)]" groups="base.group_system"/>
+                <filter string="Create Only" name="create_only" domain="[('tracking_value_ids', '=', False)]" groups="base.group_system"/>
+                <separator/>
+                <filter name="date" string="Date" date="date"/>
                 <group expand="0" string="Group By">
-                    <filter string="date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
-                    <filter string="Journal Entry" name="group_by_log_move_id" domain="[]" context="{'group_by': 'res_id'}"/>
+                    <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
+                    <filter string="Record" name="group_by_log_move_id" domain="[]" context="{'group_by': 'res_id'}"/>
                 </group>
             </search>
         </field>
@@ -47,9 +60,7 @@
             </p>
         </field>
         <field name="domain">[
-            ('model', '=', 'account.move'),
             ('message_type', '=', 'notification'),
-            ('account_audit_log_move_id', '!=', False),
             ('show_audit_log', '=', True),
         ]</field>
         <field name="search_view_id" ref="view_message_tree_audit_log_search"/>

@@ -264,6 +264,13 @@ $o-wblog-loader-size: 50px;
             .o_wblog_post_cover_nocard .o_record_cover_container {
                 padding-top: 33%;
             }
+
+            @include media-breakpoint-down(md) {
+                > .row {
+                    margin-left: 0;
+                    margin-right: 0;
+                }
+            }
         }
 
     }

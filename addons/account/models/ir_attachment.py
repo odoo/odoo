@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import api, models
-from odoo.tools.pdf import OdooPdfFileReader
+from odoo.tools.pdf import OdooPdfFileReader, PdfReadError
 
 from lxml import etree
 from struct import error as StructError
-try:
-    from PyPDF2.errors import PdfReadError
-except ImportError:
-    from PyPDF2.utils import PdfReadError
 import io
 import logging
 import zipfile
@@ -37,7 +33,7 @@ class IrAttachment(models.Model):
         try:
             xml_tree = etree.fromstring(content)
         except Exception as e:
-            _logger.exception("Error when converting the xml content to etree: %s", e)
+            _logger.info('Error when reading the xml file "%s": %s', filename, e)
             return []
 
         to_process = []
@@ -61,7 +57,7 @@ class IrAttachment(models.Model):
             pdf_reader = OdooPdfFileReader(buffer, strict=False)
         except Exception as e:
             # Malformed pdf
-            _logger.warning("Error when reading the pdf: %s", e, exc_info=True)
+            _logger.info('Error when reading the pdf file "%s": %s', filename, e)
             return []
 
         # Process embedded files.
@@ -175,3 +171,10 @@ class IrAttachment(models.Model):
         # To be extended by localisations, where they can download their necessary XSD files
         # Note: they should always return super().action_download_xsd_files()
         return
+
+    def _post_add_create(self, **kwargs):
+        move_attachments = self.filtered(lambda attachment: attachment.res_model == 'account.move')
+        moves_per_id = self.env['account.move'].browse([attachment.res_id for attachment in move_attachments]).grouped('id')
+        for attachment in move_attachments:
+            moves_per_id[attachment.res_id]._check_and_decode_attachment(attachment)
+        super()._post_add_create(**kwargs)

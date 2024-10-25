@@ -1,25 +1,36 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import json
 from collections import defaultdict
-from datetime import date
 
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import Query, SQL, OrderedSet
-
+from odoo.tools.misc import unquote
 
 
 class Project(models.Model):
     _inherit = 'project.project'
 
+    def _domain_sale_line_id(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                ('is_service', '=', True),
+                ('is_expense', '=', False),
+                ('state', '=', 'sale'),
+                ('order_partner_id', '=?', unquote("partner_id")),
+            ],
+        ])
+        return str(domain)
+
     allow_billable = fields.Boolean("Billable")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         compute="_compute_sale_line_id", store=True, readonly=False, index='btree_not_null',
-        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('order_partner_id', '=?', partner_id)]",
+        domain=_domain_sale_line_id,
         help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
             " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
             "It can be modified on each task and timesheet entry individually if necessary.")
@@ -96,7 +107,9 @@ class Project(models.Model):
         for project in self:
             sale_order_lines = sale_order_items_per_project_id.get(project.id, self.env['sale.order.line'])
             project.sale_order_line_count = len(sale_order_lines)
-            project.sale_order_count = len(sale_order_lines.order_id)
+
+            # Use sudo to avoid AccessErrors when the SOLs belong to different companies.
+            project.sale_order_count = len(sale_order_lines.sudo().order_id)
 
     def _compute_invoice_count(self):
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
@@ -137,6 +150,7 @@ class Project(models.Model):
                 'show_sale': True,
                 'link_to_project': self.id,
                 'form_view_ref': 'sale_project.sale_order_line_view_form_editable', # Necessary for some logic in the form view
+                'action_view_sols': True,
                 'default_partner_id': self.partner_id.id,
                 'default_company_id': self.company_id.id,
                 'default_order_id': self.sale_order_id.id,
@@ -157,12 +171,18 @@ class Project(models.Model):
 
     def action_view_sos(self):
         self.ensure_one()
-        all_sale_orders = self._fetch_sale_order_items({'project.task': [('state', 'in', self.env['project.task'].OPEN_STATES)]}).order_id
+        # Use sudo to avoid AccessErrors when the SOLs belong to different companies.
+        all_sale_orders = self._fetch_sale_order_items({'project.task': [('state', 'in', self.env['project.task'].OPEN_STATES)]}).sudo().order_id
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             'name': _("%(name)s's Sales Orders", name=self.name),
-            "context": {"create": self.env.context.get('create_for_project_id', False), "show_sale": True},
+            "context": {
+                "create": self.env.context.get('create_for_project_id', False),
+                "show_sale": True,
+                "default_partner_id": self.partner_id.id,
+                "default_analytic_account_id": self.analytic_account_id.id,
+            },
         }
         if len(all_sale_orders) <= 1:
             action_window.update({
@@ -203,6 +223,11 @@ class Project(models.Model):
         if section_name in ['other_invoice_revenues', 'downpayments']:
             action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
             action['domain'] = domain if domain else []
+            action['context'] = {
+                **ast.literal_eval(action['context']),
+                'default_partner_id': self.partner_id.id,
+                'project_id': self.id,
+            }
             if res_id:
                 action['views'] = [(False, 'form')]
                 action['view_mode'] = 'form'
@@ -252,7 +277,9 @@ class Project(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', invoice_ids)],
             'context': {
-                'create': False,
+                'default_move_type': 'out_invoice',
+                'default_partner_id': self.partner_id.id,
+                'project_id': self.id,
             }
         }
         if len(invoice_ids) == 1:
@@ -679,6 +706,9 @@ class Project(models.Model):
                 'number': self_sudo.sale_order_count,
                 'action_type': 'object',
                 'action': 'action_view_sos',
+                'additional_context': json.dumps({
+                    'create_for_project_id': self.id,
+                }),
                 'show': self_sudo.display_sales_stat_buttons and self_sudo.sale_order_count > 0,
                 'sequence': 27,
             })
@@ -765,7 +795,8 @@ class Project(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', vendor_bill_ids)],
             'context': {
-                'create': False,
+                'default_move_type': 'in_invoice',
+                'project_id': self.id,
             }
         }
         if len(vendor_bill_ids) == 1:
@@ -784,16 +815,23 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
+    def _domain_sale_line_id(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                '|', ('order_partner_id.commercial_partner_id.id', 'parent_of', unquote('partner_id if partner_id else []')),
+                    ('order_partner_id', '=?', unquote('partner_id')),
+                ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'),
+            ],
+        ])
+        return str(domain)
+
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, help="Sales order to which the task is linked.", group_expand="_group_expand_sales_order")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item',
         copy=True, tracking=True, index='btree_not_null', recursive=True,
         compute='_compute_sale_line', store=True, readonly=False,
-        domain="""[
-            '|', ('order_partner_id.commercial_partner_id.id', 'parent_of', partner_id if partner_id else []),
-                 ('order_partner_id', '=?', partner_id),
-            ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'),
-        ]""",
+        domain=_domain_sale_line_id,
         help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
              "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
              "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.")
@@ -825,16 +863,20 @@ class ProjectTask(models.Model):
             if not task.allow_billable:
                 task.sale_order_id = False
                 continue
-            sale_order_id = task.sale_order_id or self.env["sale.order"]
-            if task.sale_line_id:
-                sale_order_id = task.sale_line_id.sudo().order_id
-            elif task.project_id.sale_order_id:
-                sale_order_id = task.project_id.sale_order_id
-            if task.partner_id.commercial_partner_id != sale_order_id.partner_id.commercial_partner_id:
-                sale_order_id = False
-            if sale_order_id and not task.partner_id:
-                task.partner_id = sale_order_id.partner_id
-            task.sale_order_id = sale_order_id
+            sale_order = (
+                task.sale_line_id.order_id
+                or task.project_id.sale_order_id
+                or task.sale_order_id
+            )
+            so_partners = (
+                sale_order.partner_id
+                | sale_order.partner_invoice_id
+                | sale_order.partner_shipping_id
+            )
+            if task.partner_id.commercial_partner_id in so_partners.commercial_partner_id:
+                task.sale_order_id = sale_order
+            else:
+                task.sale_order_id = False
 
     @api.depends('allow_billable')
     def _compute_partner_id(self):

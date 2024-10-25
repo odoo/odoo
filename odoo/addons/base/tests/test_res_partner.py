@@ -736,6 +736,26 @@ class TestPartnerAddressCompany(TransactionCase):
         res_bhide = test_partner_bhide.with_context(show_address=1, address_inline=1).display_name
         self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
+    def test_accessibility_of_company_partner_from_branch(self):
+        """ Check accessibility of company partner from branch. """
+        company = self.env['res.company'].create({'name': 'company'})
+        branch = self.env['res.company'].create({
+            'name': 'branch',
+            'parent_id': company.id
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'partner',
+            'company_id': company.id
+        })
+        user = self.env['res.users'].create({
+            'name': 'user',
+            'login': 'user',
+            'company_id': branch.id,
+            'company_ids': [branch.id]
+        })
+        record = self.env['res.partner'].with_user(user).search([('id', '=', partner.id)])
+        self.assertEqual(record.id, partner.id)
+
 
 @tagged('res_partner', 'post_install', '-at_install')
 class TestPartnerForm(TransactionCase):

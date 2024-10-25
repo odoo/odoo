@@ -58,3 +58,37 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
         isCheck: true,
     },
 ]});
+
+registry.category("web_tour.tours").add('tour_shop_multi_checkbox_single_value', {
+    test: true,
+    url: '/shop?search=Burger',
+    steps: () => [
+    {
+        content: "select Product",
+        trigger: '.oe_product_cart a:containsExact("Burger")',
+    },
+    {
+        content: "check price",
+        trigger: '.oe_currency_value:contains("750")',
+        isCheck: true,
+    },
+    {
+        content: 'click on the first option to select it',
+        trigger: 'input[data-attribute_name="Toppings"][data-value_name="cheese"]',
+    },
+    {
+        content: "check price of options is correct",
+        trigger: '.oe_currency_value:contains("750")',
+        isCheck: true,
+    },
+    {
+        content: "add to cart",
+        trigger: 'a:contains(Add to cart)',
+    },
+        tourUtils.goToCart(),
+    {
+        content: "check choice was correctly saved",
+        trigger: '#cart_products div div.text-muted>span:contains("Toppings: cheese")',
+        isCheck: true,
+    },
+]});

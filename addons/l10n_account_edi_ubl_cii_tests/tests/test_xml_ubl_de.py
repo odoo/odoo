@@ -64,6 +64,16 @@ class TestUBLDE(TestUBLCommon):
         )
         return res
 
+    def _detach_attachment(self, attachment):
+        # attachments are protected from being edited because of the audit trail
+        # in the tests, we are reusing the ame attachment coming from another invoice, which would then switch invoice
+        self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id = %s", (attachment.id,))
+        attachment.invalidate_recordset()
+
+    def _assert_imported_invoice_from_etree(self, invoice, attachment):
+        self._detach_attachment(attachment)
+        return super()._assert_imported_invoice_from_etree(invoice, attachment)
+
     ####################################################
     # Test export - import
     ####################################################
@@ -237,5 +247,6 @@ class TestUBLDE(TestUBLCommon):
         )
 
         created_bill = self.env['account.move'].create({'move_type': 'in_invoice'})
+        self._detach_attachment(attachment)
         created_bill.message_post(attachment_ids=[attachment.id])
         self.assertTrue(created_bill)

@@ -8,7 +8,7 @@
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
             <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
             <t t-call="website_sale.pricelist_list">
-                <t t-set="_classes" t-valuef="d-none d-lg-inline p-0 ms-2 my-1"/>
+                <t t-set="_classes" t-valuef="d-inline p-0 ms-2 my-1"/>
             </t>
         </div>
     </xpath>

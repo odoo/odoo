@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_sale
-#
+# 
 # Translators:
-# Jumshud Sultanov <cumshud@gmail.com>, 2022
-# erpgo translator <jumshud@erpgo.az>, 2022
-#
+# Jumshud Sultanov <cumshud@gmail.com>, 2024
+# erpgo translator <jumshud@erpgo.az>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2022\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2024\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
-"Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: az\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_sale
@@ -30,10 +30,8 @@ msgstr ""
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid ""
-"<small class=\"o_wevent_participating text-bg-success\">\n"
-"                                            <i class=\"fa fa-check me-2\"/>\n"
-"                                            Registered\n"
-"                                        </small>"
+"<i class=\"fa fa-check me-2\"/>\n"
+"                                            Registered"
 msgstr ""
 
 #. module: website_event_sale
@@ -47,19 +45,32 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
-msgid "A pricelist item with a positive min. quantity cannot be applied to this event tickets product."
-msgstr "Müsbət minimum miqdarı olan qiymət siyahısı vasitəsi bu tədbir bilet məhsullarına tətbiq edilə bilməz."
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+"Müsbət minimum miqdarı olan qiymət siyahısı vasitəsi bu tədbir bilet "
+"məhsullarına tətbiq edilə bilməz."
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
-msgid "A pricelist item with a positive min. quantity will not be applied to the event tickets products."
-msgstr "Müsbət minimum miqdarı olan qiymət siyahısı vasitəsi tədbir bilet məhsuluna tətbiq edilməyəcək."
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+"Müsbət minimum miqdarı olan qiymət siyahısı vasitəsi tədbir bilet məhsuluna "
+"tətbiq edilməyəcək."
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Confirm Registration"
+msgstr "Qeydiyyatı təsdiq edin"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
 msgstr ""
 
 #. module: website_event_sale
@@ -73,12 +84,12 @@ msgid "Event Tickets"
 msgstr "Tədbir Biletləri"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "Free"
 msgstr "Azad"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "From"
 msgstr "Başlama Tarixi"
 
@@ -96,6 +107,11 @@ msgstr ""
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
 msgstr "Qiymət Siyahısı üzrə Qayda"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_template
+msgid "Product"
+msgstr "Məhsul"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -129,8 +145,12 @@ msgstr "Bağışlayın, %(event)s hadisəsi üzrə %(ticket)s biletlər tükənd
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
-msgid "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event."
-msgstr "Bağışlayın, %(event)s hadisəsi üzrə %(ticket)s biletinin yalnız %(remaining_seats)d oturacaqları hələ də mövcuddur."
+msgid ""
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
+msgstr ""
+"Bağışlayın, %(event)s hadisəsi üzrə %(ticket)s biletinin yalnız "
+"%(remaining_seats)d oturacaqları hələ də mövcuddur."
 
 #. module: website_event_sale
 #. odoo-python
@@ -181,6 +201,6 @@ msgid "events"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "to"
-msgstr "etmək"
+msgstr "Bitmə Tarixi"

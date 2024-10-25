@@ -15,8 +15,10 @@
 # Martin Aavastik <martin@avalah.ee>, 2023
 # Marten, 2023
 # Rivo Zängov <eraser@eraser.ee>, 2023
-# Anna, 2023
 # Leaanika Randmets, 2023
+# Stevin Lilla, 2024
+# Anna, 2024
+# Siim Raasuke, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Siim Raasuke, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +64,7 @@ msgstr "Aktiivne"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "Lisa uus mõõtühik"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -98,7 +100,7 @@ msgstr "Värv"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
 msgid "Combined Ratio"
-msgstr ""
+msgstr "Kombineeritud suhe"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -135,7 +137,7 @@ msgstr "Kuvatav nimi"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
-msgstr ""
+msgstr "tosin"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -252,6 +254,13 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Mõned kriitilised väljad on muudetud %s peal.\n"
+"Pange tähele, et olemasolevaid andmeid selle muudatusega EI uuendata.\n"
+"\n"
+"Kuna mõõtühikud mõjutavad kogu süsteemi, võib see põhjustada kriitilisi probleeme.\n"
+"Näiteks võib ümardamise muutmine häirida teie inventari tasakaalu.\n"
+"\n"
+"Seetõttu ei ole käimasolevas andmebaasis põhikomponentide mõõtühikute muutmine soovitatav."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -280,16 +289,19 @@ msgid ""
 "The following units of measure are used by the system and cannot be deleted: %s\n"
 "You can archive them instead."
 msgstr ""
+"Süsteem kasutab järgmisi mõõtühikuid ja neid ei saa kustutada: %s\n"
+"Võite need arhiveerida hoopis."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
 msgid "The reference unit must have a conversion factor equal to 1."
 msgstr ""
+"Viidatud mõõtühikul peab olema konversioonifaktor, mis on võrdne 1-ga."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "Ümardamise täpsus peab olema rangelt positiivne."
 
 #. module: uom
 #. odoo-python
@@ -301,13 +313,16 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"Tellimuse real määratud mõõtühik %s ei kuulu samasse kategooriasse kui "
+"tootel määratud mõõtühik %s.  Palun parandage mõõtühik tellimuse real või "
+"tootel, need peaksid kuuluma samasse kategooriasse."
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "The value of ratio could not be Zero"
-msgstr ""
+msgstr "Suhtarvu väärtus ei saa olla null."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -378,21 +393,21 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
-msgstr ""
+msgstr "Mõõtühikute kategoorial %s peab olema vähemalt üks viidatud mõõtühik."
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
-msgstr ""
+msgstr "Mõõtühikute kategoorial %s peaks olema viidatud mõõtühik."
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr ""
+msgstr "Mõõtühikute kategoorial %s peaks olema ainult üks viidatud mõõtühik."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
@@ -438,17 +453,17 @@ msgstr "cm"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
 msgid "fl oz (US)"
-msgstr ""
+msgstr "fl oz (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
 msgid "ft"
-msgstr ""
+msgstr "ft"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_foot
 msgid "ft²"
-msgstr ""
+msgstr "ft²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
@@ -458,7 +473,7 @@ msgstr "ft³"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
-msgstr ""
+msgstr "gal (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
@@ -468,7 +483,7 @@ msgstr "tollid"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
 msgid "in³"
-msgstr ""
+msgstr "in³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -483,7 +498,7 @@ msgstr "km"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lb"
-msgstr ""
+msgstr "lb"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
@@ -493,12 +508,12 @@ msgstr "mi"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
 msgid "mm"
-msgstr ""
+msgstr "mm"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_meter
 msgid "m²"
-msgstr ""
+msgstr "m²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_meter
@@ -508,14 +523,14 @@ msgstr "m³"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz"
-msgstr ""
+msgstr "oz"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt (US)"
-msgstr ""
+msgstr "qt (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr ""
+msgstr "yd"

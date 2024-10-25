@@ -88,9 +88,19 @@
                                        options="{'model': 'model_name', 'in_dialog': True}"
                                        invisible="trigger == 'on_webhook'"
                                 />
-                                <label for="filter_domain" invisible="trigger not in ['on_create_or_write', 'on_change', 'on_unlink']"/>
-                                <label for="filter_domain" string="Extra Conditions" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
+                                <field name="filter_domain" widget="domain" groups="base.group_no_one"
+                                    options="{'model': 'model_name', 'in_dialog': True}"
+                                    invisible="trigger == 'on_webhook'"
+                                />
+                                <label for="filter_domain" groups="!base.group_no_one"
+                                    invisible="trigger not in ['on_create_or_write', 'on_change', 'on_unlink']"
+                                />
+                                <label for="filter_domain" groups="!base.group_no_one"
+                                    string="Extra Conditions"
+                                    invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"
+                                />
                                 <field name="filter_domain" nolabel="1" widget="domain"
+                                    groups="!base.group_no_one"
                                     options="{'model': 'model_name', 'in_dialog': False, 'foldable': True}"
                                     invisible="trigger not in ['on_create_or_write', 'on_change', 'on_unlink', 'on_time', 'on_time_created', 'on_time_updated']"
                                 />

@@ -19,57 +19,81 @@ class PaymentProvider(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends('code')
+    def _ensure_payment_method_line(self, allow_create=True):
+        self.ensure_one()
+        if not self.id:
+            return
+
+        default_payment_method = self._get_provider_payment_method(self._get_code())
+        if not default_payment_method:
+            return
+
+        pay_method_line = self.env['account.payment.method.line'].search([
+            ('payment_provider_id', '=', self.id),
+            ('journal_id', '!=', False),
+        ], limit=1)
+
+        if not self.journal_id:
+            if pay_method_line:
+                pay_method_line.unlink()
+                return
+
+        if not pay_method_line:
+            pay_method_line = self.env['account.payment.method.line'].search(
+                [
+                    *self.env['account.payment.method.line']._check_company_domain(self.company_id),
+                    ('code', '=', self._get_code()),
+                    ('payment_provider_id', '=', False),
+                    ('journal_id', '!=', False),
+                ],
+                limit=1,
+            )
+        if pay_method_line:
+            pay_method_line.payment_provider_id = self
+            pay_method_line.journal_id = self.journal_id
+            pay_method_line.name = self.name
+        elif allow_create:
+            create_values = {
+                'name': self.name,
+                'payment_method_id': default_payment_method.id,
+                'journal_id': self.journal_id.id,
+                'payment_provider_id': self.id,
+            }
+            pay_method_line_same_code = self.env['account.payment.method.line'].search(
+                [
+                    *self.env['account.payment.method.line']._check_company_domain(self.company_id),
+                    ('code', '=', self._get_code()),
+                ],
+                limit=1,
+            )
+            if pay_method_line_same_code:
+                create_values['payment_account_id'] = pay_method_line_same_code.payment_account_id.id
+            self.env['account.payment.method.line'].create(create_values)
+
+    @api.depends('code', 'state', 'company_id')
     def _compute_journal_id(self):
         for provider in self:
-            payment_method = self.env['account.payment.method.line'].search([
-                *self.env['account.payment.method.line']._check_company_domain(provider.company_id),
-                ('code', '=', provider._get_code())
+            pay_method_line = self.env['account.payment.method.line'].search([
+                ('payment_provider_id', '=', provider._origin.id),
+                ('journal_id', '!=', False),
             ], limit=1)
-            if payment_method:
-                provider.journal_id = payment_method.journal_id
-            else:  # Fallback to the first journal of type bank that we find.
-                provider.journal_id = self.env['account.journal'].search([
-                    ('company_id', '=', provider.company_id.id),
-                    ('type', '=', 'bank'),
-                ], limit=1)
-                if provider.journal_id:
-                    self._link_payment_method_to_journal(provider)
+
+            if pay_method_line:
+                provider.journal_id = pay_method_line.journal_id
+            elif provider.state in ('enabled', 'test'):
+                provider.journal_id = self.env['account.journal'].search(
+                    [
+                        ('company_id', '=', provider.company_id.id),
+                        ('type', '=', 'bank'),
+                    ],
+                    limit=1,
+                )
+                if provider.id:
+                    provider._ensure_payment_method_line()
 
     def _inverse_journal_id(self):
         for provider in self:
-            code = provider._get_code()
-            payment_method_line = self.env['account.payment.method.line'].search([
-                *self.env['account.payment.method.line']._check_company_domain(provider.company_id),
-                ('code', '=', code),
-            ], limit=1)
-            if provider.journal_id:
-                if not payment_method_line:
-                    self._link_payment_method_to_journal(provider)
-                else:
-                    payment_method_line.journal_id = provider.journal_id
-            elif payment_method_line:
-                payment_method_line.unlink()
-
-    def _link_payment_method_to_journal(self, provider):
-        default_payment_method_id = provider._get_default_payment_method_id(provider._get_code())
-        existing_payment_method_line = self.env['account.payment.method.line'].search([
-            *self.env['account.payment.method.line']._check_company_domain(provider.company_id),
-            ('payment_method_id', '=', default_payment_method_id),
-            ('journal_id', '=', provider.journal_id.id),
-        ], limit=1)
-        if not existing_payment_method_line:
-            self.env['account.payment.method.line'].create({
-                'payment_method_id': default_payment_method_id,
-                'journal_id': provider.journal_id.id,
-            })
-
-    @api.model
-    def _get_default_payment_method_id(self, code):
-        provider_payment_method = self._get_provider_payment_method(code)
-        if provider_payment_method:
-            return provider_payment_method.id
-        return self.env.ref('account.account_payment_method_manual_in').id
+            provider._ensure_payment_method_line()
 
     @api.model
     def _get_provider_payment_method(self, code):
@@ -92,12 +116,6 @@ class PaymentProvider(models.Model):
                 'code': code,
                 'payment_type': 'inbound',
             })
-
-    def _check_existing_payment_method_lines(self, payment_method):
-        existing_payment_method_lines_count =  \
-            self.env['account.payment.method.line'].search_count([('payment_method_id', '=', \
-                payment_method.id)], limit=1)
-        return bool(existing_payment_method_lines_count)
 
     def _check_existing_payment(self, payment_method):
         existing_payment_count = self.env['account.payment'].search_count([('payment_method_id', '=', payment_method.id)], limit=1)

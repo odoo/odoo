@@ -22,6 +22,14 @@
                     <field name="create_date" interval="month" type="col"/>
                     <field name="stage_id" type="row"/>
                     <field name="prorated_revenue" type="measure"/>
+                    <field name="color" invisible="1"/>
+                    <field name="message_bounce" invisible="1"/>
+                    <field name="probability" invisible="1"/>
+                    <field name="automated_probability" invisible="1"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
                 </pivot>
             </field>
         </record>
@@ -38,9 +46,10 @@
                     <field name="message_bounce" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="automated_probability" invisible="1"/>
-                    <field name="recurring_revenue_monthly" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue_monthly_prorated" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue" groups="crm.group_use_recurring_revenues"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
                 </pivot>
             </field>
         </record>
@@ -55,6 +64,13 @@
                     <field name="date_deadline" interval="month"/>
                     <field name="prorated_revenue" type="measure"/>
                     <field name="color" invisible="1"/>
+                    <field name="message_bounce" invisible="1"/>
+                    <field name="probability" invisible="1"/>
+                    <field name="automated_probability" invisible="1"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
                 </graph>
             </field>
         </record>
@@ -71,9 +87,10 @@
                     <field name="automated_probability" invisible="1"/>
                     <field name="message_bounce" invisible="1"/>
                     <field name="probability" invisible="1"/>
-                    <field name="recurring_revenue_monthly" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue_monthly_prorated" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue" groups="crm.group_use_recurring_revenues"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
                 </graph>
             </field>
         </record>

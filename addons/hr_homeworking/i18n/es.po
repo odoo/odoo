@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -320,6 +320,14 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#, python-format
+msgid "User work at {{location}} and is {{status}}"
+msgstr "El usuario trabaja en {{location}} y su estado es {{status}}"
+
+#. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__wednesday_location_id
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__wednesday_location_id
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_public__wednesday_location_id
@@ -349,3 +357,11 @@ msgstr "Ubicación de trabajo"
 #, python-format
 msgid "You cannot delete locations that are being used by your employees"
 msgstr "No puede eliminar las ubicaciones que utilizan sus empleados."
+
+#. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#, python-format
+msgid "{{status}}"
+msgstr "{{status}}"

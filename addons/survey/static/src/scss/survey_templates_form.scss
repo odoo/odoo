@@ -11,6 +11,9 @@ div.o_frontend_to_backend_nav {
 /**********************************************************
                         Common Style
  **********************************************************/
+// dynamic color is used to ensure enough contrast between the text and the background color
+$dynamic-text-color: if(lightness($body-bg) > 50%, $gray-900, $gray-100);
+
 // the survey background image takes all the page background, with a translucent white overlay (box-shadow)
 // When changing the background from one section to another, the overlay will become opaque to simulate a fade out of
 // the background image. This ensure a smooth transition from one background to another, likewise the question
@@ -19,9 +22,20 @@ div.o_frontend_to_backend_nav {
     height: 100%;
     overflow: auto;
     transition: box-shadow 0.3s ease-in-out;
-    box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7);
     background: no-repeat fixed center;
     background-size: cover;
+    color: $dynamic-text-color !important;
+    .text-muted {
+        opacity: 0.7;
+        color: $dynamic-text-color !important;
+    }
+    &.o_survey_background_shadow {
+        box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7);
+        color: $gray-900 !important;
+        .text-muted {
+            color: $gray-900 !important;
+        }
+    }
     &.o_survey_background_transition {
         box-shadow: inset 0 0 0 10000px rgba(255,255,255,1);
     }
@@ -98,6 +112,9 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         }
         &:focus {
             box-shadow: none;
+        }
+        .o_survey_background_shadow & {
+            color: $gray-900 !important;
         }
     }
 
@@ -289,6 +306,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         padding: 1rem;
         top: calc(50% - 0.5rem);
         cursor: pointer;
+        max-width: 10%;
 
         &.o_survey_session_navigation_next {
             right: 1rem;

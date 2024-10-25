@@ -267,10 +267,12 @@
                          ref('payment.payment_method_eps'),
                          ref('payment.payment_method_giropay'),
                          ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_kbc_cbc'),
                          ref('payment.payment_method_paypal'),
                          ref('payment.payment_method_paysafecard'),
                          ref('payment.payment_method_p24'),
                          ref('payment.payment_method_sofort'),
+                         ref('payment.payment_method_twint'),
                      ])]"
         />
 
@@ -352,7 +354,6 @@
         <field name="payment_method_ids"
                eval="[Command.set([
                          ref('payment.payment_method_ach_direct_debit'),
-                         ref('payment.payment_method_acss_debit'),
                          ref('payment.payment_method_affirm'),
                          ref('payment.payment_method_afterpay'),
                          ref('payment.payment_method_alipay'),

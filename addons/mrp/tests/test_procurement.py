@@ -522,6 +522,8 @@ class TestProcurement(TestMrpCommon):
         """ Simulate a mto chain with a manufacturing order. Updating the
         initial demand should also impact the initial move but not the
         linked manufacturing order.
+        Secondary test: set the MTO route company-specific and ensure that make
+        sure no new routes have been created
         """
         def create_run_procurement(product, product_qty, values=None):
             if not values:
@@ -540,7 +542,12 @@ class TestProcurement(TestMrpCommon):
             'name': 'Roger'
         })
         # This needs to be tried with MTO route activated
-        self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
+        mto_route = self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto'))
+        mto_route.action_unarchive()
+        # Setup for the secondary test
+        routes_count = self.env['stock.route'].search_count([])
+        mto_route.rule_ids.search([('company_id', 'not in', (False, self.env.company.id))]).unlink()
+        mto_route.company_id = self.env.company
         # Define products requested for this BoM.
         product = self.env['product.product'].create({
             'name': 'product',
@@ -593,6 +600,9 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
         manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertEqual(len(manufacturing_orders), 2, 'A new MO should have been created for missing demand.')
+
+        # Secondary test
+        self.assertEqual(self.env['stock.route'].search_count([]), routes_count)
 
     def test_rr_with_dependance_between_bom(self):
         self.warehouse = self.env.ref('stock.warehouse0')

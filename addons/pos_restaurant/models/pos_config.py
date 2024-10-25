@@ -112,7 +112,7 @@ class PosConfig(models.Model):
 
     def setup_defaults(self, company):
         main_restaurant = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
-        main_restaurant_is_present = main_restaurant and self.filtered(lambda cfg: cfg.id == main_restaurant.id)
+        main_restaurant_is_present = main_restaurant and not main_restaurant.has_active_session and self.filtered(lambda cfg: cfg.id == main_restaurant.id)
         if main_restaurant_is_present:
             non_main_restaurant_configs = self - main_restaurant
             non_main_restaurant_configs.assign_payment_journals(company)

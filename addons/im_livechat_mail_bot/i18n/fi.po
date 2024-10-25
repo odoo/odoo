@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -30,6 +30,11 @@ msgid ""
 "<b>close this conversation</b> or start the tour again with typing <span "
 "class=\"o_odoobot_command\">start the tour</span>. Enjoy discovering Odoo!"
 msgstr ""
+"Hyvä, voit mukauttaa esivalmisteltuja vastauksia live-chat-"
+"sovelluksessa.<br/><br/><b>Tämä yleiskatsaus on nyt päättynyt</b>, voit nyt "
+"<b>sulkea tämän keskustelun</b> tai aloittaa kierroksen uudelleen "
+"kirjoittamalla <span class=\"o_odoobot_command\">Aloita kierros</span>. "
+"Nauti Odoon tutustumisesta!"
 
 #. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_mail_bot
@@ -58,13 +63,13 @@ msgid "Onboarding canned"
 msgstr "Perehdytys on purkissa"
 
 #. module: im_livechat_mail_bot
+#: model:ir.model,name:im_livechat_mail_bot.model_res_users
+msgid "User"
+msgstr "Käyttäjä"
+
+#. module: im_livechat_mail_bot
 #. odoo-python
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "Wonderful! 😇<br/>Try typing %s to use canned responses."
-msgstr ""
-
-#. module: im_livechat_mail_bot
-#: model:ir.model,name:im_livechat_mail_bot.model_res_users
-msgid "User"
-msgstr "Käyttäjä"
+msgstr "Ihanaa! 😇<br/>Kokeile kirjoittaa %s käyttääksesi valmiita vastauksia."

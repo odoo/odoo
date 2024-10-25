@@ -122,7 +122,7 @@ paymentExpressCheckoutForm.include({
                 addresses.shipping_address = {
                     name: ev.shippingAddress.recipient,
                     email: ev.payerEmail,
-                    phone: ev.shippingAddress.phone,
+                    phone: ev.shippingAddress.phone || ev.payerPhone,
                     street: ev.shippingAddress.addressLine[0],
                     street2: ev.shippingAddress.addressLine[1],
                     zip: ev.shippingAddress.postalCode,
@@ -197,11 +197,8 @@ paymentExpressCheckoutForm.include({
 
             // When the customer selects a different shipping option, update the displayed total.
             paymentRequest.on('shippingoptionchange', async (ev) => {
-                const result = await this._rpc({
-                    route: '/shop/update_carrier',
-                    params: {
-                        carrier_id: parseInt(ev.shippingOption.id),
-                    },
+                const result = await this.rpc('/shop/update_carrier', {
+                    carrier_id: parseInt(ev.shippingOption.id),
                 });
                 ev.updateWith({
                     status: 'success',

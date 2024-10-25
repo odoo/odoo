@@ -9,4 +9,10 @@
             background: rgba(0, 0, 0, .05);
         }
     }
+
+    .row > div {
+        @include media-breakpoint-down(lg) {
+            min-width: fit-content;
+        }
+    }
 }

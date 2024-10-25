@@ -150,7 +150,7 @@ class TimesheetCustomerPortal(CustomerPortal):
 
             grouped_timesheets = [(
                 timesheets,
-                sum(Timesheet_sudo.search(domain).mapped('unit_amount'))
+                Timesheet_sudo._read_group(domain, aggregates=['unit_amount:sum'])[0][0]
             )] if timesheets else []
             return timesheets, grouped_timesheets
 
@@ -183,3 +183,11 @@ class TimesheetProjectCustomerPortal(ProjectCustomerPortal):
         timesheets = request.env['account.analytic.line'].sudo().search(task_domain)
         return self._show_report(model=timesheets,
             report_type=report_type, report_ref='hr_timesheet.timesheet_report_task_timesheets', download=download)
+
+    def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False, project=False):
+        values = super()._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su, project)
+        values.update(
+            is_uom_day=request.env['account.analytic.line']._is_timesheet_encode_uom_day(),
+        )
+
+        return values

@@ -31,6 +31,7 @@
             <field name="body">Hi</field>
             <field name="email_from">Visitor</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_11"/>
             <field name="model">discuss.channel</field>
         </record>
@@ -41,6 +42,7 @@
             <field name="write_date" eval="datetime.now() - timedelta(seconds=-15)"/>
             <field name="body">Hello, how may I help you?</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_11"/>
             <field name="model">discuss.channel</field>
         </record>
@@ -53,6 +55,7 @@
             <field name="email_from">Visitor</field>
             <field name="body">I would like to know more about the Discuss application</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_11"/>
             <field name="model">discuss.channel</field>
         </record>

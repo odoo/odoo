@@ -194,6 +194,22 @@ class PickingType(models.Model):
                         'prefix': vals['sequence_code'], 'padding': 5,
                         'company_id': picking_type.env.company.id,
                     })
+        if 'reservation_method' in vals:
+            if vals['reservation_method'] == 'by_date':
+                if picking_types := self.filtered(lambda p: p.reservation_method != 'by_date'):
+                    domain = [('picking_type_id', 'in', picking_types.ids), ('state', 'in', ('draft', 'confirmed', 'waiting', 'partially_available'))]
+                    group_by = ['picking_type_id']
+                    aggregates = ['id:recordset']
+                    for picking_type, moves in self.env['stock.move']._read_group(domain, group_by, aggregates):
+                        common_days = vals.get('reservation_days_before') or picking_type.reservation_days_before
+                        priority_days = vals.get('reservation_days_before_priority') or picking_type.reservation_days_before_priority
+                        for move in moves:
+                            move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=priority_days if move.priority == '1' else common_days)
+            else:
+                if picking_types := self.filtered(lambda p: p.reservation_method == 'by_date'):
+                    moves = self.env['stock.move'].search([('picking_type_id', 'in', picking_types.ids), ('state', 'not in', ('assigned', 'done', 'cancel'))])
+                    moves.reservation_date = False
+
         return super(PickingType, self).write(vals)
 
     @api.depends('code')
@@ -433,7 +449,7 @@ class Picking(models.Model):
         help="Is late or will be late depending on the deadline and scheduled date")
     date = fields.Datetime(
         'Creation Date',
-        default=fields.Datetime.now, tracking=True,
+        default=fields.Datetime.now, tracking=True, copy=False,
         help="Creation Date, usually the time of the order")
     date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")
     delay_alert_date = fields.Datetime('Delay Alert Date', compute='_compute_delay_alert_date', search='_search_delay_alert_date')
@@ -453,7 +469,7 @@ class Picking(models.Model):
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
-        required=True, readonly=True, index=True,
+        required=True, index=True,
         default=_default_picking_type_id)
     picking_type_code = fields.Selection(
         related='picking_type_id.code',
@@ -781,10 +797,11 @@ class Picking(models.Model):
     def _onchange_picking_type(self):
         if self.picking_type_id and self.state == 'draft':
             self = self.with_company(self.company_id)
-            (self.move_ids | self.move_ids_without_package).update({
-                "picking_type_id": self.picking_type_id,  # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
-                "company_id": self.company_id,
-            })
+            # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
+            (self.move_ids | self.move_ids_without_package).filtered(
+                lambda m: m.picking_type_id != self.picking_type_id
+            ).picking_type_id = self.picking_type_id
+            (self.move_ids | self.move_ids_without_package).company_id = self.company_id
             for move in (self.move_ids | self.move_ids_without_package):
                 if not move.product_id:
                     continue
@@ -924,13 +941,7 @@ class Picking(models.Model):
         )
         if not moves:
             raise UserError(_('Nothing to check the availability for.'))
-        # If a package level is done when confirmed its location can be different than where it will be reserved.
-        # So we remove the move lines created when confirmed to set quantity done to the new reserved ones.
-        package_level_done = self.mapped('package_level_ids').filtered(lambda pl: pl.is_done and pl.state == 'confirmed')
-        package_level_done.write({'is_done': False})
         moves._action_assign()
-        package_level_done.write({'is_done': True})
-
         return True
 
     def action_cancel(self):
@@ -949,6 +960,7 @@ class Picking(models.Model):
             'views': [(view_id, 'tree')],
             'domain': [('id', 'in', self.move_line_ids.ids)],
             'context': {
+                'create': self.state != 'done' or not self.is_locked,
                 'default_picking_id': self.id,
                 'default_location_id': self.location_id.id,
                 'default_location_dest_id': self.location_dest_id.id,
@@ -1462,7 +1474,10 @@ class Picking(models.Model):
                 'views': [(view_id, 'form')],
                 'type': 'ir.actions.act_window',
                 'res_id': wiz.id,
-                'target': 'new'
+                'target': 'new',
+                'context': {
+                    'move_lines_to_pack_ids': move_line_ids.ids,
+                }
             }
         else:
             return {}
@@ -1517,6 +1532,8 @@ class Picking(models.Model):
         move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
         if not move_line_ids:
             move_line_ids = quantity_move_line_ids
+        if self.env.context.get('move_lines_to_pack_ids', False):
+            move_line_ids = move_line_ids.filtered(lambda ml: ml.id in self.env.context['move_lines_to_pack_ids'])
         return move_line_ids
 
     def action_put_in_pack(self):
@@ -1527,7 +1544,6 @@ class Picking(models.Model):
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:
                     package = self._put_in_pack(move_line_ids)
-                    self.action_assign()
                     return self._post_put_in_pack_hook(package)
                 return res
             raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or all products are already in a pack."))

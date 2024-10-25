@@ -3,22 +3,35 @@
 # 	* account_audit_trail
 # 
 # Translators:
-# Wil Odoo, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-15 06:37+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-12-23 23:00+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_account_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_account_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Account"
+msgstr "Konto"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_display_name
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_display_name
+msgid "Account Audit Log Display Name"
+msgstr "Anzeigename des Audit-Protokolls des Kontos"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
@@ -33,6 +46,11 @@ msgstr "Audit Trail aktivieren"
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Audit Trail"
 msgstr "Audit Trail"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Kontoauszugszeile"
 
 #. module: account_audit_trail
 #. odoo-python
@@ -56,9 +74,25 @@ msgid "Companies"
 msgstr "Unternehmen"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_company_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_company_id
+msgid "Company "
+msgstr "Unternehmen "
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigurationseinstellungen"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Create Only"
+msgstr "Nur erstellen"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
@@ -90,6 +124,16 @@ msgid "Journal Entry"
 msgstr "Journalbuchung"
 
 #. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_tracking_value
+msgid "Mail Tracking Value"
+msgstr "Wert für E-Mail-Verfolgung"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Assistent zum Zusammenführen von Partnern"
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_mail_message
 msgid "Message"
 msgstr "Nachricht"
@@ -100,6 +144,11 @@ msgid "Messages Search"
 msgstr "Nachrichtensuche"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log
+msgid "Name"
+msgstr "Name"
+
+#. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #: code:addons/account_audit_trail/models/mail_message.py:0
@@ -108,10 +157,37 @@ msgid "Operation not supported"
 msgstr "Vorgang nicht unterstützt"
 
 #. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_partner_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Partners"
+msgstr "Partner"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Record"
+msgstr "Datensatz"
+
+#. module: account_audit_trail
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
 msgid "Show Audit Log"
 msgstr "Audit-Protokoll anzeigen"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_tax_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_tax_id
+msgid "Tax"
+msgstr "Steuer"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Taxes"
+msgstr "Steuern"
 
 #. module: account_audit_trail
 #. odoo-python
@@ -145,6 +221,11 @@ msgid "Updated"
 msgstr "Aktualisiert"
 
 #. module: account_audit_trail
-#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
-msgid "date"
-msgstr "Datum"
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid ""
+"You cannot remove parts of the audit trail. Archive the record instead."
+msgstr ""
+"Sie können diese Teile des Audit Trail nicht entfernen. Archivieren Sie "
+"stattdessen den Datensatz."

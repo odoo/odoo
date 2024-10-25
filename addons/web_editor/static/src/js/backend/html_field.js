@@ -33,6 +33,7 @@ import { uniqueId } from '@web/core/utils/functions';
 // Ensure `@web/views/fields/html/html_field` is loaded first as this module
 // must override the html field in the registry.
 import '@web/views/fields/html/html_field';
+import { Deferred } from "@web/core/utils/concurrency";
 
 let stripHistoryIds;
 
@@ -147,13 +148,10 @@ export class HtmlField extends Component {
         onMounted(() => {
             this.dynamicPlaceholder?.setElementRef(this.wysiwyg);
         });
-        onWillUnmount(() => {
+        onWillUnmount(async () => {
             if (!this.props.readonly && this._isDirty()) {
-                // If we still have uncommited changes, commit them with the
-                // urgent flag to avoid losing them. Urgent flag is used to be
-                // able to save the changes before the component is destroyed
-                // by the owl component manager.
-                this.commitChanges({ urgent: true });
+                // If we still have uncommited changes, commit them to avoid losing them.
+                await this.commitChanges();
             }
             if (this._qwebPlugin) {
                 this._qwebPlugin.destroy();
@@ -387,16 +385,22 @@ export class HtmlField extends Component {
         popover.style.left = leftPosition + 'px';
     }
     async commitChanges({ urgent, shouldInline } = {}) {
+        if (this.isCurrentlySaving && !urgent) {
+            await this.isCurrentlySaving;
+        }
         if (this._isDirty() || urgent || (shouldInline && this.props.isInlineStyle)) {
             let savePendingImagesPromise, toInlinePromise;
             if (this.wysiwyg && this.wysiwyg.odooEditor) {
+                if (!urgent) {
+                    this.isCurrentlySaving = new Deferred();
+                }
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
                 savePendingImagesPromise = this.wysiwyg.savePendingImages();
                 if (this.props.isInlineStyle) {
                     // Avoid listening to changes made during the _toInline process.
                     toInlinePromise = this._toInline();
                 }
-                if (urgent) {
+                if (urgent && status(this) !== 'destroyed') {
                     await this.updateValue();
                 }
                 await savePendingImagesPromise;
@@ -407,6 +411,9 @@ export class HtmlField extends Component {
             }
             if (status(this) !== 'destroyed') {
                 await this.updateValue();
+            }
+            if (this.isCurrentlySaving) {
+                this.isCurrentlySaving.resolve();
             }
         }
     }
@@ -580,7 +587,7 @@ export class HtmlField extends Component {
         $odooEditor.removeClass('odoo-editor-editable');
         $editable.html(html);
 
-        await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
+        await toInline($editable, undefined, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor-editable');
 
         this.wysiwyg.setValue($editable.html());

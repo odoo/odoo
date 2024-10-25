@@ -17,7 +17,7 @@ from psycopg2.sql import Identifier, SQL, Placeholder
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import pycompat, unique, OrderedSet
+from odoo.tools import pycompat, unique, OrderedSet, lazy_property
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -135,7 +135,14 @@ def upsert_en(model, fnames, rows, conflict):
     cols = ", ".join(quote(fname) for fname in fnames)
     values = ", ".join("%s" for row in rows)
     conf = ", ".join(conflict)
-    excluded = ", ".join(f"EXCLUDED.{quote(fname)}" for fname in fnames)
+    excluded = ", ".join(
+        (
+            f"COALESCE({table}.{quote(fname)}, '{{}}'::jsonb) || EXCLUDED.{quote(fname)}"
+            if model._fields[fname].translate is True
+            else f"EXCLUDED.{quote(fname)}"
+        )
+        for fname in fnames
+    )
     query = f"""
         INSERT INTO {table} ({cols}) VALUES {values}
         ON CONFLICT ({conf}) DO UPDATE SET ({cols}) = ({excluded})
@@ -1677,12 +1684,14 @@ class IrModelSelection(models.Model):
                 records.invalidate_recordset([fname])
 
         for selection in self:
-            Model = self.env[selection.field_id.model]
             # The field may exist in database but not in registry. In this case
             # we allow the field to be skipped, but for production this should
             # be handled through a migration script. The ORM will take care of
             # the orphaned 'ir.model.fields' down the stack, and will log a
             # warning prompting the developer to write a migration script.
+            Model = self.env.get(selection.field_id.model)
+            if Model is None:
+                continue
             field = Model._fields.get(selection.field_id.name)
             if not field or not field.store or not Model._auto:
                 continue
@@ -2377,12 +2386,24 @@ class IrModelData(models.Model):
         # be executed on a stale registry, and if some of the data for executing the compute
         # methods is not in cache it will be fetched, and fields that exist in the registry but not
         # in the database will be prefetched, this will of course fail and prevent the uninstall.
+        has_shared_field = False
         for ir_field in self.env['ir.model.fields'].browse(field_ids):
             model = self.pool.get(ir_field.model)
             if model is not None:
                 field = model._fields.get(ir_field.name)
-                if field is not None:
-                    field.prefetch = False
+                if field is not None and field.prefetch:
+                    if field._toplevel:
+                        # the field is specific to this registry
+                        field.prefetch = False
+                    else:
+                        # the field is shared across registries; don't modify it
+                        Field = type(field)
+                        field_ = Field(_base_fields=[field, Field(prefetch=False)])
+                        self.env[ir_field.model]._add_field(ir_field.name, field_)
+                        field_.setup(model)
+                        has_shared_field = True
+        if has_shared_field:
+            lazy_property.reset_all(self.env.registry)
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []

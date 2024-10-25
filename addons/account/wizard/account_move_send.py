@@ -122,10 +122,12 @@ class AccountMoveSend(models.TransientModel):
     def _get_default_mail_partner_ids(self, move, mail_template, mail_lang):
         partners = self.env['res.partner'].with_company(move.company_id)
         if mail_template.email_to:
-            for mail_data in tools.email_split(mail_template.email_to):
+            email_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_to')
+            for mail_data in tools.email_split(email_to):
                 partners |= partners.find_or_create(mail_data)
         if mail_template.email_cc:
-            for mail_data in tools.email_split(mail_template.email_cc):
+            email_cc = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_cc')
+            for mail_data in tools.email_split(email_cc):
                 partners |= partners.find_or_create(mail_data)
         if mail_template.partner_to:
             partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
@@ -288,7 +290,7 @@ class AccountMoveSend(models.TransientModel):
     def _compute_mail_partner_ids(self):
         for wizard in self:
             if wizard.mode == 'invoice_single' and wizard.mail_template_id:
-                wizard.mail_partner_ids = self._get_default_mail_partner_ids(self.move_ids, wizard.mail_template_id, wizard.mail_lang)
+                wizard.mail_partner_ids = wizard._get_default_mail_partner_ids(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
             else:
                 wizard.mail_partner_ids = None
 
@@ -375,7 +377,7 @@ class AccountMoveSend(models.TransientModel):
         if invoice.invoice_pdf_report_id:
             return
 
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids)
+        content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._render('account.account_invoices', invoice.ids)
 
         invoice_data['pdf_attachment_values'] = {
             'raw': content,
@@ -392,7 +394,7 @@ class AccountMoveSend(models.TransientModel):
         :param invoice:         An account.move record.
         :param invoice_data:    The collected data for the invoice so far.
         """
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids, data={'proforma': True})
+        content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._render('account.account_invoices', invoice.ids, data={'proforma': True})
 
         invoice_data['proforma_pdf_attachment_values'] = {
             'raw': content,
@@ -473,6 +475,9 @@ class AccountMoveSend(models.TransientModel):
             )
 
         # Prevent duplicated attachments linked to the invoice.
+        new_message.attachment_ids.invalidate_recordset(['res_id', 'res_model'], flush=False)
+        if new_message.attachment_ids.ids:
+            self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
         new_message.attachment_ids.write({
             'res_model': new_message._name,
             'res_id': new_message.id,

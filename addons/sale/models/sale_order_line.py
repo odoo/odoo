@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -328,7 +327,9 @@ class SaleOrderLine(models.Model):
                 elif dp_state == 'cancel':
                     name = _("%(line_description)s (Canceled)", line_description=name)
                 else:
-                    invoice = line._get_invoice_lines().move_id
+                    invoice = line._get_invoice_lines().filtered(
+                        lambda aml: aml.quantity >= 0
+                    ).move_id.filtered(lambda move: move.move_type == 'out_invoice')
                     if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:
                         name = _(
                             "%(line_description)s (ref: %(reference)s on %(date)s)",
@@ -360,13 +361,16 @@ class SaleOrderLine(models.Model):
         :return: the description related to special variant attributes/values
         :rtype: string
         """
-        if not self.product_custom_attribute_value_ids and not self.product_no_variant_attribute_value_ids:
+        no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin.filtered(
+            # Only describe the attributes where a choice was made by the customer
+            lambda ptav: ptav.display_type == 'multi' or ptav.attribute_line_id.value_count > 1
+        )
+        if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
 
         name = "\n"
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
-        no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
 
         # display the no_variant attributes, except those that are also
@@ -615,7 +619,7 @@ class SaleOrderLine(models.Model):
         Compute the amounts of the SO line.
         """
         for line in self:
-            tax_results = self.env['account.tax']._compute_taxes([
+            tax_results = self.env['account.tax'].with_company(line.company_id)._compute_taxes([
                 line._convert_to_tax_base_line_dict()
             ])
             totals = list(tax_results['totals'].values())[0]
@@ -1286,3 +1290,13 @@ class SaleOrderLine(models.Model):
 
     def has_valued_move_ids(self):
         return self.move_ids
+
+    def _sellable_lines_domain(self):
+        discount_products_ids = self.env.companies.sale_discount_product_id.ids
+        domain = [('is_downpayment', '=', False)]
+        if discount_products_ids:
+            domain = expression.AND([
+                domain,
+                [('product_id', 'not in', discount_products_ids)],
+            ])
+        return domain

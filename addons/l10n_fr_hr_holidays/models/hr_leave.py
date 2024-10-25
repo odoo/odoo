@@ -33,6 +33,28 @@ class HrLeave(models.Model):
         if not (self.resource_calendar_id.attendance_ids):
             raise UserError(_("An employee can't take paid time off in a period without any work hours."))
 
+        if not self.request_unit_hours:
+            # extend the date range to the full day or requested period so that the difference of hours
+            # between employee's work hours and the company's work hours doesn't affect the computation
+            date_from = date_from.replace(hour=0, minute=0, second=0)
+            date_to = date_to.replace(hour=23, minute=59, second=59)
+
+            def adjust_date_range(date_from, date_to, period, attendance_ids, employee_id):
+                period_ids = attendance_ids.filtered(lambda a: a.day_period == period)
+                max_hour = max(attendance.hour_to for attendance in period_ids)
+                min_hour = min(attendance.hour_from for attendance in period_ids)
+                date_from = self._to_utc(date_from, min_hour, employee_id)
+                date_to = self._to_utc(date_to, max_hour, employee_id)
+                return date_from, date_to
+
+            if self.request_unit_half:
+                attendance_ids = self.company_id.resource_calendar_id.attendance_ids.filtered(
+                    lambda a: int(a.dayofweek) == date_to.weekday() and a.day_period != "lunch"
+                )
+                if attendance_ids:
+                    period = 'morning' if self.request_date_from_period == 'am' else 'afternoon'
+                    date_from, date_to = adjust_date_range(date_from, date_to, period, attendance_ids, self.employee_id)
+
         if self.request_unit_half and self.request_date_from_period == 'am':
             # In normal workflows request_unit_half implies that date_from and date_to are the same
             # request_unit_half allows us to choose between `am` and `pm`

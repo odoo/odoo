@@ -742,7 +742,38 @@ class Website(Home):
 
     @http.route(['/website/seo_suggest'], type='json', auth="user", website=True)
     def seo_suggest(self, keywords=None, lang=None):
-        language = lang.split("_")
+        """
+        Suggests search keywords based on a given input using Google's
+        autocomplete API.
+
+        This method takes in a `keywords` string and an optional `lang`
+        parameter that defines the language and geographical region for
+        tailoring search suggestions. It sends a request to Google's
+        autocomplete service and returns the search suggestions in JSON format.
+
+        :param str keywords: the keyword string for which suggestions
+            are needed.
+        :param str lang: a string representing the language and geographical
+            location, formatted as:
+            - `language_territory@modifier`, where:
+                - `language`: 2-letter ISO language code (e.g., "en" for
+                  English).
+                - `territory`: Optional, 2-letter country code (e.g., "US" for
+                  United States).
+                - `modifier`: Optional, generally script variant (e.g.,
+                  "latin").
+            If `lang` is not provided or does not match the expected format, the
+            default language is set to English (`en`) and the territory to the
+            United States (`US`).
+
+        :returns: JSON list of strings
+            A list of suggested keywords returned by Google's autocomplete
+            service. If no suggestions are found or if there's an error (e.g.,
+            connection issues), an empty list is returned.
+        """
+        pattern = r'^([a-zA-Z]+)(?:_(\w+))?(?:@(\w+))?$'
+        match = re.match(pattern, lang)
+        language = [match.group(1), match.group(2) or ''] if match else ['en', 'US']
         url = "http://google.com/complete/search"
         try:
             req = requests.get(url, params={
@@ -766,11 +797,10 @@ class Website(Home):
         res = {'can_edit_seo': True}
         record = request.env[res_model].browse(res_id)
         try:
-            record.check_access_rights('write')
-            record.check_access_rule('write')
+            request.website._check_user_can_modify(record)
         except AccessError:
-            record = record.sudo()
             res['can_edit_seo'] = False
+        record = record.sudo()
 
         res.update(record.read(fields)[0])
         res['has_social_default_image'] = request.website.has_social_default_image
@@ -780,6 +810,22 @@ class Website(Home):
             res['seo_name'] = record.seo_name and slugify(record.seo_name) or ''
 
         return res
+
+    @http.route(['/website/check_can_modify_any'], type='json', auth="user", website=True)
+    def check_can_modify_any(self, records):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+        first_error = None
+        for rec in records:
+            try:
+                record = request.env[rec['res_model']].browse(rec['res_id'])
+                request.website._check_user_can_modify(record)
+                return True
+            except AccessError as e:
+                if not first_error:
+                    first_error = e
+                continue
+        raise first_error
 
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
     def google_console_search(self, key, **kwargs):

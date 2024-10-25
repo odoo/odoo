@@ -72,7 +72,10 @@ class StockPicking(models.Model):
     def _compute_shipping_weight(self):
         for picking in self:
             # if shipping weight is not assigned => default to calculated product weight
-            picking.shipping_weight = picking.weight_bulk + sum([pack.shipping_weight or pack.weight for pack in picking.package_ids])
+            picking.shipping_weight = (
+                picking.weight_bulk +
+                sum(pack.shipping_weight or pack.weight for pack in picking.package_ids.sudo())
+            )
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -164,6 +167,10 @@ class StockPicking(models.Model):
         #`package_carrier_type` will be the same in these cases.
         if context['current_package_carrier_type'] in ['fixed', 'base_on_rule']:
             context['current_package_carrier_type'] = 'none'
+        # Update the context 'default_package_type_id' passed from JS
+        # to populate the scanned package type in the package wizard opened from the barcode.
+        if self.env.context.get('default_package_type_id'):
+            context['default_delivery_package_type_id'] = self.env.context.get('default_package_type_id')
         return {
             'name': _('Package Details'),
             'type': 'ir.actions.act_window',

@@ -247,7 +247,7 @@ describe('Paste HTML tables', () => {
     
 
     
-[]<br></p>`,
+[]</p>`,
             });
         });
     });
@@ -360,7 +360,7 @@ describe('Paste HTML tables', () => {
             </tr>
         </tbody>
     </table><p>
-[]<br></p>`,
+[]</p>`,
             });
         });
     });
@@ -493,7 +493,7 @@ describe('Paste HTML tables', () => {
     </tbody></table><p>
 
 
-[]<br></p>`,
+[]</p>`,
             });
         });
     });

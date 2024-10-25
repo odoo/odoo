@@ -75,7 +75,7 @@ class PosPaymentMethod(models.Model):
         if not data:
             raise UserError(_('Invalid Adyen request'))
 
-        if 'SaleToPOIRequest' in data and data['SaleToPOIRequest']['MessageHeader']['MessageCategory'] == 'Payment': # Clear only if it is a payment request
+        if 'SaleToPOIRequest' in data and data['SaleToPOIRequest']['MessageHeader']['MessageCategory'] == 'Payment' and 'PaymentRequest' in data['SaleToPOIRequest']:  # Clear only if it is a payment request
             self.sudo().adyen_latest_response = ''  # avoid handling old responses multiple times
 
         if not operation:

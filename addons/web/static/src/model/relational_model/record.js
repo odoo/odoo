@@ -762,8 +762,10 @@ export class Record extends DataPoint {
                         });
                     }
                     staticList = this._createStaticListDatapoint(data, fieldName);
-                }
-                if (valueIsCommandList) {
+                    if (valueIsCommandList) {
+                        staticList._applyInitialCommands(value);
+                    }
+                } else if (valueIsCommandList) {
                     staticList._applyCommands(value);
                 }
                 parsedValues[fieldName] = staticList;
@@ -987,13 +989,13 @@ export class Record extends DataPoint {
                 this.data[fieldName]._abandonRecords();
             }
         }
-        if (!this._checkValidity({ displayNotification: true })) {
-            return false;
-        }
         const changes = this._getChanges();
         delete changes.id; // id never changes, and should not be written
         if (!creation && !Object.keys(changes).length) {
             return true;
+        }
+        if (!this._checkValidity({ displayNotification: true })) {
+            return false;
         }
         if (this.model._urgentSave && this.model.useSendBeaconToSaveUrgently) {
             // We are trying to save urgently because the user is closing the page. To
@@ -1179,7 +1181,11 @@ export class Record extends DataPoint {
             { withReadonly: true }
         );
         if (this.config.relationField) {
-            localChanges[this.config.relationField] = this._parentRecord._getChanges();
+            const parentRecord = this._parentRecord;
+            localChanges[this.config.relationField] = parentRecord._getChanges(
+                parentRecord._changes,
+                { withReadonly: true }
+            );
             if (!this._parentRecord.isNew) {
                 localChanges[this.config.relationField].id = this._parentRecord.resId;
             }

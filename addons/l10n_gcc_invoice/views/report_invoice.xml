@@ -280,15 +280,9 @@
                                         <span t-field="line.quantity"/>
                                         <span t-field="line.product_uom_id" groups="uom.group_uom"/>
                                     </td>
-                                    <td name="account_invoice_line_name" class="text-end">
-                                        <t t-set="line_name" t-value="
-                                            line.with_context(lang=o.partner_id.lang).product_id.display_name
-                                                if line.product_id and line.name in (
-                                                line.with_context(lang='ar_001').product_id.display_name,
-                                                line.with_context(lang='en_US').product_id.display_name
-                                            ) else line.name
-                                        "/>
-                                        <span t-out="line_name" t-options="{'widget': 'text'}"/>
+                                    <td name="account_invoice_line_name">
+                                        <t t-set="line_name" t-value="line.name or line.with_context(lang=o.partner_id.lang).product_id.display_name"/>
+                                        <span t-out="line_name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._lang_get_direction(o.partner_id.lang)"/>
                                     </td>
 
                                 </t>
@@ -343,23 +337,24 @@
                                     <!-- copy-pasted template "account.tax_groups_totals" with reversed columns order -->
                                     <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                                         <tr>
-                                            <t t-if="tax_totals['display_tax_base']">
-                                                <td class="text-end o_price_total">
-                                                    <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
-                                                </td>
-                                                <td class="text-end">
+                                            <td class="text-end o_price_total">
+                                                <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <strong>
                                                     <span t-esc="amount_by_group['tax_group_name']"/>
-                                                    <span class="text-nowrap"> on
-                                                        <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/>
+                                                    <t t-if="tax_totals['display_tax_base']">
+                                                        <span class="text-nowrap"> on
+                                                            <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/>
+                                                        </span>
+                                                    </t>
+                                                    <!-- Arabic translation of tax group -->
+                                                    <t t-set="arabic_tax_group_name" t-value="o_sec.tax_totals['groups_by_subtotal'][o_sec.tax_totals['subtotals'][subtotal_index]['name']][amount_by_group_index]['tax_group_name']"/>
+                                                    <span t-if="arabic_tax_group_name != amount_by_group['tax_group_name']" class="text-nowrap">/
+                                                        <t t-esc="arabic_tax_group_name"/>
                                                     </span>
-                                                </td>
-                                            </t>
-                                            <t t-else="">
-                                                <td class="text-end o_price_total">
-                                                    <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']" />
-                                                </td>
-                                                <td class="text-end"><span class="text-nowrap" t-esc="amount_by_group['tax_group_name']"/></td>
-                                            </t>
+                                                </strong>
+                                            </td>
                                         </tr>
                                     </t>
 
@@ -484,7 +479,7 @@
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-out="o.invoice_payment_term_id.note"/>
+                            <span t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" t-out="o.invoice_payment_term_id.note"/>
                         </div>
                         <div class="col-6 text-end">
                             <span dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
@@ -495,20 +490,20 @@
                 <p t-if="o.narration" name="comment">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-out="o.narration"/>
+                            <span t-if="o.narration != o_sec.narration" t-out="o.narration"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span t-out="o_sec.narration"/>
+                            <span dir="rtl" t-out="o_sec.narration"/>
                         </div>
                     </div>
                 </p>
                 <p t-if="o.fiscal_position_id.note" name="note">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-out="o.fiscal_position_id.note"/>
+                            <span t-if="o.fiscal_position_id.note != o_sec.fiscal_position_id.note" t-out="o.fiscal_position_id.note"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span t-out="o_sec.fiscal_position_id.note"/>
+                            <span dir="rtl" t-out="o_sec.fiscal_position_id.note"/>
                         </div>
                     </div>
                 </p>

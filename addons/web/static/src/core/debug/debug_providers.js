@@ -46,13 +46,14 @@ commandProviderRegistry.add("debug", {
                 name: _t("Run JS Mobile Tests"),
             });
         } else {
-            if (options.searchValue.toLowerCase() === "debug") {
+            const debugKey = "debug";
+            if (options.searchValue.toLowerCase() === debugKey) {
                 result.push({
                     action() {
                         browser.location.search = "?debug=assets";
                     },
                     category: "debug",
-                    name: _t("Activate debug mode (with assets)"),
+                    name: `${_t("Activate debug mode (with assets)")} (${debugKey})`,
                 });
             }
         }

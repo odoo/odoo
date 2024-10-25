@@ -67,7 +67,7 @@ class AccountMove(models.Model):
             ]
             for code in codes
         )
-        account_ids = self.env["account.account"].search(code_domain).ids
+        account_ids = self.env["account.account"].with_company(company_id).search(code_domain).ids
         code_domain = [("account_id", "in", account_ids)]
         period_domain = expression.OR([balance_domain, pnl_domain])
         domain = expression.AND([code_domain, period_domain, [("company_id", "=", company_id)]])

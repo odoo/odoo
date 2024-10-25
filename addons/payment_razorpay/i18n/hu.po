@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2023-12-22 15:54+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
@@ -19,6 +19,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
+"                        Enable recurring payments on Razorpay"
+msgstr ""
 
 #. module: payment_razorpay
 #. odoo-python
@@ -68,6 +75,13 @@ msgid "Payment Transaction"
 msgstr "Fizetési tranzakció"
 
 #. module: payment_razorpay
+#. odoo-javascript
+#: code:addons/payment_razorpay/static/src/js/payment_form.js:0
+#, python-format
+msgid "Payment processing failed"
+msgstr ""
+
+#. module: payment_razorpay
 #: model:ir.model.fields.selection,name:payment_razorpay.selection__payment_provider__code__razorpay
 msgid "Razorpay"
 msgstr ""
@@ -85,6 +99,13 @@ msgstr ""
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_webhook_secret
 msgid "Razorpay Webhook Secret"
+msgstr ""
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+#, python-format
+msgid "Razorpay gave us the following information: '%s'"
 msgstr ""
 
 #. module: payment_razorpay
@@ -123,17 +144,15 @@ msgid "Received incomplete refund data."
 msgstr ""
 
 #. module: payment_razorpay
-#. odoo-python
-#: code:addons/payment_razorpay/models/payment_provider.py:0
-#, python-format
-msgid ""
-"The communication with the API failed. Razorpay gave us the following "
-"information: '%s'"
+#: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
+msgid "The key solely used to identify the account with Razorpay."
 msgstr ""
 
 #. module: payment_razorpay
-#: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
-msgid "The key solely used to identify the account with Razorpay."
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "The phone number is invalid."
 msgstr ""
 
 #. module: payment_razorpay
@@ -146,6 +165,13 @@ msgstr ""
 #. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__code
 msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
 msgstr ""
 
 #. module: payment_razorpay

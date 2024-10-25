@@ -24,3 +24,4 @@ Sandeep Magukiya smangukiya@opensourceintegrators.com https://github.com/smanguk
 Steven Campbell scampbell@opensourceintegrators.com https://github.com/osi-scampbell
 Sudarshan Kadalazhi skadalazhi@opensourceintegrators.com https://github.com/sudarshan1607
 Wolfgang Hall shall@opensourceintegrators.com https://github.com/wolfhall
+Cole Beddies cbeddies@opensourceintegrators.com https://github.com/cbeddies

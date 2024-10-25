@@ -22,14 +22,18 @@
                         <Tipo t-out="format_alphanumeric(line_dict['discount_type'])"/>
                         <Percentuale t-out="format_numbers(abs(line.discount))"/>
                     </ScontoMaggiorazione>
-                    <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price'], currency)"/>
+                    <ScontoMaggiorazione t-if="line_dict['discount_amount'] != 0">
+                        <Tipo t-out="'SC'"/>
+                        <Importo t-out="format_numbers(abs(line_dict['discount_amount']))"/>
+                    </ScontoMaggiorazione>
+                    <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price_eur'], currency)"/>
                     <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-out="format_numbers(vat_tax.amount)"/>
                     <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-out="'0.00'"/>
                     <Natura t-if="vat_tax.l10n_it_exempt_reason" t-out="vat_tax.l10n_it_exempt_reason"/>
                     <AltriDatiGestionali t-if="conversion_rate">
                         <TipoDato t-translation="off">DIVISA</TipoDato>
                         <RiferimentoTesto t-out="format_alphanumeric(record.currency_id.name)"/>
-                        <RiferimentoNumero t-out="'%.06f' % line.price_subtotal"/>
+                        <RiferimentoNumero t-out="'%.06f' % line_dict['subtotal_price']"/>
                     </AltriDatiGestionali>
                     <AltriDatiGestionali t-if="conversion_rate">
                         <TipoDato t-translation="off">CAMBIO</TipoDato>
@@ -196,7 +200,7 @@
             <CondizioniPagamento t-translation="off"><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
             <t t-foreach="payments" t-as="payment">
                 <DettaglioPagamento>
-                    <ModalitaPagamento t-translation="off">MP05</ModalitaPagamento>
+                    <ModalitaPagamento t-translation="off" t-out="payment_method"/>
                     <DataScadenzaPagamento t-out="format_date(payment.date_maturity)"/>
                     <ImportoPagamento t-out="format_monetary(abs(payment.amount_currency), currency)"/>
                     <IstitutoFinanziario t-if="partner_bank.bank_id" t-out="format_alphanumeric(partner_bank.bank_id.name, 80)"/>

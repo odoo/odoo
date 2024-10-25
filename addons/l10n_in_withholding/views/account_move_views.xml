@@ -1,0 +1,38 @@
+<odoo>
+    <record id="account_move_view_form_inherit_l10n_in_withholding" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_in_withholding</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="l10n_in_is_withholding" invisible="1"/>
+                <button name="%(l10n_in_withholding_entry_form_action)d" string="TDS Entry" type="action" class="btn btn-secondary float-end"
+                        invisible="country_code != 'IN' or move_type not in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund') or state != 'posted'"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="l10n_in_withhold_move_ids" invisible="1"/>
+                <button name="action_l10n_in_withholding_entries"
+                        class="oe_stat_button"
+                        type="object"
+                        icon="fa-list-alt"
+                        invisible="not l10n_in_withhold_move_ids">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">TDS</span>
+                        <span class="o_stat_value"><field name="l10n_in_total_withholding_amount"/></span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//notebook/page[@id='aml_tab']" position="before">
+                <page name="withholding_tab" string="TDS Information" invisible="not l10n_in_withholding_line_ids">
+                    <field name="l10n_in_withholding_line_ids" nolabel="1" colspan="4">
+                        <tree editable="bottom" string="TDS Information">
+                            <field name="tax_ids" string="Tax" widget="many2many_tags"/>
+                            <field name="price_subtotal" string="Base Amount" sum="Total"/>
+                            <field name="l10n_in_withhold_tax_amount" string="TDS Amount" sum="Total"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

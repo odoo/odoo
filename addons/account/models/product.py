@@ -118,6 +118,22 @@ class ProductTemplate(models.Model):
                 "If you want to change its Unit of Measure, please archive this product and create a new one."
             ))
 
+    def _force_default_sale_tax(self, companies):
+        default_customer_taxes = companies.filtered('account_sale_tax_id').account_sale_tax_id
+        for product_grouped_by_tax in self.grouped('taxes_id').values():
+            product_grouped_by_tax.taxes_id += default_customer_taxes
+        self.invalidate_recordset(['taxes_id'])
+
+    def _force_default_purchase_tax(self, companies):
+        default_supplier_taxes = companies.filtered('account_purchase_tax_id').account_purchase_tax_id
+        for product_grouped_by_tax in self.grouped('supplier_taxes_id').values():
+            product_grouped_by_tax.supplier_taxes_id += default_supplier_taxes
+        self.invalidate_recordset(['supplier_taxes_id'])
+
+    def _force_default_tax(self, companies):
+        self._force_default_sale_tax(companies)
+        self._force_default_purchase_tax(companies)
+
     @api.model_create_multi
     def create(self, vals_list):
         products = super().create(vals_list)
@@ -125,18 +141,9 @@ class ProductTemplate(models.Model):
         # have the default taxes of the other companies as well. sudo() is used since we're going to need to fetch all
         # the other companies default taxes which the user may not have access to.
         other_companies = self.env['res.company'].sudo().search([('id', 'not in', self.env.companies.ids)])
-        if not other_companies:
-            return products
-
-        default_customer_tax_ids = other_companies.filtered('account_sale_tax_id').account_sale_tax_id.ids
-        default_supplier_tax_ids = other_companies.filtered('account_purchase_tax_id').account_purchase_tax_id.ids
-
-        products_without_company = products.filtered(lambda p: not p.company_id).sudo()
-        products_without_company.taxes_id = [Command.link(tax) for tax in default_customer_tax_ids]
-        products_without_company.supplier_taxes_id = [Command.link(tax) for tax in default_supplier_tax_ids]
-
-        products_without_company.invalidate_recordset(['taxes_id', 'supplier_taxes_id'])
-        products.invalidate_recordset(['taxes_id', 'supplier_taxes_id'])
+        if other_companies and products:
+            products_without_company = products.filtered(lambda p: not p.company_id).sudo()
+            products_without_company._force_default_tax(other_companies)
         return products
 
 
@@ -277,14 +284,19 @@ class ProductProduct(models.Model):
 
         # Search for the product with the exact name, then ilike the name
         name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
+        company = company or self.env.company
         for name_domain in name_domains:
-            product = self.env['product.product'].search(
-                expression.AND([
-                    expression.OR(domains + [name_domain]),
-                    self.env['product.product']._check_company_domain(company),
-                ]),
-                limit=1,
-            )
-            if product:
-                return product
+            for extra_domain in (
+                [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
+                [('company_id', '=', False)],
+            ):
+                product = self.env['product.product'].search(
+                    expression.AND([
+                        expression.OR(domains + [name_domain]),
+                        extra_domain,
+                    ]),
+                    limit=1,
+                )
+                if product:
+                    return product
         return self.env['product.product']

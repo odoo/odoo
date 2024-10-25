@@ -17,6 +17,9 @@ export class DynamicRecordList extends DynamicList {
     _setData(data) {
         /** @type {import("./record").Record[]} */
         this.records = data.records.map((r) => this._createRecordDatapoint(r));
+        if (this.isDomainSelected) {
+            this.records.forEach((r) => (r.selected = true));
+        }
         this._updateCount(data);
     }
 
@@ -149,22 +152,13 @@ export class DynamicRecordList extends DynamicList {
     }
 
     _removeRecords(recordIds) {
-        const _records = this.records.filter((r) => !recordIds.includes(r.id));
-        if (this.offset && !_records.length) {
+        const keptRecords = this.records.filter((r) => !recordIds.includes(r.id));
+        this.count -= this.records.length - keptRecords.length;
+        this.records = keptRecords;
+        if (this.offset && !this.records.length) {
             // we weren't on the first page, and we removed all records of the current page
             const offset = Math.max(this.offset - this.limit, 0);
-            return this._load(offset, this.limit, this.orderBy, this.domain);
-        }
-        const nbRemovedRecords = this.records.length - _records.length;
-        if (nbRemovedRecords > 0) {
-            if (this.count > this.offset + this.limit) {
-                // we removed some records, and there are other pages after the current one
-                return this._load(this.offset, this.limit, this.orderBy, this.domain);
-            } else {
-                // we are on the last page and there are still records remaining
-                this.count -= nbRemovedRecords;
-                this.records = _records;
-            }
+            this.model._updateConfig(this.config, { offset }, { reload: false });
         }
     }
 

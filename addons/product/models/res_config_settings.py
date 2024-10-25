@@ -46,7 +46,9 @@ class ResConfigSettings(models.TransientModel):
         if not self.group_product_pricelist:
             if self.group_sale_pricelist:
                 self.group_sale_pricelist = False
-            active_pricelist = self.env['product.pricelist'].sudo().search([('active', '=', True)])
+            active_pricelist = self.env['product.pricelist'].sudo().search_count(
+                [('active', '=', True)], limit=1
+            )
             if active_pricelist:
                 return {
                     'warning': {
@@ -63,8 +65,9 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
         had_group_pl = self.default_get(['group_product_pricelist'])['group_product_pricelist']
+        had_discount_group = self.default_get(['group_discount_per_so_line'])['group_discount_per_so_line']
         super().set_values()
-        if not self.group_discount_per_so_line:
+        if had_discount_group and not self.group_discount_per_so_line:
             pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
             pl.write({'discount_policy': 'with_discount'})
 

@@ -2,19 +2,19 @@
 <odoo>
     <template id="report_delivery_document2" inherit_id="stock.report_delivery_document">
         <xpath expr="//div[@name='div_sched_date']" position="after">
-            <div t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id" class="col-auto">
+            <div t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id" class="col-auto col-3 mw-100 mb-2">
                 <strong>Carrier:</strong>
-                <p t-field="o.carrier_id"/>
+                <p t-field="o.carrier_id" class="m-0"/>
             </div>
-            <div t-if="o.shipping_weight" class="col-auto">
+            <div t-if="o.shipping_weight" class="col-auto col-3 mw-100 mb-2">
                 <strong>Total Weight:</strong>
                 <br/>
                 <span t-field="o.shipping_weight"/>
                 <span t-field="o.weight_uom_name"/>
             </div>
-            <div t-if="o.carrier_tracking_ref" class="col-auto" style="max-width:30%;">
+            <div t-if="o.carrier_tracking_ref" class="col-auto col-3 mw-100 mb-2">
                 <strong>Tracking Number:</strong>
-                <p t-field="o.carrier_tracking_ref"/>
+                <p t-field="o.carrier_tracking_ref" class="m-0"/>
             </div>
             <t t-set="has_hs_code" t-value="o.move_ids.filtered(lambda l: l.product_id.hs_code)"/>
         </xpath>

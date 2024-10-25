@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document" primary="True">
-        <xpath expr="//address[@t-field='o.partner_id']" position="after">
-            <span t-field="o.l10n_in_gstin" t-if="o.company_id.account_fiscal_country_id.code == 'IN'"/>
+        <xpath expr="//div[@name='shipping_address_block']" position="inside">
+            <div t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.partner_shipping_id.vat">
+                GSTIN: <span t-field="o.partner_shipping_id.vat"/>
+            </div>
         </xpath>
-        <xpath expr="//t[@t-set='address']" position="inside">
-            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.l10n_in_state_id" class="mt16">
-                Place of supply: <span t-esc="o.l10n_in_state_id.name"/>
-            </t>
+        <xpath expr="//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="inside">
+            <t t-call="l10n_in.place_of_supply"/>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']//t[@t-set='address']" position="inside">
+            <t t-call="l10n_in.place_of_supply"/>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']//t[@t-set='address']" position="inside">
+            <t t-call="l10n_in.place_of_supply"/>
         </xpath>
 
         <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="after">
@@ -120,6 +126,12 @@
                t-call="l10n_in.l10n_in_report_invoice_document_inherit"
                t-lang="lang"/>
         </xpath>
+    </template>
+
+    <template id="place_of_supply">
+        <div t-if="o.l10n_in_state_id">
+            Place of supply: <span t-out="o.l10n_in_state_id.name" />
+        </div>
     </template>
 
 </odoo>

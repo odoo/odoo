@@ -4,6 +4,7 @@ import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 import { timings } from "@bus/misc";
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { unpatchImStatusService } from "@mail/core/common/im_status_service_patch";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
@@ -27,6 +28,7 @@ import { doAction, getActionManagerServerData } from "@web/../tests/webclient/he
 QUnit.begin(loadEmoji);
 QUnit.begin(loadLamejs);
 registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
+unpatchImStatusService();
 
 //------------------------------------------------------------------------------
 // Public: test lifecycle

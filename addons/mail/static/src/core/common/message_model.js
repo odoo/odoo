@@ -102,6 +102,11 @@ export class Message extends Record {
     is_discussion;
     /** @type {boolean} */
     is_note;
+    isSeenBySelf = Record.attr(false, {
+        compute() {
+            return this.originThread?.selfMember?.lastSeenMessage?.id >= this.id;
+        },
+    });
     /** @type {boolean} */
     isStarred;
     /** @type {boolean} */

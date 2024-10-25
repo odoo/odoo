@@ -8,6 +8,7 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,12 +57,12 @@ msgstr "Betala"
 #: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
 #, python-format
 msgid "Pay at cashier"
-msgstr ""
+msgstr "Betala i kassan"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Pay at cashier if empty"
-msgstr ""
+msgstr "Betala i kassan om den är tom"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -73,7 +74,7 @@ msgstr "Betalningsmetoder"
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Payment in progress"
-msgstr ""
+msgstr "Pågående betalningar"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
@@ -90,20 +91,20 @@ msgstr "Kassaorder"
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "Skanna QR-koden för att betala"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Self Online Payment"
-msgstr ""
+msgstr "Självbetjäning online"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.js:0
 #, python-format
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "Den aktuella ordern kan inte betalas (kanske är den redan betald)."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -111,6 +112,8 @@ msgstr ""
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
 msgstr ""
+"Den onlinebetalningsmetod som ska användas när en kund betalar en "
+"självbetald order online."
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -121,8 +124,11 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"Den onlinebetalningsmetod som används för självbeställning i en POS-"
+"konfiguration måste ha minst en publicerad betalningsleverantör som stöder "
+"valutan i den POS-konfigurationen."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "Använd självbeställning onlinebetalning"

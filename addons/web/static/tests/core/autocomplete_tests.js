@@ -59,6 +59,22 @@ QUnit.module("Components", (hooks) => {
             options.map((el) => el.textContent),
             ["World", "Hello"]
         );
+
+        const optionItems = [...target.querySelectorAll(".dropdown-item")];
+        assert.deepEqual(
+            optionItems.map((el) => ({
+                id: el.id,
+                role: el.getAttribute("role"),
+                "aria-selected": el.getAttribute("aria-selected"),
+            })),
+            [
+                {"id": "autocomplete_0_0", "role": "option", "aria-selected": "true"},
+                {"id": "autocomplete_0_1", "role": "option", "aria-selected": "false"},
+            ]
+        );
+
+        const input = target.querySelector(".o-autocomplete--input");
+        assert.strictEqual(input.getAttribute("aria-activedescendant"), optionItems[0].id);
     });
 
     QUnit.test("select option", async (assert) => {
@@ -557,6 +573,34 @@ QUnit.module("Components", (hooks) => {
         const input = target.querySelector(".o-autocomplete--input");
         await click(input);
         input.focus();
+
+        // Navigate suggestions using arrow keys
+        const optionItems = [...target.querySelectorAll(".dropdown-item")];
+        assert.deepEqual(
+            optionItems.map((el) => ({
+                id: el.id,
+                role: el.getAttribute("role"),
+                "aria-selected": el.getAttribute("aria-selected"),
+            })),
+            [
+                {"id": "autocomplete_0_0", "role": "option", "aria-selected": "true"},
+                {"id": "autocomplete_0_1", "role": "option", "aria-selected": "false"},
+            ]
+        );
+        assert.strictEqual(input.getAttribute("aria-activedescendant"), optionItems[0].id);
+        await triggerEvent(target, ".o-autocomplete--input", "keydown", { key: "arrowdown" });
+        assert.deepEqual(
+            optionItems.map((el) => ({
+                id: el.id,
+                role: el.getAttribute("role"),
+                "aria-selected": el.getAttribute("aria-selected"),
+            })),
+            [
+                {"id": "autocomplete_0_0", "role": "option", "aria-selected": "false"},
+                {"id": "autocomplete_0_1", "role": "option", "aria-selected": "true"},
+            ]
+        );
+        assert.strictEqual(input.getAttribute("aria-activedescendant"), optionItems[1].id);
 
         // Start typing hello and click on the result
         await triggerEvent(target, ".o-autocomplete--input", "keydown", { key: "h" });

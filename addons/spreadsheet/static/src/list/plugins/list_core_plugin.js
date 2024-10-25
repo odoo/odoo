@@ -66,6 +66,11 @@ export class ListCorePlugin extends CorePlugin {
                     return CommandResult.EmptyName;
                 }
                 break;
+            case "UPDATE_ODOO_LIST_DOMAIN":
+                if (!(cmd.listId in this.lists)) {
+                    return CommandResult.ListIdNotFound;
+                }
+                break;
             case "ADD_GLOBAL_FILTER":
             case "EDIT_GLOBAL_FILTER":
                 if (cmd.list) {

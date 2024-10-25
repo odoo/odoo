@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from collections import OrderedDict
 from operator import itemgetter
 from markupsafe import Markup
 
 from odoo import conf, http, _
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.tools import groupby as groupbyelem
@@ -280,7 +282,6 @@ class ProjectCustomerPortal(CustomerPortal):
         values = {
             'date': {'label': _('Newest'), 'order': 'create_date desc', 'sequence': 1},
             'name': {'label': _('Title'), 'order': 'name', 'sequence': 2},
-            'users': {'label': _('Assignees'), 'order': 'user_ids', 'sequence': 4},
             'stage': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 5},
             'status': {'label': _('Status'), 'order': 'state', 'sequence': 6},
             'priority': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 8},
@@ -392,7 +393,7 @@ class ProjectCustomerPortal(CustomerPortal):
         Task_sudo = Task.sudo()
 
         # default sort by value
-        if not sortby or (sortby == 'milestone' and not milestones_allowed):
+        if not sortby or sortby not in searchbar_sortings or (sortby == 'milestone' and not milestones_allowed):
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
@@ -544,3 +545,42 @@ class ProjectCustomerPortal(CustomerPortal):
             request.session['my_tasks_history'] = task_sudo.ids
         values = self._task_get_page_view_values(task_sudo, access_token, **kw)
         return request.render("project.portal_my_task", values)
+
+    @http.route('/project_sharing/attachment/add_image', type='http', auth='user', methods=['POST'], website=True)
+    def add_image(self, name, data, res_id, access_token=None, **kwargs):
+        try:
+            task_sudo = self._document_check_access('project.task', int(res_id), access_token=access_token)
+            if not task_sudo.with_user(request.env.uid).project_id._check_project_sharing_access():
+                return request.not_found()
+        except (AccessError, MissingError):
+            raise UserError(_("The document does not exist or you do not have the rights to access it."))
+
+        IrAttachment = request.env['ir.attachment']
+
+        # Avoid using sudo when not necessary: internal users can create attachments,
+        # as opposed to public and portal users.
+        if not request.env.user._is_internal():
+            IrAttachment = IrAttachment.sudo()
+
+        values = IrAttachment._check_contents({
+            'name': name,
+            'datas': data,
+            'res_model': 'project.task',
+            'res_id': res_id,
+            'access_token': IrAttachment._generate_access_token(),
+        })
+
+        valid_image_mime_types = ['image/jpeg', 'image/png', 'image/bmp', 'image/tiff']
+
+        if values.get('mimetype', False) not in valid_image_mime_types:
+            return request.make_response(
+                data=json.dumps({'error': _('Only jpeg, png, bmp and tiff images are allowed as attachments.')}),
+                headers=[('Content-Type', 'application/json')],
+                status=400
+            )
+
+        attachment = IrAttachment.create(values)
+        return request.make_response(
+            data=json.dumps(attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]),
+            headers=[('Content-Type', 'application/json')]
+        )

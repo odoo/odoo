@@ -54,7 +54,7 @@ class PaymentTransaction(models.Model):
         """
         payload = {
             'name': self.partner_name,
-            'email': self.partner_email,
+            'email': self.partner_email or '',
             'contact': self.partner_phone and self._validate_phone_number(self.partner_phone) or '',
             'fail_existing': '0',  # Don't throw an error if the customer already exists.
         }
@@ -310,7 +310,8 @@ class PaymentTransaction(models.Model):
                 raise ValidationError("Razorpay: " + _("Received data with missing reference."))
             tx = self.search([('reference', '=', reference), ('provider_code', '=', 'razorpay')])
         else:  # 'refund'
-            reference = notification_data.get('notes', {}).get('reference')
+            notes = notification_data.get('notes')
+            reference = isinstance(notes, dict) and notes.get('reference')
             if reference:  # The refund was initiated from Odoo.
                 tx = self.search([('reference', '=', reference), ('provider_code', '=', 'razorpay')])
             else:  # The refund was initiated from Razorpay.
@@ -388,7 +389,7 @@ class PaymentTransaction(models.Model):
         # Update the payment method.
         payment_method_type = entity_data.get('method', '')
         if payment_method_type == 'card':
-            payment_method_type = entity_data.get('card', {}).get('network').lower()
+            payment_method_type = entity_data.get('card', {}).get('network', '').lower()
         payment_method = self.env['payment.method']._get_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
@@ -405,8 +406,12 @@ class PaymentTransaction(models.Model):
             if self.provider_id.capture_manually:
                 self._set_authorized()
         elif entity_status in const.PAYMENT_STATUS_MAPPING['done']:
-            if entity_data.get('token_id') and self.provider_id.allow_tokenization:
-                self._razorpay_tokenize_from_notification_data(notification_data)
+            if (
+                not self.token_id
+                and entity_data.get('token_id')
+                and self.provider_id.allow_tokenization
+            ):
+                self._razorpay_tokenize_from_notification_data(entity_data)
             self._set_done()
 
             # Immediately post-process the transaction if it is a refund, as the post-processing

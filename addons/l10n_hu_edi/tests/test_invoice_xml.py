@@ -70,8 +70,10 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
         # Skip if sale is not installed
         if 'sale_line_ids' not in self.env['account.move.line']:
             self.skipTest('Sale module not installed, skipping advance invoice tests.')
-        with freeze_time('2024-02-01'):
-            advance_invoice, final_invoice = self.create_advance_invoice()
+
+        # Issue advance invoice on 2024-01-01.
+        with freeze_time('2024-01-01'):
+            sale_order, advance_invoice = self.create_advance_invoice()
             advance_invoice.action_post()
             advance_invoice_xml = advance_invoice._l10n_hu_edi_generate_xml()
 
@@ -81,6 +83,13 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
                     self.get_xml_tree_from_string(expected_xml_file.read()),
                 )
 
+        # Pay advance invoice on 2024-01-15.
+        with freeze_time('2024-01-15'):
+            self.env['account.payment.register'].with_context(active_ids=advance_invoice.ids, active_model='account.move').create({})._create_payments()
+
+        # Issue final invoice on 2024-02-01. The XML should report 2024-01-15 as the date of advance payment.
+        with freeze_time('2024-02-01'):
+            final_invoice = self.create_final_invoice(sale_order)
             final_invoice.action_post()
             final_invoice_xml = final_invoice._l10n_hu_edi_generate_xml()
 

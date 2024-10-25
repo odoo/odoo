@@ -55,7 +55,7 @@ class StockWarehouse(models.Model):
         return result
 
     def _update_global_route_resupply_subcontractor(self):
-        route_id = self._find_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
+        route_id = self._find_or_create_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
                                            _('Resupply Subcontractor on Order'))
         if not route_id.sudo().rule_ids.filtered(lambda r: r.active):
             route_id.active = False
@@ -98,7 +98,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), raise_if_not_found=False).id,
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
                     'name': self._format_rulename(self.lot_stock_id, subcontract_location_id, 'MTO'),
                     'location_dest_id': subcontract_location_id.id,
                     'location_src_id': self.lot_stock_id.id,
@@ -115,8 +115,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
-                                                        _('Resupply Subcontractor on Order'), raise_if_not_found=False).id,
+                    'route_id': self._find_or_create_global_route('mrp_subcontracting.route_resupply_subcontractor_mto', _('Resupply Subcontractor on Order')).id,
                     'name': self._format_rulename(subcontract_location_id, production_location_id, False),
                     'location_dest_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,

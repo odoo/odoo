@@ -9,4 +9,4 @@ class EventRegistration(models.Model):
     _mailing_enabled = True
 
     def _mailing_get_default_domain(self, mailing):
-        return [('state', '!=', 'cancel')]
+        return [('state', 'not in', ['cancel', 'draft'])]

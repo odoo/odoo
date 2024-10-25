@@ -42,3 +42,9 @@ class PaymentProvider(models.Model):
             # system and need to be converted to send to external APIs.
             return iri_to_uri(request.httprequest.url_root)
         return super().get_base_url()
+
+    def copy(self, default=None):
+        res = super().copy(default=default)
+        if self._context.get('stripe_connect_onboarding'):
+            res.website_id = False
+        return res

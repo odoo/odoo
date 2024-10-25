@@ -318,21 +318,27 @@ class TestCalendar(SavepointCaseWithUserDemo):
                     ])
                 self.assertEqual(len(mail), 1)
 
-        def _test_emails_has_attachment(self, partners):
-            # check that every email has an attachment
+        def _test_emails_has_attachment(self, partners, attachments_names=["fileText_attachment.txt"], checksums=None):
+            # check that every email has specified extra attachments
             for partner in partners:
                 mail = self.env['mail.message'].sudo().search([
                     ('notified_partner_ids', 'in', partner.id),
                 ])
-                extra_attachment = mail.attachment_ids.filtered(lambda attachment: attachment.name == "fileText_attachment.txt")
-                self.assertEqual(len(extra_attachment), 1)
+                extra_attachments = mail.attachment_ids.filtered(lambda attachment: attachment.name in attachments_names)
+                self.assertEqual(len(extra_attachments), len(attachments_names))
+                if checksums:
+                    self.assertEqual(extra_attachments.mapped('checksum'), checksums)
 
-        attachment = self.env['ir.attachment'].create({
+        attachments = self.env['ir.attachment'].create([{
             'datas': base64.b64encode(bytes("Event Attachment", 'utf-8')),
             'name': 'fileText_attachment.txt',
             'mimetype': 'text/plain'
-        })
-        self.env.ref('calendar.calendar_template_meeting_invitation').attachment_ids = attachment
+        }, {
+            'datas': base64.b64encode(bytes("Event Attachment 2", 'utf-8')),
+            'name': 'fileText_attachment_2.txt',
+            'mimetype': 'text/plain'
+        }])
+        self.env.ref('calendar.calendar_template_meeting_invitation').attachment_ids = attachments
 
         partners = [
             self.env['res.partner'].create({'name': 'testuser0', 'email': u'bob@example.com'}),
@@ -351,7 +357,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         # every partner should have 1 mail sent
         _test_one_mail_per_attendee(self, partners)
-        _test_emails_has_attachment(self, partners)
+        _test_emails_has_attachment(self, partners, checksums=[attachments[0].checksum])
 
         # adding more partners to the event
         partners.extend([
@@ -380,6 +386,23 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         # no more email should be sent
         _test_one_mail_per_attendee(self, partners)
+
+        partner_staff, new_partner = self.env['res.partner'].create([{
+            'name': 'partner_staff',
+            'email': 'partner_staff@example.com',
+        }, {
+            'name': 'partner_created_on_the_spot_by_the_appointment_form',
+            'email': 'partner_created_on_the_spot_by_the_appointment_form@example.com',
+        }])
+        self.CalendarEvent.with_user(self.env.ref('base.public_user')).sudo().create({
+            'name': "publicUserEvent",
+            'partner_ids': [(6, False, [partner_staff.id, new_partner.id])],
+            'start': "2023-10-06 12:00:00",
+            'stop': "2023-10-06 13:00:00",
+        })
+        _test_emails_has_attachment(
+            self, partners=[partner_staff, new_partner], attachments_names=[a.name for a in attachments], checksums=attachments.mapped('checksum')
+        )
 
     def test_event_creation_internal_user_invitation_ics(self):
         """ Check that internal user can read invitation.ics attachment """

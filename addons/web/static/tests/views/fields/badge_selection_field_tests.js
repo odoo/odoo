@@ -148,4 +148,93 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test(
+        "BadgeSelectionField widget on a selection unchecking selected value",
+        async (assert) => {
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
+                arch: '<form><field name="color" widget="selection_badge"/></form>',
+                mockRPC(_, { method, model, args }) {
+                    if (method === "web_save" && model === "partner") {
+                        assert.step("web_save");
+                        assert.deepEqual(args[1], { color: false });
+                    }
+                },
+            });
+
+            assert.containsOnce(
+                target,
+                "div.o_field_selection_badge",
+                "should have rendered outer div"
+            );
+            assert.containsN(target, "span.o_selection_badge", 2, "should have 2 possible choices");
+            assert.containsN(target, "span.o_selection_badge.active", 1, "one is active");
+            assert.strictEqual(
+                target.querySelector("span.o_selection_badge.active").textContent,
+                "Red",
+                "the active one should be Red"
+            );
+
+            // click again on red option and save to update the server data
+            await click(target, "span.o_selection_badge.active");
+            assert.verifySteps([]);
+            await click(target, ".o_form_button_save");
+            assert.verifySteps(["web_save"], "should have created a new record");
+
+            const newRecord = serverData.models.partner.records.at(-1);
+            assert.strictEqual(
+                newRecord.color,
+                false,
+                "the new value should be false as we have selected same value as default"
+            );
+        }
+    );
+
+    QUnit.test(
+        "BadgeSelectionField widget on a selection unchecking selected value (required field)",
+        async (assert) => {
+            serverData.models.partner.fields.color.required = true;
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
+                arch: '<form><field name="color" widget="selection_badge"/></form>',
+                mockRPC(_, { method, model, args }) {
+                    if (method === "web_save" && model === "partner") {
+                        assert.step("web_save");
+                        assert.deepEqual(args[1], { color: "red" });
+                    }
+                },
+            });
+
+            assert.containsOnce(
+                target,
+                "div.o_field_selection_badge",
+                "should have rendered outer div"
+            );
+            assert.containsN(target, "span.o_selection_badge", 2, "should have 2 possible choices");
+            assert.containsN(target, "span.o_selection_badge.active", 1, "one is active");
+            assert.strictEqual(
+                target.querySelector("span.o_selection_badge.active").textContent,
+                "Red",
+                "the active one should be Red"
+            );
+
+            // click again on red option and save to update the server data
+            await click(target, "span.o_selection_badge.active");
+            assert.verifySteps([]);
+            await click(target, ".o_form_button_save");
+            assert.verifySteps(["web_save"], "should have created a new record");
+
+            const newRecord = serverData.models.partner.records.at(-1);
+            assert.strictEqual(
+                newRecord.color,
+                "red",
+                "the new value should be red"
+            );
+        }
+    );
 });

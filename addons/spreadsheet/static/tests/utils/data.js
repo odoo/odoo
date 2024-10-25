@@ -373,6 +373,11 @@ export function getBasicData() {
                     type: "many2many",
                     searchable: true,
                 },
+                id: {
+                    type: "integer",
+                    searchable: true,
+                    string: "ID",
+                },
             },
             records: [
                 {

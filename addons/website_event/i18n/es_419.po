@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -57,9 +57,7 @@ msgstr ""
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "<b>Drag and Drop</b> this snippet below the event title."
-msgstr ""
-"<b>Arrastre y suelte</b> este fragmento de código debajo del título del "
-"evento."
+msgstr "<b>Arrastre y suelte</b> este snippet debajo del título del evento."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -406,18 +404,8 @@ msgstr "Cancelar"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Cards"
-msgstr "Tarjetas"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Card design"
 msgstr "Diseño de la tarjeta"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Template badge"
-msgstr "Plantilla del gafete"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -758,11 +746,6 @@ msgstr ""
 "conversación."
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Fold Tickets Details"
-msgstr "Plegar detalles de boletos"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Follow Us"
@@ -830,9 +813,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
-"Si es verdadera, esta pregunta se hará una sola vez y se repartirá su valor "
-"entre todos los asistentes; de no ser así, se hará la pregunta a todos los "
-"asistentes del evento."
+"Si está seleccionada, esta pregunta se hará solo una vez y su valor se "
+"compartirá entre todos los asistentes. Si no, se preguntará a todos los "
+"asistentes."
 
 #. module: website_event
 #. odoo-python
@@ -1199,6 +1182,7 @@ msgstr "¡Registro confirmado!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registration failed! These tickets are not available anymore."
 msgstr ""
 "Ocurrió un error con el registro. Estos boletos ya no están disponibles."
@@ -1259,16 +1243,6 @@ msgid "SEO optimized"
 msgstr "Optimizado para SEO"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Share"
-msgstr "Compartir"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "SHARE"
-msgstr "COMPARTIR"
-
-#. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_1
 msgid "Sales"
 msgstr "Ventas"
@@ -1320,6 +1294,11 @@ msgstr "Nombre SEO"
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
 msgid "Sequence"
 msgstr "Secuencia"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Share"
+msgstr "Compartir"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1393,8 +1372,8 @@ msgstr "Respuesta sugerida"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Templates"
-msgstr "Plantillas"
+msgid "Template badge"
+msgstr "Plantilla del gafete"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box

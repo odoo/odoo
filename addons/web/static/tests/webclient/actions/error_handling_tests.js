@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { click, getFixture, nextTick } from "../../helpers/utils";
 import { errorService } from "@web/core/errors/error_service";
+import { ConnectionLostError } from "@web/core/network/rpc_service";
 
 import { Component, xml } from "@odoo/owl";
 
@@ -87,5 +88,40 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".my_button");
         assert.containsOnce(target, ".o_error_dialog");
         assert.verifyErrors(["Cannot read properties of undefined (reading 'b')"]);
+    });
+
+    QUnit.test("connection lost when opening form view from kanban", async function (assert) {
+        assert.expectErrors();
+        registry.category("services").add("error", errorService);
+
+        let offline = false;
+        const mockRPC = (route, { method }) => {
+            assert.step(method || route);
+            if (offline) {
+                throw new ConnectionLostError(route);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+        assert.containsOnce(target, ".o_list_view");
+
+        offline = true;
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_notification");
+        assert.strictEqual(
+            target.querySelector(".o_notification").innerText,
+            "Connection lost. Trying to reconnect..."
+        );
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "get_views",
+            "web_search_read",
+            "web_read",
+            "web_search_read",
+        ]);
+        await nextTick();
+        assert.verifySteps([]); // doesn't indefinitely try to reload the list
     });
 });

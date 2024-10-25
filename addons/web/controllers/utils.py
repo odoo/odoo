@@ -78,7 +78,7 @@ def ensure_db(redirect='/web/database/selector', db=None):
         url_redirect = werkzeug.urls.url_parse(r.base_url)
         if r.query_string:
             # in P3, request.query_string is bytes, the rest is text, can't mix them
-            query_string = iri_to_uri(r.query_string)
+            query_string = iri_to_uri(r.query_string.decode())
             url_redirect = url_redirect.replace(query=query_string)
         request.session.db = db
         werkzeug.exceptions.abort(request.redirect(url_redirect.to_url(), 302))

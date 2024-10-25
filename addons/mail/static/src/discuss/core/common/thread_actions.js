@@ -14,7 +14,11 @@ import { usePopover } from "@web/core/popover/popover_hook";
 threadActionsRegistry
     .add("notification-settings", {
         condition(component) {
-            return component.thread?.model === "discuss.channel" && !component.props.chatWindow;
+            return (
+                component.thread?.model === "discuss.channel" &&
+                !component.props.chatWindow &&
+                component.store.self.type !== "guest"
+            );
         },
         setup(action) {
             const component = useComponent();

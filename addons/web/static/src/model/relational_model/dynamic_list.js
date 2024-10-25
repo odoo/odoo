@@ -163,9 +163,7 @@ export class DynamicList extends DataPoint {
     }
 
     selectDomain(value) {
-        return this.model.mutex.exec(() => {
-            this.isDomainSelected = value;
-        });
+        return this.model.mutex.exec(() => this._selectDomain(value));
     }
 
     sortBy(fieldName) {
@@ -215,7 +213,9 @@ export class DynamicList extends DataPoint {
             resIds = await this.getResIds(true);
         }
 
-        const duplicated = await this.model.orm.call(this.resModel, "copy_multi", [resIds]);
+        const duplicated = await this.model.orm.call(this.resModel, "copy_multi", [resIds], {
+            context: this.context,
+        });
         if (resIds.length > duplicated.length) {
             this.model.notification.add(_t("Some records could not be duplicated"), {
                 title: _t("Warning"),
@@ -250,7 +250,8 @@ export class DynamicList extends DataPoint {
             );
             this.model.notification.add(msg, { title: _t("Warning") });
         }
-        await this._removeRecords(records.map((r) => r.id));
+        this._removeRecords(records.map((r) => r.id));
+        await this._load(this.offset, this.limit, this.orderBy, this.domain);
         return unlinked;
     }
 
@@ -284,6 +285,7 @@ export class DynamicList extends DataPoint {
             this.model.dialog.add(AlertDialog, {
                 body: _t("No valid record to save"),
                 confirm: () => this.leaveEditMode({ discard: true }),
+                dismiss: () => this.leaveEditMode({ discard: true }),
             });
             return false;
         } else {
@@ -337,18 +339,16 @@ export class DynamicList extends DataPoint {
             let lastSequence = (asc ? -1 : 1) * Infinity;
             for (let index = 0; index < originalList.length; index++) {
                 const sequence = getSequence(originalList[index]);
-                if (
-                    ((index < firstIndex || index >= lastIndex) &&
-                        ((asc && lastSequence >= sequence) ||
-                            (!asc && lastSequence <= sequence))) ||
-                    (index >= firstIndex && index < lastIndex && lastSequence === sequence)
-                ) {
+                if ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence)) {
                     reorderAll = true;
+                    break;
                 }
                 lastSequence = sequence;
             }
         }
 
+        // Save the original list in case of error
+        const originalOrder = [...originalList];
         // Perform the resequence in the list of records/groups
         const [dp] = originalList.splice(fromIndex, 1);
         originalList.splice(toIndex, 0, dp);
@@ -381,9 +381,16 @@ export class DynamicList extends DataPoint {
         if (offset) {
             params.offset = offset;
         }
-        const wasResequenced = await this.model.rpc("/web/dataset/resequence", params);
-        if (!wasResequenced) {
-            return;
+        // Attempt to resequence the records/groups on the server
+        try {
+            const wasResequenced = await this.model.rpc("/web/dataset/resequence", params);
+            if (!wasResequenced) {
+                return;
+            }
+        } catch (error) {
+            // If the server fails to resequence, rollback the original list
+            originalList.splice(0, originalList.length, ...originalOrder);
+            throw error;
         }
 
         // Read the actual values set by the server and update the records/groups
@@ -397,6 +404,10 @@ export class DynamicList extends DataPoint {
                 dp[handleField] = dpData[handleField];
             }
         }
+    }
+
+    _selectDomain(value) {
+        this.isDomainSelected = value;
     }
 
     async _toggleArchive(isSelected, state) {

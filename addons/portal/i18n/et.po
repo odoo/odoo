@@ -18,16 +18,17 @@
 # Martin Trigaux, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
 # Eneli Õigus <enelioigus@gmail.com>, 2023
-# Anna, 2023
 # Katrin Kampura, 2023
+# Siim Raasuke, 2024
+# Anna, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katrin Kampura, 2023\n"
+"Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,22 +65,22 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> Minu konto"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary\"/> Logout"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary\"/> Logi välja"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary\"/> Apps"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-th me-1 small text-primary\"/> Rakendused"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
 msgid "<i class=\"fa fa-pencil\"/> Edit information"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil\"/> Muuda informatsiooni"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -92,11 +93,13 @@ msgid ""
 "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -111,7 +114,7 @@ msgstr "<option value=\"\">Riik...</option>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">select...</option>"
-msgstr ""
+msgstr "<option value=\"\">vali...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -121,6 +124,10 @@ msgid ""
 "                <br/>Please contact us directly for that operation.\n"
 "            </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                Ettevõtte nime, KMK numbrit ja riike ei saa muuta peale dokumentide väljastamist teie kontole.\n"
+"                <br/>Palun võtke selle toimingu jaoks meiega otse ühendust.\n"
+"            </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -128,11 +135,13 @@ msgid ""
 "<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
 msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -364,19 +373,9 @@ msgid "Add extra content to display in the email"
 msgstr "Lisage täiendav sisu meilis kuvamiseks"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Add, remove or modify your addresses"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
 msgstr "Lisatud"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Addresses"
-msgstr ""
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
@@ -434,6 +433,8 @@ msgid ""
 "Changing the country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Riigi muutmine ei ole võimalik pärast dokumentide väljastamist teie kontole."
+" Palun võtke selle toimingu jaoks meiega otse ühendust."
 
 #. module: portal
 #. odoo-javascript
@@ -478,7 +479,7 @@ msgstr "Seadistused"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Configure your connection parameters"
-msgstr ""
+msgstr "Konfigureerige oma ühenduse parameetrid"
 
 #. module: portal
 #. odoo-javascript
@@ -498,7 +499,7 @@ msgstr "Kinnitage salasõna"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Connection &amp; Security"
-msgstr ""
+msgstr "Ühendus &amp; turvalisus"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -622,6 +623,11 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
+"Lülita välja enda konto, et takistada edasisi sisselogimisi.<br/>\n"
+"                                        <b>\n"
+"                                            <i class=\"fa fa-exclamation-triangle text-danger\"/>\n"
+"                                            See tegevus ei ole tagasipööratav.\n"
+"                                        </b>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -713,6 +719,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Siin on teie uus API võti, kasutage seda parooli asemel RPC-juurdepääsu jaoks.\n"
+"                Teie sisselogimine on endiselt vajalik interaktiivseks kasutamiseks."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -792,7 +800,7 @@ msgstr "E-maili kutse kontaktidele kasutajakonto loomiseks"
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "Invitation to access %s"
-msgstr ""
+msgstr "Kutse ligipääsuks %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
@@ -814,6 +822,13 @@ msgid ""
 msgstr ""
 "On väga oluline, et see kirjeldus on selge\n"
 "ja täielik,"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -852,14 +867,14 @@ msgstr "Link"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #, python-format
 msgid "Log out from all devices"
-msgstr ""
+msgstr "Logi välja kõikidest seadmetest"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "Log out from all devices?"
-msgstr ""
+msgstr "Kas oled loginud välja kõikidest seadmetest?"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -880,12 +895,12 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Multi company reports are not supported."
-msgstr ""
+msgstr "Mitme ettevõtte aruandeid ei toetata."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "My account"
-msgstr ""
+msgstr "Minu konto"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -921,11 +936,6 @@ msgid "Next"
 msgstr "Järgmine"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr "Pole dokumente, mida näidata"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
 msgstr "Märkus"
@@ -940,7 +950,7 @@ msgstr "Odoo logo"
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 #, python-format
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "API võtmeid saavad luua ainult sisekasutajad ja portaali kasutajad."
 
 #. module: portal
 #. odoo-javascript
@@ -1050,6 +1060,8 @@ msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted "
 "again"
 msgstr ""
+"Lisa minu e-post ja telefon musta nimekirja, et tagada, et minuga ei võetaks"
+" enam kunagi ühendust."
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -1114,6 +1126,7 @@ msgstr "Turvalisus"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "Turvalisuse kontroll"
@@ -1166,6 +1179,8 @@ msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
 msgstr ""
+"Mõned väljad on kohustuslikud. Palun veenduge, et kirjutate sõnumi või "
+"lisate dokumendi."
 
 #. module: portal
 #. odoo-python
@@ -1201,7 +1216,7 @@ msgstr "Aitäh!"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr ""
+msgstr "Manust %s ei saa eemaldada, kuna see on seotud sõnumiga."
 
 #. module: portal
 #. odoo-python
@@ -1209,7 +1224,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
-msgstr ""
+msgstr "Manust %s ei saa eemaldada, kuna see ei ole ootel olekus."
 
 #. module: portal
 #. odoo-python
@@ -1217,14 +1232,14 @@ msgstr ""
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Manust ei eksisteeri või teil ei ole õigusi sellele juurde pääseda."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "Kontaktil \"%s\" ei ole kehtivat e-posti aadressi."
 
 #. module: portal
 #. odoo-python
@@ -1240,6 +1255,7 @@ msgstr "Kontaktil \"%s\" on sama e-posti aadress nagu olemasoleval kasutajal"
 msgid ""
 "The document does not exist or you do not have the rights to access it."
 msgstr ""
+"Dokumenti ei eksisteeri või teil ei ole õigusi sellele juurde pääseda."
 
 #. module: portal
 #. odoo-javascript
@@ -1268,14 +1284,14 @@ msgstr "Sisestatud vana parool oli vale. Sinu parooli ei muudetud."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Partneril \"%s\" juba on portaali ligipääs."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "Partneril \"%s\" ei ole portaali ligipääsu või on sisemine."
 
 #. module: portal
 #. odoo-python
@@ -1285,6 +1301,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"Mall \"Portal: uus kasutaja\" ei leitud portaalikasutajale e-kirja "
+"saatmiseks."
 
 #. module: portal
 #. odoo-javascript
@@ -1311,12 +1329,14 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"See partner on seotud sisekasutajaga ja omab juba portaalile juurdepääsu."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"See tekst on lisatud uutele portaalikasutajatele saadetud e-kirja lõppu."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1327,14 +1347,14 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
-msgstr ""
+msgstr "Lülita filtrid sisse/välja"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Type in your password to confirm :"
-msgstr ""
+msgstr "Sisestage oma parool, et kinnitada:"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1480,6 +1500,8 @@ msgid ""
 "You are about to log out from all devices that currently have access to this"
 " user's account."
 msgstr ""
+"Olete välja logimas kõigilt seadmetelt, millel on praegu sellele "
+"kasutajakontole juurdepääs."
 
 #. module: portal
 #. odoo-python
@@ -1505,7 +1527,7 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Peaksite kõigepealt lubama ligipääsu partnerile \"%s\"."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -1580,6 +1602,13 @@ msgstr "odoo"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
 msgstr "salasõna"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "revoke"
+msgstr "tühistada"
 
 #. module: portal
 #. odoo-javascript

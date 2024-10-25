@@ -444,6 +444,11 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.deepEqual(model.getters.getListDefinition(listId).domain, [["foo", "in", [55]]]);
         await waitForDataSourcesLoaded(model);
         assert.strictEqual(getCellValue(model, "B2"), "");
+        const result = model.dispatch("UPDATE_ODOO_LIST_DOMAIN", {
+            listId: "invalid",
+            domain: [],
+        });
+        assert.deepEqual(result.reasons, [CommandResult.ListIdNotFound]);
     });
 
     QUnit.test("edited domain is exported", async (assert) => {
@@ -576,6 +581,45 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             assert.strictEqual(getEvaluatedCell(model, "A2").value, "EUR");
         }
     );
+
+    QUnit.test("Spec of web_search_read is minimal", async function (assert) {
+        const spreadsheetData = {
+            lists: {
+                1: {
+                    id: 1,
+                    columns: ["currency_id", "pognon", "foo"],
+                    model: "partner",
+                    orderBy: [],
+                },
+            },
+        };
+        const model = await createModelWithDataSource({
+            spreadsheetData,
+            mockRPC: function (route, args) {
+                if (args.method === "web_search_read") {
+                    assert.deepEqual(args.kwargs.specification, {
+                        pognon: {},
+                        currency_id: {
+                            fields: {
+                                name: {},
+                                symbol: {},
+                                decimal_places: {},
+                                display_name: {},
+                                position: {},
+                            },
+                        },
+                        foo: {},
+                    });
+                    assert.step("web_search_read");
+                }
+            },
+        });
+        setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
+        setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+        setCellContent(model, "A3", '=ODOO.LIST(1, 1, "foo")');
+        await waitForDataSourcesLoaded(model);
+        assert.verifySteps(["web_search_read"]);
+    });
 
     QUnit.test(
         "List record limit is computed during the import and UPDATE_CELL",

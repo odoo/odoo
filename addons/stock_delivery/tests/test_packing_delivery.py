@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.stock.tests.test_packing import TestPackingCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form
@@ -50,13 +51,14 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
             'carrier_id': self.test_carrier.id
         })
-        self.env['stock.move.line'].create({
+        move_line = self.env['stock.move.line'].create({
             'product_id': self.product_aw.id,
             'product_uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'quantity': 5,
             'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id
+            'location_dest_id': self.customer_location.id,
+            'picked': True,
         })
         self.env['stock.move.line'].create({
             'product_id': self.product_bw.id,
@@ -64,7 +66,8 @@ class TestPacking(TestPackingCommon):
             'picking_id': picking_ship.id,
             'quantity': 5,
             'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id
+            'location_dest_id': self.customer_location.id,
+            'picked': True,
         })
         pack_action = picking_ship.action_put_in_pack()
         pack_action_ctx = pack_action['context']
@@ -77,6 +80,17 @@ class TestPacking(TestPackingCommon):
         # default weight was set.
         pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
         self.assertEqual(pack_wiz.shipping_weight, 13.5)
+
+        # unpick the move lines and check that the weight is correctly updated
+        move_line.write({'picked': False})
+
+        pack_action = picking_ship.action_put_in_pack()
+        pack_action_ctx = pack_action['context']
+        pack_action_model = pack_action['res_model']
+        self.assertEqual(pack_action_model, 'choose.delivery.package')
+
+        pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
+        self.assertEqual(pack_wiz.shipping_weight, 1.5)
 
     def test_send_to_shipper_without_sale_order(self):
         """
@@ -196,3 +210,83 @@ class TestPacking(TestPackingCommon):
         package = delivery_1._put_in_pack(move_lines_to_pack)
         self.assertEqual(delivery_1.move_line_ids.result_package_id, package, 'Delivery 1 moves should have been put in package.')
         self.assertEqual(delivery_2.move_line_ids.result_package_id, package, 'Delivery 2 moves should have been put in package.')
+
+    def test_picking_access_error_on_package(self):
+        """ In a multi-company environment, a reusable package which is used by 2+ companies can cause access errors
+        on a company's picking history when it is in an in-use state (waiting to be unpacked)
+        """
+        company_a_user = self.env['res.users'].create({
+            'name': 'test user company a',
+            'login': 'test@testing.testing',
+            'password': 'password',
+            'groups_id': [Command.set([self.env.ref('stock.group_stock_user').id])],
+        })
+        wh_a = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        wh_a.delivery_steps = 'pick_pack_ship'
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        wh_b = self.env['stock.warehouse'].with_company(company_b).create({
+            'name': 'Company B WH',
+            'code': 'WH B',
+            'delivery_steps': 'pick_pack_ship',
+            'company_id': company_b.id,
+        })
+
+        reusable_box = self.env['stock.quant.package'].create({
+            'name': 'Reusable Box',
+            'package_use': 'reusable',
+        })
+
+        delivery_company_a = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids_without_package': [Command.create({
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 5.0,
+                'location_id': self.stock_location.id,
+                'product_uom': self.productA.uom_id.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+            'move_line_ids': [Command.create({
+                'location_id': self.stock_location.id,
+                'result_package_id': reusable_box.id,
+                'quantity': 5.0,
+                'product_id': self.productA.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_id': self.productA.uom_id.id,
+            })],
+        })
+        delivery_company_a.action_confirm()
+        delivery_company_a.move_ids.quantity = 5.0
+        delivery_company_a.button_validate()
+        reusable_box.unpack()
+
+        other_picking_company_b = self.env['stock.picking'].with_company(company_b).create({
+            'picking_type_id': wh_b.int_type_id.id,
+            'location_id': wh_b.lot_stock_id.id,
+            'location_dest_id': wh_b.lot_stock_id.id,
+            'move_ids_without_package': [Command.create({
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 3.0,
+                'location_id': wh_b.lot_stock_id.id,
+                'location_dest_id': wh_b.lot_stock_id.id,
+                'product_uom': self.productA.uom_id.id,
+            })],
+            'move_line_ids': [Command.create({
+                'location_id': wh_b.lot_stock_id.id,
+                'location_dest_id': wh_b.lot_stock_id.id,
+                'result_package_id': reusable_box.id,
+                'quantity': 3.0,
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+            })],
+        })
+        other_picking_company_b.action_confirm()
+        other_picking_company_b.move_ids.quantity = 3.0
+        other_picking_company_b.button_validate()
+
+        company_a_user.groups_id = [Command.unlink(self.env.ref('stock.group_stock_multi_warehouses').id)]
+        res = delivery_company_a.with_user(company_a_user).read()
+        self.assertTrue(res)

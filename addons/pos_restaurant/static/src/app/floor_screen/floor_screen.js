@@ -44,9 +44,6 @@ export class FloorScreen extends Component {
             floorMapScrollTop: 0,
             isColorPicker: false,
         });
-        const ui = useState(useService("ui"));
-        const mode = localStorage.getItem("floorPlanStyle");
-        this.pos.floorPlanStyle = ui.isSmall || mode == "kanban" ? "kanban" : "default";
         this.floorMapRef = useRef("floor-map-ref");
         this.addFloorRef = useRef("add-floor-ref");
         this.map = useRef("map");
@@ -65,6 +62,7 @@ export class FloorScreen extends Component {
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
     }
     async onWillStart() {
+        this.pos.searchProductWord = "";
         const table = this.pos.table;
         if (table) {
             const orders = this.pos.get_order_list();

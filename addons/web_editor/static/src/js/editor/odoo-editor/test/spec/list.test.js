@@ -2811,7 +2811,7 @@ describe('List', () => {
                                 '<ul><li><p>abc</p></li><li><p>def[]</p><p>ghi</p></li><li><p>klm</p></li></ul>',
                             // Paragraphs in list items are treated as nonsense.
                             contentBeforeEdit:
-                                '<ul><li>abc</li><li>def[]</li><li class="oe-nested">ghi</li><li>klm</li></ul>',
+                                '<ul><li>abc</li><li>def[]<br>ghi</li><li>klm</li></ul>',
                             stepFunction: deleteForward,
                             contentAfter:
                                 '<ul><li>abc</li><li>def[]ghi</li><li>klm</li></ul>',
@@ -5445,10 +5445,10 @@ describe('List', () => {
                                 '<ol><li><p>abc</p></li><li><p>def</p><p>[]ghi</p></li><li><p>klm</p></li></ol>',
                             // Paragraphs in list items are treated as nonsense.
                             contentBeforeEdit:
-                                '<ol><li>abc</li><li>def</li><li class="oe-nested">[]ghi</li><li>klm</li></ol>',
+                                '<ol><li>abc</li><li>def<br>[]ghi</li><li>klm</li></ol>',
                             stepFunction: deleteBackward,
                             contentAfter:
-                                '<ol><li>abc</li><li>def</li></ol><p>[]ghi</p><ol><li>klm</li></ol>',
+                                '<ol><li>abc</li><li>def[]ghi</li><li>klm</li></ol>',
                         });
                         await testEditor(BasicEditor, {
                             contentBefore:
@@ -5469,10 +5469,10 @@ describe('List', () => {
                             // Two paragraphs in a list item = Two list items.
                             // Paragraphs in list items are treated as nonsense.
                             contentBeforeEdit:
-                                '<ol><li>abc</li><li><b>de</b>fg</li><li class="oe-nested"><b>[]hij</b>klm</li><li>nop</li></ol>',
+                                '<ol><li>abc</li><li><b>de</b>fg<br><b>[]hij</b>klm</li><li>nop</li></ol>',
                             stepFunction: deleteBackward,
                             contentAfter:
-                                '<ol><li>abc</li><li><b>de</b>fg</li></ol><p><b>[]hij</b>klm</p><ol><li>nop</li></ol>',
+                                '<ol><li>abc</li><li><b>de</b>fg[]<b>hij</b>klm</li><li>nop</li></ol>',
                         });
                     });
                     it('should treat two blocks in a list item and keep blocks', async () => {
@@ -5481,10 +5481,10 @@ describe('List', () => {
                                 '<ul><li><p>abc</p></li><li><p>def</p><p>[]ghi</p></li><li><p>klm</p></li></ul>',
                             // Paragraphs in list items are treated as nonsense.
                             contentBeforeEdit:
-                                '<ul><li>abc</li><li>def</li><li class="oe-nested">[]ghi</li><li>klm</li></ul>',
+                                '<ul><li>abc</li><li>def<br>[]ghi</li><li>klm</li></ul>',
                             stepFunction: deleteBackward,
                             contentAfter:
-                                '<ul><li>abc</li><li>def</li></ul><p>[]ghi</p><ul><li>klm</li></ul>',
+                                '<ul><li>abc</li><li>def[]ghi</li><li>klm</li></ul>',
                         });
                         await testEditor(BasicEditor, {
                             contentBefore:
@@ -5505,10 +5505,10 @@ describe('List', () => {
                             // Two paragraphs in a list item = Two list items.
                             // Paragraphs in list items are treated as nonsense.
                             contentBeforeEdit:
-                                '<ul><li>abc</li><li><b>de</b>fg</li><li class="oe-nested"><b>[]hij</b>klm</li><li>nop</li></ul>',
+                                '<ul><li>abc</li><li><b>de</b>fg<br><b>[]hij</b>klm</li><li>nop</li></ul>',
                             stepFunction: deleteBackward,
                             contentAfter:
-                                '<ul><li>abc</li><li><b>de</b>fg</li></ul><p><b>[]hij</b>klm</p><ul><li>nop</li></ul>',
+                                '<ul><li>abc</li><li><b>de</b>fg[]<b>hij</b>klm</li><li>nop</li></ul>',
                         });
                     });
                     it('should treat two blocks in a list item and keep blocks', async () => {
@@ -5518,10 +5518,10 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li class="o_checked"><p>def</p><p>[]ghi</p></li><li class="o_checked"><p>klm</p></li></ul>',
                             // Paragraphs in list items are treated as nonsense.
                             contentBeforeEdit:
-                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">def</li><li class="oe-nested">[]ghi</li><li class="o_checked">klm</li></ul>',
+                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">def<br>[]ghi</li><li class="o_checked">klm</li></ul>',
                             stepFunction: deleteBackward,
                             contentAfter:
-                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">def</li></ul><p>[]ghi</p><ul class="o_checklist"><li class="o_checked">klm</li></ul>',
+                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">def[]ghi</li><li class="o_checked">klm</li></ul>',
                         });
                         await testEditor(BasicEditor, {
                             removeCheckIds: true,
@@ -5542,12 +5542,12 @@ describe('List', () => {
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li class="o_checked"><p><b>de</b>fg</p><p><b>[]hij</b>klm</p></li><li class="o_checked"><p>nop</p></li></ul>',
                             contentBeforeEdit:
-                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg</li><li class="oe-nested"><b>[]hij</b>klm</li><li class="o_checked">nop</li></ul>',
+                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg<br><b>[]hij</b>klm</li><li class="o_checked">nop</li></ul>',
                             // Two paragraphs in a list item = Two list items.
                             // Paragraphs in list items are treated as nonsense.
                             stepFunction: deleteBackward,
                             contentAfter:
-                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg</li></ul><p><b>[]hij</b>klm</p><ul class="o_checklist"><li class="o_checked">nop</li></ul>',
+                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]<b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
                         });
                     });
                 });
@@ -8931,6 +8931,138 @@ describe('List', () => {
                     stepFunction: switchDirection,
                     contentAfter: `<ul><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li class="oe-nested"><ol><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
                 });
+            });
+        });
+        describe('table as direct child of list', () => {
+            it('should create table inside an empty list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await insertText(editor, '/table');
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>
+                                <br>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p>[]<br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </li>
+                        </ul>`
+                    ),
+                })
+            });
+            it('should create table inside a non-empty list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc[]</li></ul>',
+                    stepFunction: async editor => {
+                        await insertText(editor, '/table');
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>abc
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p>[]<br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </li>
+                        </ul>`
+                    ),
+                })
+            });
+            it('should add an empty list item after a list item', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <ul>
+                            <li><br>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                []<br>
+                            </li>
+                        </ul>`
+                    ),
+                    stepFunction: insertParagraphBreak,
+                    contentAfter: unformat(`
+                        <ul>
+                            <li><br>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li>[]<br></li>
+                        </ul>`
+                    ),
+                })
             });
         });
     });

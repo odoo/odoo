@@ -56,7 +56,7 @@ class Project(models.Model):
         project_and_state_counts = self.env['project.task'].with_context(
             active_test=any(project.active for project in self)
         )._read_group(
-            [('project_id', 'in', self.ids)],
+            [('project_id', 'in', self.ids), ('display_in_project', '=', True)],
             ['project_id', 'state'],
             ['__count'],
         )
@@ -127,7 +127,7 @@ class Project(models.Model):
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', search='_search_is_favorite',
         compute_sudo=True, string='Show Project on Dashboard')
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', translate=True,
+    label_tasks = fields.Char(string='Use Tasks as', default=lambda s: _('Tasks'), translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
@@ -244,12 +244,14 @@ class Project(models.Model):
     def _compute_allow_rating(self):
         self.allow_rating = self.env.user.has_group('project.group_project_rating')
 
-    @api.depends('analytic_account_id.company_id')
+    @api.depends('analytic_account_id.company_id', 'partner_id.company_id')
     def _compute_company_id(self):
         for project in self:
-            # if a new restriction is put on the account, the restriction on the project is updated.
+            # if a new restriction is put on the account or the customer, the restriction on the project is updated.
             if project.analytic_account_id.company_id:
                 project.company_id = project.analytic_account_id.company_id
+            if not project.company_id and project.partner_id.company_id:
+                project.company_id = project.partner_id.company_id
 
     @api.depends_context('company')
     @api.depends('company_id', 'company_id.resource_calendar_id')
@@ -264,7 +266,7 @@ class Project(models.Model):
         """
         for project in self:
             account = project.analytic_account_id
-            if project.partner_id and project.partner_id.company_id and project.company_id and project.company_id != project.partner_id.company_id:
+            if project.partner_id and project.partner_id.company_id and project.company_id != project.partner_id.company_id:
                 raise UserError(_('The project and the associated partner must be linked to the same company.'))
             if not account or not account.company_id:
                 continue
@@ -633,6 +635,19 @@ class Project(models.Model):
                 res -= waiting_subtype
         return res
 
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
+        """ Give access to the portal user/customer if the project visibility is portal. """
+        groups = super()._notify_get_recipients_groups(message, model_description, msg_vals=msg_vals)
+        if not self:
+            return groups
+
+        self.ensure_one()
+        portal_privacy = self.privacy_visibility == 'portal'
+        for group_name, _group_method, group_data in groups:
+            if group_name in ['portal', 'portal_customer'] and not portal_privacy:
+                group_data['has_button_access'] = False
+        return groups
+
     # ---------------------------------------------------
     #  Actions
     # ---------------------------------------------------
@@ -670,6 +685,7 @@ class Project(models.Model):
             'delete': False,
             'search_default_open_tasks': True,
             'active_id_chatter': self.id,
+            'allow_milestones': self.allow_milestones,
         }
         action['display_name'] = self.name
         return action
@@ -687,7 +703,7 @@ class Project(models.Model):
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def action_view_tasks(self):
-        action = self.env['ir.actions.act_window'].with_context({'active_id': self.id})._for_xml_id('project.act_project_project_2_project_task_all')
+        action = self.env['ir.actions.act_window'].with_context(active_id=self.id)._for_xml_id('project.act_project_project_2_project_task_all')
         action['display_name'] = _("%(name)s", name=self.name)
         context = action['context'].replace('active_id', str(self.id))
         context = ast.literal_eval(context)

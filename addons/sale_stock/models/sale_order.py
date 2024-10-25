@@ -31,6 +31,7 @@ class SaleOrder(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     delivery_status = fields.Selection([
         ('pending', 'Not Delivered'),
+        ('started', 'Started'),
         ('partial', 'Partially Delivered'),
         ('full', 'Fully Delivered'),
     ], string='Delivery Status', compute='_compute_delivery_status', store=True)
@@ -77,22 +78,22 @@ class SaleOrder(models.Model):
                 order.delivery_status = False
             elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
-            elif any(p.state == 'done' for p in order.picking_ids):
+            elif any(p.state == 'done' for p in order.picking_ids) and any(
+                    l.qty_delivered for l in order.order_line):
                 order.delivery_status = 'partial'
+            elif any(p.state == 'done' for p in order.picking_ids):
+                order.delivery_status = 'started'
             else:
                 order.delivery_status = 'pending'
 
     @api.depends('picking_policy')
     def _compute_expected_date(self):
         super(SaleOrder, self)._compute_expected_date()
-        for order in self:
-            dates_list = []
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery() and not x.display_type):
-                dt = line._expected_date()
-                dates_list.append(dt)
-            if dates_list:
-                expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
-                order.expected_date = fields.Datetime.to_string(expected_date)
+
+    def _select_expected_date(self, expected_dates):
+        if self.picking_policy == "direct":
+            return super()._select_expected_date(expected_dates)
+        return max(expected_dates)
 
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
@@ -225,7 +226,9 @@ class SaleOrder(models.Model):
             picking_id = picking_id[0]
         else:
             picking_id = pickings[0]
-        action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
+        # View context from sale_renting `rental_schedule_view_form`
+        cleaned_context = {k: v for k, v in self._context.items() if k != 'form_view_ref'}
+        action['context'] = dict(cleaned_context, default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
         return action
 
     def _prepare_invoice(self):

@@ -19,6 +19,10 @@ import { session } from "@web/session";
 const serviceRegistry = registry.category("services");
 let target;
 
+function toCIDS(...ids) {
+    return `cids=${ids.join("-")}&_company_switching=1`;
+}
+
 const ORIGINAL_TOGGLE_DELAY = MobileSwitchCompanyMenu.toggleDelay;
 async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
     patchWithCleanup(MobileSwitchCompanyMenu, { toggleDelay });
@@ -252,11 +256,11 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
 
         /**
          *   [x] Company 1
-         *   [ ] Company 2      -> log into
-         *   [x] **Company 3**
+         *   [x] **Company 2**    -> log into
+         *   [x] Company 3
          */
         await click(scMenuEl.querySelectorAll(".log_into")[1]);
-        assert.verifySteps(["cids=2&_company_switching=1"]);
+        assert.verifySteps([toCIDS(2, 3, 1)]);
     });
 
     QUnit.test("multi company mode: log into an already selected company", async (assert) => {
@@ -282,11 +286,11 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
 
         /**
          *   [ ] Company 1
-         *   [x] **Company 2**
-         *   [x] Company 3      -> log into
+         *   [x] Company 2
+         *   [x] **Company 3**      -> log into
          */
         await click(scMenuEl.querySelectorAll(".log_into")[2]);
-        assert.verifySteps(["cids=3&_company_switching=1"]);
+        assert.verifySteps([toCIDS(3, 2)]);
     });
 
     QUnit.test("companies can be logged in even if some toggled within delay", async (assert) => {
@@ -310,13 +314,16 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         assert.containsN(scMenuEl, "[data-company-id] .fa-square-o", 2);
 
         /**
-         *   [ ] **Company 1**  -> toggled
-         *   [ ] Company 2      -> logged in
-         *   [ ] Company 3      -> toggled
+         *   [ ] **Company 1**  -> 2) toggled
+         *   [x] Company 2      -> 3) logged in
+         *   [ ] Company 3      -> 1) toggled
          */
         await click(scMenuEl.querySelectorAll(".toggle_company")[2]);
         await click(scMenuEl.querySelectorAll(".toggle_company")[0]);
         await click(scMenuEl.querySelectorAll(".log_into")[1]);
-        assert.verifySteps(["cids=2&_company_switching=1"]);
+
+        // When "Company 2" is logged into, only one company is currently selected
+        // so we treat it as single company mode
+        assert.verifySteps([toCIDS(2)]);
     });
 });

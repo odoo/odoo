@@ -9,7 +9,7 @@ import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
 
 const { cellMenuRegistry, featurePluginRegistry } = spreadsheet.registries;
 const { astToFormula } = spreadsheet;
-const { toString, toBoolean, formatValue } = spreadsheet.helpers;
+const { toString, toBoolean } = spreadsheet.helpers;
 
 featurePluginRegistry.add("odooAccountingAggregates", AccountingPlugin);
 
@@ -23,26 +23,15 @@ cellMenuRegistry.add("move_lines_see_records", {
         const { args } = getFirstAccountFunction(cell.compiledFormula.tokens);
         let [codes, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
-            .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
-        codes = toString(codes).split(",");
+            .map((arg) => env.model.getters.evaluateFormulaResult(sheetId, arg));
+        codes = toString(codes?.value).split(",");
         const locale = env.model.getters.getLocale();
-        if (args[1]?.type === "REFERENCE") {
-            const range = env.model.getters.getRangeFromSheetXC(sheetId, args[1].value);
-            const cell = env.model.getters.getEvaluatedCell({
-                sheetId: range.sheetId,
-                col: range.zone.left,
-                row: range.zone.top,
-            });
-            if (cell?.format) {
-                date_range = formatValue(date_range, { format: cell.format, locale });
-            }
-        }
         const dateRange = parseAccountingDate(date_range, locale);
-        offset = parseInt(offset) || 0;
+        offset = parseInt(offset?.value) || 0;
         dateRange.year += offset || 0;
-        companyId = parseInt(companyId) || null;
+        companyId = parseInt(companyId?.value) || null;
         try {
-            includeUnposted = toBoolean(includeUnposted);
+            includeUnposted = toBoolean(includeUnposted.value);
         } catch {
             includeUnposted = false;
         }

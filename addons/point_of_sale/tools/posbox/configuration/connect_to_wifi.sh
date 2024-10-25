@@ -1,11 +1,43 @@
 #!/usr/bin/env bash
 
+function update_conf () {
+  KEY="${1}"
+  VALUE="${2}"
+  CONF_FILE="${3}"
+
+  # This command checks if the section exists in the configuration file.
+  if ! grep -q "\[iot\.box\]" "$CONF_FILE"; then
+    echo "[iot.box]" >> "$CONF_FILE"
+  fi
+
+  # These commands check if the key exists in the configuration file.
+  # If the key exists, replace its value.
+  # If the key does not exist, append the key-value pair to the configuration file.
+  if grep -q "^\s*$KEY\b" "$CONF_FILE"; then
+    # Key exists, replace its value
+    sed -i "s/^\s*\b\($KEY\)\b.*/\1 = $VALUE/" "$CONF_FILE"
+  else
+    # Key does not exist, add key-value pair
+    echo "$KEY = $VALUE" >> "$CONF_FILE"
+  fi
+}
+
+function get_conf () {
+  KEY="${1}"
+  CONF_FILE="${2}"
+  # These commands seek for keys on the configuration file,
+  # for each key found, trim spaces and store the corresponding value
+
+  touch "$CONF_FILE"  # create the file if it does not exist
+  awk -v key="$KEY" -F= '$1 ~ "^" key "[[:space:]]*" {gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2); print $2}' "$CONF_FILE"
+}
+
 # call with ESSID and optionally a password
 # when called without an ESSID, it will attempt
 # to reconnect to a previously chosen network
 function connect () {
 	WPA_PASS_FILE="/tmp/wpa_pass.txt"
-	PERSISTENT_WIFI_NETWORK_FILE="/home/pi/wifi_network.txt"
+	CONF_FILE="/home/pi/odoo.conf"
 	CURRENT_WIFI_NETWORK_FILE="/tmp/current_wifi_network.txt" # used to repair connection when we lose it
 	LOST_WIFI_FILE="/tmp/lost_wifi.txt"
 	ESSID="${1}"
@@ -20,17 +52,20 @@ function connect () {
 
 	# make network choice persistent
 	if [ -n "${ESSID}" ] ; then
-		if [ -n "${PERSIST}" ] ; then
-			logger -t posbox_connect_to_wifi "Making network selection permanent"
-			sudo mount -o remount,rw /
-			echo "${ESSID}" > ${PERSISTENT_WIFI_NETWORK_FILE}
-			echo "${PASSWORD}" >> ${PERSISTENT_WIFI_NETWORK_FILE}
-			sudo mount -o remount,ro /
-		fi
+	  if [ -n "${PERSIST}" ]; then
+      logger -t posbox_connect_to_wifi "Making network selection permanent"
+      sudo mount -o remount,rw /
+
+      update_conf "wifi_ssid" "$ESSID" "$CONF_FILE"
+      update_conf "wifi_password" "$PASSWORD" "$CONF_FILE"
+
+      sudo mount -o remount,ro /
+    fi
 	else
-		logger -t posbox_connect_to_wifi "Reading configuration from ${PERSISTENT_WIFI_NETWORK_FILE}"
-		ESSID=$(head -n 1 "${PERSISTENT_WIFI_NETWORK_FILE}" | tr -d '\n')
-		PASSWORD=$(tail -n 1 "${PERSISTENT_WIFI_NETWORK_FILE}" | tr -d '\n')
+		logger -t posbox_connect_to_wifi "Reading configuration from ${CONF_FILE}"
+
+    ESSID=$(get_conf "wifi_ssid" "$CONF_FILE")
+    PASSWORD=$(get_conf "wifi_password" "$CONF_FILE")
 	fi
 
 	echo "${ESSID}" > ${CURRENT_WIFI_NETWORK_FILE}

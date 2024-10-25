@@ -132,7 +132,7 @@
                             </t>
                         </tr>
 
-                        <t t-if="current_section and (line_last or doc.order_line[line_index+1].display_type == 'line_section') and not line.is_downpayment">
+                        <t t-if="current_section and (line_last or lines_to_report[line_index+1].display_type == 'line_section') and not line.is_downpayment">
                             <tr class="is-subtotal text-end">
                                 <td name="td_section_subtotal" colspan="99">
                                     <strong class="mr16">Subtotal</strong>
@@ -176,12 +176,14 @@
                 <p t-if="not is_html_empty(doc.payment_term_id.note)">
                     <span t-field="doc.payment_term_id.note">The payment should also be transmitted with love</span>
                 </p>
+                <div class="oe_structure"/>
                 <p t-if="doc.fiscal_position_id and not is_html_empty(doc.fiscal_position_id.sudo().note)"
                     id="fiscal_position_remark">
                     <strong>Fiscal Position Remark:</strong>
                     <span t-field="doc.fiscal_position_id.sudo().note">No further requirements for this payment</span>
                 </p>
             </div>
+            <div class="oe_structure"/>
         </div>
     </t>
 </template>

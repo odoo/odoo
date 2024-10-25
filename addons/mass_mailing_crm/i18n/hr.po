@@ -1,37 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mass_mailing_crm
-#
+# 
 # Translators:
-# Vladimir Vrgoč, 2022
-# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2022
-# Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
-# Bole <bole@dajmi5.com>, 2022
-#
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2024
+# Bole <bole@dajmi5.com>, 2024
+# hrvoje sić <hrvoje.sic@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: hrvoje sić <hrvoje.sic@gmail.com>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: mass_mailing_crm
 #: model_terms:ir.ui.view,arch_db:mass_mailing_crm.mailing_mailing_view_form
 msgid ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">Leads</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Potencijali</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Prilike</span>"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 #, python-format
 msgid "LEADS"
@@ -43,6 +41,7 @@ msgid "Lead/Opportunity"
 msgstr "Potencijal/prilika"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 #: model:ir.model.fields.selection,name:mass_mailing_crm.selection__utm_campaign__ab_testing_winner_selection__crm_lead_count
 #, python-format
@@ -50,6 +49,7 @@ msgid "Leads"
 msgstr "Potencijali"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 #, python-format
 msgid "Leads Analysis"
@@ -66,18 +66,23 @@ msgid "Mass Mailing"
 msgstr "Grupna e-pošta"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 #, python-format
 msgid "No %s yet!"
 msgstr ""
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 #, python-format
-msgid "Note that Odoo cannot track replies if they are sent towards email addresses to this database."
+msgid ""
+"Note that Odoo cannot track replies if they are sent towards email addresses"
+" to this database."
 msgstr ""
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 #, python-format
 msgid "Opportunities"

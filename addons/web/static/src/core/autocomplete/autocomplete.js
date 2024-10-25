@@ -75,6 +75,15 @@ export class AutoComplete extends Component {
         return this.inputRef.el;
     }
 
+    get activeSourceOptionId() {
+        if (!this.isOpened || !this.state.activeSourceOption) {
+            return undefined;
+        }
+        const [sourceIndex, optionIndex] = this.state.activeSourceOption;
+        const source = this.sources[sourceIndex];
+        return `${this.props.id || "autocomplete"}_${sourceIndex}_${source.isLoading ? "loading" : optionIndex}`;
+    }
+
     get dropdownOptions() {
         return {
             position: "bottom-start",

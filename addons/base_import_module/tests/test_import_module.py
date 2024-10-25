@@ -56,8 +56,17 @@ class TestImportModule(odoo.tests.TransactionCase):
                     </record>
                 </data>
             """),
+            ('bar/i18n/fr_FR.po', b"""
+                #. module: bar
+                #: model:res.country,name:bar.foo
+                msgid "foo"
+                msgstr "dumb"
+            """),
         ]
-        self.import_zipfile(files)
+        self.env['res.lang']._activate_lang('fr_FR')
+        with self.assertLogs('odoo.addons.base_import_module.models.ir_module') as log_catcher:
+            self.import_zipfile(files)
+            self.assertIn('INFO:odoo.addons.base_import_module.models.ir_module:module foo: no translation for language fr_FR', log_catcher.output)
         self.assertEqual(self.env.ref('foo.foo')._name, 'res.partner')
         self.assertEqual(self.env.ref('foo.foo').name, 'foo')
         self.assertEqual(self.env.ref('foo.bar')._name, 'res.partner')
@@ -66,6 +75,11 @@ class TestImportModule(odoo.tests.TransactionCase):
 
         self.assertEqual(self.env.ref('bar.foo')._name, 'res.country')
         self.assertEqual(self.env.ref('bar.foo').name, 'foo')
+        self.assertEqual(self.env.ref('bar.foo').with_context(lang="fr_FR").name, 'dumb')
+
+        # Check that activating a non-loaded language does not crash the code
+        self.env['res.lang']._activate_lang('es')
+        self.assertEqual(self.env.ref('bar.foo').with_context(lang="es").name, 'foo')
 
         for path, data in files:
             if path.split('/')[1] == 'static':
@@ -146,9 +160,8 @@ class TestImportModule(odoo.tests.TransactionCase):
         ]
         with self.assertLogs('odoo.addons.base_import_module.models.ir_module') as log_catcher:
             self.import_zipfile(files)
-            self.assertEqual(len(log_catcher.output), 2)
-            self.assertIn('module foo: skip unsupported file res.partner.xls', log_catcher.output[0])
-            self.assertIn("Successfully imported module 'foo'", log_catcher.output[1])
+            self.assertIn("INFO:odoo.addons.base_import_module.models.ir_module:module foo: skip unsupported file res.partner.xls", log_catcher.output)
+            self.assertIn("INFO:odoo.addons.base_import_module.models.ir_module:Successfully imported module 'foo'", log_catcher.output)
             self.assertFalse(self.env.ref('foo.foo', raise_if_not_found=False))
 
     def test_import_zip_extract_only_useful(self):

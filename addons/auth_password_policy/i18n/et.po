@@ -6,6 +6,7 @@
 # Anna, 2023
 # Arma Gedonsky <armagedonsky@hot.ee>, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
+# Tairi Tiimann, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2023\n"
+"Last-Translator: Tairi Tiimann, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,8 @@ msgstr "Minimaalne parooli pikkus"
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
+"Miinimum tähemärkide arv, mida parool peab sisaldama. Määra 0, et mitte "
+"defineerida."
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -49,7 +52,7 @@ msgstr "Salasõna"
 #: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr ""
+msgstr "Parool peab sisaldaba vähemalt %d tähemärki, hetkel on %d."
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -60,6 +63,9 @@ msgid ""
 "\n"
 "Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
+"Nõutud: %s\n"
+"\n"
+"Vihje: parooli tugevuse suurendamiseks looge pikem parool, kasutage mitut sõna, numbreid ja sümboleid."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -71,7 +77,7 @@ msgstr "Kasutaja"
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s character classes"
-msgstr ""
+msgstr "vähemalt %s tähemärgiklassi"
 
 #. module: auth_password_policy
 #. odoo-javascript

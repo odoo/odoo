@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -256,7 +256,7 @@ msgstr "<span>Eventos en línea</span>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong> You ordered more tickets than available seats</strong>"
-msgstr "<strong> Ordenó más entradas que los asientos disponibles</strong>"
+msgstr "<strong> Ha pedido más entradas que asientos disponibles</strong>"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_2
@@ -401,18 +401,8 @@ msgstr "Cancelar"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Cards"
-msgstr "Tarjetas"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Card design"
 msgstr "Diseño de la tarjeta"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Template badge"
-msgstr "Plantilla de insignia"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -754,11 +744,6 @@ msgstr ""
 "conversación."
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Fold Tickets Details"
-msgstr "Plegar detalles de entradas"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Follow Us"
@@ -826,9 +811,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
-"Si es verdadera, esta pregunta se hará una sola vez y se transmitirá su "
-"valor a todos los asistentes; si no, se preguntará a todos los asistentes "
-"del evento."
+"Si es True, esta pregunta se hará una sola vez y se transmitirá su valor a "
+"todos los asistentes; si no, se preguntará a todos los asistentes del "
+"evento."
 
 #. module: website_event
 #. odoo-python
@@ -857,7 +842,7 @@ msgstr "Hecho"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_ongoing
 msgid "Is Ongoing"
-msgstr "Está en marcha"
+msgstr "En curso"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
@@ -1020,7 +1005,7 @@ msgstr "Todavía no hay eventos programados"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
 msgid "No registration linked to this visitor"
-msgstr "No hay registro vinculado a este visitante"
+msgstr "No hay inscripción vinculada a este visitante"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -1030,13 +1015,13 @@ msgstr "No se han encontrado resultados para \""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 msgid "Not Published"
-msgstr "Sin publicar"
+msgstr "No publicado"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Once per Order"
-msgstr "Una vez por orden "
+msgstr "Una vez por pedido"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -1195,6 +1180,7 @@ msgstr "¡Inscripción confirmada!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registration failed! These tickets are not available anymore."
 msgstr "¡Inscripción fallida! Estas entradas ya no están disponibles."
 
@@ -1254,16 +1240,6 @@ msgid "SEO optimized"
 msgstr "Optimizado para SEO"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Share"
-msgstr "Compartir"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "SHARE"
-msgstr "COMPARTIR"
-
-#. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_1
 msgid "Sales"
 msgstr "Ventas"
@@ -1315,6 +1291,11 @@ msgstr "Nombre SEO"
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
 msgid "Sequence"
 msgstr "Secuencia"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Share"
+msgstr "Compartir"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1369,7 +1350,7 @@ msgstr "Inicio → Fin"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
 msgid "Starts <span/>"
-msgstr "Inicia <span/>"
+msgstr "Empieza <span/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -1388,8 +1369,8 @@ msgstr "Respuesta sugerida"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Templates"
-msgstr "Plantillas"
+msgid "Template badge"
+msgstr "Plantilla de pase"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box
@@ -1523,7 +1504,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
 msgid "Used when not being an url based menu"
-msgstr "Se utiliza cuando no es un menú con base en URL"
+msgstr "Utilizado cuando no es un menú con base en URL"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_1
@@ -1533,7 +1514,7 @@ msgstr "Vegetariano"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__view_id
 msgid "View"
-msgstr "Ver"
+msgstr "Vista"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published

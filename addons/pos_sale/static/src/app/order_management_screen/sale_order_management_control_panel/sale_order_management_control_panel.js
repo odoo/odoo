@@ -30,7 +30,7 @@ export class SaleOrderManagementControlPanel extends Component {
 
         const currentPartner = this.pos.get_order().get_partner();
         if (currentPartner) {
-            this.pos.orderManagement.searchString = currentPartner.name;
+            this.pos.orderManagement.searchString = `"${currentPartner.name}"`;
         }
         this.saleOrderFetcher.setSearchDomain(this._computeDomain());
     }
@@ -96,10 +96,18 @@ export class SaleOrderManagementControlPanel extends Component {
             return domain;
         }
 
-        const searchConditions = this.pos.orderManagement.searchString.split(/[,&]\s*/);
+        let searchConditions;
+        let isQuoted = false;
+        if (input.startsWith('"') && input.endsWith('"')) {
+            searchConditions = [input.slice(1, -1)];
+            isQuoted = true;
+        } else {
+            searchConditions = input.split(/[,&]\s*/);
+        }
+
         if (searchConditions.length === 1) {
             const cond = searchConditions[0].split(/:\s*/);
-            if (cond.length === 1) {
+            if (cond.length === 1 || isQuoted) {
                 domain = domain.concat(Array(this.searchFields.length - 1).fill("|"));
                 domain = domain.concat(
                     this.searchFields.map((field) => [field, "ilike", `%${cond[0]}%`])

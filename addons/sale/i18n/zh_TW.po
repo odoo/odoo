@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
+# Pak Wai Ho, 2024
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1152,13 +1153,13 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
 msgstr ""
-"允許您在銷售中與客戶共享文檔。\n"
-"如果不想與銷售客戶共享此文檔，請將其留空。\n"
-"報價: 文件將發送給客戶，客戶可隨時訪問。\n"
-"例如，該選項可用於共享產品描述文件。\n"
-"確認訂單：該文件將發送給客戶並供其訪問。\n"
-"例如，此選項可用於共享用戶手冊或在電子商務上購買的數字內容。\n"
-"內部引用:文件將包含在報價單的PDF文件中,位於頁眉和報價表之間。"
+"允許你在銷售過程中，與客戶共享文件。\n"
+"如果不想與銷售客戶分享此文件，請將其留空。\n"
+"「報價單」：文件將傳送給客戶，客戶可隨時存取查閱。\n"
+"例如：若想分享產品資料/描述的文件，此選項很有用。\n"
+"「已確認訂單」：文件將傳送給客戶，供客戶存取查閱。\n"
+"例如：若想傳送使用手冊，或交付在電子商務平台購買的數碼/電子內容，此選項便很有用。\n"
+"「報價單內夾附」：文件會加入報價單的 pdf 中，放在標題頁與報價表之間。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1296,7 +1297,7 @@ msgstr "成本"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_value
@@ -2040,14 +2041,14 @@ msgstr "折扣精靈"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
-msgstr "折扣:"
+msgstr "折扣："
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #, python-format
 msgid "Discount: %(percent)s%%"
-msgstr "折扣:%(percent)s%%"
+msgstr "折扣：%(percent)s%%"
 
 #. module: sale
 #. odoo-python
@@ -2169,7 +2170,7 @@ msgstr "首期付款<br/>"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment invoice"
-msgstr ""
+msgstr "首期付款發票"
 
 #. module: sale
 #. odoo-python
@@ -3477,7 +3478,7 @@ msgstr "網站入口訪問網址"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Prepayment amount"
-msgstr ""
+msgstr "預付金額"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
@@ -3819,7 +3820,7 @@ msgstr "待審閲報價"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
 msgid "Ratings"
-msgstr "點評"
+msgstr "評分"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -3905,7 +3906,7 @@ msgstr "要求客戶在網上簽名以確認訂單。"
 msgid ""
 "Request an online prepayment from your customers to confirm orders. You can "
 "ask them to fully pay the order or partially with a downpayment"
-msgstr ""
+msgstr "要求客戶進行線上預付以確認訂單。您可以要求他們全額支付訂單款項或者支付部分款項。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4050,14 +4051,14 @@ msgid "Sales Analysis"
 msgstr "銷售分析"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "按客戶銷售分析"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "按銷售人員的銷售分析"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "按客戶的銷售分析"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4849,7 +4850,6 @@ msgstr "確認報價所需支付金額的百分比。"
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -4889,11 +4889,6 @@ msgstr "提供的參數無效。"
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "訂金必須為正數."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "現在您的帳戶沒有訂單."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5311,6 +5306,7 @@ msgstr "警告"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format

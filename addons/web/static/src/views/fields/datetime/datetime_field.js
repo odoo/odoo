@@ -10,6 +10,7 @@ import {
     formatDateTime,
     today,
 } from "@web/core/l10n/dates";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
@@ -28,6 +29,7 @@ import { standardFieldProps } from "../standard_field_props";
  *  rounding?: number;
  *  startDateField?: string;
  *  warnFuture?: boolean;
+ *  showTime?: boolean;
  * }} DateTimeFieldProps
  *
  * @typedef {import("@web/core/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
@@ -46,7 +48,9 @@ export class DateTimeField extends Component {
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
         warnFuture: { type: Boolean, optional: true },
+        showTime: { type: Boolean, optional: true },
     };
+    static defaultProps = { showTime: true };
 
     static template = "web.DateTimeField";
 
@@ -170,7 +174,7 @@ export class DateTimeField extends Component {
     getFormattedValue(valueIndex) {
         const value = this.values[valueIndex];
         return value
-            ? this.field.type === "date"
+            ? this.field.type === "date" || !this.props.showTime
                 ? formatDate(value)
                 : formatDateTime(value)
             : "";
@@ -344,7 +348,18 @@ export const dateTimeField = {
                 `Control the number of minutes in the time selection. E.g. set it to 15 to work in quarters.`
             ),
         },
+        {
+            label: _t("Show time"),
+            name: "show_time",
+            type: "boolean",
+            default: true,
+            help: _t(`Displays or hides the time in the datetime value.`),
+        },
     ],
+    extractProps: ({ attrs, options }, dynamicInfo) => ({
+        ...dateField.extractProps({ attrs, options }, dynamicInfo),
+        showTime: archParseBoolean(options.show_time ?? true),
+    }),
     supportedTypes: ["datetime"],
 };
 
@@ -376,6 +391,31 @@ export const dateRangeField = {
         },
     ],
     supportedTypes: ["date", "datetime"],
+    isValid: (record, fieldname, fieldInfo) => {
+        if (fieldInfo.widget === "daterange") {
+            if (
+                !record.data[fieldInfo.options[END_DATE_FIELD_OPTION]] !==
+                    !record.data[fieldname] &&
+                evaluateBooleanExpr(
+                    record.activeFields[fieldInfo.options[END_DATE_FIELD_OPTION]]?.required,
+                    record.evalContextWithVirtualIds
+                )
+            ) {
+                return false;
+            }
+            if (
+                !record.data[fieldInfo.options[START_DATE_FIELD_OPTION]] !==
+                    !record.data[fieldname] &&
+                evaluateBooleanExpr(
+                    record.activeFields[fieldInfo.options[START_DATE_FIELD_OPTION]]?.required,
+                    record.evalContextWithVirtualIds
+                )
+            ) {
+                return false;
+            }
+        }
+        return !record.isFieldInvalid(fieldname);
+    }
 };
 
 registry

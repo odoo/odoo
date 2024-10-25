@@ -3,6 +3,7 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests.common import Form
+from odoo import Command
 
 class TestLotSerial(TestStockCommon):
     @classmethod
@@ -74,3 +75,34 @@ class TestLotSerial(TestStockCommon):
         self.StockQuantObj.invalidate_model()
         self.StockQuantObj._unlink_zero_quants()
         self.assertEqual(self.lot_p_a.location_id, self.locationC)
+
+    def test_bypass_reservation(self):
+        """
+        Check that the reservation of is bypassed when the stock move is added after the picking is done
+        """
+        customer = self.PartnerObj.create({'name': 'bob'})
+        delivery_picking = self.env['stock.picking'].create({
+            'partner_id': customer.id,
+            'picking_type_id': self.picking_type_out,
+            'move_ids': [Command.create({
+                'name': self.productC.name,
+                'product_id': self.productC.id,
+                'product_uom_qty': 5,
+                'quantity': 5,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })]
+        })
+        delivery_picking.button_validate()
+        delivery_picking.is_locked = False
+        self.env['stock.move.line'].create({
+            'product_id': self.productA.id,
+            'product_uom_id': self.productA.uom_id.id,
+            'picking_id': delivery_picking.id,
+            'quantity': 1,
+            'lot_id': self.lot_p_a.id,
+            'quant_id': self.lot_p_a.quant_ids.id
+        })
+        self.assertRecordValues(delivery_picking.move_ids, [{'state': 'done', 'quantity': 5.0, 'picked': True}, {'state': 'done', 'quantity': 1.0, 'picked': True}])
+        quant = self.lot_p_a.quant_ids.filtered(lambda q: q.location_id == self.locationA)
+        self.assertRecordValues(quant, [{'quantity': 9.0, 'reserved_quantity': 0.0}])

@@ -69,3 +69,8 @@ class SaleOrder(models.Model):
                     filtered_res[coupon] = filtered_rewards
             res = filtered_res
         return res
+
+    def _remove_delivery_line(self):
+        """Override of delivery to recalculate the reward after a delivery line is deleted"""
+        super()._remove_delivery_line()
+        self._update_programs_and_rewards()

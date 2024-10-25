@@ -203,3 +203,12 @@ QUnit.test("no conversation selected when opening non-existing channel in discus
     await click(".o-mail-DiscussSidebar .btn", { text: "Channels" }); // check no crash
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
 });
+
+QUnit.test("Preserve letter case and accents when creating channel from sidebar", async () => {
+    const { openDiscuss } = await start();
+    openDiscuss();
+    await click(".o-mail-DiscussSidebar i[title='Add or join a channel']");
+    await insertText(".o-discuss-ChannelSelector input", "Crème brûlée Fan Club");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-mail-Discuss-threadName", { value: "Crème brûlée Fan Club" });
+});

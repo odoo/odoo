@@ -9,8 +9,4 @@
         <field name="perm_create">1</field>
         <field name="perm_unlink">1</field>
     </record>
-    <!-- adds portal users to rule -->
-    <record model="ir.rule" id="auth_totp.rule_auth_totp_wizard">
-        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-    </record>
 </odoo>

@@ -675,4 +675,27 @@ QUnit.module("Fields", (hooks) => {
 
         assert.ok(afterHeight > initialHeight, "Should be taller than one character");
     });
+
+    QUnit.test("text field without line breaks", async function (assert) {
+        serverData.models.partner.fields.foo.type = "text";
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="foo" options="{'line_breaks': False}"/></form>`,
+        });
+
+        assert.containsOnce(target, ".o_field_text textarea", "should have a text area");
+        const textarea = target.querySelector(".o_field_text textarea");
+        assert.strictEqual(textarea.value, "yop");
+        textarea.focus();
+        const keydownEvent = await triggerEvent(textarea, null, "keydown", { key: "Enter" });
+        assert.strictEqual(keydownEvent.defaultPrevented, true);
+        assert.strictEqual(textarea.value, "yop", "no line break should appear");
+        // Simulate a (very artificial) paste event
+        textarea.value = "text\nwith\nline\nbreaks\n";
+        await triggerEvent(textarea, null, "input", { inputType: "insertFromPaste" });
+        assert.strictEqual(textarea.value, "text with line breaks ", "no line break should appear");
+    });
 });

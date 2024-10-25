@@ -18,11 +18,12 @@ import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { isEmpty } from "@spreadsheet/helpers/helpers";
 import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
 import {
-    checkFiltersTypeValueCombination,
+    checkFilterValueIsValid,
     getRelativeDateDomain,
 } from "@spreadsheet/global_filters/helpers";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { getItemId } from "../../helpers/model";
+import { serializeDateTime, serializeDate } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -64,7 +65,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     /**
      * Check if the given command can be dispatched
      *
-     * @param {Object} cmd Command
+     * @param {import("@spreadsheet").AllCommand} cmd Command
      */
     allowDispatch(cmd) {
         switch (cmd.type) {
@@ -73,7 +74,10 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 if (!filter) {
                     return CommandResult.FilterNotFound;
                 }
-                return checkFiltersTypeValueCombination(filter.type, cmd.value);
+                if (!checkFilterValueIsValid(filter, cmd.value)) {
+                    return CommandResult.InvalidValueTypeCombination;
+                }
+                break;
             }
         }
         return CommandResult.Success;
@@ -82,19 +86,30 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     /**
      * Handle a spreadsheet command
      *
-     * @param {Object} cmd Command
+     * @param {import("@spreadsheet").AllCommand} cmd
      */
     handle(cmd) {
         switch (cmd.type) {
             case "ADD_GLOBAL_FILTER":
-                this.recordsDisplayName[cmd.filter.id] = cmd.filter.defaultValueDisplayNames;
+                this.recordsDisplayName[cmd.filter.id] =
+                    cmd.filter.type === "relation"
+                        ? cmd.filter.defaultValueDisplayNames
+                        : undefined;
                 break;
             case "EDIT_GLOBAL_FILTER": {
-                const id = cmd.filter.id;
-                if (this.values[id] && this.values[id].rangeType !== cmd.filter.rangeType) {
+                const filter = cmd.filter;
+                const id = filter.id;
+                if (
+                    filter.type === "date" &&
+                    this.values[id] &&
+                    this.values[id].rangeType !== filter.rangeType
+                ) {
+                    delete this.values[id];
+                } else if (!checkFilterValueIsValid(filter, this.values[id]?.value)) {
                     delete this.values[id];
                 }
-                this.recordsDisplayName[id] = cmd.filter.defaultValueDisplayNames;
+                this.recordsDisplayName[id] =
+                    filter.type === "relation" ? filter.defaultValueDisplayNames : undefined;
                 break;
             }
             case "SET_GLOBAL_FILTER_VALUE":
@@ -431,14 +446,17 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         const now = DateTime.local();
 
         if (filter.rangeType === "from_to") {
-            if (value.from && value.to) {
-                return new Domain(["&", [field, ">=", value.from], [field, "<=", value.to]]);
+            const serialize = type === "datetime" ? serializeDateTime : serializeDate;
+            const from = value.from && serialize(DateTime.fromISO(value.from).startOf("day"));
+            const to = value.to && serialize(DateTime.fromISO(value.to).endOf("day"));
+            if (from && to) {
+                return new Domain(["&", [field, ">=", from], [field, "<=", to]]);
             }
-            if (value.from) {
-                return new Domain([[field, ">=", value.from]]);
+            if (from) {
+                return new Domain([[field, ">=", from]]);
             }
-            if (value.to) {
-                return new Domain([[field, "<=", value.to]]);
+            if (to) {
+                return new Domain([[field, "<=", to]]);
             }
             return new Domain();
         }
@@ -554,6 +572,9 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 numberOfCols = Math.max(numberOfCols, Number(colIndex) + 2);
                 for (const rowIndex in result[colIndex]) {
                     const cell = result[colIndex][rowIndex];
+                    if (cell.value === undefined) {
+                        continue;
+                    }
                     const xc = toXC(Number(colIndex) + 1, Number(rowIndex) + filterRowIndex);
                     cells[xc] = { content: cell.value.toString() };
                     if (cell.format) {

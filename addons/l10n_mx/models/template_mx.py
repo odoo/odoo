@@ -33,6 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'cuenta105_02',
                 'income_currency_exchange_account_id': 'cuenta702_01',
                 'expense_currency_exchange_account_id': 'cuenta701_01',
+                'deferred_expense_account_id': 'cuenta173_01',
                 'account_journal_early_pay_discount_loss_account_id': 'cuenta9993',
                 'account_journal_early_pay_discount_gain_account_id': 'cuenta9994',
                 'tax_cash_basis_journal_id': 'cbmx',

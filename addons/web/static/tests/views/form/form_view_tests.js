@@ -1044,6 +1044,44 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "col-lg-6");
     });
 
+    QUnit.test("field ids are unique (same field name in 2 form views)", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                        <field name="p">
+                            <form>
+                                <sheet>
+                                    <group>
+                                        <field name="bar"/>
+                                        <field name="foo"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <tree>
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_field_widget input#foo_0");
+
+        await click(target, ".o_field_x2many_list_row_add a");
+        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsOnce(target, ".o_field_widget input#foo_0");
+        assert.containsOnce(target, ".modal .o_field_widget input#foo_0");
+        assert.containsOnce(target, ".modal .o_field_widget input#bar_0");
+    });
+
     QUnit.test("Form and subview with _view_ref contexts", async function (assert) {
         assert.expect(3);
 
@@ -4008,6 +4046,67 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "tralala");
     });
 
+    QUnit.test(
+        "onchange send relation parent field values (including readonly)",
+        async function (assert) {
+            assert.expect(1);
+
+            serverData.models.user.fields.login = { string: "Login", type: "char" };
+            serverData.models.user.onchanges = {};
+            serverData.models.user.onchanges.name = (obj) => {
+                // like computed field that depends on "name" field
+                obj.login = obj.name.toLowerCase() + "@example.org";
+            };
+            serverData.models.partner.onchanges.qux = () => {};
+
+            let checkOnchange = false;
+            await makeView({
+                type: "form",
+                resModel: "user",
+                serverData,
+                arch: `
+                <form>
+                    <field name="name"/>
+                    <field name="login" readonly="True"/>
+                    <field name="partner_ids">
+                        <tree editable="top">
+                            <field name="qux"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 17,
+                mockRPC(route, args) {
+                    if (args.method === "onchange" && checkOnchange) {
+                        assert.deepEqual(
+                            args.args[1],
+                            {
+                                qux: 12.4,
+                                user_id: {
+                                    id: 17,
+                                    name: "Test",
+                                    login: "test@example.org",
+                                    partner_ids: [
+                                        [0, args.args[1].user_id.partner_ids[0][1], { qux: 0 }],
+                                    ],
+                                },
+                            },
+                            "should send the values (including readonly) for the relational parent field"
+                        );
+                    }
+                },
+            });
+            // trigger an onchange that update a readonly field by modifying user name
+            await editInput(target, ".o_field_widget[name=name] input", "Test");
+
+            // add a o2m row
+            await click(target.querySelector(".o_field_x2many_list_row_add a"));
+
+            // trigger an onchange by modifying foo
+            checkOnchange = true;
+            await editInput(target, ".o_field_one2many .o_field_widget[name=qux] input", "12.4");
+        }
+    );
+
     QUnit.test("evaluate in python field options", async function (assert) {
         assert.expect(3);
 
@@ -5336,6 +5435,135 @@ QUnit.module("Views", (hooks) => {
         await clickDiscard(target);
         assert.containsNone(target, ".modal", "modal should not be displayed");
         assert.containsNone(target, ".o_data_row");
+    });
+
+    QUnit.test("discard changes on relational data on existing record", async function (assert) {
+        serverData.models.partner.records[0].product_ids = [37];
+        serverData.models.partner.records[0].bar = false;
+        serverData.models.partner.onchanges = {
+            bar(record) {
+                // when bar changes, push another record in product_ids.
+                record.product_ids = [[4, 41]];
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="product_ids" widget="one2many">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xphone"]);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+
+        // Click on bar
+        await click(target.querySelector(".o_field_widget[name=bar] input"));
+        assert.containsOnce(target, ".o_field_widget[name=bar] input:checked");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "xphone",
+            "xpad",
+        ]);
+
+        // click on discard
+        await clickDiscard(target);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xphone"]);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+    });
+
+    QUnit.test("discard changes on relational data on new record (1)", async function (assert) {
+        // When bar is changed, it pushes a record in product_ids
+        // After discarding, product_ids should be empty
+        serverData.models.partner.onchanges = {
+            bar(record) {
+                if (record.bar) {
+                    // when bar changes, push another record in product_ids.
+                    record.product_ids = [[4, 41]];
+                }
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="product_ids" widget="one2many">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), []);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+
+        // Click on bar
+        await click(target.querySelector(".o_field_widget[name=bar] input"));
+        assert.containsOnce(target, ".o_field_widget[name=bar] input:checked");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xpad"]);
+
+        // click on discard
+        await clickDiscard(target);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), []);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+    });
+
+    QUnit.test("discard changes on relational data on new record (2)", async function (assert) {
+        // An initial onChange push a record in product_ids
+        // When bar is changed, it pushes a second record in product_ids
+        // After discarding, product_ids should contain the inital record pushed by the inital onChange
+        serverData.models.partner.onchanges = {
+            product_ids(record) {
+                record.product_ids = [[4, 41]];
+            },
+            bar(record) {
+                // when bar changes, push another record in product_ids.
+                if (record.bar) {
+                    record.product_ids = [[4, 37]];
+                }
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="product_ids" widget="one2many">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xpad"]);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+
+        // Click on bar
+        await click(target.querySelector(".o_field_widget[name=bar] input"));
+        assert.containsOnce(target, ".o_field_widget[name=bar] input:checked");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "xpad",
+            "xphone",
+        ]);
+
+        // click on discard
+        await clickDiscard(target);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xpad"]);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
     });
 
     QUnit.test(
@@ -10937,7 +11165,7 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o-tooltip--technical > li")),
-            ["Field:product_id", "Type:many2one", "Context:{}", "Relation:product"]
+            ["Label:Product", "Field:product_id", "Type:many2one", "Context:{}", "Relation:product"]
         );
     });
 
@@ -14285,52 +14513,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("containing a nested x2many list view should not overflow", async function (assert) {
-        serverData.models.partner_type.records.push({
-            id: 3,
-            display_name: "very".repeat(30) + "_long_name",
-            color: 10,
-        });
-
-        const record = serverData.models.partner.records[0];
-        record.timmy = [3];
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: record.id,
-            serverData,
-            arch: `
-            <form>
-                <sheet>
-                    <group>
-                        <group/>
-                        <group>
-                            <field name="timmy" widget="many2many">
-                                <tree>
-                                    <field name="display_name"/>
-                                    <field name="color"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </group>
-                </sheet>
-            </form>`,
-        });
-
-        const table = target.querySelector("table");
-        const group = target.querySelector(".o_inner_group:last-child");
-
-        // Testing not overflowing on render
-        assert.equal(group.clientWidth, group.scrollWidth);
-
-        // Testing that the table will overflow if no value is calculated
-        table.style.tableLayout = "auto";
-        // Allow overflowing over the inner group for testing purpose
-        group.querySelectorAll(".o_cell").forEach((el) => (el.style.minWidth = "min-content"));
-        assert.ok(group.clientWidth < group.scrollWidth);
-    });
-
     QUnit.test(
         "multiple views for m2m field after list item edit in form",
         async function (assert) {
@@ -14778,4 +14960,105 @@ QUnit.module("Views", (hooks) => {
             "o_field_invalid"
         );
     });
+
+    QUnit.test(
+        "onchange returns values w.r.t. extended record specs, for not extended one",
+        async function (assert) {
+            serverData.models.product.fields.partner_type_ids = {
+                string: "Partner type",
+                type: "one2many",
+                relation: "partner",
+            };
+            serverData.models.partner.records[1].product_ids = [37, 41];
+            serverData.models.partner.onchanges = {
+                bar() {},
+            };
+            serverData.views = {
+                "product,false,form": `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="partner_type_ids">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="bar"/>
+                        <field name="product_ids">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                mockRPC: (route, { method, args }) => {
+                    if (method === "onchange") {
+                        return {
+                            value: {
+                                product_ids: [
+                                    [
+                                        1,
+                                        37,
+                                        {
+                                            display_name: "name changed",
+                                            partner_type_ids: [[0, 0, { display_name: "one" }]],
+                                        },
+                                    ],
+                                    [
+                                        1,
+                                        41,
+                                        {
+                                            display_name: "name twisted",
+                                            partner_type_ids: [[0, 0, { display_name: "two" }]],
+                                        },
+                                    ],
+                                ],
+                            },
+                        };
+                    }
+                    if (method === "web_save") {
+                        assert.step("web_save");
+                        assert.deepEqual(args[1], {
+                            bar: false,
+                            product_ids: [
+                                [
+                                    1,
+                                    37,
+                                    {
+                                        display_name: "name changed",
+                                        partner_type_ids: [[0, 0, { display_name: "one" }]],
+                                    },
+                                ],
+                                [
+                                    1,
+                                    41,
+                                    {
+                                        display_name: "name twisted",
+                                        partner_type_ids: [[0, 0, { display_name: "two" }]],
+                                    },
+                                ],
+                            ],
+                        });
+                    }
+                },
+                resId: 2,
+            });
+
+            await click(target.querySelector(".o_data_cell"));
+            await click(target.querySelector(".btn-secondary"));
+            await click(target.querySelector(".o-checkbox"));
+            assert.strictEqual(
+                target.querySelector(".o_data_cell").dataset.tooltip,
+                "name changed"
+            );
+            await clickSave(target);
+            assert.verifySteps(["web_save"]);
+        }
+    );
 });

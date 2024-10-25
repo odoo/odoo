@@ -106,49 +106,27 @@ export class ThreadService {
                 .then(() => this.markAsRead(thread));
         }
         thread.seen_message_id = newestPersistentMessage?.id ?? false;
-        if (
-            thread.message_unread_counter > 0 &&
-            thread.model === "discuss.channel" &&
-            newestPersistentMessage
-        ) {
+        const alreadySeenBySelf = newestPersistentMessage?.isSeenBySelf;
+        if (thread.selfMember) {
+            thread.selfMember.lastSeenMessage = newestPersistentMessage;
+        }
+        if (newestPersistentMessage && thread.selfMember && !alreadySeenBySelf) {
             this.rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: newestPersistentMessage.id,
-            })
-                .then(() => {
-                    this.updateSeen(thread, newestPersistentMessage.id);
-                })
-                .catch((e) => {
-                    if (e.code !== 404) {
-                        throw e;
-                    }
-                });
-        } else if (newestPersistentMessage) {
-            this.updateSeen(thread);
+            }).catch((e) => {
+                if (e.code !== 404) {
+                    throw e;
+                }
+            });
         }
         if (thread.needactionMessages.length > 0) {
             this.markAllMessagesAsRead(thread);
         }
     }
 
-    updateSeen(thread, lastSeenId = thread.newestPersistentOfAllMessage?.id) {
-        const lastReadIndex = thread.messages.findIndex((message) => message.id === lastSeenId);
-        let newNeedactionCounter = 0;
-        let newUnreadCounter = 0;
-        for (const message of thread.messages.slice(lastReadIndex + 1)) {
-            if (message.isNeedaction) {
-                newNeedactionCounter++;
-            }
-            if (Number.isInteger(message.id)) {
-                newUnreadCounter++;
-            }
-        }
-        Object.assign(thread, {
-            seen_message_id: lastSeenId,
-            message_needaction_counter: newNeedactionCounter,
-            message_unread_counter: newUnreadCounter,
-        });
-    }
+    /** @deprecated */
+    updateSeen(thread, lastSeenId = thread.newestPersistentOfAllMessage?.id) {}
 
     async markAllMessagesAsRead(thread) {
         await this.orm.silent.call("mail.message", "mark_all_as_read", [
@@ -738,6 +716,9 @@ export class ThreadService {
             );
             thread.messages.push(tmpMsg);
             thread.seen_message_id = tmpMsg.id;
+            if (thread.selfMember) {
+                thread.selfMember.lastSeenMessage = tmpMsg;
+            }
         }
         const data = await this.rpc(this.getMessagePostRoute(thread), params);
         tmpMsg?.delete();
@@ -749,6 +730,10 @@ export class ThreadService {
         }
         const message = this.store.Message.insert(data, { html: true });
         thread.messages.add(message);
+        if (thread.selfMember && !message.isSeenBySelf) {
+            thread.seen_message_id = message.id;
+            thread.selfMember.lastSeenMessage = message;
+        }
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }

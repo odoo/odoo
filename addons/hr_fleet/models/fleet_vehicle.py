@@ -27,6 +27,7 @@ class FleetVehicle(models.Model):
         for vehicle in self:
             if vehicle.driver_id:
                 vehicle.driver_employee_id = self.env['hr.employee'].search([
+                    *self.env['hr.employee']._check_company_domain(self.env.companies),
                     ('work_contact_id', '=', vehicle.driver_id.id),
                 ], limit=1)
             else:
@@ -37,6 +38,7 @@ class FleetVehicle(models.Model):
         for vehicle in self:
             if vehicle.future_driver_id:
                 vehicle.future_driver_employee_id = self.env['hr.employee'].search([
+                    *self.env['hr.employee']._check_company_domain(self.env.companies),
                     ('work_contact_id', '=', vehicle.future_driver_id.id),
                 ], limit=1)
             else:

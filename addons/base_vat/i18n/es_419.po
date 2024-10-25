@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,6 +98,13 @@ msgstr ""
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "DE123456788 or 12/345/67890"
+msgstr "DE123456788 o 12/345/67890"
 
 #. module: base_vat
 #. odoo-python
@@ -208,11 +215,23 @@ msgstr "El número de IVA %s no pudo ser interpretado por el servidor VIES."
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"El país detectado para este NIF extranjero no coincide con el establecido en"
-" esta posición fiscal."
+"El país detectado para este número de identificación extranjero no coincide "
+"con ninguno de los países del grupo de países establecido en esta posición "
+"fiscal."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"No se pudo detectar el país del número de identificación extranjero. Asigne "
+"un país a la posición fiscal o establezca un grupo de países."
 
 #. module: base_vat
 #. odoo-python
@@ -230,7 +249,7 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "VAT"
-msgstr "IVA"
+msgstr "Número de identificación fiscal"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
@@ -248,6 +267,15 @@ msgstr "Verificar números tributarios con el servicio europeo VIES"
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
 msgstr "Verificación de número de IVA en VIES"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXX [9 dígitos] que deben cumplir con la suma de verificación del "
+"algoritmo de Luhn."
 
 #. module: base_vat
 #. odoo-python

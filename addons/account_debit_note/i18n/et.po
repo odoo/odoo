@@ -11,8 +11,8 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2023
 # Patrick-Jordan Kiudorv, 2023
 # Rivo Zängov <eraser@eraser.ee>, 2023
-# Anna, 2023
 # Kärt Villako, 2024
+# Anna, 2024
 # Birgit Vijar, 2024
 # 
 msgid ""
@@ -37,7 +37,7 @@ msgstr "<span class=\"o_stat_text\">Deebet</span>"
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
-msgstr ""
+msgstr "Lisa deebetarve viisard"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
@@ -105,7 +105,7 @@ msgstr "ID"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
-msgstr ""
+msgstr "Kui tühi, kasutab andmiku kandes andmikku, mida debiteeritakse."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -113,6 +113,8 @@ msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
+"Paranduste tegemisel on mugavam kopeerida ridu, Ridu ei kopeerida "
+"kreeditarvetelt deebetarvetele. "
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -149,14 +151,14 @@ msgstr "Liigutamise viis"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_count
 msgid "Number of Debit Notes"
-msgstr ""
+msgstr "Deebetarvete arv"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_origin_id
 msgid "Original Invoice Debited"
-msgstr ""
+msgstr "Algne arve debiteeritud"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
@@ -177,14 +179,14 @@ msgstr ""
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_payment__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr ""
+msgstr "Deebetarved, mis on loodud sellele arvele"
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "This debit note was created from: %s"
-msgstr ""
+msgstr "See deebetarve loodi: %s"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
@@ -199,13 +201,15 @@ msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
 msgstr ""
+"Deebetarve saab luua ainult kliendi arvele, kliendi kreeditarvele, tarnija "
+"arvele ja tarnija kreeditarvele"
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "You can only debit posted moves."
-msgstr ""
+msgstr "Debiteerida saab ainult postitatud kandeid. "
 
 #. module: account_debit_note
 #. odoo-python
@@ -214,4 +218,4 @@ msgstr ""
 msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit"
 " note."
-msgstr ""
+msgstr "Deebetarvet ei saa teha arvele, mis on juba seotud deebetarvega. "

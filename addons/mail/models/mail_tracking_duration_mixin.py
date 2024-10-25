@@ -38,7 +38,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
         ):
             self.duration_tracking = False
             raise ValueError(_(
-                'Field "(field)r on model %(model)r must be of type Many2one and have tracking=True for the computation of duration.',
+                'Field “%(field)s” on model “%(model)s” must be of type Many2one and have tracking=True for the computation of duration.',
                 field=self._track_duration_field, model=self._name
             ))
 
@@ -79,6 +79,20 @@ class MailTrackingDurationMixin(models.AbstractModel):
         self.ensure_one()
         json = defaultdict(lambda: 0)
         previous_date = self.create_date
+
+        # If there is a tracking value to be created, but still in the
+        # precommit values, create a fake one to take it into account.
+        # Otherwise, the duration_tracking value will add time spent on
+        # previous tracked field value to the time spent in the new value
+        # (after writing the stage on the record)
+        if f'mail.tracking.{self._name}' in self.env.cr.precommit.data:
+            if data := self.env.cr.precommit.data.get(f'mail.tracking.{self._name}', {}).get(self.id):
+                new_id = data.get(self._track_duration_field, self.env[self._name]).id
+                if new_id and new_id != self[self._track_duration_field].id:
+                    trackings.append({
+                        'create_date': self.env.cr.now(),
+                        'old_value_integer': data[self._track_duration_field].id,
+                    })
 
         # add "fake" tracking for time spent in the current value
         trackings.append({

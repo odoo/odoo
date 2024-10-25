@@ -182,6 +182,18 @@ class TestUiTranslate(odoo.tests.HttpCase):
         self.assertNotEqual(new_menu.name, 'value pa-GB', msg="The new menu should not have its value edited, only its translation")
         self.assertEqual(new_menu.with_context(lang=parseltongue.code).name, 'value pa-GB', msg="The new translation should be set")
 
+    def test_translate_text_options(self):
+        lang_en = self.env.ref('base.lang_en')
+        lang_fr = self.env.ref('base.lang_fr')
+        self.env['res.lang']._activate_lang(lang_fr.code)
+        default_website = self.env.ref('website.default_website')
+        default_website.write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [(6, 0, (lang_en + lang_fr).ids)],
+        })
+
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_text_options', login='admin')
+
     def test_snippet_translation(self):
         ResLang = self.env['res.lang']
         parseltongue, fake_user_lang = ResLang.create([{
@@ -617,3 +629,17 @@ class TestUi(odoo.tests.HttpCase):
             self.env['website'].with_context(website_id=website.id).viewref(key).active = active
 
         self.start_tour('/', 'website_no_dirty_lazy_image', login='admin')
+
+    def test_website_edit_menus_delete_parent(self):
+        website = self.env['website'].browse(1)
+        menu_tree = self.env['website.menu'].get_tree(website.id)
+
+        parent_menu = menu_tree['children'][0]['fields']
+        child_menu = menu_tree['children'][1]['fields']
+        child_menu['parent_id'] = parent_menu['id']
+
+        self.env['website.menu'].save(website.id, {'data': [parent_menu, child_menu]})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus_delete_parent', login='admin')
+
+    def test_snippet_carousel(self):
+        self.start_tour('/', 'snippet_carousel', login='admin')

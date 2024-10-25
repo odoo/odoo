@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -94,6 +94,13 @@ msgstr "VIESサーバとの接続に失敗しました。VAT番号%sが検証で
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "連絡先"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "DE123456788 or 12/345/67890"
+msgstr "DE123456788 または 12/345/67890"
 
 #. module: base_vat
 #. odoo-python
@@ -199,9 +206,18 @@ msgstr "VAT 番号 %s はVIESサーバで解釈することはできませんで
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
-msgstr "この国外納税者番号に検知された国は、会計ポジションに設定した国と一致しません。"
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
+msgstr "この外国VAT番号で検出された国は、この会計ポジションで設定された国グループのいずれの国とも一致しません。"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr "外国VAT番号の国を検出できませんでした。会計ポジションに国を割当てるか、国グループを設定して下さい。"
 
 #. module: base_vat
 #. odoo-python
@@ -235,6 +251,13 @@ msgstr "ヨーロッパのVIESサービスを使用してVAT番号を確認す�
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
 msgstr "Vies VAT要チェック"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr "XXXXXXXXX [9 桁] でLuhnアルゴリズムのチェックサムにならう必要があります。"
 
 #. module: base_vat
 #. odoo-python

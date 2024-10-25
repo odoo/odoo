@@ -40,6 +40,7 @@ class AccountMove(models.Model):
                             'quantity': line.qty if lot.product_id.tracking == 'lot' else 1.0,
                             'uom_name': line.product_uom_id.name,
                             'lot_name': lot.lot_name,
+                            'pos_lot_id': lot.id,
                         })
 
         return lot_values
@@ -70,3 +71,8 @@ class AccountMoveLine(models.Model):
         if sudo_order:
             price_unit = sudo_order._get_pos_anglo_saxon_price_unit(self.product_id, self.move_id.partner_id.id, self.quantity)
         return price_unit
+
+    def _check_edi_line_tax_required(self):
+        if self.product_id.type == 'combo':
+            return False
+        return super()._check_edi_line_tax_required()

@@ -17,31 +17,35 @@ class StockMove(models.Model):
     ewaybill_price_unit = fields.Monetary(
         compute='_compute_l10n_in_ewaybill_price_unit',
         currency_field='company_currency_id',
-        store=True
+        store=True,
+        readonly=False
     )
     ewaybill_tax_ids = fields.Many2many(
         comodel_name='account.tax',
         string="Taxes",
         compute='_compute_l10n_in_tax_ids',
-        store=True
+        store=True,
+        readonly=False
     )
 
-    @api.depends('product_id.uom_id', 'product_id.standard_price', 'l10n_in_ewaybill_id')
+    @api.depends('l10n_in_ewaybill_id')
     def _compute_l10n_in_ewaybill_price_unit(self):
-        for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state not in ['generated', 'cancel']):
-            line.ewaybill_price_unit = line._l10n_in_get_product_price_unit()
+        for line in self:
+            if line.l10n_in_ewaybill_id.state == 'pending' and line.picking_id.country_code == 'IN':
+                line.ewaybill_price_unit = line._l10n_in_get_product_price_unit()
 
-    @api.depends('product_id.supplier_taxes_id', 'product_id.taxes_id', 'l10n_in_ewaybill_id.fiscal_position_id')
+    @api.depends('l10n_in_ewaybill_id.fiscal_position_id')
     def _compute_l10n_in_tax_ids(self):
-        for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state not in ['generated', 'cancel']):
-            taxes_details = line._l10n_in_get_product_tax()
-            taxes = taxes_details['taxes']
-            if taxes_details['is_from_order']:
-                # Don't map taxes if they are from sale/purchase order
-                line.ewaybill_tax_ids = taxes
-            else:
-                if fiscal_position := line.l10n_in_ewaybill_id.fiscal_position_id:
-                    taxes = fiscal_position.map_tax(taxes)
-                line.ewaybill_tax_ids = taxes.filtered_domain(
-                    self.env['account.tax']._check_company_domain(self.company_id)
-                )
+        for line in self:
+            if line.l10n_in_ewaybill_id.state == 'pending' and line.picking_id.country_code == 'IN':
+                taxes_details = line._l10n_in_get_product_tax()
+                taxes = taxes_details['taxes']
+                if taxes_details['is_from_order']:
+                    # Don't map taxes if they are from sale/purchase order
+                    line.ewaybill_tax_ids = taxes
+                else:
+                    if fiscal_position := line.l10n_in_ewaybill_id.fiscal_position_id:
+                        taxes = fiscal_position.map_tax(taxes)
+                    line.ewaybill_tax_ids = taxes.filtered_domain(
+                        self.env['account.tax']._check_company_domain(self.company_id)
+                    )

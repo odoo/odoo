@@ -51,3 +51,18 @@ class TestResCountryState(TransactionCase):
                     self.env['res.country.state'].name_search(name, operator='ilike'),
                     [(vescillo.id, vescillo.display_name)]
                 )
+
+        # search in state list
+        for name in [
+            [altan.name],
+            [altan.display_name],
+            ['Altan(AA)'],
+            ['Altan ( AA )'],
+            ['Altan (Arstotzka)'],
+            ['Altan (Arst)'],
+        ]:
+            with self.subTest(name):
+                self.assertEqual(
+                    self.env['res.country.state'].name_search(name, operator='in'),
+                    [(altan.id, altan.display_name)]
+                )

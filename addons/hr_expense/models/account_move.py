@@ -10,6 +10,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     expense_sheet_id = fields.Many2one(comodel_name='hr.expense.sheet', ondelete='set null', copy=False, index='btree_not_null')
+    show_commercial_partner_warning = fields.Boolean(compute='_compute_show_commercial_partner_warning')
 
     def action_open_expense_report(self):
         self.ensure_one()
@@ -21,6 +22,15 @@ class AccountMove(models.Model):
             'res_model': 'hr.expense.sheet',
             'res_id': self.expense_sheet_id.id
         }
+
+    @api.depends('commercial_partner_id')
+    def _compute_show_commercial_partner_warning(self):
+        for move in self:
+            move.show_commercial_partner_warning = (
+                    move.commercial_partner_id == self.env.company.partner_id
+                    and move.move_type == 'in_invoice'
+                    and move.partner_id.employee_ids
+            )
 
     # Expenses can be written on journal other than purchase, hence don't include them in the constraint check
     def _check_journal_move_type(self):

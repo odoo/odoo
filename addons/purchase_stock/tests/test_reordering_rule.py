@@ -5,9 +5,11 @@ from datetime import datetime as dt, time
 from datetime import timedelta as td
 from freezegun import freeze_time
 
-from odoo import SUPERUSER_ID
+from odoo import SUPERUSER_ID, Command
+from odoo.fields import Date
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
+from odoo.tools.date_utils import add
 from odoo.exceptions import UserError
 
 
@@ -1100,3 +1102,116 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(orderpoint.supplier_id, product.seller_ids, 'The supplier should be set in the orderpoint')
         self.assertEqual(orderpoint.product_uom, product.uom_id, 'The orderpoint uom should be the same as the product uom')
         self.assertEqual(orderpoint.qty_to_order, 6000)
+
+    def test_tax_po_line_reordering_rule_with_branch_company(self):
+        """
+        Test that the parent company tax is correctly set in the purchase order line
+        when the scheduler is triggered and the branch company is used."
+        """
+        self.env.company.write({
+            'child_ids': [Command.create({
+                'name': 'Branch A',
+                'zip': '85120',
+            })],
+        })
+        self.cr.precommit.run()  # load the CoA
+        branch = self.env.company.child_ids
+        product = self.env['product.product'].with_company(branch).create({
+            'name': 'Storable Product',
+            'type': 'product',
+            'seller_ids': [Command.create({'partner_id': self.partner.id, 'min_qty': 1})],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', branch.id)], limit=1)
+        product.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 0,
+        })
+        # run the scheduler
+        self.env['procurement.group'].run_scheduler()
+        # check that the PO line is created
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(po_line), 1, 'There should be only one PO line')
+        self.assertEqual(po_line.product_qty, 10, 'The PO line quantity should be 10')
+        self.assertTrue(po_line.taxes_id)
+
+    def test_forbid_snoozing_auto_trigger_orderpoint(self):
+        """
+        Check that you can not snooze an auto-trigger reoredering rule
+        """
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        product = self.env['product.product'].create({
+            'name': 'Super product',
+            'type': 'product',
+            'route_ids': [Command.set(buy_route.ids)],
+        })
+
+        # check that you can not create a snoozed auto-trigger reoredering rule
+        with self.assertRaises(UserError):
+            orderpoint = self.env['stock.warehouse.orderpoint'].create({
+                'name': 'Super product RR',
+                'route_id': buy_route.id,
+                'product_id': product.id,
+                'product_min_qty': 0,
+                'product_max_qty': 5,
+                'snoozed_until': add(Date.today(), days=1),
+            })
+
+        # check that you can not snooze an existing one
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Super product RR',
+            'route_id': buy_route.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+        with self.assertRaises(UserError):
+            orderpoint.snoozed_until = add(Date.today(), days=1)
+
+    def test_supplierinfo_last_purchase_date(self):
+        """
+        Test that the last_purchase_date on the replenishment information is correctly computed
+        A user creates two purchase orders
+        The last_purchase_date on the supplier info should be computed as the most recent date_order from the purchase orders
+        """
+        res_partner = self.env['res.partner'].create({
+            'name': 'Test Partner',
+        })
+        product = self.env['product.product'].create({
+            'name': 'Storable Product',
+            'type': 'product',
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+        po1_vals = {
+            'partner_id': res_partner.id,
+            'date_order': dt.today() - td(days=15),
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_qty': 1.0,
+                })],
+        }
+        po2_vals = {
+            'partner_id': res_partner.id,
+            'date_order': dt.today(),
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_qty': 1.0,
+                })],
+        }
+        po1 = self.env['purchase.order'].create(po1_vals)
+        po1.button_confirm()
+        po2 = self.env['purchase.order'].create(po2_vals)
+        po2.button_confirm()
+        replenishment_info = self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id})
+        supplier_info = replenishment_info.supplierinfo_ids
+        self.assertEqual(supplier_info.last_purchase_date, dt.today().date(), "The last_purhchase_date should be set to the most recent date_order from the purchase orders")

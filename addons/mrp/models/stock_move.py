@@ -83,6 +83,46 @@ class StockMoveLine(models.Model):
         aggregated_properties['line_key'] += f'_{bom.id if bom else ""}'
         return aggregated_properties
 
+    @api.model
+    def _compute_packaging_qtys(self, aggregated_move_lines):
+        non_kit_ml = {}
+        kit_aggregated_ml = set()
+        kit_moves = defaultdict(lambda: self.env['stock.move'])
+        kit_qty = {}
+
+        for line in aggregated_move_lines.values():
+            if line['packaging']:
+                bom_id = line['bom']
+                if bom_id and bom_id.type == "phantom":
+                    kit_aggregated_ml.add(line['line_key'])
+                    kit_moves[bom_id] |= line['move']
+                else:
+                    non_kit_ml[line['line_key']] = line
+
+        filters = {'incoming_moves': lambda m: True, 'outgoing_moves': lambda m: False}
+        for bom, moves in kit_moves.items():
+            if moves.picking_id.backorder_ids:
+                kit_qty_ordered = (moves + moves.picking_id.backorder_ids.move_ids)._compute_kit_quantities(bom.product_id or bom.product_tmpl_id.product_variant_id, 1, bom, filters)
+                kit_qty_done = moves._compute_kit_quantities(bom.product_id or bom.product_tmpl_id.product_variant_id, 1, bom, filters)
+            else:
+                kit_qty_done = moves._compute_kit_quantities(bom.product_id or bom.product_tmpl_id.product_variant_id, 1, bom, filters)
+                kit_qty_ordered = kit_qty_done
+            kit_qty[bom.id] = (kit_qty_ordered, kit_qty_done)
+
+        for key in kit_aggregated_ml:
+            line = aggregated_move_lines[key]
+            bom_id = line['bom']
+            kit_qty_ordered, kit_qty_done = kit_qty[bom_id.id]
+            line['packaging_qty'] = line['packaging']._compute_qty(kit_qty_ordered, bom_id.product_uom_id)
+            line['packaging_quantity'] = line['packaging']._compute_qty(kit_qty_done, bom_id.product_uom_id)
+            aggregated_move_lines[key] = line
+
+        non_kit_ml = super()._compute_packaging_qtys(non_kit_ml)
+        for line in non_kit_ml.values():
+            aggregated_move_lines[line['line_key']] = line
+
+        return aggregated_move_lines
+
     def _get_aggregated_product_quantities(self, **kwargs):
         """Returns dictionary of products and corresponding values of interest grouped by optional kit_name
 
@@ -115,6 +155,28 @@ class StockMoveLine(models.Model):
             del aggregated_move_lines[move_line]
 
         return aggregated_move_lines
+
+    def _prepare_stock_move_vals(self):
+        move_vals = super()._prepare_stock_move_vals()
+        if self.env['product.product'].browse(move_vals['product_id']).is_kits:
+            move_vals['location_id'] = self.location_id.id
+            move_vals['location_dest_id'] = self.location_dest_id.id
+        return move_vals
+
+    def _get_linkable_moves(self):
+        """ Don't linke move lines with kit products to moves with dissimilar locations so that
+        post `action_explode()` move lines will have accurate location data.
+        """
+        self.ensure_one()
+        if self.product_id and self.product_id.is_kits:
+            moves = self.picking_id.move_ids.filtered(lambda move:
+                move.product_id == self.product_id and
+                move.location_id == self.location_id and
+                move.location_dest_id == self.location_dest_id
+            )
+            return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+        else:
+            return super()._get_linkable_moves()
 
 
 class StockMove(models.Model):
@@ -243,7 +305,9 @@ class StockMove(models.Model):
     @api.depends('byproduct_id')
     def _compute_show_info(self):
         super()._compute_show_info()
-        self.filtered(lambda m: m.byproduct_id or m in self.production_id.move_finished_ids).show_quant = False
+        byproduct_moves = self.filtered(lambda m: m.byproduct_id or m in self.production_id.move_finished_ids)
+        byproduct_moves.show_quant = False
+        byproduct_moves.show_lots_m2o = True
 
     @api.depends('picking_type_id.use_create_components_lots')
     def _compute_display_assign_serial(self):
@@ -261,6 +325,12 @@ class StockMove(models.Model):
             mo = self.raw_material_production_id
             new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
             self.quantity = new_qty
+
+    @api.onchange('quantity', 'product_uom', 'picked')
+    def _onchange_quantity(self):
+        if self.raw_material_production_id and not self.manual_consumption and self.picked and self.product_uom and \
+           float_compare(self.product_uom_qty, self.quantity, precision_rounding=self.product_uom.rounding) != 0:
+            self.manual_consumption = True
 
     @api.model
     def default_get(self, fields_list):

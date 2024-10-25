@@ -548,8 +548,12 @@ class ir_cron_trigger(models.Model):
     _allow_sudo_commands = False
 
     cron_id = fields.Many2one("ir.cron", index=True)
-    call_at = fields.Datetime()
+    call_at = fields.Datetime(index=True)
 
     @api.autovacuum
     def _gc_cron_triggers(self):
-        self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))]).unlink()
+        domain = [('call_at', '<', datetime.now() + relativedelta(weeks=-1))]
+        records = self.search(domain, limit=models.GC_UNLINK_LIMIT)
+        if len(records) >= models.GC_UNLINK_LIMIT:
+            self.env.ref('base.autovacuum_job')._trigger()
+        return records.unlink()

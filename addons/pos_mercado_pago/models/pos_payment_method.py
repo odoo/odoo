@@ -27,13 +27,16 @@ class PosPaymentMethod(models.Model):
     def _get_payment_terminal_selection(self):
         return super()._get_payment_terminal_selection() + [('mercado_pago', 'Mercado Pago')]
 
+    def _check_access(self):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("Do not have access to fetch token from Mercado Pago"))
+
     def force_pdv(self):
         """
         Triggered in debug mode when the user wants to force the "PDV" mode.
         It calls the Mercado Pago API to set the terminal mode to "PDV".
         """
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access to fetch token from Mercado Pago"))
+        self._check_access()
 
         mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
         _logger.info('Calling Mercado Pago to force the terminal mode to "PDV"')
@@ -49,8 +52,7 @@ class PosPaymentMethod(models.Model):
         """
         Called from frontend for creating a payment intent in Mercado Pago
         """
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access to fetch token from Mercado Pago"))
+        self._check_access()
 
         mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
         # Call Mercado Pago for payment intend creation
@@ -62,8 +64,7 @@ class PosPaymentMethod(models.Model):
         """
         Called from frontend to get the last payment intend from Mercado Pago
         """
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access to fetch token from Mercado Pago"))
+        self._check_access()
 
         mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
         # Call Mercado Pago for payment intend status
@@ -71,12 +72,23 @@ class PosPaymentMethod(models.Model):
         _logger.debug("mp_payment_intent_get(), response from Mercado Pago: %s", resp)
         return resp
 
+    def mp_get_payment_status(self, payment_id):
+        """
+        Called from frontend to get the payment status from Mercado Pago
+        """
+        self._check_access()
+
+        mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
+
+        resp = mercado_pago.call_mercado_pago("get", f"/v1/payments/{payment_id}", {})
+        _logger.debug("mp_get_payment_status(), response from Mercado Pago: %s", resp)
+        return resp
+
     def mp_payment_intent_cancel(self, payment_intent_id):
         """
         Called from frontend to cancel a payment intent in Mercado Pago
         """
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access to fetch token from Mercado Pago"))
+        self._check_access()
 
         mercado_pago = MercadoPagoPosRequest(self.sudo().mp_bearer_token)
         # Call Mercado Pago for payment intend cancelation

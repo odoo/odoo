@@ -4,13 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0+e\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-04 13:34+0000\n"
-"PO-Revision-Date: 2022-08-04 13:33+0000\n"
+"POT-Creation-Date: 2024-08-28 16:56+0000\n"
+"PO-Revision-Date: 2024-08-28 16:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -41,6 +40,16 @@ msgid "5% VAT"
 msgstr "5% ÁFA"
 
 #. module: l10n_hu
+#: model:ir.model,name:l10n_hu.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Számlatükör sablon"
+
+#. module: l10n_hu
+#: model:account.report.column,name:l10n_hu.tax_report_balance
+msgid "Balance"
+msgstr "Mérleg"
+
+#. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_alap_komp
 #: model:account.report.line,name:l10n_hu.tax_report_fizetndo_viss_komp
 msgid "Compensation Surcharge"
@@ -55,12 +64,12 @@ msgstr "Mentes"
 #. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_alap_viss_targyi
 msgid "Exempt from material tax"
-msgstr "Mentes az anyagi adó alól"
+msgstr "Tárgyi adómentes"
 
 #. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_alap_fiz_targyi
 msgid "Exempt from property tax"
-msgstr "Mentes az ingatlanadó alól"
+msgstr "Ingatlanadó mentesség"
 
 #. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_alap_fiz_alanyi
@@ -74,14 +83,9 @@ msgid "Exports"
 msgstr "Export"
 
 #. module: l10n_hu
-#: model:ir.ui.menu,name:l10n_hu.hu_reports_menu
-msgid "Hungary"
-msgstr "Magyarország"
-
-#. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_alap_import
 msgid "Import"
-msgstr "Importálás"
+msgstr "Import"
 
 #. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_alap_fiz_eu
@@ -90,153 +94,38 @@ msgid "Intra-community"
 msgstr "Közösségen belüli"
 
 #. module: l10n_hu
+#: model:ir.model,name:l10n_hu.model_account_move
+msgid "Journal Entry"
+msgstr "Könyvelési tétel"
+
+#. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_base_pay
 #: model:account.report.line,name:l10n_hu.tax_report_vat_pay
 msgid "Payable"
-msgstr "Kifizetendő"
+msgstr "Fizetendő"
 
 #. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_base_rec
 #: model:account.report.line,name:l10n_hu.tax_report_vat_rec
 msgid "Recoverable"
-msgstr "Helyrehozható"
+msgstr "Visszaigényelhető"
 
 #. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_alap_forditott
 msgid "Reverse"
-msgstr "Fordított"
+msgstr "Fordított ÁFA"
+
+#. module: l10n_hu
+#: model:account.report,name:l10n_hu.tax_report
+msgid "Tax Report"
+msgstr "Adóbevallás"
 
 #. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_alap
 msgid "Tax base"
-msgstr "Adó alap"
+msgstr "Adóalap"
 
 #. module: l10n_hu
 #: model:account.report.line,name:l10n_hu.tax_report_fizetndo
 msgid "VAT payable/recoverable"
 msgstr "Fizetendő/visszaigényelhető ÁFA"
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_fiz_afa_18
-msgid "base_pay_18"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_fiz_afa_27
-msgid "base_pay_27"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_fiz_afa_5
-msgid "base_pay_5"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_fiz_koron_kivuli
-msgid "base_pay_exempt"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_fiz_targyi
-msgid "base_pay_exempt_property"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_fiz_alanyi
-msgid "base_pay_exempt_tax"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_fiz_export
-msgid "base_pay_exports"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_fiz_eu
-msgid "base_pay_intra"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_viss_18
-msgid "base_rec_18"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_viss_27
-msgid "base_rec_27"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_viss_5
-msgid "base_rec_5"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_komp
-msgid "base_rec_compensation"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_viss_koron_kivuli
-msgid "base_rec_exempt"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_viss_targyi
-msgid "base_rec_exempt_material"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_viss_alanyi
-msgid "base_rec_exempt_tax"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_import
-msgid "base_rec_import"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_viss
-msgid "base_rec_intra"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_alap_forditott
-msgid "base_rec_reverse"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_fizetndo_18
-msgid "vat_pay_18"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_fizetndo_27
-msgid "vat_pay_27"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_fizetndo_5
-msgid "vat_pay_5"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_fizetndo_viss_18
-msgid "vat_rec_18"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_fizetndo_viss_27
-msgid "vat_rec_27"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_fizetndo_viss_5
-msgid "vat_rec_5"
-msgstr ""
-
-#. module: l10n_hu
-#: model:account.report.line,tag_name:l10n_hu.tax_report_fizetndo_viss_komp
-msgid "vat_rec_compensation"
-msgstr ""

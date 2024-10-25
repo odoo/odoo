@@ -62,7 +62,7 @@ class AccountMove(models.Model):
         previous_qties_delivered = defaultdict(float)
         stock_move_lines = current_invoice_amls.sale_line_ids.move_ids.move_line_ids.filtered(lambda sml: sml.state == 'done' and sml.lot_id).sorted(lambda sml: (sml.date, sml.id))
         for sml in stock_move_lines:
-            if sml.product_id not in invoiced_products or 'customer' not in {sml.location_id.usage, sml.location_dest_id.usage}:
+            if sml.product_id not in invoiced_products or not sml._should_show_lot_in_invoice():
                 continue
             product = sml.product_id
             product_uom = product.uom_id
@@ -145,7 +145,7 @@ class AccountMoveLine(models.Model):
         price_unit = super(AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()
 
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
-        down_payment = self.move_id.invoice_line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
+        down_payment = self.move_id.invoice_line_ids.filtered(lambda line: any(line.sale_line_ids.mapped('is_downpayment')))
         if so_line:
             is_line_reversing = False
             if self.move_id.move_type == 'out_refund' and not down_payment:

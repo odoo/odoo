@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, _lt, SUPERUSER_ID, api, fields, models, tools
+from odoo import SUPERUSER_ID, _, _lt, api, fields, models, tools
 from odoo.http import request
 from odoo.osv import expression
 
@@ -201,7 +200,9 @@ class Website(models.Model):
             pricelists |= partner_pricelist
 
         # This method is cached, must not return records! See also #8795
-        return pricelists.ids
+        # sudo is needed to ensure no records rules are applied during the sorted call,
+        # we only want to reorder the records on hand, not filter them.
+        return pricelists.sudo().sorted().ids
 
     def get_pricelist_available(self, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
@@ -428,10 +429,18 @@ class Website(models.Model):
                 order="date_order desc, id desc",
             )
             if last_sale_order:
-                if last_sale_order.partner_shipping_id.active:  # first = me
-                    addr['delivery'] = last_sale_order.partner_shipping_id.id
-                if last_sale_order.partner_invoice_id.active:
-                    addr['invoice'] = last_sale_order.partner_invoice_id.id
+                partner_shipping = last_sale_order.partner_shipping_id
+                if (
+                    partner_shipping.active
+                    and partner_shipping.commercial_partner_id == partner_sudo
+                ):
+                    addr['delivery'] = partner_shipping.id
+                partner_invoice = last_sale_order.partner_invoice_id
+                if (
+                    partner_invoice.active
+                    and partner_invoice.commercial_partner_id == partner_sudo
+                ):
+                    addr['invoice'] = partner_invoice.id
 
         affiliate_id = request.session.get('affiliate_id')
         salesperson_user_sudo = self.env['res.users'].sudo().browse(affiliate_id).exists()

@@ -448,10 +448,12 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             'seller_ids': [(0, 0, {
                 'partner_id': vendor_a.id,
                 'price': 5,
+                'product_code': 'code A',
             }), (0, 0, {
                 'partner_id': vendor_b.id,
                 'price': 4,
                 'min_qty': 10,
+                'product_code': 'code B',
             }), (0, 0, {
                 'partner_id': vendor_b.id,
                 'price': 6,
@@ -466,6 +468,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             line.product_qty = 100
         po_orig = po_form.save()
         self.assertEqual(po_orig.order_line.price_unit, 5)
+        self.assertEqual(po_orig.order_line.name, '[code A] Product')
         # Creates an alternative PO
         action = po_orig.action_create_alternative()
         alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
@@ -475,6 +478,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         alt_po_wizard.action_create_alternative()
         po_alt = po_orig.alternative_po_ids - po_orig
         self.assertEqual(po_alt.order_line.price_unit, 4)
+        self.assertEqual(po_alt.order_line.name, '[code B] Product')
 
     def test_08_purchase_requisition_sequence(self):
         new_company = self.env['res.company'].create({'name': 'Company 2'})
@@ -487,6 +491,25 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.bo_requisition.company_id = new_company
         self.bo_requisition.action_in_progress()
         self.assertTrue(self.bo_requisition.name.startswith("REQ_"))
+
+    def test_purchase_requisition_with_same_product(self):
+        """
+        Create two requisitions with the same product, but only one of them has a PO linked.
+        Check that the ordered quantity is correctly computed.
+        """
+        self.bo_requisition.vendor_id = self.res_partner_1
+        self.bo_requisition.type_id.quantity_copy = 'copy'
+        requisition_2 = self.bo_requisition.copy({'name': 'requisition_2'})
+        # Create purchase order from purchase requisition
+        po_form = Form(self.env['purchase.order'].with_context(default_requisition_id=requisition_2.id))
+        # po_form.partner_id = self.res_partner_1
+        po = po_form.save()
+        self.assertEqual(po.requisition_id, requisition_2)
+        po.button_confirm()
+        self.assertEqual(po.state, 'purchase')
+        (self.bo_requisition.line_ids | requisition_2.line_ids)._compute_ordered_qty()
+        self.assertEqual(self.bo_requisition.line_ids.qty_ordered, 0)
+        self.assertEqual(requisition_2.line_ids.qty_ordered, 10)
 
     def test_taxes_for_alternative_po(self):
         """

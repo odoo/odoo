@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
@@ -74,7 +73,7 @@ class ResourceCalendarAttendance(models.Model):
         for attendance in self:
             attendance.duration_hours = (attendance.hour_to - attendance.hour_from) if attendance.day_period != 'lunch' else 0
 
-    @api.depends('day_period', 'hour_from', 'hour_to')
+    @api.depends('day_period', 'duration_hours')
     def _compute_duration_days(self):
         for attendance in self:
             if attendance.day_period == 'lunch':

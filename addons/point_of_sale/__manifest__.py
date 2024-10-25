@@ -110,7 +110,6 @@
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
-            'web_editor/static/lib/html2canvas.js',
             'web/static/lib/zxing-library/zxing-library.js',
             # JS framework
             ('include', 'web._assets_core'),
@@ -143,6 +142,13 @@
             'web/static/src/legacy/js/libs/jquery.js',
             'web_tour/static/src/tour_pointer/**/*',
             'web_tour/static/src/tour_service/**/*',
+            'web/static/src/model/**/*',
+            'web/static/src/views/**/*',
+            'web/static/src/search/**/*',
+            'web/static/src/webclient/actions/**/*',
+            ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
+            ('remove', 'web/static/src/webclient/actions/**/*css'),
+            'web/static/src/webclient/company_service.js',
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [

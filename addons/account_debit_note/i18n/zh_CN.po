@@ -28,7 +28,7 @@ msgstr "<span class=\"o_stat_text\">退款通知</span>"
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
-msgstr "添加借记单向导"
+msgstr "添加退款通知向导"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
@@ -49,7 +49,7 @@ msgstr "国家/地区代码"
 #: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Create Debit Note"
-msgstr "创建借记单"
+msgstr "创建退款通知"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
@@ -64,13 +64,13 @@ msgstr "创建日期"
 #. module: account_debit_note
 #: model:ir.actions.server,name:account_debit_note.action_move_debit_note
 msgid "Debit Note"
-msgstr "借项凭单"
+msgstr "退款通知"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Debit Note Date"
-msgstr "借记单日期"
+msgstr "退款通知日期"
 
 #. module: account_debit_note
 #. odoo-python
@@ -175,7 +175,7 @@ msgstr "为此结算单创建的退款通知"
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "This debit note was created from: %s"
-msgstr "借记单创建于：%s"
+msgstr "退款通知创建于：%s"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
@@ -189,7 +189,7 @@ msgstr "使用特定日记账"
 msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
-msgstr "只能为客户发票、客户贷项凭单、供应商账单或供应商贷项凭单制作借项凭单。"
+msgstr "只能为客户发票、客户退款通知、供应商账单或供应商退款通知制作退款通知。"
 
 #. module: account_debit_note
 #. odoo-python
@@ -205,4 +205,4 @@ msgstr "您只能借记已发布的凭证。"
 msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit"
 " note."
-msgstr "不能为已链接至借项凭单的发票制作借项凭单。"
+msgstr "不能为已链接至退款通知的发票制作退款通知。"
