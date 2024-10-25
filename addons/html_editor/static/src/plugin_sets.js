@@ -60,6 +60,42 @@ import { TableOfContentPlugin } from "@html_editor/others/embedded_components/pl
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 
+/**
+ * @typedef { Object } SharedMethods
+ *
+ * Core
+ * @property { import("./core/clipboard_plugin").ClipboardShared } clipboard
+ * @property { import("./core/delete_plugin").DeleteShared } delete
+ * @property { import("./core/dialog_plugin").DialogShared } dialog
+ * @property { import("./core/dom_plugin").DomShared } dom
+ * @property { import("./core/format_plugin").FormatShared } format
+ * @property { import("./core/history_plugin").HistoryShared } history
+ * @property { import("./core/line_break_plugin").LineBreakShared } lineBreak
+ * @property { import("./core/overlay_plugin").OverlayShared } overlay
+ * @property { import("./core/protected_node_plugin").ProtectedNodeShared } protectedNode
+ * @property { import("./core/sanitize_plugin").SanitizeShared } sanitize
+ * @property { import("./core/selection_plugin").SelectionShared } selection
+ * @property { import("./core/split_plugin").SplitShared } split
+ * @property { import("./core/user_command_plugin").UserCommandShared } userCommand
+ *
+ * Main
+ * @property { import("./main/font/color_plugin").ColorShared } color
+ * @property { import("./main/link/link_plugin").LinkShared } link
+ * @property { import ("./main/link/link_selection_plugin").LinkSelectionShared } linkSelection
+ * @property { import ("./main/media/media_plugin").MediaShared } media
+ * @property { import("./main/powerbox/powerbox_plugin").PowerboxShared } powerbox
+ * @property { import ("./main/table/table_plugin").TableShared } table
+ * @property { import ("./main/toolbar/toolbar_plugin").ToolbarShared } toolbar
+ * @property { import ("./main/emoji_plugin").EmojiShared } emoji
+ * @property { import ("./main/local_overlay_plugin").LocalOverlayShared } localOverlay
+ * @property { import ("./main/tabulation_plugin").TabulationShared } tabulation
+ *
+ * Others
+ * @property { import("./others/collaboration/collaboration_odoo_plugin").CollaborationOdooShared } collaborationOdoo
+ * @property { import("./others/collaboration/collaboration_plugin").CollaborationShared } collaboration
+ * @property { import("./others/dynamic_placeholder_plugin").DynamicPlaceholderShared } dynamicPlaceholder
+ */
+
 export const CORE_PLUGINS = [
     ClipboardPlugin,
     CommentPlugin,

@@ -74,7 +74,7 @@ export function deleteBackward(editor, isMobileTest = false) {
 // history
 /** @param {Editor} editor */
 export function addStep(editor) {
-    editor.shared.addStep();
+    editor.shared.history.addStep();
 }
 /** @param {Editor} editor */
 export function undo(editor) {
@@ -116,7 +116,7 @@ export async function clickCheckbox(li) {
 
 /** @param {Editor} editor */
 export function insertLineBreak(editor) {
-    editor.shared.insertLineBreak();
+    editor.shared.lineBreak.insertLineBreak();
 }
 
 // Format commands
@@ -146,8 +146,8 @@ export function switchDirection(editor) {
 }
 /** @param {Editor} editor */
 export function splitBlock(editor) {
-    editor.shared.splitBlock();
-    editor.shared.addStep();
+    editor.shared.split.splitBlock();
+    editor.shared.history.addStep();
 }
 
 export async function simulateArrowKeyPress(editor, keys) {
@@ -189,8 +189,8 @@ export async function keydownShiftTab(editor) {
 }
 /** @param {Editor} editor */
 export function resetSize(editor) {
-    const selection = editor.shared.getEditableSelection();
-    editor.shared.resetTableSize(findInSelection(selection, "table"));
+    const selection = editor.shared.selection.getEditableSelection();
+    editor.shared.table.resetTableSize(findInSelection(selection, "table"));
 }
 /** @param {Editor} editor */
 export function justifyLeft(editor) {

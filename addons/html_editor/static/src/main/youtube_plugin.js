@@ -7,9 +7,8 @@ export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 
 export class YoutubePlugin extends Plugin {
-    static name = "youtube";
-    static dependencies = ["history", "history", "powerbox", "link", "dom"];
-    static shared = [];
+    static id = "youtube";
+    static dependencies = ["history", "powerbox", "link", "dom"];
     resources = {
         paste_url_overrides: this.handlePasteUrl.bind(this),
     };
@@ -22,11 +21,11 @@ export class YoutubePlugin extends Plugin {
         // option of do we want to add a plugin whenever we want the feature?
         const youtubeUrl = !this.config.disableVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
         if (youtubeUrl) {
-            const restoreSavepoint = this.shared.makeSavePoint();
+            const restoreSavepoint = this.dependencies.history.makeSavePoint();
             // Open powerbox with commands to embed media or paste as link.
             // Insert URL as text, revert it later if a command is triggered.
-            this.shared.domInsert(text);
-            this.shared.addStep();
+            this.dependencies.dom.insert(text);
+            this.dependencies.history.addStep();
             // URL is a YouTube video.
             const embedVideoCommand = {
                 title: _t("Embed Youtube Video"),
@@ -34,12 +33,15 @@ export class YoutubePlugin extends Plugin {
                 icon: "fa-youtube-play",
                 run: async () => {
                     const videoElement = await this.getYoutubeVideoElement(youtubeUrl[0]);
-                    this.shared.domInsert(videoElement);
-                    this.shared.addStep();
+                    this.dependencies.dom.insert(videoElement);
+                    this.dependencies.history.addStep();
                 },
             };
-            const commands = [embedVideoCommand, this.shared.getPathAsUrlCommand(text, url)];
-            this.shared.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
+            const commands = [
+                embedVideoCommand,
+                this.dependencies.link.getPathAsUrlCommand(text, url),
+            ];
+            this.dependencies.powerbox.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
             return true;
         }
     }

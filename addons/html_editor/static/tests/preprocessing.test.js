@@ -28,7 +28,7 @@ const migrations = [
 ];
 
 class MigrationPlugin extends Plugin {
-    static name = "knowledge_migrations_demo";
+    static id = "knowledge_migrations_demo";
     resources = {
         preprocessDom: this.preprocessDom.bind(this),
     };

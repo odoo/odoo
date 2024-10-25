@@ -7,8 +7,8 @@ import {
 } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 
 export class TableOfContentPlugin extends Plugin {
-    static name = "tableOfContent";
-    static dependencies = ["dom", "selection", "embedded_components", "link", "history"];
+    static id = "tableOfContent";
+    static dependencies = ["dom", "selection", "embeddedComponents", "link", "history"];
     resources = {
         user_commands: [
             {
@@ -45,8 +45,8 @@ export class TableOfContentPlugin extends Plugin {
 
     insertTableOfContent() {
         const tableOfContentBlueprint = renderToElement("html_editor.TableOfContentBlueprint");
-        this.shared.domInsert(tableOfContentBlueprint);
-        this.shared.addStep();
+        this.dependencies.dom.insert(tableOfContentBlueprint);
+        this.dependencies.history.addStep();
     }
 
     /**

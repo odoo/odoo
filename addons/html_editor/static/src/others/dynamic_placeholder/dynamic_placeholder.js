@@ -3,9 +3,14 @@ import { _t } from "@web/core/l10n/translation";
 import { DynamicPlaceholderPopover } from "@web/views/fields/dynamic_placeholder_popover";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {Object} DynamicPlaceholderShared
+ * @property {DynamicPlaceholderPlugin['updateDphDefaultModel']} updateDphDefaultModel
+ */
+
 export class DynamicPlaceholderPlugin extends Plugin {
-    static name = "dynamic_placeholder";
-    static dependencies = ["overlay", "selection", "history", "dom", "qweb"];
+    static id = "dynamicPlaceholder";
+    static dependencies = ["overlay", "selection", "history", "dom"];
     static shared = ["updateDphDefaultModel"];
     resources = {
         user_commands: [
@@ -33,7 +38,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.overlay = this.shared.createOverlay(DynamicPlaceholderPopover, {
+        this.overlay = this.dependencies.overlay.createOverlay(DynamicPlaceholderPopover, {
             hasAutofocus: true,
             className: "popover",
         });
@@ -80,12 +85,12 @@ export class DynamicPlaceholderPlugin extends Plugin {
             t.innerText = defaultValue;
         }
 
-        this.shared.domInsert(t);
-        this.shared.addStep();
+        this.dependencies.dom.insert(t);
+        this.dependencies.history.addStep();
     }
 
     onClose() {
         this.overlay.close();
-        this.shared.focusEditable();
+        this.dependencies.selection.focusEditable();
     }
 }
