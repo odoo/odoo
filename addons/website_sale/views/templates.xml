@@ -860,12 +860,19 @@
             <label t-attf-class="m-0 h6 o_products_attributes_title {{_classes_title}}">
                 <b>Price Range</b>
             </label>
-            <input type="range" multiple="multiple"
-                   t-attf-class="form-range range-with-input {{_classes_input}}"
-                   t-att-data-currency="pricelist.currency_id.symbol"
-                   t-att-data-currency-position="pricelist.currency_id.position"
-                   t-att-step="pricelist.currency_id.rounding" t-att-min="'%f' % (available_min_price)"
-                   t-att-max="'%f' % (available_max_price)" t-att-value="'%f,%f' % (min_price, max_price)"/>
+            <span style="font-family:none;">
+                <input
+                    type="range"
+                    multiple="multiple"
+                    t-attf-class="form-range range-with-input {{_classes_input}}"
+                    t-att-data-currency="pricelist.currency_id.symbol"
+                    t-att-data-currency-position="pricelist.currency_id.position"
+                    t-att-step="pricelist.currency_id.rounding"
+                    t-att-min="'%f' % (available_min_price)"
+                    t-att-max="'%f' % (available_max_price)"
+                    t-att-value="'%f,%f' % (min_price, max_price)"
+                />
+            </span>
         </div>
     </template>
 
