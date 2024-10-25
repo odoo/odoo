@@ -1022,7 +1022,7 @@ class Session(collections.abc.MutableMapping):
     #
     # Session methods
     #
-    def authenticate(self, dbname, credential):
+    def authenticate(self, env, credential):
         """
         Authenticate the current user with the given db, login and
         credential. If successful, store the authentication parameters in
@@ -1042,28 +1042,24 @@ class Session(collections.abc.MutableMapping):
             'HTTP_HOST': request.httprequest.environ['HTTP_HOST'],
             'REMOTE_ADDR': request.httprequest.environ['REMOTE_ADDR'],
         }
-
-        registry = Registry(dbname)
-        auth_info = registry['res.users'].authenticate(dbname, credential, wsgienv)
+        env = env(user=None, su=False)
+        auth_info = env['res.users'].authenticate(credential, wsgienv)
         pre_uid = auth_info['uid']
 
         self.uid = None
         self.pre_login = credential['login']
         self.pre_uid = pre_uid
 
-        with registry.cursor() as cr:
-            env = odoo.api.Environment(cr, pre_uid, {})
+        env = env(user=pre_uid)
 
-            # if 2FA is disabled we finalize immediately
-            user = env['res.users'].browse(pre_uid)
-            if auth_info.get('mfa') == 'skip' or not user._mfa_url():
-                self.finalize(env)
+        # if 2FA is disabled we finalize immediately
+        user = env['res.users'].browse(pre_uid)
+        if auth_info.get('mfa') == 'skip' or not user._mfa_url():
+            self.finalize(env)
 
-        if request and request.session is self and request.db == dbname:
-            request.env = odoo.api.Environment(request.env.cr, self.uid, self.context)
+        if request and request.session is self:
+            request.env = env(user=self.uid, context=self.context)
             request.update_context(lang=get_lang(request.env(user=pre_uid)).code)
-            # request env needs to be able to access the latest changes from the auth layers
-            request.env.cr.commit()
 
         return auth_info
 
