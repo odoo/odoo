@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
-        <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
+        <xpath
+            expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
+            position="before">
             <t t-if="pos.config.module_pos_restaurant">
                 <!-- All buttons always displayed -->
                 <button t-att-class="buttonClass"
@@ -15,7 +17,9 @@
                 </button>
             </t>
         </xpath>
-        <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
+        <xpath
+            expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
+            position="before">
             <!-- All these buttons will only be displayed in a dialog -->
             <t t-if="pos.config.module_pos_restaurant">
                 <button class="btn btn-secondary btn-lg py-5"

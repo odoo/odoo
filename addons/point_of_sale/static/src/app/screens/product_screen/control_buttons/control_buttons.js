@@ -2,7 +2,7 @@ import { Component, useState, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
-import { OrderlineNoteButton } from "@point_of_sale/app/screens/product_screen/control_buttons/customer_note_button/customer_note_button";
+import { NoteButton } from "@point_of_sale/app/screens/product_screen/control_buttons/note_button/note_button";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
@@ -10,7 +10,7 @@ import { SelectPartnerButton } from "@point_of_sale/app/screens/product_screen/c
 
 export class ControlButtons extends Component {
     static template = "point_of_sale.ControlButtons";
-    static components = { OrderlineNoteButton, SelectPartnerButton };
+    static components = { NoteButton, SelectPartnerButton };
     static props = {
         showRemainingButtons: { type: Boolean, optional: true },
         onClickMore: { type: Function, optional: true },
@@ -114,10 +114,7 @@ export class ControlButtons extends Component {
             },
         });
     }
-    internalNoteLabel(order) {
-        if (order) {
-            return _t("General Note");
-        }
+    internalNoteLabel() {
         return this.pos.config.module_pos_restaurant ? _t("Kitchen Note") : _t("Internal Note");
     }
 

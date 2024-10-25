@@ -20,9 +20,9 @@ patch(ActionpadWidget.prototype, {
     get hasChangesToPrint() {
         let hasChange = this.pos.getOrderChanges();
         hasChange =
-            hasChange.generalNote == ""
+            hasChange.generalCustomerNote == ""
                 ? true // for the case when removed all general note
-                : hasChange.count || hasChange.generalNote;
+                : hasChange.count || hasChange.generalCustomerNote;
         return hasChange;
     },
     get swapButtonClasses() {

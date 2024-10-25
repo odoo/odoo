@@ -78,10 +78,13 @@ patch(PosStore.prototype, {
 
             return acc;
         }, {});
-
+        const noteCount = ["general_customer_note", "internal_note"].reduce(
+            (count, note) => count + (note in orderChanges ? 1 : 0),
+            0
+        );
         return [
             ...Object.values(categories),
-            ...("generalNote" in orderChanges ? [{ count: 1, name: _t("General Note") }] : []),
+            ...(noteCount > 0 ? [{ count: noteCount, name: _t("Message") }] : []),
         ];
     },
     get selectedTable() {
