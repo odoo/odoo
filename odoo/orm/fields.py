@@ -346,7 +346,10 @@ class Field(typing.Generic[T]):
         :param owner: the owner class of the field (the model's definition or registry class)
         :param name: the name of the field
         """
-        assert isinstance(owner, _models.MetaModel)
+        # during initialization, when importing `_models` at the end of this
+        # file, it is not yet available and we already declare fields:
+        # id and display_name
+        assert '_models' not in globals() or isinstance(owner, _models.MetaModel)
         self.model_name = owner._name
         self.name = name
         if getattr(owner, 'pool', None) is None:  # models.is_definition_class(owner)

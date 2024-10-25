@@ -39,8 +39,6 @@ import markupsafe
 import pytz
 from lxml import etree, objectify
 
-import odoo
-import odoo.addons
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F401
@@ -183,14 +181,14 @@ def exec_pg_environ():
     See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
     """
     env = os.environ.copy()
-    if odoo.tools.config['db_host']:
-        env['PGHOST'] = odoo.tools.config['db_host']
-    if odoo.tools.config['db_port']:
-        env['PGPORT'] = str(odoo.tools.config['db_port'])
-    if odoo.tools.config['db_user']:
-        env['PGUSER'] = odoo.tools.config['db_user']
-    if odoo.tools.config['db_password']:
-        env['PGPASSWORD'] = odoo.tools.config['db_password']
+    if config['db_host']:
+        env['PGHOST'] = config['db_host']
+    if config['db_port']:
+        env['PGPORT'] = str(config['db_port'])
+    if config['db_user']:
+        env['PGUSER'] = config['db_user']
+    if config['db_password']:
+        env['PGPASSWORD'] = config['db_password']
     return env
 
 
@@ -216,6 +214,7 @@ def file_path(file_path: str, filter_ext: tuple[str, ...] = ('',), env: Environm
     :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
+    import odoo.addons  # noqa: PLC0415
     root_path = os.path.abspath(config.root_path)
     temporary_paths = env.transaction._Transaction__file_open_tmp_paths if env else ()
     addons_paths = [*odoo.addons.__path__, root_path, *temporary_paths]
@@ -934,6 +933,7 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
             for line in extract_stack(stack):
                 code.append(line)
 
+    import odoo  # eventd
     if odoo.evented:
         # code from http://stackoverflow.com/questions/12510648/in-gevent-how-can-i-dump-stack-traces-of-all-running-greenlets
         import gc
@@ -1426,18 +1426,19 @@ def format_date(
     """
     if not value:
         return ''
+    from odoo.fields import Datetime  # noqa: PLC0415
     if isinstance(value, str):
         if len(value) < DATE_LENGTH:
             return ''
         if len(value) > DATE_LENGTH:
             # a datetime, convert to correct timezone
-            value = odoo.fields.Datetime.from_string(value)
-            value = odoo.fields.Datetime.context_timestamp(env['res.lang'], value)
+            value = Datetime.from_string(value)
+            value = Datetime.context_timestamp(env['res.lang'], value)
         else:
-            value = odoo.fields.Datetime.from_string(value)
+            value = Datetime.from_string(value)
     elif isinstance(value, datetime.datetime) and not value.tzinfo:
         # a datetime, convert to correct timezone
-        value = odoo.fields.Datetime.context_timestamp(env['res.lang'], value)
+        value = Datetime.context_timestamp(env['res.lang'], value)
 
     lang = get_lang(env, lang_code)
     locale = babel_locale_parse(lang.code)
@@ -1487,7 +1488,8 @@ def format_datetime(
     if not value:
         return ''
     if isinstance(value, str):
-        timestamp = odoo.fields.Datetime.from_string(value)
+        from odoo.fields import Datetime  # noqa: PLC0415
+        timestamp = Datetime.from_string(value)
     else:
         timestamp = value
 
@@ -1541,7 +1543,8 @@ def format_time(
         localized_time = value
     else:
         if isinstance(value, str):
-            value = odoo.fields.Datetime.from_string(value)
+            from odoo.fields import Datetime  # noqa: PLC0415
+            value = Datetime.from_string(value)
         assert isinstance(value, datetime.datetime)
         tz_name = tz or env.user.tz or 'UTC'
         utc_datetime = pytz.utc.localize(value, is_dst=False)

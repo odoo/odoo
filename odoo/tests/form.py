@@ -13,7 +13,7 @@ from datetime import datetime, date
 
 from lxml import etree
 
-import odoo
+from odoo import api, fields
 from odoo.models import BaseModel
 from odoo.fields import Command
 from odoo.tools.safe_eval import safe_eval
@@ -142,7 +142,7 @@ class Form:
             self._init_from_defaults()
 
     @classmethod
-    def from_action(cls, env: odoo.api.Environment, action: dict) -> Form:
+    def from_action(cls, env: api.Environment, action: dict) -> Form:
         assert action['type'] == 'ir.actions.act_window', \
             f"only window actions are valid, got {action['type']}"
         # ensure the first-requested view is a form view
@@ -970,10 +970,10 @@ class M2MProxy(X2MProxy, collections.abc.Sequence):
         self._form._perform_onchange(self._field)
 
 
-def convert_read_to_form(values, fields):
+def convert_read_to_form(values, model_fields):
     result = {}
     for fname, value in values.items():
-        field_info = {'type': 'id'} if fname == 'id' else fields[fname]
+        field_info = {'type': 'id'} if fname == 'id' else model_fields[fname]
         if field_info['type'] == 'one2many':
             if 'edition_view' in field_info:
                 subfields = field_info['edition_view']['fields']
@@ -983,9 +983,9 @@ def convert_read_to_form(values, fields):
         elif field_info['type'] == 'many2many':
             value = M2MValue({'id': id_} for id_ in (value or ()))
         elif field_info['type'] == 'datetime' and isinstance(value, datetime):
-            value = odoo.fields.Datetime.to_string(value)
+            value = fields.Datetime.to_string(value)
         elif field_info['type'] == 'date' and isinstance(value, date):
-            value = odoo.fields.Date.to_string(value)
+            value = fields.Date.to_string(value)
         result[fname] = value
     return result
 
@@ -1003,9 +1003,9 @@ def _cleanup_from_default(type_, value):
     if type_ == 'one2many':
         raise NotImplementedError()
     elif type_ == 'datetime' and isinstance(value, datetime):
-        return odoo.fields.Datetime.to_string(value)
+        return fields.Datetime.to_string(value)
     elif type_ == 'date' and isinstance(value, date):
-        return odoo.fields.Date.to_string(value)
+        return fields.Date.to_string(value)
     return value
 
 

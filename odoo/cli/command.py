@@ -5,8 +5,9 @@ import sys
 from inspect import cleandoc
 from pathlib import Path
 
-import odoo
+import odoo.cli
 from odoo.modules import get_module_path, get_modules, initialize_sys_path
+from odoo.tools import config
 
 commands = {}
 """All loaded commands"""
@@ -86,7 +87,7 @@ def main():
     # commands from modules
     if len(args) > 1 and args[0].startswith('--addons-path=') and not args[1].startswith('-'):
         # parse only the addons-path, do not setup the logger...
-        odoo.tools.config._parse_config([args[0]])
+        config._parse_config([args[0]])
         args = args[1:]
 
     if len(args) and not args[0].startswith('-'):
