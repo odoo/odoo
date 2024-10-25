@@ -250,3 +250,35 @@ test.tags("desktop")("add table inside non-empty list", async () => {
         </ul>`
     );
 });
+
+test.tags("desktop")(
+    "should close the table picker when any key except arrow keys pressed",
+    async () => {
+        const { el, editor } = await setupEditor("<p>a[]</p>");
+        await insertText(editor, "/");
+        await waitFor(".o-we-powerbox");
+        await insertText(editor, "table");
+        expectContentToBe(el, "<p>a/table[]</p>");
+        await animationFrame();
+        await press("Enter");
+        await waitFor(".o-we-tablepicker");
+        expect(".o-we-tablepicker").toHaveCount(1);
+        expectContentToBe(el, "<p>a[]</p>");
+        await insertText(editor, "b");
+        await animationFrame();
+        expect(".o-we-tablepicker").toHaveCount(0);
+        expectContentToBe(el, "<p>ab[]</p>");
+        await insertText(editor, "/");
+        await waitFor(".o-we-powerbox");
+        await insertText(editor, "table");
+        expectContentToBe(el, "<p>ab/table[]</p>");
+        await animationFrame();
+        await press("Enter");
+        await waitFor(".o-we-tablepicker");
+        expect(".o-we-tablepicker").toHaveCount(1);
+        expectContentToBe(el, "<p>ab[]</p>");
+        await insertText(editor, "/");
+        await animationFrame();
+        expect(".o-we-tablepicker").toHaveCount(0);
+    }
+);
