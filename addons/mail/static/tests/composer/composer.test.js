@@ -102,6 +102,22 @@ test("add an emoji", async () => {
     await contains(".o-mail-Composer-input", { value: "😤" });
 });
 
+test("emojis are auto-substituted from text", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", ":)");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message-body", { text: "😊" });
+    await insertText(".o-mail-Composer-input", "x'D");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message-body", { text: "😂" });
+    await insertText(".o-mail-Composer-input", ">:)");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message-body", { text: "😈" });
+});
+
 test("Exiting emoji picker brings the focus back to the Composer textarea [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
