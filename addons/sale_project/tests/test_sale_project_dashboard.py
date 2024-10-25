@@ -79,13 +79,13 @@ class TestDashboardProject(TestProjectDashboardCommon):
                 'product_id': self.dashboard_product_delivery_service.id,
                 'product_uom_qty': 1,
         }])
-        expected_dict = [{'id': sol_service_3.id, 'name': 'Material', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (1, 'Units'), 'product_id': (self.material_product.id, 'Material')}]
+        expected_dict = sol_service_3._read_format(
+            ['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id']
+        )
         sale_item_data = self.dashboard_project.get_sale_items_data(limit=5, with_action=False, section_id='materials')
         self.assertEqual(sale_item_data['sol_items'], expected_dict)
-        expected_dict = [
-             {'id': sol_service_1.id, 'name': '[SERV-ORDERED2] Service Milestone', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (4, 'Hours'), 'product_id': (self.product_milestone.id, '[SERV-ORDERED2] Service Milestone')},
-             {'id': sol_service_2.id, 'name': '[SERV-ORDERED2] Product prepaid', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (4, 'Hours'), 'product_id': (self.product_prepaid.id, '[SERV-ORDERED2] Product prepaid')},
-             {'id': sol_service_4.id, 'name': '[SERV-ORDERED2] Service Delivery', 'product_uom_qty': 1.0, 'qty_delivered': 0.0, 'qty_invoiced': 0.0, 'product_uom_id': (4, 'Hours'), 'product_id': (self.dashboard_product_delivery_service.id, '[SERV-ORDERED2] Service Delivery')},
-        ]
+        expected_dict = (sol_service_1 + sol_service_2 + sol_service_4)._read_format(
+            ['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id']
+        )
         sale_item_data = self.dashboard_project.get_sale_items_data(limit=5, with_action=False, section_id='service_revenues')
         self.assertEqual(sale_item_data['sol_items'], expected_dict)
