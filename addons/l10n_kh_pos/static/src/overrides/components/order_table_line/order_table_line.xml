@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_kh_pos.OrderTableLine">
+        <t t-set="line" t-value="props.line" />
+        <tr class="lh-sm">
+            <td class="py-2 align-top">
+                <div t-attf-class="{{ line.comboParent ? 'border-start border-3 ms-2 ps-2' : '' }}">
+                    <div class="text-wrap fw-bolder" t-out="line.productName"/>
+                    <div t-if="line.unit">
+                        kh_unit / Unit: <t t-out="line.unit"/>
+                    </div>
+                    <div t-if="line.oldUnitPrice and line.price !== 0">
+                        kh_original_price / Original Unit Price: <t t-out="line.oldUnitPrice"/>
+                    </div>
+                    <div t-if="line.price !== 0 and line.discount and line.discount !== '0'">ថ្លៃឯកតា / Discount: <t t-out="line.discount"/>%</div>
+                    <div t-if="line.customerNote" class="customer-note w-100 p-1 text-break">
+                        <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                        <t t-esc="line.customerNote" />
+                    </div>
+                    <div t-if="line.pack_lot_lines">
+                        <li t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
+                            <t t-if="lot.order_line.product.tracking == 'lot'">
+                                kh_lot / Lot Number <t t-esc="lot.lot_name"/>
+                            </t>
+                            <t t-else="">
+                                kh_sn / SN <t t-esc="lot.lot_name"/>
+                            </t>
+                        </li>
+                    </div>
+                </div>
+            </td>
+            <td class="text-end py-2 align-top">
+                <span t-out="line.qty" class="qty" />
+            </td>
+            <td class="text-end py-2 align-top">
+                <span t-out="line.unitPrice" />
+            </td>
+            <td class="text-end py-2 align-top">
+                <t t-if="line.price === 'free'">
+                    Free
+                </t>
+                <t t-else="" t-esc="line.price"/>
+            </td>
+        </tr>
+    </t>
+</templates>

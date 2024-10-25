@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_kh_pos.OrderTable">
+        <t t-if="props.lines?.length" t-translation="off">
+            <table t-ref="scrollable" class="order-table bg-view overflow-y-auto w-100">
+                <thead>
+                    <th width="40%" class="fw-bolder p-0">
+                        <span>បរិយាយ​</span>
+                        <br/>
+                        <span>Description</span>
+                    </th>
+                    <th width="20%" class="text-end fw-bolder p-0">
+                        <span>បរិមាណ</span>
+                        <br/>
+                        <span>Qty</span>
+                    </th>
+                    <th width="20%" class="text-end fw-bolder p-0">
+                        <span>ថ្លៃឯកតា</span>
+                        <br/>
+                        <span>Price</span>
+                    </th>
+                    <th class="text-end fw-bolder p-0">
+                        <span>ថ្លៃទំនិញ</span>
+                        <br/>
+                        <span>Net Price</span>
+                    </th>
+                </thead>
+                <tbody>
+                    <t t-foreach="props.lines" t-as="line" t-key="line_index">
+                        <t t-slot="default" line="line"/>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+        <t t-else="">
+            <CenteredIcon icon="'fa-shopping-cart fa-4x'" text="'This order is empty'"/>
+        </t>
+    </t>
+</templates>
