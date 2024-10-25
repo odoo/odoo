@@ -70,7 +70,7 @@ class AccountMoveLine(models.Model):
             second_currency_field = 'price_subtotal'
             second_currency = self.currency_id
             main_currency_rate = 1
-            second_currency_rate = abs(self.balance) / self.price_subtotal if domestic_invoice_other_currency else False
+            second_currency_rate = 1 / self.move_id.invoice_currency_rate if self.move_id.invoice_currency_rate else 1
             inverse_rate = second_currency_rate if domestic_invoice_other_currency else main_currency_rate
         else:
             # This is to manage case 5 (export docs)
@@ -78,7 +78,7 @@ class AccountMoveLine(models.Model):
             second_currency = self.move_id.company_id.currency_id
             main_currency_field = 'price_subtotal'
             second_currency_field = 'balance'
-            inverse_rate = abs(self.balance) / self.price_subtotal
+            inverse_rate = 1 / self.move_id.invoice_currency_rate if self.move_id.invoice_currency_rate else 1
         price_subtotal = abs(self[main_currency_field]) * line_sign
         if self.quantity and self.discount != 100.0:
             price_unit = (price_subtotal / abs(self.quantity)) / (1 - self.discount / 100)
