@@ -51,15 +51,14 @@ class AccountEdiDocument(models.Model):
     def _compute_edi_content(self):
         for doc in self:
             res = b''
-            if doc.state in ('to_send', 'to_cancel'):
-                move = doc.move_id
-                config_errors = doc.edi_format_id._check_move_configuration(move)
-                if config_errors:
-                    res = base64.b64encode('\n'.join(config_errors).encode('UTF-8'))
-                else:
-                    move_applicability = doc.edi_format_id._get_move_applicability(move)
-                    if move_applicability and move_applicability.get('edi_content'):
-                        res = base64.b64encode(move_applicability['edi_content'](move))
+            move = doc.move_id
+            config_errors = doc.edi_format_id._check_move_configuration(move)
+            if config_errors:
+                res = base64.b64encode('\n'.join(config_errors).encode('UTF-8'))
+            else:
+                move_applicability = doc.edi_format_id._get_move_applicability(move)
+                if move_applicability and move_applicability.get('edi_content'):
+                    res = base64.b64encode(move_applicability['edi_content'](move))
             doc.edi_content = res
 
     def action_export_xml(self):
