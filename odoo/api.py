@@ -821,6 +821,10 @@ class Environment(Mapping):
     @contextmanager
     def norecompute(self):
         """ Delay recomputations (deprecated: this is not the default behavior). """
+        warnings.warn(
+            "norecompute() is deprecated since 13.0. You should use protecting() instead.",
+            DeprecationWarning,
+        )
         yield
 
     def cache_key(self, field):
