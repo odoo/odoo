@@ -97,9 +97,9 @@ class L10n_InWithholdWizard(models.TransientModel):
             withhold_type = wizard._get_withhold_type()
             l10n_in_tds_tax_type = False
             if withhold_type in ('in_withhold', 'in_refund_withhold'):
-                l10n_in_tds_tax_type = 'purchase'
+                l10n_in_tds_tax_type = 'tds_purchase'
             elif withhold_type in ('out_withhold', 'out_refund_withhold'):
-                l10n_in_tds_tax_type = 'sale'
+                l10n_in_tds_tax_type = 'tds_sale'
             wizard.l10n_in_tds_tax_type = l10n_in_tds_tax_type
 
     @api.depends('related_move_id', 'related_payment_id')
@@ -125,7 +125,7 @@ class L10n_InWithholdWizard(models.TransientModel):
     def _compute_l10n_in_withholding_warning(self):
         for wizard in self:
             warnings = {}
-            if wizard.tax_id and wizard.l10n_in_tds_tax_type == 'purchase' and not wizard.related_move_id.commercial_partner_id.l10n_in_pan \
+            if wizard.tax_id and wizard.l10n_in_tds_tax_type == 'tds_purchase' and not wizard.related_move_id.commercial_partner_id.l10n_in_pan \
                 and wizard.tax_id.amount != max(wizard.tax_id.l10n_in_section_id.l10n_in_section_tax_ids, key=lambda t: abs(t.amount)).amount:
                 warnings['lower_tds_tax'] = {
                     'message': _("As the Partner's PAN missing/invalid, it's advisable to apply TDS at the higher rate.")

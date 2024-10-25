@@ -28,6 +28,7 @@ class TestInPosBase(TestPoSCommon):
         })
         cls.config = cls.basic_config
         cls.gst_5 = cls.env['account.chart.template'].ref('sgst_sale_5')
+        cls.nil_rated = cls.env['account.chart.template'].ref('nil_rated_sale')
 
         country_in = cls.env.ref('base.in')
         state_in_gj = cls.env.ref('base.state_in_gj')
@@ -60,6 +61,12 @@ class TestInPosBase(TestPoSCommon):
             'l10n_in_hsn_code': '2222',
             'list_price': 200,
             'taxes_id': [Command.set(cls.gst_5.ids)],  # Tax: 10
+        })
+        cls.product_c = cls.env['product.product'].create({
+            'name': 'Product C',
+            'available_in_pos': True,
+            'list_price': 300,
+            'taxes_id': [Command.set(cls.nil_rated.ids)],  # Tax: 0
         })
 
     @contextmanager

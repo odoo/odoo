@@ -8,23 +8,35 @@ class AccountTax(models.Model):
     _inherit = 'account.tax'
 
     l10n_in_reverse_charge = fields.Boolean("Reverse charge", help="Tick this if this tax is reverse charge. Only for Indian accounting")
-    l10n_in_tax_type = fields.Selection(
+    l10n_in_gst_tax_type = fields.Selection(
         selection=[('igst', 'igst'), ('cgst', 'cgst'), ('sgst', 'sgst'), ('cess', 'cess')],
-        compute='_compute_l10n_in_tax_type',
+        compute='_compute_l10n_in_gst_tax_type',
+    )
+    l10n_in_is_lut = fields.Boolean(
+        string="LUT",
+        help="Tick this if this tax is used in LUT (Letter of Undertaking) transactions. Only for Indian accounting.",
+    )
+    l10n_in_tax_type = fields.Selection(
+        selection=[
+            ('gst', 'GST'),
+            ('tcs', 'TCS'),
+            ('tds_sale', 'TDS Sale'),
+            ('tds_purchase', 'TDS Purchase'),
+            ('nil_rated', 'Nil Rated'),
+            ('exempt', 'Exempt'),
+            ('non_gst', 'Non-GST'),
+        ],
+        string="Indian Tax Type",
     )
 
     # withholding related fields
-    l10n_in_tds_tax_type = fields.Selection([
-        ('sale', 'Sale'),
-        ('purchase', 'Purchase')
-    ], string="TDS Tax Type")
     l10n_in_section_id = fields.Many2one('l10n_in.section.alert', string="Section")
     l10n_in_tds_feature_enabled = fields.Boolean(related='company_id.l10n_in_tds_feature')
     l10n_in_tcs_feature_enabled = fields.Boolean(related='company_id.l10n_in_tcs_feature')
 
     @api.depends('country_code', 'invoice_repartition_line_ids.tag_ids')
-    def _compute_l10n_in_tax_type(self):
-        self.l10n_in_tax_type = False
+    def _compute_l10n_in_gst_tax_type(self):
+        self.l10n_in_gst_tax_type = False
         in_taxes = self.filtered(lambda tax: tax.country_code == 'IN')
         if in_taxes:
             tags_mapping = {
@@ -37,7 +49,7 @@ class AccountTax(models.Model):
                 tags = tax.invoice_repartition_line_ids.tag_ids
                 for tag_code, tag in tags_mapping.items():
                     if tag in tags:
-                        tax.l10n_in_tax_type = tag_code
+                        tax.l10n_in_gst_tax_type = tag_code
                         break
 
     # -------------------------------------------------------------------------
@@ -54,7 +66,7 @@ class AccountTax(models.Model):
 
     @api.model
     def _l10n_in_get_hsn_summary_table(self, base_lines, display_uom):
-        l10n_in_tax_types = set()
+        l10n_in_gst_tax_types = set()
         items_map = defaultdict(lambda: {
             'quantity': 0.0,
             'amount_untaxed': 0.0,
@@ -68,7 +80,7 @@ class AccountTax(models.Model):
             unique_taxes_data = set(
                 tax_data['tax']
                 for tax_data in base_line['tax_details']['taxes_data']
-                if tax_data['tax']['l10n_in_tax_type'] in ('igst', 'cgst', 'sgst')
+                if tax_data['tax']['l10n_in_gst_tax_type'] in ('igst', 'cgst', 'sgst')
             )
             rate = sum(tax.amount for tax in unique_taxes_data)
 
@@ -95,7 +107,7 @@ class AccountTax(models.Model):
         def grouping_function(base_line, tax_data):
             return {
                 **get_base_line_grouping_key(base_line),
-                'l10n_in_tax_type': tax_data['tax'].l10n_in_tax_type,
+                'l10n_in_gst_tax_type': tax_data['tax'].l10n_in_gst_tax_type,
             } if tax_data else None
 
         base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
@@ -104,7 +116,7 @@ class AccountTax(models.Model):
             if (
                 not grouping_key
                 or not grouping_key['l10n_in_hsn_code']
-                or not grouping_key['l10n_in_tax_type']
+                or not grouping_key['l10n_in_gst_tax_type']
             ):
                 continue
 
@@ -114,15 +126,15 @@ class AccountTax(models.Model):
                 'uom_name': grouping_key['uom_name'],
             })
             item = items_map[key]
-            l10n_in_tax_type = grouping_key['l10n_in_tax_type']
-            item[f'tax_amount_{l10n_in_tax_type}'] += values['tax_amount_currency']
-            l10n_in_tax_types.add(l10n_in_tax_type)
+            l10n_in_gst_tax_type = grouping_key['l10n_in_gst_tax_type']
+            item[f'tax_amount_{l10n_in_gst_tax_type}'] += values['tax_amount_currency']
+            l10n_in_gst_tax_types.add(l10n_in_gst_tax_type)
 
         return {
-            'has_igst': 'igst' in l10n_in_tax_types,
-            'has_gst': bool({'cgst', 'sgst'} & l10n_in_tax_types),
-            'has_cess': 'cess' in l10n_in_tax_types,
-            'nb_columns': 5 + len(l10n_in_tax_types),
+            'has_igst': 'igst' in l10n_in_gst_tax_types,
+            'has_gst': bool({'cgst', 'sgst'} & l10n_in_gst_tax_types),
+            'has_cess': 'cess' in l10n_in_gst_tax_types,
+            'nb_columns': 5 + len(l10n_in_gst_tax_types),
             'display_uom': display_uom,
             'items': [
                 key | values
