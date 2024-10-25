@@ -37,6 +37,7 @@ registry.category("web_tour.tours").add("PaymentScreenQRISPaymentFail", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             addProductandPay(),
             isQRDisplayedinDialog(),
             Dialog.confirm("Confirm Payment"),
@@ -48,6 +49,7 @@ registry.category("web_tour.tours").add("PaymentScreenQRISPaymentSuccess", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             addProductandPay(),
             isQRDisplayedinDialog(),
             Dialog.confirm("Confirm Payment"),
@@ -59,10 +61,17 @@ registry.category("web_tour.tours").add("PayementScreenQRISFetchQR", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             addProductandPay(),
             isQRDisplayedinDialog(),
             Dialog.cancel(),
             PaymentScreen.clickPaymentMethod("QRIS", true),
+            {
+                isActive: ["body:has(.modal)"],
+                content: "close error modal: there is already an electronic payment in progress",
+                trigger: ".modal .btn:contains(ok)",
+                run: "click",
+            },
             {
                 content: "Display QR Code Payment dialog",
                 trigger: ".button.send_payment_request.highlight",
@@ -83,6 +92,12 @@ registry.category("web_tour.tours").add("PayementScreenQRISChangeAmount", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentlineDelButton("QRIS", "1,000.00"),
             PaymentScreen.clickPaymentMethod("QRIS", true, { amount: "2,000.00" }),
+            {
+                isActive: ["body:has(.modal)"],
+                content: "close error modal: there is already an electronic payment in progress",
+                trigger: ".modal .btn:contains(ok)",
+                run: "click",
+            },
             {
                 content: "Display QR Code Payment dialog",
                 trigger: ".button.send_payment_request.highlight",

@@ -192,8 +192,8 @@ export class Thread extends Record {
         if (this.model === "mail.box") {
             return this.counter;
         }
-        if (this.isChatChannel) {
-            return this.selfMember?.message_unread_counter || this.message_needaction_counter;
+        if (this.isChatChannel && this.selfMember?.message_unread_counter) {
+            return this.selfMember.totalUnreadMessageCounter;
         }
         return this.message_needaction_counter;
     }
