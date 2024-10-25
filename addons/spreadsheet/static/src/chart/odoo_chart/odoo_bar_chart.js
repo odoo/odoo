@@ -23,7 +23,6 @@ export class OdooBarChart extends OdooChart {
         this.verticalAxisPosition = definition.verticalAxisPosition;
         this.stacked = definition.stacked;
         this.axesDesign = definition.axesDesign;
-        this.trend = definition.trend;
     }
 
     getDefinition() {
@@ -52,10 +51,9 @@ function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
     const definition = chart.getDefinition();
-    definition.dataSets = datasets.map(() => ({ trend: definition.trend }));
 
     const trendDataSetsValues = datasets.map((dataset, index) => {
-        const trend = definition.dataSets[index].trend;
+        const trend = definition.dataSets[index]?.trend;
         return !trend?.display || chart.horizontal
             ? undefined
             : getTrendDatasetForBarChart(trend, dataset.data);
