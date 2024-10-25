@@ -1,9 +1,10 @@
-import { isTextNode, paragraphRelatedElements } from "../utils/dom_info";
+import { isTextNode, isParagraphRelatedElement, childNodesAnalysis } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { unwrapContents } from "../utils/dom";
+import { unwrapContents, wrapInlinesInBlocks } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
+import { BASE_CONTAINER_CLASS, BaseContainer } from "../utils/base_container";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -73,10 +74,50 @@ export const CLIPBOARD_WHITELISTS = {
         // Miscellaneous
         /^btn/,
         /^fa/,
+        BASE_CONTAINER_CLASS,
     ],
     attributes: ["class", "href", "src", "target"],
     styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD"],
 };
+
+/**
+ * Return true if the given attribute, class or node is whitelisted for
+ * pasting, false otherwise.
+ *
+ * @private
+ * @param {Attr | string | Node} item
+ * @returns {boolean}
+ */
+export function isWhitelisted(item) {
+    if (item instanceof Attr) {
+        return CLIPBOARD_WHITELISTS.attributes.includes(item.name);
+    } else if (typeof item === "string") {
+        return CLIPBOARD_WHITELISTS.classes.some((okClass) =>
+            okClass instanceof RegExp ? okClass.test(item) : okClass === item
+        );
+    } else {
+        return (
+            isTextNode(item) ||
+            item.matches?.(CLIPBOARD_WHITELISTS.nodes.join(",")) ||
+            item.matches?.(BaseContainer.selector)
+        );
+    }
+}
+/**
+ * Return true if the given node is blacklisted for pasting, false
+ * otherwise.
+ *
+ * @private
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isBlacklisted(node) {
+    return (
+        !isTextNode(node) &&
+        node.matches([].concat(...Object.values(CLIPBOARD_BLACKLISTS)).join(",")) &&
+        !node.matches(BaseContainer.selector)
+    );
+}
 
 /**
  * @typedef {Object} ClipboardShared
@@ -86,6 +127,7 @@ export const CLIPBOARD_WHITELISTS = {
 export class ClipboardPlugin extends Plugin {
     static id = "clipboard";
     static dependencies = [
+        "baseContainer",
         "dom",
         "selection",
         "sanitize",
@@ -196,7 +238,7 @@ export class ClipboardPlugin extends Plugin {
             for (const ancestor of ancestorsList) {
                 // Keep the formatting by keeping inline ancestors and paragraph
                 // related ones like headings etc.
-                if (!isBlock(ancestor) || paragraphRelatedElements.includes(ancestor.nodeName)) {
+                if (!isBlock(ancestor) || isParagraphRelatedElement(ancestor)) {
                     const clone = ancestor.cloneNode();
                     clone.append(...clonedContents.childNodes);
                     clonedContents.appendChild(clone);
@@ -332,16 +374,29 @@ export class ClipboardPlugin extends Plugin {
             if (textIndex < textFragments.length) {
                 // Break line by inserting new paragraph and
                 // remove current paragraph's bottom margin.
-                const p = closestElement(selection.anchorNode, "p");
+                const block = closestBlock(selection.anchorNode);
                 if (
-                    this.dependencies.split.isUnsplittable(closestBlock(selection.anchorNode)) ||
+                    this.dependencies.split.isUnsplittable(block) ||
                     closestElement(selection.anchorNode).tagName === "PRE"
                 ) {
                     this.dependencies.lineBreak.insertLineBreak();
                 } else {
-                    const [pBefore] = this.dependencies.split.splitBlock();
-                    if (p) {
-                        pBefore.style.marginBottom = "0px";
+                    const [blockBefore] = this.dependencies.split.splitBlock();
+                    const baseContainer = new BaseContainer("DIV", this.document);
+                    if (
+                        block &&
+                        block.matches(BaseContainer.selector) &&
+                        blockBefore &&
+                        !blockBefore.matches(baseContainer.selector)
+                    ) {
+                        // Do something only if blockBefore is not a DIV (which is the no-margin option)
+                        // replace blockBefore by a DIV.
+                        const div = baseContainer.create();
+                        const cursors = this.shared.preserveSelection();
+                        blockBefore.before(div);
+                        div.replaceChildren(...childNodes(blockBefore));
+                        blockBefore.remove();
+                        cursors.remapNode(blockBefore, div).restore();
                     }
                     selection = this.dependencies.selection.getEditableSelection();
                 }
@@ -385,7 +440,8 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         }
-        for (const child of childNodes(container)) {
+        const childContent = childNodes(container);
+        for (const child of childContent) {
             this.cleanForPaste(child);
         }
         // Force inline nodes at the root of the container into separate P
@@ -395,46 +451,15 @@ export class ClipboardPlugin extends Plugin {
         // particular case in all of those functions. In fact, this case cannot
         // happen on a new document created using this editor, but will happen
         // instantly when editing a document that was created from Etherpad.
+
+        // TODO ABD: this is an allowInlineAtRoot inconsistency, check this
+        // Since this is external content, new containers are created without
+        // a margin bottom.
+        wrapInlinesInBlocks(container, { baseContainer: new BaseContainer("DIV", this.document) });
+        // TODO ABD: maybe do this in addStep instead
+        // this.dependencies.baseContainer.normalizeDivBaseContainers(container);
         const result = this.document.createDocumentFragment();
-        let p = this.document.createElement("p");
-        for (const child of childNodes(container)) {
-            if (isBlock(child)) {
-                if (p.hasChildNodes()) {
-                    result.appendChild(p);
-                    p = this.document.createElement("p");
-                }
-                result.appendChild(child);
-            } else {
-                p.appendChild(child);
-            }
-
-            if (p.hasChildNodes()) {
-                result.appendChild(p);
-            }
-
-            // Split elements containing <br> into seperate elements for each line.
-            const brs = result.querySelectorAll("br");
-            for (const br of brs) {
-                const block = closestBlock(br);
-                if (
-                    ["P", "H1", "H2", "H3", "H4", "H5", "H6"].includes(block.nodeName) &&
-                    !block.closest("li")
-                ) {
-                    // A linebreak at the beginning of a block is an empty line.
-                    const isEmptyLine = block.firstChild.nodeName === "BR";
-                    // Split blocks around it until only the BR remains in the
-                    // block.
-                    const remainingBrContainer = this.dependencies.split.splitAroundUntil(
-                        br,
-                        block
-                    );
-                    // Remove the container unless it represented an empty line.
-                    if (!isEmptyLine) {
-                        remainingBrContainer.remove();
-                    }
-                }
-            }
-        }
+        result.replaceChildren(...childContent);
         return result;
     }
     /**
@@ -446,8 +471,8 @@ export class ClipboardPlugin extends Plugin {
      */
     cleanForPaste(node) {
         if (
-            !this.isWhitelisted(node) ||
-            this.isBlacklisted(node) ||
+            !isWhitelisted(node) ||
+            isBlacklisted(node) ||
             // Google Docs have their html inside a B tag with custom id.
             (node.id && node.id.startsWith("docs-internal-guid"))
         ) {
@@ -455,17 +480,15 @@ export class ClipboardPlugin extends Plugin {
                 node.remove();
             } else {
                 let childNodes;
-                if (node.nodeName === "DIV" && [...node.childNodes].every((n) => !isBlock(n))) {
-                    // Convert <div> to <p> to preserve the inline structure
-                    // while maintaining block-level behaviour.
-                    const dir = node.getAttribute("dir");
-                    const p = this.document.createElement("p");
-                    if (dir) {
-                        p.setAttribute("dir", dir);
+                if (node.nodeName === "DIV") {
+                    const analysis = childNodesAnalysis(node);
+                    if (analysis.flowContent.length > 0) {
+                        // DIV is not eligible to be a baseContainer.
+                        childNodes = unwrapContents(node);
+                    } else {
+                        // DIV will become a baseContainer.
+                        childNodes = analysis.childNodes;
                     }
-                    p.append(...node.childNodes);
-                    node.replaceWith(p);
-                    childNodes = p.childNodes;
                 } else {
                     // Unwrap the illegal node's contents.
                     childNodes = unwrapContents(node);
@@ -530,12 +553,12 @@ export class ClipboardPlugin extends Plugin {
                             this.cleanForPaste(unwrappedNode);
                         }
                     }
-                } else if (!this.isWhitelisted(attribute)) {
+                } else if (!isWhitelisted(attribute)) {
                     node.removeAttribute(attribute.name);
                 }
             }
             for (const klass of [...node.classList]) {
-                if (!this.isWhitelisted(klass)) {
+                if (!isWhitelisted(klass)) {
                     node.classList.remove(klass);
                 }
             }
@@ -543,39 +566,6 @@ export class ClipboardPlugin extends Plugin {
                 this.cleanForPaste(child);
             }
         }
-    }
-    /**
-     * Return true if the given attribute, class or node is whitelisted for
-     * pasting, false otherwise.
-     *
-     * @private
-     * @param {Attr | string | Node} item
-     * @returns {boolean}
-     */
-    isWhitelisted(item) {
-        if (item instanceof Attr) {
-            return CLIPBOARD_WHITELISTS.attributes.includes(item.name);
-        } else if (typeof item === "string") {
-            return CLIPBOARD_WHITELISTS.classes.some((okClass) =>
-                okClass instanceof RegExp ? okClass.test(item) : okClass === item
-            );
-        } else {
-            return isTextNode(item) || item.matches?.(CLIPBOARD_WHITELISTS.nodes);
-        }
-    }
-    /**
-     * Return true if the given node is blacklisted for pasting, false
-     * otherwise.
-     *
-     * @private
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    isBlacklisted(node) {
-        return (
-            !isTextNode(node) &&
-            node.matches([].concat(...Object.values(CLIPBOARD_BLACKLISTS)).join(","))
-        );
     }
 
     /**

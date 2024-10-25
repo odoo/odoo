@@ -58,7 +58,7 @@ import { withSequence } from "@html_editor/utils/resource";
  */
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["selection", "history", "input"];
+    static dependencies = ["baseContainer", "selection", "history", "input"];
     static id = "delete";
     static shared = ["deleteRange", "deleteSelection", "delete"];
     resources = {
@@ -428,7 +428,7 @@ export class DeletePlugin extends Plugin {
                 !block.parentElement.isContentEditable
             ) {
                 // @todo: not sure we want this when allowInlineAtRoot is true
-                const p = this.document.createElement("p");
+                const p = this.dependencies.baseContainer.getBaseContainer().create();
                 p.appendChild(this.document.createElement("br"));
                 block.appendChild(p);
             } else {

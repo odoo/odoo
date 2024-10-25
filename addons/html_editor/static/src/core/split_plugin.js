@@ -1,7 +1,8 @@
+import { BaseContainer } from "@html_editor/utils/base_container";
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty, splitTextNode } from "../utils/dom";
-import { isTextNode, isVisible } from "../utils/dom_info";
+import { isTextNode, isUnprotecting, isVisible } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
 import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
@@ -19,7 +20,7 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
  */
 
 export class SplitPlugin extends Plugin {
-    static dependencies = ["selection", "history", "input", "delete", "lineBreak"];
+    static dependencies = ["baseContainer", "selection", "history", "input", "delete", "lineBreak"];
     static id = "split";
     static shared = [
         "splitBlock",
@@ -46,7 +47,10 @@ export class SplitPlugin extends Plugin {
             // "Unbreakable" is a legacy term that means unsplittable and
             // unmergeable.
             (node) => node.classList?.contains("oe_unbreakable"),
-            (node) => ["DIV", "SECTION"].includes(node.nodeName),
+            (node) => node.getAttribute?.("contenteditable") === "false", // TODO ABD check `isContentEditable` ?
+            (node) => isUnprotecting(node),
+            (node) => node.nodeName === "SECTION",
+            (node) => node.nodeName === "DIV" && !node.matches(BaseContainer.selector),
         ],
     };
 
@@ -139,6 +143,11 @@ export class SplitPlugin extends Plugin {
      * @returns {boolean}
      */
     isUnsplittable(node) {
+        if (!node) {
+            // TODO ABD: had a traceback in domInsert => maybe put the condition there
+            // maybe delete this if predicate handles undefined node
+            return false;
+        }
         return this.getResource("unsplittable_node_predicates").some((p) => p(node));
     }
 

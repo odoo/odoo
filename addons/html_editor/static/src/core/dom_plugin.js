@@ -3,6 +3,7 @@ import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import {
     cleanTrailingBR,
+    copyAttributes,
     fillEmpty,
     fillShrunkPhrasingParent,
     makeContentsInline,
@@ -17,13 +18,22 @@ import {
     isEmptyBlock,
     isSelfClosingElement,
     isShrunkBlock,
-    paragraphRelatedElements,
+    isParagraphRelatedElement,
+    isListItemElement,
+    isListContainerElement,
+    listContainersSelector,
+    listItemElementSelector,
+    paragraphRelatedElementsSelector,
+    isEmpty,
+    isProtected,
+    isProtecting,
 } from "../utils/dom_info";
-import { closestElement, descendants, firstLeaf, lastLeaf } from "../utils/dom_traversal";
+import { children, closestElement, descendants, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { convertList, getListMode } from "@html_editor/utils/list";
+import { BaseContainer } from "../utils/base_container";
 
 /**
  * @typedef {Object} DomShared
@@ -33,7 +43,7 @@ import { convertList, getListMode } from "@html_editor/utils/list";
 
 export class DomPlugin extends Plugin {
     static id = "dom";
-    static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
+    static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
     static shared = ["insert", "copyAttributes", "setTag"];
     resources = {
         user_commands: [
@@ -92,7 +102,7 @@ export class DomPlugin extends Plugin {
         if (typeof content === "string") {
             container.textContent = content;
         } else {
-            for (const child of content.children) {
+            for (const child of children(content)) {
                 this.dispatchTo("normalize_handlers", child);
             }
             container.replaceChildren(content);
@@ -100,15 +110,17 @@ export class DomPlugin extends Plugin {
 
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
-        const isList = (node) => ["UL", "OL"].includes(node.nodeName);
         const hasSingleChild = container.childNodes.length === 1;
-        if (closestElement(selection.anchorNode, "UL, OL") && isList(container.firstChild)) {
+        if (
+            closestElement(selection.anchorNode, listContainersSelector()) &&
+            isListContainerElement(container.firstChild)
+        ) {
             unwrapContents(container.firstChild);
         }
         // Similarly if the html inserted ends with a list.
         if (
-            closestElement(selection.focusNode, "UL, OL") &&
-            isList(container.lastChild) &&
+            closestElement(selection.focusNode, listContainersSelector()) &&
+            isListContainerElement(container.lastChild) &&
             !hasSingleChild
         ) {
             unwrapContents(container.lastChild);
@@ -118,10 +130,12 @@ export class DomPlugin extends Plugin {
         const block = closestBlock(selection.anchorNode);
 
         const shouldUnwrap = (node) =>
-            [...paragraphRelatedElements, "LI"].includes(node.nodeName) &&
-            block.textContent !== "" &&
-            node.textContent !== "" &&
-            [node.nodeName, "DIV"].includes(block.nodeName) &&
+            (isParagraphRelatedElement(node) || isListItemElement(node)) &&
+            !isEmpty(block) &&
+            !isEmpty(node) &&
+            !isProtecting(node) &&
+            !isProtected(node) &&
+            [node.nodeName].includes(block.nodeName) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
             selection.anchorNode !== this.editable;
@@ -140,7 +154,9 @@ export class DomPlugin extends Plugin {
         // <p> or <li>.
         if (
             container.childElementCount === 1 &&
-            (["P", "LI"].includes(container.firstChild.nodeName) ||
+            (container.firstChild.matches?.(
+                `${BaseContainer.selector},${listItemElementSelector()}`
+            ) ||
                 shouldUnwrap(container.firstChild)) &&
             selection.anchorNode !== this.editable
         ) {
@@ -156,7 +172,7 @@ export class DomPlugin extends Plugin {
             if (shouldUnwrap(container.firstChild) && !isSelectionAtStart) {
                 // Unwrap the deepest nested first <li> element in the
                 // container to extract and paste the text content of the list.
-                if (container.firstChild.nodeName === "LI") {
+                if (isListItemElement(container.firstChild)) {
                     const deepestBlock = closestBlock(firstLeaf(container.firstChild));
                     this.dependencies.split.splitAroundUntil(deepestBlock, container.firstChild);
                     container.firstElementChild.replaceChildren(...deepestBlock.childNodes);
@@ -168,7 +184,7 @@ export class DomPlugin extends Plugin {
             if (shouldUnwrap(container.lastChild) && !isSelectionAtEnd) {
                 // Unwrap the deepest nested last <li> element in the container
                 // to extract and paste the text content of the list.
-                if (container.lastChild.nodeName === "LI") {
+                if (isListItemElement(container.lastChild)) {
                     const deepestBlock = closestBlock(lastLeaf(container.lastChild));
                     this.dependencies.split.splitAroundUntil(deepestBlock, container.lastChild);
                     container.lastElementChild.replaceChildren(...deepestBlock.childNodes);
@@ -196,7 +212,7 @@ export class DomPlugin extends Plugin {
         // element if it's a block then we insert the content in the right places.
         let currentNode = startNode;
         let lastChildNode = false;
-        const currentList = currentNode && closestElement(currentNode, "UL, OL");
+        const currentList = currentNode && closestElement(currentNode, listContainersSelector());
         const mode = currentList && getListMode(currentList);
 
         const _insertAt = (reference, nodes, insertBefore) => {
@@ -249,7 +265,7 @@ export class DomPlugin extends Plugin {
                 while (
                     !this.isEditionBoundary(currentNode.parentElement) &&
                     (!allowsParagraphRelatedElements(currentNode.parentElement) ||
-                        (currentNode.parentElement.nodeName === "LI" &&
+                        (isListItemElement(currentNode.parentElement) &&
                             !this.dependencies.split.isUnsplittable(nodeToInsert)))
                 ) {
                     if (this.dependencies.split.isUnsplittable(currentNode.parentElement)) {
@@ -299,7 +315,7 @@ export class DomPlugin extends Plugin {
                     doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
                 }
                 if (
-                    currentNode.parentElement.nodeName === "LI" &&
+                    isListItemElement(currentNode.parentElement) &&
                     isBlock(nodeToInsert) &&
                     this.dependencies.split.isUnsplittable(nodeToInsert)
                 ) {
@@ -309,11 +325,10 @@ export class DomPlugin extends Plugin {
             }
             // Ensure that all adjacent paragraph elements are converted to
             // <li> when inserting in a list.
-            if (
-                block.nodeName === "LI" &&
-                paragraphRelatedElements.includes(nodeToInsert.nodeName)
-            ) {
-                setTagName(nodeToInsert, "LI");
+            if (isListItemElement(block) && isParagraphRelatedElement(nodeToInsert)) {
+                const ignoredAttrs = {};
+                this.dispatchTo("copy_attributes_handlers", ignoredAttrs, nodeToInsert);
+                setTagName(nodeToInsert, "LI", ignoredAttrs);
             }
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
@@ -324,8 +339,9 @@ export class DomPlugin extends Plugin {
             let convertedList;
             if (
                 currentList &&
-                ((nodeToInsert.nodeName === "LI" && nodeToInsert.classList.contains("oe-nested")) ||
-                    isList(nodeToInsert))
+                ((isListItemElement(nodeToInsert) &&
+                    nodeToInsert.classList.contains("oe-nested")) ||
+                    isListContainerElement(nodeToInsert))
             ) {
                 convertedList = convertList(nodeToInsert, mode);
             }
@@ -352,11 +368,12 @@ export class DomPlugin extends Plugin {
             currentNode = previousNode;
         }
         currentNode = lastChildNode || currentNode;
-        let lastPosition = [...paragraphRelatedElements, "LI", "OL", "UL"].includes(
-            currentNode.nodeName
-        )
-            ? rightPos(lastLeaf(currentNode))
-            : rightPos(currentNode);
+        let lastPosition =
+            isParagraphRelatedElement(currentNode) ||
+            isListItemElement(currentNode) ||
+            isListContainerElement(currentNode)
+                ? rightPos(lastLeaf(currentNode))
+                : rightPos(currentNode);
 
         if (!this.config.allowInlineAtRoot && this.isEditionBoundary(lastPosition[0])) {
             // Correct the position if it happens to be in the editable root.
@@ -382,13 +399,9 @@ export class DomPlugin extends Plugin {
      */
     copyAttributes(source, target) {
         this.dispatchTo("clean_handlers", source);
-        for (const attr of source.attributes) {
-            if (attr.name === "class") {
-                target.classList.add(...source.classList);
-            } else {
-                target.setAttribute(attr.name, attr.value);
-            }
-        }
+        const ignoredAttrs = {};
+        this.dispatchTo("copy_attributes_handlers", ignoredAttrs, source);
+        copyAttributes(source, target, ignoredAttrs);
     }
 
     // --------------------------------------------------------------------------
@@ -408,9 +421,16 @@ export class DomPlugin extends Plugin {
      * @param {Object} param0
      * @param {string} param0.tagName
      * @param {string} [param0.extraClass]
+     * @param {Array} [param0.identityClasses]
      */
-    setTag({ tagName, extraClass = "" }) {
-        tagName = tagName.toUpperCase();
+    setTag({ tagName, extraClass = "", identityClasses = [] }) {
+        const newCandidate = this.document.createElement(tagName.toUpperCase());
+        if (extraClass) {
+            newCandidate.classList.add(extraClass);
+        }
+        if (identityClasses.length) {
+            newCandidate.classList.add(...identityClasses);
+        }
         const cursors = this.dependencies.selection.preserveSelection();
         const selectedBlocks = [...this.dependencies.selection.getTraversedBlocks()];
         const deepestSelectedBlocks = selectedBlocks.filter(
@@ -419,22 +439,19 @@ export class DomPlugin extends Plugin {
                 block.isContentEditable
         );
         for (const block of deepestSelectedBlocks) {
-            if (
-                ["P", "PRE", "H1", "H2", "H3", "H4", "H5", "H6", "LI", "BLOCKQUOTE"].includes(
-                    block.nodeName
-                )
-            ) {
-                if (tagName === "P") {
-                    if (block.nodeName === "LI") {
+            if (isParagraphRelatedElement(block)) {
+                if (newCandidate.matches(BaseContainer.selector)) {
+                    if (isListItemElement(block)) {
                         continue;
-                    } else if (block.parentNode.nodeName === "LI") {
+                    } else if (isListItemElement(block.parentNode)) {
                         cursors.update(callbacksForCursorUpdate.unwrap(block));
                         unwrapContents(block);
                         continue;
                     }
                 }
-
-                const newEl = setTagName(block, tagName);
+                const ignoredAttrs = {};
+                this.dispatchTo("copy_attributes_handlers", ignoredAttrs, block);
+                const newEl = setTagName(block, tagName, ignoredAttrs);
                 cursors.remapNode(block, newEl);
                 // We want to be able to edit the case `<h2 class="h3">`
                 // but in that case, we want to display "Header 2" and
@@ -447,13 +464,15 @@ export class DomPlugin extends Plugin {
                 if (extraClass) {
                     newEl.classList.add(extraClass);
                 }
+                if (identityClasses.length) {
+                    newEl.classList.add(...identityClasses);
+                }
             } else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
-                const newBlock = this.document.createElement(tagName);
-                newBlock.append(...block.childNodes);
-                block.append(newBlock);
-                cursors.remapNode(block, newBlock);
+                newCandidate.append(...block.childNodes);
+                block.append(newCandidate);
+                cursors.remapNode(block, newCandidate);
             }
         }
         cursors.restore();
@@ -465,9 +484,8 @@ export class DomPlugin extends Plugin {
         const sep = this.document.createElement("hr");
         const block = closestBlock(selection.startContainer);
         const element =
-            closestElement(selection.startContainer, (el) =>
-                paragraphRelatedElements.includes(el.tagName)
-            ) || (block && block.nodeName !== "LI" ? block : null);
+            closestElement(selection.startContainer, paragraphRelatedElementsSelector()) ||
+            (block && !isListItemElement(block) ? block : null);
 
         if (element && element !== this.editable) {
             element.before(sep);

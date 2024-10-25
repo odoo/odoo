@@ -1,6 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { memoize } from "@web/core/utils/functions";
 
+const EMBEDDED_SELECTOR = "[data-embedded]";
+
 /**
  * This plugin is responsible with providing the API to manipulate/insert
  * sub components in an editor.
@@ -18,6 +20,8 @@ export class EmbeddedComponentPlugin extends Plugin {
         history_reset_from_steps_handlers: () => this.handleComponents(this.editable),
         step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
         external_step_added_handlers: () => this.handleComponents(this.editable),
+
+        assign_base_container_overrides: (host) => this.isEmbeddedComponentHost(host),
 
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
         attribute_change_processors: this.onChangeAttribute.bind(this),
@@ -42,6 +46,10 @@ export class EmbeddedComponentPlugin extends Plugin {
         });
         // First mount is done during history_reset_handlers which happens
         // when start_edition_handlers are called.
+    }
+
+    isEmbeddedComponentHost(host) {
+        return host?.nodeType === Node.ELEMENT_NODE && host.matches(EMBEDDED_SELECTOR);
     }
 
     isMutationRecordSavable(record) {
@@ -77,7 +85,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     forEachEmbeddedComponentHost(elem, callback) {
-        const selector = `[data-embedded]`;
+        const selector = EMBEDDED_SELECTOR;
         const targets = [...elem.querySelectorAll(selector)];
         if (elem.matches(selector)) {
             targets.unshift(elem);
