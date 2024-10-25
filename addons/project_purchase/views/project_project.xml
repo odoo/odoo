@@ -9,4 +9,14 @@
         <field name="context">{"from_embedded_action": true}</field>
         <field name="groups_ids" eval="[(4, ref('purchase.group_purchase_user'))]"/>
     </record>
+
+    <record id="project_embedded_action_purchase_orders_dashboard" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">70</field>
+        <field name="name">Purchase Orders</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="python_method">action_open_project_purchase_orders</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+    </record>
 </odoo>
