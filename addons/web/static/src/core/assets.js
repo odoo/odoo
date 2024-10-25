@@ -62,11 +62,11 @@ export class AssetsLoadingError extends Error {}
  * @param {string} url the url of the script
  * @returns {Promise<true>} resolved when the script has been loaded
  */
-assets.loadJS = async function loadJS(url) {
+assets.loadJS = async function loadJS(url, targetDoc = document) {
     if (cacheMap.has(url)) {
         return cacheMap.get(url);
     }
-    const scriptEl = document.createElement("script");
+    const scriptEl = targetDoc.createElement("script");
     scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
     scriptEl.src = url;
     const promise = new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ assets.loadJS = async function loadJS(url) {
         });
     });
     cacheMap.set(url, promise);
-    document.head.appendChild(scriptEl);
+    targetDoc.head.appendChild(scriptEl);
     return promise;
 };
 
@@ -86,11 +86,11 @@ assets.loadJS = async function loadJS(url) {
  * @param {string} url the url of the stylesheet
  * @returns {Promise<true>} resolved when the stylesheet has been loaded
  */
-assets.loadCSS = async function loadCSS(url, retryCount = 0) {
+assets.loadCSS = async function loadCSS(url, { retryCount = 0, targetDoc = document } = {}) {
     if (cacheMap.has(url)) {
         return cacheMap.get(url);
     }
-    const linkEl = document.createElement("link");
+    const linkEl = targetDoc.createElement("link");
     linkEl.type = "text/css";
     linkEl.rel = "stylesheet";
     linkEl.href = url;
@@ -110,7 +110,7 @@ assets.loadCSS = async function loadCSS(url, retryCount = 0) {
                     )
                 );
                 linkEl.remove();
-                loadCSS(url, retryCount + 1)
+                loadCSS(url, { retryCount: retryCount + 1, targetDoc })
                     .then(resolve)
                     .catch(onError);
             } else {
@@ -119,7 +119,7 @@ assets.loadCSS = async function loadCSS(url, retryCount = 0) {
         });
     });
     cacheMap.set(url, promise);
-    document.head.appendChild(linkEl);
+    targetDoc.head.appendChild(linkEl);
     return promise;
 };
 
@@ -172,12 +172,12 @@ assets.getBundle = async function getBundle(bundleName) {
  * @param {string} bundleName
  * @returns {Promise[]}
  */
-assets.loadBundle = async function loadBundle(bundleName) {
+assets.loadBundle = async function loadBundle(bundleName, targetDoc = document) {
     if (typeof bundleName === "string") {
         const desc = await assets.getBundle(bundleName);
         return Promise.all([
-            ...(desc.cssLibs || []).map(assets.loadCSS),
-            ...(desc.jsLibs || []).map(assets.loadJS),
+            ...(desc.cssLibs || []).map((url) => assets.loadCSS(url, { targetDoc })),
+            ...(desc.jsLibs || []).map((url) => assets.loadJS(url, targetDoc)),
         ]);
     } else {
         throw new Error(
@@ -188,17 +188,17 @@ assets.loadBundle = async function loadBundle(bundleName) {
     }
 };
 
-export const loadJS = function (url) {
-    return assets.loadJS(url);
+export const loadJS = function (url, targetDoc = document) {
+    return assets.loadJS(url, targetDoc);
 };
-export const loadCSS = function (url) {
-    return assets.loadCSS(url);
+export const loadCSS = function (url, targetDoc = document) {
+    return assets.loadCSS(url, { targetDoc });
 };
 export const getBundle = function (bundleName) {
     return assets.getBundle(bundleName);
 };
-export const loadBundle = function (bundleName) {
-    return assets.loadBundle(bundleName);
+export const loadBundle = function (bundleName, targetDoc = document) {
+    return assets.loadBundle(bundleName, targetDoc);
 };
 
 /**
