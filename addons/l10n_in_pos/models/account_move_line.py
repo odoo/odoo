@@ -1,0 +1,29 @@
+from odoo import models, api
+
+
+class AccountMoveLine(models.Model):
+    _inherit = "account.move.line"
+
+    @api.depends('move_id.pos_session_ids', 'move_id.reversed_pos_order_id')
+    def _compute_l10n_in_gstr_section(self):
+        super()._compute_l10n_in_gstr_section()
+
+        in_pos_closing_and_reversed_lines = self.filtered(
+            lambda l: l.move_id.country_code == 'IN'
+            and l.move_id.move_type == 'entry'
+            and l.parent_state == 'posted'
+            and (l.move_id.pos_session_ids or l.move_id.reversed_pos_order_id)
+        )
+        if not in_pos_closing_and_reversed_lines:
+            return
+
+        tax_tags_ids = self.get_l10n_in_tax_tag_ids()
+
+        for line in in_pos_closing_and_reversed_lines:
+            tax_tags = line.tax_tag_ids.ids
+            if any(tag in tax_tags for tag in tax_tags_ids['gst']):
+                line.l10n_in_gstr_section = 'sale_b2cs'
+            elif any(tag in tax_tags for tag in tax_tags_ids['nil']):
+                line.l10n_in_gstr_section = 'sale_nil_rated'
+            else:
+                line.l10n_in_gstr_section = 'sale_out_of_scope'
