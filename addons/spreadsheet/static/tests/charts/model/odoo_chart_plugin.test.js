@@ -96,6 +96,8 @@ test("Odoo bar chart runtime loads the data", async () => {
                 borderWidth: 1,
                 data: [1, 3],
                 label: "Count",
+                xAxisID: "x",
+                yAxisID: "y",
             },
         ],
         labels: ["false", "true"],
@@ -163,9 +165,10 @@ test("Odoo line chart runtime loads the data", async () => {
                 borderColor: "#4EA7F2",
                 data: [1, 3],
                 label: "Count",
-                lineTension: 0,
+                tension: 0,
                 fill: false,
                 pointBackgroundColor: "#4EA7F2",
+                yAxisID: "y",
             },
         ],
         labels: ["false", "true"],
@@ -187,7 +190,7 @@ test("Area charts are supported", async () => {
     });
     let runtime = model.getters.getChartRuntime(chartId).chartJsConfig;
     expect(runtime.options.scales.x.stacked).toBe(undefined);
-    expect(runtime.options.scales.y.stacked).toBe(undefined);
+    expect(runtime.options.scales.y.stacked).toBe(false);
     expect(runtime.data.datasets[0].fill).toBe("origin");
     model.dispatch("UPDATE_CHART", {
         definition: { ...definition, fillArea: true, stacked: true },
@@ -412,10 +415,10 @@ test("Bar chart with stacked attribute is supported", async () => {
         sheetId,
     });
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked).toBe(
-        undefined
+        false
     );
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.y.stacked).toBe(
-        undefined
+        false
     );
 });
 
@@ -506,7 +509,7 @@ test("Line chart with stacked attribute is supported", async () => {
         undefined
     );
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.y.stacked).toBe(
-        undefined
+        false
     );
 });
 
