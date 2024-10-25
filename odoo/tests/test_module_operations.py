@@ -209,9 +209,9 @@ if __name__ == '__main__':
 
     # handle paths option
     if args.addons_path:
-        odoo.tools.config['addons_path'] = args.addons_path + odoo.tools.config['addons_path']
+        config['addons_path'] = args.addons_path + config['addons_path']
         if args.data_dir:
-            odoo.tools.config['data_dir'] = args.data_dir
+            config['data_dir'] = args.data_dir
         odoo.modules.module.initialize_sys_path()
 
     init_logger()

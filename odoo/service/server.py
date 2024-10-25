@@ -51,14 +51,13 @@ try:
 except ImportError:
     setproctitle = lambda x: None
 
-import odoo
-from odoo import api
-from odoo.modules import get_modules
+from odoo import api, sql_db
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config, osutil
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import stripped_sys_argv, dumpstacks
+from .db import list_dbs
 
 _logger = logging.getLogger(__name__)
 
@@ -80,6 +79,7 @@ def set_limit_memory_hard():
     if platform.system() != 'Linux':
         return
     limit_memory_hard = config['limit_memory_hard']
+    import odoo  # for eventd
     if odoo.evented and config['limit_memory_hard_gevent']:
         limit_memory_hard = config['limit_memory_hard_gevent']
     if limit_memory_hard:
@@ -257,6 +257,7 @@ class FSWatcherBase(object):
 class FSWatcherWatchdog(FSWatcherBase):
     def __init__(self):
         self.observer = Observer()
+        import odoo.addons  # noqa: PLC0415
         for path in odoo.addons.__path__:
             _logger.info('Watching addons folder %s', path)
             self.observer.schedule(self, path, recursive=True)
@@ -283,6 +284,7 @@ class FSWatcherInotify(FSWatcherBase):
         inotify.adapters._LOGGER.setLevel(logging.ERROR)
         # recreate a list as InotifyTrees' __init__ deletes the list's items
         paths_to_watch = []
+        import odoo.addons  # noqa: PLC0415
         for path in odoo.addons.__path__:
             paths_to_watch.append(path)
             _logger.info('Watching addons folder %s', path)
@@ -474,7 +476,7 @@ class ThreadedServer(CommonServer):
                         return
                     raise
 
-                registries = odoo.modules.registry.Registry.registries
+                registries = Registry.registries
                 _logger.debug('cron%d polling for jobs', number)
                 for db_name, registry in registries.d.items():
                     if registry.ready:
@@ -486,7 +488,7 @@ class ThreadedServer(CommonServer):
                             _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
                         thread.start_time = None
         while True:
-            conn = odoo.sql_db.db_connect('postgres')
+            conn = sql_db.db_connect('postgres')
             with contextlib.closing(conn.cursor()) as cr:
                 _run_cron(cr)
             _logger.info('cron%d max age (%ss) reached, releasing connection.', number, config['limit_time_worker_cron'])
@@ -503,7 +505,7 @@ class ThreadedServer(CommonServer):
         # to prevent time.strptime AttributeError within the thread.
         # See: http://bugs.python.org/issue7980
         datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
-        for i in range(odoo.tools.config['max_cron_threads']):
+        for i in range(config['max_cron_threads']):
             t = threading.Thread(target=self.cron_thread, args=(i,), name=f"odoo.service.cron.cron{i}")
             t.daemon = True
             t.type = 'cron'
@@ -571,7 +573,7 @@ class ThreadedServer(CommonServer):
                     thread.join(0.05)
                     time.sleep(0.05)
 
-        odoo.sql_db.close_all()
+        sql_db.close_all()
 
         _logger.debug('--')
         logging.shutdown()
@@ -976,7 +978,7 @@ class PreforkServer(CommonServer):
             return rc
 
         # Empty the cursor pool, we dont want them to be shared among forked workers.
-        odoo.sql_db.close_all()
+        sql_db.close_all()
 
         _logger.debug("Multiprocess starting")
         while 1:
@@ -1103,7 +1105,7 @@ class Worker(object):
             t.join()
             _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
                          self.pid, self.request_count,
-                         len(odoo.modules.registry.Registry.registries))
+                         len(Registry.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occurred, exiting...", self.pid)
@@ -1209,7 +1211,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = list(config['db_name'])
         else:
-            db_names = odoo.service.db.list_dbs(True)
+            db_names = list_dbs(True)
         return db_names
 
     def process_work(self):
@@ -1225,7 +1227,7 @@ class WorkerCron(Worker):
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
-                odoo.sql_db.close_db(db_name)
+                sql_db.close_db(db_name)
 
             self.request_count += 1
             if self.request_count >= self.request_max and self.request_max < len(db_names):
@@ -1241,7 +1243,7 @@ class WorkerCron(Worker):
         if self.multi.socket:
             self.multi.socket.close()
 
-        dbconn = odoo.sql_db.db_connect('postgres')
+        dbconn = sql_db.db_connect('postgres')
         self.dbcursor = dbconn.cursor()
         # LISTEN / NOTIFY doesn't work in recovery mode
         self.dbcursor.execute("SELECT pg_is_in_recovery()")
@@ -1264,9 +1266,10 @@ server = None
 server_phoenix = False
 
 def load_server_wide_modules():
+    from odoo.modules.module import load_openerp_module  # noqa: PLC0415
     for m in config['server_wide_modules']:
         try:
-            odoo.modules.module.load_openerp_module(m)
+            load_openerp_module(m)
         except Exception:
             msg = ''
             if m == 'web':
@@ -1304,7 +1307,7 @@ def preload_registries(dbnames):
             if config['test_enable']:
                 from odoo.tests import loader  # noqa: PLC0415
                 t0 = time.time()
-                t0_sql = odoo.sql_db.sql_counter
+                t0_sql = sql_db.sql_counter
                 module_names = (registry.updated_modules if update_module else
                                 sorted(registry._init_modules))
                 _logger.info("Starting post tests")
@@ -1319,7 +1322,7 @@ def preload_registries(dbnames):
                 _logger.info("%d post-tests in %.2fs, %s queries",
                              registry._assertion_report.testsRun - tests_before,
                              time.time() - t0,
-                             odoo.sql_db.sql_counter - t0_sql)
+                             sql_db.sql_counter - t0_sql)
 
                 registry._assertion_report.log_stats()
             if registry._assertion_report and not registry._assertion_report.wasSuccessful():
@@ -1335,6 +1338,7 @@ def start(preload=None, stop=False):
     global server
 
     load_server_wide_modules()
+    import odoo.http  # noqa: PLC0415
 
     if odoo.evented:
         server = GeventServer(odoo.http.root)

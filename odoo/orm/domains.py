@@ -696,6 +696,7 @@ class DomainCondition(Domain):
         # - NewId is not a value
         # - records are not accepted, use values
         # - Query and Domain values should be using a relational operator
+        from .models import BaseModel  # noqa: PLC0415
         value = self.value
         if value is None:
             value = False
@@ -703,7 +704,7 @@ class DomainCondition(Domain):
             _logger.warning("Domains don't support NewId, use .ids instead, for %r", (self.field_expr, self.operator, self.value))
             operator = 'not in' if operator in NEGATIVE_CONDITION_OPERATORS else 'in'
             value = []
-        elif isinstance(value, _models.BaseModel):
+        elif isinstance(value, BaseModel):
             _logger.warning("The domain condition %r should not have a value which is a model", (self.field_expr, self.operator, self.value))
             value = value.ids
         elif isinstance(value, (Domain, Query)) and operator not in ('any', 'not any', 'in', 'not in'):
@@ -1502,8 +1503,3 @@ def _optimize_same_conditions(cls, model, conditions: Iterable[Domain]):
         if a == b:
             continue
         yield b
-
-
-# forward-reference to models
-# it is used in the constructor for warnings
-from . import models as _models  # noqa: E402

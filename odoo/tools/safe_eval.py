@@ -25,7 +25,7 @@ from types import CodeType
 import werkzeug
 from psycopg2 import OperationalError
 
-import odoo
+import odoo.exceptions
 
 unsafe_eval = eval
 
