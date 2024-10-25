@@ -13,17 +13,17 @@ export class DropZonePlugin extends Plugin {
 
         const createDropZone = () => {
             const dropZone = this.document.createElement("div");
-            dropZone.className = "bg-info w-100 pt-3 o-dropzone";
+            dropZone.className = "oe_drop_zone oe_insert";
             this.dropZoneElements.push(dropZone);
             return dropZone;
         };
 
         for (const target of targets) {
-            if (!target.nextElementSibling?.classList.contains("o-dropzone")) {
+            if (!target.nextElementSibling?.classList.contains("oe_drop_zone")) {
                 target.after(createDropZone());
             }
 
-            if (!target.previousElementSibling?.classList.contains("o-dropzone")) {
+            if (!target.previousElementSibling?.classList.contains("oe_drop_zone")) {
                 target.before(createDropZone());
             }
         }
