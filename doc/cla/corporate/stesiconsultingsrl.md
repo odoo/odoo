@@ -15,3 +15,4 @@ List of contributors:
 Michele Di Croce dicroce.m@stesi.eu https://github.com/micheledic
 Francesco Moccia moccia.f@stesi.eu https://github.com/stesifrancesco
 Arcadio Pinto pinto.a@stesi.eu https://github.com/ArcadioPinto
+Gabriele Portente portente.g@stesi.consulting https://github.com/gportente
