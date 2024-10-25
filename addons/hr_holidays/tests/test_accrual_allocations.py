@@ -2312,3 +2312,36 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             data = self.leave_type.get_allocation_data(self.employee_emp, date(2025, 1, 15))
             remaining_future = data[self.employee_emp][0][1]["remaining_leaves"]
             self.assertEqual(remaining_future, 21)
+
+    def test_accrual_allocation_without_working_hours(self):
+        """
+        check that creating an accrual allocation for an employee without working hours doesn't raise a traceback error
+        """
+        with freeze_time("2017-12-5"):
+            employee_without_calendar = self.env['hr.employee'].create({
+                'name': 'employee without calendar',
+                'resource_calendar_id': False,
+            })
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'accrual plan',
+                'is_based_on_worked_time': True,
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'hour',
+                    'frequency': 'hourly',
+                })],
+            })
+            past_date = datetime.date.today() - relativedelta(days=1)
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'accrual allocation for employee without calendar',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': employee_without_calendar.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': past_date,
+            })
+            future_date = datetime.date.today() + relativedelta(days=1)
+            allocation._process_accrual_plans(date_to=future_date)
