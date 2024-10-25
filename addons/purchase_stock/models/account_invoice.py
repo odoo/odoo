@@ -176,6 +176,16 @@ class AccountMove(models.Model):
 
         self._stock_account_anglo_saxon_reconcile_valuation()
 
+        for move in self.stock_move_id:
+            if move.product_id.type != 'product' or move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'standard':
+                    continue
+            acc_src = move._get_accounting_data_for_valuation()[1]
+            move_lines = move._get_all_related_aml().filtered(lambda aml: aml.product_id and aml.product_id.cost_method != 'standard' and aml.account_id.id == acc_src)
+            diff = sum(move_lines.mapped('balance'))
+            if move.company_id.currency_id.is_zero(diff):
+                svls, _amls = move_lines._apply_price_difference()
+                svls._validate_accounting_entries()
+
         return posted
 
     def _stock_account_get_last_step_stock_moves(self):
