@@ -91,14 +91,22 @@ function target(selectionData) {
     }
 }
 
+/**
+ * @typedef { Object } PowerboxShared
+ * @property { PowerboxPlugin['closePowerbox'] } closePowerbox
+ * @property { PowerboxPlugin['getAvailablePowerboxCommands'] } getAvailablePowerboxCommands
+ * @property { PowerboxPlugin['openPowerbox'] } openPowerbox
+ * @property { PowerboxPlugin['updatePowerbox'] } updatePowerbox
+ */
+
 export class PowerboxPlugin extends Plugin {
-    static name = "powerbox";
-    static dependencies = ["overlay", "selection", "history", "user_command"];
+    static id = "powerbox";
+    static dependencies = ["overlay", "selection", "history", "userCommand"];
     static shared = [
+        "closePowerbox",
         "getAvailablePowerboxCommands",
         "openPowerbox",
         "updatePowerbox",
-        "closePowerbox",
     ];
     resources = {
         hints: {
@@ -126,7 +134,7 @@ export class PowerboxPlugin extends Plugin {
 
     setup() {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.overlay = this.shared.createOverlay(Powerbox);
+        this.overlay = this.dependencies.overlay.createOverlay(Powerbox);
 
         this.state = reactive({});
         this.overlayProps = {
@@ -146,7 +154,7 @@ export class PowerboxPlugin extends Plugin {
      * @returns {PowerboxCommand[]}
      */
     getAvailablePowerboxCommands() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         return this.powerboxCommands.filter(
             (cmd) => cmd.isAvailable === undefined || cmd.isAvailable(selection)
         );
@@ -164,7 +172,7 @@ export class PowerboxPlugin extends Plugin {
             categories.map((category) => [category.id, category])
         );
         return powerboxItems.map((/** @type {PowerboxItem} */ item) => {
-            const command = this.shared.getCommand(item.commandId);
+            const command = this.dependencies.userCommand.getCommand(item.commandId);
             return {
                 ...pick(command, "title", "description", "icon", "isAvailable"),
                 ...omit(item, "commandId", "commandParams"),

@@ -3,7 +3,7 @@ import { Plugin } from "../plugin";
 import { descendants } from "../utils/dom_traversal";
 
 export class CommentPlugin extends Plugin {
-    static name = "comment";
+    static id = "comment";
     resources = {
         normalize_handlers: this.removeComment.bind(this),
     };

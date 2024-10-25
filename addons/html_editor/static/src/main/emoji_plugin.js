@@ -2,8 +2,13 @@ import { Plugin } from "@html_editor/plugin";
 import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 
+/**
+ * @typedef { Object } EmojiShared
+ * @property { EmojiPlugin['showEmojiPicker'] } showEmojiPicker
+ */
+
 export class EmojiPlugin extends Plugin {
-    static name = "emoji";
+    static id = "emoji";
     static dependencies = ["history", "overlay", "dom", "selection"];
     static shared = ["showEmojiPicker"];
     resources = {
@@ -25,7 +30,7 @@ export class EmojiPlugin extends Plugin {
     };
 
     setup() {
-        this.overlay = this.shared.createOverlay(EmojiPicker, {
+        this.overlay = this.dependencies.overlay.createOverlay(EmojiPicker, {
             hasAutofocus: true,
             className: "popover",
         });
@@ -42,15 +47,15 @@ export class EmojiPlugin extends Plugin {
             props: {
                 close: () => {
                     this.overlay.close();
-                    this.shared.focusEditable();
+                    this.dependencies.selection.focusEditable();
                 },
                 onSelect: (str) => {
                     if (onSelect) {
                         onSelect(str);
                         return;
                     }
-                    this.shared.domInsert(str);
-                    this.shared.addStep();
+                    this.dependencies.dom.insert(str);
+                    this.dependencies.history.addStep();
                 },
             },
             target,

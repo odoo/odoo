@@ -19,8 +19,8 @@ import { Plugin } from "../plugin";
  */
 
 export class ShortCutPlugin extends Plugin {
-    static name = "shortcut";
-    static dependencies = ["user_command"];
+    static id = "shortcut";
+    static dependencies = ["userCommand"];
 
     setup() {
         const hotkeyService = this.services.hotkey;
@@ -31,7 +31,7 @@ export class ShortCutPlugin extends Plugin {
             hotkeyService.registerIframe({ contentWindow: this.document.defaultView });
         }
         for (const shortcut of this.getResource("shortcuts")) {
-            const command = this.shared.getCommand(shortcut.commandId);
+            const command = this.dependencies.userCommand.getCommand(shortcut.commandId);
             this.addShortcut(shortcut.hotkey, () => {
                 command.run(shortcut.commandParams);
             });

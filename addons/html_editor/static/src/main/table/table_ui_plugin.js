@@ -10,7 +10,7 @@ import { TablePicker } from "./table_picker";
  * All actual table manipulation code is located in the table plugin.
  */
 export class TableUIPlugin extends Plugin {
-    static name = "table_ui";
+    static id = "tableUi";
     static dependencies = ["history", "overlay", "table"];
     resources = {
         user_commands: [
@@ -33,7 +33,7 @@ export class TableUIPlugin extends Plugin {
 
     setup() {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.picker = this.shared.createOverlay(TablePicker, {
+        this.picker = this.dependencies.overlay.createOverlay(TablePicker, {
             positionOptions: {
                 onPositioned: (picker, position) => {
                     const popperRect = picker.getBoundingClientRect();
@@ -55,7 +55,7 @@ export class TableUIPlugin extends Plugin {
         this.activeTd = null;
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.colMenu = this.shared.createOverlay(TableMenu, {
+        this.colMenu = this.dependencies.overlay.createOverlay(TableMenu, {
             positionOptions: {
                 position: "top-fit",
                 onPositioned: (el, solution) => {
@@ -68,7 +68,7 @@ export class TableUIPlugin extends Plugin {
             },
         });
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.rowMenu = this.shared.createOverlay(TableMenu, {
+        this.rowMenu = this.dependencies.overlay.createOverlay(TableMenu, {
             positionOptions: {
                 position: "left-fit",
             },
@@ -90,14 +90,14 @@ export class TableUIPlugin extends Plugin {
                 editable: this.editable,
                 overlay: this.picker,
                 direction: this.config.direction || "ltr",
-                insertTable: (params) => this.shared.insertTable(params),
+                insertTable: (params) => this.dependencies.table.insertTable(params),
             },
         });
     }
 
     openPickerOrInsertTable() {
         if (this.services.ui.isSmall) {
-            this.shared.insertTable({ cols: 3, rows: 3 });
+            this.dependencies.table.insertTable({ cols: 3, rows: 3 });
         } else {
             this.openPicker();
         }
@@ -154,17 +154,17 @@ export class TableUIPlugin extends Plugin {
         const withAddStep = (fn) => {
             return (...args) => {
                 fn(...args);
-                this.shared.addStep();
+                this.dependencies.history.addStep();
             };
         };
         const tableMethods = {
-            moveColumn: withAddStep(this.shared.moveColumn),
-            addColumn: withAddStep(this.shared.addColumn),
-            removeColumn: withAddStep(this.shared.removeColumn),
-            moveRow: withAddStep(this.shared.moveRow),
-            addRow: withAddStep(this.shared.addRow),
-            removeRow: withAddStep(this.shared.removeRow),
-            resetTableSize: withAddStep(this.shared.resetTableSize),
+            moveColumn: withAddStep(this.dependencies.table.moveColumn),
+            addColumn: withAddStep(this.dependencies.table.addColumn),
+            removeColumn: withAddStep(this.dependencies.table.removeColumn),
+            moveRow: withAddStep(this.dependencies.table.moveRow),
+            addRow: withAddStep(this.dependencies.table.addRow),
+            removeRow: withAddStep(this.dependencies.table.removeRow),
+            resetTableSize: withAddStep(this.dependencies.table.resetTableSize),
         };
         if (td.cellIndex === 0) {
             this.rowMenu.open({

@@ -4,9 +4,8 @@ import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "../font/color_selector";
 
 export class IconPlugin extends Plugin {
-    static name = "icon";
-    static dependencies = ["history", "link", "selection", "color"];
-    /** @type { (p: IconPlugin) => Record<string, any> } */
+    static id = "icon";
+    static dependencies = ["history", "selection", "color"];
     resources = {
         user_commands: [
             {
@@ -71,14 +70,14 @@ export class IconPlugin extends Plugin {
                 groupId: "icon_color",
                 title: _t("Font Color"),
                 Component: ColorSelector,
-                props: this.shared.getPropsForColorSelector("foreground"),
+                props: this.dependencies.color.getPropsForColorSelector("foreground"),
             },
             {
                 id: "icon_backcolor",
                 groupId: "icon_color",
                 title: _t("Background Color"),
                 Component: ColorSelector,
-                props: this.shared.getPropsForColorSelector("background"),
+                props: this.dependencies.color.getPropsForColorSelector("background"),
             },
             {
                 id: "icon_size_1",
@@ -126,7 +125,7 @@ export class IconPlugin extends Plugin {
     };
 
     getSelectedIcon() {
-        const selectedNodes = this.shared.getSelectedNodes();
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
         return selectedNodes.find((node) => node.classList?.contains?.("fa"));
     }
 
@@ -143,7 +142,7 @@ export class IconPlugin extends Plugin {
         if (size !== "1") {
             selectedIcon.classList.add(`fa-${size}x`);
         }
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     toggleSpinIcon() {
@@ -180,7 +179,7 @@ export class IconPlugin extends Plugin {
         if (!selectedIcon) {
             return;
         }
-        this.shared.colorElement(selectedIcon, color, mode);
+        this.dependencies.color.colorElement(selectedIcon, color, mode);
         return true;
     }
 }

@@ -8,7 +8,7 @@ import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrollin
  * visibility is relative to the overflow of their ancestors.
  */
 export class PositionPlugin extends Plugin {
-    static name = "position";
+    static id = "position";
     resources = {
         // todo: it is strange that the position plugin is aware of external_history_step_handlers and history_reset_from_steps_handlers.
         external_history_step_handlers: this.layoutGeometryChange.bind(this),

@@ -4,8 +4,8 @@ import { VideoSelectorDialog } from "@html_editor/others/embedded_components/plu
 import { renderToElement } from "@web/core/utils/render";
 
 export class VideoPlugin extends Plugin {
-    static name = "video";
-    static dependencies = ["embedded_components", "dom", "selection", "link", "history"];
+    static id = "video";
+    static dependencies = ["embeddedComponents", "dom", "selection", "link", "history"];
     resources = {
         user_commands: [
             {
@@ -40,8 +40,8 @@ export class VideoPlugin extends Plugin {
                 params: media.params || {},
             }),
         });
-        this.shared.domInsert(videoBlock);
-        this.shared.addStep();
+        this.dependencies.dom.insert(videoBlock);
+        this.dependencies.history.addStep();
     }
 
     /**
@@ -49,9 +49,9 @@ export class VideoPlugin extends Plugin {
      * @param {function} save
      */
     openVideoSelectorDialog(save) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         let restoreSelection = () => {
-            this.shared.setSelection(selection);
+            this.dependencies.selection.setSelection(selection);
         };
         this.services.dialog.add(
             VideoSelectorDialog,
