@@ -1,17 +1,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from odoo import _, models
+from odoo import _, fields, models
 
 
-class HrDepartureWizard(models.TransientModel):
-    _inherit = 'hr.departure.wizard'
+class HrEmployeeDeparture(models.Model):
+    _inherit = 'hr.employee.departure'
+
+    do_cancel_time_off_requests = fields.Boolean(
+        string="Cancel Time Off Requests",
+        default=True,
+        help="Set the running allocations validity's end and delete future time off.")
 
     def action_register_departure(self):
-        super(HrDepartureWizard, self).action_register_departure()
+        super().action_register_departure()
+        if not self.do_cancel_time_off_requests:
+            return
         employee_leaves = self.env['hr.leave'].search([
-            ('employee_id', 'in', self.employee_ids.ids),
+            ('employee_id', '=', self.employee_id.id),
             ('date_to', '>', self.departure_date),
         ])
 
@@ -43,24 +50,25 @@ class HrDepartureWizard(models.TransientModel):
             leaves_to_delete.with_context(leave_skip_state_check=True).unlink()
 
         employee_allocations = self.env['hr.leave.allocation'].search([
-            ('employee_id', 'in', self.employee_ids.ids),
+            ('employee_id', '=', self.employee_id.id),
             '|',
                 ('date_to', '=', False),
                 ('date_to', '>', self.departure_date),
         ])
-        if not employee_allocations:
-            return
-        to_delete = self.env['hr.leave.allocation']
-        to_modify = self.env['hr.leave.allocation']
-        allocation_msg = _('Validity End date has been updated because '
-            'the employee will leave the company on %(departure_date)s.',
-            departure_date=self.departure_date
-        )
-        for allocation in employee_allocations:
-            if allocation.date_from > self.departure_date:
-                to_delete |= allocation
-            else:
-                to_modify |= allocation
-                allocation.message_post(body=allocation_msg, subtype_xmlid='mail.mt_comment')
-        to_delete.with_context(allocation_skip_state_check=True).unlink()
-        to_modify.date_to = self.departure_date
+        if employee_allocations:
+            to_delete = self.env['hr.leave.allocation']
+            to_modify = self.env['hr.leave.allocation']
+            allocation_msg = _('Validity End date has been updated because '
+                'the employee will leave the company on %(departure_date)s.',
+                departure_date=self.departure_date
+            )
+            for allocation in employee_allocations:
+                if allocation.date_from > self.departure_date:
+                    to_delete |= allocation
+                else:
+                    to_modify |= allocation
+                    allocation.message_post(body=allocation_msg, subtype_xmlid='mail.mt_comment')
+            to_delete.with_context(allocation_skip_state_check=True).unlink()
+            to_modify.date_to = self.departure_date
+
+        self.employee_id.message_post(body=self.env._("Time off and allocation requests have been cleaned for %s", self.employee_id.name))
