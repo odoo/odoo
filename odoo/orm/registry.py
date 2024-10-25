@@ -20,9 +20,7 @@ from operator import attrgetter
 
 import psycopg2.sql
 
-import odoo
-from odoo.modules.db import FunctionStatus
-from odoo.sql_db import TestCursor
+from odoo import sql_db
 from odoo.tools import (
     SQL,
     OrderedSet,
@@ -186,10 +184,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.loaded_xmlids: set[str] = set()
 
         self.db_name = db_name
-        self._db: Connection = odoo.sql_db.db_connect(db_name, readonly=False)
+        self._db: Connection = sql_db.db_connect(db_name, readonly=False)
         self._db_readonly: Connection | None = None
         if config['db_replica_host'] or config['test_enable']:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
-            self._db_readonly = odoo.sql_db.db_connect(db_name, readonly=True)
+            self._db_readonly = sql_db.db_connect(db_name, readonly=True)
 
         # cursor for test mode; None means "normal" mode
         self.test_cr: Cursor | None = None
@@ -218,9 +216,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Flags indicating invalidation of the registry or the cache.
         self._invalidation_flags = threading.local()
 
+        from odoo.modules import db  # noqa: PLC0415
         with closing(self.cursor()) as cr:
-            self.has_unaccent = odoo.modules.db.has_unaccent(cr)
-            self.has_trigram = odoo.modules.db.has_trigram(cr)
+            self.has_unaccent = db.has_unaccent(cr)
+            self.has_trigram = db.has_trigram(cr)
 
         self.unaccent = _unaccent if self.has_unaccent else lambda x: x  # type: ignore
         self.unaccent_python = remove_accents if self.has_unaccent else lambda x: x
@@ -676,6 +675,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     # add `unaccent` to the trigram index only because the
                     # trigram indexes are mainly used for (=)ilike search and
                     # unaccent is added only in these cases when searching
+                    from odoo.modules.db import FunctionStatus  # noqa: PLC0415
                     if self.has_unaccent == FunctionStatus.INDEXABLE:
                         column_expression = self.unaccent(column_expression)
                     elif self.has_unaccent:
@@ -1018,7 +1018,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             if readonly and not self.test_readonly_enabled:
                 _logger.info('Explicitly ignoring readonly flag when generating a cursor')
             assert self.test_lock is not None
-            return TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
+            return sql_db.TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
 
         if readonly and self._db_readonly is not None:
             try:

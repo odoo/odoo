@@ -10,13 +10,13 @@ import os
 import sys
 import tempfile
 import warnings
-import odoo
 from os.path import expandvars, expanduser, abspath, realpath, normcase
 from odoo import release
 from odoo.tools.func import classproperty
 from . import appdirs
 
 from passlib.context import CryptContext
+
 crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
                              deprecated=['plaintext'],
                              pbkdf2_sha512__rounds=600_000)
@@ -532,9 +532,10 @@ class configmanager:
 
             odoo.tools.config.parse_config(sys.argv[1:])
         """
+        from odoo import modules, netsvc  # noqa: PLC0415
         opt = self._parse_config(args)
         if setup_logging is not False:
-            odoo.netsvc.init_logger()
+            netsvc.init_logger()
             # warn after having done setup, so it has a chance to show up
             # (mostly once this warning is bumped to DeprecationWarning proper)
             if setup_logging is None:
@@ -547,7 +548,7 @@ class configmanager:
                 )
         self._warn_deprecated_options()
         self._flush_log_and_warn_entries()
-        odoo.modules.module.initialize_sys_path()
+        modules.module.initialize_sys_path()
         return opt
 
     def _parse_config(self, args=None):
