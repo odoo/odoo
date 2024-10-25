@@ -250,6 +250,10 @@
         width: 100%;
         max-width: $o-form-view-sheet-max-width;
         margin-right: auto; // Always align to le left
+
+        &:not(:has(.o_form_statusbar)) {
+            padding-top: map-get($spacers, 2);
+        }
     }
 
     // Sheet
