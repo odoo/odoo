@@ -5,7 +5,7 @@ import logging
 import typing
 from contextlib import suppress
 
-import odoo
+from odoo.tools.misc import file_open
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -29,7 +29,7 @@ def get_neutralization_queries(modules: Iterable[str]) -> Iterator[str]:
     for module in modules:
         filename = f'{module}/data/neutralize.sql'
         with suppress(FileNotFoundError):
-            with odoo.tools.misc.file_open(filename) as file:
+            with file_open(filename) as file:
                 yield file.read().strip()
 
 

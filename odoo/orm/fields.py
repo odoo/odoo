@@ -98,6 +98,7 @@ class MetaField(type):
 
 
 _global_seq = iter(itertools.count())
+_MetaModelType = type
 
 
 class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
@@ -346,7 +347,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         :param owner: the owner class of the field (the model's definition or registry class)
         :param name: the name of the field
         """
-        assert isinstance(owner, _models.MetaModel)
+        assert isinstance(owner, _MetaModelType)
         self.model_name = owner._name
         self.name = name
         if getattr(owner, 'pool', None) is None:  # models.is_definition_class(owner)
@@ -1422,3 +1423,4 @@ def apply_required(model, field_name):
 # forward-reference to models because we have this last cyclic dependency
 # it is used in this file only for asserts
 from . import models as _models  # noqa: E402
+_MetaModelType = _models.MetaModel

@@ -50,13 +50,15 @@ try:
 except ImportError:
     setproctitle = lambda x: None
 
-import odoo
+import odoo.addons
+import odoo.sql_db
 from odoo.modules import get_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config, osutil
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import stripped_sys_argv, dumpstacks
+from .db import list_dbs
 
 _logger = logging.getLogger(__name__)
 
@@ -467,7 +469,7 @@ class ThreadedServer(CommonServer):
                 time.sleep(number / 100)
                 pg_conn.poll()
 
-                registries = odoo.modules.registry.Registry.registries
+                registries = Registry.registries
                 _logger.debug('cron%d polling for jobs', number)
                 for db_name, registry in registries.d.items():
                     if registry.ready:
@@ -491,7 +493,7 @@ class ThreadedServer(CommonServer):
         # to prevent time.strptime AttributeError within the thread.
         # See: http://bugs.python.org/issue7980
         datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
-        for i in range(odoo.tools.config['max_cron_threads']):
+        for i in range(config['max_cron_threads']):
             def target():
                 self.cron_thread(i)
             t = threading.Thread(target=target, name="odoo.service.cron.cron%d" % i)
@@ -1093,7 +1095,7 @@ class Worker(object):
             t.join()
             _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
                          self.pid, self.request_count,
-                         len(odoo.modules.registry.Registry.registries))
+                         len(Registry.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occurred, exiting...", self.pid)
@@ -1191,7 +1193,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = list(config['db_name'])
         else:
-            db_names = odoo.service.db.list_dbs(True)
+            db_names = list_dbs(True)
         return db_names
 
     def process_work(self):
@@ -1350,6 +1352,7 @@ def start(preload=None, stop=False):
     global server
 
     load_server_wide_modules()
+    import odoo.http  # noqa: PLC0415
 
     if odoo.evented:
         server = GeventServer(odoo.http.root)
