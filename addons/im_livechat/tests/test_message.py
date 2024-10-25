@@ -5,11 +5,12 @@ from markupsafe import Markup
 
 from odoo import Command
 from odoo.exceptions import AccessError
-from odoo.tests.common import users, tagged, HttpCase
+from odoo.tests.common import users, tagged
+from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 
 
 @tagged('post_install', '-at_install')
-class TestImLivechatMessage(HttpCase):
+class TestImLivechatMessage(ChatbotCase):
     def setUp(self):
         super().setUp()
         self.password = 'Pl1bhD@2!kXZ'
@@ -18,6 +19,7 @@ class TestImLivechatMessage(HttpCase):
                 'email': 'e.e@example.com',
                 'groups_id': [Command.link(self.env.ref('base.group_user').id)],
                 'login': 'emp',
+                'password': self.password,
                 'name': 'Ernest Employee',
                 'notification_type': 'inbox',
                 'odoobot_state': 'disabled',
@@ -38,6 +40,75 @@ class TestImLivechatMessage(HttpCase):
             self.env['res.users'].with_user(user).check_access_rights('write')
         user.with_user(user).livechat_username = 'New username'
         self.assertEqual(user.livechat_username, 'New username')
+
+    def test_chatbot_message_format(self):
+        session = self.authenticate(self.users[0].login, self.password)
+        channel_info = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Visitor",
+                "channel_id": self.livechat_channel.id,
+                "chatbot_script_id": self.chatbot_script.id,
+                "persisted": True,
+            },
+            headers={
+                "Cookie": f"session_id={session.sid};",
+            },
+        )
+        mail_channel = self.env['discuss.channel'].browse(channel_info['id'])
+        self._post_answer_and_trigger_next_step(
+            mail_channel,
+            self.step_dispatch_buy_software.name,
+            chatbot_script_answer=self.step_dispatch_buy_software
+        )
+        chatbot_message = mail_channel.chatbot_message_ids.mail_message_id[-1:]
+        self.assertEqual(
+            chatbot_message.message_format(),
+            [
+                {
+                    "attachments": [],
+                    "author": {
+                        "id": self.chatbot_script.operator_partner_id.id,
+                        "is_company": False,
+                        "name": "Testing Bot",
+                        "type": "partner",
+                        "user": False,
+                    },
+                    "body": Markup("<p>Can you give us your email please?</p>"),
+                    "chatbotStep": {
+                        "answers": [],
+                        "id": self.step_email.id,
+                        "selectedAnswerId": False,
+                    },
+                    "create_date": chatbot_message.create_date,
+                    "date": chatbot_message.date,
+                    "default_subject": "Testing Bot",
+                    "history_partner_ids": [],
+                    "id": chatbot_message.id,
+                    "is_discussion": True,
+                    "is_note": False,
+                    "linkPreviews": [],
+                    "message_type": "comment",
+                    "model": "discuss.channel",
+                    "module_icon": "/mail/static/description/icon.png",
+                    "needaction_partner_ids": [],
+                    "notifications": [],
+                    "pinned_at": False,
+                    "reactions": [],
+                    "recipients": [],
+                    "record_name": "Testing Bot",
+                    "res_id": mail_channel.id,
+                    "scheduledDatetime": False,
+                    "sms_ids": [],
+                    "starred_partner_ids": [],
+                    "subject": False,
+                    "subtype_description": False,
+                    "subtype_id": (self.env.ref("mail.mt_comment").id, "Discussions"),
+                    "trackingValues": [],
+                    "write_date": chatbot_message.write_date,
+                }
+            ],
+        )
 
     @users('emp')
     def test_message_format(self):

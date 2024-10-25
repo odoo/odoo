@@ -15061,4 +15061,71 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["web_save"]);
         }
     );
+
+    QUnit.test(
+        "do not perform button action for records with invalid datas",
+        async function (assert) {
+            const formView = registry.category("views").get("form");
+            const fakeActionService = {
+                start() {
+                    return {
+                        doActionButton(params) {
+                            assert.step("Perform Action");
+                            assert.strictEqual(params.name, "lovely action");
+                            assert.strictEqual(params.type, "action");
+                        },
+                    };
+                },
+            };
+            serviceRegistry.add("action", fakeActionService, { force: true });
+            class CustomFormController extends formView.Controller {
+                beforeExecuteActionButton(clickParams) {
+                    assert.step("Check/prepare record datas");
+                    return super.beforeExecuteActionButton(clickParams);
+                }
+            }
+            registry.category("views").add("custom_form", {
+                ...formView,
+                Controller: CustomFormController,
+            });
+            // The records data are invalid since foo is required
+            serverData.models.partner.records = [{ id: 6, display_name: "Bob", foo: "" }];
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 6,
+                serverData,
+                arch: `
+                    <form js_class="custom_form">
+                        <field name="foo" required="1"></field>
+                        <button type="action" name="lovely action" string="Use Foo"/>
+                    </form>`,
+                mockRPC(route, args) {
+                    if (args.method === "web_save") {
+                        assert.step("web_save");
+                    }
+                },
+            });
+            patchWithCleanup(form.env.services.notification, {
+                add: (message) => {
+                    assert.step(`Pop Up: Invalid Field: ${message}`);
+                },
+            });
+
+            assert.verifySteps([]);
+            // Try to perform the action with invalid datas
+            await click(target.querySelector(".btn[name='lovely action']"));
+            // the action should not be called thanks to the `_checkValidity`
+            assert.verifySteps([
+                "Check/prepare record datas",
+                "Pop Up: Invalid Field: <ul><li>Foo</li></ul>",
+            ]);
+            // Edit the required field
+            await editInput(target, ".o_input", "Foo Value");
+            // Try to perform the action once more
+            await click(target.querySelector(".btn[name='lovely action']"));
+            // the record should have been saved and the action performed.
+            assert.verifySteps(["Check/prepare record datas", "web_save", "Perform Action"]);
+        }
+    );
 });
