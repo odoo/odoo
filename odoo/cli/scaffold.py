@@ -93,7 +93,7 @@ class Scaffold(Command):
 
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(
-            prog=self.prog,
+            prog=self.title,
             description=self.__doc__,
             epilog=self.epilog(),
         )

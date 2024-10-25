@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import argparse
 import io
 import urllib.parse
 import sys
@@ -16,20 +15,18 @@ from ..tools import config
 
 eprint = partial(print, file=sys.stderr, flush=True)
 
+
 class Db(Command):
     """ Create, drop, dump, load databases """
-    name = 'db'
+
+    def documentation(self):
+        return """
+            Command-line version of the database manager.
+            Commands are all filestore-aware.
+        """
 
     def run(self, cmdargs):
-        """Command-line version of the database manager.
-
-        Doesn't provide a `create` command as that's not useful. Commands are
-        all filestore-aware.
-        """
-        parser = argparse.ArgumentParser(
-            prog=f'{Path(sys.argv[0]).name} {self.name}',
-            description=self.__doc__.strip()
-        )
+        parser = self.new_parser()
         parser.add_argument('-c', '--config')
         parser.add_argument('-D', '--data-dir')
         parser.add_argument('--addons-path')
@@ -110,8 +107,8 @@ class Db(Command):
             if v is not None
             if k in ['config', 'data_dir', 'addons_path'] or k.startswith(('db_', 'pg_'))
             for val in [
-                '--data-dir' if k == 'data_dir'\
-                    else '--addons-path' if k == 'addons_path'\
+                '--data-dir' if k == 'data_dir'
+                    else '--addons-path' if k == 'addons_path'
                     else f'--{k}',
                 v,
             ]

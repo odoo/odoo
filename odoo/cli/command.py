@@ -1,125 +1,94 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# ruff: noqa: PLC0415
+
+import argparse
 import contextlib
 import logging
+import os
 import sys
+import textwrap
 from pathlib import Path
 
 import odoo.cli
+from odoo import api
 from odoo.modules import get_module_path, get_modules, initialize_sys_path
 
 commands = {}
-"""All loaded commands"""
 
 
 class Command:
     name = None
-
-    @property
-    def stdout(self):
-        return sys.stdout
-
-    @property
-    def stderr(self):
-        return sys.stderr
-
-    @property
-    def prog(self):
-        return f'{Path(sys.argv[0]).name} {self.name}'
-
-    def exit(code=0):
-        """ Avoids repeating `import sys` in subclasses. """
-        sys.exit(code)
+    sys = sys
+    os = os
 
     def __init_subclass__(cls):
         cls.name = cls.name or cls.__name__.lower()
         commands[cls.name] = cls
 
+    def __getattr__(self, name):
+        delegated = {
+            sys: ('argv', 'exit', 'stdin', 'stdout', 'stderr'),
+        }
+        for module, delegated_attrs in delegated.items():
+            if name in delegated_attrs and hasattr(module, name):
+                return getattr(module, name)
 
-ODOO_HELP = """\
-Odoo CLI, use '{odoo_bin} --help' for regular server options.
+    @property
+    def appname(self):
+        return Path(self.argv[0]).name
 
-Available commands:
-    {command_list}
+    @property
+    def title(self):
+        return f'{self.appname} {self.name}'
 
-Use '{odoo_bin} <command> --help' for individual command help."""
+    def documentation(self):
+        raise NotImplementedError()
 
+    def cleanup_string(self, s):
+        return textwrap.dedent(s.lstrip("\n").rstrip())
 
-class Help(Command):
-    """ Display the list of available commands """
-    def run(self, args):
-        load_internal_commands()
-        load_addons_commands()
-        padding = max(len(cmd) for cmd in commands) + 2
-        command_list = "\n    ".join([
-            "    {}{}".format(name.ljust(padding), (command.__doc__ or "").strip())
-            for name in sorted(commands)
-            if (command := find_command(name))
-        ])
-        print(ODOO_HELP.format(  # pylint: disable=bad-builtin  # noqa: T201
-            odoo_bin=Path(sys.argv[0]).name,
-            command_list=command_list
-        ))
+    def new_parser(self, title=None, description=None):
+        title = title or self.title
+        description = description if description is not None else self.cleanup_string(self.documentation())
+        return argparse.ArgumentParser(
+            prog=title,
+            description=description,
+            formatter_class=argparse.RawDescriptionHelpFormatter)
 
+    @classmethod
+    def load_internal_commands(cls):
+        """Load `commands` from `odoo.cli`"""
+        for path in odoo.cli.__path__:
+            for module in Path(path).iterdir():
+                if module.suffix != '.py' or module.name.startswith("_"):
+                    continue
+                __import__(f'odoo.cli.{module.stem}')
 
-def load_internal_commands():
-    """Load `commands` from `odoo.cli`"""
-    for path in odoo.cli.__path__:
-        for module in Path(path).iterdir():
-            if module.suffix != '.py':
-                continue
-            __import__(f'odoo.cli.{module.stem}')
+    @classmethod
+    def load_addons_commands(cls):
+        """Load `commands` from `odoo.addons.*.cli`"""
+        logging.disable(logging.CRITICAL)
+        initialize_sys_path()
+        for module in get_modules():
+            if (Path(get_module_path(module)) / 'cli').is_dir():
+                with contextlib.suppress(ImportError):
+                    __import__(f'odoo.addons.{module}')
+        logging.disable(logging.NOTSET)
+        return list(commands)
 
-
-def load_addons_commands():
-    """Load `commands` from `odoo.addons.*.cli`"""
-    logging.disable(logging.CRITICAL)
-    initialize_sys_path()
-    for module in get_modules():
-        if (Path(get_module_path(module)) / 'cli').is_dir():
-            with contextlib.suppress(ImportError):
-                __import__(f'odoo.addons.{module}')
-    logging.disable(logging.NOTSET)
-    return list(commands)
-
-
-def find_command(name: str) -> Command | None:
-    """ Get command by name. """
-    # check in the loaded commands
-    if command := commands.get(name):
-        return command
-    # import from odoo.cli
-    try:
-        __import__(f'odoo.cli.{name}')
-    except ImportError:
-        pass
-    else:
+    @classmethod
+    def find_command(cls, name: str) -> api.Self | None:
+        """ Get command by name. """
+        # check in the loaded commands
         if command := commands.get(name):
             return command
-    # last try, import from odoo.addons.*.cli
-    load_addons_commands()
-    return commands.get(name)
-
-
-def main():
-    args = sys.argv[1:]
-
-    # The only shared option is '--addons-path=' needed to discover additional
-    # commands from modules
-    if len(args) > 1 and args[0].startswith('--addons-path=') and not args[1].startswith('-'):
-        # parse only the addons-path, do not setup the logger...
-        odoo.tools.config._parse_config([args[0]])
-        args = args[1:]
-
-    # Default legacy command
-    command_name = 'server'
-
-    # Subcommand discovery
-    if len(args) and not args[0].startswith('-'):
-        command_name = args[0]
-        args = args[1:]
-
-    if command := find_command(command_name):
-        o = command()
-        o.run(args)
-    else:
-        sys.exit('Unknown command %r' % (command,))
+        # import from odoo.cli
+        try:
+            __import__(f'odoo.cli.{name}')
+        except ImportError:
+            pass
+        else:
+            if command := commands.get(name):
+                return command
+        # last try, import from odoo.addons.*.cli
+        cls.load_addons_commands()
+        return commands.get(name)

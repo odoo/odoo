@@ -1,5 +1,5 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-import argparse
+# ruff: noqa: T201, BLE001
+
 import os
 import requests
 import tempfile
@@ -7,10 +7,12 @@ import zipfile
 
 from . import Command
 
+
 class Deploy(Command):
     """Deploy a module on an Odoo instance"""
+
     def __init__(self):
-        super(Deploy, self).__init__()
+        super().__init__()
         self.session = requests.session()
 
     def deploy_module(self, module_path, url, login, password, db='', force=False):
@@ -44,7 +46,7 @@ class Deploy(Command):
         path = os.path.abspath(path)
         if not os.path.isdir(path):
             raise Exception("Could not find module directory '%s'" % path)
-        container, module_name = os.path.split(path)
+        container, _module_name = os.path.split(path)
         temp = tempfile.mktemp(suffix='.zip')
         try:
             print("Zipping module directory...")
@@ -59,10 +61,7 @@ class Deploy(Command):
             raise
 
     def run(self, cmdargs):
-        parser = argparse.ArgumentParser(
-            prog=self.prog,
-            description=self.__doc__
-        )
+        parser = self.new_parser()
         parser.add_argument('path', help="Path of the module to deploy")
         parser.add_argument('url', nargs='?', help='Url of the server (default=http://localhost:8069)', default="http://localhost:8069")
         parser.add_argument('--db', dest='db', help='Database to use if server does not use db-filter.')

@@ -1,2 +1,4 @@
-# Import just the command, the rest will get imported as needed
-from .command import Command, main  # noqa: F401
+# ruff: noqa: F401, F403
+
+from ._tools import *
+from .command import Command  # noqa: F401

@@ -401,7 +401,7 @@ def load_openerp_module(module_name):
 def get_modules():
     """Get the list of module names that can be loaded.
     """
-    def listdir(dir):
+    def listdir(directory):
         def clean(name):
             name = os.path.basename(name)
             if name[-4:] == '.zip':
@@ -410,11 +410,11 @@ def get_modules():
 
         def is_really_module(name):
             for mname in MANIFEST_NAMES:
-                if os.path.isfile(opj(dir, name, mname)):
+                if os.path.isfile(opj(directory, name, mname)):
                     return True
         return [
             clean(it)
-            for it in os.listdir(dir)
+            for it in os.listdir(directory)
             if is_really_module(it)
         ]
 
