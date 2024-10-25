@@ -3,7 +3,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
-    static name = "inline_code";
+    static name = "inlineCode";
     static dependencies = ["selection", "history", "split"];
     resources = {
         input_handlers: this.onInput.bind(this),

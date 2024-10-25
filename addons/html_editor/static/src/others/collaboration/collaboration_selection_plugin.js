@@ -11,13 +11,13 @@ import { getCursorDirection } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 
 export class CollaborationSelectionPlugin extends Plugin {
-    static name = "collaboration_selection";
+    static name = "collaborationSelection";
     static dependencies = [
         "history",
         "position",
         "collaboration",
-        "collaboration_odoo",
-        "local-overlay",
+        "collaborationOdoo",
+        "localOverlay",
     ];
     resources = {
         collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),

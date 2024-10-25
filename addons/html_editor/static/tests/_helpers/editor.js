@@ -103,7 +103,7 @@ export async function setupEditor(content, options = {}) {
             return [plugin.constructor.name, plugin];
         })
     );
-    if (plugins.get("embedded_components")) {
+    if (plugins.get("embeddedComponents")) {
         // await an extra animation frame for embedded components mounting
         // TODO @phoenix: would be more accurate to register mounting
         // promises in embedded_component_plugin and await them, change this

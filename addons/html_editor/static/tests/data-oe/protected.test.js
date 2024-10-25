@@ -298,7 +298,7 @@ test("removing a recursively protected then unprotected node should be undo-able
             <p>[]z</p>
         `)
     );
-    const protectPlugin = plugins.get("protected_node");
+    const protectPlugin = plugins.get("protectedNode");
     const protectingNodes = [...el.querySelectorAll(`[data-oe-protected="true"]`)];
     const unprotectingNodes = [...el.querySelectorAll(`[data-oe-protected="false"]`)];
     const unprotectedDescendants = [];
@@ -468,7 +468,7 @@ test("sequentially added nodes under a protecting parent are correctly protected
             </div>
         `)
     );
-    const protectedPlugin = plugins.get("protected_node");
+    const protectedPlugin = plugins.get("protectedNode");
     expect(editor.shared.getHistorySteps().length).toBe(1);
     const protecting = el.querySelector("[data-oe-protected='true']");
     const element = editor.document.createElement("div");
@@ -510,7 +510,7 @@ test("don't protect a node under data-oe-protected='false' through delete and un
             <p>[]a</p>
         `)
     );
-    const protectedPlugin = plugins.get("protected_node");
+    const protectedPlugin = plugins.get("protectedNode");
     expect(editor.shared.getHistorySteps().length).toBe(1);
     const protecting = el.querySelector("[data-oe-protected='false']");
     const paragraph = editor.document.createElement("p");
@@ -550,7 +550,7 @@ test("don't protect a node under data-oe-protected='false' through delete and un
 
 test("protected plugin is robust against other plugins which can filter mutations", async () => {
     class FilterPlugin extends Plugin {
-        static name = "filter_plugin";
+        static name = "filterPlugin";
         resources = {
             is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         };

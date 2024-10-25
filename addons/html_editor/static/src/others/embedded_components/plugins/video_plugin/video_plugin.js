@@ -5,7 +5,7 @@ import { renderToElement } from "@web/core/utils/render";
 
 export class VideoPlugin extends Plugin {
     static name = "video";
-    static dependencies = ["embedded_components", "dom", "selection", "link", "history"];
+    static dependencies = ["embeddedComponents", "dom", "selection", "link", "history"];
     resources = {
         user_commands: [
             {

@@ -4,7 +4,7 @@ import { DynamicPlaceholderPopover } from "@web/views/fields/dynamic_placeholder
 import { withSequence } from "@html_editor/utils/resource";
 
 export class DynamicPlaceholderPlugin extends Plugin {
-    static name = "dynamic_placeholder";
+    static name = "dynamicPlaceholder";
     static dependencies = ["overlay", "selection", "history", "dom", "qweb"];
     static shared = ["updateDphDefaultModel"];
     resources = {

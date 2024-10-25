@@ -2,7 +2,7 @@ import { Plugin } from "../plugin";
 
 export class ShortCutPlugin extends Plugin {
     static name = "shortcut";
-    static dependencies = ["user_command"];
+    static dependencies = ["userCommand"];
 
     setup() {
         const hotkeyService = this.services.hotkey;

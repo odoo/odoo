@@ -6,7 +6,7 @@ import { loadBundle } from "@web/core/assets";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageCropPlugin extends Plugin {
-    static name = "image_crop";
+    static name = "imageCrop";
     static dependencies = ["image", "selection", "history"];
     resources = {
         user_commands: [

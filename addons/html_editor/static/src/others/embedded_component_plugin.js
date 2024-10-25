@@ -7,8 +7,8 @@ import { memoize } from "@web/core/utils/functions";
  * sub components in an editor.
  */
 export class EmbeddedComponentPlugin extends Plugin {
-    static name = "embedded_components";
-    static dependencies = ["history", "protected_node"];
+    static name = "embeddedComponents";
+    static dependencies = ["history", "protectedNode"];
     resources = {
         filter_descendants_to_serialize: this.filterDescendantsToSerialize.bind(this),
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),

@@ -5,7 +5,7 @@ import { ExcalidrawDialog } from "@html_editor/others/embedded_components/plugin
 
 export class ExcalidrawPlugin extends Plugin {
     static name = "excalidraw";
-    static dependencies = ["embedded_components", "dom", "selection", "link", "history"];
+    static dependencies = ["embeddedComponents", "dom", "selection", "link", "history"];
     resources = {
         user_commands: [
             {

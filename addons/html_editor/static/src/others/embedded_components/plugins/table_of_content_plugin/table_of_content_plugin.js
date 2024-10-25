@@ -8,7 +8,7 @@ import {
 
 export class TableOfContentPlugin extends Plugin {
     static name = "tableOfContent";
-    static dependencies = ["dom", "selection", "embedded_components", "link", "history"];
+    static dependencies = ["dom", "selection", "embeddedComponents", "link", "history"];
     resources = {
         user_commands: [
             {

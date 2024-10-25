@@ -496,7 +496,7 @@ test("should toggle list on empty paragraph", async () => {
 });
 
 class NoOpPlugin extends Plugin {
-    static name = "no_op";
+    static name = "noOp";
     resources = {
         user_commands: [
             {

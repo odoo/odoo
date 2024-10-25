@@ -11,7 +11,7 @@ const ALLOWED_ELEMENTS =
 
 export class MoveNodePlugin extends Plugin {
     static name = "movenode";
-    static dependencies = ["selection", "history", "position", "local-overlay"];
+    static dependencies = ["selection", "history", "position", "localOverlay"];
     resources = {
         layout_geometry_change_handlers: () => {
             if (this.currentMovableElement) {

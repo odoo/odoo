@@ -7,7 +7,7 @@ import { isBlock } from "@html_editor/utils/blocks";
 
 export class FilePlugin extends Plugin {
     static name = "file";
-    static dependencies = ["embedded_components", "dom", "selection", "history"];
+    static dependencies = ["embeddedComponents", "dom", "selection", "history"];
     resources = {
         user_commands: [
             {

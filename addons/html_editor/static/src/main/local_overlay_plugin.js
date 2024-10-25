@@ -5,7 +5,7 @@ import { Plugin } from "../plugin";
  * visibility is relative to the overflow of their ancestors.
  */
 export class LocalOverlayPlugin extends Plugin {
-    static name = "local-overlay";
+    static name = "localOverlay";
     static shared = ["makeLocalOverlay"];
 
     setup() {

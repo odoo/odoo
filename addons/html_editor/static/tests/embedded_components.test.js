@@ -377,7 +377,7 @@ describe("Mount and Destroy embedded components", () => {
         );
         const indexOrder = [1, 0, 2];
         const orderedMountInfos = [];
-        const embeddedComponentPlugin = plugins.get("embedded_components");
+        const embeddedComponentPlugin = plugins.get("embeddedComponents");
         embeddedComponentPlugin.forEachEmbeddedComponentHost(el, (host, embedding) => {
             orderedMountInfos.push([host, embedding]);
         });
@@ -844,7 +844,7 @@ describe("Mount processing", () => {
         let setSelection;
         class SimplePlugin extends Plugin {
             static name = "simple";
-            static dependencies = ["selection", "embedded_components", "dom", "history"];
+            static dependencies = ["selection", "embeddedComponents", "dom", "history"];
             resources = {
                 mount_component_handlers: this.setupNewComponent.bind(this),
             };

@@ -82,7 +82,7 @@ test("no arrow key press or mouse click should keep selection near a contentedit
 test("event handlers are properly cleaned up after destruction", async () => {
     let count = 0;
     class TestHandlerPlugin extends Plugin {
-        static name = "test_handler";
+        static name = "testHandler";
 
         setup() {
             this.addDomListener(document.body, "click", () => count++);

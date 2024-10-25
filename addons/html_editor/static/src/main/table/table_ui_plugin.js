@@ -10,8 +10,8 @@ import { TablePicker } from "./table_picker";
  * All actual table manipulation code is located in the table plugin.
  */
 export class TableUIPlugin extends Plugin {
-    static name = "table_ui";
-    static dependencies = ["history", "overlay", "table", "user_command"];
+    static name = "tableUi";
+    static dependencies = ["history", "overlay", "table", "userCommand"];
     resources = {
         user_commands: [
             {

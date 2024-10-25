@@ -13,7 +13,7 @@ const DELAY_TOOLBAR_OPEN = 300;
 
 export class ToolbarPlugin extends Plugin {
     static name = "toolbar";
-    static dependencies = ["overlay", "selection", "user_command"];
+    static dependencies = ["overlay", "selection", "userCommand"];
     static shared = ["getToolbarInfo"];
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),

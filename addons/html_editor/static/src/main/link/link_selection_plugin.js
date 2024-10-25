@@ -48,7 +48,7 @@ function isLegitZwnbsp(textNode) {
     - on non-editable links or links that are not within the editable area
  */
 export class LinkSelectionPlugin extends Plugin {
-    static name = "link_selection";
+    static name = "linkSelection";
     static dependencies = ["selection"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing padLinkWithZwnbsp.
     static shared = ["padLinkWithZwnbsp"];

@@ -87,7 +87,7 @@ export class ClipboardPlugin extends Plugin {
         "history",
         "split",
         "delete",
-        "line_break",
+        "lineBreak",
     ];
     static shared = ["pasteText"];
 

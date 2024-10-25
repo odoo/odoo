@@ -26,7 +26,7 @@ import { convertList, getListMode } from "@html_editor/utils/list";
 
 export class DomPlugin extends Plugin {
     static name = "dom";
-    static dependencies = ["selection", "history", "split", "delete", "line_break"];
+    static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
     static shared = ["domInsert", "copyAttributes"];
     resources = {
         user_commands: [

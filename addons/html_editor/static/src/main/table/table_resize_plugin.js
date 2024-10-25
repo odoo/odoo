@@ -8,7 +8,7 @@ import { getColumnIndex } from "@html_editor/utils/table";
 import { BORDER_SENSITIVITY } from "@html_editor/main/table/table_plugin";
 
 export class TableResizePlugin extends Plugin {
-    static name = "table_resize";
+    static name = "tableResize";
     static dependencies = ["table", "history"];
 
     setup() {

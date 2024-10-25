@@ -5,8 +5,8 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 
 export class PowerButtonsPlugin extends Plugin {
-    static name = "power_buttons";
-    static dependencies = ["selection", "local-overlay", "powerbox"];
+    static name = "powerButtons";
+    static dependencies = ["selection", "localOverlay", "powerbox"];
     resources = {
         layout_geometry_change_handlers: this.updatePowerButtons.bind(this),
         selectionchange_handlers: this.updatePowerButtons.bind(this),

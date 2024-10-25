@@ -42,7 +42,7 @@ function target(selectionData) {
 
 export class PowerboxPlugin extends Plugin {
     static name = "powerbox";
-    static dependencies = ["overlay", "selection", "history", "user_command"];
+    static dependencies = ["overlay", "selection", "history", "userCommand"];
     static shared = [
         "getPowerboxItems",
         "getAvailablePowerboxItems",
