@@ -14,6 +14,10 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             Dialog.confirm("Open session"),
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),
+            combo.select("Combo Product 9"),
+            // Check Product Configurator is open
+            Dialog.is("Attribute selection"),
+            Dialog.discard(),
             {
                 content: "check that amount is not displayed if zero",
                 trigger: `article.product .product-content:not(:has(.price-tag:contains("0")))`,
