@@ -536,7 +536,7 @@ class configmanager:
         for arg_no, arg in enumerate(args or ()):
             if option := self.optional_options.get(arg):
                 if arg_no == len(args) - 1 or args[arg_no + 1].startswith('-'):
-                    args[arg_no] += '=' + self._format(option.dest, option.const)
+                    args[arg_no] += '=' + self.format(option.dest, option.const)
                     self._log(logging.DEBUG, "changed %s for %s", arg, args[arg_no])
 
         opt, unknown_args = self.parser.parse_args(args or [])
@@ -744,7 +744,7 @@ class configmanager:
             cls._log(logging.WARNING, "option %s: since 19.0, invalid boolean value: %r, assume %s", opt, value, value != 'None')
             return value != 'None'
 
-    def _parse(self, option_name, value):
+    def parse(self, option_name, value):
         if not isinstance(value, str):
             e = f"can only cast strings: {value!r}"
             raise TypeError(e)
@@ -769,7 +769,7 @@ class configmanager:
     def _format_without_demo(cls, value):
         return str(bool(value))
 
-    def _format(self, option_name, value):
+    def format(self, option_name, value):
         option = self.options_index[option_name]
         if option.action in ('store_true', 'store_false'):
             format_func = self.parser.option_class.TYPE_FORMATTER['bool']
@@ -806,7 +806,7 @@ class configmanager:
                     # "False" used to be the my_default of many non-bool options
                     self._log(logging.WARNING, "option %s reads %r in the config file at %s but isn't a boolean option, skip", name, value, self['config'])
                     continue
-                self._file_options[name] = self._parse(name, value)
+                self._file_options[name] = self.parse(name, value)
         except IOError:
             pass
         except ConfigParser.NoSectionError:
@@ -826,7 +826,7 @@ class configmanager:
             if opt == 'version' or (option and not option.file_exportable):
                 continue
             if option:
-                p.set('options', opt, self._format(opt, self.options[opt]))
+                p.set('options', opt, self.format(opt, self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])
 
@@ -851,7 +851,7 @@ class configmanager:
 
     def __setitem__(self, key, value):
         if isinstance(value, str) and key in self.options_index:
-            value = self._parse(key, value)
+            value = self.parse(key, value)
         self.options[key] = value
 
     def __getitem__(self, key):
