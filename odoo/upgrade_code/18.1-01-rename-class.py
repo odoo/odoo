@@ -2,180 +2,161 @@ import re
 
 
 def upgrade(file_manager):
-    nb = len([1 for file in file_manager if file.path.name.endswith('.py')])
-    i = 0
-    file_manager.print_progress(0, nb)
+    files = [file for file in file_manager if file.path.name.endswith('.py')]
+    file_manager.print_progress(0, len(files))
 
-    for file in file_manager:
-        if not file.path.name.endswith('.py'):
-            continue
-
-        class_name_models = get_class_name_models(file)
+    for count, file in enumerate(files, start=1):
+        model_classes = get_model_classes(file)
         content = file.content
-        content = update_class_name(content, class_name_models)
-        content = remove_name_and_update_inherit(content)
-        content = class_with_2_blank_lines(content)
+        content = rename_model_classes(content, model_classes)
+        content = update_model_name_inherit(content)
+        content = update_blank_lines(content)
         file.content = content
-
-        i += 1
-        file_manager.print_progress(i, nb)
+        file_manager.print_progress(count, len(files))
 
 
-regex_camel_case = re.compile(r'(?<=[^_])([A-Z])')
-regex_class_name = re.compile(r'^class ([\w]+)\s*\(.*(TransientModel|AbstractModel|Model)[,)]')
+# matches the places where to insert a '.' in class_name_to_model_name()
+RE_DOT_PLACE = re.compile(r"(?<=[^_])([A-Z])")
+
+# matches all the lines like one of those:
+#   class <identifier> (... Model ...
+#       _name = <str>
+#       _inherit = <str>
+RE_MODEL_DEF = re.compile(
+    r"""
+        (
+            ^class \s+ (?P<class>\w+) \s* \( .*
+            \b (Model|TransientModel|AbstractModel|BaseModel) \b
+        )|(
+            ^\s{4,8} (?P<attr>_name|_inherit) \s* = \s*
+            (?P<attrs> (\w+ \s* = \s*)*)
+            (?P<quote>['"]) (?P<model>[\w.]+) (?P=quote)
+        )
+    """,
+    re.VERBOSE)
+
+# matches model classes with preceding blank lines and comments
+RE_CLASS_DEF = re.compile(
+    r"""
+        (^ \n)*
+        (?P<comments> (^ [#] .* \n)* )
+        (?P<class> ^ class .* \b (Model|TransientModel|AbstractModel|BaseModel) \b )
+    """,
+    re.MULTILINE | re.VERBOSE,
+)
 
 
-def class_name_to_model_name(classname: str) -> str:
-    return regex_camel_case.sub(r'.\1', classname).lower()
+def class_name_to_model_name(class_name: str) -> str:
+    return RE_DOT_PLACE.sub(r'.\1', class_name).lower()
 
 
-def model_name_to_class_name(model):
-    return ''.join([
+def model_name_to_class_name(model_name: str) -> str:
+    return "".join(
         part[0].upper() + part[1:]
-        for part in re.split(r'\.', model.replace('_', '_.'))
+        for part in model_name.replace('_', '_.').split('.')
         if part
-    ])
+    )
 
 
-def attribute_to_model_name(line):
-    if '(' in line or ',' in line:
-        return
-    if '[' in line:
-        # makes the code idempotent
-        return
-    if '"' not in line and "'" not in line:
-        return
-    if line.startswith('     ') or line.strip().startswith('#'):
-        return
-    if not line.split('=', 1)[0].strip() in ('_name', '_inherit'):
-        return
-    return re.sub(r'''[\]\['"\s\n]+''', '', line.split('=').pop())
+def get_model_classes(file):
+    """ Return a dict mapping class names to their corresponding model name. """
+    result = {}
 
+    def collect(class_name, model_info):
+        if model_info:
+            model_name = model_info.get('_name') or model_info.get('_inherit')
+            other_name = result.setdefault(class_name, model_name)
+            if other_name != model_name:
+                raise ValueError(
+                    f"Class name {class_name!r} in addon {file.addon.name!r} "
+                    f"is used for both models {other_name!r} and {model_name!r}. "
+                    "Please rename one of the classes before running the script."
+                )
 
-def get_class_name_models(file):
-    content = file.content
-    class_name_models = {}
-    iter_lines = iter(content.split('\n'))
-    line = next(iter_lines, None)
-    while line is not None:
-        part = regex_class_name.search(line)
-        line = next(iter_lines, None)
+    class_name = None
+    model_info = {}
 
-        if not part:
+    for line in file.content.splitlines():
+        match = RE_MODEL_DEF.match(line)
+        if not match:
             continue
 
-        class_name = part.group(1)
-        current_model_name = None
-        while line is not None and (not line or line.startswith('  ')):
-            class_model_name = attribute_to_model_name(line)
-            if class_model_name and ('_name' in line or ('_inherit' in line and not current_model_name)):
-                current_model_name = class_model_name
-            line = next(iter_lines, None)
+        if match['class']:
+            # we found a class definition
+            collect(class_name, model_info)
+            class_name = match['class']
+            model_info.clear()
 
-        if current_model_name and current_model_name != 'base':
-            new_class_name = model_name_to_class_name(current_model_name)
+        elif class_name and match['model']:
+            # we found a model name (_name or _inherit with string)
+            model_info[match['attr']] = match['model']
 
-            previous = class_name_models.get(class_name)
-            if previous and previous[1] != current_model_name:
-                raise ValueError(f'Please fix your class {class_name!r} from addon {file.addon.name!r} used for {previous[1]!r} and {current_model_name!r} ({file.path})')
+    collect(class_name, model_info)
 
-            class_name_models[class_name] = (new_class_name, current_model_name)
-    return class_name_models
+    return result
 
 
-def update_class_name(content, class_name_models):
-    # update class name
-    lines = content.split('\n')
-    for old_class_name, (new_class_name, _current_model_name) in class_name_models.items():
+def rename_model_classes(content, model_classes):
+    spattern = r"^[^']*('[^']*'[^']*)*'[^']*$"      # odd number of single quotes
+    dpattern = r'^[^"]*("[^"]*"[^"]*)*"[^"]*$'      # odd number of double quotes
+    re_bad = re.compile(rf"#| fields\.|self\.$|{spattern}|{dpattern}")
+    re_sql = re.compile(r"\b(SELECT|FROM|JOIN|ON|WHERE|AND|OR|GROUP|UNION)\b")
+    lines = content.split("\n")
+
+    for old_class_name, model_name in model_classes.items():
+        new_class_name = model_name_to_class_name(model_name)
         if old_class_name == new_class_name:
             continue
-        if old_class_name == new_class_name:
-            # to avoid unwanted changes (classes having the table name)
-            continue
 
-        reg_use_class_name = re.compile(rf'\b{old_class_name}\b')
-        reg_use_super = re.compile(rf'super\(\s*{new_class_name}\s*,\s*self\s*\)')
+        re_class = re.compile(rf"\b{old_class_name}\b")
+        re_super = re.compile(rf"super\(\s*{new_class_name}\s*,\s*self\s*\)")
         for index, line in enumerate(lines):
-            try:
-                start = line.split(old_class_name, 1)[0]
-                if "#" in start or ' fields.' in start or start.endswith('self.') or start.count('"') % 2 or start.count("'") % 2:
-                    continue
-                if (" FROM " in line or
-                    "JOIN " in line or
-                    " UNION " in line or
-                    " AND " in line or
-                    " ON " in line or
-                    " OR " in line or
-                    " WHERE " in line or
-                    " GROUP BY " in line or
-                    " SELECT " in line):
-                    continue
-                line = reg_use_class_name.sub(new_class_name, line)
-                line = reg_use_super.sub('super()', line)
+            before = line.split(old_class_name, 1)[0]
+            if not (re_bad.search(before) or re_sql.search(line)):
+                line = re_class.sub(new_class_name, line)
+                line = re_super.sub('super()', line)
                 lines[index] = line
-            except ValueError:
-                continue
-    return '\n'.join(lines)
+
+    return "\n".join(lines)
 
 
-def remove_name_and_update_inherit(content):
-    lines = content.split('\n')
-    length = len(lines)
+def update_model_name_inherit(content):
+    result = []
 
-    class_model_name = None
-    for index, line in enumerate(lines):
-        if index >= length:
+    class_name = None
+    for line in content.split("\n"):
+        # by default, keep the line as is
+        result.append(line)
+
+        match = RE_MODEL_DEF.match(line)
+        if not match:
             continue
 
-        part = regex_class_name.search(line)
-        if not part:
-            continue
-        class_name = part.group(1)
-        if not class_name:
-            continue
-        class_model_name = class_name_to_model_name(class_name)
+        if match['class']:
+            # we found a class definition
+            class_name = match['class']
 
-        model_name = None
-        index_name = -1
-        inherit_model_name = None
-        index_inherit = -1
-        for i in range(index + 1, length):
-            new_line = lines[i]
-            if new_line.startswith('class ') or line.startswith('def '):
-                break
-            new_model_name = attribute_to_model_name(new_line)
-            if new_model_name:
-                if '_name' in new_line:
-                    model_name = new_model_name
-                    index_name = i
-                elif '_inherit' in new_line and '_inherits' not in new_line:
-                    inherit_model_name = new_model_name
-                    index_inherit = i
+        elif class_name and match['model']:
+            # we found a model name (_name or _inherit with string)
+            model_name = match['model']
+            same_as_class = class_name_to_model_name(class_name) == model_name
 
-        # update `_inherit` = 'xxx' into `_inherit` = ['xxx']
-        if index_inherit != -1:
-            inherit_line = lines[index_inherit]
-            if '[' not in inherit_line:
-                # makes the code idempotent
-                attr, value = inherit_line.split('=')
-                lines[index_inherit] = f'{attr.rstrip()} = [{value.strip()}]'
-
-        if model_name:
-            if class_model_name == model_name:
-                if len(lines[index_name].split('=')) > 2:
-                    lines[index_name] = re.sub(r'_name *= *', '', lines[index_name])
+            if match['attr'] == '_name' and same_as_class:
+                # _name can be inferred from class name, so drop _name
+                if match['attrs']:
+                    result[-1] = re.sub(r"\b_name\s*=\s*", "", line)
                 else:
-                    lines.pop(index_name)
-                length -= 1
-        elif inherit_model_name and class_model_name != inherit_model_name:
-            inherit_line = lines[index_inherit]
-            tab = inherit_line[0:(len(inherit_line) - len(inherit_line.lstrip()))]
-            lines.insert(index_inherit, f'{tab}_name = "{inherit_model_name}"\n')
-            length += 1
+                    result.pop()
 
-    return '\n'.join(lines)
+            elif match['attr'] == '_inherit' and not same_as_class:
+                # _name and _inherit are not the same, wrap _inherit in a list
+                index0 = match.start('quote')
+                index1 = match.end('model') + 1
+                result[-1] = f"{line[:index0]}[{line[index0:index1]}]{line[index1:]}"
+
+    return "\n".join(result)
 
 
-def class_with_2_blank_lines(content):
+def update_blank_lines(content):
     """ Replace multiple blank lines before class definitions into exactly 2 blank lines. """
-    return re.sub(r'(?:\s*\n)+?(# .*\n)?(class .*Model\))', r'\n\n\n\1\2', content)
+    return RE_CLASS_DEF.sub(r"\n\n\g<comments>\g<class>", content)
