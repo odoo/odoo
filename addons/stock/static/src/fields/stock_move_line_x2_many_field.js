@@ -43,7 +43,6 @@ export class SMLX2ManyField extends X2ManyField {
                     for (const ml of this.props.record.data.move_line_ids.records) {
                         const entry = quants_by_key[[ml.data.product_id[0], ml.data.lot_id?.[0] || false, ml.data.location_id[0], ml.data.package_id?.[0] || false, ml.data.owner_id?.[0] || false].toString()];
                         if (!entry) {  // product not storable or has no quant yet
-                            ml.data.quant_id = [false, 0];
                             continue;
                         }
                         ml.data.quant_id = [entry[0], entry[1]];
