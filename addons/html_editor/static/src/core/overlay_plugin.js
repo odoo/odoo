@@ -98,8 +98,8 @@ export class Overlay {
                     getContainer: this.getContainer,
                     close: this.close.bind(this),
                     history: {
-                        enableObserver: this.plugin.shared.enableObserver,
-                        disableObserver: this.plugin.shared.disableObserver,
+                        enableObserver: this.plugin.dependencies.history.enableObserver,
+                        disableObserver: this.plugin.dependencies.history.disableObserver,
                     },
                 }),
                 {

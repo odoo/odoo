@@ -111,7 +111,9 @@ export class LinkSelectionPlugin extends Plugin {
         const combinedFilter = (node) => defaultFilter(node) && !exclude(node);
         const nodes = descendants(root).filter(combinedFilter);
         if (nodes.length > 0) {
-            const cursors = preserveSelection ? this.shared.preserveSelection() : null;
+            const cursors = preserveSelection
+                ? this.dependencies.selection.preserveSelection()
+                : null;
             for (const node of nodes) {
                 // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
                 // nodes visible if needed.
@@ -139,7 +141,7 @@ export class LinkSelectionPlugin extends Plugin {
      * @param {HTMLAnchorElement} link
      */
     padLinkWithZwnbsp(link) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         if (!isZwnbsp(link.firstChild)) {
             cursors.shiftOffset(link, 1);
             link.prepend(this.document.createTextNode("\uFEFF"));
@@ -183,7 +185,7 @@ export class LinkSelectionPlugin extends Plugin {
      *
      * @param {SelectionData} [selectionData]
      */
-    resetLinkInSelection(selectionData = this.shared.getSelectionData()) {
+    resetLinkInSelection(selectionData = this.dependencies.selection.getSelectionData()) {
         this.clearLinkInSelectionClass(this.editable);
 
         const { anchorNode, focusNode } = selectionData.editableSelection;

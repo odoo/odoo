@@ -102,7 +102,7 @@ export class HtmlField extends Component {
             const value = record.data[this.props.dynamicPlaceholderModelReferenceField || "model"];
             // update Dynamic Placeholder reference model
             if (this.props.dynamicPlaceholder && this.editor) {
-                this.editor.shared.updateDphDefaultModel?.(value);
+                this.editor.shared.dynamicPlaceholder?.updateDphDefaultModel(value);
             }
         });
     }
@@ -144,7 +144,7 @@ export class HtmlField extends Component {
     }
 
     async getEditorContent() {
-        await this.editor.shared.savePendingImages();
+        await this.editor.shared.media.savePendingImages();
         return this.editor.getElContent();
     }
 
@@ -196,7 +196,7 @@ export class HtmlField extends Component {
         this.state.showCodeView = !this.state.showCodeView;
         if (!this.state.showCodeView && this.editor) {
             this.editor.editable.innerHTML = this.value;
-            this.editor.shared.addStep();
+            this.editor.shared.history.addStep();
         }
     }
 

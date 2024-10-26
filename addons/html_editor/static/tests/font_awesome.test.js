@@ -5,7 +5,7 @@ import { getContent } from "./_helpers/selection";
 
 function insertFontAwesome(faClass) {
     return (editor) => {
-        editor.shared.execCommand("insertFontAwesome", { faClass });
+        editor.shared.userCommand.execCommand("insertFontAwesome", { faClass });
     };
 }
 
@@ -520,8 +520,12 @@ describe("FontAwesome insertion", () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
             stepFunction: async (editor) => {
-                editor.shared.execCommand("insertFontAwesome", { faClass: "fa fa-star" });
-                editor.shared.execCommand("insertFontAwesome", { faClass: "fa fa-glass" });
+                editor.shared.userCommand.execCommand("insertFontAwesome", {
+                    faClass: "fa fa-star",
+                });
+                editor.shared.userCommand.execCommand("insertFontAwesome", {
+                    faClass: "fa fa-glass",
+                });
             },
             contentAfterEdit:
                 '<p><i class="fa fa-star" contenteditable="false">\u200b</i><i class="fa fa-glass" contenteditable="false">\u200b</i>[]</p>',

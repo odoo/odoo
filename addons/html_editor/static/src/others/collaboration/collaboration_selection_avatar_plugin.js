@@ -35,8 +35,10 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
     selectionInfos = new Map();
 
     setup() {
-        this.avatarOverlay = this.shared.makeLocalOverlay("oe-avatars-overlay");
-        this.avatarsCountersOverlay = this.shared.makeLocalOverlay("oe-avatars-counters-overlay");
+        this.avatarOverlay = this.dependencies.localOverlay.makeLocalOverlay("oe-avatars-overlay");
+        this.avatarsCountersOverlay = this.dependencies.localOverlay.makeLocalOverlay(
+            "oe-avatars-counters-overlay"
+        );
         this.avatarUrl = `${
             browser.location.origin
         }/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(user.userId)}`;
@@ -65,9 +67,10 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
      */
     drawPeerAvatar(selectionInfo) {
         const { selection, peerId } = selectionInfo;
-        const { avatarUrl, peerName = _t("Anonymous") } = this.shared.getPeerMetadata(peerId);
-        const anchorNode = this.shared.getNodeById(selection.anchorNodeId);
-        const focusNode = this.shared.getNodeById(selection.focusNodeId);
+        const { avatarUrl, peerName = _t("Anonymous") } =
+            this.dependencies.collaborationOdoo.getPeerMetadata(peerId);
+        const anchorNode = this.dependencies.history.getNodeById(selection.anchorNodeId);
+        const focusNode = this.dependencies.history.getNodeById(selection.focusNodeId);
         if (!anchorNode || !focusNode) {
             return;
         }

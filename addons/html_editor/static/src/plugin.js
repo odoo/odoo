@@ -106,7 +106,7 @@ export class Plugin {
      * @param {import("./editor").EditorConfig} config
      * @param {*} services
      */
-    constructor(document, editable, shared, config, services) {
+    constructor(document, editable, dependencies, config, services) {
         /** @type { Document } **/
         this.document = document;
         /** @type { HTMLElement } **/
@@ -115,7 +115,7 @@ export class Plugin {
         this.config = config;
         this.services = services;
         /** @type { SharedMethods } **/
-        this.shared = shared;
+        this.dependencies = dependencies;
         this._cleanups = [];
         /**
          * The resources aggregated from all the plugins by the editor.

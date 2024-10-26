@@ -9,7 +9,7 @@ export class DialogPlugin extends Plugin {
         return new Promise((resolve) => {
             this.services.dialog.add(dialogClass, props, {
                 onClose: () => {
-                    this.shared.focusEditable();
+                    this.dependencies.selection.focusEditable();
                     resolve();
                 },
                 ...options,

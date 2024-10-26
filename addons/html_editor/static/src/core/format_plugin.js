@@ -25,7 +25,7 @@ function isFormatted(formatPlugin, format) {
 }
 function hasFormat(formatPlugin) {
     return () => {
-        const traversedNodes = formatPlugin.shared.getTraversedNodes();
+        const traversedNodes = formatPlugin.dependencies.selection.getTraversedNodes();
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 formatsSpecs[format].removeStyle &&
@@ -34,8 +34,10 @@ function hasFormat(formatPlugin) {
                 return true;
             }
         }
-        const nodes = formatPlugin.shared.getTraversedNodes();
-        return hasAnyNodesColor(nodes, "color") || hasAnyNodesColor(nodes, "backgroundColor");
+        return (
+            hasAnyNodesColor(traversedNodes, "color") ||
+            hasAnyNodesColor(traversedNodes, "backgroundColor")
+        );
     };
 }
 
@@ -147,7 +149,7 @@ export class FormatPlugin extends Plugin {
             this._formatSelection(format, { applyStyle: false });
         }
         this.dispatchTo("remove_format_handlers");
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     /**
@@ -159,7 +161,7 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     hasSelectionFormat(format) {
-        const selectedNodes = this.shared.getTraversedNodes().filter(isTextNode);
+        const selectedNodes = this.dependencies.selection.getTraversedNodes().filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
         return selectedNodes.some((n) => isFormatted(n, this.editable));
     }
@@ -173,7 +175,7 @@ export class FormatPlugin extends Plugin {
      * @param {String} format 'bold'|'italic'|'underline'|'strikeThrough'|'switchDirection'
      * @returns {boolean}
      */
-    isSelectionFormat(format, traversedNodes = this.shared.getTraversedNodes()) {
+    isSelectionFormat(format, traversedNodes = this.dependencies.selection.getTraversedNodes()) {
         const selectedNodes = traversedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
         return selectedNodes.length && selectedNodes.every((n) => isFormatted(n, this.editable));
@@ -181,14 +183,14 @@ export class FormatPlugin extends Plugin {
 
     formatSelection(...args) {
         if (this._formatSelection(...args)) {
-            this.shared.addStep();
+            this.dependencies.history.addStep();
         }
     }
 
     // @todo phoenix: refactor this method.
     _formatSelection(formatName, { applyStyle, formatProps } = {}) {
         // note: does it work if selection is in opposite direction?
-        const selection = this.shared.splitSelection();
+        const selection = this.dependencies.split.splitSelection();
         if (typeof applyStyle === "undefined") {
             applyStyle = !this.isSelectionFormat(formatName);
         }
@@ -197,7 +199,7 @@ export class FormatPlugin extends Plugin {
         if (selection.isCollapsed) {
             if (isTextNode(selection.anchorNode) && selection.anchorNode.textContent === "\u200b") {
                 zws = selection.anchorNode;
-                this.shared.setSelection({
+                this.dependencies.selection.setSelection({
                     anchorNode: zws,
                     anchorOffset: 0,
                     focusNode: zws,
@@ -214,7 +216,7 @@ export class FormatPlugin extends Plugin {
             (node) => node.querySelector("br")
         );
         const selectedNodes = /** @type { Text[] } **/ (
-            this.shared
+            this.dependencies.selection
                 .getSelectedNodes()
                 .filter(
                     (n) =>
@@ -224,7 +226,7 @@ export class FormatPlugin extends Plugin {
         const selectedTextNodes = selectedNodes.length ? selectedNodes : selectedNodesInTds;
 
         const selectedFieldNodes = new Set(
-            this.shared
+            this.dependencies.selection
                 .getSelectedNodes()
                 .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
                 .filter(Boolean)
@@ -243,7 +245,7 @@ export class FormatPlugin extends Plugin {
             while (
                 parentNode &&
                 !isBlock(parentNode) &&
-                !this.shared.isUnsplittable(parentNode) &&
+                !this.dependencies.split.isUnsplittable(parentNode) &&
                 (parentNode.classList.length === 0 ||
                     [...parentNode.classList].every((cls) => FONT_SIZE_CLASSES.includes(cls)))
             ) {
@@ -255,7 +257,7 @@ export class FormatPlugin extends Plugin {
                 if (isUselessZws) {
                     unwrapContents(parentNode);
                 } else {
-                    const newLastAncestorInlineFormat = this.shared.splitAroundUntil(
+                    const newLastAncestorInlineFormat = this.dependencies.split.splitAroundUntil(
                         currentNode,
                         parentNode
                     );
@@ -321,7 +323,7 @@ export class FormatPlugin extends Plugin {
         }
 
         if (selectedTextNodes[0] && selectedTextNodes[0].textContent === "\u200B") {
-            this.shared.setCursorStart(selectedTextNodes[0]);
+            this.dependencies.selection.setCursorStart(selectedTextNodes[0]);
         } else if (selectedTextNodes.length) {
             const firstNode = selectedTextNodes[0];
             const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
@@ -341,7 +343,7 @@ export class FormatPlugin extends Plugin {
                     focusOffset: 0,
                 };
             }
-            this.shared.setSelection(newSelection, { normalize: false });
+            this.dependencies.selection.setSelection(newSelection, { normalize: false });
             return true;
         }
     }
@@ -396,7 +398,7 @@ export class FormatPlugin extends Plugin {
 
     cleanZWS(element, { preserveSelection = true } = {}) {
         const textNodes = descendants(element).filter(isTextNode);
-        const cursors = preserveSelection ? this.shared.preserveSelection() : null;
+        const cursors = preserveSelection ? this.dependencies.selection.preserveSelection() : null;
         for (const node of textNodes) {
             cleanTextNode(node, "\u200B", cursors);
         }
@@ -405,10 +407,10 @@ export class FormatPlugin extends Plugin {
 
     insertText(selection, content) {
         if (selection.anchorNode.nodeType === Node.TEXT_NODE) {
-            selection = this.shared.setSelection(
+            selection = this.dependencies.selection.setSelection(
                 {
                     anchorNode: selection.anchorNode.parentElement,
-                    anchorOffset: this.shared.splitTextNode(
+                    anchorOffset: this.dependencies.split.splitTextNode(
                         selection.anchorNode,
                         selection.anchorOffset
                     ),
@@ -425,7 +427,7 @@ export class FormatPlugin extends Plugin {
         );
         restore();
         const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(txt);
-        this.shared.setSelection(
+        this.dependencies.selection.setSelection(
             { anchorNode, anchorOffset, focusNode, focusOffset },
             { normalize: false }
         );
@@ -440,15 +442,15 @@ export class FormatPlugin extends Plugin {
      * @returns {Node} the inserted zero-width space
      */
     insertAndSelectZws() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const zws = this.insertText(selection, "\u200B");
-        this.shared.splitTextNode(zws, selection.anchorOffset);
+        this.dependencies.split.splitTextNode(zws, selection.anchorOffset);
         return zws;
     }
 
     onBeforeInput(ev) {
         if (ev.inputType === "insertText") {
-            const selection = this.shared.getEditableSelection();
+            const selection = this.dependencies.selection.getEditableSelection();
             if (!selection.isCollapsed) {
                 return;
             }
@@ -459,7 +461,12 @@ export class FormatPlugin extends Plugin {
                 // This addresses an undesired behavior of the
                 // contenteditable.
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(element);
-                this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
+                });
             }
         }
     }
@@ -469,7 +476,7 @@ export class FormatPlugin extends Plugin {
         for (const node of descendants(root)) {
             if (this.shouldBeMergedWithPreviousSibling(node)) {
                 if (preserveSelection) {
-                    selectionToRestore ??= this.shared.preserveSelection();
+                    selectionToRestore ??= this.dependencies.selection.preserveSelection();
                     selectionToRestore.update(callbacksForCursorUpdate.merge(node));
                 }
                 node.previousSibling.append(...childNodes(node));
@@ -483,7 +490,7 @@ export class FormatPlugin extends Plugin {
         return (
             !isSelfClosingElement(node) &&
             areSimilarElements(node, node.previousSibling) &&
-            !this.shared.isUnmergeable(node)
+            !this.dependencies.delete.isUnmergeable(node)
         );
     }
 }

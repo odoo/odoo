@@ -359,7 +359,7 @@ export class HistoryPlugin extends Plugin {
      * when reverting the step.
      */
     stageSelection() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         if (
             this.currentStep.mutations.find((m) =>
                 ["characterData", "remove", "add"].includes(m.type)
@@ -607,7 +607,7 @@ export class HistoryPlugin extends Plugin {
             newSelection.focusNode = focusNode;
             newSelection.focusOffset = selection.focusOffset;
         }
-        this.shared.setSelection(newSelection, { normalize: false });
+        this.dependencies.selection.setSelection(newSelection, { normalize: false });
         // @todo @phoenix add this in the selection or table plugin.
         // // If a table must be selected, ensure it's in the same tick.
         // this._handleSelectionInTable();
@@ -877,7 +877,7 @@ export class HistoryPlugin extends Plugin {
         const step = this.steps.at(-1);
         let applied = false;
         // TODO ABD TODO @phoenix: selection may become obsolete, it should evolve with mutations.
-        const selectionToRestore = this.shared.preserveSelection();
+        const selectionToRestore = this.dependencies.selection.preserveSelection();
         return () => {
             if (applied) {
                 return;
@@ -1014,7 +1014,7 @@ export class HistoryPlugin extends Plugin {
         let [unserializedNode, nodeMap] = this._unserializeNode(node, this.idToNodeMap);
         const fakeNode = this.document.createElement("fake-el");
         fakeNode.appendChild(unserializedNode);
-        this.shared.sanitize(fakeNode, { IN_PLACE: true });
+        this.dependencies.sanitize.sanitize(fakeNode, { IN_PLACE: true });
         unserializedNode = fakeNode.firstChild;
 
         if (unserializedNode) {

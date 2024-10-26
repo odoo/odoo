@@ -25,7 +25,7 @@ export class EmojiPlugin extends Plugin {
     };
 
     setup() {
-        this.overlay = this.shared.createOverlay(EmojiPicker, {
+        this.overlay = this.dependencies.overlay.createOverlay(EmojiPicker, {
             hasAutofocus: true,
             className: "popover",
         });
@@ -42,15 +42,15 @@ export class EmojiPlugin extends Plugin {
             props: {
                 close: () => {
                     this.overlay.close();
-                    this.shared.focusEditable();
+                    this.dependencies.selection.focusEditable();
                 },
                 onSelect: (str) => {
                     if (onSelect) {
                         onSelect(str);
                         return;
                     }
-                    this.shared.domInsert(str);
-                    this.shared.addStep();
+                    this.dependencies.dom.domInsert(str);
+                    this.dependencies.history.addStep();
                 },
             },
             target,

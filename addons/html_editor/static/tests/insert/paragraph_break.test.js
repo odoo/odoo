@@ -350,7 +350,7 @@ describe("Selection collapsed", () => {
             // splitBlock in an <a> tag will open the linkPopover which will take the focus.
             // So we need to put the selection back into the editor
             splitBlock(editor);
-            editor.shared.focusEditable();
+            editor.shared.selection.focusEditable();
             await tick();
         }
 
@@ -412,7 +412,7 @@ describe("Selection collapsed", () => {
                 stepFunction: async (editor) => {
                     splitBlock(editor);
                     await press("enter");
-                    editor.shared.focusEditable();
+                    editor.shared.selection.focusEditable();
                     await tick();
                 },
                 contentAfterEdit: `<p>\ufeff<a href="">\ufeffab\ufeff</a>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,

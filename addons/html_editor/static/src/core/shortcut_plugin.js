@@ -14,7 +14,10 @@ export class ShortCutPlugin extends Plugin {
         }
         for (const shortcut of this.getResource("shortcuts")) {
             this.addShortcut(shortcut.hotkey, () => {
-                this.shared.execCommand(shortcut.commandId, shortcut.commandParams);
+                this.dependencies.userCommand.execCommand(
+                    shortcut.commandId,
+                    shortcut.commandParams
+                );
             });
         }
     }

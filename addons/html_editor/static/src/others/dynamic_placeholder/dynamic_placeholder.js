@@ -30,7 +30,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.overlay = this.shared.createOverlay(DynamicPlaceholderPopover, {
+        this.overlay = this.dependencies.overlay.createOverlay(DynamicPlaceholderPopover, {
             hasAutofocus: true,
             className: "popover",
         });
@@ -77,12 +77,12 @@ export class DynamicPlaceholderPlugin extends Plugin {
             t.innerText = defaultValue;
         }
 
-        this.shared.domInsert(t);
-        this.shared.addStep();
+        this.dependencies.dom.domInsert(t);
+        this.dependencies.history.addStep();
     }
 
     onClose() {
         this.overlay.close();
-        this.shared.focusEditable();
+        this.dependencies.selection.focusEditable();
     }
 }

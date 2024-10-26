@@ -15,7 +15,7 @@ async function deleteRange(editor) {
     const selection = editor.document.getSelection();
     let range = selection.getRangeAt(0);
 
-    range = editor.shared.deleteRange(range);
+    range = editor.shared.delete.deleteRange(range);
 
     const { startContainer, startOffset, endContainer, endOffset } = range;
     selection.setBaseAndExtent(startContainer, startOffset, endContainer, endOffset);
@@ -23,7 +23,7 @@ async function deleteRange(editor) {
 
 // Tests the DELETE_SELECTION command.
 async function deleteSelection(editor) {
-    editor.shared.deleteSelection();
+    editor.shared.delete.deleteSelection();
 }
 
 describe("deleteRange method", () => {

@@ -93,11 +93,11 @@ export class MediaPlugin extends Plugin {
     }
 
     replaceImage() {
-        const selectedNodes = this.shared.getSelectedNodes();
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
         const node = selectedNodes.find((node) => node.tagName === "IMG");
         if (node) {
             this.openMediaDialog({ node });
-            this.shared.addStep();
+            this.dependencies.history.addStep();
         }
     }
 
@@ -156,17 +156,17 @@ export class MediaPlugin extends Plugin {
                 node.replaceWith(element);
             }
         } else {
-            this.shared.domInsert(element);
+            this.dependencies.dom.domInsert(element);
         }
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
-        this.shared.setSelection({ anchorNode, anchorOffset });
-        this.shared.addStep();
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.history.addStep();
     }
 
     openMediaDialog(params = {}) {
         const { resModel, resId, field, type } = this.recordInfo;
-        const mediaDialogClosedPromise = this.shared.addDialog(MediaDialog, {
+        const mediaDialogClosedPromise = this.dependencies.dialog.addDialog(MediaDialog, {
             resModel,
             resId,
             useMediaLibrary: !!(

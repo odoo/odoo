@@ -575,17 +575,17 @@ test("should discard /command insertion from history when command is executed", 
     expect(commandNames(el)).toEqual(["Heading 1"]);
     await press("Enter");
     expect(getContent(el)).toBe("<h1>abc[]</h1>");
-    editor.shared.execCommand("historyUndo");
+    editor.shared.userCommand.execCommand("historyUndo");
     expect(getContent(el)).toBe("<p>abc[]</p>");
-    editor.shared.execCommand("historyRedo");
+    editor.shared.userCommand.execCommand("historyRedo");
     expect(getContent(el)).toBe("<h1>abc[]</h1>");
-    editor.shared.execCommand("historyUndo");
+    editor.shared.userCommand.execCommand("historyUndo");
     expect(getContent(el)).toBe("<p>abc[]</p>");
-    editor.shared.execCommand("historyUndo");
+    editor.shared.userCommand.execCommand("historyUndo");
     expect(getContent(el)).toBe("<p>ab[]</p>");
-    editor.shared.execCommand("historyUndo");
+    editor.shared.userCommand.execCommand("historyUndo");
     expect(getContent(el)).toBe("<p>a[]</p>");
-    editor.shared.execCommand("historyUndo");
+    editor.shared.userCommand.execCommand("historyUndo");
     expect(getContent(el)).toBe(
         `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
     );

@@ -128,28 +128,28 @@ export class Editor {
             if (plugins.has(P.id)) {
                 throw new Error(`Duplicate plugin id: ${P.id}`);
             }
-            const _shared = {};
+            const imports = {};
             for (const dep of P.dependencies) {
                 if (plugins.has(dep)) {
+                    imports[dep] = {};
                     for (const h of plugins.get(dep).shared) {
-                        _shared[h] = this.shared[h];
+                        imports[dep][h] = this.shared[dep][h];
                     }
                 } else {
                     throw new Error(`Missing dependency for plugin ${P.id}: ${dep}`);
                 }
             }
             plugins.set(P.id, P);
-            const plugin = new P(this.document, this.editable, _shared, this.config, this.services);
+            const plugin = new P(this.document, this.editable, imports, this.config, this.services);
             this.plugins.push(plugin);
+            const exports = {};
             for (const h of P.shared) {
-                if (h in this.shared) {
-                    throw new Error(`Duplicate shared name: ${h}`);
-                }
                 if (!(h in plugin)) {
                     throw new Error(`Missing helper implementation: ${h} in plugin ${P.id}`);
                 }
-                this.shared[h] = plugin[h].bind(plugin);
+                exports[h] = plugin[h].bind(plugin);
             }
+            this.shared[P.id] = exports;
         }
         const resources = this.createResources();
         for (const plugin of this.plugins) {

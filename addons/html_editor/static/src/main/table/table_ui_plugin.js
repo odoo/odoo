@@ -39,7 +39,7 @@ export class TableUIPlugin extends Plugin {
 
     setup() {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.picker = this.shared.createOverlay(TablePicker, {
+        this.picker = this.dependencies.overlay.createOverlay(TablePicker, {
             positionOptions: {
                 onPositioned: (picker, position) => {
                     const popperRect = picker.getBoundingClientRect();
@@ -61,7 +61,7 @@ export class TableUIPlugin extends Plugin {
         this.activeTd = null;
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.colMenu = this.shared.createOverlay(TableMenu, {
+        this.colMenu = this.dependencies.overlay.createOverlay(TableMenu, {
             positionOptions: {
                 position: "top-fit",
                 onPositioned: (el, solution) => {
@@ -74,7 +74,7 @@ export class TableUIPlugin extends Plugin {
             },
         });
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.rowMenu = this.shared.createOverlay(TableMenu, {
+        this.rowMenu = this.dependencies.overlay.createOverlay(TableMenu, {
             positionOptions: {
                 position: "left-fit",
             },
@@ -96,14 +96,15 @@ export class TableUIPlugin extends Plugin {
                 editable: this.editable,
                 overlay: this.picker,
                 direction: this.config.direction || "ltr",
-                insertTable: (params) => this.shared.execCommand("insertTable", params),
+                insertTable: (params) =>
+                    this.dependencies.userCommand.execCommand("insertTable", params),
             },
         });
     }
 
     openPickerOrInsertTable() {
         if (this.services.ui.isSmall) {
-            this.shared.execCommand("insertTable", { cols: 3, rows: 3 });
+            this.dependencies.userCommand.execCommand("insertTable", { cols: 3, rows: 3 });
         } else {
             this.openPicker();
         }
@@ -160,17 +161,17 @@ export class TableUIPlugin extends Plugin {
         const wrapAddStep = (fn) => {
             return (...args) => {
                 fn(...args);
-                this.shared.addStep();
+                this.dependencies.history.addStep();
             };
         };
         const tableMethods = {
-            moveColumn: wrapAddStep(this.shared.moveColumn),
-            addColumn: wrapAddStep(this.shared.addColumn),
-            removeColumn: wrapAddStep(this.shared.removeColumn),
-            moveRow: wrapAddStep(this.shared.moveRow),
-            addRow: wrapAddStep(this.shared.addRow),
-            removeRow: wrapAddStep(this.shared.removeRow),
-            resetTableSize: wrapAddStep(this.shared.resetTableSize),
+            moveColumn: wrapAddStep(this.dependencies.table.moveColumn),
+            addColumn: wrapAddStep(this.dependencies.table.addColumn),
+            removeColumn: wrapAddStep(this.dependencies.table.removeColumn),
+            moveRow: wrapAddStep(this.dependencies.table.moveRow),
+            addRow: wrapAddStep(this.dependencies.table.addRow),
+            removeRow: wrapAddStep(this.dependencies.table.removeRow),
+            resetTableSize: wrapAddStep(this.dependencies.table.resetTableSize),
         };
         if (td.cellIndex === 0) {
             this.rowMenu.open({

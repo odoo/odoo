@@ -57,7 +57,7 @@ export async function insertText(editor, text) {
 
 /** @param {Editor} editor */
 export function deleteForward(editor) {
-    editor.shared.execCommand("deleteForward");
+    editor.shared.userCommand.execCommand("deleteForward");
 }
 
 /**
@@ -67,34 +67,34 @@ export function deleteForward(editor) {
 export function deleteBackward(editor, isMobileTest = false) {
     // TODO phoenix: find a strategy for test mobile and desktop. (check legacy code)
 
-    editor.shared.execCommand("deleteBackward");
+    editor.shared.userCommand.execCommand("deleteBackward");
 }
 
 // history
 /** @param {Editor} editor */
 export function addStep(editor) {
-    editor.shared.addStep();
+    editor.shared.history.addStep();
 }
 /** @param {Editor} editor */
 export function undo(editor) {
-    editor.shared.execCommand("historyUndo");
+    editor.shared.userCommand.execCommand("historyUndo");
 }
 /** @param {Editor} editor */
 export function redo(editor) {
-    editor.shared.execCommand("historyRedo");
+    editor.shared.userCommand.execCommand("historyRedo");
 }
 
 // list
 export function toggleOrderedList(editor) {
-    editor.shared.execCommand("toggleListOL");
+    editor.shared.userCommand.execCommand("toggleListOL");
 }
 /** @param {Editor} editor */
 export function toggleUnorderedList(editor) {
-    editor.shared.execCommand("toggleListUL");
+    editor.shared.userCommand.execCommand("toggleListUL");
 }
 /** @param {Editor} editor */
 export function toggleCheckList(editor) {
-    editor.shared.execCommand("toggleListCL");
+    editor.shared.userCommand.execCommand("toggleListCL");
 }
 
 /**
@@ -115,38 +115,38 @@ export async function clickCheckbox(li) {
 
 /** @param {Editor} editor */
 export function insertLineBreak(editor) {
-    editor.shared.insertLineBreak();
+    editor.shared.lineBreak.insertLineBreak();
 }
 
 // Format commands
 
 /** @param {Editor} editor */
 export function bold(editor) {
-    editor.shared.execCommand("formatBold");
+    editor.shared.userCommand.execCommand("formatBold");
 }
 /** @param {Editor} editor */
 export function italic(editor) {
-    editor.shared.execCommand("formatItalic");
+    editor.shared.userCommand.execCommand("formatItalic");
 }
 /** @param {Editor} editor */
 export function underline(editor) {
-    editor.shared.execCommand("formatUnderline");
+    editor.shared.userCommand.execCommand("formatUnderline");
 }
 /** @param {Editor} editor */
 export function strikeThrough(editor) {
-    editor.shared.execCommand("formatStrikethrough");
+    editor.shared.userCommand.execCommand("formatStrikethrough");
 }
 export function setFontSize(size) {
-    return (editor) => editor.shared.execCommand("formatFontSize", { size });
+    return (editor) => editor.shared.userCommand.execCommand("formatFontSize", { size });
 }
 /** @param {Editor} editor */
 export function switchDirection(editor) {
-    return editor.shared.execCommand("switchDirection");
+    return editor.shared.userCommand.execCommand("switchDirection");
 }
 /** @param {Editor} editor */
 export function splitBlock(editor) {
-    editor.shared.splitBlock();
-    editor.shared.addStep();
+    editor.shared.split.splitBlock();
+    editor.shared.history.addStep();
 }
 
 export async function simulateArrowKeyPress(editor, keys) {
@@ -162,7 +162,7 @@ export async function simulateArrowKeyPress(editor, keys) {
 }
 
 export function unlinkByCommand(editor) {
-    editor.shared.execCommand("removeLinkFromSelection");
+    editor.shared.userCommand.execCommand("removeLinkFromSelection");
 }
 
 export async function unlinkFromToolbar() {
@@ -188,24 +188,24 @@ export async function keydownShiftTab(editor) {
 }
 /** @param {Editor} editor */
 export function resetSize(editor) {
-    const selection = editor.shared.getEditableSelection();
-    editor.shared.resetTableSize(findInSelection(selection, "table"));
+    const selection = editor.shared.selection.getEditableSelection();
+    editor.shared.table.resetTableSize(findInSelection(selection, "table"));
 }
 /** @param {Editor} editor */
 export function justifyLeft(editor) {
-    editor.shared.execCommand("justifyLeft");
+    editor.shared.userCommand.execCommand("justifyLeft");
 }
 /** @param {Editor} editor */
 export function justifyCenter(editor) {
-    editor.shared.execCommand("justifyCenter");
+    editor.shared.userCommand.execCommand("justifyCenter");
 }
 /** @param {Editor} editor */
 export function justifyRight(editor) {
-    editor.shared.execCommand("justifyRight");
+    editor.shared.userCommand.execCommand("justifyRight");
 }
 /** @param {Editor} editor */
 export function justifyFull(editor) {
-    editor.shared.execCommand("justifyFull");
+    editor.shared.userCommand.execCommand("justifyFull");
 }
 
 /**
@@ -215,7 +215,7 @@ export function justifyFull(editor) {
 export function setColor(color, mode) {
     /** @param {Editor} editor */
     return (editor) => {
-        editor.shared.execCommand("applyColor", { color, mode });
+        editor.shared.userCommand.execCommand("applyColor", { color, mode });
     };
 }
 

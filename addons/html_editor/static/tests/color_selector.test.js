@@ -195,7 +195,7 @@ test("Can reset a color", async () => {
     await animationFrame();
     expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(0);
     expect(".tested").toHaveInnerHTML("test");
-    editor.shared.execCommand("historyUndo");
+    editor.shared.userCommand.execCommand("historyUndo");
     expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(1);
     expect(".tested").not.toHaveInnerHTML("test");
 });
@@ -422,9 +422,9 @@ describe.tags("desktop")("color preview", () => {
         expect("font").toHaveCount(1);
         expect("font").toHaveClass("text-o-color-2");
         await animationFrame();
-        editor.shared.execCommand("historyUndo");
+        editor.shared.userCommand.execCommand("historyUndo");
         expect("font").toHaveCount(0);
-        editor.shared.execCommand("historyRedo");
+        editor.shared.userCommand.execCommand("historyRedo");
         expect("font").toHaveCount(1);
         expect("font").toHaveClass("text-o-color-2");
     });
@@ -447,7 +447,7 @@ describe.tags("desktop")("color preview", () => {
         await press("escape");
         await animationFrame();
         expect("font").toHaveCount(0);
-        editor.shared.execCommand("historyUndo");
+        editor.shared.userCommand.execCommand("historyUndo");
         expect("font").toHaveCount(0);
     });
 });

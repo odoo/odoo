@@ -14,7 +14,7 @@ export class PowerButtonsPlugin extends Plugin {
 
     setup() {
         const powerboxItemsDict = Object.fromEntries(
-            this.shared.getPowerboxItems().map((item) => [item.id, item])
+            this.dependencies.powerbox.getPowerboxItems().map((item) => [item.id, item])
         );
         this.powerboxItems = this.getResource("powerButtons")
             .map((id) => powerboxItemsDict[id])
@@ -25,7 +25,9 @@ export class PowerButtonsPlugin extends Plugin {
             icon: "fa-ellipsis-v",
             run: this.openPowerbox.bind(this),
         });
-        this.powerButtonsOverlay = this.shared.makeLocalOverlay("oe-power-buttons-overlay");
+        this.powerButtonsOverlay = this.dependencies.localOverlay.makeLocalOverlay(
+            "oe-power-buttons-overlay"
+        );
         this.categories = this.getResource("powerboxCategory");
         this.createPowerButtons();
     }
@@ -45,7 +47,8 @@ export class PowerButtonsPlugin extends Plugin {
 
     updatePowerButtons() {
         this.powerButtons.classList.add("d-none");
-        const { editableSelection, documentSelectionIsInEditable } = this.shared.getSelectionData();
+        const { editableSelection, documentSelectionIsInEditable } =
+            this.dependencies.selection.getSelectionData();
         if (!documentSelectionIsInEditable) {
             return;
         }
@@ -103,8 +106,8 @@ export class PowerButtonsPlugin extends Plugin {
     }
 
     openPowerbox() {
-        this.shared.openPowerbox({
-            commands: this.shared.getAvailablePowerboxItems(),
+        this.dependencies.powerbox.openPowerbox({
+            commands: this.dependencies.powerbox.getAvailablePowerboxItems(),
             categories: this.categories,
         });
     }

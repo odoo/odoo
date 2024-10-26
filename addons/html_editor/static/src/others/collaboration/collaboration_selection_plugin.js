@@ -28,7 +28,8 @@ export class CollaborationSelectionPlugin extends Plugin {
     selectionInfos = new Map();
 
     setup() {
-        this.selectionOverlay = this.shared.makeLocalOverlay("oe-selections-container");
+        this.selectionOverlay =
+            this.dependencies.localOverlay.makeLocalOverlay("oe-selections-container");
         this.selectionColor = `hsl(${(Math.random() * 360).toFixed(0)}, 75%, 50%)`;
     }
     handleCollaborationNotification({ notificationName, notificationPayload }) {
@@ -50,12 +51,13 @@ export class CollaborationSelectionPlugin extends Plugin {
      * @param {import("./collaboration_odoo_plugin").CollaborationSelection} selection
      */
     drawPeerSelection({ selection, peerId }) {
-        const { selectionColor, peerName = _t("Anonymous") } = this.shared.getPeerMetadata(peerId);
+        const { selectionColor, peerName = _t("Anonymous") } =
+            this.dependencies.collaborationOdoo.getPeerMetadata(peerId);
         this.multiselectionRemove(peerId);
         let clientRects;
 
-        let anchorNode = this.shared.getNodeById(selection.anchorNodeId);
-        let focusNode = this.shared.getNodeById(selection.focusNodeId);
+        let anchorNode = this.dependencies.history.getNodeById(selection.anchorNodeId);
+        let focusNode = this.dependencies.history.getNodeById(selection.focusNodeId);
         let anchorOffset = selection.anchorOffset;
         let focusOffset = selection.focusOffset;
         if (!anchorNode || !focusNode) {

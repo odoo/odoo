@@ -40,8 +40,8 @@ export class VideoPlugin extends Plugin {
                 params: media.params || {},
             }),
         });
-        this.shared.domInsert(videoBlock);
-        this.shared.addStep();
+        this.dependencies.dom.domInsert(videoBlock);
+        this.dependencies.history.addStep();
     }
 
     /**
@@ -49,9 +49,9 @@ export class VideoPlugin extends Plugin {
      * @param {function} save
      */
     openVideoSelectorDialog(save) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         let restoreSelection = () => {
-            this.shared.setSelection(selection);
+            this.dependencies.selection.setSelection(selection);
         };
         this.services.dialog.add(
             VideoSelectorDialog,

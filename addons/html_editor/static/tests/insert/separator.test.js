@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 
 async function insertSeparator(editor) {
-    editor.shared.execCommand("insertSeparator");
+    editor.shared.userCommand.execCommand("insertSeparator");
 }
 
 describe("insert separator", () => {
@@ -63,7 +63,7 @@ describe("insert separator", () => {
         const separator = editor.document.createElement("hr");
         div.append(separator);
         el.append(div);
-        editor.shared.addStep();
+        editor.shared.history.addStep();
         expect(getContent(el)).toBe(
             `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p><div><hr contenteditable="false"></div>`
         );

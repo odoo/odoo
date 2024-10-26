@@ -60,7 +60,7 @@ export class HintPlugin extends Plugin {
      * @param {HTMLElement} [root]
      */
     updateHints() {
-        const selectionData = this.shared.getSelectionData();
+        const selectionData = this.dependencies.selection.getSelectionData();
         const editableSelection = selectionData.editableSelection;
         if (this.hint) {
             const blockEl = closestBlock(editableSelection.anchorNode);

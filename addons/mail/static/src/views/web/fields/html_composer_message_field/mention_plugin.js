@@ -13,7 +13,7 @@ export class MentionPlugin extends Plugin {
     };
 
     setup() {
-        this.mentionList = this.shared.createOverlay(MentionList, {
+        this.mentionList = this.dependencies.overlay.createOverlay(MentionList, {
             hasAutofocus: true,
             className: "popover",
         });
@@ -34,20 +34,20 @@ export class MentionPlugin extends Plugin {
         );
         mentionBlock.appendChild(nameNode);
         this.historySavePointRestore();
-        this.shared.domInsert(mentionBlock);
-        this.shared.addStep();
+        this.dependencies.dom.domInsert(mentionBlock);
+        this.dependencies.history.addStep();
     }
 
     onBeforeInput(ev) {
         if (ev.data === "@" || ev.data === "#") {
-            this.historySavePointRestore = this.shared.makeSavePoint();
+            this.historySavePointRestore = this.dependencies.history.makeSavePoint();
             this.mentionList.open({
                 props: {
                     onSelect: this.onSelect.bind(this),
                     type: ev.data === "@" ? "partner" : "channel",
                     close: () => {
                         this.mentionList.close();
-                        this.shared.focusEditable();
+                        this.dependencies.selection.focusEditable();
                     },
                 },
             });

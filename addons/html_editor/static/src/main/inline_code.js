@@ -10,7 +10,7 @@ export class InlineCodePlugin extends Plugin {
     };
 
     onInput(ev) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         if (ev.data !== "`" || closestElement(selection.anchorNode, "code")) {
             return;
         }
@@ -32,11 +32,11 @@ export class InlineCodePlugin extends Plugin {
             sibling.remove();
             sibling = textNode.nextSibling;
         }
-        this.shared.setSelection({ anchorNode: textNode, anchorOffset: offset });
+        this.dependencies.selection.setSelection({ anchorNode: textNode, anchorOffset: offset });
         const textHasTwoTicks = /`.*`/.test(textNode.textContent);
         // We don't apply the code tag if there is no content between the two `
         if (textHasTwoTicks && textNode.textContent.replace(/`/g, "").length) {
-            this.shared.addStep();
+            this.dependencies.history.addStep();
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
                 0,
@@ -57,10 +57,10 @@ export class InlineCodePlugin extends Plugin {
             // Split around the backticks if needed so text starts
             // and ends with a backtick.
             if (endOffset && endOffset < textNode.textContent.length) {
-                this.shared.splitTextNode(textNode, endOffset + 1, DIRECTIONS.LEFT);
+                this.dependencies.split.splitTextNode(textNode, endOffset + 1, DIRECTIONS.LEFT);
             }
             if (startOffset) {
-                this.shared.splitTextNode(textNode, startOffset);
+                this.dependencies.split.splitTextNode(textNode, startOffset);
             }
             // Remove ticks.
             textNode.textContent = textNode.textContent.substring(
@@ -81,17 +81,17 @@ export class InlineCodePlugin extends Plugin {
             if (isClosingForward) {
                 // Move selection out of code element.
                 codeElement.after(document.createTextNode("\u200B"));
-                this.shared.setSelection({
+                this.dependencies.selection.setSelection({
                     anchorNode: codeElement.nextSibling,
                     anchorOffset: 1,
                 });
             } else {
-                this.shared.setSelection({
+                this.dependencies.selection.setSelection({
                     anchorNode: codeElement.firstChild,
                     anchorOffset: 0,
                 });
             }
         }
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 }

@@ -91,10 +91,10 @@ export class ColumnPlugin extends Plugin {
 
     columnize({ numberOfColumns, addParagraphAfter } = {}) {
         this._columnize(numberOfColumns, addParagraphAfter);
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
     _columnize(numberOfColumns, addParagraphAfter = true) {
-        const selectionToRestore = this.shared.getEditableSelection();
+        const selectionToRestore = this.dependencies.selection.getEditableSelection();
         const anchor = selectionToRestore.anchorNode;
         const hasColumns = !!closestElement(anchor, ".o_text_columns");
         if (hasColumns) {
@@ -106,7 +106,7 @@ export class ColumnPlugin extends Plugin {
         } else if (numberOfColumns) {
             this.createColumns(anchor, numberOfColumns, addParagraphAfter);
         }
-        this.shared.setSelection(selectionToRestore);
+        this.dependencies.selection.setSelection(selectionToRestore);
     }
 
     removeColumns(anchor) {

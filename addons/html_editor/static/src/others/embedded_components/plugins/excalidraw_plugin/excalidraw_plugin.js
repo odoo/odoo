@@ -24,9 +24,9 @@ export class ExcalidrawPlugin extends Plugin {
     };
 
     insertDrawingBoard() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         let restoreSelection = () => {
-            this.shared.setSelection(selection);
+            this.dependencies.selection.setSelection(selection);
         };
         this.services.dialog.add(
             ExcalidrawDialog,
@@ -38,8 +38,8 @@ export class ExcalidrawPlugin extends Plugin {
                             embeddedProps: JSON.stringify({ source: href }),
                         }
                     );
-                    this.shared.domInsert(templateBlock);
-                    this.shared.addStep();
+                    this.dependencies.dom.domInsert(templateBlock);
+                    this.dependencies.history.addStep();
 
                     restoreSelection = () => {};
                 },

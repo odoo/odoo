@@ -33,7 +33,7 @@ test("should change the font size of a whole heading after a triple click", asyn
 
 test("should get ready to type with a different font size", async () => {
     const { editor } = await setupEditor('<p class="p">ab[]cd</p>');
-    editor.shared.execCommand("formatFontSize", { size: "36px" });
+    editor.shared.userCommand.execCommand("formatFontSize", { size: "36px" });
     await animationFrame();
     expect(".p span").toHaveStyle({ "font-size": "36px" });
     expect(".p span").toHaveAttribute("data-oe-zws-empty-inline", "");

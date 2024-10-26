@@ -111,9 +111,9 @@ export class CollaborationOdooPlugin extends Plugin {
     }
 
     getCurrentCollaborativeSelection() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         return {
-            selection: this.shared.serializeSelection(selection),
+            selection: this.dependencies.history.serializeSelection(selection),
             peerId: this.config.collaboration.peerId,
         };
     }
@@ -242,16 +242,20 @@ export class CollaborationOdooPlugin extends Plugin {
             onRequest: {
                 get_peer_metadata: this.getMetadata.bind(this),
                 get_missing_steps: (params) =>
-                    this.shared.historyGetMissingSteps(params.requestPayload),
+                    this.dependencies.collaboration.historyGetMissingSteps(params.requestPayload),
                 get_history_from_snapshot: () => this.getHistorySnapshot(),
                 get_collaborative_selection: () => this.getCurrentCollaborativeSelection(),
                 recover_document: (params) => {
                     const { serverDocumentId, fromStepId } = params.requestPayload;
-                    if (!this.shared.getBranchIds().includes(serverDocumentId)) {
+                    if (
+                        !this.dependencies.collaboration.getBranchIds().includes(serverDocumentId)
+                    ) {
                         return;
                     }
                     return {
-                        missingSteps: this.shared.historyGetMissingSteps({ fromStepId }),
+                        missingSteps: this.dependencies.collaboration.historyGetMissingSteps({
+                            fromStepId,
+                        }),
                         snapshot: this.getHistorySnapshot(),
                     };
                 },
@@ -310,7 +314,7 @@ export class CollaborationOdooPlugin extends Plugin {
                             // ensure they are in sync.
                             this.ptp.notifyAllPeers(
                                 "oe_history_step",
-                                this.shared.getHistorySteps().at(-1),
+                                this.dependencies.history.getHistorySteps().at(-1),
                                 { transport: "rtc" }
                             );
                             this.resetCollaborativeSelection(fromPeerId);
@@ -319,7 +323,9 @@ export class CollaborationOdooPlugin extends Plugin {
                     }
                     case "oe_history_step":
                         if (this.historySyncFinished) {
-                            this.shared.onExternalHistorySteps([notificationPayload]);
+                            this.dependencies.collaboration.onExternalHistorySteps([
+                                notificationPayload,
+                            ]);
                         } else {
                             this.historyStepsBuffer.push(notificationPayload);
                         }
@@ -408,7 +414,7 @@ export class CollaborationOdooPlugin extends Plugin {
         if (!this.serverLastStepId) {
             return false;
         }
-        return !this.shared.getBranchIds().includes(this.serverLastStepId);
+        return !this.dependencies.collaboration.getBranchIds().includes(this.serverLastStepId);
     }
 
     /**
@@ -464,7 +470,7 @@ export class CollaborationOdooPlugin extends Plugin {
                     "recover_document",
                     {
                         serverDocumentId: this.serverLastStepId,
-                        fromStepId: this.shared.getBranchIds().at(-1),
+                        fromStepId: this.dependencies.collaboration.getBranchIds().at(-1),
                     },
                     { transport: "rtc" }
                 ).then((response) => {
@@ -585,7 +591,7 @@ export class CollaborationOdooPlugin extends Plugin {
         stripHistoryIds(this.editable);
         this.dispatchTo("normalize_handlers", this.editable);
 
-        this.shared.reset(content);
+        this.dependencies.history.reset(content);
 
         // After resetting from the server, try to resynchronise with a peer as
         // if it was the first time connecting to a peer in order to retrieve a
@@ -615,7 +621,7 @@ export class CollaborationOdooPlugin extends Plugin {
 
         const lastStepId = content && this.getLastHistoryStepId(content);
         if (lastStepId) {
-            this.shared.setInitialBranchStepId(lastStepId);
+            this.dependencies.collaboration.setInitialBranchStepId(lastStepId);
         }
     }
 
@@ -638,7 +644,7 @@ export class CollaborationOdooPlugin extends Plugin {
         if (missingSteps === -1 || !missingSteps.length) {
             return false;
         }
-        this.shared.onExternalHistorySteps(missingSteps);
+        this.dependencies.collaboration.onExternalHistorySteps(missingSteps);
         return true;
     }
     applySnapshot(snapshot) {
@@ -652,7 +658,7 @@ export class CollaborationOdooPlugin extends Plugin {
         }
         this.historyShareId = historyShareId;
         this.historySyncAtLeastOnce = true;
-        this.shared.resetFromSteps(steps, historyIds);
+        this.dependencies.collaboration.resetFromSteps(steps, historyIds);
 
         // todo: ensure that if the selection was not in the editable before the
         // reset, it remains where it was after applying the snapshot.
@@ -683,7 +689,7 @@ export class CollaborationOdooPlugin extends Plugin {
     }
 
     getHistorySnapshot() {
-        return Object.assign({}, this.shared.getSnapshotSteps(), {
+        return Object.assign({}, this.dependencies.collaboration.getSnapshotSteps(), {
             historyShareId: this.historyShareId,
         });
     }
@@ -712,11 +718,11 @@ export class CollaborationOdooPlugin extends Plugin {
         if (!applied) {
             return;
         }
-        this.shared.setCursorStart(this.editable.firstChild);
+        this.dependencies.selection.setCursorStart(this.editable.firstChild);
         this.historySyncFinished = true;
         // In case there are steps received in the meantime, process them.
         if (this.historyStepsBuffer.length) {
-            this.shared.onExternalHistorySteps(this.historyStepsBuffer);
+            this.dependencies.collaboration.onExternalHistorySteps(this.historyStepsBuffer);
             this.historyStepsBuffer = [];
         }
         this.editable.dispatchEvent(new CustomEvent("onHistoryResetFromPeer"));
@@ -766,7 +772,7 @@ export class CollaborationOdooPlugin extends Plugin {
         return record;
     }
     attachHistoryIds(editable) {
-        const historyIds = this.shared.getBranchIds().join(",");
+        const historyIds = this.dependencies.collaboration.getBranchIds().join(",");
         const firstChild = editable.children[0];
         if (firstChild) {
             firstChild.setAttribute("data-last-history-steps", historyIds);

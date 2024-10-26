@@ -49,7 +49,7 @@ export class ColorPlugin extends Plugin {
                     applyColor: this.applyColor.bind(this),
                     applyColorPreview: this.applyColorPreview.bind(this),
                     applyColorResetPreview: this.applyColorResetPreview.bind(this),
-                    focusEditable: () => this.shared.focusEditable(),
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                 },
             },
             {
@@ -64,7 +64,7 @@ export class ColorPlugin extends Plugin {
                     applyColor: this.applyColor.bind(this),
                     applyColorPreview: this.applyColorPreview.bind(this),
                     applyColorResetPreview: this.applyColorResetPreview.bind(this),
-                    focusEditable: () => this.shared.focusEditable(),
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                 },
             },
         ],
@@ -75,13 +75,13 @@ export class ColorPlugin extends Plugin {
 
     setup() {
         this.selectedColors = reactive({ color: "", backgroundColor: "" });
-        this.previewableApplyColor = this.shared.makePreviewableOperation((color, mode) =>
-            this._applyColor(color, mode)
+        this.previewableApplyColor = this.dependencies.history.makePreviewableOperation(
+            (color, mode) => this._applyColor(color, mode)
         );
     }
 
     updateSelectedColor() {
-        const nodes = this.shared.getTraversedNodes().filter(isTextNode);
+        const nodes = this.dependencies.selection.getTraversedNodes().filter(isTextNode);
         if (nodes.length === 0) {
             return;
         }
@@ -141,7 +141,9 @@ export class ColorPlugin extends Plugin {
             for (const mode of colorModes) {
                 let max = 40;
                 const hasAnySelectedNodeColor = (mode) => {
-                    const nodes = this.shared.getTraversedNodes().filter(isTextNode);
+                    const nodes = this.dependencies.selection
+                        .getTraversedNodes()
+                        .filter(isTextNode);
                     return hasAnyNodesColor(nodes, mode);
                 };
                 while (hasAnySelectedNodeColor(mode) && max > 0) {
@@ -167,7 +169,7 @@ export class ColorPlugin extends Plugin {
         if (this.delegateTo("color_apply_overrides", color, mode)) {
             return;
         }
-        let selection = this.shared.getEditableSelection();
+        let selection = this.dependencies.selection.getEditableSelection();
         let selectionNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
@@ -178,9 +180,9 @@ export class ColorPlugin extends Plugin {
             ) {
                 zws = selection.anchorNode;
             } else {
-                zws = this.shared.insertAndSelectZws();
+                zws = this.dependencies.format.insertAndSelectZws();
             }
-            selection = this.shared.setSelection(
+            selection = this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,
                     anchorOffset: 0,
@@ -189,8 +191,8 @@ export class ColorPlugin extends Plugin {
             );
             selectionNodes = [zws];
         } else {
-            selection = this.shared.splitSelection();
-            selectionNodes = this.shared
+            selection = this.dependencies.split.splitSelection();
+            selectionNodes = this.dependencies.selection
                 .getSelectedNodes()
                 .filter((node) => isContentEditable(node) && node.nodeName !== "T");
             if (isEmptyBlock(selection.endContainer)) {
@@ -204,7 +206,7 @@ export class ColorPlugin extends Plugin {
                 : selectionNodes;
 
         const selectedFieldNodes = new Set(
-            this.shared
+            this.dependencies.selection
                 .getSelectedNodes()
                 .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
                 .filter(Boolean)
@@ -223,7 +225,7 @@ export class ColorPlugin extends Plugin {
                         selectedNodes.includes(child)
                     );
                     if (selectedChildren.length) {
-                        font = this.shared.splitAroundUntil(selectedChildren, font);
+                        font = this.dependencies.split.splitAroundUntil(selectedChildren, font);
                     } else {
                         font = [];
                     }
@@ -298,7 +300,7 @@ export class ColorPlugin extends Plugin {
                 fontsSet.delete(font);
             }
         }
-        this.shared.setSelection(selection, { normalize: false });
+        this.dependencies.selection.setSelection(selection, { normalize: false });
     }
 
     getUsedCustomColors(mode) {

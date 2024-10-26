@@ -36,7 +36,7 @@ export class ToolbarPlugin extends Plugin {
         if (this.isMobileToolbar) {
             this.overlay = new MobileToolbarOverlay(this.editable);
         } else {
-            this.overlay = this.shared.createOverlay(Toolbar, {
+            this.overlay = this.dependencies.overlay.createOverlay(Toolbar, {
                 positionOptions: {
                     position: "top-start",
                 },
@@ -109,7 +109,7 @@ export class ToolbarPlugin extends Plugin {
     }
 
     getButtons() {
-        const commands = this.shared.getCommands();
+        const commands = this.dependencies.userCommand.getCommands();
         const toolbarItems = this.getResource("toolbarItems");
         const buttons = toolbarItems.map((item) => {
             const command = commands[item.commandId] || {};
@@ -144,7 +144,8 @@ export class ToolbarPlugin extends Plugin {
         const buttonsWithRun = buttonsWithInheritance.map((button) => {
             if (!button.Component) {
                 const { commandId, commandParams } = button;
-                button.run = () => this.shared.execCommand(commandId, commandParams);
+                button.run = () =>
+                    this.dependencies.userCommand.execCommand(commandId, commandParams);
             }
             delete button.commandId;
             delete button.commandParams;
@@ -167,9 +168,9 @@ export class ToolbarPlugin extends Plugin {
     getToolbarInfo() {
         return {
             buttonGroups: this.buttonGroups,
-            getSelection: () => this.shared.getEditableSelection(),
+            getSelection: () => this.dependencies.selection.getEditableSelection(),
             state: this.state,
-            focusEditable: () => this.shared.focusEditable(),
+            focusEditable: () => this.dependencies.selection.focusEditable(),
         };
     }
 
@@ -179,7 +180,7 @@ export class ToolbarPlugin extends Plugin {
         }
     }
 
-    updateToolbar(selectionData = this.shared.getSelectionData()) {
+    updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
         this.updateToolbarVisibility(selectionData);
         if (this.overlay.isOpen || this.config.disableFloatingToolbar) {
             this.updateNamespace();
@@ -188,7 +189,7 @@ export class ToolbarPlugin extends Plugin {
     }
 
     getFilterTraverseNodes() {
-        return this.shared
+        return this.dependencies.selection
             .getTraversedNodes()
             .filter((node) => !isTextNode(node) || (node.textContent !== "\n" && !isZWS(node)));
     }

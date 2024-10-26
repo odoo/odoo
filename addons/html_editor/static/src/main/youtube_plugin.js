@@ -22,11 +22,11 @@ export class YoutubePlugin extends Plugin {
         // option of do we want to add a plugin whenever we want the feature?
         const youtubeUrl = !this.config.disableVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
         if (youtubeUrl) {
-            const restoreSavepoint = this.shared.makeSavePoint();
+            const restoreSavepoint = this.dependencies.history.makeSavePoint();
             // Open powerbox with commands to embed media or paste as link.
             // Insert URL as text, revert it later if a command is triggered.
-            this.shared.domInsert(text);
-            this.shared.addStep();
+            this.dependencies.dom.domInsert(text);
+            this.dependencies.history.addStep();
             // URL is a YouTube video.
             const embedVideoCommand = {
                 label: _t("Embed Youtube Video"),
@@ -34,12 +34,15 @@ export class YoutubePlugin extends Plugin {
                 icon: "fa-youtube-play",
                 run: async () => {
                     const videoElement = await this.getYoutubeVideoElement(youtubeUrl[0]);
-                    this.shared.domInsert(videoElement);
-                    this.shared.addStep();
+                    this.dependencies.dom.domInsert(videoElement);
+                    this.dependencies.history.addStep();
                 },
             };
-            const commands = [embedVideoCommand, this.shared.getPathAsUrlCommand(text, url)];
-            this.shared.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
+            const commands = [
+                embedVideoCommand,
+                this.dependencies.link.getPathAsUrlCommand(text, url),
+            ];
+            this.dependencies.powerbox.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
             return true;
         }
     }

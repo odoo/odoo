@@ -51,36 +51,36 @@ export class TabulationPlugin extends Plugin {
             return;
         }
 
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         if (selection.isCollapsed) {
             this.insertTab();
         } else {
-            const traversedBlocks = this.shared.getTraversedBlocks();
+            const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
             this.indentBlocks(traversedBlocks);
         }
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     handleShiftTab() {
         if (this.delegateTo("shift_tab_overrides")) {
             return;
         }
-        const traversedBlocks = this.shared.getTraversedBlocks();
+        const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
         this.outdentBlocks(traversedBlocks);
-        this.shared.addStep();
+        this.dependencies.history.addStep();
     }
 
     insertTab() {
-        this.shared.domInsert(parseHTML(this.document, tabHtml));
+        this.dependencies.dom.domInsert(parseHTML(this.document, tabHtml));
     }
 
     indentBlocks(blocks) {
-        const selectionToRestore = this.shared.getEditableSelection();
+        const selectionToRestore = this.dependencies.selection.getEditableSelection();
         const tab = parseHTML(this.document, tabHtml);
         for (const block of blocks) {
             block.prepend(tab.cloneNode(true));
         }
-        this.shared.setSelection(selectionToRestore, { normalize: false });
+        this.dependencies.selection.setSelection(selectionToRestore, { normalize: false });
     }
 
     outdentBlocks(blocks) {
@@ -94,7 +94,7 @@ export class TabulationPlugin extends Plugin {
     }
 
     removeTrailingZWS(tab) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
         const updateAnchor = anchorNode === tab.nextSibling;
         const updateFocus = focusNode === tab.nextSibling;
@@ -104,12 +104,12 @@ export class TabulationPlugin extends Plugin {
             tab.nextSibling.nodeType === Node.TEXT_NODE &&
             tab.nextSibling.textContent.startsWith("\u200B")
         ) {
-            this.shared.splitTextNode(tab.nextSibling, 1, DIRECTIONS.LEFT);
+            this.dependencies.split.splitTextNode(tab.nextSibling, 1, DIRECTIONS.LEFT);
             tab.nextSibling.remove();
             zwsRemoved++;
         }
         if (updateAnchor || updateFocus) {
-            this.shared.setSelection({
+            this.dependencies.selection.setSelection({
                 anchorNode: updateAnchor ? tab.nextSibling : anchorNode,
                 anchorOffset: updateAnchor ? Math.max(0, anchorOffset - zwsRemoved) : anchorOffset,
                 focusNode: updateFocus ? tab.nextSibling : focusNode,
@@ -189,8 +189,8 @@ export class TabulationPlugin extends Plugin {
         const nodeToDelete = endContainer.childNodes[endOffset - 1];
         if (isEditorTab(nodeToDelete)) {
             [endContainer, endOffset] = this.expandRangeToIncludeZWS(nodeToDelete);
-            range = this.shared.deleteRange({ ...range, endContainer, endOffset });
-            this.shared.setSelection({
+            range = this.dependencies.delete.deleteRange({ ...range, endContainer, endOffset });
+            this.dependencies.selection.setSelection({
                 anchorNode: range.startContainer,
                 anchorOffset: range.startOffset,
             });

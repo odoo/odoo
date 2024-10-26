@@ -38,7 +38,7 @@ export class ImageCropPlugin extends Plugin {
     }
 
     getSelectedImage() {
-        const selectedNodes = this.shared.getSelectedNodes();
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
         return selectedNodes.find((node) => node.tagName === "IMG");
     }
 
@@ -55,7 +55,7 @@ export class ImageCropPlugin extends Plugin {
         };
 
         const onSave = () => {
-            this.shared.addStep();
+            this.dependencies.history.addStep();
         };
 
         await loadBundle("html_editor.assets_image_cropper");

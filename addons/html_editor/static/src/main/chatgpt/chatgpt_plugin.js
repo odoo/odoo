@@ -34,7 +34,9 @@ export class ChatGPTPlugin extends Plugin {
                 Component: LanguageSelector,
                 props: {
                     onSelected: (language) => {
-                        this.shared.execCommand("openChatGPTDialog", { language });
+                        this.dependencies.userCommand.execCommand("openChatGPTDialog", {
+                            language,
+                        });
                     },
                 },
             },
@@ -56,11 +58,11 @@ export class ChatGPTPlugin extends Plugin {
     };
 
     openDialog(params = {}) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const dialogParams = {
             insert: (content) => {
-                const insertedNodes = this.shared.domInsert(content);
-                this.shared.addStep();
+                const insertedNodes = this.dependencies.dom.domInsert(content);
+                this.dependencies.history.addStep();
                 // Add a frame around the inserted content to highlight it for 2
                 // seconds.
                 const start = insertedNodes?.length && closestElement(insertedNodes[0]);
@@ -100,12 +102,12 @@ export class ChatGPTPlugin extends Plugin {
             ...params,
         };
         // collapse to end
-        const sanitize = this.shared.sanitize;
+        const sanitize = this.dependencies.sanitize.sanitize;
         if (selection.isCollapsed) {
-            this.shared.addDialog(ChatGPTPromptDialog, { ...dialogParams, sanitize });
+            this.dependencies.dialog.addDialog(ChatGPTPromptDialog, { ...dialogParams, sanitize });
         } else {
             const originalText = selection.textContent() || "";
-            this.shared.addDialog(
+            this.dependencies.dialog.addDialog(
                 params.language ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
                 { ...dialogParams, originalText, sanitize }
             );

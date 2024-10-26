@@ -29,7 +29,7 @@ export class QWebPlugin extends Plugin {
 
     setup() {
         this.editable.classList.add("odoo-editor-qweb");
-        this.picker = this.shared.createOverlay(QWebPicker, {
+        this.picker = this.dependencies.overlay.createOverlay(QWebPicker, {
             positionOptions: { position: "top-start" },
         });
         this.addDomListener(this.editable, "click", this.onClick);
@@ -64,7 +64,12 @@ export class QWebPlugin extends Plugin {
             // select the whole qweb node
             const [anchorNode, anchorOffset] = leftPos(qwebNode);
             const [focusNode, focusOffset] = rightPos(qwebNode);
-            this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+            this.dependencies.selection.setSelection({
+                anchorNode,
+                anchorOffset,
+                focusNode,
+                focusOffset,
+            });
         }
     }
 

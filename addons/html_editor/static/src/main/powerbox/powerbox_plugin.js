@@ -63,7 +63,7 @@ export class PowerboxPlugin extends Plugin {
 
     setup() {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.overlay = this.shared.createOverlay(Powerbox);
+        this.overlay = this.dependencies.overlay.createOverlay(Powerbox);
 
         this.state = reactive({});
         this.overlayProps = {
@@ -82,12 +82,12 @@ export class PowerboxPlugin extends Plugin {
         return this.defaultPowerboxItems;
     }
     getAvailablePowerboxItems() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         return this.defaultPowerboxItems.filter((cmd) => !cmd.isAvailable?.(selection.anchorNode));
     }
     makeDefaultPowerboxItems() {
         const powerboxItems = this.getResource("powerboxItems");
-        const userCommands = this.shared.getCommands();
+        const userCommands = this.dependencies.userCommand.getCommands();
         const categories = this.getResource("powerboxCategory");
         const categoryDict = Object.fromEntries(
             categories.map((category) => [category.id, category])
@@ -98,7 +98,8 @@ export class PowerboxPlugin extends Plugin {
                 ...userCommand,
                 ...item,
                 categoryName: categoryDict[item.category].name,
-                run: () => this.shared.execCommand(item.commandId, item.commandParams),
+                run: () =>
+                    this.dependencies.userCommand.execCommand(item.commandId, item.commandParams),
             };
         });
     }

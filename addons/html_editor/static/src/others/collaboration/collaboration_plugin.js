@@ -55,14 +55,14 @@ export class CollaborationPlugin extends Plugin {
         this.branchStepIds = [];
     }
     onHistoryReset() {
-        const firstStep = this.shared.getHistorySteps()[0];
+        const firstStep = this.dependencies.history.getHistorySteps()[0];
         this.snapshots = [{ step: firstStep }];
     }
     /**
      * @param {number} index
      */
     isReversibleStep(index) {
-        const steps = this.shared.getHistorySteps();
+        const steps = this.dependencies.history.getHistorySteps();
         const step = steps[index];
         return step && step.peerId === this.peerId;
     }
@@ -82,7 +82,7 @@ export class CollaborationPlugin extends Plugin {
      * Get all the history ids for the current history branch.
      */
     getBranchIds() {
-        const steps = this.shared.getHistorySteps();
+        const steps = this.dependencies.history.getHistorySteps();
         return [this.initialBranchStepId].concat(this.branchStepIds).concat(steps.map((s) => s.id));
     }
     /**
@@ -94,7 +94,7 @@ export class CollaborationPlugin extends Plugin {
     safeSetAttribute(node, attributeName, attributeValue) {
         const clone = this.document.createElement(node.tagName);
         clone.setAttribute(attributeName, attributeValue);
-        this.shared.sanitize(clone);
+        this.dependencies.sanitize.sanitize(clone);
         if (clone.hasAttribute(attributeName)) {
             node.setAttribute(attributeName, clone.getAttribute(attributeName));
         } else {
@@ -114,11 +114,11 @@ export class CollaborationPlugin extends Plugin {
         if (this.postProcessExternalStepsPromise) {
             this.externalStepsBuffer.push(...newSteps);
         }
-        this.shared.disableObserver();
-        const selectionData = this.shared.getSelectionData();
+        this.dependencies.history.disableObserver();
+        const selectionData = this.dependencies.selection.getSelectionData();
 
         let stepIndex = 0;
-        const steps = this.shared.getHistorySteps();
+        const steps = this.dependencies.history.getHistorySteps();
         for (const newStep of newSteps) {
             // todo: add a test that no 2 history_missing_parent_step_listeners
             // are called for in same stack.
@@ -126,7 +126,7 @@ export class CollaborationPlugin extends Plugin {
             if (typeof insertIndex === "undefined") {
                 continue;
             }
-            this.shared.addExternalStep(newStep, insertIndex);
+            this.dependencies.history.addExternalStep(newStep, insertIndex);
             stepIndex++;
 
             this.postProcessExternalSteps();
@@ -142,9 +142,9 @@ export class CollaborationPlugin extends Plugin {
             }
         }
 
-        this.shared.enableObserver();
+        this.dependencies.history.enableObserver();
         if (selectionData.documentSelectionIsInEditable) {
-            this.shared.rectifySelection(selectionData.editableSelection);
+            this.dependencies.selection.rectifySelection(selectionData.editableSelection);
         }
 
         this.dispatchTo("external_history_step_handlers");
@@ -226,7 +226,7 @@ export class CollaborationPlugin extends Plugin {
      * @param {string} [params.toStepId]
      */
     historyGetMissingSteps({ fromStepId, toStepId }) {
-        const steps = this.shared.getHistorySteps();
+        const steps = this.dependencies.history.getHistorySteps();
         const fromIndex = steps.findIndex((x) => x.id === fromStepId);
         const toIndex = toStepId ? steps.findIndex((x) => x.id === toStepId) : steps.length;
         if (fromIndex === -1 || toIndex === -1) {
@@ -236,7 +236,7 @@ export class CollaborationPlugin extends Plugin {
     }
 
     getSnapshotSteps() {
-        const historySteps = this.shared.getHistorySteps();
+        const historySteps = this.dependencies.history.getHistorySteps();
         // If the current snapshot has no time, it means that there is the no
         // other snapshot that have been made (either it is the one created upon
         // initialization or reseted by historyResetFromSteps).
@@ -266,12 +266,12 @@ export class CollaborationPlugin extends Plugin {
         this.initialBranchStepId = stepId;
     }
     resetFromSteps(steps, branchStepIds) {
-        this.shared.resetSelection();
-        this.shared.historyResetFromSteps(steps);
+        this.dependencies.selection.resetSelection();
+        this.dependencies.history.historyResetFromSteps(steps);
         this.snapshots = [{ step: steps[0] }];
         this.branchStepIds = branchStepIds;
         this.postProcessExternalSteps();
-        this.shared.enableObserver();
+        this.dependencies.history.enableObserver();
 
         // @todo @phoenix: test that the hint are proprely handeled
         // this._handleCommandHint();
@@ -290,10 +290,10 @@ export class CollaborationPlugin extends Plugin {
     }
 
     makeSnapshot() {
-        const historyLength = this.shared.getHistorySteps().length;
+        const historyLength = this.dependencies.history.getHistorySteps().length;
         if (!this.lastSnapshotLength || this.lastSnapshotLength < historyLength) {
             this.lastSnapshotLength = historyLength;
-            const step = this.shared.makeSnapshotStep();
+            const step = this.dependencies.history.makeSnapshotStep();
             const snapshot = {
                 time: Date.now(),
                 step: step,
