@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -61,7 +61,7 @@ msgstr "%(event_name)s - Inscription de %(attendee_name)s"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "du %(start_date)s au %(end_date)s"
 
 #. module: event
 #. odoo-python
@@ -80,6 +80,12 @@ msgstr "%(ticket_name)s (Épuisés)"
 #: code:addons/event/models/event_event.py:0
 msgid "%s (copy)"
 msgstr "%s (copie)"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
+msgid "'%(name)s' badge sent to printer '%(printer)s'"
+msgstr "'%(name)s' badge envoyé à l'imprimante '%(printer)s'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -174,12 +180,12 @@ msgstr "5-10"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
 msgid "96x134mm (Badge Printer)"
-msgstr ""
+msgstr "96x134 mm (Imprimante de badges)"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
 msgid "96x82mm (Badge Printer)"
-msgstr ""
+msgstr "96x82 mm (Imprimante de badges)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -350,7 +356,7 @@ msgstr "<i class=\"fa fa-ticket\" title=\"Type de ticket\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-2\" title=\"Date de fin\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2066,7 +2072,7 @@ msgstr "Participants"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Auto-Print"
-msgstr ""
+msgstr "Auto-impression"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -2082,12 +2088,12 @@ msgstr "Badge"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
 msgid "Badge (96x134mm)"
-msgstr ""
+msgstr "Badge (96x134 mm)"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
 msgid "Badge (96x82mm)"
-msgstr ""
+msgstr "Badge (96x82 mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -2349,12 +2355,6 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm"
-msgstr "Confirmer"
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
 msgstr "Confirmer la présence"
@@ -2368,7 +2368,7 @@ msgstr "Bouton de confirmation de présence"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "Confirmer la participation ?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -3450,7 +3450,7 @@ msgstr "Les 30 derniers jours"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "Dernier participant"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -3854,6 +3854,8 @@ msgstr "En ligne si non défini"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"Ouvrir le sélecteur de page de dates.<br/>Choisissez une date de début et de"
+" fin pour votre événement."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3973,12 +3975,6 @@ msgstr "Point de vente (PdV), introduction à la personnalisation de rapports."
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Print"
 msgstr "Imprimer"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
-msgid "Printing badge on %s..."
-msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4102,8 +4098,6 @@ msgid "Registration Date"
 msgstr "Date d'inscription"
 
 #. module: event
-#. odoo-python
-#: code:addons/event/controllers/main.py:0
 #: model:ir.actions.client,name:event.event_action_install_kiosk_pwa
 #: model:ir.ui.menu,name:event.menu_event_registration_desk
 #: model:res.groups,name:event.group_event_registration_desk
@@ -4242,12 +4236,6 @@ msgstr "Erreur d'envoi SMS"
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
-msgid "Scan a badge"
-msgstr "Scannez un badge"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
 msgstr "Scanner ou toucher"
 
@@ -4281,6 +4269,11 @@ msgid "Scheduled Time"
 msgstr "Heure prévue"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
+msgid "Scheduler Emails"
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you!"
 msgstr "Amateurs de hockey aguerris et curieux, ce tournoi est pour vous !"
@@ -4300,7 +4293,7 @@ msgstr "Sélectionnez un participant"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Select printer..."
-msgstr ""
+msgstr "Sélectionner l'imprimante..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4923,15 +4916,15 @@ msgstr ""
 " liées à vos événements."
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "Comprendre les modèles variés ;"
+
+#. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
 msgstr "Annuler"
-
-#. module: event
-#: model_terms:event.event,description:event.event_2
-msgid "Understand the various modules;"
-msgstr "Comprendre les modèles variés ;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -5295,9 +5288,3 @@ msgstr "demain"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr "{{ object.event_id.name }} : {{ object.event_date_range }}"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
-msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr "'%(name)s' badge envoyé à l'imprimante '%(printer)s'"

@@ -4,16 +4,16 @@
 # 
 # Translators:
 # gdp Odoo <gdp@odoo.com>, 2024
-# Wil Odoo, 2024
 # Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -366,7 +366,7 @@ msgid ""
 "status."
 msgstr ""
 "La meilleure façon de suivre vos congés payés, jours de maladies et autres "
-"demandes d'approbation. "
+"demandes de validation. "
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -376,7 +376,7 @@ msgid ""
 " status."
 msgstr ""
 "La meilleure façon de suivre vos demandes de congés, jours de maladie et "
-"autres demande d'approbations. "
+"autres demandes de validation. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -647,7 +647,7 @@ msgstr "Allocation"
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_approval
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 msgid "Allocation Approval"
-msgstr "Approbation d'allocation"
+msgstr "Validation d'allocation"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_display
@@ -700,7 +700,7 @@ msgstr "Demandes d'allocation"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approval"
-msgstr "Deuxième approbation d'allocation"
+msgstr "Deuxième validation d'allocation"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
@@ -716,8 +716,8 @@ msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to "
 "validate it."
 msgstr ""
-"L'allocation doit avoir le statut « À approuver » ou « Deuxième approbation "
-"» pour être validée."
+"L'allocation doit avoir le statut « À approuver » ou « Deuxième validation »"
+" pour être validée."
 
 #. module: hr_holidays
 #. odoo-python
@@ -745,8 +745,8 @@ msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
 msgstr ""
-"La demande d'allocation doit être en statut confirmé, deuxième approbation "
-"ou validé pour qu'elle puisse être refusée."
+"La demande d'allocation doit être en statut confirmé, deuxième validation ou"
+" validé pour qu'elle puisse être refusée."
 
 #. module: hr_holidays
 #. odoo-python
@@ -830,7 +830,7 @@ msgstr "Analyse des évaluations"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_validation_type
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Approval"
-msgstr "Approbation"
+msgstr "Validation"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1211,7 +1211,7 @@ msgstr "Mois de report"
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_employee.py:0
+#: code:addons/hr_holidays/models/hr_employee_base.py:0
 msgid ""
 "Changing this working schedule results in the affected employee(s) not "
 "having enough leaves allocated to accomodate for their leaves already taken "
@@ -1773,7 +1773,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "First Approval"
-msgstr "Première approbation"
+msgstr "Première validation"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__first_day
@@ -1912,7 +1912,7 @@ msgstr "Congés de groupe"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_approval
 msgid "HR Approval"
-msgstr "Approbation RH"
+msgstr "Validation RH"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
@@ -2275,7 +2275,7 @@ msgstr "Manager"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_manager_approval
 msgid "Manager Approval"
-msgstr "Approbation du manager"
+msgstr "Validation du manager"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_mandatory_day
@@ -2324,8 +2324,8 @@ msgid ""
 "Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
 "Approval"
 msgstr ""
-"Maximum de congés autorisés - Congés déjà pris - Congés en attente "
-"d'approbation"
+"Maximum de congés autorisés - Congés déjà pris - Congés en attente de "
+"validation"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
@@ -2786,7 +2786,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_employee.py:0
+#: code:addons/hr_holidays/models/hr_employee_base.py:0
 msgid "Operation not supported"
 msgstr "Opération non prise en charge"
 
@@ -3099,7 +3099,7 @@ msgstr "Rechercher des allocations"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Second Approval"
-msgstr "Deuxième approbation"
+msgstr "Deuxième validation"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_day
@@ -3130,13 +3130,13 @@ msgstr "Visualisation du second jour du mois"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Second approval request for %(allocation_type)s"
-msgstr "Deuxième demande d'approbation pour %(allocation_type)s"
+msgstr "Deuxième demande de validation pour %(allocation_type)s"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Second approval request for %(leave_type)s"
-msgstr "Deuxième demande d'approbation pour %(leave_type)s"
+msgstr "Deuxième demande de validation pour %(leave_type)s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3158,7 +3158,7 @@ msgid ""
 "            #     - Approved by Time Off Officer: The employee's request need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
-"Sélectionner le niveau d'approbation en cas de demande par un employé\n"
+"Sélectionner le niveau de validation en cas de demande par un employé\n"
 "            #     - Aucune validation nécessaire : la demande de l'employé est automatiquement approuvée.\n"
 "            #     - Approuvé par le responsable de la gestion des congés : la demande de l'employé doit être approuvée manuellement.\n"
 "            #       par le responsable des congés, l'approbateur de l'employé ou les deux."
@@ -3179,8 +3179,8 @@ msgid ""
 "Select the user responsible for approving \"Time Off\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
-"Sélectionnez l'utilisateur responsable de l'approbation des congés de cet employé.\n"
-"Si vide, l'approbation est faite par un Administrateur ou un Approbateur (déterminé dans les paramètres/utilisateurs)."
+"Sélectionnez l'utilisateur responsable de la validation des congés de cet employé.\n"
+"Si vide, la validation est faite par un Administrateur ou un Approbateur (déterminé dans les paramètres/utilisateurs)."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__sep
@@ -3711,7 +3711,7 @@ msgstr "Analyse des congés"
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 msgid "Time Off Approval"
-msgstr "Approbation des congés"
+msgstr "Validation des congés"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_tree_inherit_leave
@@ -4190,7 +4190,7 @@ msgstr "Congés restants virtuels"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__confirm
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__confirm
 msgid "Waiting Approval"
-msgstr "En attente d'approbation"
+msgstr "En attente de validation"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4203,12 +4203,12 @@ msgstr "En attente de ma signature"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate1
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate1
 msgid "Waiting Second Approval"
-msgstr "En attente d'une deuxième approbation"
+msgstr "En attente d'une deuxième validation"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Waiting for Approval"
-msgstr "En attente d'approbation"
+msgstr "En attente de validation"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__website_message_ids
@@ -4437,7 +4437,7 @@ msgstr ""
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
 msgstr ""
-"Vous n'avez pas les droits de réaliser une deuxième approbation sur une "
+"Vous n'avez pas les droits de réaliser une deuxième validation sur une "
 "demande de congé"
 
 #. module: hr_holidays
@@ -4529,8 +4529,8 @@ msgstr "après le date du début de l'allocation"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
-msgid "all - Valid for"
-msgstr ""
+msgid "all"
+msgstr "tous"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form

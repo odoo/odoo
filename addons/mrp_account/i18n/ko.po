@@ -90,7 +90,7 @@ msgstr "<span>단위</span>"
 #. module: mrp_account
 #: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
 msgid "A single line cannot be both credit and debit."
-msgstr ""
+msgstr "한 줄에 대변과 차변 값을 모두 포함할 수 없습니다."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
@@ -105,7 +105,7 @@ msgstr "계정 이동 항목"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
-msgstr ""
+msgstr "WIP 계정 이동을 게시할 때 생성되는 계정 이동 항목"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -324,7 +324,7 @@ msgstr "제조 주문 수"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr ""
+msgstr "제조 WIP - %(orders_list)s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
@@ -341,12 +341,12 @@ msgstr "제조 주문서 분석 계정 내역"
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid ""
 "Please make sure the total credit amount equals the total debit amount."
-msgstr ""
+msgstr "총 크레딧 금액이 총 차변 금액과 일치하는지 확인합니다."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post Manufacturing WIP"
-msgstr ""
+msgstr "제조 후 WIP"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -356,7 +356,7 @@ msgstr "포스트 WIP"
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
 msgid "Post WIP Accounting Entry"
-msgstr ""
+msgstr "WIP 후 계정 항목 입력"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -397,7 +397,7 @@ msgstr "참조"
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
 msgid "Relevant WIP MOs"
-msgstr ""
+msgstr "관련 WIP MO"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
@@ -408,7 +408,7 @@ msgstr "역분개 기준일"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Reversal date must be after the posting date."
-msgstr ""
+msgstr "취소 날짜는 게시 날짜 이후여야 합니다."
 
 #. module: mrp_account
 #. odoo-python
@@ -432,7 +432,7 @@ msgstr "재고 이동"
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
-msgstr ""
+msgstr "이 WIP 항목과 관련된 MO입니다. 이는 WIP 항목을 생성할 때 정의해야 합니다."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
@@ -470,19 +470,19 @@ msgstr "단위"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Component Value"
-msgstr ""
+msgstr "WIP - 구성 요소 값"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Overhead"
-msgstr ""
+msgstr "WIP - 간접 비용"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
 msgid "WIP MOs of %s"
-msgstr ""
+msgstr "WIP MO의 %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -492,12 +492,12 @@ msgstr "WIP 보고서"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
 msgid "WIP accounting lines"
-msgstr ""
+msgstr "WIP 회계 항목"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
 msgid "WIP accounting wizard"
-msgstr ""
+msgstr "WIP 회계 마법사"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
@@ -512,7 +512,7 @@ msgstr "Wc 분석 계정 내역"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP account move"
-msgstr ""
+msgstr "제조 WIP 계정 이동 게시 마법사"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter

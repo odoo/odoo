@@ -138,12 +138,12 @@ msgstr "<small><b>ĐỌC</b></small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Địa chỉ IP</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Email đã gửi</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -297,6 +297,8 @@ msgstr "Tác vụ cần thiết"
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
 msgstr ""
+"Kích hoạt chế độ Làm việc từ xa để cho phép Nhân viên chỉ định nơi họ làm "
+"việc."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -463,7 +465,7 @@ msgstr "Ứng tuyển"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
 msgid "Apprenticeship"
-msgstr ""
+msgstr "Học nghề"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -692,6 +694,8 @@ msgid ""
 "Categorize your Employees by type. This field also has an impact on "
 "contracts. Only Employees, Students and Trainee will have contract history."
 msgstr ""
+"Phân loại Nhân viên của bạn theo hình thức. Trường này cũng có tác động đến "
+"hợp đồng. Chỉ Nhân viên, Sinh viên và Thực tập sinh mới có lịch sử hợp đồng."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -1014,11 +1018,14 @@ msgid ""
 "Define the allowed IP to be displayed as Present. In case of multiple "
 "addresses, separate them by a coma."
 msgstr ""
+"Xác định IP được phép hiển thị là Hiện tại. Trong trường hợp có nhiều địa "
+"chỉ, hãy phân tách chúng bằng dấu phẩy."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Define the minimum number of sent emails to be displayed as Present."
 msgstr ""
+"Xác định số lượng email đã gửi tối thiểu sẽ được hiển thị là Hiện tại."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -1027,6 +1034,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"Xác định lịch trình làm việc của nhân lực. Nếu không thiết lập, nhân lực sẽ "
+"có giờ làm việc hoàn toàn linh hoạt."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_ceo
@@ -1208,6 +1217,11 @@ msgid ""
 "                            Several activities are often organized all over the year, such as weekly\n"
 "                            sports sessions, team building events, monthly drink, and much more."
 msgstr ""
+"Mỗi nhân viên đều có cơ hội thấy được tầm ảnh hưởng từ công việc của mình.\n"
+"                        Bạn có thể tạo ra những đóng góp thiết thực cho sự thành công của công ty.\n"
+"                        <br>\n"
+"                        Khá nhiều hoạt động được thường xuyên tổ chức trong năm, ví dụ như chơi\n"
+"                        thể thao hàng tuần, sự kiện team building, đồ uống hàng tháng, và hơn thế nữa."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1609,7 +1623,7 @@ msgstr "Thiết lập nhân lực"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__has_department_manager_access
 msgid "Has Department Manager Access"
-msgstr ""
+msgstr "Có quyền truy cập cấp trưởng phòng"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
@@ -1666,7 +1680,7 @@ msgstr "Hiển thị biểu tượng nhân sự"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_manager_department_report
 msgid "Hr Manager Department Report"
-msgstr ""
+msgstr "Báo cáo phòng nhân sự"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1811,14 +1825,14 @@ msgstr "Tạm thời"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Intern"
-msgstr ""
+msgstr "Thực tập sinh"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_flexible
 msgid "Is Flexible"
-msgstr ""
+msgstr "Linh hoạt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -1832,7 +1846,7 @@ msgstr "Là người theo dõi"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_fully_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_fully_flexible
 msgid "Is Fully Flexible"
-msgstr ""
+msgstr "Hoàn toàn linh hoạt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
@@ -2228,7 +2242,7 @@ msgstr "Nếu có là lợi thế"
 #: code:addons/hr/static/src/views/hr_graph_controller.xml:0
 #: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
 msgid "No Data"
-msgstr ""
+msgstr "Không có dữ liệu"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
@@ -2347,6 +2361,10 @@ msgid ""
 "that loop is linked to a user.                        Please double-check "
 "that everyone reports to the correct manager."
 msgstr ""
+"Ôi! Có vẻ như có vấn đề với cấu trúc bộ phận của bạn. Chúng tôi đã tìm thấy "
+"một vòng lặp báo cáo tuần hoàn và không ai trong vòng lặp đó được liên kết "
+"với một người dùng nào. Hãy kiểm tra lại xem nhân viên có báo cáo cho đúng "
+"quản lý hay không."
 
 #. module: hr
 #. odoo-javascript
@@ -2385,7 +2403,7 @@ msgstr "Sản phẩm"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "Out of Working Hours"
-msgstr ""
+msgstr "Ngoài giờ làm việc"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
@@ -2395,7 +2413,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Out of Working hours"
-msgstr ""
+msgstr "Ngoài giờ làm việc"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -2583,12 +2601,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Condition"
-msgstr ""
+msgstr "Điều kiện hiện diện"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Display"
-msgstr ""
+msgstr "Hiển thị sự hiện diện"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -3061,7 +3079,7 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_statutaire
 msgid "Statutory"
-msgstr ""
+msgstr "Biên chế"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3093,6 +3111,8 @@ msgid ""
 "Structure Employees per department and have an overview of e.g.\n"
 "                    expenses, timesheets, time off, recruitment, etc."
 msgstr ""
+"Cấu trúc Nhân viên theo từng phòng ban và có cái nhìn tổng quan về các khía cạnh\n"
+"chẳng hạn như chi phí, bảng chấm công, nghỉ phép, tuyển dụng,..."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_student
@@ -3195,7 +3215,7 @@ msgstr "Mã PIN phải là một dãy số."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
-msgstr ""
+msgstr "Giờ làm việc mặc định được thiết lập trong cấu hình."
 
 #. module: hr
 #. odoo-python
@@ -3264,7 +3284,7 @@ msgstr "Giấy phép lao động của %(employee)s hết hạn vào %(date)s."
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "Luận văn"
 
 #. module: hr
 #. odoo-python
@@ -3289,11 +3309,13 @@ msgid ""
 "This report gives you an overview of your employees based on the measures of"
 " your choice."
 msgstr ""
+"Báo cáo này cung cấp cho bạn cái nhìn tổng quan về nhân viên dựa trên các "
+"phương pháp bạn lựa chọn."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
-msgstr ""
+msgstr "Khối thiết lập này được sử dụng để quản lý thiết kế frontend."
 
 #. module: hr
 #. odoo-python
@@ -3313,7 +3335,7 @@ msgstr "Múi giờ"
 #: model:digest.tip,name:hr.digest_tip_hr_0
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid "Tip: Where's Bryan?"
-msgstr ""
+msgstr "Mẹo: Bryan ở đâu?"
 
 #. module: hr
 #. odoo-python
@@ -3730,7 +3752,7 @@ msgstr "phòng ban"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
-msgstr ""
+msgstr "VD: Toà 2, Từ xa,..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3746,7 +3768,7 @@ msgstr "vd Quản lý bán hàng"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Summarize the position in one or two lines..."
-msgstr ""
+msgstr "VD: Tóm tắt về vị trí trong một hoặc hai dòng..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form

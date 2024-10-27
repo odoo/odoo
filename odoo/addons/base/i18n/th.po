@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Ped, 2024
-# Wil Odoo, 2024
-# Rasareeyar Lappiam, 2024
 # Tana Chan, 2024
+# Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 12:54+0000\n"
+"POT-Creation-Date: 2024-10-25 14:42+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tana Chan, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1854,6 +1854,9 @@ msgstr ""
 msgid ""
 "\n"
 "Accounting reports for Türkiye\n"
+"\n"
+"- Balance Sheet\n"
+"- Profit and Loss\n"
 msgstr ""
 
 #. module: base
@@ -2510,6 +2513,10 @@ msgid ""
 "When generating the PDF on the order, the PDF will be embedded inside the xml for all UBL formats. This allows the\n"
 "receiver to retrieve the PDF with only the xml file.\n"
 msgstr ""
+"\n"
+"อนุญาตให้ส่งออกและนำเข้ารูปแบบ: UBL Bis 3\n"
+"เมื่อสร้าง PDF ตามคำสั่งซื้อ PDF จะถูกฝังไว้ใน xml สำหรับรูปแบบ UBL ทั้งหมด วิธีนี้ช่วยให้\n"
+"ผู้รับสามารถเรียกค้น PDF โดยใช้ไฟล์ xml เท่านั้น\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -4570,6 +4577,14 @@ msgid ""
 "\n"
 "Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
 msgstr ""
+"\n"
+"การประยุกต์ใช้ของ EDI สำหรับประเทศเอกวาดอร์\n"
+"===========================\n"
+"เพิ่มเอกสารอิเล็กทรอนิกส์พร้อมกับ XML, RIDE, ลายเซ็นอิเล็กทรอนิกส์และการเชื่อมต่อโดยตรงกับหน่วยงานภาษี SRI\n"
+"\n"
+"เอกสารที่รองรับคือใบแจ้งหนี้, ใบลดหนี้, ใบเพิ่มหนี้, การจัดซื้อการชำระบัญชี การขอคืนเงินการซื้อ และการถือคืน\n"
+"\n"
+"รวมถึงการอัตโนมัติเพื่อคาดการณ์ภาษีหัก ณ ที่จ่ายที่จะถูกนำไปใช้กับใบแจ้งหนี้การซื้อแต่ละรายการได้อย่างง่ายดาย\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -4615,6 +4630,14 @@ msgstr ""
 "คุณยังสามารถส่งโดยตรงไปยัง Digiflow หากคุณซื้อบัญชีจากพวกเขาและแม้กระทั่งไปยัง SUNAT ในกรณีฉุกเฉิน\n"
 "\n"
 "เราสนับสนุนการส่งและยกเลิกใบแจ้งหนี้ของลูกค้า\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_nz_eft
+msgid ""
+"\n"
+"EFT Batch Payment\n"
+"=================\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -4809,6 +4832,13 @@ msgid ""
 "When uploading or pasting Files in order list view with order related data inside XML file or PDF\n"
 "File with embedded xml data will allow seller to retrieve Order data from Files.\n"
 msgstr ""
+"\n"
+"โมดูลการสั่งซื้อทางอิเล็กทรอนิกส์\n"
+"===========================\n"
+"\n"
+"อนุญาตให้นำเข้ารูปแบบ: UBL Bis 3.\n"
+"เมื่ออัปโหลดหรือวางไฟล์ในมุมมองรายการคำสั่งซื้อพร้อมข้อมูลที่เกี่ยวข้องกับคำสั่งซื้อภายในไฟล์ XML หรือ PDF\n"
+"ไฟล์ที่มีข้อมูล XML ที่ฝังไว้จะช่วยให้ผู้ขายดึงข้อมูลคำสั่งซื้อจากไฟล์ได้\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_reports_stock
@@ -5052,6 +5082,17 @@ msgid ""
 "============================================================================================================\n"
 "\n"
 msgstr ""
+"\n"
+"กฎบัญชีเงินเดือนของประเทศฝรั่งเศส\n"
+"=====================\n"
+"\n"
+"    - การกำหนดค่าของ hr_payroll สำหรับการประยุกต์ใช้สำหรับประเทศฝรั่งเศส\n"
+"    - กฎเกณฑ์การจ่ายเงินสมทบหลักทั้งหมดสำหรับสลิปเงินเดือนของประเทศฝรั่งเศส ทั้งสำหรับ 'cadre' และ 'non-cadre'\n"
+"    - รายงานสลิปเงินเดือนใหม่\n"
+"\n"
+"โมดูลนี้ไม่ได้จัดทำโดยทีมบัญชีเงินเดือน R&D เราไม่สามารถรับประกันความถูกต้องของข้อมูลที่มีอยู่ในโมดูลนี้ได้\n"
+"============================================================================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp_workorder_quality
@@ -5273,10 +5314,10 @@ msgid ""
 "* Partners example for the different responsibility types:\n"
 "\n"
 "  * ADHOC (IVA Responsable Inscripto)\n"
-"  * Consejo Municipal Rosario (IVA Sujeto Exento)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
 "  * Gritti (Monotributo)\n"
-"  * Cerro Castor. IVA Liberado in Zona Franca\n"
-"  * Expresso (Cliente del Exterior)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
 "  * Odoo (Proveedor del Exterior)\n"
 "\n"
 "Highlights:\n"
@@ -5310,67 +5351,6 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
-"\n"
-"ฟังก์ชั่น\n"
-"----------\n"
-"\n"
-"โมดูลนี้เพิ่มฟีเจอร์ทางบัญชีสำหรับการประยุกต์ใช้ในประเทศอาร์เจนตินา ซึ่งแสดงถึงการกำหนดค่าขั้นต่ำที่จำเป็นสำหรับบริษัทในการดำเนินธุรกิจในประเทศอาร์เจนตินา และภายใต้ข้อบังคับและแนวปฏิบัติ AFIP (Administración Federal de Ingresos Públicos)\n"
-"\n"
-"ทำตามขั้นตอนการกำหนดค่าถัดไปสำหรับการผลิต:\n"
-"\n"
-"1. ไปที่บริษัทของคุณและกำหนดค่าหมายเลข VAT และประเภทความรับผิดชอบ AFIP\n"
-"2. ไปที่ระบบบัญชี / การตั้งค่า และตั้งค่าผังบัญชีที่คุณต้องการใช้\n"
-"3. สร้างบันทึกการขายของคุณโดยคำนึงถึงข้อมูล AFIP POS\n"
-"\n"
-"ข้อมูลสาธิตสำหรับการทดสอบ:\n"
-"\n"
-"* มีการสร้างบริษัท 3 แห่ง หนึ่งแห่งสำหรับประเภทความรับผิดชอบ AFIP แต่ละประเภทพร้อมผังบัญชีที่ติดตั้งตามลำดับ เลือกบริษัทที่ซ่อมคุณเพื่อทำการทดสอบ:\n"
-"\n"
-"  * (AR) Responsable Inscripto\n"
-"  * (AR) Exento\n"
-"  * (AR) Monotributo\n"
-"\n"
-"* สมุดรายการขายวันที่กำหนดค่าเป็นใบแจ้งหนี้ที่พิมพ์ล่วงหน้าและ Expo ในทุกบริษัท\n"
-"* ตัวอย่างใบแจ้งหนี้และเอกสารอื่นๆ ที่ได้รับการตรวจสอบแล้วในบริษัท “(AR) Responsable Inscripto”\n"
-"* ตัวอย่างพาร์ทเนอร์สำหรับประเภทความรับผิดชอบที่แตกต่างกัน:\n"
-"\n"
-"  * ADHOC (IVA Responsable Inscripto)\n"
-"  * Consejo Municipal Rosario (IVA Sujeto Exento)\n"
-"  * Gritti (Monotributo)\n"
-"  * Cerro Castor. IVA Liberado in Zona Franca\n"
-"  * Expresso (Cliente del Exterior)\n"
-"  * Odoo (Proveedor del Exterior)\n"
-"\n"
-"ไฮไลท์:\n"
-"\n"
-"* ผังบัญชีจะไม่ได้รับการติดตั้งโดยอัตโนมัติ เทมเพลต CoA แต่ละรายการขึ้นอยู่กับความรับผิดชอบของ AFIP ของบริษัท คุณจะต้องติดตั้ง CoA ตามความต้องการของคุณ\n"
-"* จะไม่มีการสร้างสมุดรายวันการขายเมื่อติดตั้ง CoA คุณจะต้องกำหนดค่าสมุดรายวันของคุณด้วยตนเอง\n"
-"* ชนิดเอกสารจะถูกเลือกล่วงหน้าอย่างถูกต้องเมื่อสร้างใบแจ้งหนี้ ขึ้นอยู่กับความรับผิดชอบทางการเงินของผู้ออกและผู้รับเอกสารและสมุดรายวันที่เกี่ยวข้อง\n"
-"* เพิ่มประเภทบัญชี CBU และการตรวจสอบ CBU แล้ว\n"
-"\n"
-"\n"
-"ทางเทคนิค\n"
-"---------\n"
-"\n"
-"โมดูลนี้เพิ่มทั้งแบบจำลองและฟิลด์ที่จะใช้สำหรับโมดูลใบแจ้งหนี้อิเล็กทรอนิกส์ในที่สุด นี่คือบทสรุปของฟีเจอร์หลัก:\n"
-"\n"
-"ข้อมูลหลัก:\n"
-"\n"
-"* ผังบัญชี: หนึ่งรายการสำหรับความรับผิดชอบ AFIP แต่ละรายการที่เกี่ยวข้องกับนิติบุคคล:\n"
-"\n"
-"  * Responsable Inscripto (RI)\n"
-"  * Exento (EX)\n"
-"  * Monotributo (Mono)\n"
-"\n"
-"* ภาษีสำหรับประเทศอาร์เจนตินาและกลุ่มภาษีทางบัญชี (ภาษี VAT ที่มีส่วนจัดสรรที่มีอยู่และประเภทอื่นๆ)\n"
-"* ประเภทความรับผิดชอบของ AFIP\n"
-"* สถานะทางการเงิน (เพื่อจัดทำแผนที่ภาษี)\n"
-"* ประเภทเอกสารทางกฎหมายในประเทศอาร์เจนตินา\n"
-"* ประเภทการระบุตัวตนที่ถูกต้องในประเทศอาร์เจนตินา\n"
-"* รหัส AFIP ของประเทศและรหัส VAT ของประเทศสำหรับนิติบุคคล บุคคลธรรมดา และอื่นๆ\n"
-"* รหัส AFIP สกุลเงิน\n"
-"* หน่วยวัดรหัส AFIP\n"
-"* พาร์ทเนอร์: Consumidor Final และ AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -6883,6 +6863,13 @@ msgstr ""
 ".. _SAT: http://www.sat.gob.mx/\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_es_reports_2024
+msgid ""
+"\n"
+"Modelo 303: Extra fields regarding Rectificación\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
 msgid ""
 "\n"
@@ -8327,18 +8314,9 @@ msgid ""
 "    * Defines tax templates\n"
 "    * Defines fiscal positions for spanish fiscal legislation\n"
 "    * Defines tax reports mod 111, 115 and 303\n"
+"\n"
+"5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
-"\n"
-"ผังบัญชีของประเทศสเปน (PGCE 2008).\n"
-"========================================\n"
-"\n"
-"    * กำหนดเทมเพลตสมุดบัญชีทั่วไปของประเทศสเปน 2008\n"
-"    * กำหนดเทมเพลตสมุดบัญชีทั่วไปของประเทศสเปน 2008 สำหรับ บริษัท ขนาดเล็กและกลาง\n"
-"    * กำหนดเทมเพลตสมุดบัญชีทั่วไปของประเทศสเปน 2008 สำหรับ สมาคม\n"
-"    * กำหนดเทมเพลตสำหรับภาษีการขายและซื้อ\n"
-"    * กำหนดเทมเพลตภาษี\n"
-"    * กำหนดตำแหน่งภาษีสำหรับกฎหมายภาษีของประเทศสเปน\n"
-"    * กำหนดรายงานภาษี mod 111, 115 และ 303\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -8396,6 +8374,13 @@ msgstr ""
 "\n"
 "Add-on นี้ช่วยให้ผู้ใช้สามารถแสดงแบบฟอร์มเว็บไซต์ทั้งหมดที่เชื่อมโยงกับโมเดลที่กำหนดได้ นอกจากนี้คุณยังสามารถสร้างแบบฟอร์มเว็บไซต์ใหม่หรือแก้ไขแบบฟอร์มที่มีอยู่ได้\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_withholding_payment
+msgid ""
+"\n"
+"Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_withholding
@@ -8529,6 +8514,13 @@ msgstr ""
 "ไฟล์การตรวจสอบมาตรฐานสำหรับประเทศออสเตรียสำหรับภาษี (SAF-T) เป็นรูปแบบไฟล์มาตรฐานสำหรับการส่งออกข้อมูลธุรกรรมทางบัญชีประเภทต่างๆ โดยใช้รูปแบบ XML\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_anz_ubl_pint
+msgid ""
+"\n"
+"The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
 msgid ""
 "\n"
@@ -8542,6 +8534,13 @@ msgstr ""
 msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Malaysia is based on the Peppol International (PINT) model for Billing.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sg_ubl_pint
+msgid ""
+"\n"
+"The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
 
 #. module: base
@@ -9090,6 +9089,18 @@ msgstr ""
 "และสกุลเงินเลมปิรา"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_iq
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Iraq in Odoo.\n"
+"==============================================================================\n"
+"Iraq accounting basic charts and localization.\n"
+"Activates:\n"
+"- Chart of accounts\n"
+"- Taxes\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
 msgid ""
 "\n"
@@ -9205,6 +9216,22 @@ msgstr ""
 "\n"
 "นี่คือโมดูลพื้นฐานในการจัดการแผนภูมิการบัญชีสำหรับไต้หวันใน Odoo\n"
 "==============================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tr
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Türkiye in Odoo\n"
+"==========================================================================\n"
+"\n"
+"Türkiye accounting basic charts and localizations\n"
+"-------------------------------------------------\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mu_account
@@ -10013,6 +10040,11 @@ msgid ""
 "This is typically useful after some legal changes were done on the tax report,\n"
 "requiring a new tax configuration.\n"
 msgstr ""
+"\n"
+"โมดูลนี้ช่วยให้สามารถอัปเดตกริดภาษีของรายการบัญชีที่มีอยู่ได้\n"
+"ในโหมดดีบัก ปุ่มสำหรับอัปเดตกริดภาษีของรายการของคุณจะพร้อมใช้งานใน\n"
+"การตั้งค่าบัญชี\n"
+"โดยปกติแล้ว ปุ่มนี้จะมีประโยชน์หลังจากมีการเปลี่ยนแปลงทางกฎหมายบางอย่างในรายงานภาษี ซึ่งต้องมีการกำหนดค่าภาษีใหม่\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_landed_costs
@@ -10804,6 +10836,20 @@ msgstr ""
 "เราขอขอบคุณเป็นพิเศษสำหรับ Plementus <info@plementus.com> สำหรับความช่วยเหลือในการพัฒนาโมดูลนี้\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_swiggy
+msgid ""
+"\n"
+"This module integrates with UrbanPiper to receive and manage orders from Swiggy.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
+msgid ""
+"\n"
+"This module integrates with UrbanPiper to receive and manage orders from Uber Eats.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_zomato
 msgid ""
 "\n"
@@ -11150,6 +11196,15 @@ msgstr ""
 "การสร้างลูกค้าเป้าหมายอัตโนมัติ, การรองรับแบบออนไลน์อย่างเต็มรูปแบบ ...\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_event_full_enterprise
+msgid ""
+"\n"
+"This module will test the main event flows of Odoo, both frontend and backend.\n"
+"It installs sale capabilities, front-end flow, eCommerce, questions and\n"
+"automatic lead generation, full Online support, sms and whatsapp support, ...\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
 msgid ""
 "\n"
@@ -11254,27 +11309,6 @@ msgstr ""
 "ภาษาที่ผู้ใช้พยายามแปลจะต้องเปิดใช้งานในโปรเจ็กต์ Transifex\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_tr_hr_payroll
-msgid ""
-"\n"
-"Türkiye Payroll and Tax Rules\n"
-"============================\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_tr
-msgid ""
-"\n"
-"Turkish charts of accounts\n"
-"========================================\n"
-"    * Defines the default chart of accounts\n"
-"    * Defines the default taxes\n"
-"    * Defines default tax report\n"
-"\n"
-"This was done in collaboration with Broadmax Partner in Türkiye.\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_auth_totp
 msgid ""
 "\n"
@@ -11303,6 +11337,17 @@ msgstr ""
 "\n"
 "หมายเหตุ: ตามหลักการ การยืนยันตัวตนแบบ 2 ขั้นตอนจะป้องกันการเข้าถึง RPC ที่ใช้รหัสผ่านสำหรับผู้ใช้\n"
 "ที่เปิดใช้งาน ในการสามารถดำเนินการสคริปต์ RPC ผู้ใช้สามารถตั้งค่าคีย์ API เพื่อแทนที่รหัสผ่านหลักของพวกเขาได้\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tr_hr_payroll
+msgid ""
+"\n"
+"Türkiye Payroll and Tax Rules\n"
+"=============================\n"
+"- Social Security Premium/Insurance calculations for employment and unemployment\n"
+"- Income tax calculations\n"
+"- Stamp tax deductions\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -11868,6 +11913,47 @@ msgstr "%y - ปีลงท้าย คศ [00,99].\""
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
 msgid "&amp; Close"
 msgstr "&amp; ปิด"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be a valid Property value for field "
+"'%%(field)s'. Each property need at least 'name', 'type' and 'string' "
+"attribute."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be a valid Selection value for "
+"'%(label_property)s' (subfield of '%%(field)s' field)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
+"(subfield of '%%(field)s' field)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be an float for field '%(label_property)s' "
+"property (subfield of '%%(field)s' field)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be an integer for field '%(label_property)s' "
+"property (subfield of '%%(field)s' field)."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -16681,6 +16767,11 @@ msgid "Australia"
 msgstr "ออสเตรเลีย"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_anz_ubl_pint
+msgid "Australia & New Zealand - UBL PINT"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australia - Accounting"
 msgstr "ประเทศออสเตรเลีย - ระบบบัญชี"
@@ -16848,7 +16939,7 @@ msgstr "แผนภูมิและภาษีมาตรฐานของ
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__auth_method
 msgid "Auth Method"
-msgstr ""
+msgstr "วิธีการยืนยันตัวตน"
 
 #. module: base
 #. odoo-python
@@ -17854,6 +17945,11 @@ msgstr "ตัวเชื่อมต่อระหว่างการขา
 #: model:ir.module.module,summary:base.module_stock_accountant
 msgid "Bridge between Stock and Accounting"
 msgstr "ตัวเชื่อมต่อระหว่างสินค้าคงคลังและระบบบัญชี"
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_subscription_timesheet
+msgid "Bridge created to add computation of timesheet to subscription"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account_asset
@@ -21808,6 +21904,11 @@ msgid "EET"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nz_eft
+msgid "EFT Batch Payment"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
 msgstr "ไดรเวอร์ฮาร์ดแวร์ ESC/POS"
@@ -22980,6 +23081,11 @@ msgid "Event Social"
 msgstr "กิจกรรมโซเชียล"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_event_full_enterprise
+msgid "Event Test (all modules)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
 msgid "Event: manage sponsors and exhibitors"
 msgstr "กิจกรรม: จัดการผู้สนับสนุนและผู้แสดงสินค้า"
@@ -23253,6 +23359,11 @@ msgstr "ส่งออกการชำระเงินเป็นไฟล
 #: model:ir.module.module,summary:base.module_l10n_ca_payment_cpa005
 msgid "Export payments as CPA 005 AFT files"
 msgstr "ส่งออกการชำระเงินเป็นไฟล์ CPA 005 AFT"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_nz_eft
+msgid "Export payments as EFT files"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_payment_nacha
@@ -26256,6 +26367,11 @@ msgid "Indian - Stock Report(GST)"
 msgstr "ประเทศอินเดีย - รายงานสินค้าคงคลัง (GST)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_withholding_payment
+msgid "Indian - TDS For Payment"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_tds_tcs
 msgid "Indian - TDS TCS Reports"
 msgstr ""
@@ -27018,6 +27134,11 @@ msgstr "อิหร่าน"
 #: model:res.country,name:base.iq
 msgid "Iraq"
 msgstr "อิรัก"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_iq
+msgid "Iraq - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -28271,6 +28392,7 @@ msgid "Locale Code"
 msgstr "รหัสประเทศ"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_accounting_localization
 #: model:ir.module.category,name:base.module_category_accounting_localizations
 #: model:ir.module.category,name:base.module_category_localization
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -33327,6 +33449,16 @@ msgid "POS Stripe"
 msgstr "POS Stripe"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_swiggy
+msgid "POS UrbanPiper - Swiggy"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
+msgid "POS UrbanPiper - Uber Eats"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_zomato
 msgid "POS UrbanPiper - Zomato"
 msgstr ""
@@ -34975,6 +35107,11 @@ msgid "Project Sales Subscription"
 msgstr "การสมัครสมาชิกการขายของโปรเจ็กต์"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
+msgid "Project Sales Subscription Timesheet"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_project_stock
 msgid "Project Stock"
 msgstr ""
@@ -35031,6 +35168,7 @@ msgstr "บัญชีเงินเดือนของโปรเจ็ก
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_sale_subscription
+#: model:ir.module.module,summary:base.module_sale_subscription_timesheet
 msgid "Project sales subscriptions"
 msgstr "การสมัครสมาชิกการขายของโปรเจ็กต์"
 
@@ -37777,6 +37915,11 @@ msgid "Singapore - Accounting Reports"
 msgstr "ประเทศสิงคโปร์ - รายงานด้านบัญชี"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sg_ubl_pint
+msgid "Singapore - UBL PINT"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sx
 msgid "Sint Maarten (Dutch part)"
 msgstr "Sint Maarten (ส่วนภาษาดัตช์)"
@@ -38042,6 +38185,11 @@ msgstr "ประเทศสเปน - ระบบบัญชี (PGCE 2008)
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports
 msgid "Spain - Accounting (PGCE 2008) Reports"
 msgstr "ประเทศสเปน - รายงานด้านบัญชี (PGCE 2008)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
+msgid "Spain - Accounting Reports (2024 Update)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -39643,6 +39791,10 @@ msgid ""
 "privileges previously modified it, and you are therefore not able to modify "
 "it yourself while preserving the content."
 msgstr ""
+"ค่าฟิลด์ที่คุณบันทึก (%(model)s %(field)s) "
+"มีเนื้อหาที่ถูกจำกัดด้วยเหตุผลด้านความปลอดภัย "
+"เป็นไปได้ว่าบุคคลที่มีสิทธิ์สูงกว่าได้แก้ไขเนื้อหาดังกล่าวไว้ก่อนหน้านี้ "
+"ดังนั้นคุณจึงไม่สามารถแก้ไขได้ด้วยตัวเองในขณะที่ยังเก็บเนื้อหาไว้"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -41231,29 +41383,8 @@ msgstr "ประเทศตูนิเซีย - รายงานด้า
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__turkey
-#: model:res.country,name:base.tr
-msgid "Türkiye"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr
-msgid "Türkiye - Accounting"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
-msgid "Türkiye - Accounting Reports"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
-msgid "Türkiye - Payroll"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll_account
-msgid "Türkiye - Payroll with Accounting"
-msgstr ""
+msgid "Turkey"
+msgstr "ตุรกี"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -41345,6 +41476,31 @@ msgstr "ประเภทของข้อจำกัด: `f` สำหรั
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Type:"
 msgstr "ประเภท:"
+
+#. module: base
+#: model:res.country,name:base.tr
+msgid "Türkiye"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr
+msgid "Türkiye - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
+msgid "Türkiye - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
+msgid "Türkiye - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll_account
+msgid "Türkiye - Payroll with Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
@@ -41578,8 +41734,10 @@ msgstr "ไม่พบ Wkhtmltopdf บนระบบนี้ ไม่สา�
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
-msgid "Unable to import field type '%s'  "
-msgstr "ไม่สามารถนำเข้าประเภทฟิลด์ '%s'"
+msgid ""
+"Unable to import'%%(field)s' Properties field as a whole, target individual "
+"property instead."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -41811,6 +41969,14 @@ msgstr "ชื่อรุ่นที่ไม่รู้จัก '%s' ใน
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "Unknown sub-field “%s”"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"Unknown value '%(value)s' for boolean '%(label_property)s' property "
+"(subfield of '%%(field)s' field)."
 msgstr ""
 
 #. module: base

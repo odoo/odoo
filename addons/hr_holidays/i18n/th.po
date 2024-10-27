@@ -3,16 +3,16 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1189,7 +1189,7 @@ msgstr "เดือนที่ยกยอด"
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_employee.py:0
+#: code:addons/hr_holidays/models/hr_employee_base.py:0
 msgid ""
 "Changing this working schedule results in the affected employee(s) not "
 "having enough leaves allocated to accomodate for their leaves already taken "
@@ -2747,7 +2747,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_employee.py:0
+#: code:addons/hr_holidays/models/hr_employee_base.py:0
 msgid "Operation not supported"
 msgstr "ไม่รองรับการทำงาน"
 
@@ -3117,6 +3117,10 @@ msgid ""
 "            #     - Approved by Time Off Officer: The employee's request need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
+"เลือกระดับการอนุมัติที่ต้องการในกรณีที่พนักงานร้องขอ\n"
+"            #     - ไม่ต้องมีการตรวจสอบ: คำขอของพนักงานจะได้รับการอนุมัติโดยอัตโนมัติ\n"
+"            #     - ได้รับการอนุมัติจากเจ้าหน้าที่: คำขอของพนักงานจะต้องได้รับการอนุมัติด้วยตนเอง\n"
+"            #       จากเจ้าหน้าที่ ผู้ให้การอนุมัติของพนักงาน หรือทั้งสองฝ่าย"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4418,8 +4422,8 @@ msgstr "หลังวันที่เริ่มการจัดสรร
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
-msgid "all - Valid for"
-msgstr ""
+msgid "all"
+msgstr "ทั้งหมด"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form

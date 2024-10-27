@@ -26,11 +26,13 @@ msgid ""
 "<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">Service's Bill</span>\n"
 "                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">Service's Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Rachunek za usługę\">Rachunek za usługę</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Rachunek za usługę\">Rachunek za usługę</span>"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
 msgid "Account Move"
-msgstr "Konto przesunięcia"
+msgstr "Ruch na koncie"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
@@ -41,12 +43,12 @@ msgstr "Wiersz ruchu na koncie"
 #. odoo-python
 #: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
 msgid "Bill"
-msgstr "Faktura zakupowa"
+msgstr "Rachunek za zakup"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "Bills"
-msgstr "Faktury zakupu"
+msgstr "Rachunek za zakup"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
@@ -76,18 +78,18 @@ msgstr "Zapis dziennika"
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_move_line
 msgid "Journal Item"
-msgstr "Pozycja zapisu"
+msgstr "Pozycja dziennika"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
 msgid "Need Vehicle"
-msgstr "Potrzebny pojazd"
+msgstr "Potrzeba pojazdu"
 
 #. module: account_fleet
 #. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
 msgid "Service Vendor Bill: %s"
-msgstr "Faktury zakupu: %s"
+msgstr "Rachunek dostawcy usług: %s"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
@@ -109,7 +111,7 @@ msgstr "Pojazd"
 #. module: account_fleet
 #: model:fleet.service.type,name:account_fleet.data_fleet_service_type_vendor_bill
 msgid "Vendor Bill"
-msgstr "Faktura zakupu"
+msgstr "Rachunek dostawcy"
 
 #. module: account_fleet
 #. odoo-python
@@ -118,6 +120,8 @@ msgid ""
 "You cannot delete log services records because one or more of them were bill"
 " created."
 msgstr ""
+"Nie możesz usunąć wpisów dziennika, ponieważ jeden lub więcej z nich zostało"
+" utworzone na podstawie faktury."
 
 #. module: account_fleet
 #. odoo-python
@@ -126,8 +130,10 @@ msgid ""
 "You cannot modify amount of services linked to an account move line. Do it "
 "on the related accounting entry instead."
 msgstr ""
+"Nie możesz zmodyfikować liczby usług powiązanych z wierszem ruchu konta. "
+"Zamiast tego, zrób to na powiązanym wpisie księgowym."
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "show the vendor bills for this vehicle"
-msgstr "pokaż faktury zakupu dla tego pojazdu"
+msgstr "pokaż rachunki dostawcy dla tego pojazdu"

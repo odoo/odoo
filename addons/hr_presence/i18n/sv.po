@@ -12,9 +12,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 09:53+0000\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -28,7 +28,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "%(name)s has been noted as %(state)s today"
-msgstr ""
+msgstr "%(name)s har noterats som %(state)s idag"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -42,6 +42,14 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div> Kära <t t-out=\"object or ''\">Abigail Peterson</t>.\n"
+"                    Kära <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"Vi hoppas att du mår bra med det här meddelandet. Det har kommit till vår kännedom att du för närvarande inte är närvarande på jobbet, och det finns inga uppgifter om en ledighetsansökan från dig. Om denna frånvaro beror på ett förbiseende från vår sida ber vi uppriktigt om ursäkt för eventuell förvirring.\n"
+"Vänligen vidta nödvändiga åtgärder för att ta itu med denna oplanerade frånvaro. Om du har några frågor eller behöver hjälp, tveka inte att kontakta din chef eller HR-avdelningen så snart som möjligt.\n"
+"Tack för din snabba uppmärksamhet på detta ärende.\n"
+"                    <Med vänlig hälsning,<br><br>\n"
+"                </div> </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -54,7 +62,7 @@ msgstr "Frånvarande"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
 msgid "Add a log note"
-msgstr ""
+msgstr "Lägg till en logganteckning"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_base
@@ -64,12 +72,12 @@ msgstr "Grundläggande anställd"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
 msgid "Companies"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_config_settings
 msgid "Config Settings"
-msgstr "Inställningar"
+msgstr "Konfigureringsinställningar"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
@@ -79,7 +87,7 @@ msgstr "Skapa Uid"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
 msgid "Create a Time Off"
-msgstr ""
+msgstr "Skapa en ledig tid"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -110,6 +118,9 @@ msgid ""
 "an oversight from us, we apologize. Please contact your manager or HR ASAP. "
 "Thanks"
 msgstr ""
+"Hej, vi har sett att du inte är på jobbet och att ingen ledig tid har "
+"skickats in. Om detta är ett förbiseende från oss ber vi om ursäkt. Vänligen"
+" kontakta din chef eller HR ASAP. Tack så mycket"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -140,7 +151,7 @@ msgstr "Ip ansluten"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
 msgid "Manually Set Presence"
-msgstr ""
+msgstr "Manuellt inställd närvaro"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
@@ -155,7 +166,7 @@ msgstr "Manuellt inställd Nuvarande"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Out of Working Hours"
-msgstr ""
+msgstr "Utanför arbetstid"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_tree
@@ -166,12 +177,12 @@ msgstr "Närvaro"
 #. odoo-javascript
 #: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
 msgid "Presence Control"
-msgstr "Kontroll av närvaro"
+msgstr "Närvarokontroll"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence/Absence"
-msgstr ""
+msgstr "Närvaro/frånvaro"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -181,15 +192,15 @@ msgid "Present"
 msgstr "Närvarande"
 
 #. module: hr_presence
-#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
-msgid "Send a SMS"
-msgstr ""
-
-#. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Send SMS"
 msgstr "Skicka SMS"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
+msgid "Send a SMS"
+msgstr "Skicka ett SMS"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
@@ -203,12 +214,12 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
 msgid "Set Absent"
-msgstr ""
+msgstr "Set Frånvarande"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
 msgid "Set Present"
-msgstr ""
+msgstr "Set Present"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
@@ -228,6 +239,9 @@ msgid ""
 "Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter."
 msgstr ""
+"Vi hoppas att detta meddelande får dig att må bra. Det har kommit till vår kännedom att du för närvarande inte är närvarande på jobbet, och det finns inga uppgifter om någon ledighetsansökan från dig. Om denna frånvaro beror på ett förbiseende från vår sida ber vi uppriktigt om ursäkt för eventuell förvirring.\n"
+"Vänligen vidta nödvändiga åtgärder för att ta itu med denna oplanerade frånvaro. Om du har några frågor eller behöver hjälp, tveka inte att kontakta din chef eller HR-avdelningen så snart som möjligt.\n"
+"Tack för din snabba uppmärksamhet på detta ärende."
 
 #. module: hr_presence
 #. odoo-python
