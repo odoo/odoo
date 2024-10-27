@@ -50,6 +50,12 @@ import { withSequence } from "@html_editor/utils/resource";
 
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
+/**
+ * @typedef {Object} DeleteShared
+ * @property { DeletePlugin['deleteRange'] } deleteRange
+ * @property { DeletePlugin['deleteSelection'] } deleteSelection
+ */
+
 export class DeletePlugin extends Plugin {
     static dependencies = ["selection", "history"];
     static id = "delete";

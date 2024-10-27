@@ -22,6 +22,10 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef { Object } ColorShared
+ * @property { ColorPlugin['colorElement'] } colorElement
+ */
 export class ColorPlugin extends Plugin {
     static id = "color";
     static dependencies = ["selection", "split", "history", "format"];

@@ -34,6 +34,11 @@ const getPowerboxItems = (plugin) => {
     return powerboxItems;
 };
 
+/**
+ * @typedef { Object } MediaShared
+ * @property { MediaPlugin['savePendingImages'] } savePendingImages
+ */
+
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];

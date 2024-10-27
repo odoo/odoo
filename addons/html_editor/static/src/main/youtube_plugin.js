@@ -9,7 +9,6 @@ export const YOUTUBE_URL_GET_VIDEO_ID =
 export class YoutubePlugin extends Plugin {
     static id = "youtube";
     static dependencies = ["history", "powerbox", "link", "dom"];
-    static shared = [];
     resources = {
         paste_url_overrides: this.handlePasteUrl.bind(this),
     };

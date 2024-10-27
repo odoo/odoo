@@ -2,6 +2,11 @@ import { Plugin } from "@html_editor/plugin";
 import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 
+/**
+ * @typedef { Object } EmojiShared
+ * @property { EmojiPlugin['showEmojiPicker'] } showEmojiPicker
+ */
+
 export class EmojiPlugin extends Plugin {
     static id = "emoji";
     static dependencies = ["history", "overlay", "dom", "selection"];

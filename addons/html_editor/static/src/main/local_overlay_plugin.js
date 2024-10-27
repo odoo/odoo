@@ -1,6 +1,11 @@
 import { Plugin } from "../plugin";
 
 /**
+ * @typedef { Object } LocalOverlayShared
+ * @property { LocalOverlayPlugin['makeLocalOverlay'] } makeLocalOverlay
+ */
+
+/**
  * This plugins provides a way to create a "local" overlays so that their
  * visibility is relative to the overflow of their ancestors.
  */

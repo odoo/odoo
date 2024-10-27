@@ -100,6 +100,13 @@ async function fetchInternalMetaData(url) {
     return result;
 }
 
+/**
+ * @typedef { Object } LinkShared
+ * @property { LinkPlugin['createLink'] } createLink
+ * @property { LinkPlugin['getPathAsUrlCommand'] } getPathAsUrlCommand
+ * @property { LinkPlugin['insertLink'] } insertLink
+ */
+
 export class LinkPlugin extends Plugin {
     static id = "link";
     static dependencies = ["dom", "history", "selection", "split", "lineBreak", "overlay"];

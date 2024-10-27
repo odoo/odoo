@@ -4,6 +4,13 @@ import { CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
 
+/**
+ * @typedef { Object } LineBreakShared
+ * @property { LineBreakPlugin['insertLineBreak'] } insertLineBreak
+ * @property { LineBreakPlugin['insertLineBreakElement'] } insertLineBreakElement
+ * @property { LineBreakPlugin['insertLineBreakNode'] } insertLineBreakNode
+ */
+
 export class LineBreakPlugin extends Plugin {
     static dependencies = ["selection", "history", "delete"];
     static id = "lineBreak";

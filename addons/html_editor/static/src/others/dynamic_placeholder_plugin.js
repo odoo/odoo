@@ -3,6 +3,11 @@ import { _t } from "@web/core/l10n/translation";
 import { DynamicPlaceholderPopover } from "@web/views/fields/dynamic_placeholder_popover";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {Object} DynamicPlaceholderShared
+ * @property {DynamicPlaceholderPlugin['updateDphDefaultModel']} updateDphDefaultModel
+ */
+
 export class DynamicPlaceholderPlugin extends Plugin {
     static id = "dynamicPlaceholder";
     static dependencies = ["overlay", "selection", "history", "dom"];

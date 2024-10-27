@@ -30,6 +30,17 @@ function isUnremovableTableComponent(element, root) {
 }
 
 /**
+ * @typedef { Object } TableShared
+ * @property { TablePlugin['addColumn'] } addColumn
+ * @property { TablePlugin['addRow'] } addRow
+ * @property { TablePlugin['moveColumn'] } moveColumn
+ * @property { TablePlugin['moveRow'] } moveRow
+ * @property { TablePlugin['removeColumn'] } removeColumn
+ * @property { TablePlugin['removeRow'] } removeRow
+ * @property { TablePlugin['resetTableSize'] } resetTableSize
+ */
+
+/**
  * This plugin only contains the table manipulation and selection features. All UI overlay
  * code is located in the table_ui plugin
  */

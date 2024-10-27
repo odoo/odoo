@@ -47,6 +47,12 @@ function isLegitZwnbsp(textNode) {
     - in links that have content more complex than simple text
     - on non-editable links or links that are not within the editable area
  */
+
+/**
+ * @typedef { Object } LinkSelectionShared
+ * @property { LinkSelectionPlugin['padLinkWithZwnbsp'] } padLinkWithZwnbsp
+ */
+
 export class LinkSelectionPlugin extends Plugin {
     static id = "linkSelection";
     static dependencies = ["selection"];

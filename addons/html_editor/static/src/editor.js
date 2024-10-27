@@ -5,7 +5,7 @@ import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 import { initElementForEdition } from "./utils/sanitize";
 
 /**
- * @typedef { import("./plugin").SharedMethods } SharedMethods
+ * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
  * @typedef {typeof import("./plugin").Plugin} PluginConstructor
  **/
 

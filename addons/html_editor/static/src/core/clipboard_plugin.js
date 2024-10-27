@@ -78,6 +78,11 @@ export const CLIPBOARD_WHITELISTS = {
     styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD"],
 };
 
+/**
+ * @typedef {Object} ClipboardShared
+ * @property {ClipboardPlugin['pasteText']} pasteText
+ */
+
 export class ClipboardPlugin extends Plugin {
     static id = "clipboard";
     static dependencies = [

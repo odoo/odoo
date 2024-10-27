@@ -22,6 +22,12 @@ function isIndentationTab(tab) {
     );
 }
 
+/**
+ * @typedef { Object } TabulationShared
+ * @property { TabulationPlugin['indentBlocks'] } indentBlocks
+ * @property { TabulationPlugin['outdentBlocks'] } outdentBlocks
+ */
+
 export class TabulationPlugin extends Plugin {
     static id = "tabulation";
     static dependencies = ["dom", "selection", "history", "delete"];

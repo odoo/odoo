@@ -1,5 +1,10 @@
 import { Plugin } from "../plugin";
 
+/**
+ * @typedef { Object } UserCommandShared
+ * @property { UserCommandPlugin['run'] } run
+ * @property { UserCommandPlugin['getCommands'] } getCommands
+ */
 export class UserCommandPlugin extends Plugin {
     static id = "userCommand";
     static shared = ["run", "getCommands"];

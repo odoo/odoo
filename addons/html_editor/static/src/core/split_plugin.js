@@ -7,6 +7,17 @@ import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_tr
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
+/**
+ * @typedef { Object } SplitShared
+ * @property { SplitPlugin['isUnsplittable'] } isUnsplittable
+ * @property { SplitPlugin['splitAroundUntil'] } splitAroundUntil
+ * @property { SplitPlugin['splitBlock'] } splitBlock
+ * @property { SplitPlugin['splitBlockNode'] } splitBlockNode
+ * @property { SplitPlugin['splitElement'] } splitElement
+ * @property { SplitPlugin['splitElementBlock'] } splitElementBlock
+ * @property { SplitPlugin['splitSelection'] } splitSelection
+ */
+
 export class SplitPlugin extends Plugin {
     static dependencies = ["selection", "history", "delete", "lineBreak"];
     static id = "split";

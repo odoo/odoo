@@ -11,6 +11,11 @@ import { debounce } from "@web/core/utils/timing";
 // Delay in ms for toolbar open after keyup, double click or triple click.
 const DELAY_TOOLBAR_OPEN = 300;
 
+/**
+ * @typedef { Object } ToolbarShared
+ * @property { ToolbarPlugin['getToolbarInfo'] } getToolbarInfo
+ */
+
 export class ToolbarPlugin extends Plugin {
     static id = "toolbar";
     static dependencies = ["overlay", "selection", "userCommand"];

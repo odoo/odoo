@@ -36,6 +36,11 @@ const REQUEST_ERROR = Symbol("REQUEST_ERROR");
 // this is a local cache for ice server descriptions
 let ICE_SERVERS = null;
 
+/**
+ * @typedef { Object } CollaborationOdooShared
+ * @property { CollaborationOdooPlugin['getPeerMetadata'] } getPeerMetadata
+ */
+
 export class CollaborationOdooPlugin extends Plugin {
     static id = "collaborationOdoo";
     static dependencies = ["history", "collaboration", "selection"];

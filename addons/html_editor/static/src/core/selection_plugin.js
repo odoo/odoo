@@ -103,6 +103,25 @@ function getUnselectedEdgeNodes(selection) {
     ]);
 }
 
+/**
+ * @typedef { Object } SelectionShared
+ * @property { SelectionPlugin['extractContent'] } extractContent
+ * @property { SelectionPlugin['focusEditable'] } focusEditable
+ * @property { SelectionPlugin['getEditableSelection'] } getEditableSelection
+ * @property { SelectionPlugin['getSelectedNodes'] } getSelectedNodes
+ * @property { SelectionPlugin['getSelectionData'] } getSelectionData
+ * @property { SelectionPlugin['getTraversedBlocks'] } getTraversedBlocks
+ * @property { SelectionPlugin['getTraversedNodes'] } getTraversedNodes
+ * @property { SelectionPlugin['modifySelection'] } modifySelection
+ * @property { SelectionPlugin['preserveSelection'] } preserveSelection
+ * @property { SelectionPlugin['rectifySelection'] } rectifySelection
+ * @property { SelectionPlugin['resetActiveSelection'] } resetActiveSelection
+ * @property { SelectionPlugin['resetSelection'] } resetSelection
+ * @property { SelectionPlugin['setCursorEnd'] } setCursorEnd
+ * @property { SelectionPlugin['setCursorStart'] } setCursorStart
+ * @property { SelectionPlugin['setSelection'] } setSelection
+ */
+
 export class SelectionPlugin extends Plugin {
     static id = "selection";
     static shared = [

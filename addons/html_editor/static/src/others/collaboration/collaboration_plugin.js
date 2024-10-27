@@ -12,6 +12,16 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
  * @typedef { import("../../core/history_plugin").HistoryStep } HistoryStep
  */
 
+/**
+ * @typedef { Object } CollaborationShared
+ * @property { CollaborationPlugin['getBranchIds'] } getBranchIds
+ * @property { CollaborationPlugin['getSnapshotSteps'] } getSnapshotSteps
+ * @property { CollaborationPlugin['historyGetMissingSteps'] } historyGetMissingSteps
+ * @property { CollaborationPlugin['onExternalHistorySteps'] } onExternalHistorySteps
+ * @property { CollaborationPlugin['resetFromSteps'] } resetFromSteps
+ * @property { CollaborationPlugin['setInitialBranchStepId'] } setInitialBranchStepId
+ */
+
 export class CollaborationPlugin extends Plugin {
     static id = "collaboration";
     static dependencies = ["history", "selection", "sanitize"];
@@ -24,13 +34,12 @@ export class CollaborationPlugin extends Plugin {
         step_added_handlers: ({ step }) => this.onStepAdded(step),
     };
     static shared = [
-        //
-        "onExternalHistorySteps",
-        "historyGetMissingSteps",
-        "setInitialBranchStepId",
         "getBranchIds",
         "getSnapshotSteps",
+        "historyGetMissingSteps",
+        "onExternalHistorySteps",
         "resetFromSteps",
+        "setInitialBranchStepId",
     ];
 
     /** @type { CollaborationPluginConfig['peerId'] } */

@@ -77,25 +77,44 @@ import { childNodes, descendants, getCommonAncestor } from "../utils/dom_travers
  * @property { Function } revert
  */
 
+/**
+ * @typedef { Object } HistoryShared
+ * @property { HistoryPlugin['addExternalStep'] } addExternalStep
+ * @property { HistoryPlugin['addStep'] } addStep
+ * @property { HistoryPlugin['canRedo'] } canRedo
+ * @property { HistoryPlugin['canUndo'] } canUndo
+ * @property { HistoryPlugin['disableObserver'] } disableObserver
+ * @property { HistoryPlugin['enableObserver'] } enableObserver
+ * @property { HistoryPlugin['getHistorySteps'] } getHistorySteps
+ * @property { HistoryPlugin['getNodeById'] } getNodeById
+ * @property { HistoryPlugin['makePreviewableOperation'] } makePreviewableOperation
+ * @property { HistoryPlugin['makeSavePoint'] } makeSavePoint
+ * @property { HistoryPlugin['makeSnapshotStep'] } makeSnapshotStep
+ * @property { HistoryPlugin['reset'] } reset
+ * @property { HistoryPlugin['resetFromSteps'] } resetFromSteps
+ * @property { HistoryPlugin['serializeSelection'] } serializeSelection
+ * @property { HistoryPlugin['stageSelection'] } stageSelection
+ */
+
 export class HistoryPlugin extends Plugin {
     static id = "history";
     static dependencies = ["selection", "sanitize"];
     static shared = [
-        "reset",
-        "canUndo",
+        "addExternalStep",
+        "addStep",
         "canRedo",
-        "makeSavePoint",
-        "makePreviewableOperation",
-        "makeSnapshotStep",
+        "canUndo",
         "disableObserver",
         "enableObserver",
-        "addExternalStep",
         "getHistorySteps",
+        "getNodeById",
+        "makePreviewableOperation",
+        "makeSavePoint",
+        "makeSnapshotStep",
+        "reset",
         "resetFromSteps",
         "serializeSelection",
-        "getNodeById",
         "stageSelection",
-        "addStep",
     ];
     resources = {
         user_commands: [

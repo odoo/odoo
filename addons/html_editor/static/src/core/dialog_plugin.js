@@ -1,5 +1,10 @@
 import { Plugin } from "../plugin";
 
+/**
+ * @typedef {Object} DialogShared
+ * @property {DialogPlugin['addDialog']} addDialog
+ */
+
 export class DialogPlugin extends Plugin {
     static id = "dialog";
     static dependencies = ["selection"];

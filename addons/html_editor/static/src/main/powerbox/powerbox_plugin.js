@@ -40,6 +40,15 @@ function target(selectionData) {
     }
 }
 
+/**
+ * @typedef { Object } PowerboxShared
+ * @property { PowerboxPlugin['closePowerbox'] } closePowerbox
+ * @property { PowerboxPlugin['getAvailablePowerboxItems'] } getAvailablePowerboxItems
+ * @property { PowerboxPlugin['getPowerboxItems'] } getPowerboxItems
+ * @property { PowerboxPlugin['openPowerbox'] } openPowerbox
+ * @property { PowerboxPlugin['updatePowerbox'] } updatePowerbox
+ */
+
 export class PowerboxPlugin extends Plugin {
     static id = "powerbox";
     static dependencies = ["overlay", "selection", "history", "userCommand"];

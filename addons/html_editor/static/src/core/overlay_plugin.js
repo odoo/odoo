@@ -8,6 +8,12 @@ import { findUpTo } from "@html_editor/utils/dom_traversal";
  * Provide the following feature:
  * - adding a component in overlay above the editor, with proper positioning
  */
+
+/**
+ * @typedef { Object } OverlayShared
+ * @property { OverlayPlugin['createOverlay'] } createOverlay
+ */
+
 export class OverlayPlugin extends Plugin {
     static id = "overlay";
     static dependencies = ["history"];

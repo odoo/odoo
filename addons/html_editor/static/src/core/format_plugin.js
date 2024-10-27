@@ -24,6 +24,13 @@ function isFormatted(formatPlugin, format) {
     return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
 }
 
+/**
+ * @typedef {Object} FormatShared
+ * @property { FormatPlugin['isSelectionFormat'] } isSelectionFormat
+ * @property { FormatPlugin['insertAndSelectZws'] } insertAndSelectZws
+ * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
+ */
+
 export class FormatPlugin extends Plugin {
     static id = "format";
     static dependencies = ["selection", "history", "split"];

@@ -25,6 +25,12 @@ import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/positio
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { convertList, getListMode } from "@html_editor/utils/list";
 
+/**
+ * @typedef {Object} DomShared
+ * @property { DomPlugin['insert'] } insert
+ * @property { DomPlugin['copyAttributes'] } copyAttributes
+ */
+
 export class DomPlugin extends Plugin {
     static id = "dom";
     static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
