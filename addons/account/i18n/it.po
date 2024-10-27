@@ -9,10 +9,10 @@
 # Odoo - Paolo Gatti (pgi), 2023
 # Sebastiano Picchi, 2023
 # Martin Trigaux, 2023
-# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # Wil Odoo, 2024
-# Marianna Ciofani, 2024
 # Simone Rubino, 2024
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Simone Rubino, 2024\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8241,7 +8241,7 @@ msgstr "Fatture"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr "Fatture cliente/fornitore"
+msgstr "Fatture"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -14003,6 +14003,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
+"La disponibilità è impostata su \"Il Paese corrisponde a\" ma il campo Paese"
+" non è configurato."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -16751,9 +16762,9 @@ msgid ""
 "account set either on the company or the %s payment method in the %s "
 "journal."
 msgstr ""
-"Nn è possibile creare un nuovo pagamento senza aver configurato per "
-"l'azienda un conto per i pagamenti in sospeso/ricevuti o il %s metodo di "
-"pagamento nel %s registro."
+"Impossibile creare un nuovo pagamento senza aver impostato un conto per i "
+"pagamenti/ricevute in sospeso nell'azienda o nel metodo di pagamento %s nel "
+"registro %s."
 
 #. module: account
 #. odoo-python

@@ -8552,7 +8552,7 @@ msgid ""
 "include one and only one receivable/payable account (with an exception of "
 "internal transfers)."
 msgstr ""
-"La pièce comptable %s n'est pas valide. Pour les traiter, les écritures "
+"La pièce comptable%s n'est pas valide. Pour les traiter, les écritures "
 "comptables ne doivent inclure qu'un et un seul compte créditeur/débiteur "
 "(avec pour exception les virements internes)."
 
@@ -14040,6 +14040,15 @@ msgstr ""
 "Le %(date_field)s(%(date)s) ne correspond pas au numéro de la séquence du %(model)s(%(sequence)s) lié.\n"
 "Vous devrez effacer les %(sequence_field)s de %(model)s pour continuer.\n"
 "Ce faisant, vous souhaiterez peut-être remettre en séquence vos écritures afin de maintenir une séquence continue basée sur la date."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
 
 #. module: account
 #. odoo-python
