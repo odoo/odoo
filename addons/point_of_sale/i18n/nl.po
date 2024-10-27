@@ -3,8 +3,9 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Wil Odoo, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,29 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/stock_picking.py:0
+msgid ""
+"\n"
+"This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
+msgstr ""
+"\n"
+"Dit probleem treedt op omdat de hoeveelheid nul wordt na afronding tijdens de conversie. Om dit op te lossen, pas je de conversiefactoren of afrondingsmethode aan om ervoor te zorgen dat zelfs de kleinste hoeveelheid in de oorspronkelijke eenheid niet naar nul wordt afgerond in de doeleenheid."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/stock_picking.py:0
+msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
+msgstr " - Van \"%(uom_from)s\" naar \"%(uom_to)s\""
 
 #. module: point_of_sale
 #. odoo-python
@@ -1997,6 +2014,16 @@ msgid "Continue with limited functionality"
 msgstr "Doorgaan met beperkte functies"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/stock_picking.py:0
+msgid ""
+"Conversion Error: The following unit of measure conversions result in a zero"
+" quantity due to rounding:"
+msgstr ""
+"Conversiefout: De volgende conversies van maateenheden resulteren in een "
+"nulhoeveelheid door afronding:"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion Rate"
 msgstr "Conversieratio"
@@ -2267,16 +2294,6 @@ msgstr "Fooien van klanten, kunnen niet direct worden gewijzigd"
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
 msgid "Customers"
 msgstr "Klanten"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
-msgid "DEMO_PRODUCT_NAME"
-msgstr "DEMO_PRODUCT_NAME"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
-msgid "DEMO_REF"
-msgstr "DEMO_REF"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4101,11 +4118,6 @@ msgid "Newspaper Rack"
 msgstr "Nieuwsbrief rek"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Volgende activiteitenafspraak"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Volgende activiteit deadline"
@@ -4324,12 +4336,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Number of transactions:"
 msgstr "Aantal transacties:"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-msgid "Odoo Point of Sale"
-msgstr "Odoo Kassa"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_odoo_sneakers_product_template
@@ -5192,12 +5198,6 @@ msgid "PoS Note"
 msgstr "Notitie kassa"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "PoS Order"
-msgstr "PoS-bestelling"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "PoS-orderregel"
@@ -5525,6 +5525,12 @@ msgstr "Geboekt"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Powered by"
 msgstr "Aangeboden door"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+msgid "Powered by Odoo"
+msgstr "Aangedreven door Odoo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6006,12 +6012,6 @@ msgid "REFUNDED:"
 msgstr "GERETOURNEERD:"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__rating_ids
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
-msgid "Ratings"
-msgstr "Beoordelingen"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Razorpay"
 msgstr "Razorpay"
@@ -6219,6 +6219,12 @@ msgstr "Factuur aanvragen"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Request sent"
 msgstr "Aanvraag verzonden"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Rescue Sessions"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6622,9 +6628,9 @@ msgstr "Serie/Partijnummer"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
-msgid "Served by"
-msgstr "Geholpen door"
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "Served by %s"
+msgstr "Bediend door %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6725,6 +6731,12 @@ msgstr "Stel fiscale positie in"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
 msgstr "Stel meerdere prijzen per product in, automatische kortingen, enz."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Set the new discount"
+msgstr "Stel de nieuwe korting in"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7896,7 +7908,6 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/account_journal.py:0
-#, python-format
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
@@ -7914,6 +7925,12 @@ msgstr ""
 "Deze operatie zal alle ${\n"
 "                    paid ? \"paid\" : \"unpaid\"\n"
 "                } bestellingen in de browser vernietigen. Je zult alle gegevens verliezen. Deze operatie kan niet ongedaan worden gemaakt."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.xml:0
+msgid "This option or combination of options is not available"
+msgstr "Deze optie of combinatie van opties is niet beschikbaar"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8072,11 +8089,8 @@ msgstr "Te wegen met weegschaal"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
-"Om een product te verwijderen, zorg ervoor dat alle verkooppuntsessies gesloten zijn.\n"
-"\n"
-"Het verwijderen van een product dat tijdens een sessie beschikbaar is, zou hetzelfde zijn als proberen een hamburger uit de hand van een klant te grissen terwijl hij een hap neemt; Er zal chaos ontstaan als ketchup en mayonaise overal rondvliegen!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8128,12 +8142,6 @@ msgstr "Totale korting"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_info_popup/product_info_popup.xml:0
 msgid "Total Margin:"
 msgstr "Totale marge:"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
-msgid "Total Moves"
-msgstr "Totaal boekingen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form

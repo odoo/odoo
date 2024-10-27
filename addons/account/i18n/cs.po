@@ -47,6 +47,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Daňová skupina: Daň je skupinou dílčích daní.\n"
+"- Pevná: Výše daně zůstává stejná bez ohledu na cenu.\n"
+"- Procentní: Výše daně je % z ceny:\n"
+"100 * (1 + 10%) = 110 (bez ceny).\n"
+"Např. 110 / (1 + 10%) = 100 (včetně ceny).\n"
+"- Procentní sazba daně včetně daně: Výše daně je dělením ceny:\n"
+"např. 180 / (1 - 10%) = 200 (bez započtení ceny)\n"
+"např. 200 * (1 - 10%) = 180 (cena je zahrnuta)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -79,13 +88,13 @@ msgstr "%(action)s pro deník %(journal)s"
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Excl. Taxes"
-msgstr ""
+msgstr "%(amount)s bez daně"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Incl. Taxes"
-msgstr ""
+msgstr "%(amount)s včetně daně"
 
 #. module: account
 #. odoo-python
@@ -151,7 +160,7 @@ msgstr "%(tag)s (%(country_code)s)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
-msgstr ""
+msgstr "%(tax_name)s (zaokrouhlení)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -289,7 +298,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
-msgstr ""
+msgstr "... (Zobrazit všechny)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
@@ -2406,7 +2415,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__aba_routing
 msgid "American Bankers Association Routing Number"
-msgstr ""
+msgstr "Směrové číslo American Bankers Association"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -2556,6 +2565,8 @@ msgid ""
 "An error occurred when computing the inalterability. A gap has been detected"
 " in the sequence."
 msgstr ""
+"Při výpočtu nezměnitelnosti došlo k chybě. V posloupnosti byla zjištěna "
+"mezera."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6765,13 +6776,15 @@ msgstr "Ikona v rámci awesome font, např. fa-tasks"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid "For any other question, write to"
-msgstr ""
+msgstr "S dalšími dotazy se obracejte na"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid ""
 "For new invoices, please ensure a PDF or electronic invoice file is attached"
 msgstr ""
+"U nových faktur se ujistěte, že je přiložen soubor PDF nebo elektronický "
+"soubor faktury."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -7022,7 +7035,7 @@ msgstr "Obecný daňový výkaz"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Get Paid online. Send electronic invoices."
-msgstr ""
+msgstr "Plaťte online. Odesílejte elektronické faktury."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -13911,6 +13924,15 @@ msgstr "Toto je datum záznamu s počátečními zůstatky."
 msgid ""
 "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
 "To maintain date-based sequences, select entries and use the resequence option from the actions menu, available in developer mode."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
 msgstr ""
 
 #. module: account

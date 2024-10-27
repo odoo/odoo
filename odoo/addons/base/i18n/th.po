@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2024
 # Ped, 2024
-# Rasareeyar Lappiam, 2024
 # Tana Chan, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 13:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Tana Chan, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2479,6 +2479,10 @@ msgid ""
 "When generating the PDF on the order, the PDF will be embedded inside the xml for all UBL formats. This allows the\n"
 "receiver to retrieve the PDF with only the xml file.\n"
 msgstr ""
+"\n"
+"อนุญาตให้ส่งออกและนำเข้ารูปแบบ: UBL Bis 3\n"
+"เมื่อสร้าง PDF ตามคำสั่งซื้อ PDF จะถูกฝังไว้ใน xml สำหรับรูปแบบ UBL ทั้งหมด วิธีนี้ช่วยให้\n"
+"ผู้รับสามารถเรียกค้น PDF โดยใช้ไฟล์ xml เท่านั้น\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -4533,6 +4537,14 @@ msgid ""
 "\n"
 "Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
 msgstr ""
+"\n"
+"การประยุกต์ใช้ของ EDI สำหรับประเทศเอกวาดอร์\n"
+"===========================\n"
+"เพิ่มเอกสารอิเล็กทรอนิกส์พร้อมกับ XML, RIDE, ลายเซ็นอิเล็กทรอนิกส์และการเชื่อมต่อโดยตรงกับหน่วยงานภาษี SRI\n"
+"\n"
+"เอกสารที่รองรับคือใบแจ้งหนี้, ใบลดหนี้, ใบเพิ่มหนี้, การจัดซื้อการชำระบัญชี การขอคืนเงินการซื้อ และการถือคืน\n"
+"\n"
+"รวมถึงการอัตโนมัติเพื่อคาดการณ์ภาษีหัก ณ ที่จ่ายที่จะถูกนำไปใช้กับใบแจ้งหนี้การซื้อแต่ละรายการได้อย่างง่ายดาย\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -4986,6 +4998,17 @@ msgid ""
 "============================================================================================================\n"
 "\n"
 msgstr ""
+"\n"
+"กฎบัญชีเงินเดือนของประเทศฝรั่งเศส\n"
+"=====================\n"
+"\n"
+"    - การกำหนดค่าของ hr_payroll สำหรับการประยุกต์ใช้สำหรับประเทศฝรั่งเศส\n"
+"    - กฎเกณฑ์การจ่ายเงินสมทบหลักทั้งหมดสำหรับสลิปเงินเดือนของประเทศฝรั่งเศส ทั้งสำหรับ 'cadre' และ 'non-cadre'\n"
+"    - รายงานสลิปเงินเดือนใหม่\n"
+"\n"
+"โมดูลนี้ไม่ได้จัดทำโดยทีมบัญชีเงินเดือน R&D เราไม่สามารถรับประกันความถูกต้องของข้อมูลที่มีอยู่ในโมดูลนี้ได้\n"
+"============================================================================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp_workorder_quality
@@ -9890,6 +9913,11 @@ msgid ""
 "This is typically useful after some legal changes were done on the tax report,\n"
 "requiring a new tax configuration.\n"
 msgstr ""
+"\n"
+"โมดูลนี้ช่วยให้สามารถอัปเดตกริดภาษีของรายการบัญชีที่มีอยู่ได้\n"
+"ในโหมดดีบัก ปุ่มสำหรับอัปเดตกริดภาษีของรายการของคุณจะพร้อมใช้งานใน\n"
+"การตั้งค่าบัญชี\n"
+"โดยปกติแล้ว ปุ่มนี้จะมีประโยชน์หลังจากมีการเปลี่ยนแปลงทางกฎหมายบางอย่างในรายงานภาษี ซึ่งต้องมีการกำหนดค่าภาษีใหม่\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_landed_costs
@@ -16858,7 +16886,7 @@ msgstr "แผนภูมิและภาษีมาตรฐานของ
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__auth_method
 msgid "Auth Method"
-msgstr ""
+msgstr "วิธีการยืนยันตัวตน"
 
 #. module: base
 #. odoo-python
@@ -38453,6 +38481,10 @@ msgid ""
 "privileges previously modified it, and you are therefore not able to modify "
 "it yourself while preserving the content."
 msgstr ""
+"ค่าฟิลด์ที่คุณบันทึก (%(model)s %(field)s) "
+"มีเนื้อหาที่ถูกจำกัดด้วยเหตุผลด้านความปลอดภัย "
+"เป็นไปได้ว่าบุคคลที่มีสิทธิ์สูงกว่าได้แก้ไขเนื้อหาดังกล่าวไว้ก่อนหน้านี้ "
+"ดังนั้นคุณจึงไม่สามารถแก้ไขได้ด้วยตัวเองในขณะที่ยังเก็บเนื้อหาไว้"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
