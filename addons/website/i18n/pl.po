@@ -10,6 +10,7 @@
 # Mathieu Coutant, 2024
 # Wil Odoo, 2024
 # Andrzej Gerasimuk, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Andrzej Gerasimuk, 2024\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,13 +68,16 @@ msgid ""
 "\"Homepage URL\" field in the website settings or the page properties on any"
 " custom page."
 msgstr ""
+"\"URL do\" nie powinno być ustawione jako \"/\".  Aby zmienić zawartość "
+"strony głównej, użyj pola \"URL strony głównej\" w ustawieniach strony na "
+"dowolnej niestandardowej stronie."
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" cannot be set to an existing page."
-msgstr ""
+msgstr "\"URL do\" nie może być ustawiony na istniejącą stronę."
 
 #. module: website
 #. odoo-python
@@ -119,17 +123,17 @@ msgstr "# Odwiedzin"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.navbar
 msgid "#{_navbar_name if _navbar_name else 'Main'}"
-msgstr ""
+msgstr "#{_navbar_name if _navbar_name else 'Main'}"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "#{display_label} #{depth}"
-msgstr ""
+msgstr "#{display_label} #{depth}"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "#{heading_label} #{depth}"
-msgstr ""
+msgstr "#{heading_label} #{depth}"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -166,7 +170,7 @@ msgstr "%s rekordów zaznaczone, czy na pewno chcesz je wszystkie opublikować?"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&amp;lt;head&amp;gt; and &amp;lt;/body&amp;gt;"
-msgstr ""
+msgstr "&amp;lt;head&amp;gt; i &amp;lt;/body&amp;gt;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -237,12 +241,12 @@ msgstr "+ Nowa strona internetowa"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 msgid "+1 555-555-5556"
-msgstr ""
+msgstr "+1 555-555-5556"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "+1 555-555-5556\""
-msgstr ""
+msgstr "+1 555-555-5556\""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -719,6 +723,8 @@ msgid ""
 "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
 "                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</small></span>"
 msgstr ""
+"<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
+"                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</small></span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -818,6 +824,8 @@ msgid ""
 "<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
 "555-555-5556</span>"
 msgstr ""
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1183,7 +1191,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
-msgstr ""
+msgstr "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -2717,7 +2725,7 @@ msgstr "Średni promień graniczny"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Border radius none"
-msgstr ""
+msgstr "Brak promienia granicy"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -3701,7 +3709,7 @@ msgstr "Tworzenie cyfrowej historii sukcesu"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Cras justo odio"
-msgstr ""
+msgstr "Cras justo odio"
 
 #. module: website
 #. odoo-javascript

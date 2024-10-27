@@ -36,31 +36,33 @@ msgid ""
 ".\n"
 "                Manual actions may be needed."
 msgstr ""
+".\n"
+"            Moguća potreba za ručnim radnjama."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Očekuje dolazak"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/>Preparation"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Priprema"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/>Otkazano"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/>Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/>Otkazano"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> Received"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-truck\"/>Zaprimljeno"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -103,13 +105,18 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Prema postavkama proizvoda, isporučena količina može se automatski izračunati mehanizmom:\n"
+"- Ručno: količina se postavlja ručno na liniji\n"
+"- Analitički iz troškova: količina je količinski zbroj knjiženih troškova\n"
+"- Vremenski list: količina je zbroj sati zabilježenih na zadacima povezanim s ovom prodajnom  stavkom\n"
+"- Premještanje zaliha: količina dolazi iz potvrđenih izbora\n"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "All planned operations included"
-msgstr ""
+msgstr "Sve planirane opercije uključene"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -145,7 +152,7 @@ msgstr "Dostupno na skladištu"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
+msgstr "Odaberite za primjenu specifične rute na stavci prodaje."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -165,7 +172,7 @@ msgstr "Konfiguracija postavki"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Customer reference"
-msgstr ""
+msgstr "Referenca kupca"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -185,7 +192,7 @@ msgstr "Otprema"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
 msgid "Delivery Alert"
-msgstr ""
+msgstr "Upozorenje o isporuci"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -264,7 +271,7 @@ msgstr "Očekivano:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
-msgstr ""
+msgstr "Predvidi očekivani datum"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -276,7 +283,7 @@ msgstr "Predviđanje zalihe"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr ""
+msgstr "Slobodna količina danas"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
@@ -314,12 +321,12 @@ msgstr "Incoterm lokacija"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Incoterm details"
-msgstr ""
+msgstr "Incoterm detalji"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Incoterm:"
-msgstr ""
+msgstr "Inkoterm:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -363,7 +370,7 @@ msgstr "Stavka dnevnika"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Last Delivery Orders"
-msgstr ""
+msgstr "Zadnje otpremnice"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
@@ -413,19 +420,19 @@ msgstr ""
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availability"
-msgstr ""
+msgstr "Nema buduće dostupnosti"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
-msgstr ""
+msgstr "Nije isporučeno"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Not enough future availability"
-msgstr ""
+msgstr "Nema dovoljno buduće dostupnosti"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -444,7 +451,7 @@ msgstr "Uključeno"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 msgid "Partially Delivered"
-msgstr ""
+msgstr "Djelomično isporučeno"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -470,7 +477,7 @@ msgstr "Skladišna kretanja proizvoda(stavke)"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr ""
+msgstr "Kol. dostupna danas"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -487,21 +494,21 @@ msgstr "Ponude"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "RETURN"
-msgstr ""
+msgstr "POVRAT"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "Preostalo potrebno biti će raspolozivo"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid "Replenish on Order (MTO)"
-msgstr ""
+msgstr "Nadopuni po Nalogu (MTO)"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -579,7 +586,7 @@ msgstr "Sigurnosni dani prodaje"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "Zakažite isporuke ranije kako biste izbjegli kašnjenja"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
@@ -609,7 +616,7 @@ msgstr "Isporuči sve proizvode odjednom"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "Isporuči proizvode čim su dostupni, sa zaostalim nalozima"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -619,7 +626,7 @@ msgstr "Pravila otpreme"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 msgid "Started"
-msgstr ""
+msgstr "Započeto"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -635,7 +642,7 @@ msgstr "Skladišni prijenosi"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Izvještaj o nadopuni skladišta"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -657,7 +664,7 @@ msgstr "Izvještaj skladišnih pravila"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "The delivery"
-msgstr ""
+msgstr "Isporuka"
 
 #. module: sale_stock
 #. odoo-python
@@ -692,7 +699,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "This product is replenished on demand."
-msgstr ""
+msgstr "Ovaj proizvod se nabavlja po zahtjevu."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -769,11 +776,11 @@ msgstr "naručeno umjesto"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "obrađeno umjesto"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "will be late."
-msgstr ""
+msgstr "će kasniti."
