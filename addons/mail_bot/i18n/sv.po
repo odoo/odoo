@@ -59,6 +59,11 @@ msgid ""
 "conversation%(bold_end)s or start the tour again with typing "
 "%(command_start)sstart the tour%(command_end)s. Enjoy discovering Odoo!"
 msgstr ""
+"Bra, du kan anpassa konserverade svar i Discuss-"
+"applikationen.%(new_line)s%(new_line)s%(bold_start)sDet är slutet på denna "
+"översikt%(bold_end)s, du kan nu %(bold_start)sluta denna "
+"konversation%(bold_end)s eller starta turen igen genom att skriva "
+"%(command_start)sstarta turen%(command_end)s. Trevlig upptäcktsfärd i Odoo!"
 
 #. module: mail_bot
 #. odoo-python
@@ -68,6 +73,9 @@ msgid ""
 "sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
 "help."
 msgstr ""
+"Jättebra! 👍%(new_line)s För att komma åt specialkommandon, "
+"%(bold_start)sbörja din mening med%(bold_end)s "
+"%(command_start)s/%(command_end)s. Försök att få hjälp."
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_ir_http
@@ -99,6 +107,8 @@ msgid ""
 "I'm not smart enough to answer your question.%(new_line)sTo follow my guide,"
 " ask: %(command_start)sstart the tour%(command_end)s."
 msgstr ""
+"Jag är inte tillräckligt smart för att svara på din fråga.%(new_line)sFör "
+"att följa min guide, fråga: %(command_start)sstarta turen%(command_end)s."
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__idle
@@ -118,6 +128,9 @@ msgid ""
 "%(bold_start)stype%(bold_end)s%(command_start)s :)%(command_end)s and press "
 "enter."
 msgstr ""
+"Inte riktigt. För att fortsätta turen skickar du en emoji: "
+"%(bold_start)stype%(bold_end)s%(command_start)s :)%(command_end)s och "
+"trycker på enter."
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
@@ -132,6 +145,9 @@ msgid ""
 "and wait for the propositions. Select %(command_start)shelp%(command_end)s "
 "and press enter."
 msgstr ""
+"Jag är inte säker på vad du gör. Skriv %(command_start)s/%(command_end)s och"
+" vänta på förslagen. Välj %(command_start)shelp%(command_end)s och tryck på "
+"Enter."
 
 #. module: mail_bot
 #. odoo-python
@@ -140,6 +156,8 @@ msgid ""
 "Not sure what you are doing. Please, type %(command_start)s:%(command_end)s "
 "and wait for the propositions. Select one of them and press enter."
 msgstr ""
+"Jag är inte säker på vad du gör. Skriv %(command_start)s:%(command_end)s och"
+" vänta på förslagen. Välj ett av dem och tryck på enter."
 
 #. module: mail_bot
 #. odoo-python
@@ -169,7 +187,7 @@ msgstr "Introduktionsbilaga"
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_canned
 msgid "Onboarding canned"
-msgstr "Introduktionen avslutad"
+msgstr "Onboarding på burk"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_command
@@ -194,6 +212,9 @@ msgid ""
 "human language...%(new_line)sI can show you features if you write: "
 "%(command_start)sstart the tour%(command_end)s."
 msgstr ""
+"Förlåt att jag är sömnig. Eller inte! Kanske försöker jag bara dölja min "
+"okunskap om mänskligt språk...%(new_line)sJag kan visa dig funktioner om du "
+"skriver: %(command_start)sstart the tour%(command_end)s."
 
 #. module: mail_bot
 #. odoo-python
@@ -203,18 +224,21 @@ msgid ""
 "him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and select "
 "me."
 msgstr ""
+"Förlåt, jag lyssnar inte. För att få någons uppmärksamhet, "
+"%(bold_start)sping honom%(bold_end)s. Skriv "
+"%(command_start)s@OdooBot%(command_end)s och välj mig."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "Thanks"
-msgstr "Tack"
+msgstr "Tack för att du kom"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "Thanks for your feedback. Goodbye!"
-msgstr ""
+msgstr "Tack för återkoppling! Hej då!"
 
 #. module: mail_bot
 #. odoo-python
@@ -226,7 +250,7 @@ msgstr "Det är inte snällt! Jag är en bot men jag har känslor ... 💔"
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "This is a temporary canned response to see how canned responses work."
-msgstr ""
+msgstr "Detta är ett tillfälligt svar för att se hur svar fungerar."
 
 #. module: mail_bot
 #. odoo-python
@@ -235,6 +259,8 @@ msgid ""
 "To %(bold_start)ssend an attachment%(bold_end)s, click on the "
 "%(paperclip_icon)s icon and select a file."
 msgstr ""
+"Om du vill %(bold_start)ssända en bilaga%(bold_end)s klickar du på ikonen "
+"%(paperclip_icon)s och väljer en fil."
 
 #. module: mail_bot
 #. odoo-python
@@ -257,6 +283,10 @@ msgid ""
 "documentation%(document_link_end)s or %(slides_link_start)sour "
 "videos%(slides_link_end)s."
 msgstr ""
+"Tyvärr är jag bara en bot 😞 Jag förstår inte! Om du behöver hjälp med att "
+"upptäcka vår produkt, vänligen kolla %(document_link_start)sour "
+"documentation%(document_link_end)s eller %(slides_link_start)sour "
+"videos%(slides_link_end)s."
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
@@ -270,6 +300,8 @@ msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s:%(command_end)s to use "
 "canned responses. I've created a temporary one for you."
 msgstr ""
+"Underbart! 😇%(new_line)sTesta att skriva %(command_start)s:%(command_end)s "
+"för att använda konserverade svar. Jag har skapat en tillfällig åt dig."
 
 #. module: mail_bot
 #. odoo-python
@@ -279,6 +311,9 @@ msgid ""
 "attention. %(bold_start)sTry to ping me using%(bold_end)s "
 "%(command_start)s@OdooBot%(command_end)s in a sentence."
 msgstr ""
+"Wow, du är en naturbegåvning! %(new_line)sPinga någon med @användarnamn för "
+"att fånga deras uppmärksamhet. %(bold_start)sTesta att pinga mig "
+"med%(bold_end)s %(command_start)s@OdooBot%(command_end)s i en mening."
 
 #. module: mail_bot
 #. odoo-python
@@ -287,6 +322,8 @@ msgid ""
 "Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an "
 "attachment%(bold_end)s, like a picture of your cute dog..."
 msgstr ""
+"Japp, jag är här! 🎉 %(new_line)sTesta nu %(bold_start)s att skicka en "
+"bilaga%(bold_end)s, som en bild på din söta hund..."
 
 #. module: mail_bot
 #. odoo-python

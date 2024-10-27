@@ -98,11 +98,13 @@ msgstr "Tilldela automatiskt de skapade kundämnen till denna säljare."
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
 msgstr ""
+"Aww! Inga Leads skapade, kontrollera dina Lead Generation-regler och försök "
+"igen."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
@@ -171,12 +173,12 @@ msgstr "Evenemang"
 #. module: event_crm
 #: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
 msgid "Event CRM: Generate Leads based on Rules"
-msgstr ""
+msgstr "CRM för evenemang: Generera leads baserat på regler"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_request
 msgid "Event Lead Request"
-msgstr ""
+msgstr "Event Lead förfrågan"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
@@ -191,7 +193,7 @@ msgstr "Anmälan"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
 msgid "Event Templates"
-msgstr "Evenemangsmall"
+msgstr "Mallar för evenemang"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
@@ -240,13 +242,15 @@ msgstr "För någon av dessa händelser"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
 msgid "Generate Leads"
-msgstr "Skapa kundämne"
+msgstr "Generera leads"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Got it! We've noted your request. Your leads will be created soon!"
 msgstr ""
+"Nu har vi det! Vi har noterat din begäran. Dina leads kommer att skapas inom"
+" kort!"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
@@ -272,7 +276,7 @@ msgstr "Senast uppdaterad den"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
 msgid "Lead"
-msgstr "Ledning"
+msgstr "Kundämne"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
@@ -298,7 +302,7 @@ msgstr "Regel för kundämnesgenerering"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Generation Rules"
-msgstr "Regler för leadgenerering"
+msgstr "Regler för kundämnesgenerering"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
@@ -349,13 +353,13 @@ msgstr "Ingen registrering hittades"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
 msgid "Ongoing Generation Request"
-msgstr ""
+msgstr "Pågående generationsförfrågan"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Only Event Managers are allowed to re-generate all leads."
-msgstr ""
+msgstr "Endast Event Managers har rätt att återgenerera alla leads."
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
@@ -390,7 +394,7 @@ msgstr "Per order"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
 msgid "Processed Registration"
-msgstr ""
+msgstr "Behandlad registrering"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
@@ -424,7 +428,7 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
 msgid "Rule Name"
-msgstr "Regelns namn"
+msgstr "Regelnamn"
 
 #. module: event_crm
 #: model:event.lead.rule,name:event_crm.event_lead_rule_0
@@ -454,7 +458,7 @@ msgstr "Regler för generering av kundämne genom sökningar"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
 msgid "Set to True when a Lead Generation Request is currently running."
-msgstr ""
+msgstr "Sätts till True när en Lead Generation Request pågår för närvarande."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -477,6 +481,8 @@ msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
 msgstr ""
+"ID för den senast bearbetade event.registration, används för att veta var "
+"man ska återuppta."
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -503,12 +509,12 @@ msgstr "När"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Yee-ha, %(leads_count)s Leads have been created!"
-msgstr ""
+msgstr "Yee-ha, %(leads_count)s Leads har skapats!"
 
 #. module: event_crm
 #: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
 msgid "You can only have one generation request per event at a time."
-msgstr ""
+msgstr "Du kan bara ha en generationsbegäran per evenemang åt gången."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

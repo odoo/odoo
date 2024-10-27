@@ -3,16 +3,17 @@
 # 	* mrp
 # 
 # Translators:
-# Wil Odoo, 2024
+# Sarah Park, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:54+0000\n"
+"POT-Creation-Date: 2024-10-25 08:17+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,7 +81,7 @@ msgstr "# 자재명세서 사용처"
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "%(name)s Sequence picking before manufacturing"
-msgstr ""
+msgstr "%(name)s 제조 전 시퀀스 피킹"
 
 #. module: mrp
 #. odoo-python
@@ -92,7 +93,7 @@ msgstr "%(name)s생산 순서"
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "%(name)s Sequence stock after manufacturing"
-msgstr ""
+msgstr "%(name)s 제조 후 시퀀스 재고"
 
 #. module: mrp
 #. odoo-python
@@ -104,7 +105,7 @@ msgstr "%(producible_qty)s 준비 완료"
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 msgid "%(product)s: Insufficient Quantity To Unbuild"
-msgstr ""
+msgstr "%(product)s: 분해할 수량이 충분하지 않습니다"
 
 #. module: mrp
 #. odoo-python
@@ -264,7 +265,7 @@ msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"일시 정지\" title
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"실행\" title=\"실행\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -290,7 +291,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span class=\"col-6\">In Progress</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">진행 중</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -300,7 +301,7 @@ msgstr "<span class=\"col-6\">지연</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span class=\"col-6\">To Close</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">닫기</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -700,7 +701,7 @@ msgstr "모든 이동"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
 msgid "All Move Raw"
-msgstr ""
+msgstr "모든 원본 이동"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
@@ -1624,13 +1625,13 @@ msgstr "원가 배분 (%)"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost as it is currently accumulated"
-msgstr ""
+msgstr "현재 누적 비용"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on cost projection"
-msgstr ""
+msgstr "비용 예측 기준 비용"
 
 #. module: mrp
 #. odoo-javascript
@@ -1642,7 +1643,7 @@ msgstr "보충을 기준으로 한 비용입니다. 그렇지 않을 경우 품�
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on the BoM"
-msgstr ""
+msgstr "BoM 기준 비용"
 
 #. module: mrp
 #. odoo-javascript
@@ -1877,7 +1878,6 @@ msgstr "생산 완료 예정 날짜 또는 실제 생산이 완료된 날짜입�
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr "생산을 시작하려는 날짜 또는 실제로 생산을 시작한 날짜입니다."
@@ -1961,14 +1961,9 @@ msgid ""
 "Defines if you can consume more or less components than the quantity defined on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
 "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
+"  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
-"자재명세서에 명시되어 있는 수량보다 더 많거나 적은 부품을 사용할 수 있는지 여부를 정의합니다:\n"
-"  * 허용: 모든 작업자에게 허용됩니다.\n"
-"  * 경고와 함께 허용: 모든 작업자에게 허용되며, 제조 주문 마감시 소비량 차이에 대한 내용이 표시됩니다.\n"
-"  소비량을 수동으로 등록하는 부품의 경우에도 소비량에 대해 경고가 계속 발생합니다.\n"
-"  * 차단: 재료 명세서에 명시되어 있는 수량을 준수하지 않을 경우, 관리자만 제조 주문을 마감할 수 있습니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2538,6 +2533,11 @@ msgid "Hidden"
 msgstr "숨김"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
+msgid "Highlight Consumption"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
 msgid "Hourly processing cost."
 msgstr "시간당 처리 비용."
@@ -2692,7 +2692,7 @@ msgstr "작업지시를 계획할 수 없습니다. 작업장의 가용성을 �
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "Impossible to plan. Please check the workcenter availabilities."
-msgstr ""
+msgstr "계획할 수 없습니다.  업장 사용 가능 여부를 확인해 주세요. "
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -2715,12 +2715,12 @@ msgstr "운송 중"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
 msgid "In the BoM"
-msgstr ""
+msgstr "BoM 상"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
 msgid "In the MO"
-msgstr ""
+msgstr "MO 상"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_deadline
@@ -3173,7 +3173,6 @@ msgid "Manage Work Order Operations"
 msgstr "작업 지시 운영 관리"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
 msgid "Manual Consumption"
 msgstr "수동 소비량"
@@ -3486,9 +3485,14 @@ msgid "My Activity Deadline"
 msgstr "내 활동 마감일"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "My MOs"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
 msgid "Never attribute values"
-msgstr ""
+msgstr "값 속성 지정 금지"
 
 #. module: mrp
 #. odoo-python
@@ -3652,7 +3656,7 @@ msgstr "작업 수"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_in_progress
 msgid "Number of Manufacturing Orders In Progress"
-msgstr ""
+msgstr "진행 중인 제조 주문 수"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
@@ -3662,7 +3666,7 @@ msgstr "지연된 제조 주문 수"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_to_close
 msgid "Number of Manufacturing Orders To Close"
-msgstr ""
+msgstr "마감 대기 중인 제조 주문 수"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_waiting
@@ -3997,7 +4001,7 @@ msgstr "부품을 선택하고 제조합니다."
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm
 msgid "Pick components then manufacture (2 steps)"
-msgstr ""
+msgstr "부품 선택 후 제조 (2단계) "
 
 #. module: mrp
 #. odoo-python
@@ -4008,7 +4012,7 @@ msgstr "부품을 선택하고 제조 및 보관합니다. (3단계)"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
 msgid "Pick components, manufacture, then store products (3 steps)"
-msgstr ""
+msgstr "부품 선택, 제품 제조 및 보관 (3단계) "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
@@ -4314,12 +4318,12 @@ msgstr "품목 용량"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_bom
 msgid "Product Catalog Product Is In Bom"
-msgstr ""
+msgstr "품목 카탈로그 품목이 BoM에 나열됨"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_mo
 msgid "Product Catalog Product Is In Mo"
-msgstr ""
+msgstr "품목 카탈로그 품목이 MO에 나열됨"
 
 #. module: mrp
 #. odoo-javascript
@@ -5589,8 +5593,8 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
-"작업장에서 작업 지시에 대한 예상 소요 시간을 계산하는 데 사용되는 필드입니다. 작업 주문에 1시간이 걸리고 능률계수가 100%인 경우 "
-"예상 소요 시간은 1시간입니다. 반면 능률계수가 200%인 경우 예상 소요 시간은 30분이 됩니다."
+"이 항목은 작업장에서 작업 주문에 대한 예상 소요 시간을 계산할 때 사용합니다. 예를 들어 작업 주문에 1시간이 걸리고 능률계수가 "
+"100%인 경우의 예상 소요 시간은 1시간입니다. 반면 능률계수가 200%인 경우에는 예상 소요 시간은 30분이 됩니다."
 
 #. module: mrp
 #. odoo-javascript
@@ -6059,6 +6063,21 @@ msgid "Use Reception Report with Manufacturing Orders"
 msgstr "제조 주문과 관련된 수취 보고서 사용"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
+msgid ""
+"Use the table work center control panel to register operations in the shop floor directly.\n"
+"            The tablet provides worksheets for your workers and allow them to scrap products, track time,\n"
+"            launch a maintenance request, perform quality tests, etc."
+msgstr ""
+"테이블 작업장 제어판을 사용하면 작업 현장에서 작업을 직접 등록할 수 있습니다.\n"
+"            태블릿은 작업자에게 작업 계획표 제공 및 제품 폐기, 일정 추적,\n"
+"            유지보수 요청 및 품질 테스트 수행 등의 작업을 수행할 수 있도록 합니다."
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Used In"
@@ -6427,18 +6446,10 @@ msgid "Work center"
 msgstr "작업장"
 
 #. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
-msgid ""
-"Work orders are operations to do as part of a manufacturing order.\n"
-"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
-msgstr ""
-"작업 지시는 제조 주문의 일부로 수행되는 작업입니다.\n"
-"                    작업은 자재명세서에 정의되어 있거나 제조주문서에 직접 추가할 수 있습니다."
-
-#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
@@ -6743,7 +6754,7 @@ msgstr "완제품을 위해서는 많은 것을 제공해야 합니다."
 msgid ""
 "You need to supply Lot/Serial Number for products and 'consume' them: "
 "%(missing_products)s"
-msgstr ""
+msgstr "제품에 대한 로트/일련 번호를 제공하고 '소비'해야 합니다: %(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

@@ -21,18 +21,18 @@
 # Батболд <batbold.ts@gmail.com>, 2024
 # Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
 # baaska sh <sh.baaskash@gmail.com>, 2024
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
 # Otgonbayar.A <gobi.mn@gmail.com>, 2024
 # hish, 2024
 # Minj P <pminj322@gmail.com>, 2024
 # Onii Onii <onii0223@yahoo.com>, 2024
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
 # Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 12:54+0000\n"
+"POT-Creation-Date: 2024-10-25 14:42+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
@@ -55,6 +55,15 @@ msgid ""
 "        * Balance Sheet (§ 224 UGB)\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Австрийн нягтлан бодох бүртгэлийн тайлангууд. \n"
+"================================ \n"
+"\n"
+"* Дараах тайлангуудыг тодорхойлно:\n"
+"* Ашиг/Алдагдал (§ 231 UGB Gesamtkostenverfahren)\n"
+"* Тэнцлийн тайлан (§ 224 UGB)\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -72,6 +81,18 @@ msgid ""
 "    * Defines tax reports U1/U30\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Австрийн дансны төлөвлөлт (Einheitskontenrahmen 2010). \n"
+"========================================================== \n"
+"\n"
+"* Дараах дансны загваруудыг тодорхойлно:\n"
+"* Австрийн Ерөнхий дансны загвар 2010\n"
+"* Борлуулалт болон худалдан авалтын НӨАТ-д зориулсан загваруудыг тодорхойлно\n"
+"* Татварын загваруудыг тодорхойлно\n"
+"* Австрийн татварын хууль тогтоомжид зориулсан татварын байршлуудыг тодорхойлно\n"
+"* U1/U30 татварын тайлангуудыг тодорхойлно\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail
@@ -128,6 +149,38 @@ msgid ""
 "For more specific needs, you may also assign custom-defined actions\n"
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 msgstr ""
+"\n"
+"\n"
+"Ярилцлага, имэйл гүйцэтгэгч болон хувийн суваг. \n"
+"======================================= \n"
+"\n"
+"Odoo-д хамтрагчид, харилцагчид, зочидтойгоо харилцах. \n"
+"\n"
+"**Ярилцлага/Чат** \n"
+"------------ \n"
+"Хэрэглэгчдэд ээлтэй \"Ярилцлага\" функц нь нэг 2 нэгний болон бүлгийн харилцааг (текст чат/дууны дуудлага/видео дуудлага) боломжийг олгож, зочдод урих, баримт бичгийг хуваалцах боломжийг олгодог, бүх зүйл жинхэнэ цаг хугацаанд. \n"
+"\n"
+"**Имэйл гүйцэтгэгч** \n"
+"------------ \n"
+"Мэдээлэл, баримт бичгийг илгээх процессыг хялбарчилна. Та Odoo-оос шууд имэйл илгээж, ингэхдээ их хэмжээний боломжуудтай. Жишээлбэл, нэхэмжлэлийн гоё имэйл загварыг зохион байгуулж, үүнийг бүх харилцагчиддаа ашиглах боломжтой, дахин дахин ижил дасгалыг хийх шаардлагагүй. \n"
+"\n"
+"**Чаттер** \n"
+"------- \n"
+"Баримт бичиг дээр бүх контекстийн яриаг хийх. Жишээлбэл, өргөдөл гаргагчийн талаар, шууд шинэчлэлт хийж, өргөдөл гаргагчид имэйл илгээж, дараагийн ярилцлагын дуудлагыг товлоход, гэрээг хавсралтаар оруулах, чухал үйл явдлуудын талаар мэдээллэхийн тулд HR ажилтныг дагагчдын жагсаалт руу нэмэх (дэд төрлийн тусламжтайгаар)... \n"
+"\n"
+"**Имэйл хүлээн авах POP/IMAP сервер дээр** \n"
+"============================================ \n"
+"POP/IMAP данс(ууд)ын параметрийг оруулна уу, эдгээр дансанд ирж буй имэйлүүд автоматично Odoo системд татагдана. Бүх POP3/IMAP-с нийцтэй серверүүдийг дэмждэг, түүнд SSL/TLS шифрлэгдсэн холболт шаарддаг серверүүд ч орно. \n"
+"Энэ нь Odoo-д имэйлд суурилсан ажлын урсгалыг хялбархан үүсгэхэд ашиглагдаж болно, жишээлбэл: \n"
+"---------------------------------------------------------------------------------------------------------- \n"
+"* CRM Лидүүд/Боломжууд \n"
+"* CRM Гомдлууд \n"
+"* Төсөлд гарсан асуудлууд \n"
+"* Төсөлд хийх ажлууд \n"
+"* Хүний нөөцийн ажилд зуучлах (Өргөдөл гаргагчид) \n"
+"\n"
+"Зөвхөн холбогдох програмыг суулгахад хангалттай бөгөөд эдгээр баримт бичгийн төрлүүдийг (Лидүүд, Төсөлд гарсан асуудлууд) ирж буй имэйл дансандаа томилох боломжтой. Шинэ имэйлүүд сонгосон төрлийн шинэ баримт бичгүүдийг автоматично үүсгэх бөгөөд ижил имэйл данс руу Odoo интеграцийг амархан үүсгэх боломжийг олгоно. Үүнээс илүү: эдгээр баримт бичгүүд нь имэйлээр синхрончлогдсон жижиг яриа шиг ажилладаг. Та Odoo дотор хариулах боломжтой бөгөөд хариуд ирэх үед хариултууд автоматично цуглуулж, ижил *ярианы* баримт бичигт хавсаргагдана. \n"
+"Тодорхой шаардлагад нийцүүлэн, та ирж буй имэйл бүрийн хувьд хүлээлгэн өгсөн үйлдлүүдийг (техникийн хувьд: Серверийн үйлдлүүд) гүйцэтгэх боломжтой.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
@@ -284,6 +337,67 @@ msgid ""
 "110101- Caja\n"
 "11010101 Caja General\n"
 msgstr ""
+"\n"
+"\n"
+"### Локализацийн модулийн тухай Доминикан Улсын зориулалттай\n"
+"===========================================\n"
+"\n"
+"**Доминикан Улсын дансны каталог болон татварууд** - Олон улсын стандартуудын (NIIF) дагуу тохирох бөгөөд Дирекцийн Ерөнхий Татварын Албаны (DGII) журам, дүрмүүдтэй нийцсэн.\n"
+"\n"
+"**Энэхүү модульд багтсан зүйлс:**\n"
+"\n"
+"- **Стандарт дансны каталог** (DGII болон NIIF-тай нийцсэн)\n"
+"- **Татварын каталог** :\n"
+"- Борлуулалт, худалдан авалтын ITBIS\n"
+"- ITBIS-ийн барьцаа\n"
+"- ISR-ийн барьцаа\n"
+"- Татварын болон барьцааны бүлгүүд:\n"
+"- Телефони\n"
+"- Барилгын материал нийлүүлэгчид\n"
+"- Бусад үйлчилгээ үзүүлэгч хувь хүмүүс\n"
+"- Бусад татварууд\n"
+"- **NCF-ийн удирдлагын урьдчилан тохируулсан дарааллууд**:\n"
+"- Борлуулалтын нягтлан бодох үнэтэй нэхэмжлэл\n"
+"- Төгсөгчдийг нэхэмжлэл\n"
+"- Зардал болон зээлийн тэмдэглэл\n"
+"- Албаны нийлүүлэгчдийн бүртгэл\n"
+"- Нэг удаагийн орлогын бүртгэл\n"
+"- Жижиг зардлын бүртгэл\n"
+"- Засгийн газрын бүртгэл\n"
+"- **Татвар болон барьцааг автоматжуулахад зориулсан татварын байршлууд**:\n"
+"- Татварыг чөлөөлөлтөд шилжүүлэх (жишээлбэл, төрд борлуулалт)\n"
+"- Татварыг барьцаанд шилжүүлэх (жишээлбэл, гадаад үйлчилгээ худалдан авах)\n"
+"- Бусад\n"
+"\n"
+"**Тэмдэглэл:**\n"
+"Энэхүү локализаци нь NCF-гийн дараалалтай боловч, гуравдагч талын модулиудыг суулгахгүйгээр ашиглах боломжгүй.\n"
+"\n"
+"### Дансны Каталогийн Кодчиллын Структур:\n"
+"===================================================\n"
+"\n"
+"**Нэг цифр** нь санхүүгийн тайлангийн дансны төрөл/категорыг илэрхийлдэг:\n"
+"**1** - А актив **4** - Орлогын данс\n"
+"**2** - Пассив **5** - Зардал, зээлийн данс\n"
+"**3** - Капитал **6** - Үр дүнгийн ликвидацийн данс\n"
+"\n"
+"**Хоёр цифр** нь бүлгийн дэд ангиллыг илэрхийлдэг:\n"
+"11 - Гүйлгээний актив\n"
+"21 - Гүйлгээний пассив\n"
+"31 - Хувийн капитал\n"
+"\n"
+"**Дөрөв цифр** нь анхны зардлын дансанд хуваарилагдана:\n"
+"1101 - Мөнгө болон мөнгөний эквивалент\n"
+"2101 - Төлөх данс, баримт бичиг\n"
+"3101 - Нийгмийн капитал\n"
+"\n"
+"**Зургаан цифр** нь хоёр дахь зэрэглэлийн дансанд хуваарилагдана:\n"
+"110101 - Төсөв\n"
+"210101 - Орон нутгийн нийлүүлэгчид\n"
+"\n"
+"**Найм цифр** нь гуравдагч зэрэглэлийн дансанд (Odoo-д харагддаг):\n"
+"1101 - Мөнгө болон мөнгөний эквивалент\n"
+"110101 - Төсөв\n"
+"11010101 - Ерөнхий төсөв\n"
 
 #. module: base
 #. odoo-python
@@ -1267,6 +1381,9 @@ msgstr ""
 msgid ""
 "\n"
 "Accounting reports for Türkiye\n"
+"\n"
+"- Balance Sheet\n"
+"- Profit and Loss\n"
 msgstr ""
 
 #. module: base
@@ -1396,6 +1513,17 @@ msgid ""
 "\n"
 "You can assign several contracts per employee.\n"
 msgstr ""
+"\n"
+"\n"
+"### Ажилтны форм дээр бүх мэдээллийг гэрээг удирдах зорилгоор нэмнэ\n"
+"============================================================= \n"
+"\n"
+"* **Гэрээ**\n"
+"* **Төрсөн газар**\n"
+"* **Эрүүл мэндийн шалгалтын огноо**\n"
+"* **Компанийн тээврийн хэрэгсэл**\n"
+"\n"
+"Та нэг ажилтанд хэд хэдэн гэрээг тохируулж болно.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -1413,6 +1541,20 @@ msgid ""
 "- the company linked to the website is mexican\n"
 "- the option 'automatic_invoice' is enabled in the website settings (\"Generate the invoice automatically when the online payment is confirmed\")\n"
 msgstr ""
+"\n"
+"### Вебсайт/eCommerce-ийн худалдааны процессийн үеэр нэмэлт табыг нэмэх\n"
+"\n"
+"Нэмэлт табыг дараах мексикийн талбаруудтайгаар нэмнэ:\n"
+"\n"
+"- **l10n_mx_edi_cfdi_to_public** (sale.order/account.move)\n"
+"- **l10n_mx_edi_fiscal_regime** (res.partner)\n"
+"- **l10n_mx_edi_usage** (sale.order/account.move)\n"
+"- **l10n_mx_edi_no_tax_breakdown** (res.partner)\n"
+"\n"
+"#### Нэмэлт таб нь дараахь тохиолдолд л харагдана:\n"
+"\n"
+"- Вэбсайттай холбогдсон компани нь мексик улсдаа байдаг\n"
+"- Вэбсайт тохиргоонд 'automatic_invoice' сонголт идэвхжүүлэгдсэн байна (\"Онлайн төлбөр баталгаажсаны дараа нэхэмжлэлийг автоматично үүсгэх\")\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -1423,6 +1565,12 @@ msgid ""
 "\n"
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
+"\n"
+"### Вэбсайт формд CRM апп-д боломжууд үүсгэх чадварыг нэмэх\n"
+"\n"
+"Вэбсайт формыг **Website Builder**-ын дотор тохируулж, CRM апп-д боломжууд буюу лид үүсгэх боломжтой.\n"
+"\n"
+"Энэхүү модуль нь холбоо барих утасны болон гар утасны дугаарын баталгаажуулалтыг багтаасан."
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -1434,6 +1582,13 @@ msgid ""
 "With this module, link your products to a template to send complete information and tools to your customer.\n"
 "For instance when invoicing a training, the training agenda and materials will automatically be sent to your customers.'\n"
 msgstr ""
+"\n"
+"### Нэхэмжлэлийн баталгаажуулалтын үед бүтээгдэхүүнд имэйл загварыг нэмэх\n"
+"================================================================== \n"
+"\n"
+"Энэхүү модульд бүтээгдэхүүнүүдээ загвартай холбоно уу, ингэснээр үйлчлүүлэгчиддээ бүрэн мэдээлэл болон хэрэгслүүдийг илгээх боломжтой. \n"
+"\n"
+"Жишээлбэл, сургалтын нэхэмжлэл гаргах үед сургалтын хөтөлбөр болон материалууд автоматично үйлчлүүлэгчиддээ илгээгдэх болно.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_stock
@@ -1441,6 +1596,10 @@ msgid ""
 "\n"
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
+"\n"
+"### Борлуулалтын захиалга болон Худалдан авалтын захиалгын хоорондын харилцаа мэдээллийг нэмэх\n"
+"\n"
+"Хэрэв борлуулсан бүтээгдэхүүн дээр **Make to Order (MTO)** идэвхжүүлсэн бол борлуулалтын захиалга болон худалдан авалтын захиалгын хоорондын харилцаа мэдээллийг нэмнэ.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi_doi
@@ -1448,6 +1607,8 @@ msgid ""
 "\n"
 "Add support for the Declaration of Intent (Dichiarazione di Intento) to the Italian localization.\n"
 msgstr ""
+"\n"
+"Итали улсын локализацид (Итгэлцлийн мэдэгдлийг) дэмжих боломжийг нэмнэ.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
@@ -1455,6 +1616,8 @@ msgid ""
 "\n"
 "Add support to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
 msgstr ""
+"\n"
+"Chorus Pro-ыг ашиглах үед, ялангуяа улсын үйлчилгээний нэхэмжлэл гаргах үед ашигладаг гурван сонголттой талбарыг бөглөх дэмжлэгийг нэмэх\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -1482,6 +1645,8 @@ msgid ""
 "\n"
 "Add the ability to manage resumés and letters from the Documents app.\n"
 msgstr ""
+"\n"
+"Баримтын апп-аас анкетууд болон захидлуудыг удирдах боломжийг нэмэх\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi_ndd
@@ -1489,6 +1654,8 @@ msgid ""
 "\n"
 "Additional module to support the debit notes (nota di debito - NDD) by adding payment method and document types\n"
 msgstr ""
+"\n"
+"Төлбөрийн аргыг болон баримтын төрөл нэмснээр дебитийн баримт (Nota di Debito - NDD)-ыг дэмжих нэмэлт модуль.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_iot
@@ -1496,6 +1663,8 @@ msgid ""
 "\n"
 "Adds Quality Control to workorders with IoT.\n"
 msgstr ""
+"\n"
+"Ажлын захиалгад IoT ашиглан чанарын удирдлага нэмнэ.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder
@@ -1503,6 +1672,8 @@ msgid ""
 "\n"
 "Adds Quality Control to workorders.\n"
 msgstr ""
+"\n"
+"Ажлын захиалгад чанарын хяналтын удирдлага оруулах.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -1568,6 +1739,8 @@ msgid ""
 "\n"
 "Adds workcenters to Quality Control\n"
 msgstr ""
+"\n"
+"Чанарын хяналтанд үйлдвэрлэлийн дамжлагуудыг нэмэх\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_enterprise
@@ -1577,7 +1750,7 @@ msgid ""
 "for IoT Box config.   \n"
 msgstr ""
 "\n"
-"Нэмэлт боломжууд (ПОС шиг харагдах) \n"
+"ПОС-ыг илүү дээр харагдуулах\n"
 "IoT Box -н тохиргоо.   \n"
 
 #. module: base
@@ -1594,6 +1767,14 @@ msgid ""
 "* Fast payment by just swiping/scanning a credit/debit card or a QR code while on the payment screen\n"
 "* Supported cards: Visa, MasterCard, Rupay, UPI\n"
 msgstr ""
+"\n"
+"Paytm POS Төлбөрийг Зөвшөөрөх\n"
+"==============================\n"
+"\n"
+"Энэхүү модуль нь харилцагчдад захиалгаа төлөхөд дебит/кредит картууд болон UPI-ээр төлбөр хийх боломжийг олгоно. Гүйлгээ нь Paytm POS-оор боловсруулагдана. Paytm худалдааны данс шаардлагатай. Модуль нь дараах боломжуудыг олгоно:\n"
+"\n"
+"* Төлбөрийн дэлгэц дээр кредит/дебит картыг эсвэл QR кодыг зүгээр л сэгсрэх/скан хийх замаар хурдан төлбөр хийх\n"
+"* Дэмжигдсэн картууд: Visa, MasterCard, Rupay, UPI\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_razorpay
@@ -1609,6 +1790,14 @@ msgid ""
 "* Fast payment by just swiping/scanning a credit/debit card or a QR code while on the payment screen\n"
 "* Supported cards: Visa, MasterCard, Rupay, UPI\n"
 msgstr ""
+"\n"
+"Razorpay POS Төлбөрийг Зөвшөөрөх\n"
+"==============================\n"
+"\n"
+"Энэхүү модуль нь харилцагчдад захиалгаа төлөхөд дебит/кредит картууд болон UPI-ээр төлбөр хийх боломжийг олгоно. Гүйлгээ нь Razorpay POS-оор боловсруулагдана. Razorpay худалдааны данс шаардлагатай. Модуль нь дараах боломжуудыг олгоно:\n"
+"\n"
+"* Төлбөрийн дэлгэц дээр кредит/дебит картыг эсвэл QR кодыг зүгээр л сэгсрэх/скан хийх замаар хурдан төлбөр хийх\n"
+"* Дэмжигдсэн картууд: Visa, MasterCard, Rupay, UPI\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment
@@ -1616,6 +1805,8 @@ msgid ""
 "\n"
 "Allow clients to Schedule Appointments through the Portal\n"
 msgstr ""
+"\n"
+"Харилцагчдад портал дээр дамжуулан тогтоолтуудыг төлөвлөх боломжийг олгоно.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment
@@ -1637,6 +1828,9 @@ msgid ""
 "Allow internal users requesting a module installation\n"
 "=====================================================\n"
 msgstr ""
+"\n"
+"Дотоод хэрэглэгч нар модуль суулгах хүсэлт илгээхийг зөвшөөрөх\n"
+"=====================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -1644,6 +1838,8 @@ msgid ""
 "\n"
 "Allow shoppers of your eCommerce store to create personalized collections of products they want to buy and save them for future reference.\n"
 msgstr ""
+"\n"
+"Худалдааны цахим дэлгүүрийн хэрэглэгчдэд худалдан авах хүсэлтэй бүтээгдэхүүнүүдийн хувийн цуглуулгыг үүсгэж, ирээдүйд ашиглах зорилгоор хадгалах боломжийг олгоно.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock_wishlist
@@ -1651,6 +1847,8 @@ msgid ""
 "\n"
 "Allow the user to select if he wants to receive email notifications when a product of his wishlist gets back in stock.\n"
 msgstr ""
+"\n"
+"Хэрэглэгчид хүссэн бүтээгдэхүүн нь нөөцөд буцаж ирэх үед имэйл мэдэгдэл хүлээн авахыг хүсч буйгаа сонгох боломжийг олгоно.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_crm
@@ -1660,6 +1858,10 @@ msgid ""
 "-----------------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+"Хуудсан дээр тогтоолтуудыг төлөвлөсний үндсэн дээр лид үүсгэх боломжийг олгоно.\n"
+"-----------------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -1679,6 +1881,9 @@ msgid ""
 "Allow users to sign up and reset their password\n"
 "===============================================\n"
 msgstr ""
+"\n"
+"Хэрэглэгчдэд бүртгүүлэх болон нууц үгээ дахин тохируулах боломжийг олгоно.\n"
+"===============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
@@ -1686,6 +1891,8 @@ msgid ""
 "\n"
 "Allow website visitors to chat with the collaborators. This module also brings a feedback tool for the livechat and web pages to display your channel with its ratings on the website.\n"
 msgstr ""
+"\n"
+"Вэбсайтын зочид хамтрагчидтай чатлах боломжийг олгоно. Энэ модуль нь мөн амьд чат болон вэб хуудсуудаас санал авах хэрэгслийг авчирч, таны суваг болон үнэлгээг вэбсайтад харуулах боломжийг олгоно.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_mass_mailing
@@ -1694,6 +1901,8 @@ msgid ""
 "Allows anonymous shoppers of your eCommerce to sign up for a newsletter during the checkout\n"
 "process.\n"
 msgstr ""
+"\n"
+"Худалдааны цахим дэлгүүрийн аноним хэрэглэгчдэд төлбөрийн процессын үеэр мэдээллийн товхимолд бүртгүүлэх боломжийг олгоно.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_collect
@@ -1701,6 +1910,8 @@ msgid ""
 "\n"
 "Allows customers to check in-store stock, pay on site, and pick up their orders at the shop.\n"
 msgstr ""
+"\n"
+"Харилцагчдад дэлгүүрт нэвтэрч орох буюу check-in хийх, газар дээр нь төлбөр хийх, захиалгаа дэлгүүрээс авах боломжийг олгоно.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account
@@ -1710,6 +1921,10 @@ msgid ""
 "==================================================================================================\n"
 "This module allows the computation of the 'Vendor Bills', 'Other Costs' and 'Other Revenues' section for the project profitability, in the project update view.\n"
 msgstr ""
+"\n"
+"Захиалгын ашигт ажиллагааны зарим хэсгийг тооцоолох боломжийг олгодог.\n"
+"==================================================================================================\n"
+"Энэхүү модуль нь төслийн шинэчлэлийн харагдацад \"Нийлүүлэгчийн нэхэмжлэл\", \"Бусад зардал\" болон \"Бусад орлого\" хэсгүүдийн ашигт ажиллагааг тооцоолох боломжийг олгодог.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -1718,6 +1933,8 @@ msgid ""
 "Allows the outsourcing of services. This module allows one to sell services provided\n"
 "by external providers and will automatically generate purchase orders directed to the service seller.\n"
 msgstr ""
+"\n"
+"Үйлчилгээг гадаад байгууллагаар гүйцэтгэх боломжийг олгодог. Энэхүү модуль нь гадаад нийлүүлэгчдийн зүгээс үзүүлсэн үйлчилгээг борлуулахад тусалж, автоматично үйлчилгээний нийлүүлэгчид хандсан худалдан авалтын захиалгуудыг үүсгэнэ.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_margin
@@ -3179,6 +3396,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_nz_eft
+msgid ""
+"\n"
+"EFT Batch Payment\n"
+"=================\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
 msgid ""
 "\n"
@@ -3631,10 +3856,10 @@ msgid ""
 "* Partners example for the different responsibility types:\n"
 "\n"
 "  * ADHOC (IVA Responsable Inscripto)\n"
-"  * Consejo Municipal Rosario (IVA Sujeto Exento)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
 "  * Gritti (Monotributo)\n"
-"  * Cerro Castor. IVA Liberado in Zona Franca\n"
-"  * Expresso (Cliente del Exterior)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
 "  * Odoo (Proveedor del Exterior)\n"
 "\n"
 "Highlights:\n"
@@ -4672,6 +4897,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_es_reports_2024
+msgid ""
+"\n"
+"Modelo 303: Extra fields regarding Rectificación\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
 msgid ""
 "\n"
@@ -5666,6 +5898,8 @@ msgid ""
 "    * Defines tax templates\n"
 "    * Defines fiscal positions for spanish fiscal legislation\n"
 "    * Defines tax reports mod 111, 115 and 303\n"
+"\n"
+"5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
 
 #. module: base
@@ -5703,6 +5937,13 @@ msgid ""
 "This addon allows the user to display all the website forms linked to a certain\n"
 "model. Furthermore, you can create a new website form or edit an existing one.\n"
 "\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_withholding_payment
+msgid ""
+"\n"
+"Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
 msgstr ""
 
 #. module: base
@@ -5810,6 +6051,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_anz_ubl_pint
+msgid ""
+"\n"
+"The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
 msgid ""
 "\n"
@@ -5821,6 +6069,13 @@ msgstr ""
 msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Malaysia is based on the Peppol International (PINT) model for Billing.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sg_ubl_pint
+msgid ""
+"\n"
+"The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
 
 #. module: base
@@ -6199,6 +6454,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_iq
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Iraq in Odoo.\n"
+"==============================================================================\n"
+"Iraq accounting basic charts and localization.\n"
+"Activates:\n"
+"- Chart of accounts\n"
+"- Taxes\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
 msgid ""
 "\n"
@@ -6301,6 +6568,22 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Taiwan in Odoo.\n"
 "==============================================================================\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tr
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Türkiye in Odoo\n"
+"==========================================================================\n"
+"\n"
+"Türkiye accounting basic charts and localizations\n"
+"-------------------------------------------------\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
 msgstr ""
 
 #. module: base
@@ -7454,6 +7737,20 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_swiggy
+msgid ""
+"\n"
+"This module integrates with UrbanPiper to receive and manage orders from Swiggy.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
+msgid ""
+"\n"
+"This module integrates with UrbanPiper to receive and manage orders from Uber Eats.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_zomato
 msgid ""
 "\n"
@@ -7709,6 +8006,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_event_full_enterprise
+msgid ""
+"\n"
+"This module will test the main event flows of Odoo, both frontend and backend.\n"
+"It installs sale capabilities, front-end flow, eCommerce, questions and\n"
+"automatic lead generation, full Online support, sms and whatsapp support, ...\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
 msgid ""
 "\n"
@@ -7791,27 +8097,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_tr_hr_payroll
-msgid ""
-"\n"
-"Türkiye Payroll and Tax Rules\n"
-"============================\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_tr
-msgid ""
-"\n"
-"Turkish charts of accounts\n"
-"========================================\n"
-"    * Defines the default chart of accounts\n"
-"    * Defines the default taxes\n"
-"    * Defines default tax report\n"
-"\n"
-"This was done in collaboration with Broadmax Partner in Türkiye.\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_auth_totp
 msgid ""
 "\n"
@@ -7827,6 +8112,17 @@ msgid ""
 "Note: logically, two-factor prevents password-based RPC access for users\n"
 "where it is enabled. In order to be able to execute RPC scripts, the user\n"
 "can setup API keys to replace their main password.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tr_hr_payroll
+msgid ""
+"\n"
+"Türkiye Payroll and Tax Rules\n"
+"=============================\n"
+"- Social Security Premium/Insurance calculations for employment and unemployment\n"
+"- Income tax calculations\n"
+"- Stamp tax deductions\n"
 msgstr ""
 
 #. module: base
@@ -8270,6 +8566,47 @@ msgstr "%y - Зуун үгүй он [00,99].\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
 msgid "&amp; Close"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be a valid Property value for field "
+"'%%(field)s'. Each property need at least 'name', 'type' and 'string' "
+"attribute."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be a valid Selection value for "
+"'%(label_property)s' (subfield of '%%(field)s' field)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
+"(subfield of '%%(field)s' field)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be an float for field '%(label_property)s' "
+"property (subfield of '%%(field)s' field)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be an integer for field '%(label_property)s' "
+"property (subfield of '%%(field)s' field)."
 msgstr ""
 
 #. module: base
@@ -12857,6 +13194,11 @@ msgid "Australia"
 msgstr "Австрали"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_anz_ubl_pint
+msgid "Australia & New Zealand - UBL PINT"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australia - Accounting"
 msgstr ""
@@ -14016,6 +14358,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_accountant
 msgid "Bridge between Stock and Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_subscription_timesheet
+msgid "Bridge created to add computation of timesheet to subscription"
 msgstr ""
 
 #. module: base
@@ -17903,6 +18250,11 @@ msgid "EET"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nz_eft
+msgid "EFT Batch Payment"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
 msgstr "ESC/POS Төхөөрөмжийн драйвер"
@@ -19045,6 +19397,11 @@ msgid "Event Social"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_event_full_enterprise
+msgid "Event Test (all modules)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
 msgid "Event: manage sponsors and exhibitors"
 msgstr ""
@@ -19313,6 +19670,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_payment_cpa005
 msgid "Export payments as CPA 005 AFT files"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_nz_eft
+msgid "Export payments as EFT files"
 msgstr ""
 
 #. module: base
@@ -22241,6 +22603,11 @@ msgid "Indian - Stock Report(GST)"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_withholding_payment
+msgid "Indian - TDS For Payment"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_tds_tcs
 msgid "Indian - TDS TCS Reports"
 msgstr ""
@@ -22989,6 +23356,11 @@ msgstr "Иран"
 #: model:res.country,name:base.iq
 msgid "Iraq"
 msgstr "Ирак"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_iq
+msgid "Iraq - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -24225,6 +24597,7 @@ msgid "Locale Code"
 msgstr "Дотоод код"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_accounting_localization
 #: model:ir.module.category,name:base.module_category_accounting_localizations
 #: model:ir.module.category,name:base.module_category_localization
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -28289,6 +28662,16 @@ msgid "POS Stripe"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_swiggy
+msgid "POS UrbanPiper - Swiggy"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
+msgid "POS UrbanPiper - Uber Eats"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_zomato
 msgid "POS UrbanPiper - Zomato"
 msgstr ""
@@ -29877,6 +30260,11 @@ msgid "Project Sales Subscription"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
+msgid "Project Sales Subscription Timesheet"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_project_stock
 msgid "Project Stock"
 msgstr ""
@@ -29933,6 +30321,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_sale_subscription
+#: model:ir.module.module,summary:base.module_sale_subscription_timesheet
 msgid "Project sales subscriptions"
 msgstr ""
 
@@ -32240,6 +32629,12 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
+"Хуурамч дансны дугаартай нэхэмжлэх илгээх нь фишинг халдлагын нийтлэг арга "
+"юм. Өөрийгөө хамгаалахын тулд шинэ банкны дансны дугааруудыг үргэлж "
+"баталгаажуулж байх шаардлагатай. Үүний тулд нийлүүлэгчтэйгээ шууд утсаар "
+"холбогдож шалгах нь зүйтэй, учир нь фишинг халдлага ихэвчлэн тэдний имэйл "
+"хаяг эвдэрсэн үед болдог. Баталгаажуулсны дараа л мөнгө шилжүүлэх боломжийг "
+"идэвхжүүлнэ үү."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.WST
@@ -32653,6 +33048,11 @@ msgid "Singapore - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sg_ubl_pint
+msgid "Singapore - UBL PINT"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sx
 msgid "Sint Maarten (Dutch part)"
 msgstr "Гэгээн Мартин (Голланд хэсэг)"
@@ -32917,6 +33317,11 @@ msgstr "Испани - Санхүү (PGCE 2008)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports
 msgid "Spain - Accounting (PGCE 2008) Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
+msgid "Spain - Accounting Reports (2024 Update)"
 msgstr ""
 
 #. module: base
@@ -34307,6 +34712,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Татварын дугаар. Энд оруулах утгууд нь тухайн улсын форматад нийцэж байгааг "
+"шалгана. Хэрэв түнш татварын харьяалалд хамаарахгүй бол '/' тэмдгийг ашиглаж"
+" тэмдэглэж болно."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
@@ -34337,6 +34745,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Харилцагч нь өөрийн стандарт нөхцөл, болзлыг, тэр ч байтугай эдгээр "
+"борлуулалтын стандарт нөхцөлөөс хойш боловсруулагдсан байсан ч хамаагүй, "
+"илэрхийлэн татгалзаж байна. Аль нэг өөрчлөлт хүчинтэй байхын тулд урьдчилан "
+"бичгээр зөвшөөрөгдсөн байх ёстой."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -35954,29 +36366,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__turkey
-#: model:res.country,name:base.tr
-msgid "Türkiye"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr
-msgid "Türkiye - Accounting"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
-msgid "Türkiye - Accounting Reports"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
-msgid "Türkiye - Payroll"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll_account
-msgid "Türkiye - Payroll with Accounting"
-msgstr ""
+msgid "Turkey"
+msgstr "Турк"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -36057,6 +36448,31 @@ msgstr "Хязгаарлалтын төрөл: `f` нь гадаад түлхү�
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Type:"
 msgstr "Төрөл:"
+
+#. module: base
+#: model:res.country,name:base.tr
+msgid "Türkiye"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr
+msgid "Türkiye - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
+msgid "Türkiye - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
+msgid "Türkiye - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll_account
+msgid "Türkiye - Payroll with Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
@@ -36289,7 +36705,9 @@ msgstr "Wkhtmltopdf-г сервер дээр олсонгүй. PDF-г үүсгэ
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
-msgid "Unable to import field type '%s'  "
+msgid ""
+"Unable to import'%%(field)s' Properties field as a whole, target individual "
+"property instead."
 msgstr ""
 
 #. module: base
@@ -36518,6 +36936,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "Unknown sub-field “%s”"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"Unknown value '%(value)s' for boolean '%(label_property)s' property "
+"(subfield of '%%(field)s' field)."
 msgstr ""
 
 #. module: base

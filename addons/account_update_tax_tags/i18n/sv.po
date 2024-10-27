@@ -25,7 +25,7 @@ msgstr ""
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__company_id
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__create_uid
@@ -40,7 +40,7 @@ msgstr "Skapad den"
 #. module: account_update_tax_tags
 #: model:ir.model.fields,help:account_update_tax_tags.field_account_update_tax_tags_wizard__date_from
 msgid "Date from which journal items will be updated."
-msgstr ""
+msgstr "Datum från vilket verifikat kommer att uppdateras."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -50,7 +50,7 @@ msgstr "Avbryt"
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__display_lock_date_warning
 msgid "Display Lock Date Warning"
-msgstr ""
+msgstr "Visa varning för låsdatum"
 
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__display_name
@@ -82,6 +82,7 @@ msgstr "Start från"
 msgid ""
 "The date you chose is violating the tax lock date, do this at your own risk."
 msgstr ""
+"Det datum du valde bryter mot skattelåsningsdatumet, gör detta på egen risk."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -91,13 +92,13 @@ msgstr "Uppdatera"
 #. module: account_update_tax_tags
 #: model:ir.model,name:account_update_tax_tags.model_account_update_tax_tags_wizard
 msgid "Update Tax Tags Wizard"
-msgstr ""
+msgstr "Uppdatera guiden för skattetecken"
 
 #. module: account_update_tax_tags
 #: model:ir.actions.act_window,name:account_update_tax_tags.action_open_wizard
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.res_config_settings_view_form
 msgid "Update tax tags on existing Journal Entries"
-msgstr ""
+msgstr "Uppdatera skattetaggar på befintliga Journalposter"
 
 #. module: account_update_tax_tags
 #. odoo-python
@@ -106,6 +107,7 @@ msgid ""
 "Update with children taxes that are child of multiple parents is not "
 "supported."
 msgstr ""
+"Uppdatering med barnskatter som är barn till flera föräldrar stöds inte."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -116,3 +118,8 @@ msgid ""
 "                    The update will change tax tags on your accounting history, starting from and including selected date,\n"
 "                    so that it matches with the current configuration of your taxes.<br/>"
 msgstr ""
+"Uppdatering av skattetaggar på befintliga Verifikat är en <b>irreversibel</b> åtgärd som kommer att påverka\n"
+"                    dina rapporter.<br/>\n"
+"                    Vi rekommenderar starkt att du säkerhetskopierar din databas i förväg.<br/>\n"
+"                    Uppdateringen kommer att ändra skattetaggar på din bokföringshistorik, från och med och inklusive valt datum,\n"
+"                    så att den stämmer överens med den aktuella konfigurationen av dina skatter.<br/>"

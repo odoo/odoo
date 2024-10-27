@@ -5,18 +5,18 @@
 # Translators:
 # Martin Trigaux, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# Wil Odoo, 2024
 # Chloe Wang, 2024
 # Chill Liao <chill421@qq.com>, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:54+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -396,7 +396,7 @@ msgstr "<span>闭幕</span>"
 msgid ""
 "<span>Please note that the kiosk only works with Adyen &amp; Stripe "
 "terminals</span>"
-msgstr "<span>请注意，报刊亭只能与 Adyen 和 Stripe 终端一起使用。</span>"
+msgstr "<span>请注意，自助终端只能与 Adyen 和 Stripe 终端一起使用。</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -925,7 +925,7 @@ msgstr "打印机的内部标识"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Another session is already opened for this point of sale."
-msgstr "已为此销售点打开其他会话。"
+msgstr "已为此POS打开其他会话。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_apple_pie_product_template
@@ -944,7 +944,7 @@ msgstr "应用"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1099,7 +1099,6 @@ msgstr "平均价格"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/reprint_receipt_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Back"
 msgstr "回退"
@@ -1601,7 +1600,7 @@ msgstr "类别名称"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_categ_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_categ_ids
 msgid "Category used in the Point of Sale."
-msgstr "在销售点中使用分类."
+msgstr "在POS中使用分类."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_chairs
@@ -1646,7 +1645,7 @@ msgstr "勾选此项，产品将在POS出现。"
 #: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
-msgstr "检查是否要在销售点订单中对此类别的产品进行分组"
+msgstr "检查是否要在POS订单中对此类别的产品进行分组"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -2206,7 +2205,7 @@ msgstr "钩编斗篷 通用尺码"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__currency_rate
@@ -2335,7 +2334,7 @@ msgstr "每日销售报表"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session_filtered
 msgid "Daily sessions hold sales from your Point of Sale."
-msgstr "查看销售点中的日常会话。"
+msgstr "查看POS中的日常会话。"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
@@ -2538,7 +2537,7 @@ msgstr "目标账户是只读的"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Details"
-msgstr "细节"
+msgstr "详情"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2664,7 +2663,7 @@ msgstr "通过电子价格标签显示和更新产品信息"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Display orders on the preparation display"
-msgstr "准备工作显示订单"
+msgstr "准备显示屏订单"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__is_closing_entry_by_product
@@ -2684,7 +2683,7 @@ msgstr "通过电子价签显示产品价格"
 #. odoo-python
 #: code:addons/point_of_sale/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "无访问权限，为用户摘要电邮路过该数据"
+msgstr "无访问权限，用户摘要邮件忽略该数据"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3288,7 +3287,7 @@ msgstr "指示异常活动的图标。"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
 msgid "Identify Customer"
-msgstr "识别客户"
+msgstr "区分客户"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_needaction
@@ -3314,7 +3313,7 @@ msgstr "如果勾选，则该硬币/纸币可在所有 PoS 中使用。"
 msgid ""
 "If this orderline is a refund, then the refunded orderline is specified in "
 "this field."
-msgstr "如果此订单行是退款，那么订单行的退款在本字段指定。"
+msgstr "如果此订单明细是退款，那么订单明细的退款在本字段指定。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__picking_policy
@@ -3859,7 +3858,7 @@ msgid ""
 " pricelist to specific customers from their contact form (in Sales tab). To "
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
-msgstr "使多个价格表可用于销售点。否则，将应用默认价格表。"
+msgstr "使多个价格表可用于POS。否则，将应用默认价格表。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3968,6 +3967,11 @@ msgstr "手机"
 #: code:addons/point_of_sale/static/src/app/navbar/sync_popup/sync_popup.xml:0
 msgid "Model"
 msgstr "模型"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_ir_module_module
+msgid "Module"
+msgstr "模块"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
@@ -4138,7 +4142,7 @@ msgstr "否"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "No Point of Sale selected"
-msgstr "没有选择销售点"
+msgstr "没有选择POS"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4254,7 +4258,7 @@ msgstr "未结算"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_note_tree
 msgid "Note Models"
-msgstr "备注模型"
+msgstr "常用备注"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4291,7 +4295,7 @@ msgstr "错误数量"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_qty
 msgid "Number of items refunded in this orderline."
-msgstr "此订单行中的退款项目数量。"
+msgstr "此订单明细中的退款商品数量。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_needaction_counter
@@ -4522,7 +4526,7 @@ msgstr "订单 %s未全额付款。"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_count
 msgid "Order Count"
-msgstr "订购计数"
+msgstr "订单数"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__date
@@ -4540,12 +4544,12 @@ msgstr "订单号序列"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
 msgid "Order Line IDs Sequence"
-msgstr "订单行 ID 序列"
+msgstr "订单明细 ID 序列"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
 msgid "Order Lines"
-msgstr "订单行"
+msgstr "订单明细"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__floating_order_name
@@ -4611,7 +4615,7 @@ msgstr "本订单中退还项目的先后顺序"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
-msgstr "订单行"
+msgstr "订单明细"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4628,7 +4632,7 @@ msgstr "订单参考号："
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Orderlines in this field are the lines that refunded this orderline."
-msgstr "本字段中的订单行是此订单中退款的行项目。"
+msgstr "此字段中的订单明细是已退款给该订单明细的行。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4762,7 +4766,7 @@ msgstr "POS营业点"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order line %s"
-msgstr "销售点订单行 %s"
+msgstr "POS订单明细 %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5042,7 +5046,7 @@ msgstr ""
 msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
-msgstr "请在关闭此会话之前关闭所有销售点的会话。打开的会话是 ：%s "
+msgstr "请在关闭此会话之前关闭所有POS的会话。打开的会话是 ：%s "
 
 #. module: point_of_sale
 #. odoo-python
@@ -5059,7 +5063,7 @@ msgstr ""
 msgid ""
 "Please create/select a Point of Sale above to show the configuration "
 "options."
-msgstr "请在上面创建/选择一个销售点，以显示配置选项。"
+msgstr "请在上面创建/选择一个POS，以显示配置选项。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5162,12 +5166,6 @@ msgid "PoS Note"
 msgstr "销售点备注"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "PoS Order"
-msgstr "POS订单"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "PoS 订单线"
@@ -5200,7 +5198,7 @@ msgstr "PoS 数据载入混入程序"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "Point Of Sale"
-msgstr "销售点"
+msgstr "POS"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5221,7 +5219,7 @@ msgstr "销售点"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Point of Sale"
-msgstr "销售点"
+msgstr "POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_pos_order_view_tree
@@ -5256,22 +5254,22 @@ msgstr "POS配置"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_daily_sales_reports_wizard
 msgid "Point of Sale Daily Report"
-msgstr "销售点每日报表"
+msgstr "POS每日报表"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
 msgid "Point of Sale Details"
-msgstr "销售网点详情"
+msgstr "POS详情"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
 msgid "Point of Sale Details Report"
-msgstr "销售网点详情报表"
+msgstr "POS详情报表"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "Point of Sale Invoice Report"
-msgstr "销售网点结算单报表"
+msgstr "POS结算单报表"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__journal_id
@@ -5282,12 +5280,12 @@ msgstr "门店日记账"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_tree
 msgid "Point of Sale List"
-msgstr "销售点列表"
+msgstr "POS列表"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr "销售点支付向导"
+msgstr "POS支付向导"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -5297,12 +5295,12 @@ msgstr "POS管理组"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr "销售点作业类型"
+msgstr "POS作业类型"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "销售网点订单行"
+msgstr "POS订单明细"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order
@@ -5314,7 +5312,7 @@ msgstr "POS订单"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr "销售网点订单报表"
+msgstr "POS订单报表"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
@@ -5325,7 +5323,7 @@ msgstr "POS支付方式"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "销售点支付"
+msgstr "POS支付"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_printer
@@ -5348,7 +5346,7 @@ msgstr "POS用户组"
 #. module: point_of_sale
 #: model:mail.template,name:point_of_sale.pos_email_marketing_template
 msgid "Point of Sale: Marketing"
-msgstr "销售点：营销"
+msgstr "POS：营销"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
@@ -5498,7 +5496,7 @@ msgstr "准备工作"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
-msgstr "准备工作显示"
+msgstr "准备显示屏"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
@@ -5626,7 +5624,6 @@ msgstr "打印完整收据"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/reprint_receipt_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Print Receipt"
 msgstr "打印收据"
@@ -6210,6 +6207,12 @@ msgid "Request sent"
 msgstr "请求已发送"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Rescue Sessions"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 msgid "Reset"
@@ -6555,12 +6558,12 @@ msgstr "发送"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: model:ir.actions.server,name:point_of_sale.action_send_mail
 msgid "Send Email"
-msgstr "发送电邮"
+msgstr "发送电子邮件"
 
 #. module: point_of_sale
 #: model:mail.template,description:point_of_sale.pos_email_marketing_template
 msgid "Send Marketing Emails from Point of Sale"
-msgstr "从销售点发送营销电子邮件"
+msgstr "从POS发送营销电子邮件"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6702,6 +6705,18 @@ msgstr "每一套产品，多种价格自动折扣等."
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Set the new discount"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Set the new price"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new quantity"
 msgstr "设置新的数量"
 
@@ -6714,7 +6729,7 @@ msgstr "设置"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Settings on this page will apply to this point of sale."
-msgstr "此页面上的设置将适用于该销售点。"
+msgstr "此页面上的设置将适用于该POS。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6782,7 +6797,7 @@ msgstr "显示类别图片"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__show_category_images
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_show_category_images
 msgid "Show category images in the Point of Sale interface."
-msgstr "在销售点界面显示类别图片。"
+msgstr "在POS界面显示类别图片。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6814,7 +6829,7 @@ msgstr "在产品信息中显示利润和成本"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_preparation_display
 msgid "Show orders on the preparation display screen."
-msgstr "在准备工作显示屏上显示订单。"
+msgstr "在准备显示屏上显示订单。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6825,7 +6840,7 @@ msgstr "显示产品图片"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__show_product_images
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_show_product_images
 msgid "Show product images in the Point of Sale interface."
-msgstr "在销售点界面显示产品图片。"
+msgstr "在POS界面显示产品图片。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -7020,7 +7035,7 @@ msgstr "在后台存储编辑后的订单"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
-msgstr "条纹"
+msgstr "Stripe支付"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -7255,7 +7270,7 @@ msgstr ""
 msgid ""
 "The Point of Sale could not find any product, customer, employee or action "
 "associated with the scanned barcode."
-msgstr "销售点无法找到与扫描条形码相关的任何产品、客户、员工或操作。"
+msgstr "POS无法找到与扫描条形码相关的任何产品、客户、员工或操作。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_rounding_form_view_inherited
@@ -7354,7 +7369,7 @@ msgstr "将自动检测是否留空硬件代理的主机名或 IP 地址."
 msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
-msgstr "结算单日记账所使用币种在未设置的情况下必须与销售日记账或公司币种一致。"
+msgstr "结算单日记账所使用币别在未设置的情况下必须与销售日记账或公司币别一致。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7389,7 +7404,7 @@ msgstr "此 POS 会话名称必须唯一！"
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users__pos_order_count
 msgid "The number of point of sales orders related to this customer"
-msgstr "与此客户相关的销售点订单的数量"
+msgstr "与此客户相关的POS订单的数量"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7445,7 +7460,7 @@ msgstr "关闭操作时段后，为建立发票而恢复的销售点订单。"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__note_ids
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_note_ids
 msgid "The predefined notes of this point of sale."
-msgstr "该销售点的预定义备注。"
+msgstr "该POS的预定义备注。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -7503,7 +7518,7 @@ msgstr "当前选定的客户需要指定地址。"
 msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
-msgstr "所选价格表必须属于没有公司或销售点的公司。"
+msgstr "所选价格表必须属于没有公司或POS的公司。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7518,7 +7533,7 @@ msgid ""
 "The session has been already closed by another User. All sales completed in "
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
-msgstr "会话已被另一用户关闭。在此期间完成的所有销售已保存在救援会话中，可以随时查看，并从销售点仪表板过账至Accounting应用程序。"
+msgstr "会话已被另一用户关闭。在此期间完成的所有销售已保存在救援会话中，可以随时查看，并从POS仪表板过账至Accounting应用程序。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -7664,7 +7679,7 @@ msgstr "本门店未设收银机。"
 msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
-msgstr "所选产品没有序列号/批次号，且销售点应用程序不允许创建序列号/批次号。"
+msgstr "所选产品没有序列号/批次号，且POS应用程序不允许创建序列号/批次号。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7699,20 +7714,20 @@ msgstr "该字段定义了在关闭一个会话时候理论的余额和实际余
 msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
-msgstr "该字段用于将销售点管理员组的 ID 传递到销售点客户端。"
+msgstr "该字段用于将POS管理员组的 ID 传递到POS客户端。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
 msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
-msgstr "该字段用于将销售点用户组的 ID 传递到销售点客户端。"
+msgstr "该字段用于将POS用户组的 ID 传递到POS客户端。"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "This invoice has been created from the point of sale session: %s"
-msgstr "此结算是从销售点会话创建的：%s"
+msgstr "此结算是从POS会话创建的：%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -7898,11 +7913,16 @@ msgstr "称重"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
-"要删除产品，请确保所有销售点会话都已关闭。\n"
-"\n"
-"删除会话中的产品就像试图从顾客手中抢走正在咬中的汉堡包一样，番茄酱和蛋黄酱会四处飞溅，混乱不堪！"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid ""
+"To ensure due balance follow-up, generate an invoice or download the "
+"accounting application. "
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8146,7 +8166,7 @@ msgstr "单价："
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "Units"
-msgstr "件"
+msgstr "单位"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8190,7 +8210,7 @@ msgstr "未税金额"
 msgid ""
 "Until the connection is reestablished, Odoo Point of Sale will operate with "
 "limited functionality."
-msgstr "在重新建立连接之前，Odoo 销售点将以有限的功能运行。"
+msgstr "在重新建立连接之前，Odoo POS将以有限的功能运行。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -8340,6 +8360,12 @@ msgid "Warehouse (PoS)"
 msgstr "仓库（PoS）"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Warning"
+msgstr "警告消息"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
@@ -8389,7 +8415,7 @@ msgstr "欢迎！"
 msgid ""
 "When active, orderlines will be sorted based on product category and "
 "sequence in the product screen's order cart."
-msgstr "激活后，订单行将根据产品屏幕的订单购物车中的产品类别和顺序进行排序。"
+msgstr "若启用，将根据产品屏幕中订单购物车中的产品类别及顺序，对订单资料进行排序。"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__one
@@ -8501,7 +8527,7 @@ msgstr "您只能退还同一订单的产品。"
 msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
-msgstr "您只能取消与（处于新订单或已取消订单状态）订单相关联的销售点订单行。"
+msgstr "您只能取消与（处于新订单或已取消订单状态）订单相关联的POS订单明细。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8603,7 +8629,7 @@ msgstr "您没有权限打开POS营业点。请尝试使用不同的登录用户
 msgid ""
 "You don't have the access rights to get the point of sale closing control "
 "data."
-msgstr "您没有获取销售点关闭控制数据的访问权限。"
+msgstr "您没有获取POS关闭控制数据的访问权限。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8611,7 +8637,7 @@ msgstr "您没有获取销售点关闭控制数据的访问权限。"
 msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
-msgstr "您为 %(payment_method)s付款方式启用了“识别客户”选项，但订单%(order)s中没有客户。"
+msgstr "您为 %(payment_method)s付款方式启用了“区分客户”选项，但订单%(order)s中没有客户。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8624,7 +8650,7 @@ msgstr "您必须四舍五入您的支付明细. 无法四舍五入."
 msgid ""
 "You must define a product for everything you sell through\n"
 "                the point of sale interface."
-msgstr "在销售点界面需要定义一个能代表您所卖的每一样东西的产品。"
+msgstr "在POS界面需要定义一个能代表您所卖的每一样东西的产品。"
 
 #. module: point_of_sale
 #. odoo-python

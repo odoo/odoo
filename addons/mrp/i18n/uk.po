@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:54+0000\n"
+"POT-Creation-Date: 2024-10-25 08:17+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -1903,7 +1903,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
@@ -1994,14 +1993,9 @@ msgid ""
 "Defines if you can consume more or less components than the quantity defined on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
 "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
+"  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
-"Визначає, чи можете ви споживати більше чи менше компонентів, ніж кількість, визначена в специфікації:\n"
-"  * Дозволено: дозволено для всіх користувачів виробництва.\n"
-"  * Дозволено з попередженням: дозволено для всіх користувачів виробництва із підсумковими розбіжностями споживання під час закриття замовлення на виробництво.\n"
-"  Зауважте, що у випадку споживання компонента вручну, де споживання реєструється виключно вручну, попередження про споживання також видаватимуться, коли це буде доречно.\n"
-"  * Заблоковано: лише менеджер може закрити замовлення на виробництво, якщо споживання специфікації не дотримується."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2573,6 +2567,11 @@ msgstr "Є рядки маршруту"
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
 msgid "Hidden"
 msgstr "Приховано"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
+msgid "Highlight Consumption"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -3236,7 +3235,6 @@ msgid "Manage Work Order Operations"
 msgstr "Керувати операціями нарядів на роботу"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
 msgid "Manual Consumption"
 msgstr "Ручне обчислення"
@@ -3547,6 +3545,11 @@ msgstr "Підрахунок виробництва Mrp"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Дедлайн моєї дії"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "My MOs"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
@@ -6186,6 +6189,21 @@ msgid "Use Reception Report with Manufacturing Orders"
 msgstr "Використовуйте звіт про прийом із замовленнями на виробництво"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
+msgid ""
+"Use the table work center control panel to register operations in the shop floor directly.\n"
+"            The tablet provides worksheets for your workers and allow them to scrap products, track time,\n"
+"            launch a maintenance request, perform quality tests, etc."
+msgstr ""
+"Використовуйте панель керування робочого центру, щоб зареєструвати операції безпосередньо в цеху.\n"
+"            Панель забезпечує робочі завдання для ваших працівників і дозволяє їм бракувати продукцію, відстежувати час,\n"
+"            запускати запит на технічне обслуговування, проводити перевірки якості тощо."
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Used In"
@@ -6568,18 +6586,10 @@ msgid "Work center"
 msgstr "Робочий центр"
 
 #. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
-msgid ""
-"Work orders are operations to do as part of a manufacturing order.\n"
-"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
-msgstr ""
-"Робочі замовлення - це операції, що виконуються як частина замовлення на виробництво.\n"
-"                   Операції визначаються у специфікації або додаються безпосередньо до замовлення на виробництво."
-
-#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"

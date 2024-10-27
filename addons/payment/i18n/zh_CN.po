@@ -10,7 +10,7 @@
 # Wil Odoo, 2024
 # Emily Jia <eji@odoo.com>, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,7 +156,7 @@ msgstr "<span><i class=\"fa fa-lock\"/> 担保人</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
-msgstr ""
+msgstr "<strong><i class=\"fa fa-file-text\"/> 显示可用性报告</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -258,7 +258,7 @@ msgstr "ACH 直接扣账"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "ACTIVATE STRIPE"
-msgstr "启动 Stripe"
+msgstr "启动 Stripe支付"
 
 #. module: payment
 #. odoo-python
@@ -279,7 +279,7 @@ msgstr "激活"
 #. module: payment
 #: model:ir.actions.server,name:payment.action_activate_stripe
 msgid "Activate Stripe"
-msgstr "启用 Stripe"
+msgstr "启用 Stripe支付"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__active
@@ -411,7 +411,7 @@ msgstr "应用"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: payment
 #. odoo-javascript
@@ -936,7 +936,7 @@ msgstr "信用付款"
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_currency_ids
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
 msgid "Currencies"
-msgstr "币种"
+msgstr "币别"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__currency_id
@@ -944,7 +944,7 @@ msgstr "币种"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__main_currency_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
@@ -1309,7 +1309,7 @@ msgstr "是主要付款方式"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr "是否支持条纹的国家/地区"
+msgstr "是支持Stripe支付的国家/地区"
 
 #. module: payment
 #. odoo-javascript
@@ -1654,7 +1654,7 @@ msgstr "不能为公共合作伙伴分配令牌。"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "None is configured for:"
-msgstr ""
+msgstr "没有为以下内容配置："
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
@@ -2110,7 +2110,7 @@ msgstr "请等待......"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_post_finance
 msgid "PostFinance Pay"
-msgstr ""
+msgstr "邮政银行支付"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_poste_pay
@@ -2300,7 +2300,7 @@ msgstr "选择国家。留空以便在所有地方都是可用的。"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select currencies. Leave empty not to restrict any."
-msgstr "选择币种。留空则不限制币种。"
+msgstr "选择币别。留空则不限制币别。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -2509,7 +2509,7 @@ msgstr "这个支付提供商可用的国家。如果没有设置，它对所有
 msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
-msgstr "该付款服务提供商可用的射程。留空则不限制币种。"
+msgstr "该支付服务提供商可用的射程。留空则不限制币别。"
 
 #. module: payment
 #. odoo-python
@@ -2760,7 +2760,7 @@ msgid ""
 "This partner has no email, which may cause issues with some payment providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
-"该合作伙伴没有电子邮箱地址，可能导致某些付款服务提供商出现问题。\n"
+"该合作伙伴没有电子邮箱地址，可能导致某些支付服务提供商出现问题。\n"
 "                     建议为其设置电子邮箱地址。"
 
 #. module: payment
@@ -3006,7 +3006,7 @@ msgstr "Xendit"
 msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
-msgstr "您无法取消存档与未激活的支付方式或禁用的提供商相关联的令牌。"
+msgstr "无效支付方式或是已禁用提供商关联的令牌，你是无法取消归档的。"
 
 #. module: payment
 #. odoo-python

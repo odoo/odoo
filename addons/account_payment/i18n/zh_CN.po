@@ -5,15 +5,15 @@
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,6 +85,11 @@ msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
 msgstr "<i class=\"fa fa-fw fa-check-circle\"/>未结"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
 msgstr "<span class=\"d-none d-md-inline\">未结</span>"
@@ -112,13 +117,20 @@ msgid ""
 msgstr ""
 "<strong>警告！</strong>该付款有待处理退款。\n"
 "                        请等待处理。如果退款在\n"
-"                        几分钟内处于待处理状态，请检查付款服务提供商配置。"
+"                        几分钟内处于待处理状态，请检查支付服务提供商配置。"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "A discount will be applied if the customer pays before %s included."
 msgstr "如果客户在%s之前付款，将享受折扣。"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"A payment has already been made on this invoice, please make sure to not pay"
+" twice."
+msgstr ""
 
 #. module: account_payment
 #. odoo-python
@@ -135,7 +147,7 @@ msgstr "创建新付款交易需要令牌。"
 #. module: account_payment
 #: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Activate Stripe"
-msgstr "启用 Stripe"
+msgstr "启用 Stripe 支付"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -207,7 +219,7 @@ msgstr "创建日期"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__discount_date
@@ -394,7 +406,7 @@ msgstr "逾期发票应属于同一公司。"
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same currency."
-msgstr "逾期发票应使用相同的币种。"
+msgstr "逾期发票应使用相同的币别。"
 
 #. module: account_payment
 #. odoo-python
@@ -466,12 +478,12 @@ msgstr "付款方式"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr "付款服务提供商"
+msgstr "支付服务提供商"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr "付款服务提供商"
+msgstr "支付服务提供商"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
@@ -701,7 +713,7 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"须先停用付款服务提供商，然后才能删除其日记账。\n"
+"须先停用支付服务提供商，然后才能删除其日记账。\n"
 "链接的服务提供商：%s"
 
 #. module: account_payment

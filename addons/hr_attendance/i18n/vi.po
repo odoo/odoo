@@ -42,6 +42,8 @@ msgstr "'Tài liệu'"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 msgid "<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Giai đoạn\" role=\"img\" "
+"title=\"Giai đoạn\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -54,6 +56,8 @@ msgid ""
 "<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-"
 "label=\"Available\" title=\"Available\"/>"
 msgstr ""
+"<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-label=\"Có "
+"mặt\" title=\"Có mặt\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -61,26 +65,28 @@ msgid ""
 "<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Không có mặt\" title=\"Không có mặt\">\n"
+"                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Time Period </span>"
-msgstr ""
+msgstr "<span class=\"me-2\">Giai đoạn thời gian </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Time Period</span>"
-msgstr ""
+msgstr "<span class=\"me-2\">Giai đoạn thời gian</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Tolerance</span>"
-msgstr ""
+msgstr "<span class=\"me-2\">Khoảng sai số</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"ms-2\">Hours</span>"
-msgstr ""
+msgstr "<span class=\"ms-2\">Giờ</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -89,6 +95,9 @@ msgid ""
 "                                <br/>\n"
 "                                <br/>"
 msgstr ""
+"<span class=\"ms-2\">Phút</span>\n"
+"                                <br/>\n"
+"                                <br/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -123,7 +132,7 @@ msgstr "<span> giây</span>"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__absence_management
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Absence Management"
-msgstr ""
+msgstr "Quản lý vắng mặt"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction
@@ -198,7 +207,7 @@ msgstr "Phê duyệt"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Approve Extra Hours"
-msgstr ""
+msgstr "Phê duyệt giờ làm thêm"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__approved
@@ -209,7 +218,7 @@ msgstr "Đã phê duyệt"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_overtime_validation__by_manager
 msgid "Approved by Manager"
-msgstr ""
+msgstr "Được Quản lý phê duyệt"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -242,7 +251,7 @@ msgstr "Chấm công từ Systray"
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_install_kiosk_pwa
 msgid "Attendance Kiosk"
-msgstr ""
+msgstr "Ki-ốt chấm công"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
@@ -295,12 +304,12 @@ msgstr "Chấm công bằng mã vạch"
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.hr_attendance_check_out_cron_ir_actions_server
 msgid "Attendance: Automatically check-out employees"
-msgstr ""
+msgstr "Chấm công: Tự động check-out nhân viên"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.hr_attendance_absence_cron_ir_actions_server
 msgid "Attendance: Detect Absences for employees"
-msgstr ""
+msgstr "Chấm công: Phát hiện nhân viên vắng mặt"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
@@ -326,24 +335,24 @@ msgstr "Chấm công từ back-end"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
 msgid "Auto Check Out Tolerance"
-msgstr ""
+msgstr "Khoảng sai số check-out tự động"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out
 msgid "Automatic Check Out"
-msgstr ""
+msgstr "Check-out tự động"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__auto_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Automatic Check-Out"
-msgstr ""
+msgstr "Check-out tự động"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_overtime_validation__no_validation
 msgid "Automatically Approved"
-msgstr ""
+msgstr "Được phê duyệt tự động"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -351,11 +360,13 @@ msgid ""
 "Automatically Check-Out Employees based on their working schedule with an "
 "additional tolerance."
 msgstr ""
+"Tự động check-out nhân viên dựa trên lịch làm việc của họ với một khoảng sai"
+" số bổ sung."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Automatically Checked-Out"
-msgstr ""
+msgstr "Được check-out tự động"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -372,13 +383,13 @@ msgstr "Camera sau"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Badge with Barcode"
-msgstr ""
+msgstr "Thẻ có mã vạch"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Badge with Barcode on Tablet"
-msgstr ""
+msgstr "Thẻ có mã vạch trên máy tính bảng"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
@@ -427,7 +438,7 @@ msgstr "Trình duyệt"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Can be converted as Time Off (cfr Time Off configuration)."
-msgstr ""
+msgstr "Có thể chuyển đổi thành Nghỉ phép (cfr cấu hình Nghỉ phép)."
 
 #. module: hr_attendance
 #. odoo-python
@@ -534,7 +545,7 @@ msgstr "Chọn thời gian tin nhắn chào mừng sẽ được hiển thị."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Choose how to record attendances"
-msgstr ""
+msgstr "Chọn cách ghi nhận chấm công"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_city
@@ -592,7 +603,7 @@ msgstr "Cấu hình"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Connect an RFID reader, and scan a token."
-msgstr ""
+msgstr "Kết nối đầu đọc RFID và quét token."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_country_name
@@ -754,7 +765,7 @@ msgstr "Lỗi"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
 msgid "Expected Hours"
-msgstr ""
+msgstr "Giờ dự kiến"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
@@ -778,7 +789,7 @@ msgstr "Giờ làm thêm (thực tế)"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_overtime_validation
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Extra Hours Validation"
-msgstr ""
+msgstr "Xác thực giờ làm thêm"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -918,6 +929,8 @@ msgstr "Nhận dạng thủ công"
 msgid ""
 "If checked, days not covered by an attendance will be visible in the Report."
 msgstr ""
+"Nếu được chọn, những ngày không có trong chấm công sẽ hiển thị trong Báo "
+"cáo."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
@@ -1086,7 +1099,7 @@ msgstr "Chọn thủ công"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Manually (optional PIN)"
-msgstr ""
+msgstr "Thủ công (PIN tuỳ chọn)"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -1136,6 +1149,8 @@ msgstr "Đội của tôi"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "No Badge defined on employees. Set one to test."
 msgstr ""
+"Không có Thẻ nào được xác định cho nhân viên. Hãy thiết lập một thẻ để kiểm "
+"tra."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1244,7 +1259,7 @@ msgstr "Overtime"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_status
 msgid "Overtime Status"
-msgstr ""
+msgstr "Trạng thái làm thêm"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
@@ -1279,13 +1294,13 @@ msgstr "Nhân viên chung"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "RFID Token with reader"
-msgstr ""
+msgstr "Token RFID với đầu đọc"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "RFID Token with reader on tablet"
-msgstr ""
+msgstr "Token RFID với đầu đọc trên máy tính bảng"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__rating_ids
@@ -1307,7 +1322,7 @@ msgstr "Từ chối"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Refuse Extra Hours"
-msgstr ""
+msgstr "Từ chối giờ làm thêm"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__refused
@@ -1357,7 +1372,7 @@ msgstr "Thiết lập mã PIN ở form Nhân viên (trong tab Thiết lập Nhâ
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Set my badge"
-msgstr ""
+msgstr "Thiết lập thẻ của tôi"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -1441,6 +1456,8 @@ msgid ""
 "This attendance was automatically checked out because the employee exceeded "
 "the allowed time for their scheduled work hours."
 msgstr ""
+"Lượt chấm công này được tự động check-out vì đã quá thời gian cho phép theo "
+"giờ làm việc đã lên lịch cho nhân viên."
 
 #. module: hr_attendance
 #. odoo-python
@@ -1449,6 +1466,8 @@ msgid ""
 "This attendance was automatically created to cover an unjustified absence on"
 " that day."
 msgstr ""
+"Lượt chấm công này được tự động ra để bù cho thời gian vắng mặt không có lý "
+"do vào ngày hôm đó."
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__to_approve
@@ -1576,7 +1595,7 @@ msgstr "Giờ làm việc"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Worked Extra Hours"
-msgstr ""
+msgstr "Giờ làm thêm đã làm"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours

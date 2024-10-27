@@ -18,16 +18,16 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2024
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Robert Frykelius <robert.frykelius@linserv.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:54+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Robert Frykelius <robert.frykelius@linserv.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -524,7 +524,7 @@ msgstr "Tillgänglighet"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_on_date
 msgid "Available On Date"
-msgstr ""
+msgstr "Tillgänglig på datum"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
@@ -847,7 +847,7 @@ msgstr "Display"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_add_button
 msgid "Display Add Button"
-msgstr ""
+msgstr "Visa Lägg till-knapp"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__display_name
@@ -1516,16 +1516,14 @@ msgstr "Ingen kontantrörelse ännu"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
-#, python-format
 msgid "No location found"
-msgstr ""
+msgstr "Ingen plats hittades"
 
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
-#, python-format
 msgid "No lunch location available."
-msgstr ""
+msgstr "Ingen lunchplats tillgänglig."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1649,7 +1647,7 @@ msgstr "Beställ din lunch"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Order lines List"
-msgstr ""
+msgstr "Beställningsrader Lista"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__ordered
@@ -1664,7 +1662,7 @@ msgstr "Order"
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
 msgid "Orders for {{ ctx['order']['company_name'] }}"
-msgstr "Beställningar för {{ ctx['order']['företagsnamn'] }}"
+msgstr "Beställningar för {{ ctx['order']['company_name'] }}"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -1732,9 +1730,8 @@ msgstr "Vegetarisk pizza"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
-#, python-format
 msgid "Please create a location to start ordering."
-msgstr ""
+msgstr "Vänligen skapa en plats för att börja beställa."
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
@@ -2107,6 +2104,8 @@ msgstr ""
 msgid ""
 "The vendor related to this order is not available at the selected date."
 msgstr ""
+"Den leverantör som är relaterad till denna beställning är inte tillgänglig "
+"vid det valda datumet."
 
 #. module: lunch
 #. odoo-python
@@ -2423,7 +2422,7 @@ msgstr "kontantflyttningsblankett"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
 msgid "cashmove list"
-msgstr ""
+msgstr "cashmove lista"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form

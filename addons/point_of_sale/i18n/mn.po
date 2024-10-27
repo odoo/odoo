@@ -24,17 +24,17 @@
 # baaska sh <sh.baaskash@gmail.com>, 2024
 # Minj P <pminj322@gmail.com>, 2024
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2024
+# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:54+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -382,7 +382,7 @@ msgstr "<span class=\"oe_inline\"><b>Дэлгэцээр харахыг алга�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Balance</span>"
-msgstr ""
+msgstr "<span>Үлдэгдэл</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1115,7 +1115,6 @@ msgstr "Дундаж үнэ"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/reprint_receipt_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Back"
 msgstr "Буцах"
@@ -4005,6 +4004,11 @@ msgid "Model"
 msgstr "Модел"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_ir_module_module
+msgid "Module"
+msgstr "Модуль"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
@@ -5199,12 +5203,6 @@ msgid "PoS Note"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "PoS Order"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr ""
@@ -5663,7 +5661,6 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/reprint_receipt_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Print Receipt"
 msgstr "Баримт хэвлэх"
@@ -5972,7 +5969,7 @@ msgstr "Нил ягаан"
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.xml:0
 msgid "QR Code"
-msgstr ""
+msgstr "QR код"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__qr_code_method
@@ -6245,6 +6242,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Request sent"
 msgstr "Хүсэлт илгээх"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Rescue Sessions"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6735,6 +6738,18 @@ msgstr "Татварын тохиргоо сонгох"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
 msgstr "Нэг бараанд олон үнэ тохируулах, автомат хөнгөлөлт г.м."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Set the new discount"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Set the new price"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7800,6 +7815,8 @@ msgstr ""
 msgid ""
 "This journal is associated with a payment method. You cannot archive it"
 msgstr ""
+"Энэ журнал нь төлбөрийн аргаатай холбогдсон байна. Та үүнийг архивлах "
+"боломжгүй."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7975,7 +7992,15 @@ msgstr "Жин хэмжүүрээр хэмжих"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid ""
+"To ensure due balance follow-up, generate an invoice or download the "
+"accounting application. "
 msgstr ""
 
 #. module: point_of_sale
@@ -8416,6 +8441,12 @@ msgstr "Агуулах"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_warehouse_id
 msgid "Warehouse (PoS)"
 msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Warning"
+msgstr "Анхааруулга"
 
 #. module: point_of_sale
 #. odoo-python

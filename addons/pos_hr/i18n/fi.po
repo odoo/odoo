@@ -6,7 +6,6 @@
 # Simo Suurla <simo@suurla.fi>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Martin Trigaux, 2024
-# Anni Saarelainen, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
@@ -15,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -54,13 +53,9 @@ msgstr "Edistyneet oikeudet"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "All Employees"
 msgstr ""
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "All employees"
-msgstr "Kaikki työntekijät"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_account_bank_statement_line
@@ -150,6 +145,11 @@ msgid "Employee"
 msgstr "Työntekijä"
 
 #. module: pos_hr
+#: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
+msgid "Employee Sales Details"
+msgstr ""
+
+#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Employee Sales Report"
 msgstr ""
@@ -206,11 +206,6 @@ msgstr "Lukitse"
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "No Cashiers"
 msgstr ""
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "No employee"
-msgstr "Ei työntekijä"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -296,12 +291,8 @@ msgid "Product Variant"
 msgstr "Tuotevariaatio"
 
 #. module: pos_hr
-#: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
-msgid "Sales Details"
-msgstr "Myynnin yksityiskohdat"
-
-#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Select Employee(s)"
 msgstr ""
 

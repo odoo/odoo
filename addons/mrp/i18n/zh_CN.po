@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# Wil Odoo, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:54+0000\n"
+"POT-Creation-Date: 2024-10-25 08:17+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -667,7 +667,7 @@ msgstr "添加副产品至物料清单（BOM）。该选项也可用于获得成
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Add quality checks to your work orders"
-msgstr "为工单质量检查"
+msgstr "为工单增加质量检查"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_tag
@@ -813,7 +813,7 @@ msgstr "存档作业"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1126,7 +1126,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "构造块"
+msgstr "阻止"
 
 #. module: mrp
 #. odoo-javascript
@@ -1175,7 +1175,7 @@ msgstr "受阻原因"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
 msgid "Blocks"
-msgstr "构造块"
+msgstr "阻塞"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -1815,7 +1815,7 @@ msgstr "创建新序列号/批号"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__product_qty_available
@@ -1866,7 +1866,6 @@ msgstr "预计或实际完成生产的日期。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr "计划或实际开始生产的日期。"
@@ -1949,14 +1948,9 @@ msgid ""
 "Defines if you can consume more or less components than the quantity defined on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
 "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
+"  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
-"规定组件消耗数量是否可以多于或少于物料清单（BOM）中规定的数量：\n"
-"  * 允许：允许所有制造用户。\n"
-"  * 允许但有警告：允许所有制造用户在关闭制造订单时提供消耗差异摘要。\n"
-"  请注意，如果手动消耗组件，即手动登记消耗，则在适当时间发出消耗警告。\n"
-"  * 阻止：仅在不遵守物料清单消耗时经理可以关闭制造订单。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2470,7 +2464,7 @@ msgstr "谷歌幻灯片链接"
 #. odoo-javascript
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
 msgid "Google Slides Viewer"
-msgstr "Google幻灯片播放器"
+msgstr "谷歌幻灯片播放器"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2524,6 +2518,11 @@ msgstr "有工艺路线行"
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
 msgid "Hidden"
 msgstr "隐藏"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
+msgid "Highlight Consumption"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -3159,7 +3158,6 @@ msgid "Manage Work Order Operations"
 msgstr "管理工单作业"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
 msgid "Manual Consumption"
 msgstr "手动消耗"
@@ -3472,6 +3470,11 @@ msgid "My Activity Deadline"
 msgstr "我的活动截止日期"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "My MOs"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
 msgid "Never attribute values"
 msgstr "切勿赋值"
@@ -3614,7 +3617,7 @@ msgid ""
 "Note that archived work center(s): '%s' is/are still linked to active Bill "
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
-msgstr "请注意，已存档工作中心：“%s”仍关联至已启用的物料清单，这意味着仍可以为其计划作业。为防止这种情况，建议删除工作中心。"
+msgstr "请注意，已归档工作中心：“%s”仍关联至已启用的物料清单，这意味着仍可以为其计划作业。为防止这种情况，建议删除工作中心。"
 
 #. module: mrp
 #. odoo-python
@@ -3880,7 +3883,7 @@ msgstr "过时的 BoM"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
 msgid "Overall Effective Efficiency Target in percentage"
-msgstr "以百分比表示的总体有效效率目标"
+msgstr "总体有效效率目标百分比"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
@@ -3935,7 +3938,7 @@ msgstr "上级向导"
 msgid ""
 "Paste the url of your Google Slide. Make sure the access to the document is "
 "public."
-msgstr "粘贴Google幻灯片网址。 确保文件可公开访问。"
+msgstr "粘贴谷歌幻灯片网址。 确保文件可公开访问。"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_pause_workorders
@@ -6039,6 +6042,21 @@ msgid "Use Reception Report with Manufacturing Orders"
 msgstr "将接收报表与制造订单一起使用"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
+#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
+msgid ""
+"Use the table work center control panel to register operations in the shop floor directly.\n"
+"            The tablet provides worksheets for your workers and allow them to scrap products, track time,\n"
+"            launch a maintenance request, perform quality tests, etc."
+msgstr ""
+"使用工作台工作中心控制面板直接登记车间内的作业。\n"
+"            平板电脑为工人提供工作表，允许他们报废产品、跟踪时间、\n"
+"            启动维护请求、执行质量测试等。"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Used In"
@@ -6400,18 +6418,10 @@ msgid "Work center"
 msgstr "工作中心"
 
 #. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
-msgid ""
-"Work orders are operations to do as part of a manufacturing order.\n"
-"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
-msgstr ""
-"工单是作为制造订单一部分、要执行的作业。\n"
-"                    作业在物料清单中规定，或直接添加至制造订单。"
-
-#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"

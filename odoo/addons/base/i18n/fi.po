@@ -23,6 +23,7 @@
 # Teemu Ahonen <teemu.ahonen@web-veistamo.fi>, 2024
 # Iipponen <erno@web-veistamo.fi>, 2024
 # Mikko Salmela <salmemik@gmail.com>, 2024
+# Tuomas Suutari <tuomas.suutari@anders.fi>, 2024
 # Konsta Aavaranta, 2024
 # Kari Lindgren <karisatu@gmail.com>, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
@@ -33,23 +34,22 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2024
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2024
-# Tuomas Suutari <tuomas.suutari@anders.fi>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Timo Koukkari <ti.ko@netikka.fi>, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 12:54+0000\n"
+"POT-Creation-Date: 2024-10-25 14:42+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1907,6 +1907,9 @@ msgstr ""
 msgid ""
 "\n"
 "Accounting reports for Türkiye\n"
+"\n"
+"- Balance Sheet\n"
+"- Profit and Loss\n"
 msgstr ""
 
 #. module: base
@@ -4585,6 +4588,14 @@ msgstr ""
 "Tuemme asiakaslaskujen lähettämistä ja peruuttamista.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_nz_eft
+msgid ""
+"\n"
+"EFT Batch Payment\n"
+"=================\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
 msgid ""
 "\n"
@@ -5250,10 +5261,10 @@ msgid ""
 "* Partners example for the different responsibility types:\n"
 "\n"
 "  * ADHOC (IVA Responsable Inscripto)\n"
-"  * Consejo Municipal Rosario (IVA Sujeto Exento)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
 "  * Gritti (Monotributo)\n"
-"  * Cerro Castor. IVA Liberado in Zona Franca\n"
-"  * Expresso (Cliente del Exterior)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
 "  * Odoo (Proveedor del Exterior)\n"
 "\n"
 "Highlights:\n"
@@ -5287,67 +5298,6 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
-"\n"
-"Toiminnallinen\n"
-"----------\n"
-"\n"
-"Tämä moduuli lisää kirjanpito-ominaisuudet Argentiinan lokalisointia varten, jotka edustavat vähimmäiskokoonpanoa, jota yritys tarvitsee toimiakseen Argentiinassa ja AFIP:n (Administración Federal de Ingresos Públicos) säännösten ja ohjeiden mukaisesti.\n"
-"\n"
-"Seuraa seuraavia konfigurointivaiheita tuotantoa varten:\n"
-"\n"
-"1. Siirry yritykseesi ja määritä alv-numerosi ja AFIP-vastuutyyppi\n"
-"2. Siirry kohtaan Kirjanpito / Asetukset ja määritä tilikartta, jota haluat käyttää.\n"
-"3. Luo myyntipäiväkirjat ottaen huomioon AFIP POS -tiedot.\n"
-"\n"
-"Demotiedot testausta varten:\n"
-"\n"
-"* yksi kullekin AFIP-vastuutyypille, johon on asennettu vastaava tilikartta. Valitse yritys, joka sopii sinulle testien tekemistä varten:\n"
-"\n"
-"  * (AR) Responsable Inscripto\n"
-"  * (AR) Exento\n"
-"  * (AR) Monotributo\n"
-"\n"
-"* Myyntipäiväkirja, joka on konfiguroitu ennakkoon tulostettuihin ja Expo-laskuihin kaikissa yrityksissä\n"
-"* Laskujen ja muiden asiakirjojen esimerkit on jo validoitu \"(AR) Responsable Inscripto\" -yrityksessä\n"
-"* Yhteistyökumppanien esimerkki eri vastuutyypeistä:\n"
-"\n"
-"  * ADHOC (IVA Responsable Inscripto)\n"
-"  * Consejo Municipal Rosario (IVA Sujeto Exento)\n"
-"  * Gritti (Monotributo)\n"
-"  * Cerro Castor. IVA Liberado Zona Francassa\n"
-"  * Expresso (ulkomaanasiakkaat)\n"
-"  * Odoo (Proveedor del Exterior)\n"
-"\n"
-"Kohokohdat:\n"
-"\n"
-"* Jokainen CoA-malli riippuu yrityksen AFIP-vastuusta, sinun on asennettava CoA tarpeisiisi.\n"
-"* CoA:n asennuksen yhteydessä ei luoda myyntipäiväkirjoja, sinun on määritettävä päiväkirjat manuaalisesti.\n"
-"* Asiakirjatyyppi valitaan asianmukaisesti valmiiksi laskua luotaessa riippuen asiakirjan myöntäjän ja vastaanottajan verovastuusta ja siihen liittyvästä lehdestä.\n"
-"* CBU-tilityyppi on lisätty ja myös CBU-validointi\n"
-"\n"
-"\n"
-"Tekninen\n"
-"---------\n"
-"\n"
-"Tämä moduuli lisää sekä mallit että kentät, joita käytetään myöhemmin sähköisessä laskumoduulissa. Seuraavassa on yhteenveto tärkeimmistä ominaisuuksista:\n"
-"\n"
-"Master Data:\n"
-"\n"
-"* Tilikartta: yksi kutakin oikeushenkilöön liittyvää AFIP-vastuualuetta varten:\n"
-"\n"
-"  * Responsable Inscripto (RI)\n"
-"  * Exento (EX)\n"
-"  * Monotributo (Mono)\n"
-"\n"
-"* Argentiinan verot ja tiliveroryhmät (arvonlisäverot, joissa on olemassa olevat aliquotit ja muut tyypit)\n"
-"* AFIP-vastuutyypit\n"
-"* Fiscal Positions (verojen kartoittamiseksi)\n"
-"* Argentiinan oikeudellisten asiakirjojen tyypit\n"
-"* Argentiinassa voimassa olevat henkilöllisyystyypit.\n"
-"* Maakohtaiset AFIP-koodit ja maakohtaiset alv-koodit oikeushenkilöille, luonnollisille henkilöille ja muille\n"
-"* Valuutta AFIP-koodit\n"
-"* Toimenpideyksikkö AFIP-koodit\n"
-"* Yhteistyökumppanit: Consumidor Final ja AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -6874,6 +6824,13 @@ msgstr ""
 ".. _SAT: http://www.sat.gob.mx/\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_es_reports_2024
+msgid ""
+"\n"
+"Modelo 303: Extra fields regarding Rectificación\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
 msgid ""
 "\n"
@@ -8376,19 +8333,9 @@ msgid ""
 "    * Defines tax templates\n"
 "    * Defines fiscal positions for spanish fiscal legislation\n"
 "    * Defines tax reports mod 111, 115 and 303\n"
+"\n"
+"5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
-"\n"
-"Spanish charts of accounts (PGCE 2008).\n"
-"========================================\n"
-"\n"
-"    * Defines the following chart of account templates:\n"
-"        * Spanish general chart of accounts 2008\n"
-"        * Spanish general chart of accounts 2008 for small and medium companies\n"
-"        * Spanish general chart of accounts 2008 for associations\n"
-"    * Defines templates for sale and purchase VAT\n"
-"    * Defines tax templates\n"
-"    * Defines fiscal positions for spanish fiscal legislation\n"
-"    * Defines tax reports mod 111, 115 and 303\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -8448,6 +8395,13 @@ msgstr ""
 "Tämän lisäosan avulla käyttäjä voi näyttää kaikki tiettyyn sivustoon linkitetyt lomakkeet\n"
 "malliin. Lisäksi voit luoda uuden verkkosivulomakkeen tai muokata olemassa olevaa lomaketta.\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_withholding_payment
+msgid ""
+"\n"
+"Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_withholding
@@ -8578,6 +8532,13 @@ msgstr ""
 "Itävallan Standard Audit File for Tax (SAF-T) on vakiotiedostomuoto erilaisten kirjanpitotapahtumatietojen viemiseksi XML-muodossa.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_anz_ubl_pint
+msgid ""
+"\n"
+"The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
 msgid ""
 "\n"
@@ -8594,6 +8555,13 @@ msgid ""
 msgstr ""
 "\n"
 "Malesian UBL:n PINT-verkkolaskutusmuoto perustuu Peppol International (PINT) -laskutusmalliin.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sg_ubl_pint
+msgid ""
+"\n"
+"The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -9154,6 +9122,18 @@ msgstr ""
 "ja Lempira-valuutta."
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_iq
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Iraq in Odoo.\n"
+"==============================================================================\n"
+"Iraq accounting basic charts and localization.\n"
+"Activates:\n"
+"- Chart of accounts\n"
+"- Taxes\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
 msgid ""
 "\n"
@@ -9267,6 +9247,22 @@ msgstr ""
 "\n"
 "Tämä on perusmoduuli Taiwanin tilikartan hallintaan Odoossa.\n"
 "==============================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tr
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Türkiye in Odoo\n"
+"==========================================================================\n"
+"\n"
+"Türkiye accounting basic charts and localizations\n"
+"-------------------------------------------------\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mu_account
@@ -10973,6 +10969,20 @@ msgstr ""
 "Erityiskiitokset Plementukselle <info@plementus.com> avusta tämän moduulin kehittämisessä.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_swiggy
+msgid ""
+"\n"
+"This module integrates with UrbanPiper to receive and manage orders from Swiggy.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
+msgid ""
+"\n"
+"This module integrates with UrbanPiper to receive and manage orders from Uber Eats.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_zomato
 msgid ""
 "\n"
@@ -11337,6 +11347,15 @@ msgstr ""
 "automaattinen liidien luominen, täysi verkkotuki, ...\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_event_full_enterprise
+msgid ""
+"\n"
+"This module will test the main event flows of Odoo, both frontend and backend.\n"
+"It installs sale capabilities, front-end flow, eCommerce, questions and\n"
+"automatic lead generation, full Online support, sms and whatsapp support, ...\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
 msgid ""
 "\n"
@@ -11442,27 +11461,6 @@ msgstr ""
 "projektissa.\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_tr_hr_payroll
-msgid ""
-"\n"
-"Türkiye Payroll and Tax Rules\n"
-"============================\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_tr
-msgid ""
-"\n"
-"Turkish charts of accounts\n"
-"========================================\n"
-"    * Defines the default chart of accounts\n"
-"    * Defines the default taxes\n"
-"    * Defines default tax report\n"
-"\n"
-"This was done in collaboration with Broadmax Partner in Türkiye.\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_auth_totp
 msgid ""
 "\n"
@@ -11492,6 +11490,17 @@ msgstr ""
 "Huomautus: loogisesti kaksitekijäisyys estää salasanapohjaisen RPC-käytön käyttäjiltä\n"
 "joissa se on käytössä. Jotta käyttäjä voisi suorittaa RPC-skriptejä, hänen on täytettävä seuraavat vaatimukset\n"
 "voi määrittää API-avaimet korvaamaan pääsalasanansa.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tr_hr_payroll
+msgid ""
+"\n"
+"Türkiye Payroll and Tax Rules\n"
+"=============================\n"
+"- Social Security Premium/Insurance calculations for employment and unemployment\n"
+"- Income tax calculations\n"
+"- Stamp tax deductions\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -12075,6 +12084,47 @@ msgstr "%y - Vuosi ilman vuosisataa [00,99]."
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
 msgid "&amp; Close"
 msgstr "&amp; Sulje"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be a valid Property value for field "
+"'%%(field)s'. Each property need at least 'name', 'type' and 'string' "
+"attribute."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be a valid Selection value for "
+"'%(label_property)s' (subfield of '%%(field)s' field)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
+"(subfield of '%%(field)s' field)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be an float for field '%(label_property)s' "
+"property (subfield of '%%(field)s' field)."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"'%(value)s' does not seem to be an integer for field '%(label_property)s' "
+"property (subfield of '%%(field)s' field)."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -16996,6 +17046,11 @@ msgid "Australia"
 msgstr "Australia"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_anz_ubl_pint
+msgid "Australia & New Zealand - UBL PINT"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australia - Accounting"
 msgstr "Australia - Kirjanpito"
@@ -18173,6 +18228,11 @@ msgstr "Yhteysmoduuli myynnin ja kirjanpidon välillä"
 #: model:ir.module.module,summary:base.module_stock_accountant
 msgid "Bridge between Stock and Accounting"
 msgstr "Yhteysmoduuli varastojen ja kirjanpidon välillä"
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_subscription_timesheet
+msgid "Bridge created to add computation of timesheet to subscription"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account_asset
@@ -22145,6 +22205,11 @@ msgid "EET"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nz_eft
+msgid "EFT Batch Payment"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
 msgstr "ESC/POS Laiteajuri"
@@ -23326,6 +23391,11 @@ msgid "Event Social"
 msgstr "Tapahtuman some"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_event_full_enterprise
+msgid "Event Test (all modules)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
 msgid "Event: manage sponsors and exhibitors"
 msgstr "Tapahtuma: hallinnoi sponsoreita ja näytteilleasettajia"
@@ -23602,6 +23672,11 @@ msgstr "Vie maksut BACS-suoraveloitus- ja suorahyvitystiedostoina"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_payment_cpa005
 msgid "Export payments as CPA 005 AFT files"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_nz_eft
+msgid "Export payments as EFT files"
 msgstr ""
 
 #. module: base
@@ -26620,6 +26695,11 @@ msgid "Indian - Stock Report(GST)"
 msgstr "Intia - Varastoraportti (GST)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_withholding_payment
+msgid "Indian - TDS For Payment"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_tds_tcs
 msgid "Indian - TDS TCS Reports"
 msgstr ""
@@ -27383,6 +27463,11 @@ msgstr "Iran"
 #: model:res.country,name:base.iq
 msgid "Iraq"
 msgstr "Irak"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_iq
+msgid "Iraq - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -28640,6 +28725,7 @@ msgid "Locale Code"
 msgstr "Aluekoodi"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_accounting_localization
 #: model:ir.module.category,name:base.module_category_accounting_localizations
 #: model:ir.module.category,name:base.module_category_localization
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -33915,6 +34001,16 @@ msgid "POS Stripe"
 msgstr "Kassa Stripe"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_swiggy
+msgid "POS UrbanPiper - Swiggy"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
+msgid "POS UrbanPiper - Uber Eats"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_zomato
 msgid "POS UrbanPiper - Zomato"
 msgstr ""
@@ -35585,6 +35681,11 @@ msgid "Project Sales Subscription"
 msgstr "Projektin myyntitilaus"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
+msgid "Project Sales Subscription Timesheet"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_project_stock
 msgid "Project Stock"
 msgstr ""
@@ -35641,6 +35742,7 @@ msgstr "Projektin palkanlaskenta"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_sale_subscription
+#: model:ir.module.module,summary:base.module_sale_subscription_timesheet
 msgid "Project sales subscriptions"
 msgstr "Projektien myyntitilaukset"
 
@@ -38393,6 +38495,11 @@ msgid "Singapore - Accounting Reports"
 msgstr "Singapore - Kirjanpitoraportit"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sg_ubl_pint
+msgid "Singapore - UBL PINT"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sx
 msgid "Sint Maarten (Dutch part)"
 msgstr "Sint Maarten (Hollannin osio)"
@@ -38658,6 +38765,11 @@ msgstr "Espanja - Kirjanpito (PGCE 2008)"
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports
 msgid "Spain - Accounting (PGCE 2008) Reports"
 msgstr "Espanja - Kirjanpitoraportit (PGCE 2008)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
+msgid "Spain - Accounting Reports (2024 Update)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -41870,29 +41982,8 @@ msgstr "Tunisia - Kirjanpitoraportit"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__turkey
-#: model:res.country,name:base.tr
-msgid "Türkiye"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr
-msgid "Türkiye - Accounting"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
-msgid "Türkiye - Accounting Reports"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
-msgid "Türkiye - Payroll"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll_account
-msgid "Türkiye - Payroll with Accounting"
-msgstr ""
+msgid "Turkey"
+msgstr "Turkki"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -41988,6 +42079,31 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Type:"
 msgstr "Tyyppi:"
+
+#. module: base
+#: model:res.country,name:base.tr
+msgid "Türkiye"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr
+msgid "Türkiye - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
+msgid "Türkiye - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
+msgid "Türkiye - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll_account
+msgid "Türkiye - Payroll with Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
@@ -42222,8 +42338,10 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
-msgid "Unable to import field type '%s'  "
-msgstr "Kenttätyyppiä '%s' ei voida tuoda"
+msgid ""
+"Unable to import'%%(field)s' Properties field as a whole, target individual "
+"property instead."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -42455,6 +42573,14 @@ msgstr "Tuntematon mallin nimi '%s' kohdassa Related Model (Liittyvä malli)"
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "Unknown sub-field “%s”"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+msgid ""
+"Unknown value '%(value)s' for boolean '%(label_property)s' property "
+"(subfield of '%%(field)s' field)."
 msgstr ""
 
 #. module: base

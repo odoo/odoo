@@ -7,15 +7,15 @@
 # Martin Trigaux, 2024
 # Chloe Wang, 2024
 # Wil Odoo, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +81,12 @@ msgstr "%(ticket_name)s (售罄)"
 #: code:addons/event/models/event_event.py:0
 msgid "%s (copy)"
 msgstr "%s（副本）"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
+msgid "'%(name)s' badge sent to printer '%(printer)s'"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -259,7 +265,7 @@ msgid ""
 "                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
 "<br/>\n"
-"                                        <span class=\"text-muted\">曲目结束后，与与会者分享测验</span>"
+"                                        <span class=\"text-muted\">专题结束后，与参会者分享测验</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -747,7 +753,7 @@ msgstr ""
 "                            <ul>\n"
 "                                <li><t t-out=\"event_organizer.name or ''\">YourCompany</t></li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
-"                                    <li>电邮：<a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
+"                                    <li>电子邮箱：<a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>电话：<t t-out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
@@ -1922,7 +1928,7 @@ msgstr "应用变更。"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
@@ -2120,7 +2126,7 @@ msgstr "在事件之前"
 #: model:event.stage,legend_blocked:event.event_stage_new
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__blocked
 msgid "Blocked"
-msgstr "构造块"
+msgstr "受阻"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_1
@@ -2302,12 +2308,6 @@ msgstr "配置设置"
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
 msgstr "配置"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm"
-msgstr "确认"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -3019,12 +3019,12 @@ msgstr "全球通信状况"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Google Maps"
-msgstr "Google 地图"
+msgstr "谷歌 地图"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_key
 msgid "Google Maps API key"
-msgstr "Google 地图 API 密钥"
+msgstr "谷歌 地图 API 密钥"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_secret
@@ -3034,7 +3034,7 @@ msgstr "谷歌地图 API 秘密"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_google_maps_static_api
 msgid "Google Maps static API"
-msgstr "Google 地图静态 API"
+msgstr "谷歌 地图静态 API"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -3230,7 +3230,7 @@ msgstr "进行中"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr "在电子邮件模板中插入动态 Google 地图"
+msgstr "在电子邮件模板中插入动态 谷歌 地图"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3346,7 +3346,7 @@ msgstr "看板有效解释"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Key"
-msgstr "键"
+msgstr "密钥KEY"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__lang
@@ -3486,7 +3486,7 @@ msgstr "EMail发送"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr "管理和发布包含曲目的日程"
+msgstr "管理和发布专题的安排日程"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3540,7 +3540,7 @@ msgstr "最多席位"
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Medium"
-msgstr "媒介"
+msgstr "中等"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
@@ -3861,19 +3861,13 @@ msgstr "请再次扫描！"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr "销售点（POS），报告定制介绍。"
+msgstr "POS，报告定制介绍。"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Print"
 msgstr "打印"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
-msgid "Printing badge on %s..."
-msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3995,8 +3989,6 @@ msgid "Registration Date"
 msgstr "活动日期"
 
 #. module: event
-#. odoo-python
-#: code:addons/event/controllers/main.py:0
 #: model:ir.actions.client,name:event.event_action_install_kiosk_pwa
 #: model:ir.ui.menu,name:event.menu_event_registration_desk
 #: model:res.groups,name:event.group_event_registration_desk
@@ -4135,12 +4127,6 @@ msgstr "短信发送错误"
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
-msgid "Scan a badge"
-msgstr "扫描徽章"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
 msgstr ""
 
@@ -4170,6 +4156,11 @@ msgstr "安排"
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduled_date
 msgid "Scheduled Time"
 msgstr "定期时间"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
+msgid "Scheduler Emails"
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -4211,7 +4202,7 @@ msgstr "在您的网站上售票"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr "通过销售点出售门票"
+msgstr "通过POS出售门票"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4683,7 +4674,7 @@ msgstr "时区"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__title
 msgid "Title"
-msgstr "称谓"
+msgstr "标题"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4774,15 +4765,15 @@ msgid ""
 msgstr "在这个技术菜单下，您会发现所有与您的活动有关的预定通信。"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "了解不同的模块;"
+
+#. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
 msgstr "取消"
-
-#. module: event
-#: model_terms:event.event,description:event.event_2
-msgid "Understand the various modules;"
-msgstr "了解不同的模块;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -4990,17 +4981,17 @@ msgstr "您在{{ object.event_id.name }}的注册情况"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"12-16 years old\""
-msgstr "例如，\"12-16 岁\""
+msgstr "例如：\"12-16 岁\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"Age Category\""
-msgstr "例如，\"年龄类别\""
+msgstr "例如：\"年龄类别\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "e.g. \"Azure Interior\""
-msgstr "例如，\"Azure Interior\""
+msgstr "例如：\"Azure Interior\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
@@ -5011,7 +5002,7 @@ msgstr "例如：“您有什么饮食限制吗？”"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "e.g. \"Promoting\""
-msgstr "例如，\"促进\""
+msgstr "例如：\"促进\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -5023,7 +5014,7 @@ msgstr "例如 建筑师会议"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
-msgstr "例如，如何参加您的活动，关门时间，..."
+msgstr "例如：如何参加您的活动，关门时间，..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -5127,9 +5118,3 @@ msgstr "明天"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
-msgid "'%(name)s' badge sent to printer '%(printer)s'"
-msgstr ""
