@@ -218,6 +218,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         $html.find('we-checkbox[data-dependencies="!footer_copyright_opt"]')[0]?.remove();
         $html.find('[data-name="header_language_selector_none_opt"]')[0]?.remove();
         $html.find('we-select[data-dependencies="!header_language_selector_none_opt"]')[0]?.removeAttribute("data-dependencies");
+
+        // TODO remove in master: changing the `data-apply-to` attribute of the
+        // grid spacing option so it is not applied on inner rows.
+        const $gridSpacingOptions = $html.find('[data-css-property="row-gap"], [data-css-property="column-gap"]');
+        $gridSpacingOptions.attr("data-apply-to", ".row.o_grid_mode");
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it

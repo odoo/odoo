@@ -248,38 +248,16 @@ class AccountFiscalPosition(models.Model):
         if not partner:
             return self.env['account.fiscal.position']
 
-        # If no "delivery" partner is specified, we assume it will be the "invoicing" partner.
-        if not delivery:
-            delivery = partner
-
         company = self.env.company
+        intra_eu = vat_exclusion = False
+        if company.vat and partner.vat:
+            eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
+            intra_eu = company.vat[:2] in eu_country_codes and partner.vat[:2] in eu_country_codes
+            vat_exclusion = company.vat[:2] == partner.vat[:2]
 
-        # The purpose of this part is to avoid making (lot of) extra queries by using ref on 'base.europe'
-        res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id('base.europe')
-        eu_country_group = self.env[res_model].browse(res_id)
-        eu_country_codes = set(eu_country_group.country_ids.mapped('code'))
-
-        delivery_country = delivery.country_id
-
-        eu_vat_partner = partner.vat and partner.vat[:2] in eu_country_codes
-        eu_partner = partner.country_code in eu_country_codes
-        eu_delivery = delivery.country_code in eu_country_codes
-        domestic_delivery = delivery_country == company.country_id
-
-        vat_required = self._get_vat_valid(partner, company) or domestic_delivery
-
-        # If the delivery is within the EU, the partner does not have a valid EU VAT number and is not from the EU,
-        # then assign the company's country as the delivery country and force vat_required to True
-        # in order to get the domestic FP
-        if eu_delivery and not eu_vat_partner and not eu_partner:
-            delivery_country = company.country_id
-            vat_required = True
-
-        # If the delivery is to the same country as the company's country (domestic delivery),
-        # the partner has a valid EU VAT number but is not from the EU,
-        # we need to force vat_required to False in order to get the EU private FP
-        if domestic_delivery and eu_vat_partner and not eu_partner:
-            vat_required = False
+        # If company and partner have the same vat prefix (and are both within the EU), use invoicing
+        if not delivery or (intra_eu and vat_exclusion):
+            delivery = partner
 
         # partner manually set fiscal position always win
         manual_fiscal_position = (
@@ -290,11 +268,12 @@ class AccountFiscalPosition(models.Model):
             return manual_fiscal_position
 
         # First search only matching VAT positions
-        fp = self._get_fpos_by_region(delivery_country.id, delivery.state_id.id, delivery.zip, vat_required)
+        vat_required = bool(partner.vat)
+        fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_required)
 
         # Then if VAT required found no match, try positions that do not require it
         if not fp and vat_required:
-            fp = self._get_fpos_by_region(delivery_country.id, delivery.state_id.id, delivery.zip, False)
+            fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
 
         return fp or self.env['account.fiscal.position']
 
