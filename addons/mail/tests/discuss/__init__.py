@@ -3,6 +3,7 @@
 from . import test_avatar_acl
 from . import test_bus_presence
 from . import test_discuss_attachment_controller
+from . import test_discuss_binary_controller
 from . import test_discuss_channel
 from . import test_discuss_channel_access
 from . import test_discuss_channel_as_guest
