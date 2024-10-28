@@ -1,10 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
-
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -173,10 +170,13 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         old_date = now - relativedelta(hours=13)
         self.template_desk.suggested_products_last_update = recent_date
         self.template_chair.suggested_products_last_update = old_date
-        with patch.object(fields.Datetime, "now", return_value=now):
-            with self.enter_registry_test_mode(), self.env.registry.cursor() as cr:
-                env = self.env(context={"cron_id": 1}, cr=cr)
-                self.env["product.template"].with_env(env)._cron_update_suggested_products()
+        with (
+            self.mock_datetime_and_now(now),
+            self.enter_registry_test_mode(),
+            self.env.registry.cursor() as cr,
+        ):
+            env = self.env(context={"cron_id": 1}, cr=cr)
+            self.env["product.template"].with_env(env)._cron_update_suggested_products()
         # template_desk should not be updated (recently updated)
         self.assertEqual(self.template_desk.suggested_products_last_update, recent_date)
         # template_chair should be updated

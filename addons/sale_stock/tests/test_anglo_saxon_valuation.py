@@ -606,6 +606,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         # Invoice
         invoice01 = sale_order._create_invoices()
         invoice01.action_post()
+        self.env.invalidate_all()  # re-read the values to avoid formatting issues
 
         # COGS should ignore the owned product
         self.assertRecordValues(invoice01.line_ids, [

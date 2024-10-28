@@ -1,4 +1,3 @@
-from contextlib import contextmanager
 from lxml import etree
 from unittest.mock import patch
 
@@ -105,19 +104,8 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
         super().setUp()
         self.config = self.basic_config
 
-    @contextmanager
-    def _patch_pos_date(self, date):
-        date = fields.Date.to_date(date)
-        datetime_value = fields.Datetime.to_datetime(f'{date} 12:00:00')
-        with (
-            patch('odoo.fields.Date.context_today', return_value=date),
-            patch('odoo.fields.Date.today', return_value=date),
-            patch('odoo.fields.Datetime.now', return_value=datetime_value),
-        ):
-            yield
-
     def _create_closed_pos_session(self, orders, date='2025-09-03'):
-        with self._patch_pos_date(date):
+        with self.mock_datetime_and_now(date + ' 12:00:00'):
             session = self.open_new_session()
             self.env['pos.order'].sync_from_ui([
                 self.create_ui_order_data(**order_vals)
@@ -147,7 +135,7 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
 
     def _run_send_cron(self, date, identifier='POS-FLOW-TEST-001'):
         with (
-            patch('odoo.fields.Date.today', return_value=fields.Date.to_date(date)),
+            self.mock_datetime_and_now(fields.Date.to_date(date)),
             patch(
                 'odoo.addons.l10n_fr_pdp.models.pdp_flow.PdpFlow._send_to_proxy',
                 return_value=self._proxy_success_response(identifier),

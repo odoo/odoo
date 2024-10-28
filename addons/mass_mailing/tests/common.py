@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -13,7 +12,6 @@ from unittest.mock import patch
 from odoo.tools import email_normalize, mail
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.mail.tests.common import MailCase, MailCommon, mail_new_test_user
-from odoo.sql_db import Cursor
 from odoo.tests import RecordCapturer
 
 
@@ -431,7 +429,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         randomized = random.random()
         # Cursor.now() uses transaction's timestamp and not datetime lib -> freeze_time
         # is not sufficient
-        with patch.object(Cursor, 'now', lambda *args, **kwargs: dt):
+        with cls.mock_datetime_and_now(dt):
             traces = cls.env['mailing.trace'].sudo().create([
                 dict({'mass_mailing_id': mailing.id,
                       'model': record._name,

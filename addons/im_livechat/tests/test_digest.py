@@ -1,9 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from unittest.mock import patch
-
-from freezegun import freeze_time
 
 from odoo import fields
 from odoo.tests.common import new_test_user
@@ -20,10 +17,8 @@ class TestLiveChatDigest(TestDigestCommon):
         super().setUpClass()
         other_user = new_test_user(cls.env, "Other User")
         cls.env["discuss.channel"].search([("channel_type", "=", "livechat")]).unlink()
-        with (
-            freeze_time(fields.Datetime.now() - datetime.timedelta(days=10)),
-            patch.object(cls.env.cr, "_now", datetime.datetime.now() - datetime.timedelta(days=10)),
-        ):
+        dt = fields.Datetime.now() - datetime.timedelta(days=10)
+        with cls.mock_datetime_and_now(dt):
             # this channel is created out of the date range of the digest
             # so it should be ignored in the computation of the KPI
             old_channel = cls.env["discuss.channel"].create(

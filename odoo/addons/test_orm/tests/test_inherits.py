@@ -249,7 +249,7 @@ class TestInherits(common.TransactionCase):
         write_date_before = user.write_date
 
         now = datetime.now() + timedelta(1)
-        with patch.object(self.env.cr, 'now', lambda: now):
+        with self.mock_datetime_and_now(now):
             user.write({'name': 'bar'})
             write_date_after = user.write_date
             self.assertNotEqual(write_date_before, write_date_after)

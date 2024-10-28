@@ -96,7 +96,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
         cls.certificate_module = "odoo.addons.certificate.models.certificate"
         cls.move_module = "odoo.addons.l10n_es_edi_facturae.models.account_move"
-        with freeze_time(cls.frozen_today), patch(f"{cls.certificate_module}.fields.Datetime.now", lambda x=None: cls.frozen_today):
+        with freeze_time(cls.frozen_today):
             cls.certificate = cls.env["certificate.certificate"].create({
                 'name': 'Test ES certificate',
                 'content': cls.file_read('l10n_es_edi_facturae/tests/data/certificate_test.pfx'),
@@ -153,8 +153,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         random.seed(42)
         date = date or self.frozen_today
         # We need to patch dates and uuid to ensure the signature's consistency
-        with freeze_time(date), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: date), \
+        with self.mock_datetime_and_now(date), \
                 self._mock_sha1():
             invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
@@ -184,7 +183,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
         random.seed(42)
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 patch(f'{self.certificate_module}.CertificateCertificate._compute_is_valid', _compute_is_valid), \
                 self._mock_sha1():
             invoice = self._create_invoice_es(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}])
@@ -242,7 +240,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         random.seed(42)
         # We need to patch dates and uuid to ensure the signature's consistency
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
             invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
@@ -356,7 +353,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         random.seed(42)
         # We need to patch dates and uuid to ensure the signature's consistency
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
             invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
@@ -388,7 +384,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
     def test_discount_100_percent(self):
         """ Create an invoice with a 100% discount """
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
             invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
@@ -570,7 +565,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
     def test_download_facturae_xml_functionality(self):
         """ Test Factura-e XML download functionality for invoices. """
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
             invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
@@ -616,7 +610,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
     def test_download_facturae_xml_legal_documents(self):
         """ Test _get_invoice_legal_documents method for facturae filetype. """
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
             invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
@@ -654,7 +647,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
     def test_download_facturae_xml_batch_scenario(self):
         """ Test Factura-e XML download with multiple invoices. """
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
 
             # Create multiple invoices with different scenarios
@@ -770,7 +762,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             )
 
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
             invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
@@ -808,7 +799,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
     def test_refund_invoice_manual_original_from_scratch_can_be_sent(self):
         with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
             refund = self._create_invoice_es(
                 partner_id=self.partner_a.id,

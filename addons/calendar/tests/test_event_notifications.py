@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
@@ -320,7 +319,7 @@ class TestEventNotifications(CalendarMailCommon):
                 ),
             ]
 
-        with patch.object(fields.Datetime, 'now', lambda: now):
+        with self.mock_datetime_and_now(now):
             with self.assertBus(notifications):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
@@ -392,7 +391,7 @@ class TestEventNotifications(CalendarMailCommon):
 
         self.assertEqual(len(capt.records), 1)
         self.assertLessEqual(capt.records.call_at, now)
-        with patch.object(fields.Datetime, 'now', lambda: now):
+        with self.mock_datetime_and_now(now):
             self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=25))._send_reminder()
             self.env.flush_all()
             new_messages = self.env['mail.message'].search([('model', '=', 'calendar.event'), ('res_id', '=', self.event.id), ('subject', '=', 'test event - Reminder')])
@@ -672,7 +671,7 @@ class TestEventNotifications(CalendarMailCommon):
                 ),
             ]
 
-        with patch.object(fields.Datetime, 'now', lambda: now):
+        with self.mock_datetime_and_now(now):
             with self.assertBus(notifications):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
