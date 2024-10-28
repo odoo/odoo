@@ -7,12 +7,12 @@
                 <form string="Lost Lead">
                     <field name="lead_ids" invisible="1"></field>
                     <group>
-                        <field name="lost_reason_id" options="{'no_create_edit': True}" />
-                        <field name="lost_feedback" placeholder="What went wrong?"/>
+                        <field name="lost_reason_id" placeholder="Select a Lost Reason..." options="{'no_create_edit': True}" />
+                        <field name="lost_feedback" placeholder="What went wrong?" nolabel="1" colspan="2"/>
                     </group>
                     <footer>
                         <button name="action_lost_reason_apply" string="Mark as Lost" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>
