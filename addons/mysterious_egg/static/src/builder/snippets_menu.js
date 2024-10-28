@@ -4,9 +4,9 @@ import { Component, onWillDestroy, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
+import { ElementToolboxPlugin } from "./plugins/element_toolbox_plugin";
 import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
 import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
-import { ElementToolboxPlugin } from "./plugins/element_toolbox_plugin";
 
 const BUILDER_PLUGIN = [ElementToolboxPlugin, BuilderOverlayPlugin, DropZonePlugin];
 

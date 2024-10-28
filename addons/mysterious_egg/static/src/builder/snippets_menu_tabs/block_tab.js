@@ -1,21 +1,13 @@
 import { Component, markup, onWillStart } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { rpc, RPCError } from "@web/core/network/rpc";
-import { PyDateTime } from "@web/core/py_js/py_date";
-import { registry } from "@web/core/registry";
+import { RPCError } from "@web/core/network/rpc";
 import { useDraggable } from "@web/core/utils/draggable";
+import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { renderToElement } from "@web/core/utils/render";
 import { escape } from "@web/core/utils/strings";
 
-function splitArrayBy3(arr) {
-    const result = [];
-    for (let i = 0; i < arr.length; i += 3) {
-        result.push(arr.slice(i, i + 3));
-    }
-    return result;
-}
+const cacheSnippetTemplate = {};
 
 export class BlockTab extends Component {
     static template = "mysterious_egg.BlockTab";
@@ -26,7 +18,7 @@ export class BlockTab extends Component {
         this.company = useService("company");
 
         onWillStart(async () => {
-            this.contextSnippetData = await rpc("/mysterious_egg/builder_data");
+            this.snippetsByCategory = await this.loadSnippets();
         });
         useDraggable({
             ref: this.env.builderRef,
@@ -37,61 +29,29 @@ export class BlockTab extends Component {
             },
             onDrop: (params) => {
                 const { x, y } = params;
-
-                const elementToAdd = renderToElement(params.element.dataset.templateContent, {
-                    ...this.contextSnippetData,
-                    datetime: {
-                        datetime: PyDateTime,
-                        timestamp: () => {
-                            return new Date().getTime();
-                        },
-                    },
-                    test_mode_enabled: false, // TODO to imp
-                });
-                this.props.editor.shared.dropElement(elementToAdd, { x, y });
+                const { category, id } = params.element.dataset;
+                const snippet = this.getSnippet(category, parseInt(id));
+                this.props.editor.shared.dropElement(snippet.content.cloneNode(true), { x, y });
             },
         });
     }
 
     get snippetCategories() {
-        return registry
-            .category("website.snippets")
-            .category("category")
-            .getEntries()
-            .filter(
-                ([, category]) =>
-                    category.isAvailable === undefined || category.isAvailable(this.env)
-            );
+        return this.snippetsByCategory.snippet_groups;
     }
 
     get innerContentSnippets() {
-        return registry
-            .category("website.snippets")
-            .category("inner_content")
-            .getEntries()
-            .filter(
-                ([, category]) =>
-                    category.isAvailable === undefined || category.isAvailable(this.env)
-            );
+        return this.snippetsByCategory.snippet_content;
     }
 
-    get innerContentBy3() {
-        const innertContents = registry
-            .category("website.snippets")
-            .category("inner_content")
-            .getEntries()
-            .filter(
-                ([, category]) =>
-                    category.isAvailable === undefined || category.isAvailable(this.env)
-            );
-        return splitArrayBy3(innertContents);
+    getSnippet(category, id) {
+        return this.snippetsByCategory[category].filter((snippet) => snippet.id === id)[0];
     }
 
     onClickInstall(snippet) {
         // TODO: Should be the app name, not the snippet name ... Maybe both ?
         const bodyText = _t("Do you want to install %s App?", snippet.title);
         const linkText = _t("More info about this app.");
-        // TODO: extract moduleId;
         const linkUrl =
             "/odoo/action-base.open_module_tree/" + encodeURIComponent(snippet.moduleId);
 
@@ -103,7 +63,7 @@ export class BlockTab extends Component {
             confirm: async () => {
                 try {
                     await this.orm.call("ir.module.module", "button_immediate_install", [
-                        [snippet.install],
+                        [snippet.moduleID],
                     ]);
                     this.invalidateSnippetCache = true;
 
@@ -128,5 +88,49 @@ export class BlockTab extends Component {
             confirmLabel: _t("Save and Install"),
             cancel: () => {},
         });
+    }
+
+    async loadSnippets() {
+        if (!cacheSnippetTemplate[this.props.snippetsName]) {
+            cacheSnippetTemplate[this.props.snippetsName] = this.orm.silent.call(
+                "ir.ui.view",
+                "render_public_asset",
+                [this.props.snippetsName, {}],
+                { context: { rendering_bundle: true } }
+            );
+        }
+        const html = await cacheSnippetTemplate[this.props.snippetsName];
+        const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
+        return this.computeSnippetTemplates(snippetsDocument);
+    }
+
+    computeSnippetTemplates(snippetsDocument) {
+        const snippetsBody = snippetsDocument.body;
+        const snippetsByCategory = {};
+        for (const snippetCategory of snippetsBody.querySelectorAll("snippets")) {
+            const snippets = [];
+            for (const snippetEl of snippetCategory.children) {
+                const snippet = {
+                    title: snippetEl.getAttribute("name"),
+                    thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
+                };
+                const moduleId = snippetEl.dataset.moduleId;
+                if (moduleId) {
+                    Object.assign(snippet, {
+                        id: uniqueId(moduleId),
+                        moduleId,
+                    });
+                } else {
+                    Object.assign(snippet, {
+                        id: parseInt(snippetEl.dataset.oeSnippetId),
+                        content: snippetEl.children[0],
+                    });
+                }
+                snippets.push(snippet);
+            }
+            snippetsByCategory[snippetCategory.id] = snippets;
+        }
+
+        return snippetsByCategory;
     }
 }
