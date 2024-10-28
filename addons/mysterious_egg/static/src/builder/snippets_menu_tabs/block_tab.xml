@@ -5,13 +5,13 @@
     <div>Categories</div>
     <div class="container">
         <div class="row">
-            <div t-foreach="this.snippetCategories" t-as="snippet" t-key="snippet[0]" class="col-4 p-1">
-                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet[1].install ? 'to_install' : '' ">
+            <div t-foreach="this.snippetCategories" t-as="snippet" t-key="snippet.id" class="col-4 p-1 o_draggable" t-att-data-category="'snippet_groups'" t-att-data-id="snippet.id">
+                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet.moduleId ? 'to_install' : '' ">
                     <div class="img-container">
-                        <img t-att-src="snippet[1].image" class="w-100"/>
-                        <button t-if="snippet[1].install" class="btn btn-primary" t-on-click="onClickInstall">install</button>
+                        <img t-att-src="snippet.thumbnailSrc" class="w-100"/>
+                        <button t-if="snippet.moduleId" class="btn btn-primary" t-on-click="() => this.onClickInstall(snippet)">install</button>
                     </div>
-                    <span class="text-center" t-esc="snippet[1].title"/>
+                    <span class="text-center" t-esc="snippet.title"/>
                 </div>
             </div>
         </div>
@@ -20,13 +20,13 @@
     <div>Inner content</div>
     <div class="container">
         <div class="row">
-            <div t-foreach="this.innerContentSnippets" t-as="snippet" t-key="snippet[0]" class="col-4 p-1 o_draggable" t-att-data-template-content="snippet[1].templateContent">
-                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet[1].install ? 'to_install' : '' ">
+            <div t-foreach="this.innerContentSnippets" t-as="snippet" t-key="snippet.id" class="col-4 p-1 o_draggable" t-att-data-category="'snippet_content'" t-att-data-id="snippet.id">
+                <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet.moduleId ? 'to_install' : '' ">
                     <div class="img-container">
-                        <img t-att-src="snippet[1].image" class="w-100"/>
-                        <button t-if="snippet[1].install" class="btn btn-primary" t-on-click="onClickInstall">install</button>
+                        <img t-att-src="snippet.thumbnailSrc" class="w-100"/>
+                        <button t-if="snippet.moduleId" class="btn btn-primary" t-on-click="() => this.onClickInstall(snippet)">install</button>
                     </div>
-                    <span class="text-center" t-esc="snippet[1].title"/>
+                    <span class="text-center" t-esc="snippet.title"/>
                 </div>
             </div>
         </div>
