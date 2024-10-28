@@ -94,6 +94,19 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
                     }),
                 ]
             },
+            {
+                'move_type': 'out_refund',
+                'partner_id': cls.partner_a.id,
+                'invoice_date': fields.Date.from_string('2017-01-01'),
+                'currency_id': cls.currency_data['currency'].id,
+                'invoice_line_ids': [
+                    (0, None, {
+                        'product_id': cls.product_a.id,
+                        'quantity': 1,
+                        'price_unit': 2400,
+                    }),
+                ]
+            },
         ])
 
     def assertInvoiceReportValues(self, expected_values_list):
@@ -118,7 +131,8 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             [             6,              6,        1,            0,            -800], # price_unit = 12,   currency.rate = 2.0
             [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
             [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
-            [           600,           -600,       -1,            0,             800], # price_unit = 1200, currency.rate = 2.0
+            [           600,           -600,       -1,          200,             800],  # price_unit = 1200, currency.rate = 2.0
+            [          1200,          -1200,       -1,         -400,             800],  # price_unit = 2400, currency.rate = 2.0
         ])
 
     def test_invoice_report_multicompany_product_cost(self):
@@ -139,5 +153,6 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             [             6,              6,        1,            0,            -800], # price_unit = 12,   currency.rate = 2.0
             [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
             [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
-            [           600,           -600,       -1,            0,             800], # price_unit = 1200, currency.rate = 2.0
+            [           600,           -600,       -1,          200,             800],  # price_unit = 1200, currency.rate = 2.0
+            [          1200,          -1200,       -1,         -400,             800],  # price_unit = 2400, currency.rate = 2.0
         ])
