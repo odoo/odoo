@@ -1422,7 +1422,7 @@ class PosSession(models.Model):
             'balance': amount_converted,
         }
         if partial_vals.get('product_id'):
-            partial_vals['quantity'] = sale_vals.get('quantity') or 1
+            partial_vals['quantity'] = sale_vals.get('quantity', 1.00) * sign
         return partial_vals
 
     def _get_tax_vals(self, key, amount, amount_converted, base_amount_converted):
