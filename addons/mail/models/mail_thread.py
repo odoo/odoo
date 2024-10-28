@@ -1299,7 +1299,7 @@ class MailThread(models.AbstractModel):
                 subtype_id = thread._creation_subtype().id
 
             # switch to odoobot for all incoming message creation
-            # to have a priviledged archived user so real_author_id is correctly computed
+            # to have a archived user so real_author_id is correctly computed
             thread_root = thread.with_user(self.env.ref('base.user_root'))
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure they are notified of a private answer
@@ -1323,9 +1323,9 @@ class MailThread(models.AbstractModel):
             if thread_root._name == 'mail.thread':  # message with parent_id not linked to record
                 new_msg = thread_root.message_notify(**post_params)
             else:
-                # parsing should find an author independently of user running mail gateway, and ensure it is not odoobot
-                partner_from_found = message_dict.get('author_id') and message_dict['author_id'] != self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
-                thread_root = thread_root.with_context(from_alias=True, mail_create_nosubscribe=not partner_from_found)
+                # if no author, skip any author subscribe check; otherwise message_post
+                # checks anyway for real author and filters inactive (like odoobot)
+                thread_root = thread_root.with_context(from_alias=True, mail_create_nosubscribe=not message_dict.get('author_id'))
                 new_msg = thread_root.message_post(**post_params)
 
             if new_msg and original_partner_ids:
@@ -2227,12 +2227,12 @@ class MailThread(models.AbstractModel):
             # if current user is active, they are the one doing the action and should
             # be notified of answers. If they are inactive they are posting on behalf
             # of someone else (a custom, mailgateway, ...) and the real author is the
-            # message author
-            if self.env.user.active:
+            # message author. In any case avoid odoobot.
+            if self.env.user.active and self.env.user != self.env.ref('base.user_root'):
                 real_author_id = self.env.user.partner_id.id
             elif msg_values['author_id']:
                 author = self.env['res.partner'].browse(msg_values['author_id'])
-                if author.active:
+                if author.active and author != self.env.ref('base.partner_root'):
                     real_author_id = author.id
             if real_author_id:
                 self._message_subscribe(partner_ids=[real_author_id])
