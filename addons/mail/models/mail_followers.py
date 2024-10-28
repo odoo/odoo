@@ -142,7 +142,7 @@ class MailFollowers(models.Model):
         self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])
         self.env['mail.message.subtype'].flush_model(['internal'])
         self.env['res.users'].flush_model(['notification_type', 'active', 'partner_id', 'groups_id'])
-        self.env['res.partner'].flush_model(['active', 'email', 'email_normalized', 'partner_share'])
+        self.env['res.partner'].flush_model(['active', 'email', 'email_normalized', 'name', 'partner_share'])
         self.env['res.groups'].flush_model(['users'])
         # if we have records and a subtype: we have to fetch followers, unless being
         # in user notification mode (contact only pids)
@@ -179,9 +179,9 @@ class MailFollowers(models.Model):
     )
     SELECT partner.id as pid,
            partner.active as active,
-           partner.email AS email,
            partner.email_normalized AS email_normalized,
            partner.lang as lang,
+           partner.name as name,
            partner.partner_share as pshare,
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
@@ -218,9 +218,9 @@ class MailFollowers(models.Model):
             query = """
     SELECT partner.id as pid,
            partner.active as active,
-           partner.email AS email,
            partner.email_normalized AS email_normalized,
            partner.lang as lang,
+           partner.name as name,
            partner.partner_share as pshare,
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
@@ -272,9 +272,9 @@ class MailFollowers(models.Model):
             query = """
     SELECT partner.id as pid,
            partner.active as active,
-           partner.email AS email,
            partner.email_normalized AS email_normalized,
            partner.lang as lang,
+           partner.name as name,
            partner.partner_share as pshare,
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
@@ -314,7 +314,7 @@ class MailFollowers(models.Model):
         res_ids = records.ids if records else [0]
         doc_infos = dict((res_id, {}) for res_id in res_ids)
         for (
-            partner_id, is_active, email, email_normalized, lang,
+            partner_id, is_active, email_normalized, lang, name,
             pshare, uid, ushare, notif, groups, res_id, is_follower
         ) in res:
             to_update = [res_id] if res_id else res_ids
@@ -324,12 +324,12 @@ class MailFollowers(models.Model):
                     continue
                 follower_data = {
                     'active': is_active,
-                    'email': email,
                     'email_normalized': email_normalized,
                     'id': partner_id,
                     'is_follower': is_follower,
                     'lang': lang,
                     'groups': set(groups or []),
+                    'name': name,
                     'notif': notif,
                     'share': pshare,
                     'uid': uid,
