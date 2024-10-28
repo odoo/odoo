@@ -219,6 +219,9 @@
                 <t t-snippet="website.s_tabs" string="Tabs" group="content">
                     <keywords>navigation, sections, multi-tab, panel, toggle</keywords>
                 </t>
+                <t t-snippet="website.s_tabs_images" string="Tabs Images" group="content">
+                    <keywords>images, pictures, photos, illustrations, media, visual, slider, tabs, switch, tabbed, sections, navigation</keywords>
+                </t>
                 <t t-snippet="website.s_timeline" string="Timeline" group="content">
                     <keywords>history, story, events, milestones, chronology, sequence, progression, achievements</keywords>
                 </t>
@@ -1846,7 +1849,7 @@
     </div>
 
     <!-- Scroll to next section button (only for full height) -->
-    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page, .o_mega_menu > section">
+    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page, .o_mega_menu > section, .s_tabs_images">
         <!-- Min height of section -->
         <we-button-group string="Height" data-show-scroll-button="">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
