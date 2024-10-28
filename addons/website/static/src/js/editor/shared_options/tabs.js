@@ -99,13 +99,6 @@ options.registry.NavTabsStyle = options.Class.extend({
      * @see this.selectClass for parameters
      */
     setStyle(previewMode, widgetValue, params) {
-        // const $nav = this.$target.find('.s_tabs_nav:first .nav');
-        // const isPills = widgetValue === 'pills';
-        // $nav.toggleClass('nav-tabs card-header-tabs', !isPills);
-        // $nav.toggleClass('nav-pills', isPills);
-        // this.$target.find('.s_tabs_nav:first').toggleClass('card-header', !isPills).toggleClass('mb-3', isPills);
-        // this.$target.toggleClass('card', !isPills);
-        // this.$target.find('.s_tabs_content:first').toggleClass('card-body', !isPills);
         const isTabs = widgetValue === 'nav-tabs';
         const isBtns = widgetValue === 'nav-buttons';
 
@@ -168,10 +161,10 @@ options.registry.NavTabsStyle = options.Class.extend({
         const tabsContent = mainEl.querySelector('.s_tabs_content');
 
         // Toggle classes based on 'isVertical'
-        nav.classList.toggle('flex-sm-column', isVertical);
+        nav.classList.toggle("flex-md-column", isVertical);
         navLinks.forEach(link => link.classList.toggle('py-2', isVertical));
-        tabsNav.classList.toggle('col-sm-3', isVertical);
-        tabsContent.classList.toggle('col-sm-9', isVertical);
+        tabsNav.classList.toggle("col-md-3", isVertical);
+        tabsContent.classList.toggle("col-md-9", isVertical);
 
         // Clean leftover classes not needed in vertical mode
         isVertical && nav.classList.remove('nav-fill', 'nav-justified', 'justify-content-center', 'justify-content-end');
@@ -192,7 +185,7 @@ options.registry.NavTabsStyle = options.Class.extend({
                 const matchingValue = params.possibleValues.find(value => !navEl || navEl.classList.contains(value));
                 return matchingValue;
             case 'setDirection':
-                return this.$target.find('.s_tabs_nav:first .nav').hasClass('flex-sm-column') ? 'vertical' : 'horizontal';
+                return navEl.classList.contains("flex-md-column") ? "vertical" : "horizontal";
         }
         return this._super(...arguments);
     },
