@@ -41,17 +41,3 @@ class AccountMoveLine(models.Model):
         res = super(AccountMoveLine, self - expensed_lines)._sale_create_reinvoice_sale_line()
         res.update(super(AccountMoveLine, expensed_lines.with_context({'force_split_lines': True}))._sale_create_reinvoice_sale_line())
         return res
-
-
-class AccountMove(models.Model):
-    _inherit = 'account.move'
-
-    def _reverse_moves(self, default_values_list=None, cancel=False):
-        self.expense_sheet_id._sale_expense_reset_sol_quantities()
-        res = super()._reverse_moves(default_values_list, cancel)
-        return res
-
-    def button_draft(self):
-        res = super().button_draft()
-        self.expense_sheet_id._sale_expense_reset_sol_quantities()
-        return res
