@@ -813,6 +813,8 @@ class PosOrder(models.Model):
             balance = company_currency.round(amount_currency * rate)
             aml_vals_list_per_nature['product'].append({
                 'name': order_line.full_product_name,
+                'product_id': order_line.product_id.id,
+                'quantity': order_line.qty * sign,
                 'account_id': base_line_vals['account_id'].id,
                 'partner_id': base_line_vals['partner_id'].id,
                 'currency_id': base_line_vals['currency_id'].id,
