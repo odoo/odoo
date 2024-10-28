@@ -323,7 +323,14 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      */
     cleanForSave() {
         // Set Indicator to the first image on save
-        this._updateIndicator(0);
+        const targetEL = this.$target[0];
+        const carouselEl = targetEL.classList.contains("carousel")
+            ? targetEL
+            : targetEL.querySelector(".carousel");
+        carouselEl.classList.remove("slide");
+        $(carouselEl).carousel(0);
+        targetEL.querySelector(".carousel-indicators button[data-bs-slide-to='0']");
+        carouselEl.classList.add("slide");
     },
 });
 

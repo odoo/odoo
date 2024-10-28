@@ -9866,22 +9866,6 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Update the carousel indicator.
-     *
-     * @private
-     * @param {integer} position - the position of the indicator to activate on
-     * the carousel.
-     */
-    _updateIndicator(position) {
-        debugger
-        const carouselEl = this.$target[0].classList.contains("carousel") ? this.$target[0]
-        : this.$target[0].querySelector(".carousel");
-        carouselEl.classList.remove("slide");
-        $(carouselEl).carousel(position);
-        this.$target[0].querySelector(`.carousel-indicators button[data-bs-slide-to="${position}"]`);
-        carouselEl.classList.add("slide");
-    },
-    /**
      * Update the carousel indicator and activate the snippet.
      *
      * @private
