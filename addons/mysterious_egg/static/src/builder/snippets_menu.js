@@ -1,6 +1,6 @@
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { Component, onWillDestroy, useState } from "@odoo/owl";
+import { Component, EventBus, onWillDestroy, useState, useSubEnv } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
@@ -38,6 +38,7 @@ export class SnippetsMenu extends Component {
         useHotkey("control+y", () => this.redo());
         useHotkey("control+shift+z", () => this.redo());
 
+        const editorBus = new EventBus();
         this.editor = new Editor(
             {
                 disableFloatingToolbar: true,
@@ -45,6 +46,7 @@ export class SnippetsMenu extends Component {
                 onChange: () => {
                     this.state.canUndo = this.editor.shared.canUndo();
                     this.state.canRedo = this.editor.shared.canRedo();
+                    editorBus.trigger("STEP_ADDED");
                 },
                 resources: {
                     change_selected_toolboxes_listeners: (selectedToolboxes) => {
@@ -55,6 +57,10 @@ export class SnippetsMenu extends Component {
             },
             this.env.services
         );
+        useSubEnv({
+            editor: this.editor,
+            editorBus,
+        });
         // onMounted(() => {
         //     // actionService.setActionMode("fullscreen");
         // });

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mysterious_egg.ToolboxRow">
+    <div class="d-flex p-1 px-2">
+        <div class="d-flex" style="flex-grow: 0.4; flex-basis: 0; min-width: 0;">
+            <span class="text-nowrap text-truncate" t-out="props.label"/>
+        </div>
+        <div class="d-flex" style="flex-grow: 0.6; flex-basis: 0; min-width: 0;">
+            <t t-slot="default"/>
+        </div>
+    </div>
+</t>
+
+</templates>
