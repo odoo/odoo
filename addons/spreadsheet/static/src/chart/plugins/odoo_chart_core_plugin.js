@@ -16,6 +16,7 @@ const CHART_PLACEHOLDER_DISPLAY_NAME = {
     odoo_bar: _t("Odoo Bar Chart"),
     odoo_line: _t("Odoo Line Chart"),
     odoo_pie: _t("Odoo Pie Chart"),
+    odoo_radar: _t("Odoo Radar Chart"),
 };
 
 export class OdooChartCorePlugin extends OdooCorePlugin {
@@ -61,12 +62,8 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "CREATE_CHART": {
-                switch (cmd.definition.type) {
-                    case "odoo_pie":
-                    case "odoo_bar":
-                    case "odoo_line":
-                        this._addOdooChart(cmd.id);
-                        break;
+                if (cmd.definition.type.startsWith("odoo_")) {
+                    this._addOdooChart(cmd.id);
                 }
                 break;
             }
