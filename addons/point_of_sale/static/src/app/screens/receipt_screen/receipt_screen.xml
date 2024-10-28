@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="pos-receipt-container d-flex flex-grow-1 flex-lg-grow-0 w-100 w-lg-50 user-select-none justify-content-center bg-200 text-center overflow-hidden">
-                        <div class="d-inline-block m-2 m-lg-3 p-3 border rounded bg-view text-start overflow-y-auto">
+                        <div t-att-class="{ 'w-50': !ui.isSmall }" class="d-inline-block m-2 m-lg-3 p-3 border rounded bg-view text-start overflow-y-auto">
                             <OrderReceipt data="pos.orderExportForPrinting(pos.get_order())" formatCurrency="env.utils.formatCurrency" />
                         </div>
                     </div>
