@@ -18,6 +18,8 @@ class MailGatewayAllowed(models.Model):
     won't apply to them.
     """
     _description = 'Mail Gateway Allowed'
+    _order = 'email'
+    _rec_name = 'email'
 
     email = fields.Char('Email Address', required=True)
     email_normalized = fields.Char(

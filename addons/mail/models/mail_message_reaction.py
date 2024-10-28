@@ -9,6 +9,7 @@ class MailMessageReaction(models.Model):
     _name = 'mail.message.reaction'
     _description = 'Message Reaction'
     _order = 'id desc'
+    _rec_name = 'content'
     _log_access = False
 
     message_id = fields.Many2one(string="Message", comodel_name='mail.message', ondelete='cascade', required=True, readonly=True)

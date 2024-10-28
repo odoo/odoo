@@ -8,6 +8,8 @@ from odoo.exceptions import UserError
 class MailResendMessage(models.TransientModel):
     _name = 'mail.resend.message'
     _description = 'Email resend wizard'
+    _order = 'id DESC'
+    _rec_name = 'mail_message_id'
 
     mail_message_id = fields.Many2one('mail.message', 'Message', readonly=True)
     partner_ids = fields.One2many('mail.resend.partner', 'resend_wizard_id', string='Recipients')
@@ -84,6 +86,8 @@ class MailResendMessage(models.TransientModel):
 class MailResendPartner(models.TransientModel):
     _name = 'mail.resend.partner'
     _description = 'Partner with additional information for mail resend'
+    _order = 'id DESC'
+    _rec_name = 'resend_wizard_id'
 
     notification_id = fields.Many2one('mail.notification', string='Notification', required=True, ondelete='cascade')
     partner_id = fields.Many2one('res.partner', string='Partner', related='notification_id.res_partner_id')
