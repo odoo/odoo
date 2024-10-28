@@ -22,7 +22,6 @@ class CreateChatDialog extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({ name: this.props.name });
         this.store = useState(useService("mail.store"));
         this.invitePeopleState = useState({
             selectablePartners: [],
@@ -55,7 +54,7 @@ class CreateChannelDialog extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
-        this.state = useState({ name: this.props.name });
+        this.state = useState({ name: this.props.name || "", isInvalid: false });
     }
 
     /** @param {KeyboardEvent} ev */
@@ -64,12 +63,15 @@ class CreateChannelDialog extends Component {
             case "Enter":
                 this.onClickConfirm();
                 break;
+            default:
+                this.state.isInvalid = false;
         }
     }
 
     async onClickConfirm() {
         const name = this.state.name.trim();
         if (!name) {
+            this.state.isInvalid = true;
             return;
         }
         await makeNewChannel(name, this.orm, this.store);

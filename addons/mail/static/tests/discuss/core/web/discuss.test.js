@@ -11,6 +11,7 @@ import {
     start,
     startServer,
     step,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
@@ -245,4 +246,14 @@ test("Preserve letter case and accents when creating channel from sidebar", asyn
     await insertText("input[placeholder='Search a conversation']", "Crème brûlée Fan Club");
     await click("a", { text: "Create Channel" });
     await contains(".o-mail-Discuss-threadName", { value: "Crème brûlée Fan Club" });
+});
+
+test("Create channel must have a name", async () => {
+    await start();
+    await openDiscuss();
+    await click("input[placeholder='Find or start a conversation']");
+    await click("a", { text: "Create Channel" });
+    await click("input[placeholder='Channel name']");
+    await triggerHotkey("Enter");
+    await contains(".invalid-feedback", { text: "Channel must have a name." });
 });
