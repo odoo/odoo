@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, onRendered, useRef, useState, useSubEnv } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useRefListener, useService } from "@web/core/utils/hooks";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
@@ -8,12 +8,19 @@ export class BaseProductAttribute extends Component {
     static template = "";
     static props = ["attributeLine"];
     setup() {
-        this.env.attribute_components.push(this);
         this.attributeLine = this.props.attributeLine;
         this.values = this.attributeLine.product_template_value_ids;
         this.state = useState({
             attribute_value_ids: parseFloat(this.values[0].id),
             custom_value: "",
+        });
+
+        onMounted(() => {
+            this.env.attribute_components.push(this);
+        });
+
+        onRendered(() => {
+            this.env.computeProductProduct();
         });
     }
 
@@ -113,7 +120,10 @@ export class ProductConfiguratorPopup extends Component {
     static props = ["productTemplate", "getPayload", "close"];
 
     setup() {
-        useSubEnv({ attribute_components: [] });
+        useSubEnv({
+            attribute_components: [],
+            computeProductProduct: this.computeProductProduct.bind(this),
+        });
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.inputArea = useRef("input-area");
@@ -123,7 +133,6 @@ export class ProductConfiguratorPopup extends Component {
             payload: this.env.attribute_components,
         });
 
-        this.computeProductProduct();
         useRefListener(this.inputArea, "touchend", this.computeProductProduct.bind(this));
         useRefListener(this.inputArea, "click", this.computeProductProduct.bind(this));
     }

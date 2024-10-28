@@ -17,7 +17,7 @@ export class ProductInfoBanner extends Component {
 
     setup() {
         this.pos = usePos();
-        this.fetchStock = useTrackedAsync((pt, p) => this.pos.getProductInfo(pt, p, 1));
+        this.fetchStock = useTrackedAsync((pt, p) => this.pos.getProductInfo(pt, 1, 0, p));
         this.ui = useState(useService("ui"));
         this.state = useState({
             other_warehouses: [],
@@ -34,15 +34,10 @@ export class ProductInfoBanner extends Component {
                     return;
                 }
 
-                let product = this.props.product;
-                if (!product) {
-                    product = this.props.productTemplate.product_variant_ids[0];
-                }
-
                 const fetchStocks = async () => {
                     let result = {};
                     if (!this.props.info) {
-                        await this.fetchStock.call(this.props.productTemplate, product);
+                        await this.fetchStock.call(this.props.productTemplate, this.props.product);
                         if (this.fetchStock.status === "error") {
                             throw this.fetchStock.result;
                         }

@@ -125,7 +125,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content: "validate the variant dialog (with default values)",
             },
             ProductScreen.selectedOrderlineHas("Desk Organizer"),
-            checkOrderChanges([{ name: "Desk Organizer (S, Leather)", quantity: 1 }]),
+            checkOrderChanges([{ name: "Desk Organizer (Leather, S)", quantity: 1 }]),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),

@@ -183,10 +183,7 @@ export class ProductScreen extends Component {
         return this.currentOrder.lines?.reduce((items, line) => items + line.qty, 0) ?? 0;
     }
     getProductName(product) {
-        const productTmplValIds = product.attribute_line_ids
-            .map((l) => l.product_template_value_ids)
-            .flat();
-        return productTmplValIds.length > 1 ? product.name : product.display_name;
+        return product.name;
     }
     async _getProductByBarcode(code) {
         let product = this.pos.models["product.product"].getBy("barcode", code.base_code);
@@ -455,8 +452,7 @@ export class ProductScreen extends Component {
     }
 
     async onProductInfoClick(productTemplate) {
-        const product = productTemplate.product_variant_ids[0];
-        const info = await reactive(this.pos).getProductInfo(productTemplate, product, 1);
+        const info = await reactive(this.pos).getProductInfo(productTemplate, 1);
         this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
     }
 }

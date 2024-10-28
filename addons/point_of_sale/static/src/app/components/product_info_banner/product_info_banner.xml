@@ -5,7 +5,7 @@
             class="section-product-info-title d-flex flex-column text-info bg-opacity-25 mx-n3 mt-n3 mb-3 px-3 py-3">
             <div class="d-flex" t-att-class="{ 'justify-content-between': !this.ui.isSmall }">
                 <div>
-                    <div class="h4" t-esc="props.productTemplate.name"/>
+                    <div class="h4" t-esc="props.product?.display_name || props.productTemplate.display_name"/>
                     <div t-if="this.props.productTemplate.is_storable" class="h4">
                         <span>On hand: </span>
                         <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/> Units</span>
@@ -18,7 +18,7 @@
                     <div class="h4">VAT: <t t-esc="state.tax_name || 0" /> (= <t t-esc="this.env.utils.formatCurrency(state.tax_amount)" />)</div>
                 </div>
             </div>
-            <AccordionItem t-if="state.other_warehouses.length > 0">
+            <AccordionItem t-if="state.other_warehouses?.length > 0">
                 <t t-set-slot="header">
                     Inventory
                 </t>

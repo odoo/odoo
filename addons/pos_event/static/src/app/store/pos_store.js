@@ -46,6 +46,7 @@ patch(PosStore.prototype, {
                 available_in_pos: true,
                 lst_price: lowestPrice.price,
                 display_name: event.name,
+                name: event.name,
                 pos_categ_ids: categIds.map((categ) => ["link", categ]),
                 taxes_id: taxeIds.map((tax) => ["link", tax]),
                 _event_id: event.id,
