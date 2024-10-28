@@ -5,6 +5,7 @@ import { MacroEngine } from "@web/core/macro";
 
 export class TourAutomatic {
     mode = "auto";
+    pointer = null;
     constructor(data) {
         Object.assign(this, data);
         this.steps = this.steps.map((step, index) => new TourStepAutomatic(step, this, index));
@@ -16,11 +17,30 @@ export class TourAutomatic {
         this.stepDelay = tourConfig.stepDelay;
     }
 
+    get debugMode() {
+        const tourConfig = tourState.getCurrentConfig() || {};
+        return tourConfig.debug !== false;
+    }
+
     start(pointer, callback) {
+        this.pointer = pointer;
         const currentStepIndex = tourState.getCurrentIndex();
         const macroSteps = this.steps
             .filter((step) => step.index >= currentStepIndex)
-            .flatMap((step) => step.compileToMacro(pointer))
+            .flatMap((step) => {
+                return [
+                    {
+                        action: () => step.log(),
+                    },
+                    {
+                        trigger: () => step.findTrigger(),
+                        action: (stepEl) => step.doAction(stepEl),
+                    },
+                    {
+                        action: () => step.waitForPause(),
+                    },
+                ];
+            })
             .concat([
                 {
                     action: () => {
