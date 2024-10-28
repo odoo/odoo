@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             TicketScreen.clickDiscard(),
 
             // Make sure that order is deleted properly.
-            FloorScreen.clickTable("5"),
+            FloorScreen.clickTable("105"),
             ProductScreen.addOrderline("Minute Maid", "1", "3"),
             ProductScreen.totalAmountIs("3.0"),
             Chrome.clickPlanButton(),
@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             TicketScreen.clickDiscard(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
-            FloorScreen.clickTable("5"),
+            FloorScreen.clickTable("105"),
             ProductScreen.orderIsEmpty(),
         ].flat(),
 });
@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
     steps: () =>
         [
             Chrome.startPoS(),
-            FloorScreen.clickTable("3"),
+            FloorScreen.clickTable("103"),
             ProductScreen.isShown(),
             ProductScreen.addOrderline("Coca-Cola", "1", "3"),
             Chrome.clickPlanButton(),

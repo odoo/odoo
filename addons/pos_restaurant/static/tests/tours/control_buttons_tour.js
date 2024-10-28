@@ -18,11 +18,11 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             // Test merging table, transfer is already tested in pos_restaurant_sync_second_login.
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            FloorScreen.clickTable("2"),
+            FloorScreen.clickTable("102"),
             Chrome.activeTableOrOrderIs("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("4"),
+            FloorScreen.clickTable("104"),
             Chrome.activeTableOrOrderIs("4"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
             // Extra line is added to test merging table.
@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.selectedOrderlineHas("Coca-Cola", "1"),
 
             ProductScreen.clickControlButton("Transfer"),
-            FloorScreen.clickTable("2"),
+            FloorScreen.clickTable("102"),
             Chrome.activeTableOrOrderIs("2"),
             Order.hasLine({ productName: "Water", quantity: "5" }),
             Order.hasLine({ productName: "Minute Maid", quantity: "3" }),
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             }),
             // Check that note is imported if come back to the table
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("2"),
+            FloorScreen.clickTable("102"),
             Order.hasLine({
                 productName: "Water",
                 quantity: "5",

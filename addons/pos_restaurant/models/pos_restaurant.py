@@ -19,6 +19,7 @@ class RestaurantFloor(models.Model):
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
     floor_background_image = fields.Image(string='Floor Background Image')
+    floor_prefix = fields.Integer('Floor Prefix', default=1, help="The prefix will be used when creating a new table in the PoS interface.")
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -26,7 +27,7 @@ class RestaurantFloor(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image']
+        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image', 'floor_prefix']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
@@ -47,6 +48,12 @@ class RestaurantFloor(models.Model):
                     raise UserError(
                         'Please close and validate the following open PoS Session before modifying this floor.\n'
                         'Open session: %s' % (' '.join(config.mapped('name')),))
+            for table in floor.table_ids:
+                # Verify if table number begin by old prefix
+                if table.table_number and str(table.table_number).startswith(str(self.floor_prefix)) and vals.get('floor_prefix'):
+                    table_number_wo_prefix = str(table.table_number)[len(str(self.floor_prefix)):]
+                    table.table_number = str(vals.get('floor_prefix')) + table_number_wo_prefix
+
         return super(RestaurantFloor, self).write(vals)
 
     def rename_floor(self, new_name):
