@@ -167,6 +167,7 @@ def _eval_xml(self, node, env):
                 raise ValueError(f"Unknown type {t!r}")
 
     elif node.tag == "function":
+        from odoo.models import BaseModel  # noqa: PLC0415
         model_str = node.get('model')
         model = env[model_str]
         method_name = node.get('name')
@@ -183,9 +184,21 @@ def _eval_xml(self, node, env):
             else:
                 args.append(_eval_xml(self, child, env))
         # merge current context with context in kwargs
-        kwargs['context'] = {**env.context, **kwargs.get('context', {})}
+        if 'context' in kwargs:
+            model = model.with_context(**kwargs.pop('context'))
+        method = getattr(model, method_name)
+        api = getattr(method, '_api', None)
+        if api and api.startswith('model'):
+            pass  # already bound to an empty recordset
+        else:
+            record_ids, *args = args
+            model = model.browse(record_ids)
+            method = getattr(model, method_name)
         # invoke method
-        return odoo.service.model.call_kw(model, method_name, args, kwargs)
+        result = method(*args, **kwargs)
+        if isinstance(result, BaseModel):
+            result = result.ids
+        return result
     elif node.tag == "test":
         return node.text
 
