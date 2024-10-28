@@ -32,6 +32,11 @@ class MailTestRecipients(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id', 'contact_ids']
 
+    def _message_add_suggested_recipients(self):
+        email_to_lst, partners = super()._message_add_suggested_recipients()
+        email_to_lst.append(self.email_cc)
+        return email_to_lst, partners
+
 # ------------------------------------------------------------
 # PROPERTIES
 # ------------------------------------------------------------
