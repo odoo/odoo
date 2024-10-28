@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from threading import Thread, Event
 
 from odoo.addons.hw_drivers.main import drivers, iot_devices
+from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.tools.helpers import toggleable
 
 from odoo.tools.lru import LRU
+
+_logger = logging.getLogger(__name__)
 
 
 class Driver(Thread):
@@ -47,28 +51,44 @@ class Driver(Thread):
         return False
 
     @toggleable
-    def action(self, data):
+    def action(self, action='', **kwargs):
         """Helper function that calls a specific action method on the device.
 
-        :param dict data: the `_actions` key mapped to the action method we want to call
+        :param str action: the action to be executed
+        :param dict kwargs: the parameters to be passed to the action method
+        :return: the result of the action method
         """
-        self._actions[data.get('action', '')](data)
+        try:
+            response = {'status': 'success', 'result': self._actions[action](**kwargs), 'action_args': {**kwargs}}
+        except Exception as e:
+            _logger.exception("Error while executing action %s with params %s", action, kwargs)
+            response = {'status': 'error', 'result': str(e), 'action_args': {**kwargs}}
+
+        event_manager.device_changed(self, response)  # Make response available to /event route or websocket
 
     def disconnect(self):
         self._stopped.set()
         del iot_devices[self.device_identifier]
 
-    def _check_idempotency(self, iot_idempotent_id, session_id):
-        """
-        Some IoT requests for the same action might be received several times.
+    def is_idempotent(self, session_id, **kwargs):
+        """Some IoT requests for the same action might be received several times.
         To avoid duplicating the resulting actions, we check if the action was "recently" executed.
         If this is the case, we will simply ignore the action
 
-        :return: the `session_id` of the same `iot_idempotent_id` if any. False otherwise,
-        which means that it is the first time that the IoT box received the request with this ID
+        :param str session_id: the session id of the request
+        :param dict kwargs: params passed to the action method
+        :return: True if the action is idempotent, False otherwise
+        :rtype: bool
         """
-        cache = self._iot_idempotent_ids_cache
-        if iot_idempotent_id in cache:
-            return cache[iot_idempotent_id]
-        cache[iot_idempotent_id] = session_id
+        idempotent_id = kwargs.get("iot_idempotent_id")
+        if not idempotent_id or not session_id:
+            return True
+        if idempotent_id not in self._iot_idempotent_ids_cache:
+            self._iot_idempotent_ids_cache[idempotent_id] = session_id
+            return True
+
+        _logger.info(
+            "Action from %s with idempotent Id %s already received from session %s",
+            session_id, idempotent_id, self._iot_idempotent_ids_cache[idempotent_id]
+        )
         return False

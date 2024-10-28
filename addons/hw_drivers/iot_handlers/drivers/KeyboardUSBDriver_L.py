@@ -201,9 +201,8 @@ class KeyboardUSBDriver(Driver):
             layout = {'layout': 'us'}
         self._change_keyboard_layout(layout)
 
-    def _action_default(self, data):
+    def _action_default(self, _data):
         self.data['value'] = ''
-        event_manager.device_changed(self)
 
     def _is_scanner(self):
         """Read the device type from the saved filed and set it as current type.

@@ -70,7 +70,7 @@ def toggleable(function):
     @wraps(function)
     def devtools_wrapper(*args, **kwargs):
         if function.__name__ == 'action':
-            action = args[1].get('action', 'default')  # first argument is self (containing Driver instance), second is 'data'
+            action = kwargs['action'] or 'default'
             disabled_actions = (get_conf('actions', section='devtools') or '').split(',')
             if action in disabled_actions or '*' in disabled_actions:
                 _logger.warning("Ignoring call to %s: '%s' action is disabled by devtools", fname, action)
