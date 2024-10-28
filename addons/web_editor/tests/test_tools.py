@@ -13,6 +13,7 @@ class TestVideoUtils(common.BaseCase):
         'youtube': 'https://www.youtube.com/watch?v=xCvFZrrQq7k',
         'youtube_shorts_video': 'https://www.youtube.com/shorts/qAgW3oG7Zmc',
         'youtube_live_stream': 'https://www.youtube.com/live/fmVNEoxr7iU?feature=shared',
+        'youtube_mobile': 'https://m.youtube.com/watch?v=xCvFZrrQq7k',
         'vimeo': 'https://vimeo.com/395399735',
         'vimeo_unlisted_video': 'https://vimeo.com/795669787/0763fdb816',
         'vimeo_player': 'https://player.vimeo.com/video/395399735',
@@ -55,6 +56,8 @@ class TestVideoUtils(common.BaseCase):
         self.assertEqual('qAgW3oG7Zmc', tools.get_video_source_data(TestVideoUtils.urls['youtube_shorts_video'])[1])
         self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube_live_stream'])[0])
         self.assertEqual('fmVNEoxr7iU', tools.get_video_source_data(TestVideoUtils.urls['youtube_live_stream'])[1])
+        self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube_mobile'])[0])
+        self.assertEqual('xCvFZrrQq7k', tools.get_video_source_data(TestVideoUtils.urls['youtube_mobile'])[1])
         #vimeo
         self.assertEqual('vimeo', tools.get_video_source_data(TestVideoUtils.urls['vimeo'])[0])
         self.assertEqual('395399735', tools.get_video_source_data(TestVideoUtils.urls['vimeo'])[1])
