@@ -2,7 +2,7 @@
 from email.policy import default
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError,ValidationError
 
 class DeliveryReceiptOrders(models.Model):
     _name = 'delivery.receipt.orders'
@@ -86,6 +86,16 @@ class DeliveryReceiptOrders(models.Model):
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('delivery.receipt.orders') or _('New')
         return super().create(vals_list)
+
+    @api.onchange('picking_id')
+    def _onchange_picking_id(self):
+        """
+        Validate that the selected picking_id (receipt) is not in 'draft' state.
+        If it is, raise a ValidationError.
+        """
+        if self.picking_id and self.picking_id.state == 'draft':
+            raise ValidationError(_("The selected receipt is in 'Draft' state and cannot be used. "
+                                    "Please select a receipt that is in 'Ready' or 'Done' state."))
 
 
 class DeliveryReceiptOrdersLine(models.Model):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
@@ -74,6 +74,17 @@ class LicensePlateOrdersLine(models.Model):
         This method opens the wizard for updating the quantity.
         It passes the default picking_id and license_plate_orders_line_id to the context.
         """
+        # Check if License Plate is in an active decanting process
+        decanting_process = self.env['automation.decanting.orders.process'].search([
+            ('license_plate_ids', '=', self.license_plate_orders_id.name),
+            ('state', 'in', ['in_progress', 'done'])  # Check if decanting process is ongoing
+        ], limit=1)
+
+        if decanting_process:
+            raise ValidationError(
+                _("The License Plate '%s' is currently in a decanting process and cannot be edited.")
+                % self.license_plate_orders_id.name
+            )
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'update.qty.wizard',
