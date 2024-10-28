@@ -227,18 +227,29 @@ export class PaymentScreen extends Component {
     async validateOrder(isForceValidate) {
         this.numberBuffer.capture();
         if (this.pos.config.cash_rounding) {
-            if (!this.pos.get_order().check_paymentlines_rounding()) {
+            if (!this.currentOrder.check_paymentlines_rounding()) {
                 this._display_popup_error_paymentlines_rounding();
                 return;
             }
         }
         if (await this._isOrderValid(isForceValidate)) {
             // remove pending payments before finalizing the validation
+            const toRemove = [];
             for (const line of this.paymentLines) {
-                if (!line.is_done()) {
-                    this.currentOrder.remove_paymentline(line);
+                if (!line.is_done() || line.amount === 0) {
+                    toRemove.push(line);
                 }
             }
+
+            for (const line of toRemove) {
+                this.currentOrder.remove_paymentline(line);
+            }
+
+            const cash = this.payment_methods_from_config.find((pm) => pm.is_cash_count);
+            if (this.currentOrder.get_due() > 0 && this.pos.config.cash_rounding && cash) {
+                this.currentOrder.add_paymentline(cash, 0);
+            }
+
             await this._finalizeValidation();
         }
     }
