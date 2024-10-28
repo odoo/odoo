@@ -39,13 +39,11 @@
                                 </td>
                                 <td style="width:67%; height:100%; vertical-align: top;">
                                     <table style="width: 100%; height: 100%; text-align: center;" class="table-borderless">
-                                        <tr><th><span style="font-size: 15pt;" t-out="employee.name">Marc Demo</span></th></tr>
-                                        <tr><td><span style="font-size: 10pt;" t-out="employee.job_id.name">Software Developer</span></td></tr>
+                                        <tr><th><span style="font-size: 15pt;" t-out="employee.name" data-oe-demo="Marc Demo"></span></th></tr>
+                                        <tr><td><span style="font-size: 10pt;" t-out="employee.job_id.name" data-oe-demo="Software Developer"></span></td></tr>
                                         <tr style="height: 100%;">
                                             <td style="vertical-align: bottom; padding-bottom: 4pt;">
-                                                <div t-if="employee.barcode" t-field="employee.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 120, 'img_style': 'max-width:100%;', 'img_align': 'center'}">
-                                                    12345678901
-                                                </div>
+                                                <div t-if="employee.barcode" t-field="employee.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 120, 'img_style': 'max-width:100%;', 'img_align': 'center'}" data-oe-demo="12345678901"></div>
                                             </td>
                                         </tr>
                                     </table>
