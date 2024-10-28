@@ -4,7 +4,7 @@
 <!-- Snippets and options -->
 <template id="slide_searchbar_input_snippet_options" inherit_id="website.searchbar_input_snippet_options" name="slide search bar snippet options">
     <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='scope_opt']" position="inside">
-        <we-button data-set-search-type="slides" data-select-data-attribute="slides" data-name="search_slides_opt" data-form-action="/slides/all">Courses</we-button>
+        <we-button data-set-search-type="slides" data-select-data-attribute="slides" data-name="search_slides_opt" data-form-action="/slides">Courses</we-button>
     </xpath>
     <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='order_opt']" position="inside">
         <we-button data-set-order-by="slide_last_update asc" data-select-data-attribute="slide_last_update asc" data-dependencies="search_slides_opt" data-name="order_slide_last_update_asc_opt">Date (old to new)</we-button>

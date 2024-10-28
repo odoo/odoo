@@ -25,7 +25,7 @@
                     </div>
                     <div t-else="" class="text-muted d-inline-block">No completed courses yet!</div>
                     <div t-if="request.env.user != user" class="text-end d-inline-block pull-right">
-                        <a href="/slides/all" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Courses</a>
+                        <a href="/slides?my=0" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Courses</a>
                     </div>
                 </div>
                 <div class="mb32">
@@ -57,7 +57,7 @@
 
                             <div class="overflow-hidden mb-1" style="height:24px">
                                 <t t-foreach="course.channel_id.tag_ids.filtered(lambda tag: tag.color)" t-as="tag">
-                                    <a t-att-href="'/slides/all/tag/%s' % slug(tag)" onclick="event.stopPropagation()" t-attf-class="badge o_wslides_channel_tag post_link #{'o_color_'+str(tag.color)}" t-esc="tag.name"/>
+                                    <a t-att-href="'/slides/tag/%s?my=0' % slug(tag)" onclick="event.stopPropagation()" t-attf-class="badge o_wslides_channel_tag post_link #{'o_color_'+str(tag.color)}" t-esc="tag.name"/>
                                 </t>
                             </div>
 
