@@ -43,12 +43,9 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     trigger: '.o_kanban_add',
     run: "click",
 }, {
-    content: "Check that column exists",
-    trigger: '.o_kanban_header:contains("Never")',
-}, {
-    content: 'Open column edit dropdown',
-    trigger: '.o_kanban_header:contains("Never") .dropdown-toggle',
-    run: "click",
+    content: "Check that column exists && Open column edit dropdown",
+    trigger: ".o_kanban_header:contains(Never)",
+    run: "hover && click .o_kanban_header:contains(Never) .dropdown-toggle",
 }, {
     content: "Try editing inbox",
     trigger: ".dropdown-item.o_column_edit",

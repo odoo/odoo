@@ -8,9 +8,9 @@ registry.category("web_tour.tours").add('shop_wishlist', {
     url: '/shop?search=Customizable Desk',
     steps: () => [
         {
-            content: "click on add to wishlist",
-            trigger: '.o_add_wishlist',
-            run: "click",
+            content: "hover card && click on add to wishlist",
+            trigger: ".o_wsale_product_grid_wrapper:contains(desk)",
+            run: "hover && click .o_add_wishlist",
         },
         {
             trigger: 'a[href="/shop/wishlist"] .badge:contains(1)',
@@ -31,9 +31,9 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
-            content: "click on add to wishlist",
-            trigger: '.o_add_wishlist',
-            run: "click",
+            content: "hover card && click on add to wishlist",
+            trigger: ".o_wsale_product_grid_wrapper:contains(desk)",
+            run: "hover && click .o_add_wishlist",
         },
         {
             trigger: ".my_wish_quantity:contains(1)",
@@ -190,8 +190,8 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Add Bottle to wishlist from /shop",
-            trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist',
-            run: "click",
+            trigger: ".oe_product_cart:contains(Bottle)",
+            run: "hover && click .oe_product_cart:contains(Bottle) .o_add_wishlist",
         },
         {
             content: "Check that wishlist contains 1 item",
