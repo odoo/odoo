@@ -212,7 +212,13 @@ export class FormCompiler extends ViewCompiler {
      * @returns {Element}
      */
     compileForm(el, params) {
-        const sheetNode = el.querySelector("sheet");
+        let sheetNode = null;
+        for (const sheet of el.querySelectorAll("sheet")) {
+            if (sheet.closest("form") === el) {
+                sheetNode = sheet;
+                break;
+            }
+        }
         const displayClasses = sheetNode
             ? `d-flex {{ __comp__.uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
             : "d-block";
