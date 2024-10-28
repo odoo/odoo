@@ -381,3 +381,21 @@ registry.category("web_tour.tours").add("PosSettleOrder4", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.shippingLaterHighlighted(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
