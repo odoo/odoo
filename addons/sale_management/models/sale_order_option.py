@@ -9,15 +9,18 @@ class SaleOrderOption(models.Model):
     _name = 'sale.order.option'
     _description = "Sale Options"
     _order = 'sequence, id'
+    _check_company_auto = True
 
     # FIXME ANVFE wtf is it not required ???
-    # TODO related to order.company_id and restrict product choice based on company
     order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
+    company_id = fields.Many2one(related='order_id.company_id', depends=['order_id'])
 
     product_id = fields.Many2one(
         comodel_name='product.product',
         required=True,
-        domain=lambda self: self._product_id_domain())
+        domain=lambda self: self._product_id_domain(),
+        check_company=True,
+    )
     line_id = fields.Many2one(
         comodel_name='sale.order.line', ondelete='set null', copy=False)
     sequence = fields.Integer(
