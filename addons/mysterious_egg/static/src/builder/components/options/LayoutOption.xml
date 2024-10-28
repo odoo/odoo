@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mysterious_egg.LayoutOption">
+    <ToolboxRow label="'Layout'">
+        <ButtonGroup t-props="this.layoutButtonsProps">
+            <Button id="'grid'" label="'Grid'" onClick.bind="setGridLayout" />
+            <Button id="'column'" label="'Column'" onClick.bind="setColumnLayout"/>
+        </ButtonGroup>
+        <t t-if="state.elementLayout === 'column'">
+            <Dropdown>
+                <button class="btn btn-primary mx-1" t-att-title="props.title">
+                    <t class="px-1" t-out="state.columnCount"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="[1, 2, 3, 4, 5, 6]" t-as="column" t-key="column_index">
+                        <DropdownItem onSelected="() => this.changeColumnCount(column)">
+                            <div class="user-select-none">
+                                <t t-out="column"/>
+                            </div>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        </t>
+    </ToolboxRow>
+    <t t-if="state.elementLayout === 'grid'">
+        <AddElementOption toolboxElement="props.toolboxElement" />
+        <SpacingOption toolboxElement="props.toolboxElement"/>
+    </t>
+    <t t-else="">
+        <HorizontalAlignmentOption toolboxElement="props.toolboxElement" />
+    </t>
+</t>
+
+</templates>
