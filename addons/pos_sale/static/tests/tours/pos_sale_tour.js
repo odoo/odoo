@@ -327,3 +327,20 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
             ProductScreen.totalAmountIs(22.0),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosSettleOrder4", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});

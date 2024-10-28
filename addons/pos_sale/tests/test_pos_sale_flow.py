@@ -858,3 +858,69 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentLinesPerFixedTax', login="accountman")
+
+    def test_settle_order_with_multistep_delivery_receipt(self):
+        """This test create an order and settle it in the PoS. It also uses multistep delivery
+            and we need to make sure that all the picking are cancelled if the order is fully delivered.
+        """
+        if not self.env["ir.module.module"].search([("name", "=", "purchase"), ("state", "=", "installed")]):
+            self.skipTest("purchase module is required for this test")
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_pack_ship'
+        warehouse.reception_steps = 'three_steps'
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
+        route_mto = self.env.ref('stock.route_warehouse0_mto')
+        self.partner_test = self.env['res.partner'].create({
+            'name': 'Partner Test A',
+            'is_company': True,
+            'street': '77 Santa Barbara Rd',
+            'city': 'Pleasant Hill',
+            'country_id': self.env.ref('base.nl').id,
+            'zip': '1105AA',
+            'state_id': False,
+            'email': 'deco.addict82@example.com',
+            'phone': '(603)-996-3829',
+        })
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10.0,
+            'seller_ids': [(0, 0, {
+                'partner_id': self.partner_test.id,
+                'min_qty': 1.0,
+                'price': 1.0,
+            })],
+            'route_ids': [(6, 0, [route_buy.id, route_mto.id])],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_test.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'product_uom': product_a.uom_id.id,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+
+        # We validate the purchase and receipt steps
+        po = sale_order._get_purchase_orders()
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        picking.button_validate()
+        self.env['stock.picking'].search([('group_id', '=', po.group_id.id)]).filtered(lambda p: p.state == 'assigned').button_validate()
+        self.env['stock.picking'].search([('group_id', '=', po.group_id.id)]).filtered(lambda p: p.state == 'assigned').button_validate()
+
+        self.main_pos_config.ship_later = True
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder4', login="accountman")
+
+        self.assertEqual(sale_order.picking_ids.state, 'cancel')
+        self.assertEqual(sale_order.pos_order_line_ids.order_id.picking_ids.state, 'assigned')
+        self.assertEqual(self.env['purchase.order.line'].search_count([('product_id', '=', product_a.id)]), 1)
