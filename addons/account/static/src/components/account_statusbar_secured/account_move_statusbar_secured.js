@@ -18,7 +18,7 @@ export const accountMoveStatusBarSecuredField = {
     ...statusBarField,
     component: AccountMoveStatusBarSecuredField,
     displayName: _t("Status with secured indicator for Journal Entries"),
-    supportedTypes: ["state"],
+    supportedTypes: ["selection"],
     additionalClasses: ["o_field_statusbar"],
 };
 
