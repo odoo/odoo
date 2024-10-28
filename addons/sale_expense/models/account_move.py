@@ -15,3 +15,8 @@ class AccountMove(models.Model):
         # EXTENDS sale
         self.expense_sheet_id._sale_expense_reset_sol_quantities()
         return super().button_draft()
+
+    def unlink(self):
+        # EXTENDS sale
+        self.expense_sheet_id._sale_expense_reset_sol_quantities()
+        return super().unlink()
