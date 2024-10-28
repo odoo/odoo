@@ -176,6 +176,20 @@ odoo.define('pos_sale.tour', function (require) {
 
     ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickShipLaterButton()
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.isShown();
+
+    Tour.register('PosSettleOrderShipLater', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickQuotationButton();
     ProductScreen.do.downPaymentFirstOrder();
     ProductScreen.check.selectedOrderlineHas('Down Payment', '1', '10.00');
     ProductScreen.do.clickPayButton();

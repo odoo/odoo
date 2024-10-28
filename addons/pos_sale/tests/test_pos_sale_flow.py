@@ -520,6 +520,54 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleDraftOrder', login="accountman")
 
+    def test_settle_order_ship_later_delivered_qty(self):
+        """This test create an order, settle it in the PoS and ship it later.
+            We need to make sure that the quantity delivered on the original sale is updated correctly
+        """
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 10.0,
+        })
+
+        partner_test = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'city': 'San Francisco',
+            'state_id': self.env.ref('base.state_us_5').id,
+            'country_id': self.env.ref('base.us').id,
+            'zip': '94134',
+            'street': 'Rue du burger',
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner_test.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'product_uom': product_a.uom_id.id,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
+
+        self.main_pos_config.ship_later = True
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderShipLater', login="accountman")
+
+        # The pos order is being shipped later so the qty_delivered should still be 0
+        self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
+
+        # We validate the delivery of the order, now the qty_delivered should be 1
+        pickings = sale_order.pos_order_line_ids.order_id.picking_ids
+        pickings.move_ids.quantity_done = 1
+        pickings.button_validate()
+        self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
+
     def test_downpayment_amount_to_invoice(self):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
