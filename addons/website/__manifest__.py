@@ -93,6 +93,7 @@
         'views/snippets/s_features_grid.xml',
         'views/snippets/s_features_wave.xml',
         'views/snippets/s_tabs.xml',
+        'views/snippets/s_tabs_images.xml',
         'views/snippets/s_table_of_content.xml',
         'views/snippets/s_images_constellation.xml',
         'views/snippets/s_chart.xml',
