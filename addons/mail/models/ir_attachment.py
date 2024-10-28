@@ -88,4 +88,6 @@ class IrAttachment(models.Model):
                 'id': attachment.res_id,
                 'model': attachment.res_model,
             })],
+            'type': attachment.type,
+            'url': attachment.url,
         } for attachment in self]

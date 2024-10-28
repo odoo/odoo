@@ -97,6 +97,56 @@ QUnit.test(
     }
 );
 
+QUnit.test(
+    "link-type attachment should have open button instead of download button",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_type: "channel",
+            name: "channel1",
+        });
+        const attachment_ids = pyEnv["ir.attachment"].create([
+            {
+                name: "url.example",
+                mimetype: "text/plain",
+                type: "url",
+                url: "https://www.odoo.com",
+            },
+            {
+                name: "test.txt",
+                mimetype: "text/plain",
+            },
+        ]);
+        pyEnv["mail.message"].create({
+            attachment_ids,
+            body: "<p>Test</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        });
+        const { openDiscuss } = await start();
+        openDiscuss(channelId);
+        await contains(".o-mail-AttachmentCard", { count: 2 });
+        await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "url.example" });
+        await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "test.txt" });
+        await contains(
+            ":nth-child(1 of .o-mail-AttachmentCard) .o-mail-AttachmentCard-aside a[title='Open Link']"
+        );
+        await contains(
+            ":nth-child(1 of .o-mail-AttachmentCard) .o-mail-AttachmentCard-aside button[title='Download']",
+            { count: 0 }
+        );
+        await contains(
+            ":nth-child(2 of .o-mail-AttachmentCard) .o-mail-AttachmentCard-aside button[title='Download']"
+        );
+        assert.strictEqual(
+            document.querySelector(`.o-mail-AttachmentCard-aside a[title='Open Link']`).target,
+            "_blank",
+            "attachment should have a open link button in a new tab"
+        );
+    }
+);
+
 QUnit.test("view attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -312,7 +362,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss(channelId);
-        await contains(".o-mail-AttachmentImage[title='test.png'] img.o-viewable");
+        await contains(".o-mail-AttachmentImage[title='test.png'].o-viewable");
         await contains(".o-mail-AttachmentCard:not(.o-viewable)", { text: "test.odt" });
         await click(".o-mail-AttachmentCard", { text: "test.odt" });
         // weak test, no guarantee that we waited long enough for the potential file viewer to show

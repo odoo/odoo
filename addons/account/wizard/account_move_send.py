@@ -377,7 +377,10 @@ class AccountMoveSend(models.TransientModel):
         if invoice.invoice_pdf_report_id:
             return
 
-        content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._render('account.account_invoices', invoice.ids)
+        content, _report_format = self.env['ir.actions.report']\
+            .with_company(invoice.company_id)\
+            .with_context(from_account_move_send=True)\
+            ._render('account.account_invoices', invoice.ids)
 
         invoice_data['pdf_attachment_values'] = {
             'raw': content,

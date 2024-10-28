@@ -419,7 +419,7 @@ class SaleOrder(models.Model):
                 continue
             mapped_taxes = self.fiscal_position_id.map_tax(tax)
             tax_desc = ''
-            if any(t.name for t in mapped_taxes):
+            if len(discountable_per_tax) > 1 and any(t.name for t in mapped_taxes):
                 tax_desc = _(
                     ' - On product with the following taxes: %(taxes)s',
                     taxes=", ".join(mapped_taxes.mapped('name')),
