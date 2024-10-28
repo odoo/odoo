@@ -168,6 +168,7 @@ class PosOrder(models.Model):
             vals['crm_team_id'] = vals['crm_team_id'] if vals.get('crm_team_id') else self.session_id.crm_team_id.id
         return super().write(vals)
 
+
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
@@ -204,6 +205,5 @@ class PosOrderLine(models.Model):
     def _launch_stock_rule_from_pos_order_lines(self):
         orders = self.mapped('order_id')
         for order in orders:
-            for line in order.lines:
-                line.sale_order_line_id.move_ids.mapped("move_line_ids").unlink()
+            self.env['stock.move'].browse(order.lines.sale_order_line_id.move_ids._rollup_move_origs()).filtered(lambda ml: ml.state not in ['cancel', 'done'])._action_cancel()
         return super()._launch_stock_rule_from_pos_order_lines()
