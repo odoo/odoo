@@ -403,6 +403,13 @@ class MailThread(models.AbstractModel):
 
         return super().get_empty_list_help(help_message)
 
+    @api.model
+    def get_views(self, views, options=None):
+        res = super().get_views(views, options)
+        if "form" in res["views"] and isinstance(self.env[self._name], self.env.registry['mail.activity.mixin']):
+            res["models"][self._name]["has_activities"] = True
+        return res
+
     def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
         if self.env.su or self.env.user._is_internal():
             return super()._condition_to_sql(alias, fname, operator, value, query)
@@ -2063,9 +2070,6 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------------
     # MESSAGE POST MAIN
     # ------------------------------------------------------------
-
-    def _get_allowed_message_post_params(self):
-        return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid"}
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *,
@@ -4386,9 +4390,7 @@ class MailThread(models.AbstractModel):
         self._message_followers_to_store(store, after, limit, filter_recipients)
         return store.get_result()
 
-    def _message_followers_to_store(
-        self, store: Store, after=None, limit=100, filter_recipients=False, reset=False
-    ):
+    def _message_followers_to_store(self, store: Store, after=None, limit=100, filter_recipients=False, reset=False):
         self.ensure_one()
         domain = [
             ("res_id", "=", self.id),
@@ -4541,20 +4543,8 @@ class MailThread(models.AbstractModel):
         message._bus_send_store(message, res)
 
     # ------------------------------------------------------
-    # CONTROLLERS
+    # STORE
     # ------------------------------------------------------
-
-    def _get_mail_thread_data_attachments(self):
-        self.ensure_one()
-        res = self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
-        if 'original_id' in self.env['ir.attachment']._fields:
-            # If the image is SVG: We take the png version if exist otherwise we take the svg
-            # If the image is not SVG: We take the original one if exist otherwise we take it
-            svg_ids = res.filtered(lambda attachment: attachment.mimetype == 'image/svg+xml')
-            non_svg_ids = res - svg_ids
-            original_ids = res.mapped('original_id')
-            res = res.filtered(lambda attachment: (attachment in svg_ids and attachment not in original_ids) or (attachment in non_svg_ids and attachment.original_id not in non_svg_ids))
-        return res
 
     def _thread_to_store(self, store: Store, /, *, fields=None, request_list=None):
         if fields is None:
@@ -4620,12 +4610,24 @@ class MailThread(models.AbstractModel):
                 res["suggestedRecipients"] = thread._message_get_suggested_recipients()
             store.add(thread, res, as_thread=True)
 
-    @api.model
-    def get_views(self, views, options=None):
-        res = super().get_views(views, options)
-        if "form" in res["views"] and isinstance(self.env[self._name], self.env.registry['mail.activity.mixin']):
-            res["models"][self._name]["has_activities"] = True
+    def _get_mail_thread_data_attachments(self):
+        self.ensure_one()
+        res = self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
+        if 'original_id' in self.env['ir.attachment']._fields:
+            # If the image is SVG: We take the png version if exist otherwise we take the svg
+            # If the image is not SVG: We take the original one if exist otherwise we take it
+            svg_ids = res.filtered(lambda attachment: attachment.mimetype == 'image/svg+xml')
+            non_svg_ids = res - svg_ids
+            original_ids = res.mapped('original_id')
+            res = res.filtered(lambda attachment: (attachment in svg_ids and attachment not in original_ids) or (attachment in non_svg_ids and attachment.original_id not in non_svg_ids))
         return res
+
+    # ------------------------------------------------------
+    # CONTROLLERS SECURITY HELPERS
+    # ------------------------------------------------------
+
+    def _get_allowed_message_post_params(self):
+        return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid"}
 
     @api.model
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
