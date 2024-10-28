@@ -140,7 +140,8 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
             e.data = response['error']['data']
             raise e
         return response.get('result')
-    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
+    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError):
+        _logger.exception("iap jsonrpc %s failed", url)
         raise exceptions.AccessError(
             _('The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was %s', url)
         )
