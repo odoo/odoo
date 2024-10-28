@@ -27,7 +27,8 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
         },
         {
             content: "Move to next week",
-            trigger: ".o_calendar_button_next"
+            trigger: ".o_calendar_button_next",
+            run: "click",
         },
         {
             content: "Access occurrence",
