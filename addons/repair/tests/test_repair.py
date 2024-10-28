@@ -490,3 +490,18 @@ class TestRepair(AccountTestInvoicingCommon):
         repair_order.action_repair_start()
         repair_order.action_repair_end()
         self.assertEqual(repair_order.state, 'done')
+
+    def test_sn_with_no_tracked_product(self):
+        """
+        Check that the lot_id field is cleared after updating the product in the repair order.
+        """
+        self.product_a.tracking = 'serial'
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_a.id})
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = self.product_a
+        ro_form.lot_id = sn_1
+        repair_order = ro_form.save()
+        ro_form = Form(repair_order)
+        ro_form.product_id = self.product_b
+        repair_order = ro_form.save()
+        self.assertFalse(repair_order.lot_id)
