@@ -74,9 +74,9 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.activeTableOrOrderIs("Table"),
 
             // Create first order
-            FloorScreen.clickTable("5"),
+            FloorScreen.clickTable("105"),
             ProductScreen.orderBtnIsPresent(),
-            Chrome.isTabActive("5"),
+            Chrome.isTabActive("105"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             inLeftSide(Order.hasLine({ productName: "Coca-Cola", run: "dblclick" })),
             ProductScreen.clickDisplayedProduct("Water", true),
@@ -95,7 +95,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // Create 2nd order (paid)
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("2"),
+            FloorScreen.clickTable("102"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
@@ -116,8 +116,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.activeTableOrOrderIs("Table"),
 
             // order on another table with a product variant
-            FloorScreen.orderCountSyncedInTableIs("5", "1"),
-            FloorScreen.clickTable("4"),
+            FloorScreen.orderCountSyncedInTableIs("105", "1"),
+            FloorScreen.clickTable("104"),
             ProductScreen.orderBtnIsPresent(),
             ProductScreen.clickDisplayedProduct("Desk Organizer", false),
             {
@@ -143,17 +143,17 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // After clicking next order, floor screen is shown.
             // It should have 1 as number of draft synced order.
-            FloorScreen.orderCountSyncedInTableIs("5", "1"),
-            FloorScreen.clickTable("5"),
+            FloorScreen.orderCountSyncedInTableIs("105", "1"),
+            FloorScreen.clickTable("105"),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create another draft order and go back to floor
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("2"),
+            FloorScreen.clickTable("102"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             Chrome.clickPlanButton(),
-            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            FloorScreen.orderCountSyncedInTableIs("105", "1"),
 
             // Delete the first order then go back to floor
             Chrome.clickMenuOption("Orders"),
@@ -173,7 +173,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.clickPlanButton(),
 
             // There should be 0 synced draft order as we already deleted -00002.
-            FloorScreen.clickTable("5"),
+            FloorScreen.clickTable("105"),
             ProductScreen.orderIsEmpty(),
         ].flat(),
 });

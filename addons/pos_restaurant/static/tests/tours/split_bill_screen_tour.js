@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            FloorScreen.clickTable("2"),
+            FloorScreen.clickTable("102"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
             ProductScreen.addOrderline("Coca-Cola", "1", "2", "2.0"),
@@ -57,7 +57,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 
             // Split the order of table 2 again
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("2"),
+            FloorScreen.clickTable("102"),
             ProductScreen.clickControlButton("Split"),
 
             SplitBillScreen.clickOrderline("Water"),
