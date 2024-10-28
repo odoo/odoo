@@ -12,7 +12,7 @@ export class BaseProductAttribute extends Component {
         this.attributeLine = this.props.attributeLine;
         this.values = this.attributeLine.product_template_value_ids;
         this.state = useState({
-            attribute_value_ids: parseFloat(this.values[0].id),
+            attribute_value_ids: this.values[0].id.toString(),
             custom_value: "",
         });
     }
