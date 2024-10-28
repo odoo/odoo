@@ -9,7 +9,7 @@
             </t>
             <div class="opening-cash-section mb-3" t-if="this.cashMethodCount">
                 <label class="form-label">Opening cash</label>
-                <div class="cash-input-sub-section d-flex gap-1">
+                <div t-att-class="{ 'w-50': !ui.isSmall }" class="cash-input-sub-section d-flex gap-1">
                     <Input tModel="[state, 'openingCash']"
                         isValid.bind="env.utils.isValidFloat"
                         callback.bind="handleInputChange"

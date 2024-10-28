@@ -27,6 +27,7 @@ export class CashMovePopup extends Component {
             reason: "",
         });
         this.confirm = useAsyncLockedMethod(this.confirm);
+        this.ui = useService("ui");
     }
 
     async confirm() {

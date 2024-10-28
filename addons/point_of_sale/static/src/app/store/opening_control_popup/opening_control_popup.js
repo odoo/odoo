@@ -30,6 +30,7 @@ export class OpeningControlPopup extends Component {
             ),
         });
         this.hardwareProxy = useService("hardware_proxy");
+        this.ui = useService("ui");
     }
     confirm() {
         this.pos.session.state = "opened";
