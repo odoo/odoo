@@ -15,19 +15,6 @@ class TestItEdiReverseCharge(TestItEdi):
     def setUpClass(cls):
         super().setUpClass()
 
-        # Helper functions -----------
-        def get_tag_ids(tag_codes):
-            """ Helper function to define tag ids for taxes """
-            return cls.env['account.account.tag'].search([
-                ('applicability', '=', 'taxes'),
-                ('country_id.code', '=', 'IT'),
-                ('name', 'in', tag_codes)]).ids
-
-        RepartitionLine = namedtuple('Line', 'factor_percent repartition_type tag_ids')
-        def repartition_lines(*lines):
-            """ Helper function to define repartition lines in taxes """
-            return [(5, 0, 0)] + [(0, 0, {**line._asdict(), 'tag_ids': get_tag_ids(line[2])}) for line in lines]
-
         # Company -----------
         cls.company.partner_id.l10n_it_pa_index = "0803HR0"
 
@@ -59,14 +46,14 @@ class TestItEdiReverseCharge(TestItEdi):
             'amount': 4.0,
             'amount_type': 'percent',
             'type_tax_use': 'purchase',
-            'invoice_repartition_line_ids': repartition_lines(
-                RepartitionLine(100, 'base', ('+03', '+vj9')),
-                RepartitionLine(100, 'tax', ('+5v',)),
-                RepartitionLine(-100, 'tax', ('-4v',))),
-            'refund_repartition_line_ids': repartition_lines(
-                RepartitionLine(100, 'base', ('-03', '-vj9')),
-                RepartitionLine(100, 'tax', False),
-                RepartitionLine(-100, 'tax', False)),
+            'invoice_repartition_line_ids': cls.repartition_lines(
+                cls.RepartitionLine(100, 'base', ('+03', '+vj9')),
+                cls.RepartitionLine(100, 'tax', ('+5v',)),
+                cls.RepartitionLine(-100, 'tax', ('-4v',))),
+            'refund_repartition_line_ids': cls.repartition_lines(
+                cls.RepartitionLine(100, 'base', ('-03', '-vj9')),
+                cls.RepartitionLine(100, 'tax', False),
+                cls.RepartitionLine(-100, 'tax', False)),
         }
         # Purchase tax 4% with Reverse Charge
         cls.purchase_tax_4p = cls.env['account.tax'].with_company(cls.company).create(tax_data)
@@ -76,14 +63,14 @@ class TestItEdiReverseCharge(TestItEdi):
         cls.purchase_tax_4p_already_in_italy = cls.env['account.tax'].with_company(cls.company).create({
             **tax_data,
             'name': 'Tax 4% purchase Reverse Charge, in Italy',
-            'invoice_repartition_line_ids': repartition_lines(
-                RepartitionLine(100, 'base', ('+03', '+vj3')),
-                RepartitionLine(100, 'tax', ('+5v',)),
-                RepartitionLine(-100, 'tax', ('-4v',))),
-            'refund_repartition_line_ids': repartition_lines(
-                RepartitionLine(100, 'base', ('-03', '-vj3')),
-                RepartitionLine(100, 'tax', False),
-                RepartitionLine(-100, 'tax', False)),
+            'invoice_repartition_line_ids': cls.repartition_lines(
+                cls.RepartitionLine(100, 'base', ('+03', '+vj3')),
+                cls.RepartitionLine(100, 'tax', ('+5v',)),
+                cls.RepartitionLine(-100, 'tax', ('-4v',))),
+            'refund_repartition_line_ids': cls.repartition_lines(
+                cls.RepartitionLine(100, 'base', ('-03', '-vj3')),
+                cls.RepartitionLine(100, 'tax', False),
+                cls.RepartitionLine(-100, 'tax', False)),
         })
 
         # Purchase tax 22% with Reverse Charge, targeting the tax grid for Construction Subcontractors
@@ -92,14 +79,14 @@ class TestItEdiReverseCharge(TestItEdi):
             **tax_data,
             'name': '22% purchase RC Construction Subcontractors',
             'amount': 22.0,
-            'invoice_repartition_line_ids': repartition_lines(
-                RepartitionLine(100, 'base', ('+03', '+vj12')),
-                RepartitionLine(100, 'tax', ('+5v',)),
-                RepartitionLine(-100, 'tax', ('-4v',))),
-            'refund_repartition_line_ids': repartition_lines(
-                RepartitionLine(100, 'base', ('-03', '-vj12')),
-                RepartitionLine(100, 'tax', False),
-                RepartitionLine(-100, 'tax', False)),
+            'invoice_repartition_line_ids': cls.repartition_lines(
+                cls.RepartitionLine(100, 'base', ('+03', '+vj12')),
+                cls.RepartitionLine(100, 'tax', ('+5v',)),
+                cls.RepartitionLine(-100, 'tax', ('-4v',))),
+            'refund_repartition_line_ids': cls.repartition_lines(
+                cls.RepartitionLine(100, 'base', ('-03', '-vj12')),
+                cls.RepartitionLine(100, 'tax', False),
+                cls.RepartitionLine(-100, 'tax', False)),
         })
 
         # Purchase tax 22% with Reverse Charge
@@ -175,12 +162,32 @@ class TestItEdiReverseCharge(TestItEdi):
         self._assert_export_invoice(invoice, 'invoice_internal_reverse_charge.xml')
 
     def test_bill_reverse_charge_and_refund(self):
-        bill = self.env['account.move'].with_company(self.company).create({
+        bills = self.env['account.move'].with_company(self.company).create([{
             'move_type': 'in_invoice',
             'invoice_date': '2022-03-24',
             'invoice_date_due': '2022-03-24',
             'partner_id': self.french_partner.id,
             'partner_bank_id': self.test_bank.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': name,
+                    'product_id': product.id,
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+            ],
+        } for name, product, tax in [
+            ("Product B, taxed 4%", self.product_b, self.purchase_tax_4p),
+            ("Product A", self.product_a, self.purchase_tax_22p),
+        ]])
+        bills.action_post()
+        self._assert_export_invoice(bills[0], 'bill_reverse_charge.xml')
+
+        credit_note = self.env['account.move'].with_company(self.company).create({
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'move_type': 'in_refund',
+            'partner_id': self.french_partner.id,
             'invoice_line_ids': [
                 Command.create({
                     'name': "Product A",
@@ -191,16 +198,14 @@ class TestItEdiReverseCharge(TestItEdi):
                 Command.create({
                     'name': "Product B, taxed 4%",
                     'product_id': self.product_b.id,
-                    'price_unit': 800.40,
+                    'price_unit': 400.40,
                     'tax_ids': [Command.set(self.purchase_tax_4p.ids)],
                 }),
             ],
         })
-        bill.action_post()
-        self._assert_export_invoice(bill, 'bill_reverse_charge.xml')
-
-        credit_note = bill._reverse_moves([{'invoice_date': '2022-03-24', 'invoice_date_due': '2022-03-25'}])
         credit_note.action_post()
+
+        (bills.line_ids + credit_note.line_ids).filtered(lambda line: line.account_type == 'liability_payable').reconcile()
         self._assert_export_invoice(credit_note, 'credit_note_reverse_charge.xml')
 
     def test_reverse_charge_bill_2(self):

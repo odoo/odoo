@@ -104,8 +104,8 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
         },
         {
-            trigger: ".o-mail-Message [title='Add a Reaction']",
-            run: "click",
+            trigger: ".o-mail-Message-textContent:contains(cheese)",
+            run: "hover && click .o-mail-Message [title='Add a Reaction']",
         },
         {
             trigger: ".o-EmojiPicker .o-Emoji:contains('🙂')",
@@ -135,8 +135,8 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Click on more menu",
-            trigger: ".o-mail-Message [title='Expand']",
-            run: "click",
+            trigger: ".o-mail-Message-textContent:contains(cheese)",
+            run: "hover && click .o-mail-Message [title='Expand']",
         },
         {
             content: "Click on edit",

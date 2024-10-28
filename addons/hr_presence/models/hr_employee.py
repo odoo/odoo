@@ -110,13 +110,25 @@ class Employee(models.AbstractModel):
         return super().write(vals)
 
     def action_open_leave_request(self):
-        self.ensure_one()
+        if len(self) == 1:
+            model = 'hr.leave'
+            context = {'default_employee_id': self.id}
+        else:
+            model = 'hr.leave.generate.multi.wizard'
+            context = {
+                'default_employee_ids': self.ids,
+                'default_date_from': fields.Date.today(),
+                'default_date_to': fields.Date.today(),
+                'default_name': _('Unplanned Absence'),
+            }
+
         return {
-            "type": "ir.actions.act_window",
-            "res_model": "hr.leave",
-            "views": [[False, "form"]],
-            "view_mode": 'form',
-            "context": {'default_employee_id': self.id},
+            'type': 'ir.actions.act_window',
+            'res_model': model,
+            'views': [[False, 'form']],
+            'view_mode': 'form',
+            'context': context,
+            'target': 'new',
         }
 
     # --------------------------------------------------
