@@ -14,7 +14,6 @@ from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.addons.hw_drivers.websocket_client import send_to_controller
 
 _logger = logging.getLogger(__name__)
 
@@ -128,8 +127,8 @@ class PrinterDriver(Driver):
 
         ghostscript.Ghostscript(*args)
 
-    def print_receipt(self, data):
-        receipt = b64decode(data['receipt'])
+    def print_receipt(self, **kwargs):
+        receipt = b64decode(kwargs['receipt'])
         im = Image.open(io.BytesIO(receipt))
 
         # Convert to greyscale then to black and white
@@ -169,6 +168,5 @@ class PrinterDriver(Driver):
             self.print_report(document)
         else:
             self.print_raw(document)
-        send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
 
 proxy_drivers['printer'] = PrinterDriver
