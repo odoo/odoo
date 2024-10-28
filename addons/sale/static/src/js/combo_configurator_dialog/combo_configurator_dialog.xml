@@ -49,9 +49,11 @@
                     />
                 </div>
                 <div class="d-flex flex-column justify-content-center">
-                    <span name="sale_combo_configurator_total" class="h4 mb-0">
-                        Total: <span t-out="formattedTotalPrice"/>
-                    </span>
+                    <span
+                        name="sale_combo_configurator_total"
+                        class="h4 mb-0"
+                        t-out="totalMessage"
+                    />
                     <span
                         t-if="this.props.price_info"
                         t-out="this.props.price_info"

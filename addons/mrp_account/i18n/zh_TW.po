@@ -90,7 +90,7 @@ msgstr "<span>計量單位</span>"
 #. module: mrp_account
 #: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
 msgid "A single line cannot be both credit and debit."
-msgstr ""
+msgstr "同一資料行不可同時是貸項和借項。"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
@@ -105,7 +105,7 @@ msgstr "會計分錄資料行"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
-msgstr ""
+msgstr "過賬半成品賬戶分錄時，要建立的賬戶分錄資料行"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -297,7 +297,7 @@ msgstr "生產訂單（MO）概覽報告"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manual Entry"
-msgstr ""
+msgstr "手動輸入"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -324,7 +324,7 @@ msgstr "製造訂單數量"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr ""
+msgstr "製造半成品 - %(orders_list)s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
@@ -341,22 +341,22 @@ msgstr "MO分析帳戶項目"
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid ""
 "Please make sure the total credit amount equals the total debit amount."
-msgstr ""
+msgstr "請確保貸項及借項的總額相等。"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post Manufacturing WIP"
-msgstr ""
+msgstr "過賬製造半成品"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post WIP"
-msgstr ""
+msgstr "過賬半成品"
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
 msgid "Post WIP Accounting Entry"
-msgstr ""
+msgstr "過賬半成品會計記項"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -408,7 +408,7 @@ msgstr "撤銷日期"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Reversal date must be after the posting date."
-msgstr ""
+msgstr "撤銷記項（反向記賬）的日期，必須在過賬日期之後。"
 
 #. module: mrp_account
 #. odoo-python
@@ -470,13 +470,13 @@ msgstr "單位"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Component Value"
-msgstr ""
+msgstr "半成品 - 組件價值"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Overhead"
-msgstr ""
+msgstr "半成品 - 營運開支"
 
 #. module: mrp_account
 #. odoo-python
@@ -512,7 +512,7 @@ msgstr "Wc 分析賬戶明細"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP account move"
-msgstr ""
+msgstr "製造管理半成品賬戶分錄過賬精靈"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter

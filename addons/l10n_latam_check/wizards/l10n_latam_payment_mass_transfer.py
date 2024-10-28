@@ -40,8 +40,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
         # use ._origin because if not a NewId for the checks is used and the returned
         # value for current_journal_id is wrong
         journal = self.check_ids._origin.mapped("current_journal_id")
-        if len(journal) != 1 or not journal.inbound_payment_method_line_ids.filtered(
-           lambda x: x.code == 'in_third_party_checks'):
+        if len(journal) != 1:
             raise UserError(_("All selected checks must be on the same journal and on hand"))
         self.journal_id = journal
         self.company_id = journal.company_id.id
@@ -55,7 +54,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
             checks = self.env['l10n_latam.check'].browse(self._context.get('active_ids', []))
             if checks.filtered(lambda x: x.payment_method_line_id.code != 'new_third_party_checks'):
                 raise 'You have select some payments that are not checks. Please call this action from the Third Party Checks menu'
-            elif not all(check.payment_id.state == 'in_process' for check in checks):
+            elif not all(check.payment_id.state != 'draft' for check in checks):
                 raise UserError(_("All the selected checks must be posted"))
             currency_ids = checks.mapped('currency_id')
             if any(x != currency_ids[0] for x in currency_ids):
@@ -71,21 +70,56 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
         currency_id = self.check_ids[0].currency_id
 
         pay_method_line = self.journal_id._get_available_payment_method_lines('outbound').filtered(
-            lambda x: x.code == 'out_third_party_checks')
-        payment_vals = {
-                        'date': self.payment_date,
-                        'amount': sum(checks.mapped('amount')),
-                        'payment_type': 'outbound',
-                        'memo': self.communication,
-                        'journal_id': self.journal_id.id,
-                        'currency_id': currency_id.id,
-                        'payment_method_line_id': pay_method_line.id,
-                        'l10n_latam_move_check_ids': [Command.link(x.id) for x in checks]
-                    }
+            lambda x: x.code in ('out_third_party_checks', 'return_third_party_checks')
+        )[:1]
 
-        payments = self.env['account.payment'].create(payment_vals)
-        payments.action_post()
-        return payments
+        outbound_payment = self.env['account.payment'].create({
+            'date': self.payment_date,
+            'amount': sum(checks.mapped('amount')),
+            'partner_id': self.env.company.partner_id.id,
+            'payment_type': 'outbound',
+            'memo': self.communication,
+            'journal_id': self.journal_id.id,
+            'currency_id': currency_id.id,
+            'payment_method_line_id': pay_method_line.id if pay_method_line else False,
+            'l10n_latam_move_check_ids': [Command.link(x.id) for x in checks],
+        })
+        outbound_payment.action_post()
+
+        inbound_payment = self.env['account.payment'].create({
+            'date': self.payment_date,
+            'amount': sum(checks.mapped('amount')),
+            'partner_id': self.env.company.partner_id.id,
+            'payment_type': 'inbound',
+            'memo': self.communication,
+            'journal_id': self.destination_journal_id.id,
+            'currency_id': currency_id.id,
+            'l10n_latam_move_check_ids': [Command.link(x.id) for x in checks],
+        })
+
+        dest_payment_method = self.destination_journal_id.inbound_payment_method_line_ids.filtered(
+            lambda x: x.code == 'in_third_party_checks'
+        )
+        if dest_payment_method:
+            inbound_payment.payment_method_line_id = dest_payment_method
+            inbound_payment.action_post()
+        else:
+            # In case the journal is not part of the third party check, when posting the move we remove the checks
+            # when the payment method line is not for checks, but in this case, we don't want to remove it so that
+            # the operation_ids is filled with the two payments
+            inbound_payment.with_context(l10n_ar_skip_remove_check=True).action_post()
+
+        body_inbound = _("This payment has been created from: ") + outbound_payment._get_html_link()
+        inbound_payment.message_post(body=body_inbound)
+        body_outbound = _("A second payment has been created: ") + inbound_payment._get_html_link()
+        outbound_payment.message_post(body=body_outbound)
+
+        (outbound_payment.move_id.line_ids + inbound_payment.move_id.line_ids).filtered(
+            lambda l:
+            l.account_id == outbound_payment.destination_account_id and not l.reconciled
+        ).reconcile()
+
+        return outbound_payment
 
     def action_create_payments(self):
         payments = self._create_payments()

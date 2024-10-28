@@ -52,7 +52,9 @@ test("Start edition on click edit", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Hello world" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "Hello world" });
+    await click("a[role='button']", { text: "cancel" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { count: 0 });
 });
 
 test("Edit message (mobile)", async () => {
@@ -1949,9 +1951,9 @@ test("Copy Message Link", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message:eq(0) [title='Expand']");
-    await contains("[title='Copy Message Link']", { count: 0 });
+    await contains("[title='Copy Link']", { count: 0 });
     await click(".o-mail-Message:eq(1) [title='Expand']");
-    await click("[title='Copy Message Link']");
+    await click("[title='Copy Link']");
     await assertSteps([url(`/mail/message/${messageId_2}`)]);
     await press(["ctrl", "v"]);
     await click(".o-mail-Composer-send:enabled");

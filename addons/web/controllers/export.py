@@ -493,7 +493,8 @@ class Export(http.Controller):
                     'field_type': field_dict['type'],
                 })
 
-        return field_info
+        indexes_dict = {fname: i for i, fname in enumerate(export_fields)}
+        return sorted(field_info, key=lambda field_dict: indexes_dict[field_dict['id']])
 
     def graft_subfields(self, model, prefix, prefix_string, fields):
         export_fields = [field.split('/', 1)[1] for field in fields]

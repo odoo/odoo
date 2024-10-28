@@ -181,16 +181,28 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
     def test_cannot_generate_unsigned_xml(self):
         """ Test that no valid certificate prevents a xml generation"""
-        self.certificate.unlink()
+        def _compute_is_valid(self):
+            for cert in self:
+                cert.is_valid = False
+
         random.seed(42)
         with freeze_time(self.frozen_today), \
                 patch(f"{self.certificate_module}.fields.datetime.now", lambda x=None: self.frozen_today), \
+                patch('odoo.addons.certificate.models.certificate.Certificate._compute_is_valid', _compute_is_valid), \
                 patch(f"{self.move_module}.sha1", lambda x: sha1()):
-            invoice = self.create_invoice(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]},],)
+            invoice = self.create_invoice(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}])
             invoice.action_post()
             wizard = self.create_send_and_print(invoice)
             with self.assertRaises(UserError):
                 wizard.action_send_and_print()
+
+    def test_no_certificate_facturae_not_selected(self):
+        self.certificate.unlink()
+        invoice = self.create_invoice(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}])
+        invoice.action_post()
+        wizard = self.create_send_and_print(invoice)
+        wizard.action_send_and_print()
+        self.assertFalse(invoice.l10n_es_edi_facturae_xml_id)
 
     def test_tax_withheld(self):
         with freeze_time(self.frozen_today), \

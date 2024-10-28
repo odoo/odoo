@@ -79,7 +79,7 @@ class FetchmailServer(models.Model):
         ('imap', 'IMAP Server'),
         ('pop', 'POP Server'),
         ('local', 'Local Server'),
-    ], string='Server Type', index=True, required=True, default='pop')
+    ], string='Server Type', index=True, required=True, default='imap')
     server_type_info = fields.Text('Server Type Info', compute='_compute_server_type_info')
     is_ssl = fields.Boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)")
     attach = fields.Boolean('Keep Attachments', help="Whether attachments should be downloaded. "

@@ -755,6 +755,7 @@ class TestPrivateReadGroup(common.TransactionCase):
 
     def test_order_by_many2one_id(self):
         # ordering by a many2one ordered itself by id does not use useless join
+        OrderLine = self.env["test_read_group.order.line"]
         expected_query = '''
             SELECT "test_read_group_order_line"."order_id", COUNT(*)
             FROM "test_read_group_order_line"
@@ -762,11 +763,27 @@ class TestPrivateReadGroup(common.TransactionCase):
             ORDER BY "test_read_group_order_line"."order_id"
         '''
         with self.assertQueries([expected_query + ' ASC']):
-            self.env["test_read_group.order.line"].read_group(
-                [], ["order_id"], "order_id"
-            )
+            OrderLine.read_group([], ["order_id"], "order_id")
         with self.assertQueries([expected_query + ' DESC']):
-            self.env["test_read_group.order.line"].read_group(
+            OrderLine.read_group([], ["order_id"], "order_id", orderby="order_id DESC")
+
+        # a hack to check model order
+        expected_query = '''
+            SELECT "test_read_group_order_line"."order_id", COUNT(*)
+            FROM "test_read_group_order_line"
+            LEFT JOIN "test_read_group_order" AS "test_read_group_order_line__order_id"
+            ON ("test_read_group_order_line"."order_id" = "test_read_group_order_line__order_id"."id")
+            GROUP BY "test_read_group_order_line"."order_id", (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->%s,to_jsonb(%s::VARCHAR))->>0)::VARCHAR
+            ORDER BY (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->%s,to_jsonb(%s::VARCHAR))->>0)::VARCHAR
+        '''
+        self.env['ir.default'].set('test_read_group.order', 'company_dependent_name', 'name with space')
+        OrderLine = OrderLine.with_context(test_read_group_order_company_dependent=True)
+        OrderLine.read_group([], ["order_id"], "order_id")
+        with self.assertQueries([expected_query]):
+            OrderLine.read_group([], ["order_id"], "order_id")
+        OrderLine.read_group([], ["order_id"], "order_id", orderby="order_id DESC")
+        with self.assertQueries([expected_query + ' DESC']):
+            OrderLine.read_group(
                 [], ["order_id"], "order_id", orderby="order_id DESC"
             )
 

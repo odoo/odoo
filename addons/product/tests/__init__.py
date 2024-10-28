@@ -11,3 +11,4 @@ from . import test_product_pricelist
 from . import test_seller
 from . import test_update_pav_wizard
 from . import test_variants
+from . import test_product_rounding

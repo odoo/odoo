@@ -15,6 +15,7 @@ const AUTOCLOSE_DELAY = 4000;
  *
  * @typedef {Object} NotificationOptions
  * @property {string} [title]
+ * @property {number} [autocloseDelay=4000]
  * @property {"warning" | "danger" | "success" | "info"} [type]
  * @property {boolean} [sticky=false]
  * @property {string} [className]
@@ -46,14 +47,16 @@ export const notificationService = {
             const id = ++notifId;
             const closeFn = () => close(id);
             const props = Object.assign({}, options, { message, close: closeFn });
+            const autocloseDelay = options.autocloseDelay ?? AUTOCLOSE_DELAY;
             const sticky = props.sticky;
             delete props.sticky;
             delete props.onClose;
+            delete props.autocloseDelay;
             let closeTimeout;
             const refresh = sticky
                 ? () => {}
                 : () => {
-                      closeTimeout = browser.setTimeout(closeFn, AUTOCLOSE_DELAY);
+                      closeTimeout = browser.setTimeout(closeFn, autocloseDelay);
                   };
             const freeze = sticky
                 ? () => {}
@@ -71,7 +74,7 @@ export const notificationService = {
             };
             notifications[id] = notification;
             if (!sticky) {
-                closeTimeout = browser.setTimeout(closeFn, AUTOCLOSE_DELAY);
+                closeTimeout = browser.setTimeout(closeFn, autocloseDelay);
             }
             return closeFn;
         }

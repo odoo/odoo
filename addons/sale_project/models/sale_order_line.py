@@ -173,6 +173,13 @@ class SaleOrderLine(models.Model):
                     line.task_id.write({'allocated_hours': allocated_hours})
         return result
 
+    def copy_data(self, default=None):
+        data = super().copy_data(default)
+        for origin, datum in zip(self, data):
+            if origin.analytic_distribution == origin.order_id.project_id.sudo()._get_analytic_distribution():
+                datum['analytic_distribution'] = False
+        return data
+
     ###########################################
     # Service : Project and task generation
     ###########################################
@@ -416,3 +423,9 @@ class SaleOrderLine(models.Model):
             :returns: Dict containing id of SOL as key and the action as value
         """
         return {}
+
+    def _prepare_procurement_values(self, group_id=False):
+        values = super()._prepare_procurement_values(group_id=group_id)
+        if self.project_id:
+            values['project_id'] = self.order_id.project_id.id
+        return values

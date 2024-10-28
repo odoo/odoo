@@ -251,7 +251,7 @@ export class ProductScreen extends Component {
     _barcodeDiscountAction(code) {
         var last_orderline = this.currentOrder.get_last_orderline();
         if (last_orderline) {
-            last_orderline.set_discount(code.value);
+            this.pos.setDiscountFromUI(last_orderline, code.value);
         }
     }
     /**
@@ -378,9 +378,11 @@ export class ProductScreen extends Component {
 
     getProductsByCategory(category) {
         const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
-        return allCategoryIds.flatMap(
+        const products = allCategoryIds.flatMap(
             (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
         );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products));
     }
 
     async onPressEnterKey() {

@@ -291,6 +291,15 @@ class AccountMove(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
     company_price_include = fields.Selection(related='company_id.account_price_include', readonly=True)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'account.move')], string='Attachments')
+    audit_trail_message_ids = fields.One2many(
+        'mail.message',
+        'res_id',
+        domain=[
+            ('model', '=', 'account.move'),
+            ('message_type', '=', 'notification'),
+        ],
+        string='Audit Trail Messages',
+    )
 
     # === Hash Fields === #
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
@@ -2484,11 +2493,12 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     def _is_eligible_for_early_payment_discount(self, currency, reference_date):
         self.ensure_one()
+        payment_terms = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
         return self.currency_id == currency \
             and self.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt') \
             and self.invoice_payment_term_id.early_discount \
             and (not reference_date or reference_date <= self.invoice_payment_term_id._get_last_discount_date(self.invoice_date)) \
-            and self.payment_state == 'not_paid'
+            and not (payment_terms.matched_debit_ids + payment_terms.matched_credit_ids)
 
     # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION
@@ -3735,7 +3745,8 @@ class AccountMove(models.Model):
         if not float_is_zero(tax_amount_rounding_error, precision_rounding=self.currency_id.rounding):
             for subtotal in totals['subtotals']:
                 if _('Untaxed Amount') == subtotal['name']:
-                    subtotal['tax_groups'][0]['tax_amount_currency'] += tax_amount_rounding_error
+                    if subtotal['tax_groups']:
+                        subtotal['tax_groups'][0]['tax_amount_currency'] += tax_amount_rounding_error
                     totals['total_amount_currency'] = amount_total
                     self.tax_totals = totals
                     break
@@ -4380,9 +4391,9 @@ class AccountMove(models.Model):
                             - sum(x['balance'] for x in res['base_lines'][payment_term_line].values()) \
                             - sum(x['balance'] for x in res['tax_lines'][payment_term_line].values())
 
-            last_tax_line = (list(res['tax_lines'][payment_term_line].values()) or list(res['base_lines'][payment_term_line].values()))[-1]
-            last_tax_line['amount_currency'] += delta_amount_currency
-            last_tax_line['balance'] += delta_balance
+            biggest_base_line = max(list(res['base_lines'][payment_term_line].values()), key=lambda x: x['amount_currency'])
+            biggest_base_line['amount_currency'] += delta_amount_currency
+            biggest_base_line['balance'] += delta_balance
 
         else:
             grouping_dict = {'account_id': cash_discount_account.id}
@@ -5157,7 +5168,7 @@ class AccountMove(models.Model):
 
         self._check_draftable()
         # We remove all the analytics entries for this journal
-        self.mapped('line_ids.analytic_line_ids').unlink()
+        self.mapped('line_ids.analytic_line_ids').with_context(force_analytic_line_delete=True).unlink()
         self.mapped('line_ids').remove_move_reconcile()
         self.state = 'draft'
 

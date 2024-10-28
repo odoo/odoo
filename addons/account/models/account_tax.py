@@ -350,7 +350,7 @@ class AccountTax(models.Model):
         if not self.is_used:
             return
 
-        old_line_values_dict = ast.literal_eval(old_values_str)
+        old_line_values_dict = ast.literal_eval(old_values_str or '{}')
         new_line_values_dict = ast.literal_eval(new_values_str)
 
         # Categorize the lines that were added/removed/modified
@@ -939,6 +939,9 @@ class AccountTax(models.Model):
             incl_base_multiplicator = 1.0 if total_percentage == 1.0 else 1 - total_percentage
             return raw_base * self.amount / 100.0 / incl_base_multiplicator
 
+    def _eval_raw_base(self, quantity, price_unit, evaluation_context):
+        return quantity * price_unit
+
     def _get_tax_details(
         self,
         price_unit,
@@ -1029,7 +1032,11 @@ class AccountTax(models.Model):
                     'is_reverse_charge': True,
                 }
 
-        raw_base = quantity * price_unit
+        raw_base_evaluation_context = {
+            'taxes': sorted_taxes,
+            'precision_rounding': precision_rounding,
+        }
+        raw_base = self._eval_raw_base(quantity, price_unit, raw_base_evaluation_context)
         if rounding_method == 'round_per_line':
             raw_base = float_round(raw_base, precision_rounding=precision_rounding)
 
@@ -1039,6 +1046,7 @@ class AccountTax(models.Model):
             'quantity': quantity,
             'raw_base': raw_base,
             'special_mode': special_mode,
+            'precision_rounding': precision_rounding,
         }
 
         # Define the order in which the taxes must be evaluated.
@@ -2376,17 +2384,8 @@ class AccountTax(models.Model):
             def get_tax_key(tax_data):
                 return frozendict({'tax': tax_data['tax'], 'is_reverse_charge': tax_data['is_reverse_charge']})
 
-            base_line_fields = (
-                'total_excluded_currency', 'raw_total_excluded_currency',
-                'total_excluded', 'raw_total_excluded',
-                'total_included_currency', 'raw_total_included_currency',
-                'total_included', 'raw_total_included',
-                'delta_base_amount_currency', 'delta_base_amount',
-            )
-            tax_data_fields = (
-                'base_amount_currency', 'base_amount', 'tax_amount_currency', 'tax_amount',
-                'raw_base_amount_currency', 'raw_base_amount', 'raw_tax_amount_currency', 'raw_tax_amount',
-            )
+            base_line_fields = ('total_excluded_currency', 'total_excluded', 'total_included_currency', 'total_included')
+            tax_data_fields = ('base_amount_currency', 'base_amount', 'tax_amount_currency', 'tax_amount')
 
             if is_zero:
                 for field in base_line_fields:

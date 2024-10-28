@@ -64,7 +64,7 @@ class res_partner(models.Model):
         compute='_compute_purchase_order_count',
     )
     supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
-    purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, default="no-message")
+    purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Warning', help=WARNING_HELP, default="no-message")
     purchase_warn_msg = fields.Text('Message for Purchase Order')
 
     receipt_reminder_email = fields.Boolean('Receipt Reminder', company_dependent=True,

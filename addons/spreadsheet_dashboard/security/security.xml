@@ -24,6 +24,7 @@
         <field name="name">Admin</field>
         <field name="category_id" ref="base.module_category_productivity_dashboard" />
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="spreadsheet_dashboard_share_create_uid_rule" model="ir.rule">

@@ -163,7 +163,7 @@ export class PosStore extends Reactive {
         return !this.cashier ? "LoginScreen" : "ProductScreen";
     }
 
-    showLoginScreen() {
+    async showLoginScreen() {
         this.reset_cashier();
         this.showScreen("LoginScreen");
         this.dialog.closeAll();
@@ -171,13 +171,13 @@ export class PosStore extends Reactive {
 
     reset_cashier() {
         this.cashier = false;
-        sessionStorage.removeItem("connected_cashier");
+        this._resetConnectedCashier();
     }
 
     checkPreviousLoggedCashier() {
-        const saved_cashier_id = Number(sessionStorage.getItem("connected_cashier"));
-        if (saved_cashier_id) {
-            this.set_cashier(this.models["res.users"].get(saved_cashier_id));
+        const savedCashier = this._getConnectedCashier();
+        if (savedCashier) {
+            this.set_cashier(savedCashier);
         }
     }
 
@@ -187,7 +187,23 @@ export class PosStore extends Reactive {
         }
 
         this.cashier = user;
-        sessionStorage.setItem("connected_cashier", user.id);
+        this._storeConnectedCashier(user);
+    }
+
+    _getConnectedCashier() {
+        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
+        if (cashier_id && this.models["res.users"].get(cashier_id)) {
+            return this.models["res.users"].get(cashier_id);
+        }
+        return false;
+    }
+
+    _storeConnectedCashier(user) {
+        sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
+    }
+
+    _resetConnectedCashier() {
+        sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
     }
 
     useProxy() {
@@ -248,14 +264,14 @@ export class PosStore extends Reactive {
         this.config.iface_printers = !!this.unwatched.printers.length;
 
         // Monitor product pricelist
-        this.models["product.product"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
-        this.models["product.pricelist.item"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
+        ["product.product", "product.pricelist.item"].forEach((model) => {
+            ["create", "update"].forEach((event) => {
+                this.models[model].addEventListener(
+                    event,
+                    this.computeProductPricelistCache.bind(this)
+                );
+            });
+        });
         if (this.data.loadedIndexedDBProducts && this.data.loadedIndexedDBProducts.length > 0) {
             await this._loadMissingPricelistItems(this.data.loadedIndexedDBProducts);
             delete this.data.loadedIndexedDBProducts;
@@ -301,6 +317,12 @@ export class PosStore extends Reactive {
             ]);
         }
 
+        for (const product of this.models["product.product"].filter(
+            (p) => !productIds.has(p.id) && p.product_template_variant_value_ids.length > 0
+        )) {
+            productByTmplId[product.raw.product_tmpl_id].push(product);
+        }
+
         for (const products of Object.values(productByTmplId)) {
             const nbrProduct = products.length;
 
@@ -317,7 +339,7 @@ export class PosStore extends Reactive {
                 title: _t("Existing orderlines"),
                 body: _t(
                     "%s has a total amount of %s, are you sure you want to delete this order?",
-                    order.name,
+                    order.pos_reference,
                     this.env.utils.formatCurrency(order.get_total_with_tax())
                 ),
             });
@@ -330,6 +352,7 @@ export class PosStore extends Reactive {
             order.uiState.displayed = false;
             this.afterOrderDeletion();
         }
+        return orderIsDeleted;
     }
     afterOrderDeletion() {
         this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
@@ -341,7 +364,7 @@ export class PosStore extends Reactive {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change).length > 0
+                    Object.keys(order.last_order_preparation_change.lines).length > 0
                 ) {
                     await this.sendOrderInPreparation(order, true);
                 }
@@ -353,6 +376,8 @@ export class PosStore extends Reactive {
                 } else if (typeof order.id === "number") {
                     ids.add(order.id);
                 }
+            } else {
+                return false;
             }
         }
 
@@ -367,6 +392,7 @@ export class PosStore extends Reactive {
 
         if (ids.size > 0) {
             await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            return true;
         }
 
         return true;
@@ -566,6 +592,11 @@ export class PosStore extends Reactive {
             searchTerm: "",
         };
     }
+
+    async setDiscountFromUI(line, val) {
+        line.set_discount(val);
+    }
+
     getDefaultPricelist() {
         const current_order = this.get_order();
         if (current_order) {
@@ -601,14 +632,16 @@ export class PosStore extends Reactive {
     // The configure parameter is available if the orderline already contains all
     // the information without having to be calculated. For example, importing a SO.
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        let merge = true;
-
         let order = this.get_order();
-        order.assert_editable();
-
         if (!order) {
             order = this.add_new_order();
         }
+        return await this.addLineToOrder(vals, order, opts, configure);
+    }
+
+    async addLineToOrder(vals, order, opts = {}, configure = true) {
+        let merge = true;
+        order.assert_editable();
 
         const options = {
             ...opts,
@@ -618,6 +651,9 @@ export class PosStore extends Reactive {
             merge = false;
         }
 
+        if (typeof vals.product_id == "number") {
+            vals.product_id = this.data.models["product.product"].get(vals.product_id);
+        }
         const product = vals.product_id;
 
         const values = {
@@ -842,8 +878,9 @@ export class PosStore extends Reactive {
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
         this.selectOrderLine(order, line);
-        this.numberBuffer.reset();
-
+        if (configure) {
+            this.numberBuffer.reset();
+        }
         const selectedOrderline = order.get_selected_orderline();
         if (options.draftPackLotLines && configure) {
             selectedOrderline.setPackLotLines({
@@ -869,12 +906,16 @@ export class PosStore extends Reactive {
             this.selectOrderLine(order, order.get_last_orderline());
         }
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         // FIXME: Put this in an effect so that we don't have to call it manually.
         order.recomputeOrderData();
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         this.hasJustAddedProduct = true;
         clearTimeout(this.productReminderTimeout);
@@ -1096,7 +1137,7 @@ export class PosStore extends Reactive {
     }
 
     // There for override
-    preSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {}
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
@@ -1112,7 +1153,7 @@ export class PosStore extends Reactive {
             }
 
             const context = this.getSyncAllOrdersContext(orders, options);
-            this.preSyncAllOrders(orders);
+            await this.preSyncAllOrders(orders);
 
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders
@@ -1155,6 +1196,10 @@ export class PosStore extends Reactive {
                 // a higher id than the original one since it's the last one created.
                 const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
                 session.delete();
+                this.models["pos.order"]
+                    .getAll()
+                    .filter((order) => order.state === "draft")
+                    .forEach((order) => (order.session_id = this.session));
             }
 
             this.clearPendingOrder();
@@ -1393,6 +1438,14 @@ export class PosStore extends Reactive {
         return false;
     }
 
+    restrictLineDiscountChange() {
+        return false;
+    }
+
+    restrictLinePriceChange() {
+        return false;
+    }
+
     getCurrencySymbol() {
         return this.currency ? this.currency.symbol : "$";
     }
@@ -1416,6 +1469,9 @@ export class PosStore extends Reactive {
         );
     }
     showScreen(name, props) {
+        if (name === "ProductScreen") {
+            this.get_order()?.deselect_orderline();
+        }
         this.previousScreen = this.mainScreen.component?.name;
         const component = registry.category("pos_screens").get(name);
         this.mainScreen = { component, props };
@@ -1588,7 +1644,7 @@ export class PosStore extends Reactive {
         });
     }
     async closePos() {
-        sessionStorage.removeItem("connected_cashier");
+        this._resetConnectedCashier();
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this) {

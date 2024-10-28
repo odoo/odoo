@@ -4,7 +4,7 @@ from odoo import models, fields, api
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    tour_enabled = fields.Boolean(compute='_compute_tour_enabled', store=True, readonly=False)
+    tour_enabled = fields.Boolean(compute='_compute_tour_enabled', store=True, readonly=False, string="Onboarding")
 
     @api.depends("create_date")
     def _compute_tour_enabled(self):

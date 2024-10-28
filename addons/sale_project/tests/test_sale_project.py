@@ -972,3 +972,28 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         action = order.action_view_project_ids()
         self.assertEqual(action['type'], 'ir.actions.act_window', 'Should return a window action')
         self.assertFalse(action['context']['default_sale_line_id'], 'No SOL should be set by default since the product changed')
+
+    def test_copy_so_doesnt_copy_project(self):
+        origin = self.env['sale.order'].create({
+            'name': 'Project Order',
+            'partner_id': self.partner.id
+        })
+        self.env['sale.order.line'].create({
+            'product_id': self.product_order_service4.id,
+            'order_id': origin.id,
+        })
+        origin.action_confirm()
+        self.assertTrue(origin.project_id)
+        self.assertEqual(
+            origin.order_line.analytic_distribution,
+            origin.order_line.project_id._get_analytic_distribution(),
+        )
+        copy = origin.copy()
+        self.assertFalse(copy.project_id)
+        self.assertFalse(copy.order_line.analytic_distribution)
+        copy.action_confirm()
+        self.assertTrue(copy.project_id)
+        self.assertEqual(
+            copy.order_line.analytic_distribution,
+            copy.order_line.project_id._get_analytic_distribution(),
+        )

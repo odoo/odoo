@@ -857,6 +857,9 @@ class ResCompany(models.Model):
         return account
 
     def install_l10n_modules(self):
+        if self.env.context.get('chart_template_load'):
+            # No automatic install during the loading of a chart_template
+            return False
         if res := super().install_l10n_modules():
             self.env.flush_all()
             self.env.reset()     # clear the set of environments
@@ -984,6 +987,8 @@ class ResCompany(models.Model):
 
         :param records: The records to lock.
         """
+        if not records.ids:
+            return
         self._cr.execute(f'SELECT * FROM {records._table} WHERE id IN %s FOR UPDATE SKIP LOCKED', [tuple(records.ids)])
         available_ids = {r[0] for r in self._cr.fetchall()}
         all_locked = available_ids == set(records.ids)
@@ -1011,7 +1016,7 @@ class ResCompany(models.Model):
             placeholder = _("/ if not applicable")
             if company.country_id or company.account_fiscal_country_id:
                 expected_vat = _ref_vat.get(
-                    company.country_id.code.lower() or company.account_fiscal_country_id.code.lower()
+                    (company.country_id.code or company.account_fiscal_country_id.code).lower()
                 )
                 if expected_vat:
                     placeholder = _("%s, or / if not applicable", expected_vat)

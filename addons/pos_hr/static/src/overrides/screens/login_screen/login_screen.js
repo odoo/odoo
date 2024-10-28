@@ -14,7 +14,7 @@ patch(LoginScreen.prototype, {
         });
 
         if (this.pos.config.module_pos_hr) {
-            this.selectCashier = useCashierSelector({
+            this.cashierSelector = useCashierSelector({
                 onScan: (employee) => employee && this.selectOneCashier(employee),
                 exclusive: true,
             });
@@ -31,6 +31,9 @@ patch(LoginScreen.prototype, {
             this.state.pin = "";
             this.pos.login = false;
         });
+    },
+    async selectCashier(pin = false, login = false, list = false) {
+        return await this.cashierSelector(pin, login, list);
     },
     unlockRegister() {
         this.pos.login = true;

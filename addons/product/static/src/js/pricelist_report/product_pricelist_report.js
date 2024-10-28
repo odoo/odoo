@@ -153,8 +153,8 @@ export class ProductPricelistReport extends Component {
             return;
         }
 
-        const qty = parseInt($("input.add-quantity-input")[0].value);
-        if (qty && qty > 0) {
+        const qty = parseInt(ev.target.previousSibling.value);
+        if (qty > 0) {
             // Check qty already exist.
             if (this.quantities.indexOf(qty) === -1) {
                 this.quantities.push(qty);

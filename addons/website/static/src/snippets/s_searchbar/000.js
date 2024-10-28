@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { renderToElement, renderToString } from "@web/core/utils/render";
 import { debounce } from '@web/core/utils/timing';
 
@@ -14,6 +15,8 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
     events: {
         'input .search-query': '_onInput',
         'focusout': '_onFocusOut',
+        "mousedown .o_dropdown_menu .dropdown-item": "_onMousedown",
+        "mouseup .o_dropdown_menu .dropdown-item": "_onMouseup",
         'keydown .search-query, .dropdown-item': '_onKeydown',
         'search .search-query': '_onSearch',
     },
@@ -249,8 +252,22 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
      * @private
      */
     _onFocusOut: function () {
-        if (!this.$el.has(document.activeElement).length) {
+        if (!this.linkHasFocus && !this.$el.has(document.activeElement).length) {
             this._render();
+        }
+    },
+    _onMousedown(ev) {
+        // On Safari, links and buttons are not focusable by default. We need
+        // to get around that behavior to avoid _onFocusOut() from triggering
+        // _render(), as this would prevent the click from working.
+        if (isBrowserSafari) {
+            this.linkHasFocus = true;
+        }
+    },
+    _onMouseup(ev) {
+        // See comment in _onMousedown.
+        if (isBrowserSafari) {
+            this.linkHasFocus = false;
         }
     },
     /**

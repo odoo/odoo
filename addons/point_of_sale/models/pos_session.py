@@ -133,7 +133,7 @@ class PosSession(models.Model):
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'product.packaging', 'res.users', 'res.partner',
             'decimal.precision', 'uom.uom', 'uom.category', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
-            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view']
+            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view', 'ir.module.module']
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -316,22 +316,24 @@ class PosSession(models.Model):
             if not config_id:
                 raise UserError(_("You should assign a Point of Sale to your session."))
 
+            name_counter = 0
+            if not vals.get('rescue'):
+                config_name = self.env['pos.config'].browse(config_id).name
+                vals['name'] = config_name + '/'
+                sessions = self.sudo().search_read([('name', 'ilike', vals['name'])], ['name'], order='name desc', limit=1)
+                if len(sessions):
+                    name_counter = int(sessions[0]['name'].split('/')[-1]) + 1
+
+                vals['name'] += str(name_counter).zfill(5)
             # journal_id is not required on the pos_config because it does not
             # exists at the installation. If nothing is configured at the
             # installation we do the minimal configuration. Impossible to do in
             # the .xml files as the CoA is not yet installed.
             pos_config = self.env['pos.config'].browse(config_id)
 
-            pos_name = self.env['ir.sequence'].with_context(
-                company_id=pos_config.company_id.id
-            ).next_by_code('pos.session')
-            if vals.get('name'):
-                pos_name += ' ' + vals['name']
-
             update_stock_at_closing = pos_config.company_id.point_of_sale_update_stock_quantities == "closing"
 
             vals.update({
-                'name': pos_name,
                 'config_id': config_id,
                 'update_stock_at_closing': update_stock_at_closing,
             })
@@ -341,18 +343,6 @@ class PosSession(models.Model):
         else:
             sessions = super().create(vals_list)
         sessions.action_pos_session_open()
-
-        date_string = fields.Date.today().isoformat()
-        ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
-        if not ir_sequence:
-            self.env['ir.sequence'].sudo().create({
-                'name': _("PoS Order"),
-                'padding': 0,
-                'code': f'pos.order_{date_string}',
-                'number_next': 1,
-                'number_increment': 1,
-                'company_id': self.env.company.id,
-            })
 
         return sessions
 
@@ -896,7 +886,7 @@ class PosSession(models.Model):
                         combine_receivables_pay_later[payment_method] = self._update_amounts(combine_receivables_pay_later[payment_method], {'amount': amount}, date)
 
             if not order_is_invoiced:
-                base_lines = order._prepare_tax_base_line_values()
+                base_lines = order.with_context(linked_to_pos=True)._prepare_tax_base_line_values()
                 AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
                 AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
                 AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, order.company_id)
@@ -1653,6 +1643,8 @@ class PosSession(models.Model):
 
     def set_opening_control(self, cashbox_value: int, notes: str):
         self.state = 'opened'
+        if not self.rescue:
+            self.name = self.env['ir.sequence'].with_context(company_id=self.config_id.company_id.id).next_by_code('pos.session')
 
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         if cash_payment_method_ids:

@@ -15,6 +15,7 @@ class AccountMove(models.Model):
         comodel_name='account.move',
         string="Indian TDS Ref Move",
         readonly=True,
+        index='btree_not_null',
         copy=False,
         help="Reference move for withholding entry",
     )

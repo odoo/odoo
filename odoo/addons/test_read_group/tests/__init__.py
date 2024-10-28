@@ -7,6 +7,7 @@ from . import test_auto_join
 from . import test_m2m_grouping
 from . import test_date_range
 from . import test_groupby_week
+from . import test_override
 from . import test_private_read_group
 from . import test_inherits
 from . import test_read_progress_bar

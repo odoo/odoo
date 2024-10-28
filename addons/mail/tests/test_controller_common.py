@@ -10,13 +10,14 @@ class TestControllerCommon(HttpCaseWithUserDemo, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.maxDiff = None
         cls._create_portal_user()
         cls.user_public = cls.env.ref("base.public_user")
         cls.guest = cls.env["mail.guest"].create({"name": "Guest"})
         last_message = cls.env["mail.message"].search([], order="id desc", limit=1)
         cls.fake_message = cls.env["mail.message"].browse(last_message.id + 1000000)
 
-    def _authenticate_user(self, user, guest):
+    def _authenticate_user(self, user=None, guest=None):
         if not user or user == self.user_public:
             self.authenticate(None, None)
         else:

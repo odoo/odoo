@@ -236,7 +236,7 @@ export class ResPartner extends webModels.ResPartner {
         const ResUsers = this.env["res.users"];
 
         for (const partner of this.browse(ids)) {
-            const [data] = this.read(
+            const [data] = this._read_format(
                 partner.id,
                 fields.filter(
                     (field) =>

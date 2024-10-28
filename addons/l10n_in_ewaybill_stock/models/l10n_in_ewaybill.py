@@ -250,6 +250,7 @@ class Ewaybill(models.Model):
         if self.state not in ('cancel', 'challan'):
             raise UserError(_("Only Delivery Challan and Cancelled E-waybill can be reset to pending."))
         self.write({
+            'name': False,
             'state': 'pending',
             'cancel_reason': False,
             'cancel_remarks': False,

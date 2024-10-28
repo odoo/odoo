@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -24,6 +24,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "%(number)s file(s) selected"
+msgstr "%(number)s arquivo(s) selecionado(s)"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "%(property_string)s (%(parent_name)s)"
 msgstr ""
 
 #. module: base_import
@@ -66,6 +72,8 @@ msgstr "Avançado"
 msgid ""
 "After each batch import, this delay is applied to avoid unthrottled calls"
 msgstr ""
+"Depois de cada importação em lote, esse atraso é aplicado para evitar "
+"chamadas sem limitação (unthrottled)"
 
 #. module: base_import
 #. odoo-javascript
@@ -124,7 +132,7 @@ msgstr "Limite de lote"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "But, you can also use .csv files"
-msgstr ""
+msgstr "Mas você também pode usar arquivos .csv"
 
 #. module: base_import
 #. odoo-javascript
@@ -205,7 +213,7 @@ msgstr "Criado em"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Data to import"
-msgstr ""
+msgstr "Dados a importar"
 
 #. module: base_import
 #. odoo-python
@@ -236,12 +244,13 @@ msgstr "Separador decimal:"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Defines how many megabytes can be imported in each batch import"
 msgstr ""
+"Define quantos megabytes podem ser importados em cada importação em lote"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Delay after each batch"
-msgstr ""
+msgstr "Atraso após cada lote"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -266,7 +275,7 @@ msgstr "Baixar"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Drop or upload a file to import"
-msgstr ""
+msgstr "Solte ou carregue um arquivo para importar"
 
 #. module: base_import
 #. odoo-javascript
@@ -373,7 +382,7 @@ msgstr "Arquivo a verificar e/ou importar, formato binário (não base64)"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Files to import"
-msgstr ""
+msgstr "Arquivos a importar"
 
 #. module: base_import
 #. odoo-javascript
@@ -511,6 +520,9 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
+"Formato de célula inválido na linha %(row)s, colunas %(col)s: "
+"%(cell_value)s, com formatos: %(cell_format)s, pois formatos "
+"(%(format_type)s) não são suportados."
 
 #. module: base_import
 #. odoo-python
@@ -535,7 +547,7 @@ msgstr "Última atualização em"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Load Data File"
-msgstr ""
+msgstr "Carregar arquivo de dados"
 
 #. module: base_import
 #. odoo-javascript
@@ -553,7 +565,7 @@ msgstr "Carregando..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Max size per batch"
-msgstr ""
+msgstr "Tamanho máximo por lote"
 
 #. module: base_import
 #. odoo-javascript
@@ -588,7 +600,7 @@ msgstr "Nenhum separador"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "No file selected"
-msgstr ""
+msgstr "Nenhum arquivo selecionado"
 
 #. module: base_import
 #. odoo-javascript
@@ -606,13 +618,13 @@ msgstr "Campo do Odoo"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Please upload a single file."
-msgstr ""
+msgstr "Faça o upload de um único arquivo."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
-msgstr ""
+msgstr "Carregue um arquivo Excel (.xls ou .xlsx) ou .csv para importar."
 
 #. module: base_import
 #. odoo-javascript
@@ -844,13 +856,13 @@ msgstr "Sem título"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Upload Data File"
-msgstr ""
+msgstr "Carregar arquivo de dados"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Upload your files"
-msgstr ""
+msgstr "Carregue seus arquivos"
 
 #. module: base_import
 #. odoo-javascript

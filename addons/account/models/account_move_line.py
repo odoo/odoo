@@ -1157,7 +1157,7 @@ class AccountMoveLine(models.Model):
         lines_to_modify = self.env['account.move.line'].browse([
             line.id for line in self if line.parent_state == "posted"
         ])
-        lines_to_modify.analytic_line_ids.unlink()
+        lines_to_modify.analytic_line_ids.with_context(force_analytic_line_delete=True).unlink()
 
         context = dict(self.env.context)
         context.pop('default_account_id', None)
@@ -1729,9 +1729,9 @@ class AccountMoveLine(models.Model):
         account_codes = self.env.execute_query(SQL(
             """
             SELECT %(account_code_alias)s AS code
-              FROM %(account_table)s,
-                   LATERAL (%(line_select)s) line
-             WHERE %(where_clause)s
+              FROM %(account_table)s
+             WHERE EXISTS(%(line_select)s)
+               AND %(where_clause)s
             """,
             account_code_alias=account_code_alias,
             account_table=query_account.from_clause,

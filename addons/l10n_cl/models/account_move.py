@@ -152,7 +152,7 @@ class AccountMove(models.Model):
         }
         tax_group_ids_to_exclude = self.env['account.tax.group'].browse(tax_group_ids).filtered(lambda x: x.l10n_cl_sii_code == 14).ids
         if tax_group_ids_to_exclude:
-            return self.env['account.tax']._exclude_tax_group_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
+            return self.env['account.tax']._exclude_tax_groups_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
         return tax_totals
 
     def _l10n_cl_include_sii(self):

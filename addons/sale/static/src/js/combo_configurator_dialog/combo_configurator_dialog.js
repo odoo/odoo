@@ -1,3 +1,4 @@
+import { _t } from '@web/core/l10n/translation';
 import { Dialog } from '@web/core/dialog/dialog';
 import { formatCurrency } from '@web/core/currency';
 import { rpc } from '@web/core/network/rpc';
@@ -20,7 +21,7 @@ export class ComboConfiguratorDialog extends Component {
         quantity: Number,
         price: Number,
         combos: { type: Array, element: ProductCombo },
-        currency_id: { type: Number, optional: true },
+        currency_id: Number,
         company_id: { type: Number, optional: true },
         pricelist_id: { type: Number, optional: true },
         date: String,
@@ -121,6 +122,10 @@ export class ComboConfiguratorDialog extends Component {
         const selectedComboItem = this.state.selectedComboItems.get(comboId);
         const isComboItemAlreadySelected = selectedComboItem?.id === comboItem.id;
         return isComboItemAlreadySelected ? selectedComboItem : comboItem;
+    }
+
+    get totalMessage() {
+        return _t("Total: %s", this.formattedTotalPrice);
     }
 
     /**

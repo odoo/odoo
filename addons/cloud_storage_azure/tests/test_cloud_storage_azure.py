@@ -15,8 +15,7 @@ from .. import uninstall_hook
 from ..models.ir_attachment import CloudStorageAzureUserDelegationKeys, get_cloud_storage_azure_user_delegation_key
 
 
-class TestCloudStorageAzure(TransactionCase):
-
+class TestCloudStorageAzureCommon(TransactionCase):
     def setUp(self):
         super().setUp()
         self.DUMMY_AZURE_ACCOUNT_NAME = 'accountname'
@@ -53,6 +52,8 @@ class TestCloudStorageAzure(TransactionCase):
 
         CloudStorageAzureUserDelegationKeys.clear()
 
+
+class TestCloudStorageAzure(TestCloudStorageAzureCommon):
     def test_get_user_delegation_key_success(self):
         request_num = 0
 

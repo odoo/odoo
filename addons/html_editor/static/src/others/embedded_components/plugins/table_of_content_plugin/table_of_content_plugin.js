@@ -22,6 +22,7 @@ export class TableOfContentPlugin extends Plugin {
             },
         ],
         mutation_filtered_classes: ["o_embedded_toc_header_highlight"],
+        onExternalHistorySteps: this.delayedUpdateTableOfContents.bind(this, this.editable),
     };
 
     setup() {
@@ -41,9 +42,10 @@ export class TableOfContentPlugin extends Plugin {
                 this.cleanForSave(payload.root);
                 break;
             case "RESTORE_SAVEPOINT":
-            case "ADD_EXTERNAL_STEP":
             case "HISTORY_RESET_FROM_STEPS":
             case "HISTORY_RESET":
+                this.delayedUpdateTableOfContents(this.editable);
+                break;
             case "STEP_ADDED":
                 this.delayedUpdateTableOfContents(payload.stepCommonAncestor);
                 break;

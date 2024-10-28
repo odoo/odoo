@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_recursive_opt
         configuratorTourUtils.addOptionalProduct("Conference Chair"),
         configuratorTourUtils.addOptionalProduct("Chair floor protection"),
         {
-            trigger: 'button:contains(Confirm)',
+            trigger: ".modal button:contains(Confirm)",
             run: "click",
         },
         ...stepUtils.discardForm(),

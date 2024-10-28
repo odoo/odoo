@@ -79,7 +79,9 @@
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.is_note,
                                                             'fs-1': !state.isEditing and !env.inChatter and message.onlyEmojis,
-                                                            'mb-0 py-2': !message.is_note,
+                                                            'mb-0': !message.is_note,
+                                                            'py-2': !message.is_note and !state.isEditing,
+                                                            'pt-2 pb-1': !message.is_note and state.isEditing,
                                                             'o-note': message.is_note,
                                                             'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.is_note,
                                                             'flex-grow-1': state.isEditing,
@@ -157,7 +159,7 @@
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }">
-                        <i class="fa fa-lg" t-att-class="action.icon"/>
+                        <i class="fa-lg" t-att-class="action.icon"/>
                     </button>
                 </t>
                 <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
@@ -166,7 +168,7 @@
                         <t t-set-slot="content">
                             <t t-foreach="messageActions.actions.slice(quickActionCount - 1)" t-as="action" t-key="action.id">
                                 <DropdownItem class="'px-2 py-1 d-flex align-items-center rounded-0'" onSelected="action.onClick" attrs="{ title: action.title}">
-                                    <i class="fa fa-fw" t-att-class="action.icon"/>
+                                    <i class="fa-fw" t-att-class="action.icon"/>
                                     <span class="mx-2" t-esc="action.title"/>
                                 </DropdownItem>
                             </t>

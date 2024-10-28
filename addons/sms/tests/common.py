@@ -145,7 +145,7 @@ class SMSCase(MockSMS):
             raise AssertionError('sent sms not found for %s (number: %s)' % (partner, number))
         return sent_sms
 
-    def _find_sms_sms(self, partner, number, status):
+    def _find_sms_sms(self, partner, number, status, content=None):
         if number is None and partner:
             number = partner._phone_format()
         domain = [('id', 'in', self._new_sms.ids),
@@ -155,10 +155,14 @@ class SMSCase(MockSMS):
             domain += [('state', '=', status)]
 
         sms = self.env['sms.sms'].sudo().search(domain)
+        if len(sms) > 1 and content:
+            sms = sms.filtered(lambda s: content in (s.body or ""))
         if not sms:
             raise AssertionError('sms.sms not found for %s (number: %s / status %s)' % (partner, number, status))
         if len(sms) > 1:
-            raise NotImplementedError()
+            raise NotImplementedError(
+                f'Found {len(sms)} sms.sms for {partner} (number: {number} / status {status})'
+            )
         return sms
 
     def assertSMSIapSent(self, numbers, content=None):
@@ -187,11 +191,11 @@ class SMSCase(MockSMS):
         :param fields_values: optional values allowing to check directly some
           values on ``sms.sms`` record;
         """
-        sms_sms = self._find_sms_sms(partner, number, status)
+        sms_sms = self._find_sms_sms(partner, number, status, content=content)
         if failure_type:
             self.assertEqual(sms_sms.failure_type, failure_type)
         if content is not None:
-            self.assertIn(content, sms_sms.body)
+            self.assertIn(content, (sms_sms.body or ""))
         for fname, fvalue in (fields_values or {}).items():
             self.assertEqual(
                 sms_sms[fname], fvalue,

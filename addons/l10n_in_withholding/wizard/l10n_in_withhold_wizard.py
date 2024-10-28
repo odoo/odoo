@@ -14,7 +14,7 @@ class L10nInWithholdWizard(models.TransientModel):
     def default_get(self, fields_list):
         result = super().default_get(fields_list)
         active_model = self._context.get('active_model')
-        active_ids = self._context.get('active_ids')
+        active_ids = self._context.get('active_ids', [])
         if len(active_ids) > 1:
             raise UserError(_("You can only create a withhold for only one record at a time."))
         if active_model not in ('account.move', 'account.payment') or not active_ids:
@@ -143,7 +143,7 @@ class L10nInWithholdWizard(models.TransientModel):
                 'in_refund': 'in_refund_withhold',
             }[move_type]
         else:
-            withhold_type = 'in_withhold' if self.related_payment_id.payment_type == 'outbound' else 'out_withhold'
+            withhold_type = 'in_withhold' if self.related_payment_id.partner_type == 'supplier' else 'out_withhold'
         return withhold_type
 
     # ===== MOVE CREATION METHODS =====
@@ -260,7 +260,6 @@ class L10nInWithholdWizardLine(models.TransientModel):
         string="TDS Amount",
         compute='_compute_amount',
         store=True,
-        readonly=False
     )
 
     #  ===== Constraints =====

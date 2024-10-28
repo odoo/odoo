@@ -1519,6 +1519,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'AAY',
             'parent_id': parentB.id,
         })
+        # Add a product that belongs to both parent and child categories.
+        # It's presence is checked during the tour to make sure app doesn't crash.
+        self.env['product.product'].create({
+            'name': 'Product in AAB and AAX',
+            'pos_categ_ids': [(6, 0, [parentA.id, parentB.id])],
+            'available_in_pos': True,
+        })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCategoriesOrder', login="pos_admin")
 

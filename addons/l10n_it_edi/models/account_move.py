@@ -470,9 +470,9 @@ class AccountMove(models.Model):
                     tax_data['base_amount'] *= 0.5
                     tax_data['base_amount_currency'] *= 0.5
 
-        AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         dispatched_results = self.env['account.tax']._dispatch_negative_lines(base_lines)
         base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines']
+        AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, self._l10n_it_edi_grouping_function_base_lines)
         self._l10n_it_edi_add_base_lines_xml_values(base_lines_aggregated_values, is_downpayment)
         base_lines = sorted(base_lines, key=lambda base_line: base_line['it_values']['numero_linea'])
@@ -642,7 +642,7 @@ class AccountMove(models.Model):
             'downpayment': self._is_downpayment(),
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
-            'professional fees': self._l10n_it_edi_is_professional_fees(),
+            'professional_fees': self._l10n_it_edi_is_professional_fees(),
         }
 
     def _l10n_it_edi_document_type_mapping(self):
@@ -653,19 +653,19 @@ class AccountMove(models.Model):
                      'self_invoice': False,
                      'simplified': False,
                      'downpayment': False,
-                     'professional fees': False},
+                     'professional_fees': False},
             'TD02': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
                      'downpayment': True,
-                     'professional fees': False},
+                     'professional_fees': False},
             'TD03': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
                      'downpayment': True,
-                     'professional fees': True},
+                     'professional_fees': True},
             'TD04': {'move_types': ['out_refund'],
                      'import_type': 'in_refund',
                      'self_invoice': False,
@@ -679,7 +679,7 @@ class AccountMove(models.Model):
                      'self_invoice': False,
                      'simplified': False,
                      'downpayment': False,
-                     'professional fees': True},
+                     'professional_fees': True},
             'TD07': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,

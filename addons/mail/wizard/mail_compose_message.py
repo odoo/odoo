@@ -1077,7 +1077,8 @@ class MailComposer(models.TransientModel):
             ]
             # email_mode: prepare processed attachments as commands for mail.mail
             if email_mode:
-                mail_values['attachment_ids'] = record._process_attachments_for_post(
+                process_record = record if hasattr(record, "_process_attachments_for_post") else record.env["mail.thread"]
+                mail_values['attachment_ids'] = process_record._process_attachments_for_post(
                     decoded_attachments,
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
@@ -1216,6 +1217,7 @@ class MailComposer(models.TransientModel):
 
             mail_to = recipients['mail_to'][0] if recipients['mail_to'] else ''
             mail_to_normalized = recipients['mail_to_normalized'][0] if recipients['mail_to_normalized'] else ''
+            mail_to_reference = mail_to_normalized or mail_to
 
             # prevent sending to blocked addresses that were included by mistake
             # blacklisted or optout or duplicate -> cancel
@@ -1224,10 +1226,10 @@ class MailComposer(models.TransientModel):
                 mail_values['failure_type'] = 'mail_bl'
                 # Do not post the mail into the recipient's chatter
                 mail_values['is_notification'] = False
-            elif optout_emails and mail_to in optout_emails:
+            elif optout_emails and mail_to_reference in optout_emails:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_optout'
-            elif mail_to in done_emails:
+            elif mail_to_reference in done_emails:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_dup'
             # void of falsy values -> error
@@ -1237,18 +1239,18 @@ class MailComposer(models.TransientModel):
             elif not mail_to_normalized:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
-            elif mail_to in sent_emails_mapping:
+            elif mail_to_reference in sent_emails_mapping:
                 # If the number of attachments on the mail exactly matches the number of attachments on the composer
                 # we assume the attachments are copies of the ones attached to the composer and thus are the same
                 if len(self.attachment_ids) == len(mail_values.get('attachment_ids', [])) and\
                    any(sent_mail.get('subject') == mail_values.get('subject') and
-                       sent_mail.get('body') == mail_values.get('body') for sent_mail in sent_emails_mapping[mail_to]):
+                       sent_mail.get('body') == mail_values.get('body') for sent_mail in sent_emails_mapping[mail_to_reference]):
                     mail_values['state'] = 'cancel'
                     mail_values['failure_type'] = 'mail_dup'
                 else:
-                    sent_emails_mapping[mail_to].append(mail_values)
+                    sent_emails_mapping[mail_to_reference].append(mail_values)
             else:
-                sent_emails_mapping[mail_to] = [mail_values]
+                sent_emails_mapping[mail_to_reference] = [mail_values]
 
         done_emails += sent_emails_mapping.keys()
 

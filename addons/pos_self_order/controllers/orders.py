@@ -15,7 +15,9 @@ class PosSelfOrderController(http.Controller):
 
         # Create the order
         ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
-        sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
+        sequence_number = order.get('sequence_number')
+        if not sequence_number:
+            sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
         order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
         fiscal_position = (
             pos_config.takeaway_fp_id

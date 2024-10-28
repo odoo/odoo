@@ -48,6 +48,6 @@ export class MailCannedResponse extends models.ServerModel {
         if (!fields) {
             fields = ["source", "substitution"];
         }
-        store.add(this._name, this.read(ids, fields, false));
+        store.add(this._name, this._read_format(ids, fields, false));
     }
 }

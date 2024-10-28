@@ -34,6 +34,7 @@ class ResCompany(models.Model):
              "Thus, PAN acts as an identifier for the person with the tax department.",
     )
     l10n_in_pan_type = fields.Char(string="PAN Type", compute="_compute_l10n_in_pan_type")
+    l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
 
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit_and_l10n_in_pan(self):
@@ -79,3 +80,7 @@ class ResCompany(models.Model):
         for record in self:
             if record.l10n_in_pan and not pan.is_valid(record.l10n_in_pan):
                 raise ValidationError(_('The entered PAN seems invalid. Please enter a valid PAN.'))
+
+    def action_update_state_as_per_gstin(self):
+        self.ensure_one()
+        self.partner_id.action_update_state_as_per_gstin()

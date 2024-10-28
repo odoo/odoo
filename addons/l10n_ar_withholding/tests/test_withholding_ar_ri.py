@@ -281,3 +281,73 @@ class TestL10nArWithholdingArRi(TestAr):
         taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
         wizard = self.new_payment_register(invoice, taxes)
         self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 0.0)
+
+    def test_09_foreign_invoice(self):
+        """ Ensure a correct behavior when the invoice has a foreign currency and the payment not. """
+        in_invoice_wht = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'currency_id': self.other_currency.id,
+            'partner_id': self.res_partner_adhoc.id,
+            'invoice_line_ids': [Command.create(
+                {'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.tax_21.ids)]}
+            )],
+            'l10n_latam_document_number': '2-1',
+        })
+        in_invoice_wht.action_post()
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoice_wht.ids).create({
+            'payment_date': '2023-01-01',
+            'currency_id': self.company_data['currency'].id,
+            'l10n_ar_withholding_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': sum(in_invoice_wht.mapped('amount_untaxed')), 'amount': 0})],
+        })
+        wizard.l10n_ar_withholding_ids._compute_amount()
+        action = wizard.action_create_payments()
+        payment = self.env['account.payment'].browse(action['res_id'])
+        self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
+            # Liquidity line:
+            {'debit': 0.0, 'credit': 120900.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -120900.0, 'reconciled': False},
+            # base line:
+            {'debit': 0.0, 'credit': 1000.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -1000.0, 'reconciled': False},
+            # withholding line:
+            {'debit': 0.0, 'credit': 100.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -100.0, 'reconciled': False},
+            # base line:
+            {'debit': 1000.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 1000.0, 'reconciled': False},
+            # Receivable line:
+            {'debit': 121000.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 121000.0, 'reconciled': True}
+        ])
+
+    def test_10_foreign_invoice_and_payment(self):
+        """ Ensure a correct behavior when the invoice and the payment have a foreign currency. """
+        in_invoice_wht = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'currency_id': self.other_currency.id,
+            'partner_id': self.res_partner_adhoc.id,
+            'invoice_line_ids': [Command.create(
+                {'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.tax_21.ids)]}
+            )],
+            'l10n_latam_document_number': '2-1',
+        })
+        in_invoice_wht.action_post()
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoice_wht.ids).create({
+            'payment_date': '2023-01-01',
+            'currency_id': self.other_currency.id,
+            'l10n_ar_withholding_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': sum(in_invoice_wht.mapped('amount_untaxed')), 'amount': 0})],
+        })
+        wizard.l10n_ar_withholding_ids._compute_amount()
+        action = wizard.action_create_payments()
+        payment = self.env['account.payment'].browse(action['res_id'])
+        self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
+            # Liquidity line:
+            {'debit': 0.0, 'credit': 111000.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -1110.0, 'reconciled': False},
+            # base line:
+            {'debit': 0.0, 'credit': 100000.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -1000.0, 'reconciled': False},
+            # withholding line:
+            {'debit': 0.0, 'credit': 10000.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -100.0, 'reconciled': False},
+            # base line:
+            {'debit': 100000.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 1000.0, 'reconciled': False},
+            # Receivable line:
+            {'debit': 121000.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 1210.0, 'reconciled': True}
+        ])

@@ -3,7 +3,7 @@
     <t t-name="pos_restaurant.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
         <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="before">
             <t t-if="pos.mainScreen.component.name == 'FloorScreen'">
-                <DropdownItem t-if="showEditPlanButton" onSelected="() => this.pos.toggleEditMode()">
+                <DropdownItem t-if="showEditPlanButton and this.pos.config.floor_ids.length" onSelected="() => this.pos.toggleEditMode()">
                     Edit Plan
                 </DropdownItem>
             </t>
@@ -29,7 +29,7 @@
                     </button>
                 </div>
                 <div t-if="!ui.isSmall" class="ms-1 me-2 my-2 border-start border"/>
-                <div class="d-flex align-items-center" t-if="pos.orderToTransferUuid">
+                <div class="d-flex align-items-center" t-if="pos.isOrderTransferMode">
                     <strong class="mx-2 text-warning">
                         Select table to transfer order
                     </strong>

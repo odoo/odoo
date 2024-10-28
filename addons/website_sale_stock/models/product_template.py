@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.http import request
 from odoo.tools.translate import html_translate
+
+from odoo.addons.website.models import ir_http
 
 
 class ProductTemplate(models.Model):
@@ -55,3 +57,36 @@ class ProductTemplate(models.Model):
             })
 
         return res
+
+    @api.model
+    def _get_additional_configurator_data(
+        self, product_or_template, date, currency, pricelist, **kwargs
+    ):
+        """ Override of `website_sale` to append stock data.
+
+        :param product.product|product.template product_or_template: The product for which to get
+            additional data.
+        :param datetime date: The date to use to compute prices.
+        :param res.currency currency: The currency to use to compute prices.
+        :param product.pricelist pricelist: The pricelist to use to compute prices.
+        :param dict kwargs: Locally unused data passed to `super` and `_get_product_available_qty`.
+        :rtype: dict
+        :return: A dict containing additional data about the specified product.
+        """
+        data = super()._get_additional_configurator_data(
+            product_or_template, date, currency, pricelist, **kwargs
+        )
+
+        if (
+            (website := ir_http.get_request_website())
+            and product_or_template.is_storable
+            and not product_or_template.allow_out_of_stock_order
+        ):
+            available_qty = website._get_product_available_qty(
+                product_or_template.sudo(), **kwargs
+            ) if product_or_template.is_product_variant else 0
+            cart_quantity = product_or_template._get_cart_qty(
+                website
+            ) if product_or_template.is_product_variant else 0
+            data['free_qty'] = available_qty - cart_quantity
+        return data

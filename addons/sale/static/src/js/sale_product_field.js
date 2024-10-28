@@ -130,9 +130,23 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     get isCombo() {
         return this.props.record.data.product_type === 'combo';
     }
+    get isDownpayment() {
+        return this.props.record.data.is_downpayment;
+    }
 
     get configurationButtonHelp() {
         return _t("Edit Configuration");
+    }
+
+    /**
+     * @override
+     */
+    get sectionAndNoteClasses() {
+        const className = super.sectionAndNoteClasses;
+        if (!className && !this.productName && !this.isDownpayment) {
+            return "text-warning";
+        }
+        return className;
     }
 
     onClick(ev) {

@@ -143,6 +143,12 @@ class AccountChartTemplate(models.AbstractModel):
         """
         if not company:
             return
+        if not self.env.registry.ready and not install_demo and not hasattr(self.env.registry, '_auto_install_template'):
+            _logger.warning(
+                'Incorrect usage of try_loading without a fully loaded registry. This could lead to issues. (%s-%s)',
+                company.name,
+                template_code
+            )
         if isinstance(company, int):
             company = self.env['res.company'].browse([company])
 
@@ -187,6 +193,7 @@ class AccountChartTemplate(models.AbstractModel):
             tracking_disable=True,
             delay_account_group_sync=True,
             lang='en_US',
+            chart_template_load=True,
         )
         company = self.env['res.company'].browse(company.id)  # also update company.pool
 
@@ -675,7 +682,7 @@ class AccountChartTemplate(models.AbstractModel):
         # Set default transfer account on the internal transfer reconciliation model
         reco = self.ref('internal_transfer_reco', raise_if_not_found=False)
         if reco:
-            reco.line_ids.write({'account_id': company.transfer_account_id.id})
+            reco.line_ids.sudo().write({'account_id': company.transfer_account_id.id})
 
     def _get_property_accounts(self, additional_properties):
         return {

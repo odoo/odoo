@@ -1588,3 +1588,41 @@ test("Many2ManyTagsField with edit_tags option", async () => {
     await fieldInput("name").edit("new");
     await clickSave();
 });
+
+test("Many2ManyTagsField with edit_tags option overrides color edition", async () => {
+    expect.assertions(4);
+
+    PartnerType._views = {
+        form: `<form><field name="name"/><field name="color"/></form>`,
+    };
+    Partner._records[0].timmy = [12];
+
+    onRpc("get_formview_id", ({ args }) => {
+        expect(args[0]).toEqual([12], {
+            message: "should call get_formview_id with correct id",
+        });
+        return false;
+    });
+    onRpc("partner.type", "web_save", ({ args }) => {
+        expect(args[1]).toEqual({ name: "new" });
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags" options="{'edit_tags': 1, 'color_field': 'color'}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    // Click to try to open form view dialog
+    expect(".o_dialog").toHaveCount(0);
+    await contains(".o_tag.badge").click();
+    expect(".o_dialog").toHaveCount(1);
+
+    // Edit name of tag
+    await fieldInput("name").edit("new");
+    await clickSave();
+});

@@ -83,6 +83,7 @@ export class SlideUploadCategory extends Component {
                 ["channel_id", "=", this.props.channelId],
             ]);
             this.state.choices.categories = categories;
+            this.state.choices.categoryId = this._getDefaultCategoryId();
             const tags = await this._fetch_choices("tag");
             this.state.choices.tags = tags;
         });
@@ -334,14 +335,23 @@ export class SlideUploadCategory extends Component {
                 );
                 result.category_id = [0, { name: category.label }];
             } else {
-                const categoryId = parseInt(this.state.choices.categoryId, 10);
+                const categoryId = this.state.choices.categoryId || this._getDefaultCategoryId();
                 result.category_id = [categoryId];
-                this.categoryID = categoryId;
             }
         } else {
             result.category_id = [this.defaultCategoryId];
         }
         return result;
+    }
+
+    /**
+     * Returns the id of the last section of the channel or null (no sections)
+     * @returns {Number|Null}
+     */
+    _getDefaultCategoryId() {
+        return this.state.choices.categories.length > 0
+            ? this.state.choices.categories[this.state.choices.categories.length - 1].value
+            : null;
     }
 
     /**

@@ -97,7 +97,7 @@ registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_sync
             run: "click",
         },
         {
-            trigger: ".o_form_button_save",
+            trigger: ".modal .o_form_button_save",
             run: "click",
         },
         ...stepUtils.saveForm(),

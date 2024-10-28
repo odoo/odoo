@@ -9,6 +9,7 @@ import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import { registry } from "@web/core/registry";
+import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
     steps: () =>
@@ -44,7 +45,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             TicketScreen.toRefundTextContains("To Refund: 2.00"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
-            ProductScreen.selectedOrderlineHas("Coca-Cola"),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola")),
             ProductScreen.totalAmountIs("-4.40"),
         ].flat(),
 });

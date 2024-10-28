@@ -111,6 +111,19 @@ export class PaymentScreen extends Component {
         return this.currentOrder.get_selected_paymentline();
     }
     async addNewPaymentLine(paymentMethod) {
+        if (
+            paymentMethod.type === "pay_later" &&
+            (!this.currentOrder.to_invoice ||
+                this.pos.data["ir.module.module"].find((m) => m.name === "pos_settle_due")
+                    ?.state !== "installed")
+        ) {
+            this.notification.add(
+                _t(
+                    "To ensure due balance follow-up, generate an invoice or download the accounting application. "
+                ),
+                { autocloseDelay: 7000, title: _t("Warning") }
+            );
+        }
         if (this.pos.paymentTerminalInProgress && paymentMethod.use_payment_terminal) {
             this.dialog.add(AlertDialog, {
                 title: _t("Error"),
@@ -350,13 +363,12 @@ export class PaymentScreen extends Component {
                 this.pos.printReceipt(this.currentOrder);
 
                 if (this.pos.config.iface_print_skip_screen) {
-                    this.currentOrder.uiState.screen_data["value"] = "";
+                    this.currentOrder.set_screen_data({ name: "" });
                     this.currentOrder.uiState.locked = true;
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextScreen = "ProductScreen";
-
                     if (switchScreen) {
-                        this.pos.add_new_order();
+                        this.selectNextOrder();
                     }
                 }
             }
@@ -366,6 +378,13 @@ export class PaymentScreen extends Component {
 
         if (switchScreen) {
             this.pos.showScreen(nextScreen);
+        }
+    }
+    selectNextOrder() {
+        if (this.currentOrder.originalSplittedOrder) {
+            this.pos.selectedOrderUuid = this.currentOrder.originalSplittedOrder.uuid;
+        } else {
+            this.pos.add_new_order();
         }
     }
     /**

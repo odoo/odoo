@@ -1100,7 +1100,7 @@ class AccountPaymentRegister(models.TransientModel):
             # order to fully paid the source journal items.
             # For example, suppose a new currency B having a rate 100:1 regarding the company currency A.
             # If you try to pay 12.15A using 0.12B, the computed balance will be 12.00A for the payment instead of 12.15A.
-            if edit_mode:
+            if edit_mode and payment.move_id:
                 lines = vals['to_reconcile']
 
                 # Batches are made using the same currency so making 'lines.currency_id' is ok.

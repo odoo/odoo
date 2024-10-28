@@ -14,6 +14,8 @@ class WebsiteSale(main.WebsiteSale):
     @route()
     def pricelist(self, promo, **post):
         order = request.website.sale_get_order()
+        if not order:
+            return request.redirect('/shop')
         coupon_status = order._try_apply_code(promo)
         if coupon_status.get('not_found'):
             return super().pricelist(promo, **post)
@@ -125,6 +127,7 @@ class WebsiteSale(main.WebsiteSale):
         if 'error' in reward_status:
             request.session['error_promo_code'] = reward_status['error']
             return False
+        order._update_programs_and_rewards()
         return True
 
     @route()

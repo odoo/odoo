@@ -66,10 +66,7 @@ export class PowerButtonsPlugin extends Plugin {
             )
         ) {
             this.powerButtons.classList.remove("d-none");
-            let direction = block.getAttribute("dir");
-            if (block.tagName === "LI") {
-                direction = block.parentElement.getAttribute("dir");
-            }
+            const direction = closestElement(element, "[dir]")?.getAttribute("dir");
             this.powerButtons.setAttribute("dir", direction);
             this.setPowerButtonsPosition(block, direction);
         }

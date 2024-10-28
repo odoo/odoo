@@ -93,3 +93,43 @@ class TestDiscussSubChannels(HttpCase):
             msg="Cannot create Hello world!: initial message should belong to parent channel.",
         ):
             parent._create_sub_channel(from_message_id=random_channel.message_ids[0].id)
+
+    def test_07_unlink_sub_channel(self):
+        bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
+        baz_user = new_test_user(self.env, "baz_user", groups="base.group_user")
+        parent_1 = self.env["discuss.channel"].with_user(bob_user).create({"name": "Parent 1"})
+        parent_1_baz_member = parent_1.add_members(partner_ids=[baz_user.partner_id.id])
+        parent_1_sub_channel_1 = parent_1._create_sub_channel(name="Parent 1 Sub 1")
+        parent_1_sub_channel_1.add_members(partner_ids=[baz_user.partner_id.id])
+        parent_1_sub_channel_2 = parent_1._create_sub_channel(name="Parent 1 Sub 2")
+        parent_1_sub_channel_2.add_members(partner_ids=[baz_user.partner_id.id])
+        parent_2 = self.env["discuss.channel"].with_user(baz_user).create({"name": "Parent 2"})
+        parent_2_bob_member = parent_2.add_members(partner_ids=[bob_user.partner_id.id])
+        parent_2_sub_channel = parent_2._create_sub_channel(name="Parent 2 Sub")
+        parent_2_sub_channel.add_members(partner_ids=[bob_user.partner_id.id])
+        parent_3 = self.env["discuss.channel"].with_user(bob_user).create({"name": "Parent 3"})
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        parent_3_guest_member = parent_3.add_members(guest_ids=[guest.id])
+        parent_3_sub_channel = parent_3._create_sub_channel(name="Parent 3 Sub")
+        parent_3_sub_channel.add_members(guest_ids=[guest.id])
+        members_to_unlink = parent_1_baz_member + parent_2_bob_member + parent_3_guest_member
+        members_to_unlink.sudo().unlink()
+        self.assertNotIn(
+            baz_user.partner_id,
+            parent_1.channel_member_ids.partner_id
+            | parent_1.sub_channel_ids.channel_member_ids.partner_id,
+        )
+        self.assertNotIn(
+            bob_user.partner_id,
+            parent_2.channel_member_ids.partner_id
+            | parent_2.sub_channel_ids.channel_member_ids.partner_id,
+        )
+        self.assertNotIn(
+            guest,
+            parent_3.channel_member_ids.guest_id
+            | parent_3.sub_channel_ids.channel_member_ids.guest_id,
+        )
+        self.assertIn(bob_user.partner_id, parent_1_sub_channel_1.channel_member_ids.partner_id)
+        self.assertIn(bob_user.partner_id, parent_1_sub_channel_2.channel_member_ids.partner_id)
+        self.assertIn(baz_user.partner_id, parent_2_sub_channel.channel_member_ids.partner_id)
+        self.assertIn(bob_user.partner_id, parent_3_sub_channel.channel_member_ids.partner_id)

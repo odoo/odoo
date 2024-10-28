@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 import {
     ComboConfiguratorDialog
@@ -22,6 +23,13 @@ patch(ComboConfiguratorDialog.prototype, {
         if (this.props.isFrontend) {
             this.getPriceUrl = '/website_sale/combo_configurator/get_price';
         }
+    },
+
+    get totalMessage() {
+        if (this.props.isFrontend) {
+            return _t("Total: %s", this.formattedTotalPrice);
+        }
+        return super.totalMessage(...arguments);
     },
 
     get _comboProductData() {

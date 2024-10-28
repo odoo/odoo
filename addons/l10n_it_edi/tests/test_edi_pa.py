@@ -52,3 +52,14 @@ class TestItEdiPa(TestItEdi):
             Use reference validator: https://fex-app.com/servizi/inizia
         """
         self._assert_export_invoice(self.pa_partner_invoice, 'split_payment.xml')
+
+        credit_note_wizard = self.env['account.move.reversal'] \
+            .with_context(active_model='account.move', active_ids=self.pa_partner_invoice.ids) \
+            .create({
+                'date': datetime.date(2022, 3, 25),
+                'journal_id': self.pa_partner_invoice.journal_id.id,
+            })
+        action = credit_note_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+        self._assert_export_invoice(credit_note, 'split_payment_cn.xml')

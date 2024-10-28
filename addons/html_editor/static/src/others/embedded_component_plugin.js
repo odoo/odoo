@@ -13,6 +13,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         filter_descendants_to_serialize: this.filterDescendantsToSerialize.bind(this),
         is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         on_change_attribute: this.onChangeAttribute.bind(this),
+        onExternalHistorySteps: this.handleComponents.bind(this, this.editable),
     };
 
     setup() {
@@ -59,7 +60,6 @@ export class EmbeddedComponentPlugin extends Plugin {
                 break;
             }
             case "RESTORE_SAVEPOINT":
-            case "ADD_EXTERNAL_STEP":
             case "HISTORY_RESET_FROM_STEPS":
             case "HISTORY_RESET": {
                 this.handleComponents(this.editable);

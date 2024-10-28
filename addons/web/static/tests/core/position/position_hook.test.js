@@ -748,6 +748,37 @@ test("batch update call", async () => {
     expect.verifySteps(["positioned"]);
 });
 
+test("not positioned if target not connected", async () => {
+    const target = document.createElement("div");
+    class TestComponent extends Component {
+        static template = xml`
+            <div t-ref="container"><div t-ref="popper"/></div>
+        `;
+        static props = ["*"];
+        setup() {
+            this.container = useRef("container");
+            this.position = usePosition("popper", () => target, {
+                onPositioned: () => {
+                    expect.step("positioned");
+                },
+            });
+        }
+    }
+
+    const comp = await mountWithCleanup(TestComponent);
+    expect.verifySteps([]);
+
+    comp.container.el.appendChild(target);
+    comp.position.unlock();
+    await animationFrame();
+    expect.verifySteps(["positioned"]);
+
+    comp.container.el.removeChild(target);
+    comp.position.unlock();
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
 function getPositionTest(position, positionToCheck) {
     return async () => {
         expect.assertions(2);

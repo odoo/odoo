@@ -16,6 +16,27 @@
 }
 
 // Cards
+
+.card {
+    // Bootstrap sets up background-color using `var(--card-bg)` but forces a
+    // color using `var(--body-color)`. It relies on `var(--card-color)` being
+    // used on the card-body... but there does not seem to be a valid reason
+    // to force the body one on the card above. Given the fact that `card-color`
+    // is actually null by default, we end up with an inconsistent body-color
+    // forced on the card whatever the value of `card-bg`. In the website case,
+    // we often set up `card-bg` to inherit by default, which means the text
+    // color would only work if the card was over the body background color.
+    // By forcing `card-color` we enforce something consistent and controllable,
+    // which by default will result as the card text color just following the
+    // parent environment one (as `card-color` is null by default). We assume
+    // that if `card-bg` is set, then `card-color` should be too.
+
+    // Note: doing `color: var(--card-color)` would prevent overriding
+    // --body-color in the card context (which is a bit weird) but it does not
+    // work: it would override the color given by bg-xxx in the .card.bg-xxx
+    // case, which is not what we want.
+    --body-color: var(--card-color);
+}
 :where(.card:not([data-vxml])) .card-body {
     // BS4 colored cards do not have a very popular design. This will reset them
     // to a BS3-like one: only the header and footer are colored and the body

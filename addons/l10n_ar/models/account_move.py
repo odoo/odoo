@@ -110,8 +110,8 @@ class AccountMove(models.Model):
     def _get_l10n_ar_codes_used_for_inv_and_ref(self):
         """ List of document types that can be used as an invoice and refund. This list can be increased once needed
         and demonstrated. As far as we've checked document types of wsfev1 don't allow negative amounts so, for example
-        document 60 and 61 could not be used as refunds. """
-        return ['99', '186', '188', '189']
+        document 61 could not be used as refunds. """
+        return ['99', '186', '188', '189', '60']
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
@@ -347,7 +347,7 @@ class AccountMove(models.Model):
         }
         tax_group_ids_to_exclude = self.env['account.tax.group'].browse(tax_group_ids).filtered('l10n_ar_vat_afip_code').ids
         if tax_group_ids_to_exclude:
-            return self.env['account.tax']._exclude_tax_group_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
+            return self.env['account.tax']._exclude_tax_groups_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
         return tax_totals
 
     def _l10n_ar_include_vat(self):

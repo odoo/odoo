@@ -1,5 +1,6 @@
 import { Component, onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { ProductList } from "../product_list/product_list";
 
@@ -41,6 +42,7 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     setup() {
+        this.title = _t("Configure your product");
         this.env.dialogData.dismiss = !this.props.edit && this.props.discard.bind(this);
         this.state = useState({
             products: [],

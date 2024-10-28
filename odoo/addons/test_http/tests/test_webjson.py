@@ -38,6 +38,13 @@ class TestHttpWebJson_1(TestHttpBase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        # enable explicitely and make sure demo has permissions
+        cls.env['ir.config_parameter'].set_param('web.json.enabled', True)
+        cls.user_demo.write({
+            'groups_id': [Command.link(cls.env.ref('base.group_allow_export').id)],
+        })
+
         cls.milky_way = cls.env.ref('test_http.milky_way')
         cls.earth = cls.env.ref('test_http.earth')
         with file_open('test_http/static/src/img/gizeh.png', 'rb') as file:

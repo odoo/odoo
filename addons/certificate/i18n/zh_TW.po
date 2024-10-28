@@ -61,7 +61,7 @@ msgstr ""
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_start
 msgid "Available date"
-msgstr ""
+msgstr "可用日期"
 
 #. module: certificate
 #: model:ir.model,name:certificate.model_certificate_certificate
@@ -73,17 +73,17 @@ msgstr "證書"
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pkcs12_password
 msgid "Certificate Password"
-msgstr ""
+msgstr "證書密碼"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pem_certificate
 msgid "Certificate in PEM format"
-msgstr ""
+msgstr "PEM 格式證書"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__scope
 msgid "Certificate scope"
-msgstr ""
+msgstr "證書範圍"
 
 #. module: certificate
 #: model:ir.actions.act_window,name:certificate.certificate_certificate_action_view_list
@@ -137,7 +137,7 @@ msgstr "加密金鑰"
 #. module: certificate
 #: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__der
 msgid "DER"
-msgstr ""
+msgstr "DER"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__display_name
@@ -181,12 +181,12 @@ msgstr "鍵"
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__pem_key
 msgid "Key bytes in PEM format"
-msgstr ""
+msgstr "PEM 格式密鑰位元組"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__content
 msgid "Key file"
-msgstr ""
+msgstr "密鑰檔案"
 
 #. module: certificate
 #: model:ir.actions.act_window,name:certificate.certificate_key_action_view_list
@@ -210,7 +210,7 @@ msgstr "最後更新於"
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__loading_error
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__loading_error
 msgid "Loading error"
-msgstr ""
+msgstr "載入錯誤"
 
 #. module: certificate
 #. odoo-python
@@ -249,22 +249,22 @@ msgstr ""
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content_format
 msgid "Original certificate format"
-msgstr ""
+msgstr "原始證書格式"
 
 #. module: certificate
 #: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pem
 msgid "PEM"
-msgstr ""
+msgstr "PEM"
 
 #. module: certificate
 #: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pkcs12
 msgid "PKCS12"
-msgstr ""
+msgstr "PKCS12"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__pkcs12_password
 msgid "Password to decrypt the PKS file."
-msgstr ""
+msgstr "用作解密 PKS 檔案的密碼。"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
@@ -279,7 +279,7 @@ msgstr "私有密鑰"
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__password
 msgid "Private key password"
-msgstr ""
+msgstr "私鑰密碼"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
@@ -294,28 +294,28 @@ msgstr "公鑰"
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_key__public
 msgid "Public/Private key"
-msgstr ""
+msgstr "公鑰/私鑰"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__serial_number
 msgid "Serial number"
-msgstr ""
+msgstr "序號"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__active
 msgid "Set active to false to archive the certificate"
-msgstr ""
+msgstr "將 active（生效）設為 false（假）以封存證書"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_key__active
 msgid "Set active to false to archive the key."
-msgstr ""
+msgstr "將 active（生效）設為 false（假）以封存密鑰。"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__subject_common_name
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
 msgid "Subject Name"
-msgstr ""
+msgstr "主題名稱"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__country_code
@@ -349,12 +349,12 @@ msgstr ""
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
 msgid "The date on which the certificate expires (UTC)"
-msgstr ""
+msgstr "證書到期日（UTC）"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
 msgid "The date on which the certificate starts to be valid (UTC)"
-msgstr ""
+msgstr "證書開始生效日期（UTC）"
 
 #. module: certificate
 #. odoo-python
@@ -377,7 +377,7 @@ msgstr ""
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__serial_number
 msgid "The serial number to add to electronic documents"
-msgstr ""
+msgstr "新增至電子文件的序號"
 
 #. module: certificate
 #. odoo-python
@@ -432,6 +432,9 @@ msgid ""
 "                When a public key is set this way, it will be used instead of the one in the certificate.\n"
 "             "
 msgstr ""
+"用於設定公鑰，以防憑證本身的公鑰錯誤。\n"
+"                以這種方式設定的公鑰，會代替憑證本身的公鑰。\n"
+"             "
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__is_valid

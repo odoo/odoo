@@ -1064,6 +1064,8 @@ class IrActionsServer(models.Model):
             elif action.update_field_id.ttype in ['many2one', 'integer']:
                 try:
                     expr = int(action.value)
+                    if expr == 0 and action.update_field_id.ttype == 'many2one':
+                        expr = False
                 except Exception:
                     pass
             elif action.update_field_id.ttype == 'float':

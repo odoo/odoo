@@ -59,3 +59,15 @@ class TestResPartner(TransactionCase):
             partners += self.env['res.partner'].create({'name': f'partner_{i}', 'l10n_it_codice_fiscale': code})
 
         self.assertEqual(len(partners), len(valid_codes))
+
+    def test_it_suggested_invoice_edi_format(self):
+        partner_it = self.env['res.partner'].create({
+            'name': "IT partner",
+            'country_id': self.env.ref('base.it').id,
+        })
+        partner_be = self.env['res.partner'].create({
+            'name': "BE partner",
+            'country_id': self.env.ref('base.be').id,
+        })
+        self.assertEqual(partner_it.invoice_edi_format, 'it_edi_xml')
+        self.assertNotEqual(partner_be.invoice_edi_format, 'it_edi_xml')

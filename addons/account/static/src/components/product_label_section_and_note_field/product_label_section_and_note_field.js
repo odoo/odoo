@@ -203,8 +203,6 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
             return "fw-bold";
         } else if (this.isNote()) {
             return "fst-italic";
-        } else if (!this.productName) {
-            return "text-warning";
         }
         return "";
     }

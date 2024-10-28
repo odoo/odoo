@@ -2875,6 +2875,15 @@ class SnippetsMenu extends Component {
             // we create editors for invisible elements when translating them,
             // we only want to toggle their visibility when the related sidebar
             // buttons are clicked).
+            const translationEditors = this.snippetEditors.filter(editor => {
+                return this._allowInTranslationMode(editor.$target);
+            });
+            // Before returning, we need to clean editors if their snippets are
+            // allowed in the translation mode.
+            for (const editor of translationEditors) {
+                await editor.cleanForSave();
+                editor.destroy();
+            }
             return;
         }
         const exec = previewMode
@@ -3637,7 +3646,7 @@ class SnippetsMenu extends Component {
                 $toInsert = $baseBody.clone();
                 isSnippetGroup = $toInsert[0].matches(".s_snippet_group");
                 // Color-customize dynamic SVGs in dropped snippets with current theme colors.
-                [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
+                [...$toInsert.find('img[src^="/html_editor/shape/"], img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
                     const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
                     colorCustomizedURL.searchParams.forEach((value, key) => {
                         const match = key.match(/^c([1-5])$/);

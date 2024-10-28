@@ -40,6 +40,20 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'acc_type': 'bank',
         })
 
+        cls.pay_term_epd = cls.env['account.payment.term'].create([{
+            'name': "test",
+            'early_discount': True,
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 100,
+                    'nb_days': 30,
+                }),
+            ],
+        }])
+
     def test_payment_move_sync_create_write(self):
         copy_receivable = self.copy_account(self.company_data['default_account_receivable'])
 
@@ -512,3 +526,27 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         self.assertEqual(duplicate_payment_1.amount, payment_1.amount)
         self.assertEqual(duplicate_payment_2.amount, payment_2.amount)
+
+    def test_payments_epd_eligible_on_move_with_payment(self):
+        """ Ensures that even if a move has a payment registered, the epd will still be eligible if no outstanding account is set on the payment method"""
+        invoice1 = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2024-01-01',
+            'invoice_payment_term_id': self.pay_term_epd.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'test',
+                'quantity': 1,
+                'price_unit': 1000,
+            })],
+        }])
+        invoice1.action_post()
+        # By default, an outstanding account is set on the bank journal, which will result in a journal entry generation
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice1.ids).create({})._create_payments()
+        self.assertFalse(invoice1._is_eligible_for_early_payment_discount(invoice1.currency_id, invoice1.invoice_date))
+        # Remove the outstanding account on the payment method line to avoid generating a journal entry on the payment
+        self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = self.env['account.account']
+        invoice2 = invoice1.copy()
+        invoice2.action_post()
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice2.ids).create({})._create_payments()
+        self.assertTrue(invoice2._is_eligible_for_early_payment_discount(invoice2.currency_id, invoice2.invoice_date))

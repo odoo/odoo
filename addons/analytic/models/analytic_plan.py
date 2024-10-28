@@ -249,7 +249,7 @@ class AccountAnalyticPlan(models.Model):
         domain = [('name', 'in', [plan._strict_column_name() for plan in self])]
         if model:
             domain.append(('model', '=', model))
-        return self.env['ir.model.fields'].search(domain)
+        return self.env['ir.model.fields'].sudo().search(domain)
 
     def _sync_all_plan_column(self):
         model_names = self.env.registry.descendants(['analytic.plan.fields.mixin'], '_inherit') - {'analytic.plan.fields.mixin'}
@@ -286,6 +286,8 @@ class AccountAnalyticPlan(models.Model):
 class AccountAnalyticApplicability(models.Model):
     _name = 'account.analytic.applicability'
     _description = "Analytic Plan's Applicabilities"
+    _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     analytic_plan_id = fields.Many2one('account.analytic.plan')
     business_domain = fields.Selection(

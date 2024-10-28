@@ -79,7 +79,7 @@ msgstr "開始日期"
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
 msgid ""
 "The date you chose is violating the tax lock date, do this at your own risk."
-msgstr ""
+msgstr "你選擇的日期違反了稅務鎖定日期，繼續操作的風險請你自行承擔。"
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -89,13 +89,13 @@ msgstr "更新"
 #. module: account_update_tax_tags
 #: model:ir.model,name:account_update_tax_tags.model_account_update_tax_tags_wizard
 msgid "Update Tax Tags Wizard"
-msgstr ""
+msgstr "更新稅務標籤精靈"
 
 #. module: account_update_tax_tags
 #: model:ir.actions.act_window,name:account_update_tax_tags.action_open_wizard
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.res_config_settings_view_form
 msgid "Update tax tags on existing Journal Entries"
-msgstr ""
+msgstr "更新現有日記賬記項的稅務標籤"
 
 #. module: account_update_tax_tags
 #. odoo-python
@@ -103,7 +103,7 @@ msgstr ""
 msgid ""
 "Update with children taxes that are child of multiple parents is not "
 "supported."
-msgstr ""
+msgstr "不支援更新擁有多個母項的子級稅項。"
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -114,3 +114,8 @@ msgid ""
 "                    The update will change tax tags on your accounting history, starting from and including selected date,\n"
 "                    so that it matches with the current configuration of your taxes.<br/>"
 msgstr ""
+"更新現有日記賬記項的稅務標籤，是<b>不可逆轉</b>的操作，\n"
+"                    將會影響你的報表。<br/>\n"
+"                    強烈建議你在執行此操作前，先備份資料庫。<br/>\n"
+"                    此更新會更改你的會計歷史賬目的稅務標籤（從所選日期開始，包括當天），\n"
+"                    讓賬目符合你目前的稅務配置。<br/>"
