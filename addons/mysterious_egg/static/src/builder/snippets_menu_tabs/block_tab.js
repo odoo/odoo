@@ -9,6 +9,33 @@ import { escape } from "@web/core/utils/strings";
 
 const cacheSnippetTemplate = {};
 
+// TODO move it in web (copy from web_studio)
+function copyElementOnDrag() {
+    let element;
+    let copy;
+
+    function clone(_element) {
+        element = _element;
+        copy = element.cloneNode(true);
+    }
+
+    function insert() {
+        if (element) {
+            element.insertAdjacentElement("beforebegin", copy);
+        }
+    }
+
+    function clean() {
+        if (copy) {
+            copy.remove();
+        }
+        copy = null;
+        element = null;
+    }
+
+    return { clone, insert, clean };
+}
+
 export class BlockTab extends Component {
     static template = "mysterious_egg.BlockTab";
 
@@ -20,11 +47,16 @@ export class BlockTab extends Component {
         onWillStart(async () => {
             this.snippetsByCategory = await this.loadSnippets();
         });
+        const copyOnDrag = copyElementOnDrag();
         useDraggable({
             ref: this.env.builderRef,
             elements: ".o-website-snippetsmenu .o_draggable",
             enable: () => this.props.editor?.isReady,
+            onWillStartDrag: ({ element }) => {
+                copyOnDrag.clone(element);
+            },
             onDragStart: () => {
+                copyOnDrag.insert();
                 this.props.editor.shared.displayDropZone("p, img");
             },
             onDrop: (params) => {
@@ -32,6 +64,9 @@ export class BlockTab extends Component {
                 const { category, id } = params.element.dataset;
                 const snippet = this.getSnippet(category, parseInt(id));
                 this.props.editor.shared.dropElement(snippet.content.cloneNode(true), { x, y });
+            },
+            onDragEnd: ({ element }) => {
+                copyOnDrag.clean();
             },
         });
     }
