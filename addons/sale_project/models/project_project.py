@@ -219,7 +219,7 @@ class ProjectProject(models.Model):
                 "show_sale": True,
                 'default_partner_id': self.partner_id.id,
                 'default_project_id': self.id,
-                "create_for_project_id": self.id if embedded_action_context else False,
+                "create_for_project_id": self.id if not embedded_action_context else False,
                 "from_embedded_action": embedded_action_context
             },
             'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s<br/>%s</p>" %
