@@ -28,7 +28,7 @@
             <t t-set-slot="footer">
                 <button class="button confirm btn btn-lg lh-lg btn-primary"
                     t-on-click="confirm"
-                    t-att-disabled="!env.utils.isValidFloat(state.amount) or !state.reason">
+                    t-att-disabled="!isValidCashMove()">
                     Confirm
                 </button>
                 <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">
