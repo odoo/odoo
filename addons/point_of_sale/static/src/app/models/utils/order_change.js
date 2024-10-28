@@ -59,7 +59,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     uuid: orderline.uuid,
                     name: orderline.get_full_product_name(),
                     product_id: product.id,
-                    attribute_value_ids: orderline.attribute_value_ids,
+                    attribute_value_ids: orderline.attribute_value_ids.map((a) => a.id),
                     quantity: quantityDiff,
                     note: note,
                     pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,

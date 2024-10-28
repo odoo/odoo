@@ -628,19 +628,10 @@ export class PosStore extends Reactive {
                 }
 
                 Object.assign(values, {
-                    attribute_value_ids: payload.attribute_value_ids
-                        .filter((a) => {
-                            if (candidate) {
-                                const attr = this.models["product.template.attribute.value"].get(a);
-                                const attribute = attr.attribute_id;
-                                return attr.is_custom || attribute.create_variant !== "always";
-                            }
-                            return true;
-                        })
-                        .map((id) => [
-                            "link",
-                            this.models["product.template.attribute.value"].get(id),
-                        ]),
+                    attribute_value_ids: payload.attribute_value_ids.map((id) => [
+                        "link",
+                        this.models["product.template.attribute.value"].get(id),
+                    ]),
                     custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
                         ([id, cus]) => {
                             return [
@@ -1228,15 +1219,16 @@ export class PosStore extends Reactive {
         }
         return orders;
     }
-    async getProductInfo(productTemplate, product, quantity, priceExtra = 0) {
+    async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.get_order();
         // check back-end method `get_product_info_pos` to see what it returns
         // We do this so it's easier to override the value returned and use it in the component template later
-        const productInfo = await this.data.call("product.product", "get_product_info_pos", [
-            [product?.id],
-            productTemplate.get_price(order.pricelist_id, quantity, priceExtra, false, product),
+        const productInfo = await this.data.call("product.template", "get_product_info_pos", [
+            [productTemplate?.id],
+            productTemplate.get_price(order.pricelist_id, quantity, priceExtra, false),
             quantity,
             this.config.id,
+            productProduct?.id,
         ]);
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
