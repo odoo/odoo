@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from freezegun import freeze_time
 
 from odoo import fields, tools
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -118,7 +116,7 @@ class TestActivitySchedule(ActivityScheduleCase):
             test_records = test_records_all[test_idx].with_env(self.env)
             with self.subTest(test_case=test_case, test_records=test_records):
                 # 1. SCHEDULE ACTIVITIES
-                with freeze_time(self.reference_now):
+                with self.mock_datetime_and_now(self.reference_now):
                     form = self._instantiate_activity_schedule_wizard(test_records)
                     form.summary = 'Write specification'
                     form.note = '<p>Useful link ...</p>'
@@ -139,12 +137,12 @@ class TestActivitySchedule(ActivityScheduleCase):
                     })
 
                 # 2. LOG DONE ACTIVITIES
-                with freeze_time(self.reference_now):
+                with self.mock_datetime_and_now(self.reference_now):
                     form = self._instantiate_activity_schedule_wizard(test_records)
                     form.activity_type_id = self.activity_type_call
                     form.activity_user_id = self.user_admin
                     form.activity_role_id = self.test_role_2
-                    with self._mock_activities(), freeze_time(self.reference_now):
+                    with self._mock_activities(), self.mock_datetime_and_now(self.reference_now):
                         form.save().with_context(
                             mail_activity_quick_update=True
                         ).action_schedule_activities_done()
@@ -154,7 +152,7 @@ class TestActivitySchedule(ActivityScheduleCase):
 
                 # 3. CONTINUE WITH SCHEDULE ACTIVITIES
                 # implies deadline addition on top of previous activities
-                with freeze_time(self.reference_now):
+                with self.mock_datetime_and_now(self.reference_now):
                     form = self._instantiate_activity_schedule_wizard(test_records)
                     form.activity_type_id = self.activity_type_call
                     form.activity_user_id = self.user_admin
@@ -271,7 +269,7 @@ class TestActivitySchedule(ActivityScheduleCase):
         })
         # Test the plan summary
         with self.subTest(test_case='Check plan summary'), \
-             freeze_time(self.reference_now):
+             self.mock_datetime_and_now(self.reference_now):
             form = self._instantiate_activity_schedule_wizard(self.test_records[0])
             form.plan_id = test_plan
             expected_values = [
@@ -290,7 +288,7 @@ class TestActivitySchedule(ActivityScheduleCase):
         for test_idx, test_case in enumerate(['mono', 'multi']):
             test_records = test_records_all[test_idx].with_env(self.env)
             with self.subTest(test_case=test_case, test_records=test_records), \
-                 freeze_time(self.reference_now):
+                 self.mock_datetime_and_now(self.reference_now):
                 # No plan_date specified (-> self.reference_now is used), No responsible specified
                 form = self._instantiate_activity_schedule_wizard(test_records)
                 self.assertFalse(form.plan_schedule_line_ids)

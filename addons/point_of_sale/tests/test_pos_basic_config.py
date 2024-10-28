@@ -98,17 +98,17 @@ class TestPoSBasicConfig(TestPoSCommon):
             available_top_product = [product for product in data['product.template']['records'] if product['product_variant_ids'][0] not in special_product]
             return [p['product_variant_ids'][0] for p in available_top_product[:count]]
 
-        self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=1))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product1, 1)])])
-        self.assertEqual(get_top_product_ids(1), [self.product1.id])
+        with self.mock_datetime_and_now(datetime.now() + timedelta(days=1)):
+            self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product1, 1)])])
+            self.assertEqual(get_top_product_ids(1), [self.product1.id])
 
-        self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=2))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product2, 1)])])
-        self.assertEqual(get_top_product_ids(2), [self.product1.id, self.product2.id])
+        with self.mock_datetime_and_now(datetime.now() + timedelta(days=2)):
+            self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product2, 1)])])
+            self.assertEqual(get_top_product_ids(2), [self.product1.id, self.product2.id])
 
-        self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=3))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
-        self.assertEqual(get_top_product_ids(3), [self.product1.id, self.product2.id, self.product3.id])
+        with self.mock_datetime_and_now(datetime.now() + timedelta(days=3)):
+            self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
+            self.assertEqual(get_top_product_ids(3), [self.product1.id, self.product2.id, self.product3.id])
 
     def test_pos_payment_method_copy(self):
         """

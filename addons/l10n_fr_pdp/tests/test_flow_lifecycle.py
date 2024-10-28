@@ -285,7 +285,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         }
 
     def _run_send_cron(self, date, identifier='FLOW-TEST-001'):
-        with patch('odoo.fields.Date.today', return_value=fields.Date.to_date(date)):
+        with self.mock_datetime_and_now(date):
             with patch(
                 'odoo.addons.l10n_fr_pdp.models.pdp_flow.PdpFlow._send_to_proxy',
                 return_value=self._proxy_success_response(identifier),
@@ -1658,7 +1658,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         )
         flow = invoice.l10n_fr_pdp_last_flow_id
 
-        with patch('odoo.fields.Date.today', return_value=fields.Date.to_date('2025-09-20')):
+        with self.mock_datetime_and_now(fields.Date.to_date('2025-09-20')):
             with patch(
                 'odoo.addons.l10n_fr_pdp.models.pdp_flow.PdpFlow._send_to_proxy',
                 return_value=self._proxy_success_response('FLOW-CRON-IDEMPOTENT'),

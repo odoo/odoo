@@ -2113,7 +2113,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
         ])
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
-    @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 10, 0, 0))
+    @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 10, 0, 0))  # FIXME use mock_datetime_and_now
     def test_routing_loop_alias_create(self):
         """Test the limit on the number of record we can create by alias."""
         # Send an email 2 hours ago, should not have an impact on more recent emails

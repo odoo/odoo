@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
 from datetime import UTC, datetime, timedelta
-from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 from odoo import fields
@@ -109,7 +106,8 @@ class TestHrAttendance(HttpCase, TransactionCase):
         })
 
         # now = 2019/3/2 14:00 in the employee's timezone
-        with patch.object(fields.Datetime, 'now', lambda: tz_datetime(2019, 3, 2, 14, 0).astimezone(UTC).replace(tzinfo=None)):
+        employee_now = tz_datetime(2019, 3, 2, 14, 0).astimezone(UTC).replace(tzinfo=None)
+        with self.mock_datetime_and_now(employee_now):
             self.assertEqual(employee.hours_today, 5, "It should have counted 5 hours")
 
     def test_remove_check_in_value_from_attendance(self):
@@ -138,7 +136,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
             'check_out': '2024-01-01 17:00:00',
         })
         initial_hours = attendance.worked_hours
-        with patch.object(fields.Datetime, 'now', lambda: datetime(2024, 1, 1, 18, 0, 0)):
+        with self.mock_datetime_and_now(datetime(2024, 1, 1, 18, 0, 0)):
             self.test_employee.invalidate_recordset(['hours_today'])
             initial_hours_today = self.test_employee.hours_today
             attendance.break_duration = 1.0
@@ -159,7 +157,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
             'break_duration': 3,
         })
 
-        with patch.object(fields.Datetime, 'now', lambda: datetime(2024, 1, 2, 3)):
+        with self.mock_datetime_and_now(datetime(2024, 1, 2, 3)):
             employee.invalidate_recordset(['hours_today'])
             self.assertAlmostEqual(employee.hours_today, 1, places=6)
 
@@ -172,7 +170,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
             'break_duration': 2,
         })
 
-        with patch.object(fields.Datetime, 'now', lambda: datetime(2024, 1, 1, 23)):
+        with self.mock_datetime_and_now(datetime(2024, 1, 1, 23)):
             employee.invalidate_recordset(['hours_today'])
             self.assertAlmostEqual(employee.hours_today, 0, places=6)
 

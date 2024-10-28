@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
@@ -7,7 +6,6 @@ import random
 from ast import literal_eval
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
@@ -70,7 +68,7 @@ class TestLeadAssign(TestLeadAssignCommon):
     def test_assign_configuration(self):
         now_patch = datetime(2020, 11, 2, 10, 0, 0)
 
-        with patch.object(fields.Datetime, 'now', return_value=now_patch):
+        with self.mock_datetime_and_now(now_patch):
             config = self.env['res.config.settings'].create({
                 'crm_use_auto_assignment': True,
                 'crm_auto_assignment_action': 'auto',
@@ -818,7 +816,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         base_time = datetime(2026, 1, 1, 8, 0, 0)
         for run in range(30):
             now = base_time + timedelta(hours=25) * run  # 25 hours to be outside of lead_day_count
-            with freeze_time(now), patch.object(self.env.cr, 'now', lambda: now):
+            with self.mock_datetime_and_now(now):
                 self.env['crm.lead'].create({
                     'name': f'TestLead_{run}',
                     'type': 'lead',

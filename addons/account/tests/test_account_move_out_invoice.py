@@ -2324,7 +2324,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_post_1(self):
         ''' Check the invoice_date will be set automatically at the post date. '''
         frozen_today = fields.Date.today()
-        with patch.object(fields.Date, 'today', lambda *args, **kwargs: frozen_today), patch.object(fields.Date, 'context_today', lambda *args, **kwargs: frozen_today):
+        with self.mock_datetime_and_now(frozen_today):
             # Create an invoice with rate 1/3.
             move = self.env['account.move'].create({
                 'move_type': 'out_invoice',
@@ -5149,7 +5149,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             ]
         )
         self.assertEqual(self.env['account.move'].get_currency_rate(self.env.company.id, self.other_currency.id, '2026-01-01'), 2.0)
-        with (freeze_time('2025-01-02'), patch.object(self.env.cr, 'now', lambda: fields.Datetime.to_datetime("2025-01-02 10:00:00"))):
+        with self.mock_datetime_and_now('2025-01-02 10:00:00'):
             move = self.env['account.move'].create({
                 'move_type': 'out_invoice',
                 'partner_id': self.partner_a.id,
