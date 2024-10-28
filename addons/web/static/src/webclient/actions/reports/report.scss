@@ -199,3 +199,30 @@ span[itemprop="streetAddress"] {
 .h6-fs {
     font-size: 1rem;
 }
+
+// Alert
+.alert {
+    padding: #{$alert-padding-y} #{$alert-padding-x};
+    margin-bottom: #{$alert-margin-bottom};
+    color: inherit;
+    background-color: transparent;
+    border: #{$alert-border-width} solid transparent;
+    @include border-radius(#{$border-radius});
+}
+
+.alert-heading {
+    color: inherit;
+}
+
+.alert-link {
+    font-weight: $alert-link-font-weight;
+    color: inherit;
+}
+
+@each $state in map-keys($theme-colors) {
+    .alert-#{$state} {
+        color: map-get($theme-colors-text, $state);
+        background-color: map-get($theme-colors-bg-subtle, $state);
+        border-color: map-get($theme-colors-border-subtle, $state);
+    }
+}
