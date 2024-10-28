@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, SUPERUSER_ID
+from odoo import api
 
 
 def migrate(cr, version):
@@ -20,7 +20,7 @@ def migrate(cr, version):
         """)
 
         return cr.fetchone()[0]
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    env = api.Environment(cr, api.SUPERUSER_ID, {})
 
     templates_mapping = {
         'mod_303_120': ['account_tax_template_s_iva_ns', 'account_tax_template_s_iva_ns_b'],

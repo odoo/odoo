@@ -10,6 +10,9 @@ regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.IGNORECASE)
 # match private methods, to prevent their remote invocation
 regex_private = re.compile(r'^(_.*|init)$')
 
+# The hard-coded super-user id (a.k.a. administrator, or root user).
+SUPERUSER_ID = 1
+
 # maximum number of prefetched records
 PREFETCH_MAX = 1000
 

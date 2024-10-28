@@ -8,7 +8,7 @@ from datetime import datetime, time
 from dateutil import relativedelta
 from psycopg2 import OperationalError
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import _, api, fields, models
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
@@ -281,7 +281,7 @@ class StockWarehouseOrderpoint(models.Model):
         # Forced to call compute quantity because we don't have a link.
         self.action_remove_manual_qty_to_order()
         self._compute_qty_to_order()
-        self.filtered(lambda o: o.create_uid.id == SUPERUSER_ID and o.qty_to_order <= 0.0 and o.trigger == 'manual').unlink()
+        self.filtered(lambda o: o.create_uid.id == api.SUPERUSER_ID and o.qty_to_order <= 0.0 and o.trigger == 'manual').unlink()
         return notification
 
     def action_replenish_auto(self):
@@ -524,7 +524,7 @@ class StockWarehouseOrderpoint(models.Model):
                 })
                 orderpoint_values_list.append(orderpoint_values)
 
-        orderpoints = self.env['stock.warehouse.orderpoint'].with_user(SUPERUSER_ID).create(orderpoint_values_list)
+        orderpoints = self.env['stock.warehouse.orderpoint'].with_user(api.SUPERUSER_ID).create(orderpoint_values_list)
         for orderpoint in orderpoints:
             orderpoint._set_default_route_id()
             orderpoint.qty_multiple = orderpoint._get_qty_multiple_to_order()
@@ -576,7 +576,7 @@ class StockWarehouseOrderpoint(models.Model):
     @api.autovacuum
     def _unlink_processed_orderpoints(self):
         domain = [
-            ('create_uid', '=', SUPERUSER_ID),
+            ('create_uid', '=', api.SUPERUSER_ID),
             ('trigger', '=', 'manual'),
             ('qty_to_order', '<=', 0)
         ]
@@ -672,7 +672,7 @@ class StockWarehouseOrderpoint(models.Model):
                         orderpoint.product_id.product_tmpl_id.sudo().activity_schedule(
                             'mail.mail_activity_data_warning',
                             note=error_msg,
-                            user_id=orderpoint.product_id.responsible_id.id or SUPERUSER_ID,
+                            user_id=orderpoint.product_id.responsible_id.id or api.SUPERUSER_ID,
                         )
 
             finally:

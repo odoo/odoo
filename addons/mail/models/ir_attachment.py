@@ -2,7 +2,8 @@
 
 import contextlib
 
-from odoo import _, models, SUPERUSER_ID
+from odoo import _, models
+from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.tools import consteq

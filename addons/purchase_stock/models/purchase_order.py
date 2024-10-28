@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
 
-from odoo import api, Command, fields, models, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, _
 from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError
 from odoo.tools import format_list
@@ -284,7 +284,7 @@ class PurchaseOrder(models.Model):
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
                 if not pickings:
                     res = order._prepare_picking()
-                    picking = StockPicking.with_user(SUPERUSER_ID).create(res)
+                    picking = StockPicking.with_user(api.SUPERUSER_ID).create(res)
                     pickings = picking
                 else:
                     picking = pickings[0]

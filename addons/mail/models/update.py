@@ -6,7 +6,7 @@ from ast import literal_eval
 
 import requests
 
-from odoo import api, fields, release, SUPERUSER_ID
+from odoo import api, fields, release
 from odoo.exceptions import UserError
 from odoo.models import AbstractModel
 from odoo.tools.translate import _
@@ -90,7 +90,7 @@ class Publisher_WarrantyContract(AbstractModel):
                 _logger.debug("Exception while sending a get logs messages", exc_info=1)
                 raise UserError(_("Error during communication with the publisher warranty server."))
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
-            user = self.env['res.users'].sudo().browse(SUPERUSER_ID)
+            user = self.env['res.users'].sudo().browse(api.SUPERUSER_ID)
             poster = self.sudo().env.ref('mail.channel_all_employees')
             for message in result["messages"]:
                 try:

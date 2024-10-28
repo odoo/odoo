@@ -8,7 +8,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 from urllib3.util import parse_url
 
-import odoo
+from odoo import api, http
 from odoo.tests import new_test_user, tagged, RecordCapturer
 from odoo.tools import config, file_open, image_process
 from odoo.tools.misc import submap
@@ -456,7 +456,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
             'Content-Type': 'image/png',
             'Content-Disposition': 'inline; filename=nologo.png'
         }
-        super_user = cls.env['res.users'].browse([odoo.SUPERUSER_ID])
+        super_user = cls.env['res.users'].browse([api.SUPERUSER_ID])
         companies = ResCompany.browse([super_user.company_id.id]) | ResCompany.create(
             {
                 'name': 'Company 2',
@@ -646,7 +646,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
                 f'{self.base_url()}/web/binary/upload_attachment',
                 files={'ufile': file},
                 data={
-                    'csrf_token': odoo.http.Request.csrf_token(self),
+                    'csrf_token': http.Request.csrf_token(self),
                     'model': 'test_http.stargate',
                     'id': self.env.ref('test_http.earth').id,
                 },
@@ -692,7 +692,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
                 f'{self.base_url()}/web/binary/upload_attachment',
                 files={'ufile': file},
                 data={
-                    'csrf_token': odoo.http.Request.csrf_token(self),
+                    'csrf_token': http.Request.csrf_token(self),
                     'model': 'test_http.stargate',
                     'id': self.env.ref('test_http.earth').id,
                     'callback': 'callmemaybe',

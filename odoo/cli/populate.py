@@ -5,11 +5,12 @@ import sys
 import time
 from pathlib import Path
 
-from . import Command
 import odoo
+from odoo import api
 from odoo.modules.registry import Registry
 from odoo.tools.populate import populate_models
-from odoo.api import Environment
+
+from . import Command
 
 DEFAULT_FACTOR = '10000'
 DEFAULT_SEPARATOR = '_'
@@ -56,11 +57,11 @@ class Populate(Command):
         dbname = odoo.tools.config['db_name']
         registry = Registry(dbname)
         with registry.cursor() as cr:
-            env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {'active_test': False})
+            env = api.Environment(cr, api.SUPERUSER_ID, {'active_test': False})
             self.populate(env, model_factors, separator_code)
 
     @classmethod
-    def populate(cls, env: Environment, modelname_factors: dict[str, int], separator_code: int):
+    def populate(cls, env: api.Environment, modelname_factors: dict[str, int], separator_code: int):
         model_factors = {
             model: factor
             for model_name, factor in modelname_factors.items()

@@ -3,7 +3,7 @@
 import psycopg2
 import re
 
-from odoo import _, api, fields, models, Command, SUPERUSER_ID
+from odoo import _, api, fields, models, Command
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import safe_eval
@@ -301,7 +301,7 @@ class DeliveryCarrier(models.Model):
             try:
                 db_registry = Registry(db_name)
                 with db_registry.cursor() as cr:
-                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    env = api.Environment(cr, api.SUPERUSER_ID, {})
                     IrLogging = env['ir.logging']
                     IrLogging.sudo().create({'name': 'delivery.carrier',
                               'type': 'server',

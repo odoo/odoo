@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from odoo.addons.hr_recruitment.models.hr_applicant import AVAILABLE_PRIORITIES
 
-from odoo import api, models, fields, SUPERUSER_ID, tools, _
+from odoo import api, models, fields, tools, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -57,7 +57,7 @@ class HrCandidate(models.Model):
     user_id = fields.Many2one(
         'res.users',
         string="Candidate Manager",
-        default=lambda self: self.env.user if self.env.user.id != SUPERUSER_ID else False,
+        default=lambda self: self.env.user if self.env.user.id != api.SUPERUSER_ID else False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         tracking=True)
     employee_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the candidate.", copy=False)

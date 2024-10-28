@@ -4,7 +4,7 @@ import ast
 from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.tools import SQL
 from odoo.tools.convert import convert_file
 
@@ -120,8 +120,8 @@ class HrJob(models.Model):
 
     @api.depends('application_ids.interviewer_ids')
     def _compute_extended_interviewer_ids(self):
-        # Use SUPERUSER_ID as the search_read is protected in hr_referral
-        results_raw = self.env['hr.applicant'].with_user(SUPERUSER_ID).search_read([
+        # Use api.SUPERUSER_ID as the search_read is protected in hr_referral
+        results_raw = self.env['hr.applicant'].with_user(api.SUPERUSER_ID).search_read([
             ('job_id', 'in', self.ids),
             ('interviewer_ids', '!=', False)
         ], ['interviewer_ids', 'job_id'])

@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from freezegun import freeze_time
 
-from odoo import SUPERUSER_ID
+from odoo.api import SUPERUSER_ID
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 from odoo.tests import tagged
 

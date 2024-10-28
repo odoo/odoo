@@ -4,6 +4,7 @@ import json
 import logging
 import psycopg2
 
+import odoo.api
 import odoo.exceptions
 import odoo.modules.registry
 from odoo import http
@@ -152,7 +153,7 @@ class Home(http.Controller):
     def switch_to_admin(self):
         uid = request.env.user.id
         if request.env.user._is_system():
-            uid = request.session.uid = odoo.SUPERUSER_ID
+            uid = request.session.uid = odoo.api.SUPERUSER_ID
             # invalidate session token cache as we've changed the uid
             request.env.registry.clear_cache()
             request.session.session_token = security.compute_session_token(request.session, request.env)

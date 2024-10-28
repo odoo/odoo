@@ -3,7 +3,7 @@
 from datetime import datetime
 from dateutil import relativedelta
 
-from odoo import _, api, Command, fields, models, SUPERUSER_ID
+from odoo import _, api, Command, fields, models
 from odoo.tools import str2bool
 
 
@@ -122,7 +122,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._log_message_on_linked_documents(message)
-        author = self.env.user.partner_id if self.env.uid == SUPERUSER_ID else self.partner_id
+        author = self.env.user.partner_id if self.env.uid == api.SUPERUSER_ID else self.partner_id
         for order in self.sale_order_ids or self.source_transaction_id.sale_order_ids:
             order.message_post(body=message, author_id=author.id)
 
@@ -135,7 +135,7 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            self.env['account.move.send'].with_user(SUPERUSER_ID)._generate_and_send_invoices(
+            self.env['account.move.send'].with_user(api.SUPERUSER_ID)._generate_and_send_invoices(
                 invoice_to_send,
                 allow_raising=False,
                 allow_fallback_pdf=True,

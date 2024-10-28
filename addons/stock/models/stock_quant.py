@@ -7,7 +7,7 @@ from ast import literal_eval
 from collections import defaultdict
 from psycopg2 import Error
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import SQL, check_barcode_encoding, format_list, groupby
@@ -1218,7 +1218,7 @@ class StockQuant(models.Model):
             name = _('Product Quantity Confirmed')
         else:
             name = _('Product Quantity Updated')
-        if self.user_id and self.user_id.id != SUPERUSER_ID:
+        if self.user_id and self.user_id.id != api.SUPERUSER_ID:
             name += f' ({self.user_id.display_name})'
 
         return {
