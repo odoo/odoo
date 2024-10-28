@@ -9,8 +9,8 @@ registry
         steps: () => [
             {
                 content: "Click on the cart button",
-                trigger: '.oe_product:has(a:contains("Main product")) div.o_wsale_product_btn a',
-                run: 'click',
+                trigger: ".oe_product:has(a:contains(Main product))",
+                run: "hover && click .oe_product:has(a:contains(Main product)) div.o_wsale_product_btn a",
             },
             {
                 content: "Assert that the product configurator is shown",
