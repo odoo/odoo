@@ -106,20 +106,14 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         return invoice
 
     def tds_wizard_entry(self, move, lines):
-        tds_wizard = self.env['l10n_in.withhold.wizard'].with_context(active_model='account.move', active_ids=move.ids).create({
-                'journal_id': self.env['account.journal'].search([
-                    ('company_id', '=', self.env.company.id),
-                    ('type', '=', 'general')
-                ], limit=1).id,
-                'date': move.invoice_date,
-            })
+        journal_id = self.env['account.journal'].search([('company_id', '=', self.env.company.id),('type', '=', 'general')], limit=1)
         for tax, amount in lines:
-            self.env['l10n_in.withhold.wizard.line'].create({
-                'withhold_id': tds_wizard.id,
+            self.env['l10n_in.withhold.wizard'].with_context(active_model='account.move', active_ids=move.ids).create({
+                'journal_id': journal_id.id,
                 'tax_id': tax.id,
-                'base': amount
-            })
-        tds_wizard.action_create_and_post_withhold()
+                'base': amount,
+                'date': move.invoice_date,
+            }).action_create_and_post_withhold()
 
     def reverse_move(self, move, date):
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=move.ids).create({

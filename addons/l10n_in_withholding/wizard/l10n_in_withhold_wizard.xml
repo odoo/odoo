@@ -21,28 +21,22 @@
                 <sheet>
                     <group>
                         <group id="header_left_group">
-                            <field name="date"/>
-                            <field name="journal_id" domain="[('type', '=', 'general')]"/>
+                            <field name="date" string="Entry Date"/>
+                            <field name="base" widget="monetary" options="{'currency_field': 'currency_id'}" required="True"/>
+                            <field name="tax_id" domain="[('l10n_in_tds_tax_type', '=', l10n_in_tds_tax_type)]" required="True"/>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="related_move_id" invisible="1"/> <!-- used to compute the l10n_in_tds_tax_type -->
+                            <field name="related_payment_id" invisible="1"/> <!-- used to compute the l10n_in_tds_tax_type -->
                         </group>
                         <group id="header_right_group">
+                            <field name="journal_id" domain="[('type', '=', 'general')]"/>
                             <field name="reference"/>
                         </group>
                     </group>
-                    <notebook>
-                        <page string="TDS Tax Details">
-                            <field name="withhold_line_ids">
-                                <list editable="bottom">
-                                    <field name="currency_id" column_invisible="True"/>
-                                    <field name="tax_id" domain="[('l10n_in_tds_tax_type', '=', l10n_in_tds_tax_type)]"/>
-                                    <field name="base" sum="Total Base" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
                 </sheet>
                 <footer>
-                    <button string="Confirm" type="object" name="action_create_and_post_withhold" class="btn-primary"/>
+                    <button string="Apply TDS" type="object" name="action_create_and_post_withhold" class="btn-primary"/>
                     <button string="Discard" special="cancel" class="btn-secondary"/>
                 </footer>
             </form>
