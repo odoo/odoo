@@ -70,30 +70,29 @@ class AutomationDecantingProductProcess(models.TransientModel):
 
     def action_confirm(self):
         """
-        Confirm the decanting process by updating the license plate lines and decanting process
-        with the entered quantities, and updating the remaining quantities in the license plate order lines.
+        Confirm the decanting process by validating quantities for each product line and updating the
+        license plate lines accordingly.
         """
+        # Validation: Ensure at least one product line item is added
+        if not self.line_ids:
+            raise ValidationError(_("Please add at least one product line before proceeding."))
+
+        # Loop through each product line in the wizard
         for line in self.line_ids:
-            # Raise ValidationError if no product line items are added
-            if not self.line_ids:
-                raise ValidationError(_("Please add at least one product line before proceeding."))
-
-            # Ensure that each line item has a product selected
-            for line in self.line_ids:
-                if not line.product_id:
-                    raise ValidationError(_("Please ensure all line items have a product selected before proceeding."))
-
-            # Validate if the number of lines exceeds the container partition limit
+            # Validate each product line's required fields and limits
+            if not line.product_id:
+                raise ValidationError(_("Please ensure all line items have a product selected before proceeding."))
             if self.count_lines > self.container_partition:
                 raise ValidationError(
-                    _("You cannot confirm this decanting process because the number of lines (%s) exceeds the allowed partition limit (%s).")
+                    _("The number of lines (%s) exceeds the allowed partition limit (%s).")
                     % (self.count_lines, self.container_partition)
                 )
-            # Create a new decanting process line
+
+            # Create a new decanting process line for each line item
             self.env['automation.decanting.orders.process.line'].create({
                 'automation_decanting_process_id': self.automation_decanting_process_id.id,
                 'product_id': line.product_id.id,
-                'quantity':line.quantity,
+                'quantity': line.quantity,
                 'available_quantity': line.available_quantity,
                 'remaining_quantity': line.remaining_quantity,
                 'barcode': line.barcode,
@@ -101,36 +100,43 @@ class AutomationDecantingProductProcess(models.TransientModel):
                 'bin_code': line.bin_code,
             })
 
-            # Update remaining quantities in license plate order lines
-            total_qty_to_decant = line.quantity  # Quantity entered by the user
+            # Track total quantity to decant for this product line
+            total_qty_to_decant = line.quantity
+            insufficient_qty = False  # To detect if any line fails the quantity check
 
             # Loop through license plate orders to find the corresponding product and update remaining quantity
             for license_plate in self.license_plate_ids:
                 product_lines = license_plate.license_plate_order_line_ids.filtered(
-                    lambda l: l.product_id == line.product_id)
+                    lambda lp: lp.product_id == line.product_id
+                )
 
                 for lp_line in product_lines:
                     if total_qty_to_decant <= 0:
-                        break  # Exit the loop if the entire quantity has been decanted
+                        break  # Exit if no more quantity is needed
 
+                    # Deduct quantities from license plate line's remaining quantity
                     if lp_line.remaining_qty >= total_qty_to_decant:
-                        # Deduct the quantity from the license plate line's remaining quantity
                         lp_line.remaining_qty -= total_qty_to_decant
-                        total_qty_to_decant = 0  # All quantity has been decanted
+                        total_qty_to_decant = 0
                     else:
-                        # Deduct the available quantity and continue decanting from the next license plate
                         total_qty_to_decant -= lp_line.remaining_qty
-                        lp_line.remaining_qty = 0  # This license plate line is fully decanted
+                        lp_line.remaining_qty = 0
 
-                    # Mark is_remaining_qty as True if remaining_qty is 0
-                    lp_line.is_remaining_qty = (lp_line.remaining_qty == 0)
+                    # Mark `is_remaining_qty` if fully decanted
+                    lp_line.is_remaining_qty = lp_line.remaining_qty == 0
+                    # if line.remaining_quantity < line.quantity:
+                    #     raise ValidationError("Insufficient Quantity")
 
-            if total_qty_to_decant > 0:
-                raise ValidationError(_("Insufficient remaining quantity for product %s. Only %d quantity left." % (
-                    line.product_id.display_name, line.available_quantity)))
+                # If remaining quantity is still greater than 0, raise an error for this product line
+                if total_qty_to_decant > 0:
+                    insufficient_qty = True
+                    break
+
+        # Update crate status and count lines after confirming all lines
         self._compute_crate_status()
         self.automation_decanting_process_id.crate_status = self.crate_status
         self.automation_decanting_process_id.count_lines = self.count_lines
+
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -258,19 +264,12 @@ class AutomationDecantingProductProcessLine(models.TransientModel):
         """Ensure that the entered quantity does not exceed the remaining quantity in the wizard."""
         for line in self:
             # Recompute the remaining quantity based on the current data in the wizard
-            line._compute_remaining_quantity()
+            # line._compute_remaining_quantity()
 
             # Check if the entered quantity exceeds the remaining quantity
             if line.remaining_quantity < 0:
-                if line.remaining_quantity < line.quantity:
-                    return {
-                        'warning': {
-                            'title': _("Invalid Quantity"),
-                            'message': _(
-                                "The selected quantity (%s) is greater than the actual remaining quantity (%s)." % (
-                                line.quantity, line.remaining_quantity)),
-                        }
-                    }
+                raise ValidationError(_("The selected quantity (%s) exceeds the remaining quantity (%s).") % (
+                line.quantity, line.remaining_quantity))
 
     @api.onchange('wizard_id', 'product_id')
     def _onchange_assign_partition_code(self):

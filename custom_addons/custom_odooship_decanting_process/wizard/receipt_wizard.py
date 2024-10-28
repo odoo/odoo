@@ -47,6 +47,7 @@ class DeliveryReceiptWizard(models.TransientModel):
         if active_id:
             delivery_order = self.env['delivery.receipt.orders'].browse(active_id)
             res['picking_id'] = delivery_order.picking_id.id  # Automatically set the picking_id
+            res['location_dest_id'] = delivery_order.location_dest_id.id
         return res
 
     def action_add_lines(self):
@@ -124,6 +125,7 @@ class DeliveryReceiptWizard(models.TransientModel):
             move_lines.remaining_qty = sum(line.mapped('remaining_quantity'))  # Sum of all quantities from the picking
             move_lines.is_remaining_qty = True
             move_lines.delivery_receipt_state = 'fully_received' if move_lines.remaining_qty ==0.0 else 'partially_received'
+            move_lines.picked = True if move_lines.remaining_qty == 0.0 else 'False'
 
         # Create License Plate Order lines from the product map
         for product_data in license_plate_product_map.values():
@@ -189,6 +191,7 @@ class DeliveryReceiptWizardLine(models.TransientModel):
         for line in self:
             if line.remaining_quantity < 0:
                 raise ValidationError(_("The selected quantity (%s) exceeds the remaining quantity (%s).") % (line.quantity, line.remaining_quantity))
+
 
 
     @api.onchange('product_id')
