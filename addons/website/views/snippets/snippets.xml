@@ -593,6 +593,63 @@
     </xpath>
 </template>
 
+<template id="snippet_options_tabs">
+    <div data-js="NavTabs" data-selector=".s_tabs">
+        <we-button data-add-item="" data-item=".tab-content:first > .tab-pane.active" data-no-preview="true" class="fa fa-fw fa-plus o_we_bg_success" title="Add Tab" aria-label="Add Tab"/>
+        <we-button data-remove-item="" data-item=".tab-content:first > .tab-pane.active" data-name="remove_tab_opt" data-no-preview="true" class="fa fa-fw fa-minus o_we_bg_danger" title="Remove Tab" aria-label="Remove Tab"/>
+    </div>
+    <div data-js="NavTabsStyle" data-selector=".s_tabs" data-target=".s_tabs_main">
+        <we-select string="Style">
+            <we-button data-set-style="nav-underline" data-name="underline_opt">Underline</we-button>
+            <we-button data-set-style="nav-tabs" data-name="tabs_opt" data-trigger="horizontal_opt">Tabs</we-button>
+            <we-button data-set-style="nav-buttons" data-name="buttons_opt" data-trigger="horizontal_opt">Buttons</we-button>
+            <we-button data-set-style="nav-pills" data-name="pills_opt">Pills</we-button>
+        </we-select>
+        <we-colorpicker
+            string="Background"
+            class="o_we_sublevel_1"
+            data-apply-to=".s_tabs_nav"
+            data-select-style="true"
+            data-css-property="--tabs-bg-color"
+            data-no-transparency="true"
+            data-color-prefix="bg-"
+            data-dependencies="tabs_opt, buttons_opt"
+        />
+        <we-colorpicker
+            string="Links Color"
+            class="o_we_sublevel_1"
+            data-apply-to=".s_tabs_nav .nav-link"
+            data-select-style="true"
+            data-css-property="--tabs-link-color"
+            data-no-transparency="true"
+            data-color-prefix="text-"
+            data-dependencies="tabs_opt, buttons_opt"
+        />
+        <we-select string="Direction" data-dependencies="pills_opt, underline_opt">
+            <we-button data-set-direction="horizontal" data-select-class="o_direction_horizontal" data-name="horizontal_opt">Horizontal</we-button>
+            <we-button data-set-direction="vertical" data-select-class="" data-name="vertical_opt">Vertical</we-button>
+        </we-select>
+        <we-select string="Fill and Justify" data-apply-to=".s_tabs_nav:first .nav" data-dependencies="horizontal_opt">
+            <we-button data-select-class="">Regular</we-button>
+            <we-button data-select-class="nav-fill">Full Width</we-button>
+            <we-button data-select-class="nav-justified">Equal Widths</we-button>
+        </we-select>
+        <we-select string="Alignment" class="o_we_sublevel_1" data-apply-to=".s_tabs_nav:first .nav" data-name="alignment_opt" data-dependencies="horizontal_opt">
+            <we-button data-select-class="">Left</we-button>
+            <we-button data-select-class="justify-content-center mx-auto">Center</we-button>
+            <we-button data-select-class="justify-content-end ms-auto">Right</we-button>
+        </we-select>
+        <we-button-group string="Slide Effect" data-apply-to=".s_tabs_content:first">
+            <we-button class="fa fa-fw fa-long-arrow-right" title="Slide Left" data-select-class="s_tabs_slide_left"/>
+            <we-button class="fa fa-fw fa-long-arrow-down" title="Slide Up" data-select-class="s_tabs_slide_up"/>
+            <we-button class="fa fa-fw fa-long-arrow-up" title="Slide Down" data-select-class="s_tabs_slide_down"/>
+            <we-button class="fa fa-fw fa-long-arrow-left" title="Slide Right" data-select-class="s_tabs_slide_right"/>
+            <we-button class="fa fa-fw fa-ban" title="No Slide Effect" data-select-class=""/>
+        </we-button-group>
+        <div data-js="TabsNavItems" data-selector=".nav-item"/>
+    </div>
+</template>
+
 <template id="snippet_options_carousel">
     <div data-js="Carousel"
          data-selector="section"
@@ -983,7 +1040,7 @@
     <div data-js="layout_column"
         data-selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
         data-target="> *:has(> .row), > .s_allow_columns"
-        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info">
+        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs_common">
         <we-row>
             <we-button-group string="Layout" data-no-preview="true">
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
@@ -1024,7 +1081,7 @@
     <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr, .s_cta_badge'"/>
     <t t-set="only_bg_color_exclude" t-valuef=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable, [data-snippet] :not(.oe_structure) > .s_hr, #{card_parent_handlers}, .s_website_form_cover .row > .o_not_editable"/>
 
-    <t t-set="base_only_bg_image_selector" t-value="'.s_tabs .oe_structure > *, footer .oe_structure > *'"/>
+    <t t-set="base_only_bg_image_selector" t-value="'.s_tabs_common .oe_structure > *, footer .oe_structure > *'"/>
     <t t-set="only_bg_image_selector" t-value="base_only_bg_image_selector"/>
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
@@ -2441,6 +2498,9 @@
     <div data-js="SwitchableViews" data-selector="#wrapwrap > main" data-no-check="true" groups="website.group_website_designer">
             <!-- Options will be populated by JS -->
     </div>
+
+    <!-- Tabs snippets -->
+    <t t-call="website.snippet_options_tabs"/>
 
     </xpath>
 </template>
