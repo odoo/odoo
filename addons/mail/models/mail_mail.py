@@ -471,15 +471,15 @@ class MailMail(models.Model):
 
         # update headers with information coming from recipients, used to tweak
         # SMTP versus Msg['To']. Consider all outgoing emails for this mail.mail.
-        if headers.get('X-Msg-To-Consolidate'):
-            all_email_to_normalized = {email for values in email_list for email in values['email_to_normalized']}
-            all_email_to = [
-                email for outgoing in email_list for email in (outgoing['email_to'] + outgoing['email_cc'])
-            ] + [
-                email for email in tools.mail.email_split_and_format(headers.get('X-Msg-To-Add') or [])
-                if tools.mail.email_normalize(email, strict=False) not in all_email_to_normalized
-            ]
-            headers['X-Msg-To-Add'] = ','.join(all_email_to)
+        # if headers.get('X-Msg-To-Consolidate'):
+        #     all_email_to_normalized = {email for values in email_list for email in values['email_to_normalized']}
+        #     all_email_to = [
+        #         email for outgoing in email_list for email in (outgoing['email_to'] + outgoing['email_cc'])
+        #     ] + [
+        #         email for email in tools.mail.email_split_and_format(headers.get('X-Msg-To-Add') or [])
+        #         if tools.mail.email_normalize(email, strict=False) not in all_email_to_normalized
+        #     ]
+        #     headers['X-Msg-To-Add'] = ','.join(all_email_to)
 
         attachments = self.attachment_ids
         # Prepare attachments:

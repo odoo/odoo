@@ -471,7 +471,7 @@ class MockSmtplibCase:
                              message_from=None, msg_from=None,
                              mail_server=None, from_filter=None,
                              emails_count=1,
-                             msg_cc=None, msg_to=None):
+                             msg_cc_lst=None, msg_to_lst=None):
         """Check that the given email has been sent. If one of the parameter is
         None it is just ignored and not used to retrieve the email.
 
@@ -483,8 +483,8 @@ class MockSmtplibCase:
         :param from_filter: from_filter of the <ir.mail_server> used to send the
           email. False means 'match everything';'
         :param emails_count: the number of emails which should match the condition
-        :param msg_cc: optional check msg_cc value of email;
-        :param msg_to: optional check msg_to value of email;
+        :param msg_cc_lst: optional check msg_cc value of email;
+        :param msg_to_lst: optional check msg_to value of email;
 
         :return: True if at least one email has been found with those parameters
         """
@@ -514,20 +514,20 @@ class MockSmtplibCase:
         self.assertEqual(
             matching_emails_count, emails_count,
             msg=f'Incorrect emails sent: {matching_emails_count} found, {emails_count} expected'
-                f'\nConditions\nSMTP-From: {smtp_from}, SMTP-To: {smtp_to_list}, Msg-From: {message_from}, From_filter: {from_filter}'
+                f'\nConditions\nSMTP-From: {smtp_from}, SMTP-To: {smtp_to_list}, Msg-From: {message_from or msg_from}, From_filter: {from_filter}'
                 f'\nNot found in\n{debug_info}'
         )
-        if msg_to is not None:
+        if msg_to_lst is not None:
             for email in matching_emails:
                 self.assertEqual(
                     sorted(tools.mail.email_split_and_format(email['msg_to'])),
-                    sorted(tools.mail.email_split_and_format(msg_to or []))
+                    sorted(msg_to_lst)
                 )
-        if msg_cc is not None:
+        if msg_cc_lst is not None:
             for email in matching_emails:
                 self.assertEqual(
                     sorted(tools.mail.email_split_and_format(email['msg_cc'])),
-                    sorted(tools.mail.email_split_and_format(msg_cc or []))
+                    sorted(msg_cc_lst)
                 )
 
     @classmethod

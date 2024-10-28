@@ -17,10 +17,10 @@ class MailTestTLead(models.Model):
     company_id = fields.Many2one('res.company')
     email_from = fields.Char()
     customer_name = fields.Char()
-    partner_id = fields.Many2one('res.partner')
+    partner_id = fields.Many2one('res.partner', tracking=2)
     mobile = fields.Char()
     phone = fields.Char()
-    user_id = fields.Many2one('res.users')
+    user_id = fields.Many2one('res.users', tracking=1)
 
     def _creation_message(self):
         self.ensure_one()

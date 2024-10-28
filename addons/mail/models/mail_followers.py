@@ -335,6 +335,7 @@ class MailFollowers(models.Model):
                     'lang': lang,
                     'name': name,
                     'groups': set(groups or []),
+                    'name': name,
                     'notif': notif,
                     'share': pshare,
                     'uid': uid,
