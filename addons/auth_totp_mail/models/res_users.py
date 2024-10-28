@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import babel.dates
@@ -90,16 +89,14 @@ class ResUsers(models.Model):
             }
         }
 
-
     def _mfa_type(self):
         r = super()._mfa_type()
         if r is not None:
             return r
         ICP = self.env['ir.config_parameter'].sudo()
         otp_required = False
-        if ICP.get_param('auth_totp.policy') == 'all_required':
-            otp_required = True
-        elif ICP.get_param('auth_totp.policy') == 'employee_required' and self._is_internal():
+        if ICP.get_param('auth_totp.policy') == 'all_required' or \
+                (ICP.get_param('auth_totp.policy') == 'employee_required' and self._is_internal()):
             otp_required = True
         if otp_required:
             return 'totp_mail'
