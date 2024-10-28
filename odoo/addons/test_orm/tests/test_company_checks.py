@@ -186,6 +186,19 @@ class TestCompanyCheck(common.TransactionCase):
         self.assertEqual(user.env.company, user.company_id)
         self.assertEqual(user.env.companies, user.company_ids)
 
+    def test_company_companies_order(self):
+        """ Check consistency bewteen company and the order of companies in the environment. """
+        user = self.test_user.with_user(self.test_user)
+        not_first_company = self.env['res.company'].create({
+            'name': 'Last but not least!',
+            'sequence': 10000,
+        })
+        user.sudo().company_ids += not_first_company
+        user.sudo().company_id = not_first_company
+        self.assertNotEqual(user.env['res.company'].search([])[0], not_first_company)  # just mare sure it is not the first one
+        self.assertEqual(user.env.company, not_first_company)
+        self.assertEqual(user.env.companies[0], not_first_company)
+
     def test_with_company(self):
         """ Check that with_company() works as expected """
 
