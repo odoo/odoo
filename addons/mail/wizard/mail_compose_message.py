@@ -1122,7 +1122,7 @@ class MailComposeMessage(models.TransientModel):
                     [{
                         'active': True,
                         'id': pid,
-                        'is_follower': True,
+                        'is_follower': False,
                         'lang': lang,
                         'groups': [],
                         'notif': 'email',
