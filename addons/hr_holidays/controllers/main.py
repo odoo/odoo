@@ -3,7 +3,7 @@
 
 from odoo.addons.mail.controllers.mail import MailController
 from odoo import http
-
+from datetime import date
 
 class HrHolidaysController(http.Controller):
 
@@ -56,3 +56,15 @@ class HrHolidaysController(http.Controller):
             except Exception:
                 return MailController._redirect_to_messaging()
         return redirect
+
+    @http.route('/holidays/is_public_holiday', type='jsonrpc', auth='user')
+    def hr_holidays_is_public_holiday(self, userId):
+        today = date.today()
+        user = http.request.env["res.users"].browse(userId)
+        is_holiday = http.request.env['resource.calendar.leaves'].search([
+            ('resource_id', '=', False),
+            ('company_id', '=', user.company_id.id),
+            ('date_from', '<=', today),
+            ('date_to', '>=', today),
+        ], limit=1)
+        return is_holiday.name if is_holiday else False
