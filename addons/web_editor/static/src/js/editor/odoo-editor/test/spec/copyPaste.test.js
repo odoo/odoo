@@ -1160,36 +1160,6 @@ describe('Paste', () => {
                     contentAfter: '<blockquote>xabc</blockquote><blockquote>def</blockquote><blockquote>ghi[]y</blockquote>',
                 });
             });
-            it('should paste all nodes as pre when pasting in pre', async () => {
-                await testEditor(BasicEditor, {
-                    contentBefore: '<pre>[]<br></pre>',
-                    stepFunction: async editor => {
-                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
-                    },
-                    contentAfter: '<pre>abc</pre><pre>def</pre><pre>ghi[]</pre>',
-                });
-                await testEditor(BasicEditor, {
-                    contentBefore: '<pre>x[]</pre>',
-                    stepFunction: async editor => {
-                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
-                    },
-                    contentAfter: '<pre>xabc</pre><pre>def</pre><pre>ghi[]</pre>',
-                });
-                await testEditor(BasicEditor, {
-                    contentBefore: '<pre>[]x</pre>',
-                    stepFunction: async editor => {
-                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
-                    },
-                    contentAfter: '<pre>abc</pre><pre>def</pre><pre>ghi[]x</pre>',
-                });
-                await testEditor(BasicEditor, {
-                    contentBefore: '<pre>x[]y</pre>',
-                    stepFunction: async editor => {
-                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
-                    },
-                    contentAfter: '<pre>xabc</pre><pre>def</pre><pre>ghi[]y</pre>',
-                });
-            });
             it('should not unwrap empty block nodes even when pasting on same node', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a[]</p>',
@@ -2310,6 +2280,28 @@ describe('Paste', () => {
                             </li>
                         </ul>
                     `),
+                });
+            });
+        });
+        describe('pre element', async () => {
+            it('Should insert the content as text inside the pre element', async () => {
+                const complexHTML = '<p>ab\n\ncd<a href="http://www.xyz.com">link</a></p>ef\n\n\nhg'
+                await testEditor(BasicEditor, {
+                    contentBefore: '<pre>[]</pre>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, complexHTML);
+                    },
+                    contentAfter: '<pre>&lt;p&gt;ab\n\ncd&lt;a href="http://www.xyz.com"&gt;link&lt;/a&gt;&lt;/p&gt;ef\n\n\nhg[]</pre>',
+                });
+            });
+            it('Should do nothing with pasteHTML in pre element', async () => {
+                const complexHTML = '<p>ab\n\ncd<a href="http://www.xyz.com">link</a></p>ef\n\n\nhg'
+                await testEditor(BasicEditor, {
+                    contentBefore: '<pre>[]</pre>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, complexHTML);
+                    },
+                    contentAfter: '<pre>[]</pre>',
                 });
             });
         });
