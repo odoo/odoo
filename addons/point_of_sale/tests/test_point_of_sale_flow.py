@@ -2192,3 +2192,44 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         purchase_order = self.env['purchase.order'].search([], limit=1)
         self.assertEqual(purchase_order.order_line.product_id.id, product.id)
         self.assertEqual(purchase_order.order_line.product_qty, 2)
+
+    def test_state_when_closing_register(self):
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+        })
+
+        self.pos_config.open_ui()
+        session_id = self.pos_config.current_session_id
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session_id.id,
+            'partner_id': False,
+            'lines': [(0, 0, {
+                'name': 'OL/0001',
+                'product_id': product.id,
+                'price_unit': 10.00,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': False,
+                'price_subtotal': 10.00,
+                'price_subtotal_incl': 10.00,
+            })],
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'amount_paid': 10.00,
+            'amount_total': 10.00,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+        })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.bank_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        session_id.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_payment_method.id: 5.00})
+        self.assertEqual(session_id.state, 'closed')
