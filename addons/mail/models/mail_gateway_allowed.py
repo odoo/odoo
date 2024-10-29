@@ -17,7 +17,6 @@ class MailGatewayAllowed(models.Model):
     from an automated-source. This model stores those trusted source and this restriction
     won't apply to them.
     """
-
     _description = 'Mail Gateway Allowed'
 
     email = fields.Char('Email Address', required=True)
