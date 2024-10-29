@@ -249,7 +249,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 const offcanvasAttributes = ["aria-modal", "aria-hidden", "role", "style"];
                 // Carousel attributes to ignore.
                 const carouselSlidingClasses = ["carousel-item-start", "carousel-item-end",
-                    "carousel-item-next", "carousel-item-prev", "active"];
+                    "carousel-item-next", "carousel-item-prev", "active", "o_carousel_sliding"];
                 const carouselIndicatorAttributes = ["aria-current"];
 
                 return filteredRecords.filter(record => {
@@ -283,7 +283,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
 
                         // Do not record some carousel attributes changes.
                         if (record.target.closest(":not(section) > .carousel")) {
-                            if (record.target.matches(".carousel-item, .carousel-indicators > li")
+                            if (record.target.matches(".carousel, .carousel-item, .carousel-indicators > li")
                                     && record.attributeName === "class") {
                                 if (checkForExcludedClasses(record, carouselSlidingClasses)) {
                                     return false;
