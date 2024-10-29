@@ -89,7 +89,12 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
 
 
     def test_totp_administration(self):
-        self.start_tour('/odoo', 'totp_tour_setup', login='demo')
+        self.start_tour('/web', 'totp_tour_setup', login='demo')
+        # If not enabled (like in demo data), landing on res.config will try
+        # to disable module_sale_quotation_builder and raise an issue
+        group_order_template = self.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)
+        if group_order_template:
+            self.env.ref('base.group_user').write({"implied_ids": [(4, group_order_template.id)]})
         self.start_tour('/odoo', 'totp_admin_disables', login='admin')
         self.start_tour('/', 'totp_login_disabled', login=None)
 
