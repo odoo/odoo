@@ -397,6 +397,131 @@ class TestConfigManager(TransactionCase):
         config._parse_config()
         config._warn_deprecated_options()
 
+    def test_06_cli(self):
+        with file_open('base/tests/config/cli') as file:
+            self.config._parse_config(file.read().split())
+
+        values = {
+            # options not exposed on the command line
+            'admin_passwd': 'admin',
+            'csv_internal_sep': ',',
+            'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
+            'reportgz': False,
+            'websocket_rate_limit_burst': 10,
+            'websocket_rate_limit_delay': .2,
+            'websocket_keep_alive_timeout': 3600,
+
+            # common
+            'config': None,
+            'save': None,
+            'init': {'hr': 1, 'stock': 1},
+            'update': {'account': 1, 'website': 1},
+            'without_demo': 'rigolo',
+            'demo': {},
+            'import_partial': '/tmp/import-partial',
+            'pidfile': '/tmp/pidfile',
+            'addons_path': f'{PROJECT_PATH}/odoo/addons,{PROJECT_PATH}/addons',
+            'upgrade_path': '',
+            'server_wide_modules': 'base,mail',
+            'data_dir': '/tmp/data-dir',
+
+            # HTTP
+            'http_interface': '10.0.0.254',
+            'http_port': 6942,
+            'gevent_port': 8012,
+            'http_enable': False,
+            'proxy_mode': True,
+            'x_sendfile': True,
+
+            # web
+            'dbfilter': '.*',
+
+            # testing
+            'test_file': '/tmp/file-file',
+            'test_enable': True,
+            'test_tags': ':TestMantra.test_is_extra_mile_done',
+            'screencasts': '/tmp/screencasts',
+            'screenshots': '/tmp/screenshots',
+
+            # logging
+            'logfile': '/tmp/odoo.log',
+            'syslog': False,
+            'log_handler': [
+                ':INFO',
+                'odoo.tools.config:DEBUG',
+                ':WARNING',
+                'odoo.http:DEBUG',
+                'odoo.sql_db:DEBUG',
+            ],
+            'log_db': 'logdb',
+            'log_db_level': 'debug',
+            'log_level': 'debug',
+
+            # SMTP
+            'email_from': 'admin@example.com',
+            'from_filter': '.*',
+            'smtp_server': 'smtp.localhost',
+            'smtp_port': 1299,
+            'smtp_ssl': True,
+            'smtp_user': 'spongebob',
+            'smtp_password': 'Tigrou0072',
+            'smtp_ssl_certificate_filename': '/tmp/tlscert',
+            'smtp_ssl_private_key_filename': '/tmp/tlskey',
+
+            # database
+            'db_name': 'horizon',
+            'db_user': 'kiwi',
+            'db_password': 'Tigrou0073',
+            'pg_path': '/tmp/pg_path',
+            'db_host': 'db.localhost',
+            'db_port': 4269,
+            'db_sslmode': 'verify-full',
+            'db_maxconn': 42,
+            'db_maxconn_gevent': 100,
+            'db_template': 'backup1706',
+            'db_replica_host': 'db2.localhost',
+            'db_replica_port': 2038,
+
+            # i18n
+            'load_language': 'fr_FR',
+            'language': 'fr_FR',
+            'translate_out': '/tmp/translate_out.csv',
+            'translate_in': '/tmp/translate_in.csv',
+            'overwrite_existing_translations': True,
+            'translate_modules': ['hr', 'mail', 'stock'],
+
+            # security
+            'list_db': False,
+
+            # advanced
+            'dev_mode': ['xml', 'reload'],
+            'shell_interface': 'ipython',
+            'stop_after_init': True,
+            'osv_memory_count_limit': 71,
+            'transient_age_limit': 4.0,
+            'max_cron_threads': 4,
+            'unaccent': True,
+            'geoip_city_db': '/tmp/city.db',
+            'geoip_country_db': '/tmp/country.db',
+        }
+
+        if IS_POSIX:
+            # multiprocessing
+            values.update(
+                {
+                    'workers': 92,
+                    'limit_memory_soft': 1048576,
+                    'limit_memory_soft_gevent': 1048577,
+                    'limit_memory_hard': 1048578,
+                    'limit_memory_hard_gevent': 1048579,
+                    'limit_time_cpu': 60,
+                    'limit_time_real': 61,
+                    'limit_time_real_cron': 62,
+                    'limit_request': 100,
+                }
+            )
+        self.assertEqual(self.config.options, values)
+
     @patch('optparse.OptionParser.error')
     def test_06_syslog_logfile_exclusive_cli(self, error):
         self.parse_reset(['--syslog', '--logfile', 'logfile'])
