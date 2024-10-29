@@ -64,8 +64,8 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
                 ?.setAttribute("data-clipboard-text", host + newCode);
 
             // Show action again
-            this.el.querySelector(".o_website_links_edit_code").style.display = "";
-            this.el.querySelector(".copy-to-clipboard").style.display = "";
+            this.el.querySelector(".o_website_links_edit_code").classList.remove("d-none");
+            this.el.querySelector(".copy-to-clipboard").classList.remove("d-none");
             this.el.querySelector(".o_website_links_edit_tools").classList.add("d-none");
         }
     },

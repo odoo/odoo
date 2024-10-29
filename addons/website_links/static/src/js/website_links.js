@@ -381,6 +381,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
                         "An error occur while trying to generate your link. Try again later."
                     ),
                 };
+                const notificationElement = document.querySelector('.notification');
                 if (result.error === 'empty_url') {
                     notificationElement.innerHTML = `<div class="alert alert-danger">${erroMessages.empty}</div>`;
                 } else if (result.error === "url_not_found") {
