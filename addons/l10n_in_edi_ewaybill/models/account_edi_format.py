@@ -259,7 +259,7 @@ class AccountEdiFormat(models.Model):
             """).format(
                 _('E-wayBill Sent'),
                 _('Number'),
-                str(response.get("data", {}).get('ewayBillNo', 0)) or str(response.get("data", {}).get('EwbNo', 0)),
+                str(response.get("data", {}).get('EwbNo')),
                 _('Validity'),
                 str(response.get("data", {}).get('EwbValidTill'))
             )
@@ -358,9 +358,9 @@ class AccountEdiFormat(models.Model):
             """).format(
                 _('E-wayBill Sent'),
                 _('Number'),
-                str(response.get("data", {}).get('ewayBillNo', 0)) or str(response.get("data", {}).get('EwbNo', 0)),
+                str(response.get("data", {}).get('ewayBillNo')),
                 _('Validity'),
-                str(response.get("data", {}).get('EwbValidTill'))
+                str(response.get("data", {}).get('validUpto'))
             )
             invoices.message_post(body=body)
         return res
