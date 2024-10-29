@@ -3041,9 +3041,6 @@ class BaseModel(metaclass=MetaModel):
         if self._has_field_access(field, operation):
             return
 
-        _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, field: %s',
-            operation, self.env.uid, self._name, field.name)
-
         description = self.env['ir.model']._get(self._name).name
 
         error_msg = _(
