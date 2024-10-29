@@ -81,6 +81,7 @@ class AutomationDecantingOrdersProcess(models.Model):
                 'default_license_plate_ids': self.license_plate_ids.ids,
                 'default_container_id': self.container_id.id,
                 'default_crate_barcode': self.crate_barcode,
+                'default_picking_id': self.picking_id.id,
             }
         }
 
@@ -129,17 +130,16 @@ class AutomationDecantingOrdersProcess(models.Model):
     # def _onchange_license_plate_ids(self):
     #     """Allow only closed license plates with done delivery receipt order."""
     #     for license_plate in self.license_plate_ids:
-    #         if license_plate.state != 'closed' or license_plate.automation_manual != 'automation':
+    #         if license_plate.state != 'closed' or license_plate.automation_manual != 'manual':
     #             raise ValidationError(
     #                 f"The selected License Plate '{license_plate.name}' is not available or its status is not 'closed'."
     #             )
-            # Check the related delivery receipt order
-            # delivery_order = self.license_plate_id.delivery_receipt_order_id
-            # if delivery_order and delivery_order.state != 'done':
-            #     raise ValidationError(
-            #         f"The related Delivery Receipt Order '{delivery_order.name}' is still in progress. "
-            #         "Please complete the order (Manual/Automation Order Process) before proceeding."
-            #     )
+    #         delivery_order = self.license_plate_id.delivery_receipt_order_id
+    #         if delivery_order and delivery_order.state != 'done':
+    #             raise ValidationError(
+    #                 f"The related Delivery Receipt Order '{delivery_order.name}' is still in progress. "
+    #                 "Please complete the order (Manual/Automation Order Process) before proceeding."
+    #             )
 
 
     def check_crate_status(self):
@@ -223,7 +223,7 @@ class AutomationDecantingOrdersProcess(models.Model):
             })
             stock_quant_obj._update_available_quantity(
                 product_id=line.product_id,
-                location_id=self.location_dest_id,
+                location_id=line.location_dest_id,
                 quantity=line.quantity,
                 # lot_id=line.lot_id,
                 # package_id=line.package_id,
@@ -300,6 +300,11 @@ class AutomationDecantingOrdersProcessLine(models.Model):
     available_product_ids = fields.Many2many('product.product', string='Available Products')
     available_quantity = fields.Float(string='Available Quantity')
     remaining_quantity = fields.Float(string='Remaining Quantity')
+    picking_id = fields.Many2one(
+        string='Receipt Order',
+        related = 'automation_decanting_process_id.picking_id'
+    )
+    location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string='Destination location')
 
 
     @api.model
@@ -332,8 +337,22 @@ class AutomationDecantingOrdersProcessLine(models.Model):
             else:
                 line.bin_code = False
 
+
     def _generate_partition_code(self, line_index, container_partition):
         """Generate partition code based on line index and container partition."""
-        partition_group = (line_index // 2) + 1  # Determine the group number (1A, 1B, etc.)
-        partition_letter = chr(65 + (line_index % 2))  # 65 is the ASCII for 'A'
-        return "{}{}".format(partition_group, partition_letter)
+        # Calculate half of the container partition to determine how many items are in each group ('A' or 'B')
+        half_partition = container_partition // 2
+
+        if container_partition == 1:
+            # Only 1 partition, return 1A
+            return "1A"
+
+        if container_partition == 2:
+            # Two partitions, return 1A, 2A
+            return f"{line_index + 1}A"
+
+        # For 4 or 8 partitions
+        partition_letter = 'A' if line_index < half_partition else 'B'  # First half 'A', second half 'B'
+        partition_number = (line_index % half_partition) + 1  # Cycle through numbers up to half_partition
+        return f"{partition_number}{partition_letter}"
+

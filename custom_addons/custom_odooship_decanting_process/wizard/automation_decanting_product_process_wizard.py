@@ -32,6 +32,7 @@ class AutomationDecantingProductProcess(models.TransientModel):
     # Product lines
     line_ids = fields.One2many('automation.decanting.product.process.wizard.line', 'wizard_id', string='Product Lines')
 
+
     @api.depends('line_ids')
     def _compute_count_lines(self):
         """
@@ -263,13 +264,11 @@ class AutomationDecantingProductProcessLine(models.TransientModel):
     def onchange_quantity(self):
         """Ensure that the entered quantity does not exceed the remaining quantity in the wizard."""
         for line in self:
-            # Recompute the remaining quantity based on the current data in the wizard
-            # line._compute_remaining_quantity()
-
-            # Check if the entered quantity exceeds the remaining quantity
-            if line.remaining_quantity < 0:
+            if line.remaining_quantity < line.quantity:
                 raise ValidationError(_("The selected quantity (%s) exceeds the remaining quantity (%s).") % (
-                line.quantity, line.remaining_quantity))
+                    line.quantity, line.remaining_quantity))
+
+
 
     @api.onchange('wizard_id', 'product_id')
     def _onchange_assign_partition_code(self):
@@ -293,13 +292,22 @@ class AutomationDecantingProductProcessLine(models.TransientModel):
                 self.partition_code = partition_code
 
     def _generate_partition_code(self, line_index, container_partition):
-        """
-        Generate partition code based on line index and container partition.
-        For the wizard, this ensures that partition codes are dynamically generated.
-        """
-        partition_group = (line_index // 2) + 1  # Determine the group number (1A, 1B, etc.)
-        partition_letter = chr(65 + (line_index % 2))  # 65 is the ASCII for 'A'
-        return "{}{}".format(partition_group, partition_letter)
+        """Generate partition code based on line index and container partition."""
+        # Calculate half of the container partition to determine how many items are in each group ('A' or 'B')
+        half_partition = container_partition // 2
+
+        if container_partition == 1:
+            # Only 1 partition, return 1A
+            return "1A"
+
+        if container_partition == 2:
+            # Two partitions, return 1A, 2A
+            return f"{line_index + 1}A"
+
+        # For 4 or 8 partitions
+        partition_letter = 'A' if line_index < half_partition else 'B'  # First half 'A', second half 'B'
+        partition_number = (line_index % half_partition) + 1  # Cycle through numbers up to half_partition
+        return f"{partition_number}{partition_letter}"
 
     # @api.model
     # def create(self, vals):
