@@ -106,8 +106,8 @@ class MailFollowers(models.Model):
         Purpose of this method is to fetch all data necessary to notify recipients
         in a single query. It fetches data from
 
-         * followers (partners and channels) of records that follow the given
-           subtype if records and subtype are set;
+         * followers of records that follow the given subtype if records and
+           subtype are set;
          * partners if pids is given;
 
         :param records: fetch data from followers of ``records`` that follow
@@ -120,19 +120,22 @@ class MailFollowers(models.Model):
 
         :return dict: recipients data based on record.ids if given, else a generic
           '0' key to keep a dict-like return format. Each item is a dict based on
-          recipients partner ids formatted like
-          {'active': whether partner is active;
-           'id': res.partner ID;
-           'is_follower': True if linked to a record and if partner is a follower;
-           'lang': lang of the partner;
-           'groups': groups of the partner's user. If several users exist preference
-                is given to internal user, then share users. In case of multiples
-                users of same kind groups are unioned;
+          recipients partner ids formatted like {
+            'active': whether partner is active;
+            'id': res.partner ID;
+            'is_follower': True if linked to a record and if partner is a follower;
+            'lang': lang of the partner;
+            'groups': groups of the partner's user (see 'uid'). If several users
+                of the same kind (e.g. several internal users) exist groups are
+                concatenated;
             'notif': notification type ('inbox' or 'email'). Overrides may change
                 this value (e.g. 'sms' in sms module);
             'share': if partner is a customer (no user or share user);
             'ushare': if partner has users, whether all are shared (public or portal);
-            'type': summary of partner 'usage' (portal, customer, internal user);
+            'type': summary of partner 'usage' (a string among 'portal', 'customer',
+                'internal user');
+            'uid': linked 'res.users' ID. If several users exist preference is
+                given to internal user, then share users;
           }
         """
         self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])
@@ -510,6 +513,10 @@ GROUP BY fol.id%s%s""" % (
                         update[fol_id] = {'subtype_ids': update_cmd}
 
         return new, update
+
+    # --------------------------------------------------
+    # Misc discuss
+    # --------------------------------------------------
 
     def _to_store(self, store: Store, fields=None):
         if fields is None:

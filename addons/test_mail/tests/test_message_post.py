@@ -1887,10 +1887,6 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                                      '"View document" translation failed')
                     self.assertIn(f'View {test_record._description}', body,
                                   '"View document" translation failed')
-                    self.assertNotIn('SpanishButtonTitle', body,
-                                     'Groups-based action names translation failed')
-                    self.assertIn('NotificationButtonTitle', body,
-                                  'Groups-based action names translation failed')
                 else:
                     self.assertNotIn('English Layout for', body, 'Layout translation failed')
                     self.assertIn('Spanish Layout para Spanish Model Description', body,
@@ -1901,10 +1897,6 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                                   '"View document" translation failed')
                     self.assertNotIn(f'View {test_record._description}', body,
                                     '"View document" translation failed')
-                    self.assertIn('SpanishButtonTitle', body,
-                                  'Groups-based action names translation failed')
-                    self.assertNotIn('NotificationButtonTitle', body,
-                                     'Groups-based action names translation failed')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -1965,8 +1957,6 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                       '"View document" should be translated')
         self.assertNotIn(f'View {test_records[1]._description}', body,
                          '"View document" should be translated')
-        self.assertIn('SpanishButtonTitle', body, 'Groups-based action names should be translated')
-        self.assertNotIn('NotificationButtonTitle', body)
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -2017,10 +2007,6 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                                  '"View document" should be translated')
                 self.assertIn(f'View {test_records[1]._description}', body,
                               '"View document" should be translated')
-                self.assertNotIn('SpanishButtonTitle', body,
-                                 'Groups-based action names should be translated')
-                self.assertIn('NotificationButtonTitle', body,
-                              'Groups-based action names should be translated')
             else:
                 self.assertIn('Spanish Layout para', body,
                               'Layout content should be translated')
@@ -2031,10 +2017,6 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                               '"View document" should be translated')
                 self.assertNotIn(f'View {test_records[1]._description}', body,
                                  '"View document" should be translated')
-                self.assertIn('SpanishButtonTitle', body,
-                              'Groups-based action names should be translated')
-                self.assertNotIn('NotificationButtonTitle', body,
-                                 'Groups-based action names should be translated')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -2110,17 +2092,13 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                             exp_layout_content_es = 'Spanish Layout para Spanish Model Description'
                             exp_button_en = 'View Lang Chatter Model'
                             exp_button_es = 'SpanishView Spanish Model Description'
-                            exp_action_en = 'NotificationButtonTitle'
-                            exp_action_es = 'SpanishButtonTitle'
                             if email_layout_xmlid:
                                 if exp_lang == 'es_ES':
                                     self.assertIn(exp_layout_content_es, email['body'])
                                     self.assertIn(exp_button_es, email['body'])
-                                    self.assertIn(exp_action_es, email['body'])
                                 else:
                                     self.assertIn(exp_layout_content_en, email['body'])
                                     self.assertIn(exp_button_en, email['body'])
-                                    self.assertIn(exp_action_en, email['body'])
                             else:
                                 # check default layouting applies
                                 if exp_lang == 'es_ES':

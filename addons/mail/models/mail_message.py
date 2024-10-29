@@ -886,8 +886,7 @@ class MailMessage(models.Model):
             target = ids_by_model if message in self else prefetch_ids_by_model
             target[message.model].add(message.res_id)
         return {
-            model_name: self.env[model_name]
-            .browse(ids)
+            model_name: self.env[model_name].browse(ids)
             .with_prefetch(tuple(ids_by_model[model_name] | prefetch_ids_by_model[model_name]))
             for model_name, ids in ids_by_model.items()
         }
@@ -895,24 +894,13 @@ class MailMessage(models.Model):
     def _record_by_message(self):
         records_by_model_name = self._records_by_model_name()
         return {
-            message: self.env[message.model]
-            .browse(message.res_id)
+            message: self.env[message.model].browse(message.res_id)
             .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
             for message in self.filtered(lambda m: m.model and m.res_id)
         }
 
-    def _to_store(
-        self,
-        store: Store,
-        /,
-        *,
-        fields=None,
-        format_reply=True,
-        msg_vals=None,
-        for_current_user=False,
-        add_followers=False,
-        followers=None,
-    ):
+    def _to_store(self, store, /, *, fields=None, format_reply=True, msg_vals=None,
+                  for_current_user=False, add_followers=False, followers=None):
         """Add the messages to the given store.
 
         :param format_reply: if True, also get data about the parent message if it exists.
