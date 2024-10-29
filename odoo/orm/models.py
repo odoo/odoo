@@ -69,7 +69,6 @@ from .fields_misc import Id
 from .fields_temporal import Datetime
 from .fields_textual import Char
 
-from .table_objects import Constraint
 from .identifiers import NewId
 from .utils import OriginIds, expand_ids, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
 from odoo.osv import expression
@@ -225,12 +224,6 @@ class MetaModel(api.Meta):
 
             if not attrs.get('_name'):
                 attrs['_name'] = class_name_to_model_name(name)
-
-        # copy _sql_constraints into _table_object_definitions
-        for cons in attrs.get('_sql_constraints', ()):
-            cons_name, definition, cons_message = cons
-            constraint = Constraint(definition, cons_message)
-            attrs['_' + cons_name] = constraint
 
         return super().__new__(meta, name, bases, attrs)
 
@@ -522,7 +515,6 @@ class BaseModel(metaclass=MetaModel):
     """
     _table = None                   #: SQL table name used by model if :attr:`_auto`
     _table_query = None             #: SQL expression of the table's content (optional)
-    _sql_constraints: list[tuple[str, str, str]] = ()   #: SQL constraints [(name, sql_def, message)]
     _table_objects: dict[str, TableObject] = frozendict()  #: SQL/Table objects
 
     _rec_name = None                #: field to use for labeling records, default: ``name``
@@ -640,9 +632,12 @@ class BaseModel(metaclass=MetaModel):
         the Python sense) from all classes that define the model, and possibly
         other registry classes.
         """
-        if getattr(cls, '_constraints', None):
+        if hasattr(cls, '_constraints'):
             _logger.warning("Model attribute '_constraints' is no longer supported, "
                             "please use @api.constrains on methods instead.")
+        if hasattr(cls, '_sql_constraints'):
+            _logger.warning("Model attribute '_sql_constraints' is no longer supported, "
+                            "please define model.Constraint on the model.")
 
         # all models except 'base' implicitly inherit from 'base'
         name = cls._name
