@@ -1012,6 +1012,11 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
     # Extra step
     # ------------------------------------------------------
+
+    def _prepare_extra_info_values(self):
+        return {'escape': lambda x: x.replace("'", r"\'")}
+        
+
     @http.route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False)
     def extra_info(self, **post):
         # Check that this option is activated
@@ -1024,14 +1029,13 @@ class WebsiteSale(http.Controller):
         redirection = self.checkout_redirection(order)
         if redirection:
             return redirection
-
-        values = {
+        values = self._prepare_extra_info_values()
+        values.update({
             'website_sale_order': order,
             'post': post,
-            'escape': lambda x: x.replace("'", r"\'"),
             'partner': order.partner_id.id,
             'order': order,
-        }
+        })
         return request.render("website_sale.extra_info", values)
 
     # ------------------------------------------------------
