@@ -14,6 +14,7 @@ import {
     isMessageContentEmpty,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
+import { loader } from "@mail/utils/common/loader";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -106,6 +107,7 @@ export class Store extends BaseStore {
         inverse: "storeAsTrackedImStatus",
     });
     hasLinkPreviewFeature = true;
+    loader = loader;
     // messaging menu
     menu = { counter: 0 };
     chatHub = Record.one("ChatHub", { compute: () => ({}) });

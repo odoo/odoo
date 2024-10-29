@@ -12,9 +12,8 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 describe.current.tags("desktop");
 defineMailModels();
 
-let i = 1;
 function assert(input, output) {
-    test(`test ${i}`, async () => {
+    test(`${input}`, async () => {
         patchWithCleanup(window, {
             alert() {
                 expect.step("markdown link or image should not trigger alerts");
@@ -43,7 +42,6 @@ function assert(input, output) {
         expect(queryFirst(".o-mail-Message-body odoo-markdown").innerHTML).toBe(output);
         expect.verifySteps([]);
     });
-    i++;
 }
 
 // list of potential malicious markdown elements that should not be active
@@ -104,7 +102,6 @@ assert(
     "![a](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)\\", // <script>alert('XSS)</script> in base64
     `<p><img alt="a" src="data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K">\\</p>\n`
 );
-assert("[a](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)", "<p>a</p>\n"); // <script>alert('XSS)</script> in base64
 assert(
     "[a](&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29)",
     "<p>a</p>\n"
@@ -120,10 +117,6 @@ assert(
 );
 assert("[test](javascript://%0d%0aprompt(1))", "<p>test</p>\n");
 assert("[test](javascript://%0d%0aprompt(1);com)", "<p>test</p>\n");
-assert(
-    "[notmalicious](javascript:window.onerror=alert;throw%20document.cookie)",
-    "<p>notmalicious</p>\n"
-);
 assert(
     "[notmalicious](javascript://%0d%0awindow.onerror=alert;throw%20document.cookie)",
     "<p>notmalicious</p>\n"
@@ -192,9 +185,7 @@ assert("[XSS]: (javascript:prompt(document.cookie))", "");
 assert("[XSS](javascript:window.onerror=alert;throw%20document.cookie)", "<p>XSS</p>\n");
 assert("[XSS](javascript://%0d%0aprompt(1))", "<p>XSS</p>\n");
 assert("[XSS](javascript://%0d%0aprompt(1);com)", "<p>XSS</p>\n");
-assert("[XSS](javascript:window.onerror=alert;throw%20document.cookie)", "<p>XSS</p>\n");
 assert("[XSS](javascript://%0d%0awindow.onerror=alert;throw%20document.cookie)", "<p>XSS</p>\n");
-assert("[XSS](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)", "<p>XSS</p>\n"); // <script>alert('XSS)</script> in base64
 assert("[XSS](vbscript:alert(document.domain))", "<p>XSS</p>\n");
 assert("[XSS](javascript:this;alert(1))", "<p>XSS</p>\n");
 assert("[XSS](javascript:this;alert(1&#41;)", "<p>XSS</p>\n");

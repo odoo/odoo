@@ -55,10 +55,14 @@ export class Message extends Record {
             if (!this.isBodyEmpty) {
                 const htmlDoc = parser.parseFromString(this.body, "text/html");
                 const markdownElements = htmlDoc.querySelectorAll("odoo-markdown");
-                for (const markdownElement of markdownElements) {
-                    markdownElement.innerHTML = markdown(
-                        markdownElement.innerHTML.replace(/&gt;/g, ">") // markdown's tokenizer expects un-escaped blockquotes to detect them
-                    );
+                if (!this.store.loader.marked.loaded) {
+                    this.store.loader.marked.load();
+                } else {
+                    for (const markdownElement of markdownElements) {
+                        markdownElement.innerHTML = markdown(
+                            markdownElement.innerHTML.replace(/&gt;/g, ">") // markdown's tokenizer expects un-escaped blockquotes to detect them
+                        );
+                    }
                 }
                 return markup(htmlDoc.body.innerHTML);
             }

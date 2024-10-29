@@ -3,7 +3,6 @@ import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { Mp3Encoder } from "./mp3_encoder";
-import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 
 /**
  * @typedef {Object} Props
@@ -98,7 +97,7 @@ export class VoiceRecorder extends Component {
         this.state.recording = true;
         this.audioContext = new browser.AudioContext();
 
-        await loadLamejs();
+        await this.store.loader.lamejs.load();
         await this.audioContext.audioWorklet.addModule("/discuss/voice/worklet_processor");
         this.processor = new browser.AudioWorkletNode(this.audioContext, "processor");
         this.processor.port.onmessage = (e) => {

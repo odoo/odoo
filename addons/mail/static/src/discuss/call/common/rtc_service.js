@@ -11,18 +11,11 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
-import { loadBundle } from "@web/core/assets";
-import { memoize } from "@web/core/utils/functions";
 import { callActionsRegistry } from "./call_actions";
 
 /**
  * @typedef {'audio' | 'camera' | 'screen' } streamType
  */
-
-/**
- * @return {Promise<{ SfuClient: import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient, SFU_CLIENT_STATE: import("@mail/../lib/odoo_sfu/odoo_sfu").SFU_CLIENT_STATE }>}
- */
-const loadSfuAssets = memoize(async () => await loadBundle("mail.assets_odoo_sfu"));
 
 export const CONNECTION_TYPES = { P2P: "p2p", SERVER: "server" };
 const SCREEN_CONFIG = {
@@ -486,7 +479,7 @@ export class Rtc extends Record {
 
     async _loadSfu() {
         const load = async () => {
-            await loadSfuAssets();
+            await this.store.loader.odoo_sfu.load();
             const sfuModule = odoo.loader.modules.get("@mail/../lib/odoo_sfu/odoo_sfu");
             this.SFU_CLIENT_STATE = sfuModule.SFU_CLIENT_STATE;
             this.sfuClient = new sfuModule.SfuClient();

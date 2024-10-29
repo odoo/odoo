@@ -1,5 +1,4 @@
 import { AND, Record } from "@mail/core/common/record";
-import { prettifyMessageContent } from "@mail/utils/common/format";
 import { assignDefined, compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
@@ -943,7 +942,7 @@ export class Thread extends Record {
     async post(body, postData = {}, extraData = {}) {
         let tmpMsg;
         postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
-        const { attachments, parentId, mentionedChannels, mentionedPartners } = postData;
+        const { attachments, parentId } = postData;
         const params = await this.store.getMessagePostParams({ body, postData, thread: this });
         Object.assign(params, extraData);
         const tmpId = this.store.getNextTemporaryId();
@@ -968,13 +967,7 @@ export class Thread extends Record {
             tmpMsg = this.store["mail.message"].insert(
                 {
                     ...tmpData,
-                    body: await prettifyMessageContent(
-                        body,
-                        this.store.getMentionsFromText(body, {
-                            mentionedChannels,
-                            mentionedPartners,
-                        })
-                    ),
+                    body: params.post_data.body,
                     isPending: true,
                     thread: this,
                 },

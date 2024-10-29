@@ -1,18 +1,4 @@
-import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
-import { memoize } from "@web/core/utils/functions";
-
-const loader = {
-    loadLamejs: memoize(() => loadBundle("mail.assets_lamejs")),
-};
-
-export async function loadLamejs() {
-    try {
-        await loader.loadLamejs();
-    } catch {
-        // Could be intentional (tour ended successfully while lamejs still loading)
-    }
-}
 
 export class VoiceMessageService {
     constructor(env) {

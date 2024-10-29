@@ -11,7 +11,6 @@ import { describe, globals, test } from "@odoo/hoot";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
-import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
 import { browser } from "@web/core/browser/browser";
@@ -161,7 +160,6 @@ test("make voice message in chat", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await loadLamejs(); // simulated AudioProcess.process() requires lamejs fully loaded
     await contains("button[title='Voice Message']");
     mockDate("2023-07-31 13:00:00");
     await click("button[title='Voice Message']");
