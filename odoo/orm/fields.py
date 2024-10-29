@@ -303,14 +303,14 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         self.args = {key: val for key, val in kwargs.items() if val is not SENTINEL}
 
     def __str__(self):
-        if self.name is None:
-            return "<%s.%s>" % (__name__, type(self).__name__)
-        return "%s.%s" % (self.model_name, self.name)
+        if hasattr(self, 'name'):
+            return "%s.%s" % (self.model_name, self.name)
+        return "<%s.%s>" % (__name__, type(self).__name__)
 
     def __repr__(self):
-        if self.name is None:
-            return f"{'<%s.%s>'!r}" % (__name__, type(self).__name__)
-        return f"{'%s.%s'!r}" % (self.model_name, self.name)
+        if hasattr(self, 'name'):
+            return f"{'%s.%s'!r}" % (self.model_name, self.name)
+        return f"{'<%s.%s>'!r}" % (__name__, type(self).__name__)
 
     ############################################################################
     #
@@ -574,14 +574,14 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             field = model.pool[model_name]._fields.get(name)
             if field is None:
                 raise KeyError(
-                    f"Field {name!r} referenced in related field definition {self} does not exist."
+                    f"Field {name!r} referenced in related field definition {self!r} does not exist."
                 )
             if not field._setup_done:
                 field.setup(model.env[model_name])
             model_name = field.comodel_name
             if model_name == '_unknown':
                 raise KeyError(
-                    f"Targeted model from {name!r} in {self.related!r} in related field definition {self} does not exist."
+                    f"Targeted model from {name!r} in {self.related!r} in related field definition {self!r} does not exist."
                 )
 
         self.related_field = field

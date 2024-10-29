@@ -38,30 +38,54 @@ class _Relational(Field[M], typing.Generic[M]):
         # multirecord case: use mapped
         return self.mapped(records)
 
+    def __set_name__(self, owner, name):
+        super().__set_name__(owner, name)
+
+        if hasattr(self, '__orig_class__'):
+            # determine the model name from typing
+            args = self.__orig_class__.__args__[0]
+            if isinstance(args, type):
+                # title = fields.Many2one[ResPartnerTitle]()
+                comodel_name = args._name
+            else:
+                # title = fields.Many2one['ResPartnerTitle']()
+                class_name = args.__forward_arg__.split('.').pop()
+                comodel_name = class_name_to_model_name(class_name)
+
+            if comodel_name:
+                if not self.comodel_name:
+                    self.comodel_name = comodel_name
+                elif self.comodel_name != comodel_name:
+                    _logger.warning(f"The type of the {self!r} field should be {self.comodel_name!r} and not {comodel_name!r}.")
+
+        if self.comodel_name and self.args is not None:
+            # get all field definitions
+            fields = [self]
+            model_names = [owner._name, *(owner._inherit or [])]
+            for model_name in model_names:
+                inherited_models = owner.__class__.models_to_classes.get(model_name)
+                if inherited_models:
+                    fields = [getattr(cls, name) for cls in reversed(inherited_models) if hasattr(cls, name)] + fields
+
+            # get declared comodel_names
+            comodel_names = {self.comodel_name} | OrderedSet({f.comodel_name for f in fields}) - {None}
+            if len(comodel_names) > 1:
+                _logger.warning(f"The {self!r} field cannot have multiple types: {list(comodel_names)!r}")
+
+            self.args['comodel_name'] = self.comodel_name
+
+    def setup_related(self, model):
+        super().setup_related(model)
+        if self.related_field.comodel_name != self.comodel_name:
+            _logger.warning(f"The {self!r} field cannot have multiple types: [{self.related_field.comodel_name!r}, {self.comodel_name!r}]")
+            self.comodel_name = self.related_field.comodel_name
+
+        elif self.inherited and self.inherited_field.comodel_name != self.comodel_name:
+            _logger.warning(f"The {self!r} field cannot have multiple types: [{self.inherited_field.comodel_name!r}, {self.comodel_name!r}]")
+            self.comodel_name = self.inherited_field.comodel_name
+
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
-
-        if not self.comodel_name:
-            for cls in model.__class__._model_classes:
-                field = getattr(cls, self.name, None)
-                if hasattr(field, '__orig_class__'):
-                    # determine the model name from typing
-                    args = field.__orig_class__.__args__[0]
-                    if isinstance(args, type):
-                        # title = fields.Many2one[ResPartnerTitle]()
-                        class_name = args.__name__
-                        comodel_name = args._name
-                    else:
-                        # title = fields.Many2one['ResPartnerTitle']()
-                        class_name = args.__forward_arg__.split('.').pop()
-                        comodel_name = class_name_to_model_name(class_name)
-
-                    if comodel_name not in model.pool:
-                        _logger.warning("Field %r with unknown comodel name %r from the class %r", self, comodel_name, class_name)
-                        self.comodel_name = '_unknown'
-                    else:
-                        self.comodel_name = comodel_name
-
         if self.comodel_name not in model.pool:
             _logger.warning("Field %r with unknown comodel_name %r", self, self.comodel_name)
             self.comodel_name = '_unknown'

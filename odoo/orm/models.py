@@ -197,7 +197,7 @@ class MetaModel(api.Meta):
         Its main purpose is to register the models per module.
     """
     module_to_models = defaultdict(list)
-    models = set()
+    models_to_classes = defaultdict(list)
 
     def __new__(meta, name, bases, attrs):
         # this prevents assignment of non-fields on recordsets
@@ -229,7 +229,7 @@ class MetaModel(api.Meta):
         if bases[0] not in OdooBaseModels:
             base_class = base_class.__base__
             if is_new_model:
-                raise TypeError(f'The new Model {name!r} must contain the Odoo model type {tuple(cls.__name__ for cls in OdooBaseModels)} before other inherited models.')
+                raise TypeError(f"The new Model {name!r} must contain the Odoo model type ('AbstractModel', 'Model', 'TransientModel') before other inherited models.")
 
         # determine '_module'
         if '_module' not in attrs:
@@ -239,7 +239,6 @@ class MetaModel(api.Meta):
             attrs['_module'] = module.split('.')[2]
 
         # set the standardized values
-        meta.models.add(model_name)
         attrs['_name'] = model_name
         attrs['_inherit'] = inherit_models
 
@@ -253,6 +252,8 @@ class MetaModel(api.Meta):
 
         if not attrs.get('_register', True):
             return
+
+        self.models_to_classes[self._name].append(self)
 
         # Remember which models to instantiate for this module.
         if self._module:

@@ -137,7 +137,7 @@ class Test_Read_GroupRelated_Foo(models.Model):
     bar_name_sudo = fields.Char('bar_name_sudo', related='bar_id.name')
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
 
-    bar_base_ids = fields.Many2many('bar_name', related='bar_id.base_ids')
+    bar_base_ids = fields.Many2many('test_read_group.related_base', related='bar_id.base_ids')
 
 
 class Test_Read_GroupRelated_Base(models.Model):

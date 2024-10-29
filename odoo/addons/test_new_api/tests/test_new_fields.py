@@ -4663,7 +4663,7 @@ class TestWrongRelatedError(TransactionCase):
 
         errMsg = (
             "Field 'non_existing_field' referenced in related field definition "
-            "test_new_api.wrong_related_path.foo_non_existing does not exist."
+            "'test_new_api.wrong_related_path.foo_non_existing' does not exist."
         )
         with self.assertRaisesRegex(KeyError, errMsg):
             self.registry.setup_models(self.env.cr)
