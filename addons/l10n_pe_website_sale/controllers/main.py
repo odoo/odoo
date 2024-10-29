@@ -37,7 +37,13 @@ class L10nPEWebsiteSale(WebsiteSale):
         if request.website.sudo().company_id.country_id.code != 'PE':
             return rendering_values
 
+<<<<<<< 18.0
         if kwargs.get('use_delivery_as_billing') and address_type == 'delivery' or address_type == 'billing':
+||||||| f24e5e51f408f68978c00f0abda05d493d35fa5d
+        if address_type == 'billing':
+=======
+        if address_type == 'billing' or rendering_values['use_delivery_as_billing']:
+>>>>>>> 74f4c3a3723ece46786b81dd810f8080772e3033
             can_edit_vat = rendering_values['can_edit_vat']
             LatamIdentificationType = request.env['l10n_latam.identification.type'].sudo()
             rendering_values.update({

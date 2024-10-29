@@ -62,7 +62,14 @@
 
     <template id="address" inherit_id="website_sale.address">
         <div id="div_vat" position="before">
+<<<<<<< 18.0
             <t t-if="(use_delivery_as_billing and address_type == 'delivery' or address_type == 'billing') and res_company.country_id.code == 'PE'">
+||||||| f24e5e51f408f68978c00f0abda05d493d35fa5d
+            <t t-if="address_type == 'billing' and res_company.country_id.code == 'PE'">
+=======
+            <t t-if="(address_type == 'billing' or use_delivery_as_billing)
+                     and res_company.country_id.code == 'PE'">
+>>>>>>> 74f4c3a3723ece46786b81dd810f8080772e3033
                 <div class="w-100" />
                 <t t-call="l10n_pe_website_sale.partner_info" />
             </t>
