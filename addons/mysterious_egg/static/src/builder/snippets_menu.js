@@ -1,6 +1,7 @@
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { Component, onWillDestroy, useState } from "@odoo/owl";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
@@ -33,6 +34,10 @@ export class SnippetsMenu extends Component {
             activeTab: "blocks",
             selectedToolboxes: undefined,
         });
+        useHotkey("control+z", () => this.undo());
+        useHotkey("control+y", () => this.redo());
+        useHotkey("control+shift+z", () => this.redo());
+
         this.editor = new Editor(
             {
                 disableFloatingToolbar: true,

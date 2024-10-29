@@ -59,13 +59,21 @@ export class BlockTab extends Component {
                 copyOnDrag.insert();
                 this.props.editor.shared.displayDropZone("p, img");
             },
-            onDrop: (params) => {
-                const { x, y } = params;
-                const { category, id } = params.element.dataset;
-                const snippet = this.getSnippet(category, parseInt(id));
-                this.props.editor.shared.dropElement(snippet.content.cloneNode(true), { x, y });
+            onDrag: ({ element }) => {
+                this.props.editor.shared.dragElement(element);
             },
-            onDragEnd: ({ element }) => {
+            onDrop: ({ element }) => {
+                const { x, y, height, width } = element.getClientRects()[0];
+                const { category, id } = element.dataset;
+                const snippet = this.getSnippet(category, parseInt(id));
+                this.props.editor.shared.dropElement(snippet.content.cloneNode(true), {
+                    x,
+                    y,
+                    height,
+                    width,
+                });
+            },
+            onDragEnd: () => {
                 copyOnDrag.clean();
             },
         });
