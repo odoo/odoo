@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 {
     trigger: ".o_field_widget[name='user_ids'] input",
     content: "Assign a responsible to your task",
-    run: "fill test",
+    run: "fill marc",
 },
 {
     isActive: ["auto"],
