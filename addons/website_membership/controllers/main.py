@@ -72,7 +72,7 @@ class WebsiteMembership(http.Controller):
             if not any(country.id == country_id for country, __ in country_groups):
                 country_groups = [(g_country, count) for g_country, count in country_groups if g_country]
                 country_groups.append((Country.browse(country_id).sudo(), 0))
-                country_groups = sorted(country_groups, key=lambda c, __: c.name or '')
+                country_groups = sorted(country_groups, key=lambda group: group[0].name or '')
 
         countries = [{
             'country_id_count': sum(count for __, count in country_groups),
