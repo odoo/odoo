@@ -588,12 +588,12 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         }
         downpayment = self.env['sale.advance.payment.inv'].with_context(Downpayment).create({
             'advance_payment_method': 'fixed',
-            'fixed_amount': 115,
+            'fixed_amount': 100,
             'deposit_account_id': self.company_data['default_account_revenue'].id,
         })
         # When a down payment is created, the default 15% tax is included. The SOL associated it then created by removing the taxed amount.
         # Therefore, the amount of the dp is higher than the amount of the sol created.
-        down_payment_invoiced = 100.00
+        down_payment_invoiced = 115.00
         downpayment.create_invoices()
         self.sale_order.invoice_ids[2].action_post()
         # Ensures the down payment is correctly computed for the project profitability.
@@ -641,6 +641,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             self.assertEqual(sol.untaxed_amount_invoiced, 0.0)
 
     def _assert_dict_equal(self, invoice_type, sequence_per_invoice_type, material_order_line, service_sols, manual_service_order_line, down_payment_invoiced):
+        self.maxDiff = None
         self.assertDictEqual(
             self.project._get_profitability_items(False),
             {

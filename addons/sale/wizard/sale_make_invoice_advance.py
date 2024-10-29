@@ -299,6 +299,22 @@ class SaleAdvancePaymentInv(models.TransientModel):
         del context
         return so_values
 
+    def _get_fixed_downpayment_amount(self, order):
+        invoice_lines = order.order_line.invoice_lines.filtered(
+                lambda aml: aml.parent_state != 'cancel'
+            )
+        invoiced_total = sum(invoice_lines.mapped('price_total'))
+        return order.amount_total - invoiced_total
+
+    def _get_order_lines(self, order):
+        order_lines = order.order_line.filtered(
+            lambda sol:
+                not sol.display_type
+                and not sol.is_downpayment
+                and sol.invoice_status != 'invoiced'
+        )
+        return order_lines
+
     def _prepare_down_payment_lines_values(self, order):
         """ Create one down payment line per tax or unique taxes combination.
             Apply the tax(es) to their respective lines.
@@ -311,9 +327,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if self.advance_payment_method == 'percentage':
             percentage = self.amount / 100
         else:
-            percentage = self.fixed_amount / order.amount_total if order.amount_total else 1
+            amount = self._get_fixed_downpayment_amount(order)
+            percentage = 1 if order.currency_id.is_zero(amount) else self.fixed_amount / amount
 
-        order_lines = order.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment)
+        order_lines = self._get_order_lines(order)
         base_downpayment_lines_values = self._prepare_base_downpayment_line_values(order)
 
         tax_base_line_dicts = [

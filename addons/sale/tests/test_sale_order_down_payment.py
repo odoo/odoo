@@ -1073,3 +1073,45 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         reversal_move.action_post()
         self.assertEqual(reversal_move.move_type, 'out_refund')
         self.assertIn('ref', so_dp_line.name)
+
+    def test_downpayment_excludes_confirmed_and_draft_invoices(self):
+        self.sale_order.order_line[0].product_id = self.company_data['product_service_order'].id
+        self.sale_order.order_line[0].product_uom_qty = 1
+        self.sale_order.order_line[0].price_unit = 100
+
+        self.sale_order.order_line[1].product_id = self.company_data['product_delivery_no'].id
+        self.sale_order.order_line[1].product_uom_qty = 1
+        self.sale_order.order_line[1].qty_delivered = 0
+        self.sale_order.order_line[1].tax_id = self.tax_15
+        self.sale_order.order_line[1].price_unit = 100
+
+        self.sale_order.order_line[2:].unlink()
+
+        self.sale_order.action_confirm()
+        # One draft invoice is created for the pre_paid product.
+        self.sale_order._create_invoices()
+
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [self.sale_order.id],
+            'active_id': self.sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(**so_context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 50.0,
+            'deposit_account_id': self.revenue_account.id,
+        })
+        downpayment.create_invoices()
+        invoice = self.sale_order.invoice_ids[1]
+        expected = [
+            # keys
+            ['account_id',              'tax_ids',          'balance',      'price_total'],
+            # base lines
+            [self.revenue_account.id,    self.tax_15.ids,   -43.48,         50.0         ],
+            # taxes
+            [self.tax_account.id,        [],                -6.52,          0.0          ],
+            # receivable
+            [self.receivable_account.id, [],                 50.0,          0.0          ],
+        ]
+        self._assert_invoice_lines_values(invoice.line_ids, expected)
