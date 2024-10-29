@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import Form, TransactionCase, tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -59,3 +59,15 @@ class TestResPartner(TransactionCase):
             partners += self.env['res.partner'].create({'name': f'partner_{i}', 'l10n_it_codice_fiscale': code})
 
         self.assertEqual(len(partners), len(valid_codes))
+
+    def test_non_italian_partner_codice_fiscale(self):
+        mexican_partner = self.env['res.partner'].create({
+            'name': 'Mexican Customer',
+            'country_id': self.env.ref('base.mx').id,
+        })
+
+        partner_form = Form(mexican_partner)
+        partner_form.vat = "ITR230522NW8"
+        mexican_partner = partner_form.save()
+
+        self.assertFalse(mexican_partner.l10n_it_codice_fiscale, "A non-italian partner should not be given an l10n_it_codice_fiscale")
