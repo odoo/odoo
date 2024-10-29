@@ -959,11 +959,13 @@ class IrActionsServer(models.Model):
                 model_name = action.model_id.model
                 try:
                     self.env[model_name].check_access("write")
-                except AccessError:
-                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                        action.name, self.env.user.login, model_name,
-                    )
-                    raise
+                except AccessError as e:
+                    raise AccessError(_(
+                        "Forbidden server action %(action_name)s executed while the user %(user)s does not have access to %(model_name)s.",
+                        action_name=repr(action.name),
+                        user=self.env.user.login,
+                        model_name=model_name,
+                    )) from e
 
             eval_context = self._get_eval_context(action)
             records = eval_context.get('record') or eval_context['model']
@@ -973,11 +975,13 @@ class IrActionsServer(models.Model):
                 # type 'onchange' can run server actions on new records
                 try:
                     records.check_access('write')
-                except AccessError:
-                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                        action.name, self.env.user.login, records,
-                    )
-                    raise
+                except AccessError as e:
+                    raise AccessError(_(
+                        "Forbidden server action %(action_name)s executed while the user %(user)s does not have access to %(model_name)s.",
+                        action_name=repr(action.name),
+                        user=self.env.user.login,
+                        model_name=model_name,
+                    )) from e
 
             runner, multi = action._get_runner()
             if runner and multi:
