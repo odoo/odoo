@@ -1490,15 +1490,21 @@
          data-no-check="true"
          groups="website.group_website_designer">
 
+        <we-select data-variable="hamburger-position" data-reload="/" string="Desktop Alignment" data-dependencies="header_sidebar_opt, header_hamburger_opt">
+            <we-button data-customize-website-variable="'left'"
+                       data-customize-website-views="">Left</we-button>
+            <we-button data-customize-website-variable="'right'"
+                       data-customize-website-views="website.template_header_hamburger_align_right">Right</we-button>
+        </we-select>
+
         <we-select string="Mobile Alignment"
                    data-name="header_mobile_alignment_opt"
                    data-variable="hamburger-position-mobile"
                    data-reload="/">
-            <we-button data-customize-website-views="" data-customize-website-variable="'left'">Left</we-button>
-            <we-button data-customize-website-views="website.template_header_mobile_align_center, website.template_header_hamburger_mobile_align_center"
-                       data-customize-website-variable="'center'">Center</we-button>
-            <we-button data-customize-website-views="website.template_header_mobile_align_right, website.template_header_hamburger_mobile_align_right"
-                       data-customize-website-variable="'right'">Right</we-button>
+            <we-button data-customize-website-variable="'right'"
+                       data-customize-website-views="">Right</we-button>
+            <we-button data-customize-website-variable="'left'"
+                       data-customize-website-views="website.template_header_mobile_position_left">Left</we-button>
         </we-select>
 
         <we-fontfamilypicker string="Font" data-variable="navbar-font"/>
@@ -1509,16 +1515,12 @@
             <!-- Generic alignment option controling all the template at once. -->
             <!-- Currently needed to be this way as the SCSS variable controls -->
             <!-- the mobile alignement which is the same for all templates. -->
-            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_boxed_opt, header_stretch_opt, header_search_opt, header_sales_one_opt, header_sales_two_opt, header_sales_four_opt, header_sidebar_opt">
+            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_boxed_opt, header_stretch_opt, header_search_opt, header_sales_one_opt, header_sales_two_opt, header_sales_four_opt, header_sidebar_opt">
                 <we-button data-customize-website-views=""
-                           data-customize-website-variable="'left'"
                            data-icon="fa-align-left"/>
-                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center, website.template_header_search_align_center, website.template_header_sales_one_align_center, website.template_header_sales_two_align_center, website.template_header_sales_four_align_center, website.template_header_sidebar_align_center"
-                           data-customize-website-variable="'center'"
-                           data-icon="fa-align-center"
-                           data-dependencies="!header_hamburger_opt"/>
-                <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_boxed_align_right, website.template_header_stretch_align_right, website.template_header_search_align_right, website.template_header_sales_one_align_right, website.template_header_sales_two_align_right, website.template_header_sales_four_align_right, website.template_header_sidebar_align_right"
-                           data-customize-website-variable="'right'"
+                <we-button data-customize-website-views="website.template_header_mobile_align_center, website.template_header_hamburger_mobile_align_center, website.template_header_default_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center, website.template_header_search_align_center, website.template_header_sales_one_align_center, website.template_header_sales_two_align_center, website.template_header_sales_four_align_center, website.template_header_sidebar_align_center"
+                           data-icon="fa-align-center"/>
+                <we-button data-customize-website-views="website.template_header_mobile_align_right, website.template_header_hamburger_mobile_align_right, website.template_header_default_align_right, website.template_header_boxed_align_right, website.template_header_stretch_align_right, website.template_header_search_align_right, website.template_header_sales_one_align_right, website.template_header_sales_two_align_right, website.template_header_sales_four_align_right, website.template_header_sidebar_align_right"
                            data-icon="fa-align-right"/>
             </we-select>
         </we-row>

@@ -1575,15 +1575,24 @@ header {
             // We need to combine both using `calc`. The `border` solution does
             // not work on Safari.
             $padding-size: o-website-value('sidebar-width');
+            $-hamburger-right: o-website-value("hamburger-position") == "right";
             @if o-website-value('layout') != 'full' {
                 $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
             }
-            padding-left: $padding-size;
+            @if $-hamburger-right {
+                padding-right: $padding-size;
+            } @else {
+                padding-left: $padding-size;
+            }
 
             > header {
                 --Offcanvas-horizontal-width: #{o-website-value('sidebar-width')};
 
-                inset: 0 auto 0 0;
+                @if $-hamburger-right {
+                    inset: 0 0 0 auto;
+                } @else {
+                    inset: 0 auto 0 0;
+                }
                 position: fixed;
                 z-index: $zindex-fixed;
                 display: flex;
