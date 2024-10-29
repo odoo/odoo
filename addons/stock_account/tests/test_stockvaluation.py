@@ -4157,3 +4157,30 @@ class TestStockValuation(TestStockValuationBase):
                 {'account_id': self.stock_valuation_account.id, 'debit': 0, 'credit': 1071},
             ]
         )
+
+    def test_internal_location_with_no_company(self):
+        """ An internal location without a company should not be valued """
+        location = self.env['stock.location'].create({
+            'name': 'Internal no company',
+            'usage': 'internal',
+            'company_id': False,
+        })
+        self.assertFalse(location._should_be_valued())
+
+        move = self.env['stock.move'].create({
+            'name': 'Receipt of 1 unit',
+            'product_id': self.product1.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': location.id,
+            'product_uom_qty': 1,
+            'price_unit': 1,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.quantity = 1
+        move.picked = True
+        move._action_done()
+
+        self.assertEqual(move.state, "done")
+        self.assertFalse(move.stock_valuation_layer_ids)
+        self.assertEqual(self.product1.quantity_svl, 0)
