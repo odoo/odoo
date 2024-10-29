@@ -2527,6 +2527,15 @@ describe('Paste', () => {
                         await pasteText(editor, 'http://www.xyz.com');
                     },
                     contentAfter: '<pre>http://www.xyz.com[]</pre>',
+                })
+            });
+            it('Should pad link with zws and put selection after the link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p><a href="http://www.xyz.com">a</a></p><p><a href="http://existing.com">b</a></p>');
+                    },
+                    contentAfter: '<p><a href="http://www.xyz.com">a</a></p><p><a href="http://existing.com">b</a>[]</p>',
                 });
             });
         });
