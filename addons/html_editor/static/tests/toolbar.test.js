@@ -426,7 +426,7 @@ test("toolbar correctly process inheritance buttons chain", async () => {
     expect("button[name='test_btn2']").toHaveAttribute("title", "Test Button 2");
 });
 
-test("toolbar does not evaluate isFormatApplied when namespace does not match", async () => {
+test("toolbar does not evaluate isActive when namespace does not match", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
@@ -438,7 +438,7 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
                     commandId: "test_cmd",
                     label: "Test Button",
                     icon: "fa-square",
-                    isFormatApplied: () => expect.step("image format evaluated"),
+                    isActive: () => expect.step("image format evaluated"),
                 },
             ],
         };

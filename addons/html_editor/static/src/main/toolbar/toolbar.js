@@ -40,8 +40,8 @@ export class Toolbar extends Component {
                                                 run: Function,
                                                 icon: { type: String, optional: true },
                                                 text: { type: String, optional: true },
-                                                isFormatApplied: { type: Function, optional: true },
-                                                hasFormat: { type: Function, optional: true },
+                                                isActive: { type: Function, optional: true },
+                                                isDisabled: { type: Function, optional: true },
                                                 isAvailable: { type: Function, optional: true },
                                             });
                                         }

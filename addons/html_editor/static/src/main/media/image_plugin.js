@@ -111,25 +111,25 @@ export class ImagePlugin extends Plugin {
                 id: "shape_rounded",
                 groupId: "image_shape",
                 commandId: "setImageShapeRounded",
-                isFormatApplied: hasShape(this, "rounded"),
+                isActive: hasShape(this, "rounded"),
             },
             {
                 id: "shape_circle",
                 groupId: "image_shape",
                 commandId: "setImageShapeCircle",
-                isFormatApplied: hasShape(this, "rounded-circle"),
+                isActive: hasShape(this, "rounded-circle"),
             },
             {
                 id: "shape_shadow",
                 groupId: "image_shape",
                 commandId: "setImageShapeShadow",
-                isFormatApplied: hasShape(this, "shadow"),
+                isActive: hasShape(this, "shadow"),
             },
             {
                 id: "shape_thumbnail",
                 groupId: "image_shape",
                 commandId: "setImageShapeThumbnail",
-                isFormatApplied: hasShape(this, "img-thumbnail"),
+                isActive: hasShape(this, "img-thumbnail"),
             },
             {
                 id: "image_padding",
@@ -146,7 +146,7 @@ export class ImagePlugin extends Plugin {
                 commandId: "resizeImage",
                 label: _t("Resize Default"),
                 text: _t("Default"),
-                isFormatApplied: () => this.hasImageSize(""),
+                isActive: () => this.hasImageSize(""),
             },
             {
                 id: "resize_100",
@@ -155,7 +155,7 @@ export class ImagePlugin extends Plugin {
                 commandParams: { size: "100%" },
                 label: _t("Resize Full"),
                 text: "100%",
-                isFormatApplied: () => this.hasImageSize("100%"),
+                isActive: () => this.hasImageSize("100%"),
             },
             {
                 id: "resize_50",
@@ -164,7 +164,7 @@ export class ImagePlugin extends Plugin {
                 commandParams: { size: "50%" },
                 label: _t("Resize Half"),
                 text: "50%",
-                isFormatApplied: () => this.hasImageSize("50%"),
+                isActive: () => this.hasImageSize("50%"),
             },
             {
                 id: "resize_25",
@@ -173,13 +173,13 @@ export class ImagePlugin extends Plugin {
                 commandParams: { size: "25%" },
                 label: _t("Resize Quarter"),
                 text: "25%",
-                isFormatApplied: () => this.hasImageSize("25%"),
+                isActive: () => this.hasImageSize("25%"),
             },
             {
                 id: "image_transform",
                 groupId: "image_transform",
                 commandId: "transformImage",
-                isFormatApplied: () => this.isImageTransformationOpen(),
+                isActive: () => this.isImageTransformationOpen(),
             },
             {
                 id: "image_delete",

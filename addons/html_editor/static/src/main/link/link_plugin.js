@@ -137,7 +137,7 @@ export class LinkPlugin extends Plugin {
                 id: "link",
                 groupId: "link",
                 commandId: "toggleLinkTools",
-                isFormatApplied: isLinkActive,
+                isActive: isLinkActive,
             },
             {
                 id: "unlink",
@@ -148,7 +148,7 @@ export class LinkPlugin extends Plugin {
                 id: "link",
                 groupId: "image_link",
                 commandId: "toggleLinkTools",
-                isFormatApplied: isLinkActive,
+                isActive: isLinkActive,
             },
             {
                 id: "unlink",

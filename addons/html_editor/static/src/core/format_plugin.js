@@ -23,23 +23,6 @@ const allWhitespaceRegex = /^[\s\u200b]*$/;
 function isFormatted(formatPlugin, format) {
     return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
 }
-function hasFormat(formatPlugin) {
-    return () => {
-        const traversedNodes = formatPlugin.dependencies.selection.getTraversedNodes();
-        for (const format of Object.keys(formatsSpecs)) {
-            if (
-                formatsSpecs[format].removeStyle &&
-                formatPlugin.isSelectionFormat(format, traversedNodes)
-            ) {
-                return true;
-            }
-        }
-        return (
-            hasAnyNodesColor(traversedNodes, "color") ||
-            hasAnyNodesColor(traversedNodes, "backgroundColor")
-        );
-    };
-}
 
 export class FormatPlugin extends Plugin {
     static id = "format";
@@ -108,31 +91,31 @@ export class FormatPlugin extends Plugin {
                 id: "bold",
                 groupId: "decoration",
                 commandId: "formatBold",
-                isFormatApplied: isFormatted(this, "bold"),
+                isActive: isFormatted(this, "bold"),
             },
             {
                 id: "italic",
                 groupId: "decoration",
                 commandId: "formatItalic",
-                isFormatApplied: isFormatted(this, "italic"),
+                isActive: isFormatted(this, "italic"),
             },
             {
                 id: "underline",
                 groupId: "decoration",
                 commandId: "formatUnderline",
-                isFormatApplied: isFormatted(this, "underline"),
+                isActive: isFormatted(this, "underline"),
             },
             {
                 id: "strikethrough",
                 groupId: "decoration",
                 commandId: "formatStrikethrough",
-                isFormatApplied: isFormatted(this, "strikeThrough"),
+                isActive: isFormatted(this, "strikeThrough"),
             },
             {
                 id: "remove_format",
                 groupId: "decoration",
                 commandId: "removeFormat",
-                hasFormat: hasFormat(this),
+                isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
             },
         ],
         arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
@@ -179,6 +162,25 @@ export class FormatPlugin extends Plugin {
         const selectedNodes = traversedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
         return selectedNodes.length && selectedNodes.every((n) => isFormatted(n, this.editable));
+    }
+
+    // @todo: issues:
+    // - this method mixes every (isSelectionFormat) with some (hasAnyNodesColor)
+    // - the calls to hasAnyColor should probably be replaced by calls to predicates
+    //   registered as resources (e.g. by the ColorPlugin).
+    hasAnyFormat(traversedNodes) {
+        for (const format of Object.keys(formatsSpecs)) {
+            if (
+                formatsSpecs[format].removeStyle &&
+                this.isSelectionFormat(format, traversedNodes)
+            ) {
+                return true;
+            }
+        }
+        return (
+            hasAnyNodesColor(traversedNodes, "color") ||
+            hasAnyNodesColor(traversedNodes, "backgroundColor")
+        );
     }
 
     formatSelection(...args) {

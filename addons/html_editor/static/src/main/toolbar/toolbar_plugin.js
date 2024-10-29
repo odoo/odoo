@@ -261,12 +261,11 @@ export class ToolbarPlugin extends Plugin {
         for (const buttonGroup of this.buttonGroups) {
             if (buttonGroup.namespace === this.state.namespace) {
                 for (const button of buttonGroup.buttons) {
-                    this.state.buttonsActiveState[button.id] = button.isFormatApplied?.(
+                    this.state.buttonsActiveState[button.id] = button.isActive?.(selection, nodes);
+                    this.state.buttonsDisabledState[button.id] = button.isDisabled?.(
                         selection,
                         nodes
                     );
-                    this.state.buttonsDisabledState[button.id] =
-                        button.hasFormat != null && !button.hasFormat?.(selection);
                     this.state.buttonsAvailableState[button.id] =
                         button.isAvailable === undefined || button.isAvailable(selection);
                 }

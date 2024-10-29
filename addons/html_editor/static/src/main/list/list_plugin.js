@@ -75,19 +75,19 @@ export class ListPlugin extends Plugin {
                 id: "bulleted_list",
                 groupId: "list",
                 commandId: "toggleListUL",
-                isFormatApplied: isListActive("UL"),
+                isActive: isListActive("UL"),
             },
             {
                 id: "numbered_list",
                 groupId: "list",
                 commandId: "toggleListOL",
-                isFormatApplied: isListActive("OL"),
+                isActive: isListActive("OL"),
             },
             {
                 id: "checklist",
                 groupId: "list",
                 commandId: "toggleListCL",
-                isFormatApplied: isListActive("CL"),
+                isActive: isListActive("CL"),
             },
         ],
         powerboxItems: [
