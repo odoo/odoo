@@ -46,7 +46,7 @@ export class ImportAction extends Component {
 
         this.state = useState({
             filename: undefined,
-            fileLength: 0,
+            numRows: 0,
             importMessages: [],
             importProgress: {
                 value: 0,
@@ -125,7 +125,7 @@ export class ImportAction extends Component {
     }
 
     get totalToImport() {
-        return this.state.fileLength - parseInt(this.importOptions.skip);
+        return this.state.numRows - parseInt(this.importOptions.skip);
     }
 
     get totalSteps() {
@@ -140,10 +140,10 @@ export class ImportAction extends Component {
         return this.state.filename !== undefined;
     }
 
-    // Activate the batch configuration panel only if the file length > 100. (In order to let the user choose
+    // Activate the batch configuration panel only if the number of rows > 100. (In order to let the user choose
     // the batch size even for medium size file. Could be useful to reduce the batch size for complex models).
     get isBatched() {
-        return this.state.fileLength > 100;
+        return this.state.numRows > 100;
     }
 
     async onOptionChanged(name, value, fieldName = null) {
@@ -151,8 +151,8 @@ export class ImportAction extends Component {
         const result = await this.model.setOption(name, value, fieldName);
         if (result) {
             const { res, error } = result;
-            if (!error && res.file_length) {
-                this.state.fileLength = res.file_length;
+            if (!error && res.num_rows) {
+                this.state.numRows = res.num_rows;
             }
         }
         this.model.unblock();
@@ -182,7 +182,7 @@ export class ImportAction extends Component {
         if (error) {
             this.state.previewError = error;
         } else {
-            this.state.fileLength = res.file_length;
+            this.state.numRows = res.num_rows;
             this.state.previewError = undefined;
         }
         this.state.isTested = false;

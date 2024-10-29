@@ -1027,11 +1027,11 @@ class Base_ImportImport(models.TransientModel):
         self.ensure_one()
         fields_tree = self.get_fields_tree(self.res_model)
         try:
-            file_length, rows = self._read_file(options)
+            file_length, data_rows = self._read_file(options)
             if file_length <= 0:
                 raise ImportValidationError(_("Import file has no content or is corrupt"))
 
-            preview = rows[:count]
+            preview = data_rows[:count]
 
             # Get file headers
             if options.get('has_headers') and preview:
@@ -1094,7 +1094,7 @@ class Base_ImportImport(models.TransientModel):
                     batch = len(preview) > batch_cutoff
                 else:
                     batch = bool(next(
-                        itertools.islice(rows, batch_cutoff - count, None),
+                        itertools.islice(data_rows, batch_cutoff - count, None),
                         None
                     ))
 
@@ -1108,7 +1108,7 @@ class Base_ImportImport(models.TransientModel):
                 'advanced_mode': advanced_mode,
                 'debug': self.env.user.has_group('base.group_no_one'),
                 'batch': batch,
-                'file_length': file_length
+                'num_rows': len(data_rows),
             }
         except Exception as error:
             # Due to lazy generators, UnicodeDecodeError (for
