@@ -1,10 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
-import { closest } from "@web/core/utils/ui";
+import { closest, touching } from "@web/core/utils/ui";
 
 export class DropZonePlugin extends Plugin {
     static name = "dropzone";
     static dependencies = ["history"];
-    static shared = ["displayDropZone", "dropElement"];
+    static shared = ["displayDropZone", "dropElement", "dragElement"];
 
     displayDropZone(selector) {
         this.clearDropZone();
@@ -37,8 +37,25 @@ export class DropZonePlugin extends Plugin {
         }
     }
 
+    dragElement(element) {
+        const { x, y, height, width } = element.getClientRects()[0];
+        const position = { x, y, height, width };
+        const dropzoneEl = closest(touching(this.dropZoneElements, position), position);
+        if (this.currentDropzoneEl !== dropzoneEl) {
+            this.currentDropzoneEl?.classList.remove("o_dropzone_highlighted");
+            this.currentDropzoneEl = dropzoneEl;
+            if (dropzoneEl) {
+                dropzoneEl.classList.add("o_dropzone_highlighted");
+            }
+        }
+    }
+
     dropElement(elementToAdd, position) {
-        const dropZone = closest(this.dropZoneElements, position);
+        const dropZone = closest(touching(this.dropZoneElements, position), position);
+        if (!dropZone) {
+            this.clearDropZone();
+            return;
+        }
 
         let target = dropZone.previousSibling;
         let addAfter = true;
