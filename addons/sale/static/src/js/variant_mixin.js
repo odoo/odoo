@@ -139,6 +139,7 @@ var VariantMixin = {
                     var $input = $('<input>', {
                         type: 'text',
                         'data-custom_product_template_attribute_value_id': attributeValueId,
+                        'name': "custom_product_template_attribute_value_id-" + attributeValueId,
                         'data-attribute_value_name': attributeValueName,
                         class: 'variant_custom_value form-control mt-2'
                     });
