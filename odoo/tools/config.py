@@ -479,23 +479,13 @@ class configmanager:
             opt.config or os.environ.get('ODOO_RC') or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
-        # Verify that we want to log or not, if not the output will go to stdout
-        if self.options['logfile'] in ('None', 'False'):
-            self.options['logfile'] = False
-        # the same for the pidfile
-        if self.options['pidfile'] in ('None', 'False'):
-            self.options['pidfile'] = False
-        # the same for the test_tags
-        if self.options['test_tags'] == 'None':
-            self.options['test_tags'] = None
-        # and the server_wide_modules
-        if self.options['server_wide_modules'] in ('', 'None', 'False'):
+        if not self.options['server_wide_modules']:
             self.options['server_wide_modules'] = 'base,web,rpc'
 
         keys = [
             option_name for option_name, option
             in self.options_index.items()
-            if option.cli_loadable and option.file_loadable
+            if option.cli_loadable
             if option.action != 'append'
         ]
 
@@ -504,9 +494,6 @@ class configmanager:
             # action=append requiring a real default, so we cannot use the my_default workaround)
             if getattr(opt, arg, None) is not None:
                 self.options[arg] = getattr(opt, arg)
-            # ... or keep, but cast, the config file value.
-            elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
-                self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         if isinstance(self.options['log_handler'], str):
             self.options['log_handler'] = self.options['log_handler'].split(',')
@@ -679,10 +666,14 @@ class configmanager:
                     continue
                 if not option.file_loadable:
                     continue
-                if value=='True' or value=='true':
+                if value == 'None':
+                    value = None
+                elif value == 'True' or value == 'true':
                     value = True
-                if value=='False' or value=='false':
+                elif value == 'False' or value == 'false':
                     value = False
+                elif option.type in optparse.Option.TYPE_CHECKER:
+                    value = optparse.Option.TYPE_CHECKER[option.type](option, name, value)
                 self.options[name] = value
         except IOError:
             pass
