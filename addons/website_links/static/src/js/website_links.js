@@ -188,10 +188,14 @@ var RecentLinks = publicWidget.Widget.extend({
             });
             self._updateNotification();
             self._updateFilters(filter);
-        }, function () {
+            })
+            .catch(function () {
                 const message = _t("Unable to get recent links");
-                self.el.append(`<div class="alert alert-danger">${message}</div>`);
-        });
+                self.el.insertAdjacentHTML(
+                    "beforeend",
+                    `<div class="alert alert-danger">${message}</div>`
+                );
+            });
     },
     /**
      * @private
@@ -289,12 +293,16 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 
         // Recent Links Widgets
         this.recentLinks = new RecentLinks(this.el);
-        defs.push(this.recentLinks.attachTo(this.el.querySelector("#o_website_links_recent_links")));
+        defs.push(
+            this.recentLinks.attachTo(this.el.querySelector("#o_website_links_recent_links"))
+        );
         this.recentLinks.getRecentLinks("newest");
 
         this.url_copy_animating = false;
 
-        Array.from(document.querySelectorAll("[data-bs-toggle='tooltip']")).forEach(function(node) {
+        Array.from(document.querySelectorAll("[data-bs-toggle='tooltip']")).forEach(function (
+            node
+        ) {
             Tooltip.getOrCreateInstance(node);
         });
 
@@ -366,15 +374,19 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
             restoreLoadingBtn();
             if ('error' in result) {
                 // Handle errors
+                const erroMessages = {
+                    empty: _t("The URL is empty."),
+                    notFound: _t("URL not found (404)"),
+                    onError: _t(
+                        "An error occur while trying to generate your link. Try again later."
+                    ),
+                };
                 if (result.error === 'empty_url') {
-                    notificationElement.innerHTML =
-                        "<div class='alert alert-danger'>The URL is empty.</div>";
+                    notificationElement.innerHTML = `<div class="alert alert-danger">${erroMessages.empty}</div>`;
                 } else if (result.error === "url_not_found") {
-                    notificationElement.innerHTML =
-                        "<div class='alert alert-danger'>URL not found (404)</div>";
+                    notificationElement.innerHTML = `<div class="alert alert-danger">${erroMessages.notFound}</div>`;
                 } else {
-                    notificationElement.innerHTML =
-                        "<div class='alert alert-danger'>An error occur while trying to generate your link. Try again later.</div>";
+                    notificationElement.innerHTML = `<div class="alert alert-danger">${erroMessages.onError}</div>`;
                 }
             } else {
                 // Link generated, clean the form and show the link

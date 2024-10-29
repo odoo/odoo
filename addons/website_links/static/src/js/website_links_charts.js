@@ -73,7 +73,7 @@ var BarChart = publicWidget.Widget.extend({
                 }
             }
         };
-        var canvas = this.el.querySelector("canvas");
+        const canvas = this.el.querySelector("canvas");
         var context = canvas.getContext('2d');
         new Chart(context, config);
     },
@@ -148,7 +148,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
         this.charts = {};
 
         // Get the code of the link
-        var linkID = parseInt(this.el.querySelector("#link_id").value);
+        const linkID = parseInt(this.el.querySelector("#link_id").value);
         this.links_domain = ['link_id', '=', linkID];
 
         var defs = [];

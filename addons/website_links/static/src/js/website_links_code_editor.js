@@ -47,7 +47,7 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
         // Clear error message and hide error element
         const errorElement = this.el.querySelector(".o_website_links_code_error");
         errorElement.innerHTML = "";
-        errorElement.style.display = "none";
+        errorElement.classList.add("d-none");
 
         // Remove existing form element
         this.el.querySelector("#o_website_links_code form")?.remove();
@@ -66,7 +66,7 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
             // Show action again
             this.el.querySelector(".o_website_links_edit_code").style.display = "";
             this.el.querySelector(".copy-to-clipboard").style.display = "";
-            this.el.querySelector(".o_website_links_edit_tools").style.display = "none";
+            this.el.querySelector(".o_website_links_edit_tools").classList.add("d-none");
         }
     },
 
@@ -123,9 +123,14 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
             '"/><input type="text" id="new_code" value="' +
             linksCodeEl.innerHTML +
             '"/></form>';
-        this.el.querySelector(".o_website_links_edit_code").style.display = "none";
-        this.el.querySelector(".copy-to-clipboard").style.display = "none";
-        this.el.querySelector(".o_website_links_edit_tools").style.display = "";
+        this.el.querySelector(".o_website_links_edit_code").classList.add("d-none");
+        this.el.querySelector(".copy-to-clipboard").classList.add("d-none");
+        const editTools = this.el
+            .querySelector(".o_website_links_edit_tools")
+            .classList.contains("d-none");
+        editTools
+            ? this.el.querySelector(".o_website_links_edit_tools").classList.remove("d-none")
+            : "";
     },
     /**
      * @private
@@ -133,10 +138,10 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
      */
     _onCancelEditClick: function (ev) {
         ev.preventDefault();
-        this.el.querySelector(".o_website_links_edit_code").style.display = "";
-        this.el.querySelector(".copy-to-clipboard").style.display = "";
-        this.el.querySelector(".o_website_links_edit_tools").style.display = "none";
-        this.el.querySelector(".o_website_links_code_error").style.display = "none";
+        this.el.querySelector(".o_website_links_edit_code").classList.remove("d-none");
+        this.el.querySelector(".copy-to-clipboard").classList.remove("d-none");
+        this.el.querySelector(".o_website_links_edit_tools").classList.add("d-none");
+        this.el.querySelector(".o_website_links_code_error").classList.add("d-none");
 
         const oldCode = this.el.querySelector("#edit-code-form #init_code").value;
         this.el.querySelector("#o_website_links_code").innerHTML = oldCode;
