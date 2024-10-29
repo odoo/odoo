@@ -1,12 +1,12 @@
-import { _t } from '@web/core/l10n/translation';
-import { Dialog } from '@web/core/dialog/dialog';
+import { Component, useState, useSubEnv } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
+import { Dialog } from '@web/core/dialog/dialog';
+import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { useService } from '@web/core/utils/hooks';
-import { Component, useState, useSubEnv } from '@odoo/owl';
-import { ProductCard } from '../product_card/product_card';
 import { ProductCombo } from '../models/product_combo';
 import { ProductTemplateAttributeLine } from '../models/product_template_attribute_line';
+import { ProductCard } from '../product_card/product_card';
 import {
     ProductConfiguratorDialog
 } from '../product_configurator_dialog/product_configurator_dialog';

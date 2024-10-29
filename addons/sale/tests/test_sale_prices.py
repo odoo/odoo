@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from freezegun import freeze_time
 from datetime import timedelta
+
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, tagged
-from odoo.tools import float_compare, mute_logger, float_round
+from odoo.tools import float_compare, float_round, mute_logger
 
 from odoo.addons.sale.tests.common import SaleCommon
 

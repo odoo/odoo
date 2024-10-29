@@ -11,7 +11,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_stripe import const, utils as stripe_utils
+from odoo.addons.payment_stripe import const
+from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.controllers.main import StripeController
 from odoo.addons.payment_stripe.controllers.onboarding import OnboardingController
 

@@ -2,7 +2,8 @@
 
 import logging
 
-from odoo.tests import HttpCase, tagged, loaded_demo_data
+from odoo.tests import HttpCase, loaded_demo_data, tagged
+
 
 _logger = logging.getLogger(__name__)
 

@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 
-from odoo import Command
-from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website.tools import MockRequest
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase, tagged, loaded_demo_data
+from odoo.fields import Command
+from odoo.tests import HttpCase, loaded_demo_data, tagged
+
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.controllers.main import WebsiteSale
+
 
 _logger = logging.getLogger(__name__)
 

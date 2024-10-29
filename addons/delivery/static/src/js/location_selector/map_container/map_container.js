@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {
     LocationSchedule
 } from '@delivery/js/location_selector/location_schedule/location_schedule';

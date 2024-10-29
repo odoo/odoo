@@ -1,13 +1,12 @@
-/** @odoo-module **/
-
-import { Mutex } from "@web/core/utils/concurrency";
-import publicWidget from "@web/legacy/js/public/public_widget";
-import { cookie } from "@web/core/browser/cookie";;
-import VariantMixin from "@website_sale/js/sale_variant_mixin";
-import website_sale_utils from "@website_sale/js/website_sale_utils";
+import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { Mutex } from "@web/core/utils/concurrency";
 import { renderToString } from "@web/core/utils/render";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import VariantMixin from "@website_sale/js/sale_variant_mixin";
+import website_sale_utils from "@website_sale/js/website_sale_utils";
+;
 
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
 

@@ -1,7 +1,3 @@
-/** @odoo-module **/
-
-import { rpc } from '@web/core/network/rpc';
-import { serializeDateTime } from '@web/core/l10n/dates';
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
@@ -10,6 +6,8 @@ import {
     ProductConfiguratorDialog
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
 import { serializeComboItem } from '@sale/js/sale_utils';
+import { serializeDateTime } from '@web/core/l10n/dates';
+import { rpc } from '@web/core/network/rpc';
 import { WebsiteSale } from '@website_sale/js/website_sale';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 

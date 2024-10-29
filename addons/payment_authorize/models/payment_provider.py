@@ -11,6 +11,7 @@ from odoo.fields import Command
 from odoo.addons.payment_authorize import const
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 
+
 _logger = logging.getLogger(__name__)
 
 

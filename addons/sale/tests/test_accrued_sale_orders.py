@@ -1,7 +1,8 @@
-from odoo import Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged, freeze_time
 from odoo.exceptions import UserError
+from odoo.fields import Command
+from odoo.tests import freeze_time, tagged
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @freeze_time('2022-01-01')

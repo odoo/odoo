@@ -1,7 +1,5 @@
-/** @odoo-module **/
-
-import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('shop_wishlist', {
     checkDelay: 250,

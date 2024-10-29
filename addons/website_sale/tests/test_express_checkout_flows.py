@@ -2,7 +2,7 @@
 
 from werkzeug import urls
 
-from odoo import Command
+from odoo.fields import Command
 from odoo.http import root
 from odoo.tests import tagged
 

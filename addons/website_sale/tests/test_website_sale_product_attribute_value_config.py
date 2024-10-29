@@ -3,7 +3,9 @@
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
+    TestSaleProductAttributeValueCommon,
+)
 
 
 @tagged('post_install', '-at_install', 'product_attribute')

@@ -1,10 +1,9 @@
-/** @odoo-module */
 
-import publicWidget from '@web/legacy/js/public/public_widget';
-import { KeepLast } from "@web/core/utils/concurrency";
-import { debounce } from "@web/core/utils/timing";
-import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { renderToElement } from "@web/core/utils/render";
+import { debounce } from "@web/core/utils/timing";
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.AddressForm = publicWidget.Widget.extend({
     selector: '.oe_cart .checkout_autoformat',

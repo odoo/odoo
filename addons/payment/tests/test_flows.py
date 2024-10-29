@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import urlparse, parse_qs
 from unittest.mock import patch
+from urllib.parse import parse_qs, urlparse
 
 from freezegun import freeze_time
 
-from odoo.tests import tagged, JsonRpcException
+from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.controllers.portal import PaymentPortal

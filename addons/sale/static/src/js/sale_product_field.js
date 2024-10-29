@@ -1,21 +1,19 @@
-/** @odoo-module **/
-
-import { _t } from "@web/core/l10n/translation";
-import { useEffect } from '@odoo/owl';
-import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { serializeDateTime } from "@web/core/l10n/dates";
-import { x2ManyCommands } from "@web/core/orm_service";
-import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
-import { useService } from "@web/core/utils/hooks";
 import {
     ProductLabelSectionAndNoteField,
     productLabelSectionAndNoteField,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
-import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
+import { useEffect } from '@odoo/owl';
+import { WarningDialog } from "@web/core/errors/error_dialogs";
+import { serializeDateTime } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { x2ManyCommands } from "@web/core/orm_service";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { uuid } from "@web/views/utils";
 import { ComboConfiguratorDialog } from "./combo_configurator_dialog/combo_configurator_dialog";
 import { ProductCombo } from "./models/product_combo";
+import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
 import { getLinkedSaleOrderLines, serializeComboItem } from "./sale_utils";
 
 async function applyProduct(record, product) {

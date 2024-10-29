@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-
 from datetime import datetime
 
 from werkzeug.exceptions import Forbidden, NotFound
@@ -12,7 +11,15 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
-from odoo.tools import clean_context, float_round, groupby, lazy, single_email_re, str2bool, SQL
+from odoo.tools import (
+    SQL,
+    clean_context,
+    float_round,
+    groupby,
+    lazy,
+    single_email_re,
+    str2bool,
+)
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
 

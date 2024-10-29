@@ -6,7 +6,13 @@ import json
 
 from odoo import _, api, models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
-from odoo.tools.pdf import NameObject, NumberObject, PdfFileReader, PdfFileWriter, createStringObject
+from odoo.tools.pdf import (
+    NameObject,
+    NumberObject,
+    PdfFileReader,
+    PdfFileWriter,
+    createStringObject,
+)
 
 
 class IrActionsReport(models.Model):

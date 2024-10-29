@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { queryOne } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";

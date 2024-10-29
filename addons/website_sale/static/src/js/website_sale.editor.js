@@ -1,12 +1,10 @@
-/** @odoo-module **/
-
-import options from "@web_editor/js/editor/snippets.options";
-import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import "@website/js/editor/snippets.options";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
+import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import options from "@web_editor/js/editor/snippets.options";
+import "@website/js/editor/snippets.options";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**

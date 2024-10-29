@@ -1,19 +1,17 @@
-/** @odoo-module **/
-
-import { registry } from '@web/core/registry';
-import { CharField } from '@web/views/fields/char/char_field';
 import {
+    ProductLabelSectionAndNoteListRender,
     productLabelSectionAndNoteOne2Many,
     ProductLabelSectionAndNoteOne2Many,
-    ProductLabelSectionAndNoteListRender,
 } from '@account/components/product_label_section_and_note_field/product_label_section_and_note_field';
 import {
     listSectionAndNoteText,
+    ListSectionAndNoteText,
     sectionAndNoteFieldOne2Many,
     sectionAndNoteText,
-    ListSectionAndNoteText,
     SectionAndNoteText,
 } from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
+import { registry } from '@web/core/registry';
+import { CharField } from '@web/views/fields/char/char_field';
 
 export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRender {
     static recordRowTemplate = 'sale.ListRenderer.RecordRow';

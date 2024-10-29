@@ -1,11 +1,9 @@
-/** @odoo-module **/
-
-import { goToCart } from '@website_sale/js/tours/tour_utils';
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
+import { goToCart } from '@website_sale/js/tours/tour_utils';
 
 
 registerWebsitePreviewTour('shop_customize', {
