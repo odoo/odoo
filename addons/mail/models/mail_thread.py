@@ -3108,7 +3108,7 @@ class MailThread(models.AbstractModel):
         :param record message: <mail.message> record being notified. May be
           void as 'msg_vals' superseeds it;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
 
         Kwargs allow to pass various parameters that are given to sub notification
         methods. See those methods for more details about supported parameters.
@@ -3148,12 +3148,12 @@ class MailThread(models.AbstractModel):
             # and send the <mail.mail>, <mail.push> and the <bus.bus> notifications
             self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
             self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
-            self._notify_thread_by_web_push(message, recipients_data, msg_vals, **kwargs)
+            self._notify_thread_by_web_push(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
         return recipients_data
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
-        """ Notificaty recipients inbox of a message. It does two main things :
+        """ Notify recipients inbox of a message. It is done in two main steps
 
           * create inbox notifications for users;
           * send bus notifications;
@@ -3161,20 +3161,10 @@ class MailThread(models.AbstractModel):
         :param record message: <mail.message> record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
-          records formatted like [
-          {
-            'active': partner.active;
-            'id': id of the res.partner being recipient to notify;
-            'is_follower': follows the message related document;
-            'lang': its lang;
-            'groups': res.group IDs if linked to a user;
-            'notif': 'inbox', 'email', 'sms' (SMS App);
-            'share': is partner a customer (partner.partner_share);
-            'type': partner usage ('customer', 'portal', 'user');
-            'ushare': are users shared (if users, all users are shared);
-          }, {...}]. See ``MailThread._notify_get_recipients()``;
+          records formatted like a list of dicts containing information. See
+          ``MailThread._notify_get_recipients()``;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         """
         inbox_pids_uids = sorted(
             [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
@@ -3222,20 +3212,10 @@ class MailThread(models.AbstractModel):
         :param record message: <mail.message> record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
-          records formatted like [
-          {
-            'active': partner.active;
-            'id': id of the res.partner being recipient to notify;
-            'is_follower': follows the message related document;
-            'lang': its lang;
-            'groups': res.group IDs if linked to a user;
-            'notif': 'inbox', 'email', 'sms' (SMS App);
-            'share': is partner a customer (partner.partner_share);
-            'type': partner usage ('customer', 'portal', 'user');
-            'ushare': are users shared (if users, all users are shared);
-          }, {...}]. See ``MailThread._notify_get_recipients()``;
+          records formatted like a list of dicts containing information. See
+          ``MailThread._notify_get_recipients()``;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
 
         :param bool mail_auto_delete: delete notification emails once sent;
 
@@ -3362,7 +3342,9 @@ class MailThread(models.AbstractModel):
         an evaluation context to render the notification layout.
 
         :param message: ``mail.message`` record to notify;
-        :param list recipients_data: see ``MailThread._notify_get_recipients``;
+        :param list recipients_data: list of recipients data based on <res.partner>
+          records formatted like a list of dicts containing information. See
+          ``MailThread._notify_get_recipients()``;
         :param msg_vals: dictionary of values used to create the message. If
           given it may be used to access values related to ``message``;
 
@@ -3452,7 +3434,7 @@ class MailThread(models.AbstractModel):
         :param record message: <mail.message> record being notified. May be
           void as 'msg_vals' superseeds it;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
         :param record force_email_company: <res.company> record used when rendering
@@ -3549,14 +3531,15 @@ class MailThread(models.AbstractModel):
         :param dict recipients_group: a dict containing data for the recipients,
           see @ _notify_get_recipients_groups;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         :param dict render_values: values to render the notification layout;
 
         At this point expected values are
           render_values: company, is_discussion, lang, message, model_description,
                          record, record_name, signature, subtype, tracking_values,
                          website_url
-          recipients_group: button_access, has_button_access, recipients
+          recipients_group: active, button_access, has_button_access,
+                            notification_group_name, recipients
 
         :return str: rendered complete layout;
         """
@@ -3651,22 +3634,14 @@ class MailThread(models.AbstractModel):
         duplicated notifications in case of a mention in a channel of `chat` type.
 
         :param message: ``mail.message`` record to notify;
-        :param recipients_data: list of recipients information (based on res.partner
-          records), formatted like
-            [{'active': partner.active;
-              'id': id of the res.partner being recipient to notify;
-              'groups': res.group IDs if linked to a user;
-              'notif': 'inbox', 'email', 'sms' (SMS App);
-              'share': partner.partner_share;
-              'type': 'customer', 'portal', 'user;'
-             }, {...}].
-          See ``MailThread._notify_get_recipients``;
+        :param list recipients_data: list of recipients data based on <res.partner>
+          records formatted like a list of dicts containing information. See
+          ``MailThread._notify_get_recipients()``;
         :param msg_vals: dictionary of values used to create the message. If given it
           may be used to access values related to ``message`` without accessing it
           directly. It lessens query count in some optimized use cases by avoiding
           access message content in db;
         """
-
         msg_vals = dict(msg_vals or {})
         partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
         if not partner_ids:
@@ -3773,7 +3748,7 @@ class MailThread(models.AbstractModel):
         :param record message: <mail.message> record being notified. May be
           void as 'msg_vals' superseeds it;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
 
         Kwargs allow to pass various parameters that are used by sub notification
         methods. See those methods for more details about supported parameters.
@@ -3797,11 +3772,13 @@ class MailThread(models.AbstractModel):
             'active': partner.active;
             'id': id of the res.partner being recipient to notify;
             'is_follower': follows the message related document;
-            'lang': its lang;
+            'lang': partner lang;
             'groups': res.group IDs if linked to a user;
             'notif': 'inbox', 'email', 'sms' (SMS App);
             'share': is partner a customer (partner.partner_share);
             'type': partner usage ('customer', 'portal', 'user');
+            'uid': user ID (in case of multiple users, internal then first found
+                by ID);)
             'ushare': are users shared (if users, all users are shared);
           }, {...}]
         """
@@ -3891,7 +3868,7 @@ class MailThread(models.AbstractModel):
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
 
         :return: list of groups definition
         """
@@ -3934,7 +3911,7 @@ class MailThread(models.AbstractModel):
 
         :param list groups: recipients groups;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
 
@@ -3972,28 +3949,18 @@ class MailThread(models.AbstractModel):
         :param record message: <mail.message> record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
-          records formatted like [
-          {
-            'active': partner.active;
-            'id': id of the res.partner being recipient to notify;
-            'is_follower': follows the message related document;
-            'lang': its lang;
-            'groups': res.group IDs if linked to a user;
-            'notif': 'inbox', 'email', 'sms' (SMS App);
-            'share': is partner a customer (partner.partner_share);
-            'type': partner usage ('customer', 'portal', 'user');
-            'ushare': are users shared (if users, all users are shared);
-          }, {...}]. See ``MailThread._notify_get_recipients()``;
+          records formatted like a list of dicts containing information. See
+          ``MailThread._notify_get_recipients()``;
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
 
         :return list: list of groups (see '_notify_get_recipients_groups')
           with 'recipients' key filled with matching partners, like
             [{
                 'active': True,
-                'button_access': {},
+                'button_access': {'url': 'https://odoo.com/url', 'title': 'Title'},
                 'has_button_access': False,
                 'notification_group_name': 'user',
                 'recipients': [11],
