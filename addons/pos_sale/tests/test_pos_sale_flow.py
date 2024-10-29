@@ -820,6 +820,25 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentAmount', login="accountman")
         self.assertEqual(sale_order.amount_to_invoice, 80.0, "Downpayment amount not considered!")
 
+        self.assertEqual(sale_order.order_line[2].price_unit, 20)
+
+        # Update delivered quantity of SO line
+        sale_order.order_line[0].write({'qty_delivered': 1.0})
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+
+        # Let's do the invoice for the remaining amount
+        payment = self.env['sale.advance.payment.inv'].with_context(context).create({})
+        payment.create_invoices()
+
+        # Confirm all invoices
+        sale_order.invoice_ids.action_post()
+        self.assertEqual(sale_order.order_line[2].price_unit, 20)
+
     def test_downpayment_with_fixed_taxed_product(self):
         tax_1 = self.env['account.tax'].create({
             'name': '10',
