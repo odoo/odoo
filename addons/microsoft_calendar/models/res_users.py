@@ -32,7 +32,7 @@ class User(models.Model):
 
         self.ensure_one()
         if self.sudo().microsoft_calendar_rtoken and not self._is_microsoft_calendar_valid():
-            self._refresh_microsoft_calendar_token()
+            self._refresh_microsoft_calendar_token(service=False)
         return self.sudo().microsoft_calendar_token
 
     def _is_microsoft_calendar_valid(self):
