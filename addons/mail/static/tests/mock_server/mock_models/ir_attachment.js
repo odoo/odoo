@@ -47,6 +47,8 @@ export class IrAttachment extends webModels.IrAttachment {
                     attachment.res_id && attachment.model !== "mail.compose.message"
                         ? { id: attachment.res_id, model: attachment.res_model }
                         : false,
+                type: attachment.type,
+                url: attachment.url,
             };
             const voice = DiscussVoiceMetadata._filter([["attachment_id", "=", attachment.id]])[0];
             if (voice) {
