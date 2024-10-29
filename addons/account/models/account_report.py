@@ -3,6 +3,7 @@
 
 import ast
 import re
+import json
 from collections import defaultdict
 
 from odoo import models, fields, api, _, osv, Command
@@ -301,6 +302,9 @@ class AccountReportLine(models.Model):
     _order = 'sequence, id'
 
     name = fields.Char(string="Name", translate=True, required=True)
+    json_name = fields.Json(string="Technical Field for the ",
+                            compute='_compute_json_name', #dummy compute
+                            inverse='_inverse_json_name')
     expression_ids = fields.One2many(string="Expressions", comodel_name='account.report.expression', inverse_name='report_line_id')
     report_id = fields.Many2one(
         string="Parent Report",
@@ -346,6 +350,18 @@ class AccountReportLine(models.Model):
     _sql_constraints = [
         ('code_uniq', 'unique (report_id, code)', "A report line with the same code already exists."),
     ]
+
+    def _compute_json_name(self):
+        """Dummy compute"""
+        for l in self:
+            l.json_name='{}'
+
+    def _inverse_json_name(self):
+        for rec in self:
+            json_name = json.loads(rec.json_name)
+            for key in json_name:
+                # TODO: catch error or check if the language is active
+                rec.with_context(lang=key).name = json_name[key]
 
     @api.depends('parent_id.hierarchy_level')
     def _compute_hierarchy_level(self):
