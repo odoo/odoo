@@ -49,6 +49,7 @@ patch(ControlButtons.prototype, {
         const orderUuid = this.pos.getOrder().uuid;
         this.pos.getOrder().setBooked(true);
         this.pos.showScreen("FloorScreen");
+<<<<<<< saas-18.1:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.js
         document.addEventListener(
             "click",
             async (ev) => {
@@ -63,6 +64,40 @@ patch(ControlButtons.prototype, {
             },
             { once: true }
         );
+||||||| a9f05eca0eb3c392c60178cc5a461aa96824651f:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js
+        document.addEventListener(
+            "click",
+            async (ev) => {
+                if (this.pos.isOrderTransferMode) {
+                    this.pos.isOrderTransferMode = false;
+                    const tableElement = ev.target.closest(".table");
+                    if (!tableElement) {
+                        return;
+                    }
+                    const table = this.pos.getTableFromElement(tableElement);
+                    await this.pos.transferOrder(orderUuid, table);
+                    this.pos.setTableFromUi(table);
+                }
+            },
+            { once: true }
+        );
+=======
+        const onClickWhileTransfer = async (ev) => {
+            if (ev.target.closest(".button-floor")) {
+                return;
+            }
+            this.pos.isOrderTransferMode = false;
+            const tableElement = ev.target.closest(".table");
+            if (!tableElement) {
+                return;
+            }
+            const table = this.pos.getTableFromElement(tableElement);
+            await this.pos.transferOrder(orderUuid, table);
+            this.pos.setTableFromUi(table);
+            document.removeEventListener("click", onClickWhileTransfer);
+        };
+        document.addEventListener("click", onClickWhileTransfer);
+>>>>>>> 51a6f6405c11c86aa1de1d3c9005107621a623fe:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js
     },
 });
 patch(ControlButtons, {
