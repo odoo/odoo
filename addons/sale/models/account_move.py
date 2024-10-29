@@ -98,10 +98,12 @@ class AccountMove(models.Model):
         # OVERRIDE
         # Auto-reconcile the invoice with payments coming from transactions.
         # It's useful when you have a "paid" sale order (using a payment transaction) and you invoice it later.
+        # Payments without a journal entry line cannot be reconciled so they'll have to be processed separately.
         posted = super()._post(soft)
 
         for invoice in posted.filtered(lambda move: move.is_invoice()):
             payments = invoice.mapped('transaction_ids.payment_id').filtered(lambda x: x.state == 'in_process')
+            invoice.matched_payment_ids += payments.filtered(lambda p: not p.move_id)
             move_lines = payments.move_id.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable') and not line.reconciled)
             for line in move_lines:
                 invoice.js_assign_outstanding_line(line.id)

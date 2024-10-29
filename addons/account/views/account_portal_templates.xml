@@ -123,7 +123,7 @@
                     <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
                     <t t-set="title">
                         <h2 class="mb-0 text-break mx-auto">
-                            <span t-field="invoice.amount_total"/>
+                            <span t-field="invoice.amount_residual"/>
                         </h2>
                         <div class="my-1 w-100" t-if="payment_state in ('not_paid', 'partial')">
                             <div class="alert alert-success px-2 py-1 text-center mb-2" t-if="payment_state == 'partial'">

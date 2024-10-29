@@ -194,7 +194,8 @@
                                             <!--Payments-->
                                             <t t-if="print_with_payments">
                                                 <t t-if="o.payment_state != 'invoicing_legacy'">
-                                                    <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
+                                                    <t t-set="existing_payments" t-value="o.sudo().invoice_payments_widget"/>
+                                                    <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and existing_payments['content'] + existing_payments['payment_content'] or []"/>
                                                     <t t-foreach="payments_vals" t-as="payment_vals">
                                                         <tr t-if="payment_vals['is_exchange'] == 0">
                                                             <td>

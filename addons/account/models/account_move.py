@@ -1052,7 +1052,9 @@ class AccountMove(models.Model):
         'line_ids.amount_residual_currency',
         'line_ids.payment_id.state',
         'line_ids.full_reconcile_id',
-        'state')
+        'state',
+        'matched_payment_ids',
+    )
     def _compute_amount(self):
         for move in self:
             total_untaxed, total_untaxed_currency = 0.0, 0.0
@@ -1084,6 +1086,16 @@ class AccountMove(models.Model):
                     if line.debit:
                         total += line.balance
                         total_currency += line.amount_currency
+
+            # Payments without journal entries need to be taken into account as well
+            down_payment_domain = [
+                ('move_id', '=', False),
+                ('state', 'in', ['in_process', 'paid']),
+                ('destination_account_id.account_type', '=', 'asset_receivable'),
+            ]
+            for payment in self.matched_payment_ids.filtered_domain(down_payment_domain):
+                total_residual -= payment.amount
+                total_residual_currency -= payment.amount
 
             sign = move.direction_sign
             move.amount_untaxed = sign * total_untaxed_currency
@@ -1166,6 +1178,9 @@ class AccountMove(models.Model):
                                 new_pmt_state = 'paid'
                             else:
                                 new_pmt_state = invoice._get_invoice_in_payment_state()
+
+                        elif invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'in_process'):
+                            new_pmt_state = invoice._get_invoice_in_payment_state()
 
                         else:
                             new_pmt_state = 'paid'
@@ -1382,7 +1397,14 @@ class AccountMove(models.Model):
                     })
                 payments_widget_vals['content'] = reconciled_vals
 
-            if payments_widget_vals['content']:
+            payments_widget_vals['payment_content'] = move.matched_payment_ids.mapped(lambda payment: {
+                'date': payment.date,
+                'is_exchange': 0,
+                'amount': payment.amount,
+                'currency_id': payment.currency_id.id,
+            })
+
+            if payments_widget_vals['content'] or payments_widget_vals['payment_content']:
                 move.invoice_payments_widget = payments_widget_vals
             else:
                 move.invoice_payments_widget = False

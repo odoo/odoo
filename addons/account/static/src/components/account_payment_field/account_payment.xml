@@ -58,6 +58,16 @@
                     </td>
                     </tr>
                 </t>
+                <t t-foreach="info.payments" t-as="payment" t-key="payment.id">
+                    <tr>
+                        <td><i class="o_field_widget text-start o_payment_label">Paid on <t t-out="payment.date"/></i></td>
+                        <td>
+                            <span class="o_field_widget text-start oe_form_field oe_form_field_float oe_form_field_monetary">
+                                <t t-out="payment.amount_formatted"/>
+                            </span>
+                        </td>
+                    </tr>
+                </t>
             </table>
         </div>
     </t>

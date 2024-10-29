@@ -30,11 +30,12 @@ export class AccountPaymentField extends Component {
     getInfo() {
         const info = this.props.record.data[this.props.name] || {
             content: [],
+            payment_content: [],
             outstanding: false,
             title: "",
             move_id: this.props.record.resId,
         };
-        for (const [key, value] of Object.entries(info.content)) {
+        for (const [key, value] of Object.entries(info.content).concat(Object.entries(info.payment_content))) {
             value.index = key;
             value.amount_formatted = formatMonetary(value.amount, {
                 currencyId: value.currency_id,
@@ -46,6 +47,7 @@ export class AccountPaymentField extends Component {
         }
         return {
             lines: info.content,
+            payments: info.payment_content,
             outstanding: info.outstanding,
             title: info.title,
             moveId: info.move_id,
