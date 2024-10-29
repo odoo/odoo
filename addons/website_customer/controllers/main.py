@@ -84,9 +84,9 @@ class WebsiteCustomer(GoogleMap):
 
         if industry:
             domain.append(('industry_id', '=', industry.id))
-            if industry.id not in (ind.id for ind, __ in industry_groups) and industry.exists():
+            if not any(ind.id == industry.id for ind, __ in industry_groups) and industry.exists():
                 industry_groups.append((industry, 0))
-                industry_groups = sorted(industry_groups, key=lambda i, __: i.name or '')
+                industry_groups = sorted(industry_groups, key=lambda group: group[0].name or '')
 
         industries = [{
             'industry_id_count': sum(count for __, count, in industry_groups),
