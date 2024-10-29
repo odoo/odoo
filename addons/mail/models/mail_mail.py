@@ -56,8 +56,6 @@ class MailMail(models.Model):
     is_notification = fields.Boolean('Notification Email', help='Mail has been created to notify people of an existing mail.message')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
-    email_to = fields.Text('To', help='Message recipients (emails)')
-    email_cc = fields.Char('Cc', help='Carbon copy message recipients')
     recipient_ids = fields.Many2many('res.partner', string='To (Partners)',
         context={'active_test': False})
     # process
@@ -190,7 +188,7 @@ class MailMail(models.Model):
         SQL queries.
         """
         super()._add_inherited_fields()
-        for field in ('email_from', 'reply_to', 'subject'):
+        for field in ('email_cc', 'email_from', 'email_to', 'reply_to', 'subject'):
             self._fields[field].related_sudo = True
 
     def action_retry(self):
@@ -297,7 +295,7 @@ class MailMail(models.Model):
                         'failure_type': failure_type,
                         'failure_reason': failure_reason,
                     })
-                    messages = notifications.mapped('mail_message_id').filtered(lambda m: m.is_thread_message())
+                    messages = notifications.mapped('mail_message_id').filtered(lambda m: m._is_thread_message())
                     # TDE TODO: could be great to notify message-based, not notifications-based, to lessen number of notifs
                     messages._notify_message_notification_update()  # notify user that we have a failure
         if not failure_type or failure_type in ['mail_email_invalid', 'mail_email_missing']:  # if we have another error, we want to keep the mail.
