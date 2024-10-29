@@ -14,7 +14,7 @@ class AutomationDecantingOrdersProcess(models.Model):
     _name = 'automation.decanting.orders.process'
     _description = 'Automation Decanting Orders Process'
 
-    name = fields.Char(string='Name', required=True,default=lambda self: _('New'))
+    name = fields.Char(string='Reference', required=True, default=lambda self: _('New'))
     barcode_option = fields.Selection([('pallet', 'Pallet'),
                                        ('Box', 'Box'),
                                        ('crate', 'Crate'),])
@@ -275,12 +275,10 @@ class AutomationDecantingOrdersProcess(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        records = super(AutomationDecantingOrdersProcess, self).create(vals_list)
         for vals in vals_list:
             if not vals.get('name') or vals['name'] == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('automation.decanting.orders.process') or _('New')
-
-        return records
+        return super().create(vals_list)
 
 
 
