@@ -788,6 +788,17 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             const rec = records[model];
 
             for (const data of Object.values(rec)) {
+                const rawLine = rawData[model].find((r) => r[key] === data[key]);
+                if (rawLine) {
+                    for (const [f, p] of Object.entries(modelClasses[model]?.extraFields || {})) {
+                        if (X2MANY_TYPES.has(p.type)) {
+                            rawLine[f] = data[f]?.map((r) => r.id) || [];
+                            continue;
+                        }
+                        rawLine[f] = data[f]?.id || false;
+                    }
+                }
+
                 if (rawDataIdx.includes(data[key])) {
                     if (data.uiState) {
                         uiState[data[key]] = { ...data.uiState };
