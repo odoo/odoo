@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "edit New milestone",
 }, {
     trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2099 && click body",
+    run: "edit 12/12/2099",
 }, {
     trigger: ".modal-footer .o_form_button_save",
     run: "click",
