@@ -512,6 +512,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             try {
                 range.surroundContents(selectedTextEl);
                 $snippet = $(selectedTextEl);
+                this._moveAnimateSpanUp(selectedTextEl);
             } catch {
                 // This try catch is needed because 'surroundContents' may
                 // fail when the range has partially selected a non-Text node.
@@ -535,6 +536,28 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
                 );
             }
             return false;
+        }
+    }
+    _moveAnimateSpanUp(spanEl) {
+        let parentEl = spanEl.parentElement;
+        if (window.getComputedStyle(parentEl).display == 'inline') {
+            const parentTag = parentEl.tagName.toLowerCase();
+            const afterSpan = document.createElement(parentTag);
+            let currentNode = parentEl.firstChild;
+            while (currentNode && (!(currentNode.tagName) || currentNode.tagName.toLowerCase() != 'span')) {
+                currentNode = currentNode.nextSibling;
+            }
+            currentNode = currentNode.nextSibling;
+            let nextNode;
+            while (currentNode) {
+                nextNode = currentNode.nextSibling;
+                afterSpan.appendChild(currentNode);
+                currentNode = nextNode;
+            }
+            parentEl.insertAdjacentElement('afterend', spanEl);
+            spanEl.insertAdjacentElement('afterend', afterSpan);
+            spanEl.innerHTML = `<${parentTag}>` + spanEl.innerHTML + `</${parentTag}>`
+            this._moveAnimateSpanUp(spanEl);
         }
     }
     /**
