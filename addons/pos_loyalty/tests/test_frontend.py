@@ -2306,3 +2306,27 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyPromocodePricelist",
             login="pos_user",
         )
+
+    def test_gift_card_program_create_with_invoice(self):
+        """
+        Test for gift card program when pos.config.gift_card_settings == 'create_set'.
+        """
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        self.env['res.partner'].create({'name': 'Test Partner'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "GiftCardProgramInvoice",
+            login="pos_user",
+        )
+        self.assertEqual(len(gift_card_program.coupon_ids), 1)
