@@ -1021,6 +1021,7 @@ export class PosStore extends Reactive {
         const orders = this.models["pos.order"].filter((order) => !order.finalized);
         if (orders.length > 0) {
             this.selectedOrderUuid = orders[0].uuid;
+            return orders[0];
         } else {
             return this.add_new_order();
         }
@@ -1496,7 +1497,8 @@ export class PosStore extends Reactive {
     }
     closeScreen() {
         this.addOrderIfEmpty();
-        const { name: screenName } = this.get_order().get_screen_data();
+        const order = this.get_order() || this.selectNextOrder();
+        const { name: screenName } = order.get_screen_data();
         const props = {};
         if (screenName === "PaymentScreen") {
             props.orderUuid = this.selectedOrderUuid;
