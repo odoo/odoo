@@ -451,6 +451,10 @@ class Location(models.Model):
 
         return result
 
+    def _child_of(self, other_location):
+        self.ensure_one()
+        return other_location.parent_path in self.parent_path
+
 
 class StockRoute(models.Model):
     _name = 'stock.route'
