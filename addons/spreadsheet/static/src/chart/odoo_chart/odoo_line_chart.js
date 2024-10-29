@@ -163,6 +163,9 @@ function getLineConfiguration(chart, labels, locale) {
                 color: fontColor,
             },
             title: getChartAxisTitleRuntime(chart.axesDesign?.x),
+            grid: {
+                display: false,
+            },
         },
         y: {
             position: chart.verticalAxisPosition,
@@ -170,6 +173,9 @@ function getLineConfiguration(chart, labels, locale) {
                 color: fontColor,
             },
             title: getChartAxisTitleRuntime(chart.axesDesign?.y),
+            grid: {
+                display: true,
+            },
         },
     };
     if (chart.stacked) {
