@@ -23,11 +23,12 @@ function changeDescriptionContentAndSave(newContent) {
         run: async function(actions) {
             const textTriggerElement = this.anchor.querySelector(descriptionField);
             await actions.editor(newText, textTriggerElement);
-            await new Promise((r) => setTimeout(r, 300));
         },
     }, {
         trigger: "button.o_form_button_save",
         run: "click",
+    }, {
+        trigger: ".o_control_panel .o_form_status_indicator_buttons.invisible:not(:visible)",
     }];
 }
 
@@ -43,7 +44,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     },
     {
         content: "Open Test History Project",
-        trigger: "div span.o_text_overflow[title='Test History Project']",
+        trigger: "div.o_project_kanban_main > div > span[title='Test History Project']",
         run: "click",
     }, {
         content: "Open Test History Task",
@@ -113,7 +114,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: ".modal .history-container .tab-pane",
         run: function () {
             const comparaisonHtml = document.querySelector(".history-container .tab-pane").innerHTML;
-            const correctHtml = `<p><added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed></p>`;
+            const correctHtml = `<div class="pe-none"><div class="o_readonly"><p><added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed></p></div></div>`;
             if (comparaisonHtml !== correctHtml) {
                 throw new Error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
             }
@@ -146,7 +147,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: ".o_kanban_view",
     }, {
         content: "Open Test History Project Without Tasks",
-        trigger: "div span.o_text_overflow[title='Without tasks project']",
+        trigger: "div.o_project_kanban_main > div > span[title='Without tasks project']",
         run: "click",
     }, {
         trigger: ".o_kanban_project_tasks",
@@ -166,6 +167,9 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         run: 'edit New task',
     },
         ...changeDescriptionContentAndSave("0"),
+    {
+        trigger: "div.o-mail-ChatterContainer.o-mail-Form-chatter div.o-mail-Chatter-content div.o-mail-Thread div.o-mail-Message-contentContainer div > p:contains('Task Created')",
+    },
         ...changeDescriptionContentAndSave("1"),
         ...changeDescriptionContentAndSave("2"),
         ...changeDescriptionContentAndSave("3"),
