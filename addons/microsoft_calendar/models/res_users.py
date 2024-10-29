@@ -38,7 +38,7 @@ class User(models.Model):
     def _is_microsoft_calendar_valid(self):
         return self.sudo().microsoft_calendar_token_validity and self.sudo().microsoft_calendar_token_validity >= (fields.Datetime.now() + timedelta(minutes=1))
 
-    def _refresh_microsoft_calendar_token(self, service):
+    def _refresh_microsoft_calendar_token(self, service='calendar'):
         self.ensure_one()
         ICP_sudo = self.env['ir.config_parameter'].sudo()
         client_id = self.env['microsoft.service']._get_microsoft_client_id('calendar')

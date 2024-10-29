@@ -425,4 +425,4 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
-        return True
+        return True if cookie_type == 'required' else bool(request.env.user)

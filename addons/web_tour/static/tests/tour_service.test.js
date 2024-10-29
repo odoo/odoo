@@ -284,8 +284,8 @@ test("a failing tour logs the step that failed in run", async () => {
         `log: [2/2] Tour tour2 → Step .button1`,
         [
             "error: FAILED: [2/2] Tour tour2 → Step .button1.",
-            "Element has been found. The error seems to be with step.run.",
-            "Cannot read properties of null (reading 'click')",
+            "Element has been found.",
+            "ERROR IN ACTION: Cannot read properties of null (reading 'click')",
         ].join("\n"),
         "error: tour not succeeded",
     ];
@@ -332,16 +332,13 @@ test("a failing tour with disabled element", async () => {
     await advanceTime(750);
     await advanceTime(750);
     await advanceTime(750);
-    const expectedError = [
-        [
-            `error: FAILED: [2/3] Tour tour3 → Step .button1.`,
-            `Element has been found. The error seems to be with step.run.`,
-            `Element can't be disabled when you want to click on it.`,
-            `Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`,
-        ].join("\n"),
-        `error: tour not succeeded`,
-    ];
     await advanceTime(10000);
+    const expectedError = [
+        `error: FAILED: [2/3] Tour tour3 → Step .button1.
+Element has been found.
+BUT: Element is not enabled.
+TIMEOUT: The step failed to complete within 10000 ms.`,
+    ];
     expect.verifySteps(expectedError);
 });
 
@@ -434,7 +431,9 @@ test("a failing tour logs the step that failed", async () => {
     expect.verifySteps(["log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)"]);
     await advanceTime(10000);
     expect.verifySteps([
-        "error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector).\nThe cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+        `error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector).
+The cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.
+TIMEOUT: The step failed to complete within 10000 ms.`,
         `runbot: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[5/9]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
     ]);
 });
@@ -880,7 +879,9 @@ test("automatic tour with invisible element", async () => {
     await advanceTime(750);
     await advanceTime(10000);
     expect.verifySteps([
-        "error: FAILED: [2/3] Tour tour_de_wallonie → Step .button1.\nThe cause is that trigger (.button1) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+        `error: FAILED: [2/3] Tour tour_de_wallonie → Step .button1.
+The cause is that trigger (.button1) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.
+TIMEOUT: The step failed to complete within 10000 ms.`,
     ]);
 });
 
@@ -1483,6 +1484,8 @@ test("check not possible to click below modal", async () => {
         "log: [1/2] Tour tour_check_modal → Step .button0",
         "log: [2/2] Tour tour_check_modal → Step .button1",
         `error: FAILED: [2/2] Tour tour_check_modal → Step .button1.
-Element has been found but it's not allowed to do action on an element that's below a modal.`,
+Element has been found.
+BUT: It is not allowed to do action on an element that's below a modal.
+TIMEOUT: The step failed to complete within 10000 ms.`,
     ]);
 });

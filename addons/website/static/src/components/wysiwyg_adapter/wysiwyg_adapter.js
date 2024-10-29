@@ -248,6 +248,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 // Offcanvas attributes to ignore.
                 const offcanvasClasses = ["show"];
                 const offcanvasAttributes = ["aria-modal", "aria-hidden", "role", "style"];
+                // Carousel attributes to ignore.
+                const carouselSlidingClasses = ["carousel-item-start", "carousel-item-end",
+                    "carousel-item-next", "carousel-item-prev", "active", "o_carousel_sliding"];
+                const carouselIndicatorAttributes = ["aria-current"];
 
                 return filteredRecords.filter(record => {
                     if (record.type === "attributes") {
@@ -274,6 +278,19 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                                 }
                             } else if (record.target.matches(".offcanvas")
                                     && offcanvasAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+                        }
+
+                        // Do not record some carousel attributes changes.
+                        if (record.target.closest(":not(section) > .carousel")) {
+                            if (record.target.matches(".carousel, .carousel-item, .carousel-indicators > *")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, carouselSlidingClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".carousel-indicators > *")
+                                    && carouselIndicatorAttributes.includes(record.attributeName)) {
                                 return false;
                             }
                         }
@@ -930,6 +947,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @returns {Promise}
      */
     async _saveViewBlocks() {
+        this._restoreCarousels();
         await super._saveViewBlocks(...arguments);
         if (this.isDirty()) {
             return this._restoreMegaMenus();
@@ -1089,6 +1107,27 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         }
         return new Promise((resolve) => {
             return this.snippetsMenuBus.trigger("ACTIVATE_SNIPPET", { $snippet: $(megaMenuEl), onSuccess: resolve });
+        });
+    }
+    /**
+     * Restores all the carousels so their first slide is the active one.
+     *
+     * @private
+     */
+    _restoreCarousels() {
+        this.$editable[0].querySelectorAll(".carousel").forEach(carouselEl => {
+            // Set the first slide as the active one.
+            carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
+                itemEl.classList.remove("next", "prev", "left", "right");
+                itemEl.classList.toggle("active", i === 0);
+            });
+            carouselEl.querySelectorAll(".carousel-indicators > *").forEach((indicatorEl, i) => {
+                indicatorEl.classList.toggle("active", i === 0);
+                indicatorEl.removeAttribute("aria-current");
+                if (i === 0) {
+                    indicatorEl.setAttribute("aria-current", "true");
+                }
+            });
         });
     }
     /**
