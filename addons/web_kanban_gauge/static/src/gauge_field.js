@@ -31,7 +31,7 @@ export class GaugeField extends Component {
 
     renderChart() {
         const gaugeValue = this.props.value;
-        let maxValue = Math.max(gaugeValue, this.props.record.data[this.props.maxValueField]);
+        let maxValue = Math.max(gaugeValue, this.props.record.data[this.props.maxValueField] || this.props.maxValue);
         let maxLabel = maxValue;
         if (gaugeValue === 0 && maxValue === 0) {
             maxValue = 1;
@@ -86,12 +86,14 @@ GaugeField.props = {
     ...standardFieldProps,
     maxValueField: { type: String },
     title: { type: String },
+    maxValue: { type: Number },
 };
 
 GaugeField.extractProps = ({ attrs, field }) => {
     return {
-        maxValueField: attrs.options.max_field,
+        maxValueField: attrs.options.max_field || "",
         title: attrs.options.title || field.string,
+        maxValue: attrs.options.max_value || 100,
     };
 };
 
