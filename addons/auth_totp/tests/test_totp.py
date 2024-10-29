@@ -9,7 +9,7 @@ from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.exceptions import AccessDenied
 from odoo.service import common as auth, model
-from odoo.tests import tagged, get_db_name, loaded_demo_data
+from odoo.tests import tagged, get_db_name
 from odoo.tools import mute_logger
 
 from ..controllers.home import Home
@@ -52,10 +52,6 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
         self.install_totphook()
 
     def test_totp(self):
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         # 1. Enable 2FA
         self.start_tour('/web', 'totp_tour_setup', login='demo')
 
@@ -95,11 +91,12 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
 
 
     def test_totp_administration(self):
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         self.start_tour('/web', 'totp_tour_setup', login='demo')
+        # If not enabled (like in demo data), landing on res.config will try
+        # to disable module_sale_quotation_builder and raise an issue
+        group_order_template = self.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)
+        if group_order_template:
+            self.env.ref('base.group_user').write({"implied_ids": [(4, group_order_template.id)]})
         self.start_tour('/web', 'totp_admin_disables', login='admin')
         self.start_tour('/', 'totp_login_disabled', login=None)
 
@@ -109,11 +106,6 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
         Ensure we don't leak the session info from an half-logged-in
         user.
         """
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
-
         self.start_tour('/web', 'totp_tour_setup', login='demo')
         self.url_open('/web/session/logout')
 
