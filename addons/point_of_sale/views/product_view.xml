@@ -9,7 +9,7 @@
                 <field string="POS Product Category" name="pos_categ_ids" filter_domain="[('pos_categ_ids', 'child_of', raw_value)]"/>
             </field>
             <filter name="filter_to_sell" position="before">
-               <filter name="filter_to_availabe_pos" string="Available in POS" domain="[('available_in_pos', '=', True)]"/>
+               <filter name="filter_to_availabe_pos" string="Point of Sale" domain="[('available_in_pos', '=', True)]"/>
             </filter>
             <filter name="group_by_categ_id" position="after">
                 <filter string="POS Product Category" name="pos_categ_ids" context="{'group_by':'pos_categ_ids'}"/>
