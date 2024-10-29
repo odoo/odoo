@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
         wsTourUtils.goToCheckout(),
         {
             content: "select delivery2",
-            trigger: 'li label:contains(delivery2)',
+            trigger: 'li[name=o_delivery_method]:contains(delivery2) input',
             run: "click",
         },
         {
@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
         },
         {
             content: "select delivery1",
-            trigger: 'li label:contains(delivery1)',
+            trigger: 'li[name=o_delivery_method]:contains(delivery1) input',
             run: 'click',
         },
         {
