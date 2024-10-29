@@ -911,9 +911,11 @@ class MailCase(MockEmail):
              'active': partner.active,
              'is_follower': partner in record.message_partner_ids if record else False,
              'groups': partner.user_ids.groups_id.ids,
+             'lang': partner.lang,
              'notif': partner.user_ids.notification_type or 'email',
              'share': partner.partner_share,
              'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
+             'uid': partner.user_ids[0].id if partner.user_ids else False,
              'ushare': all(user.share for user in partner.user_ids) if partner.user_ids else False,
             } for partner in partners
         ]
