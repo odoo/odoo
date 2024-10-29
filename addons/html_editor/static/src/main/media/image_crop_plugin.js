@@ -7,7 +7,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
-    static dependencies = ["image", "selection", "history"];
+    static dependencies = ["selection", "history"];
     resources = {
         user_commands: [
             {

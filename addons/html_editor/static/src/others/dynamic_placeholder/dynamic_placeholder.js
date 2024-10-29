@@ -5,7 +5,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class DynamicPlaceholderPlugin extends Plugin {
     static id = "dynamicPlaceholder";
-    static dependencies = ["overlay", "selection", "history", "dom", "qweb"];
+    static dependencies = ["overlay", "selection", "history", "dom"];
     static shared = ["updateDphDefaultModel"];
     resources = {
         user_commands: [

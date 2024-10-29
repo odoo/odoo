@@ -4,8 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
-    static dependencies = ["history", "link", "selection", "color"];
-    /** @type { (p: IconPlugin) => Record<string, any> } */
+    static dependencies = ["history", "selection", "color"];
     resources = {
         user_commands: [
             {

@@ -12,13 +12,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class CollaborationSelectionPlugin extends Plugin {
     static id = "collaborationSelection";
-    static dependencies = [
-        "history",
-        "position",
-        "collaboration",
-        "collaborationOdoo",
-        "localOverlay",
-    ];
+    static dependencies = ["history", "collaborationOdoo", "localOverlay"];
     resources = {
         collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
         getCollaborationPeerMetadata: () => ({ selectionColor: this.selectionColor }),

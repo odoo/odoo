@@ -31,8 +31,6 @@ export class TabulationPlugin extends Plugin {
             { id: "tab", run: this.handleTab.bind(this) },
             { id: "shiftTab", run: this.handleShiftTab.bind(this) },
         ],
-        tab_overrides: [],
-        shift_tab_overrides: [],
         delete_forward_overrides: this.handleDeleteForward.bind(this),
         shortcuts: [
             { hotkey: "tab", commandId: "tab" },
