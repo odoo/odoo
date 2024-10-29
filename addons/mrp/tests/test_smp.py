@@ -40,9 +40,9 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         wizard = wizard_form.save()
         wizard.action_generate_production_text()
         wizard.action_prepare()
-        # Initial MO should have a backorder-sequenced name and be in to_close state
+        # Initial MO should have a backorder-sequenced name and be in confirmed state
         self.assertTrue("-001" in mo.name)
-        self.assertEqual(mo.state, "to_close")
+        self.assertEqual(mo.state, "confirmed")
         # Each generated serial number should have its own mo
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), count)
         # Check generated serial numbers
@@ -227,9 +227,9 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         wizard.action_generate_production_text()
         # Reload the wizard to apply generated serial numbers
         wizard.action_prepare()
-        # Initial MO should have a backorder-sequenced name and be in to_close state
+        # Initial MO should have a backorder-sequenced name and be in confirmed state
         self.assertTrue("-001" in mo.name)
-        self.assertEqual(mo.state, "to_close")
+        self.assertEqual(mo.state, "confirmed")
         # Each generated serial number should have its own mo
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
         # Check generated serial numbers
@@ -273,10 +273,10 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.move_raw_ids, [
             {'quantity': 1.0, 'picked': True},
             {'quantity': 1.0, 'picked': True},
-            {'quantity': 1.0, 'picked': True},
-            {'quantity': 1.0, 'picked': True},
-            {'quantity': 1.0, 'picked': True},
-            {'quantity': 1.0, 'picked': True},
+            {'quantity': 1.0, 'picked': False},
+            {'quantity': 0.0, 'picked': False},
+            {'quantity': 1.0, 'picked': False},
+            {'quantity': 0.0, 'picked': False},
         ])
         mo.procurement_group_id.mrp_production_ids.button_mark_done()
         self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped('state'), ['done', 'done', 'done'])
@@ -326,9 +326,9 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         wizard.action_generate_production_text()
         wizard.action_prepare()
 
-        # Initial MO should have a backorder-sequenced name and be in to_close state
+        # Initial MO should have a backorder-sequenced name and be in confirmed state
         self.assertTrue("-001" in mo.name)
-        self.assertEqual(mo.state, "to_close")
+        self.assertEqual(mo.state, "confirmed")
         # Each generated serial number should have its own mo
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 12)
 
