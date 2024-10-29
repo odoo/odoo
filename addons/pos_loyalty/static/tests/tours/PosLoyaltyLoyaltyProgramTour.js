@@ -269,3 +269,22 @@ registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
             PosLoyalty.finalizeOrder("Cash", "61.03"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosComboSpecificProductProgram", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.isPopupShown(),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            combo.confirm(),
+            Order.hasLine({ productName: "10% on Office Combo" }),
+            PosLoyalty.orderTotalIs("216.00"),
+            PosLoyalty.finalizeOrder("Cash", "216.00"),
+        ].flat(),
+});
