@@ -460,7 +460,7 @@ class ResCompany(models.CachedModel):
 
         return main_company
 
-    @ormcache('tuple(self.env.companies.ids)', 'self.id', 'self.env.uid')
+    @ormcache('frozenset(self.env.companies.ids)', 'self.id', 'self.env.uid')
     def __accessible_branches(self):
         # Get branches of this company that the current user can use
         self.ensure_one()
