@@ -416,6 +416,24 @@ test("Close emoji picker in chat window with ESCAPE does not also close the chat
     await contains(".o-mail-ChatWindow");
 });
 
+test("Close active thread action in chatwindow on ESCAPE", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+        ],
+    });
+    await start();
+    await contains(".o-mail-ChatWindow");
+    await click(".o-mail-ChatWindow-command", { text: "General" });
+    await click(".o-dropdown-item", { text: "Invite People" });
+    await contains(".o-discuss-ChannelInvitation");
+    triggerHotkey("Escape");
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
+    await contains(".o-mail-ChatWindow");
+});
+
 test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "Channel_1" }, { name: "Channel_2" }]);
