@@ -100,6 +100,8 @@ class IrAttachment(models.Model):
                     if attachment.res_id and attachment.res_model != "mail.compose.message"
                     else False
                 ),
+                'type': attachment.type,
+                'url': attachment.url,
             }
             if access_token:
                 res["accessToken"] = attachment.access_token
