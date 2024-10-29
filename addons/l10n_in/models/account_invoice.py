@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import re
+from datetime import date
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
@@ -25,6 +26,31 @@ class AccountMove(models.Model):
     l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply",
         compute="_compute_l10n_in_state_id", store=True, copy=True, readonly=False, precompute=True)
     l10n_in_gstin = fields.Char(string="GSTIN")
+    l10n_in_gstr_section = fields.Selection(
+        selection=[
+            ("b2b_rcm", "B2B RCM"),
+            ("b2b_regular", "B2B Regular"),
+            ("b2cl", "B2CL"),
+            ("b2cs", "B2CS"),
+            ("exp_wp", "EXP(WP)"),
+            ("exp_wop", "EXP(WOP)"),
+            ("sez_wp", "SEZ(WP)"),
+            ("sez_wop", "SEZ(WOP)"),
+            ("deemed_export", "Deemed Export"),
+            ("cdnr_rcm", "CDNR RCM"),
+            ("cdnr_regular", "CDNR Regular"),
+            ("cdnr_deemed_export", "CDNR(Deemed Export)"),
+            ("cdnr_sez", "CDNR(SEZ)"),
+            ("cdnur_b2cl", "CDNUR(B2CL)"),
+            ("cdnur_exp_wp", "CDNUR(EXP-WP)"),
+            ("cdnur_exp_wop", "CDNUR(EXP-WOP)"),
+            ("nil_rated", "Nil Rated"),
+            ("out_of_scope", "Out of Scope")
+            ],
+        string="GSTR-1 Section",
+        compute="_compute_l10n_in_gstr_section",
+        store=True
+    )
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number')
     l10n_in_shipping_bill_date = fields.Date('Shipping bill date')
@@ -140,6 +166,193 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_warning = {}
         (self - indian_invoice).l10n_in_warning = {}
+
+    @api.depends('l10n_in_gst_treatment', 'amount_total', 'l10n_in_state_id', 'company_id', 'invoice_line_ids.tax_tag_ids')
+    def _compute_l10n_in_gstr_section(self):
+
+        def has_tags(tags):
+            return any(tag in tax_tags for tag in tags)
+
+        def is_invoice(move):
+            return (
+                move.is_inbound() and not move.debit_origin_id
+            )
+
+        def get_transaction_type(move):
+            if move.l10n_in_state_id and move.l10n_in_state_id == move.company_id.state_id:
+                return 'intra_state'
+            else:
+                return 'inter_state'
+
+        def is_b2b_rcm(move):
+            return (
+                is_invoice(move) and
+                move.l10n_in_gst_treatment in ('regular', 'composition', 'uin_holders') and
+                has_tags(gst_rc_tags)
+            )
+
+        def is_b2b_regular(move):
+            return (
+                is_invoice(move) and
+                move.l10n_in_gst_treatment in ('regular', 'composition', 'uin_holders') and
+                has_tags(gst_tags)
+            )
+
+        def is_b2cl(move):
+            amount_limit = 100000 if move.invoice_date >= date(2024, 11, 1) else 250000
+            return (
+                is_invoice(move) and
+                move.l10n_in_gst_treatment in ('unregistered', 'consumer') and
+                has_tags(gst_tags) and
+                get_transaction_type(move) == 'inter_state' and
+                move.amount_total > amount_limit
+            )
+
+        def is_b2cs(move):
+            amount_limit = 100000 if move.invoice_date >= date(2024, 11, 1) else 250000
+            return (
+                move.l10n_in_gst_treatment in ('unregistered', 'consumer') and
+                has_tags(gst_tags) and
+                (get_transaction_type(move) == 'intra_state' or
+                (get_transaction_type(move) == 'inter_state' and
+                    (is_invoice(move) and move.amount_total <= amount_limit) or
+                    (move.debit_origin_id and move.debit_origin_id.amount_total <= amount_limit) or
+                    (move.reversed_entry_id and move.reversed_entry_id.amount_total <= amount_limit)
+                ))
+            )
+
+        def is_exp_wp(move):
+            return (
+                is_invoice(move) and
+                move.l10n_in_gst_treatment == 'overseas' and
+                has_tags(export_tags)
+            )
+
+        def is_exp_wop(move):
+            return (
+                is_invoice(move) and
+                move.l10n_in_gst_treatment == 'overseas' and
+                has_tags(igst_lut_tag)
+            )
+
+        def is_sez_wp(move):
+            return (
+                is_invoice(move) and
+                move.l10n_in_gst_treatment == 'special_economic_zone' and
+                has_tags(export_tags)
+            )
+
+        def is_sez_wop(move):
+            return (
+                is_invoice(move) and
+                move.l10n_in_gst_treatment == 'special_economic_zone' and
+                has_tags(igst_lut_tag)
+            )
+
+        def is_deemed_export(move):
+            return (
+                is_invoice(move) and
+                move.l10n_in_gst_treatment == 'deemed_export' and
+                has_tags(gst_tags)
+            )
+
+        def is_nil_rated(move):
+            return (
+                move.l10n_in_gst_treatment not in ('overseas', 'special_economic_zone') and
+                has_tags(nil_tags)
+            )
+
+        def is_cdnr_rcm(move):
+            return (
+                not is_invoice(move) and
+                move.l10n_in_gst_treatment in ('regular', 'composition', 'uin_holders') and
+                has_tags(gst_rc_tags)
+            )
+
+        def is_cdnr_regular(move):
+            return (
+                not is_invoice(move) and
+                move.l10n_in_gst_treatment in ('regular', 'composition', 'uin_holders') and
+                has_tags(gst_tags)
+            )
+
+        def is_cdnr_sez(move):
+            return (
+                not is_invoice(move) and
+                move.l10n_in_gst_treatment == 'special_economic_zone' and
+                has_tags(export_tags)
+            )
+
+        def is_cdnr_deemed_export(move):
+            return (
+                not is_invoice(move) and
+                move.l10n_in_gst_treatment == 'deemed_export' and
+                has_tags(gst_tags)
+            )
+
+        def is_cdnur_b2cl(move):
+            amount_limit = 100000 if move.invoice_date >= date(2024, 11, 1) else 250000
+            return (
+                not is_invoice(move) and
+                move.l10n_in_gst_treatment in ('unregistered', 'consumer') and
+                has_tags(gst_tags) and
+                get_transaction_type(move) == 'inter_state' and
+                (
+                    (move.debit_origin_id and move.debit_origin_id.amount_total > amount_limit) or
+                    (move.reversed_entry_id and move.reversed_entry_id.amount_total > amount_limit) or
+                    (not move.reversed_entry_id and not move.is_inbound())
+                )
+            )
+
+        def is_cdnur_exp_wp(move):
+            return (
+                not is_invoice(move) and
+                move.l10n_in_gst_treatment == 'overseas' and
+                has_tags(export_tags)
+            )
+
+        def is_cdnur_exp_wop(move):
+            return (
+                not is_invoice(move) and
+                move.l10n_in_gst_treatment == 'overseas' and
+                has_tags(igst_lut_tag)
+            )
+
+        indian_moves = self.filtered(lambda m: m.country_code == 'IN' and m.is_sale_document(include_receipts=True) and m.state == 'posted')
+        (self - indian_moves).l10n_in_gstr_section = False
+        if not indian_moves:
+            return
+        gst_tags = self.env.ref('l10n_in.tax_tag_base_sgst') + self.env.ref('l10n_in.tax_tag_base_cgst') + self.env.ref('l10n_in.tax_tag_base_igst')
+        gst_rc_tags = self.env.ref('l10n_in.tax_tag_base_sgst_rc') + self.env.ref('l10n_in.tax_tag_base_cgst_rc') + self.env.ref('l10n_in.tax_tag_base_igst_rc')
+        nil_tags = self.env.ref('l10n_in.tax_tag_exempt') + self.env.ref('l10n_in.tax_tag_nil_rated') + self.env.ref('l10n_in.tax_tag_non_gst_supplies')
+        export_tags = self.env.ref('l10n_in.tax_tag_zero_rated') + self.env.ref('l10n_in.tax_tag_base_igst')
+        igst_lut_tag = self.env.ref('l10n_in.tax_tag_igst_lut')
+
+        gstr_mapping_fun = {
+            "b2b_rcm": is_b2b_rcm,
+            "b2b_regular": is_b2b_regular,
+            "b2cl": is_b2cl,
+            "b2cs": is_b2cs,
+            "exp_wp": is_exp_wp,
+            "exp_wop": is_exp_wop,
+            "sez_wp": is_sez_wp,
+            "sez_wop": is_sez_wop,
+            "deemed_export": is_deemed_export,
+            "cdnr_rcm": is_cdnr_rcm,
+            "cdnr_regular": is_cdnr_regular,
+            "cdnr_sez": is_cdnr_sez,
+            "cdnr_deemed_export": is_cdnr_deemed_export,
+            "cdnur_b2cl": is_cdnur_b2cl,
+            "cdnur_exp_wp": is_cdnur_exp_wp,
+            "cdnur_exp_wop": is_cdnur_exp_wop,
+            "nil_rated": is_nil_rated
+        }
+        for move in indian_moves:
+            tax_tags = move.invoice_line_ids.tax_tag_ids
+            move.l10n_in_gstr_section = next(
+                (section for section, function in gstr_mapping_fun.items() if function(move)),
+                'out_of_scope'
+            )
 
     def _get_name_invoice_report(self):
         self.ensure_one()
