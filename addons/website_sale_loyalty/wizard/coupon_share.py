@@ -2,7 +2,7 @@
 
 from werkzeug.urls import url_encode
 
-from odoo import fields, models, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 

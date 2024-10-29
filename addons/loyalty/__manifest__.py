@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Coupons & Loyalty',
     'summary': "Use discounts, gift card, eWallets and loyalty programs in different sales channels",

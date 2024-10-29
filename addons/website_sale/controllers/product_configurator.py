@@ -3,7 +3,9 @@
 from odoo.http import request, route
 from odoo.tools import float_is_zero
 
-from odoo.addons.sale.controllers.product_configurator import SaleProductConfiguratorController
+from odoo.addons.sale.controllers.product_configurator import (
+    SaleProductConfiguratorController,
+)
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 

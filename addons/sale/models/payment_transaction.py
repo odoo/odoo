@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+
 from dateutil import relativedelta
 
-from odoo import _, api, Command, fields, models, SUPERUSER_ID
+from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.tools import str2bool
 
 

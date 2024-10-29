@@ -5,6 +5,7 @@ import pprint
 
 from odoo.http import Controller, request, route
 
+
 _logger = logging.getLogger(__name__)
 
 

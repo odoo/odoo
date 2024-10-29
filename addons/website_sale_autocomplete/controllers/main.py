@@ -1,12 +1,14 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+
 import requests
 
 from odoo import http
 from odoo.http import request
 from odoo.tools import html2plaintext
 
-import logging
+
 _logger = logging.getLogger(__name__)
 
 

@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from base64 import b64encode
 import hashlib
 import hmac
 import json
+from base64 import b64encode
 from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden

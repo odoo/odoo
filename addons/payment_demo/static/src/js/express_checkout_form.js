@@ -1,10 +1,9 @@
-/** @odoo-module */
 
-import {_t} from '@web/core/l10n/translation';
-import publicWidget from '@web/legacy/js/public/public_widget';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { debounce } from '@web/core/utils/timing';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
 import paymentDemoMixin from '@payment_demo/js/payment_demo_mixin';

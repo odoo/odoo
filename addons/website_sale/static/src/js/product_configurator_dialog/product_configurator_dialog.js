@@ -1,9 +1,9 @@
-import { _t } from '@web/core/l10n/translation';
-import { patch } from '@web/core/utils/patch';
 import { useSubEnv } from '@odoo/owl';
 import {
     ProductConfiguratorDialog
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
+import { _t } from '@web/core/l10n/translation';
+import { patch } from '@web/core/utils/patch';
 
 patch(ProductConfiguratorDialog, {
     props: {

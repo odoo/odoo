@@ -1,6 +1,6 @@
+import { EventBus } from '@odoo/owl';
 import { registry } from '@web/core/registry';
 import { AuthUI } from './auth_ui';
-import { EventBus } from '@odoo/owl';
 
 const bus = new EventBus();
 

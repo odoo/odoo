@@ -8,6 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 
+
 _logger = logging.getLogger(__name__)
 
 

@@ -1,4 +1,3 @@
-/** @odoo-module */
 
 import { queryFirst } from '@odoo/hoot-dom';
 import {

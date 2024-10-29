@@ -2,7 +2,7 @@
 
 import binascii
 
-from odoo import _, fields, http, SUPERUSER_ID
+from odoo import SUPERUSER_ID, _, fields, http
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request

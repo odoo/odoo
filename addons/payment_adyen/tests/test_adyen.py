@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
-from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 

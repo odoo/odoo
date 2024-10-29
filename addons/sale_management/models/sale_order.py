@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
 
-from odoo import SUPERUSER_ID, api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import is_html_empty
 

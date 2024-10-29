@@ -10,6 +10,7 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+
 _logger = logging.getLogger(__name__)
 
 

@@ -236,4 +236,3 @@ class WebsiteSnippetFilter(models.Model):
                     display_default_code=False,
                 ).search(domain, limit=limit)
         return products
-

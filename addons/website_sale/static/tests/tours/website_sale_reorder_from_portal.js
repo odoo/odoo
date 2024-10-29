@@ -1,8 +1,6 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
-import { assertCartContains } from '@website_sale/js/tours/tour_utils';
 import { clickOnElement } from '@website/js/tours/tour_utils';
+import { assertCartContains } from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         url: '/my/orders',

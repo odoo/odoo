@@ -1,11 +1,9 @@
-/** @odoo-module **/
-
-import { _t } from "@web/core/l10n/translation";
-import { debounce as debounceFn } from "@web/core/utils/timing";
-import publicWidget from "@web/legacy/js/public/public_widget";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { formatCurrency } from "@web/core/currency";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { debounce as debounceFn } from "@web/core/utils/timing";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 // Widget responsible for openingn the modal (giving out the sale order id)
 
@@ -29,9 +27,9 @@ publicWidget.registry.SaleOrderPortalReorderWidget = publicWidget.Widget.extend(
     },
 });
 
-import { useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onWillStart } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
+import { useService } from "@web/core/utils/hooks";
 
 // Reorder Dialog
 

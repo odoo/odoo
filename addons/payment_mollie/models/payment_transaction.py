@@ -12,6 +12,7 @@ from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment_mollie import const
 from odoo.addons.payment_mollie.controllers.main import MollieController
 
+
 _logger = logging.getLogger(__name__)
 
 

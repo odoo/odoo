@@ -8,6 +8,7 @@ from odoo.tests import loaded_demo_data, tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
+
 _logger = logging.getLogger(__name__)
 
 

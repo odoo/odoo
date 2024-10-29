@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 from contextlib import contextmanager
-from uuid import uuid4
 
 from lxml import etree, objectify
 from werkzeug import urls

@@ -1,6 +1,4 @@
-/** @odoo-module **/
-
-import {registry} from '@web/core/registry';
+import { registry } from '@web/core/registry';
 import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category('web_tour.tours').add('shop_update_cart', {

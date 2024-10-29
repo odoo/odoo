@@ -1,8 +1,6 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
-import * as tourUtils from "@website_sale/js/tours/tour_utils";
 import { redirect } from "@web/core/utils/urls";
+import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('shop_mail', {
     url: '/shop?search=Acoustic Bloc Screens',

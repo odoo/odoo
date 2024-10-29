@@ -10,6 +10,7 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_paypal import utils as paypal_utils
 from odoo.addons.payment_paypal.const import PAYMENT_STATUS_MAPPING
 
+
 _logger = logging.getLogger(__name__)
 
 

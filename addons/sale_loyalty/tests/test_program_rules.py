@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
+
 from freezegun import freeze_time
 
-from odoo import Command
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 

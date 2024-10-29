@@ -1,12 +1,10 @@
-/** @odoo-module **/
-
 import {
-    getFixture,
-    patchWithCleanup,
     addRow,
     editInput,
-    triggerHotkey,
-    nextTick
+    getFixture,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";

@@ -3,7 +3,8 @@
 from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools.translate import _, LazyTranslate
+from odoo.tools.translate import LazyTranslate, _
+
 
 _lt = LazyTranslate(__name__)
 
@@ -637,5 +638,3 @@ class Website(models.Model):
     def has_ecommerce_access(self):
         """ Return whether the current user is allowed to access eCommerce-related content. """
         return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
-
-

@@ -9,6 +9,7 @@ from odoo.http import Controller, request, route
 
 from odoo.addons.sale_pdf_quote_builder import utils
 
+
 logger = logging.getLogger(__name__)
 
 

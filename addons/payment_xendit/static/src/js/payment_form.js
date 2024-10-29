@@ -1,6 +1,6 @@
 /* global Xendit */
 
-import { loadJS } from '@web/core/assets'
+import { loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
 import { rpc, RPCError } from '@web/core/network/rpc';
 
@@ -207,7 +207,7 @@ paymentForm.include({
             card_holder_email: inputs.email.value,
             card_holder_first_name: inputs.first_name.value,
             card_holder_last_name: inputs.last_name.value,
-            card_holder_phone_number: inputs.phone.value 
+            card_holder_phone_number: inputs.phone.value
         };
     },
 

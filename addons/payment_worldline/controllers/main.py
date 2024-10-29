@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from base64 import b64encode
 import hashlib
 import hmac
 import logging
 import pprint
+from base64 import b64encode
 
 from werkzeug.exceptions import Forbidden
 

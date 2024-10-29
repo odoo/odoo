@@ -1,4 +1,4 @@
-import { EventBus, Component, xml } from '@odoo/owl';
+import { Component, EventBus, xml } from '@odoo/owl';
 
 export class AuthUI extends Component {
     static props = {

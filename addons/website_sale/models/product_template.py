@@ -9,6 +9,7 @@ from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
 
+
 _logger = logging.getLogger(__name__)
 
 

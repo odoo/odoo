@@ -6,11 +6,12 @@ import os
 
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 from odoo.tools.misc import file_open
 
 from odoo.addons.sale.tests.common import SaleCommon
+
 
 directory = os.path.dirname(__file__)
 

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component } from "@odoo/owl";
 import { AddToCartNotification } from "../add_to_cart_notification/add_to_cart_notification";
 import { WarningNotification } from "../warning_notification/warning_notification";

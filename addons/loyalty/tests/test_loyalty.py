@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase, Form
+from odoo.tests import Form, TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from unittest.mock import patch
 
 @tagged('post_install', '-at_install')
 class TestLoyalty(TransactionCase):

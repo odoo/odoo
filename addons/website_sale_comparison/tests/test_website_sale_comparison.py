@@ -8,6 +8,7 @@ from lxml import etree
 from odoo.fields import Command
 from odoo.tests import HttpCase, TransactionCase, loaded_demo_data, tagged
 
+
 _logger = logging.getLogger(__name__)
 
 

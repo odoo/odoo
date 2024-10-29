@@ -11,6 +11,7 @@ from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.base.tests.common import BaseCommon
 
+
 _logger = logging.getLogger(__name__)
 
 

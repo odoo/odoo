@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { queryAttribute, queryValue, waitUntil } from '@odoo/hoot-dom';
 
 function productSelector(productName) {
