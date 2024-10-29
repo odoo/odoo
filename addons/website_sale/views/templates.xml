@@ -1363,6 +1363,12 @@
                                     </div>
                                 </div>
                             </form>
+                            <p t-elif="not product.active" class="alert alert-warning">
+                                This product is no longer available.
+                            </p>
+                            <p t-else="" class="alert alert-warning">
+                                This product has no valid combination.
+                            </p>
                             <t t-call="website_sale.product_accordion"/>
                             <div
                                 id="contact_us_wrapper"
@@ -1392,8 +1398,6 @@
                                     t-value="product_variant.all_product_tag_ids"
                                 />
                             </t>
-                            <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
-                            <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
                             <div
                                 t-if="not is_view_active('website_sale_comparison.accordion_specs_item')"
                                 id="product_attributes_simple"
