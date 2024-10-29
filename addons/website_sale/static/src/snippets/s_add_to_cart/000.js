@@ -1,10 +1,8 @@
-/** @odoo-module **/
-
-import publicWidget from '@web/legacy/js/public/public_widget';
-import { rpc } from "@web/core/network/rpc";
-import { cartHandlerMixin } from '@website_sale/js/website_sale_utils';
-import { WebsiteSale } from '@website_sale/js/website_sale';
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import publicWidget from '@web/legacy/js/public/public_widget';
+import { WebsiteSale } from '@website_sale/js/website_sale';
+import { cartHandlerMixin } from '@website_sale/js/website_sale_utils';
 
 publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
     selector: '.s_add_to_cart_btn',

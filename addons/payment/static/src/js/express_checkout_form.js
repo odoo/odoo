@@ -1,7 +1,6 @@
-/** @odoo-module */
 
-import publicWidget from '@web/legacy/js/public/public_widget';
 import { Component } from '@odoo/owl';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     selector: 'form[name="o_payment_express_checkout_form"]',

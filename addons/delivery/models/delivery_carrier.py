@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import psycopg2
 import re
 
-from odoo import _, api, fields, models, Command, SUPERUSER_ID
+import psycopg2
+
+from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import safe_eval

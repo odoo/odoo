@@ -1,12 +1,10 @@
-/** @odoo-module **/
-
-import { goToCart } from '@website_sale/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { goToCart } from '@website_sale/js/tours/tour_utils';
 
 registerWebsitePreviewTour('shop_list_view_b2c', {
     url: '/shop?search=Test Product',

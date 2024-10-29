@@ -2,7 +2,7 @@
 
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import float_compare
 

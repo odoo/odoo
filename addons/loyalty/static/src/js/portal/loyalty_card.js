@@ -1,7 +1,7 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
 import { rpc } from '@web/core/network/rpc';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
-import { PortalLoyaltyCardDialog } from './loyalty_card_dialog/loyalty_card_dialog'
+import { PortalLoyaltyCardDialog } from './loyalty_card_dialog/loyalty_card_dialog';
 
 publicWidget.registry.PortalLoyaltyWidget = publicWidget.Widget.extend({
     selector: '.o_loyalty_container',

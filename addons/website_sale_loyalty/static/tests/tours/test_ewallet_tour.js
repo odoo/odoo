@@ -1,8 +1,6 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
-import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 import { TourError } from "@web_tour/tour_service/tour_utils";
+import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 
 
 registry.category("web_tour.tours").add('shop_sale_ewallet', {

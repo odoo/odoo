@@ -1,4 +1,3 @@
-/** @odoo-module **/
 /*global L*/
 
 import { Component, useEffect, useRef } from '@odoo/owl';

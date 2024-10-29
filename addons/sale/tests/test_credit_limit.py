@@ -1,7 +1,7 @@
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from .common import TestSaleCommon
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
 @tagged('post_install', '-at_install')

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import configuratorTourUtils from '@sale/js/tours/product_configurator_tour_utils';
 
 function assertProductStrikethroughPrice(productName, price) {

@@ -8,8 +8,9 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_adyen import utils as adyen_utils
 from odoo.addons.payment_adyen import const
+from odoo.addons.payment_adyen import utils as adyen_utils
+
 
 _logger = logging.getLogger(__name__)
 

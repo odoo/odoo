@@ -1,12 +1,10 @@
-/** @odoo-module **/
-
+import { useEffect } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import {
     KanbanProgressBarField,
     kanbanProgressBarField,
 } from "@web/views/fields/progress_bar/kanban_progress_bar_field";
-import { useEffect } from "@odoo/owl";
 
 /**
  * A custom Component for the view of sales teams on the kanban view in the CRM app.

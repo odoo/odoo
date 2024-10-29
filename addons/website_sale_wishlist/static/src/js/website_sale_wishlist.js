@@ -1,9 +1,7 @@
-/** @odoo-module **/
-
-import publicWidget from "@web/legacy/js/public/public_widget";
-import wSaleUtils from "@website_sale/js/website_sale_utils";
-import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import { rpc, RPCError } from "@web/core/network/rpc";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import VariantMixin from "@website_sale/js/sale_variant_mixin";
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 // VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered

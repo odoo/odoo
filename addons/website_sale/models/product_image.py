@@ -2,7 +2,7 @@
 
 import base64
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.image import is_image_size_above
 

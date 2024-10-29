@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import paymentForm from '@payment/js/payment_form';
 import paymentDemoMixin from '@payment_demo/js/payment_demo_mixin';
 

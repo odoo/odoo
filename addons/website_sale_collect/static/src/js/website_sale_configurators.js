@@ -1,4 +1,4 @@
-import {WebsiteSale} from '@website_sale/js/website_sale';
+import { WebsiteSale } from '@website_sale/js/website_sale';
 
 WebsiteSale.include({
     /**

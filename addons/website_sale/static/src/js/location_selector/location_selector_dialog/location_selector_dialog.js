@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {
     LocationSelectorDialog
 } from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';

@@ -1,7 +1,11 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.website_sale_autocomplete.controllers.main import AutoCompleteController
-from odoo.tests import patch, HttpCase, tagged
+
+from odoo.tests import HttpCase, patch, tagged
+
+from odoo.addons.website_sale_autocomplete.controllers.main import (
+    AutoCompleteController,
+)
+
 
 CONTROLLER_PATH = 'odoo.addons.website_sale_autocomplete.controllers.main.AutoCompleteController'
 MOCK_GOOGLE_ID = 'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ=='

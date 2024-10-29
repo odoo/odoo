@@ -5,6 +5,7 @@ from odoo.fields import Command
 from odoo.addons.delivery.tests.common import DeliveryCommon
 from odoo.addons.product.tests.common import ProductCommon
 
+
 # from odoo.addons.website.tests.common import WebsiteCommon
 
 

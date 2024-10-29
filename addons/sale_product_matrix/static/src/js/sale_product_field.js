@@ -1,9 +1,7 @@
-/** @odoo-module **/
-
-import { patch } from "@web/core/utils/patch";
-import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
+import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 
 patch(SaleOrderLineProductField.prototype, {
 

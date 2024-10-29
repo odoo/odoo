@@ -1,10 +1,9 @@
-/** @odoo-module **/
 /* global Stripe */
 
-import { _t } from '@web/core/l10n/translation';
-import { rpc } from "@web/core/network/rpc";
 import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
+import { _t } from '@web/core/l10n/translation';
+import { rpc } from "@web/core/network/rpc";
 
 paymentExpressCheckoutForm.include({
     /**

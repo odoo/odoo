@@ -8,4 +8,3 @@ export class SaleKanbanRenderer extends FileUploadKanbanRenderer {
         SaleActionHelper,
     };
 };
-

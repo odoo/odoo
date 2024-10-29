@@ -1,7 +1,5 @@
-/** @odoo-modules */
-
-import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 import { registry } from "@web/core/registry";
+import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 const PRODUCT_CATEGORY_ID = 2;
 

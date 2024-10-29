@@ -1,9 +1,8 @@
-/** @odoo-module **/
 /* global AdyenCheckout */
 
+import paymentForm from '@payment/js/payment_form';
 import { _t } from '@web/core/l10n/translation';
 import { pyToJsLocale } from '@web/core/l10n/utils';
-import paymentForm from '@payment/js/payment_form';
 import { rpc, RPCError } from '@web/core/network/rpc';
 
 paymentForm.include({

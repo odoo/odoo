@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 function createNewSalesOrder() {
     return [
         {

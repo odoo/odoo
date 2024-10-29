@@ -1,7 +1,5 @@
-/** @odoo-module **/
-
-import options from '@web_editor/js/editor/snippets.options';
 import { _t } from "@web/core/l10n/translation";
+import options from '@web_editor/js/editor/snippets.options';
 
 options.registry.AddToCart = options.Class.extend({
     events: Object.assign({}, options.Class.prototype.events || {}, {

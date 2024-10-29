@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from odoo.fields import Command
 from odoo.tests import tagged
-from odoo.tools.misc import file_open
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
-from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
+from odoo.addons.sale.tests.product_configurator_common import (
+    TestProductConfiguratorCommon,
+)
+
 
 @tagged('post_install', '-at_install')
 class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductConfiguratorCommon):

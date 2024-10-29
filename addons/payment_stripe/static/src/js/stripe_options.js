@@ -1,4 +1,3 @@
-/** @odoo-module */
 
 export class StripeOptions {
     /**

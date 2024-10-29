@@ -5,8 +5,8 @@ from unittest.mock import patch
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 
 
 @tagged('-at_install', 'post_install')
