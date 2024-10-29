@@ -104,7 +104,10 @@ class configmanager:
         parser = optparse.OptionParser(version=version, option_class=OdooOption)
 
         parser.add_option(FileOnlyOption(dest='admin_passwd', my_default='admin'))
+        parser.add_option(FileOnlyOption(dest='bin_path', my_default='', file_exportable=False))
         parser.add_option(FileOnlyOption(dest='csv_internal_sep', my_default=','))
+        parser.add_option(FileOnlyOption(dest='default_productivity_apps', my_default='False', file_exportable=False))
+        parser.add_option(FileOnlyOption(dest='proxy_access_token', my_default='', file_exportable=False))
         parser.add_option(FileOnlyOption(dest='publisher_warranty_url', my_default='http://services.odoo.com/publisher-warranty/', file_exportable=False))
         parser.add_option(FileOnlyOption(dest='reportgz', action='store_true', my_default=False))
         parser.add_option(FileOnlyOption(dest='websocket_keep_alive_timeout', type='int', my_default=3600))
@@ -157,12 +160,6 @@ class configmanager:
                          help="Activate X-Sendfile (apache) and X-Accel-Redirect (nginx) "
                               "HTTP response header to delegate the delivery of large "
                               "files (assets/attachments) to the web server.")
-        # HTTP: hidden backwards-compatibility for "*xmlrpc*" options
-        hidden = optparse.SUPPRESS_HELP
-        group.add_option("--xmlrpc-interface", dest="http_interface", help=hidden)
-        group.add_option("--xmlrpc-port", dest="http_port", type="int", help=hidden)
-        group.add_option("--no-xmlrpc", dest="http_enable", action="store_false", help=hidden)
-
         parser.add_option_group(group)
 
         # WEB
@@ -581,8 +578,7 @@ class configmanager:
 
     def _warn_deprecated_options(self):
         for old_option_name, new_option_name in [
-            ('geoip_database', 'geoip_city_db'),
-            ('osv_memory_age_limit', 'transient_age_limit')
+            # there are no deprecated option at the moment
         ]:
             deprecated_value = self.options.pop(old_option_name, None)
             if deprecated_value:
@@ -595,7 +591,12 @@ class configmanager:
                     # warning because: (1) it holds the same value as
                     # the correct option, and (2) it is going to be
                     # automatically removed on the next --save anyway.
-                    pass
+                    self._log(logging.INFO,
+                        f"The {old_option_name!r} option found in the "
+                        "configuration file is a deprecated alias to "
+                        f"{new_option_name!r}. The configuration value "
+                        "is the same as the default value, it can "
+                        "safely be removed.")
                 elif current_value == default_value:
                     # deprecated_value != current_value == default_value
                     # assume the new option was not set
@@ -663,20 +664,20 @@ class configmanager:
             parser.values.test_tags = "+standard"
 
     def load(self):
-        outdated_options_map = {
-            'xmlrpc_port': 'http_port',
-            'xmlrpc_interface': 'http_interface',
-            'xmlrpc': 'http_enable',
-        }
         p = ConfigParser.RawConfigParser()
         try:
             p.read([self.rcfile])
             for (name,value) in p.items('options'):
-                name = outdated_options_map.get(name, name)
                 option = self.options_index.get(name)
-                if option and not option.file_loadable:
+                if not option:
+                    self._log(logging.WARNING,
+                        "unknown option %r in the config file at %s, "
+                        "option stored as-is, without parsing",
+                        name, self.rcfile,
+                    )
+                    self.options[name] = value
                     continue
-                if name == 'root_path':
+                if not option.file_loadable:
                     continue
                 if value=='True' or value=='true':
                     value = True

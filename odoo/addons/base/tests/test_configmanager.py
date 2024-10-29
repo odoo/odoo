@@ -34,7 +34,10 @@ class TestConfigManager(TransactionCase):
         default_values = {
             # options not exposed on the command line
             'admin_passwd': 'admin',
+            'bin_path': '',
             'csv_internal_sep': ',',
+            'default_productivity_apps': 'False',
+            'proxy_access_token': '',
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'reportgz': False,
             'websocket_rate_limit_burst': 10,
@@ -151,7 +154,10 @@ class TestConfigManager(TransactionCase):
         values = {
             # options not exposed on the command line
             'admin_passwd': 'Tigrou007',
+            'bin_path': '',
             'csv_internal_sep': '@',
+            'default_productivity_apps': 'False',
+            'proxy_access_token': '',
             'publisher_warranty_url': 'http://example.com',  # blacklist for save, read from the config file
             'reportgz': True,
             'websocket_rate_limit_burst': '1',
@@ -344,6 +350,7 @@ class TestConfigManager(TransactionCase):
             'config': None,
             'data_dir': _get_default_datadir(),
             'dev_mode': [],
+            'geoip_database': '/usr/share/GeoIP/GeoLite2-City.mmdb',
             'init': {},
             'language': None,
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
@@ -352,6 +359,12 @@ class TestConfigManager(TransactionCase):
             'stop_after_init': False,
             'translate_in': '',
             'translate_out': '',
+
+            # undocummented options
+            'bin_path': '',
+            'default_productivity_apps': 'False',
+            'osv_memory_age_limit': 'False',
+            'proxy_access_token': '',
 
             # new options since 14.0
             'db_maxconn_gevent': False,
@@ -384,10 +397,18 @@ class TestConfigManager(TransactionCase):
             )
 
         config_path = file_path('base/tests/config/16.0.conf')
-        self.config._parse_config(['--config', config_path])
+        with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
+            self.config._parse_config(['--config', config_path])
         with self.assertNoLogs('py.warnings'):
             self.config._warn_deprecated_options()
         self.assertEqual(self.config.options, assert_options, "Options don't match")
+        output = [
+            (f"WARNING:odoo.tools.config:unknown option '{option}' in "
+             f"the config file at {config_path}, option stored as-is, "
+             "without parsing")
+            for option in ('demo', 'geoip_database', 'osv_memory_age_limit')
+        ]
+        self.assertEqual(capture.output, output)
 
     def test_05_repeat_parse_config(self):
         """Emulate multiple calls to parse_config()"""
@@ -404,7 +425,10 @@ class TestConfigManager(TransactionCase):
         values = {
             # options not exposed on the command line
             'admin_passwd': 'admin',
+            'bin_path': '',
             'csv_internal_sep': ',',
+            'default_productivity_apps': 'False',
+            'proxy_access_token': '',
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'reportgz': False,
             'websocket_rate_limit_burst': 10,
