@@ -403,26 +403,26 @@
         <t t-set="_navbar_classes" t-valuef="o_header_mobile d-block d-lg-none shadow-sm"/>
         <t t-set="_navbar_expand_class" t-valuef=""/>
         <t t-set="_navbar_name" t-valuef="Mobile"/>
+        <t t-set="_side" t-valuef="offcanvas-end"></t>
 
         <div class="o_main_nav container flex-wrap justify-content-between">
-            <!-- Brand -->
-            <t t-call="website.placeholder_header_brand"/>
-            <ul class="o_header_mobile_buttons_wrap navbar-nav flex-row align-items-center gap-2 mb-0">
-                <li class="o_not_editable">
-                    <button
-                        class="nav-link btn me-auto p-2"
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#top_menu_collapse_mobile"
-                        aria-controls="top_menu_collapse_mobile"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                        >
-                        <span class="navbar-toggler-icon"/>
-                    </button>
-                </li>
-            </ul>
-            <div t-attf-class="offcanvas offcanvas-end o_navbar_mobile" id="top_menu_collapse_mobile">
+            <div class="d-flex flex-grow-1">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <ul class="o_header_mobile_buttons_wrap navbar-nav d-flex flex-row align-items-center gap-2 mb-0 ms-auto"/>
+            </div>
+            <button
+                class="nav-link btn p-2 o_not_editable"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#top_menu_collapse_mobile"
+                aria-controls="top_menu_collapse_mobile"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                >
+                <span class="navbar-toggler-icon"/>
+            </button>
+            <div t-attf-class="offcanvas #{_side} o_navbar_mobile" id="top_menu_collapse_mobile">
                 <div class="offcanvas-header justify-content-end o_not_editable">
                     <button type="button" class="nav-link btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                 </div>
@@ -490,6 +490,18 @@
             </div>
         </div>
     </t>
+</template>
+
+<template id="template_header_mobile_position_left" inherit_id="website.template_header_mobile" active="False">
+    <xpath expr="//t[@t-set='_side']" position="replace">
+        <t t-set="_side" t-valuef="offcanvas-start"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_main_nav')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_main_nav')]//button" position="attributes">
+        <attribute name="class" add="me-2" separator=" "/>
+    </xpath>
 </template>
 
 <template id="template_header_mobile_align_center" inherit_id="website.template_header_mobile" active="False">
