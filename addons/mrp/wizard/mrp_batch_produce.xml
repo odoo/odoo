@@ -33,7 +33,7 @@
                 </group>
                 <footer>
                     <button name="action_prepare" string="Prepare MO" type="object" class="btn-primary"/>
-                    <button name="action_done" string="Produce" type="object" class="btn-primary"/>
+                    <button name="action_done" string="Produce" invisible="context.get('check_ids', False)" type="object" class="btn-primary"/>
                     <button string="Discard" class="btn-secondary" special="cancel" />
                 </footer>
             </form>
