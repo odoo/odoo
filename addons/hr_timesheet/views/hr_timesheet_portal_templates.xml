@@ -50,6 +50,8 @@
                     <t t-foreach="grouped_timesheets" t-as="timesheets_with_hours">
                         <t t-set="timesheets" t-value="timesheets_with_hours[0]"/>
                         <t t-set="hours_spent" t-value="timesheets_with_hours[1]"/>
+                        <t t-set="should_display_allocated_hours" t-value="timesheets_with_hours[2]"/>
+                        <t t-set="allocated_hours" t-value="timesheets_with_hours[3]"/>
                         <tbody style="font-size: 0.8rem">
                             <tr t-if="not groupby =='none'" class="table-light">
                                 <t t-if="groupby == 'project_id'">
@@ -85,6 +87,9 @@
                                     </t>
                                     <t t-else="">
                                         Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                                    </t>
+                                    <t t-if="should_display_allocated_hours">
+                                        / <span t-out="allocated_hours" t-options='{"widget": "float_time"}'/>
                                     </t>
                                 </th>
                             </tr>

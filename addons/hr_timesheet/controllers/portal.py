@@ -135,17 +135,30 @@ class TimesheetCustomerPortal(CustomerPortal):
                     raw_timesheets_group = Timesheet_sudo._read_group(
                         domain, ['date:day'], ['unit_amount:sum', 'id:recordset'], order='date:day desc'
                     )
-                    grouped_timesheets = [(records, unit_amount) for __, unit_amount, records in raw_timesheets_group]
+                    grouped_timesheets = [(records, unit_amount, False, 0) for __, unit_amount, records in raw_timesheets_group]
 
                 else:
                     time_data = Timesheet_sudo._read_group(domain, [field], ['unit_amount:sum'])
-                    mapped_time = {field.id: unit_amount for field, unit_amount in time_data}
-                    grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k.id]) for k, g in groupbyelem(timesheets, itemgetter(field))]
+                    project_related_group_by = groupby in ['project_id', 'task_id', 'parent_task_id']
+                    mapped_time = {
+                        field.id: (
+                            unit_amount,
+                            project_related_group_by and field.allow_timesheets and field.allocated_hours,
+                            field.allocated_hours if project_related_group_by else 0
+                        )
+                        for field, unit_amount in time_data
+                    }
+                    grouped_timesheets = [
+                        (Timesheet_sudo.concat(*g), mapped_time[k.id][0], mapped_time[k.id][1], mapped_time[k.id][2])
+                        for k, g in groupbyelem(timesheets, itemgetter(field))
+                    ]
                 return timesheets, grouped_timesheets
 
             grouped_timesheets = [(
                 timesheets,
-                Timesheet_sudo._read_group(domain, aggregates=['unit_amount:sum'])[0][0]
+                Timesheet_sudo._read_group(domain, aggregates=['unit_amount:sum'])[0][0],
+                False,
+                0
             )] if timesheets else []
             return timesheets, grouped_timesheets
 
