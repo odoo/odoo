@@ -130,11 +130,13 @@ test("hide the string when the PercentPieField widget is used in the view", asyn
     expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_text").not.toBeVisible();
 });
 
-test.tags("desktop")("show the string when the PercentPieField widget is used in a button with the class oe_stat_button", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: /* xml */ `
+test.tags("desktop")(
+    "show the string when the PercentPieField widget is used in a button with the class oe_stat_button",
+    async () => {
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: /* xml */ `
                <form>
                     <div name="button_box" class="oe_button_box">
                         <button type="object" class="oe_stat_button">
@@ -142,9 +144,10 @@ test.tags("desktop")("show the string when the PercentPieField widget is used in
                         </button>
                     </div>
                 </form>`,
-        resId: 1,
-    });
+            resId: 1,
+        });
 
-    expect(".o_field_percent_pie.o_field_widget .o_pie").toHaveCount(1);
-    expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_text").toBeVisible();
-});
+        expect(".o_field_percent_pie.o_field_widget .o_pie").toHaveCount(1);
+        expect(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_text").toBeVisible();
+    }
+);

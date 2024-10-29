@@ -86,7 +86,8 @@ test("test name_and_signature widget default signature", async function () {
     const props = {
         signature: {
             name: "Brandon Freeman",
-            signatureImage: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+BCQAHBQICJmhD1AAAAABJRU5ErkJggg==",
+            signatureImage:
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+BCQAHBQICJmhD1AAAAABJRU5ErkJggg==",
         },
         mode: "draw",
         signatureType: "signature",
@@ -94,5 +95,4 @@ test("test name_and_signature widget default signature", async function () {
     };
     const res = await mountWithCleanup(NameAndSignature, { props });
     expect(res.isSignatureEmpty).toBe(false);
-
 });
