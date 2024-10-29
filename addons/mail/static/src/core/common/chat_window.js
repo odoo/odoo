@@ -91,6 +91,11 @@ export class ChatWindow extends Component {
 
     onKeydown(ev) {
         const chatWindow = toRaw(this.props.chatWindow);
+        if (ev.key === "Escape" && this.threadActions.activeAction) {
+            this.threadActions.activeAction.close();
+            ev.stopPropagation();
+            return;
+        }
         if (ev.target.closest(".o-dropdown") || ev.target.closest(".o-dropdown--menu")) {
             return;
         }
