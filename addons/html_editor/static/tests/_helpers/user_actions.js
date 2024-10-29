@@ -193,20 +193,20 @@ export function resetSize(editor) {
     editor.shared.table.resetTableSize(findInSelection(selection, "table"));
 }
 /** @param {Editor} editor */
-export function justifyLeft(editor) {
-    execCommand(editor, "justifyLeft");
+export function alignLeft(editor) {
+    execCommand(editor, "alignLeft");
 }
 /** @param {Editor} editor */
-export function justifyCenter(editor) {
-    execCommand(editor, "justifyCenter");
+export function alignCenter(editor) {
+    execCommand(editor, "alignCenter");
 }
 /** @param {Editor} editor */
-export function justifyRight(editor) {
-    execCommand(editor, "justifyRight");
+export function alignRight(editor) {
+    execCommand(editor, "alignRight");
 }
 /** @param {Editor} editor */
-export function justifyFull(editor) {
-    execCommand(editor, "justifyFull");
+export function justify(editor) {
+    execCommand(editor, "justify");
 }
 
 /**

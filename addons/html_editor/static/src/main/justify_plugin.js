@@ -2,15 +2,15 @@ import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 
-export class JustifyPlugin extends Plugin {
-    static id = "justify";
+export class AlignPlugin extends Plugin {
+    static id = "align";
     static dependencies = ["selection"];
     resources = {
         user_commands: [
-            { id: "justifyLeft", run: () => this.align("left") },
-            { id: "justifyRight", run: () => this.align("right") },
-            { id: "justifyCenter", run: () => this.align("center") },
-            { id: "justifyFull", run: () => this.align("justify") },
+            { id: "alignLeft", run: () => this.align("left") },
+            { id: "alignRight", run: () => this.align("right") },
+            { id: "alignCenter", run: () => this.align("center") },
+            { id: "justify", run: () => this.align("justify") },
         ],
     };
 
